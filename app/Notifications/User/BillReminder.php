@@ -45,8 +45,6 @@ class BillReminder extends Notification
 
     /**
      * Create a new notification instance.
-     *
-     * @return void
      */
     public function __construct(Bill $bill, string $field, int $diff)
     {
@@ -61,11 +59,12 @@ class BillReminder extends Notification
      * @param mixed $notifiable
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toArray($notifiable)
     {
         return [
-            //
         ];
     }
 
@@ -75,6 +74,8 @@ class BillReminder extends Notification
      * @param mixed $notifiable
      *
      * @return MailMessage
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toMail($notifiable)
     {
@@ -85,7 +86,8 @@ class BillReminder extends Notification
 
         return (new MailMessage())
             ->markdown('emails.bill-warning', ['field' => $this->field, 'diff' => $this->diff, 'bill' => $this->bill])
-            ->subject($subject);
+            ->subject($subject)
+        ;
     }
 
     /**
@@ -94,6 +96,8 @@ class BillReminder extends Notification
      * @param mixed $notifiable
      *
      * @return SlackMessage
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toSlack($notifiable)
     {
@@ -101,14 +105,16 @@ class BillReminder extends Notification
         if (0 === $this->diff) {
             $message = (string)trans(sprintf('email.bill_warning_subject_now_%s', $this->field), ['diff' => $this->diff, 'name' => $this->bill->name]);
         }
-        $bill = $this->bill;
-        $url  = route('bills.show', [$bill->id]);
+        $bill    = $this->bill;
+        $url     = route('bills.show', [$bill->id]);
+
         return (new SlackMessage())
             ->warning()
-            ->attachment(function ($attachment) use ($bill, $url) {
+            ->attachment(static function ($attachment) use ($bill, $url): void {
                 $attachment->title((string)trans('firefly.visit_bill', ['name' => $bill->name]), $url);
             })
-            ->content($message);
+            ->content($message)
+        ;
     }
 
     /**
@@ -117,15 +123,21 @@ class BillReminder extends Notification
      * @param mixed $notifiable
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function via($notifiable)
     {
-        /** @var User|null $user */
+        /** @var null|User $user */
         $user     = auth()->user();
-        $slackUrl = null === $user ? '' : (string)app('preferences')->getForUser(auth()->user(), 'slack_webhook_url', '')->data;
-        if (UrlValidator::isValidWebhookURL($slackUrl)) {
+        $slackUrl = null === $user ? '' : app('preferences')->getForUser(auth()->user(), 'slack_webhook_url', '')->data;
+        if (is_array($slackUrl)) {
+            $slackUrl = '';
+        }
+        if (UrlValidator::isValidWebhookURL((string)$slackUrl)) {
             return ['mail', 'slack'];
         }
+
         return ['mail'];
     }
 }

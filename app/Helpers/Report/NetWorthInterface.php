@@ -31,7 +31,6 @@ use Illuminate\Support\Collection;
 
 /**
  * Interface NetWorthInterface
- *
  */
 interface NetWorthInterface
 {
@@ -42,43 +41,11 @@ interface NetWorthInterface
      * of that amount in the native currency.
      *
      * Includes extra array with the total(!) net worth in the native currency.
-     *
-     * @param Collection $accounts
-     * @param Carbon     $date
-     *
-     * @return array
      */
     public function byAccounts(Collection $accounts, Carbon $date): array;
 
-    /**
-     * TODO unsure why this is deprecated.
-     *
-     * Returns the user's net worth in an array with the following layout:
-     *
-     * -
-     *  - currency: TransactionCurrency object
-     *  - date: the current date
-     *  - amount: the user's net worth in that currency.
-     *
-     * This repeats for each currency the user has transactions in.
-     * Result of this method is cached.
-     *
-     * @param Collection $accounts
-     * @param Carbon     $date
-     *
-     * @return array
-     * @deprecated
-     */
-    public function getNetWorthByCurrency(Collection $accounts, Carbon $date): array;
+    public function setUser(null|Authenticatable|User $user): void;
 
-    /**
-     * @param User|Authenticatable|null $user
-     */
-    public function setUser(User | Authenticatable | null $user): void;
-
-    /**
-     * @param UserGroup $userGroup
-     */
     public function setUserGroup(UserGroup $userGroup): void;
 
     /**
@@ -86,9 +53,7 @@ interface NetWorthInterface
      *
      * Same as above but cleaner function with less dependencies.
      *
-     * @param Carbon $date
-     *
-     * @return array
+     * @deprecated
      */
     public function sumNetWorthByCurrency(Carbon $date): array;
 }

@@ -33,12 +33,6 @@ class PiggyBankFactory
 {
     private User $user;
 
-    /**
-     * @param int|null    $piggyBankId
-     * @param null|string $piggyBankName
-     *
-     * @return PiggyBank|null
-     */
     public function find(?int $piggyBankId, ?string $piggyBankName): ?PiggyBank
     {
         $piggyBankId   = (int)$piggyBankId;
@@ -48,7 +42,7 @@ class PiggyBankFactory
         }
         // first find by ID:
         if ($piggyBankId > 0) {
-            /** @var PiggyBank $piggyBank */
+            /** @var null|PiggyBank $piggyBank */
             $piggyBank = $this->user->piggyBanks()->find($piggyBankId);
             if (null !== $piggyBank) {
                 return $piggyBank;
@@ -57,7 +51,7 @@ class PiggyBankFactory
 
         // then find by name:
         if ('' !== $piggyBankName) {
-            /** @var PiggyBank $piggyBank */
+            /** @var null|PiggyBank $piggyBank */
             $piggyBank = $this->findByName($piggyBankName);
             if (null !== $piggyBank) {
                 return $piggyBank;
@@ -67,19 +61,11 @@ class PiggyBankFactory
         return null;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return PiggyBank|null
-     */
     public function findByName(string $name): ?PiggyBank
     {
         return $this->user->piggyBanks()->where('piggy_banks.name', $name)->first();
     }
 
-    /**
-     * @param User $user
-     */
     public function setUser(User $user): void
     {
         $this->user = $user;

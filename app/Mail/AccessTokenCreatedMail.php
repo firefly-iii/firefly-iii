@@ -29,8 +29,6 @@ use Illuminate\Queue\SerializesModels;
 
 /**
  * Class AccessTokenCreatedMail
- *
-
  */
 class AccessTokenCreatedMail extends Mailable
 {
@@ -40,9 +38,7 @@ class AccessTokenCreatedMail extends Mailable
     /**
      * AccessTokenCreatedMail constructor.
      */
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     /**
      * Build the message.
@@ -53,6 +49,7 @@ class AccessTokenCreatedMail extends Mailable
     {
         return $this
             ->markdown('emails.token-created')
-            ->subject((string)trans('email.access_token_created_subject'));
+            ->subject((string)trans('email.access_token_created_subject'))
+        ;
     }
 }

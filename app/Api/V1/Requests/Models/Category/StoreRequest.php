@@ -23,25 +23,20 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Category;
 
-use FireflyIII\Rules\ZeroOrMore;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class StoreRequest
- *
-
  */
 class StoreRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Get all data from the request.
-     *
-     * @return array
      */
     public function getAll(): array
     {
@@ -53,13 +48,11 @@ class StoreRequest extends FormRequest
 
     /**
      * The rules that the incoming request must be matched against.
-     *
-     * @return array
      */
     public function rules(): array
     {
         return [
-            'name' => 'required|between:1,100|uniqueObjectForUser:categories,name',
+            'name' => 'required|min:1|max:100|uniqueObjectForUser:categories,name',
         ];
     }
 }

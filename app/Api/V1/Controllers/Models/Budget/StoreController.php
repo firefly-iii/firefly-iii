@@ -40,8 +40,6 @@ class StoreController extends Controller
 
     /**
      * StoreController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -62,23 +60,19 @@ class StoreController extends Controller
      *
      * Store a budget.
      *
-     * @param StoreRequest $request
-     *
-     * @return JsonResponse
      * @throws FireflyException
-     *
      */
     public function store(StoreRequest $request): JsonResponse
     {
-        $budget = $this->repository->store($request->getAll());
+        $budget      = $this->repository->store($request->getAll());
         $budget->refresh();
-        $manager = $this->getManager();
+        $manager     = $this->getManager();
 
         /** @var BudgetTransformer $transformer */
         $transformer = app(BudgetTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($budget, $transformer, 'budgets');
+        $resource    = new Item($budget, $transformer, 'budgets');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

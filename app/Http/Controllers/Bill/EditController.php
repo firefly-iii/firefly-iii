@@ -33,6 +33,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class EditController
@@ -44,8 +45,6 @@ class EditController extends Controller
 
     /**
      * BillController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -66,22 +65,20 @@ class EditController extends Controller
     /**
      * Edit a bill.
      *
-     * @param Request $request
-     * @param Bill    $bill
-     *
      * @return Factory|View
      */
     public function edit(Request $request, Bill $bill)
     {
-        $periods = [];
+        $periods          = [];
+
         /** @var array $billPeriods */
-        $billPeriods = config('firefly.bill_periods');
+        $billPeriods      = config('firefly.bill_periods');
 
         foreach ($billPeriods as $current) {
-            $periods[$current] = (string)trans('firefly.' . $current);
+            $periods[$current] = (string)trans('firefly.'.$current);
         }
 
-        $subTitle = (string)trans('firefly.edit_bill', ['name' => $bill->name]);
+        $subTitle         = (string)trans('firefly.edit_bill', ['name' => $bill->name]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('bills.edit.fromUpdate')) {
@@ -95,15 +92,15 @@ class EditController extends Controller
         $defaultCurrency  = app('amount')->getDefaultCurrency();
 
         // code to handle active-checkboxes
-        $hasOldInput = null !== $request->old('_token');
+        $hasOldInput      = null !== $request->old('_token');
 
-        $preFilled = [
+        $preFilled        = [
             'bill_end_date'           => $bill->end_date,
             'extension_date'          => $bill->extension_date,
             'notes'                   => $this->repository->getNoteText($bill),
             'transaction_currency_id' => $bill->transaction_currency_id,
             'active'                  => $hasOldInput ? (bool)$request->old('active') : $bill->active,
-            'object_group'            => $bill->objectGroups->first() ? $bill->objectGroups->first()->title : '',
+            'object_group'            => null !== $bill->objectGroups->first() ? $bill->objectGroups->first()->title : '',
         ];
 
         $request->session()->flash('preFilled', $preFilled);
@@ -114,26 +111,24 @@ class EditController extends Controller
 
     /**
      * Update a bill.
-     *
-     * @param BillUpdateRequest $request
-     * @param Bill              $bill
-     *
-     * @return RedirectResponse
      */
     public function update(BillUpdateRequest $request, Bill $bill): RedirectResponse
     {
         $billData = $request->getBillData();
         $bill     = $this->repository->update($bill, $billData);
 
+        Log::channel('audit')->info(sprintf('Updated bill #%d.', $bill->id), $billData);
+
         $request->session()->flash('success', (string)trans('firefly.updated_bill', ['name' => $bill->name]));
         app('preferences')->mark();
 
-        /** @var array $files */
-        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        /** @var null|array $files */
+        $files    = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($bill, $files);
         }
         if (null !== $files && auth()->user()->hasRole('demo')) {
+            Log::channel('audit')->warning(sprintf('The demo user is trying to upload attachments in %s.', __METHOD__));
             session()->flash('info', (string)trans('firefly.no_att_demo_user'));
         }
 

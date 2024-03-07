@@ -119,7 +119,7 @@ export default {
   methods: {
     getWebhook: function () {
       const page = window.location.href.split('/');
-      const webhookId = page[page.length - 1];
+      const webhookId = parseInt(page[page.length - 1]);
       this.downloadWebhook(webhookId);
     },
     downloadWebhook: function (id) {

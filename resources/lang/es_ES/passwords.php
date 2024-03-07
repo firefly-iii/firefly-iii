@@ -31,7 +31,6 @@
  *
  */
 
-
 declare(strict_types=1);
 
 return [
@@ -39,6 +38,6 @@ return [
     'user'     => 'No podemos encontrar un usuario con esa dirección de correo electrónico.',
     'token'    => 'Este token para restablecer la contraseña no es válido.',
     'sent'     => '¡Te hemos enviado un correo con el enlace para restablecer tu contraseña!',
-    'reset'    => 'Tu contraseña fue reestablecida!',
+    'reset'    => '¡Tu contraseña ha sido restablecida!',
     'blocked'  => 'Buen intento.',
 ];

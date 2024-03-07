@@ -28,12 +28,10 @@ use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Insight\GenericRequest;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Account\OperationsRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Api\ApiSupport;
 use Illuminate\Http\JsonResponse;
 
 /**
- *
  * Class AccountController
  *
  * Shows income information grouped or limited by date.
@@ -43,26 +41,20 @@ class AccountController extends Controller
 {
     use ApiSupport;
 
-    private CurrencyRepositoryInterface   $currencyRepository;
     private OperationsRepositoryInterface $opsRepository;
     private AccountRepositoryInterface    $repository;
 
     /**
      * AccountController constructor.
-     *
-
      */
     public function __construct()
     {
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                $user             = auth()->user();
-                $this->repository = app(AccountRepositoryInterface::class);
+                $user                = auth()->user();
+                $this->repository    = app(AccountRepositoryInterface::class);
                 $this->repository->setUser($user);
-
-                $this->currencyRepository = app(CurrencyRepositoryInterface::class);
-                $this->currencyRepository->setUser($user);
 
                 $this->opsRepository = app(OperationsRepositoryInterface::class);
                 $this->opsRepository->setUser($user);
@@ -75,10 +67,6 @@ class AccountController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/insight/insightIncomeAsset
-     *
-     * @param GenericRequest $request
-     *
-     * @return JsonResponse
      */
     public function asset(GenericRequest $request): JsonResponse
     {
@@ -87,6 +75,7 @@ class AccountController extends Controller
         $assetAccounts = $request->getAssetAccounts();
         $income        = $this->opsRepository->sumIncomeByDestination($start, $end, $assetAccounts);
         $result        = [];
+
         /** @var array $entry */
         foreach ($income as $entry) {
             $result[] = [
@@ -105,10 +94,6 @@ class AccountController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/insight/insightIncomeRevenue
-     *
-     * @param GenericRequest $request
-     *
-     * @return JsonResponse
      */
     public function revenue(GenericRequest $request): JsonResponse
     {

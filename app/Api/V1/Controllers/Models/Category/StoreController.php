@@ -40,8 +40,6 @@ class StoreController extends Controller
 
     /**
      * CategoryController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -62,21 +60,18 @@ class StoreController extends Controller
      *
      * Store new category.
      *
-     * @param StoreRequest $request
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function store(StoreRequest $request): JsonResponse
     {
-        $category = $this->repository->store($request->getAll());
-        $manager  = $this->getManager();
+        $category    = $this->repository->store($request->getAll());
+        $manager     = $this->getManager();
 
         /** @var CategoryTransformer $transformer */
         $transformer = app(CategoryTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($category, $transformer, 'categories');
+        $resource    = new Item($category, $transformer, 'categories');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

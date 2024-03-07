@@ -30,18 +30,14 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class StoreRequest
- *
-
  */
 class StoreRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Get all data from the request.
-     *
-     * @return array
      */
     public function getAll(): array
     {
@@ -66,19 +62,16 @@ class StoreRequest extends FormRequest
 
     /**
      * The rules that the incoming request must be matched against.
-     *
-     * @return array
      */
     public function rules(): array
     {
         return [
-            'name'           => 'required|between:1,255|unique:transaction_currencies,name',
-            'code'           => 'required|between:3,51|unique:transaction_currencies,code',
-            'symbol'         => 'required|between:1,51|unique:transaction_currencies,symbol',
-            'decimal_places' => 'between:0,20|numeric|min:0|max:12',
+            'name'           => 'required|min:1|max:255|unique:transaction_currencies,name',
+            'code'           => 'required|min:3|max:32|unique:transaction_currencies,code',
+            'symbol'         => 'required|min:1|max:32|unique:transaction_currencies,symbol',
+            'decimal_places' => 'numeric|min:0|max:12',
             'enabled'        => [new IsBoolean()],
             'default'        => [new IsBoolean()],
-
         ];
     }
 }

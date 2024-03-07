@@ -31,28 +31,19 @@ use FireflyIII\Models\PiggyBankRepetition;
  */
 class PiggyBankObserver
 {
-    /**
-     * @param PiggyBank $piggyBank
-     *
-     * @return void
-     */
     public function created(PiggyBank $piggyBank): void
     {
         app('log')->debug('Observe "created" of a piggy bank.');
-        $repetition = new PiggyBankRepetition();
+        $repetition                = new PiggyBankRepetition();
         $repetition->piggyBank()->associate($piggyBank);
         $repetition->startdate     = $piggyBank->startdate;
         $repetition->targetdate    = $piggyBank->targetdate;
-        $repetition->currentamount = 0;
+        $repetition->currentamount = '0';
         $repetition->save();
     }
 
     /**
      * Also delete related objects.
-     *
-     * @param PiggyBank $piggyBank
-     *
-     * @return void
      */
     public function deleting(PiggyBank $piggyBank): void
     {
@@ -67,5 +58,4 @@ class PiggyBankObserver
 
         $piggyBank->notes()->delete();
     }
-
 }

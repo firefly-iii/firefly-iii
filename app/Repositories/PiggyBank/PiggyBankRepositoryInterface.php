@@ -37,184 +37,81 @@ use Illuminate\Support\Collection;
  */
 interface PiggyBankRepositoryInterface
 {
-    /**
-     * @param PiggyBank               $piggyBank
-     * @param string                  $amount
-     * @param TransactionJournal|null $journal
-     *
-     * @return bool
-     */
     public function addAmount(PiggyBank $piggyBank, string $amount, ?TransactionJournal $journal = null): bool;
 
-    /**
-     * @param PiggyBankRepetition $repetition
-     * @param string              $amount
-     * @param TransactionJournal  $journal
-     *
-     * @return void
-     */
     public function addAmountToRepetition(PiggyBankRepetition $repetition, string $amount, TransactionJournal $journal): void;
 
-    /**
-     * @param PiggyBank $piggyBank
-     * @param string    $amount
-     *
-     * @return bool
-     */
     public function canAddAmount(PiggyBank $piggyBank, string $amount): bool;
 
-    /**
-     * @param PiggyBank $piggyBank
-     * @param string    $amount
-     *
-     * @return bool
-     */
     public function canRemoveAmount(PiggyBank $piggyBank, string $amount): bool;
 
     /**
      * Destroy piggy bank.
-     *
-     * @param PiggyBank $piggyBank
-     *
-     * @return bool
      */
     public function destroy(PiggyBank $piggyBank): bool;
 
-    /**
-     *
-     */
     public function destroyAll(): void;
 
-    /**
-     * @param int $piggyBankId
-     *
-     * @return PiggyBank|null
-     */
     public function find(int $piggyBankId): ?PiggyBank;
 
     /**
      * Find by name or return NULL.
-     *
-     * @param string $name
-     *
-     * @return PiggyBank|null
      */
     public function findByName(string $name): ?PiggyBank;
 
-    /**
-     * @param int|null    $piggyBankId
-     * @param string|null $piggyBankName
-     *
-     * @return PiggyBank|null
-     */
     public function findPiggyBank(?int $piggyBankId, ?string $piggyBankName): ?PiggyBank;
 
-    /**
-     * @param PiggyBank $piggyBank
-     *
-     * @return Collection
-     */
     public function getAttachments(PiggyBank $piggyBank): Collection;
 
     /**
      * Get current amount saved in piggy bank.
-     *
-     * @param PiggyBank $piggyBank
-     *
-     * @return string
      */
     public function getCurrentAmount(PiggyBank $piggyBank): string;
 
     /**
      * Get all events.
-     *
-     * @param PiggyBank $piggyBank
-     *
-     * @return Collection
      */
     public function getEvents(PiggyBank $piggyBank): Collection;
 
     /**
      * Used for connecting to a piggy bank.
-     *
-     * @param PiggyBank           $piggyBank
-     * @param PiggyBankRepetition $repetition
-     * @param TransactionJournal  $journal
-     *
-     * @return string
      */
     public function getExactAmount(PiggyBank $piggyBank, PiggyBankRepetition $repetition, TransactionJournal $journal): string;
 
     /**
      * Highest order of all piggy banks.
-     *
-     * @return int
      */
     public function getMaxOrder(): int;
 
     /**
      * Return note for piggy bank.
-     *
-     * @param PiggyBank $piggyBank
-     *
-     * @return string
      */
     public function getNoteText(PiggyBank $piggyBank): string;
 
     /**
      * Return all piggy banks.
-     *
-     * @return Collection
      */
     public function getPiggyBanks(): Collection;
 
     /**
      * Also add amount in name.
-     *
-     * @return Collection
      */
     public function getPiggyBanksWithAmount(): Collection;
 
-    /**
-     * @param PiggyBank $piggyBank
-     *
-     * @return PiggyBankRepetition|null
-     */
     public function getRepetition(PiggyBank $piggyBank): ?PiggyBankRepetition;
 
     /**
      * Returns the suggested amount the user should save per month, or "".
-     *
-     * @param PiggyBank $piggyBank
-     *
-     * @return string
      */
     public function getSuggestedMonthlyAmount(PiggyBank $piggyBank): string;
 
     /**
      * Get for piggy account what is left to put in piggies.
-     *
-     * @param PiggyBank $piggyBank
-     * @param Carbon    $date
-     *
-     * @return string
      */
     public function leftOnAccount(PiggyBank $piggyBank, Carbon $date): string;
 
-    /**
-     * @param PiggyBank               $piggyBank
-     * @param string                  $amount
-     * @param TransactionJournal|null $journal
-     *
-     * @return bool
-     */
     public function removeAmount(PiggyBank $piggyBank, string $amount, ?TransactionJournal $journal = null): bool;
 
-    /**
-     * @param PiggyBank $piggyBank
-     *
-     * @return PiggyBank
-     */
     public function removeObjectGroup(PiggyBank $piggyBank): PiggyBank;
 
     /**
@@ -224,62 +121,29 @@ interface PiggyBankRepositoryInterface
 
     /**
      * Search for piggy banks.
-     *
-     * @param string $query
-     * @param int    $limit
-     *
-     * @return Collection
      */
     public function searchPiggyBank(string $query, int $limit): Collection;
 
-    /**
-     * @param PiggyBank $piggyBank
-     * @param string    $amount
-     *
-     * @return PiggyBank
-     */
     public function setCurrentAmount(PiggyBank $piggyBank, string $amount): PiggyBank;
 
-    /**
-     * @param PiggyBank $piggyBank
-     * @param string    $objectGroupTitle
-     *
-     * @return PiggyBank
-     */
     public function setObjectGroup(PiggyBank $piggyBank, string $objectGroupTitle): PiggyBank;
 
     /**
      * Set specific piggy bank to specific order.
-     *
-     * @param PiggyBank $piggyBank
-     * @param int       $newOrder
-     *
-     * @return bool
      */
     public function setOrder(PiggyBank $piggyBank, int $newOrder): bool;
 
-    /**
-     * @param User|Authenticatable|null $user
-     */
-    public function setUser(User | Authenticatable | null $user): void;
+    public function setUser(null|Authenticatable|User $user): void;
 
     /**
      * Store new piggy bank.
      *
-     * @param array $data
-     *
-     * @return PiggyBank
      * @throws FireflyException
      */
     public function store(array $data): PiggyBank;
 
     /**
      * Update existing piggy bank.
-     *
-     * @param PiggyBank $piggyBank
-     * @param array     $data
-     *
-     * @return PiggyBank
      */
     public function update(PiggyBank $piggyBank, array $data): PiggyBank;
 }

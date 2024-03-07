@@ -26,12 +26,9 @@ namespace FireflyIII\Events;
 
 use FireflyIII\User;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class AdminRequestedTestMessage.
- *
-
  */
 class AdminRequestedTestMessage extends Event
 {
@@ -41,12 +38,10 @@ class AdminRequestedTestMessage extends Event
 
     /**
      * Create a new event instance.
-     *
-     * @param User $user
      */
     public function __construct(User $user)
     {
-        Log::debug(sprintf('Triggered AdminRequestedTestMessage for user #%d (%s)', $user->id, $user->email));
+        app('log')->debug(sprintf('Triggered AdminRequestedTestMessage for user #%d (%s)', $user->id, $user->email));
         $this->user = $user;
     }
 }

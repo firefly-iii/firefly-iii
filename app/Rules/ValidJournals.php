@@ -25,52 +25,33 @@ declare(strict_types=1);
 namespace FireflyIII\Rules;
 
 use FireflyIII\Models\TransactionJournal;
-use Illuminate\Contracts\Validation\Rule;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Contracts\Validation\ValidationRule;
 
 /**
  * Class ValidJournals
- *
-
  */
-class ValidJournals implements Rule
+class ValidJournals implements ValidationRule
 {
     /**
-     * Get the validation error message.
-     *
-     * @return string
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function message(): string
+    public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
-        return (string)trans('validation.invalid_selection');
-    }
-
-    /**
-     * Determine if the validation rule passes.
-     *
-     * @param string $attribute
-     * @param mixed  $value
-     *
-     * @return bool
-     *
-     */
-    public function passes($attribute, $value): bool
-    {
-        Log::debug('In ValidJournals::passes');
+        app('log')->debug('In ValidJournals::passes');
         if (!is_array($value)) {
-            return true;
+            return;
         }
         $userId = auth()->user()->id;
         foreach ($value as $journalId) {
             $count = TransactionJournal::where('id', $journalId)->where('user_id', $userId)->count();
             if (0 === $count) {
-                Log::debug(sprintf('Count for transaction #%d and user #%d is zero! Return FALSE', $journalId, $userId));
+                app('log')->debug(sprintf('Count for transaction #%d and user #%d is zero! Return FALSE', $journalId, $userId));
 
-                return false;
+                $fail('validation.invalid_selection')->translate();
+
+                return;
             }
         }
-        Log::debug('Return true!');
-
-        return true;
+        app('log')->debug('Return true!');
     }
 }

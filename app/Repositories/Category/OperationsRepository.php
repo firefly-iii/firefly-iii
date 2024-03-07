@@ -31,7 +31,6 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
- *
  * Class OperationsRepository
  */
 class OperationsRepository implements OperationsRepositoryInterface
@@ -44,13 +43,6 @@ class OperationsRepository implements OperationsRepositoryInterface
      * as possible. Amounts are always negative.
      *
      * First currency, then categories.
-     *
-     * @param Carbon          $start
-     * @param Carbon          $end
-     * @param Collection|null $accounts
-     * @param Collection|null $categories
-     *
-     * @return array
      */
     public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
     {
@@ -63,17 +55,17 @@ class OperationsRepository implements OperationsRepositoryInterface
         if (null !== $categories && $categories->count() > 0) {
             $collector->setCategories($categories);
         }
-        if (null === $categories || (null !== $categories && 0 === $categories->count())) {
+        if (null === $categories || 0 === $categories->count()) {
             $collector->setCategories($this->getCategories());
         }
         $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation();
-        $journals = $collector->getExtractedJournals();
-        $array    = [];
+        $journals  = $collector->getExtractedJournals();
+        $array     = [];
 
         foreach ($journals as $journal) {
-            $currencyId   = (int)$journal['currency_id'];
-            $categoryId   = (int)$journal['category_id'];
-            $categoryName = (string)$journal['category_name'];
+            $currencyId                                                                        = (int)$journal['currency_id'];
+            $categoryId                                                                        = (int)$journal['category_id'];
+            $categoryName                                                                      = (string)$journal['category_name'];
 
             // catch "no category" entries.
             if (0 === $categoryId) {
@@ -81,7 +73,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             }
 
             // info about the currency:
-            $array[$currencyId] = $array[$currencyId] ?? [
+            $array[$currencyId]                            ??= [
                 'categories'              => [],
                 'currency_id'             => (string)$currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -91,7 +83,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             ];
 
             // info about the categories:
-            $array[$currencyId]['categories'][$categoryId] = $array[$currencyId]['categories'][$categoryId] ?? [
+            $array[$currencyId]['categories'][$categoryId] ??= [
                 'id'                   => (string)$categoryId,
                 'name'                 => $categoryName,
                 'transaction_journals' => [],
@@ -116,20 +108,15 @@ class OperationsRepository implements OperationsRepositoryInterface
         return $array;
     }
 
-    /**
-     * @param User|Authenticatable|null $user
-     */
-    public function setUser(User | Authenticatable | null $user): void
+    public function setUser(null|Authenticatable|User $user): void
     {
-        if (null !== $user) {
+        if ($user instanceof User) {
             $this->user = $user;
         }
     }
 
     /**
      * Returns a list of all the categories belonging to a user.
-     *
-     * @return Collection
      */
     private function getCategories(): Collection
     {
@@ -140,13 +127,6 @@ class OperationsRepository implements OperationsRepositoryInterface
      * This method returns a list of all the deposit transaction journals (as arrays) set in that period
      * which have the specified category set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always positive.
-     *
-     * @param Carbon          $start
-     * @param Carbon          $end
-     * @param Collection|null $accounts
-     * @param Collection|null $categories
-     *
-     * @return array
      */
     public function listIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
     {
@@ -159,17 +139,17 @@ class OperationsRepository implements OperationsRepositoryInterface
         if (null !== $categories && $categories->count() > 0) {
             $collector->setCategories($categories);
         }
-        if (null === $categories || (null !== $categories && 0 === $categories->count())) {
+        if (null === $categories || 0 === $categories->count()) {
             $collector->setCategories($this->getCategories());
         }
         $collector->withCategoryInformation()->withAccountInformation();
-        $journals = $collector->getExtractedJournals();
-        $array    = [];
+        $journals  = $collector->getExtractedJournals();
+        $array     = [];
 
         foreach ($journals as $journal) {
-            $currencyId   = (int)$journal['currency_id'];
-            $categoryId   = (int)$journal['category_id'];
-            $categoryName = (string)$journal['category_name'];
+            $currencyId                                                                        = (int)$journal['currency_id'];
+            $categoryId                                                                        = (int)$journal['category_id'];
+            $categoryName                                                                      = (string)$journal['category_name'];
 
             // catch "no category" entries.
             if (0 === $categoryId) {
@@ -177,7 +157,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             }
 
             // info about the currency:
-            $array[$currencyId] = $array[$currencyId] ?? [
+            $array[$currencyId]                            ??= [
                 'categories'              => [],
                 'currency_id'             => (string)$currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -187,7 +167,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             ];
 
             // info about the categories:
-            $array[$currencyId]['categories'][$categoryId] = $array[$currencyId]['categories'][$categoryId] ?? [
+            $array[$currencyId]['categories'][$categoryId] ??= [
                 'id'                   => (string)$categoryId,
                 'name'                 => $categoryName,
                 'transaction_journals' => [],
@@ -211,29 +191,27 @@ class OperationsRepository implements OperationsRepositoryInterface
         return $array;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function listTransferredIn(Carbon $start, Carbon $end, Collection $accounts, ?Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::TRANSFER])
-                  ->setDestinationAccounts($accounts)->excludeSourceAccounts($accounts);
+            ->setDestinationAccounts($accounts)->excludeSourceAccounts($accounts)
+        ;
         if (null !== $categories && $categories->count() > 0) {
             $collector->setCategories($categories);
         }
-        if (null === $categories || (null !== $categories && 0 === $categories->count())) {
+        if (null === $categories || 0 === $categories->count()) {
             $collector->setCategories($this->getCategories());
         }
         $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation();
-        $journals = $collector->getExtractedJournals();
-        $array    = [];
+        $journals  = $collector->getExtractedJournals();
+        $array     = [];
 
         foreach ($journals as $journal) {
-            $currencyId   = (int)$journal['currency_id'];
-            $categoryId   = (int)$journal['category_id'];
-            $categoryName = (string)$journal['category_name'];
+            $currencyId                                                                        = (int)$journal['currency_id'];
+            $categoryId                                                                        = (int)$journal['category_id'];
+            $categoryName                                                                      = (string)$journal['category_name'];
 
             // catch "no category" entries.
             if (0 === $categoryId) {
@@ -241,7 +219,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             }
 
             // info about the currency:
-            $array[$currencyId] = $array[$currencyId] ?? [
+            $array[$currencyId]                            ??= [
                 'categories'              => [],
                 'currency_id'             => (string)$currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -251,7 +229,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             ];
 
             // info about the categories:
-            $array[$currencyId]['categories'][$categoryId] = $array[$currencyId]['categories'][$categoryId] ?? [
+            $array[$currencyId]['categories'][$categoryId] ??= [
                 'id'                   => (string)$categoryId,
                 'name'                 => $categoryName,
                 'transaction_journals' => [],
@@ -276,29 +254,27 @@ class OperationsRepository implements OperationsRepositoryInterface
         return $array;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function listTransferredOut(Carbon $start, Carbon $end, Collection $accounts, ?Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::TRANSFER])
-                  ->setSourceAccounts($accounts)->excludeDestinationAccounts($accounts);
+            ->setSourceAccounts($accounts)->excludeDestinationAccounts($accounts)
+        ;
         if (null !== $categories && $categories->count() > 0) {
             $collector->setCategories($categories);
         }
-        if (null === $categories || (null !== $categories && 0 === $categories->count())) {
+        if (null === $categories || 0 === $categories->count()) {
             $collector->setCategories($this->getCategories());
         }
         $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation();
-        $journals = $collector->getExtractedJournals();
-        $array    = [];
+        $journals  = $collector->getExtractedJournals();
+        $array     = [];
 
         foreach ($journals as $journal) {
-            $currencyId   = (int)$journal['currency_id'];
-            $categoryId   = (int)$journal['category_id'];
-            $categoryName = (string)$journal['category_name'];
+            $currencyId                                                                        = (int)$journal['currency_id'];
+            $categoryId                                                                        = (int)$journal['category_id'];
+            $categoryName                                                                      = (string)$journal['category_name'];
 
             // catch "no category" entries.
             if (0 === $categoryId) {
@@ -306,7 +282,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             }
 
             // info about the currency:
-            $array[$currencyId] = $array[$currencyId] ?? [
+            $array[$currencyId]                            ??= [
                 'categories'              => [],
                 'currency_id'             => (string)$currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -316,7 +292,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             ];
 
             // info about the categories:
-            $array[$currencyId]['categories'][$categoryId] = $array[$currencyId]['categories'][$categoryId] ?? [
+            $array[$currencyId]['categories'][$categoryId] ??= [
                 'id'                   => (string)$categoryId,
                 'name'                 => $categoryName,
                 'transaction_journals' => [],
@@ -343,35 +319,29 @@ class OperationsRepository implements OperationsRepositoryInterface
 
     /**
      * Sum of withdrawal journals in period for a set of categories, grouped per currency. Amounts are always negative.
-     *
-     * @param Carbon          $start
-     * @param Carbon          $end
-     * @param Collection|null $accounts
-     * @param Collection|null $categories
-     *
-     * @return array
      */
     public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)
-                  ->setTypes([TransactionType::WITHDRAWAL]);
+            ->setTypes([TransactionType::WITHDRAWAL])
+        ;
 
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        if (null === $categories || (null !== $categories && 0 === $categories->count())) {
+        if (null === $categories || 0 === $categories->count()) {
             $categories = $this->getCategories();
         }
         $collector->setCategories($categories);
         $collector->withCategoryInformation();
-        $journals = $collector->getExtractedJournals();
-        $array    = [];
+        $journals  = $collector->getExtractedJournals();
+        $array     = [];
 
         foreach ($journals as $journal) {
             $currencyId                = (int)$journal['currency_id'];
-            $array[$currencyId]        = $array[$currencyId] ?? [
+            $array[$currencyId] ??= [
                 'sum'                     => '0',
                 'currency_id'             => (string)$currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -387,34 +357,28 @@ class OperationsRepository implements OperationsRepositoryInterface
 
     /**
      * Sum of income journals in period for a set of categories, grouped per currency. Amounts are always positive.
-     *
-     * @param Carbon          $start
-     * @param Carbon          $end
-     * @param Collection|null $accounts
-     * @param Collection|null $categories
-     *
-     * @return array
      */
     public function sumIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)
-                  ->setTypes([TransactionType::DEPOSIT]);
+            ->setTypes([TransactionType::DEPOSIT])
+        ;
 
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        if (null === $categories || (null !== $categories && 0 === $categories->count())) {
+        if (null === $categories || 0 === $categories->count()) {
             $categories = $this->getCategories();
         }
         $collector->setCategories($categories);
-        $journals = $collector->getExtractedJournals();
-        $array    = [];
+        $journals  = $collector->getExtractedJournals();
+        $array     = [];
 
         foreach ($journals as $journal) {
             $currencyId                = (int)$journal['currency_id'];
-            $array[$currencyId]        = $array[$currencyId] ?? [
+            $array[$currencyId] ??= [
                 'sum'                     => '0',
                 'currency_id'             => (string)$currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -430,34 +394,28 @@ class OperationsRepository implements OperationsRepositoryInterface
 
     /**
      * Sum of income journals in period for a set of categories, grouped per currency. Amounts are always positive.
-     *
-     * @param Carbon          $start
-     * @param Carbon          $end
-     * @param Collection|null $accounts
-     * @param Collection|null $categories
-     *
-     * @return array
      */
     public function sumTransfers(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)
-                  ->setTypes([TransactionType::TRANSFER]);
+            ->setTypes([TransactionType::TRANSFER])
+        ;
 
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        if (null === $categories || (null !== $categories && 0 === $categories->count())) {
+        if (null === $categories || 0 === $categories->count()) {
             $categories = $this->getCategories();
         }
         $collector->setCategories($categories);
-        $journals = $collector->getExtractedJournals();
-        $array    = [];
+        $journals  = $collector->getExtractedJournals();
+        $array     = [];
 
         foreach ($journals as $journal) {
             $currencyId                = (int)$journal['currency_id'];
-            $array[$currencyId]        = $array[$currencyId] ?? [
+            $array[$currencyId] ??= [
                 'sum'                     => '0',
                 'currency_id'             => (string)$currencyId,
                 'currency_name'           => $journal['currency_name'],

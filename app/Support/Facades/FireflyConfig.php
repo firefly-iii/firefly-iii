@@ -28,18 +28,17 @@ use Illuminate\Support\Facades\Facade;
 
 /**
  * Class FireflyConfig.
+ *
  * @method null|Configuration get($name, $default = null)
- * @method Configuration set(string $name, $value)
+ * @method Configuration      set(string $name, $value)
  * @method delete(string $name)
- * @method Configuration|null getFresh(string $name, $default = null)
- * @method Configuration put(string $name, $value)
+ * @method null|Configuration getFresh(string $name, $default = null)
+ * @method Configuration      put(string $name, $value)
  */
 class FireflyConfig extends Facade
 {
     /**
      * Get the registered name of the component.
-     *
-     * @return string
      */
     protected static function getFacadeAccessor(): string
     {

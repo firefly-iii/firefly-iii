@@ -26,7 +26,6 @@ namespace FireflyIII\Api\V2\Controllers\Model\Bill;
 
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Generic\DateRequest;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\UserGroups\Bill\BillRepositoryInterface;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use Illuminate\Http\JsonResponse;
@@ -40,9 +39,6 @@ class SumController extends Controller
 
     private BillRepositoryInterface $repository;
 
-    /**
-     *
-     */
     public function __construct()
     {
         parent::__construct();
@@ -50,11 +46,10 @@ class SumController extends Controller
             function ($request, $next) {
                 $this->repository = app(BillRepositoryInterface::class);
 
-                $userGroup = $this->validateUserGroup($request);
+                $userGroup        = $this->validateUserGroup($request);
                 if (null !== $userGroup) {
                     $this->repository->setUserGroup($userGroup);
                 }
-
 
                 return $next($request);
             }
@@ -67,9 +62,7 @@ class SumController extends Controller
      *
      * TODO see autocomplete/accountcontroller for list.
      *
-     * @param DateRequest $request
-     *
-     * @return JsonResponse
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function paid(DateRequest $request): JsonResponse
     {
@@ -85,9 +78,7 @@ class SumController extends Controller
      *
      * TODO see autocomplete/accountcontroller for list.
      *
-     * @param DateRequest $request
-     *
-     * @return JsonResponse
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function unpaid(DateRequest $request): JsonResponse
     {

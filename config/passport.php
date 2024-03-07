@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * passport.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -24,7 +23,6 @@
 declare(strict_types=1);
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Passport Guard
@@ -36,7 +34,7 @@ return [
     |
     */
 
-    'guard' => envNonEmpty('AUTHENTICATION_GUARD', 'web'),
+    'guard'                  => envNonEmpty('AUTHENTICATION_GUARD', 'web'),
 
     /*
     |--------------------------------------------------------------------------
@@ -49,9 +47,9 @@ return [
     |
     */
 
-    'private_key' => env('PASSPORT_PRIVATE_KEY'),
+    'private_key'            => env('PASSPORT_PRIVATE_KEY'),
 
-    'public_key' => env('PASSPORT_PUBLIC_KEY'),
+    'public_key'             => env('PASSPORT_PUBLIC_KEY'),
 
     /*
     |--------------------------------------------------------------------------
@@ -64,7 +62,7 @@ return [
     |
     */
 
-    'client_uuids' => false,
+    'client_uuids'           => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -81,5 +79,4 @@ return [
         'id'     => env('PASSPORT_PERSONAL_ACCESS_CLIENT_ID'),
         'secret' => env('PASSPORT_PERSONAL_ACCESS_CLIENT_SECRET'),
     ],
-
 ];

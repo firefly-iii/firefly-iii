@@ -32,15 +32,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 trait LocationServiceTrait
 {
-    /**
-     * @param Model $model
-     * @param array $data
-     *
-     * @return Location|null
-     */
     protected function storeNewLocation(Model $model, array $data): ?Location
     {
-        $data['store_location'] = $data['store_location'] ?? false;
+        $data['store_location'] ??= false;
         if ($data['store_location']) {
             $location             = new Location();
             $location->latitude   = $data['latitude'] ?? config('firefly.default_location.latitude');

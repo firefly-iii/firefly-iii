@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Attachment;
 
-use Crypt;
-use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AttachmentFactory;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
@@ -34,14 +32,11 @@ use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\UnableToDeleteFile;
-use LogicException;
 
 /**
  * Class AttachmentRepository.
- *
  */
 class AttachmentRepository implements AttachmentRepositoryInterface
 {
@@ -49,17 +44,15 @@ class AttachmentRepository implements AttachmentRepositoryInterface
     private $user;
 
     /**
-     * @param Attachment $attachment
-     *
-     * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     public function destroy(Attachment $attachment): bool
     {
         /** @var AttachmentHelperInterface $helper */
         $helper = app(AttachmentHelperInterface::class);
 
-        $path = $helper->getAttachmentLocation($attachment);
+        $path   = $helper->getAttachmentLocation($attachment);
+
         try {
             Storage::disk('upload')->delete($path);
         } catch (UnableToDeleteFile $e) {
@@ -70,11 +63,6 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         return true;
     }
 
-    /**
-     * @param Attachment $attachment
-     *
-     * @return string
-     */
     public function getContent(Attachment $attachment): string
     {
         // create a disk.
@@ -84,10 +72,11 @@ class AttachmentRepository implements AttachmentRepositoryInterface
 
         if ($disk->exists($file)) {
             $encryptedContent = (string)$disk->get($file);
+
             try {
-                $unencryptedContent = Crypt::decrypt($encryptedContent); // verified
+                $unencryptedContent = \Crypt::decrypt($encryptedContent); // verified
             } catch (DecryptException $e) {
-                Log::debug(sprintf('Could not decrypt attachment #%d but this is fine: %s', $attachment->id, $e->getMessage()));
+                app('log')->debug(sprintf('Could not decrypt attachment #%d but this is fine: %s', $attachment->id, $e->getMessage()));
                 $unencryptedContent = $encryptedContent;
             }
         }
@@ -95,11 +84,6 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         return $unencryptedContent;
     }
 
-    /**
-     * @param Attachment $attachment
-     *
-     * @return bool
-     */
     public function exists(Attachment $attachment): bool
     {
         /** @var Storage $disk */
@@ -108,9 +92,6 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         return $disk->exists($attachment->fileName());
     }
 
-    /**
-     * @return Collection
-     */
     public function get(): Collection
     {
         return $this->user->attachments()->get();
@@ -118,10 +99,6 @@ class AttachmentRepository implements AttachmentRepositoryInterface
 
     /**
      * Get attachment note text or empty string.
-     *
-     * @param Attachment $attachment
-     *
-     * @return string|null
      */
     public function getNoteText(Attachment $attachment): ?string
     {
@@ -134,9 +111,6 @@ class AttachmentRepository implements AttachmentRepositoryInterface
     }
 
     /**
-     * @param array $data
-     *
-     * @return Attachment
      * @throws FireflyException
      */
     public function store(array $data): Attachment
@@ -144,7 +118,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         /** @var AttachmentFactory $factory */
         $factory = app(AttachmentFactory::class);
         $factory->setUser($this->user);
-        $result = $factory->create($data);
+        $result  = $factory->create($data);
         if (null === $result) {
             throw new FireflyException('Could not store attachment.');
         }
@@ -152,22 +126,13 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         return $result;
     }
 
-    /**
-     * @param User|Authenticatable|null $user
-     */
-    public function setUser(User | Authenticatable | null $user): void
+    public function setUser(null|Authenticatable|User $user): void
     {
-        if (null !== $user) {
+        if ($user instanceof User) {
             $this->user = $user;
         }
     }
 
-    /**
-     * @param Attachment $attachment
-     * @param array      $data
-     *
-     * @return Attachment
-     */
     public function update(Attachment $attachment, array $data): Attachment
     {
         if (array_key_exists('title', $data)) {
@@ -193,12 +158,6 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         return $attachment;
     }
 
-    /**
-     * @param Attachment $attachment
-     * @param string     $note
-     *
-     * @return bool
-     */
     public function updateNote(Attachment $attachment, string $note): bool
     {
         if ('' === $note) {
@@ -206,14 +165,14 @@ class AttachmentRepository implements AttachmentRepositoryInterface
             if (null !== $dbNote) {
                 try {
                     $dbNote->delete();
-                } catch (LogicException $e) {
-                    Log::error($e->getMessage());
+                } catch (\LogicException $e) {
+                    app('log')->error($e->getMessage());
                 }
             }
 
             return true;
         }
-        $dbNote = $attachment->notes()->first();
+        $dbNote       = $attachment->notes()->first();
         if (null === $dbNote) {
             $dbNote = new Note();
             $dbNote->noteable()->associate($attachment);

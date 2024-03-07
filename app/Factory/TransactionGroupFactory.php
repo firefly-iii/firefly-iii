@@ -27,13 +27,9 @@ use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\User;
-use Illuminate\Support\Facades\Log;
-use JsonException;
 
 /**
  * Class TransactionGroupFactory
- *
-
  */
 class TransactionGroupFactory
 {
@@ -51,26 +47,24 @@ class TransactionGroupFactory
     /**
      * Store a new transaction journal.
      *
-     * @param array $data
-     *
-     * @return TransactionGroup
      * @throws DuplicateTransactionException
      * @throws FireflyException
-     * @throws JsonException
      */
     public function create(array $data): TransactionGroup
     {
-        Log::debug('Now in TransactionGroupFactory::create()');
+        app('log')->debug('Now in TransactionGroupFactory::create()');
         $this->journalFactory->setUser($this->user);
         $this->journalFactory->setErrorOnHash($data['error_if_duplicate_hash'] ?? false);
+
         try {
             $collection = $this->journalFactory->create($data);
         } catch (DuplicateTransactionException $e) {
             app('log')->warning('GroupFactory::create() caught journalFactory::create() with a duplicate!');
+
             throw new DuplicateTransactionException($e->getMessage(), 0, $e);
         }
-        $title = $data['group_title'] ?? null;
-        $title = '' === $title ? null : $title;
+        $title        = $data['group_title'] ?? null;
+        $title        = '' === $title ? null : $title;
 
         if (null !== $title) {
             $title = substr($title, 0, 1000);
@@ -79,7 +73,7 @@ class TransactionGroupFactory
             throw new FireflyException('Created zero transaction journals.');
         }
 
-        $group = new TransactionGroup();
+        $group        = new TransactionGroup();
         $group->user()->associate($this->user);
         $group->userGroup()->associate($data['user_group'] ?? $this->user->userGroup);
         $group->title = $title;
@@ -92,8 +86,6 @@ class TransactionGroupFactory
 
     /**
      * Set the user.
-     *
-     * @param User $user
      */
     public function setUser(User $user): void
     {

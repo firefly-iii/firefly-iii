@@ -23,33 +23,36 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\AvailableBudget
  *
- * @property int                      $id
- * @property Carbon|null              $created_at
- * @property Carbon|null              $updated_at
- * @property Carbon|null              $deleted_at
- * @property int                      $user_id
- * @property int                      $transaction_currency_id
- * @property string                   $amount
- * @property Carbon                   $start_date
- * @property Carbon                   $end_date
- * @property-read TransactionCurrency $transactionCurrency
- * @property-read User                $user
+ * @property int                 $id
+ * @property null|Carbon         $created_at
+ * @property null|Carbon         $updated_at
+ * @property null|Carbon         $deleted_at
+ * @property int                 $user_id
+ * @property int                 $transaction_currency_id
+ * @property string              $amount
+ * @property Carbon              $start_date
+ * @property Carbon              $end_date
+ * @property TransactionCurrency $transactionCurrency
+ * @property User                $user
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget newQuery()
- * @method static Builder|AvailableBudget onlyTrashed()
+ * @method static Builder|AvailableBudget                               onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget query()
  * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereCreatedAt($value)
@@ -60,79 +63,77 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereTransactionCurrencyId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereUserId($value)
- * @method static Builder|AvailableBudget withTrashed()
- * @method static Builder|AvailableBudget withoutTrashed()
- * @property int|null                 $user_group_id
+ * @method static Builder|AvailableBudget                               withTrashed()
+ * @method static Builder|AvailableBudget                               withoutTrashed()
+ *
+ * @property int $user_group_id
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereUserGroupId($value)
+ *
  * @mixin Eloquent
  */
 class AvailableBudget extends Model
 {
+    use ReturnsIntegerIdTrait;
+    use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
     protected $casts
-        = [
-            'created_at'              => 'datetime',
-            'updated_at'              => 'datetime',
-            'deleted_at'              => 'datetime',
-            'start_date'              => 'date',
-            'end_date'                => 'date',
-            'transaction_currency_id' => 'int',
-        ];
-    /** @var array Fields that can be filled */
+                        = [
+                            'created_at'              => 'datetime',
+                            'updated_at'              => 'datetime',
+                            'deleted_at'              => 'datetime',
+                            'start_date'              => 'date',
+                            'end_date'                => 'date',
+                            'transaction_currency_id' => 'int',
+                        ];
+
     protected $fillable = ['user_id', 'user_group_id', 'transaction_currency_id', 'amount', 'start_date', 'end_date'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param string $value
-     *
-     * @return AvailableBudget
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): AvailableBudget
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $availableBudgetId = (int)$value;
+
             /** @var User $user */
-            $user = auth()->user();
-            /** @var AvailableBudget $availableBudget */
-            $availableBudget = $user->availableBudgets()->find($availableBudgetId);
+            $user              = auth()->user();
+
+            /** @var null|AvailableBudget $availableBudget */
+            $availableBudget   = $user->availableBudgets()->find($availableBudgetId);
             if (null !== $availableBudget) {
                 return $availableBudget;
             }
         }
+
         throw new NotFoundHttpException();
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function transactionCurrency(): BelongsTo
     {
         return $this->belongsTo(TransactionCurrency::class);
     }
 
-    /**
-     * @return Attribute
-     */
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (string)$value,
+            get: static fn ($value) => (string)$value,
+        );
+    }
+
+    protected function transactionCurrencyId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int)$value,
         );
     }
 }

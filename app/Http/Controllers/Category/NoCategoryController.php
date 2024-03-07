@@ -33,13 +33,9 @@ use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
- *
  * Class NoCategoryController
  */
 class NoCategoryController extends Controller
@@ -50,8 +46,6 @@ class NoCategoryController extends Controller
 
     /**
      * CategoryController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -72,40 +66,36 @@ class NoCategoryController extends Controller
     /**
      * Show transactions without a category.
      *
-     * @param Request     $request
-     * @param Carbon|null $start
-     * @param Carbon|null $end
-     *
      * @return Factory|View
+     *
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function show(Request $request, Carbon $start = null, Carbon $end = null)
     {
-        Log::debug('Start of noCategory()');
-        /** @var Carbon $start */
-        $start = $start ?? session('start');
-        /** @var Carbon $end */
-        $end      = $end ?? session('end');
-        $page     = (int)$request->get('page');
-        $pageSize = (int)app('preferences')->get('listPageSize', 50)->data;
-        $subTitle = trans(
+        app('log')->debug('Start of noCategory()');
+        // @var Carbon $start
+        $start ??= session('start');
+        // @var Carbon $end
+        $end   ??= session('end');
+        $page      = (int)$request->get('page');
+        $pageSize  = (int)app('preferences')->get('listPageSize', 50)->data;
+        $subTitle  = trans(
             'firefly.without_category_between',
             ['start' => $start->isoFormat($this->monthAndDayFormat), 'end' => $end->isoFormat($this->monthAndDayFormat)]
         );
-        $periods  = $this->getNoCategoryPeriodOverview($start);
+        $periods   = $this->getNoCategoryPeriodOverview($start);
 
-        Log::debug(sprintf('Start for noCategory() is %s', $start->format('Y-m-d')));
-        Log::debug(sprintf('End for noCategory() is %s', $end->format('Y-m-d')));
+        app('log')->debug(sprintf('Start for noCategory() is %s', $start->format('Y-m-d')));
+        app('log')->debug(sprintf('End for noCategory() is %s', $end->format('Y-m-d')));
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)
-                  ->setLimit($pageSize)->setPage($page)->withoutCategory()
-                  ->withAccountInformation()->withBudgetInformation()
-                  ->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER]);
-        $groups = $collector->getPaginatedGroups();
+            ->setLimit($pageSize)->setPage($page)->withoutCategory()
+            ->withAccountInformation()->withBudgetInformation()
+            ->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER])
+        ;
+        $groups    = $collector->getPaginatedGroups();
         $groups->setPath(route('categories.no-category', [$start->format('Y-m-d'), $end->format('Y-m-d')]));
 
         return view('categories.no-category', compact('groups', 'subTitle', 'periods', 'start', 'end'));
@@ -114,34 +104,31 @@ class NoCategoryController extends Controller
     /**
      * Show all transactions without a category.
      *
-     * @param Request $request
-     *
      * @return Factory|View
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function showAll(Request $request)
     {
         // default values:
-        $start    = null;
-        $end      = null;
-        $periods  = new Collection();
-        $page     = (int)$request->get('page');
-        $pageSize = (int)app('preferences')->get('listPageSize', 50)->data;
-        Log::debug('Start of noCategory()');
-        $subTitle = (string)trans('firefly.all_journals_without_category');
-        $first    = $this->journalRepos->firstNull();
-        $start    = null === $first ? new Carbon() : $first->date;
-        $end      = today(config('app.timezone'));
-        Log::debug(sprintf('Start for noCategory() is %s', $start->format('Y-m-d')));
-        Log::debug(sprintf('End for noCategory() is %s', $end->format('Y-m-d')));
+        $start     = null;
+        $end       = null;
+        $periods   = new Collection();
+        $page      = (int)$request->get('page');
+        $pageSize  = (int)app('preferences')->get('listPageSize', 50)->data;
+        app('log')->debug('Start of noCategory()');
+        $subTitle  = (string)trans('firefly.all_journals_without_category');
+        $first     = $this->journalRepos->firstNull();
+        $start     = null === $first ? new Carbon() : $first->date;
+        $end       = today(config('app.timezone'));
+        app('log')->debug(sprintf('Start for noCategory() is %s', $start->format('Y-m-d')));
+        app('log')->debug(sprintf('End for noCategory() is %s', $end->format('Y-m-d')));
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withoutCategory()
-                  ->withAccountInformation()->withBudgetInformation()
-                  ->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER]);
-        $groups = $collector->getPaginatedGroups();
+            ->withAccountInformation()->withBudgetInformation()
+            ->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER])
+        ;
+        $groups    = $collector->getPaginatedGroups();
         $groups->setPath(route('categories.no-category.all'));
 
         return view('categories.no-category', compact('groups', 'subTitle', 'periods', 'start', 'end'));

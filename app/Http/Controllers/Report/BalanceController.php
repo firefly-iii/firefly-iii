@@ -32,8 +32,6 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
-use Throwable;
 
 /**
  * Class BalanceController.
@@ -62,19 +60,17 @@ class BalanceController extends Controller
     /**
      * Show overview of budget balances.
      *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
      * @return string
+     *
      * @throws FireflyException
      */
     public function general(Collection $accounts, Carbon $start, Carbon $end)
     {
-        $report = [
+        $report  = [
             'budgets'  => [],
             'accounts' => [],
         ];
+
         /** @var Account $account */
         foreach ($accounts as $account) {
             $report['accounts'][$account->id] = [
@@ -89,23 +85,26 @@ class BalanceController extends Controller
 
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
-            $budgetId                     = $budget->id;
-            $report['budgets'][$budgetId] = [
+            $budgetId                              = $budget->id;
+            $report['budgets'][$budgetId]          = [
                 'budget_id'   => $budgetId,
                 'budget_name' => $budget->name,
                 'spent'       => [], // per account
                 'sums'        => [], // per currency
             ];
-            $spent                        = [];
+            $spent                                 = [];
+
             /** @var GroupCollectorInterface $collector */
-            $collector = app(GroupCollectorInterface::class);
-            $journals  = $collector->setRange($start, $end)->setSourceAccounts($accounts)->setTypes([TransactionType::WITHDRAWAL])->setBudget($budget)
-                                   ->getExtractedJournals();
+            $collector                             = app(GroupCollectorInterface::class);
+            $journals                              = $collector->setRange($start, $end)->setSourceAccounts($accounts)->setTypes([TransactionType::WITHDRAWAL])->setBudget($budget)
+                ->getExtractedJournals()
+            ;
+
             /** @var array $journal */
             foreach ($journals as $journal) {
-                $sourceAccount                  = $journal['source_account_id'];
-                $currencyId                     = $journal['currency_id'];
-                $spent[$sourceAccount]          = $spent[$sourceAccount] ?? [
+                $sourceAccount                                                 = $journal['source_account_id'];
+                $currencyId                                                    = $journal['currency_id'];
+                $spent[$sourceAccount]                  ??= [
                     'source_account_id'       => $sourceAccount,
                     'currency_id'             => $journal['currency_id'],
                     'currency_code'           => $journal['currency_code'],
@@ -114,10 +113,10 @@ class BalanceController extends Controller
                     'currency_decimal_places' => $journal['currency_decimal_places'],
                     'spent'                   => '0',
                 ];
-                $spent[$sourceAccount]['spent'] = bcadd($spent[$sourceAccount]['spent'], $journal['amount']);
+                $spent[$sourceAccount]['spent']                                = bcadd($spent[$sourceAccount]['spent'], $journal['amount']);
 
                 // also fix sum:
-                $report['sums'][$budgetId][$currencyId]        = $report['sums'][$budgetId][$currencyId] ?? [
+                $report['sums'][$budgetId][$currencyId] ??= [
                     'sum'                     => '0',
                     'currency_id'             => $journal['currency_id'],
                     'currency_code'           => $journal['currency_code'],
@@ -125,8 +124,8 @@ class BalanceController extends Controller
                     'currency_symbol'         => $journal['currency_symbol'],
                     'currency_decimal_places' => $journal['currency_decimal_places'],
                 ];
-                $report['sums'][$budgetId][$currencyId]['sum'] = bcadd($report['sums'][$budgetId][$currencyId]['sum'], $journal['amount']);
-                $report['accounts'][$sourceAccount]['sum']     = bcadd($report['accounts'][$sourceAccount]['sum'], $journal['amount']);
+                $report['sums'][$budgetId][$currencyId]['sum']                 = bcadd($report['sums'][$budgetId][$currencyId]['sum'], $journal['amount']);
+                $report['accounts'][$sourceAccount]['sum']                     = bcadd($report['accounts'][$sourceAccount]['sum'], $journal['amount']);
 
                 // add currency info for account sum
                 $report['accounts'][$sourceAccount]['currency_id']             = $journal['currency_id'];
@@ -138,12 +137,14 @@ class BalanceController extends Controller
             $report['budgets'][$budgetId]['spent'] = $spent;
             // get transactions in budget
         }
+
         try {
             $result = view('reports.partials.balance', compact('report'))->render();
-        } catch (Throwable $e) {
-            Log::error(sprintf('Could not render reports.partials.balance: %s', $e->getMessage()));
-            Log::error($e->getTraceAsString());
+        } catch (\Throwable $e) {
+            app('log')->error(sprintf('Could not render reports.partials.balance: %s', $e->getMessage()));
+            app('log')->error($e->getTraceAsString());
             $result = 'Could not render view.';
+
             throw new FireflyException($result, 0, $e);
         }
 

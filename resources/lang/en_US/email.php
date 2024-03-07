@@ -116,6 +116,7 @@ return [
     'error_github_text'                       => 'If you prefer, you can also open a new issue on https://github.com/firefly-iii/firefly-iii/issues.',
     'error_stacktrace_below'                  => 'The full stacktrace is below:',
     'error_headers'                           => 'The following headers may also be relevant:',
+    'error_post'                              => 'This was submitted by the user:',
 
     // Ignore this comment
 
@@ -133,6 +134,5 @@ return [
     'bill_warning_end_date_zero'              => 'Your bill **":name"** is due to end on :date. This moment will pass **TODAY!**',
     'bill_warning_extension_date_zero'        => 'Your bill **":name"** is due to be extended or cancelled on :date. This moment will pass **TODAY!**',
     'bill_warning_please_action'              => 'Please take the appropriate action.',
-
 ];
 // Ignore this comment

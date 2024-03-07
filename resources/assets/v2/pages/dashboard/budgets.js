@@ -22,17 +22,15 @@ import Dashboard from "../../api/v2/chart/budget/dashboard.js";
 import {getDefaultChartSettings} from "../../support/default-chart-settings.js";
 import formatMoney from "../../util/format-money.js";
 import {Chart} from 'chart.js';
-import {I18n} from "i18n-js";
-import {loadTranslations} from "../../support/load-translations.js";
 import {getColors} from "../../support/get-colors.js";
 import {getCacheKey} from "../../support/get-cache-key.js";
+import i18next from "i18next";
 
 let currencies = [];
 let chart = null;
 let chartData = null;
 let afterPromises = false;
 
-let i18n; // for translating items in the chart.
 
 export default () => ({
     loading: false,
@@ -105,7 +103,7 @@ export default () => ({
             labels: [],
             datasets: [
                 {
-                    label: i18n.t('firefly.spent'),
+                    label: i18next.t('firefly.spent'),
                     data: [],
                     borderWidth: 1,
                     stack: 1,
@@ -113,7 +111,7 @@ export default () => ({
                     borderColor: getColors('spent', 'border'),
                 },
                 {
-                    label: i18n.t('firefly.left'),
+                    label: i18next.t('firefly.left'),
                     data: [],
                     borderWidth: 1,
                     stack: 1,
@@ -121,7 +119,7 @@ export default () => ({
                     borderColor: getColors('left', 'border'),
                 },
                 {
-                    label: i18n.t('firefly.overspent'),
+                    label: i18next.t('firefly.overspent'),
                     data: [],
                     borderWidth: 1,
                     stack: 1,
@@ -174,19 +172,12 @@ export default () => ({
 
 
     init() {
-        // console.log('budgets init');
-        Promise.all([getVariable('autoConversion', false), getVariable('language', 'en_US')]).then((values) => {
-
-            i18n = new I18n();
-            const locale = values[1].replace('-', '_');
-            i18n.locale = locale;
-            loadTranslations(i18n, locale).then(() => {
-                this.autoConversion = values[0];
-                afterPromises = true;
-                if (false === this.loading) {
-                    this.loadChart();
-                }
-            });
+        Promise.all([getVariable('autoConversion', false)]).then((values) => {
+            this.autoConversion = values[0];
+            afterPromises = true;
+            if (false === this.loading) {
+                this.loadChart();
+            }
         });
         window.store.observe('end', () => {
             if (!afterPromises) {

@@ -24,18 +24,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
-use Closure;
 use DB;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\System\OAuthKeys;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class Installer
- *
- *
  */
 class Installer
 {
@@ -43,16 +39,14 @@ class Installer
      * Handle an incoming request.
      *
      * @param Request $request
-     * @param Closure $next
      *
      * @return mixed
      *
      * @throws FireflyException
-     *
      */
-    public function handle($request, Closure $next)
+    public function handle($request, \Closure $next)
     {
-        //Log::debug(sprintf('Installer middleware for URL %s', $request->url()));
+        // app('log')->debug(sprintf('Installer middleware for URL %s', $request->url()));
         // ignore installer in test environment.
         if ('testing' === config('app.env')) {
             return $next($request);
@@ -61,7 +55,7 @@ class Installer
         $url    = $request->url();
         $strpos = stripos($url, '/install');
         if (false !== $strpos) {
-            //Log::debug(sprintf('URL is %s, will NOT run installer middleware', $url));
+            // app('log')->debug(sprintf('URL is %s, will NOT run installer middleware', $url));
 
             return $next($request);
         }
@@ -73,6 +67,7 @@ class Installer
             return response()->redirectTo(route('installer.index'));
         }
         OAuthKeys::verifyKeysRoutine();
+
         // update scheme version
         // update firefly version
         return $next($request);
@@ -81,18 +76,17 @@ class Installer
     /**
      * Check if the tables are created and accounted for.
      *
-     * @return bool
      * @throws FireflyException
      */
     private function hasNoTables(): bool
     {
-        //Log::debug('Now in routine hasNoTables()');
+        // app('log')->debug('Now in routine hasNoTables()');
 
         try {
-            DB::table('users')->count();
+            \DB::table('users')->count();
         } catch (QueryException $e) {
             $message = $e->getMessage();
-            Log::error(sprintf('Error message trying to access users-table: %s', $message));
+            app('log')->error(sprintf('Error message trying to access users-table: %s', $message));
             if ($this->isAccessDenied($message)) {
                 throw new FireflyException(
                     'It seems your database configuration is not correct. Please verify the username and password in your .env file.',
@@ -106,20 +100,17 @@ class Installer
 
                 return true;
             }
+
             throw new FireflyException(sprintf('Could not access the database: %s', $message), 0, $e);
         }
 
-        //Log::debug('Everything seems OK with the tables.');
+        // app('log')->debug('Everything seems OK with the tables.');
 
         return false;
     }
 
     /**
      * Is access denied error.
-     *
-     * @param string $message
-     *
-     * @return bool
      */
     protected function isAccessDenied(string $message): bool
     {
@@ -128,10 +119,6 @@ class Installer
 
     /**
      * Is no tables exist error.
-     *
-     * @param string $message
-     *
-     * @return bool
      */
     protected function noTablesExist(string $message): bool
     {
@@ -140,8 +127,6 @@ class Installer
 
     /**
      * Check if the "db_version" variable is correct.
-     *
-     * @return bool
      */
     private function oldDBVersion(): bool
     {
@@ -160,15 +145,13 @@ class Installer
             return true;
         }
 
-        //Log::info(sprintf('Configured DB version (%d) equals expected DB version (%d)', $dbVersion, $configVersion));
+        // app('log')->info(sprintf('Configured DB version (%d) equals expected DB version (%d)', $dbVersion, $configVersion));
 
         return false;
     }
 
     /**
      * Check if the "firefly_version" variable is correct.
-     *
-     * @return bool
      */
     private function oldVersion(): bool
     {
@@ -187,7 +170,7 @@ class Installer
             return true;
         }
 
-        //Log::info(sprintf('Installed Firefly III version (%s) equals expected Firefly III version (%s)', $dbVersion, $configVersion));
+        // app('log')->info(sprintf('Installed Firefly III version (%s) equals expected Firefly III version (%s)', $dbVersion, $configVersion));
 
         return false;
     }

@@ -37,8 +37,6 @@ class DestroyController extends Controller
 
     /**
      * CategoryController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -58,10 +56,6 @@ class DestroyController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/categories/deleteCategory
      *
      * Remove the specified resource from storage.
-     *
-     * @param Category $category
-     *
-     * @return JsonResponse
      */
     public function destroy(Category $category): JsonResponse
     {

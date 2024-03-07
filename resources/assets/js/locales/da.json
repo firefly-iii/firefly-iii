@@ -2,10 +2,13 @@
     "firefly": {
         "welcome_back": "Hvad spiller?",
         "flash_error": "Fejl!",
+        "flash_warning": "Advarsel!",
         "flash_success": "Succes!",
         "close": "Luk",
+        "select_dest_account": "Please select or type a valid destination account name",
+        "select_source_account": "Please select or type a valid source account name",
         "split_transaction_title": "Description of the split transaction",
-        "errors_submission": "There was something wrong with your submission. Please check out the errors.",
+        "errors_submission": "There was something wrong with your submission. Please check out the errors below.",
         "split": "Opdel",
         "single_split": "Opdel",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID} (\"{title}\")<\/a> has been stored.",
@@ -24,11 +27,13 @@
         "destination_account": "Destinationskonto",
         "add_another_split": "Add another split",
         "submission": "Submission",
+        "stored_journal": "Successfully created new transaction \":description\"",
         "create_another": "After storing, return here to create another one.",
         "reset_after": "Reset form after submission",
         "submit": "Submit",
         "amount": "Bel\u00f8b",
         "date": "Date",
+        "is_reconciled_fields_dropped": "Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).",
         "tags": "Etiketter",
         "no_budget": "(no budget)",
         "no_bill": "(no bill)",
@@ -138,9 +143,9 @@
         "payment_date": "Betalingsdato",
         "invoice_date": "Fakturadato",
         "internal_reference": "Intern reference",
-        "webhook_response": "Response",
-        "webhook_trigger": "Trigger",
-        "webhook_delivery": "Delivery"
+        "webhook_response": "Svar",
+        "webhook_trigger": "Udl\u00f8ser",
+        "webhook_delivery": "Levering"
     },
     "list": {
         "active": "Aktiv?",
@@ -152,6 +157,6 @@
     },
     "config": {
         "html_language": "da",
-        "date_time_fns": "MMMM do, yyyy @ HH:mm:ss"
+        "date_time_fns": "MMMM g\u00f8r, yyyy @ HH:mm:ss"
     }
 }

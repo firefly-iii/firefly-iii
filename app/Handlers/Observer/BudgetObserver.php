@@ -24,28 +24,30 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Observer;
 
 use FireflyIII\Models\Budget;
+use FireflyIII\Models\BudgetLimit;
 
 /**
  * Class BudgetObserver
  */
 class BudgetObserver
 {
-    /**
-     * @param Budget $budget
-     *
-     * @return void
-     */
     public function deleting(Budget $budget): void
     {
         app('log')->debug('Observe "deleting" of a budget.');
         foreach ($budget->attachments()->get() as $attachment) {
             $attachment->delete();
         }
+        $budgetLimits = $budget->budgetlimits()->get();
 
-        $budget->budgetlimits()->delete();
+        /** @var BudgetLimit $budgetLimit */
+        foreach ($budgetLimits as $budgetLimit) {
+            // this loop exists so several events are fired.
+            $budgetLimit->delete();
+        }
 
         $budget->notes()->delete();
         $budget->autoBudgets()->delete();
-    }
 
+        // recalculate available budgets.
+    }
 }

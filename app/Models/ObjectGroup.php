@@ -24,33 +24,37 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\ObjectGroup
  *
- * @property int                         $id
- * @property int                         $user_id
- * @property Carbon|null                 $created_at
- * @property Carbon|null                 $updated_at
- * @property Carbon|null                 $deleted_at
- * @property string                      $title
- * @property int                         $order
- * @property-read Collection|Account[]   $accounts
- * @property-read int|null               $accounts_count
- * @property-read Collection|Bill[]      $bills
- * @property-read int|null               $bills_count
- * @property-read Collection|PiggyBank[] $piggyBanks
- * @property-read int|null               $piggy_banks_count
- * @property-read User                   $user
+ * @property int                    $id
+ * @property int                    $user_id
+ * @property null|Carbon            $created_at
+ * @property null|Carbon            $updated_at
+ * @property null|Carbon            $deleted_at
+ * @property string                 $title
+ * @property int                    $order
+ * @property Account[]|Collection   $accounts
+ * @property null|int               $accounts_count
+ * @property Bill[]|Collection      $bills
+ * @property null|int               $bills_count
+ * @property Collection|PiggyBank[] $piggyBanks
+ * @property null|int               $piggy_banks_count
+ * @property User                   $user
+ *
  * @method static Builder|ObjectGroup newModelQuery()
  * @method static Builder|ObjectGroup newQuery()
  * @method static Builder|ObjectGroup query()
@@ -61,51 +65,49 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|ObjectGroup whereTitle($value)
  * @method static Builder|ObjectGroup whereUpdatedAt($value)
  * @method static Builder|ObjectGroup whereUserId($value)
- * @property int|null $user_group_id
+ *
+ * @property int $user_group_id
+ *
  * @method static Builder|ObjectGroup whereUserGroupId($value)
+ *
  * @mixin Eloquent
  */
 class ObjectGroup extends Model
 {
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+    use ReturnsIntegerIdTrait;
+    use ReturnsIntegerUserIdTrait;
+
     protected $casts
                         = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'user_id'    => 'integer',
-            'deleted_at' => 'datetime',
-        ];
+                            'created_at' => 'datetime',
+                            'updated_at' => 'datetime',
+                            'user_id'    => 'integer',
+                            'deleted_at' => 'datetime',
+                        ];
     protected $fillable = ['title', 'order', 'user_id', 'user_group_id'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param string $value
-     *
-     * @return ObjectGroup
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): ObjectGroup
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $objectGroupId = (int)$value;
-            /** @var ObjectGroup $objectGroup */
-            $objectGroup = self::where('object_groups.id', $objectGroupId)
-                               ->where('object_groups.user_id', auth()->user()->id)->first();
+
+            /** @var null|ObjectGroup $objectGroup */
+            $objectGroup   = self::where('object_groups.id', $objectGroupId)
+                ->where('object_groups.user_id', auth()->user()->id)->first()
+            ;
             if (null !== $objectGroup) {
                 return $objectGroup;
             }
         }
+
         throw new NotFoundHttpException();
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -133,5 +135,12 @@ class ObjectGroup extends Model
     public function piggyBanks()
     {
         return $this->morphedByMany(PiggyBank::class, 'object_groupable');
+    }
+
+    protected function order(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int)$value,
+        );
     }
 }

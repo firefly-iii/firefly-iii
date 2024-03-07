@@ -25,40 +25,35 @@ namespace FireflyIII\Factory;
 
 use Carbon\Carbon;
 use FireflyIII\Models\TransactionJournalMeta;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class TransactionJournalMetaFactory
  */
 class TransactionJournalMetaFactory
 {
-    /**
-     * @param array $data
-     *
-     * @return TransactionJournalMeta|null
-     */
     public function updateOrCreate(array $data): ?TransactionJournalMeta
     {
-        //Log::debug('In updateOrCreate()');
-        $value = $data['data'];
-        /** @var TransactionJournalMeta|null $entry */
-        $entry = $data['journal']->transactionJournalMeta()->where('name', $data['name'])->first();
+        // app('log')->debug('In updateOrCreate()');
+        $value       = $data['data'];
+
+        /** @var null|TransactionJournalMeta $entry */
+        $entry       = $data['journal']->transactionJournalMeta()->where('name', $data['name'])->first();
         if (null === $value && null !== $entry) {
-            //Log::debug('Value is empty, delete meta value.');
+            // app('log')->debug('Value is empty, delete meta value.');
             $entry->delete();
 
             return null;
         }
 
         if ($data['data'] instanceof Carbon) {
-            Log::debug('Is a carbon object.');
+            app('log')->debug('Is a carbon object.');
             $value = $data['data']->toW3cString();
         }
         if ('' === (string)$value) {
-            // Log::debug('Is an empty string.');
+            // app('log')->debug('Is an empty string.');
             // don't store blank strings.
             if (null !== $entry) {
-                Log::debug('Will not store empty strings, delete meta value');
+                app('log')->debug('Will not store empty strings, delete meta value');
                 $entry->delete();
             }
 
@@ -66,13 +61,13 @@ class TransactionJournalMetaFactory
         }
 
         if (null === $entry) {
-            //Log::debug('Will create new object.');
-            Log::debug(sprintf('Going to create new meta-data entry to store "%s".', $data['name']));
-            $entry = new TransactionJournalMeta();
+            // app('log')->debug('Will create new object.');
+            app('log')->debug(sprintf('Going to create new meta-data entry to store "%s".', $data['name']));
+            $entry       = new TransactionJournalMeta();
             $entry->transactionJournal()->associate($data['journal']);
             $entry->name = $data['name'];
         }
-        Log::debug('Will update value and return.');
+        app('log')->debug('Will update value and return.');
         $entry->data = $value;
         $entry->save();
 

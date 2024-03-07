@@ -28,67 +28,27 @@ namespace FireflyIII\Support\Request;
  */
 trait GetRecurrenceData
 {
-    /**
-     * @param array $transaction
-     *
-     * @return array
-     */
     protected function getSingleTransactionData(array $transaction): array
     {
-        $return = [];
+        $return     = [];
+        $stringKeys = ['id'];
+        $intKeys    = ['currency_id', 'foreign_currency_id', 'source_id', 'destination_id', 'bill_id', 'piggy_bank_id', 'bill_id', 'budget_id', 'category_id'];
+        $keys       = ['amount', 'currency_code', 'foreign_amount', 'foreign_currency_code', 'description', 'tags'];
 
-        if (array_key_exists('id', $transaction)) {
-            $return['id'] = (string)$transaction['id'];
+        foreach ($stringKeys as $key) {
+            if (array_key_exists($key, $transaction)) {
+                $return[$key] = (string)$transaction[$key];
+            }
         }
-
-        // amount + currency
-        if (array_key_exists('amount', $transaction)) {
-            $return['amount'] = $transaction['amount'];
+        foreach ($intKeys as $key) {
+            if (array_key_exists($key, $transaction)) {
+                $return[$key] = (int)$transaction[$key];
+            }
         }
-        if (array_key_exists('currency_id', $transaction)) {
-            $return['currency_id'] = (int)$transaction['currency_id'];
-        }
-        if (array_key_exists('currency_code', $transaction)) {
-            $return['currency_code'] = $transaction['currency_code'];
-        }
-
-        // foreign amount + currency
-        if (array_key_exists('foreign_amount', $transaction)) {
-            $return['foreign_amount'] = $transaction['foreign_amount'];
-        }
-        if (array_key_exists('foreign_currency_id', $transaction)) {
-            $return['foreign_currency_id'] = (int)$transaction['foreign_currency_id'];
-        }
-        if (array_key_exists('foreign_currency_code', $transaction)) {
-            $return['foreign_currency_code'] = $transaction['foreign_currency_code'];
-        }
-        // source + dest
-        if (array_key_exists('source_id', $transaction)) {
-            $return['source_id'] = (int)$transaction['source_id'];
-        }
-        if (array_key_exists('destination_id', $transaction)) {
-            $return['destination_id'] = (int)$transaction['destination_id'];
-        }
-        // description
-        if (array_key_exists('description', $transaction)) {
-            $return['description'] = $transaction['description'];
-        }
-
-        if (array_key_exists('piggy_bank_id', $transaction)) {
-            $return['piggy_bank_id'] = (int)$transaction['piggy_bank_id'];
-        }
-        if (array_key_exists('bill_id', $transaction)) {
-            $return['bill_id'] = (int)$transaction['bill_id'];
-        }
-
-        if (array_key_exists('tags', $transaction)) {
-            $return['tags'] = $transaction['tags'];
-        }
-        if (array_key_exists('budget_id', $transaction)) {
-            $return['budget_id'] = (int)$transaction['budget_id'];
-        }
-        if (array_key_exists('category_id', $transaction)) {
-            $return['category_id'] = (int)$transaction['category_id'];
+        foreach ($keys as $key) {
+            if (array_key_exists($key, $transaction)) {
+                $return[$key] = $transaction[$key];
+            }
         }
 
         return $return;

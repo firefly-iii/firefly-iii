@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\PiggyBank;
 
-use Amount;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\PiggyBankUpdateRequest;
@@ -34,6 +33,7 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 /**
@@ -47,8 +47,6 @@ class EditController extends Controller
 
     /**
      * PiggyBankController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -62,6 +60,7 @@ class EditController extends Controller
                 $this->attachments       = app(AttachmentHelperInterface::class);
                 $this->piggyRepos        = app(PiggyBankRepositoryInterface::class);
                 $this->accountRepository = app(AccountRepositoryInterface::class);
+
                 return $next($request);
             }
         );
@@ -69,8 +68,6 @@ class EditController extends Controller
 
     /**
      * Edit a piggy bank.
-     *
-     * @param PiggyBank $piggyBank
      *
      * @return Factory|View
      */
@@ -80,20 +77,20 @@ class EditController extends Controller
         $subTitleIcon = 'fa-pencil';
         $note         = $piggyBank->notes()->first();
         // Flash some data to fill the form.
-        $targetDate = $piggyBank->targetdate?->format('Y-m-d');
-        $startDate  = $piggyBank->startdate?->format('Y-m-d');
-        $currency   = $this->accountRepository->getAccountCurrency($piggyBank->account);
+        $targetDate   = $piggyBank->targetdate?->format('Y-m-d');
+        $startDate    = $piggyBank->startdate?->format('Y-m-d');
+        $currency     = $this->accountRepository->getAccountCurrency($piggyBank->account);
         if (null === $currency) {
-            $currency = Amount::getDefaultCurrency();
+            $currency = app('amount')->getDefaultCurrency();
         }
 
-        $preFilled = [
+        $preFilled    = [
             'name'         => $piggyBank->name,
             'account_id'   => $piggyBank->account_id,
             'targetamount' => app('steam')->bcround($piggyBank->targetamount, $currency->decimal_places),
             'targetdate'   => $targetDate,
             'startdate'    => $startDate,
-            'object_group' => $piggyBank->objectGroups->first() ? $piggyBank->objectGroups->first()->title : '',
+            'object_group' => null !== $piggyBank->objectGroups->first() ? $piggyBank->objectGroups->first()->title : '',
             'notes'        => null === $note ? '' : $note->text,
         ];
         if (0 === bccomp($piggyBank->targetamount, '0')) {
@@ -113,10 +110,7 @@ class EditController extends Controller
     /**
      * Update a piggy bank.
      *
-     * @param PiggyBankUpdateRequest $request
-     * @param PiggyBank              $piggyBank
-     *
-     * @return RedirectResponse|Redirector
+     * @return Redirector|RedirectResponse
      */
     public function update(PiggyBankUpdateRequest $request, PiggyBank $piggyBank)
     {
@@ -127,19 +121,20 @@ class EditController extends Controller
         app('preferences')->mark();
 
         // store new attachment(s):
-        /** @var array $files */
-        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        /** @var null|array $files */
+        $files     = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($piggyBank, $files);
         }
         if (null !== $files && auth()->user()->hasRole('demo')) {
+            Log::channel('audit')->warning(sprintf('The demo user is trying to upload attachments in %s.', __METHOD__));
             session()->flash('info', (string)trans('firefly.no_att_demo_user'));
         }
 
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments'));
         }
-        $redirect = redirect($this->getPreviousUrl('piggy-banks.edit.url'));
+        $redirect  = redirect($this->getPreviousUrl('piggy-banks.edit.url'));
 
         if (1 === (int)$request->get('return_to_edit')) {
             session()->put('piggy-banks.edit.fromUpdate', true);

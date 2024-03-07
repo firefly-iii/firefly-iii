@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * ShowController.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -30,7 +29,6 @@ use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\UserGroup\UserGroupRepositoryInterface;
 use FireflyIII\Transformers\V2\UserGroupTransformer;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
@@ -41,9 +39,6 @@ class ShowController extends Controller
 {
     private UserGroupRepositoryInterface $repository;
 
-    /**
-     *
-     */
     public function __construct()
     {
         parent::__construct();
@@ -56,15 +51,10 @@ class ShowController extends Controller
         );
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function index(Request $request): JsonResponse
+    public function index(): JsonResponse
     {
-        $collection = new Collection();
-        $pageSize   = $this->parameters->get('limit');
+        $collection  = new Collection();
+        $pageSize    = $this->parameters->get('limit');
         // if the user has the system owner role, get all. Otherwise, get only the users' groups.
         if (!auth()->user()->hasRole('owner')) {
             $collection = $this->repository->get();
@@ -72,8 +62,8 @@ class ShowController extends Controller
         if (auth()->user()->hasRole('owner')) {
             $collection = $this->repository->getAll();
         }
-        $count      = $collection->count();
-        $userGroups = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $count       = $collection->count();
+        $userGroups  = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         $paginator   = new LengthAwarePaginator($userGroups, $count, $pageSize, $this->parameters->get('page'));
         $transformer = new UserGroupTransformer();
@@ -81,22 +71,18 @@ class ShowController extends Controller
 
         return response()
             ->json($this->jsonApiList('user-groups', $paginator, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
 
-    /**
-     * @param Request   $request
-     * @param UserGroup $userGroup
-     *
-     * @return JsonResponse
-     */
-    public function show(Request $request, UserGroup $userGroup): JsonResponse
+    public function show(UserGroup $userGroup): JsonResponse
     {
         $transformer = new UserGroupTransformer();
         $transformer->setParameters($this->parameters);
 
         return response()
             ->api($this->jsonApiObject('user-groups', $userGroup, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
 }

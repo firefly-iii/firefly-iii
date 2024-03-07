@@ -24,12 +24,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
-use DB;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Expressions\ActionExpressionEvaluator;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class SetDescription.
@@ -41,8 +39,6 @@ class SetDescription implements ActionInterface
 
     /**
      * TriggerInterface constructor.
-     *
-     * @param RuleAction $action
      */
     public function __construct(RuleAction $action, ActionExpressionEvaluator $evaluator)
     {
@@ -50,9 +46,6 @@ class SetDescription implements ActionInterface
         $this->evaluator = $evaluator;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function actOnArray(array $journal): bool
     {
         /** @var TransactionJournal $object */
@@ -60,11 +53,11 @@ class SetDescription implements ActionInterface
         $before = $journal['description'];
         $after = $this->evaluator->evaluate($journal);
 
-        DB::table('transaction_journals')
+        \DB::table('transaction_journals')
             ->where('id', '=', $journal['transaction_journal_id'])
-            ->update(['description' => $after]);
+            ->update(['description' => $this->action->action_value]);
 
-        Log::debug(
+        app('log')->debug(
             sprintf(
                 'RuleAction SetDescription changed the description of journal #%d from "%s" to "%s".',
                 $journal['transaction_journal_id'],

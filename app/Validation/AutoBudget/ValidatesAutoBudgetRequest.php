@@ -31,12 +31,14 @@ use Illuminate\Validation\Validator;
 trait ValidatesAutoBudgetRequest
 {
     /**
-     * @param Validator $validator
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     protected function validateAutoBudgetAmount(Validator $validator): void
     {
         $data         = $validator->getData();
         $type         = $data['auto_budget_type'] ?? '';
+
+        /** @var null|float|int|string $amount */
         $amount       = array_key_exists('auto_budget_amount', $data) ? $data['auto_budget_amount'] : null;
         $period       = array_key_exists('auto_budget_period', $data) ? $data['auto_budget_period'] : null;
         $currencyId   = array_key_exists('auto_budget_currency_id', $data) ? (int)$data['auto_budget_currency_id'] : null;
@@ -47,6 +49,11 @@ trait ValidatesAutoBudgetRequest
         if ('' === $type || 0 === $type) {
             return;
         }
+        // TODO lots of duplicates with number validator.
+        // TODO should be present at more places, stop scientific notification
+        if (str_contains(strtoupper((string)$amount), 'E')) {
+            $amount = '';
+        }
         // basic float check:
         if (!is_numeric($amount)) {
             $validator->errors()->add('auto_budget_amount', (string)trans('validation.amount_required_for_auto_budget'));
@@ -54,9 +61,6 @@ trait ValidatesAutoBudgetRequest
             return;
         }
 
-        if ('' === $amount) {
-            $validator->errors()->add('auto_budget_amount', (string)trans('validation.amount_required_for_auto_budget'));
-        }
         if (1 !== bccomp((string)$amount, '0')) {
             $validator->errors()->add('auto_budget_amount', (string)trans('validation.auto_budget_amount_positive'));
         }
@@ -69,7 +73,6 @@ trait ValidatesAutoBudgetRequest
         // too big amount
         if ((int)$amount > 268435456) {
             $validator->errors()->add('auto_budget_amount', (string)trans('validation.amount_required_for_auto_budget'));
-            return;
         }
     }
 }

@@ -31,9 +31,7 @@
  *
  */
 
-
 declare(strict_types=1);
-
 
 return [
     'failed'   => 'Ezek a hitelesítő adatok nem egyeznek meg a tárolt adatokkal.',

@@ -33,13 +33,11 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class StoreRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Get all data from the request.
-     *
-     * @return array
      */
     public function getAll(): array
     {
@@ -62,14 +60,12 @@ class StoreRequest extends FormRequest
 
     /**
      * The rules that the incoming request must be matched against.
-     *
-     * @return array
      */
     public function rules(): array
     {
         return [
-            'title'       => 'required|between:1,100|uniqueObjectForUser:rule_groups,title',
-            'description' => 'between:1,5000|nullable',
+            'title'       => 'required|min:1|max:100|uniqueObjectForUser:rule_groups,title',
+            'description' => 'min:1|max:32768|nullable',
             'active'      => [new IsBoolean()],
         ];
     }

@@ -33,8 +33,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Support\CreditRecalculateService;
 use FireflyIII\User;
 use Illuminate\Console\Command;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class UpgradeLiabilities
@@ -43,16 +41,12 @@ class UpgradeLiabilities extends Command
 {
     use ShowsFriendlyMessages;
 
-    public const CONFIG_NAME = '560_upgrade_liabilities';
-    protected $description = 'Upgrade liabilities to new 5.6.0 structure.';
-    protected $signature   = 'firefly-iii:upgrade-liabilities {--F|force : Force the execution of this command.}';
+    public const string CONFIG_NAME = '560_upgrade_liabilities';
+    protected $description          = 'Upgrade liabilities to new 5.6.0 structure.';
+    protected $signature            = 'firefly-iii:upgrade-liabilities {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
-     *
-     * @return int
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function handle(): int
     {
@@ -64,14 +58,10 @@ class UpgradeLiabilities extends Command
         $this->upgradeLiabilities();
 
         $this->markAsExecuted();
+
         return 0;
     }
 
-    /**
-     * @return bool
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
@@ -82,27 +72,24 @@ class UpgradeLiabilities extends Command
         return false;
     }
 
-    /**
-     *
-     */
     private function upgradeLiabilities(): void
     {
         $users = User::get();
+
         /** @var User $user */
         foreach ($users as $user) {
             $this->upgradeForUser($user);
         }
     }
 
-    /**
-     * @param User $user
-     */
     private function upgradeForUser(User $user): void
     {
         $accounts = $user->accounts()
-                         ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                         ->whereIn('account_types.type', config('firefly.valid_liabilities'))
-                         ->get(['accounts.*']);
+            ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+            ->whereIn('account_types.type', config('firefly.valid_liabilities'))
+            ->get(['accounts.*'])
+        ;
+
         /** @var Account $account */
         foreach ($accounts as $account) {
             $this->upgradeLiability($account);
@@ -112,13 +99,10 @@ class UpgradeLiabilities extends Command
         }
     }
 
-    /**
-     * @param Account $account
-     */
     private function upgradeLiability(Account $account): void
     {
         /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
+        $repository     = app(AccountRepositoryInterface::class);
         $repository->setUser($account->user);
 
         // get opening balance, and correct if necessary.
@@ -129,7 +113,7 @@ class UpgradeLiabilities extends Command
         }
 
         // add liability direction property (if it does not yet exist!)
-        $value = $repository->getMetaValue($account, 'liability_direction');
+        $value          = $repository->getMetaValue($account, 'liability_direction');
         if (null === $value) {
             /** @var AccountMetaFactory $factory */
             $factory = app(AccountMetaFactory::class);
@@ -137,10 +121,6 @@ class UpgradeLiabilities extends Command
         }
     }
 
-    /**
-     * @param Account            $account
-     * @param TransactionJournal $openingBalance
-     */
     private function correctOpeningBalance(Account $account, TransactionJournal $openingBalance): void
     {
         $source      = $this->getSourceTransaction($openingBalance);
@@ -149,9 +129,9 @@ class UpgradeLiabilities extends Command
             return;
         }
         // source MUST be the liability.
-        if ((int)$destination->account_id === (int)$account->id) {
+        if ($destination->account_id === $account->id) {
             // so if not, switch things around:
-            $sourceAccountId         = (int)$source->account_id;
+            $sourceAccountId         = $source->account_id;
             $source->account_id      = $destination->account_id;
             $destination->account_id = $sourceAccountId;
             $source->save();
@@ -159,29 +139,16 @@ class UpgradeLiabilities extends Command
         }
     }
 
-    /**
-     * @param TransactionJournal $journal
-     *
-     * @return Transaction|null
-     */
     private function getSourceTransaction(TransactionJournal $journal): ?Transaction
     {
         return $journal->transactions()->where('amount', '<', 0)->first();
     }
 
-    /**
-     * @param TransactionJournal $journal
-     *
-     * @return Transaction|null
-     */
     private function getDestinationTransaction(TransactionJournal $journal): ?Transaction
     {
         return $journal->transactions()->where('amount', '>', 0)->first();
     }
 
-    /**
-     *
-     */
     private function markAsExecuted(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);

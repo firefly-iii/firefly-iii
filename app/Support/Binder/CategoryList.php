@@ -34,31 +34,28 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class CategoryList implements BinderInterface
 {
     /**
-     * @param string $value
-     * @param Route  $route
-     *
-     * @return Collection
      * @throws NotFoundHttpException
-     *
      */
     public static function routeBinder(string $value, Route $route): Collection
     {
         if (auth()->check()) {
             if ('allCategories' === $value) {
                 return auth()->user()->categories()
-                             ->orderBy('name', 'ASC')
-                             ->get();
+                    ->orderBy('name', 'ASC')
+                    ->get()
+                ;
             }
 
-            $list = array_unique(array_map('\intval', explode(',', $value)));
-            if (0 === count($list)) {
+            $list       = array_unique(array_map('\intval', explode(',', $value)));
+            if (0 === count($list)) { // @phpstan-ignore-line
                 throw new NotFoundHttpException();
             }
 
             /** @var Collection $collection */
             $collection = auth()->user()->categories()
-                                ->whereIn('id', $list)
-                                ->get();
+                ->whereIn('id', $list)
+                ->get()
+            ;
 
             // add empty category if applicable.
             if (in_array(0, $list, true)) {
@@ -69,6 +66,7 @@ class CategoryList implements BinderInterface
                 return $collection;
             }
         }
+
         throw new NotFoundHttpException();
     }
 }

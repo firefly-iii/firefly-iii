@@ -41,15 +41,14 @@ class DeleteEmptyGroups extends Command
     /**
      * Execute the console command.
      *
-     * @return int
      * @throws Exception;
-     *
      */
     public function handle(): int
     {
         $groupIds
-            = TransactionGroup::leftJoin('transaction_journals', 'transaction_groups.id', '=', 'transaction_journals.transaction_group_id')
-                              ->whereNull('transaction_journals.id')->get(['transaction_groups.id'])->pluck('id')->toArray();
+               = TransactionGroup::leftJoin('transaction_journals', 'transaction_groups.id', '=', 'transaction_journals.transaction_group_id')
+                   ->whereNull('transaction_journals.id')->get(['transaction_groups.id'])->pluck('id')->toArray()
+        ;
 
         $total = count($groupIds);
         if ($total > 0) {

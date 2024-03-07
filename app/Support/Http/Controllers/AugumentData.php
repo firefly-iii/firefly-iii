@@ -40,28 +40,24 @@ use Illuminate\Support\Collection;
 
 /**
  * Trait AugumentData
- *
  */
 trait AugumentData
 {
     /**
      * Searches for the opposing account.
-     *
-     * @param Collection $accounts
-     *
-     * @return array
      */
     protected function combineAccounts(Collection $accounts): array // filter + group data
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         $combined   = [];
+
         /** @var Account $expenseAccount */
         foreach ($accounts as $expenseAccount) {
-            $collection = new Collection();
+            $collection                      = new Collection();
             $collection->push($expenseAccount);
 
-            $revenue = $repository->findByName($expenseAccount->name, [AccountType::REVENUE]);
+            $revenue                         = $repository->findByName($expenseAccount->name, [AccountType::REVENUE]);
             if (null !== $revenue) {
                 $collection->push($revenue);
             }
@@ -74,9 +70,7 @@ trait AugumentData
     /**
      * Small helper function for the revenue and expense account charts.
      *
-     * @param array $names
-     *
-     * @return array
+     * @param array<array> $names
      */
     protected function expandNames(array $names): array
     {
@@ -90,14 +84,11 @@ trait AugumentData
 
     /**
      * Small helper function for the revenue and expense account charts.
-     *
-     * @param Collection $accounts
-     *
-     * @return array
      */
     protected function extractNames(Collection $accounts): array
     {
         $return = [];
+
         /** @var Account $account */
         foreach ($accounts as $account) {
             $return[$account->id] = $account->name;
@@ -108,10 +99,6 @@ trait AugumentData
 
     /**
      * Get the account names belonging to a bunch of account ID's.
-     *
-     * @param array $accountIds
-     *
-     * @return array
      */
     protected function getAccountNames(array $accountIds): array // extract info from array.
     {
@@ -127,17 +114,13 @@ trait AugumentData
                 $return[$accountId] = $grouped[$accountId][0]['name'];
             }
         }
-        $return[0] = '(no name)';
+        $return[0]  = '(no name)';
 
         return $return;
     }
 
     /**
      * Get the budget names from a set of budget ID's.
-     *
-     * @param array $budgetIds
-     *
-     * @return array
      */
     protected function getBudgetNames(array $budgetIds): array // extract info from array.
     {
@@ -151,17 +134,13 @@ trait AugumentData
                 $return[$budgetId] = $grouped[$budgetId][0]['name'];
             }
         }
-        $return[0] = (string)trans('firefly.no_budget');
+        $return[0]  = (string)trans('firefly.no_budget');
 
         return $return;
     }
 
     /**
      * Get the category names from a set of category ID's. Small helper function for some of the charts.
-     *
-     * @param array $categoryIds
-     *
-     * @return array
      */
     protected function getCategoryNames(array $categoryIds): array // extract info from array.
     {
@@ -177,29 +156,23 @@ trait AugumentData
                 $return[$categoryId] = $grouped[$categoryId][0]['name'];
             }
         }
-        $return[0] = (string)trans('firefly.no_category');
+        $return[0]  = (string)trans('firefly.no_category');
 
         return $return;
     }
 
     /**
      * Gets all budget limits for a budget.
-     *
-     * @param Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
      */
     protected function getLimits(Budget $budget, Carbon $start, Carbon $end): Collection // get data + augment with info
     {
         /** @var OperationsRepositoryInterface $opsRepository */
-        $opsRepository = app(OperationsRepositoryInterface::class);
+        $opsRepository    = app(OperationsRepositoryInterface::class);
 
         /** @var BudgetLimitRepositoryInterface $blRepository */
-        $blRepository = app(BudgetLimitRepositoryInterface::class);
+        $blRepository     = app(BudgetLimitRepositoryInterface::class);
         // properties for cache
-        $cache = new CacheProperties();
+        $cache            = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty($budget->id);
@@ -215,12 +188,23 @@ trait AugumentData
 
         /** @var BudgetLimit $entry */
         foreach ($set as $entry) {
-            $currency = $entry->transactionCurrency;
+            $currency     = $entry->transactionCurrency;
+
+            if (null === $currency) {
+                $currency = app('amount')->getDefaultCurrency();
+            }
+
             // clone because these objects change each other.
             $currentStart = clone $entry->start_date;
-            $currentEnd   = clone $entry->end_date;
+            $currentEnd   = null === $entry->end_date ? null : clone $entry->end_date;
+
+            if (null === $currentEnd) {
+                $currentEnd = clone $currentStart;
+                $currentEnd->addMonth();
+            }
+
             $expenses     = $opsRepository->sumExpenses($currentStart, $currentEnd, null, $budgetCollection, $currency);
-            $spent        = $expenses[(int)$currency->id]['sum'] ?? '0';
+            $spent        = $expenses[$currency->id]['sum'] ?? '0';
             $entry->spent = $spent;
 
             $limits->push($entry);
@@ -232,18 +216,15 @@ trait AugumentData
 
     /**
      * Group set of transactions by name of opposing account.
-     *
-     * @param array $array
-     *
-     * @return array
      */
     protected function groupByName(array $array): array // filter + group data
     {
         // group by opposing account name.
         $grouped = [];
+
         /** @var array $journal */
         foreach ($array as $journal) {
-            $name = '(no name)';
+            $name           = '(no name)';
             if (TransactionType::WITHDRAWAL === $journal['transaction_type_type']) {
                 $name = $journal['destination_account_name'];
             }
@@ -251,7 +232,7 @@ trait AugumentData
                 $name = $journal['source_account_name'];
             }
 
-            $grouped[$name] = $grouped[$name] ?? '0';
+            $grouped[$name] ??= '0';
             $grouped[$name] = bcadd($journal['amount'], $grouped[$name]);
         }
 
@@ -260,29 +241,22 @@ trait AugumentData
 
     /**
      * Spent in a period.
-     *
-     * @param Collection $assets
-     * @param Collection $opposing
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
      */
     protected function spentInPeriod(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array // get data + augment with info
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
 
-        $total = $assets->merge($opposing);
+        $total     = $assets->merge($opposing);
         $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setAccounts($total);
-        $journals = $collector->getExtractedJournals();
-        $sum      = [
+        $journals  = $collector->getExtractedJournals();
+        $sum       = [
             'grand_sum'    => '0',
             'per_currency' => [],
         ];
         // loop to support multi currency
         foreach ($journals as $journal) {
-            $currencyId = (int)$journal['currency_id'];
+            $currencyId                              = (int)$journal['currency_id'];
 
             // if not set, set to zero:
             if (!array_key_exists($currencyId, $sum['per_currency'])) {

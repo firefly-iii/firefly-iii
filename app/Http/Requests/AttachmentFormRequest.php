@@ -26,21 +26,19 @@ namespace FireflyIII\Http\Requests;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Validator;
 
 /**
  * Class AttachmentFormRequest.
- *
-
  */
 class AttachmentFormRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Returns the data required by the controller.
-     *
-     * @return array
      */
     public function getAttachmentData(): array
     {
@@ -52,15 +50,20 @@ class AttachmentFormRequest extends FormRequest
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {
         // fixed
         return [
-            'title' => 'between:1,255|nullable',
-            'notes' => 'between:1,65536|nullable',
+            'title' => 'min:1|max:255|nullable',
+            'notes' => 'min:1|max:32768|nullable',
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        if ($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+        }
     }
 }

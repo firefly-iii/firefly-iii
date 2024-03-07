@@ -35,9 +35,6 @@ use Illuminate\Support\Collection;
  */
 interface AvailableBudgetRepositoryInterface
 {
-    /**
-     * @return void
-     */
     public function cleanup(): void;
 
     /**
@@ -45,132 +42,54 @@ interface AvailableBudgetRepositoryInterface
      */
     public function destroyAll(): void;
 
-    /**
-     * @param AvailableBudget $availableBudget
-     */
     public function destroyAvailableBudget(AvailableBudget $availableBudget): void;
 
     /**
      * Find existing AB.
-     *
-     * @param TransactionCurrency $currency
-     * @param Carbon              $start
-     * @param Carbon              $end
-     *
-     * @return AvailableBudget|null
      */
     public function find(TransactionCurrency $currency, Carbon $start, Carbon $end): ?AvailableBudget;
 
-    /**
-     * @param int $id
-     *
-     * @return AvailableBudget|null
-     */
     public function findById(int $id): ?AvailableBudget;
 
     /**
      * Return a list of all available budgets (in all currencies) (for the selected period).
-     *
-     * @param Carbon|null $start
-     * @param Carbon|null $end
-     *
-     * @return Collection
      */
     public function get(?Carbon $start = null, ?Carbon $end = null): Collection;
 
     /**
-     * @param TransactionCurrency $currency
-     * @param Carbon              $start
-     * @param Carbon              $end
-     *
-     * @return string
      * @deprecated
      */
     public function getAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end): string;
 
-    /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
     public function getAvailableBudgetWithCurrency(Carbon $start, Carbon $end): array;
 
     /**
      * Returns all available budget objects.
-     *
-     * @param TransactionCurrency $currency
-     *
-     * @return Collection
      */
     public function getAvailableBudgetsByCurrency(TransactionCurrency $currency): Collection;
 
     /**
      * Returns all available budget objects.
-     *
-     * @param Carbon|null $start
-     * @param Carbon|null $end
-     *
-     * @return Collection
-     *
      */
     public function getAvailableBudgetsByDate(?Carbon $start, ?Carbon $end): Collection;
 
-    /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
-     */
     public function getAvailableBudgetsByExactDate(Carbon $start, Carbon $end): Collection;
 
     /**
      * Get by transaction currency and date. Should always result in one entry or NULL.
-     *
-     * @param Carbon              $start
-     * @param Carbon              $end
-     * @param TransactionCurrency $currency
-     *
-     * @return null|AvailableBudget
      */
     public function getByCurrencyDate(Carbon $start, Carbon $end, TransactionCurrency $currency): ?AvailableBudget;
 
     /**
-     * @param TransactionCurrency $currency
-     * @param Carbon              $start
-     * @param Carbon              $end
-     * @param string              $amount
-     *
-     * @return AvailableBudget
      * @deprecated
      */
     public function setAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end, string $amount): AvailableBudget;
 
-    /**
-     * @param User|Authenticatable|null $user
-     */
-    public function setUser(User | Authenticatable | null $user): void;
+    public function setUser(null|Authenticatable|User $user): void;
 
-    /**
-     * @param array $data
-     *
-     * @return AvailableBudget|null
-     */
     public function store(array $data): ?AvailableBudget;
 
-    /**
-     * @param AvailableBudget $availableBudget
-     * @param array           $data
-     *
-     * @return AvailableBudget
-     */
     public function update(AvailableBudget $availableBudget, array $data): AvailableBudget;
 
-    /**
-     * @param AvailableBudget $availableBudget
-     * @param array           $data
-     *
-     * @return AvailableBudget
-     */
     public function updateAvailableBudget(AvailableBudget $availableBudget, array $data): AvailableBudget;
 }

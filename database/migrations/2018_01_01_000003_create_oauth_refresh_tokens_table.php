@@ -44,6 +44,8 @@ class CreateOauthRefreshTokensTable extends Migration
 
     /**
      * Run the migrations.
+     *
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up(): void
     {
@@ -51,7 +53,7 @@ class CreateOauthRefreshTokensTable extends Migration
             try {
                 Schema::create(
                     'oauth_refresh_tokens',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->string('id', 100)->primary();
                         $table->string('access_token_id', 100)->index();
                         $table->boolean('revoked');

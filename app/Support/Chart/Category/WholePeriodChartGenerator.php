@@ -35,31 +35,24 @@ use Illuminate\Support\Collection;
  */
 class WholePeriodChartGenerator
 {
-    /**
-     * @param Category $category
-     * @param Carbon   $start
-     * @param Carbon   $end
-     *
-     * @return array
-     */
     public function generate(Category $category, Carbon $start, Carbon $end): array
     {
-        $collection = new Collection([$category]);
+        $collection        = new Collection([$category]);
 
         /** @var OperationsRepositoryInterface $opsRepository */
-        $opsRepository = app(OperationsRepositoryInterface::class);
+        $opsRepository     = app(OperationsRepositoryInterface::class);
 
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
 
-        $types     = [AccountType::DEFAULT, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
-        $accounts  = $accountRepository->getAccountsByType($types);
-        $step      = $this->calculateStep($start, $end);
-        $chartData = [];
-        $spent     = [];
-        $earned    = [];
+        $types             = [AccountType::DEFAULT, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
+        $accounts          = $accountRepository->getAccountsByType($types);
+        $step              = $this->calculateStep($start, $end);
+        $chartData         = [];
+        $spent             = [];
+        $earned            = [];
 
-        $current = clone $start;
+        $current           = clone $start;
 
         while ($current <= $end) {
             $key          = $current->format('Y-m-d');
@@ -69,14 +62,14 @@ class WholePeriodChartGenerator
             $current      = app('navigation')->addPeriod($current, $step, 0);
         }
 
-        $currencies = $this->extractCurrencies($spent) + $this->extractCurrencies($earned);
+        $currencies        = $this->extractCurrencies($spent) + $this->extractCurrencies($earned);
 
         // generate chart data (for each currency)
         /** @var array $currency */
         foreach ($currencies as $currency) {
-            $code                                     = $currency['currency_code'];
-            $name                                     = $currency['currency_name'];
-            $chartData[sprintf('spent-in-%s', $code)] = [
+            $code                                      = $currency['currency_code'];
+            $name                                      = $currency['currency_name'];
+            $chartData[sprintf('spent-in-%s', $code)]  = [
                 'label'           => (string)trans('firefly.box_spent_in_currency', ['currency' => $name]),
                 'entries'         => [],
                 'type'            => 'bar',
@@ -91,11 +84,11 @@ class WholePeriodChartGenerator
             ];
         }
 
-        $current = clone $start;
+        $current           = clone $start;
 
         while ($current <= $end) {
-            $key   = $current->format('Y-m-d');
-            $label = app('navigation')->periodShow($current, $step);
+            $key     = $current->format('Y-m-d');
+            $label   = app('navigation')->periodShow($current, $step);
 
             /** @var array $currency */
             foreach ($currencies as $currency) {
@@ -116,11 +109,6 @@ class WholePeriodChartGenerator
 
     /**
      * TODO this method is duplicated
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return string
      */
     protected function calculateStep(Carbon $start, Carbon $end): string
     {
@@ -142,17 +130,13 @@ class WholePeriodChartGenerator
     /**
      * Loop array of spent/earned info, and extract which currencies are present.
      * Key is the currency ID.
-     *
-     * @param array $array
-     *
-     * @return array
      */
     private function extractCurrencies(array $array): array
     {
         $return = [];
         foreach ($array as $block) {
             foreach ($block as $currencyId => $currencyRow) {
-                $return[$currencyId] = $return[$currencyId] ?? [
+                $return[$currencyId] ??= [
                     'currency_id'             => $currencyId,
                     'currency_name'           => $currencyRow['currency_name'],
                     'currency_symbol'         => $currencyRow['currency_symbol'],

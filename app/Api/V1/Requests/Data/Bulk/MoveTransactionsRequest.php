@@ -28,6 +28,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 
 /**
@@ -38,9 +39,6 @@ class MoveTransactionsRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
 
-    /**
-     * @return array
-     */
     public function getAll(): array
     {
         return [
@@ -62,16 +60,12 @@ class MoveTransactionsRequest extends FormRequest
 
     /**
      * Configure the validator instance with special rules for after the basic validation rules.
-     *
-     * @param Validator $validator
      * TODO this is duplicate.
-     *
-     * @return void
      */
     public function withValidator(Validator $validator): void
     {
         $validator->after(
-            function (Validator $validator) {
+            function (Validator $validator): void {
                 // validate start before end only if both are there.
                 $data = $validator->getData();
                 if (array_key_exists('original_account', $data) && array_key_exists('destination_account', $data)) {
@@ -79,20 +73,18 @@ class MoveTransactionsRequest extends FormRequest
                 }
             }
         );
+        if ($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+        }
     }
 
-    /**
-     * @param Validator $validator
-     *
-     * @return void
-     */
     private function validateMove(Validator $validator): void
     {
-        $data       = $validator->getData();
-        $repository = app(AccountRepositoryInterface::class);
+        $data                = $validator->getData();
+        $repository          = app(AccountRepositoryInterface::class);
         $repository->setUser(auth()->user());
-        $original    = $repository->find((int)$data['original_account']);
-        $destination = $repository->find((int)$data['destination_account']);
+        $original            = $repository->find((int)$data['original_account']);
+        $destination         = $repository->find((int)$data['destination_account']);
 
         // not the same type:
         if ($original->accountType->type !== $destination->accountType->type) {

@@ -27,9 +27,6 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournalMeta;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class MigrateJournalNotes
@@ -38,26 +35,14 @@ class MigrateJournalNotes extends Command
 {
     use ShowsFriendlyMessages;
 
-    public const CONFIG_NAME = '480_migrate_notes';
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Migrate notes for transaction journals.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'firefly-iii:migrate-notes {--F|force : Force the execution of this command.}';
+    public const string CONFIG_NAME = '480_migrate_notes';
+
+    protected $description          = 'Migrate notes for transaction journals.';
+
+    protected $signature            = 'firefly-iii:migrate-notes {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
-     *
-     * @return int
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function handle(): int
     {
@@ -71,10 +56,11 @@ class MigrateJournalNotes extends Command
 
         $count = 0;
         $set   = TransactionJournalMeta::whereName('notes')->get();
+
         /** @var TransactionJournalMeta $meta */
         foreach ($set as $meta) {
-            $journal = $meta->transactionJournal;
-            $note    = $journal->notes()->first();
+            $journal    = $meta->transactionJournal;
+            $note       = $journal->notes()->first();
             if (null === $note) {
                 $note = new Note();
                 $note->noteable()->associate($journal);
@@ -82,10 +68,10 @@ class MigrateJournalNotes extends Command
 
             $note->text = $meta->data;
             $note->save();
-            Log::debug(sprintf('Migrated meta note #%d to Note #%d', $meta->id, $note->id));
+            app('log')->debug(sprintf('Migrated meta note #%d to Note #%d', $meta->id, $note->id));
             $meta->delete();
 
-            $count++;
+            ++$count;
         }
 
         if (0 === $count) {
@@ -95,18 +81,13 @@ class MigrateJournalNotes extends Command
             $this->friendlyInfo(sprintf('Migrated %d note(s).', $count));
         }
 
-        $end = round(microtime(true) - $start, 2);
+        $end   = round(microtime(true) - $start, 2);
         $this->friendlyInfo(sprintf('Migrated notes in %s seconds.', $end));
         $this->markAsExecuted();
 
         return 0;
     }
 
-    /**
-     * @return bool
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
@@ -117,9 +98,6 @@ class MigrateJournalNotes extends Command
         return false;
     }
 
-    /**
-     *
-     */
     private function markAsExecuted(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);

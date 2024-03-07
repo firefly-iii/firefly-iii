@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * ShowController.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -27,10 +26,9 @@ namespace FireflyIII\Api\V2\Controllers\Model\Budget;
 
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Generic\DateRequest;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Support\Http\Api\ConvertsExchangeRates;
+use FireflyIII\Transformers\V2\BudgetTransformer;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -39,13 +37,8 @@ use Illuminate\Http\JsonResponse;
  */
 class ShowController extends Controller
 {
-    use ConvertsExchangeRates;
-
     private BudgetRepositoryInterface $repository;
 
-    /**
-     *
-     */
     public function __construct()
     {
         parent::__construct();
@@ -59,30 +52,43 @@ class ShowController extends Controller
     }
 
     /**
+     * 2023-10-29 removed the cerSum reference, not sure where this is used atm
+     * so removed from api.php. Also applies to "spent" method.
+     *
      * This endpoint is documented at:
      * TODO add URL
-     *
      */
     public function budgeted(DateRequest $request, Budget $budget): JsonResponse
     {
-        $data      = $request->getAll();
-        $result    = $this->repository->budgetedInPeriodForBudget($budget, $data['start'], $data['end']);
-        $converted = $this->cerSum(array_values($result));
+        $data   = $request->getAll();
+        $result = $this->repository->budgetedInPeriodForBudget($budget, $data['start'], $data['end']);
 
-        return response()->json($converted);
+        return response()->json($result);
+    }
+
+    /**
+     * Show a budget.
+     */
+    public function show(Budget $budget): JsonResponse
+    {
+        $transformer = new BudgetTransformer();
+        $transformer->setParameters($this->parameters);
+
+        return response()
+            ->api($this->jsonApiObject('budgets', $budget, $transformer))
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
 
     /**
      * This endpoint is documented at:
      * TODO add URL
-     *
      */
     public function spent(DateRequest $request, Budget $budget): JsonResponse
     {
-        $data      = $request->getAll();
-        $result    = $this->repository->spentInPeriodForBudget($budget, $data['start'], $data['end']);
-        $converted = $this->cerSum(array_values($result));
+        $data   = $request->getAll();
+        $result = $this->repository->spentInPeriodForBudget($budget, $data['start'], $data['end']);
 
-        return response()->json($converted);
+        return response()->json($result);
     }
 }

@@ -27,7 +27,6 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class TransferBudgets
@@ -41,24 +40,24 @@ class TransferBudgets extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle(): int
     {
         $set   = TransactionJournal::distinct()
-                                   ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                                   ->leftJoin('budget_transaction_journal', 'transaction_journals.id', '=', 'budget_transaction_journal.transaction_journal_id')
-                                   ->whereNotIn('transaction_types.type', [TransactionType::WITHDRAWAL])
-                                   ->whereNotNull('budget_transaction_journal.budget_id')->get(['transaction_journals.*']);
+            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+            ->leftJoin('budget_transaction_journal', 'transaction_journals.id', '=', 'budget_transaction_journal.transaction_journal_id')
+            ->whereNotIn('transaction_types.type', [TransactionType::WITHDRAWAL])
+            ->whereNotNull('budget_transaction_journal.budget_id')->get(['transaction_journals.*'])
+        ;
         $count = 0;
+
         /** @var TransactionJournal $entry */
         foreach ($set as $entry) {
             $message = sprintf('Transaction journal #%d is a %s, so has no longer a budget.', $entry->id, $entry->transactionType->type);
             $this->friendlyInfo($message);
-            Log::debug($message);
+            app('log')->debug($message);
             $entry->budgets()->sync([]);
-            $count++;
+            ++$count;
         }
         if (0 === $count) {
             $message = 'No invalid budget/journal entries.';
@@ -66,9 +65,10 @@ class TransferBudgets extends Command
         }
         if (0 !== $count) {
             $message = sprintf('Corrected %d invalid budget/journal entries (entry).', $count);
-            Log::debug($message);
+            app('log')->debug($message);
             $this->friendlyInfo($message);
         }
+
         return 0;
     }
 }

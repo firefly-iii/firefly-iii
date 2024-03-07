@@ -23,17 +23,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
-use DB;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
-use Illuminate\Support\Facades\Log;
 
 /**
- *
  * Class SwitchAccounts
  */
 class SwitchAccounts implements ActionInterface
@@ -42,51 +39,51 @@ class SwitchAccounts implements ActionInterface
 
     /**
      * TriggerInterface constructor.
-     *
-     * @param RuleAction $action
      */
     public function __construct(RuleAction $action)
     {
         $this->action = $action;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function actOnArray(array $journal): bool
     {
         // make object from array (so the data is fresh).
-        /** @var TransactionJournal|null $object */
-        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        /** @var null|TransactionJournal $object */
+        $object                        = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         if (null === $object) {
-            Log::error(sprintf('Cannot find journal #%d, cannot switch accounts.', $journal['transaction_journal_id']));
+            app('log')->error(sprintf('Cannot find journal #%d, cannot switch accounts.', $journal['transaction_journal_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_such_journal')));
+
             return false;
         }
-        $groupCount = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
+        $groupCount                    = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
         if ($groupCount > 1) {
-            Log::error(sprintf('Group #%d has more than one transaction in it, cannot switch accounts.', $journal['transaction_group_id']));
+            app('log')->error(sprintf('Group #%d has more than one transaction in it, cannot switch accounts.', $journal['transaction_group_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.split_group')));
+
             return false;
         }
 
-        $type = $object->transactionType->type;
+        $type                          = $object->transactionType->type;
         if (TransactionType::TRANSFER !== $type) {
-            Log::error(sprintf('Journal #%d is NOT a transfer (rule #%d), cannot switch accounts.', $journal['transaction_journal_id'], $this->action->rule_id));
+            app('log')->error(sprintf('Journal #%d is NOT a transfer (rule #%d), cannot switch accounts.', $journal['transaction_journal_id'], $this->action->rule_id));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.is_not_transfer')));
+
             return false;
         }
 
-        /** @var Transaction $sourceTransaction */
-        $sourceTransaction = $object->transactions()->where('amount', '<', 0)->first();
-        /** @var Transaction $destTransaction */
-        $destTransaction = $object->transactions()->where('amount', '>', 0)->first();
+        /** @var null|Transaction $sourceTransaction */
+        $sourceTransaction             = $object->transactions()->where('amount', '<', 0)->first();
+
+        /** @var null|Transaction $destTransaction */
+        $destTransaction               = $object->transactions()->where('amount', '>', 0)->first();
         if (null === $sourceTransaction || null === $destTransaction) {
-            Log::error(sprintf('Journal #%d has no source or destination transaction (rule #%d), cannot switch accounts.', $journal['transaction_journal_id'], $this->action->rule_id));
+            app('log')->error(sprintf('Journal #%d has no source or destination transaction (rule #%d), cannot switch accounts.', $journal['transaction_journal_id'], $this->action->rule_id));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_accounts')));
+
             return false;
         }
-        $sourceAccountId               = (int)$sourceTransaction->account_id;
+        $sourceAccountId               = $sourceTransaction->account_id;
         $destinationAccountId          = $destTransaction->account_id;
         $sourceTransaction->account_id = $destinationAccountId;
         $destTransaction->account_id   = $sourceAccountId;

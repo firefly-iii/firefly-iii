@@ -27,24 +27,18 @@ use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
-use FireflyIII\User;
-use FireflyIII\Validation\Administration\ValidatesAdministrationAccess;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Validator;
 
 /**
  * Class AutocompleteRequest
  */
 class AutocompleteRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     protected array $acceptedRoles = [UserRoleEnum::MANAGE_TRANSACTIONS];
 
-    /**
-     * @return array
-     */
     public function getData(): array
     {
         $types = $this->convertString('types');
@@ -57,8 +51,6 @@ class AutocompleteRequest extends FormRequest
 
         // remove 'initial balance' and another from allowed types. its internal
         $array = array_diff($array, [AccountType::INITIAL_BALANCE, AccountType::RECONCILIATION]);
-        /** @var User $user */
-        $user = auth()->user();
 
         return [
             'types' => $array,
@@ -68,9 +60,6 @@ class AutocompleteRequest extends FormRequest
         ];
     }
 
-    /**
-     * @return array
-     */
     public function rules(): array
     {
         return [

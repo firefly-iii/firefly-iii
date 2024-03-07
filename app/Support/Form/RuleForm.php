@@ -25,8 +25,6 @@ namespace FireflyIII\Support\Form;
 
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
-use Form;
-use Illuminate\Support\HtmlString;
 
 /**
  * Class RuleForm
@@ -36,21 +34,15 @@ class RuleForm
 {
     use FormSupport;
 
-    /**
-     * @param string     $name
-     * @param mixed      $value
-     * @param array|null $options
-     *
-     * @return string
-     */
     public function ruleGroupList(string $name, mixed $value = null, array $options = null): string
     {
         /** @var RuleGroupRepositoryInterface $groupRepos */
         $groupRepos = app(RuleGroupRepositoryInterface::class);
 
         // get all currencies:
-        $list  = $groupRepos->get();
-        $array = [];
+        $list       = $groupRepos->get();
+        $array      = [];
+
         /** @var RuleGroup $group */
         foreach ($list as $group) {
             $array[$group->id] = $group->title;
@@ -60,24 +52,22 @@ class RuleForm
     }
 
     /**
-     * @param string     $name
-     * @param null       $value
-     * @param array|null $options
-     *
-     * @return string
+     * @param null $value
      */
     public function ruleGroupListWithEmpty(string $name, $value = null, array $options = null): string
     {
-        $options          = $options ?? [];
+        $options ??= [];
         $options['class'] = 'form-control';
+
         /** @var RuleGroupRepositoryInterface $groupRepos */
-        $groupRepos = app(RuleGroupRepositoryInterface::class);
+        $groupRepos       = app(RuleGroupRepositoryInterface::class);
 
         // get all currencies:
-        $list  = $groupRepos->get();
-        $array = [
+        $list             = $groupRepos->get();
+        $array            = [
             0 => (string)trans('firefly.none_in_select_list'),
         ];
+
         /** @var RuleGroup $group */
         foreach ($list as $group) {
             if (array_key_exists('hidden', $options) && (int)$options['hidden'] !== $group->id) {

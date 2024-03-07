@@ -39,10 +39,11 @@ class ChangesForV440 extends Migration
     public function down(): void
     {
         Schema::dropIfExists('currency_exchange_rates');
+
         try {
             Schema::table(
                 'transactions',
-                static function (Blueprint $table) {
+                static function (Blueprint $table): void {
                     if (Schema::hasColumn('transactions', 'transaction_currency_id')) {
                         // cannot drop foreign keys in SQLite:
                         if ('sqlite' !== config('database.default')) {
@@ -52,7 +53,7 @@ class ChangesForV440 extends Migration
                     }
                 }
             );
-        } catch (QueryException | ColumnDoesNotExist $e) {
+        } catch (ColumnDoesNotExist|QueryException $e) {
             app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
             app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
         }
@@ -61,6 +62,7 @@ class ChangesForV440 extends Migration
     /**
      * Run the migrations.
      *
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up(): void
     {
@@ -68,7 +70,7 @@ class ChangesForV440 extends Migration
             try {
                 Schema::create(
                     'currency_exchange_rates',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->softDeletes();
@@ -93,7 +95,7 @@ class ChangesForV440 extends Migration
             try {
                 Schema::table(
                     'transactions',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         if (!Schema::hasColumn('transactions', 'transaction_currency_id')) {
                             $table->integer('transaction_currency_id', false, true)->after('description')->nullable();
                             $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('set null');

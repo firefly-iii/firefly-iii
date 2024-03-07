@@ -32,7 +32,6 @@ use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -66,8 +65,6 @@ class ShowController extends Controller
     }
 
     /**
-     * @param TransactionGroup $transactionGroup
-     *
      * @return JsonResponse
      */
     public function debugShow(TransactionGroup $transactionGroup)
@@ -76,36 +73,34 @@ class ShowController extends Controller
     }
 
     /**
-     * @param Request          $request
-     * @param TransactionGroup $transactionGroup
-     *
      * @return Factory|View
+     *
      * @throws FireflyException
      */
-    public function show(Request $request, TransactionGroup $transactionGroup)
+    public function show(TransactionGroup $transactionGroup)
     {
-        /** @var TransactionJournal $first */
-        $first  = $transactionGroup->transactionJournals()->first(['transaction_journals.*']);
-        $splits = $transactionGroup->transactionJournals()->count();
+        /** @var null|TransactionJournal $first */
+        $first           = $transactionGroup->transactionJournals()->first(['transaction_journals.*']);
+        $splits          = $transactionGroup->transactionJournals()->count();
 
         if (null === $first) {
             throw new FireflyException('This transaction is broken :(.');
         }
 
-        $type     = (string)trans(sprintf('firefly.%s', $first->transactionType->type));
-        $title    = 1 === $splits ? $first->description : $transactionGroup->title;
-        $subTitle = sprintf('%s: "%s"', $type, $title);
+        $type            = (string)trans(sprintf('firefly.%s', $first->transactionType->type));
+        $title           = 1 === $splits ? $first->description : $transactionGroup->title;
+        $subTitle        = sprintf('%s: "%s"', $type, $title);
 
         /** @var TransactionGroupTransformer $transformer */
-        $transformer = app(TransactionGroupTransformer::class);
+        $transformer     = app(TransactionGroupTransformer::class);
         $transformer->setParameters(new ParameterBag());
-        $groupArray = $transformer->transformObject($transactionGroup);
+        $groupArray      = $transformer->transformObject($transactionGroup);
 
         // do some calculations:
-        $amounts  = $this->getAmounts($groupArray);
-        $accounts = $this->getAccounts($groupArray);
+        $amounts         = $this->getAmounts($groupArray);
+        $accounts        = $this->getAccounts($groupArray);
 
-        foreach ($groupArray['transactions'] as $index => $transaction) {
+        foreach (array_keys($groupArray['transactions']) as $index) {
             $groupArray['transactions'][$index]['tags'] = $this->repository->getTagObjects(
                 $groupArray['transactions'][$index]['transaction_journal_id']
             );
@@ -118,10 +113,9 @@ class ShowController extends Controller
             $logEntries[$journal->id] = $this->aleRepository->getForObject($journal);
         }
 
-        $events      = $this->repository->getPiggyEvents($transactionGroup);
-        $attachments = $this->repository->getAttachments($transactionGroup);
-        $links       = $this->repository->getLinks($transactionGroup);
-
+        $events          = $this->repository->getPiggyEvents($transactionGroup);
+        $attachments     = $this->repository->getAttachments($transactionGroup);
+        $links           = $this->repository->getLinks($transactionGroup);
 
         return view(
             'transactions.show',
@@ -143,16 +137,11 @@ class ShowController extends Controller
         );
     }
 
-    /**
-     * @param array $group
-     *
-     * @return array
-     */
     private function getAmounts(array $group): array
     {
         $amounts = [];
         foreach ($group['transactions'] as $transaction) {
-            $symbol = $transaction['currency_symbol'];
+            $symbol                     = $transaction['currency_symbol'];
             if (!array_key_exists($symbol, $amounts)) {
                 $amounts[$symbol] = [
                     'amount'         => '0',
@@ -162,12 +151,12 @@ class ShowController extends Controller
             }
             $amounts[$symbol]['amount'] = bcadd($amounts[$symbol]['amount'], $transaction['amount']);
             if (null !== $transaction['foreign_amount'] && '' !== $transaction['foreign_amount']
-                && bccomp(
+                && 0 !== bccomp(
                     '0',
                     $transaction['foreign_amount']
-                ) !== 0) {
+                )) {
                 // same for foreign currency:
-                $foreignSymbol = $transaction['foreign_currency_symbol'];
+                $foreignSymbol                     = $transaction['foreign_currency_symbol'];
                 if (!array_key_exists($foreignSymbol, $amounts)) {
                     $amounts[$foreignSymbol] = [
                         'amount'         => '0',
@@ -185,14 +174,12 @@ class ShowController extends Controller
         return $amounts;
     }
 
-    /**
-     * @param array $group
-     *
-     * @return array
-     */
     private function getAccounts(array $group): array
     {
-        $accounts = [];
+        $accounts                = [
+            'source'      => [],
+            'destination' => [],
+        ];
 
         foreach ($group['transactions'] as $transaction) {
             $accounts['source'][]      = [

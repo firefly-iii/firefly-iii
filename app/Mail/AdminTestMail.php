@@ -31,8 +31,6 @@ use Illuminate\Queue\SerializesModels;
  * Class AdminTestMail.
  *
  * Sends a test mail to administrators.
- *
-
  */
 class AdminTestMail extends Mailable
 {
@@ -44,9 +42,7 @@ class AdminTestMail extends Mailable
     /**
      * AdminTestMail constructor.
      */
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     /**
      * Build the message.
@@ -57,6 +53,7 @@ class AdminTestMail extends Mailable
     {
         return $this
             ->markdown('emails.admin-test')
-            ->subject((string)trans('email.admin_test_subject'));
+            ->subject((string)trans('email.admin_test_subject'))
+        ;
     }
 }

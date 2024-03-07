@@ -31,9 +31,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
-use JsonException;
-use Throwable;
 
 /**
  * Class MonthReportGenerator.
@@ -47,15 +44,14 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Generates the report.
      *
-     * @return string
      * @throws FireflyException
-     * @throws JsonException
      */
     public function generate(): string
     {
-        $auditData = [];
-        $dayBefore = clone $this->start;
+        $auditData   = [];
+        $dayBefore   = clone $this->start;
         $dayBefore->subDay();
+
         /** @var Account $account */
         foreach ($this->accounts as $account) {
             // balance the day before:
@@ -93,14 +89,17 @@ class MonthReportGenerator implements ReportGeneratorInterface
             'payment_date',
             'invoice_date',
         ];
+
         try {
             $result = view('reports.audit.report', compact('reportType', 'accountIds', 'auditData', 'hideable', 'defaultShow'))
                 ->with('start', $this->start)->with('end', $this->end)->with('accounts', $this->accounts)
-                ->render();
-        } catch (Throwable $e) {
-            Log::error(sprintf('Cannot render reports.audit.report: %s', $e->getMessage()));
-            Log::error($e->getTraceAsString());
+                ->render()
+            ;
+        } catch (\Throwable $e) {
+            app('log')->error(sprintf('Cannot render reports.audit.report: %s', $e->getMessage()));
+            app('log')->error($e->getTraceAsString());
             $result = sprintf('Could not render report view: %s', $e->getMessage());
+
             throw new FireflyException($result, 0, $e);
         }
 
@@ -110,12 +109,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Get the audit report.
      *
-     * @param Account $account
-     * @param Carbon  $date
-     *
-     * @return array
      * @throws FireflyException
-     * @throws JsonException
      */
     public function getAuditReport(Account $account, Carbon $date): array
     {
@@ -128,15 +122,16 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $journalRepository->setUser($account->user);
 
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector         = app(GroupCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setRange($this->start, $this->end)->withAccountInformation()
-                  ->withBudgetInformation()->withCategoryInformation()->withBillInformation();
-        $journals         = $collector->getExtractedJournals();
-        $journals         = array_reverse($journals, true);
-        $dayBeforeBalance = app('steam')->balance($account, $date);
-        $startBalance     = $dayBeforeBalance;
-        $defaultCurrency  = app('amount')->getDefaultCurrencyByUser($account->user);
-        $currency         = $accountRepository->getAccountCurrency($account) ?? $defaultCurrency;
+            ->withBudgetInformation()->withCategoryInformation()->withBillInformation()
+        ;
+        $journals          = $collector->getExtractedJournals();
+        $journals          = array_reverse($journals, true);
+        $dayBeforeBalance  = app('steam')->balance($account, $date);
+        $startBalance      = $dayBeforeBalance;
+        $defaultCurrency   = app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
+        $currency          = $accountRepository->getAccountCurrency($account) ?? $defaultCurrency;
 
         foreach ($journals as $index => $journal) {
             $journals[$index]['balance_before'] = $startBalance;
@@ -154,19 +149,19 @@ class MonthReportGenerator implements ReportGeneratorInterface
                 }
             }
 
-            $newBalance                        = bcadd($startBalance, $transactionAmount);
-            $journals[$index]['balance_after'] = $newBalance;
-            $startBalance                      = $newBalance;
+            $newBalance                         = bcadd($startBalance, $transactionAmount);
+            $journals[$index]['balance_after']  = $newBalance;
+            $startBalance                       = $newBalance;
 
             // add meta dates for each journal.
-            $journals[$index]['interest_date'] = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'interest_date');
-            $journals[$index]['book_date']     = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'book_date');
-            $journals[$index]['process_date']  = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'process_date');
-            $journals[$index]['due_date']      = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'due_date');
-            $journals[$index]['payment_date']  = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'payment_date');
-            $journals[$index]['invoice_date']  = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'invoice_date');
+            $journals[$index]['interest_date']  = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'interest_date');
+            $journals[$index]['book_date']      = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'book_date');
+            $journals[$index]['process_date']   = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'process_date');
+            $journals[$index]['due_date']       = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'due_date');
+            $journals[$index]['payment_date']   = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'payment_date');
+            $journals[$index]['invoice_date']   = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'invoice_date');
         }
-        $locale = app('steam')->getLocale();
+        $locale            = app('steam')->getLocale();
 
         return [
             'journals'         => $journals,
@@ -181,10 +176,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
     /**
      * Account collection setter.
-     *
-     * @param Collection $accounts
-     *
-     * @return ReportGeneratorInterface
      */
     public function setAccounts(Collection $accounts): ReportGeneratorInterface
     {
@@ -195,10 +186,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
     /**
      * Budget collection setter.
-     *
-     * @param Collection $budgets
-     *
-     * @return ReportGeneratorInterface
      */
     public function setBudgets(Collection $budgets): ReportGeneratorInterface
     {
@@ -207,10 +194,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
     /**
      * Category collection setter.
-     *
-     * @param Collection $categories
-     *
-     * @return ReportGeneratorInterface
      */
     public function setCategories(Collection $categories): ReportGeneratorInterface
     {
@@ -219,10 +202,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
     /**
      * End date setter.
-     *
-     * @param Carbon $date
-     *
-     * @return ReportGeneratorInterface
      */
     public function setEndDate(Carbon $date): ReportGeneratorInterface
     {
@@ -233,10 +212,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
     /**
      * Expenses collection setter.
-     *
-     * @param Collection $expense
-     *
-     * @return ReportGeneratorInterface
      */
     public function setExpense(Collection $expense): ReportGeneratorInterface
     {
@@ -246,10 +221,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
     /**
      * Start date collection setter.
-     *
-     * @param Carbon $date
-     *
-     * @return ReportGeneratorInterface
      */
     public function setStartDate(Carbon $date): ReportGeneratorInterface
     {
@@ -260,10 +231,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
     /**
      * Tags collection setter.
-     *
-     * @param Collection $tags
-     *
-     * @return ReportGeneratorInterface
      */
     public function setTags(Collection $tags): ReportGeneratorInterface
     {

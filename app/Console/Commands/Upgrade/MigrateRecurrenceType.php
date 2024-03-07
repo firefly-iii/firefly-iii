@@ -25,12 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
-use FireflyIII\Models\Recurrence;
-use FireflyIII\Models\RecurrenceTransaction;
-use FireflyIII\Models\TransactionType;
 use Illuminate\Console\Command;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class MigrateRecurrenceType
@@ -39,26 +34,14 @@ class MigrateRecurrenceType extends Command
 {
     use ShowsFriendlyMessages;
 
-    public const CONFIG_NAME = '550_migrate_recurrence_type';
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Migrate transaction type of recurring transaction.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'firefly-iii:migrate-recurrence-type {--F|force : Force the execution of this command.}';
+    public const string CONFIG_NAME = '550_migrate_recurrence_type';
+
+    protected $description          = 'Migrate transaction type of recurring transaction.';
+
+    protected $signature            = 'firefly-iii:migrate-recurrence-type {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
-     *
-     * @return int
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function handle(): int
     {
@@ -67,69 +50,19 @@ class MigrateRecurrenceType extends Command
 
             return 0;
         }
-
-        $this->migrateTypes();
+        $this->friendlyWarning('This command has been disabled.');
         $this->markAsExecuted();
-
 
         return 0;
     }
 
-    /**
-     * @return bool
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
+
         return (bool)$configVar?->data;
     }
 
-    /**
-     *
-     */
-    private function migrateTypes(): void
-    {
-        $set = Recurrence::get();
-        /** @var Recurrence $recurrence */
-        foreach ($set as $recurrence) {
-            if ($recurrence->transactionType->type !== TransactionType::INVALID) {
-                $this->migrateRecurrence($recurrence);
-            }
-        }
-    }
-
-    /**
-     * @param Recurrence $recurrence
-     *
-     * @return void
-     */
-    private function migrateRecurrence(Recurrence $recurrence): void
-    {
-        $originalType                    = (int)$recurrence->transaction_type_id;
-        $newType                         = $this->getInvalidType();
-        $recurrence->transaction_type_id = $newType->id;
-        $recurrence->save();
-        /** @var RecurrenceTransaction $transaction */
-        foreach ($recurrence->recurrenceTransactions as $transaction) {
-            $transaction->transaction_type_id = $originalType;
-            $transaction->save();
-        }
-        $this->friendlyInfo(sprintf('Updated recurrence #%d to new transaction type model.', $recurrence->id));
-    }
-
-    /**
-     *
-     */
-    private function getInvalidType(): TransactionType
-    {
-        return TransactionType::whereType(TransactionType::INVALID)->firstOrCreate(['type' => TransactionType::INVALID]);
-    }
-
-    /**
-     *
-     */
     private function markAsExecuted(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);

@@ -26,7 +26,6 @@ use FireflyIII\Http\Middleware\EncryptCookies;
 use FireflyIII\Http\Middleware\VerifyCsrfToken;
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Stateful Domains
@@ -38,7 +37,7 @@ return [
     |
     */
 
-    'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', '')),
+    'stateful'   => explode(',', env('SANCTUM_STATEFUL_DOMAINS', '')),
 
     /*
     |--------------------------------------------------------------------------
@@ -52,7 +51,7 @@ return [
     |
     */
 
-    'guard' => [env('AUTHENTICATION_GUARD', 'web')],
+    'guard'      => [env('AUTHENTICATION_GUARD', 'web')],
 
     /*
     |--------------------------------------------------------------------------
@@ -82,5 +81,4 @@ return [
         'verify_csrf_token' => VerifyCsrfToken::class,
         'encrypt_cookies'   => EncryptCookies::class,
     ],
-
 ];

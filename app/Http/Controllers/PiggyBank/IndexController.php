@@ -36,7 +36,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use JsonException;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -50,8 +49,6 @@ class IndexController extends Controller
 
     /**
      * PiggyBankController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -74,52 +71,52 @@ class IndexController extends Controller
      *
      * TODO very complicated function.
      *
-     * @param Request $request
-     *
      * @return Factory|View
+     *
      * @throws FireflyException
-     * @throws JsonException
      */
-    public function index(Request $request)
+    public function index()
     {
         $this->cleanupObjectGroups();
         $this->piggyRepos->resetOrder();
-        $collection = $this->piggyRepos->getPiggyBanks();
-        $accounts   = [];
+        $collection         = $this->piggyRepos->getPiggyBanks();
+        $accounts           = [];
+
         /** @var Carbon $end */
-        $end = session('end', today(config('app.timezone'))->endOfMonth());
+        $end                = session('end', today(config('app.timezone'))->endOfMonth());
 
         // transform piggies using the transformer:
-        $parameters = new ParameterBag();
+        $parameters         = new ParameterBag();
         $parameters->set('end', $end);
 
         // make piggy bank groups:
-        $piggyBanks = [];
+        $piggyBanks         = [];
 
         /** @var PiggyBankTransformer $transformer */
-        $transformer = app(PiggyBankTransformer::class);
+        $transformer        = app(PiggyBankTransformer::class);
         $transformer->setParameters(new ParameterBag());
 
         /** @var AccountTransformer $accountTransformer */
         $accountTransformer = app(AccountTransformer::class);
         $accountTransformer->setParameters($parameters);
+
         /** @var PiggyBank $piggy */
         foreach ($collection as $piggy) {
-            $array      = $transformer->transform($piggy);
-            $groupOrder = (int)$array['object_group_order'];
+            $array                                    = $transformer->transform($piggy);
+            $groupOrder                               = (int)$array['object_group_order'];
             // make group array if necessary:
-            $piggyBanks[$groupOrder] = $piggyBanks[$groupOrder] ?? [
+            $piggyBanks[$groupOrder] ??= [
                 'object_group_id'    => $array['object_group_id'] ?? 0,
                 'object_group_title' => $array['object_group_title'] ?? trans('firefly.default_group_title_name'),
                 'piggy_banks'        => [],
             ];
 
-            $account              = $accountTransformer->transform($piggy->account);
-            $accountId            = (int)$account['id'];
-            $array['attachments'] = $this->piggyRepos->getAttachments($piggy);
+            $account                                  = $accountTransformer->transform($piggy->account);
+            $accountId                                = (int)$account['id'];
+            $array['attachments']                     = $this->piggyRepos->getAttachments($piggy);
             if (!array_key_exists($accountId, $accounts)) {
                 // create new:
-                $accounts[$accountId] = $account;
+                $accounts[$accountId]            = $account;
 
                 // add some interesting details:
                 $accounts[$accountId]['left']    = $accounts[$accountId]['current_balance'];
@@ -137,26 +134,21 @@ class IndexController extends Controller
             $piggyBanks[$groupOrder]['piggy_banks'][] = $array;
         }
         // do a bunch of summaries.
-        $piggyBanks = $this->makeSums($piggyBanks);
+        $piggyBanks         = $this->makeSums($piggyBanks);
 
         ksort($piggyBanks);
 
         return view('piggy-banks.index', compact('piggyBanks', 'accounts'));
     }
 
-    /**
-     * @param array $piggyBanks
-     *
-     * @return array
-     */
     private function makeSums(array $piggyBanks): array
     {
         $sums = [];
         foreach ($piggyBanks as $groupOrder => $group) {
             $groupId = $group['object_group_id'];
             foreach ($group['piggy_banks'] as $piggy) {
-                $currencyId                  = $piggy['currency_id'];
-                $sums[$groupId][$currencyId] = $sums[$groupId][$currencyId] ?? [
+                $currencyId                                    = $piggy['currency_id'];
+                $sums[$groupId][$currencyId] ??= [
                     'target'                  => '0',
                     'saved'                   => '0',
                     'left_to_save'            => '0',
@@ -186,11 +178,6 @@ class IndexController extends Controller
 
     /**
      * Set the order of a piggy bank.
-     *
-     * @param Request   $request
-     * @param PiggyBank $piggyBank
-     *
-     * @return JsonResponse
      */
     public function setOrder(Request $request, PiggyBank $piggyBank): JsonResponse
     {

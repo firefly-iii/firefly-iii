@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * DestroyController.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -31,7 +30,6 @@ use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\UserGroup\UserGroupRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -41,9 +39,6 @@ class DestroyController extends Controller
 {
     private UserGroupRepositoryInterface $repository;
 
-    /**
-     *
-     */
     public function __construct()
     {
         parent::__construct();
@@ -56,22 +51,18 @@ class DestroyController extends Controller
         );
     }
 
-    /**
-     * @param Request   $request
-     * @param UserGroup $userGroup
-     *
-     * @return JsonResponse
-     */
-    public function destroy(Request $request, UserGroup $userGroup): JsonResponse
+    public function destroy(UserGroup $userGroup): JsonResponse
     {
         /** @var User $user */
-        $user = auth()->user();
+        $user   = auth()->user();
+        // to access this function: must be group owner or sysadmin.
         // need owner role or system owner role to delete user group.
-        $access = $user->hasRoleInGroup($userGroup, UserRoleEnum::OWNER, false, true);
+        $access = $user->hasSpecificRoleInGroup($userGroup, UserRoleEnum::OWNER) || $user->hasRole('owner');
         if (false === $access) {
             throw new NotFoundHttpException();
         }
         $this->repository->destroy($userGroup);
+
         return response()->json([], 204);
     }
 }

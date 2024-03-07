@@ -44,8 +44,6 @@ class ShowController extends Controller
 
     /**
      * AvailableBudgetController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -68,18 +66,17 @@ class ShowController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function index(): JsonResponse
     {
-        $manager = $this->getManager();
+        $manager          = $this->getManager();
 
         // types to get, page size:
-        $pageSize = $this->parameters->get('limit');
+        $pageSize         = $this->parameters->get('limit');
 
-        $start = $this->parameters->get('start');
-        $end   = $this->parameters->get('end');
+        $start            = $this->parameters->get('start');
+        $end              = $this->parameters->get('end');
 
         // get list of available budgets. Count it and split it.
         $collection       = $this->abRepository->getAvailableBudgetsByDate($start, $end);
@@ -87,14 +84,14 @@ class ShowController extends Controller
         $availableBudgets = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
-        $paginator = new LengthAwarePaginator($availableBudgets, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.available-budgets.index') . $this->buildParams());
+        $paginator        = new LengthAwarePaginator($availableBudgets, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.available-budgets.index').$this->buildParams());
 
         /** @var AvailableBudgetTransformer $transformer */
-        $transformer = app(AvailableBudgetTransformer::class);
+        $transformer      = app(AvailableBudgetTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($availableBudgets, $transformer, 'available_budgets');
+        $resource         = new FractalCollection($availableBudgets, $transformer, 'available_budgets');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -105,20 +102,16 @@ class ShowController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/available_budgets/getAvailableBudget
      *
      * Display the specified resource.
-     *
-     * @param AvailableBudget $availableBudget
-     *
-     * @return JsonResponse
      */
     public function show(AvailableBudget $availableBudget): JsonResponse
     {
-        $manager = $this->getManager();
+        $manager     = $this->getManager();
 
         /** @var AvailableBudgetTransformer $transformer */
         $transformer = app(AvailableBudgetTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($availableBudget, $transformer, 'available_budgets');
+        $resource    = new Item($availableBudget, $transformer, 'available_budgets');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

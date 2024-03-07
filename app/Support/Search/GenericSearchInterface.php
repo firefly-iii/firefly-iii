@@ -31,8 +31,5 @@ use Illuminate\Support\Collection;
  */
 interface GenericSearchInterface
 {
-    /**
-     * @return Collection
-     */
     public function search(): Collection;
 }

@@ -28,7 +28,6 @@ use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class NewIPAddressWarningMail
@@ -44,8 +43,6 @@ class NewIPAddressWarningMail extends Mailable
 
     /**
      * OAuthTokenCreatedMail constructor.
-     *
-     * @param string $ipAddress
      */
     public function __construct(string $ipAddress)
     {
@@ -61,10 +58,11 @@ class NewIPAddressWarningMail extends Mailable
     {
         $this->time = now(config('app.timezone'))->isoFormat((string)trans('config.date_time_js'));
         $this->host = '';
+
         try {
             $hostName = app('steam')->getHostName($this->ipAddress);
         } catch (FireflyException $e) {
-            Log::error($e->getMessage());
+            app('log')->error($e->getMessage());
             $hostName = $this->ipAddress;
         }
         if ($hostName !== $this->ipAddress) {
@@ -73,6 +71,7 @@ class NewIPAddressWarningMail extends Mailable
 
         return $this
             ->markdown('emails.new-ip')
-            ->subject((string)trans('email.login_from_new_ip'));
+            ->subject((string)trans('email.login_from_new_ip'))
+        ;
     }
 }

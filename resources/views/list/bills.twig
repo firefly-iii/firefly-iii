@@ -80,7 +80,9 @@
                             {{ trans('firefly.not_expected_period') }}
                         </td>
                         <td class="expected_in_period hidden-sm hidden-xs">
-                            {{ formatDate(entry.next_expected_match, monthAndDayFormat) }}
+                            {% if entry.next_expected_match %}
+                                {{ formatDate(entry.next_expected_match, monthAndDayFormat) }}
+                            {% endif %}
                         </td>
                     {% endif %}
 
@@ -92,7 +94,8 @@
                     #}
                     {% if entry.paid_dates|length == 0 and entry.pay_dates|length > 0 and entry.active %}
                         <td class="paid_in_period text-warning">
-                            {{ trans('firefly.bill_expected_date', {date: entry.next_expected_match_diff }) }}
+                            {{ entry.next_expected_match_diff }}
+                            <!-- {{ trans('firefly.bill_expected_date', {date: entry.next_expected_match_diff }) }} -->
                         </td>
                         <td class="expected_in_period hidden-sm hidden-xs">
                             {% for date in entry.pay_dates %}
@@ -116,7 +119,9 @@
                             {% endfor %}
                         </td>
                         <td class="expected_in_period hidden-sm hidden-xs">
-                            {{ formatDate(entry.next_expected_match, monthAndDayFormat) }}
+                            {% if entry.next_expected_match %}
+                                {{ formatDate(entry.next_expected_match, monthAndDayFormat) }}
+                            {% endif %}
                         </td>
                     {% endif %}
                     {# bill is not active #}

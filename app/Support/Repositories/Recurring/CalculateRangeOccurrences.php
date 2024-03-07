@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Repositories\Recurring;
 
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Trait CalculateRangeOccurrences
@@ -35,12 +34,6 @@ trait CalculateRangeOccurrences
     /**
      * Get the number of daily occurrences for a recurring transaction until date $end is reached. Will skip every
      * $skipMod-1 occurrences.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     * @param int    $skipMod
-     *
-     * @return array
      */
     protected function getDailyInRange(Carbon $start, Carbon $end, int $skipMod): array
     {
@@ -51,7 +44,7 @@ trait CalculateRangeOccurrences
                 $return[] = clone $start;
             }
             $start->addDay();
-            $attempts++;
+            ++$attempts;
         }
 
         return $return;
@@ -60,14 +53,6 @@ trait CalculateRangeOccurrences
     /**
      * Get the number of daily occurrences for a recurring transaction until date $end is reached. Will skip every
      * $skipMod-1 occurrences.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     * @param int    $skipMod
-     * @param string $moment
-     *
-     * @return array
-     *
      */
     protected function getMonthlyInRange(Carbon $start, Carbon $end, int $skipMod, string $moment): array
     {
@@ -84,7 +69,7 @@ trait CalculateRangeOccurrences
             if (0 === $attempts % $skipMod && $start->lte($start) && $end->gte($start)) {
                 $return[] = clone $start;
             }
-            $attempts++;
+            ++$attempts;
             $start->endOfMonth()->startOfDay()->addDay();
         }
 
@@ -94,22 +79,15 @@ trait CalculateRangeOccurrences
     /**
      * Get the number of daily occurrences for a recurring transaction until date $end is reached. Will skip every
      * $skipMod-1 occurrences.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     * @param int    $skipMod
-     * @param string $moment
-     *
-     * @return array
      */
     protected function getNdomInRange(Carbon $start, Carbon $end, int $skipMod, string $moment): array
     {
-        $return   = [];
-        $attempts = 0;
+        $return     = [];
+        $attempts   = 0;
         $start->startOfMonth();
         // this feels a bit like a cop out but why reinvent the wheel?
-        $counters   = [1 => 'first', 2 => 'second', 3 => 'third', 4 => 'fourth', 5 => 'fifth',];
-        $daysOfWeek = [1 => 'Monday', 2 => 'Tuesday', 3 => 'Wednesday', 4 => 'Thursday', 5 => 'Friday', 6 => 'Saturday', 7 => 'Sunday',];
+        $counters   = [1 => 'first', 2 => 'second', 3 => 'third', 4 => 'fourth', 5 => 'fifth'];
+        $daysOfWeek = [1 => 'Monday', 2 => 'Tuesday', 3 => 'Wednesday', 4 => 'Thursday', 5 => 'Friday', 6 => 'Saturday', 7 => 'Sunday'];
         $parts      = explode(',', $moment);
         while ($start <= $end) {
             $string    = sprintf('%s %s of %s %s', $counters[$parts[0]], $daysOfWeek[$parts[1]], $start->format('F'), $start->format('Y'));
@@ -117,7 +95,7 @@ trait CalculateRangeOccurrences
             if (0 === $attempts % $skipMod) {
                 $return[] = clone $newCarbon;
             }
-            $attempts++;
+            ++$attempts;
             $start->endOfMonth()->addDay();
         }
 
@@ -127,43 +105,35 @@ trait CalculateRangeOccurrences
     /**
      * Get the number of daily occurrences for a recurring transaction until date $end is reached. Will skip every
      * $skipMod-1 occurrences.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     * @param int    $skipMod
-     * @param string $moment
-     *
-     * @return array
-     *
      */
     protected function getWeeklyInRange(Carbon $start, Carbon $end, int $skipMod, string $moment): array
     {
-        $return   = [];
-        $attempts = 0;
-        Log::debug('Rep is weekly.');
+        $return        = [];
+        $attempts      = 0;
+        app('log')->debug('Rep is weekly.');
         // monday = 1
         // sunday = 7
-        $dayOfWeek = (int)$moment;
-        Log::debug(sprintf('DoW in repetition is %d, in mutator is %d', $dayOfWeek, $start->dayOfWeekIso));
+        $dayOfWeek     = (int)$moment;
+        app('log')->debug(sprintf('DoW in repetition is %d, in mutator is %d', $dayOfWeek, $start->dayOfWeekIso));
         if ($start->dayOfWeekIso > $dayOfWeek) {
             // day has already passed this week, add one week:
             $start->addWeek();
-            Log::debug(sprintf('Jump to next week, so mutator is now: %s', $start->format('Y-m-d')));
+            app('log')->debug(sprintf('Jump to next week, so mutator is now: %s', $start->format('Y-m-d')));
         }
         // today is wednesday (3), expected is friday (5): add two days.
         // today is friday (5), expected is monday (1), subtract four days.
-        Log::debug(sprintf('Mutator is now: %s', $start->format('Y-m-d')));
+        app('log')->debug(sprintf('Mutator is now: %s', $start->format('Y-m-d')));
         $dayDifference = $dayOfWeek - $start->dayOfWeekIso;
         $start->addDays($dayDifference);
-        Log::debug(sprintf('Mutator is now: %s', $start->format('Y-m-d')));
+        app('log')->debug(sprintf('Mutator is now: %s', $start->format('Y-m-d')));
         while ($start <= $end) {
             if (0 === $attempts % $skipMod && $start->lte($start) && $end->gte($start)) {
-                Log::debug('Date is in range of start+end, add to set.');
+                app('log')->debug('Date is in range of start+end, add to set.');
                 $return[] = clone $start;
             }
-            $attempts++;
+            ++$attempts;
             $start->addWeek();
-            Log::debug(sprintf('Mutator is now (end of loop): %s', $start->format('Y-m-d')));
+            app('log')->debug(sprintf('Mutator is now (end of loop): %s', $start->format('Y-m-d')));
         }
 
         return $return;
@@ -172,14 +142,6 @@ trait CalculateRangeOccurrences
     /**
      * Get the number of daily occurrences for a recurring transaction until date $end is reached. Will skip every
      * $skipMod-1 occurrences.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     * @param int    $skipMod
-     * @param string $moment
-     *
-     * @return array
-     *
      */
     protected function getYearlyInRange(Carbon $start, Carbon $end, int $skipMod, string $moment): array
     {
@@ -192,15 +154,15 @@ trait CalculateRangeOccurrences
         }
 
         // is $date between $start and $end?
-        $obj   = clone $date;
-        $count = 0;
+        $obj        = clone $date;
+        $count      = 0;
         while ($obj <= $end && $obj >= $start && $count < 10) {
             if (0 === $attempts % $skipMod) {
                 $return[] = clone $obj;
             }
             $obj->addYears();
-            $count++;
-            $attempts++;
+            ++$count;
+            ++$attempts;
         }
 
         return $return;

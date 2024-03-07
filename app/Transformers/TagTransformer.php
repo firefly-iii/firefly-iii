@@ -35,15 +35,12 @@ class TagTransformer extends AbstractTransformer
      * Transform a tag.
      *
      * TODO add spent, earned, transferred, etc.
-     *
-     * @param Tag $tag
-     *
-     * @return array
      */
     public function transform(Tag $tag): array
     {
-        $date = $tag->date?->format('Y-m-d');
-        /** @var Location $location */
+        $date      = $tag->date?->format('Y-m-d');
+
+        /** @var null|Location $location */
         $location  = $tag->locations()->first();
         $latitude  = null;
         $longitude = null;
@@ -55,7 +52,7 @@ class TagTransformer extends AbstractTransformer
         }
 
         return [
-            'id'          => (int)$tag->id,
+            'id'          => $tag->id,
             'created_at'  => $tag->created_at->toAtomString(),
             'updated_at'  => $tag->updated_at->toAtomString(),
             'tag'         => $tag->tag,
@@ -67,7 +64,7 @@ class TagTransformer extends AbstractTransformer
             'links'       => [
                 [
                     'rel' => 'self',
-                    'uri' => '/tags/' . $tag->id,
+                    'uri' => '/tags/'.$tag->id,
                 ],
             ],
         ];

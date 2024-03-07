@@ -2,8 +2,11 @@
     "firefly": {
         "welcome_back": "Hoe staat het er voor?",
         "flash_error": "Fout!",
+        "flash_warning": "Waarschuwing!",
         "flash_success": "Gelukt!",
         "close": "Sluiten",
+        "select_dest_account": "Please select or type a valid destination account name",
+        "select_source_account": "Please select or type a valid source account name",
         "split_transaction_title": "Beschrijving van de gesplitste transactie",
         "errors_submission": "Er ging iets mis. Check de errors.",
         "split": "Splitsen",
@@ -24,11 +27,13 @@
         "destination_account": "Doelrekening",
         "add_another_split": "Voeg een split toe",
         "submission": "Indienen",
+        "stored_journal": "Nieuw transactie \":description\" opgeslagen",
         "create_another": "Terug naar deze pagina voor een nieuwe transactie.",
         "reset_after": "Reset formulier na opslaan",
         "submit": "Invoeren",
         "amount": "Bedrag",
         "date": "Datum",
+        "is_reconciled_fields_dropped": "Omdat deze transactie al is afgestemd, kan je het bedrag noch de rekeningen wijzigen.",
         "tags": "Tags",
         "no_budget": "(geen budget)",
         "no_bill": "(geen contract)",
@@ -152,6 +157,6 @@
     },
     "config": {
         "html_language": "nl",
-        "date_time_fns": "D MMMM yyyy @ HH:mm:ss"
+        "date_time_fns": "d MMMM yyyy @ HH:mm:ss"
     }
 }

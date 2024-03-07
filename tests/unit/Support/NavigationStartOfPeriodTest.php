@@ -33,8 +33,12 @@ use PHPUnit\Framework\TestCase;
  * @group unit-test
  * @group support
  * @group navigation
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class NavigationStartOfPeriodTest extends TestCase
+final class NavigationStartOfPeriodTest extends TestCase
 {
     private Navigation $navigation;
 
@@ -44,7 +48,7 @@ class NavigationStartOfPeriodTest extends TestCase
         $this->navigation = new Navigation();
     }
 
-    public static function provideDates(): array
+    public static function provideDates(): iterable
     {
         return [
             'custom'    => ['frequency' => 'custom', 'from' => Carbon::now(), 'expected' => Carbon::now()],
@@ -74,7 +78,7 @@ class NavigationStartOfPeriodTest extends TestCase
         ];
     }
 
-    public static function provideUnknownFrequencies(): array
+    public static function provideUnknownFrequencies(): iterable
     {
         return [
             '1day'    => ['frequency' => '1day', 'from' => Carbon::now(), 'expected' => Carbon::now()],
@@ -86,22 +90,23 @@ class NavigationStartOfPeriodTest extends TestCase
     /**
      * @dataProvider provideDates
      */
-    public function testGivenADateAndFrequencyWhenCalculateTheDateThenReturnsTheExpectedDateSuccessful(string $frequency, Carbon $from, Carbon $expected)
+    public function testGivenADateAndFrequencyWhenCalculateTheDateThenReturnsTheExpectedDateSuccessful(string $frequency, Carbon $from, Carbon $expected): void
     {
         $period = $this->navigation->startOfPeriod($from, $frequency);
-        $this->assertEquals($expected->toDateString(), $period->toDateString());
+        self::assertSame($expected->toDateString(), $period->toDateString());
     }
 
     /**
      * @dataProvider provideUnknownFrequencies
      */
-    public function testGivenADateAndUnknownFrequencyWhenCalculateTheDateThenReturnsTheSameDateSuccessful(string $frequency, Carbon $from, Carbon $expected)
+    public function testGivenADateAndUnknownFrequencyWhenCalculateTheDateThenReturnsTheSameDateSuccessful(string $frequency, Carbon $from, Carbon $expected): void
     {
         Log::shouldReceive('error')
-           ->with(sprintf('Cannot do startOfPeriod for $repeat_freq "%s"', $frequency))
-           ->andReturnNull();
+            ->with(sprintf('Cannot do startOfPeriod for $repeat_freq "%s"', $frequency))
+            ->andReturnNull()
+        ;
 
         $period = $this->navigation->startOfPeriod($from, $frequency);
-        $this->assertEquals($expected->toDateString(), $period->toDateString());
+        self::assertSame($expected->toDateString(), $period->toDateString());
     }
 }

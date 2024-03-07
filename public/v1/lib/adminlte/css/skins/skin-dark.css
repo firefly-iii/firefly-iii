@@ -15,6 +15,9 @@
   color: #bec5cb;
   /* PAGINATION */
 }
+.skin-firefly-iii .content-header > .breadcrumb {
+  background: #272c30;
+}
 .skin-firefly-iii .well {
   background-color: #55606a;
   border-color: #454e56;

@@ -1,8 +1,7 @@
 /node_modules
-/frontend/node_modules
 /storage/*.key
 /vendor
-/.vagrant
+public/hot
 npm-debug.log
 yarn-error.log
 .env

@@ -24,46 +24,30 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
-use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Contracts\Validation\ValidationRule;
 
 /**
  * Class IsBoolean
  */
-class IsBoolean implements Rule
+class IsBoolean implements ValidationRule
 {
     /**
-     * Get the validation error message.
-     *
-     * @return string
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function message(): string
-    {
-        return (string)trans('validation.boolean');
-    }
-
-    /**
-     * Determine if the validation rule passes.
-     *
-     * @param string $attribute
-     * @param mixed  $value
-     *
-     * @return bool
-     */
-    public function passes($attribute, $value): bool
+    public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
         if (is_bool($value)) {
-            return true;
+            return;
         }
-        if (is_int($value) && 0 === $value) {
-            return true;
+        if (0 === $value) {
+            return;
         }
-        if (is_int($value) && 1 === $value) {
-            return true;
+        if (1 === $value) {
+            return;
         }
-        if (is_string($value) && in_array($value, ['0', '1', 'true', 'false', 'on', 'off', 'yes', 'no', 'y', 'n'], true)) {
-            return true;
+        if (in_array($value, ['0', '1', 'true', 'false', 'on', 'off', 'yes', 'no', 'y', 'n'], true)) {
+            return;
         }
-
-        return false;
+        $fail('validation.boolean')->translate();
     }
 }

@@ -23,22 +23,23 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Validator;
 
 /**
  * Class BillStoreRequest.
  */
 class BillStoreRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Returns the data required by the controller.
-     *
-     * @return array
      */
     public function getBillData(): array
     {
@@ -61,22 +62,28 @@ class BillStoreRequest extends FormRequest
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {
         return [
-            'name'                    => 'required|between:1,255|uniqueObjectForUser:bills,name',
-            'amount_min'              => 'required|numeric|gt:0|max:1000000000',
-            'amount_max'              => 'required|numeric|gt:0|max:1000000000',
+            'name'                    => 'required|min:1|max:255|uniqueObjectForUser:bills,name',
+            'amount_min'              => ['required', new IsValidPositiveAmount()],
+            'amount_max'              => ['required', new IsValidPositiveAmount()],
             'transaction_currency_id' => 'required|exists:transaction_currencies,id',
             'date'                    => 'required|date',
+            'notes'                   => 'min:1|max:32768|nullable',
             'bill_end_date'           => 'nullable|date',
             'extension_date'          => 'nullable|date',
-            'repeat_freq'             => sprintf('required|in:%s', join(',', config('firefly.bill_periods'))),
+            'repeat_freq'             => sprintf('required|in:%s', implode(',', config('firefly.bill_periods'))),
             'skip'                    => 'required|integer|gte:0|lte:31',
             'active'                  => 'boolean',
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        if ($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+        }
     }
 }

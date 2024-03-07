@@ -43,8 +43,6 @@ class DestroyController extends Controller
 
     /**
      * LinkTypeController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -67,9 +65,6 @@ class DestroyController extends Controller
      *
      * Delete the resource.
      *
-     * @param LinkType $linkType
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function destroy(LinkType $linkType): JsonResponse

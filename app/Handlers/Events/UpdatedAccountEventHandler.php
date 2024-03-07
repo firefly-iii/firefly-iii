@@ -32,14 +32,12 @@ use FireflyIII\Services\Internal\Support\CreditRecalculateService;
  */
 class UpdatedAccountEventHandler
 {
-    /**
-     * @param UpdatedAccount $event
-     */
     public function recalculateCredit(UpdatedAccount $event): void
     {
         $account = $event->account;
+
         /** @var CreditRecalculateService $object */
-        $object = app(CreditRecalculateService::class);
+        $object  = app(CreditRecalculateService::class);
         $object->setAccount($account);
         $object->recalculate();
     }

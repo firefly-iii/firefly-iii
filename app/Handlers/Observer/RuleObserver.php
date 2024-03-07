@@ -30,16 +30,10 @@ use FireflyIII\Models\Rule;
  */
 class RuleObserver
 {
-    /**
-     * @param Rule $rule
-     *
-     * @return void
-     */
     public function deleting(Rule $rule): void
     {
         app('log')->debug('Observe "deleting" of a rule.');
         $rule->ruleActions()->delete();
         $rule->ruleTriggers()->delete();
     }
-
 }

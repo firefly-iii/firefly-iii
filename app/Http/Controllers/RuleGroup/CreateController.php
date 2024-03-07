@@ -41,8 +41,6 @@ class CreateController extends Controller
 
     /**
      * CreateController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -82,9 +80,7 @@ class CreateController extends Controller
     /**
      * Store the rule group.
      *
-     * @param RuleGroupFormRequest $request
-     *
-     * @return RedirectResponse|Redirector
+     * @return Redirector|RedirectResponse
      */
     public function store(RuleGroupFormRequest $request)
     {
@@ -94,7 +90,7 @@ class CreateController extends Controller
         session()->flash('success', (string)trans('firefly.created_new_rule_group', ['title' => $ruleGroup->title]));
         app('preferences')->mark();
 
-        $redirect = redirect($this->getPreviousUrl('rule-groups.create.url'));
+        $redirect  = redirect($this->getPreviousUrl('rule-groups.create.url'));
         if (1 === (int)$request->get('create_another')) {
             session()->put('rule-groups.create.fromStore', true);
 

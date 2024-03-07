@@ -30,14 +30,11 @@ use FireflyIII\Api\V1\Requests\Data\DateRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Api\ApiSupport;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use JsonException;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class AccountController
@@ -46,13 +43,10 @@ class AccountController extends Controller
 {
     use ApiSupport;
 
-    private CurrencyRepositoryInterface $currencyRepository;
-    private AccountRepositoryInterface  $repository;
+    private AccountRepositoryInterface $repository;
 
     /**
      * AccountController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -64,9 +58,6 @@ class AccountController extends Controller
                 $this->repository = app(AccountRepositoryInterface::class);
                 $this->repository->setUser($user);
 
-                $this->currencyRepository = app(CurrencyRepositoryInterface::class);
-                $this->currencyRepository->setUser($user);
-
                 return $next($request);
             }
         );
@@ -76,25 +67,23 @@ class AccountController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/charts/getChartAccountOverview
      *
-     * @param DateRequest $request
-     *
-     * @return JsonResponse
      * @throws FireflyException
-     * @throws JsonException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function overview(DateRequest $request): JsonResponse
     {
         // parameters for chart:
-        $dates = $request->getAll();
+        $dates      = $request->getAll();
+
         /** @var Carbon $start */
-        $start = $dates['start'];
+        $start      = $dates['start'];
+
         /** @var Carbon $end */
-        $end = $dates['end'];
+        $end        = $dates['end'];
 
         // user's preferences
         $defaultSet = $this->repository->getAccountsByType([AccountType::ASSET])->pluck('id')->toArray();
+
+        /** @var Preference $frontPage */
         $frontPage  = app('preferences')->get('frontPageAccounts', $defaultSet);
         $default    = app('amount')->getDefaultCurrency();
 
@@ -103,17 +92,17 @@ class AccountController extends Controller
             $frontPage->save();
         }
 
-
         // get accounts:
-        $accounts  = $this->repository->getAccountsById($frontPage->data);
-        $chartData = [];
+        $accounts   = $this->repository->getAccountsById($frontPage->data);
+        $chartData  = [];
+
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $currency = $this->repository->getAccountCurrency($account);
+            $currency     = $this->repository->getAccountCurrency($account);
             if (null === $currency) {
                 $currency = $default;
             }
-            $currentSet = [
+            $currentSet   = [
                 'label'                   => $account->name,
                 'currency_id'             => (string)$currency->id,
                 'currency_code'           => $currency->code,
@@ -129,16 +118,16 @@ class AccountController extends Controller
             $currentStart = clone $start;
             $range        = app('steam')->balanceInRange($account, $start, clone $end);
             // 2022-10-11 this method no longer converts to float.
-            $previous = array_values($range)[0];
+            $previous     = array_values($range)[0];
             while ($currentStart <= $end) {
-                $format   = $currentStart->format('Y-m-d');
-                $label    = $currentStart->toAtomString();
-                $balance  = array_key_exists($format, $range) ? $range[$format] : $previous;
-                $previous = $balance;
+                $format                        = $currentStart->format('Y-m-d');
+                $label                         = $currentStart->toAtomString();
+                $balance                       = array_key_exists($format, $range) ? $range[$format] : $previous;
+                $previous                      = $balance;
                 $currentStart->addDay();
                 $currentSet['entries'][$label] = $balance;
             }
-            $chartData[] = $currentSet;
+            $chartData[]  = $currentSet;
         }
 
         return response()->json($chartData);

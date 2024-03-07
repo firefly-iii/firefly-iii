@@ -23,42 +23,46 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\Rule
  *
- * @property int                          $id
- * @property Carbon|null                  $created_at
- * @property Carbon|null                  $updated_at
- * @property Carbon|null                  $deleted_at
- * @property int                          $user_id
- * @property int                          $rule_group_id
- * @property string                       $title
- * @property string|null                  $description
- * @property int                          $order
- * @property bool                         $active
- * @property bool                         $stop_processing
- * @property bool                         $strict
- * @property-read string                  $action_value
- * @property-read Collection|RuleAction[] $ruleActions
- * @property-read int|null                $rule_actions_count
- * @property-read RuleGroup               $ruleGroup
- * @property Collection|RuleTrigger[]     $ruleTriggers
- * @property-read int|null                $rule_triggers_count
- * @property-read User                    $user
+ * @property int                      $id
+ * @property null|Carbon              $created_at
+ * @property null|Carbon              $updated_at
+ * @property null|Carbon              $deleted_at
+ * @property int                      $user_id
+ * @property int                      $rule_group_id
+ * @property string                   $title
+ * @property null|string              $description
+ * @property int                      $order
+ * @property bool                     $active
+ * @property bool                     $stop_processing
+ * @property bool                     $strict
+ * @property string                   $action_value
+ * @property Collection|RuleAction[]  $ruleActions
+ * @property null|int                 $rule_actions_count
+ * @property RuleGroup                $ruleGroup
+ * @property Collection|RuleTrigger[] $ruleTriggers
+ * @property null|int                 $rule_triggers_count
+ * @property User                     $user
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Rule newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Rule newQuery()
- * @method static Builder|Rule onlyTrashed()
+ * @method static Builder|Rule                               onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Rule query()
  * @method static \Illuminate\Database\Eloquent\Builder|Rule whereActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Rule whereCreatedAt($value)
@@ -72,78 +76,75 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|Rule whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Rule whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Rule whereUserId($value)
- * @method static Builder|Rule withTrashed()
- * @method static Builder|Rule withoutTrashed()
- * @property int|null                     $user_group_id
+ * @method static Builder|Rule                               withTrashed()
+ * @method static Builder|Rule                               withoutTrashed()
+ *
+ * @property int $user_group_id
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Rule whereUserGroupId($value)
- * @property-read UserGroup|null          $userGroup
+ *
+ * @property null|UserGroup $userGroup
+ *
  * @mixin Eloquent
  */
 class Rule extends Model
 {
+    use ReturnsIntegerIdTrait;
+    use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
     protected $casts
-        = [
-            'created_at'      => 'datetime',
-            'updated_at'      => 'datetime',
-            'deleted_at'      => 'datetime',
-            'active'          => 'boolean',
-            'order'           => 'int',
-            'stop_processing' => 'boolean',
-            'id'              => 'int',
-            'strict'          => 'boolean',
-        ];
-    /** @var array Fields that can be filled */
+                        = [
+                            'created_at'      => 'datetime',
+                            'updated_at'      => 'datetime',
+                            'deleted_at'      => 'datetime',
+                            'active'          => 'boolean',
+                            'order'           => 'int',
+                            'stop_processing' => 'boolean',
+                            'id'              => 'int',
+                            'strict'          => 'boolean',
+                        ];
+
     protected $fillable = ['rule_group_id', 'order', 'active', 'title', 'description', 'user_id', 'strict'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param string $value
-     *
-     * @return Rule
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): Rule
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $ruleId = (int)$value;
+
             /** @var User $user */
-            $user = auth()->user();
-            /** @var Rule $rule */
-            $rule = $user->rules()->find($ruleId);
+            $user   = auth()->user();
+
+            /** @var null|Rule $rule */
+            $rule   = $user->rules()->find($ruleId);
             if (null !== $rule) {
                 return $rule;
             }
         }
+
         throw new NotFoundHttpException();
     }
 
-    /**
-     * @return HasMany
-     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function ruleActions(): HasMany
     {
         return $this->hasMany(RuleAction::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function ruleGroup(): BelongsTo
     {
         return $this->belongsTo(RuleGroup::class);
     }
 
-    /**
-     * @return HasMany
-     */
     public function ruleTriggers(): HasMany
     {
         return $this->hasMany(RuleTrigger::class);
@@ -151,27 +152,28 @@ class Rule extends Model
 
     /**
      * @param mixed $value
-     *
-
      */
     public function setDescriptionAttribute($value): void
     {
         $this->attributes['description'] = e($value);
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    /**
-     * @return BelongsTo
-     */
     public function userGroup(): BelongsTo
     {
         return $this->belongsTo(UserGroup::class);
+    }
+
+    protected function order(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int)$value,
+        );
+    }
+
+    protected function ruleGroupId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int)$value,
+        );
     }
 }

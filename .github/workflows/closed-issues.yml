@@ -1,10 +1,11 @@
-name: "Reply to closed issue"
+---
+name: Issues - Reply to closed issue
 on:
   issues:
     types:
       - closed
 jobs:
-  auto_comment:
+  command_and_close:
     runs-on: ubuntu-latest
     steps:
       - uses: aws-actions/closed-issue-message@v1
@@ -21,4 +22,4 @@ jobs:
             If there is more to discuss, please open [a new issue](https://github.com/firefly-iii/firefly-iii/issues/new/choose) or [discussion](https://github.com/firefly-iii/firefly-iii/discussions/).
 
             Thank you for your contributions.
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}

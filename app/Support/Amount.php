@@ -23,20 +23,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support;
 
-use Crypt;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
-use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Collection;
-use NumberFormatter;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class Amount.
- *
-
  */
 class Amount
 {
@@ -44,42 +38,32 @@ class Amount
      * This method will properly format the given number, in color or "black and white",
      * as a currency, given two things: the currency required and the current locale.
      *
-     * @param TransactionCurrency $format
-     * @param string              $amount
-     * @param bool                $coloured
-     *
-     * @return string
      * @throws FireflyException
      */
     public function formatAnything(TransactionCurrency $format, string $amount, bool $coloured = null): string
     {
-        return $this->formatFlat($format->symbol, (int)$format->decimal_places, $amount, $coloured);
+        return $this->formatFlat($format->symbol, $format->decimal_places, $amount, $coloured);
     }
 
     /**
      * This method will properly format the given number, in color or "black and white",
      * as a currency, given two things: the currency required and the current locale.
      *
-     * @param string $symbol
-     * @param int    $decimalPlaces
-     * @param string $amount
-     * @param bool   $coloured
-     *
-     * @return string
-     *
      * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.MissingImport)
      */
     public function formatFlat(string $symbol, int $decimalPlaces, string $amount, bool $coloured = null): string
     {
-        $locale   = app('steam')->getLocale();
-        $rounded  = app('steam')->bcround($amount, $decimalPlaces);
-        $coloured = $coloured ?? true;
+        $locale  = app('steam')->getLocale();
+        $rounded = app('steam')->bcround($amount, $decimalPlaces);
+        $coloured ??= true;
 
-        $fmt = new NumberFormatter($locale, NumberFormatter::CURRENCY);
-        $fmt->setSymbol(NumberFormatter::CURRENCY_SYMBOL, $symbol);
-        $fmt->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, $decimalPlaces);
-        $fmt->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $decimalPlaces);
-        $result = $fmt->format((float)$rounded); // intentional float
+        $fmt     = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
+        $fmt->setSymbol(\NumberFormatter::CURRENCY_SYMBOL, $symbol);
+        $fmt->setAttribute(\NumberFormatter::MIN_FRACTION_DIGITS, $decimalPlaces);
+        $fmt->setAttribute(\NumberFormatter::MAX_FRACTION_DIGITS, $decimalPlaces);
+        $result  = (string)$fmt->format((float)$rounded); // intentional float
 
         if (true === $coloured) {
             if (1 === bccomp($rounded, '0')) {
@@ -95,106 +79,57 @@ class Amount
         return $result;
     }
 
-    /**
-     * @return Collection
-     */
     public function getAllCurrencies(): Collection
     {
         return TransactionCurrency::orderBy('code', 'ASC')->get();
     }
 
-    /**
-     * @return Collection
-     */
     public function getCurrencies(): Collection
     {
-        return TransactionCurrency::where('enabled', true)->orderBy('code', 'ASC')->get();
+        /** @var User $user */
+        $user = auth()->user();
+
+        return $user->currencies()->orderBy('code', 'ASC')->get();
     }
 
-    /**
-     * @return string
-     * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    public function getCurrencyCode(): string
-    {
-        $cache = new CacheProperties();
-        $cache->addProperty('getCurrencyCode');
-        if ($cache->has()) {
-            return $cache->get();
-        }
-        $currencyPreference = app('preferences')->get('currencyPreference', config('firefly.default_currency', 'EUR'));
-
-        $currency = TransactionCurrency::where('code', $currencyPreference->data)->first();
-        if ($currency) {
-            $cache->store($currency->code);
-
-            return $currency->code;
-        }
-        $cache->store(config('firefly.default_currency', 'EUR'));
-
-        return (string)config('firefly.default_currency', 'EUR');
-    }
-
-    /**
-     * @return TransactionCurrency
-     * @throws FireflyException
-     */
     public function getDefaultCurrency(): TransactionCurrency
     {
         /** @var User $user */
         $user = auth()->user();
 
-        return $this->getDefaultCurrencyByUser($user);
+        return $this->getDefaultCurrencyByUserGroup($user->userGroup);
     }
 
-    /**
-     * @param User $user
-     *
-     * @return TransactionCurrency
-     * @throws FireflyException
-     */
-    public function getDefaultCurrencyByUser(User $user): TransactionCurrency
+    public function getDefaultCurrencyByUserGroup(UserGroup $userGroup): TransactionCurrency
     {
-        $cache = new CacheProperties();
-        $cache->addProperty('getDefaultCurrency');
-        $cache->addProperty($user->id);
+        $cache   = new CacheProperties();
+        $cache->addProperty('getDefaultCurrencyByGroup');
+        $cache->addProperty($userGroup->id);
         if ($cache->has()) {
             return $cache->get();
         }
-        $currencyPreference = app('preferences')->getForUser($user, 'currencyPreference', config('firefly.default_currency', 'EUR'));
-        $currencyPrefStr    = $currencyPreference ? $currencyPreference->data : 'EUR';
-
-        // at this point the currency preference could be encrypted, if coming from an old version.
-        $currencyCode = $this->tryDecrypt((string)$currencyPrefStr);
-
-        // could still be json encoded:
-        /** @var TransactionCurrency|null $currency */
-        $currency = TransactionCurrency::where('code', $currencyCode)->first();
-        if (null === $currency) {
-            // get EUR
-            $currency = TransactionCurrency::where('code', 'EUR')->first();
+        $default = $userGroup->currencies()->where('group_default', true)->first();
+        if (null === $default) {
+            $default = $this->getSystemCurrency();
+            // could be the user group has no default right now.
+            $userGroup->currencies()->sync([$default->id => ['group_default' => true]]);
         }
-        $cache->store($currency);
+        $cache->store($default);
 
-        return $currency;
+        return $default;
+    }
+
+    public function getSystemCurrency(): TransactionCurrency
+    {
+        return TransactionCurrency::where('code', 'EUR')->first();
     }
 
     /**
-     * @param string $value
-     *
-     * @return string
+     * @deprecated use getDefaultCurrencyByUserGroup instead
      */
-    private function tryDecrypt(string $value): string
+    public function getDefaultCurrencyByUser(User $user): TransactionCurrency
     {
-        try {
-            $value = Crypt::decrypt($value); // verified
-        } catch (DecryptException $e) {
-            // @ignoreException
-        }
-
-        return $value;
+        return $this->getDefaultCurrencyByUserGroup($user->userGroup);
     }
 
     /**
@@ -203,7 +138,6 @@ class Amount
      *
      * Used only in one place.
      *
-     * @return array
      * @throws FireflyException
      */
     public function getJsConfig(): array
@@ -224,39 +158,34 @@ class Amount
     }
 
     /**
-     * @return array
      * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.MissingImport)
      */
     private function getLocaleInfo(): array
     {
         // get config from preference, not from translation:
-        $locale = app('steam')->getLocale();
-        $array  = app('steam')->getLocaleArray($locale);
+        $locale                    = app('steam')->getLocale();
+        $array                     = app('steam')->getLocaleArray($locale);
 
         setlocale(LC_MONETARY, $array);
-        $info = localeconv();
+        $info                      = localeconv();
 
         // correct variables
-        $info['n_cs_precedes'] = $this->getLocaleField($info, 'n_cs_precedes');
-        $info['p_cs_precedes'] = $this->getLocaleField($info, 'p_cs_precedes');
+        $info['n_cs_precedes']     = $this->getLocaleField($info, 'n_cs_precedes');
+        $info['p_cs_precedes']     = $this->getLocaleField($info, 'p_cs_precedes');
 
-        $info['n_sep_by_space'] = $this->getLocaleField($info, 'n_sep_by_space');
-        $info['p_sep_by_space'] = $this->getLocaleField($info, 'p_sep_by_space');
+        $info['n_sep_by_space']    = $this->getLocaleField($info, 'n_sep_by_space');
+        $info['p_sep_by_space']    = $this->getLocaleField($info, 'p_sep_by_space');
 
-        $fmt = new NumberFormatter($locale, NumberFormatter::CURRENCY);
+        $fmt                       = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
 
-        $info['mon_decimal_point'] = $fmt->getSymbol(NumberFormatter::MONETARY_SEPARATOR_SYMBOL);
-        $info['mon_thousands_sep'] = $fmt->getSymbol(NumberFormatter::MONETARY_GROUPING_SEPARATOR_SYMBOL);
+        $info['mon_decimal_point'] = $fmt->getSymbol(\NumberFormatter::MONETARY_SEPARATOR_SYMBOL);
+        $info['mon_thousands_sep'] = $fmt->getSymbol(\NumberFormatter::MONETARY_GROUPING_SEPARATOR_SYMBOL);
 
         return $info;
     }
 
-    /**
-     * @param array  $info
-     * @param string $field
-     *
-     * @return bool
-     */
     private function getLocaleField(array $info, string $field): bool
     {
         return (is_bool($info[$field]) && true === $info[$field])
@@ -268,19 +197,11 @@ class Amount
      * int $signPosn = $localeconv['n_sign_posn']
      * string $sign = $localeconv['negative_sign']
      * bool $csPrecedes = $localeconv['n_cs_precedes'].
-     *
-     * @param bool   $sepBySpace
-     * @param int    $signPosn
-     * @param string $sign
-     * @param bool   $csPrecedes
-     *
-     * @return string
-     *
      */
     public static function getAmountJsConfig(bool $sepBySpace, int $signPosn, string $sign, bool $csPrecedes): string
     {
         // negative first:
-        $space = ' ';
+        $space  = ' ';
 
         // require space between symbol and amount?
         if (false === $sepBySpace) {
@@ -289,11 +210,11 @@ class Amount
 
         // there are five possible positions for the "+" or "-" sign (if it is even used)
         // pos_a and pos_e could be the ( and ) symbol.
-        $posA = ''; // before everything
-        $posB = ''; // before currency symbol
-        $posC = ''; // after currency symbol
-        $posD = ''; // before amount
-        $posE = ''; // after everything
+        $posA   = ''; // before everything
+        $posB   = ''; // before currency symbol
+        $posC   = ''; // after currency symbol
+        $posD   = ''; // before amount
+        $posE   = ''; // after everything
 
         // format would be (currency before amount)
         // AB%sC_D%vE
@@ -308,40 +229,40 @@ class Amount
                 // ( and ) around the whole thing
                 $posA = '(';
                 $posE = ')';
+
                 break;
+
             case 1:
                 // The sign string precedes the quantity and currency_symbol
                 $posA = $sign;
+
                 break;
+
             case 2:
                 // The sign string succeeds the quantity and currency_symbol
                 $posE = $sign;
+
                 break;
+
             case 3:
                 // The sign string immediately precedes the currency_symbol
                 $posB = $sign;
+
                 break;
+
             case 4:
                 // The sign string immediately succeeds the currency_symbol
                 $posC = $sign;
         }
 
         // default is amount before currency
-        $format = $posA . $posD . '%v' . $space . $posB . '%s' . $posC . $posE;
+        $format = $posA.$posD.'%v'.$space.$posB.'%s'.$posC.$posE;
 
         if ($csPrecedes) {
             // alternative is currency before amount
-            $format = $posA . $posB . '%s' . $posC . $space . $posD . '%v' . $posE;
+            $format = $posA.$posB.'%s'.$posC.$space.$posD.'%v'.$posE;
         }
 
         return $format;
-    }
-
-    /**
-     * @return TransactionCurrency
-     */
-    public function getSystemCurrency(): TransactionCurrency
-    {
-        return TransactionCurrency::where('code', 'EUR')->first();
     }
 }

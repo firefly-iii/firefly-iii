@@ -39,12 +39,10 @@ class FixIbans extends Command
 
     protected $description = 'Removes spaces from IBANs';
     protected $signature   = 'firefly-iii:fix-ibans';
-    private int $count       = 0;
+    private int $count     = 0;
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle(): int
     {
@@ -58,11 +56,6 @@ class FixIbans extends Command
         return 0;
     }
 
-    /**
-     * @param Collection $accounts
-     *
-     * @return void
-     */
     private function filterIbans(Collection $accounts): void
     {
         /** @var Account $account */
@@ -74,38 +67,33 @@ class FixIbans extends Command
                     $account->iban = $iban;
                     $account->save();
                     $this->friendlyInfo(sprintf('Removed spaces from IBAN of account #%d', $account->id));
-                    $this->count++;
+                    ++$this->count;
                 }
             }
         }
     }
 
-    /**
-     * @param Collection $accounts
-     *
-     * @return void
-     */
     private function countAndCorrectIbans(Collection $accounts): void
     {
         $set = [];
+
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $userId       = (int)$account->user_id;
-            $set[$userId] = $set[$userId] ?? [];
-            $iban         = (string)$account->iban;
+            $userId = $account->user_id;
+            $set[$userId] ??= [];
+            $iban   = (string)$account->iban;
             if ('' === $iban) {
                 continue;
             }
-            $type = $account->accountType->type;
+            $type   = $account->accountType->type;
             if (in_array($type, [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE], true)) {
                 $type = 'liabilities';
             }
             if (array_key_exists($iban, $set[$userId])) {
                 // iban already in use! two exceptions exist:
                 if (
-                    !(AccountType::EXPENSE === $set[$userId][$iban] && AccountType::REVENUE === $type)
-                    && // allowed combination
-                    !(AccountType::REVENUE === $set[$userId][$iban] && AccountType::EXPENSE === $type) // also allowed combination.
+                    !(AccountType::EXPENSE === $set[$userId][$iban] && AccountType::REVENUE === $type) // allowed combination
+                    && !(AccountType::REVENUE === $set[$userId][$iban] && AccountType::EXPENSE === $type) // also allowed combination.
                 ) {
                     $this->friendlyWarning(
                         sprintf(
@@ -118,7 +106,7 @@ class FixIbans extends Command
                     );
                     $account->iban = null;
                     $account->save();
-                    $this->count++;
+                    ++$this->count;
                 }
             }
 

@@ -28,11 +28,29 @@ SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 # enable test .env file.
 # cp .ci/.env.ci .env
 
+OUTPUT_FORMAT=txt
+EXTRA_PARAMS=""
+
+if [[ $GITHUB_ACTIONS = "true" ]]
+then
+    OUTPUT_FORMAT=txt
+    EXTRA_PARAMS=""
+fi
+
 # clean up php code
 cd $SCRIPT_DIR/php-cs-fixer
 composer update --quiet
 rm -f .php-cs-fixer.cache
-PHP_CS_FIXER_IGNORE_ENV=true ./vendor/bin/php-cs-fixer fix --config $SCRIPT_DIR/php-cs-fixer/.php-cs-fixer.php --allow-risky=yes
+PHP_CS_FIXER_IGNORE_ENV=true
+./vendor/bin/php-cs-fixer fix \
+    --config $SCRIPT_DIR/php-cs-fixer/.php-cs-fixer.php \
+    --format=$OUTPUT_FORMAT \
+    --allow-risky=yes $EXTRA_PARAMS
+
+EXIT_CODE=$?
+
+echo "Exit code for CS fixer is $EXIT_CODE."
+
 cd $SCRIPT_DIR/..
 
-exit 0
+exit $EXIT_CODE

@@ -38,20 +38,10 @@ interface OperationsRepositoryInterface
     /**
      * A method that returns the amount of money budgeted per day for this budget,
      * on average.
-     *
-     * @param Budget $budget
-     *
-     * @return string
      */
     public function budgetedPerDay(Budget $budget): string;
 
     /**
-     * @param Collection $budgets
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
      * @deprecated
      */
     public function getBudgetPeriodReport(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array;
@@ -60,46 +50,13 @@ interface OperationsRepositoryInterface
      * This method returns a list of all the withdrawal transaction journals (as arrays) set in that period
      * which have the specified budget set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always negative.
-     *
-     * @param Carbon          $start
-     * @param Carbon          $end
-     * @param Collection|null $accounts
-     * @param Collection|null $budgets
-     *
-     * @return array
      */
     public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $budgets = null): array;
 
-    /**
-     * @param User|Authenticatable|null $user
-     */
-    public function setUser(User | Authenticatable | null $user): void;
-
+    public function setUser(null|Authenticatable|User $user): void;
 
     /**
-     * Return multi-currency spent information.
-     *
-     * @param Collection $budgets
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     * @deprecated
-     */
-    public function spentInPeriodMc(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array;
-
-    /**
-     * TODO this method was marked as deprecated but I'm not sure why.
-     *
-     * @param Carbon                   $start
-     * @param Carbon                   $end
-     * @param Collection|null          $accounts
-     * @param Collection|null          $budgets
-     * @param TransactionCurrency|null $currency
-     *
-     * @return array
-     *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function sumExpenses(
         Carbon               $start,

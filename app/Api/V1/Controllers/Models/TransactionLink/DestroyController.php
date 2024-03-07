@@ -39,8 +39,6 @@ class DestroyController extends Controller
 
     /**
      * TransactionLinkController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -48,7 +46,7 @@ class DestroyController extends Controller
         $this->middleware(
             function ($request, $next) {
                 /** @var User $user */
-                $user = auth()->user();
+                $user             = auth()->user();
 
                 $this->repository = app(LinkTypeRepositoryInterface::class);
 
@@ -64,10 +62,6 @@ class DestroyController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/links/deleteTransactionLink
      *
      * Delete the resource.
-     *
-     * @param TransactionJournalLink $link
-     *
-     * @return JsonResponse
      */
     public function destroy(TransactionJournalLink $link): JsonResponse
     {

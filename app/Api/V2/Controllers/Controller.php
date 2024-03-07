@@ -33,7 +33,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
@@ -46,17 +45,17 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class Controller
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.NumberOfChildren)
  */
 class Controller extends BaseController
 {
     use ValidatesUserGroupTrait;
 
-    protected const CONTENT_TYPE = 'application/vnd.api+json';
+    protected const string CONTENT_TYPE = 'application/vnd.api+json';
     protected ParameterBag $parameters;
 
-    /**
-     *
-     */
     public function __construct()
     {
         $this->middleware(
@@ -66,22 +65,22 @@ class Controller extends BaseController
                 return $next($request);
             }
         );
-
     }
 
     /**
      * TODO duplicate from V1 controller
      * Method to grab all parameters from the URL.
      *
-     * @return ParameterBag
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     private function getParameters(): ParameterBag
     {
-        $bag = new ParameterBag();
+        $bag      = new ParameterBag();
         $bag->set('limit', 50);
+
         try {
             $page = (int)request()->get('page');
-        } catch (ContainerExceptionInterface | NotFoundExceptionInterface $e) {
+        } catch (ContainerExceptionInterface|NotFoundExceptionInterface $e) {
             $page = 1;
         }
 
@@ -100,19 +99,20 @@ class Controller extends BaseController
         foreach ($dates as $field) {
             $date = null;
             $obj  = null;
+
             try {
                 $date = request()->query->get($field);
             } catch (BadRequestException $e) {
-                Log::error(sprintf('Request field "%s" contains a non-scalar value. Value set to NULL.', $field));
-                Log::error($e->getMessage());
-                Log::error($e->getTraceAsString());
+                app('log')->error(sprintf('Request field "%s" contains a non-scalar value. Value set to NULL.', $field));
+                app('log')->error($e->getMessage());
+                app('log')->error($e->getTraceAsString());
             }
             if (null !== $date) {
                 try {
-                    $obj = Carbon::parse($date, config('app.timezone'));
-                } catch (InvalidDateException | InvalidFormatException $e) {
+                    $obj = Carbon::parse((string)$date, config('app.timezone'));
+                } catch (InvalidDateException|InvalidFormatException $e) {
                     // don't care
-                    app('log')->warning(sprintf('Ignored invalid date "%s" in API v2 controller parameter check: %s', substr($date, 0, 20), $e->getMessage()));
+                    app('log')->warning(sprintf('Ignored invalid date "%s" in API v2 controller parameter check: %s', substr((string)$date, 0, 20), $e->getMessage()));
                 }
                 // out of range? set to null.
                 if (null !== $obj && ($obj->year <= 1900 || $obj->year > 2099)) {
@@ -128,8 +128,8 @@ class Controller extends BaseController
             try {
                 $value = request()->query->get($integer);
             } catch (BadRequestException $e) {
-                Log::error(sprintf('Request field "%s" contains a non-scalar value. Value set to NULL.', $integer));
-                Log::error($e->getMessage());
+                app('log')->error(sprintf('Request field "%s" contains a non-scalar value. Value set to NULL.', $integer));
+                app('log')->error($e->getMessage());
                 $value = null;
             }
             if (null !== $value) {
@@ -148,20 +148,13 @@ class Controller extends BaseController
         return $bag;
     }
 
-    /**
-     * @param string               $key
-     * @param LengthAwarePaginator $paginator
-     * @param AbstractTransformer  $transformer
-     *
-     * @return array
-     */
     final protected function jsonApiList(string $key, LengthAwarePaginator $paginator, AbstractTransformer $transformer): array
     {
-        $manager = new Manager();
-        $baseUrl = request()->getSchemeAndHttpHost() . '/api/v2';
+        $manager  = new Manager();
+        $baseUrl  = request()->getSchemeAndHttpHost().'/api/v2';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $objects = $paginator->getCollection();
+        $objects  = $paginator->getCollection();
 
         // the transformer, at this point, needs to collect information that ALL items in the collection
         // require, like meta-data and stuff like that, and save it for later.
@@ -176,17 +169,13 @@ class Controller extends BaseController
     /**
      * Returns a JSON API object and returns it.
      *
-     * @param string              $key
-     * @param Model               $object
-     * @param AbstractTransformer $transformer
-     *
-     * @return array
+     * @param array<int, mixed>|Model $object
      */
-    final protected function jsonApiObject(string $key, array | Model $object, AbstractTransformer $transformer): array
+    final protected function jsonApiObject(string $key, array|Model $object, AbstractTransformer $transformer): array
     {
         // create some objects:
-        $manager = new Manager();
-        $baseUrl = request()->getSchemeAndHttpHost() . '/api/v2';
+        $manager  = new Manager();
+        $baseUrl  = request()->getSchemeAndHttpHost().'/api/v2';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         $transformer->collectMetaData(new Collection([$object]));

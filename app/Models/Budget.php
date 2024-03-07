@@ -23,8 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -33,35 +37,35 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\Budget
  *
- * @property int                                  $id
- * @property Carbon|null                          $created_at
- * @property Carbon|null                          $updated_at
- * @property Carbon|null                          $deleted_at
- * @property int                                  $user_id
- * @property string                               $name
- * @property bool                                 $active
- * @property bool                                 $encrypted
- * @property int                                  $order
- * @property-read Collection|Attachment[]         $attachments
- * @property-read int|null                        $attachments_count
- * @property-read Collection|AutoBudget[]         $autoBudgets
- * @property-read int|null                        $auto_budgets_count
- * @property-read Collection|BudgetLimit[]        $budgetlimits
- * @property-read int|null                        $budgetlimits_count
- * @property-read Collection|TransactionJournal[] $transactionJournals
- * @property-read int|null                        $transaction_journals_count
- * @property-read Collection|Transaction[]        $transactions
- * @property-read int|null                        $transactions_count
- * @property-read User                            $user
+ * @property int                             $id
+ * @property null|Carbon                     $created_at
+ * @property null|Carbon                     $updated_at
+ * @property null|Carbon                     $deleted_at
+ * @property int                             $user_id
+ * @property string                          $name
+ * @property bool                            $active
+ * @property bool                            $encrypted
+ * @property int                             $order
+ * @property Attachment[]|Collection         $attachments
+ * @property null|int                        $attachments_count
+ * @property AutoBudget[]|Collection         $autoBudgets
+ * @property null|int                        $auto_budgets_count
+ * @property BudgetLimit[]|Collection        $budgetlimits
+ * @property null|int                        $budgetlimits_count
+ * @property Collection|TransactionJournal[] $transactionJournals
+ * @property null|int                        $transaction_journals_count
+ * @property Collection|Transaction[]        $transactions
+ * @property null|int                        $transactions_count
+ * @property User                            $user
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Budget newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Budget newQuery()
- * @method static Builder|Budget onlyTrashed()
+ * @method static Builder|Budget                               onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Budget query()
  * @method static \Illuminate\Database\Eloquent\Builder|Budget whereActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Budget whereCreatedAt($value)
@@ -72,87 +76,76 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|Budget whereOrder($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Budget whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Budget whereUserId($value)
- * @method static Builder|Budget withTrashed()
- * @method static Builder|Budget withoutTrashed()
- * @property string                               $email
- * @property int|null                             $user_group_id
+ * @method static Builder|Budget                               withTrashed()
+ * @method static Builder|Budget                               withoutTrashed()
+ *
+ * @property string $email
+ * @property int    $user_group_id
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Budget whereUserGroupId($value)
- * @property-read Collection|Note[]               $notes
- * @property-read int|null                        $notes_count
+ *
+ * @property Collection|Note[] $notes
+ * @property null|int          $notes_count
+ *
  * @mixin Eloquent
  */
 class Budget extends Model
 {
+    use ReturnsIntegerIdTrait;
+    use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
     protected $casts
-        = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'deleted_at' => 'datetime',
-            'active'     => 'boolean',
-            'encrypted'  => 'boolean',
-        ];
-    /** @var array Fields that can be filled */
+                        = [
+                            'created_at' => 'datetime',
+                            'updated_at' => 'datetime',
+                            'deleted_at' => 'datetime',
+                            'active'     => 'boolean',
+                            'encrypted'  => 'boolean',
+                        ];
+
     protected $fillable = ['user_id', 'name', 'active', 'order', 'user_group_id'];
-    /** @var array Hidden from view */
-    protected $hidden = ['encrypted'];
+
+    protected $hidden   = ['encrypted'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param string $value
-     *
-     * @return Budget
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): Budget
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $budgetId = (int)$value;
+
             /** @var User $user */
-            $user = auth()->user();
-            /** @var Budget $budget */
-            $budget = $user->budgets()->find($budgetId);
+            $user     = auth()->user();
+
+            /** @var null|Budget $budget */
+            $budget   = $user->budgets()->find($budgetId);
             if (null !== $budget) {
                 return $budget;
             }
         }
+
         throw new NotFoundHttpException();
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * @return MorphMany
-     */
     public function attachments(): MorphMany
     {
         return $this->morphMany(Attachment::class, 'attachable');
     }
 
-    /**
-     * @return HasMany
-     */
     public function autoBudgets(): HasMany
     {
         return $this->hasMany(AutoBudget::class);
     }
 
-    /**
-     * @return HasMany
-     */
     public function budgetlimits(): HasMany
     {
         return $this->hasMany(BudgetLimit::class);
@@ -166,19 +159,20 @@ class Budget extends Model
         return $this->morphMany(Note::class, 'noteable');
     }
 
-    /**
-     * @return BelongsToMany
-     */
     public function transactionJournals(): BelongsToMany
     {
         return $this->belongsToMany(TransactionJournal::class, 'budget_transaction_journal', 'budget_id');
     }
 
-    /**
-     * @return BelongsToMany
-     */
     public function transactions(): BelongsToMany
     {
         return $this->belongsToMany(Transaction::class, 'budget_transaction', 'budget_id');
+    }
+
+    protected function order(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int)$value,
+        );
     }
 }

@@ -24,13 +24,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
-use Closure;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\User;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Auth\Factory as Auth;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class Authenticate
@@ -39,17 +37,11 @@ class Authenticate
 {
     /**
      * The authentication factory instance.
-     *
-     * @var Auth
      */
     protected Auth $auth;
 
     /**
      * Create a new middleware instance.
-     *
-     * @param Auth $auth
-     *
-     * @return void
      */
     public function __construct(Auth $auth)
     {
@@ -60,7 +52,6 @@ class Authenticate
      * Handle an incoming request.
      *
      * @param Request  $request
-     * @param Closure  $next
      * @param string[] ...$guards
      *
      * @return mixed
@@ -68,7 +59,7 @@ class Authenticate
      * @throws FireflyException
      * @throws AuthenticationException
      */
-    public function handle($request, Closure $next, ...$guards)
+    public function handle($request, \Closure $next, ...$guards)
     {
         $this->authenticate($request, $guards);
 
@@ -79,17 +70,19 @@ class Authenticate
      * Determine if the user is logged in to any of the given guards.
      *
      * @param mixed $request
-     * @param array $guards
      *
      * @return mixed
+     *
      * @throws FireflyException
      * @throws AuthenticationException
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     protected function authenticate($request, array $guards)
     {
         if (0 === count($guards)) {
             // go for default guard:
-            /** @noinspection PhpUndefinedMethodInspection */
+            // @noinspection PhpUndefinedMethodInspection
             if ($this->auth->check()) {
                 // do an extra check on user object.
                 /** @noinspection PhpUndefinedMethodInspection */
@@ -98,7 +91,7 @@ class Authenticate
                 $this->validateBlockedUser($user, $guards);
             }
 
-            /** @noinspection PhpUndefinedMethodInspection */
+            // @noinspection PhpUndefinedMethodInspection
             return $this->auth->authenticate();
         }
 
@@ -110,6 +103,7 @@ class Authenticate
             if ($result) {
                 $user = $this->auth->guard($guard)->user();
                 $this->validateBlockedUser($user, $guards);
+
                 // According to PHPstan the method returns void, but we'll see.
                 return $this->auth->shouldUse($guard); // @phpstan-ignore-line
             }
@@ -119,27 +113,23 @@ class Authenticate
     }
 
     /**
-     * @param User|null $user
-     * @param array     $guards
-     *
-     * @return void
      * @throws AuthenticationException
      */
     private function validateBlockedUser(?User $user, array $guards): void
     {
         if (null === $user) {
-            Log::warning('User is null, throw exception?');
+            app('log')->warning('User is null, throw exception?');
         }
         if (null !== $user) {
-            // Log::debug(get_class($user));
+            // app('log')->debug(get_class($user));
             if (1 === (int)$user->blocked) {
                 $message = (string)trans('firefly.block_account_logout');
                 if ('email_changed' === $user->blocked_code) {
                     $message = (string)trans('firefly.email_changed_logout');
                 }
-                Log::warning('User is blocked, cannot use authentication method.');
+                app('log')->warning('User is blocked, cannot use authentication method.');
                 app('session')->flash('logoutMessage', $message);
-                /** @noinspection PhpUndefinedMethodInspection */
+                // @noinspection PhpUndefinedMethodInspection
                 $this->auth->logout(); // @phpstan-ignore-line (thinks function is undefined)
 
                 throw new AuthenticationException('Blocked account.', $guards);

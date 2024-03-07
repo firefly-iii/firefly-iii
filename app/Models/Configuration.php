@@ -23,24 +23,26 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Carbon;
 
 /**
  * FireflyIII\Models\Configuration
  *
  * @property int         $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
+ * @property null|Carbon $created_at
+ * @property null|Carbon $updated_at
+ * @property null|Carbon $deleted_at
  * @property string      $name
  * @property mixed       $data
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Configuration newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Configuration newQuery()
- * @method static Builder|Configuration onlyTrashed()
+ * @method static Builder|Configuration                               onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Configuration query()
  * @method static \Illuminate\Database\Eloquent\Builder|Configuration whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Configuration whereData($value)
@@ -48,31 +50,28 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|Configuration whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Configuration whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Configuration whereUpdatedAt($value)
- * @method static Builder|Configuration withTrashed()
- * @method static Builder|Configuration withoutTrashed()
+ * @method static Builder|Configuration                               withTrashed()
+ * @method static Builder|Configuration                               withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class Configuration extends Model
 {
+    use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
     protected $casts
-        = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'deleted_at' => 'datetime',
-        ];
+                     = [
+                         'created_at' => 'datetime',
+                         'updated_at' => 'datetime',
+                         'deleted_at' => 'datetime',
+                     ];
+
     /** @var string The table to store the data in */
     protected $table = 'configuration';
 
     /**
      * TODO can be replaced with native laravel code.
-     *
      *
      * @param mixed $value
      *
@@ -84,7 +83,6 @@ class Configuration extends Model
     }
 
     /**
-     *
      * @param mixed $value
      */
     public function setDataAttribute($value): void

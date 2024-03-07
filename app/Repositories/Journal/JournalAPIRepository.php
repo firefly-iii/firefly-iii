@@ -30,7 +30,6 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
-use Storage;
 
 /**
  * Class JournalAPIRepository
@@ -41,49 +40,39 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface
 
     /**
      * Returns transaction by ID. Used to validate attachments.
-     *
-     * @param int $transactionId
-     *
-     * @return Transaction|null
      */
     public function findTransaction(int $transactionId): ?Transaction
     {
         return Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                          ->where('transaction_journals.user_id', $this->user->id)
-                          ->where('transactions.id', $transactionId)
-                          ->first(['transactions.*']);
+            ->where('transaction_journals.user_id', $this->user->id)
+            ->where('transactions.id', $transactionId)
+            ->first(['transactions.*'])
+        ;
     }
 
     /**
      * TODO pretty sure method duplicated.
      *
      * Return all attachments for journal.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return Collection
      */
     public function getAttachments(TransactionJournal $journal): Collection
     {
-        $set = $journal->attachments;
+        $set  = $journal->attachments;
 
-        /** @var Storage $disk */
-        $disk = Storage::disk('upload');
+        /** @var \Storage $disk */
+        $disk = \Storage::disk('upload');
 
         return $set->each(
             static function (Attachment $attachment) use ($disk) {
                 $notes                   = $attachment->notes()->first();
                 $attachment->file_exists = $disk->exists($attachment->fileName());
-                $attachment->notes       = $notes ? $notes->text : ''; // TODO should not set notes like this.
+                $attachment->notes_text  = null !== $notes ? $notes->text : ''; // TODO should not set notes like this.
 
                 return $attachment;
             }
         );
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getJournalLinks(TransactionJournal $journal): Collection
     {
         $collection = $journal->destJournalLinks()->get();
@@ -93,16 +82,12 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface
 
     /**
      * Get all piggy bank events for a journal.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return Collection
      */
     public function getPiggyBankEvents(TransactionJournal $journal): Collection
     {
         $events = $journal->piggyBankEvents()->get();
         $events->each(
-            function (PiggyBankEvent $event) {
+            static function (PiggyBankEvent $event): void {
                 $event->piggyBank = $event->piggyBank()->withTrashed()->first();
             }
         );
@@ -110,12 +95,9 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface
         return $events;
     }
 
-    /**
-     * @param User|Authenticatable|null $user
-     */
-    public function setUser(User | Authenticatable | null $user): void
+    public function setUser(null|Authenticatable|User $user): void
     {
-        if (null !== $user) {
+        if ($user instanceof User) {
             $this->user = $user;
         }
     }

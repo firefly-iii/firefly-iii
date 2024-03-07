@@ -29,10 +29,5 @@ namespace FireflyIII\Services\FireflyIIIOrg\Update;
  */
 interface UpdateRequestInterface
 {
-    /**
-     * @param string $channel
-     *
-     * @return array
-     */
     public function getUpdateInformation(string $channel): array;
 }

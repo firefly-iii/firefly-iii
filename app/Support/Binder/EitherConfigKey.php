@@ -57,17 +57,16 @@ class EitherConfigKey
         ];
 
     /**
-     * @param string $value
-     * @param Route  $route
-     *
-     * @return string
      * @throws NotFoundHttpException
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public static function routeBinder(string $value, Route $route): string
     {
         if (in_array($value, self::$static, true) || in_array($value, DynamicConfigKey::$accepted, true)) {
             return $value;
         }
+
         throw new NotFoundHttpException();
     }
 }

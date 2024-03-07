@@ -19,14 +19,12 @@
  */
 import {getVariable} from "../../store/get-variable.js";
 import Get from "../../api/v2/model/piggy-bank/get.js";
-import {I18n} from "i18n-js";
-import {loadTranslations} from "../../support/load-translations.js";
 import {getCacheKey} from "../../support/get-cache-key.js";
 import {format} from "date-fns";
+import i18next from "i18next";
 
 let apiData = {};
 let afterPromises = false;
-let i18n;
 const PIGGY_CACHE_KEY = 'dashboard-piggies-data';
 
 export default () => ({
@@ -61,7 +59,7 @@ export default () => ({
         const end = new Date(window.store.get('end'));
         const cacheKey = getCacheKey(PIGGY_CACHE_KEY, start, end);
         const getter = new Get();
-        getter.get(params).then((response) => {
+        getter.list(params).then((response) => {
             apiData = [...apiData, ...response.data.data];
             if (parseInt(response.data.meta.pagination.total_pages) > params.page) {
                 params.page++;
@@ -84,7 +82,7 @@ export default () => ({
                 if (0 === current.attributes.percentage) {
                     continue;
                 }
-                let groupName = current.object_group_title ?? i18n.t('firefly.default_group_title_name_plain');
+                let groupName = current.object_group_title ?? i18next.t('firefly.default_group_title_name_plain');
                 if (!dataSet.hasOwnProperty(groupName)) {
                     dataSet[groupName] = {
                         id: current.object_group_id ?? 0,
@@ -130,18 +128,11 @@ export default () => ({
     init() {
         // console.log('piggies init');
         apiData = [];
-        Promise.all([getVariable('autoConversion', false), getVariable('language', 'en_US')]).then((values) => {
+        Promise.all([getVariable('autoConversion', false)]).then((values) => {
 
-            i18n = new I18n();
-            const locale = values[1].replace('-', '_');
-            i18n.locale = locale;
-            loadTranslations(i18n, locale).then(() => {
-                // console.log('piggies after promises');
-                afterPromises = true;
-                this.autoConversion = values[0];
-                this.loadPiggyBanks();
-            });
-
+            afterPromises = true;
+            this.autoConversion = values[0];
+            this.loadPiggyBanks();
 
         });
         window.store.observe('end', () => {

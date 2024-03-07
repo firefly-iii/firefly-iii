@@ -27,11 +27,10 @@ namespace FireflyIII\Api\V1\Controllers\Models\TransactionCurrency;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use Validator;
 
 /**
  * Class DestroyController
@@ -43,8 +42,6 @@ class DestroyController extends Controller
 
     /**
      * CurrencyRepository constructor.
-     *
-
      */
     public function __construct()
     {
@@ -66,9 +63,6 @@ class DestroyController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @param TransactionCurrency $currency
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function destroy(TransactionCurrency $currency): JsonResponse
@@ -80,15 +74,15 @@ class DestroyController extends Controller
         if (!$this->userRepository->hasRole($admin, 'owner')) {
             // access denied:
             $messages = ['currency_code' => '200005: You need the "owner" role to do this.'];
-            Validator::make([], $rules, $messages)->validate();
+            \Validator::make([], $rules, $messages)->validate();
         }
         if ($this->repository->currencyInUse($currency)) {
             $messages = ['currency_code' => '200006: Currency in use.'];
-            Validator::make([], $rules, $messages)->validate();
+            \Validator::make([], $rules, $messages)->validate();
         }
         if ($this->repository->isFallbackCurrency($currency)) {
             $messages = ['currency_code' => '200026: Currency is fallback.'];
-            Validator::make([], $rules, $messages)->validate();
+            \Validator::make([], $rules, $messages)->validate();
         }
 
         $this->repository->destroy($currency);

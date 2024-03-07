@@ -23,36 +23,40 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\RuleGroup
  *
  * @property int               $id
- * @property Carbon|null       $created_at
- * @property Carbon|null       $updated_at
- * @property Carbon|null       $deleted_at
+ * @property null|Carbon       $created_at
+ * @property null|Carbon       $updated_at
+ * @property null|Carbon       $deleted_at
  * @property int               $user_id
- * @property string            $title
- * @property string|null       $description
+ * @property null|string       $title
+ * @property null|string       $description
  * @property int               $order
  * @property bool              $active
  * @property bool              $stop_processing
  * @property Collection|Rule[] $rules
- * @property-read int|null     $rules_count
- * @property-read User         $user
+ * @property null|int          $rules_count
+ * @property User              $user
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup newQuery()
- * @method static Builder|RuleGroup onlyTrashed()
+ * @method static Builder|RuleGroup                               onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup query()
  * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereCreatedAt($value)
@@ -64,70 +68,70 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereUserId($value)
- * @method static Builder|RuleGroup withTrashed()
- * @method static Builder|RuleGroup withoutTrashed()
- * @property int|null          $user_group_id
+ * @method static Builder|RuleGroup                               withTrashed()
+ * @method static Builder|RuleGroup                               withoutTrashed()
+ *
+ * @property int $user_group_id
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereUserGroupId($value)
+ *
  * @mixin Eloquent
  */
 class RuleGroup extends Model
 {
+    use ReturnsIntegerIdTrait;
+    use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
     protected $casts
-        = [
-            'created_at'      => 'datetime',
-            'updated_at'      => 'datetime',
-            'deleted_at'      => 'datetime',
-            'active'          => 'boolean',
-            'stop_processing' => 'boolean',
-            'order'           => 'int',
-        ];
+                        = [
+                            'created_at'      => 'datetime',
+                            'updated_at'      => 'datetime',
+                            'deleted_at'      => 'datetime',
+                            'active'          => 'boolean',
+                            'stop_processing' => 'boolean',
+                            'order'           => 'int',
+                        ];
 
-    /** @var array Fields that can be filled */
     protected $fillable = ['user_id', 'user_group_id', 'stop_processing', 'order', 'title', 'description', 'active'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param string $value
-     *
-     * @return RuleGroup
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): RuleGroup
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $ruleGroupId = (int)$value;
+
             /** @var User $user */
-            $user = auth()->user();
-            /** @var RuleGroup $ruleGroup */
-            $ruleGroup = $user->ruleGroups()->find($ruleGroupId);
+            $user        = auth()->user();
+
+            /** @var null|RuleGroup $ruleGroup */
+            $ruleGroup   = $user->ruleGroups()->find($ruleGroupId);
             if (null !== $ruleGroup) {
                 return $ruleGroup;
             }
         }
+
         throw new NotFoundHttpException();
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * @return HasMany
-     */
     public function rules(): HasMany
     {
         return $this->hasMany(Rule::class);
+    }
+
+    protected function order(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int)$value,
+        );
     }
 }

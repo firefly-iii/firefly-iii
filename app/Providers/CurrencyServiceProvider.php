@@ -25,6 +25,8 @@ namespace FireflyIII\Providers;
 
 use FireflyIII\Repositories\Currency\CurrencyRepository;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepository as GroupCurrencyRepository;
+use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface as GroupCurrencyRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -36,9 +38,7 @@ class CurrencyServiceProvider extends ServiceProvider
     /**
      * Bootstrap the application services.
      */
-    public function boot(): void
-    {
-    }
+    public function boot(): void {}
 
     /**
      * Register the application services.
@@ -47,9 +47,22 @@ class CurrencyServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             CurrencyRepositoryInterface::class,
-            function (Application $app) {
+            static function (Application $app) {
                 /** @var CurrencyRepository $repository */
                 $repository = app(CurrencyRepository::class);
+                // phpstan does not get the reference to auth
+                if ($app->auth->check()) { // @phpstan-ignore-line
+                    $repository->setUser(auth()->user());
+                }
+
+                return $repository;
+            }
+        );
+        $this->app->bind(
+            GroupCurrencyRepositoryInterface::class,
+            static function (Application $app) {
+                /** @var GroupCurrencyRepository $repository */
+                $repository = app(GroupCurrencyRepository::class);
                 // phpstan does not get the reference to auth
                 if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());

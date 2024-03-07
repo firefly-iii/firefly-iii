@@ -12,7 +12,7 @@
         {% if tag.currencies|length == 0 %}
             <tr>
                 <td data-value="{{ tag.name }}">
-                    <a href="{{ route('tags.show', tag.id) }}" title="{{ tag.name }}">{{ tag.name }}</a>
+                    <a href="{{ route('tags.show', [tag.id]) }}" title="{{ tag.name }}">{{ tag.name }}</a>
                 </td>
                 <td style="text-align: right;">&mdash;</td>
                 <td style="text-align: right;">&mdash;</td>
@@ -22,7 +22,7 @@
         {% for currency in tag.currencies %}
             <tr>
                 <td data-value="{{ tag.name }} ({{ currency.currency_name }})">
-                    <a href="{{ route('tags.show', tag.id) }}" title="{{ tag.name }}">{{ tag.name }} ({{ currency.currency_name }})</a>
+                    <a href="{{ route('tags.show', [tag.id]) }}" title="{{ tag.name }}">{{ tag.name }} ({{ currency.currency_name }})</a>
                 </td>
                 <td data-value="{{ currency.spent }}" style="text-align: right;">
                     {{ formatAmountBySymbol(currency.spent, currency.currency_symbol, currency.currency_decimal_places) }}

@@ -31,11 +31,9 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Trait UserNavigation
- *
  */
 trait UserNavigation
 {
@@ -46,26 +44,18 @@ trait UserNavigation
      * returned but instead the index (/) will be returned.
      * - If the remembered url contains "jscript/" the remembered url will not be returned but instead the index (/)
      * will be returned.
-     *
-     * @param string $identifier
-     *
-     * @return string
      */
     final protected function getPreviousUrl(string $identifier): string
     {
-        Log::debug(sprintf('Trying to retrieve URL stored under "%s"', $identifier));
+        app('log')->debug(sprintf('Trying to retrieve URL stored under "%s"', $identifier));
         $url = (string)session($identifier);
-        Log::debug(sprintf('The URL is %s', $url));
+        app('log')->debug(sprintf('The URL is %s', $url));
 
         return app('steam')->getSafeUrl($url, route('index'));
     }
 
     /**
      * Will return false if you cant edit this account type.
-     *
-     * @param Account $account
-     *
-     * @return bool
      */
     final protected function isEditableAccount(Account $account): bool
     {
@@ -75,15 +65,10 @@ trait UserNavigation
         return in_array($type, $editable, true);
     }
 
-    /**
-     * @param TransactionGroup $group
-     *
-     * @return bool
-     */
     final protected function isEditableGroup(TransactionGroup $group): bool
     {
-        /** @var TransactionJournal|null $journal */
-        $journal = $group->transactionJournals()->first();
+        /** @var null|TransactionJournal $journal */
+        $journal  = $group->transactionJournals()->first();
         if (null === $journal) {
             return false;
         }
@@ -94,9 +79,7 @@ trait UserNavigation
     }
 
     /**
-     * @param Account $account
-     *
-     * @return RedirectResponse|Redirector
+     * @return Redirector|RedirectResponse
      */
     final protected function redirectAccountToAccount(Account $account)
     {
@@ -104,19 +87,20 @@ trait UserNavigation
         if (AccountType::RECONCILIATION === $type || AccountType::INITIAL_BALANCE === $type || AccountType::LIABILITY_CREDIT === $type) {
             // reconciliation must be stored somewhere in this account's transactions.
 
-            /** @var Transaction|null $transaction */
+            /** @var null|Transaction $transaction */
             $transaction = $account->transactions()->first();
             if (null === $transaction) {
-                Log::error(sprintf('Account #%d has no transactions. Dont know where it belongs.', $account->id));
+                app('log')->error(sprintf('Account #%d has no transactions. Dont know where it belongs.', $account->id));
                 session()->flash('error', trans('firefly.cant_find_redirect_account'));
 
                 return redirect(route('index'));
             }
-            $journal = $transaction->transactionJournal;
-            /** @var Transaction|null $other */
-            $other = $journal->transactions()->where('id', '!=', $transaction->id)->first();
+            $journal     = $transaction->transactionJournal;
+
+            /** @var null|Transaction $other */
+            $other       = $journal->transactions()->where('id', '!=', $transaction->id)->first();
             if (null === $other) {
-                Log::error(sprintf('Account #%d has no valid journals. Dont know where it belongs.', $account->id));
+                app('log')->error(sprintf('Account #%d has no valid journals. Dont know where it belongs.', $account->id));
                 session()->flash('error', trans('firefly.cant_find_redirect_account'));
 
                 return redirect(route('index'));
@@ -129,22 +113,21 @@ trait UserNavigation
     }
 
     /**
-     * @param TransactionGroup $group
-     *
-     * @return RedirectResponse|Redirector
+     * @return Redirector|RedirectResponse
      */
     final protected function redirectGroupToAccount(TransactionGroup $group)
     {
-        /** @var TransactionJournal|null $journal */
-        $journal = $group->transactionJournals()->first();
+        /** @var null|TransactionJournal $journal */
+        $journal      = $group->transactionJournals()->first();
         if (null === $journal) {
-            Log::error(sprintf('No journals in group #%d', $group->id));
+            app('log')->error(sprintf('No journals in group #%d', $group->id));
 
             return redirect(route('index'));
         }
         // prefer redirect to everything but expense and revenue:
         $transactions = $journal->transactions;
         $ignore       = [AccountType::REVENUE, AccountType::EXPENSE, AccountType::RECONCILIATION, AccountType::INITIAL_BALANCE];
+
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
             $type = $transaction->account->accountType->type;
@@ -156,17 +139,12 @@ trait UserNavigation
         return redirect(route('index'));
     }
 
-    /**
-     * @param string $identifier
-     *
-     * @return string|null
-     */
     final protected function rememberPreviousUrl(string $identifier): ?string
     {
         $return = app('steam')->getSafePreviousUrl();
         session()->put($identifier, $return);
 
-        Log::debug(sprintf('rememberPreviousUrl: %s: "%s"', $identifier, $return));
+        app('log')->debug(sprintf('rememberPreviousUrl: %s: "%s"', $identifier, $return));
 
         return $return;
     }

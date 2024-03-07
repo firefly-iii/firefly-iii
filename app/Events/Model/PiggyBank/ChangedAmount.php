@@ -29,7 +29,6 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class ChangedAmount
@@ -45,15 +44,10 @@ class ChangedAmount extends Event
 
     /**
      * Create a new event instance.
-     *
-     * @param PiggyBank               $piggyBank
-     * @param string                  $amount
-     * @param TransactionJournal|null $transactionJournal
-     * @param TransactionGroup|null   $transactionGroup
      */
     public function __construct(PiggyBank $piggyBank, string $amount, ?TransactionJournal $transactionJournal, ?TransactionGroup $transactionGroup)
     {
-        Log::debug(sprintf('Created piggy bank event for piggy bank #%d with amount %s', $piggyBank->id, $amount));
+        app('log')->debug(sprintf('Created piggy bank event for piggy bank #%d with amount %s', $piggyBank->id, $amount));
         $this->piggyBank          = $piggyBank;
         $this->transactionJournal = $transactionJournal;
         $this->transactionGroup   = $transactionGroup;

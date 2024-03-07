@@ -38,7 +38,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
@@ -65,48 +64,24 @@ class ListController extends Controller
     use AccountFilter;
     use TransactionFilter;
 
-    private CurrencyRepositoryInterface $repository;
-
-    /**
-     * CurrencyRepository constructor.
-     *
-
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $this->repository = app(CurrencyRepositoryInterface::class);
-                $this->repository->setUser(auth()->user());
-
-                return $next($request);
-            }
-        );
-    }
-
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/listAccountByCurrency
      * Display a list of accounts.
      *
-     * @param Request             $request
-     * @param TransactionCurrency $currency
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function accounts(Request $request, TransactionCurrency $currency): JsonResponse
     {
-        $manager = $this->getManager();
+        $manager           = $this->getManager();
 
         // read type from URL
-        $type = $request->get('type') ?? 'all';
+        $type              = $request->get('type') ?? 'all';
         $this->parameters->set('type', $type);
 
         // types to get, page size:
-        $types    = $this->mapAccountTypes($this->parameters->get('type'));
-        $pageSize = $this->parameters->get('limit');
+        $types             = $this->mapAccountTypes($this->parameters->get('type'));
+        $pageSize          = $this->parameters->get('limit');
 
         // get list of accounts. Count it and split it.
         /** @var AccountRepositoryInterface $accountRepository */
@@ -114,7 +89,7 @@ class ListController extends Controller
         $unfiltered        = $accountRepository->getAccountsByType($types);
 
         // filter list on currency preference:
-        $collection = $unfiltered->filter(
+        $collection        = $unfiltered->filter(
             static function (Account $account) use ($currency, $accountRepository) {
                 $currencyId = (int)$accountRepository->getMetaValue($account, 'currency_id');
 
@@ -122,17 +97,17 @@ class ListController extends Controller
             }
         );
 
-        $count    = $collection->count();
-        $accounts = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $count             = $collection->count();
+        $accounts          = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
-        $paginator = new LengthAwarePaginator($accounts, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.currencies.accounts', [$currency->code]) . $this->buildParams());
+        $paginator         = new LengthAwarePaginator($accounts, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.currencies.accounts', [$currency->code]).$this->buildParams());
 
         /** @var AccountTransformer $transformer */
-        $transformer = app(AccountTransformer::class);
+        $transformer       = app(AccountTransformer::class);
         $transformer->setParameters($this->parameters);
-        $resource = new FractalCollection($accounts, $transformer, 'accounts');
+        $resource          = new FractalCollection($accounts, $transformer, 'accounts');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -144,33 +119,30 @@ class ListController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @param TransactionCurrency $currency
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function availableBudgets(TransactionCurrency $currency): JsonResponse
     {
-        $manager = $this->getManager();
+        $manager          = $this->getManager();
         // types to get, page size:
-        $pageSize = $this->parameters->get('limit');
+        $pageSize         = $this->parameters->get('limit');
 
         // get list of available budgets. Count it and split it.
         /** @var AvailableBudgetRepositoryInterface $abRepository */
-        $abRepository = app(AvailableBudgetRepositoryInterface::class);
+        $abRepository     = app(AvailableBudgetRepositoryInterface::class);
 
         $collection       = $abRepository->getAvailableBudgetsByCurrency($currency);
         $count            = $collection->count();
         $availableBudgets = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         // make paginator:
-        $paginator = new LengthAwarePaginator($availableBudgets, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.currencies.available-budgets', [$currency->code]) . $this->buildParams());
+        $paginator        = new LengthAwarePaginator($availableBudgets, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.currencies.available-budgets', [$currency->code]).$this->buildParams());
 
         /** @var AvailableBudgetTransformer $transformer */
-        $transformer = app(AvailableBudgetTransformer::class);
+        $transformer      = app(AvailableBudgetTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($availableBudgets, $transformer, 'available_budgets');
+        $resource         = new FractalCollection($availableBudgets, $transformer, 'available_budgets');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -182,38 +154,35 @@ class ListController extends Controller
      *
      * List all bills
      *
-     * @param TransactionCurrency $currency
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function bills(TransactionCurrency $currency): JsonResponse
     {
-        $manager = $this->getManager();
+        $manager     = $this->getManager();
 
         /** @var BillRepositoryInterface $billRepos */
-        $billRepos  = app(BillRepositoryInterface::class);
-        $pageSize   = $this->parameters->get('limit');
-        $unfiltered = $billRepos->getBills();
+        $billRepos   = app(BillRepositoryInterface::class);
+        $pageSize    = $this->parameters->get('limit');
+        $unfiltered  = $billRepos->getBills();
 
         // filter and paginate list:
-        $collection = $unfiltered->filter(
+        $collection  = $unfiltered->filter(
             static function (Bill $bill) use ($currency) {
                 return $bill->transaction_currency_id === $currency->id;
             }
         );
-        $count      = $collection->count();
-        $bills      = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $count       = $collection->count();
+        $bills       = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
-        $paginator = new LengthAwarePaginator($bills, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.currencies.bills', [$currency->code]) . $this->buildParams());
+        $paginator   = new LengthAwarePaginator($bills, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.currencies.bills', [$currency->code]).$this->buildParams());
 
         /** @var BillTransformer $transformer */
         $transformer = app(BillTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($bills, $transformer, 'bills');
+        $resource    = new FractalCollection($bills, $transformer, 'bills');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -225,9 +194,6 @@ class ListController extends Controller
      *
      * List all budget limits
      *
-     * @param TransactionCurrency $currency
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function budgetLimits(TransactionCurrency $currency): JsonResponse
@@ -241,13 +207,13 @@ class ListController extends Controller
         $count        = $collection->count();
         $budgetLimits = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         $paginator    = new LengthAwarePaginator($budgetLimits, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.currencies.budget-limits', [$currency->code]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.currencies.budget-limits', [$currency->code]).$this->buildParams());
 
         /** @var BudgetLimitTransformer $transformer */
-        $transformer = app(BudgetLimitTransformer::class);
+        $transformer  = app(BudgetLimitTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($budgetLimits, $transformer, 'budget_limits');
+        $resource     = new FractalCollection($budgetLimits, $transformer, 'budget_limits');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -259,16 +225,13 @@ class ListController extends Controller
      *
      * List all recurring transactions.
      *
-     * @param TransactionCurrency $currency
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function recurrences(TransactionCurrency $currency): JsonResponse
     {
-        $manager = $this->getManager();
+        $manager        = $this->getManager();
         // types to get, page size:
-        $pageSize = $this->parameters->get('limit');
+        $pageSize       = $this->parameters->get('limit');
 
         // get list of budgets. Count it and split it.
         /** @var RecurringRepositoryInterface $recurringRepos */
@@ -276,8 +239,8 @@ class ListController extends Controller
         $unfiltered     = $recurringRepos->getAll();
 
         // filter selection
-        $collection = $unfiltered->filter(
-            static function (Recurrence $recurrence) use ($currency) {
+        $collection     = $unfiltered->filter( // @phpstan-ignore-line
+            static function (Recurrence $recurrence) use ($currency) {  // @phpstan-ignore-line
                 /** @var RecurrenceTransaction $transaction */
                 foreach ($recurrence->recurrenceTransactions as $transaction) {
                     if ($transaction->transaction_currency_id === $currency->id || $transaction->foreign_currency_id === $currency->id) {
@@ -288,18 +251,18 @@ class ListController extends Controller
                 return null;
             }
         );
-        $count      = $collection->count();
-        $piggyBanks = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $count          = $collection->count();
+        $piggyBanks     = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
-        $paginator = new LengthAwarePaginator($piggyBanks, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.currencies.recurrences', [$currency->code]) . $this->buildParams());
+        $paginator      = new LengthAwarePaginator($piggyBanks, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.currencies.recurrences', [$currency->code]).$this->buildParams());
 
         /** @var RecurrenceTransformer $transformer */
-        $transformer = app(RecurrenceTransformer::class);
+        $transformer    = app(RecurrenceTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($piggyBanks, $transformer, 'recurrences');
+        $resource       = new FractalCollection($piggyBanks, $transformer, 'recurrences');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -311,23 +274,20 @@ class ListController extends Controller
      *
      * List all of them.
      *
-     * @param TransactionCurrency $currency
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function rules(TransactionCurrency $currency): JsonResponse
     {
-        $manager  = $this->getManager();
-        $pageSize = $this->parameters->get('limit');
+        $manager     = $this->getManager();
+        $pageSize    = $this->parameters->get('limit');
 
         // get list of budgets. Count it and split it.
         /** @var RuleRepositoryInterface $ruleRepos */
-        $ruleRepos  = app(RuleRepositoryInterface::class);
-        $unfiltered = $ruleRepos->getAll();
+        $ruleRepos   = app(RuleRepositoryInterface::class);
+        $unfiltered  = $ruleRepos->getAll();
 
-        $collection = $unfiltered->filter(
-            static function (Rule $rule) use ($currency) {
+        $collection  = $unfiltered->filter( // @phpstan-ignore-line
+            static function (Rule $rule) use ($currency) { // @phpstan-ignore-line
                 /** @var RuleTrigger $trigger */
                 foreach ($rule->ruleTriggers as $trigger) {
                     if ('currency_is' === $trigger->trigger_type && $currency->name === $trigger->trigger_value) {
@@ -339,18 +299,18 @@ class ListController extends Controller
             }
         );
 
-        $count = $collection->count();
-        $rules = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $count       = $collection->count();
+        $rules       = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
-        $paginator = new LengthAwarePaginator($rules, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.rules.index') . $this->buildParams());
+        $paginator   = new LengthAwarePaginator($rules, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.rules.index').$this->buildParams());
 
         /** @var RuleTransformer $transformer */
         $transformer = app(RuleTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($rules, $transformer, 'rules');
+        $resource    = new FractalCollection($rules, $transformer, 'rules');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -362,28 +322,23 @@ class ListController extends Controller
      *
      * Show all transactions.
      *
-     * @param Request             $request
-     *
-     * @param TransactionCurrency $currency
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function transactions(Request $request, TransactionCurrency $currency): JsonResponse
     {
-        $pageSize = $this->parameters->get('limit');
-        $type     = $request->get('type') ?? 'default';
+        $pageSize     = $this->parameters->get('limit');
+        $type         = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 
-        $types   = $this->mapTransactionTypes($this->parameters->get('type'));
-        $manager = $this->getManager();
+        $types        = $this->mapTransactionTypes($this->parameters->get('type'));
+        $manager      = $this->getManager();
 
         /** @var User $admin */
-        $admin = auth()->user();
+        $admin        = auth()->user();
 
         // use new group collector:
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector    = app(GroupCollectorInterface::class);
         $collector
             ->setUser($admin)
             // filter on currency.
@@ -395,22 +350,23 @@ class ListController extends Controller
             // set page to retrieve
             ->setPage($this->parameters->get('page'))
             // set types of transactions to return.
-            ->setTypes($types);
+            ->setTypes($types)
+        ;
         if (null !== $this->parameters->get('start')) {
             $collector->setStart($this->parameters->get('start'));
         }
         if (null !== $this->parameters->get('end')) {
             $collector->setEnd($this->parameters->get('end'));
         }
-        $paginator = $collector->getPaginatedGroups();
-        $paginator->setPath(route('api.v1.currencies.transactions', [$currency->code]) . $this->buildParams());
+        $paginator    = $collector->getPaginatedGroups();
+        $paginator->setPath(route('api.v1.currencies.transactions', [$currency->code]).$this->buildParams());
         $transactions = $paginator->getCollection();
 
         /** @var TransactionGroupTransformer $transformer */
-        $transformer = app(TransactionGroupTransformer::class);
+        $transformer  = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($transactions, $transformer, 'transactions');
+        $resource     = new FractalCollection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);

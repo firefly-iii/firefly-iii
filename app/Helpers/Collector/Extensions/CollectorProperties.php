@@ -33,30 +33,34 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 trait CollectorProperties
 {
-    public const TEST = 'Test';
-    private bool $expandGroupSearch;
-    private array $fields;
-    private bool $hasAccountInfo;
-    private bool $hasBillInformation;
-    private bool $hasBudgetInformation;
-    private bool $hasCatInformation;
-    private bool $hasJoinedAttTables;
-    private bool $hasJoinedMetaTables;
-    private bool $hasJoinedTagTables;
-    private bool $hasNotesInformation;
-    private array $integerFields;
-    private ?int $limit;
-    private ?int $page;
-    private array $postFilters;
+    /** @var array<int, string> */
+    public array $sorting;
+    public const string TEST = 'Test';
+    private ?int $endRow;
+    private bool    $expandGroupSearch;
+    private array   $fields;
+    private bool    $hasAccountInfo;
+    private bool    $hasBillInformation;
+    private bool    $hasBudgetInformation;
+    private bool    $hasCatInformation;
+    private bool    $hasJoinedAttTables;
+    private bool    $hasJoinedMetaTables;
+    private bool    $hasJoinedTagTables;
+    private bool    $hasNotesInformation;
+    private array   $integerFields;
+    private ?int    $limit;
+    private ?int    $page;
+    private array   $postFilters;
     private HasMany $query;
-    private array $stringFields;
+    private ?int $startRow;
+    private array   $stringFields;
     /*
      * This array is used to collect ALL tags the user may search for (using 'setTags').
      * This way the user can call 'setTags' multiple times and get a joined result.
      *
      */
-    private array $tags;
-    private int $total;
-    private ?User $user;
+    private array      $tags;
+    private int        $total;
+    private ?User      $user;
     private ?UserGroup $userGroup;
 }

@@ -32,9 +32,6 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class TransferCurrenciesCorrections
@@ -43,9 +40,9 @@ class TransferCurrenciesCorrections extends Command
 {
     use ShowsFriendlyMessages;
 
-    public const CONFIG_NAME = '480_transfer_currencies';
-    protected $description = 'Updates transfer currency information.';
-    protected $signature   = 'firefly-iii:transfer-currencies {--F|force : Force the execution of this command.}';
+    public const string CONFIG_NAME = '480_transfer_currencies';
+    protected $description          = 'Updates transfer currency information.';
+    protected $signature            = 'firefly-iii:transfer-currencies {--F|force : Force the execution of this command.}';
     private array                         $accountCurrencies;
     private AccountRepositoryInterface    $accountRepos;
     private JournalCLIRepositoryInterface $cliRepos;
@@ -60,10 +57,6 @@ class TransferCurrenciesCorrections extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function handle(): int
     {
@@ -75,16 +68,17 @@ class TransferCurrenciesCorrections extends Command
             return 0;
         }
 
-
         $this->startUpdateRoutine();
         $this->markAsExecuted();
 
         if (0 === $this->count) {
             $this->friendlyPositive('All transfers have correct currency information.');
+
             return 0;
         }
 
         $this->friendlyInfo(sprintf('Verified currency information of %d transfer(s).', $this->count));
+
         return 0;
     }
 
@@ -92,8 +86,6 @@ class TransferCurrenciesCorrections extends Command
      * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
      * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
      * be called from the handle method instead of using the constructor to initialize the command.
-     *
-
      */
     private function stupidLaravel(): void
     {
@@ -106,8 +98,6 @@ class TransferCurrenciesCorrections extends Command
 
     /**
      * Reset all the class fields for the current transfer.
-     *
-
      */
     private function resetInformation(): void
     {
@@ -119,11 +109,6 @@ class TransferCurrenciesCorrections extends Command
         $this->destinationCurrency    = null;
     }
 
-    /**
-     * @return bool
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
@@ -145,26 +130,22 @@ class TransferCurrenciesCorrections extends Command
     private function startUpdateRoutine(): void
     {
         $set = $this->cliRepos->getAllJournals([TransactionType::TRANSFER]);
+
         /** @var TransactionJournal $journal */
         foreach ($set as $journal) {
             $this->updateTransferCurrency($journal);
         }
     }
 
-    /**
-     * @param TransactionJournal $transfer
-     */
     private function updateTransferCurrency(TransactionJournal $transfer): void
     {
         $this->resetInformation();
-
 
         if ($this->isSplitJournal($transfer)) {
             $this->friendlyWarning(sprintf('Transaction journal #%d is a split journal. Cannot continue.', $transfer->id));
 
             return;
         }
-
 
         $this->getSourceInformation($transfer);
         $this->getDestinationInformation($transfer);
@@ -186,7 +167,6 @@ class TransferCurrenciesCorrections extends Command
 
             return;
         }
-
 
         // fix source transaction having no currency.
         $this->fixSourceNoCurrency();
@@ -216,10 +196,6 @@ class TransferCurrenciesCorrections extends Command
 
     /**
      * Is this a split transaction journal?
-     *
-     * @param TransactionJournal $transfer
-     *
-     * @return bool
      */
     private function isSplitJournal(TransactionJournal $transfer): bool
     {
@@ -228,10 +204,6 @@ class TransferCurrenciesCorrections extends Command
 
     /**
      * Extract source transaction, source account + source account currency from the journal.
-     *
-     * @param TransactionJournal $journal
-     *
-
      */
     private function getSourceInformation(TransactionJournal $journal): void
     {
@@ -240,31 +212,21 @@ class TransferCurrenciesCorrections extends Command
         $this->sourceCurrency    = null === $this->sourceAccount ? null : $this->getCurrency($this->sourceAccount);
     }
 
-    /**
-     * @param TransactionJournal $transfer
-     *
-     * @return Transaction|null
-     */
     private function getSourceTransaction(TransactionJournal $transfer): ?Transaction
     {
         return $transfer->transactions()->where('amount', '<', 0)->first();
     }
 
-    /**
-     * @param Account $account
-     *
-     * @return TransactionCurrency|null
-     */
     private function getCurrency(Account $account): ?TransactionCurrency
     {
-        $accountId = $account->id;
+        $accountId                           = $account->id;
         if (array_key_exists($accountId, $this->accountCurrencies) && 0 === $this->accountCurrencies[$accountId]) {
             return null;
         }
         if (array_key_exists($accountId, $this->accountCurrencies) && $this->accountCurrencies[$accountId] instanceof TransactionCurrency) {
             return $this->accountCurrencies[$accountId];
         }
-        $currency = $this->accountRepos->getAccountCurrency($account);
+        $currency                            = $this->accountRepos->getAccountCurrency($account);
         if (null === $currency) {
             $this->accountCurrencies[$accountId] = 0;
 
@@ -277,10 +239,6 @@ class TransferCurrenciesCorrections extends Command
 
     /**
      * Extract destination transaction, destination account + destination account currency from the journal.
-     *
-     * @param TransactionJournal $journal
-     *
-
      */
     private function getDestinationInformation(TransactionJournal $journal): void
     {
@@ -289,11 +247,6 @@ class TransferCurrenciesCorrections extends Command
         $this->destinationCurrency    = null === $this->destinationAccount ? null : $this->getCurrency($this->destinationAccount);
     }
 
-    /**
-     * @param TransactionJournal $transfer
-     *
-     * @return Transaction|null
-     */
     private function getDestinationTransaction(TransactionJournal $transfer): ?Transaction
     {
         return $transfer->transactions()->where('amount', '>', 0)->first();
@@ -301,8 +254,6 @@ class TransferCurrenciesCorrections extends Command
 
     /**
      * Is either the source or destination transaction NULL?
-     *
-     * @return bool
      */
     private function isEmptyTransactions(): bool
     {
@@ -311,15 +262,12 @@ class TransferCurrenciesCorrections extends Command
                || null === $this->destinationAccount;
     }
 
-    /**
-     * @return bool
-     */
     private function isNoCurrencyPresent(): bool
     {
         // source account must have a currency preference.
         if (null === $this->sourceCurrency) {
             $message = sprintf('Account #%d ("%s") must have currency preference but has none.', $this->sourceAccount->id, $this->sourceAccount->name);
-            Log::error($message);
+            app('log')->error($message);
             $this->friendlyError($message);
 
             return true;
@@ -332,7 +280,7 @@ class TransferCurrenciesCorrections extends Command
                 $this->destinationAccount->id,
                 $this->destinationAccount->name
             );
-            Log::error($message);
+            app('log')->error($message);
             $this->friendlyError($message);
 
             return true;
@@ -350,14 +298,15 @@ class TransferCurrenciesCorrections extends Command
         if (null === $this->sourceTransaction->transaction_currency_id && null !== $this->sourceCurrency) {
             $this->sourceTransaction
                 ->transaction_currency_id
-                     = (int)$this->sourceCurrency->id;
+                     = $this->sourceCurrency->id
+            ;
             $message = sprintf(
                 'Transaction #%d has no currency setting, now set to %s.',
                 $this->sourceTransaction->id,
                 $this->sourceCurrency->code
             );
             $this->friendlyInfo($message);
-            $this->count++;
+            ++$this->count;
             $this->sourceTransaction->save();
         }
     }
@@ -370,9 +319,9 @@ class TransferCurrenciesCorrections extends Command
     {
         if (null !== $this->sourceCurrency
             && null === $this->sourceTransaction->foreign_amount
-            && (int)$this->sourceTransaction->transaction_currency_id !== (int)$this->sourceCurrency->id
+            && (int)$this->sourceTransaction->transaction_currency_id !== $this->sourceCurrency->id
         ) {
-            $message = sprintf(
+            $message                                          = sprintf(
                 'Transaction #%d has a currency setting #%d that should be #%d. Amount remains %s, currency is changed.',
                 $this->sourceTransaction->id,
                 $this->sourceTransaction->transaction_currency_id,
@@ -380,8 +329,8 @@ class TransferCurrenciesCorrections extends Command
                 $this->sourceTransaction->amount
             );
             $this->friendlyWarning($message);
-            $this->count++;
-            $this->sourceTransaction->transaction_currency_id = (int)$this->sourceCurrency->id;
+            ++$this->count;
+            $this->sourceTransaction->transaction_currency_id = $this->sourceCurrency->id;
             $this->sourceTransaction->save();
         }
     }
@@ -395,14 +344,15 @@ class TransferCurrenciesCorrections extends Command
         if (null === $this->destinationTransaction->transaction_currency_id && null !== $this->destinationCurrency) {
             $this->destinationTransaction
                 ->transaction_currency_id
-                     = (int)$this->destinationCurrency->id;
+                     = $this->destinationCurrency->id
+            ;
             $message = sprintf(
                 'Transaction #%d has no currency setting, now set to %s.',
                 $this->destinationTransaction->id,
                 $this->destinationCurrency->code
             );
             $this->friendlyInfo($message);
-            $this->count++;
+            ++$this->count;
             $this->destinationTransaction->save();
         }
     }
@@ -415,9 +365,9 @@ class TransferCurrenciesCorrections extends Command
     {
         if (null !== $this->destinationCurrency
             && null === $this->destinationTransaction->foreign_amount
-            && (int)$this->destinationTransaction->transaction_currency_id !== (int)$this->destinationCurrency->id
+            && (int)$this->destinationTransaction->transaction_currency_id !== $this->destinationCurrency->id
         ) {
-            $message = sprintf(
+            $message                                               = sprintf(
                 'Transaction #%d has a currency setting #%d that should be #%d. Amount remains %s, currency is changed.',
                 $this->destinationTransaction->id,
                 $this->destinationTransaction->transaction_currency_id,
@@ -425,8 +375,8 @@ class TransferCurrenciesCorrections extends Command
                 $this->destinationTransaction->amount
             );
             $this->friendlyWarning($message);
-            $this->count++;
-            $this->destinationTransaction->transaction_currency_id = (int)$this->destinationCurrency->id;
+            ++$this->count;
+            $this->destinationTransaction->transaction_currency_id = $this->destinationCurrency->id;
             $this->destinationTransaction->save();
         }
     }
@@ -438,10 +388,10 @@ class TransferCurrenciesCorrections extends Command
      */
     private function fixInvalidForeignCurrency(): void
     {
-        if ((int)$this->destinationCurrency->id === (int)$this->sourceCurrency->id) {
+        if ($this->destinationCurrency->id === $this->sourceCurrency->id) {
             // update both transactions to match:
-            $this->sourceTransaction->foreign_amount      = null;
-            $this->sourceTransaction->foreign_currency_id = null;
+            $this->sourceTransaction->foreign_amount           = null;
+            $this->sourceTransaction->foreign_currency_id      = null;
 
             $this->destinationTransaction->foreign_amount      = null;
             $this->destinationTransaction->foreign_currency_id = null;
@@ -458,7 +408,7 @@ class TransferCurrenciesCorrections extends Command
      */
     private function fixMismatchedForeignCurrency(): void
     {
-        if ((int)$this->sourceCurrency->id !== (int)$this->destinationCurrency->id) {
+        if ($this->sourceCurrency->id !== $this->destinationCurrency->id) {
             $this->sourceTransaction->transaction_currency_id      = $this->sourceCurrency->id;
             $this->sourceTransaction->foreign_currency_id          = $this->destinationCurrency->id;
             $this->destinationTransaction->transaction_currency_id = $this->sourceCurrency->id;
@@ -466,7 +416,7 @@ class TransferCurrenciesCorrections extends Command
 
             $this->sourceTransaction->save();
             $this->destinationTransaction->save();
-            $this->count++;
+            ++$this->count;
             $this->friendlyInfo(
                 sprintf('Verified foreign currency ID of transaction #%d and #%d', $this->sourceTransaction->id, $this->destinationTransaction->id)
             );
@@ -480,9 +430,9 @@ class TransferCurrenciesCorrections extends Command
     private function fixSourceNullForeignAmount(): void
     {
         if (null === $this->sourceTransaction->foreign_amount && null !== $this->destinationTransaction->foreign_amount) {
-            $this->sourceTransaction->foreign_amount = bcmul((string)$this->destinationTransaction->foreign_amount, '-1');
+            $this->sourceTransaction->foreign_amount = bcmul($this->destinationTransaction->foreign_amount, '-1');
             $this->sourceTransaction->save();
-            $this->count++;
+            ++$this->count;
             $this->friendlyInfo(
                 sprintf(
                     'Restored foreign amount of source transaction #%d to %s',
@@ -500,9 +450,9 @@ class TransferCurrenciesCorrections extends Command
     private function fixDestNullForeignAmount(): void
     {
         if (null === $this->destinationTransaction->foreign_amount && null !== $this->sourceTransaction->foreign_amount) {
-            $this->destinationTransaction->foreign_amount = bcmul((string)$this->sourceTransaction->foreign_amount, '-1');
+            $this->destinationTransaction->foreign_amount = bcmul($this->sourceTransaction->foreign_amount, '-1');
             $this->destinationTransaction->save();
-            $this->count++;
+            ++$this->count;
             $this->friendlyInfo(
                 sprintf(
                     'Restored foreign amount of destination transaction #%d to %s',
@@ -515,12 +465,10 @@ class TransferCurrenciesCorrections extends Command
 
     /**
      * This method makes sure that the transaction journal uses the currency given in the source transaction.
-     *
-     * @param TransactionJournal $journal
      */
     private function fixTransactionJournalCurrency(TransactionJournal $journal): void
     {
-        if ((int)$journal->transaction_currency_id !== (int)$this->sourceCurrency->id) {
+        if ((int)$journal->transaction_currency_id !== $this->sourceCurrency->id) {
             $oldCurrencyCode                  = $journal->transactionCurrency->code ?? '(nothing)';
             $journal->transaction_currency_id = $this->sourceCurrency->id;
             $message                          = sprintf(
@@ -530,15 +478,12 @@ class TransferCurrenciesCorrections extends Command
                 $this->sourceCurrency->code,
                 $oldCurrencyCode
             );
-            $this->count++;
+            ++$this->count;
             $this->friendlyInfo($message);
             $journal->save();
         }
     }
 
-    /**
-     *
-     */
     private function markAsExecuted(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);

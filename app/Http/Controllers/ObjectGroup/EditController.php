@@ -43,8 +43,6 @@ class EditController extends Controller
 
     /**
      * PiggyBankController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -65,8 +63,6 @@ class EditController extends Controller
     /**
      * Edit an object group.
      *
-     * @param ObjectGroup $objectGroup
-     *
      * @return Factory|View
      */
     public function edit(ObjectGroup $objectGroup)
@@ -85,10 +81,7 @@ class EditController extends Controller
     /**
      * Update a piggy bank.
      *
-     * @param ObjectGroupFormRequest $request
-     * @param ObjectGroup            $objectGroup
-     *
-     * @return Application|RedirectResponse|Redirector
+     * @return Application|Redirector|RedirectResponse
      */
     public function update(ObjectGroupFormRequest $request, ObjectGroup $objectGroup)
     {
@@ -98,7 +91,7 @@ class EditController extends Controller
         session()->flash('success', (string)trans('firefly.updated_object_group', ['title' => $objectGroup->title]));
         app('preferences')->mark();
 
-        $redirect = redirect($this->getPreviousUrl('object-groups.edit.url'));
+        $redirect  = redirect($this->getPreviousUrl('object-groups.edit.url'));
 
         if (1 === (int)$request->get('return_to_edit')) {
             session()->put('object-groups.edit.fromUpdate', true);

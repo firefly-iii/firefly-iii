@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * rules.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -56,6 +55,8 @@ return [
     'cannot_find_subscription'                    => 'Firefly III finn ikkje abonnementet «:name»',
     'no_notes_to_move'                            => 'The transaction has no notes to move to the description field',
     'no_tags_to_remove'                           => 'Transaksjonen har ingen nøkkelord å fjerna',
+    'not_withdrawal'                              => 'The transaction is not a withdrawal',
+    'not_deposit'                                 => 'The transaction is not a deposit',
     'cannot_find_tag'                             => 'Firefly III finn ikkje nøkkelordet «:tag»',
     'cannot_find_asset'                           => 'Firefly III can\'t find asset account ":name"',
     'cannot_find_accounts'                        => 'Firefly III can\'t find the source or destination account',

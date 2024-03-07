@@ -27,8 +27,6 @@ use Carbon\Carbon;
 
 /**
  * Class AbstractCronjob
- *
-
  */
 abstract class AbstractCronjob
 {
@@ -53,23 +51,14 @@ abstract class AbstractCronjob
         $this->message      = null;
     }
 
-    /**
-     *
-     */
     abstract public function fire(): void;
 
-    /**
-     * @param Carbon $date
-     */
     final public function setDate(Carbon $date): void
     {
         $newDate    = clone $date;
         $this->date = $newDate;
     }
 
-    /**
-     * @param bool $force
-     */
     final public function setForce(bool $force): void
     {
         $this->force = $force;

@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * BudgetRepositoryInterface.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -25,6 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\UserGroups\Budget;
 
+use FireflyIII\Models\UserGroup;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -32,8 +33,9 @@ use Illuminate\Support\Collection;
  */
 interface BudgetRepositoryInterface
 {
-    /**
-     * @return Collection
-     */
     public function getActiveBudgets(): Collection;
+
+    public function setUser(User $user): void;
+
+    public function setUserGroup(UserGroup $userGroup): void;
 }

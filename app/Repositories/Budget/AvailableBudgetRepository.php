@@ -30,27 +30,25 @@ use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
- *
  * Class AvailableBudgetRepository
  */
 class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
 {
     private User $user;
 
-    /**
-     * @inheritDoc
-     */
     public function cleanup(): void
     {
         $exists           = [];
         $availableBudgets = $this->user->availableBudgets()->get();
+
         /** @var AvailableBudget $availableBudget */
         foreach ($availableBudgets as $availableBudget) {
-            $start = $availableBudget->start_date->format('Y-m-d');
-            $end   = $availableBudget->end_date->format('Y-m-d');
-            $key   = sprintf('%s-%s-%s', $availableBudget->transaction_currency_id, $start, $end);
+            $start        = $availableBudget->start_date->format('Y-m-d');
+            $end          = $availableBudget->end_date->format('Y-m-d');
+            $key          = sprintf('%s-%s-%s', $availableBudget->transaction_currency_id, $start, $end);
             if (array_key_exists($key, $exists)) {
                 app('log')->debug(sprintf('Found duplicate AB: %s %s, %s-%s. Has been deleted', $availableBudget->transaction_currency_id, $availableBudget->amount, $start, $end));
                 $availableBudget->delete();
@@ -61,18 +59,13 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
 
     /**
      * Return a list of all available budgets (in all currencies) (for the selected period).
-     *
-     * @param Carbon|null $start
-     * @param Carbon|null $end
-     *
-     * @return Collection
      */
     public function get(?Carbon $start = null, ?Carbon $end = null): Collection
     {
         $query = $this->user->availableBudgets()->with(['transactionCurrency']);
         if (null !== $start && null !== $end) {
             $query->where(
-                static function (Builder $q1) use ($start, $end) {
+                static function (Builder $q1) use ($start, $end): void { // @phpstan-ignore-line
                     $q1->where('start_date', '=', $start->format('Y-m-d'));
                     $q1->where('end_date', '=', $end->format('Y-m-d'));
                 }
@@ -87,20 +80,15 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
      */
     public function destroyAll(): void
     {
+        Log::channel('audit')->info('Delete all available budgets through destroyAll');
         $this->user->availableBudgets()->delete();
     }
 
-    /**
-     * @param AvailableBudget $availableBudget
-     */
     public function destroyAvailableBudget(AvailableBudget $availableBudget): void
     {
         $availableBudget->delete();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function findById(int $id): ?AvailableBudget
     {
         return $this->user->availableBudgets->find($id);
@@ -108,55 +96,42 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
 
     /**
      * Find existing AB.
-     *
-     * @param TransactionCurrency $currency
-     * @param Carbon              $start
-     * @param Carbon              $end
-     *
-     * @return AvailableBudget|null
      */
     public function find(TransactionCurrency $currency, Carbon $start, Carbon $end): ?AvailableBudget
     {
         return $this->user->availableBudgets()
-                          ->where('transaction_currency_id', $currency->id)
-                          ->where('start_date', $start->format('Y-m-d'))
-                          ->where('end_date', $end->format('Y-m-d'))
-                          ->first();
+            ->where('transaction_currency_id', $currency->id)
+            ->where('start_date', $start->format('Y-m-d'))
+            ->where('end_date', $end->format('Y-m-d'))
+            ->first()
+        ;
     }
 
-    /**
-     * @param TransactionCurrency $currency
-     * @param Carbon              $start
-     * @param Carbon              $end
-     *
-     * @return string
-     */
     public function getAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end): string
     {
         $amount          = '0';
+
+        /** @var null|AvailableBudget $availableBudget */
         $availableBudget = $this->user->availableBudgets()
-                                      ->where('transaction_currency_id', $currency->id)
-                                      ->where('start_date', $start->format('Y-m-d'))
-                                      ->where('end_date', $end->format('Y-m-d'))->first();
+            ->where('transaction_currency_id', $currency->id)
+            ->where('start_date', $start->format('Y-m-d'))
+            ->where('end_date', $end->format('Y-m-d'))->first()
+        ;
         if (null !== $availableBudget) {
-            $amount = (string)$availableBudget->amount;
+            $amount = $availableBudget->amount;
         }
 
         return $amount;
     }
 
-    /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
     public function getAvailableBudgetWithCurrency(Carbon $start, Carbon $end): array
     {
         $return           = [];
         $availableBudgets = $this->user->availableBudgets()
-                                       ->where('start_date', $start->format('Y-m-d'))
-                                       ->where('end_date', $end->format('Y-m-d'))->get();
+            ->where('start_date', $start->format('Y-m-d'))
+            ->where('end_date', $end->format('Y-m-d'))->get()
+        ;
+
         /** @var AvailableBudget $availableBudget */
         foreach ($availableBudgets as $availableBudget) {
             $return[$availableBudget->transaction_currency_id] = $availableBudget->amount;
@@ -167,10 +142,6 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
 
     /**
      * Returns all available budget objects.
-     *
-     * @param TransactionCurrency $currency
-     *
-     * @return Collection
      */
     public function getAvailableBudgetsByCurrency(TransactionCurrency $currency): Collection
     {
@@ -179,12 +150,6 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
 
     /**
      * Returns all available budget objects.
-     *
-     * @param Carbon|null $start
-     * @param Carbon|null $end
-     *
-     * @return Collection
-     *
      */
     public function getAvailableBudgetsByDate(?Carbon $start, ?Carbon $end): Collection
     {
@@ -202,54 +167,42 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
 
     /**
      * Returns all available budget objects.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
-     *
      */
     public function getAvailableBudgetsByExactDate(Carbon $start, Carbon $end): Collection
     {
         return $this->user->availableBudgets()
-                          ->where('start_date', '=', $start->format('Y-m-d'))
-                          ->where('end_date', '=', $end->format('Y-m-d'))
-                          ->get();
+            ->where('start_date', '=', $start->format('Y-m-d'))
+            ->where('end_date', '=', $end->format('Y-m-d'))
+            ->get()
+        ;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getByCurrencyDate(Carbon $start, Carbon $end, TransactionCurrency $currency): ?AvailableBudget
     {
         return $this->user
             ->availableBudgets()
             ->where('transaction_currency_id', $currency->id)
             ->where('start_date', $start->format('Y-m-d'))
-            ->where('end_date', $end->format('Y-m-d'))->first();
+            ->where('end_date', $end->format('Y-m-d'))->first()
+        ;
     }
 
     /**
-     * @param TransactionCurrency $currency
-     * @param Carbon              $start
-     * @param Carbon              $end
-     * @param string              $amount
-     *
-     * @return AvailableBudget
      * @deprecated
      */
     public function setAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end, string $amount): AvailableBudget
     {
-        $availableBudget = $this->user->availableBudgets()
-                                      ->where('transaction_currency_id', $currency->id)
-                                      ->where('start_date', $start->format('Y-m-d'))
-                                      ->where('end_date', $end->format('Y-m-d'))->first();
+        $availableBudget         = $this->user->availableBudgets()
+            ->where('transaction_currency_id', $currency->id)
+            ->where('start_date', $start->format('Y-m-d'))
+            ->where('end_date', $end->format('Y-m-d'))->first()
+        ;
         if (null === $availableBudget) {
-            $availableBudget = new AvailableBudget();
+            $availableBudget             = new AvailableBudget();
             $availableBudget->user()->associate($this->user);
             $availableBudget->transactionCurrency()->associate($currency);
-            $availableBudget->start_date = $start->format('Y-m-d');
-            $availableBudget->end_date   = $end->format('Y-m-d');
+            $availableBudget->start_date = $start->startOfDay()->format('Y-m-d'); // @phpstan-ignore-line
+            $availableBudget->end_date   = $end->endOfDay()->format('Y-m-d'); // @phpstan-ignore-line
         }
         $availableBudget->amount = $amount;
         $availableBudget->save();
@@ -257,28 +210,20 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
         return $availableBudget;
     }
 
-    /**
-     * @param User|Authenticatable|null $user
-     */
-    public function setUser(User | Authenticatable | null $user): void
+    public function setUser(null|Authenticatable|User $user): void
     {
-        if (null !== $user) {
+        if ($user instanceof User) {
             $this->user = $user;
         }
     }
 
-    /**
-     * @param array $data
-     *
-     * @return AvailableBudget|null
-     */
     public function store(array $data): ?AvailableBudget
     {
         $start = $data['start'];
         if ($start instanceof Carbon) {
             $start = $data['start']->startOfDay();
         }
-        $end = $data['end'];
+        $end   = $data['end'];
         if ($end instanceof Carbon) {
             $end = $data['end']->endOfDay();
         }
@@ -289,19 +234,12 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
                 'user_group_id'           => $this->user->user_group_id,
                 'transaction_currency_id' => $data['currency_id'],
                 'amount'                  => $data['amount'],
-                'start_date'              => $start,
-                'end_date'                => $end,
-
+                'start_date'              => $start->format('Y-m-d'),
+                'end_date'                => $end->format('Y-m-d'),
             ]
         );
     }
 
-    /**
-     * @param AvailableBudget $availableBudget
-     * @param array           $data
-     *
-     * @return AvailableBudget
-     */
     public function update(AvailableBudget $availableBudget, array $data): AvailableBudget
     {
         if (array_key_exists('amount', $data)) {
@@ -312,19 +250,13 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
         return $availableBudget;
     }
 
-    /**
-     * @param AvailableBudget $availableBudget
-     * @param array           $data
-     *
-     * @return AvailableBudget
-     */
     public function updateAvailableBudget(AvailableBudget $availableBudget, array $data): AvailableBudget
     {
         if (array_key_exists('start', $data)) {
             $start = $data['start'];
             if ($start instanceof Carbon) {
                 $start                       = $data['start']->startOfDay();
-                $availableBudget->start_date = $start;
+                $availableBudget->start_date = $start->format('Y-m-d');
                 $availableBudget->save();
             }
         }
@@ -333,7 +265,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
             $end = $data['end'];
             if ($end instanceof Carbon) {
                 $end                       = $data['end']->endOfDay();
-                $availableBudget->end_date = $end;
+                $availableBudget->end_date = $end->format('Y-m-d');
                 $availableBudget->save();
             }
         }

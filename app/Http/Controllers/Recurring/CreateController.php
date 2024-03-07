@@ -37,10 +37,10 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 /**
- *
  * Class CreateController
  */
 class CreateController extends Controller
@@ -52,8 +52,6 @@ class CreateController extends Controller
 
     /**
      * CreateController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -79,8 +77,6 @@ class CreateController extends Controller
     /**
      * Create a new recurring transaction.
      *
-     * @param Request $request
-     *
      * @return Factory|View
      */
     public function create(Request $request)
@@ -97,19 +93,19 @@ class CreateController extends Controller
             $this->rememberPreviousUrl('recurring.create.url');
         }
         $request->session()->forget('recurring.create.fromStore');
-        $repetitionEnds   = [
+        $repetitionEnds    = [
             'forever'    => (string)trans('firefly.repeat_forever'),
             'until_date' => (string)trans('firefly.repeat_until_date'),
             'times'      => (string)trans('firefly.repeat_times'),
         ];
-        $weekendResponses = [
+        $weekendResponses  = [
             RecurrenceRepetition::WEEKEND_DO_NOTHING    => (string)trans('firefly.do_nothing'),
             RecurrenceRepetition::WEEKEND_SKIP_CREATION => (string)trans('firefly.skip_transaction'),
             RecurrenceRepetition::WEEKEND_TO_FRIDAY     => (string)trans('firefly.jump_to_friday'),
             RecurrenceRepetition::WEEKEND_TO_MONDAY     => (string)trans('firefly.jump_to_monday'),
         ];
-        $hasOldInput      = null !== $request->old('_token'); // flash some data
-        $preFilled        = [
+        $hasOldInput       = null !== $request->old('_token'); // flash some data
+        $preFilled         = [
             'first_date'       => $tomorrow->format('Y-m-d'),
             'transaction_type' => $hasOldInput ? $request->old('transaction_type') : 'withdrawal',
             'active'           => $hasOldInput ? (bool)$request->old('active') : true,
@@ -124,10 +120,9 @@ class CreateController extends Controller
     }
 
     /**
-     * @param Request            $request
-     * @param TransactionJournal $journal
-     *
      * @return Factory|\Illuminate\Contracts\View\View
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function createFromJournal(Request $request, TransactionJournal $journal)
     {
@@ -143,31 +138,31 @@ class CreateController extends Controller
             $this->rememberPreviousUrl('recurring.create.url');
         }
         $request->session()->forget('recurring.create.fromStore');
-        $repetitionEnds   = [
+        $repetitionEnds    = [
             'forever'    => (string)trans('firefly.repeat_forever'),
             'until_date' => (string)trans('firefly.repeat_until_date'),
             'times'      => (string)trans('firefly.repeat_times'),
         ];
-        $weekendResponses = [
+        $weekendResponses  = [
             RecurrenceRepetition::WEEKEND_DO_NOTHING    => (string)trans('firefly.do_nothing'),
             RecurrenceRepetition::WEEKEND_SKIP_CREATION => (string)trans('firefly.skip_transaction'),
             RecurrenceRepetition::WEEKEND_TO_FRIDAY     => (string)trans('firefly.jump_to_friday'),
             RecurrenceRepetition::WEEKEND_TO_MONDAY     => (string)trans('firefly.jump_to_monday'),
         ];
 
-
         // fill prefilled with journal info
-        $type = strtolower($journal->transactionType->type);
+        $type              = strtolower($journal->transactionType->type);
 
         /** @var Transaction $source */
-        $source = $journal->transactions()->where('amount', '<', 0)->first();
+        $source            = $journal->transactions()->where('amount', '<', 0)->first();
+
         /** @var Transaction $dest */
-        $dest        = $journal->transactions()->where('amount', '>', 0)->first();
-        $category    = $journal->categories()->first() ? $journal->categories()->first()->name : '';
-        $budget      = $journal->budgets()->first() ? $journal->budgets()->first()->id : 0;
-        $bill        = $journal->bill ? $journal->bill->id : 0;
-        $hasOldInput = null !== $request->old('_token'); // flash some data
-        $preFilled   = [];
+        $dest              = $journal->transactions()->where('amount', '>', 0)->first();
+        $category          = null !== $journal->categories()->first() ? $journal->categories()->first()->name : '';
+        $budget            = null !== $journal->budgets()->first() ? $journal->budgets()->first()->id : 0;
+        $bill              = null !== $journal->bill ? $journal->bill->id : 0;
+        $hasOldInput       = null !== $request->old('_token'); // flash some data
+        $preFilled         = [];
         if (true === $hasOldInput) {
             $preFilled = [
                 'title'                     => $request->old('title'),
@@ -221,14 +216,14 @@ class CreateController extends Controller
     /**
      * Store a recurring transaction.
      *
-     * @param RecurrenceFormRequest $request
+     * @return Redirector|RedirectResponse
      *
-     * @return RedirectResponse|Redirector
      * @throws FireflyException
      */
     public function store(RecurrenceFormRequest $request)
     {
-        $data = $request->getAll();
+        $data     = $request->getAll();
+
         try {
             $recurrence = $this->recurring->store($data);
         } catch (FireflyException $e) {
@@ -236,17 +231,19 @@ class CreateController extends Controller
 
             return redirect(route('recurring.create'))->withInput();
         }
+        Log::channel('audit')->info('Stored new recurrence.', $data);
 
         $request->session()->flash('success', (string)trans('firefly.stored_new_recurrence', ['title' => $recurrence->title]));
         app('preferences')->mark();
 
         // store attachment(s):
-        /** @var array $files */
-        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        /** @var null|array $files */
+        $files    = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($recurrence, $files);
         }
         if (null !== $files && auth()->user()->hasRole('demo')) {
+            Log::channel('audit')->warning(sprintf('The demo user is trying to upload attachments in %s.', __METHOD__));
             session()->flash('info', (string)trans('firefly.no_att_demo_user'));
         }
 

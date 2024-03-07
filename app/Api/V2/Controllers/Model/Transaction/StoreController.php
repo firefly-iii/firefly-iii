@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * StoreController.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -30,7 +29,6 @@ use FireflyIII\Api\V2\Request\Model\Transaction\StoreRequest;
 use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
-use Illuminate\Validation\ValidationException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\Rules\IsDuplicateTransaction;
@@ -38,6 +36,7 @@ use FireflyIII\Transformers\V2\TransactionGroupTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Class StoreController
@@ -55,6 +54,7 @@ class StoreController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->groupRepository = app(TransactionGroupRepositoryInterface::class);
+
                 return $next($request);
             }
         );
@@ -63,13 +63,11 @@ class StoreController extends Controller
     /**
      * TODO this method is practically the same as the V1 method and borrows as much code as possible.
      *
-     * @return JsonResponse
      * @throws FireflyException
      * @throws ValidationException
      */
     public function post(StoreRequest $request): JsonResponse
     {
-
         app('log')->debug('Now in API v2 StoreController::store()');
         $data               = $request->getAll();
         $userGroup          = $request->getUserGroup();
@@ -82,47 +80,50 @@ class StoreController extends Controller
 
         try {
             $transactionGroup = $this->groupRepository->store($data);
-        } catch (DuplicateTransactionException $e) {
+        } catch (DuplicateTransactionException $e) { // @phpstan-ignore-line
             app('log')->warning('Caught a duplicate transaction. Return error message.');
             $validator = Validator::make(
                 ['transactions' => [['description' => $e->getMessage()]]],
                 ['transactions.0.description' => new IsDuplicateTransaction()]
             );
-            throw new ValidationException($validator, 0, $e);
-        } catch (FireflyException $e) {
+
+            throw new ValidationException($validator); // @phpstan-ignore-line
+        } catch (FireflyException $e) { // @phpstan-ignore-line
             app('log')->warning('Caught an exception. Return error message.');
             app('log')->error($e->getMessage());
             $message   = sprintf('Internal exception: %s', $e->getMessage());
             $validator = Validator::make(['transactions' => [['description' => $message]]], ['transactions.0.description' => new IsDuplicateTransaction()]);
-            throw new ValidationException($validator, 0, $e);
+
+            throw new ValidationException($validator); // @phpstan-ignore-line
         }
         app('preferences')->mark();
-        $applyRules   = $data['apply_rules'] ?? true;
-        $fireWebhooks = $data['fire_webhooks'] ?? true;
+        $applyRules         = $data['apply_rules'] ?? true;
+        $fireWebhooks       = $data['fire_webhooks'] ?? true;
         event(new StoredTransactionGroup($transactionGroup, $applyRules, $fireWebhooks));
 
         /** @var User $admin */
-        $admin = auth()->user();
+        $admin              = auth()->user();
+
         // use new group collector:
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector          = app(GroupCollectorInterface::class);
         $collector
             ->setUser($admin)
             // filter on transaction group.
-            ->setTransactionGroup($transactionGroup);
+            ->setTransactionGroup($transactionGroup)
+        ;
 
-        $selectedGroup = $collector->getGroups()->first();
+        $selectedGroup      = $collector->getGroups()->first();
         if (null === $selectedGroup) {
             throw new FireflyException('200032: Cannot find transaction. Possibly, a rule deleted this transaction after its creation.');
         }
 
-        $transformer = new TransactionGroupTransformer();
+        $transformer        = new TransactionGroupTransformer();
         $transformer->setParameters($this->parameters);
 
         return response()
             ->api($this->jsonApiObject('transactions', $selectedGroup, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
-
-
 }

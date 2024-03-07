@@ -43,8 +43,6 @@ class EditController extends Controller
 
     /**
      * EditController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -65,14 +63,11 @@ class EditController extends Controller
     /**
      * Edit a rule group.
      *
-     * @param Request   $request
-     * @param RuleGroup $ruleGroup
-     *
      * @return Factory|View
      */
     public function edit(Request $request, RuleGroup $ruleGroup)
     {
-        $subTitle = (string)trans('firefly.edit_rule_group', ['title' => $ruleGroup->title]);
+        $subTitle    = (string)trans('firefly.edit_rule_group', ['title' => $ruleGroup->title]);
 
         $hasOldInput = null !== $request->old('_token');
         $preFilled   = [
@@ -90,10 +85,6 @@ class EditController extends Controller
 
     /**
      * Move a rule group in either direction.
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
     public function moveGroup(Request $request): JsonResponse
     {
@@ -103,34 +94,32 @@ class EditController extends Controller
             $direction = $request->get('direction');
             if ('down' === $direction) {
                 $maxOrder = $this->repository->maxOrder();
-                $order    = (int)$ruleGroup->order;
+                $order    = $ruleGroup->order;
                 if ($order < $maxOrder) {
                     $newOrder = $order + 1;
                     $this->repository->setOrder($ruleGroup, $newOrder);
                 }
             }
             if ('up' === $direction) {
-                $order = (int)$ruleGroup->order;
+                $order = $ruleGroup->order;
                 if ($order > 1) {
                     $newOrder = $order - 1;
                     $this->repository->setOrder($ruleGroup, $newOrder);
                 }
             }
         }
+
         return new JsonResponse(['OK']);
     }
 
     /**
      * Update the rule group.
      *
-     * @param RuleGroupFormRequest $request
-     * @param RuleGroup            $ruleGroup
-     *
-     * @return $this|RedirectResponse|Redirector
+     * @return $this|Redirector|RedirectResponse
      */
     public function update(RuleGroupFormRequest $request, RuleGroup $ruleGroup)
     {
-        $data = [
+        $data     = [
             'title'       => $request->convertString('title'),
             'description' => $request->stringWithNewlines('description'),
             'active'      => 1 === (int)$request->input('active'),

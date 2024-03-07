@@ -43,6 +43,7 @@ class ChangesForV410 extends Migration
     /**
      * Run the migrations.
      *
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up(): void
     {
@@ -50,7 +51,7 @@ class ChangesForV410 extends Migration
             try {
                 Schema::create(
                     'notes',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->softDeletes();

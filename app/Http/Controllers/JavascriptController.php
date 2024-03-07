@@ -29,13 +29,10 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use JsonException;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class JavascriptController.
@@ -46,23 +43,14 @@ class JavascriptController extends Controller
 
     /**
      * Show info about accounts.
-     *
-     * @param AccountRepositoryInterface  $repository
-     * @param CurrencyRepositoryInterface $currencyRepository
-     *
-     * @return Response
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
-    public function accounts(AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepository): Response
+    public function accounts(AccountRepositoryInterface $repository): Response
     {
-        $accounts   = $repository->getAccountsByType(
+        $accounts = $repository->getAccountsByType(
             [AccountType::DEFAULT, AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD]
         );
-        $preference = app('preferences')->get('currencyPreference', config('firefly.default_currency', 'EUR'));
-        $default    = $currencyRepository->findByCodeNull((string)$preference->data);
-
-        $data = ['accounts' => []];
+        $default  = app('amount')->getDefaultCurrency();
+        $data     = ['accounts' => []];
 
         /** @var Account $account */
         foreach ($accounts as $account) {
@@ -75,20 +63,18 @@ class JavascriptController extends Controller
 
         return response()
             ->view('javascript.accounts', $data)
-            ->header('Content-Type', 'text/javascript');
+            ->header('Content-Type', 'text/javascript')
+        ;
     }
 
     /**
      * Get info about currencies.
-     *
-     * @param CurrencyRepositoryInterface $repository
-     *
-     * @return Response
      */
     public function currencies(CurrencyRepositoryInterface $repository): Response
     {
         $currencies = $repository->get();
         $data       = ['currencies' => []];
+
         /** @var TransactionCurrency $currency */
         foreach ($currencies as $currency) {
             $currencyId                      = $currency->id;
@@ -98,26 +84,19 @@ class JavascriptController extends Controller
 
         return response()
             ->view('javascript.currencies', $data)
-            ->header('Content-Type', 'text/javascript');
+            ->header('Content-Type', 'text/javascript')
+        ;
     }
 
     /**
      * Show some common variables to be used in scripts.
      *
-     * @param Request                     $request
-     * @param AccountRepositoryInterface  $repository
-     * @param CurrencyRepositoryInterface $currencyRepository
-     *
-     * @return Response
      * @throws FireflyException
-     * @throws JsonException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    public function variables(Request $request, AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepository): Response
+     *                                              */
+    public function variables(Request $request, AccountRepositoryInterface $repository): Response
     {
-        $account  = $repository->find((int)$request->get('account'));
-        $currency = app('amount')->getDefaultCurrency();
+        $account                   = $repository->find((int)$request->get('account'));
+        $currency                  = app('amount')->getDefaultCurrency();
         if (null !== $account) {
             $currency = $repository->getAccountCurrency($account) ?? $currency;
         }
@@ -129,7 +108,7 @@ class JavascriptController extends Controller
         $dateRange                 = $this->getDateRangeConfig();
         $uid                       = substr(hash('sha256', sprintf('%s-%s-%s', (string)config('app.key'), auth()->user()->id, auth()->user()->email)), 0, 12);
 
-        $data = [
+        $data                      = [
             'currencyCode'         => $currency->code,
             'currencySymbol'       => $currency->symbol,
             'accountingLocaleInfo' => $accounting,
@@ -143,30 +122,29 @@ class JavascriptController extends Controller
 
         return response()
             ->view('javascript.variables', $data)
-            ->header('Content-Type', 'text/javascript');
+            ->header('Content-Type', 'text/javascript')
+        ;
     }
 
     /**
      * Bit of a hack but OK.
-     *
-     * @param Request $request
-     *
-     * @return Response
      */
-    public function variablesV2(Request $request): Response
+    public function variablesV2(): Response
     {
         /** @var Carbon $start */
         $start = clone session('start', today(config('app.timezone'))->startOfMonth());
-        /** @var Carbon $end */
-        $end = clone session('end', today(config('app.timezone'))->endOfMonth());
 
-        $data = [
+        /** @var Carbon $end */
+        $end   = clone session('end', today(config('app.timezone'))->endOfMonth());
+
+        $data  = [
             'start' => $start->format('Y-m-d'),
             'end'   => $end->format('Y-m-d'),
         ];
 
         return response()
             ->view('v2.javascript.variables', $data)
-            ->header('Content-Type', 'text/javascript');
+            ->header('Content-Type', 'text/javascript')
+        ;
     }
 }

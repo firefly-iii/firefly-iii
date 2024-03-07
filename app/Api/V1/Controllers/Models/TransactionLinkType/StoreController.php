@@ -34,7 +34,6 @@ use FireflyIII\Transformers\LinkTypeTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use League\Fractal\Resource\Item;
-use Validator;
 
 /**
  * Class StoreController
@@ -48,8 +47,6 @@ class StoreController extends Controller
 
     /**
      * LinkTypeController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -73,31 +70,28 @@ class StoreController extends Controller
      *
      * Store new object.
      *
-     * @param StoreRequest $request
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function store(StoreRequest $request): JsonResponse
     {
         /** @var User $admin */
-        $admin = auth()->user();
-        $rules = ['name' => 'required'];
+        $admin       = auth()->user();
+        $rules       = ['name' => 'required'];
 
         if (!$this->userRepository->hasRole($admin, 'owner')) {
             // access denied:
             $messages = ['name' => '200005: You need the "owner" role to do this.'];
-            Validator::make([], $rules, $messages)->validate();
+            \Validator::make([], $rules, $messages)->validate();
         }
-        $data = $request->getAll();
+        $data        = $request->getAll();
         // if currency ID is 0, find the currency by the code:
-        $linkType = $this->repository->store($data);
-        $manager  = $this->getManager();
+        $linkType    = $this->repository->store($data);
+        $manager     = $this->getManager();
 
         /** @var LinkTypeTransformer $transformer */
         $transformer = app(LinkTypeTransformer::class);
         $transformer->setParameters($this->parameters);
-        $resource = new Item($linkType, $transformer, 'link_types');
+        $resource    = new Item($linkType, $transformer, 'link_types');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

@@ -35,14 +35,12 @@ use League\Fractal\Resource\Item;
  */
 class StoreController extends Controller
 {
-    public const RESOURCE_KEY = 'accounts';
+    public const string RESOURCE_KEY = 'accounts';
 
     private AccountRepositoryInterface $repository;
 
     /**
      * AccountController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -62,23 +60,19 @@ class StoreController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/accounts/storeAccount
      *
      * Store a new instance.
-     *
-     * @param StoreRequest $request
-     *
-     * @return JsonResponse
      */
     public function store(StoreRequest $request): JsonResponse
     {
-        $data = $request->getAllAccountData();
+        $data        = $request->getAllAccountData();
         $this->repository->resetAccountOrder();
-        $account = $this->repository->store($data);
-        $manager = $this->getManager();
+        $account     = $this->repository->store($data);
+        $manager     = $this->getManager();
 
         /** @var AccountTransformer $transformer */
         $transformer = app(AccountTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($account, $transformer, self::RESOURCE_KEY);
+        $resource    = new Item($account, $transformer, self::RESOURCE_KEY);
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

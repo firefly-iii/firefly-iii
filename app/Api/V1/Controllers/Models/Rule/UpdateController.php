@@ -41,8 +41,6 @@ class UpdateController extends Controller
 
     /**
      * RuleController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -50,7 +48,7 @@ class UpdateController extends Controller
         $this->middleware(
             function ($request, $next) {
                 /** @var User $user */
-                $user = auth()->user();
+                $user                 = auth()->user();
 
                 $this->ruleRepository = app(RuleRepositoryInterface::class);
                 $this->ruleRepository->setUser($user);
@@ -65,23 +63,18 @@ class UpdateController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/rules/updateRule
      *
      * Update a rule.
-     *
-     * @param UpdateRequest $request
-     * @param Rule          $rule
-     *
-     * @return JsonResponse
      */
     public function update(UpdateRequest $request, Rule $rule): JsonResponse
     {
-        $data    = $request->getAll();
-        $rule    = $this->ruleRepository->update($rule, $data);
-        $manager = $this->getManager();
+        $data        = $request->getAll();
+        $rule        = $this->ruleRepository->update($rule, $data);
+        $manager     = $this->getManager();
 
         /** @var RuleTransformer $transformer */
         $transformer = app(RuleTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($rule, $transformer, 'rules');
+        $resource    = new Item($rule, $transformer, 'rules');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

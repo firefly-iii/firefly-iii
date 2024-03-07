@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * rules.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -56,6 +55,8 @@ return [
     'cannot_find_subscription'                    => 'Firefly III 找不到订阅“:name”',
     'no_notes_to_move'                            => '此交易没有备注可移动到描述字段',
     'no_tags_to_remove'                           => '此交易没有要删除的标签',
+    'not_withdrawal'                              => '此交易不是支出',
+    'not_deposit'                                 => '此交易不是收入',
     'cannot_find_tag'                             => 'Firefly III 找不到标签“:tag”',
     'cannot_find_asset'                           => 'Firefly III 找不到资产账户“:name”',
     'cannot_find_accounts'                        => 'Firefly III 找不到来源账户或目标账户',

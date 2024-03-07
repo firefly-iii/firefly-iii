@@ -22,6 +22,7 @@ $(function () {
     "use strict";
     $('.link-modal').click(getLinkModal);
     $('.clone-transaction').click(cloneTransaction);
+    $('.clone-transaction-and-edit').click(cloneTransactionAndEdit);
     $('#linkJournalModal').on('shown.bs.modal', function () {
         makeAutoComplete();
     })
@@ -85,6 +86,21 @@ function cloneTransaction(e) {
     var groupId = parseInt(button.data('id'));
 
     $.post(cloneGroupUrl, {
+        id: groupId
+    }).done(function (data) {
+        // lame but it works
+        location.href = data.redirect;
+    }).fail(function () {
+        console.error('I failed :(');
+    });
+    return false;
+}
+
+function cloneTransactionAndEdit(e) {
+    var button = $(e.currentTarget);
+    var groupId = parseInt(button.data('id'));
+
+    $.post(cloneAndEditUrl, {
         id: groupId
     }).done(function (data) {
         // lame but it works

@@ -33,7 +33,6 @@ use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 
 /**
- *
  * Class DeleteController
  */
 class DeleteController extends Controller
@@ -43,8 +42,6 @@ class DeleteController extends Controller
 
     /**
      * DeleteController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -64,8 +61,6 @@ class DeleteController extends Controller
     /**
      * Deletes a budget.
      *
-     * @param Budget $budget
-     *
      * @return Factory|View
      */
     public function delete(Budget $budget)
@@ -81,10 +76,7 @@ class DeleteController extends Controller
     /**
      * Destroys a budget.
      *
-     * @param Request $request
-     * @param Budget  $budget
-     *
-     * @return RedirectResponse|Redirector
+     * @return Redirector|RedirectResponse
      */
     public function destroy(Request $request, Budget $budget)
     {

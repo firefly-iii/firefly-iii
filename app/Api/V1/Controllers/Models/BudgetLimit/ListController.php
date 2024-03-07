@@ -28,7 +28,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
-use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
@@ -44,55 +43,28 @@ class ListController extends Controller
 {
     use TransactionFilter;
 
-    private BudgetLimitRepositoryInterface $blRepository;
-
-    /**
-     * BudgetLimitController constructor.
-     *
-
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                /** @var User $user */
-                $user               = auth()->user();
-                $this->blRepository = app(BudgetLimitRepositoryInterface::class);
-                $this->blRepository->setUser($user);
-
-                return $next($request);
-            }
-        );
-    }
-
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/budgets/listTransactionByBudgetLimit
      * Show all transactions.
      *
-     * @param Request     $request
-     * @param Budget      $budget
-     * @param BudgetLimit $budgetLimit
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function transactions(Request $request, Budget $budget, BudgetLimit $budgetLimit): JsonResponse
     {
-        $pageSize = $this->parameters->get('limit');
-        $type     = $request->get('type') ?? 'default';
+        $pageSize     = $this->parameters->get('limit');
+        $type         = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 
-        $types   = $this->mapTransactionTypes($this->parameters->get('type'));
-        $manager = $this->getManager();
+        $types        = $this->mapTransactionTypes($this->parameters->get('type'));
+        $manager      = $this->getManager();
 
         /** @var User $admin */
-        $admin = auth()->user();
+        $admin        = auth()->user();
 
         // use new group collector:
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector    = app(GroupCollectorInterface::class);
         $collector
             ->setUser($admin)
             // filter on budget.
@@ -104,19 +76,20 @@ class ListController extends Controller
             // set page to retrieve
             ->setPage($this->parameters->get('page'))
             // set types of transactions to return.
-            ->setTypes($types);
+            ->setTypes($types)
+        ;
 
         $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date);
         $collector->setTypes($types);
-        $paginator = $collector->getPaginatedGroups();
-        $paginator->setPath(route('api.v1.budgets.limits.transactions', [$budget->id, $budgetLimit->id]) . $this->buildParams());
+        $paginator    = $collector->getPaginatedGroups();
+        $paginator->setPath(route('api.v1.budgets.limits.transactions', [$budget->id, $budgetLimit->id]).$this->buildParams());
         $transactions = $paginator->getCollection();
 
         /** @var TransactionGroupTransformer $transformer */
-        $transformer = app(TransactionGroupTransformer::class);
+        $transformer  = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($transactions, $transformer, 'transactions');
+        $resource     = new FractalCollection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);

@@ -23,15 +23,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Correction;
 
-use Artisan;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
-use Schema;
 
 /**
  * Class CorrectDatabase
- *
-
  */
 class CorrectDatabase extends Command
 {
@@ -46,7 +42,7 @@ class CorrectDatabase extends Command
     public function handle(): int
     {
         // if table does not exist, return false
-        if (!Schema::hasTable('users')) {
+        if (!\Schema::hasTable('users')) {
             $this->friendlyError('No "users"-table, will not continue.');
 
             return 1;

@@ -1,194 +1,198 @@
 {
-  "name": "grumpydictator/firefly-iii",
-  "description": "Firefly III: a personal finances manager.",
-  "keywords": [
-    "finance",
-    "finances",
-    "manager",
-    "management",
-    "euro",
-    "dollar",
-    "laravel",
-    "money",
-    "currency",
-    "financials",
-    "financial",
-    "budgets",
-    "administration",
-    "tool",
-    "tooling",
-    "help",
-    "helper",
-    "assistant",
-    "planning",
-    "organizing",
-    "bills",
-    "personal finance",
-    "budgets",
-    "budgeting",
-    "budgeting tool",
-    "budgeting application",
-    "transactions",
-    "self hosted",
-    "self-hosted",
-    "transfers",
-    "management"
-  ],
-  "license": "AGPL-3.0-or-later",
-  "homepage": "https://github.com/firefly-iii/firefly-iii",
-  "type": "project",
-  "readme": "readme.md",
-  "authors": [
-    {
-      "name": "James Cole",
-      "email": "james@firefly-iii.org",
-      "homepage": "https://github.com/firefly-iii",
-      "role": "Developer"
-    }
-  ],
-  "support": {
-    "email": "james@firefly-iii.org",
-    "issues": "https://github.com/firefly-iii/firefly-iii/issues",
-    "forum": "https://gitter.im/firefly-iii/firefly-iii",
-    "wiki": "https://github.com/firefly-iii/help/wiki",
-    "source": "https://github.com/firefly-iii/firefly-iii",
-    "docs": "https://docs.firefly-iii.org/"
-  },
-  "funding": [
-    {
-      "type": "patreon",
-      "url": "https://www.patreon.com/JC5"
+    "name": "grumpydictator/firefly-iii",
+    "description": "Firefly III: a personal finances manager.",
+    "keywords": [
+        "finance",
+        "finances",
+        "manager",
+        "management",
+        "euro",
+        "dollar",
+        "laravel",
+        "money",
+        "currency",
+        "financials",
+        "financial",
+        "budgets",
+        "administration",
+        "tool",
+        "tooling",
+        "help",
+        "helper",
+        "assistant",
+        "planning",
+        "organizing",
+        "bills",
+        "personal finance",
+        "budgets",
+        "budgeting",
+        "budgeting tool",
+        "budgeting application",
+        "transactions",
+        "self hosted",
+        "self-hosted",
+        "transfers",
+        "management"
+    ],
+    "license": "AGPL-3.0-or-later",
+    "homepage": "https://github.com/firefly-iii/firefly-iii",
+    "type": "project",
+    "readme": "readme.md",
+    "authors": [
+        {
+            "name": "James Cole",
+            "email": "james@firefly-iii.org",
+            "homepage": "https://github.com/firefly-iii",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "email": "james@firefly-iii.org",
+        "issues": "https://github.com/firefly-iii/firefly-iii/issues",
+        "forum": "https://gitter.im/firefly-iii/firefly-iii",
+        "wiki": "https://github.com/firefly-iii/help/wiki",
+        "source": "https://github.com/firefly-iii/firefly-iii",
+        "docs": "https://docs.firefly-iii.org/"
     },
-    {
-      "type": "github",
-      "url": "https://github.com/sponsors/JC5"
-    }
-  ],
-  "require": {
-    "php": ">=8.2",
-    "ext-bcmath": "*",
-    "ext-curl": "*",
-    "ext-fileinfo": "*",
-    "ext-iconv": "*",
-    "ext-intl": "*",
-    "ext-json": "*",
-    "ext-mbstring": "*",
-    "ext-openssl": "*",
-    "ext-pdo": "*",
-    "ext-session": "*",
-    "ext-simplexml": "*",
-    "ext-sodium": "*",
-    "ext-tokenizer": "*",
-    "ext-xml": "*",
-    "ext-xmlwriter": "*",
-    "bacon/bacon-qr-code": "2.*",
-    "diglactic/laravel-breadcrumbs": "^8.1",
-    "doctrine/dbal": "3.*",
-    "gdbots/query-parser": "^3.0",
-    "guzzlehttp/guzzle": "^7.8",
-    "jc5/google2fa-laravel": "^2.0",
-    "jc5/recovery": "^2",
-    "laravel/framework": "^10",
-    "laravel/passport": "11.*",
-    "laravel/sanctum": "^3.3",
-    "laravel/slack-notification-channel": "^3.0",
-    "laravel/ui": "^4.2",
-    "league/commonmark": "2.*",
-    "league/csv": "^9.10",
-    "league/fractal": "0.*",
-    "nunomaduro/collision": "^7.7",
-    "pragmarx/google2fa": "^8.0",
-    "predis/predis": "^2.2",
-    "psr/log": "<4",
-    "ramsey/uuid": "^4.7",
-    "rcrowe/twigbridge": "^0.14",
-    "spatie/laravel-html": "^3.2",
-    "spatie/laravel-ignition": "^2",
-    "spatie/period": "^2.4",
-    "symfony/expression-language": "^6.3",
-    "symfony/http-client": "^6.3",
-    "symfony/mailgun-mailer": "^6.3",
-    "therobfonz/laravel-mandrill-driver": "^5.0"
-  },
-  "require-dev": {
-    "barryvdh/laravel-ide-helper": "2.*",
-    "ergebnis/phpstan-rules": "^2.1",
-    "fakerphp/faker": "1.*",
-    "filp/whoops": "2.*",
-    "mockery/mockery": "1.*",
-    "nunomaduro/larastan": "^2.6",
-    "phpstan/phpstan": "^1.10",
-    "phpstan/phpstan-deprecation-rules": "^1.1",
-    "phpstan/phpstan-strict-rules": "^1.4",
-    "phpunit/phpunit": "^10",
-    "thecodingmachine/phpstan-strict-rules": "^1.0"
-  },
-  "suggest": {
-  },
-  "autoload": {
-    "psr-4": {
-      "FireflyIII\\": "app/",
-      "Domain\\": "domain/",
-      "Database\\Factories\\": "database/factories/",
-      "Database\\Seeders\\": "database/seeders/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Tests\\": "tests/"
-    }
-  },
-  "extra": {
-    "laravel": {
-      "dont-discover": []
-    }
-  },
-  "scripts": {
-    "post-root-package-install": [
-      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+    "funding": [
+        {
+            "type": "patreon",
+            "url": "https://www.patreon.com/JC5"
+        },
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/JC5"
+        }
     ],
-    "post-create-project-cmd": [
-      "@php artisan key:generate"
-    ],
-    "post-autoload-dump": [
-      "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump"
-    ],
-    "post-update-cmd": [
-      "@php artisan config:clear",
-      "@php artisan route:clear",
-      "@php artisan twig:clean",
-      "@php artisan view:clear",
-      "@php artisan clear-compiled",
-      "@php artisan cache:clear",
-      "@php artisan firefly-iii:upgrade-database",
-      "@php artisan firefly-iii:correct-database",
-      "@php artisan firefly-iii:report-integrity",
-      "@php artisan passport:install",
-      "@php artisan firefly:instructions update"
-    ],
-    "post-install-cmd": [
-      "@php artisan firefly:instructions install",
-      "@php artisan firefly-iii:verify-security-alerts"
-    ],
-    "unit-test": [
-      "@php vendor/bin/phpunit -c phpunit.xml --testsuite unit --no-coverage"
-    ],
-    "integration-test": [
-      "@php vendor/bin/phpunit -c phpunit.xml --testsuite integration --no-coverage"
-    ],
-    "coverage": [
-      "@php vendor/bin/phpunit -c phpunit.xml --testsuite unit"
-    ]
-  },
-  "config": {
-    "platform": {
-      "php": "8.2"
+    "require": {
+        "php": ">=8.3",
+        "ext-bcmath": "*",
+        "ext-curl": "*",
+        "ext-fileinfo": "*",
+        "ext-iconv": "*",
+        "ext-intl": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "ext-openssl": "*",
+        "ext-pdo": "*",
+        "ext-session": "*",
+        "ext-simplexml": "*",
+        "ext-sodium": "*",
+        "ext-tokenizer": "*",
+        "ext-xml": "*",
+        "ext-xmlwriter": "*",
+        "bacon/bacon-qr-code": "2.*",
+        "diglactic/laravel-breadcrumbs": "^8.1",
+        "doctrine/dbal": "3.*",
+        "gdbots/query-parser": "^3.0",
+        "guzzlehttp/guzzle": "^7.8",
+        "jc5/google2fa-laravel": "^2.0",
+        "jc5/recovery": "^2",
+        "laravel/framework": "^10",
+        "laravel/passport": "11.*",
+        "laravel/sanctum": "^3.3",
+        "laravel/slack-notification-channel": "^3.0",
+        "laravel/ui": "^4.2",
+        "league/commonmark": "2.*",
+        "league/csv": "^9.10",
+        "league/fractal": "0.*",
+        "nunomaduro/collision": "^7.7",
+        "pragmarx/google2fa": "^8.0",
+        "predis/predis": "^2.2",
+        "psr/log": "<4",
+        "ramsey/uuid": "^4.7",
+        "rcrowe/twigbridge": "^0.14",
+        "spatie/laravel-html": "^3.2",
+        "spatie/laravel-ignition": "^2",
+        "spatie/period": "^2.4",
+        "symfony/expression-language": "^6.4",
+        "symfony/http-client": "^7.0",
+        "symfony/mailgun-mailer": "^7.0",
+        "therobfonz/laravel-mandrill-driver": "^5.0"
     },
-    "preferred-install": "dist",
-    "sort-packages": true,
-    "optimize-autoloader": true,
-    "allow-plugins": {
-      "composer/package-versions-deprecated": true
+    "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.9",
+        "barryvdh/laravel-ide-helper": "2.*",
+        "ergebnis/phpstan-rules": "^2.1",
+        "fakerphp/faker": "1.*",
+        "filp/whoops": "2.*",
+        "larastan/larastan": "^2",
+        "mockery/mockery": "1.*",
+        "phpstan/extension-installer": "^1.3",
+        "phpstan/phpstan": "^1.10",
+        "phpstan/phpstan-deprecation-rules": "^1.1",
+        "phpstan/phpstan-strict-rules": "^1.4",
+        "phpunit/phpunit": "^10",
+        "thecodingmachine/phpstan-strict-rules": "^1.0"
+    },
+    "suggest": {},
+    "autoload": {
+        "psr-4": {
+            "FireflyIII\\": "app/",
+            "Domain\\": "domain/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": []
+        },
+        "phpstan": {
+            "includes": [
+                "extension.neon"
+            ]
+        }
+    },
+    "scripts": {
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "@php artisan key:generate"
+        ],
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump"
+        ],
+        "post-update-cmd": [
+            "@php artisan config:clear",
+            "@php artisan route:clear",
+            "@php artisan twig:clean",
+            "@php artisan view:clear",
+            "@php artisan clear-compiled",
+            "@php artisan cache:clear",
+            "@php artisan firefly-iii:upgrade-database",
+            "@php artisan firefly-iii:correct-database",
+            "@php artisan firefly-iii:report-integrity",
+            "@php artisan passport:install",
+            "@php artisan firefly:instructions update"
+        ],
+        "post-install-cmd": [
+            "@php artisan firefly:instructions install",
+            "@php artisan firefly-iii:verify-security-alerts"
+        ],
+        "unit-test": [
+            "@php vendor/bin/phpunit -c phpunit.xml --testsuite unit --no-coverage"
+        ],
+        "integration-test": [
+            "@php vendor/bin/phpunit -c phpunit.xml --testsuite integration --no-coverage"
+        ],
+        "coverage": [
+            "@php vendor/bin/phpunit -c phpunit.xml"
+        ]
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "optimize-autoloader": true,
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true,
+            "phpstan/extension-installer": true
+        }
     }
-  }
 }

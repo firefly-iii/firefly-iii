@@ -62,7 +62,7 @@
                             {{ formatAmountBySymbol(sum.amount*-1, sum.currency_symbol, sum.currency_decimal_places) }}{% if loop.index != group.sums|length %},{% endif %}
                         {% elseif group.transaction_type == 'Transfer' %}
                             <span class="text-info money-transfer">
-                            {{ formatAmountBySymbol(sum.amount*-1, sum.currency_symbol, sum.currency_decimal_places, false) }}{% if loop.index != group.sums|length %},{% endif %}X
+                            {{ formatAmountBySymbol(sum.amount*-1, sum.currency_symbol, sum.currency_decimal_places, false) }}{% if loop.index != group.sums|length %},{% endif %}
                             </span>
                         {% else %}
                             {{ formatAmountBySymbol(sum.amount, sum.currency_symbol, sum.currency_decimal_places) }}{% if loop.index != group.sums|length %},{% endif %}
@@ -87,6 +87,8 @@
                                         class="fa fa-fw fa-trash"></span> {{ 'delete'|_ }}</a></li>
                             <li><a href="#" data-id="{{ group.id }}" class="clone-transaction"><span
                                         class="fa fa-copy fa-fw"></span> {{ 'clone'|_ }}</a></li>
+                            <li><a href="#" data-id="{{ group.id }}" class="clone-transaction-and-edit"><span
+                                        class="fa fa-copy fa-fw"></span> {{ 'clone_and_edit'|_ }}</a></li>
                         </ul>
                     </div>
                 </td>
@@ -257,6 +259,8 @@
                                             class="fa fa-fw fa-trash"></span> {{ 'delete'|_ }}</a></li>
                                 <li><a href="#" data-id="{{ group.id }}" class="clone-transaction"><span
                                             class="fa fa-copy fa-fw"></span> {{ 'clone'|_ }}</a></li>
+                                <li><a href="#" data-id="{{ group.id }}" class="clone-transaction-and-edit"><span
+                                            class="fa fa-copy fa-fw"></span> {{ 'clone_and_edit'|_ }}</a></li>
                                 <li>
                                     <a href="{{ route('rules.create-from-journal', [transaction.transaction_journal_id]) }}"><span
                                             class="fa fa-fw fa-random"></span> {{ 'create_rule_from_transaction'|_ }}
@@ -317,4 +321,5 @@
 </table>
 <script type="text/javascript" nonce="{{ JS_NONCE }}">
     var cloneGroupUrl = '{{ route('transactions.clone') }}';
+    var cloneAndEditUrl = '{{ route('transactions.clone') }}?redirect=edit';
 </script>

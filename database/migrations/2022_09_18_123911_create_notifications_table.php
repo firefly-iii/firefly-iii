@@ -31,13 +31,13 @@ return new class () extends Migration {
     /**
      * Run the migrations.
      *
-     * @return void
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up(): void
     {
         if (!Schema::hasTable('notifications')) {
             try {
-                Schema::create('notifications', function (Blueprint $table) {
+                Schema::create('notifications', static function (Blueprint $table): void {
                     $table->uuid('id')->primary();
                     $table->string('type');
                     $table->morphs('notifiable');
@@ -54,8 +54,6 @@ return new class () extends Migration {
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down(): void
     {

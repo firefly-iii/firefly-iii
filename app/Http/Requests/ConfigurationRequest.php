@@ -25,11 +25,11 @@ namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Support\Request\ChecksLogin;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Validator;
 
 /**
  * Class ConfigurationRequest.
- *
-
  */
 class ConfigurationRequest extends FormRequest
 {
@@ -37,8 +37,6 @@ class ConfigurationRequest extends FormRequest
 
     /**
      * Returns the data required by the controller.
-     *
-     * @return array
      */
     public function getConfigurationData(): array
     {
@@ -50,15 +48,20 @@ class ConfigurationRequest extends FormRequest
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {
         // fixed
         return [
-            'single_user_mode' => 'between:0,1|numeric',
-            'is_demo_site'     => 'between:0,1|numeric',
+            'single_user_mode' => 'min:0|max:1|numeric',
+            'is_demo_site'     => 'min:0|max:1|numeric',
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        if ($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+        }
     }
 }

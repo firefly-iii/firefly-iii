@@ -36,18 +36,13 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class UpdateRequest
- *
-
  */
 class UpdateRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use AppendsLocationData;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
-    /**
-     * @return array
-     */
     public function getUpdateData(): array
     {
         $fields = [
@@ -82,8 +77,6 @@ class UpdateRequest extends FormRequest
 
     /**
      * The rules that the incoming request must be matched against.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -93,12 +86,12 @@ class UpdateRequest extends FormRequest
         $types          = implode(',', array_keys(config('firefly.subTitlesByIdentifier')));
         $ccPaymentTypes = implode(',', array_keys(config('firefly.ccTypes')));
 
-        $rules = [
+        $rules          = [
             'name'                 => sprintf('min:1|max:1024|uniqueAccountForUser:%d', $account->id),
             'type'                 => sprintf('in:%s', $types),
             'iban'                 => ['iban', 'nullable', new UniqueIban($account, $this->convertString('type'))],
             'bic'                  => 'bic|nullable',
-            'account_number'       => ['between:1,255', 'nullable', new UniqueAccountNumber($account, $this->convertString('type'))],
+            'account_number'       => ['min:1', 'max:255', 'nullable', new UniqueAccountNumber($account, $this->convertString('type'))],
             'opening_balance'      => 'numeric|required_with:opening_balance_date|nullable',
             'opening_balance_date' => 'date|required_with:opening_balance|nullable',
             'virtual_balance'      => 'numeric|nullable',
@@ -109,12 +102,12 @@ class UpdateRequest extends FormRequest
             'include_net_worth'    => [new IsBoolean()],
             'account_role'         => sprintf('in:%s|nullable|required_if:type,asset', $accountRoles),
             'credit_card_type'     => sprintf('in:%s|nullable|required_if:account_role,ccAsset', $ccPaymentTypes),
-            'monthly_payment_date' => 'date' . '|nullable|required_if:account_role,ccAsset|required_if:credit_card_type,monthlyFull',
+            'monthly_payment_date' => 'date|nullable|required_if:account_role,ccAsset|required_if:credit_card_type,monthlyFull',
             'liability_type'       => 'required_if:type,liability|in:loan,debt,mortgage',
             'liability_direction'  => 'required_if:type,liability|in:credit,debit',
-            'interest'             => 'required_if:type,liability|between:0,100|numeric',
+            'interest'             => 'required_if:type,liability|min:0|max:100|numeric',
             'interest_period'      => 'required_if:type,liability|in:daily,monthly,yearly',
-            'notes'                => 'min:0|max:65536',
+            'notes'                => 'min:0|max:32768',
         ];
 
         return Location::requestRules($rules);

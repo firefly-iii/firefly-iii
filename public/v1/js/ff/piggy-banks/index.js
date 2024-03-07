@@ -90,25 +90,25 @@ function stopSorting() {
         var holder = $(v);
         var parentBody = holder.parent();
         var objectGroupTitle = parentBody.data('title');
-        var position = parseInt(holder.data('position'));
         var originalOrder = parseInt(holder.data('order'));
+        var newOrder = i+1;
         var name = holder.data('name');
         var id = holder.data('id');
-        var newOrder;
-        if (position === i) {
+        if (originalOrder=== newOrder) {
             // not changed, position is what it should be.
+            console.log('"' + name + '" ("' + objectGroupTitle + '") has not moved.');
             return;
         }
-        if (position < i) {
+        if (originalOrder < newOrder) {
             // position is less.
-            console.log('"' + name + '" ("' + objectGroupTitle + '") has moved down from position ' + originalOrder + ' to ' + (i + 1));
+            console.log('"' + name + '" ("' + objectGroupTitle + '") has moved down from position ' + originalOrder + ' to ' + newOrder);
         }
-        if (position > i) {
-            console.log('"' + name + '" ("' + objectGroupTitle + '") has moved up from position ' + originalOrder + ' to ' + (i + 1));
+        if (originalOrder > newOrder) {
+            console.log('"' + name + '" ("' + objectGroupTitle + '") has moved up from position ' + originalOrder + ' to ' + newOrder);
         }
         // update position:
-        holder.data('position', i);
-        newOrder = i+1;
+        //holder.data('position', newPosition);
+        holder.data('order', newOrder);
 
         $.post('piggy-banks/set-order/' + id, {order: newOrder, objectGroupTitle: objectGroupTitle, _token: token})
     });

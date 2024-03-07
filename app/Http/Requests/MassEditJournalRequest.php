@@ -25,11 +25,11 @@ namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Support\Request\ChecksLogin;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Validator;
 
 /**
  * Class MassEditJournalRequest.
- *
-
  */
 class MassEditJournalRequest extends FormRequest
 {
@@ -37,20 +37,25 @@ class MassEditJournalRequest extends FormRequest
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {
         // fixed
 
         return [
-            'description.*'    => 'required|min:1|max:255',
+            'description.*'    => 'required|min:1|max:1024',
             'source_id.*'      => 'numeric|belongsToUser:accounts,id',
             'destination_id.*' => 'numeric|belongsToUser:accounts,id',
             'journals.*'       => 'numeric|belongsToUser:transaction_journals,id',
             'revenue_account'  => 'max:255',
             'expense_account'  => 'max:255',
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        if ($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+        }
     }
 }

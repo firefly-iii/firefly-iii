@@ -44,8 +44,6 @@ class ShowController extends Controller
 
     /**
      * RuleController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -53,7 +51,7 @@ class ShowController extends Controller
         $this->middleware(
             function ($request, $next) {
                 /** @var User $user */
-                $user = auth()->user();
+                $user                 = auth()->user();
 
                 $this->ruleRepository = app(RuleRepositoryInterface::class);
                 $this->ruleRepository->setUser($user);
@@ -69,30 +67,29 @@ class ShowController extends Controller
      *
      * List all of them.
      *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function index(): JsonResponse
     {
-        $manager = $this->getManager();
+        $manager     = $this->getManager();
 
         // types to get, page size:
-        $pageSize = $this->parameters->get('limit');
+        $pageSize    = $this->parameters->get('limit');
 
         // get list of budgets. Count it and split it.
-        $collection = $this->ruleRepository->getAll();
-        $count      = $collection->count();
-        $rules      = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $collection  = $this->ruleRepository->getAll();
+        $count       = $collection->count();
+        $rules       = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
-        $paginator = new LengthAwarePaginator($rules, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.rules.index') . $this->buildParams());
+        $paginator   = new LengthAwarePaginator($rules, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.rules.index').$this->buildParams());
 
         /** @var RuleTransformer $transformer */
         $transformer = app(RuleTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($rules, $transformer, 'rules');
+        $resource    = new FractalCollection($rules, $transformer, 'rules');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -103,19 +100,16 @@ class ShowController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/rules/getRule
      *
      * List single resource.
-     *
-     * @param Rule $rule
-     *
-     * @return JsonResponse
      */
     public function show(Rule $rule): JsonResponse
     {
-        $manager = $this->getManager();
+        $manager     = $this->getManager();
+
         /** @var RuleTransformer $transformer */
         $transformer = app(RuleTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($rule, $transformer, 'rules');
+        $resource    = new Item($rule, $transformer, 'rules');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

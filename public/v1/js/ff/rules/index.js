@@ -97,6 +97,35 @@ $(function () {
           }
       );
 
+      // show rule triggers
+      $('.rule-triggers-show').click(function (e) {
+          var obj = $(e.currentTarget);
+          $('.rule-trigger-list[data-id="' + obj.data('id') + '"]').show();
+          $('.rule-triggers-show[data-id="' + obj.data('id') + '"]').hide();
+      });
+
+      $('.rule-trigger-list').each(function(i,v) {
+          var obj = $(v);
+          if(obj.data('count') > 2) {
+              obj.hide();
+              $('.rule-triggers-show[data-id="' + obj.data('id') + '"]').show();
+          }
+      });
+    // show rule actions
+    $('.rule-actions-show').click(function (e) {
+        var obj = $(e.currentTarget);
+        $('.rule-action-list[data-id="' + obj.data('id') + '"]').show();
+        $('.rule-actions-show[data-id="' + obj.data('id') + '"]').hide();
+    });
+
+    $('.rule-action-list').each(function(i,v) {
+        var obj = $(v);
+        if(obj.data('count') > 1) {
+            obj.hide();
+            $('.rule-actions-show[data-id="' + obj.data('id') + '"]').show();
+        }
+    });
+
       $('.move-group').click(moveRuleGroup);
       $('.duplicate-rule').click(duplicateRule);
 

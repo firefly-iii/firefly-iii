@@ -27,13 +27,13 @@ namespace FireflyIII\Api\V1\Controllers\Models\TransactionCurrency;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\CurrencyTransformer;
+use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
-use JsonException;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
@@ -50,8 +50,6 @@ class ShowController extends Controller
 
     /**
      * CurrencyRepository constructor.
-     *
-
      */
     public function __construct()
     {
@@ -72,28 +70,25 @@ class ShowController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @return JsonResponse
      * @throws FireflyException
-     * @throws JsonException
      */
     public function index(): JsonResponse
     {
-        $pageSize   = $this->parameters->get('limit');
-        $collection = $this->repository->getAll();
-        $count      = $collection->count();
+        $pageSize    = $this->parameters->get('limit');
+        $collection  = $this->repository->getAll();
+        $count       = $collection->count();
+
         // slice them:
-        $currencies = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
-        $paginator  = new LengthAwarePaginator($currencies, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.currencies.index') . $this->buildParams());
-        $manager         = $this->getManager();
-        $defaultCurrency = app('amount')->getDefaultCurrencyByUser(auth()->user());
-        $this->parameters->set('defaultCurrency', $defaultCurrency);
+        $currencies  = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $paginator   = new LengthAwarePaginator($currencies, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.currencies.index').$this->buildParams());
+        $manager     = $this->getManager();
 
         /** @var CurrencyTransformer $transformer */
         $transformer = app(CurrencyTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($currencies, $transformer, 'currencies');
+        $resource    = new FractalCollection($currencies, $transformer, 'currencies');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -105,23 +100,24 @@ class ShowController extends Controller
      *
      * Show a currency.
      *
-     * @param TransactionCurrency $currency
-     *
-     * @return JsonResponse
      * @throws FireflyException
-     * @throws JsonException
      */
     public function show(TransactionCurrency $currency): JsonResponse
     {
+        /** @var User $user */
+        $user            = auth()->user();
         $manager         = $this->getManager();
-        $defaultCurrency = app('amount')->getDefaultCurrencyByUser(auth()->user());
+        $defaultCurrency = app('amount')->getDefaultCurrencyByUserGroup($user->userGroup);
         $this->parameters->set('defaultCurrency', $defaultCurrency);
 
+        // update fields with user info.
+        $currency->refreshForUser($user);
+
         /** @var CurrencyTransformer $transformer */
-        $transformer = app(CurrencyTransformer::class);
+        $transformer     = app(CurrencyTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($currency, $transformer, 'currencies');
+        $resource        = new Item($currency, $transformer, 'currencies');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
@@ -132,21 +128,23 @@ class ShowController extends Controller
      *
      * Show a currency.
      *
-     * @return JsonResponse
      * @throws FireflyException
-     * @throws JsonException
      */
     public function showDefault(): JsonResponse
     {
-        $manager  = $this->getManager();
-        $currency = app('amount')->getDefaultCurrencyByUser(auth()->user());
-        $this->parameters->set('defaultCurrency', $currency);
+        /** @var User $user */
+        $user        = auth()->user();
+        $manager     = $this->getManager();
+        $currency    = app('amount')->getDefaultCurrencyByUserGroup($user->userGroup);
+
+        // update fields with user info.
+        $currency->refreshForUser($user);
 
         /** @var CurrencyTransformer $transformer */
         $transformer = app(CurrencyTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($currency, $transformer, 'currencies');
+        $resource    = new Item($currency, $transformer, 'currencies');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

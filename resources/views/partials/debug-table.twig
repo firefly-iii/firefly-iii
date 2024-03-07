@@ -12,13 +12,13 @@
     {# Firefly III version #}
     <tr>
         <td>Firefly III</td>
-        <td>v{{ FF_VERSION }} / v{{ config('firefly.api_version') }} / {{ system.db_version }} (exp. {{ config('firefly.db_version') }})
+        <td>{% if FF_VERSION starts with 'develop' %}{{ FF_VERSION }}{% else %}{{ FF_VERSION }}{% endif %} / v{{ config('firefly.api_version') }} / {{ system.db_version }} (exp. {{ config('firefly.db_version') }})
         </td>
     </tr>
     {# PHP version + settings #}
     <tr>
         <td>PHP version</td>
-        <td>{{ system.php_version|escape }} / {{ system.interface }} / {{ system.php_os }}</td>
+        <td>{{ system.php_version|escape }} ({{ system.bits }}bits) / {{ system.interface }} / {{ system.php_os }} {{ system.uname }}</td>
     </tr>
     <tr>
         <td>BCscale</td>
@@ -72,7 +72,11 @@
     </tr>
     <tr>
         <td>Layout</td>
-        <td>{{ config('firefly.layout') }}</td>
+        <td>{{ config('firefly.layout') }}
+            {% if 'v2' == config('firefly.layout') %}
+                <!-- .eOxNZAmyGz6CXMyf -->
+            {% endif %}
+        </td>
     </tr>
     <tr>
         <td>Logging</td>

@@ -37,16 +37,13 @@ class UpdateRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
 
-    /**
-     * @return array
-     */
     public function getData(): array
     {
-        $triggers   = Webhook::getTriggersForValidation();
-        $responses  = Webhook::getResponsesForValidation();
-        $deliveries = Webhook::getDeliveriesForValidation();
+        $triggers         = Webhook::getTriggersForValidation();
+        $responses        = Webhook::getResponsesForValidation();
+        $deliveries       = Webhook::getDeliveriesForValidation();
 
-        $fields = [
+        $fields           = [
             'title'    => ['title', 'convertString'],
             'active'   => ['active', 'boolean'],
             'trigger'  => ['trigger', 'convertString'],
@@ -56,7 +53,7 @@ class UpdateRequest extends FormRequest
         ];
 
         // this is the way.
-        $return = $this->getAllData($fields);
+        $return           = $this->getAllData($fields);
         if (array_key_exists('trigger', $return)) {
             $return['trigger'] = $triggers[$return['trigger']] ?? 0;
         }
@@ -76,25 +73,24 @@ class UpdateRequest extends FormRequest
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {
-        $triggers   = implode(',', array_keys(Webhook::getTriggersForValidation()));
-        $responses  = implode(',', array_keys(Webhook::getResponsesForValidation()));
-        $deliveries = implode(',', array_keys(Webhook::getDeliveriesForValidation()));
+        $triggers       = implode(',', array_keys(Webhook::getTriggersForValidation()));
+        $responses      = implode(',', array_keys(Webhook::getResponsesForValidation()));
+        $deliveries     = implode(',', array_keys(Webhook::getDeliveriesForValidation()));
+        $validProtocols = config('firefly.valid_url_protocols');
 
         /** @var Webhook $webhook */
-        $webhook = $this->route()->parameter('webhook');
+        $webhook        = $this->route()->parameter('webhook');
 
         return [
-            'title'    => sprintf('between:1,512|uniqueObjectForUser:webhooks,title,%d', $webhook->id),
+            'title'    => sprintf('min:1|max:255|uniqueObjectForUser:webhooks,title,%d', $webhook->id),
             'active'   => [new IsBoolean()],
             'trigger'  => sprintf('in:%s', $triggers),
             'response' => sprintf('in:%s', $responses),
             'delivery' => sprintf('in:%s', $deliveries),
-            'url'      => ['url', sprintf('uniqueExistingWebhook:%d', $webhook->id)],
+            'url'      => [sprintf('url:%s', $validProtocols), sprintf('uniqueExistingWebhook:%d', $webhook->id)],
         ];
     }
 }

@@ -33,14 +33,12 @@ use Illuminate\Http\JsonResponse;
  */
 class DestroyController extends Controller
 {
-    public const RESOURCE_KEY = 'accounts';
+    public const string RESOURCE_KEY = 'accounts';
 
     private AccountRepositoryInterface $repository;
 
     /**
      * AccountController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -60,10 +58,6 @@ class DestroyController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/accounts/deleteAccount
      *
      * Remove the specified resource from storage.
-     *
-     * @param Account $account
-     *
-     * @return JsonResponse
      */
     public function destroy(Account $account): JsonResponse
     {

@@ -36,8 +36,6 @@ class ChangesForV4710 extends Migration
 {
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down(): void
     {
@@ -48,7 +46,7 @@ class ChangesForV4710 extends Migration
     /**
      * Run the migrations.
      *
-     * @return void
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up(): void
     {
@@ -56,7 +54,7 @@ class ChangesForV4710 extends Migration
             try {
                 Schema::create(
                     'transaction_groups',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->softDeletes();
@@ -76,7 +74,7 @@ class ChangesForV4710 extends Migration
             try {
                 Schema::create(
                     'group_journals',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->integer('transaction_group_id', false, true);
                         $table->integer('transaction_journal_id', false, true);

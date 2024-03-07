@@ -22,7 +22,7 @@
                         {{ ExpandedForm.text('symbol', currency.symbol,{'maxlength' : 51}) }}
                         {{ ExpandedForm.text('code', currency.code,{'maxlength' : 51}) }}
                         {{ ExpandedForm.integer('decimal_places', currency.decimal_places,{'maxlength' : 2,'min': 0,'max': 12}) }}
-                        {{ ExpandedForm.checkbox('enabled', currency.enabled) }}
+                        {{ ExpandedForm.checkbox('enabled', null, currency.enabled) }}
                     </div>
                 </div>
             </div>

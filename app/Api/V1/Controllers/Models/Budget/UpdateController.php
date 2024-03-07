@@ -40,8 +40,6 @@ class UpdateController extends Controller
 
     /**
      * UpdateController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -61,23 +59,18 @@ class UpdateController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/budgets/updateBudget
      *
      * Update a budget.
-     *
-     * @param UpdateRequest $request
-     * @param Budget        $budget
-     *
-     * @return JsonResponse
      */
     public function update(UpdateRequest $request, Budget $budget): JsonResponse
     {
-        $data    = $request->getAll();
-        $budget  = $this->repository->update($budget, $data);
-        $manager = $this->getManager();
+        $data        = $request->getAll();
+        $budget      = $this->repository->update($budget, $data);
+        $manager     = $this->getManager();
 
         /** @var BudgetTransformer $transformer */
         $transformer = app(BudgetTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($budget, $transformer, 'budgets');
+        $resource    = new Item($budget, $transformer, 'budgets');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

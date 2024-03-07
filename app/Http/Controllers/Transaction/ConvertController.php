@@ -33,7 +33,6 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Services\Internal\Update\JournalUpdateService;
 use FireflyIII\Support\Http\Controllers\ModelInformation;
 use FireflyIII\Transformers\TransactionGroupTransformer;
@@ -42,7 +41,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 /**
@@ -55,12 +53,9 @@ class ConvertController extends Controller
     use ModelInformation;
 
     private AccountRepositoryInterface $accountRepository;
-    private JournalRepositoryInterface $repository;
 
     /**
      * ConvertController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -69,7 +64,6 @@ class ConvertController extends Controller
         // some useful repositories:
         $this->middleware(
             function ($request, $next) {
-                $this->repository        = app(JournalRepositoryInterface::class);
                 $this->accountRepository = app(AccountRepositoryInterface::class);
                 app('view')->share('title', (string)trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-exchange');
@@ -82,12 +76,9 @@ class ConvertController extends Controller
     /**
      * Show overview of a to be converted transaction.
      *
-     * @param TransactionType  $destinationType
-     * @param TransactionGroup $group
+     * @return Factory|Redirector|RedirectResponse|View
      *
-     * @return RedirectResponse|Redirector|Factory|View
-     * @throws Exception
-     *
+     * @throws \Exception
      */
     public function index(TransactionType $destinationType, TransactionGroup $group)
     {
@@ -96,16 +87,16 @@ class ConvertController extends Controller
         }
 
         /** @var TransactionGroupTransformer $transformer */
-        $transformer = app(TransactionGroupTransformer::class);
+        $transformer          = app(TransactionGroupTransformer::class);
 
         /** @var TransactionJournal $first */
-        $first      = $group->transactionJournals()->first();
-        $sourceType = $first->transactionType;
+        $first                = $group->transactionJournals()->first();
+        $sourceType           = $first->transactionType;
 
-        $groupTitle   = $group->title ?? $first->description;
-        $groupArray   = $transformer->transformObject($group);
-        $subTitle     = (string)trans('firefly.convert_to_' . $destinationType->type, ['description' => $groupTitle]);
-        $subTitleIcon = 'fa-exchange';
+        $groupTitle           = $group->title ?? $first->description;
+        $groupArray           = $transformer->transformObject($group);
+        $subTitle             = (string)trans('firefly.convert_to_'.$destinationType->type, ['description' => $groupTitle]);
+        $subTitleIcon         = 'fa-exchange';
 
         // get a list of asset accounts and liabilities and stuff, in various combinations:
         $validDepositSources  = $this->getValidDepositSources();
@@ -114,13 +105,13 @@ class ConvertController extends Controller
         $assets               = $this->getAssetAccounts();
 
         // old input variables:
-        $preFilled = [
+        $preFilled            = [
             'source_name' => old('source_name'),
         ];
 
         if ($sourceType->type === $destinationType->type) { // cannot convert to its own type.
-            Log::debug('This is already a transaction of the expected type..');
-            session()->flash('info', (string)trans('firefly.convert_is_already_type_' . $destinationType->type));
+            app('log')->debug('This is already a transaction of the expected type..');
+            session()->flash('info', (string)trans('firefly.convert_is_already_type_'.$destinationType->type));
 
             return redirect(route('transactions.show', [$group->id]));
         }
@@ -144,28 +135,27 @@ class ConvertController extends Controller
         );
     }
 
-    /**
-     * @return array
-     */
     private function getValidDepositSources(): array
     {
         // make repositories
         $liabilityTypes = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN];
         $accountList    = $this->accountRepository
-            ->getActiveAccountsByType([AccountType::REVENUE, AccountType::CASH, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
+            ->getActiveAccountsByType([AccountType::REVENUE, AccountType::CASH, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE])
+        ;
         $grouped        = [];
+
         // group accounts:
         /** @var Account $account */
         foreach ($accountList as $account) {
-            $role = (string)$this->accountRepository->getMetaValue($account, 'account_role');
-            $name = $account->name;
+            $role                        = (string)$this->accountRepository->getMetaValue($account, 'account_role');
+            $name                        = $account->name;
             if ('' === $role) {
                 $role = 'no_account_type';
             }
 
             // maybe it's a liability thing:
             if (in_array($account->accountType->type, $liabilityTypes, true)) {
-                $role = 'l_' . $account->accountType->type;
+                $role = 'l_'.$account->accountType->type;
             }
             if (AccountType::CASH === $account->accountType->type) {
                 $role = 'cash_account';
@@ -175,16 +165,13 @@ class ConvertController extends Controller
                 $role = 'revenue_account';
             }
 
-            $key                         = (string)trans('firefly.opt_group_' . $role);
+            $key                         = (string)trans('firefly.opt_group_'.$role);
             $grouped[$key][$account->id] = $name;
         }
 
         return $grouped;
     }
 
-    /**
-     * @return array
-     */
     private function getValidWithdrawalDests(): array
     {
         // make repositories
@@ -193,18 +180,19 @@ class ConvertController extends Controller
             [AccountType::EXPENSE, AccountType::CASH, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]
         );
         $grouped        = [];
+
         // group accounts:
         /** @var Account $account */
         foreach ($accountList as $account) {
-            $role = (string)$this->accountRepository->getMetaValue($account, 'account_role');
-            $name = $account->name;
+            $role                        = (string)$this->accountRepository->getMetaValue($account, 'account_role');
+            $name                        = $account->name;
             if ('' === $role) {
                 $role = 'no_account_type';
             }
 
             // maybe it's a liability thing:
             if (in_array($account->accountType->type, $liabilityTypes, true)) {
-                $role = 'l_' . $account->accountType->type;
+                $role = 'l_'.$account->accountType->type;
             }
             if (AccountType::CASH === $account->accountType->type) {
                 $role = 'cash_account';
@@ -214,7 +202,7 @@ class ConvertController extends Controller
                 $role = 'expense_account';
             }
 
-            $key                         = (string)trans('firefly.opt_group_' . $role);
+            $key                         = (string)trans('firefly.opt_group_'.$role);
             $grouped[$key][$account->id] = $name;
         }
 
@@ -222,8 +210,7 @@ class ConvertController extends Controller
     }
 
     /**
-     * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     private function getLiabilities(): array
     {
@@ -231,22 +218,22 @@ class ConvertController extends Controller
         $accountList     = $this->accountRepository->getActiveAccountsByType([AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
         $defaultCurrency = app('amount')->getDefaultCurrency();
         $grouped         = [];
+
         // group accounts:
         /** @var Account $account */
         foreach ($accountList as $account) {
             $balance                     = app('steam')->balance($account, today());
             $currency                    = $this->accountRepository->getAccountCurrency($account) ?? $defaultCurrency;
-            $role                        = 'l_' . $account->accountType->type;
-            $key                         = (string)trans('firefly.opt_group_' . $role);
-            $grouped[$key][$account->id] = $account->name . ' (' . app('amount')->formatAnything($currency, $balance, false) . ')';
+            $role                        = 'l_'.$account->accountType->type;
+            $key                         = (string)trans('firefly.opt_group_'.$role);
+            $grouped[$key][$account->id] = $account->name.' ('.app('amount')->formatAnything($currency, $balance, false).')';
         }
 
         return $grouped;
     }
 
     /**
-     * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     private function getAssetAccounts(): array
     {
@@ -254,18 +241,19 @@ class ConvertController extends Controller
         $accountList     = $this->accountRepository->getActiveAccountsByType([AccountType::ASSET]);
         $defaultCurrency = app('amount')->getDefaultCurrency();
         $grouped         = [];
+
         // group accounts:
         /** @var Account $account */
         foreach ($accountList as $account) {
-            $balance  = app('steam')->balance($account, today());
-            $currency = $this->accountRepository->getAccountCurrency($account) ?? $defaultCurrency;
-            $role     = (string)$this->accountRepository->getMetaValue($account, 'account_role');
+            $balance                     = app('steam')->balance($account, today());
+            $currency                    = $this->accountRepository->getAccountCurrency($account) ?? $defaultCurrency;
+            $role                        = (string)$this->accountRepository->getMetaValue($account, 'account_role');
             if ('' === $role) {
                 $role = 'no_account_type';
             }
 
-            $key                         = (string)trans('firefly.opt_group_' . $role);
-            $grouped[$key][$account->id] = $account->name . ' (' . app('amount')->formatAnything($currency, $balance, false) . ')';
+            $key                         = (string)trans('firefly.opt_group_'.$role);
+            $grouped[$key][$account->id] = $account->name.' ('.app('amount')->formatAnything($currency, $balance, false).')';
         }
 
         return $grouped;
@@ -274,12 +262,7 @@ class ConvertController extends Controller
     /**
      * Do the conversion.
      *
-     * @param Request          $request
-     * @param TransactionType  $destinationType
-     * @param TransactionGroup $group
-     *
-     * @return RedirectResponse|Redirector
-     *
+     * @return Redirector|RedirectResponse
      */
     public function postIndex(Request $request, TransactionType $destinationType, TransactionGroup $group)
     {
@@ -302,39 +285,34 @@ class ConvertController extends Controller
         // correct transfers:
         $group->refresh();
 
-        session()->flash('success', (string)trans('firefly.converted_to_' . $destinationType->type));
+        session()->flash('success', (string)trans('firefly.converted_to_'.$destinationType->type));
         event(new UpdatedTransactionGroup($group, true, true));
 
         return redirect(route('transactions.show', [$group->id]));
     }
 
     /**
-     * @param TransactionJournal $journal
-     * @param TransactionType    $transactionType
-     * @param array              $data
-     *
-     * @return TransactionJournal
      * @throws FireflyException
      */
     private function convertJournal(TransactionJournal $journal, TransactionType $transactionType, array $data): TransactionJournal
     {
         /** @var AccountValidator $validator */
-        $validator = app(AccountValidator::class);
+        $validator        = app(AccountValidator::class);
         $validator->setUser(auth()->user());
         $validator->setTransactionType($transactionType->type);
 
-        $sourceId        = $data['source_id'][$journal->id] ?? null;
-        $sourceName      = $data['source_name'][$journal->id] ?? null;
-        $destinationId   = $data['destination_id'][$journal->id] ?? null;
-        $destinationName = $data['destination_name'][$journal->id] ?? null;
+        $sourceId         = $data['source_id'][$journal->id] ?? null;
+        $sourceName       = $data['source_name'][$journal->id] ?? null;
+        $destinationId    = $data['destination_id'][$journal->id] ?? null;
+        $destinationName  = $data['destination_name'][$journal->id] ?? null;
 
         // double check its not an empty string.
         $sourceId         = '' === $sourceId || null === $sourceId ? null : (int)$sourceId;
         $sourceName       = '' === $sourceName ? null : (string)$sourceName;
         $destinationId    = '' === $destinationId || null === $destinationId ? null : (int)$destinationId;
         $destinationName  = '' === $destinationName ? null : (string)$destinationName;
-        $validSource      = $validator->validateSource(['id' => $sourceId, 'name' => $sourceName,]);
-        $validDestination = $validator->validateDestination(['id' => $destinationId, 'name' => $destinationName,]);
+        $validSource      = $validator->validateSource(['id' => $sourceId, 'name' => $sourceName]);
+        $validDestination = $validator->validateDestination(['id' => $destinationId, 'name' => $destinationName]);
 
         if (false === $validSource) {
             throw new FireflyException(sprintf(trans('firefly.convert_invalid_source'), $journal->id));
@@ -345,15 +323,16 @@ class ConvertController extends Controller
 
         // TODO typeOverrule: the account validator may have another opinion on the transaction type.
 
-        $update = [
+        $update           = [
             'source_id'        => $sourceId,
             'source_name'      => $sourceName,
             'destination_id'   => $destinationId,
             'destination_name' => $destinationName,
             'type'             => $transactionType->type,
         ];
+
         /** @var JournalUpdateService $service */
-        $service = app(JournalUpdateService::class);
+        $service          = app(JournalUpdateService::class);
         $service->setTransactionJournal($journal);
         $service->setData($update);
         $service->update();

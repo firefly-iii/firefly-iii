@@ -37,13 +37,14 @@ bcscale(12);
 if (!function_exists('envNonEmpty')) {
     /**
      * @param string $key
-     * @param null   $default
+     * @param string|int|bool|null   $default
      *
      * @return mixed|null
      */
-    function envNonEmpty(string $key, $default = null) {
+    function envNonEmpty(string $key, string|int|bool|null $default = null)
+    {
         $result = env($key, $default);
-        if (is_string($result) && '' === $result) {
+        if ('' === $result) {
             $result = $default;
         }
 
@@ -58,13 +59,14 @@ if (!function_exists('stringIsEqual')) {
      *
      * @return bool
      */
-    function stringIsEqual(string $left, string $right): bool {
+    function stringIsEqual(string $left, string $right): bool
+    {
         return $left === $right;
     }
 }
 
 $app = new Illuminate\Foundation\Application(
-    realpath(__DIR__ . '/../')
+    (string)realpath(__DIR__ . '/../')
 );
 
 /*

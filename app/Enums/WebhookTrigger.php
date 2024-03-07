@@ -29,10 +29,10 @@ namespace FireflyIII\Enums;
  */
 enum WebhookTrigger: int
 {
-    case STORE_TRANSACTION = 100;
-    //case BEFORE_STORE_TRANSACTION = 101;
-    case UPDATE_TRANSACTION = 110;
-    //case BEFORE_UPDATE_TRANSACTION = 111;
+    case STORE_TRANSACTION   = 100;
+    // case BEFORE_STORE_TRANSACTION = 101;
+    case UPDATE_TRANSACTION  = 110;
+    // case BEFORE_UPDATE_TRANSACTION = 111;
     case DESTROY_TRANSACTION = 120;
-    //case BEFORE_DESTROY_TRANSACTION = 121;
+    // case BEFORE_DESTROY_TRANSACTION = 121;
 }

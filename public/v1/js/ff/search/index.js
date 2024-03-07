@@ -48,4 +48,5 @@ function presentSearchResults(data) {
     updateListButtons();
     // want to clone?
     $('.clone-transaction').click(cloneTransaction);
+    $('.clone-transaction-and-edit').click(cloneTransactionAndEdit);
 }

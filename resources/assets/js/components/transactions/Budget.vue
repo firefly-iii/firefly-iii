@@ -76,7 +76,7 @@ export default {
     }
   },
   methods: {
-    // Fixes edit change budget not updating on every broswer
+    // Fixes edit change budget not updating on every browser
     signalChange: function (e) {
       this.$emit('input', this.$refs.budget.value);
     },

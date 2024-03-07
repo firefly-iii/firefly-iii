@@ -33,7 +33,6 @@ use League\Fractal\Resource\Item;
  */
 class BudgetLimitTransformer extends AbstractTransformer
 {
-    /** @var string[] */
     protected array $availableIncludes
         = [
             'budget',
@@ -41,8 +40,6 @@ class BudgetLimitTransformer extends AbstractTransformer
 
     /**
      * Include Budget
-     *
-     * @param BudgetLimit $limit
      *
      * @return Item
      */
@@ -53,14 +50,10 @@ class BudgetLimitTransformer extends AbstractTransformer
 
     /**
      * Transform the note.
-     *
-     * @param BudgetLimit $budgetLimit
-     *
-     * @return array
      */
     public function transform(BudgetLimit $budgetLimit): array
     {
-        $repository = app(OperationsRepository::class);
+        $repository            = app(OperationsRepository::class);
         $repository->setUser($budgetLimit->budget->user);
         $expenses              = $repository->sumExpenses(
             $budgetLimit->start_date,
@@ -78,13 +71,13 @@ class BudgetLimitTransformer extends AbstractTransformer
         $currencySymbol        = null;
         if (null !== $currency) {
             $amount                = $budgetLimit->amount;
-            $currencyId            = (int)$currency->id;
+            $currencyId            = $currency->id;
             $currencyName          = $currency->name;
             $currencyCode          = $currency->code;
             $currencySymbol        = $currency->symbol;
             $currencyDecimalPlaces = $currency->decimal_places;
         }
-        $amount = app('steam')->bcround($amount, $currencyDecimalPlaces);
+        $amount                = app('steam')->bcround($amount, $currencyDecimalPlaces);
 
         return [
             'id'                      => (string)$budgetLimit->id,
@@ -104,7 +97,7 @@ class BudgetLimitTransformer extends AbstractTransformer
             'links'                   => [
                 [
                     'rel' => 'self',
-                    'uri' => '/budgets/limits/' . $budgetLimit->id,
+                    'uri' => '/budgets/limits/'.$budgetLimit->id,
                 ],
             ],
         ];

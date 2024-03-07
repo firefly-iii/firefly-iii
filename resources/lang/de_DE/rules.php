@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * rules.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -56,6 +55,8 @@ return [
     'cannot_find_subscription'                    => 'Firefly III kann das Abonnement ":name" nicht finden',
     'no_notes_to_move'                            => 'Diese Transaktion hat keine Notizen für das Beschreibungsfeld',
     'no_tags_to_remove'                           => 'Die Buchung hat keine Schlagworte zum Entfernen',
+    'not_withdrawal'                              => 'Diese Buchung ist keine Ausgabe',
+    'not_deposit'                                 => 'Diese Buchung ist keine Einnahme',
     'cannot_find_tag'                             => 'Firefly III kann Schlagwort ":tag" nicht finden',
     'cannot_find_asset'                           => 'Firefly III kann kein Girokonto ":name" finden',
     'cannot_find_accounts'                        => 'Firefly III kann das Quell- oder Zielkonto nicht finden',

@@ -31,7 +31,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use PragmaRX\Google2FALaravel\Support\Authenticator;
-use Preferences;
 
 /**
  * Class TwoFactorController.
@@ -54,15 +53,13 @@ class TwoFactorController extends Controller
     }
 
     /**
-     * @param Request $request
-     *
-     * @return RedirectResponse|Redirector
+     * @return Redirector|RedirectResponse
      */
     public function submitMFA(Request $request)
     {
         /** @var array $mfaHistory */
-        $mfaHistory = Preferences::get('mfa_history', [])->data;
-        $mfaCode    = (string)$request->get('one_time_password');
+        $mfaHistory    = app('preferences')->get('mfa_history', [])->data;
+        $mfaCode       = (string)$request->get('one_time_password');
 
         // is in history? then refuse to use it.
         if ($this->inMFAHistory($mfaCode, $mfaHistory)) {
@@ -101,11 +98,6 @@ class TwoFactorController extends Controller
     /**
      * Each MFA history has a timestamp and a code, saving the MFA entries for 5 minutes. So if the
      * submitted MFA code has been submitted in the last 5 minutes, it won't work despite being valid.
-     *
-     * @param string $mfaCode
-     * @param array  $mfaHistory
-     *
-     * @return bool
      */
     private function inMFAHistory(string $mfaCode, array $mfaHistory): bool
     {
@@ -127,7 +119,7 @@ class TwoFactorController extends Controller
     private function filterMFAHistory(): void
     {
         /** @var array $mfaHistory */
-        $mfaHistory = Preferences::get('mfa_history', [])->data;
+        $mfaHistory = app('preferences')->get('mfa_history', [])->data;
         $newHistory = [];
         $now        = time();
         foreach ($mfaHistory as $entry) {
@@ -140,36 +132,32 @@ class TwoFactorController extends Controller
                 ];
             }
         }
-        Preferences::set('mfa_history', $newHistory);
+        app('preferences')->set('mfa_history', $newHistory);
     }
 
-    /**
-     * @param string $mfaCode
-     */
     private function addToMFAHistory(string $mfaCode): void
     {
         /** @var array $mfaHistory */
-        $mfaHistory   = Preferences::get('mfa_history', [])->data;
+        $mfaHistory   = app('preferences')->get('mfa_history', [])->data;
         $entry        = [
             'time' => time(),
             'code' => $mfaCode,
         ];
         $mfaHistory[] = $entry;
 
-        Preferences::set('mfa_history', $mfaHistory);
+        app('preferences')->set('mfa_history', $mfaHistory);
         $this->filterMFAHistory();
     }
 
     /**
      * Checks if code is in users backup codes.
-     *
-     * @param string $mfaCode
-     *
-     * @return bool
      */
     private function isBackupCode(string $mfaCode): bool
     {
-        $list = Preferences::get('mfa_recovery', [])->data;
+        $list = app('preferences')->get('mfa_recovery', [])->data;
+        if (!is_array($list)) {
+            $list = [];
+        }
         if (in_array($mfaCode, $list, true)) {
             return true;
         }
@@ -179,13 +167,14 @@ class TwoFactorController extends Controller
 
     /**
      * Remove the used code from the list of backup codes.
-     *
-     * @param string $mfaCode
      */
     private function removeFromBackupCodes(string $mfaCode): void
     {
-        $list    = Preferences::get('mfa_recovery', [])->data;
+        $list    = app('preferences')->get('mfa_recovery', [])->data;
+        if (!is_array($list)) {
+            $list = [];
+        }
         $newList = array_values(array_diff($list, [$mfaCode]));
-        Preferences::set('mfa_recovery', $newList);
+        app('preferences')->set('mfa_recovery', $newList);
     }
 }

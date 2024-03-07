@@ -41,8 +41,8 @@ use League\Fractal\Resource\Item;
  */
 class PreferencesController extends Controller
 {
-    public const DATE_FORMAT  = 'Y-m-d';
-    public const RESOURCE_KEY = 'preferences';
+    public const string DATE_FORMAT  = 'Y-m-d';
+    public const string RESOURCE_KEY = 'preferences';
 
     /**
      * This endpoint is documented at:
@@ -50,7 +50,6 @@ class PreferencesController extends Controller
      *
      * List all of them.
      *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function index(): JsonResponse
@@ -62,14 +61,14 @@ class PreferencesController extends Controller
         $preferences = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
-        $paginator = new LengthAwarePaginator($preferences, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.preferences.index') . $this->buildParams());
+        $paginator   = new LengthAwarePaginator($preferences, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.preferences.index').$this->buildParams());
 
         /** @var PreferenceTransformer $transformer */
         $transformer = app(PreferenceTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($preferences, $transformer, self::RESOURCE_KEY);
+        $resource    = new FractalCollection($preferences, $transformer, self::RESOURCE_KEY);
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -80,19 +79,16 @@ class PreferencesController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/preferences/getPreference
      *
      * Return a single preference by name.
-     *
-     * @param Preference $preference
-     *
-     * @return JsonResponse
      */
     public function show(Preference $preference): JsonResponse
     {
-        $manager = $this->getManager();
+        $manager     = $this->getManager();
+
         /** @var PreferenceTransformer $transformer */
         $transformer = app(PreferenceTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($preference, $transformer, 'preferences');
+        $resource    = new Item($preference, $transformer, 'preferences');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
@@ -101,22 +97,19 @@ class PreferencesController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/preferences/storePreference
      *
-     * @param PreferenceStoreRequest $request
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function store(PreferenceStoreRequest $request): JsonResponse
     {
-        $manager = $this->getManager();
-        $data    = $request->getAll();
-        $pref    = app('preferences')->set($data['name'], $data['data']);
+        $manager     = $this->getManager();
+        $data        = $request->getAll();
+        $pref        = app('preferences')->set($data['name'], $data['data']);
 
         /** @var PreferenceTransformer $transformer */
         $transformer = app(PreferenceTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($pref, $transformer, 'preferences');
+        $resource    = new Item($pref, $transformer, 'preferences');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
@@ -125,23 +118,19 @@ class PreferencesController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/preferences/updatePreference
      *
-     * @param PreferenceUpdateRequest $request
-     * @param Preference              $preference
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function update(PreferenceUpdateRequest $request, Preference $preference): JsonResponse
     {
-        $manager = $this->getManager();
-        $data    = $request->getAll();
-        $pref    = app('preferences')->set($preference->name, $data['data']);
+        $manager     = $this->getManager();
+        $data        = $request->getAll();
+        $pref        = app('preferences')->set($preference->name, $data['data']);
 
         /** @var PreferenceTransformer $transformer */
         $transformer = app(PreferenceTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($pref, $transformer, 'preferences');
+        $resource    = new Item($pref, $transformer, 'preferences');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

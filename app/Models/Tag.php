@@ -23,7 +23,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -32,34 +35,34 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\Tag
  *
- * @property int                                  $id
- * @property Carbon|null                          $created_at
- * @property Carbon|null                          $updated_at
- * @property Carbon|null                          $deleted_at
- * @property int                                  $user_id
- * @property string                               $tag
- * @property string                               $tagMode
- * @property Carbon|null                          $date
- * @property string|null                          $description
- * @property float|null                           $latitude
- * @property float|null                           $longitude
- * @property int|null                             $zoomLevel
- * @property-read Collection|Attachment[]         $attachments
- * @property-read int|null                        $attachments_count
- * @property-read Collection|Location[]           $locations
- * @property-read int|null                        $locations_count
- * @property-read Collection|TransactionJournal[] $transactionJournals
- * @property-read int|null                        $transaction_journals_count
- * @property-read User                            $user
+ * @property int                             $id
+ * @property null|Carbon                     $created_at
+ * @property null|Carbon                     $updated_at
+ * @property null|Carbon                     $deleted_at
+ * @property int                             $user_id
+ * @property string                          $tag
+ * @property string                          $tagMode
+ * @property null|Carbon                     $date
+ * @property null|string                     $description
+ * @property null|float                      $latitude
+ * @property null|float                      $longitude
+ * @property null|int                        $zoomLevel
+ * @property Attachment[]|Collection         $attachments
+ * @property null|int                        $attachments_count
+ * @property Collection|Location[]           $locations
+ * @property null|int                        $locations_count
+ * @property Collection|TransactionJournal[] $transactionJournals
+ * @property null|int                        $transaction_journals_count
+ * @property User                            $user
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Tag newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Tag newQuery()
- * @method static Builder|Tag onlyTrashed()
+ * @method static Builder|Tag                               onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Tag query()
  * @method static \Illuminate\Database\Eloquent\Builder|Tag whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Tag whereDate($value)
@@ -73,86 +76,74 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|Tag whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Tag whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Tag whereZoomLevel($value)
- * @method static Builder|Tag withTrashed()
- * @method static Builder|Tag withoutTrashed()
- * @property int|null                             $user_group_id
+ * @method static Builder|Tag                               withTrashed()
+ * @method static Builder|Tag                               withoutTrashed()
+ *
+ * @property int $user_group_id
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Tag whereUserGroupId($value)
+ *
  * @mixin Eloquent
  */
 class Tag extends Model
 {
+    use ReturnsIntegerIdTrait;
+    use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
     protected $casts
-        = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'deleted_at' => 'datetime',
-            'date'       => 'date',
-            'zoomLevel'  => 'int',
-            'latitude'   => 'float',
-            'longitude'  => 'float',
-        ];
-    /** @var array Fields that can be filled */
+                        = [
+                            'created_at' => 'datetime',
+                            'updated_at' => 'datetime',
+                            'deleted_at' => 'datetime',
+                            'date'       => 'date',
+                            'zoomLevel'  => 'int',
+                            'latitude'   => 'float',
+                            'longitude'  => 'float',
+                        ];
+
     protected $fillable = ['user_id', 'user_group_id', 'tag', 'date', 'description', 'tagMode'];
 
-    protected $hidden = ['zoomLevel', 'latitude', 'longitude'];
+    protected $hidden   = ['zoomLevel', 'latitude', 'longitude'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param string $value
-     *
-     * @return Tag
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): Tag
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $tagId = (int)$value;
+
             /** @var User $user */
-            $user = auth()->user();
-            /** @var Tag $tag */
-            $tag = $user->tags()->find($tagId);
+            $user  = auth()->user();
+
+            /** @var null|Tag $tag */
+            $tag   = $user->tags()->find($tagId);
             if (null !== $tag) {
                 return $tag;
             }
         }
+
         throw new NotFoundHttpException();
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * @return MorphMany
-     */
     public function attachments(): MorphMany
     {
         return $this->morphMany(Attachment::class, 'attachable');
     }
 
-    /**
-     * @return MorphMany
-     */
     public function locations(): MorphMany
     {
         return $this->morphMany(Location::class, 'locatable');
     }
 
-    /**
-     * @return BelongsToMany
-     */
     public function transactionJournals(): BelongsToMany
     {
         return $this->belongsToMany(TransactionJournal::class);

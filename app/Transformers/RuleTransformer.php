@@ -39,8 +39,6 @@ class RuleTransformer extends AbstractTransformer
 
     /**
      * CurrencyTransformer constructor.
-     *
-
      */
     public function __construct()
     {
@@ -50,9 +48,6 @@ class RuleTransformer extends AbstractTransformer
     /**
      * Transform the rule.
      *
-     * @param Rule $rule
-     *
-     * @return array
      * @throws FireflyException
      */
     public function transform(Rule $rule): array
@@ -67,7 +62,7 @@ class RuleTransformer extends AbstractTransformer
             'rule_group_title' => (string)$rule->ruleGroup->title,
             'title'            => $rule->title,
             'description'      => $rule->description,
-            'order'            => (int)$rule->order,
+            'order'            => $rule->order,
             'active'           => $rule->active,
             'strict'           => $rule->strict,
             'stop_processing'  => $rule->stop_processing,
@@ -77,22 +72,20 @@ class RuleTransformer extends AbstractTransformer
             'links'            => [
                 [
                     'rel' => 'self',
-                    'uri' => '/rules/' . $rule->id,
+                    'uri' => '/rules/'.$rule->id,
                 ],
             ],
         ];
     }
 
     /**
-     * @param Rule $rule
-     *
-     * @return string
      * @throws FireflyException
      */
     private function getRuleTrigger(Rule $rule): string
     {
         $moment   = null;
         $triggers = $this->ruleRepository->getRuleTriggers($rule);
+
         /** @var RuleTrigger $ruleTrigger */
         foreach ($triggers as $ruleTrigger) {
             if ('user_action' === $ruleTrigger->trigger_type) {
@@ -106,26 +99,28 @@ class RuleTransformer extends AbstractTransformer
         return $moment;
     }
 
-    /**
-     * @param Rule $rule
-     *
-     * @return array
-     */
     private function triggers(Rule $rule): array
     {
         $result   = [];
         $triggers = $this->ruleRepository->getRuleTriggers($rule);
+
         /** @var RuleTrigger $ruleTrigger */
         foreach ($triggers as $ruleTrigger) {
             if ('user_action' === $ruleTrigger->trigger_type) {
                 continue;
             }
-            $result[] = [
+            $triggerValue = (string)$ruleTrigger->trigger_value;
+            $needsContext = config(sprintf('search.operators.%s.needs_context', $ruleTrigger->trigger_type), true);
+            if (false === $needsContext) {
+                $triggerValue = 'true';
+            }
+
+            $result[]     = [
                 'id'              => (string)$ruleTrigger->id,
                 'created_at'      => $ruleTrigger->created_at->toAtomString(),
                 'updated_at'      => $ruleTrigger->updated_at->toAtomString(),
                 'type'            => $ruleTrigger->trigger_type,
-                'value'           => $ruleTrigger->trigger_value,
+                'value'           => $triggerValue,
                 'order'           => $ruleTrigger->order,
                 'active'          => $ruleTrigger->active,
                 'stop_processing' => $ruleTrigger->stop_processing,
@@ -135,15 +130,11 @@ class RuleTransformer extends AbstractTransformer
         return $result;
     }
 
-    /**
-     * @param Rule $rule
-     *
-     * @return array
-     */
     private function actions(Rule $rule): array
     {
         $result  = [];
         $actions = $this->ruleRepository->getRuleActions($rule);
+
         /** @var RuleAction $ruleAction */
         foreach ($actions as $ruleAction) {
             $result[] = [

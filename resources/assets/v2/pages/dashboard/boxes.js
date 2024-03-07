@@ -55,7 +55,6 @@ export default () => ({
             this.boxData = response.data;
             window.store.set(boxesCacheKey, response.data);
             this.generateOptions(this.boxData);
-            //this.drawChart();
         });
     },
     generateOptions(data) {

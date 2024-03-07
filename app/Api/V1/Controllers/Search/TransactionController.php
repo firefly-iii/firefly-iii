@@ -42,35 +42,31 @@ class TransactionController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/search/searchTransactions
      *
-     * @param Request         $request
-     * @param SearchInterface $searcher
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function search(Request $request, SearchInterface $searcher): JsonResponse
     {
-        $manager   = $this->getManager();
-        $fullQuery = (string)$request->get('query');
-        $page      = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
-        $pageSize  = $this->parameters->get('limit');
+        $manager      = $this->getManager();
+        $fullQuery    = (string)$request->get('query');
+        $page         = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
+        $pageSize     = $this->parameters->get('limit');
         $searcher->parseQuery($fullQuery);
         $searcher->setPage($page);
         $searcher->setLimit($pageSize);
-        $groups     = $searcher->searchTransactions();
-        $parameters = ['search' => $fullQuery];
-        $url        = route('api.v1.search.transactions') . '?' . http_build_query($parameters);
+        $groups       = $searcher->searchTransactions();
+        $parameters   = ['search' => $fullQuery];
+        $url          = route('api.v1.search.transactions').'?'.http_build_query($parameters);
         $groups->setPath($url);
         $transactions = $groups->getCollection();
 
         /** @var TransactionGroupTransformer $transformer */
-        $transformer = app(TransactionGroupTransformer::class);
+        $transformer  = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Collection($transactions, $transformer, 'transactions');
+        $resource     = new Collection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($groups));
 
-        $array = $manager->createData($resource)->toArray();
+        $array        = $manager->createData($resource)->toArray();
 
         return response()->json($array)->header('Content-Type', self::CONTENT_TYPE);
     }

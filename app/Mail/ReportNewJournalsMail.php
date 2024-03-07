@@ -35,8 +35,6 @@ use Illuminate\Support\Collection;
  * Class ReportNewJournalsMail.
  *
  * Sends a list of newly created journals to the user.
- *
-
  */
 class ReportNewJournalsMail extends Mailable
 {
@@ -48,8 +46,6 @@ class ReportNewJournalsMail extends Mailable
 
     /**
      * ConfirmEmailChangeMail constructor.
-     *
-     * @param Collection $groups
      */
     public function __construct(Collection $groups)
     {
@@ -67,11 +63,11 @@ class ReportNewJournalsMail extends Mailable
 
         return $this
             ->markdown('emails.report-new-journals')
-            ->subject((string)trans_choice('email.new_journals_subject', $this->groups->count()));
+            ->subject(trans_choice('email.new_journals_subject', $this->groups->count()))
+        ;
     }
 
     /**
-     * @return void
      * @throws FireflyException
      */
     private function transform(): void

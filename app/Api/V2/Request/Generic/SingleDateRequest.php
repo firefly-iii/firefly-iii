@@ -36,13 +36,11 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class SingleDateRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Get all data from the request.
-     *
-     * @return Carbon
      */
     public function getDate(): Carbon
     {
@@ -51,8 +49,6 @@ class SingleDateRequest extends FormRequest
 
     /**
      * The rules that the incoming request must be matched against.
-     *
-     * @return array
      */
     public function rules(): array
     {

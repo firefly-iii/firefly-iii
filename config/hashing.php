@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * hashing.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -24,7 +23,6 @@
 declare(strict_types=1);
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Default Hash Driver
@@ -66,10 +64,9 @@ return [
     |
     */
 
-    'argon' => [
+    'argon'  => [
         'memory'  => 65536,
         'threads' => 1,
         'time'    => 4,
     ],
-
 ];

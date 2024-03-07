@@ -31,41 +31,39 @@
  *
  */
 
-
 declare(strict_types=1);
 
 return [
     // index
-    'index_intro'                           => 'Velkommen til indekssiden i Firefly III. Ta deg tid til å gå gjennom denne introduksjonen for å få en følelse av hvordan Firefly III fungerer.',
-    'index_accounts-chart'                  => 'Dette diagrammet viser gjeldende saldo på aktivakontoene dine. Du kan velge kontoene som er synlige her under innstillinger.',
-    'index_box_out_holder'                  => 'Denne lille boksen og boksene ved siden av gir deg rask oversikt over din økonomiske situasjon.',
-    'index_help'                            => 'Hvis du trenger hjelp til en side eller et skjema, trykker du på denne knappen.',
-    'index_outro'                           => 'De fleste sidene av Firefly III vil starte med en liten gjennomgang slik som denne. Ta kontakt med meg hvis du har spørsmål eller kommentarer. Sett igang!',
-    'index_sidebar-toggle'                  => 'For å opprette nye transaksjoner, kontoer eller andre ting, bruk menyen under dette ikonet.',
-    'index_cash_account'                    => 'Dette er kontoene som er opprettet så langt. Du kan bruke kontantkontoen til å spore kontantutgifter, men det er selvfølgelig ikke obligatorisk.',
+    'index_intro'                                             => 'Velkommen til indekssiden i Firefly III. Ta deg tid til å gå gjennom denne introduksjonen for å få en følelse av hvordan Firefly III fungerer.',
+    'index_accounts-chart'                                    => 'Dette diagrammet viser gjeldende saldo på aktivakontoene dine. Du kan velge kontoene som er synlige her under innstillinger.',
+    'index_box_out_holder'                                    => 'Denne lille boksen og boksene ved siden av gir deg rask oversikt over din økonomiske situasjon.',
+    'index_help'                                              => 'Hvis du trenger hjelp til en side eller et skjema, trykker du på denne knappen.',
+    'index_outro'                                             => 'De fleste sidene av Firefly III vil starte med en liten gjennomgang slik som denne. Ta kontakt med meg hvis du har spørsmål eller kommentarer. Sett igang!',
+    'index_sidebar-toggle'                                    => 'For å opprette nye transaksjoner, kontoer eller andre ting, bruk menyen under dette ikonet.',
+    'index_cash_account'                                      => 'Dette er kontoene som er opprettet så langt. Du kan bruke kontantkontoen til å spore kontantutgifter, men det er selvfølgelig ikke obligatorisk.',
 
     // transactions
-    'transactions_create_basic_info'        => 'Skriv inn grunnleggende informasjon om din transaksjon. Kilde, destinasjon, dato og beskrivelse.',
-    'transactions_create_amount_info'       => 'Angi mengde for transaksjonen. Hvis nødvendig vil feltene auto-oppdatere for utenlansk beløp info.',
-    'transactions_create_optional_info'     => 'Alle disse feltene er valgfrie. Å legge til meta-data her vil gjøre transaksjonene dine bedre organisert.',
-    'transactions_create_split'             => 'Hvis du vil dele en transaksjon, kan du legge til flere deler med denne knappen',
+    'transactions_create_basic_info'                          => 'Skriv inn grunnleggende informasjon om din transaksjon. Kilde, destinasjon, dato og beskrivelse.',
+    'transactions_create_amount_info'                         => 'Angi mengde for transaksjonen. Hvis nødvendig vil feltene auto-oppdatere for utenlansk beløp info.',
+    'transactions_create_optional_info'                       => 'Alle disse feltene er valgfrie. Å legge til meta-data her vil gjøre transaksjonene dine bedre organisert.',
+    'transactions_create_split'                               => 'Hvis du vil dele en transaksjon, kan du legge til flere deler med denne knappen',
 
     // create account:
-    'accounts_create_iban'                  => 'Gi kontoene dine en gyldig IBAN. Dette gjør dataimport lettere i fremtiden.',
-    'accounts_create_asset_opening_balance' => 'Aktivakontoer kan ha en "åpningssaldo" som indikerer starten på denne kontoens historie i Firefly III.',
-    'accounts_create_asset_currency'        => 'Firefly III støtter flere valutaer. Aktivakontoer har en hovedvaluta, som du må sette her.',
-    'accounts_create_asset_virtual'         => 'Det kan noen ganger hjelpe å gi kontoen din en virtuell saldo: et ekstra beløp blir alltid lagt til eller fjernet fra den faktiske saldoen.',
+    'accounts_create_iban'                                    => 'Gi kontoene dine en gyldig IBAN. Dette gjør dataimport lettere i fremtiden.',
+    'accounts_create_asset_opening_balance'                   => 'Aktivakontoer kan ha en "åpningssaldo" som indikerer starten på denne kontoens historie i Firefly III.',
+    'accounts_create_asset_currency'                          => 'Firefly III støtter flere valutaer. Aktivakontoer har en hovedvaluta, som du må sette her.',
+    'accounts_create_asset_virtual'                           => 'Det kan noen ganger hjelpe å gi kontoen din en virtuell saldo: et ekstra beløp blir alltid lagt til eller fjernet fra den faktiske saldoen.',
 
     // budgets index
-    'budgets_index_intro'                   => 'Budsjetter brukes til å styre din økonomi og er en av kjernefunksjonene i Firefly III.',
-    'budgets_index_set_budget'              => 'Sett ditt totale budsjett for hver periode, så Firefly III kan fortelle deg om du har budsjettert med alle tilgjengelige penger.',
-    'budgets_index_see_expenses_bar'        => 'Når du bruker penger vil denne linjen fylles opp.',
-    'budgets_index_navigate_periods'        => 'Naviger gjennom perioder for å enkelt sette budsjetter på forhånd.',
-    'budgets_index_new_budget'              => 'Opprett nye budsjetter etter behov.',
-    'budgets_index_list_of_budgets'         => 'Bruk denne tabellen til å angi beløp for hvert budsjett og se hvordan du klarer deg.',
-    'budgets_index_outro'                   => 'Hvis du vil vite mer om budsjettering, trykk på hjelp-ikonet øverst til høyre.',
+    'budgets_index_intro'                                     => 'Budsjetter brukes til å styre din økonomi og er en av kjernefunksjonene i Firefly III.',
+    'budgets_index_see_expenses_bar'                          => 'Når du bruker penger vil denne linjen fylles opp.',
+    'budgets_index_navigate_periods'                          => 'Naviger gjennom perioder for å enkelt sette budsjetter på forhånd.',
+    'budgets_index_new_budget'                                => 'Opprett nye budsjetter etter behov.',
+    'budgets_index_list_of_budgets'                           => 'Bruk denne tabellen til å angi beløp for hvert budsjett og se hvordan du klarer deg.',
+    'budgets_index_outro'                                     => 'Hvis du vil vite mer om budsjettering, trykk på hjelp-ikonet øverst til høyre.',
 
-/*
+    /*
  * PLEASE DO NOT EDIT THIS FILE DIRECTLY.
  * YOUR CHANGES WILL BE OVERWRITTEN!
  * YOUR PR WITH CHANGES TO THIS FILE WILL BE REJECTED!
@@ -76,26 +74,25 @@ return [
  *
  */
 
-
     // reports (index)
-    'reports_index_intro'                   => 'Bruk disse rapportene for å få detaljert innsikt i din økonomi.',
-    'reports_index_inputReportType'         => 'Velg en rapporttype. Sjekk ut hjelpesidene for å se hva hver rapport viser deg.',
-    'reports_index_inputAccountsSelect'     => 'Du kan ekskludere eller inkludere aktivakontoer etter eget ønske.',
-    'reports_index_inputDateRange'          => 'Den valgte datoperioden er helt opp til deg: fra en dag, og opptil 10 år.',
-    'reports_index_extra-options-box'       => 'Avhengig av hvilken rapport du har valgt, kan du velge ekstra filtre og alternativer her. Følg med på denne boksen når du endrer rapporttyper.',
+    'reports_index_intro'                                     => 'Bruk disse rapportene for å få detaljert innsikt i din økonomi.',
+    'reports_index_inputReportType'                           => 'Velg en rapporttype. Sjekk ut hjelpesidene for å se hva hver rapport viser deg.',
+    'reports_index_inputAccountsSelect'                       => 'Du kan ekskludere eller inkludere aktivakontoer etter eget ønske.',
+    'reports_index_inputDateRange'                            => 'The selected date range is entirely up to you: from one day to 10 years or more.',
+    'reports_index_extra-options-box'                         => 'Avhengig av hvilken rapport du har valgt, kan du velge ekstra filtre og alternativer her. Følg med på denne boksen når du endrer rapporttyper.',
 
     // reports (reports)
-    'reports_report_default_intro'          => 'Denne rapporten gir deg en rask og omfattende oversikt over økonomien din. Hvis du ønsker å se noe annet her, ikke nøl med å kontakte meg!',
-    'reports_report_audit_intro'            => 'Denne rapporten gir deg detaljert innsikt i aktivakontoene dine.',
-    'reports_report_audit_optionsBox'       => 'Bruk disse avkrysningssboksene for å vise eller skjule kolonnene du er interessert i.',
+    'reports_report_default_intro'                            => 'Denne rapporten gir deg en rask og omfattende oversikt over økonomien din. Hvis du ønsker å se noe annet her, ikke nøl med å kontakte meg!',
+    'reports_report_audit_intro'                              => 'Denne rapporten gir deg detaljert innsikt i aktivakontoene dine.',
+    'reports_report_audit_optionsBox'                         => 'Bruk disse avkrysningssboksene for å vise eller skjule kolonnene du er interessert i.',
 
-    'reports_report_category_intro'                  => 'Denne rapporten gir deg innblikk i en eller flere kategorier.',
-    'reports_report_category_pieCharts'              => 'Disse diagrammene gir deg innblikk i utgifter og inntekt per kategori eller per konto.',
-    'reports_report_category_incomeAndExpensesChart' => 'Dette diagrammet viser dine utgifter og inntekter per kategori.',
+    'reports_report_category_intro'                           => 'Denne rapporten gir deg innblikk i en eller flere kategorier.',
+    'reports_report_category_pieCharts'                       => 'Disse diagrammene gir deg innblikk i utgifter og inntekt per kategori eller per konto.',
+    'reports_report_category_incomeAndExpensesChart'          => 'Dette diagrammet viser dine utgifter og inntekter per kategori.',
 
-    'reports_report_tag_intro'                  => 'Denne rapporten gir deg innblikk i en eller flere tagger.',
-    'reports_report_tag_pieCharts'              => 'Disse diagrammene gir deg innblikk i utgifter og inntekter per tagg, konto, kategori eller budsjett.',
-    'reports_report_tag_incomeAndExpensesChart' => 'Dette diagrammet viser dine utgifter og inntekter per tagg.',
+    'reports_report_tag_intro'                                => 'Denne rapporten gir deg innblikk i en eller flere tagger.',
+    'reports_report_tag_pieCharts'                            => 'Disse diagrammene gir deg innblikk i utgifter og inntekter per tagg, konto, kategori eller budsjett.',
+    'reports_report_tag_incomeAndExpensesChart'               => 'Dette diagrammet viser dine utgifter og inntekter per tagg.',
 
     'reports_report_budget_intro'                             => 'Denne rapporten gir deg innblikk i ett eller flere budsjetter.',
     'reports_report_budget_pieCharts'                         => 'Disse diagrammene gir deg innblikk i utgifter og inntekter per budsjett eller per konto.',
@@ -114,7 +111,7 @@ return [
     'piggy-banks_index_button'                                => 'Ved siden av denne fremdriftslinjen er det to knapper (+ og -) for å legge til eller fjerne penger fra hver sparegris.',
     'piggy-banks_index_accountStatus'                         => 'For hver aktivakonto med minst en sparegris er statusen oppført i denne tabellen.',
 
-/*
+    /*
  * PLEASE DO NOT EDIT THIS FILE DIRECTLY.
  * YOUR CHANGES WILL BE OVERWRITTEN!
  * YOUR PR WITH CHANGES TO THIS FILE WILL BE REJECTED!
@@ -124,7 +121,6 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
-
 
     // create piggy
     'piggy-banks_create_name'                                 => 'Hva er ditt mål? En ny sofa, et kamera, penger til uforutsette utgifter?',
@@ -148,7 +144,7 @@ return [
     // create bill
     'bills_create_intro'                                      => 'Bruk regninger for å spore hvor mange penger du skal betale for hver periode. Tenk på utgifter som leie, forsikring eller nedbetaling av boliglån.',
     'bills_create_name'                                       => 'Bruk et beskrivende navn som "Leie" eller "Helseforsikring".',
-    //'bills_create_match'                                      => 'To match transactions, use terms from those transactions or the expense account involved. All words must match.',
+    // 'bills_create_match'                                      => 'To match transactions, use terms from those transactions or the expense account involved. All words must match.',
     'bills_create_amount_min_holder'                          => 'Velg minimum og maksimumsbeløp for denne regningen.',
     'bills_create_repeat_freq_holder'                         => 'De fleste regninger gjentas månedlig, men du kan angi en annen frekvens her.',
     'bills_create_skip_holder'                                => 'Hvis en regning gjentas hver andre uke, skal "hopp over" -feltet settes til "1" for å hoppe over annenhver uke.',
@@ -168,7 +164,7 @@ return [
     'rules_create_test_rule_triggers'                         => 'Bruk denne knappen for å se hvilke eksisterende transaksjoner som samsvarer med regelen din.',
     'rules_create_actions'                                    => 'Sett så mange handlinger som du vil.',
 
-/*
+    /*
  * PLEASE DO NOT EDIT THIS FILE DIRECTLY.
  * YOUR CHANGES WILL BE OVERWRITTEN!
  * YOUR PR WITH CHANGES TO THIS FILE WILL BE REJECTED!
@@ -178,7 +174,6 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
-
 
     // preferences
     'preferences_index_tabs'                                  => 'Flere alternativer er tilgjengelig bak disse fanene.',

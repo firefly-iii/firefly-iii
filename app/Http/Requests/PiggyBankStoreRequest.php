@@ -23,22 +23,23 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Validator;
 
 /**
  * Class PiggyBankStoreRequest.
  */
 class PiggyBankStoreRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Returns the data required by the controller.
-     *
-     * @return array
      */
     public function getPiggyBankData(): array
     {
@@ -55,19 +56,25 @@ class PiggyBankStoreRequest extends FormRequest
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {
         return [
-            'name'         => 'required|between:1,255|uniquePiggyBankForUser',
+            'name'         => 'required|min:1|max:255|uniquePiggyBankForUser',
             'account_id'   => 'required|belongsToUser:accounts',
-            'targetamount' => 'nullable|numeric|max:1000000000',
+            'targetamount' => ['nullable', new IsValidPositiveAmount()],
             'startdate'    => 'date',
             'targetdate'   => 'date|nullable',
             'order'        => 'integer|min:1',
             'object_group' => 'min:0|max:255',
+            'notes'        => 'min:1|max:32768|nullable',
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        if ($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+        }
     }
 }

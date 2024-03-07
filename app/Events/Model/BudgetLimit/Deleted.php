@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * Deleted.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -38,9 +37,6 @@ class Deleted extends Event
 
     public BudgetLimit $budgetLimit;
 
-    /**
-     * @param BudgetLimit $budgetLimit
-     */
     public function __construct(BudgetLimit $budgetLimit)
     {
         $this->budgetLimit = $budgetLimit;

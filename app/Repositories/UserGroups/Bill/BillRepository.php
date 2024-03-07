@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * BillRepository.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -33,6 +32,7 @@ use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class BillRepository
@@ -49,72 +49,69 @@ class BillRepository implements BillRepositoryInterface
         $set     = $this->userGroup->bills()->orderBy('order', 'ASC')->get();
         $current = 1;
         foreach ($set as $bill) {
-            if ((int)$bill->order !== $current) {
+            if ($bill->order !== $current) {
                 $bill->order = $current;
                 $bill->save();
             }
-            $current++;
+            ++$current;
         }
     }
 
-    /**
-     * @return Collection
-     */
     public function getBills(): Collection
     {
         return $this->userGroup->bills()
-                               ->orderBy('bills.name', 'ASC')
-                               ->get(['bills.*']);
+            ->orderBy('bills.name', 'ASC')
+            ->get(['bills.*'])
+        ;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function sumPaidInRange(Carbon $start, Carbon $end): array
     {
+        Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         $bills     = $this->getActiveBills();
         $default   = app('amount')->getDefaultCurrency();
         $return    = [];
         $converter = new ExchangeRateConverter();
+
         /** @var Bill $bill */
         foreach ($bills as $bill) {
             /** @var Collection $set */
             $set        = $bill->transactionJournals()->after($start)->before($end)->get(['transaction_journals.*']);
             $currency   = $bill->transactionCurrency;
-            $currencyId = (int)$bill->transaction_currency_id;
+            $currencyId = $bill->transaction_currency_id;
 
-            $return[$currencyId] = $return[$currencyId] ?? [
-                'currency_id'             => (string)$currency->id,
-                'currency_name'           => $currency->name,
-                'currency_symbol'         => $currency->symbol,
-                'currency_code'           => $currency->code,
-                'currency_decimal_places' => (int)$currency->decimal_places,
-                'native_id'               => (string)$default->id,
-                'native_name'             => $default->name,
-                'native_symbol'           => $default->symbol,
-                'native_code'             => $default->code,
-                'native_decimal_places'   => (int)$default->decimal_places,
-                'sum'                     => '0',
-                'native_sum'              => '0',
+            $return[$currencyId] ??= [
+                'currency_id'                    => (string)$currency->id,
+                'currency_name'                  => $currency->name,
+                'currency_symbol'                => $currency->symbol,
+                'currency_code'                  => $currency->code,
+                'currency_decimal_places'        => $currency->decimal_places,
+                'native_currency_id'             => (string)$default->id,
+                'native_currency_name'           => $default->name,
+                'native_currency_symbol'         => $default->symbol,
+                'native_currency_code'           => $default->code,
+                'native_currency_decimal_places' => $default->decimal_places,
+                'sum'                            => '0',
+                'native_sum'                     => '0',
             ];
 
             /** @var TransactionJournal $transactionJournal */
             foreach ($set as $transactionJournal) {
-                /** @var Transaction|null $sourceTransaction */
+                /** @var null|Transaction $sourceTransaction */
                 $sourceTransaction = $transactionJournal->transactions()->where('amount', '<', 0)->first();
                 if (null !== $sourceTransaction) {
-                    $amount = (string)$sourceTransaction->amount;
-                    if ((int)$sourceTransaction->foreign_currency_id === (int)$currency->id) {
+                    $amount                            = $sourceTransaction->amount;
+                    if ((int)$sourceTransaction->foreign_currency_id === $currency->id) {
                         // use foreign amount instead!
                         $amount = (string)$sourceTransaction->foreign_amount;
                     }
                     // convert to native currency
-                    $nativeAmount = $amount;
-                    if ($currencyId !== (int)$default->id) {
+                    $nativeAmount                      = $amount;
+                    if ($currencyId !== $default->id) {
                         // get rate and convert.
                         $nativeAmount = $converter->convert($currency, $default, $transactionJournal->date, $amount);
                     }
-                    if ((int)$sourceTransaction->foreign_currency_id === (int)$default->id) {
+                    if ((int)$sourceTransaction->foreign_currency_id === $default->id) {
                         // ignore conversion, use foreign amount
                         $nativeAmount = (string)$sourceTransaction->foreign_amount;
                     }
@@ -123,29 +120,28 @@ class BillRepository implements BillRepositoryInterface
                 }
             }
         }
+        $converter->summarize();
+
         return $return;
     }
 
-    /**
-     * @return Collection
-     */
     public function getActiveBills(): Collection
     {
         return $this->userGroup->bills()
-                               ->where('active', true)
-                               ->orderBy('bills.name', 'ASC')
-                               ->get(['bills.*']);
+            ->where('active', true)
+            ->orderBy('bills.name', 'ASC')
+            ->get(['bills.*'])
+        ;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function sumUnpaidInRange(Carbon $start, Carbon $end): array
     {
+        Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         $bills     = $this->getActiveBills();
         $return    = [];
         $default   = app('amount')->getDefaultCurrency();
         $converter = new ExchangeRateConverter();
+
         /** @var Bill $bill */
         foreach ($bills as $bill) {
             $dates = $this->getPayDatesInRange($bill, $start, $end);
@@ -154,27 +150,28 @@ class BillRepository implements BillRepositoryInterface
 
             if ($total > 0) {
                 $currency                          = $bill->transactionCurrency;
-                $currencyId                        = (int)$bill->transaction_currency_id;
+                $currencyId                        = $bill->transaction_currency_id;
                 $average                           = bcdiv(bcadd($bill->amount_max, $bill->amount_min), '2');
                 $nativeAverage                     = $converter->convert($currency, $default, $start, $average);
-                $return[$currencyId]               = $return[$currencyId] ?? [
-                    'currency_id'             => (string)$currency->id,
-                    'currency_name'           => $currency->name,
-                    'currency_symbol'         => $currency->symbol,
-                    'currency_code'           => $currency->code,
-                    'currency_decimal_places' => (int)$currency->decimal_places,
-                    'native_id'               => (string)$default->id,
-                    'native_name'             => $default->name,
-                    'native_symbol'           => $default->symbol,
-                    'native_code'             => $default->code,
-                    'native_decimal_places'   => (int)$default->decimal_places,
-                    'sum'                     => '0',
-                    'native_sum'              => '0',
+                $return[$currencyId] ??= [
+                    'currency_id'                    => (string)$currency->id,
+                    'currency_name'                  => $currency->name,
+                    'currency_symbol'                => $currency->symbol,
+                    'currency_code'                  => $currency->code,
+                    'currency_decimal_places'        => $currency->decimal_places,
+                    'native_currency_id'             => (string)$default->id,
+                    'native_currency_name'           => $default->name,
+                    'native_currency_symbol'         => $default->symbol,
+                    'native_currency_code'           => $default->code,
+                    'native_currency_decimal_places' => $default->decimal_places,
+                    'sum'                            => '0',
+                    'native_sum'                     => '0',
                 ];
                 $return[$currencyId]['sum']        = bcadd($return[$currencyId]['sum'], bcmul($average, (string)$total));
                 $return[$currencyId]['native_sum'] = bcadd($return[$currencyId]['native_sum'], bcmul($nativeAverage, (string)$total));
             }
         }
+        $converter->summarize();
 
         return $return;
     }
@@ -182,34 +179,28 @@ class BillRepository implements BillRepositoryInterface
     /**
      * Between start and end, tells you on which date(s) the bill is expected to hit.
      * TODO duplicate of function in other billrepositoryinterface
-     *
-     * @param Bill   $bill
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
      */
     public function getPayDatesInRange(Bill $bill, Carbon $start, Carbon $end): Collection
     {
         $set          = new Collection();
         $currentStart = clone $start;
-        //Log::debug(sprintf('Now at bill "%s" (%s)', $bill->name, $bill->repeat_freq));
-        //Log::debug(sprintf('First currentstart is %s', $currentStart->format('Y-m-d')));
+        // app('log')->debug(sprintf('Now at bill "%s" (%s)', $bill->name, $bill->repeat_freq));
+        // app('log')->debug(sprintf('First currentstart is %s', $currentStart->format('Y-m-d')));
 
         while ($currentStart <= $end) {
-            //Log::debug(sprintf('Currentstart is now %s.', $currentStart->format('Y-m-d')));
+            // app('log')->debug(sprintf('Currentstart is now %s.', $currentStart->format('Y-m-d')));
             $nextExpectedMatch = $this->nextDateMatch($bill, $currentStart);
-            //Log::debug(sprintf('Next Date match after %s is %s', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
+            // app('log')->debug(sprintf('Next Date match after %s is %s', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
             if ($nextExpectedMatch > $end) {// If nextExpectedMatch is after end, we continue
                 break;
             }
             $set->push(clone $nextExpectedMatch);
-            //Log::debug(sprintf('Now %d dates in set.', $set->count()));
+            // app('log')->debug(sprintf('Now %d dates in set.', $set->count()));
             $nextExpectedMatch->addDay();
 
-            //Log::debug(sprintf('Currentstart (%s) has become %s.', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
+            // app('log')->debug(sprintf('Currentstart (%s) has become %s.', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
 
-            $currentStart = clone $nextExpectedMatch;
+            $currentStart      = clone $nextExpectedMatch;
         }
 
         return $set;
@@ -220,11 +211,6 @@ class BillRepository implements BillRepositoryInterface
      * transaction. Whether it is there already, is not relevant.
      *
      * TODO duplicate of other repos
-     *
-     * @param Bill   $bill
-     * @param Carbon $date
-     *
-     * @return Carbon
      */
     public function nextDateMatch(Bill $bill, Carbon $date): Carbon
     {

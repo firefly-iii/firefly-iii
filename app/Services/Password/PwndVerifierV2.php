@@ -26,21 +26,14 @@ namespace FireflyIII\Services\Password;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class PwndVerifierV2.
- *
-
  */
 class PwndVerifierV2 implements Verifier
 {
     /**
      * Verify the given password against (some) service.
-     *
-     * @param string $password
-     *
-     * @return bool
      */
     public function validPassword(string $password): bool
     {
@@ -57,28 +50,28 @@ class PwndVerifierV2 implements Verifier
             'timeout' => 3.1415,
         ];
 
-        Log::debug(sprintf('hash prefix is %s', $prefix));
-        Log::debug(sprintf('rest is %s', $rest));
+        app('log')->debug(sprintf('hash prefix is %s', $prefix));
+        app('log')->debug(sprintf('rest is %s', $rest));
 
         try {
             $client = new Client();
             $res    = $client->request('GET', $url, $opt);
-        } catch (GuzzleException | RequestException $e) {
-            Log::error(sprintf('Could not verify password security: %s', $e->getMessage()));
+        } catch (GuzzleException|RequestException $e) {
+            app('log')->error(sprintf('Could not verify password security: %s', $e->getMessage()));
 
             return true;
         }
-        Log::debug(sprintf('Status code returned is %d', $res->getStatusCode()));
+        app('log')->debug(sprintf('Status code returned is %d', $res->getStatusCode()));
         if (404 === $res->getStatusCode()) {
             return true;
         }
         $strpos = stripos($res->getBody()->getContents(), $rest);
         if (false === $strpos) {
-            Log::debug(sprintf('%s was not found in result body. Return true.', $rest));
+            app('log')->debug(sprintf('%s was not found in result body. Return true.', $rest));
 
             return true;
         }
-        Log::debug(sprintf('Found %s, return FALSE.', $rest));
+        app('log')->debug(sprintf('Found %s, return FALSE.', $rest));
 
         return false;
     }

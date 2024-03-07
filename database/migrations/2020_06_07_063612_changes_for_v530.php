@@ -35,8 +35,6 @@ class ChangesForV530 extends Migration
 {
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down(): void
     {
@@ -47,7 +45,7 @@ class ChangesForV530 extends Migration
     /**
      * Run the migrations.
      *
-     * @return void
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up(): void
     {
@@ -55,7 +53,7 @@ class ChangesForV530 extends Migration
             try {
                 Schema::create(
                     'object_groups',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->integer('user_id', false, true);
                         $table->timestamps();
@@ -75,7 +73,7 @@ class ChangesForV530 extends Migration
             try {
                 Schema::create(
                     'object_groupables',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->integer('object_group_id');
                         $table->integer('object_groupable_id', false, true);
                         $table->string('object_groupable_type', 255);

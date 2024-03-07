@@ -37,12 +37,8 @@ class UserRegistration extends Notification
 
     /**
      * Create a new notification instance.
-     *
-     * @return void
      */
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     /**
      * Get the array representation of the notification.
@@ -50,11 +46,12 @@ class UserRegistration extends Notification
      * @param mixed $notifiable
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toArray($notifiable)
     {
         return [
-            //
         ];
     }
 
@@ -64,12 +61,15 @@ class UserRegistration extends Notification
      * @param mixed $notifiable
      *
      * @return MailMessage
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toMail($notifiable)
     {
         return (new MailMessage())
             ->markdown('emails.registered', ['address' => route('index')])
-            ->subject((string)trans('email.registered_subject'));
+            ->subject((string)trans('email.registered_subject'))
+        ;
     }
 
     /**
@@ -78,6 +78,8 @@ class UserRegistration extends Notification
      * @param mixed $notifiable
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function via($notifiable)
     {

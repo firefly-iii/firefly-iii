@@ -27,17 +27,9 @@ use FireflyIII\Models\TransactionCurrency;
 
 /**
  * Class CurrencyUpdateService
- *
-
  */
 class CurrencyUpdateService
 {
-    /**
-     * @param TransactionCurrency $currency
-     * @param array               $data
-     *
-     * @return TransactionCurrency
-     */
     public function update(TransactionCurrency $currency, array $data): TransactionCurrency
     {
         if (array_key_exists('code', $data) && '' !== (string)$data['code']) {
@@ -52,14 +44,13 @@ class CurrencyUpdateService
             $currency->name = e($data['name']);
         }
 
-        if (array_key_exists('enabled', $data) && is_bool($data['enabled'])) {
-            $currency->enabled = (bool)$data['enabled'];
-        }
+        $currency->enabled          = false;
 
         if (array_key_exists('decimal_places', $data) && is_int($data['decimal_places'])) {
-            $currency->decimal_places = (int)$data['decimal_places'];
+            $currency->decimal_places = $data['decimal_places'];
         }
-
+        $currency->userGroupEnabled = null;
+        $currency->userGroupDefault = null;
         $currency->save();
 
         return $currency;

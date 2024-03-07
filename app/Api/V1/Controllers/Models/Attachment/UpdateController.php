@@ -31,7 +31,9 @@ use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Transformers\AttachmentTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 use League\Fractal\Resource\Item;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class UpdateController
@@ -42,8 +44,6 @@ class UpdateController extends Controller
 
     /**
      * UpdateController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -66,23 +66,23 @@ class UpdateController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/attachments/updateAttachment
      *
      * Update the specified resource in storage.
-     *
-     * @param UpdateRequest $request
-     * @param Attachment    $attachment
-     *
-     * @return JsonResponse
      */
     public function update(UpdateRequest $request, Attachment $attachment): JsonResponse
     {
-        $data = $request->getAll();
+        if (true === auth()->user()->hasRole('demo')) {
+            Log::channel('audit')->warning(sprintf('Demo user tries to access attachment API in %s', __METHOD__));
+
+            throw new NotFoundHttpException();
+        }
+        $data        = $request->getAll();
         $this->repository->update($attachment, $data);
-        $manager = $this->getManager();
+        $manager     = $this->getManager();
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($attachment, $transformer, 'attachments');
+        $resource    = new Item($attachment, $transformer, 'attachments');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

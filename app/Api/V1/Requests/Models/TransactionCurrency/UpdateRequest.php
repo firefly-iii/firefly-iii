@@ -31,22 +31,18 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class UpdateRequest
- *
-
  */
 class UpdateRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Get all data from the request.
-     *
-     * @return array
      */
     public function getAll(): array
     {
-        // return nothing that isn't explicitely in the array:
+        // return nothing that isn't explicitly in the array:
         $fields = [
             'name'           => ['name', 'convertString'],
             'code'           => ['code', 'convertString'],
@@ -57,13 +53,10 @@ class UpdateRequest extends FormRequest
         ];
 
         return $this->getAllData($fields);
-        //        return $return;
     }
 
     /**
      * The rules that the incoming request must be matched against.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -71,10 +64,10 @@ class UpdateRequest extends FormRequest
         $currency = $this->route()->parameter('currency_code');
 
         return [
-            'name'           => sprintf('between:1,255|unique:transaction_currencies,name,%d', $currency->id),
-            'code'           => sprintf('between:3,51|unique:transaction_currencies,code,%d', $currency->id),
-            'symbol'         => sprintf('between:1,51|unique:transaction_currencies,symbol,%d', $currency->id),
-            'decimal_places' => 'between:0,20|numeric|min:0|max:12',
+            'name'           => sprintf('min:1|max:255|unique:transaction_currencies,name,%d', $currency->id),
+            'code'           => sprintf('min:3|max:32|unique:transaction_currencies,code,%d', $currency->id),
+            'symbol'         => sprintf('min:1|max:32|unique:transaction_currencies,symbol,%d', $currency->id),
+            'decimal_places' => 'numeric|min:0|max:12',
             'enabled'        => [new IsBoolean()],
             'default'        => [new IsBoolean()],
         ];

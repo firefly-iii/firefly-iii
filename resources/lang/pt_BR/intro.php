@@ -31,41 +31,39 @@
  *
  */
 
-
 declare(strict_types=1);
 
 return [
     // index
-    'index_intro'                           => 'Bem-vindo(a) à página inicial do Firefly III. Aproveite e acompanhe esta introdução para ter uma ideia de como funciona.',
-    'index_accounts-chart'                  => 'Este gráfico mostra o saldo atual de suas contas de ativos. Você pode selecionar as contas visíveis aqui nas suas preferências.',
-    'index_box_out_holder'                  => 'Esta pequena caixa e as caixas próximas a esta lhe darão uma rápida visão geral de sua situação financeira.',
-    'index_help'                            => 'Se você precisar de ajuda com uma página ou um formulário, pressione este botão.',
-    'index_outro'                           => 'A maioria das páginas do Firefly III começará com uma pequena turnê como esta. Entre em contato comigo quando tiver dúvidas ou comentários. Aproveite!',
-    'index_sidebar-toggle'                  => 'Para criar novas transações, contas ou outras coisas, use o menu dentro deste ícone.',
-    'index_cash_account'                    => 'Estas são as contas criadas até agora. Você pode usar a conta de caixa para rastrear as despesas de caixa, mas não é obrigatório, claro.',
+    'index_intro'                                             => 'Bem-vindo(a) à página inicial do Firefly III. Aproveite e acompanhe esta introdução para ter uma ideia de como funciona.',
+    'index_accounts-chart'                                    => 'Este gráfico mostra o saldo atual de suas contas de ativos. Você pode selecionar as contas visíveis aqui nas suas preferências.',
+    'index_box_out_holder'                                    => 'Esta pequena caixa e as caixas próximas a esta lhe darão uma rápida visão geral de sua situação financeira.',
+    'index_help'                                              => 'Se você precisar de ajuda com uma página ou um formulário, pressione este botão.',
+    'index_outro'                                             => 'A maioria das páginas do Firefly III começará com uma pequena turnê como esta. Entre em contato comigo quando tiver dúvidas ou comentários. Aproveite!',
+    'index_sidebar-toggle'                                    => 'Para criar novas transações, contas ou outras coisas, use o menu dentro deste ícone.',
+    'index_cash_account'                                      => 'Estas são as contas criadas até agora. Você pode usar a conta de caixa para rastrear as despesas de caixa, mas não é obrigatório, claro.',
 
     // transactions
-    'transactions_create_basic_info'        => 'Insira as informações básicas de sua transação. Origem, destino, data e descrição.',
-    'transactions_create_amount_info'       => 'Insira o valor da transação. Caso necessário, os campos serão atualizados automaticamente para informações de valor estrangeiro.',
-    'transactions_create_optional_info'     => 'Todos estes campos são opcionais. Adicionar meta-dados aqui fará suas transações melhor organizadas.',
-    'transactions_create_split'             => 'Caso você queira dividir uma transação, adicione mais divisões com este botão',
+    'transactions_create_basic_info'                          => 'Insira as informações básicas de sua transação. Origem, destino, data e descrição.',
+    'transactions_create_amount_info'                         => 'Insira o valor da transação. Caso necessário, os campos serão atualizados automaticamente para informações de valor estrangeiro.',
+    'transactions_create_optional_info'                       => 'Todos estes campos são opcionais. Adicionar meta-dados aqui fará suas transações melhor organizadas.',
+    'transactions_create_split'                               => 'Caso você queira dividir uma transação, adicione mais divisões com este botão',
 
     // create account:
-    'accounts_create_iban'                  => 'Dê a suas contas um IBAN válido. Isso poderá tornar a importação de dados muito fácil no futuro.',
-    'accounts_create_asset_opening_balance' => 'As contas de ativos podem ter um "saldo de abertura", indicando o início do histórico desta conta no Firefly III.',
-    'accounts_create_asset_currency'        => 'Firefly III suporta múltiplas moedas. As contas de ativos têm uma moeda principal, que você deve definir aqui.',
-    'accounts_create_asset_virtual'         => 'Às vezes, ajuda a dar à sua conta um saldo virtual: um valor extra sempre adicionado ou removido do saldo real.',
+    'accounts_create_iban'                                    => 'Dê a suas contas um IBAN válido. Isso poderá tornar a importação de dados muito fácil no futuro.',
+    'accounts_create_asset_opening_balance'                   => 'As contas de ativos podem ter um "saldo de abertura", indicando o início do histórico desta conta no Firefly III.',
+    'accounts_create_asset_currency'                          => 'Firefly III suporta múltiplas moedas. As contas de ativos têm uma moeda principal, que você deve definir aqui.',
+    'accounts_create_asset_virtual'                           => 'Às vezes, ajuda a dar à sua conta um saldo virtual: um valor extra sempre adicionado ou removido do saldo real.',
 
     // budgets index
-    'budgets_index_intro'                   => 'Os orçamentos são usados ​​para gerenciar suas finanças e formar uma das principais funções do Firefly III.',
-    'budgets_index_set_budget'              => 'Defina seu orçamento total para todos os períodos, de modo que o Firefly III possa lhe dizer se você orçou todo o dinheiro disponível.',
-    'budgets_index_see_expenses_bar'        => 'Gastar dinheiro vai preencher lentamente esta barra.',
-    'budgets_index_navigate_periods'        => 'Navegue por períodos para definir os orçamentos facilmente antes do tempo.',
-    'budgets_index_new_budget'              => 'Crie novos orçamentos conforme for entendendo o programa.',
-    'budgets_index_list_of_budgets'         => 'Use esta tabela para definir os montantes para cada orçamento e veja como você está fazendo.',
-    'budgets_index_outro'                   => 'Para saber mais sobre criar orçamentos, clique no ícone de ajuda no canto superior direito.',
+    'budgets_index_intro'                                     => "Os orçamentos são usados \u{200b}\u{200b}para gerenciar suas finanças e formar uma das principais funções do Firefly III.",
+    'budgets_index_see_expenses_bar'                          => 'Gastar dinheiro vai preencher lentamente esta barra.',
+    'budgets_index_navigate_periods'                          => 'Navegue por períodos para definir os orçamentos facilmente antes do tempo.',
+    'budgets_index_new_budget'                                => 'Crie novos orçamentos conforme for entendendo o programa.',
+    'budgets_index_list_of_budgets'                           => 'Use esta tabela para definir os montantes para cada orçamento e veja como você está fazendo.',
+    'budgets_index_outro'                                     => 'Para saber mais sobre criar orçamentos, clique no ícone de ajuda no canto superior direito.',
 
-/*
+    /*
  * PLEASE DO NOT EDIT THIS FILE DIRECTLY.
  * YOUR CHANGES WILL BE OVERWRITTEN!
  * YOUR PR WITH CHANGES TO THIS FILE WILL BE REJECTED!
@@ -76,26 +74,25 @@ return [
  *
  */
 
-
     // reports (index)
-    'reports_index_intro'                   => 'Use esses relatórios para obter informações detalhadas sobre suas finanças.',
-    'reports_index_inputReportType'         => 'Escolha um tipo de relatório. Confira as páginas de ajuda para ver o que cada relatório mostra.',
-    'reports_index_inputAccountsSelect'     => 'Você pode excluir ou incluir contas de ativos de acordo com a sua demanda.',
-    'reports_index_inputDateRange'          => 'O intervalo de datas selecionado depende inteiramente de você: de um dia a 10 anos.',
-    'reports_index_extra-options-box'       => 'Dependendo do relatório que você selecionou, você pode usar filtros e opções adicionais aqui. Observe esta caixa quando você altera os tipos de relatórios.',
+    'reports_index_intro'                                     => 'Use esses relatórios para obter informações detalhadas sobre suas finanças.',
+    'reports_index_inputReportType'                           => 'Escolha um tipo de relatório. Confira as páginas de ajuda para ver o que cada relatório mostra.',
+    'reports_index_inputAccountsSelect'                       => 'Você pode excluir ou incluir contas de ativos de acordo com a sua demanda.',
+    'reports_index_inputDateRange'                            => 'O intervalo de datas selecionado depende só de você: de um dia até 10 anos ou mais.',
+    'reports_index_extra-options-box'                         => 'Dependendo do relatório que você selecionou, você pode usar filtros e opções adicionais aqui. Observe esta caixa quando você altera os tipos de relatórios.',
 
     // reports (reports)
-    'reports_report_default_intro'          => 'Este relatório lhe dará uma visão geral rápida e abrangente de suas finanças. Se você deseja ver mais alguma coisa, não hesite em contactar-me!',
-    'reports_report_audit_intro'            => 'Este relatório fornecerá informações detalhadas sobre suas contas de ativos.',
-    'reports_report_audit_optionsBox'       => 'Use essas caixas de seleção para mostrar ou ocultar as colunas em que você está interessado.',
+    'reports_report_default_intro'                            => 'Este relatório lhe dará uma visão geral rápida e abrangente de suas finanças. Se você deseja ver mais alguma coisa, não hesite em contactar-me!',
+    'reports_report_audit_intro'                              => 'Este relatório fornecerá informações detalhadas sobre suas contas de ativos.',
+    'reports_report_audit_optionsBox'                         => 'Use essas caixas de seleção para mostrar ou ocultar as colunas em que você está interessado.',
 
-    'reports_report_category_intro'                  => 'Este relatório lhe dará uma visão em uma ou várias categorias.',
-    'reports_report_category_pieCharts'              => 'Esses gráficos fornecerão informações sobre despesas e receitas por categoria ou por conta.',
-    'reports_report_category_incomeAndExpensesChart' => 'Este gráfico mostra suas despesas e receitas por categoria.',
+    'reports_report_category_intro'                           => 'Este relatório lhe dará uma visão em uma ou várias categorias.',
+    'reports_report_category_pieCharts'                       => 'Esses gráficos fornecerão informações sobre despesas e receitas por categoria ou por conta.',
+    'reports_report_category_incomeAndExpensesChart'          => 'Este gráfico mostra suas despesas e receitas por categoria.',
 
-    'reports_report_tag_intro'                  => 'Este relatório lhe dará uma visão de uma ou várias tags.',
-    'reports_report_tag_pieCharts'              => 'Esses gráficos fornecerão informações sobre despesas e receitas por tag, conta, categoria ou orçamento.',
-    'reports_report_tag_incomeAndExpensesChart' => 'Este gráfico mostra suas despesas e receita por tag.',
+    'reports_report_tag_intro'                                => 'Este relatório lhe dará uma visão de uma ou várias tags.',
+    'reports_report_tag_pieCharts'                            => 'Esses gráficos fornecerão informações sobre despesas e receitas por tag, conta, categoria ou orçamento.',
+    'reports_report_tag_incomeAndExpensesChart'               => 'Este gráfico mostra suas despesas e receita por tag.',
 
     'reports_report_budget_intro'                             => 'Este relatório lhe dará uma visão em um ou vários orçamentos.',
     'reports_report_budget_pieCharts'                         => 'Esses gráficos fornecerão informações sobre despesas por orçamento ou por conta.',
@@ -114,7 +111,7 @@ return [
     'piggy-banks_index_button'                                => 'Ao lado desta barra de progresso estão dois botões (+ e -) para adicionar ou remover dinheiro de cada cofrinho.',
     'piggy-banks_index_accountStatus'                         => 'Para cada conta de ativos com pelo menos um cofrinho, o status está listado nesta tabela.',
 
-/*
+    /*
  * PLEASE DO NOT EDIT THIS FILE DIRECTLY.
  * YOUR CHANGES WILL BE OVERWRITTEN!
  * YOUR PR WITH CHANGES TO THIS FILE WILL BE REJECTED!
@@ -124,7 +121,6 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
-
 
     // create piggy
     'piggy-banks_create_name'                                 => 'Qual é o teu objetivo? Um novo sofá, uma câmera, dinheiro para emergências?',
@@ -136,9 +132,9 @@ return [
     'piggy-banks_show_piggyEvents'                            => 'Todas as adições ou remoções também estão listadas aqui.',
 
     // bill index
-    'bills_index_rules'                                       => 'Aqui você visualiza quais regras se aplicam a esta conta',
+    'bills_index_rules'                                       => 'Aqui você visualiza quais regras se aplicam a esta fatura',
     'bills_index_paid_in_period'                              => 'Este campo indica quando a fatura foi paga pela última vez.',
-    'bills_index_expected_in_period'                          => 'Este campo indica, para cada conta, se e quando a próxima fatura é esperada para cair em conta.',
+    'bills_index_expected_in_period'                          => 'Este campo indica, para cada conta, se e quando a próxima conta é esperada.',
 
     // show bill
     'bills_show_billInfo'                                     => 'Esta tabela mostra algumas informações gerais sobre esta fatura.',
@@ -146,9 +142,9 @@ return [
     'bills_show_billChart'                                    => 'Este gráfico mostra as transações vinculadas a esta fatura.',
 
     // create bill
-    'bills_create_intro'                                      => 'Use faturas para acompanhar a quantidade de dinheiro devido por período. Pense em gastos como aluguel, seguro ou pagamentos de hipoteca.',
-    'bills_create_name'                                       => 'Use um nome descritivo como "Aluguel" ou "Seguro de saúde".',
-    //'bills_create_match'                                      => 'To match transactions, use terms from those transactions or the expense account involved. All words must match.',
+    'bills_create_intro'                                      => 'Use as faturas para acompanhar a quantidade de dinheiro devido por período. Pense em gastos como aluguel, seguro ou pagamentos de hipoteca.',
+    'bills_create_name'                                       => 'Use um nome descritivo como "Aluguel" ou "Plano de saúde".',
+    // 'bills_create_match'                                      => 'To match transactions, use terms from those transactions or the expense account involved. All words must match.',
     'bills_create_amount_min_holder'                          => 'Selecione um valor mínimo e máximo para esta fatura.',
     'bills_create_repeat_freq_holder'                         => 'A maioria das faturas repetem mensalmente, mas você pode definir outra frequência aqui.',
     'bills_create_skip_holder'                                => 'Se uma fatura se repete a cada 2 semanas, o campo "pular" deve ser definido como "1" para a repetição quinzenal.',
@@ -168,7 +164,7 @@ return [
     'rules_create_test_rule_triggers'                         => 'Use este botão para ver quais transações combinariam com sua regra.',
     'rules_create_actions'                                    => 'Defina todas ações que desejar realizar.',
 
-/*
+    /*
  * PLEASE DO NOT EDIT THIS FILE DIRECTLY.
  * YOUR CHANGES WILL BE OVERWRITTEN!
  * YOUR PR WITH CHANGES TO THIS FILE WILL BE REJECTED!
@@ -178,7 +174,6 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
-
 
     // preferences
     'preferences_index_tabs'                                  => 'Mais opções estão disponíveis atrás dessas abas/guias.',

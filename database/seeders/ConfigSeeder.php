@@ -25,7 +25,6 @@ namespace Database\Seeders;
 
 use FireflyIII\Models\Configuration;
 use Illuminate\Database\Seeder;
-use Log;
 
 /**
  * Class ConfigSeeder.

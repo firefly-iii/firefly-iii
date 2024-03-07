@@ -50,8 +50,6 @@ class ListController extends Controller
 
     /**
      * BillController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -72,29 +70,26 @@ class ListController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @param Bill $bill
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function attachments(Bill $bill): JsonResponse
     {
-        $manager    = $this->getManager();
-        $pageSize   = $this->parameters->get('limit');
-        $collection = $this->repository->getAttachments($bill);
+        $manager     = $this->getManager();
+        $pageSize    = $this->parameters->get('limit');
+        $collection  = $this->repository->getAttachments($bill);
 
         $count       = $collection->count();
         $attachments = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
-        $paginator = new LengthAwarePaginator($attachments, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.bills.attachments', [$bill->id]) . $this->buildParams());
+        $paginator   = new LengthAwarePaginator($attachments, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.bills.attachments', [$bill->id]).$this->buildParams());
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($attachments, $transformer, 'attachments');
+        $resource    = new FractalCollection($attachments, $transformer, 'attachments');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -106,31 +101,28 @@ class ListController extends Controller
      *
      * List all of them.
      *
-     * @param Bill $bill
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function rules(Bill $bill): JsonResponse
     {
-        $manager = $this->getManager();
+        $manager     = $this->getManager();
 
         // types to get, page size:
-        $pageSize = $this->parameters->get('limit');
+        $pageSize    = $this->parameters->get('limit');
 
         // get list of budgets. Count it and split it.
-        $collection = $this->repository->getRulesForBill($bill);
-        $count      = $collection->count();
-        $rules      = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $collection  = $this->repository->getRulesForBill($bill);
+        $count       = $collection->count();
+        $rules       = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
-        $paginator = new LengthAwarePaginator($rules, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.bills.rules', [$bill->id]) . $this->buildParams());
+        $paginator   = new LengthAwarePaginator($rules, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.bills.rules', [$bill->id]).$this->buildParams());
 
         /** @var RuleTransformer $transformer */
         $transformer = app(RuleTransformer::class);
         $transformer->setParameters($this->parameters);
-        $resource = new FractalCollection($rules, $transformer, 'rules');
+        $resource    = new FractalCollection($rules, $transformer, 'rules');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -142,28 +134,23 @@ class ListController extends Controller
      *
      * Show all transactions.
      *
-     * @param Request $request
-     *
-     * @param Bill    $bill
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function transactions(Request $request, Bill $bill): JsonResponse
     {
-        $pageSize = $this->parameters->get('limit');
-        $type     = $request->get('type') ?? 'default';
+        $pageSize     = $this->parameters->get('limit');
+        $type         = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 
-        $types   = $this->mapTransactionTypes($this->parameters->get('type'));
-        $manager = $this->getManager();
+        $types        = $this->mapTransactionTypes($this->parameters->get('type'));
+        $manager      = $this->getManager();
 
         /** @var User $admin */
-        $admin = auth()->user();
+        $admin        = auth()->user();
 
         // use new group collector:
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector    = app(GroupCollectorInterface::class);
         $collector
             ->setUser($admin)
             // include source + destination account name and type.
@@ -175,7 +162,8 @@ class ListController extends Controller
             // set page to retrieve
             ->setPage($this->parameters->get('page'))
             // set types of transactions to return.
-            ->setTypes($types);
+            ->setTypes($types)
+        ;
 
         if (null !== $this->parameters->get('start')) {
             $collector->setStart($this->parameters->get('start'));
@@ -185,15 +173,15 @@ class ListController extends Controller
         }
 
         // get paginator.
-        $paginator = $collector->getPaginatedGroups();
-        $paginator->setPath(route('api.v1.bills.transactions', [$bill->id]) . $this->buildParams());
+        $paginator    = $collector->getPaginatedGroups();
+        $paginator->setPath(route('api.v1.bills.transactions', [$bill->id]).$this->buildParams());
         $transactions = $paginator->getCollection();
 
         /** @var TransactionGroupTransformer $transformer */
-        $transformer = app(TransactionGroupTransformer::class);
+        $transformer  = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($transactions, $transformer, 'transactions');
+        $resource     = new FractalCollection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);

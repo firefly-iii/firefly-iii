@@ -38,13 +38,12 @@ class FixNullables extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down(): void
-    {
-    }
+    public function down(): void {}
 
     /**
      * Run the migrations.
      *
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up(): void
     {
@@ -52,7 +51,7 @@ class FixNullables extends Migration
             try {
                 Schema::table(
                     'rule_groups',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->text('description')->nullable()->change();
                     }
                 );
@@ -66,7 +65,7 @@ class FixNullables extends Migration
             try {
                 Schema::table(
                     'rules',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->text('description')->nullable()->change();
                     }
                 );

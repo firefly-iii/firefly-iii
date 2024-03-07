@@ -33,9 +33,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use JsonException;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class CreateController
@@ -46,8 +43,6 @@ class CreateController extends Controller
 
     /**
      * CreateController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -64,11 +59,6 @@ class CreateController extends Controller
         );
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
     public function cloneGroup(Request $request): JsonResponse
     {
         $groupId = (int)$request->get('id');
@@ -84,10 +74,14 @@ class CreateController extends Controller
 
                 app('preferences')->mark();
 
-                $title = $newGroup->title ?? $newGroup->transactionJournals->first()->description;
-                $link  = route('transactions.show', [$newGroup->id]);
+                $title    = $newGroup->title ?? $newGroup->transactionJournals->first()->description;
+                $link     = route('transactions.show', [$newGroup->id]);
                 session()->flash('success', trans('firefly.stored_journal', ['description' => $title]));
                 session()->flash('success_url', $link);
+
+                if ('edit' === $request->get('redirect')) {
+                    return response()->json(['redirect' => route('transactions.edit', [$newGroup->id])]);
+                }
 
                 return response()->json(['redirect' => route('transactions.show', [$newGroup->id])]);
             }
@@ -99,35 +93,51 @@ class CreateController extends Controller
     /**
      * Create a new transaction group.
      *
-     * @param string|null $objectType
-     *
      * @return Factory|View
+     *
      * @throws FireflyException
-     * @throws JsonException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
+     *                                              */
     public function create(?string $objectType)
     {
         app('preferences')->mark();
 
-        $sourceId      = (int)request()->get('source');
-        $destinationId = (int)request()->get('destination');
+        $sourceId                   = (int)request()->get('source');
+        $destinationId              = (int)request()->get('destination');
 
         /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository    = app(AccountRepositoryInterface::class);
-        $cash                 = $accountRepository->getCashAccount();
-        $preFilled            = session()->has('preFilled') ? session('preFilled') : [];
-        $subTitle             = (string)trans(sprintf('breadcrumbs.create_%s', strtolower((string)$objectType)));
-        $subTitleIcon         = 'fa-plus';
-        $optionalFields       = app('preferences')->get('transaction_journal_optional_fields', [])->data;
-        $allowedOpposingTypes = config('firefly.allowed_opposing_types');
-        $accountToTypes       = config('firefly.account_to_transaction');
-        $defaultCurrency      = app('amount')->getDefaultCurrency();
-        $previousUrl          = $this->rememberPreviousUrl('transactions.create.url');
-        $parts                = parse_url($previousUrl);
-        $search               = sprintf('?%s', $parts['query'] ?? '');
-        $previousUrl          = str_replace($search, '', $previousUrl);
+        $accountRepository          = app(AccountRepositoryInterface::class);
+        $cash                       = $accountRepository->getCashAccount();
+        $preFilled                  = session()->has('preFilled') ? session('preFilled') : [];
+        $subTitle                   = (string)trans(sprintf('breadcrumbs.create_%s', strtolower((string)$objectType)));
+        $subTitleIcon               = 'fa-plus';
+        $optionalFields             = app('preferences')->get('transaction_journal_optional_fields', [])->data;
+        $allowedOpposingTypes       = config('firefly.allowed_opposing_types');
+        $accountToTypes             = config('firefly.account_to_transaction');
+        $defaultCurrency            = app('amount')->getDefaultCurrency();
+        $previousUrl                = $this->rememberPreviousUrl('transactions.create.url');
+        $parts                      = parse_url($previousUrl);
+        $search                     = sprintf('?%s', $parts['query'] ?? '');
+        $previousUrl                = str_replace($search, '', $previousUrl);
+        if (!is_array($optionalFields)) {
+            $optionalFields = [];
+        }
+        // not really a fan of this, but meh.
+        $optionalDateFields         = [
+            'interest_date' => $optionalFields['interest_date'] ?? false,
+            'book_date'     => $optionalFields['book_date'] ?? false,
+            'process_date'  => $optionalFields['process_date'] ?? false,
+            'due_date'      => $optionalFields['due_date'] ?? false,
+            'payment_date'  => $optionalFields['payment_date'] ?? false,
+            'invoice_date'  => $optionalFields['invoice_date'] ?? false,
+        ];
+        $optionalFields['external_url'] ??= false;
+        $optionalFields['location']     ??= false;
+        $optionalFields['location'] = $optionalFields['location'] && true === config('firefly.enable_external_map');
+
+        // map info:
+        $longitude                  = config('firefly.default_location.longitude');
+        $latitude                   = config('firefly.default_location.latitude');
+        $zoomLevel                  = config('firefly.default_location.zoom_level');
 
         session()->put('preFilled', $preFilled);
 
@@ -136,7 +146,11 @@ class CreateController extends Controller
             compact(
                 'subTitleIcon',
                 'cash',
+                'longitude',
+                'latitude',
+                'zoomLevel',
                 'objectType',
+                'optionalDateFields',
                 'subTitle',
                 'defaultCurrency',
                 'previousUrl',

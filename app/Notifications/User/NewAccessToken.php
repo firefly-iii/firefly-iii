@@ -40,12 +40,8 @@ class NewAccessToken extends Notification
 
     /**
      * Create a new notification instance.
-     *
-     * @return void
      */
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     /**
      * Get the array representation of the notification.
@@ -53,11 +49,12 @@ class NewAccessToken extends Notification
      * @param mixed $notifiable
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toArray($notifiable)
     {
         return [
-            //
         ];
     }
 
@@ -67,12 +64,15 @@ class NewAccessToken extends Notification
      * @param mixed $notifiable
      *
      * @return MailMessage
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toMail($notifiable)
     {
         return (new MailMessage())
             ->markdown('emails.token-created')
-            ->subject((string)trans('email.access_token_created_subject'));
+            ->subject((string)trans('email.access_token_created_subject'))
+        ;
     }
 
     /**
@@ -81,6 +81,8 @@ class NewAccessToken extends Notification
      * @param mixed $notifiable
      *
      * @return SlackMessage
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toSlack($notifiable)
     {
@@ -93,15 +95,21 @@ class NewAccessToken extends Notification
      * @param mixed $notifiable
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function via($notifiable)
     {
-        /** @var User|null $user */
+        /** @var null|User $user */
         $user     = auth()->user();
-        $slackUrl = null === $user ? '' : (string)app('preferences')->getForUser(auth()->user(), 'slack_webhook_url', '')->data;
-        if (UrlValidator::isValidWebhookURL($slackUrl)) {
+        $slackUrl = null === $user ? '' : app('preferences')->getForUser(auth()->user(), 'slack_webhook_url', '')->data;
+        if (is_array($slackUrl)) {
+            $slackUrl = '';
+        }
+        if (UrlValidator::isValidWebhookURL((string)$slackUrl)) {
             return ['mail', 'slack'];
         }
+
         return ['mail'];
     }
 }

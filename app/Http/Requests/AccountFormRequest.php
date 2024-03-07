@@ -26,26 +26,28 @@ namespace FireflyIII\Http\Requests;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Location;
+use FireflyIII\Rules\IsValidAmount;
 use FireflyIII\Rules\UniqueIban;
 use FireflyIII\Support\Request\AppendsLocationData;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Validator;
 
 /**
  * Class AccountFormRequest.
  */
 class AccountFormRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use AppendsLocationData;
     use ChecksLogin;
+    use ConvertsDataTypes;
+
     protected array $acceptedRoles = [UserRoleEnum::MANAGE_TRANSACTIONS];
 
     /**
      * Get all data.
-     *
-     * @return array
      */
     public function getAccountData(): array
     {
@@ -94,8 +96,6 @@ class AccountFormRequest extends FormRequest
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -104,32 +104,40 @@ class AccountFormRequest extends FormRequest
         $ccPaymentTypes = implode(',', array_keys(config('firefly.ccTypes')));
         $rules          = [
             'name'                               => 'required|max:1024|min:1|uniqueAccountForUser',
-            'opening_balance'                    => 'numeric|nullable|max:1000000000',
+            'opening_balance'                    => ['nullable', new IsValidAmount()],
             'opening_balance_date'               => 'date|required_with:opening_balance|nullable',
             'iban'                               => ['iban', 'nullable', new UniqueIban(null, $this->convertString('objectType'))],
             'BIC'                                => 'bic|nullable',
-            'virtual_balance'                    => 'numeric|nullable|max:1000000000',
+            'virtual_balance'                    => ['nullable', new IsValidAmount()],
             'currency_id'                        => 'exists:transaction_currencies,id',
-            'account_number'                     => 'between:1,255|uniqueAccountNumberForUser|nullable',
-            'account_role'                       => 'in:' . $accountRoles,
+            'account_number'                     => 'min:1|max:255|uniqueAccountNumberForUser|nullable',
+            'account_role'                       => 'in:'.$accountRoles,
             'active'                             => 'boolean',
-            'cc_type'                            => 'in:' . $ccPaymentTypes,
+            'cc_type'                            => 'in:'.$ccPaymentTypes,
             'amount_currency_id_opening_balance' => 'exists:transaction_currencies,id',
             'amount_currency_id_virtual_balance' => 'exists:transaction_currencies,id',
-            'what'                               => 'in:' . $types,
+            'what'                               => 'in:'.$types,
             'interest_period'                    => 'in:daily,monthly,yearly',
+            'notes'                              => 'min:1|max:32768|nullable',
         ];
         $rules          = Location::requestRules($rules);
 
-        /** @var Account $account */
-        $account = $this->route()->parameter('account');
+        /** @var null|Account $account */
+        $account        = $this->route()->parameter('account');
         if (null !== $account) {
             // add rules:
             $rules['id']   = 'belongsToUser:accounts';
-            $rules['name'] = 'required|max:1024|min:1|uniqueAccountForUser:' . $account->id;
+            $rules['name'] = 'required|max:1024|min:1|uniqueAccountForUser:'.$account->id;
             $rules['iban'] = ['iban', 'nullable', new UniqueIban($account, $account->accountType->type)];
         }
 
         return $rules;
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        if ($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+        }
     }
 }

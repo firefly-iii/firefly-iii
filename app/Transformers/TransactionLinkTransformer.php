@@ -27,7 +27,6 @@ use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 
 /**
- *
  * Class TransactionLinkTransformer
  */
 class TransactionLinkTransformer extends AbstractTransformer
@@ -37,19 +36,12 @@ class TransactionLinkTransformer extends AbstractTransformer
 
     /**
      * Constructor.
-     *
-
      */
     public function __construct()
     {
         $this->repository = app(JournalRepositoryInterface::class);
     }
 
-    /**
-     * @param TransactionJournalLink $link
-     *
-     * @return array
-     */
     public function transform(TransactionJournalLink $link): array
     {
         $notes = $this->repository->getLinkNoteText($link);
@@ -65,7 +57,7 @@ class TransactionLinkTransformer extends AbstractTransformer
             'links'        => [
                 [
                     'rel' => 'self',
-                    'uri' => '/transaction_links/' . $link->id,
+                    'uri' => '/transaction_links/'.$link->id,
                 ],
             ],
         ];

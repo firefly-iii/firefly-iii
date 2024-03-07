@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * Bimonthly.php
  * Copyright (c) 2023 Antonio Spinelli <https://github.com/tonicospinelli>
@@ -30,5 +29,5 @@ namespace FireflyIII\Support\Calendar\Periodicity;
  */
 final class Bimonthly extends Monthly
 {
-    public const INTERVAL = 2;
+    public const int INTERVAL = 2;
 }

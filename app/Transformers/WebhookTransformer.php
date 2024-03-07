@@ -34,26 +34,18 @@ use FireflyIII\Models\Webhook;
  */
 class WebhookTransformer extends AbstractTransformer
 {
-    private array $enums;
-
     /**
      * WebhookTransformer constructor.
      */
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     /**
      * Transform webhook.
-     *
-     * @param Webhook $webhook
-     *
-     * @return array
      */
     public function transform(Webhook $webhook): array
     {
         return [
-            'id'         => (int)$webhook->id,
+            'id'         => $webhook->id,
             'created_at' => $webhook->created_at->toAtomString(),
             'updated_at' => $webhook->updated_at->toAtomString(),
             'active'     => $webhook->active,
@@ -72,12 +64,6 @@ class WebhookTransformer extends AbstractTransformer
         ];
     }
 
-    /**
-     * @param string $type
-     * @param int    $value
-     *
-     * @return string
-     */
     private function getEnum(string $type, int $value): string
     {
         if ('trigger' === $type) {
@@ -86,6 +72,7 @@ class WebhookTransformer extends AbstractTransformer
         if ('response' === $type) {
             return WebhookResponse::from($value)->name;
         }
+
         return WebhookDelivery::from($value)->name;
     }
 }

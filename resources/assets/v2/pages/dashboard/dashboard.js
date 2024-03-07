@@ -27,23 +27,21 @@ import categories from './categories.js';
 import sankey from './sankey.js';
 import subscriptions from './subscriptions.js';
 import piggies from './piggies.js';
-
-
 import {
+    ArcElement,
+    BarController,
+    BarElement,
+    CategoryScale,
     Chart,
+    Colors,
+    Filler,
+    Legend,
+    LinearScale,
     LineController,
     LineElement,
     PieController,
-    BarController,
-    BarElement,
-    TimeScale,
-    ArcElement,
-    LinearScale,
-    Legend,
-    Filler,
-    Colors,
-    CategoryScale,
     PointElement,
+    TimeScale,
     Tooltip
 } from "chart.js";
 import 'chartjs-adapter-date-fns';
@@ -77,9 +75,10 @@ const comps = {
     piggies
 };
 
+//let i18n;
+
 function loadPage(comps) {
     Object.keys(comps).forEach(comp => {
-        console.log(`Loading page component "${comp}"`);
         let data = comps[comp]();
         Alpine.data(comp, () => data);
     });
@@ -88,11 +87,11 @@ function loadPage(comps) {
 
 // wait for load until bootstrapped event is received.
 document.addEventListener('firefly-iii-bootstrapped', () => {
-    //console.log('Loaded through event listener.');
+    console.log('Loaded through event listener.');
     loadPage(comps);
 });
 // or is bootstrapped before event is triggered.
 if (window.bootstrapped) {
-    //console.log('Loaded through window variable.');
+    console.log('Loaded through window variable.');
     loadPage(comps);
 }

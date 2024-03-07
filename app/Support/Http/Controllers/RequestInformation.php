@@ -25,46 +25,33 @@ namespace FireflyIII\Support\Http\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\ValidationException;
-use FireflyIII\Helpers\Help\HelpInterface;
 use FireflyIII\Http\Requests\RuleFormRequest;
 use FireflyIII\Http\Requests\TestRuleFormRequest;
 use FireflyIII\Support\Binder\AccountList;
 use FireflyIII\User;
-use Hash;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Routing\Route;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use InvalidArgumentException;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Route as RouteFacade;
 
 /**
  * Trait RequestInformation
- *
  */
 trait RequestInformation
 {
     /**
      * Get the domain of FF system.
-     *
-     * @return string
      */
     final protected function getDomain(): string // get request info
     {
         $url   = url()->to('/');
         $parts = parse_url($url);
 
-        return $parts['host'];
+        return $parts['host'] ?? '';
     }
 
     /**
      * Get a list of triggers.
-     *
-     * @param TestRuleFormRequest $request
-     *
-     * @return array
      */
     final protected function getValidTriggerList(TestRuleFormRequest $request): array // process input
     {
@@ -82,28 +69,25 @@ trait RequestInformation
                 $triggers[] = $current;
             }
         }
+
         return $triggers;
     }
 
     /**
      * Returns if user has seen demo.
-     *
-     * @return bool
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     final protected function hasSeenDemo(): bool // get request info + get preference
     {
         $page         = $this->getPageName();
         $specificPage = $this->getSpecificPageName();
         // indicator if user has seen the help for this page ( + special page):
-        $key = sprintf('shown_demo_%s%s', $page, $specificPage);
+        $key          = sprintf('shown_demo_%s%s', $page, $specificPage);
         // is there an intro for this route?
         $intro        = config(sprintf('intro.%s', $page)) ?? [];
         $specialIntro = config(sprintf('intro.%s%s', $page, $specificPage)) ?? [];
         // some routes have a "what" parameter, which indicates a special page:
 
-        $shownDemo = true;
+        $shownDemo    = true;
         // both must be array and either must be > 0
         if (count($intro) > 0 || count($specialIntro) > 0) {
             $shownDemo = app('preferences')->get($key, false)->data;
@@ -115,9 +99,6 @@ trait RequestInformation
         return $shownDemo;
     }
 
-    /**
-     * @return string
-     */
     final protected function getPageName(): string // get request info
     {
         return str_replace('.', '_', RouteFacade::currentRouteName());
@@ -125,26 +106,23 @@ trait RequestInformation
 
     /**
      * Get the specific name of a page for intro.
-     *
-     * @return string
      */
     final protected function getSpecificPageName(): string // get request info
     {
-        return null === RouteFacade::current()->parameter('objectType') ? '' : '_' . RouteFacade::current()->parameter('objectType');
+        /** @var null|string $param */
+        $param = RouteFacade::current()->parameter('objectType');
+
+        return null === $param ? '' : sprintf('_%s', $param);
     }
 
     /**
      * Check if date is outside session range.
-     *
-     * @param Carbon $date
-     *
-     * @return bool
-     *
      */
     final protected function notInSessionRange(Carbon $date): bool // Validate a preference
     {
         /** @var Carbon $start */
-        $start = session('start', today(config('app.timezone'))->startOfMonth());
+        $start  = session('start', today(config('app.timezone'))->startOfMonth());
+
         /** @var Carbon $end */
         $end    = session('end', today(config('app.timezone'))->endOfMonth());
         $result = false;
@@ -161,30 +139,24 @@ trait RequestInformation
 
     /**
      * Parses attributes from URL
-     *
-     * @param array $attributes
-     *
-     * @return array
      */
     final protected function parseAttributes(array $attributes): array // parse input + return result
     {
-        $attributes['location'] = $attributes['location'] ?? '';
-        $attributes['accounts'] = AccountList::routeBinder($attributes['accounts'] ?? '', new Route('get', '', []));
-        try {
-            $attributes['startDate'] = Carbon::createFromFormat('Ymd', $attributes['startDate'])->startOfDay();
-        } catch (InvalidArgumentException $e) {
-            Log::debug(sprintf('Not important error message: %s', $e->getMessage()));
-            $date                    = today(config('app.timezone'))->startOfMonth();
-            $attributes['startDate'] = $date;
+        $attributes['location'] ??= '';
+        $attributes['accounts']  = AccountList::routeBinder($attributes['accounts'] ?? '', new Route('get', '', []));
+        $date                    = Carbon::createFromFormat('Ymd', $attributes['startDate']);
+        if (false === $date) {
+            $date = today(config('app.timezone'));
         }
+        $date->startOfMonth();
+        $attributes['startDate'] = $date;
 
-        try {
-            $attributes['endDate'] = Carbon::createFromFormat('Ymd', $attributes['endDate'])->endOfDay();
-        } catch (InvalidArgumentException $e) {
-            Log::debug(sprintf('Not important error message: %s', $e->getMessage()));
-            $date                  = today(config('app.timezone'))->startOfMonth();
-            $attributes['endDate'] = $date;
+        $date2                   = Carbon::createFromFormat('Ymd', $attributes['endDate']);
+        if (false === $date2) {
+            $date2 = today(config('app.timezone'));
         }
+        $date2->endOfDay();
+        $attributes['endDate']   = $date2;
 
         return $attributes;
     }
@@ -192,17 +164,11 @@ trait RequestInformation
     /**
      * Validate users new password.
      *
-     * @param User   $user
-     * @param string $current
-     * @param string $new
-     *
-     * @return bool
-     *
      * @throws ValidationException
      */
-    final protected function validatePassword(User $user, string $current, string $new): bool //get request info
+    final protected function validatePassword(User $user, string $current, string $new): bool // get request info
     {
-        if (!Hash::check($current, $user->password)) {
+        if (!\Hash::check($current, $user->password)) {
             throw new ValidationException((string)trans('firefly.invalid_current_password'));
         }
 
@@ -215,10 +181,6 @@ trait RequestInformation
 
     /**
      * Get a validator for an incoming registration request.
-     *
-     * @param array $data
-     *
-     * @return ValidatorContract
      */
     final protected function validator(array $data): ValidatorContract
     {

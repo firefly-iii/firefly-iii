@@ -32,7 +32,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class WarnAboutBills
@@ -49,25 +48,22 @@ class WarnAboutBills implements ShouldQueue
 
     /**
      * Create a new job instance.
-     *
-     *
-     * @param Carbon|null $date
      */
     public function __construct(?Carbon $date)
     {
-        $newDate = new Carbon();
+        $newDate     = new Carbon();
         $newDate->startOfDay();
-        $this->date = $newDate;
+        $this->date  = $newDate;
 
         if (null !== $date) {
-            $newDate = clone $date;
+            $newDate    = clone $date;
             $newDate->startOfDay();
             $this->date = $newDate;
         }
 
         $this->force = false;
 
-        Log::debug(sprintf('Created new WarnAboutBills("%s")', $this->date->format('Y-m-d')));
+        app('log')->debug(sprintf('Created new WarnAboutBills("%s")', $this->date->format('Y-m-d')));
     }
 
     /**
@@ -75,11 +71,12 @@ class WarnAboutBills implements ShouldQueue
      */
     public function handle(): void
     {
-        Log::debug(sprintf('Now at start of WarnAboutBills() job for %s.', $this->date->format('D d M Y')));
+        app('log')->debug(sprintf('Now at start of WarnAboutBills() job for %s.', $this->date->format('D d M Y')));
         $bills = Bill::all();
+
         /** @var Bill $bill */
         foreach ($bills as $bill) {
-            Log::debug(sprintf('Now checking bill #%d ("%s")', $bill->id, $bill->name));
+            app('log')->debug(sprintf('Now checking bill #%d ("%s")', $bill->id, $bill->name));
             if ($this->hasDateFields($bill)) {
                 if ($this->needsWarning($bill, 'end_date')) {
                     $this->sendWarning($bill, 'end_date');
@@ -89,89 +86,65 @@ class WarnAboutBills implements ShouldQueue
                 }
             }
         }
-        Log::debug('Done with handle()');
+        app('log')->debug('Done with handle()');
 
         // clear cache:
         app('preferences')->mark();
     }
 
-    /**
-     * @param Bill $bill
-     *
-     * @return bool
-     */
     private function hasDateFields(Bill $bill): bool
     {
         if (false === $bill->active) {
-            Log::debug('Bill is not active.');
+            app('log')->debug('Bill is not active.');
+
             return false;
         }
         if (null === $bill->end_date && null === $bill->extension_date) {
-            Log::debug('Bill has no date fields.');
+            app('log')->debug('Bill has no date fields.');
+
             return false;
         }
+
         return true;
     }
 
-    /**
-     * @param Bill   $bill
-     * @param string $field
-     *
-     * @return bool
-     */
     private function needsWarning(Bill $bill, string $field): bool
     {
-        if (null === $bill->$field) {
+        if (null === $bill->{$field}) {
             return false;
         }
         $diff = $this->getDiff($bill, $field);
         $list = config('firefly.bill_reminder_periods');
-        Log::debug(sprintf('Difference in days for field "%s" ("%s") is %d day(s)', $field, $bill->$field->format('Y-m-d'), $diff));
+        app('log')->debug(sprintf('Difference in days for field "%s" ("%s") is %d day(s)', $field, $bill->{$field}->format('Y-m-d'), $diff));
         if (in_array($diff, $list, true)) {
             return true;
         }
+
         return false;
     }
 
-    /**
-     * @param Bill   $bill
-     * @param string $field
-     *
-     * @return int
-     */
     private function getDiff(Bill $bill, string $field): int
     {
         $today  = clone $this->date;
-        $carbon = clone $bill->$field;
+        $carbon = clone $bill->{$field};
+
         return $today->diffInDays($carbon, false);
     }
 
-    /**
-     * @param Bill   $bill
-     * @param string $field
-     *
-     * @return void
-     */
     private function sendWarning(Bill $bill, string $field): void
     {
         $diff = $this->getDiff($bill, $field);
-        Log::debug('Will now send warning!');
+        app('log')->debug('Will now send warning!');
         event(new WarnUserAboutBill($bill, $field, $diff));
     }
 
-    /**
-     * @param Carbon $date
-     */
     public function setDate(Carbon $date): void
     {
-        $newDate = clone $date;
+        $newDate    = clone $date;
         $newDate->startOfDay();
         $this->date = $newDate;
     }
 
-    /**
-     * @param bool $force
-     */
     public function setForce(bool $force): void
     {
         $this->force = $force;

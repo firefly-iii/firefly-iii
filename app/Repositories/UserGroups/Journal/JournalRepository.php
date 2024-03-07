@@ -33,13 +33,11 @@ class JournalRepository implements JournalRepositoryInterface
 {
     use UserGroupTrait;
 
-    /**
-     * @inheritDoc
-     */
     public function searchJournalDescriptions(string $search, int $limit): Collection
     {
         $query = $this->userGroup->transactionJournals()
-                                 ->orderBy('date', 'DESC');
+            ->orderBy('date', 'DESC')
+        ;
         if ('' !== $search) {
             $query->where('description', 'LIKE', sprintf('%%%s%%', $search));
         }

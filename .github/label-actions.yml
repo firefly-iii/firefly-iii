@@ -1,0 +1,111 @@
+# Configuration for Label Actions - https://github.com/dessant/label-actions
+
+# The `feature` label is added to issues
+feature:
+  issues:
+    # Post a comment, `{issue-author}` is an optional placeholder
+    comment: |
+      Hi there! 
+
+      This is an automatic reply. `Share and enjoy`
+
+      This issue has been marked as a feature request. The requested (new) feature will become a part of Firefly III or the data importer in due course.
+
+      If you come across this issue, please be aware there is NO need to reply with "+1" or "me too" or "I need this too" or whatever. Such comments are not helpful, and do not influence [the roadmap](https://roadmap.firefly-iii.org/). Your comment may be :skull: deleted. You can subscribe to this issue to get updates.
+
+      Thank you for your contributions.
+
+epic:
+  issues:
+    # Post a comment, `{issue-author}` is an optional placeholder
+    comment: |
+      Hi there! 
+
+      This is an automatic reply. `Share and enjoy`
+
+      This issue has been marked as an epic. In epics, large amounts of works are collected that will be part of a major new feature. If you have more ideas that could be a part of this epic, feel free to reply.
+
+      *However*, please be aware there is NO need to reply with "+1" or "me too" or "I need this too" or whatever. Such comments are not helpful, and do not influence [the roadmap](https://roadmap.firefly-iii.org/). Your comment may be :skull: deleted. 
+
+      If you are merely interested in this epic's progress, you can subscribe to this issue to get updates.
+
+      Thank you for your contributions.
+
+enhancement:
+  issues:
+    # Post a comment, `{issue-author}` is an optional placeholder
+    comment: |
+      Hi there! 
+
+      This is an automatic reply. `Share and enjoy`
+
+      This issue has been marked as an enhancement. The requested enhancement to an existing feature will become a part of Firefly III or the data importer in due course.
+
+      If you come across this issue, please be aware there is NO need to reply with "+1" or "me too" or "I need this too" or whatever. Such comments are not helpful, and do not influence [the roadmap](https://roadmap.firefly-iii.org/). Your comment may be :skull: deleted. You can subscribe to this issue to get updates.
+
+      Thank you for your contributions.
+
+triage:
+  issues:
+    # Post a comment, `{issue-author}` is an optional placeholder
+    comment: |
+      Hi there! 
+
+      This is an automatic reply. `Share and enjoy`
+
+      This issue has been marked as being in triage. The root cause is not known yet, or the issue needs more investigation. You can help by sharing debug information (from `/debug`) if you also have this issue or when you haven't already done so.
+
+      Thank you for your contributions.
+
+needs-moar-debug:
+  issues:
+    comment: |
+      Hi there! 
+
+      This is an automatic reply. `Share and enjoy`
+
+      To learn more about this issue, please make sure you share at least:
+
+      1. The table you can find on the `/debug` page
+      2. Firefly III version
+      2. Docker, self-hosted, or hosted by a third party?
+      3. Operating system and browser
+
+      Thank you for your contributions.
+    unlabel: needs-moar-debug
+
+
+needs-moar-logs:
+  issues:
+    comment: |
+      Hi there! 
+
+      This is an automatic reply. `Share and enjoy`
+
+      To learn more about this issue, please share the relevant log files from your Firefly III or data importer installation.
+
+      The relevant instructions can be found in the documentation: [How to debug Firefly III?](https://docs.firefly-iii.org/how-to/general/debug/) Once debug mode is activated per these instructions, you can repeat your action and find the logs, depending on your method of installation. All is explained on the page.
+
+      Please share the relevant log lines in your issue, either inline or as an attachment. If you feel the logs contain sensitive information, you may also send them to [james@firefly-iii.org](mailto:james@firefly-iii.org). Without these logs, it may not be possible to properly investigate this issue.
+
+      Thank you for your contributions.
+    unlabel: needs-moar-logs
+
+v2-layout-issue:
+  issues:
+    comment: |
+      Hi there! 
+
+      This is an automatic reply. `Share and enjoy`
+
+      It seems your issue is about the new v2-layout that is currently in development for Firefly III.
+
+      These issues are collected in [a GitHub discussion](https://github.com/firefly-iii/firefly-iii/issues/8361).
+
+      Please note that the v2 layout is still very much in development.
+
+      Thank you for your contributions.
+    close: true
+    close-reason: completed
+    lock: false
+    unlabel: v2-layout-issue

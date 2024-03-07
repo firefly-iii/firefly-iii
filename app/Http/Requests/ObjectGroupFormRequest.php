@@ -27,19 +27,19 @@ use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Validator;
 
 /**
  * Class ObjectGroupFormRequest.
  */
 class ObjectGroupFormRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Returns the data required by the controller.
-     *
-     * @return array
      */
     public function getObjectGroupData(): array
     {
@@ -50,21 +50,26 @@ class ObjectGroupFormRequest extends FormRequest
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {
-        /** @var ObjectGroup $objectGroup */
+        /** @var null|ObjectGroup $objectGroup */
         $objectGroup = $this->route()->parameter('objectGroup');
-        $titleRule   = 'required|between:1,255|uniqueObjectGroup';
+        $titleRule   = 'required|min:1|max:255|uniqueObjectGroup';
 
         if (null !== $objectGroup) {
-            $titleRule = sprintf('required|between:1,255|uniqueObjectGroup:%d', $objectGroup->id);
+            $titleRule = sprintf('required|min:1|max:255|uniqueObjectGroup:%d', $objectGroup->id);
         }
 
         return [
             'title' => $titleRule,
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        if ($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+        }
     }
 }

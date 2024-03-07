@@ -27,6 +27,8 @@ use FireflyIII\Repositories\Tag\OperationsRepository;
 use FireflyIII\Repositories\Tag\OperationsRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepository;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Tag\TagRepository as UserGroupTagRepository;
+use FireflyIII\Repositories\UserGroups\Tag\TagRepositoryInterface as UserGroupTagRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -38,9 +40,7 @@ class TagServiceProvider extends ServiceProvider
     /**
      * Bootstrap the application services.
      */
-    public function boot(): void
-    {
-    }
+    public function boot(): void {}
 
     /**
      * Register the application services.
@@ -49,7 +49,7 @@ class TagServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             TagRepositoryInterface::class,
-            function (Application $app) {
+            static function (Application $app) {
                 /** @var TagRepository $repository */
                 $repository = app(TagRepository::class);
 
@@ -62,8 +62,22 @@ class TagServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            UserGroupTagRepositoryInterface::class,
+            static function (Application $app) {
+                /** @var UserGroupTagRepository $repository */
+                $repository = app(UserGroupTagRepository::class);
+
+                if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
+                    $repository->setUser(auth()->user());
+                }
+
+                return $repository;
+            }
+        );
+
+        $this->app->bind(
             OperationsRepositoryInterface::class,
-            function (Application $app) {
+            static function (Application $app) {
                 /** @var OperationsRepository $repository */
                 $repository = app(OperationsRepository::class);
 

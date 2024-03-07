@@ -38,8 +38,6 @@ class CategoryTransformer extends AbstractTransformer
 
     /**
      * CategoryTransformer constructor.
-     *
-
      */
     public function __construct()
     {
@@ -49,10 +47,6 @@ class CategoryTransformer extends AbstractTransformer
 
     /**
      * Convert category.
-     *
-     * @param Category $category
-     *
-     * @return array
      */
     public function transform(Category $category): array
     {
@@ -67,10 +61,10 @@ class CategoryTransformer extends AbstractTransformer
             $earned = $this->beautify($this->opsRepository->sumIncome($start, $end, null, new Collection([$category])));
             $spent  = $this->beautify($this->opsRepository->sumExpenses($start, $end, null, new Collection([$category])));
         }
-        $notes = $this->repository->getNoteText($category);
+        $notes  = $this->repository->getNoteText($category);
 
         return [
-            'id'         => (int)$category->id,
+            'id'         => $category->id,
             'created_at' => $category->created_at->toAtomString(),
             'updated_at' => $category->updated_at->toAtomString(),
             'name'       => $category->name,
@@ -80,17 +74,12 @@ class CategoryTransformer extends AbstractTransformer
             'links'      => [
                 [
                     'rel' => 'self',
-                    'uri' => '/categories/' . $category->id,
+                    'uri' => '/categories/'.$category->id,
                 ],
             ],
         ];
     }
 
-    /**
-     * @param array $array
-     *
-     * @return array
-     */
     private function beautify(array $array): array
     {
         $return = [];

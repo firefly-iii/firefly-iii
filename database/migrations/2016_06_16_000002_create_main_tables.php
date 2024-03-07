@@ -73,6 +73,7 @@ class CreateMainTables extends Migration
     /**
      * Run the migrations.
      *
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up(): void
     {
@@ -95,7 +96,7 @@ class CreateMainTables extends Migration
             try {
                 Schema::create(
                     'accounts',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->softDeletes();
@@ -120,7 +121,7 @@ class CreateMainTables extends Migration
             try {
                 Schema::create(
                     'account_meta',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->integer('account_id', false, true);
@@ -142,7 +143,7 @@ class CreateMainTables extends Migration
             try {
                 Schema::create(
                     'piggy_banks',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->softDeletes();
@@ -167,7 +168,7 @@ class CreateMainTables extends Migration
             try {
                 Schema::create(
                     'piggy_bank_repetitions',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->integer('piggy_bank_id', false, true);
@@ -190,7 +191,7 @@ class CreateMainTables extends Migration
             try {
                 Schema::create(
                     'attachments',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->softDeletes();
@@ -223,7 +224,7 @@ class CreateMainTables extends Migration
             try {
                 Schema::create(
                     'bills',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->softDeletes();
@@ -251,15 +252,13 @@ class CreateMainTables extends Migration
         }
     }
 
-    /**
-     */
     private function createBudgetTables(): void
     {
         if (!Schema::hasTable('budgets')) {
             try {
                 Schema::create(
                     'budgets',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->softDeletes();
@@ -279,7 +278,7 @@ class CreateMainTables extends Migration
             try {
                 Schema::create(
                     'budget_limits',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->integer('budget_id', false, true);
@@ -299,7 +298,7 @@ class CreateMainTables extends Migration
             try {
                 Schema::create(
                     'limit_repetitions',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->integer('budget_limit_id', false, true);
@@ -316,16 +315,13 @@ class CreateMainTables extends Migration
         }
     }
 
-    /**
-     * @return void
-     */
     private function createCategoriesTable(): void
     {
         if (!Schema::hasTable('categories')) {
             try {
                 Schema::create(
                     'categories',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->softDeletes();
@@ -350,7 +346,7 @@ class CreateMainTables extends Migration
             try {
                 Schema::create(
                     'preferences',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->integer('user_id', false, true);
@@ -367,16 +363,13 @@ class CreateMainTables extends Migration
         }
     }
 
-    /**
-     * @return void
-     */
     private function createRoleTable(): void
     {
         if (!Schema::hasTable('role_user')) {
             try {
                 Schema::create(
                     'role_user',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->integer('user_id', false, true);
                         $table->integer('role_id', false, true);
 
@@ -393,13 +386,16 @@ class CreateMainTables extends Migration
         }
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     private function createRuleTables(): void
     {
         if (!Schema::hasTable('rule_groups')) {
             try {
                 Schema::create(
                     'rule_groups',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->softDeletes();
@@ -422,7 +418,7 @@ class CreateMainTables extends Migration
             try {
                 Schema::create(
                     'rules',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->softDeletes();
@@ -450,7 +446,7 @@ class CreateMainTables extends Migration
             try {
                 Schema::create(
                     'rule_actions',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->integer('rule_id', false, true);
@@ -475,7 +471,7 @@ class CreateMainTables extends Migration
             try {
                 Schema::create(
                     'rule_triggers',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->integer('rule_id', false, true);
@@ -498,16 +494,13 @@ class CreateMainTables extends Migration
         }
     }
 
-    /**
-     * @return void
-     */
     private function createTagsTable(): void
     {
         if (!Schema::hasTable('tags')) {
             try {
                 Schema::create(
                     'tags',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->softDeletes();
@@ -533,7 +526,8 @@ class CreateMainTables extends Migration
     }
 
     /**
-     * @return void
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     private function createTransactionTables(): void
     {
@@ -541,7 +535,7 @@ class CreateMainTables extends Migration
             try {
                 Schema::create(
                     'transaction_journals',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->softDeletes();
@@ -574,7 +568,7 @@ class CreateMainTables extends Migration
             try {
                 Schema::create(
                     'journal_meta',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->integer('transaction_journal_id', false, true);
@@ -594,7 +588,7 @@ class CreateMainTables extends Migration
             try {
                 Schema::create(
                     'tag_transaction_journal',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->integer('tag_id', false, true);
                         $table->integer('transaction_journal_id', false, true);
@@ -615,7 +609,7 @@ class CreateMainTables extends Migration
             try {
                 Schema::create(
                     'budget_transaction_journal',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->integer('budget_id', false, true);
                         $table->integer('transaction_journal_id', false, true);
@@ -633,7 +627,7 @@ class CreateMainTables extends Migration
             try {
                 Schema::create(
                     'category_transaction_journal',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->integer('category_id', false, true);
                         $table->integer('transaction_journal_id', false, true);
@@ -651,7 +645,7 @@ class CreateMainTables extends Migration
             try {
                 Schema::create(
                     'piggy_bank_events',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->integer('piggy_bank_id', false, true);
@@ -673,7 +667,7 @@ class CreateMainTables extends Migration
             try {
                 Schema::create(
                     'transactions',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->softDeletes();
@@ -696,7 +690,7 @@ class CreateMainTables extends Migration
             try {
                 Schema::create(
                     'budget_transaction',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->integer('budget_id', false, true);
                         $table->integer('transaction_id', false, true);
@@ -715,7 +709,7 @@ class CreateMainTables extends Migration
             try {
                 Schema::create(
                     'category_transaction',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->integer('category_id', false, true);
                         $table->integer('transaction_id', false, true);

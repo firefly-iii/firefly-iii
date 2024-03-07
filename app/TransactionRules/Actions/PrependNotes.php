@@ -29,7 +29,6 @@ use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Expressions\ActionExpressionEvaluator;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class PrependNotes.
@@ -41,23 +40,17 @@ class PrependNotes implements ActionInterface
 
     /**
      * TriggerInterface constructor.
-     *
-     * @param RuleAction $action
      */
     public function __construct(RuleAction $action, ActionExpressionEvaluator $evaluator)
     {
-        $this->action = $action;
+        $this->action    = $action;
         $this->evaluator = $evaluator;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function actOnArray(array $journal): bool
     {
-        $actionValue = $this->evaluator->evaluate($journal);
-
-        $dbNote = Note::where('noteable_id', (int)$journal['transaction_journal_id'])
+        $actionValue  = $this->evaluator->evaluate($journal);
+        $dbNote       = Note::where('noteable_id', (int)$journal['transaction_journal_id'])
             ->where('noteable_type', TransactionJournal::class)
             ->first(['notes.*']);
         if (null === $dbNote) {
@@ -66,15 +59,15 @@ class PrependNotes implements ActionInterface
             $dbNote->noteable_type = TransactionJournal::class;
             $dbNote->text          = '';
         }
-        $before = $dbNote->text;
-        Log::debug(sprintf('RuleAction PrependNotes prepended "%s" to "%s".', $actionValue, $dbNote->text));
+        $before       = $dbNote->text;
+        app('log')->debug(sprintf('RuleAction PrependNotes prepended "%s" to "%s".', $actionValue, $dbNote->text));
         $text         = sprintf('%s%s', $actionValue, $dbNote->text);
         $dbNote->text = $text;
         $dbNote->save();
 
         // journal
         /** @var TransactionJournal $object */
-        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $object       = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
 
         // audit log
         event(new TriggeredAuditLog($this->action->rule, $object, 'update_notes', $before, $text));

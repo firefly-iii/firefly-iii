@@ -31,9 +31,6 @@ use Illuminate\Support\Collection;
  */
 class PreferenceTransformer extends AbstractTransformer
 {
-    /**
-     * @inheritDoc
-     */
     public function collectMetaData(Collection $objects): void
     {
         // TODO: Implement collectMetaData() method.
@@ -41,15 +38,11 @@ class PreferenceTransformer extends AbstractTransformer
 
     /**
      * Transform the preference
-     *
-     * @param Preference $preference
-     *
-     * @return array
      */
     public function transform(Preference $preference): array
     {
         return [
-            'id'         => (int)$preference->id,
+            'id'         => $preference->id,
             'created_at' => $preference->created_at->toAtomString(),
             'updated_at' => $preference->updated_at->toAtomString(),
             'name'       => $preference->name,

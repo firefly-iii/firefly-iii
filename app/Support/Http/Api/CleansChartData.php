@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * CleansChartData.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -37,14 +36,12 @@ trait CleansChartData
      * "main" entry used in the V2 API chart endpoints. This loop makes sure
      * IDs are strings and other values are present (or missing).
      *
-     * @param array $data
-     *
-     * @return array
      * @throws FireflyException
      */
     private function clean(array $data): array
     {
         $return = [];
+
         /**
          * @var mixed $index
          * @var array $array
@@ -53,8 +50,8 @@ trait CleansChartData
             if (array_key_exists('currency_id', $array)) {
                 $array['currency_id'] = (string)$array['currency_id'];
             }
-            if (array_key_exists('native_id', $array)) {
-                $array['native_id'] = (string)$array['native_id'];
+            if (array_key_exists('native_currency_id', $array)) {
+                $array['native_currency_id'] = (string)$array['native_currency_id'];
             }
             if (!array_key_exists('start', $array)) {
                 throw new FireflyException(sprintf('Data-set "%s" is missing the "start"-variable.', $index));
@@ -67,7 +64,7 @@ trait CleansChartData
             }
             $return[] = $array;
         }
+
         return $return;
     }
-
 }

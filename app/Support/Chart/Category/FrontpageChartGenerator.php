@@ -51,9 +51,6 @@ class FrontpageChartGenerator
 
     /**
      * FrontpageChartGenerator constructor.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
      */
     public function __construct(Carbon $start, Carbon $end)
     {
@@ -66,18 +63,16 @@ class FrontpageChartGenerator
         $this->noCatRepos   = app(NoCategoryRepositoryInterface::class);
     }
 
-    /**
-     * @return array
-     */
     public function generate(): array
     {
-        $categories = $this->repository->getCategories();
-        $accounts   = $this->accountRepos->getAccountsByType(
+        $categories   = $this->repository->getCategories();
+        $accounts     = $this->accountRepos->getAccountsByType(
             [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::ASSET, AccountType::DEFAULT]
         );
 
         // get expenses + income per category:
-        $collection = [];
+        $collection   = [];
+
         /** @var Category $category */
         foreach ($categories as $category) {
             // get expenses
@@ -87,10 +82,10 @@ class FrontpageChartGenerator
         // collect for no-category:
         $collection[] = $this->collectNoCatExpenses($accounts);
 
-        $tempData = array_merge(...$collection);
+        $tempData     = array_merge(...$collection);
 
         // sort temp array by amount.
-        $amounts = array_column($tempData, 'sum_float');
+        $amounts      = array_column($tempData, 'sum_float');
         array_multisort($amounts, SORT_ASC, $tempData);
 
         $currencyData = $this->createCurrencyGroups($tempData);
@@ -98,12 +93,6 @@ class FrontpageChartGenerator
         return $this->insertValues($currencyData, $tempData);
     }
 
-    /**
-     * @param Category   $category
-     * @param Collection $accounts
-     *
-     * @return array
-     */
     private function collectExpenses(Category $category, Collection $accounts): array
     {
         $spent    = $this->opsRepos->sumExpenses($this->start, $this->end, $accounts, new Collection([$category]));
@@ -121,14 +110,11 @@ class FrontpageChartGenerator
         return $tempData;
     }
 
-    /**
-     * @param array $currency
-     */
     private function addCurrency(array $currency): void
     {
         $currencyId = (int)$currency['currency_id'];
 
-        $this->currencies[$currencyId] = $this->currencies[$currencyId] ?? [
+        $this->currencies[$currencyId] ??= [
             'currency_id'             => $currencyId,
             'currency_name'           => $currency['currency_name'],
             'currency_symbol'         => $currency['currency_symbol'],
@@ -137,11 +123,6 @@ class FrontpageChartGenerator
         ];
     }
 
-    /**
-     * @param Collection $accounts
-     *
-     * @return array
-     */
     private function collectNoCatExpenses(Collection $accounts): array
     {
         $noCatExp = $this->noCatRepos->sumExpenses($this->start, $this->end, $accounts);
@@ -159,15 +140,11 @@ class FrontpageChartGenerator
         return $tempData;
     }
 
-    /**
-     * @param array $data
-     *
-     * @return array
-     */
     private function createCurrencyGroups(array $data): array
     {
         $return = [];
         $names  = $this->expandNames($data);
+
         /**
          * @var array $currency
          */
@@ -184,12 +161,6 @@ class FrontpageChartGenerator
         return $return;
     }
 
-    /**
-     * @param array $currencyData
-     * @param array $monetaryData
-     *
-     * @return array
-     */
     private function insertValues(array $currencyData, array $monetaryData): array
     {
         /** @var array $array */

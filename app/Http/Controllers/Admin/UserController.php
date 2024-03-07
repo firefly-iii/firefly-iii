@@ -36,10 +36,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class UserController.
@@ -70,9 +67,7 @@ class UserController extends Controller
     }
 
     /**
-     * @param User $user
-     *
-     * @return Application|Factory|RedirectResponse|Redirector|View
+     * @return Application|Factory|Redirector|RedirectResponse|View
      */
     public function delete(User $user)
     {
@@ -87,31 +82,26 @@ class UserController extends Controller
         return view('admin.users.delete', compact('user', 'subTitle'));
     }
 
-    /**
-     * @param InvitedUser $invitedUser
-     *
-     * @return JsonResponse
-     */
     public function deleteInvite(InvitedUser $invitedUser): JsonResponse
     {
-        Log::debug('Will now delete invitation');
+        app('log')->debug('Will now delete invitation');
         if ($invitedUser->redeemed) {
-            Log::debug('Is already redeemed.');
+            app('log')->debug('Is already redeemed.');
             session()->flash('error', trans('firefly.invite_is_already_redeemed', ['address' => $invitedUser->email]));
+
             return response()->json(['success' => false]);
         }
-        Log::debug('Delete!');
+        app('log')->debug('Delete!');
         session()->flash('success', trans('firefly.invite_is_deleted', ['address' => $invitedUser->email]));
         $this->repository->deleteInvite($invitedUser);
+
         return response()->json(['success' => true]);
     }
 
     /**
      * Destroy a user.
      *
-     * @param User $user
-     *
-     * @return RedirectResponse|Redirector
+     * @return Redirector|RedirectResponse
      */
     public function destroy(User $user)
     {
@@ -129,8 +119,6 @@ class UserController extends Controller
     /**
      * Edit user form.
      *
-     * @param User $user
-     *
      * @return Factory|View
      */
     public function edit(User $user)
@@ -145,11 +133,11 @@ class UserController extends Controller
         }
         session()->forget('users.edit.fromUpdate');
 
-        $subTitle     = (string)trans('firefly.edit_user', ['email' => $user->email]);
-        $subTitleIcon = 'fa-user-o';
-        $currentUser  = auth()->user();
-        $isAdmin      = $this->repository->hasRole($user, 'owner');
-        $codes        = [
+        $subTitle       = (string)trans('firefly.edit_user', ['email' => $user->email]);
+        $subTitleIcon   = 'fa-user-o';
+        $currentUser    = auth()->user();
+        $isAdmin        = $this->repository->hasRole($user, 'owner');
+        $codes          = [
             ''              => (string)trans('firefly.no_block_code'),
             'bounced'       => (string)trans('firefly.block_code_bounced'),
             'expired'       => (string)trans('firefly.block_code_expired'),
@@ -163,26 +151,24 @@ class UserController extends Controller
      * Show index of user manager.
      *
      * @return Factory|View
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function index()
     {
         $subTitle       = (string)trans('firefly.user_administration');
         $subTitleIcon   = 'fa-users';
         $users          = $this->repository->all();
-        $singleUserMode = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
+        $singleUserMode = (bool)app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $allowInvites   = false;
         if (!$this->externalIdentity && $singleUserMode) {
             // also registration enabled.
             $allowInvites = true;
         }
 
-        $invitedUsers = $this->repository->getInvitedUsers();
+        $invitedUsers   = $this->repository->getInvitedUsers();
 
         // add meta stuff.
         $users->each(
-            function (User $user) {
+            function (User $user): void {
                 $user->isAdmin = $this->repository->hasRole($user, 'owner');
                 $user->has2FA  = null !== $user->mfa_secret;
             }
@@ -191,11 +177,6 @@ class UserController extends Controller
         return view('admin.users.index', compact('subTitle', 'subTitleIcon', 'users', 'allowInvites', 'invitedUsers'));
     }
 
-    /**
-     * @param InviteUserFormRequest $request
-     *
-     * @return RedirectResponse
-     */
     public function invite(InviteUserFormRequest $request): RedirectResponse
     {
         $address = (string)$request->get('invited_user');
@@ -210,8 +191,6 @@ class UserController extends Controller
 
     /**
      * Show single user.
-     *
-     * @param User $user
      *
      * @return Factory|View
      */
@@ -239,17 +218,14 @@ class UserController extends Controller
     /**
      * Update single user.
      *
-     * @param UserFormRequest $request
-     * @param User            $user
-     *
-     * @return $this|RedirectResponse|Redirector
+     * @return $this|Redirector|RedirectResponse
      */
     public function update(UserFormRequest $request, User $user)
     {
-        Log::debug('Actually here');
-        $data = $request->getUserData();
+        app('log')->debug('Actually here');
+        $data     = $request->getUserData();
 
-        //var_dump($data);
+        // var_dump($data);
 
         // update password
         if (array_key_exists('password', $data) && '' !== $data['password']) {

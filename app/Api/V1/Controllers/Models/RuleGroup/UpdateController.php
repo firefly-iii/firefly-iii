@@ -41,8 +41,6 @@ class UpdateController extends Controller
 
     /**
      * RuleGroupController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -50,7 +48,7 @@ class UpdateController extends Controller
         $this->middleware(
             function ($request, $next) {
                 /** @var User $user */
-                $user = auth()->user();
+                $user                      = auth()->user();
 
                 $this->ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
                 $this->ruleGroupRepository->setUser($user);
@@ -65,22 +63,17 @@ class UpdateController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/rule_groups/updateRuleGroup
      *
      * Update a rule group.
-     *
-     * @param UpdateRequest $request
-     * @param RuleGroup     $ruleGroup
-     *
-     * @return JsonResponse
      */
     public function update(UpdateRequest $request, RuleGroup $ruleGroup): JsonResponse
     {
-        $ruleGroup = $this->ruleGroupRepository->update($ruleGroup, $request->getAll());
-        $manager   = $this->getManager();
+        $ruleGroup   = $this->ruleGroupRepository->update($ruleGroup, $request->getAll());
+        $manager     = $this->getManager();
 
         /** @var RuleGroupTransformer $transformer */
         $transformer = app(RuleGroupTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($ruleGroup, $transformer, 'rule_groups');
+        $resource    = new Item($ruleGroup, $transformer, 'rule_groups');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

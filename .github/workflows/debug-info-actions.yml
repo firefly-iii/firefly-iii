@@ -1,0 +1,32 @@
+name: 'Issues - Respond to hidden commands'
+
+# the workflow to execute on is comments that are newly created
+on:
+  issues:
+    types: [opened, edited]
+  issue_comment:
+    types: [created]
+
+# permissions needed for reacting to IssueOps commands on issues and PRs
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  checks: read
+
+jobs:
+  respond:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          ISSUE_BODY=$(gh issue view $NUMBER --json body)
+          if [[ $ISSUE_BODY == *".eOxNZAmyGz6CXMyf"* ]]; then
+            gh issue comment "$NUMBER" --body "$V2_ISSUE_REPLY_BODY"
+            gh issue close "$NUMBER" --reason completed
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          NUMBER: ${{ github.event.issue.number }}
+          V2_ISSUE_REPLY_BODY: ${{ secrets.V2_ISSUE_REPLY_BODY }}
+          LABELS: v2-layout-issue

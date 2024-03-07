@@ -32,15 +32,11 @@ use League\Fractal\Resource\Item;
  */
 class BudgetLimitTransformer extends AbstractTransformer
 {
-    /** @var string[] */
     protected array $availableIncludes
         = [
             'budget',
         ];
 
-    /**
-     * @inheritDoc
-     */
     public function collectMetaData(Collection $objects): void
     {
         // TODO: Implement collectMetaData() method.
@@ -48,8 +44,6 @@ class BudgetLimitTransformer extends AbstractTransformer
 
     /**
      * Include Budget
-     *
-     * @param BudgetLimit $limit
      *
      * @return Item
      */
@@ -60,10 +54,6 @@ class BudgetLimitTransformer extends AbstractTransformer
 
     /**
      * Transform the note.
-     *
-     * @param BudgetLimit $budgetLimit
-     *
-     * @return array
      */
     public function transform(BudgetLimit $budgetLimit): array
     {
@@ -81,13 +71,13 @@ class BudgetLimitTransformer extends AbstractTransformer
         $currencySymbol        = null;
         if (null !== $currency) {
             $amount                = $budgetLimit->amount;
-            $currencyId            = (int)$currency->id;
+            $currencyId            = $currency->id;
             $currencyName          = $currency->name;
             $currencyCode          = $currency->code;
             $currencySymbol        = $currency->symbol;
             $currencyDecimalPlaces = $currency->decimal_places;
         }
-        $amount = number_format((float)$amount, $currencyDecimalPlaces, '.', '');
+        $amount                = number_format((float)$amount, $currencyDecimalPlaces, '.', '');
 
         return [
             'id'                      => (string)$budgetLimit->id,
@@ -103,7 +93,7 @@ class BudgetLimitTransformer extends AbstractTransformer
             'currency_symbol'         => $currencySymbol,
             'amount'                  => $amount,
             'period'                  => $budgetLimit->period,
-            //'spent'                   => $expenses[$currencyId]['sum'] ?? '0',
+            // 'spent'                   => $expenses[$currencyId]['sum'] ?? '0',
             'links'                   => [
                 [
                     'rel' => 'self',

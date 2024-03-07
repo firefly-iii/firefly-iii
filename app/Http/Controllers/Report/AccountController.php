@@ -29,8 +29,6 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
-use Throwable;
 
 /**
  * Class AccountController.
@@ -40,17 +38,12 @@ class AccountController extends Controller
     /**
      * Show partial overview for account balances.
      *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return string
      * @throws FireflyException
      */
     public function general(Collection $accounts, Carbon $start, Carbon $end): string
     {
         // chart properties for cache:
-        $cache = new CacheProperties();
+        $cache         = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('account-report');
@@ -62,12 +55,14 @@ class AccountController extends Controller
         /** @var AccountTaskerInterface $accountTasker */
         $accountTasker = app(AccountTaskerInterface::class);
         $accountReport = $accountTasker->getAccountReport($accounts, $start, $end);
+
         try {
             $result = view('reports.partials.accounts', compact('accountReport'))->render();
-        } catch (Throwable $e) {
-            Log::error(sprintf('Could not render reports.partials.accounts: %s', $e->getMessage()));
-            Log::error($e->getTraceAsString());
+        } catch (\Throwable $e) {
+            app('log')->error(sprintf('Could not render reports.partials.accounts: %s', $e->getMessage()));
+            app('log')->error($e->getTraceAsString());
             $result = 'Could not render view.';
+
             throw new FireflyException($result, 0, $e);
         }
 

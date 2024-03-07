@@ -31,10 +31,10 @@ return [
     |
     */
 
-    'filename' => '_ide_helper',
-    'format'   => 'php',
+    'filename'                    => '_ide_helper',
+    'format'                      => 'php',
 
-    'meta_filename' => '.phpstorm.meta.php',
+    'meta_filename'               => '.phpstorm.meta.php',
 
     /*
     |--------------------------------------------------------------------------
@@ -45,7 +45,7 @@ return [
     |
     */
 
-    'include_fluent' => true,
+    'include_fluent'              => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -56,7 +56,7 @@ return [
     |
     */
 
-    'write_model_magic_where' => true,
+    'write_model_magic_where'     => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -83,10 +83,10 @@ return [
     |
     */
 
-    'include_helpers' => false,
+    'include_helpers'             => false,
 
-    'helper_files' => [
-        base_path() . '/vendor/laravel/framework/src/Illuminate/Support/helpers.php',
+    'helper_files'                => [
+        base_path().'/vendor/laravel/framework/src/Illuminate/Support/helpers.php',
     ],
 
     /*
@@ -99,7 +99,7 @@ return [
     |
     */
 
-    'model_locations' => [
+    'model_locations'             => [
         'app',
     ],
 
@@ -112,12 +112,12 @@ return [
     |
     */
 
-    'extra' => [
+    'extra'                       => [
         'Eloquent' => ['Illuminate\Database\Eloquent\Builder', 'Illuminate\Database\Query\Builder'],
         'Session'  => ['Illuminate\Session\Store'],
     ],
 
-    'magic' => [
+    'magic'                       => [
         'Log' => [
             'debug'     => 'Monolog\Logger::addDebug',
             'info'      => 'Monolog\Logger::addInfo',
@@ -141,7 +141,6 @@ return [
     */
 
     'interfaces'                  => [
-
     ],
 
     /*
@@ -171,7 +170,6 @@ return [
     |
     */
     'custom_db_types'             => [
-
     ],
 
     /*
@@ -223,5 +221,4 @@ return [
     |
     */
     'include_class_docblocks'     => false,
-
 ];

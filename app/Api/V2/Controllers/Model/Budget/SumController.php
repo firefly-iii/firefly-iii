@@ -26,9 +26,7 @@ namespace FireflyIII\Api\V2\Controllers\Model\Budget;
 
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Generic\DateRequest;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Support\Http\Api\ConvertsExchangeRates;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -36,13 +34,8 @@ use Illuminate\Http\JsonResponse;
  */
 class SumController extends Controller
 {
-    use ConvertsExchangeRates;
-
     private BudgetRepositoryInterface $repository;
 
-    /**
-     *
-     */
     public function __construct()
     {
         parent::__construct();
@@ -58,34 +51,24 @@ class SumController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v2)#/budgets/getBudgetedForBudget
-     *
-     * @param DateRequest $request
-     *
-     * @return JsonResponse
      */
     public function budgeted(DateRequest $request): JsonResponse
     {
-        $data      = $request->getAll();
-        $result    = $this->repository->budgetedInPeriod($data['start'], $data['end']);
-        $converted = $this->cerSum(array_values($result));
+        $data   = $request->getAll();
+        $result = $this->repository->budgetedInPeriod($data['start'], $data['end']);
 
-        return response()->json($converted);
+        return response()->json($result);
     }
 
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v2)#/budgets/getSpentForBudget
-     *
-     * @param DateRequest $request
-     *
-     * @return JsonResponse
      */
     public function spent(DateRequest $request): JsonResponse
     {
-        $data      = $request->getAll();
-        $result    = $this->repository->spentInPeriod($data['start'], $data['end']);
-        $converted = $this->cerSum(array_values($result));
+        $data   = $request->getAll();
+        $result = $this->repository->spentInPeriod($data['start'], $data['end']);
 
-        return response()->json($converted);
+        return response()->json($result);
     }
 }

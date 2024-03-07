@@ -35,22 +35,17 @@ class ChangesForV4712 extends Migration
 {
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down(): void
-    {
-        //
-    }
+    public function down(): void {}
 
     /**
      * Run the migrations.
      *
-     * @return void
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up(): void
     {
-        /**
+        /*
          * In 4.7.11, I changed the date field to a "datetimetz" field. This wreaks havoc
          * because apparently MySQL is not actually capable of handling multiple time zones,
          * only having a server wide time zone setting. Actual database schemes like Postgres
@@ -61,7 +56,7 @@ class ChangesForV4712 extends Migration
         try {
             Schema::table(
                 'transaction_journals',
-                static function (Blueprint $table) {
+                static function (Blueprint $table): void {
                     $table->dateTime('date')->change();
                 }
             );

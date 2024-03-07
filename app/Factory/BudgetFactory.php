@@ -33,12 +33,6 @@ class BudgetFactory
 {
     private User $user;
 
-    /**
-     * @param int|null    $budgetId
-     * @param null|string $budgetName
-     *
-     * @return Budget|null
-     */
     public function find(?int $budgetId, ?string $budgetName): ?Budget
     {
         $budgetId   = (int)$budgetId;
@@ -50,7 +44,7 @@ class BudgetFactory
 
         // first by ID:
         if ($budgetId > 0) {
-            /** @var Budget $budget */
+            /** @var null|Budget $budget */
             $budget = $this->user->budgets()->find($budgetId);
             if (null !== $budget) {
                 return $budget;
@@ -67,19 +61,11 @@ class BudgetFactory
         return null;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return Budget|null
-     */
     public function findByName(string $name): ?Budget
     {
         return $this->user->budgets()->where('name', $name)->first();
     }
 
-    /**
-     * @param User $user
-     */
     public function setUser(User $user): void
     {
         $this->user = $user;

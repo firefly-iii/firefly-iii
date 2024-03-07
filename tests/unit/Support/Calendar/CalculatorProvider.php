@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * CalculatorProvider.php
  * Copyright (c) 2023 Antonio Spinelli <https://github.com/tonicospinelli>
@@ -27,7 +26,6 @@ namespace Tests\unit\Support\Calendar;
 
 use Carbon\Carbon;
 use FireflyIII\Support\Calendar\Periodicity;
-use Generator;
 use Tests\unit\Support\Calendar\Periodicity\IntervalProvider;
 
 readonly class CalculatorProvider
@@ -45,72 +43,72 @@ readonly class CalculatorProvider
         $this->label            = "{$periodicity->name} {$intervalProvider->label}";
     }
 
-    public static function providePeriodicityWithSkippedIntervals(): Generator
+    public static function providePeriodicityWithSkippedIntervals(): \Generator
     {
         $intervals = [
-            CalculatorProvider::from(Periodicity::Daily, new IntervalProvider(Carbon::now(), Carbon::now()->addDays(2)), 1),
-            CalculatorProvider::from(Periodicity::Daily, new IntervalProvider(Carbon::now(), Carbon::now()->addDays(3)), 2),
-            CalculatorProvider::from(Periodicity::Daily, new IntervalProvider(Carbon::parse('2023-01-31'), Carbon::parse('2023-02-11')), 10),
+            self::from(Periodicity::Daily, new IntervalProvider(Carbon::now(), Carbon::now()->addDays(2)), 1),
+            self::from(Periodicity::Daily, new IntervalProvider(Carbon::now(), Carbon::now()->addDays(3)), 2),
+            self::from(Periodicity::Daily, new IntervalProvider(Carbon::parse('2023-01-31'), Carbon::parse('2023-02-11')), 10),
 
-            CalculatorProvider::from(Periodicity::Weekly, new IntervalProvider(Carbon::now(), Carbon::now()->addWeeks(3)), 2),
-            CalculatorProvider::from(Periodicity::Weekly, new IntervalProvider(Carbon::parse('2023-01-31'), Carbon::parse('2023-02-14')), 1),
+            self::from(Periodicity::Weekly, new IntervalProvider(Carbon::now(), Carbon::now()->addWeeks(3)), 2),
+            self::from(Periodicity::Weekly, new IntervalProvider(Carbon::parse('2023-01-31'), Carbon::parse('2023-02-14')), 1),
 
-            CalculatorProvider::from(Periodicity::Fortnightly, new IntervalProvider(Carbon::now(), Carbon::now()->addWeeks(4)), 1),
-            CalculatorProvider::from(Periodicity::Fortnightly, new IntervalProvider(Carbon::parse('2023-01-29'), Carbon::parse('2023-02-26')), 1),
-            CalculatorProvider::from(Periodicity::Fortnightly, new IntervalProvider(Carbon::parse('2023-01-30'), Carbon::parse('2023-02-27')), 1),
-            CalculatorProvider::from(Periodicity::Fortnightly, new IntervalProvider(Carbon::parse('2023-01-31'), Carbon::parse('2023-02-28')), 1),
+            self::from(Periodicity::Fortnightly, new IntervalProvider(Carbon::now(), Carbon::now()->addWeeks(4)), 1),
+            self::from(Periodicity::Fortnightly, new IntervalProvider(Carbon::parse('2023-01-29'), Carbon::parse('2023-02-26')), 1),
+            self::from(Periodicity::Fortnightly, new IntervalProvider(Carbon::parse('2023-01-30'), Carbon::parse('2023-02-27')), 1),
+            self::from(Periodicity::Fortnightly, new IntervalProvider(Carbon::parse('2023-01-31'), Carbon::parse('2023-02-28')), 1),
 
-            CalculatorProvider::from(Periodicity::Monthly, new IntervalProvider(Carbon::now(), Carbon::now()->addMonthsNoOverflow(2)), 1),
-            CalculatorProvider::from(Periodicity::Monthly, new IntervalProvider(Carbon::parse('2019-12-30'), Carbon::parse('2020-02-29')), 1),
-            CalculatorProvider::from(Periodicity::Monthly, new IntervalProvider(Carbon::parse('2019-12-31'), Carbon::parse('2020-02-29')), 1),
-            CalculatorProvider::from(Periodicity::Monthly, new IntervalProvider(Carbon::parse('2020-01-29'), Carbon::parse('2020-03-29')), 1),
-            CalculatorProvider::from(Periodicity::Monthly, new IntervalProvider(Carbon::parse('2020-01-31'), Carbon::parse('2020-09-30')), 7),
-            CalculatorProvider::from(Periodicity::Monthly, new IntervalProvider(Carbon::parse('2020-12-29'), Carbon::parse('2021-02-28')), 1),
-            CalculatorProvider::from(Periodicity::Monthly, new IntervalProvider(Carbon::parse('2020-12-30'), Carbon::parse('2021-02-28')), 1),
-            CalculatorProvider::from(Periodicity::Monthly, new IntervalProvider(Carbon::parse('2020-12-31'), Carbon::parse('2021-02-28')), 1),
-            CalculatorProvider::from(Periodicity::Monthly, new IntervalProvider(Carbon::parse('2023-03-31'), Carbon::parse('2023-11-30')), 7),
-            CalculatorProvider::from(Periodicity::Monthly, new IntervalProvider(Carbon::parse('2023-05-31'), Carbon::parse('2023-08-31')), 2),
-            CalculatorProvider::from(Periodicity::Monthly, new IntervalProvider(Carbon::parse('2023-07-31'), Carbon::parse('2023-09-30')), 1),
-            CalculatorProvider::from(Periodicity::Monthly, new IntervalProvider(Carbon::parse('2023-10-30'), Carbon::parse('2024-02-29')), 3),
-            CalculatorProvider::from(Periodicity::Monthly, new IntervalProvider(Carbon::parse('2023-10-31'), Carbon::parse('2024-02-29')), 3),
+            self::from(Periodicity::Monthly, new IntervalProvider(Carbon::now(), Carbon::now()->addMonthsNoOverflow(2)), 1),
+            self::from(Periodicity::Monthly, new IntervalProvider(Carbon::parse('2019-12-30'), Carbon::parse('2020-02-29')), 1),
+            self::from(Periodicity::Monthly, new IntervalProvider(Carbon::parse('2019-12-31'), Carbon::parse('2020-02-29')), 1),
+            self::from(Periodicity::Monthly, new IntervalProvider(Carbon::parse('2020-01-29'), Carbon::parse('2020-03-29')), 1),
+            self::from(Periodicity::Monthly, new IntervalProvider(Carbon::parse('2020-01-31'), Carbon::parse('2020-09-30')), 7),
+            self::from(Periodicity::Monthly, new IntervalProvider(Carbon::parse('2020-12-29'), Carbon::parse('2021-02-28')), 1),
+            self::from(Periodicity::Monthly, new IntervalProvider(Carbon::parse('2020-12-30'), Carbon::parse('2021-02-28')), 1),
+            self::from(Periodicity::Monthly, new IntervalProvider(Carbon::parse('2020-12-31'), Carbon::parse('2021-02-28')), 1),
+            self::from(Periodicity::Monthly, new IntervalProvider(Carbon::parse('2023-03-31'), Carbon::parse('2023-11-30')), 7),
+            self::from(Periodicity::Monthly, new IntervalProvider(Carbon::parse('2023-05-31'), Carbon::parse('2023-08-31')), 2),
+            self::from(Periodicity::Monthly, new IntervalProvider(Carbon::parse('2023-07-31'), Carbon::parse('2023-09-30')), 1),
+            self::from(Periodicity::Monthly, new IntervalProvider(Carbon::parse('2023-10-30'), Carbon::parse('2024-02-29')), 3),
+            self::from(Periodicity::Monthly, new IntervalProvider(Carbon::parse('2023-10-31'), Carbon::parse('2024-02-29')), 3),
 
-            CalculatorProvider::from(Periodicity::Bimonthly, new IntervalProvider(Carbon::now(), Carbon::now()->addMonthsNoOverflow(6)), 2),
-            CalculatorProvider::from(Periodicity::Bimonthly, new IntervalProvider(Carbon::parse('2019-08-29'), Carbon::parse('2020-02-29')), 2),
-            CalculatorProvider::from(Periodicity::Bimonthly, new IntervalProvider(Carbon::parse('2019-08-30'), Carbon::parse('2020-02-29')), 2),
-            CalculatorProvider::from(Periodicity::Bimonthly, new IntervalProvider(Carbon::parse('2019-08-31'), Carbon::parse('2020-02-29')), 2),
-            CalculatorProvider::from(Periodicity::Bimonthly, new IntervalProvider(Carbon::parse('2019-10-30'), Carbon::parse('2020-02-29')), 1),
-            CalculatorProvider::from(Periodicity::Bimonthly, new IntervalProvider(Carbon::parse('2019-10-31'), Carbon::parse('2020-02-29')), 1),
-            CalculatorProvider::from(Periodicity::Bimonthly, new IntervalProvider(Carbon::parse('2020-02-29'), Carbon::parse('2021-02-28')), 5),
-            CalculatorProvider::from(Periodicity::Bimonthly, new IntervalProvider(Carbon::parse('2020-08-29'), Carbon::parse('2021-02-28')), 2),
-            CalculatorProvider::from(Periodicity::Bimonthly, new IntervalProvider(Carbon::parse('2020-08-30'), Carbon::parse('2021-02-28')), 2),
-            CalculatorProvider::from(Periodicity::Bimonthly, new IntervalProvider(Carbon::parse('2020-08-31'), Carbon::parse('2021-02-28')), 2),
+            self::from(Periodicity::Bimonthly, new IntervalProvider(Carbon::now(), Carbon::now()->addMonthsNoOverflow(6)), 2),
+            self::from(Periodicity::Bimonthly, new IntervalProvider(Carbon::parse('2019-08-29'), Carbon::parse('2020-02-29')), 2),
+            self::from(Periodicity::Bimonthly, new IntervalProvider(Carbon::parse('2019-08-30'), Carbon::parse('2020-02-29')), 2),
+            self::from(Periodicity::Bimonthly, new IntervalProvider(Carbon::parse('2019-08-31'), Carbon::parse('2020-02-29')), 2),
+            self::from(Periodicity::Bimonthly, new IntervalProvider(Carbon::parse('2019-10-30'), Carbon::parse('2020-02-29')), 1),
+            self::from(Periodicity::Bimonthly, new IntervalProvider(Carbon::parse('2019-10-31'), Carbon::parse('2020-02-29')), 1),
+            self::from(Periodicity::Bimonthly, new IntervalProvider(Carbon::parse('2020-02-29'), Carbon::parse('2021-02-28')), 5),
+            self::from(Periodicity::Bimonthly, new IntervalProvider(Carbon::parse('2020-08-29'), Carbon::parse('2021-02-28')), 2),
+            self::from(Periodicity::Bimonthly, new IntervalProvider(Carbon::parse('2020-08-30'), Carbon::parse('2021-02-28')), 2),
+            self::from(Periodicity::Bimonthly, new IntervalProvider(Carbon::parse('2020-08-31'), Carbon::parse('2021-02-28')), 2),
 
-            CalculatorProvider::from(Periodicity::Quarterly, new IntervalProvider(Carbon::now(), Carbon::now()->addMonthsNoOverflow(9)), 2),
-            CalculatorProvider::from(Periodicity::Quarterly, new IntervalProvider(Carbon::parse('2019-05-29'), Carbon::parse('2020-02-29')), 2),
-            CalculatorProvider::from(Periodicity::Quarterly, new IntervalProvider(Carbon::parse('2019-05-30'), Carbon::parse('2020-02-29')), 2),
-            CalculatorProvider::from(Periodicity::Quarterly, new IntervalProvider(Carbon::parse('2019-05-31'), Carbon::parse('2020-02-29')), 2),
-            CalculatorProvider::from(Periodicity::Quarterly, new IntervalProvider(Carbon::parse('2020-02-29'), Carbon::parse('2021-02-28')), 3),
-            CalculatorProvider::from(Periodicity::Quarterly, new IntervalProvider(Carbon::parse('2020-08-29'), Carbon::parse('2021-02-28')), 1),
-            CalculatorProvider::from(Periodicity::Quarterly, new IntervalProvider(Carbon::parse('2020-08-30'), Carbon::parse('2021-02-28')), 1),
-            CalculatorProvider::from(Periodicity::Quarterly, new IntervalProvider(Carbon::parse('2020-08-31'), Carbon::parse('2021-02-28')), 1),
+            self::from(Periodicity::Quarterly, new IntervalProvider(Carbon::now(), Carbon::now()->addMonthsNoOverflow(9)), 2),
+            self::from(Periodicity::Quarterly, new IntervalProvider(Carbon::parse('2019-05-29'), Carbon::parse('2020-02-29')), 2),
+            self::from(Periodicity::Quarterly, new IntervalProvider(Carbon::parse('2019-05-30'), Carbon::parse('2020-02-29')), 2),
+            self::from(Periodicity::Quarterly, new IntervalProvider(Carbon::parse('2019-05-31'), Carbon::parse('2020-02-29')), 2),
+            self::from(Periodicity::Quarterly, new IntervalProvider(Carbon::parse('2020-02-29'), Carbon::parse('2021-02-28')), 3),
+            self::from(Periodicity::Quarterly, new IntervalProvider(Carbon::parse('2020-08-29'), Carbon::parse('2021-02-28')), 1),
+            self::from(Periodicity::Quarterly, new IntervalProvider(Carbon::parse('2020-08-30'), Carbon::parse('2021-02-28')), 1),
+            self::from(Periodicity::Quarterly, new IntervalProvider(Carbon::parse('2020-08-31'), Carbon::parse('2021-02-28')), 1),
 
-            CalculatorProvider::from(Periodicity::HalfYearly, new IntervalProvider(Carbon::now(), Carbon::now()->addMonthsNoOverflow(12)), 1),
-            CalculatorProvider::from(Periodicity::HalfYearly, new IntervalProvider(Carbon::now(), Carbon::now()->addMonthsNoOverflow(18)), 2),
-            CalculatorProvider::from(Periodicity::HalfYearly, new IntervalProvider(Carbon::now(), Carbon::now()->addMonthsNoOverflow(24)), 3),
-            CalculatorProvider::from(Periodicity::HalfYearly, new IntervalProvider(Carbon::parse('2018-08-29'), Carbon::parse('2020-02-29')), 2),
-            CalculatorProvider::from(Periodicity::HalfYearly, new IntervalProvider(Carbon::parse('2018-08-30'), Carbon::parse('2020-02-29')), 2),
-            CalculatorProvider::from(Periodicity::HalfYearly, new IntervalProvider(Carbon::parse('2018-08-31'), Carbon::parse('2020-02-29')), 2),
-            CalculatorProvider::from(Periodicity::HalfYearly, new IntervalProvider(Carbon::parse('2019-01-31'), Carbon::parse('2021-01-31')), 3),
-            CalculatorProvider::from(Periodicity::HalfYearly, new IntervalProvider(Carbon::parse('2019-02-28'), Carbon::parse('2021-08-28')), 4),
-            CalculatorProvider::from(Periodicity::HalfYearly, new IntervalProvider(Carbon::parse('2020-01-31'), Carbon::parse('2021-01-31')), 1),
-            CalculatorProvider::from(Periodicity::HalfYearly, new IntervalProvider(Carbon::parse('2020-02-29'), Carbon::parse('2021-02-28')), 1),
-            CalculatorProvider::from(Periodicity::HalfYearly, new IntervalProvider(Carbon::parse('2020-08-29'), Carbon::parse('2022-02-28')), 2),
-            CalculatorProvider::from(Periodicity::HalfYearly, new IntervalProvider(Carbon::parse('2020-08-30'), Carbon::parse('2022-02-28')), 2),
-            CalculatorProvider::from(Periodicity::HalfYearly, new IntervalProvider(Carbon::parse('2020-08-31'), Carbon::parse('2022-02-28')), 2),
+            self::from(Periodicity::HalfYearly, new IntervalProvider(Carbon::now(), Carbon::now()->addMonthsNoOverflow(12)), 1),
+            self::from(Periodicity::HalfYearly, new IntervalProvider(Carbon::now(), Carbon::now()->addMonthsNoOverflow(18)), 2),
+            self::from(Periodicity::HalfYearly, new IntervalProvider(Carbon::now(), Carbon::now()->addMonthsNoOverflow(24)), 3),
+            self::from(Periodicity::HalfYearly, new IntervalProvider(Carbon::parse('2018-08-29'), Carbon::parse('2020-02-29')), 2),
+            self::from(Periodicity::HalfYearly, new IntervalProvider(Carbon::parse('2018-08-30'), Carbon::parse('2020-02-29')), 2),
+            self::from(Periodicity::HalfYearly, new IntervalProvider(Carbon::parse('2018-08-31'), Carbon::parse('2020-02-29')), 2),
+            self::from(Periodicity::HalfYearly, new IntervalProvider(Carbon::parse('2019-01-31'), Carbon::parse('2021-01-31')), 3),
+            self::from(Periodicity::HalfYearly, new IntervalProvider(Carbon::parse('2019-02-28'), Carbon::parse('2021-08-28')), 4),
+            self::from(Periodicity::HalfYearly, new IntervalProvider(Carbon::parse('2020-01-31'), Carbon::parse('2021-01-31')), 1),
+            self::from(Periodicity::HalfYearly, new IntervalProvider(Carbon::parse('2020-02-29'), Carbon::parse('2021-02-28')), 1),
+            self::from(Periodicity::HalfYearly, new IntervalProvider(Carbon::parse('2020-08-29'), Carbon::parse('2022-02-28')), 2),
+            self::from(Periodicity::HalfYearly, new IntervalProvider(Carbon::parse('2020-08-30'), Carbon::parse('2022-02-28')), 2),
+            self::from(Periodicity::HalfYearly, new IntervalProvider(Carbon::parse('2020-08-31'), Carbon::parse('2022-02-28')), 2),
 
-            CalculatorProvider::from(Periodicity::Yearly, new IntervalProvider(Carbon::now(), Carbon::now()->addYearsNoOverflow(3)), 2),
-            CalculatorProvider::from(Periodicity::Yearly, new IntervalProvider(Carbon::parse('2019-01-29'), Carbon::parse('2025-01-29')), 5),
-            CalculatorProvider::from(Periodicity::Yearly, new IntervalProvider(Carbon::parse('2020-02-29'), Carbon::parse('2031-02-28')), 10),
+            self::from(Periodicity::Yearly, new IntervalProvider(Carbon::now(), Carbon::now()->addYearsNoOverflow(3)), 2),
+            self::from(Periodicity::Yearly, new IntervalProvider(Carbon::parse('2019-01-29'), Carbon::parse('2025-01-29')), 5),
+            self::from(Periodicity::Yearly, new IntervalProvider(Carbon::parse('2020-02-29'), Carbon::parse('2031-02-28')), 10),
         ];
 
         /** @var IntervalProvider $interval */
@@ -119,7 +117,7 @@ readonly class CalculatorProvider
         }
     }
 
-    public static function from(Periodicity $periodicity, IntervalProvider $interval, int $skip = 0): CalculatorProvider
+    public static function from(Periodicity $periodicity, IntervalProvider $interval, int $skip = 0): self
     {
         return new self($interval, $periodicity, $skip);
     }

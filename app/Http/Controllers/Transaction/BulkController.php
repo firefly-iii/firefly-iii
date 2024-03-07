@@ -34,7 +34,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 /**
@@ -47,8 +46,6 @@ class BulkController extends Controller
 
     /**
      * BulkController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -70,13 +67,11 @@ class BulkController extends Controller
      *
      * TODO user wont be able to tell if the journal is part of a split.
      *
-     * @param array $journals
-     *
      * @return Factory|View
      */
     public function edit(array $journals)
     {
-        $subTitle = (string)trans('firefly.mass_bulk_journals');
+        $subTitle    = (string)trans('firefly.mass_bulk_journals');
 
         $this->rememberPreviousUrl('transactions.bulk-edit.url');
 
@@ -93,9 +88,7 @@ class BulkController extends Controller
     /**
      * Update all journals.
      *
-     * @param BulkEditJournalRequest $request
-     *
-     * @return Application|RedirectResponse|Redirector
+     * @return Application|Redirector|RedirectResponse
      */
     public function update(BulkEditJournalRequest $request)
     {
@@ -115,7 +108,7 @@ class BulkController extends Controller
                 $resultB = $this->updateJournalTags($journal, $tagsAction, explode(',', $request->convertString('tags')));
                 $resultC = $this->updateJournalCategory($journal, $ignoreCategory, $request->convertString('category'));
                 if ($resultA || $resultB || $resultC) {
-                    $count++;
+                    ++$count;
                     $collection->push($journal);
                 }
             }
@@ -128,41 +121,27 @@ class BulkController extends Controller
         }
 
         app('preferences')->mark();
-        $request->session()->flash('success', (string)trans_choice('firefly.mass_edited_transactions_success', $count));
+        $request->session()->flash('success', trans_choice('firefly.mass_edited_transactions_success', $count));
 
         // redirect to previous URL:
         return redirect($this->getPreviousUrl('transactions.bulk-edit.url'));
     }
 
-    /**
-     * @param TransactionJournal $journal
-     * @param bool               $ignoreUpdate
-     * @param int                $budgetId
-     *
-     * @return bool
-     */
     private function updateJournalBudget(TransactionJournal $journal, bool $ignoreUpdate, int $budgetId): bool
     {
         if (true === $ignoreUpdate) {
             return false;
         }
-        Log::debug(sprintf('Set budget to %d', $budgetId));
+        app('log')->debug(sprintf('Set budget to %d', $budgetId));
         $this->repository->updateBudget($journal, $budgetId);
 
         return true;
     }
 
-    /**
-     * @param TransactionJournal $journal
-     * @param string             $action
-     * @param array              $tags
-     *
-     * @return bool
-     */
     private function updateJournalTags(TransactionJournal $journal, string $action, array $tags): bool
     {
         if ('do_replace' === $action) {
-            Log::debug(sprintf('Set tags to %s', implode(',', $tags)));
+            app('log')->debug(sprintf('Set tags to %s', implode(',', $tags)));
             $this->repository->updateTags($journal, $tags);
         }
         if ('do_append' === $action) {
@@ -174,19 +153,12 @@ class BulkController extends Controller
         return true;
     }
 
-    /**
-     * @param TransactionJournal $journal
-     * @param bool               $ignoreUpdate
-     * @param string             $category
-     *
-     * @return bool
-     */
     private function updateJournalCategory(TransactionJournal $journal, bool $ignoreUpdate, string $category): bool
     {
         if (true === $ignoreUpdate) {
             return false;
         }
-        Log::debug(sprintf('Set budget to %s', $category));
+        app('log')->debug(sprintf('Set budget to %s', $category));
         $this->repository->updateCategory($journal, $category);
 
         return true;

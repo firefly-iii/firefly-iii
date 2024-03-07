@@ -29,7 +29,6 @@ use FireflyIII\Models\WebhookMessage;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
-use Str;
 
 /**
  * Class WebhookRepository
@@ -38,88 +37,63 @@ class WebhookRepository implements WebhookRepositoryInterface
 {
     private User $user;
 
-    /**
-     * @inheritDoc
-     */
     public function all(): Collection
     {
         return $this->user->webhooks()->get();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function destroy(Webhook $webhook): void
     {
         $webhook->delete();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function destroyAttempt(WebhookAttempt $attempt): void
     {
         $attempt->delete();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function destroyMessage(WebhookMessage $message): void
     {
         $message->delete();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getAttempts(WebhookMessage $webhookMessage): Collection
     {
         return $webhookMessage->webhookAttempts()->orderBy('created_at', 'DESC')->get(['webhook_attempts.*']);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getMessages(Webhook $webhook): Collection
     {
         return $webhook->webhookMessages()
-                       ->orderBy('created_at', 'DESC')
-                       ->get(['webhook_messages.*']);
+            ->orderBy('created_at', 'DESC')
+            ->get(['webhook_messages.*'])
+        ;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getReadyMessages(Webhook $webhook): Collection
     {
         return $webhook->webhookMessages()
-                       ->where('webhook_messages.sent', 0)
-                       ->where('webhook_messages.errored', 0)
-                       ->get(['webhook_messages.*'])
-                       ->filter(
-                           function (WebhookMessage $message) {
-                               return $message->webhookAttempts()->count() <= 2;
-                           }
-                       )->splice(0, 3);
+            ->where('webhook_messages.sent', 0)
+            ->where('webhook_messages.errored', 0)
+            ->get(['webhook_messages.*'])
+            ->filter(
+                static function (WebhookMessage $message) {
+                    return $message->webhookAttempts()->count() <= 2;
+                }
+            )->splice(0, 3)
+        ;
     }
 
-    /**
-     * @param User|Authenticatable|null $user
-     */
-    public function setUser(User | Authenticatable | null $user): void
+    public function setUser(null|Authenticatable|User $user): void
     {
-        if (null !== $user) {
+        if ($user instanceof User) {
             $this->user = $user;
         }
     }
 
-    /**
-     * @inheritDoc
-     */
     public function store(array $data): Webhook
     {
-        $secret   = Str::random(24);
+        $secret   = \Str::random(24);
         $fullData = [
             'user_id'       => $this->user->id,
             'user_group_id' => $this->user->user_group_id,
@@ -135,9 +109,6 @@ class WebhookRepository implements WebhookRepositoryInterface
         return Webhook::create($fullData);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function update(Webhook $webhook, array $data): Webhook
     {
         $webhook->active   = $data['active'] ?? $webhook->active;
@@ -148,7 +119,7 @@ class WebhookRepository implements WebhookRepositoryInterface
         $webhook->url      = $data['url'] ?? $webhook->url;
 
         if (true === $data['secret']) {
-            $secret          = Str::random(24);
+            $secret          = \Str::random(24);
             $webhook->secret = $secret;
         }
 

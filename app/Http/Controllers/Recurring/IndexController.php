@@ -34,12 +34,9 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\View\View;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
- *
  * Class IndexController
  */
 class IndexController extends Controller
@@ -50,8 +47,6 @@ class IndexController extends Controller
 
     /**
      * IndexController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -74,20 +69,17 @@ class IndexController extends Controller
      * TODO the notes of a recurrence are pretty pointless at this moment.
      * Show all recurring transactions.
      *
-     * @param Request $request
-     *
      * @return Factory|View
+     *
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function index(Request $request)
     {
-        $page       = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
-        $pageSize   = (int)app('preferences')->get('listPageSize', 50)->data;
-        $collection = $this->recurringRepos->get();
-        $today      = today(config('app.timezone'));
-        $year       = today(config('app.timezone'));
+        $page        = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
+        $pageSize    = (int)app('preferences')->get('listPageSize', 50)->data;
+        $collection  = $this->recurringRepos->get();
+        $today       = today(config('app.timezone'));
+        $year        = today(config('app.timezone'));
 
         // split collection
         $total       = $collection->count();
@@ -97,7 +89,8 @@ class IndexController extends Controller
         $transformer = app(RecurrenceTransformer::class);
         $transformer->setParameters(new ParameterBag());
 
-        $recurring = [];
+        $recurring   = [];
+
         /** @var Recurrence $recurrence */
         foreach ($recurrences as $recurrence) {
             $year->addYear();
@@ -111,7 +104,7 @@ class IndexController extends Controller
             $array['repeat_until'] = null === $array['repeat_until'] ? null : new Carbon($array['repeat_until']);
             $array['latest_date']  = null === $array['latest_date'] ? null : new Carbon($array['latest_date']);
             // lazy but OK
-            $array['attachments'] = $recurrence->attachments()->count();
+            $array['attachments']  = $recurrence->attachments()->count();
 
             // make carbon objects out of occurrences
             foreach ($array['repetitions'] as $repIndex => $repetition) {
@@ -120,11 +113,11 @@ class IndexController extends Controller
                 }
             }
 
-            $recurring[] = $array;
+            $recurring[]           = $array;
         }
-        $paginator = new LengthAwarePaginator($recurring, $total, $pageSize, $page);
+        $paginator   = new LengthAwarePaginator($recurring, $total, $pageSize, $page);
         $paginator->setPath(route('recurring.index'));
-        $today = today(config('app.timezone'));
+        $today       = today(config('app.timezone'));
 
         $this->verifyRecurringCronJob();
 

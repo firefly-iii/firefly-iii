@@ -28,7 +28,7 @@ Route::group(
         'prefix'    => '',
         'as'        => 'api.v1.cron.',
     ],
-    static function () {
+    static function (): void {
         Route::get('{cliToken}', ['uses' => 'CronController@cron', 'as' => 'index']);
     }
 );

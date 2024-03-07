@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * UserGroupFactory.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -37,19 +36,16 @@ use FireflyIII\Models\UserRole;
 class UserGroupFactory
 {
     /**
-     * @param array $data
-     *
-     * @return UserGroup
      * @throws FireflyException
      */
     public function create(array $data): UserGroup
     {
-        $userGroup        = new UserGroup();
-        $userGroup->title = $data['title'];
+        $userGroup                      = new UserGroup();
+        $userGroup->title               = $data['title'];
         $userGroup->save();
 
         // grab the OWNER role:
-        $role = UserRole::whereTitle(UserRoleEnum::OWNER->value)->first();
+        $role                           = UserRole::whereTitle(UserRoleEnum::OWNER->value)->first();
         if (null === $role) {
             throw new FireflyException('Role "owner" does not exist.');
         }
@@ -62,5 +58,4 @@ class UserGroupFactory
 
         return $userGroup;
     }
-
 }

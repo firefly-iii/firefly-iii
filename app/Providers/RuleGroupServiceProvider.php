@@ -36,9 +36,7 @@ class RuleGroupServiceProvider extends ServiceProvider
     /**
      * Bootstrap the application services.
      */
-    public function boot(): void
-    {
-    }
+    public function boot(): void {}
 
     /**
      * Register the application services.
@@ -47,7 +45,7 @@ class RuleGroupServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             RuleGroupRepositoryInterface::class,
-            function (Application $app) {
+            static function (Application $app) {
                 /** @var RuleGroupRepository $repository */
                 $repository = app(RuleGroupRepository::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)

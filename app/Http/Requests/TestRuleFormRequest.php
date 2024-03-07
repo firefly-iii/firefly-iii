@@ -26,22 +26,20 @@ namespace FireflyIII\Http\Requests;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\GetRuleConfiguration;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Validator;
 
 /**
  * Class TestRuleFormRequest.
- *
-
  */
 class TestRuleFormRequest extends FormRequest
 {
-    use GetRuleConfiguration;
     use ChecksLogin;
+    use GetRuleConfiguration;
 
     /**
      * Rules for this request.
      * TODO these rules are not valid anymore.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -49,8 +47,15 @@ class TestRuleFormRequest extends FormRequest
         $validTriggers = $this->getTriggers();
 
         return [
-            'rule-trigger.*'       => 'required|max:1024|min:1|in:' . implode(',', $validTriggers),
+            'rule-trigger.*'       => 'required|max:1024|min:1|in:'.implode(',', $validTriggers),
             'rule-trigger-value.*' => 'required|max:1024|min:1|ruleTriggerValue',
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        if ($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+        }
     }
 }

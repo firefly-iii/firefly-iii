@@ -29,6 +29,7 @@ use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 
 /**
@@ -36,13 +37,11 @@ use Illuminate\Validation\Validator;
  */
 class UserUpdateRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Logged in + owner
-     *
-     * @return bool
      */
     public function authorize(): bool
     {
@@ -51,8 +50,6 @@ class UserUpdateRequest extends FormRequest
 
     /**
      * Get all data from the request.
-     *
-     * @return array
      */
     public function getAll(): array
     {
@@ -71,8 +68,6 @@ class UserUpdateRequest extends FormRequest
 
     /**
      * The rules that the incoming request must be matched against.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -89,17 +84,13 @@ class UserUpdateRequest extends FormRequest
 
     /**
      * Configure the validator instance.
-     *
-     * @param Validator $validator
-     *
-     * @return void
      */
     public function withValidator(Validator $validator): void
     {
-        /** @var User|null $current */
+        /** @var null|User $current */
         $current = $this->route()->parameter('user');
         $validator->after(
-            static function (Validator $validator) use ($current) {
+            static function (Validator $validator) use ($current): void {
                 $isAdmin = auth()->user()->hasRole('owner');
                 // not admin, and not own user?
                 if (auth()->check() && false === $isAdmin && $current?->id !== auth()->user()->id) {
@@ -107,5 +98,8 @@ class UserUpdateRequest extends FormRequest
                 }
             }
         );
+        if ($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+        }
     }
 }

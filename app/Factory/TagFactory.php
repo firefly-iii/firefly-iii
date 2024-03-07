@@ -26,7 +26,6 @@ namespace FireflyIII\Factory;
 use FireflyIII\Models\Location;
 use FireflyIII\Models\Tag;
 use FireflyIII\User;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class TagFactory
@@ -35,20 +34,15 @@ class TagFactory
 {
     private User $user;
 
-    /**
-     * @param string $tag
-     *
-     * @return Tag|null
-     */
     public function findOrCreate(string $tag): ?Tag
     {
-        $tag = trim($tag);
-        Log::debug(sprintf('Now in TagFactory::findOrCreate("%s")', $tag));
+        $tag    = trim($tag);
+        app('log')->debug(sprintf('Now in TagFactory::findOrCreate("%s")', $tag));
 
-        /** @var Tag|null $dbTag */
-        $dbTag = $this->user->tags()->where('tag', $tag)->first();
+        /** @var null|Tag $dbTag */
+        $dbTag  = $this->user->tags()->where('tag', $tag)->first();
         if (null !== $dbTag) {
-            Log::debug(sprintf('Tag exists (#%d), return it.', $dbTag->id));
+            app('log')->debug(sprintf('Tag exists (#%d), return it.', $dbTag->id));
 
             return $dbTag;
         }
@@ -63,20 +57,15 @@ class TagFactory
             ]
         );
         if (null === $newTag) {
-            Log::error(sprintf('TagFactory::findOrCreate("%s") but tag is unexpectedly NULL!', $tag));
+            app('log')->error(sprintf('TagFactory::findOrCreate("%s") but tag is unexpectedly NULL!', $tag));
 
             return null;
         }
-        Log::debug(sprintf('Created new tag #%d ("%s")', $newTag->id, $newTag->tag));
+        app('log')->debug(sprintf('Created new tag #%d ("%s")', $newTag->id, $newTag->tag));
 
         return $newTag;
     }
 
-    /**
-     * @param array $data
-     *
-     * @return Tag|null
-     */
     public function create(array $data): ?Tag
     {
         $zoomLevel = 0 === (int)$data['zoom_level'] ? null : (int)$data['zoom_level'];
@@ -93,6 +82,8 @@ class TagFactory
             'longitude'     => null,
             'zoomLevel'     => null,
         ];
+
+        /** @var null|Tag $tag */
         $tag       = Tag::create($array);
         if (null !== $tag && null !== $latitude && null !== $longitude) {
             // create location object.
@@ -107,9 +98,6 @@ class TagFactory
         return $tag;
     }
 
-    /**
-     * @param User $user
-     */
     public function setUser(User $user): void
     {
         $this->user = $user;

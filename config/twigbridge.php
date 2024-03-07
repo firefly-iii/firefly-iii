@@ -22,8 +22,7 @@
 
 declare(strict_types=1);
 
-
-/**
+/*
  * This file is part of the TwigBridge package.
  *
  * @copyright Robert Crowe <hello@vivalacrowe.com>
@@ -53,12 +52,9 @@ use TwigBridge\Extension\Loader\Filters;
 use TwigBridge\Extension\Loader\Functions;
 use TwigBridge\Extension\Loader\Globals;
 
-/**
- * Configuration options for Twig.
- */
+// Configuration options for Twig.
 return [
-
-    'twig' => [
+    'twig'       => [
         'extension'    => 'twig',
         'environment'  => [
             'debug'            => env('APP_DEBUG', false),
@@ -95,7 +91,6 @@ return [
     ],
 
     'extensions' => [
-
         /*
         |--------------------------------------------------------------------------
         | Extensions
@@ -193,7 +188,6 @@ return [
                     'amountNoCurrency',
                     'percentage',
                     'objectGroup',
-
                 ],
             ],
             'AccountForm'   => [

@@ -31,8 +31,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class HomeController.
@@ -62,8 +60,6 @@ class UpdateController extends Controller
      * Show page with update options.
      *
      * @return Factory|View
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function index()
     {
@@ -79,7 +75,7 @@ class UpdateController extends Controller
             1  => (string)trans('firefly.updates_enable_check'),
         ];
 
-        $channelOptions = [
+        $channelOptions  = [
             'stable' => (string)trans('firefly.update_channel_stable'),
             'beta'   => (string)trans('firefly.update_channel_beta'),
             'alpha'  => (string)trans('firefly.update_channel_alpha'),
@@ -91,9 +87,7 @@ class UpdateController extends Controller
     /**
      * Post new settings.
      *
-     * @param Request $request
-     *
-     * @return RedirectResponse|Redirector
+     * @return Redirector|RedirectResponse
      */
     public function post(Request $request)
     {

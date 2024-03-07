@@ -40,17 +40,16 @@ class DynamicConfigKey
         ];
 
     /**
-     * @param string $value
-     * @param Route  $route
-     *
-     * @return string
      * @throws NotFoundHttpException
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public static function routeBinder(string $value, Route $route): string
     {
         if (in_array($value, self::$accepted, true)) {
             return $value;
         }
+
         throw new NotFoundHttpException();
     }
 }

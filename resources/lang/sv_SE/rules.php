@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * rules.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -30,16 +29,16 @@ return [
     'inspect_transaction'                         => 'Inspect transaction ":title" @ Firefly III',
     'inspect_rule'                                => 'Inspect rule ":title" @ Firefly III',
     'journal_other_user'                          => 'This transaction doesn\'t belong to the user',
-    'no_such_journal'                             => 'This transaction doesn\'t exist',
+    'no_such_journal'                             => 'Denna transaktion finns inte',
     'journal_already_no_budget'                   => 'This transaction has no budget, so it cannot be removed',
     'journal_already_no_category'                 => 'This transaction had no category, so it cannot be removed',
     'journal_already_no_notes'                    => 'This transaction had no notes, so they cannot be removed',
-    'journal_not_found'                           => 'Firefly III can\'t find the requested transaction',
+    'journal_not_found'                           => 'Firefly III kan inte hitta den begärda transaktionen',
     'split_group'                                 => 'Firefly III cannot execute this action on a transaction with multiple splits',
     'is_already_withdrawal'                       => 'This transaction is already a withdrawal',
     'is_already_deposit'                          => 'This transaction is already a deposit',
     'is_already_transfer'                         => 'This transaction is already a transfer',
-    'is_not_transfer'                             => 'This transaction is not a transfer',
+    'is_not_transfer'                             => 'Denna transaktion är inte en överföring',
     'complex_error'                               => 'Something complicated went wrong. Sorry about that. Please inspect the logs of Firefly III',
     'no_valid_opposing'                           => 'Conversion failed because there is no valid account named ":account"',
     'new_notes_empty'                             => 'The notes to be set are empty',
@@ -51,11 +50,13 @@ return [
     'already_has_destination'                     => 'This transaction already has ":name" as the destination account',
     'already_has_source'                          => 'This transaction already has ":name" as the source account',
     'already_linked_to_subscription'              => 'The transaction is already linked to subscription ":name"',
-    'already_linked_to_category'                  => 'The transaction is already linked to category ":name"',
-    'already_linked_to_budget'                    => 'The transaction is already linked to budget ":name"',
+    'already_linked_to_category'                  => 'Transaktionen är redan länkad till kategorin ":name"',
+    'already_linked_to_budget'                    => 'Transaktionen är redan länkad till budgeten ":name"',
     'cannot_find_subscription'                    => 'Firefly III can\'t find subscription ":name"',
     'no_notes_to_move'                            => 'The transaction has no notes to move to the description field',
     'no_tags_to_remove'                           => 'The transaction has no tags to remove',
+    'not_withdrawal'                              => 'The transaction is not a withdrawal',
+    'not_deposit'                                 => 'The transaction is not a deposit',
     'cannot_find_tag'                             => 'Firefly III can\'t find tag ":tag"',
     'cannot_find_asset'                           => 'Firefly III can\'t find asset account ":name"',
     'cannot_find_accounts'                        => 'Firefly III can\'t find the source or destination account',

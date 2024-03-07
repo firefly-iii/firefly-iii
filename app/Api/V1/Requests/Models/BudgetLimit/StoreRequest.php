@@ -23,24 +23,21 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\BudgetLimit;
 
+use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class StoreRequest
- *
-
  */
 class StoreRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Get all data from the request.
-     *
-     * @return array
      */
     public function getAll(): array
     {
@@ -55,15 +52,13 @@ class StoreRequest extends FormRequest
 
     /**
      * The rules that the incoming request must be matched against.
-     *
-     * @return array
      */
     public function rules(): array
     {
         return [
             'start'         => 'required|before:end|date',
             'end'           => 'required|after:start|date',
-            'amount'        => 'required|gt:0',
+            'amount'        => ['required', new IsValidPositiveAmount()],
             'currency_id'   => 'numeric|exists:transaction_currencies,id',
             'currency_code' => 'min:3|max:51|exists:transaction_currencies,code',
         ];

@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * TriggerCreditCalculation.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -39,8 +38,6 @@ class TriggerCreditCalculation extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle(): int
     {
@@ -49,24 +46,17 @@ class TriggerCreditCalculation extends Command
         return 0;
     }
 
-    /**
-     * @return void
-     */
     private function processAccounts(): void
     {
         $accounts = Account::leftJoin('account_types', 'accounts.account_type_id', 'account_types.id')
-                           ->whereIn('account_types.type', config('firefly.valid_liabilities'))
-                           ->get(['accounts.*']);
+            ->whereIn('account_types.type', config('firefly.valid_liabilities'))
+            ->get(['accounts.*'])
+        ;
         foreach ($accounts as $account) {
             $this->processAccount($account);
         }
     }
 
-    /**
-     * @param Account $account
-     *
-     * @return void
-     */
     private function processAccount(Account $account): void
     {
         /** @var CreditRecalculateService $object */

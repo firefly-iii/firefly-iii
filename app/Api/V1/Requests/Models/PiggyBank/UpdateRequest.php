@@ -25,6 +25,7 @@ namespace FireflyIII\Api\V1\Requests\Models\PiggyBank;
 
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Rules\IsAssetAccountId;
+use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Rules\LessThanPiggyTarget;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
@@ -32,18 +33,14 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class UpdateRequest
- *
-
  */
 class UpdateRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Get all data from the request.
-     *
-     * @return array
      */
     public function getAll(): array
     {
@@ -65,8 +62,6 @@ class UpdateRequest extends FormRequest
 
     /**
      * The rules that the incoming request must be matched against.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -74,9 +69,9 @@ class UpdateRequest extends FormRequest
         $piggyBank = $this->route()->parameter('piggyBank');
 
         return [
-            'name'           => 'between:1,255|uniquePiggyBankForUser:' . $piggyBank->id,
-            'current_amount' => ['numeric', 'gte:0', new LessThanPiggyTarget()],
-            'target_amount'  => 'numeric|gte:0',
+            'name'           => 'min:1|max:255|uniquePiggyBankForUser:'.$piggyBank->id,
+            'current_amount' => ['nullable', new LessThanPiggyTarget(), new IsValidPositiveAmount()],
+            'target_amount'  => ['nullable', new IsValidPositiveAmount()],
             'start_date'     => 'date|nullable',
             'target_date'    => 'date|nullable|after:start_date',
             'notes'          => 'max:65000',

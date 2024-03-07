@@ -31,13 +31,13 @@ return new class () extends Migration {
     /**
      * Run the migrations.
      *
-     * @return void
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up(): void
     {
         if (!Schema::hasTable('audit_log_entries')) {
             try {
-                Schema::create('audit_log_entries', function (Blueprint $table) {
+                Schema::create('audit_log_entries', static function (Blueprint $table): void {
                     $table->id();
                     $table->timestamps();
                     $table->softDeletes();
@@ -61,8 +61,6 @@ return new class () extends Migration {
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down(): void
     {

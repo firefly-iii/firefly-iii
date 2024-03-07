@@ -33,19 +33,17 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait MetaCollection
  */
 trait MetaCollection
 {
-    /**
-     * @inheritDoc
-     */
     public function excludeBills(Collection $bills): GroupCollectorInterface
     {
         $this->withBillInformation();
-        $this->query->where(static function (EloquentBuilder $q1) use ($bills) {
+        $this->query->where(static function (EloquentBuilder $q1) use ($bills): void { // @phpstan-ignore-line
             $q1->whereNotIn('transaction_journals.bill_id', $bills->pluck('id')->toArray());
             $q1->orWhereNull('transaction_journals.bill_id');
         });
@@ -55,8 +53,6 @@ trait MetaCollection
 
     /**
      * Will include bill name + ID, if any.
-     *
-     * @return GroupCollectorInterface
      */
     public function withBillInformation(): GroupCollectorInterface
     {
@@ -74,16 +70,12 @@ trait MetaCollection
 
     /**
      * Exclude a specific budget.
-     *
-     * @param Budget $budget
-     *
-     * @return GroupCollectorInterface
      */
     public function excludeBudget(Budget $budget): GroupCollectorInterface
     {
         $this->withBudgetInformation();
 
-        $this->query->where(static function (EloquentBuilder $q2) use ($budget) {
+        $this->query->where(static function (EloquentBuilder $q2) use ($budget): void { // @phpstan-ignore-line
             $q2->where('budgets.id', '!=', $budget->id);
             $q2->orWhereNull('budgets.id');
         });
@@ -93,8 +85,6 @@ trait MetaCollection
 
     /**
      * Will include budget ID + name, if any.
-     *
-     * @return GroupCollectorInterface
      */
     public function withBudgetInformation(): GroupCollectorInterface
     {
@@ -112,14 +102,11 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function excludeBudgets(Collection $budgets): GroupCollectorInterface
     {
         if ($budgets->count() > 0) {
             $this->withBudgetInformation();
-            $this->query->where(static function (EloquentBuilder $q1) use ($budgets) {
+            $this->query->where(static function (EloquentBuilder $q1) use ($budgets): void { // @phpstan-ignore-line
                 $q1->whereNotIn('budgets.id', $budgets->pluck('id')->toArray());
                 $q1->orWhereNull('budgets.id');
             });
@@ -128,14 +115,11 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function excludeCategories(Collection $categories): GroupCollectorInterface
     {
         if ($categories->count() > 0) {
             $this->withCategoryInformation();
-            $this->query->where(static function (EloquentBuilder $q1) use ($categories) {
+            $this->query->where(static function (EloquentBuilder $q1) use ($categories): void { // @phpstan-ignore-line
                 $q1->whereNotIn('categories.id', $categories->pluck('id')->toArray());
                 $q1->orWhereNull('categories.id');
             });
@@ -146,8 +130,6 @@ trait MetaCollection
 
     /**
      * Will include category ID + name, if any.
-     *
-     * @return GroupCollectorInterface
      */
     public function withCategoryInformation(): GroupCollectorInterface
     {
@@ -167,16 +149,12 @@ trait MetaCollection
 
     /**
      * Exclude a specific category.
-     *
-     * @param Category $category
-     *
-     * @return GroupCollectorInterface
      */
     public function excludeCategory(Category $category): GroupCollectorInterface
     {
         $this->withCategoryInformation();
 
-        $this->query->where(static function (EloquentBuilder $q2) use ($category) {
+        $this->query->where(static function (EloquentBuilder $q2) use ($category): void { // @phpstan-ignore-line
             $q2->where('categories.id', '!=', $category->id);
             $q2->orWhereNull('categories.id');
         });
@@ -184,9 +162,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function excludeExternalId(string $externalId): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
@@ -204,14 +179,11 @@ trait MetaCollection
         if (false === $this->hasJoinedMetaTables) {
             $this->hasJoinedMetaTables = true;
             $this->query->leftJoin('journal_meta', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id');
-            $this->fields[] = 'journal_meta.name as meta_name';
-            $this->fields[] = 'journal_meta.data as meta_data';
+            $this->fields[]            = 'journal_meta.name as meta_name';
+            $this->fields[]            = 'journal_meta.data as meta_data';
         }
     }
 
-    /**
-     * @inheritDoc
-     */
     public function excludeExternalUrl(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
@@ -221,12 +193,9 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function excludeInternalReference(string $internalReference): GroupCollectorInterface
     {
-        $internalReference = json_encode($internalReference);
+        $internalReference = (string)json_encode($internalReference);
         $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
 
         $this->joinMetaDataTables();
@@ -236,9 +205,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function excludeRecurrenceId(string $recurringId): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
@@ -248,12 +214,9 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function externalIdContains(string $externalId): GroupCollectorInterface
     {
-        $externalId = json_encode($externalId);
+        $externalId = (string)json_encode($externalId);
         $externalId = str_replace('\\', '\\\\', trim($externalId, '"'));
 
         $this->joinMetaDataTables();
@@ -263,12 +226,9 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function externalIdDoesNotContain(string $externalId): GroupCollectorInterface
     {
-        $externalId = json_encode($externalId);
+        $externalId = (string)json_encode($externalId);
         $externalId = str_replace('\\', '\\\\', trim($externalId, '"'));
 
         $this->joinMetaDataTables();
@@ -278,12 +238,9 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function externalIdDoesNotEnd(string $externalId): GroupCollectorInterface
     {
-        $externalId = json_encode($externalId);
+        $externalId = (string)json_encode($externalId);
         $externalId = str_replace('\\', '\\\\', trim($externalId, '"'));
 
         $this->joinMetaDataTables();
@@ -293,12 +250,9 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function externalIdDoesNotStart(string $externalId): GroupCollectorInterface
     {
-        $externalId = json_encode($externalId);
+        $externalId = (string)json_encode($externalId);
         $externalId = str_replace('\\', '\\\\', trim($externalId, '"'));
 
         $this->joinMetaDataTables();
@@ -308,12 +262,9 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function externalIdEnds(string $externalId): GroupCollectorInterface
     {
-        $externalId = json_encode($externalId);
+        $externalId = (string)json_encode($externalId);
         $externalId = str_replace('\\', '\\\\', trim($externalId, '"'));
 
         $this->joinMetaDataTables();
@@ -323,12 +274,9 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function externalIdStarts(string $externalId): GroupCollectorInterface
     {
-        $externalId = json_encode($externalId);
+        $externalId = (string)json_encode($externalId);
         $externalId = str_replace('\\', '\\\\', trim($externalId, '"'));
 
         $this->joinMetaDataTables();
@@ -338,15 +286,10 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @param string $url
-     *
-     * @return GroupCollectorInterface
-     */
     public function externalUrlContains(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
-        $url = json_encode($url);
+        $url = (string)json_encode($url);
         $url = str_replace('\\', '\\\\', trim($url, '"'));
         $this->query->where('journal_meta.name', '=', 'external_url');
         $this->query->where('journal_meta.data', 'LIKE', sprintf('%%%s%%', $url));
@@ -354,15 +297,10 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @param string $url
-     *
-     * @return GroupCollectorInterface
-     */
     public function externalUrlDoesNotContain(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
-        $url = json_encode($url);
+        $url = (string)json_encode($url);
         $url = str_replace('\\', '\\\\', trim($url, '"'));
         $this->query->where('journal_meta.name', '=', 'external_url');
         $this->query->where('journal_meta.data', 'NOT LIKE', sprintf('%%%s%%', $url));
@@ -370,15 +308,10 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @param string $url
-     *
-     * @return GroupCollectorInterface
-     */
     public function externalUrlDoesNotEnd(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
-        $url = json_encode($url);
+        $url = (string)json_encode($url);
         $url = str_replace('\\', '\\\\', ltrim($url, '"'));
         $this->query->where('journal_meta.name', '=', 'external_url');
         $this->query->where('journal_meta.data', 'NOT LIKE', sprintf('%%%s', $url));
@@ -386,17 +319,12 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @param string $url
-     *
-     * @return GroupCollectorInterface
-     */
     public function externalUrlDoesNotStart(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
-        $url = json_encode($url);
+        $url = (string)json_encode($url);
         $url = str_replace('\\', '\\\\', rtrim($url, '"'));
-        //var_dump($url);
+        // var_dump($url);
 
         $this->query->where('journal_meta.name', '=', 'external_url');
         $this->query->where('journal_meta.data', 'NOT LIKE', sprintf('%s%%', $url));
@@ -404,15 +332,10 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @param string $url
-     *
-     * @return GroupCollectorInterface
-     */
     public function externalUrlEnds(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
-        $url = json_encode($url);
+        $url = (string)json_encode($url);
         $url = str_replace('\\', '\\\\', ltrim($url, '"'));
         $this->query->where('journal_meta.name', '=', 'external_url');
         $this->query->where('journal_meta.data', 'LIKE', sprintf('%%%s', $url));
@@ -420,17 +343,12 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @param string $url
-     *
-     * @return GroupCollectorInterface
-     */
     public function externalUrlStarts(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
-        $url = json_encode($url);
+        $url = (string)json_encode($url);
         $url = str_replace('\\', '\\\\', rtrim($url, '"'));
-        //var_dump($url);
+        // var_dump($url);
 
         $this->query->where('journal_meta.name', '=', 'external_url');
         $this->query->where('journal_meta.data', 'LIKE', sprintf('%s%%', $url));
@@ -440,8 +358,6 @@ trait MetaCollection
 
     /**
      * Where has no tags.
-     *
-     * @return GroupCollectorInterface
      */
     public function hasAnyTag(): GroupCollectorInterface
     {
@@ -451,9 +367,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @return GroupCollectorInterface
-     */
     public function withTagInformation(): GroupCollectorInterface
     {
         $this->fields[] = 'tags.id as tag_id';
@@ -482,15 +395,12 @@ trait MetaCollection
         }
     }
 
-    /**
-     * @inheritDoc
-     */
     public function internalReferenceContains(string $internalReference): GroupCollectorInterface
     {
-        $internalReference = json_encode($internalReference);
+        $internalReference = (string)json_encode($internalReference);
         $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
-        //var_dump($internalReference);
-        //exit;
+        // var_dump($internalReference);
+        // exit;
 
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'internal_reference');
@@ -499,12 +409,9 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function internalReferenceDoesNotContain(string $internalReference): GroupCollectorInterface
     {
-        $internalReference = json_encode($internalReference);
+        $internalReference = (string)json_encode($internalReference);
         $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
 
         $this->joinMetaDataTables();
@@ -514,12 +421,9 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function internalReferenceDoesNotEnd(string $internalReference): GroupCollectorInterface
     {
-        $internalReference = json_encode($internalReference);
+        $internalReference = (string)json_encode($internalReference);
         $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
 
         $this->joinMetaDataTables();
@@ -529,12 +433,9 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function internalReferenceDoesNotStart(string $internalReference): GroupCollectorInterface
     {
-        $internalReference = json_encode($internalReference);
+        $internalReference = (string)json_encode($internalReference);
         $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
 
         $this->joinMetaDataTables();
@@ -544,12 +445,9 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function internalReferenceEnds(string $internalReference): GroupCollectorInterface
     {
-        $internalReference = json_encode($internalReference);
+        $internalReference = (string)json_encode($internalReference);
         $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
 
         $this->joinMetaDataTables();
@@ -559,12 +457,9 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function internalReferenceStarts(string $internalReference): GroupCollectorInterface
     {
-        $internalReference = json_encode($internalReference);
+        $internalReference = (string)json_encode($internalReference);
         $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
 
         $this->joinMetaDataTables();
@@ -574,11 +469,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @param string $value
-     *
-     * @return GroupCollectorInterface
-     */
     public function notesContain(string $value): GroupCollectorInterface
     {
         $this->withNotes();
@@ -587,16 +477,13 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function withNotes(): GroupCollectorInterface
     {
         if (false === $this->hasNotesInformation) {
             // join bill table
             $this->query->leftJoin(
                 'notes',
-                static function (JoinClause $join) {
+                static function (JoinClause $join): void {
                     $join->on('notes.noteable_id', '=', 'transaction_journals.id');
                     $join->where('notes.noteable_type', '=', 'FireflyIII\Models\TransactionJournal');
                     $join->whereNull('notes.deleted_at');
@@ -610,15 +497,10 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @param string $value
-     *
-     * @return GroupCollectorInterface
-     */
     public function notesDoNotContain(string $value): GroupCollectorInterface
     {
         $this->withNotes();
-        $this->query->where(static function (Builder $q) use ($value) {
+        $this->query->where(static function (Builder $q) use ($value): void { // @phpstan-ignore-line
             $q->whereNull('notes.text');
             $q->orWhere('notes.text', 'NOT LIKE', sprintf('%%%s%%', $value));
         });
@@ -626,15 +508,10 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @param string $value
-     *
-     * @return GroupCollectorInterface
-     */
     public function notesDontEndWith(string $value): GroupCollectorInterface
     {
         $this->withNotes();
-        $this->query->where(static function (Builder $q) use ($value) {
+        $this->query->where(static function (Builder $q) use ($value): void { // @phpstan-ignore-line
             $q->whereNull('notes.text');
             $q->orWhere('notes.text', 'NOT LIKE', sprintf('%%%s', $value));
         });
@@ -642,15 +519,10 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @param string $value
-     *
-     * @return GroupCollectorInterface
-     */
     public function notesDontStartWith(string $value): GroupCollectorInterface
     {
         $this->withNotes();
-        $this->query->where(static function (Builder $q) use ($value) {
+        $this->query->where(static function (Builder $q) use ($value): void { // @phpstan-ignore-line
             $q->whereNull('notes.text');
             $q->orWhere('notes.text', 'NOT LIKE', sprintf('%s%%', $value));
         });
@@ -658,11 +530,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @param string $value
-     *
-     * @return GroupCollectorInterface
-     */
     public function notesEndWith(string $value): GroupCollectorInterface
     {
         $this->withNotes();
@@ -671,11 +538,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @param string $value
-     *
-     * @return GroupCollectorInterface
-     */
     public function notesExactly(string $value): GroupCollectorInterface
     {
         $this->withNotes();
@@ -684,15 +546,10 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @param string $value
-     *
-     * @return GroupCollectorInterface
-     */
     public function notesExactlyNot(string $value): GroupCollectorInterface
     {
         $this->withNotes();
-        $this->query->where(static function (Builder $q) use ($value) {
+        $this->query->where(static function (Builder $q) use ($value): void { // @phpstan-ignore-line
             $q->whereNull('notes.text');
             $q->orWhere('notes.text', '!=', sprintf('%s', $value));
         });
@@ -700,11 +557,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @param string $value
-     *
-     * @return GroupCollectorInterface
-     */
     public function notesStartWith(string $value): GroupCollectorInterface
     {
         $this->withNotes();
@@ -714,11 +566,64 @@ trait MetaCollection
     }
 
     /**
+     * Limit results to a SPECIFIC set of tags.
+     */
+    public function setAllTags(Collection $tags): GroupCollectorInterface
+    {
+        Log::debug(sprintf('Now in setAllTags(%d tag(s))', $tags->count()));
+        $this->withTagInformation();
+        $this->query->whereNotNull('tag_transaction_journal.tag_id');
+
+        // this method adds a "postFilter" to the collector.
+        $list                = $tags->pluck('tag')->toArray();
+        $list                = array_map('strtolower', $list);
+        $filter              = static function (array $object) use ($list): bool|array {
+            $includedJournals       = [];
+            $return                 = $object;
+            unset($return['transactions']);
+            $return['transactions'] = [];
+            Log::debug(sprintf('Now in setAllTags(%s) filter', implode(', ', $list)));
+            $expectedTagCount       = count($list);
+            $foundTagCount          = 0;
+            foreach ($object['transactions'] as $transaction) {
+                $transactionTagCount = count($transaction['tags']);
+                app('log')->debug(sprintf('Transaction #%d has %d tag(s)', $transaction['transaction_journal_id'], $transactionTagCount));
+                if ($transactionTagCount < $expectedTagCount) {
+                    app('log')->debug(sprintf('Transaction has %d tag(s), we expect %d tag(s), return false.', $transactionTagCount, $expectedTagCount));
+
+                    return false;
+                }
+                foreach ($transaction['tags'] as $tag) {
+                    Log::debug(sprintf('"%s" versus', strtolower($tag['name'])), $list);
+                    if (in_array(strtolower($tag['name']), $list, true)) {
+                        app('log')->debug(sprintf('Transaction has tag "%s" so count++.', $tag['name']));
+                        ++$foundTagCount;
+                        $journalId = $transaction['transaction_journal_id'];
+                        // #8377 prevent adding a transaction twice when multiple tag searches find this transaction
+                        if (!in_array($journalId, $includedJournals, true)) {
+                            $includedJournals[]       = $journalId;
+                            $return['transactions'][] = $transaction;
+                        }
+                    }
+                }
+            }
+            Log::debug(sprintf('Found %d tags, need at least %d.', $foundTagCount, $expectedTagCount));
+
+            // found at least the expected tags.
+            $result                 = $foundTagCount >= $expectedTagCount;
+            if (true === $result) {
+                return $return;
+            }
+
+            return false;
+        };
+        $this->postFilters[] = $filter;
+
+        return $this;
+    }
+
+    /**
      * Limit the search to a specific bill.
-     *
-     * @param Bill $bill
-     *
-     * @return GroupCollectorInterface
      */
     public function setBill(Bill $bill): GroupCollectorInterface
     {
@@ -730,10 +635,6 @@ trait MetaCollection
 
     /**
      * Limit the search to a specific set of bills.
-     *
-     * @param Collection $bills
-     *
-     * @return GroupCollectorInterface
      */
     public function setBills(Collection $bills): GroupCollectorInterface
     {
@@ -745,10 +646,6 @@ trait MetaCollection
 
     /**
      * Limit the search to a specific budget.
-     *
-     * @param Budget $budget
-     *
-     * @return GroupCollectorInterface
      */
     public function setBudget(Budget $budget): GroupCollectorInterface
     {
@@ -760,10 +657,6 @@ trait MetaCollection
 
     /**
      * Limit the search to a specific set of budgets.
-     *
-     * @param Collection $budgets
-     *
-     * @return GroupCollectorInterface
      */
     public function setBudgets(Collection $budgets): GroupCollectorInterface
     {
@@ -777,10 +670,6 @@ trait MetaCollection
 
     /**
      * Limit the search to a specific bunch of categories.
-     *
-     * @param Collection $categories
-     *
-     * @return GroupCollectorInterface
      */
     public function setCategories(Collection $categories): GroupCollectorInterface
     {
@@ -794,10 +683,6 @@ trait MetaCollection
 
     /**
      * Limit the search to a specific category.
-     *
-     * @param Category $category
-     *
-     * @return GroupCollectorInterface
      */
     public function setCategory(Category $category): GroupCollectorInterface
     {
@@ -807,9 +692,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function setExternalId(string $externalId): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
@@ -819,9 +701,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function setExternalUrl(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
@@ -831,12 +710,9 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function setInternalReference(string $internalReference): GroupCollectorInterface
     {
-        $internalReference = json_encode($internalReference);
+        $internalReference = (string)json_encode($internalReference);
         $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
 
         $this->joinMetaDataTables();
@@ -846,9 +722,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function setRecurrenceId(string $recurringId): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
@@ -858,9 +731,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function setSepaCT(string $sepaCT): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
@@ -873,41 +743,50 @@ trait MetaCollection
 
     /**
      * Limit results to a specific tag.
-     *
-     * @param Tag $tag
-     *
-     * @return GroupCollectorInterface
      */
     public function setTag(Tag $tag): GroupCollectorInterface
     {
         $this->withTagInformation();
-        $this->query->where('tag_transaction_journal.tag_id', $tag->id);
+        $this->setTags(new Collection([$tag]));
 
         return $this;
     }
 
     /**
-     * Limit results to a specific set of tags.
-     *
-     * @param Collection $tags
-     *
-     * @return GroupCollectorInterface
+     * Limit results to any of the tags in the list.
      */
     public function setTags(Collection $tags): GroupCollectorInterface
     {
+        Log::debug(sprintf('Now in setTags(%d tag(s))', $tags->count()));
         $this->withTagInformation();
-        $this->tags = array_merge($this->tags, $tags->pluck('id')->toArray());
-        $this->query->whereIn('tag_transaction_journal.tag_id', $this->tags);
+        $this->query->whereNotNull('tag_transaction_journal.tag_id');
+
+        // this method adds a "postFilter" to the collector.
+        $list                = $tags->pluck('tag')->toArray();
+        $list                = array_map('strtolower', $list);
+        $filter              = static function (array $object) use ($list): bool {
+            Log::debug(sprintf('Now in setTags(%s) filter', implode(', ', $list)));
+            foreach ($object['transactions'] as $transaction) {
+                foreach ($transaction['tags'] as $tag) {
+                    Log::debug(sprintf('"%s" versus', strtolower($tag['name'])), $list);
+                    if (in_array(strtolower($tag['name']), $list, true)) {
+                        app('log')->debug(sprintf('Transaction has tag "%s" so return true.', $tag['name']));
+
+                        return true;
+                    }
+                }
+            }
+            app('log')->debug('Transaction has no tags from the list, so return false.');
+
+            return false;
+        };
+        $this->postFilters[] = $filter;
 
         return $this;
     }
 
     /**
      * Without tags
-     *
-     * @param Collection $tags
-     *
-     * @return GroupCollectorInterface
      */
     public function setWithoutSpecificTags(Collection $tags): GroupCollectorInterface
     {
@@ -915,25 +794,28 @@ trait MetaCollection
 
         // this method adds a "postFilter" to the collector.
         $list                = $tags->pluck('tag')->toArray();
-        $filter              = function (int $index, array $object) use ($list): bool {
+        $list                = array_map('strtolower', $list);
+        $filter              = static function (array $object) use ($list): bool {
+            Log::debug(sprintf('Now in setWithoutSpecificTags(%s) filter', implode(', ', $list)));
             foreach ($object['transactions'] as $transaction) {
+                app('log')->debug(sprintf('Transaction has %d tag(s)', count($transaction['tags'])));
                 foreach ($transaction['tags'] as $tag) {
-                    if (in_array($tag['name'], $list, true)) {
+                    Log::debug(sprintf('"%s" versus', strtolower($tag['name'])), $list);
+                    if (in_array(strtolower($tag['name']), $list, true)) {
+                        app('log')->debug(sprintf('Transaction has tag "%s", but should not have it, return false.', $tag['name']));
+
                         return false;
                     }
                 }
             }
+
             return true;
         };
         $this->postFilters[] = $filter;
 
-
         return $this;
     }
 
-    /**
-     * @return GroupCollectorInterface
-     */
     public function withAnyNotes(): GroupCollectorInterface
     {
         $this->withNotes();
@@ -944,8 +826,6 @@ trait MetaCollection
 
     /**
      * Limit results to transactions without a bill.
-     *
-     * @return GroupCollectorInterface
      */
     public function withBill(): GroupCollectorInterface
     {
@@ -957,8 +837,6 @@ trait MetaCollection
 
     /**
      * Limit results to a transactions without a budget..
-     *
-     * @return GroupCollectorInterface
      */
     public function withBudget(): GroupCollectorInterface
     {
@@ -970,8 +848,6 @@ trait MetaCollection
 
     /**
      * Limit results to a transactions without a category.
-     *
-     * @return GroupCollectorInterface
      */
     public function withCategory(): GroupCollectorInterface
     {
@@ -981,9 +857,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function withExternalId(): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
@@ -993,9 +866,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function withExternalUrl(): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
@@ -1007,8 +877,6 @@ trait MetaCollection
 
     /**
      * Limit results to a transactions without a bill.
-     *
-     * @return GroupCollectorInterface
      */
     public function withoutBill(): GroupCollectorInterface
     {
@@ -1019,8 +887,6 @@ trait MetaCollection
 
     /**
      * Limit results to a transactions without a budget..
-     *
-     * @return GroupCollectorInterface
      */
     public function withoutBudget(): GroupCollectorInterface
     {
@@ -1032,8 +898,6 @@ trait MetaCollection
 
     /**
      * Limit results to a transactions without a category.
-     *
-     * @return GroupCollectorInterface
      */
     public function withoutCategory(): GroupCollectorInterface
     {
@@ -1043,20 +907,17 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function withoutExternalId(): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
         // TODO not sure if this will work properly.
-        $this->query->where(function (Builder $q1) {
-            $q1->where(function (Builder $q2) {
+        $this->query->where(static function (Builder $q1): void { // @phpstan-ignore-line
+            $q1->where(static function (Builder $q2): void {
                 $q2->where('journal_meta.name', '=', 'external_id');
                 $q2->whereNull('journal_meta.data');
-            })->orWhere(function (Builder $q3) {
+            })->orWhere(static function (Builder $q3): void {
                 $q3->where('journal_meta.name', '!=', 'external_id');
-            })->orWhere(function (Builder $q4) {
+            })->orWhere(static function (Builder $q4): void {
                 $q4->whereNull('journal_meta.name');
             });
         });
@@ -1064,20 +925,17 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function withoutExternalUrl(): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
         // TODO not sure if this will work properly.
-        $this->query->where(function (Builder $q1) {
-            $q1->where(function (Builder $q2) {
+        $this->query->where(static function (Builder $q1): void { // @phpstan-ignore-line
+            $q1->where(static function (Builder $q2): void {
                 $q2->where('journal_meta.name', '=', 'external_url');
                 $q2->whereNull('journal_meta.data');
-            })->orWhere(function (Builder $q3) {
+            })->orWhere(static function (Builder $q3): void {
                 $q3->where('journal_meta.name', '!=', 'external_url');
-            })->orWhere(function (Builder $q4) {
+            })->orWhere(static function (Builder $q4): void {
                 $q4->whereNull('journal_meta.name');
             });
         });
@@ -1085,13 +943,10 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @return GroupCollectorInterface
-     */
     public function withoutNotes(): GroupCollectorInterface
     {
         $this->withNotes();
-        $this->query->where(function (Builder $q) {
+        $this->query->where(static function (Builder $q): void { // @phpstan-ignore-line
             $q->whereNull('notes.text');
             $q->orWhere('notes.text', '');
         });
@@ -1101,8 +956,6 @@ trait MetaCollection
 
     /**
      * Where has no tags.
-     *
-     * @return GroupCollectorInterface
      */
     public function withoutTags(): GroupCollectorInterface
     {

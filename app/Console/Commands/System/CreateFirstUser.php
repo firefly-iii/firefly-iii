@@ -28,35 +28,21 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
-use Str;
 
 /**
  * Class CreateFirstUser
- *
- * @package FireflyIII\Console\Commands
  */
 class CreateFirstUser extends Command
 {
     use ShowsFriendlyMessages;
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Creates a new user and gives admin rights. Outputs the password on the command line. Strictly for testing.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'firefly-iii:create-first-user {email}';
+
+    protected $signature   = 'firefly-iii:create-first-user {email}';
     private UserRepositoryInterface $repository;
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle(): int
     {
@@ -66,7 +52,7 @@ class CreateFirstUser extends Command
             return 1;
         }
         $this->stupidLaravel();
-        $count = $this->repository->count();
+        $count          = $this->repository->count();
         if ($count > 0) {
             $this->friendlyError('Already have more than zero users in DB.');
 
@@ -78,11 +64,11 @@ class CreateFirstUser extends Command
             'email'        => $this->argument('email'),
             'role'         => 'owner',
         ];
-        $password       = Str::random(24);
+        $password       = \Str::random(24);
         $user           = $this->repository->store($data);
         $user->password = Hash::make($password);
         $user->save();
-        $user->setRememberToken(Str::random(60));
+        $user->setRememberToken(\Str::random(60));
 
         $this->friendlyInfo(sprintf('Created new admin user (ID #%d) with email address "%s" and password "%s".', $user->id, $user->email, $password));
         $this->friendlyWarning('Change this password.');
@@ -94,8 +80,6 @@ class CreateFirstUser extends Command
      * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
      * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
      * be called from the handle method instead of using the constructor to initialize the command.
-     *
-
      */
     private function stupidLaravel(): void
     {

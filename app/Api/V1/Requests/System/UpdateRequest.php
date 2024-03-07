@@ -31,27 +31,23 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class UpdateRequest
- *
-
  */
 class UpdateRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Get all data from the request.
-     *
-     * @return array
      */
     public function getAll(): array
     {
         $name = $this->route()->parameter('dynamicConfigKey');
 
-        if ($name === 'configuration.is_demo_site' || $name === 'configuration.single_user_mode') {
+        if ('configuration.is_demo_site' === $name || 'configuration.single_user_mode' === $name) {
             return ['value' => $this->boolean('value')];
         }
-        if ($name === 'configuration.permission_update_check' || $name === 'configuration.last_update_check') {
+        if ('configuration.permission_update_check' === $name || 'configuration.last_update_check' === $name) {
             return ['value' => $this->convertInteger('value')];
         }
 
@@ -60,20 +56,18 @@ class UpdateRequest extends FormRequest
 
     /**
      * The rules that the incoming request must be matched against.
-     *
-     * @return array
      */
     public function rules(): array
     {
         $name = $this->route()->parameter('configName');
 
-        if ($name === 'configuration.is_demo_site' || $name === 'configuration.single_user_mode') {
+        if ('configuration.is_demo_site' === $name || 'configuration.single_user_mode' === $name) {
             return ['value' => ['required', new IsBoolean()]];
         }
-        if ($name === 'configuration.permission_update_check') {
-            return ['value' => 'required|numeric|between:-1,1'];
+        if ('configuration.permission_update_check' === $name) {
+            return ['value' => 'required|numeric|min:-1|max:1'];
         }
-        if ($name === 'configuration.last_update_check') {
+        if ('configuration.last_update_check' === $name) {
             return ['value' => 'required|numeric|min:464272080'];
         }
 

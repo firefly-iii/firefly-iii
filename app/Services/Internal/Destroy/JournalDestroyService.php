@@ -23,35 +23,31 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Destroy;
 
-use DB;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Models\TransactionJournalMeta;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class JournalDestroyService
  */
 class JournalDestroyService
 {
-    /**
-     * @param TransactionJournal $journal
-     */
     public function destroy(TransactionJournal $journal): void
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
+        app('log')->debug(sprintf('Now in %s', __METHOD__));
+
         /** @var Transaction $transaction */
         foreach ($journal->transactions()->get() as $transaction) {
-            Log::debug(sprintf('Will now delete transaction #%d', $transaction->id));
+            app('log')->debug(sprintf('Will now delete transaction #%d', $transaction->id));
             $transaction->delete();
         }
 
         // also delete journal_meta entries.
         /** @var TransactionJournalMeta $meta */
         foreach ($journal->transactionJournalMeta()->get() as $meta) {
-            Log::debug(sprintf('Will now delete meta-entry #%d', $meta->id));
+            app('log')->debug(sprintf('Will now delete meta-entry #%d', $meta->id));
             $meta->delete();
         }
 
@@ -62,16 +58,19 @@ class JournalDestroyService
         }
 
         // delete all from 'budget_transaction_journal'
-        DB::table('budget_transaction_journal')
-          ->where('transaction_journal_id', $journal->id)->delete();
+        \DB::table('budget_transaction_journal')
+            ->where('transaction_journal_id', $journal->id)->delete()
+        ;
 
         // delete all from 'category_transaction_journal'
-        DB::table('category_transaction_journal')
-          ->where('transaction_journal_id', $journal->id)->delete();
+        \DB::table('category_transaction_journal')
+            ->where('transaction_journal_id', $journal->id)->delete()
+        ;
 
         // delete all from 'tag_transaction_journal'
-        DB::table('tag_transaction_journal')
-          ->where('transaction_journal_id', $journal->id)->delete();
+        \DB::table('tag_transaction_journal')
+            ->where('transaction_journal_id', $journal->id)->delete()
+        ;
 
         // delete all links:
         TransactionJournalLink::where('source_id', $journal->id)->delete();

@@ -26,24 +26,21 @@ namespace FireflyIII\Console\Commands;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Trait VerifiesAccessToken.
  *
  * Verifies user access token for sensitive commands.
- *
-
  */
 trait VerifiesAccessToken
 {
     /**
-     * @return User
      * @throws FireflyException
      */
     public function getUser(): User
     {
-        $userId = (int)$this->option('user');
+        $userId     = (int)$this->option('user');
+
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
         $user       = $repository->find($userId);
@@ -57,7 +54,7 @@ trait VerifiesAccessToken
     /**
      * Abstract method to make sure trait knows about method "option".
      *
-     * @param string|null $key
+     * @param null|string $key
      *
      * @return mixed
      */
@@ -66,31 +63,31 @@ trait VerifiesAccessToken
     /**
      * Returns false when given token does not match given user token.
      *
-     * @return bool
      * @throws FireflyException
      */
     protected function verifyAccessToken(): bool
     {
-        $userId = (int)$this->option('user');
-        $token  = (string)$this->option('token');
+        $userId      = (int)$this->option('user');
+        $token       = (string)$this->option('token');
+
         /** @var UserRepositoryInterface $repository */
-        $repository = app(UserRepositoryInterface::class);
-        $user       = $repository->find($userId);
+        $repository  = app(UserRepositoryInterface::class);
+        $user        = $repository->find($userId);
 
         if (null === $user) {
-            Log::error(sprintf('verifyAccessToken(): no such user for input "%d"', $userId));
+            app('log')->error(sprintf('verifyAccessToken(): no such user for input "%d"', $userId));
 
             return false;
         }
         $accessToken = app('preferences')->getForUser($user, 'access_token');
         if (null === $accessToken) {
-            Log::error(sprintf('User #%d has no access token, so cannot access command line options.', $userId));
+            app('log')->error(sprintf('User #%d has no access token, so cannot access command line options.', $userId));
 
             return false;
         }
         if ($accessToken->data !== $token) {
-            Log::error(sprintf('Invalid access token for user #%d.', $userId));
-            Log::error(sprintf('Token given is "%s", expected something else.', $token));
+            app('log')->error(sprintf('Invalid access token for user #%d.', $userId));
+            app('log')->error(sprintf('Token given is "%s", expected something else.', $token));
 
             return false;
         }

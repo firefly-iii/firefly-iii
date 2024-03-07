@@ -24,25 +24,23 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests\Models\AvailableBudget;
 
 use Carbon\Carbon;
+use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 
 /**
  * Class Request
- *
-
  */
 class Request extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Get all data from the request.
-     *
-     * @return array
      */
     public function getAll(): array
     {
@@ -60,15 +58,13 @@ class Request extends FormRequest
 
     /**
      * The rules that the incoming request must be matched against.
-     *
-     * @return array
      */
     public function rules(): array
     {
         return [
             'currency_id'   => 'numeric|exists:transaction_currencies,id',
             'currency_code' => 'min:3|max:51|exists:transaction_currencies,code',
-            'amount'        => 'numeric|gt:0',
+            'amount'        => ['nullable', new IsValidPositiveAmount()],
             'start'         => 'date',
             'end'           => 'date',
         ];
@@ -76,15 +72,11 @@ class Request extends FormRequest
 
     /**
      * Configure the validator instance with special rules for after the basic validation rules.
-     *
-     * @param Validator $validator
-     *
-     * @return void
      */
     public function withValidator(Validator $validator): void
     {
         $validator->after(
-            function (Validator $validator) {
+            static function (Validator $validator): void {
                 // validate start before end only if both are there.
                 $data = $validator->getData();
                 if (array_key_exists('start', $data) && array_key_exists('end', $data)) {
@@ -96,5 +88,8 @@ class Request extends FormRequest
                 }
             }
         );
+        if ($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+        }
     }
 }

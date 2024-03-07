@@ -44,9 +44,6 @@ class TransactionController extends Controller
 {
     private AccountRepositoryInterface $repository;
 
-    /**
-     *
-     */
     public function __construct()
     {
         parent::__construct();
@@ -63,10 +60,6 @@ class TransactionController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/bulkUpdateTransactions
-     *
-     * @param TransactionRequest $request
-     *
-     * @return JsonResponse
      */
     public function update(TransactionRequest $request): JsonResponse
     {
@@ -76,12 +69,12 @@ class TransactionController extends Controller
         // this deserves better code, but for now a loop of basic if-statements
         // to respond to what is in the $query.
         // this is OK because only one thing can be in the query at the moment.
-        if ($this->updatesTransactionAccount($params)) {
+        if ($this->isUpdateTransactionAccount($params)) {
             $original    = $this->repository->find((int)$params['where']['account_id']);
             $destination = $this->repository->find((int)$params['update']['account_id']);
 
             /** @var AccountDestroyService $service */
-            $service = app(AccountDestroyService::class);
+            $service     = app(AccountDestroyService::class);
             $service->moveTransactions($original, $destination);
         }
 
@@ -89,11 +82,9 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param array $params
-     *
-     * @return bool
+     * @param array<string, array<string, string>> $params
      */
-    private function updatesTransactionAccount(array $params): bool
+    private function isUpdateTransactionAccount(array $params): bool
     {
         return array_key_exists('account_id', $params['where']) && array_key_exists('account_id', $params['update']);
     }

@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * RuleHandler.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -28,7 +27,8 @@ namespace FireflyIII\Handlers\Events\Model;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnObject;
 use FireflyIII\Notifications\User\RuleActionFailed;
-use FireflyIII\Support\Facades\Preferences;
+use GuzzleHttp\Exception\ClientException;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
 /**
@@ -36,23 +36,20 @@ use Illuminate\Support\Facades\Notification;
  */
 class RuleHandler
 {
-    /**
-     * @param RuleActionFailedOnArray $event
-     *
-     * @return void
-     */
     public function ruleActionFailedOnArray(RuleActionFailedOnArray $event): void
     {
-        $ruleAction = $event->ruleAction;
-        $rule       = $ruleAction->rule;
-        $preference = Preferences::getForUser($rule->user, 'notification_rule_action_failures', true)->data;
+        $ruleAction  = $event->ruleAction;
+        $rule        = $ruleAction->rule;
+
+        /** @var bool $preference */
+        $preference  = app('preferences')->getForUser($rule->user, 'notification_rule_action_failures', true)->data;
         if (false === $preference) {
             return;
         }
         app('log')->debug('Now in ruleActionFailedOnArray');
-        $journal = $event->journal;
-        $error   = $event->error;
-        $user    = $ruleAction->rule->user;
+        $journal     = $event->journal;
+        $error       = $event->error;
+        $user        = $ruleAction->rule->user;
 
         $mainMessage = trans('rules.main_message', ['rule' => $rule->title, 'action' => $ruleAction->action_type, 'group' => $journal['transaction_group_id'], 'error' => $error]);
         $groupTitle  = $journal['description'] ?? '';
@@ -61,27 +58,27 @@ class RuleHandler
         $ruleLink    = route('rules.edit', [$rule->id]);
         $params      = [$mainMessage, $groupTitle, $groupLink, $ruleTitle, $ruleLink];
 
-
-        Notification::send($user, new RuleActionFailed($params));
+        try {
+            Notification::send($user, new RuleActionFailed($params));
+        } catch (ClientException $e) {
+            Log::error(sprintf('[a] Error sending notification that the rule action failed: %s', $e->getMessage()));
+        }
     }
 
-    /**
-     * @param RuleActionFailedOnObject $event
-     *
-     * @return void
-     */
     public function ruleActionFailedOnObject(RuleActionFailedOnObject $event): void
     {
-        $ruleAction = $event->ruleAction;
-        $rule       = $ruleAction->rule;
-        $preference = Preferences::getForUser($rule->user, 'notification_rule_action_failures', true)->data;
+        $ruleAction  = $event->ruleAction;
+        $rule        = $ruleAction->rule;
+
+        /** @var bool $preference */
+        $preference  = app('preferences')->getForUser($rule->user, 'notification_rule_action_failures', true)->data;
         if (false === $preference) {
             return;
         }
         app('log')->debug('Now in ruleActionFailedOnObject');
-        $journal = $event->journal;
-        $error   = $event->error;
-        $user    = $ruleAction->rule->user;
+        $journal     = $event->journal;
+        $error       = $event->error;
+        $user        = $ruleAction->rule->user;
 
         $mainMessage = trans('rules.main_message', ['rule' => $rule->title, 'action' => $ruleAction->action_type, 'group' => $journal->transaction_group_id, 'error' => $error]);
         $groupTitle  = $journal->description ?? '';
@@ -90,8 +87,10 @@ class RuleHandler
         $ruleLink    = route('rules.edit', [$rule->id]);
         $params      = [$mainMessage, $groupTitle, $groupLink, $ruleTitle, $ruleLink];
 
-
-        Notification::send($user, new RuleActionFailed($params));
+        try {
+            Notification::send($user, new RuleActionFailed($params));
+        } catch (ClientException $e) {
+            Log::error(sprintf('[b] Error sending notification that the rule action failed: %s', $e->getMessage()));
+        }
     }
-
 }

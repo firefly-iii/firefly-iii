@@ -33,71 +33,41 @@ interface ReportGeneratorInterface
 {
     /**
      * Generate the report.
-     *
-     * @return string
      */
     public function generate(): string;
 
     /**
      * Set the involved accounts.
-     *
-     * @param Collection $accounts
-     *
-     * @return ReportGeneratorInterface
      */
-    public function setAccounts(Collection $accounts): ReportGeneratorInterface;
+    public function setAccounts(Collection $accounts): self;
 
     /**
      * Set the involved budgets.
-     *
-     * @param Collection $budgets
-     *
-     * @return ReportGeneratorInterface
      */
-    public function setBudgets(Collection $budgets): ReportGeneratorInterface;
+    public function setBudgets(Collection $budgets): self;
 
     /**
      * Set the involved categories.
-     *
-     * @param Collection $categories
-     *
-     * @return ReportGeneratorInterface
      */
-    public function setCategories(Collection $categories): ReportGeneratorInterface;
+    public function setCategories(Collection $categories): self;
 
     /**
      * Set the end date.
-     *
-     * @param Carbon $date
-     *
-     * @return ReportGeneratorInterface
      */
-    public function setEndDate(Carbon $date): ReportGeneratorInterface;
+    public function setEndDate(Carbon $date): self;
 
     /**
      * Set the expense accounts.
-     *
-     * @param Collection $expense
-     *
-     * @return ReportGeneratorInterface
      */
-    public function setExpense(Collection $expense): ReportGeneratorInterface;
+    public function setExpense(Collection $expense): self;
 
     /**
      * Set the start date.
-     *
-     * @param Carbon $date
-     *
-     * @return ReportGeneratorInterface
      */
-    public function setStartDate(Carbon $date): ReportGeneratorInterface;
+    public function setStartDate(Carbon $date): self;
 
     /**
      * Set the tags.
-     *
-     * @param Collection $tags
-     *
-     * @return ReportGeneratorInterface
      */
-    public function setTags(Collection $tags): ReportGeneratorInterface;
+    public function setTags(Collection $tags): self;
 }

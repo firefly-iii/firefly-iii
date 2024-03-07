@@ -39,8 +39,6 @@ class AvailableBudgetTransformer extends AbstractTransformer
 
     /**
      * CurrencyTransformer constructor.
-     *
-
      */
     public function __construct()
     {
@@ -51,10 +49,6 @@ class AvailableBudgetTransformer extends AbstractTransformer
 
     /**
      * Transform the note.
-     *
-     * @param AvailableBudget $availableBudget
-     *
-     * @return array
      */
     public function transform(AvailableBudget $availableBudget): array
     {
@@ -68,7 +62,7 @@ class AvailableBudgetTransformer extends AbstractTransformer
             'currency_id'             => (string)$currency->id,
             'currency_code'           => $currency->code,
             'currency_symbol'         => $currency->symbol,
-            'currency_decimal_places' => (int)$currency->decimal_places,
+            'currency_decimal_places' => $currency->decimal_places,
             'amount'                  => app('steam')->bcround($availableBudget->amount, $currency->decimal_places),
             'start'                   => $availableBudget->start_date->toAtomString(),
             'end'                     => $availableBudget->end_date->endOfDay()->toAtomString(),
@@ -77,7 +71,7 @@ class AvailableBudgetTransformer extends AbstractTransformer
             'links'                   => [
                 [
                     'rel' => 'self',
-                    'uri' => '/available_budgets/' . $availableBudget->id,
+                    'uri' => '/available_budgets/'.$availableBudget->id,
                 ],
             ],
         ];
@@ -91,9 +85,6 @@ class AvailableBudgetTransformer extends AbstractTransformer
         return $data;
     }
 
-    /**
-     * @return array
-     */
     private function getSpentInBudgets(): array
     {
         $allActive = $this->repository->getActiveBudgets();
@@ -102,9 +93,6 @@ class AvailableBudgetTransformer extends AbstractTransformer
         return array_values($sums);
     }
 
-    /**
-     * @return array
-     */
     private function spentOutsideBudgets(): array
     {
         $sums = $this->noBudgetRepository->sumExpenses($this->parameters->get('start'), $this->parameters->get('end'));

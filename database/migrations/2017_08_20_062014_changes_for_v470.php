@@ -45,6 +45,7 @@ class ChangesForV470 extends Migration
     /**
      * Run the migrations.
      *
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up(): void
     {
@@ -52,7 +53,7 @@ class ChangesForV470 extends Migration
             try {
                 Schema::create(
                     'link_types',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->softDeletes();
@@ -74,7 +75,7 @@ class ChangesForV470 extends Migration
             try {
                 Schema::create(
                     'journal_links',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->integer('link_type_id', false, true);

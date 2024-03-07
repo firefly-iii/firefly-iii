@@ -37,11 +37,11 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
- *
  * Class EditController
  */
 class EditController extends Controller
@@ -53,8 +53,6 @@ class EditController extends Controller
 
     /**
      * EditController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -80,34 +78,31 @@ class EditController extends Controller
     /**
      * Edit a recurring transaction.
      *
-     * @param Request    $request
-     * @param Recurrence $recurrence
-     *
      * @return Factory|View
-     * @throws FireflyException
      *
+     * @throws FireflyException
      */
     public function edit(Request $request, Recurrence $recurrence)
     {
         // TODO this should be in the repository.
-        $count = $recurrence->recurrenceTransactions()->count();
+        $count                            = $recurrence->recurrenceTransactions()->count();
         if (0 === $count) {
             throw new FireflyException('This recurring transaction has no meta-data. You will have to delete it and recreate it. Sorry!');
         }
 
         /** @var RecurrenceTransformer $transformer */
-        $transformer = app(RecurrenceTransformer::class);
+        $transformer                      = app(RecurrenceTransformer::class);
         $transformer->setParameters(new ParameterBag());
 
-        $array   = $transformer->transform($recurrence);
-        $budgets = app('expandedform')->makeSelectListWithEmpty($this->budgetRepos->getActiveBudgets());
-        $bills   = app('expandedform')->makeSelectListWithEmpty($this->billRepository->getActiveBills());
+        $array                            = $transformer->transform($recurrence);
+        $budgets                          = app('expandedform')->makeSelectListWithEmpty($this->budgetRepos->getActiveBudgets());
+        $bills                            = app('expandedform')->makeSelectListWithEmpty($this->billRepository->getActiveBills());
 
         /** @var RecurrenceRepetition $repetition */
-        $repetition     = $recurrence->recurrenceRepetitions()->first();
-        $currentRepType = $repetition->repetition_type;
+        $repetition                       = $recurrence->recurrenceRepetitions()->first();
+        $currentRepType                   = $repetition->repetition_type;
         if ('' !== $repetition->repetition_moment) {
-            $currentRepType .= ',' . $repetition->repetition_moment;
+            $currentRepType .= ','.$repetition->repetition_moment;
         }
 
         // put previous url in session if not redirect from store (not "return_to_edit").
@@ -116,8 +111,8 @@ class EditController extends Controller
         }
         $request->session()->forget('recurrences.edit.fromUpdate');
 
-        $repetitionEnd  = 'forever';
-        $repetitionEnds = [
+        $repetitionEnd                    = 'forever';
+        $repetitionEnds                   = [
             'forever'    => (string)trans('firefly.repeat_forever'),
             'until_date' => (string)trans('firefly.repeat_until_date'),
             'times'      => (string)trans('firefly.repeat_times'),
@@ -129,7 +124,7 @@ class EditController extends Controller
             $repetitionEnd = 'times';
         }
 
-        $weekendResponses = [
+        $weekendResponses                 = [
             RecurrenceRepetition::WEEKEND_DO_NOTHING    => (string)trans('firefly.do_nothing'),
             RecurrenceRepetition::WEEKEND_SKIP_CREATION => (string)trans('firefly.skip_transaction'),
             RecurrenceRepetition::WEEKEND_TO_FRIDAY     => (string)trans('firefly.jump_to_friday'),
@@ -167,25 +162,26 @@ class EditController extends Controller
     /**
      * Update the recurring transaction.
      *
-     * @param RecurrenceFormRequest $request
-     * @param Recurrence            $recurrence
+     * @return Redirector|RedirectResponse
      *
-     * @return RedirectResponse|Redirector
      * @throws FireflyException
      */
     public function update(RecurrenceFormRequest $request, Recurrence $recurrence)
     {
-        $data = $request->getAll();
+        $data     = $request->getAll();
         $this->recurring->update($recurrence, $data);
 
         $request->session()->flash('success', (string)trans('firefly.updated_recurrence', ['title' => $recurrence->title]));
+        Log::channel('audit')->info(sprintf('Updated recurrence #%d.', $recurrence->id), $data);
 
         // store new attachment(s):
-        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        /** @var null|array $files */
+        $files    = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($recurrence, $files);
         }
         if (null !== $files && auth()->user()->hasRole('demo')) {
+            Log::channel('audit')->warning(sprintf('The demo user is trying to upload attachments in %s.', __METHOD__));
             session()->flash('info', (string)trans('firefly.no_att_demo_user'));
         }
 

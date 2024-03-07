@@ -38,8 +38,6 @@ class DestroyController extends Controller
 
     /**
      * RuleController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -47,7 +45,7 @@ class DestroyController extends Controller
         $this->middleware(
             function ($request, $next) {
                 /** @var User $user */
-                $user = auth()->user();
+                $user                 = auth()->user();
 
                 $this->ruleRepository = app(RuleRepositoryInterface::class);
                 $this->ruleRepository->setUser($user);
@@ -62,10 +60,6 @@ class DestroyController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/rules/deleteRule
      *
      * Delete the resource.
-     *
-     * @param Rule $rule
-     *
-     * @return JsonResponse
      */
     public function destroy(Rule $rule): JsonResponse
     {

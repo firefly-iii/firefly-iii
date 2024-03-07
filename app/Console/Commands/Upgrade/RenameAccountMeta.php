@@ -27,8 +27,6 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\AccountMeta;
 use Illuminate\Console\Command;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class RenameAccountMeta
@@ -37,27 +35,16 @@ class RenameAccountMeta extends Command
 {
     use ShowsFriendlyMessages;
 
-    public const CONFIG_NAME = '480_rename_account_meta';
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Rename account meta-data to new format.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'firefly-iii:rename-account-meta {--F|force : Force the execution of this command.}';
+    public const string CONFIG_NAME = '480_rename_account_meta';
+
+    protected $description          = 'Rename account meta-data to new format.';
+
+    protected $signature            = 'firefly-iii:rename-account-meta {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
      *
-     * @return int
-     * @throws ContainerExceptionInterface
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
      */
     public function handle(): int
     {
@@ -98,11 +85,6 @@ class RenameAccountMeta extends Command
         return 0;
     }
 
-    /**
-     * @return bool
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
@@ -113,9 +95,6 @@ class RenameAccountMeta extends Command
         return false;
     }
 
-    /**
-     *
-     */
     private function markAsExecuted(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);

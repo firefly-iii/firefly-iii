@@ -43,8 +43,6 @@ class ShowController extends Controller
 
     /**
      * CategoryController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -65,29 +63,28 @@ class ShowController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function index(): JsonResponse
     {
-        $manager = $this->getManager();
+        $manager     = $this->getManager();
 
         // types to get, page size:
-        $pageSize = $this->parameters->get('limit');
+        $pageSize    = $this->parameters->get('limit');
 
         // get list of budgets. Count it and split it.
-        $collection = $this->repository->getCategories();
-        $count      = $collection->count();
-        $categories = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $collection  = $this->repository->getCategories();
+        $count       = $collection->count();
+        $categories  = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
-        $paginator = new LengthAwarePaginator($categories, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.categories.index') . $this->buildParams());
+        $paginator   = new LengthAwarePaginator($categories, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.categories.index').$this->buildParams());
 
         /** @var CategoryTransformer $transformer */
         $transformer = app(CategoryTransformer::class);
         $transformer->setParameters($this->parameters);
-        $resource = new FractalCollection($categories, $transformer, 'categories');
+        $resource    = new FractalCollection($categories, $transformer, 'categories');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -98,20 +95,16 @@ class ShowController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/categories/getCategory
      *
      * Show the category.
-     *
-     * @param Category $category
-     *
-     * @return JsonResponse
      */
     public function show(Category $category): JsonResponse
     {
-        $manager = $this->getManager();
+        $manager     = $this->getManager();
 
         /** @var CategoryTransformer $transformer */
         $transformer = app(CategoryTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($category, $transformer, 'categories');
+        $resource    = new Item($category, $transformer, 'categories');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

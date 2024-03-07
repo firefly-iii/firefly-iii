@@ -34,8 +34,6 @@ use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Console\Command;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class MigrateToRules
@@ -44,36 +42,21 @@ class MigrateToRules extends Command
 {
     use ShowsFriendlyMessages;
 
-    public const CONFIG_NAME = '480_bills_to_rules';
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Migrate bills to rules.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'firefly-iii:bills-to-rules {--F|force : Force the execution of this command.}';
-    /** @var BillRepositoryInterface */
-    private $billRepository;
-    private $count;
-    /** @var RuleGroupRepositoryInterface */
-    private $ruleGroupRepository;
-    /** @var RuleRepositoryInterface */
-    private $ruleRepository;
-    /** @var UserRepositoryInterface */
-    private $userRepository;
+    public const string CONFIG_NAME = '480_bills_to_rules';
+
+    protected $description          = 'Migrate bills to rules.';
+
+    protected $signature            = 'firefly-iii:bills-to-rules {--F|force : Force the execution of this command.}';
+    private BillRepositoryInterface      $billRepository;
+    private int                          $count;
+    private RuleGroupRepositoryInterface $ruleGroupRepository;
+    private RuleRepositoryInterface      $ruleRepository;
+    private UserRepositoryInterface      $userRepository;
 
     /**
      * Execute the console command.
      *
-     * @return int
-     * @throws ContainerExceptionInterface
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
      */
     public function handle(): int
     {
@@ -85,8 +68,8 @@ class MigrateToRules extends Command
             return 0;
         }
 
-
         $users = $this->userRepository->all();
+
         /** @var User $user */
         foreach ($users as $user) {
             $this->migrateUser($user);
@@ -108,8 +91,6 @@ class MigrateToRules extends Command
      * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
      * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
      * be called from the handle method instead of using the constructor to initialize the command.
-     *
-
      */
     private function stupidLaravel(): void
     {
@@ -120,11 +101,6 @@ class MigrateToRules extends Command
         $this->ruleRepository      = app(RuleRepositoryInterface::class);
     }
 
-    /**
-     * @return bool
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
@@ -138,8 +114,6 @@ class MigrateToRules extends Command
     /**
      * Migrate bills to new rule structure for a specific user.
      *
-     * @param User $user
-     *
      * @throws FireflyException
      */
     private function migrateUser(User $user): void
@@ -150,19 +124,20 @@ class MigrateToRules extends Command
 
         /** @var Preference $lang */
         $lang       = app('preferences')->getForUser($user, 'language', 'en_US');
-        $groupTitle = (string)trans('firefly.rulegroup_for_bills_title', [], $lang->data);
+        $language   = null !== $lang->data && !is_array($lang->data) ? (string)$lang->data : 'en_US';
+        $groupTitle = (string)trans('firefly.rulegroup_for_bills_title', [], $language);
         $ruleGroup  = $this->ruleGroupRepository->findByTitle($groupTitle);
 
         if (null === $ruleGroup) {
             $ruleGroup = $this->ruleGroupRepository->store(
                 [
-                    'title'       => (string)trans('firefly.rulegroup_for_bills_title', [], $lang->data),
-                    'description' => (string)trans('firefly.rulegroup_for_bills_description', [], $lang->data),
+                    'title'       => (string)trans('firefly.rulegroup_for_bills_title', [], $language),
+                    'description' => (string)trans('firefly.rulegroup_for_bills_description', [], $language),
                     'active'      => true,
                 ]
             );
         }
-        $bills = $this->billRepository->getBills();
+        $bills      = $this->billRepository->getBills();
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {
@@ -170,26 +145,22 @@ class MigrateToRules extends Command
         }
     }
 
-    /**
-     * @param RuleGroup  $ruleGroup
-     * @param Bill       $bill
-     * @param Preference $language
-     */
     private function migrateBill(RuleGroup $ruleGroup, Bill $bill, Preference $language): void
     {
         if ('MIGRATED_TO_RULES' === $bill->match) {
             return;
         }
+        $languageString = null !== $language->data && !is_array($language->data) ? (string)$language->data : 'en_US';
 
         // get match thing:
-        $match   = implode(' ', explode(',', $bill->match));
-        $newRule = [
+        $match          = implode(' ', explode(',', $bill->match));
+        $newRule        = [
             'rule_group_id'   => $ruleGroup->id,
             'active'          => true,
             'strict'          => false,
             'stop_processing' => false, // field is no longer used.
-            'title'           => (string)trans('firefly.rule_for_bill_title', ['name' => $bill->name], $language->data),
-            'description'     => (string)trans('firefly.rule_for_bill_description', ['name' => $bill->name], $language->data),
+            'title'           => (string)trans('firefly.rule_for_bill_title', ['name' => $bill->name], $languageString),
+            'description'     => (string)trans('firefly.rule_for_bill_description', ['name' => $bill->name], $languageString),
             'trigger'         => 'store-journal',
             'triggers'        => [
                 [
@@ -226,7 +197,7 @@ class MigrateToRules extends Command
         $this->ruleRepository->store($newRule);
 
         // update bill:
-        $newBillData = [
+        $newBillData    = [
             'currency_id' => $bill->transaction_currency_id,
             'name'        => $bill->name,
             'match'       => 'MIGRATED_TO_RULES',
@@ -238,12 +209,9 @@ class MigrateToRules extends Command
             'active'      => $bill->active,
         ];
         $this->billRepository->update($bill, $newBillData);
-        $this->count++;
+        ++$this->count;
     }
 
-    /**
-     *
-     */
     private function markAsExecuted(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);

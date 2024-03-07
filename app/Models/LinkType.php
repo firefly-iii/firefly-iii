@@ -23,32 +23,34 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\LinkType
  *
- * @property int                                      $id
- * @property Carbon|null                              $created_at
- * @property Carbon|null                              $updated_at
- * @property Carbon|null                              $deleted_at
- * @property string                                   $name
- * @property string                                   $outward
- * @property string                                   $inward
- * @property int                                      $journalCount
- * @property bool                                     $editable
- * @property-read Collection|TransactionJournalLink[] $transactionJournalLinks
- * @property-read int|null                            $transaction_journal_links_count
+ * @property int                                 $id
+ * @property null|Carbon                         $created_at
+ * @property null|Carbon                         $updated_at
+ * @property null|Carbon                         $deleted_at
+ * @property string                              $name
+ * @property string                              $outward
+ * @property string                              $inward
+ * @property int                                 $journalCount
+ * @property bool                                $editable
+ * @property Collection|TransactionJournalLink[] $transactionJournalLinks
+ * @property null|int                            $transaction_journal_links_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|LinkType newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|LinkType newQuery()
- * @method static Builder|LinkType onlyTrashed()
+ * @method static Builder|LinkType                               onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|LinkType query()
  * @method static \Illuminate\Database\Eloquent\Builder|LinkType whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|LinkType whereDeletedAt($value)
@@ -58,40 +60,32 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|LinkType whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|LinkType whereOutward($value)
  * @method static \Illuminate\Database\Eloquent\Builder|LinkType whereUpdatedAt($value)
- * @method static Builder|LinkType withTrashed()
- * @method static Builder|LinkType withoutTrashed()
+ * @method static Builder|LinkType                               withTrashed()
+ * @method static Builder|LinkType                               withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class LinkType extends Model
 {
+    use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
     protected $casts
-        = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'deleted_at' => 'datetime',
-            'editable'   => 'boolean',
-        ];
+                        = [
+                            'created_at' => 'datetime',
+                            'updated_at' => 'datetime',
+                            'deleted_at' => 'datetime',
+                            'editable'   => 'boolean',
+                        ];
 
-    /** @var array Fields that can be filled */
     protected $fillable = ['name', 'inward', 'outward', 'editable'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param string $value
-     *
-     * @return LinkType
-     *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): LinkType
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $linkTypeId = (int)$value;
@@ -100,12 +94,10 @@ class LinkType extends Model
                 return $linkType;
             }
         }
+
         throw new NotFoundHttpException();
     }
 
-    /**
-     * @return HasMany
-     */
     public function transactionJournalLinks(): HasMany
     {
         return $this->hasMany(TransactionJournalLink::class);

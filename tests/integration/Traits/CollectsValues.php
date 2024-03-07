@@ -30,9 +30,6 @@ use FireflyIII\User;
  */
 trait CollectsValues
 {
-    /**
-     * @return User
-     */
     public function user(): User
     {
         return User::where('email', 'james@firefly')->first();

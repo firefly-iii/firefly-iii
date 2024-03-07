@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\UserGroups\Journal;
 
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -32,11 +33,8 @@ interface JournalRepositoryInterface
 {
     /**
      * Search in journal descriptions.
-     *
-     * @param string $search
-     * @param int    $limit
-     *
-     * @return Collection
      */
     public function searchJournalDescriptions(string $search, int $limit): Collection;
+
+    public function setUser(User $user): void;
 }

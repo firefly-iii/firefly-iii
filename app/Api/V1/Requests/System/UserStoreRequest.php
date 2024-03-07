@@ -34,13 +34,11 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class UserStoreRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Logged in + owner
-     *
-     * @return bool
      */
     public function authorize(): bool
     {
@@ -49,8 +47,6 @@ class UserStoreRequest extends FormRequest
 
     /**
      * Get all data from the request.
-     *
-     * @return array
      */
     public function getAll(): array
     {
@@ -69,8 +65,6 @@ class UserStoreRequest extends FormRequest
 
     /**
      * The rules that the incoming request must be matched against.
-     *
-     * @return array
      */
     public function rules(): array
     {

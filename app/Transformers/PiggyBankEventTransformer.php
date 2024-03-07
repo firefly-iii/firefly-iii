@@ -26,52 +26,41 @@ namespace FireflyIII\Transformers;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
-use JsonException;
 
 /**
  * Class PiggyBankEventTransformer
  */
 class PiggyBankEventTransformer extends AbstractTransformer
 {
-    private CurrencyRepositoryInterface  $currencyRepos;
     private PiggyBankRepositoryInterface $piggyRepos;
     private AccountRepositoryInterface   $repository;
 
     /**
      * PiggyBankEventTransformer constructor.
-     *
-
      */
     public function __construct()
     {
-        $this->repository    = app(AccountRepositoryInterface::class);
-        $this->currencyRepos = app(CurrencyRepositoryInterface::class);
-        $this->piggyRepos    = app(PiggyBankRepositoryInterface::class);
+        $this->repository = app(AccountRepositoryInterface::class);
+        $this->piggyRepos = app(PiggyBankRepositoryInterface::class);
     }
 
     /**
      * Convert piggy bank event.
      *
-     * @param PiggyBankEvent $event
-     *
-     * @return array
      * @throws FireflyException
-     * @throws JsonException
      */
     public function transform(PiggyBankEvent $event): array
     {
         // get account linked to piggy bank
-        $account = $event->piggyBank->account;
+        $account   = $event->piggyBank->account;
 
         // set up repositories.
         $this->repository->setUser($account->user);
-        $this->currencyRepos->setUser($account->user);
         $this->piggyRepos->setUser($account->user);
 
         // get associated currency or fall back to the default:
-        $currency = $this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUser($account->user);
+        $currency  = $this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
 
         // get associated journal and transaction, if any:
         $journalId = $event->transaction_journal_id;
@@ -89,13 +78,13 @@ class PiggyBankEventTransformer extends AbstractTransformer
             'currency_id'             => (string)$currency->id,
             'currency_code'           => $currency->code,
             'currency_symbol'         => $currency->symbol,
-            'currency_decimal_places' => (int)$currency->decimal_places,
-            'transaction_journal_id'  => $journalId ? (string)$journalId : null,
-            'transaction_group_id'    => $groupId ? (string)$groupId : null,
+            'currency_decimal_places' => $currency->decimal_places,
+            'transaction_journal_id'  => null !== $journalId ? (string)$journalId : null,
+            'transaction_group_id'    => null !== $groupId ? (string)$groupId : null,
             'links'                   => [
                 [
                     'rel' => 'self',
-                    'uri' => '/piggy_bank_events/' . $event->id,
+                    'uri' => '/piggy_bank_events/'.$event->id,
                 ],
             ],
         ];

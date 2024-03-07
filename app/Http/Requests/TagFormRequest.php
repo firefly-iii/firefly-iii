@@ -29,20 +29,20 @@ use FireflyIII\Support\Request\AppendsLocationData;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Validator;
 
 /**
  * Class TagFormRequest.
  */
 class TagFormRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use AppendsLocationData;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Get all data for controller.
-     *
-     * @return array
      */
     public function collectTagData(): array
     {
@@ -57,29 +57,33 @@ class TagFormRequest extends FormRequest
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {
-        $idRule = '';
+        $idRule  = '';
 
-        /** @var Tag $tag */
+        /** @var null|Tag $tag */
         $tag     = $this->route()->parameter('tag');
         $tagRule = 'required|max:1024|min:1|uniqueObjectForUser:tags,tag';
         if (null !== $tag) {
             $idRule  = 'belongsToUser:tags';
-            $tagRule = 'required|max:1024|min:1|uniqueObjectForUser:tags,tag,' . $tag->id;
+            $tagRule = 'required|max:1024|min:1|uniqueObjectForUser:tags,tag,'.$tag->id;
         }
 
-        $rules = [
+        $rules   = [
             'tag'         => $tagRule,
             'id'          => $idRule,
-            'description' => 'max:65536|min:1|nullable',
+            'description' => 'max:32768|min:1|nullable',
             'date'        => 'date|nullable',
-
         ];
 
         return Location::requestRules($rules);
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        if ($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+        }
     }
 }

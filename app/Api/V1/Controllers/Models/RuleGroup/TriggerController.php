@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Models\RuleGroup;
 
-use Exception;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\RuleGroup\TestRequest;
 use FireflyIII\Api\V1\Requests\Models\RuleGroup\TriggerRequest;
@@ -47,8 +46,6 @@ class TriggerController extends Controller
 
     /**
      * RuleGroupController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -56,7 +53,7 @@ class TriggerController extends Controller
         $this->middleware(
             function ($request, $next) {
                 /** @var User $user */
-                $user = auth()->user();
+                $user                      = auth()->user();
 
                 $this->ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
                 $this->ruleGroupRepository->setUser($user);
@@ -70,23 +67,18 @@ class TriggerController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/rule_groups/testRuleGroup
      *
-     * @param TestRequest $request
-     * @param RuleGroup   $group
-     *
-     * @return JsonResponse
      * @throws FireflyException
-     *
      */
     public function testGroup(TestRequest $request, RuleGroup $group): JsonResponse
     {
-        $rules = $this->ruleGroupRepository->getActiveRules($group);
+        $rules        = $this->ruleGroupRepository->getActiveRules($group);
         if (0 === $rules->count()) {
             throw new FireflyException('200023: No rules in this rule group.');
         }
-        $parameters = $request->getTestParameters();
+        $parameters   = $request->getTestParameters();
 
         /** @var RuleEngineInterface $ruleEngine */
-        $ruleEngine = app(RuleEngineInterface::class);
+        $ruleEngine   = app(RuleEngineInterface::class);
         $ruleEngine->setRules($rules);
 
         // overrule the rule(s) if necessary.
@@ -107,16 +99,17 @@ class TriggerController extends Controller
         $transactions = $ruleEngine->find();
         $count        = $transactions->count();
 
-        $paginator = new LengthAwarePaginator($transactions, $count, 31337, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.rule-groups.test', [$group->id]) . $this->buildParams());
+        $paginator    = new LengthAwarePaginator($transactions, $count, 31337, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.rule-groups.test', [$group->id]).$this->buildParams());
 
         // resulting list is presented as JSON thing.
-        $manager = $this->getManager();
+        $manager      = $this->getManager();
+
         /** @var TransactionGroupTransformer $transformer */
-        $transformer = app(TransactionGroupTransformer::class);
+        $transformer  = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($transactions, $transformer, 'transactions');
+        $resource     = new FractalCollection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -128,15 +121,11 @@ class TriggerController extends Controller
      *
      * Execute the given rule group on a set of existing transactions.
      *
-     * @param TriggerRequest $request
-     * @param RuleGroup      $group
-     *
-     * @return JsonResponse
-     * @throws Exception
+     * @throws \Exception
      */
     public function triggerGroup(TriggerRequest $request, RuleGroup $group): JsonResponse
     {
-        $rules = $this->ruleGroupRepository->getActiveRules($group);
+        $rules      = $this->ruleGroupRepository->getActiveRules($group);
         if (0 === $rules->count()) {
             throw new FireflyException('200023: No rules in this rule group.');
         }
@@ -158,7 +147,7 @@ class TriggerController extends Controller
             // add a range:
             $ruleEngine->addOperator(['type' => 'date_before', 'value' => $parameters['end']->format('Y-m-d')]);
         }
-        if (array_key_exists('accounts', $parameters) && '' !== $parameters['accounts']) {
+        if (array_key_exists('accounts', $parameters) && is_array($parameters['accounts']) && count($parameters['accounts']) > 0) {
             $ruleEngine->addOperator(['type' => 'account_id', 'value' => implode(',', $parameters['accounts'])]);
         }
 

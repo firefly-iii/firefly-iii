@@ -41,8 +41,6 @@ use Illuminate\View\View;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\DataArraySerializer;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -54,8 +52,6 @@ class ShowController extends Controller
 
     /**
      * BillController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -77,24 +73,17 @@ class ShowController extends Controller
     /**
      * Rescan bills for transactions.
      *
-     * @param Request $request
-     * @param Bill    $bill
-     *
-     * @return RedirectResponse|Redirector
+     * @return Redirector|RedirectResponse
      */
     public function rescan(Request $request, Bill $bill)
     {
-        $total = 0;
+        $total      = 0;
         if (false === $bill->active) {
             $request->session()->flash('warning', (string)trans('firefly.cannot_scan_inactive_bill'));
 
             return redirect(route('bills.show', [$bill->id]));
         }
-        $set = new Collection();
-        if (true === $bill->active) {
-            $set   = $this->repository->getRulesForBill($bill);
-            $total = 0;
-        }
+        $set        = $this->repository->getRulesForBill($bill);
         if (0 === $set->count()) {
             $request->session()->flash('error', (string)trans('firefly.no_rules_for_bill'));
 
@@ -112,7 +101,7 @@ class ShowController extends Controller
         // file the rule(s)
         $ruleEngine->fire();
 
-        $request->session()->flash('success', (string)trans_choice('firefly.rescanned_bill', $total));
+        $request->session()->flash('success', trans_choice('firefly.rescanned_bill', $total));
         app('preferences')->mark();
 
         return redirect(route('bills.show', [$bill->id]));
@@ -121,56 +110,56 @@ class ShowController extends Controller
     /**
      * Show a bill.
      *
-     * @param Request $request
-     * @param Bill    $bill
-     *
      * @return Factory|View
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function show(Request $request, Bill $bill)
     {
         // add info about rules:
-        $rules    = $this->repository->getRulesForBill($bill);
-        $subTitle = $bill->name;
+        $rules                      = $this->repository->getRulesForBill($bill);
+        $subTitle                   = $bill->name;
+
         /** @var Carbon $start */
-        $start = session('start');
+        $start                      = session('start');
+
         /** @var Carbon $end */
-        $end            = session('end');
-        $year           = $start->year;
-        $page           = (int)$request->get('page');
-        $pageSize       = (int)app('preferences')->get('listPageSize', 50)->data;
-        $yearAverage    = $this->repository->getYearAverage($bill, $start);
-        $overallAverage = $this->repository->getOverallAverage($bill);
-        $manager        = new Manager();
+        $end                        = session('end');
+        $year                       = $start->year;
+        $page                       = (int)$request->get('page');
+        $pageSize                   = (int)app('preferences')->get('listPageSize', 50)->data;
+        $yearAverage                = $this->repository->getYearAverage($bill, $start);
+        $overallAverage             = $this->repository->getOverallAverage($bill);
+        $manager                    = new Manager();
         $manager->setSerializer(new DataArraySerializer());
         $manager->parseIncludes(['attachments', 'notes']);
 
+        // add another period to end, could fix 8163
+        $range                      = app('navigation')->getViewRange(true);
+        $end                        = app('navigation')->addPeriod($end, $range);
+
         // Make a resource out of the data and
-        $parameters = new ParameterBag();
+        $parameters                 = new ParameterBag();
         $parameters->set('start', $start);
         $parameters->set('end', $end);
 
         /** @var BillTransformer $transformer */
-        $transformer = app(BillTransformer::class);
+        $transformer                = app(BillTransformer::class);
         $transformer->setParameters($parameters);
 
         $resource                   = new Item($bill, $transformer, 'bill');
         $object                     = $manager->createData($resource)->toArray();
         $object['data']['currency'] = $bill->transactionCurrency;
 
-
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector                  = app(GroupCollectorInterface::class);
         $collector->setBill($bill)->setLimit($pageSize)->setPage($page)->withBudgetInformation()
-                  ->withCategoryInformation()->withAccountInformation();
-        $groups = $collector->getPaginatedGroups();
+            ->withCategoryInformation()->withAccountInformation()
+        ;
+        $groups                     = $collector->getPaginatedGroups();
         $groups->setPath(route('bills.show', [$bill->id]));
 
         // transform any attachments as well.
-        $collection  = $this->repository->getAttachments($bill);
-        $attachments = new Collection();
-
+        $collection                 = $this->repository->getAttachments($bill);
+        $attachments                = new Collection();
 
         if ($collection->count() > 0) {
             /** @var AttachmentTransformer $transformer */
@@ -181,7 +170,6 @@ class ShowController extends Controller
                 }
             );
         }
-
 
         return view('bills.show', compact('attachments', 'groups', 'rules', 'yearAverage', 'overallAverage', 'year', 'object', 'bill', 'subTitle'));
     }

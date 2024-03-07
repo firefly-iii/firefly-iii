@@ -36,10 +36,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class TagList implements BinderInterface
 {
     /**
-     * @param string $value
-     * @param Route  $route
-     *
-     * @return Collection
      * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value, Route $route): Collection
@@ -47,29 +43,34 @@ class TagList implements BinderInterface
         if (auth()->check()) {
             if ('allTags' === $value) {
                 return auth()->user()->tags()
-                             ->orderBy('tag', 'ASC')
-                             ->get();
+                    ->orderBy('tag', 'ASC')
+                    ->get()
+                ;
             }
-            $list = array_unique(array_map('\strtolower', explode(',', $value)));
-            Log::debug('List of tags is', $list);
+            $list       = array_unique(array_map('\strtolower', explode(',', $value)));
+            app('log')->debug('List of tags is', $list);
 
-            if (0 === count($list)) {
-                Log::error('Tag list is empty.');
+            if (0 === count($list)) { // @phpstan-ignore-line
+                app('log')->error('Tag list is empty.');
+
                 throw new NotFoundHttpException();
             }
-
 
             /** @var TagRepositoryInterface $repository */
             $repository = app(TagRepositoryInterface::class);
             $repository->setUser(auth()->user());
-            $allTags = $repository->get();
+            $allTags    = $repository->get();
 
             $collection = $allTags->filter(
                 static function (Tag $tag) use ($list) {
                     if (in_array(strtolower($tag->tag), $list, true)) {
+                        Log::debug(sprintf('TagList: (string) found tag #%d ("%s") in list.', $tag->id, $tag->tag));
+
                         return true;
                     }
                     if (in_array((string)$tag->id, $list, true)) {
+                        Log::debug(sprintf('TagList: (id) found tag #%d ("%s") in list.', $tag->id, $tag->tag));
+
                         return true;
                     }
 
@@ -81,7 +82,8 @@ class TagList implements BinderInterface
                 return $collection;
             }
         }
-        Log::error('TagList: user is not logged in.');
+        app('log')->error('TagList: user is not logged in.');
+
         throw new NotFoundHttpException();
     }
 }

@@ -32,7 +32,6 @@ use FireflyIII\Validation\Api\Data\Bulk\ValidatesBulkTransactionQuery;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
-use JsonException;
 
 /**
  * Class TransactionRequest
@@ -43,27 +42,22 @@ class TransactionRequest extends FormRequest
     use ConvertsDataTypes;
     use ValidatesBulkTransactionQuery;
 
-    /**
-     * @return array
-     */
     public function getAll(): array
     {
         $data = [];
+
         try {
             $data = [
                 'query' => json_decode($this->get('query'), true, 8, JSON_THROW_ON_ERROR),
             ];
-        } catch (JsonException $e) {
+        } catch (\JsonException $e) {
             // dont really care. the validation should catch invalid json.
-            Log::error($e->getMessage());
+            app('log')->error($e->getMessage());
         }
 
         return $data;
     }
 
-    /**
-     * @return array
-     */
     public function rules(): array
     {
         return [
@@ -71,18 +65,16 @@ class TransactionRequest extends FormRequest
         ];
     }
 
-    /**
-     * @param Validator $validator
-     *
-     * @return void
-     */
     public function withValidator(Validator $validator): void
     {
         $validator->after(
-            function (Validator $validator) {
+            function (Validator $validator): void {
                 // validate transaction query data.
                 $this->validateTransactionQuery($validator);
             }
         );
+        if ($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+        }
     }
 }

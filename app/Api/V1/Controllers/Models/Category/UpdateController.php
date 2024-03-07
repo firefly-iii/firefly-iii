@@ -40,8 +40,6 @@ class UpdateController extends Controller
 
     /**
      * CategoryController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -61,23 +59,18 @@ class UpdateController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/categories/updateCategory
      *
      * Update the category.
-     *
-     * @param UpdateRequest $request
-     * @param Category      $category
-     *
-     * @return JsonResponse
      */
     public function update(UpdateRequest $request, Category $category): JsonResponse
     {
-        $data     = $request->getAll();
-        $category = $this->repository->update($category, $data);
-        $manager  = $this->getManager();
+        $data        = $request->getAll();
+        $category    = $this->repository->update($category, $data);
+        $manager     = $this->getManager();
 
         /** @var CategoryTransformer $transformer */
         $transformer = app(CategoryTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($category, $transformer, 'categories');
+        $resource    = new Item($category, $transformer, 'categories');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

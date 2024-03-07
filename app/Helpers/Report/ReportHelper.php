@@ -33,8 +33,6 @@ use Illuminate\Support\Collection;
 
 /**
  * Class ReportHelper.
- *
-
  */
 class ReportHelper implements ReportHelperInterface
 {
@@ -43,8 +41,6 @@ class ReportHelper implements ReportHelperInterface
 
     /**
      * ReportHelper constructor.
-     *
-     * @param BudgetRepositoryInterface $budgetRepository
      */
     public function __construct(BudgetRepositoryInterface $budgetRepository)
     {
@@ -56,12 +52,6 @@ class ReportHelper implements ReportHelperInterface
      * the users bills and their payments.
      *
      * Excludes bills which have not had a payment on the mentioned accounts.
-     *
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return array
      */
     public function getBillReport(Collection $accounts, Carbon $start, Carbon $end): array
     {
@@ -74,10 +64,10 @@ class ReportHelper implements ReportHelperInterface
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {
-            $expectedDates = $repository->getPayDatesInRange($bill, $start, $end);
-            $billId        = $bill->id;
-            $currency      = $bill->transactionCurrency;
-            $current       = [
+            $expectedDates            = $repository->getPayDatesInRange($bill, $start, $end);
+            $billId                   = $bill->id;
+            $currency                 = $bill->transactionCurrency;
+            $current                  = [
                 'id'                      => $bill->id,
                 'name'                    => $bill->name,
                 'active'                  => $bill->active,
@@ -94,11 +84,11 @@ class ReportHelper implements ReportHelperInterface
 
             /** @var Carbon $expectedStart */
             foreach ($expectedDates as $expectedStart) {
-                $expectedEnd = app('navigation')->endOfX($expectedStart, $bill->repeat_freq, null);
+                $expectedEnd               = app('navigation')->endOfX($expectedStart, $bill->repeat_freq, null);
 
                 // is paid in this period maybe?
                 /** @var GroupCollectorInterface $collector */
-                $collector = app(GroupCollectorInterface::class);
+                $collector                 = app(GroupCollectorInterface::class);
                 $collector->setAccounts($accounts)->setRange($expectedStart, $expectedEnd)->setBill($bill);
                 $current['paid_moments'][] = $collector->getExtractedJournals();
             }
@@ -112,10 +102,6 @@ class ReportHelper implements ReportHelperInterface
 
     /**
      * Generate a list of months for the report.
-     *
-     * @param Carbon $date
-     *
-     * @return array
      */
     public function listOfMonths(Carbon $date): array
     {
@@ -123,12 +109,12 @@ class ReportHelper implements ReportHelperInterface
         $fiscalHelper = app(FiscalHelperInterface::class);
         $start        = clone $date;
         $start->startOfMonth();
-        $end = today(config('app.timezone'));
+        $end          = today(config('app.timezone'));
         $end->endOfMonth();
-        $months = [];
+        $months       = [];
 
         while ($start <= $end) {
-            $year = $fiscalHelper->endOfFiscalYear($start)->year; // current year
+            $year                      = $fiscalHelper->endOfFiscalYear($start)->year; // current year
             if (!array_key_exists($year, $months)) {
                 $months[$year] = [
                     'fiscal_start' => $fiscalHelper->startOfFiscalYear($start)->format('Y-m-d'),
@@ -139,7 +125,7 @@ class ReportHelper implements ReportHelperInterface
                 ];
             }
 
-            $currentEnd = clone $start;
+            $currentEnd                = clone $start;
             $currentEnd->endOfMonth();
             $months[$year]['months'][] = [
                 'formatted' => $start->isoFormat((string)trans('config.month_js')),
@@ -149,7 +135,7 @@ class ReportHelper implements ReportHelperInterface
                 'year'      => $year,
             ];
 
-            $start = clone $currentEnd; // to make the hop to the next month properly
+            $start                     = clone $currentEnd; // to make the hop to the next month properly
             $start->addDay();
         }
 

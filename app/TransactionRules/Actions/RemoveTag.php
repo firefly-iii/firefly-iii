@@ -24,14 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
-use DB;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Expressions\ActionExpressionEvaluator;
 use FireflyIII\User;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class RemoveTag.
@@ -43,8 +41,6 @@ class RemoveTag implements ActionInterface
 
     /**
      * TriggerInterface constructor.
-     *
-     * @param RuleAction $action
      */
     public function __construct(RuleAction $action, ActionExpressionEvaluator $evaluator)
     {
@@ -52,34 +48,35 @@ class RemoveTag implements ActionInterface
         $this->evaluator = $evaluator;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function actOnArray(array $journal): bool
     {
         // if tag does not exist, no need to continue:
-        $name = $this->evaluator->evaluate($journal);
-        $user = User::find($journal['user_id']);
-        $tag  = $user->tags()->where('tag', $name)->first();
+        $name   = $this->evaluator->evaluate($journal);
+
+        /** @var User $user */
+        $user   = User::find($journal['user_id']);
+        $tag    = $user->tags()->where('tag', $name)->first();
 
         if (null === $tag) {
-            Log::debug(
+            app('log')->debug(
                 sprintf('RuleAction RemoveTag tried to remove tag "%s" from journal #%d but no such tag exists.', $name, $journal['transaction_journal_id'])
             );
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_tag', ['tag' => $name])));
+
             return false;
         }
-        $count = DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal['transaction_journal_id'])->where('tag_id', $tag->id)->count();
+        $count  = \DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal['transaction_journal_id'])->where('tag_id', $tag->id)->count();
         if (0 === $count) {
-            Log::debug(
+            app('log')->debug(
                 sprintf('RuleAction RemoveTag tried to remove tag "%s" from journal #%d but no such tag is linked.', $name, $journal['transaction_journal_id'])
             );
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_unlink_tag', ['tag' => $name])));
+
             return false;
         }
 
-        Log::debug(sprintf('RuleAction RemoveTag removed tag #%d ("%s") from journal #%d.', $tag->id, $tag->tag, $journal['transaction_journal_id']));
-        DB::table('tag_transaction_journal')
+        app('log')->debug(sprintf('RuleAction RemoveTag removed tag #%d ("%s") from journal #%d.', $tag->id, $tag->tag, $journal['transaction_journal_id']));
+        \DB::table('tag_transaction_journal')
             ->where('transaction_journal_id', $journal['transaction_journal_id'])
             ->where('tag_id', $tag->id)
             ->delete();

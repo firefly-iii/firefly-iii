@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Notifications\Admin;
 
 use FireflyIII\Support\Notifications\UrlValidator;
-use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
@@ -42,8 +41,6 @@ class TestNotification extends Notification
 
     /**
      * Create a new notification instance.
-     *
-     * @return void
      */
     public function __construct(string $address)
     {
@@ -55,12 +52,13 @@ class TestNotification extends Notification
      *
      * @param mixed $notifiable
      *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @return array
      */
     public function toArray($notifiable)
     {
         return [
-            //
         ];
     }
 
@@ -69,19 +67,24 @@ class TestNotification extends Notification
      *
      * @param mixed $notifiable
      *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @return MailMessage
      */
     public function toMail($notifiable)
     {
         return (new MailMessage())
             ->markdown('emails.admin-test', ['email' => $this->address])
-            ->subject((string)trans('email.admin_test_subject'));
+            ->subject((string)trans('email.admin_test_subject'))
+        ;
     }
 
     /**
      * Get the Slack representation of the notification.
      *
      * @param mixed $notifiable
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return SlackMessage
      */
@@ -93,6 +96,8 @@ class TestNotification extends Notification
     /**
      * Get the notification's delivery channels.
      *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param mixed $notifiable
      *
      * @return array
@@ -103,6 +108,7 @@ class TestNotification extends Notification
         if (UrlValidator::isValidWebhookURL($slackUrl)) {
             return ['mail', 'slack'];
         }
+
         return ['mail'];
     }
 }

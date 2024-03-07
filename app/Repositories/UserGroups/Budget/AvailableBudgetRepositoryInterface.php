@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * AvailableBudgetRepositoryInterface.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -26,18 +25,14 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\UserGroups\Budget;
 
 use Carbon\Carbon;
+use FireflyIII\User;
 
 /**
  * Interface AvailableBudgetRepositoryInterface
  */
 interface AvailableBudgetRepositoryInterface
 {
-    /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
     public function getAvailableBudgetWithCurrency(Carbon $start, Carbon $end): array;
 
+    public function setUser(User $user): void;
 }

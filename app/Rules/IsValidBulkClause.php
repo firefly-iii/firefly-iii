@@ -24,63 +24,47 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
-use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Validator;
-use JsonException;
 
 /**
  * Class IsValidBulkClause
  */
-class IsValidBulkClause implements Rule
+class IsValidBulkClause implements ValidationRule
 {
     private string $error;
     private array  $rules;
 
-    /**
-     * @param string $type
-     */
     public function __construct(string $type)
     {
         $this->rules = config(sprintf('bulk.%s', $type));
         $this->error = (string)trans('firefly.belongs_user');
     }
 
-    /**
-     * @return string
-     */
     public function message(): string
     {
         return $this->error;
     }
 
     /**
-     * @param string $attribute
-     * @param mixed  $value
-     *
-     * @return bool
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function passes($attribute, $value): bool
+    public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
         $result = $this->basicValidation((string)$value);
         if (false === $result) {
-            return false;
+            $fail($this->error);
         }
-
-        return true;
     }
 
     /**
      * Does basic rule based validation.
-     *
-     * @param string $value
-     *
-     * @return bool
      */
     private function basicValidation(string $value): bool
     {
         try {
             $array = json_decode($value, true, 8, JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
+        } catch (\JsonException $e) {
             $this->error = (string)trans('validation.json');
 
             return false;
@@ -92,6 +76,7 @@ class IsValidBulkClause implements Rule
 
                 return false;
             }
+
             /**
              * @var string $arrayKey
              * @var mixed  $arrayValue
@@ -107,7 +92,7 @@ class IsValidBulkClause implements Rule
                     'value' => $this->rules[$clause][$arrayKey],
                 ]);
                 if ($validator->fails()) {
-                    $this->error = sprintf('%s: %s: %s', $clause, $arrayKey, join(', ', ($validator->errors()->get('value'))));
+                    $this->error = sprintf('%s: %s: %s', $clause, $arrayKey, implode(', ', $validator->errors()->get('value')));
 
                     return false;
                 }

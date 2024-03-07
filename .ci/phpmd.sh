@@ -22,16 +22,29 @@
 
 
 SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+OUTPUT_FORMAT=text
+
+if [[ $GITHUB_ACTIONS = "true" ]]
+then
+    OUTPUT_FORMAT=github
+fi
+
 
 cd $SCRIPT_DIR/phpmd
 composer update --quiet
 ./vendor/bin/phpmd \
-  $SCRIPT_DIR/../app text phpmd.xml \
+  $SCRIPT_DIR/../app,$SCRIPT_DIR/../database,$SCRIPT_DIR/../routes,$SCRIPT_DIR/../config \
+   $OUTPUT_FORMAT phpmd.xml \
   --exclude $SCRIPT_DIR/../app/resources/** \
   --exclude $SCRIPT_DIR/../app/frontend/** \
   --exclude $SCRIPT_DIR/../app/public/** \
-  --exclude $SCRIPT_DIR/../app/vendor/** \
+  --exclude $SCRIPT_DIR/../app/vendor/**
+
+EXIT_CODE=$?
 
 cd $SCRIPT_DIR/..
 
-exit 0
+echo "Exit code is $EXIT_CODE."
+
+# for the time being, exit 0
+exit $EXIT_CODE

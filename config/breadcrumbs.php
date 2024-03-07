@@ -21,9 +21,10 @@
  */
 
 declare(strict_types=1);
+use Diglactic\Breadcrumbs\Generator;
+use Diglactic\Breadcrumbs\Manager;
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | View Name
@@ -47,7 +48,7 @@ return [
     |
     */
 
-    'view' => 'partials/layout/breadcrumbs',
+    'view'                                     => 'partials/layout/breadcrumbs',
 
     /*
     |--------------------------------------------------------------------------
@@ -91,9 +92,8 @@ return [
     */
 
     // Manager
-    'manager-class'                            => Diglactic\Breadcrumbs\Manager::class,
+    'manager-class'                            => Manager::class,
 
     // Generator
-    'generator-class'                          => Diglactic\Breadcrumbs\Generator::class,
-
+    'generator-class'                          => Generator::class,
 ];

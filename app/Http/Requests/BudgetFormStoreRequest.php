@@ -23,10 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\AutoBudget\ValidatesAutoBudgetRequest;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 
 /**
@@ -34,14 +36,12 @@ use Illuminate\Validation\Validator;
  */
 class BudgetFormStoreRequest extends FormRequest
 {
+    use ChecksLogin;
     use ConvertsDataTypes;
     use ValidatesAutoBudgetRequest;
-    use ChecksLogin;
 
     /**
      * Returns the data required by the controller.
-     *
-     * @return array
      */
     public function getBudgetData(): array
     {
@@ -57,35 +57,34 @@ class BudgetFormStoreRequest extends FormRequest
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {
         return [
-            'name'                    => 'required|between:1,100|uniqueObjectForUser:budgets,name',
-            'active'                  => 'numeric|between:0,1',
+            'name'                    => 'required|min:1|max:255|uniqueObjectForUser:budgets,name',
+            'active'                  => 'numeric|min:0|max:1',
             'auto_budget_type'        => 'numeric|integer|gte:0|lte:3',
             'auto_budget_currency_id' => 'exists:transaction_currencies,id',
-            'auto_budget_amount'      => 'min:0|max:1000000000|required_if:auto_budget_type,1|required_if:auto_budget_type,2',
+            'auto_budget_amount'      => ['required_if:auto_budget_type,1', 'required_if:auto_budget_type,2', new IsValidPositiveAmount()],
             'auto_budget_period'      => 'in:daily,weekly,monthly,quarterly,half_year,yearly',
+            'notes'                   => 'min:1|max:32768|nullable',
         ];
     }
 
     /**
      * Configure the validator instance with special rules for after the basic validation rules.
-     *
-     * @param Validator $validator
-     *
-     * @return void
      */
     public function withValidator(Validator $validator): void
     {
         $validator->after(
-            function (Validator $validator) {
+            function (Validator $validator): void {
                 // validate all account info
                 $this->validateAutoBudgetAmount($validator);
             }
         );
+
+        if ($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+        }
     }
 }

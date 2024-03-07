@@ -29,6 +29,8 @@ use FireflyIII\Repositories\Category\NoCategoryRepository;
 use FireflyIII\Repositories\Category\NoCategoryRepositoryInterface;
 use FireflyIII\Repositories\Category\OperationsRepository;
 use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Category\CategoryRepository as UserGroupCategoryRepository;
+use FireflyIII\Repositories\UserGroups\Category\CategoryRepositoryInterface as UserGroupCategoryRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -40,9 +42,7 @@ class CategoryServiceProvider extends ServiceProvider
     /**
      * Bootstrap the application services.
      */
-    public function boot(): void
-    {
-    }
+    public function boot(): void {}
 
     /**
      * Register the application services.
@@ -55,6 +55,20 @@ class CategoryServiceProvider extends ServiceProvider
             static function (Application $app) {
                 /** @var CategoryRepository $repository */
                 $repository = app(CategoryRepository::class);
+                if ($app->auth->check()) { // @phpstan-ignore-line
+                    $repository->setUser(auth()->user());
+                }
+
+                return $repository;
+            }
+        );
+
+        // phpstan does not understand reference to 'auth'.
+        $this->app->bind(
+            UserGroupCategoryRepositoryInterface::class,
+            static function (Application $app) {
+                /** @var UserGroupCategoryRepository $repository */
+                $repository = app(UserGroupCategoryRepository::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
                 }

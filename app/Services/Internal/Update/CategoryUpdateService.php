@@ -23,22 +23,19 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
-use Exception;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
-use Illuminate\Support\Facades\Log;
+use FireflyIII\User;
 
 /**
  * Class CategoryUpdateService
- *
-
  */
 class CategoryUpdateService
 {
-    private $user;
+    private User $user;
 
     /**
      * Constructor.
@@ -46,7 +43,9 @@ class CategoryUpdateService
     public function __construct()
     {
         if (auth()->check()) {
-            $this->user = auth()->user();
+            /** @var User $user */
+            $user       = auth()->user();
+            $this->user = $user;
         }
     }
 
@@ -59,11 +58,7 @@ class CategoryUpdateService
     }
 
     /**
-     * @param Category $category
-     * @param array    $data
-     *
-     * @return Category
-     * @throws Exception
+     * @throws \Exception
      */
     public function update(Category $category, array $data): Category
     {
@@ -82,71 +77,61 @@ class CategoryUpdateService
         return $category;
     }
 
-    /**
-     * @param string $oldName
-     * @param string $newName
-     */
     private function updateRuleTriggers(string $oldName, string $newName): void
     {
-        $types    = ['category_is',];
+        $types    = ['category_is'];
         $triggers = RuleTrigger::leftJoin('rules', 'rules.id', '=', 'rule_triggers.rule_id')
-                               ->where('rules.user_id', $this->user->id)
-                               ->whereIn('rule_triggers.trigger_type', $types)
-                               ->where('rule_triggers.trigger_value', $oldName)
-                               ->get(['rule_triggers.*']);
-        Log::debug(sprintf('Found %d triggers to update.', $triggers->count()));
+            ->where('rules.user_id', $this->user->id)
+            ->whereIn('rule_triggers.trigger_type', $types)
+            ->where('rule_triggers.trigger_value', $oldName)
+            ->get(['rule_triggers.*'])
+        ;
+        app('log')->debug(sprintf('Found %d triggers to update.', $triggers->count()));
+
         /** @var RuleTrigger $trigger */
         foreach ($triggers as $trigger) {
             $trigger->trigger_value = $newName;
             $trigger->save();
-            Log::debug(sprintf('Updated trigger %d: %s', $trigger->id, $trigger->trigger_value));
+            app('log')->debug(sprintf('Updated trigger %d: %s', $trigger->id, $trigger->trigger_value));
         }
     }
 
-    /**
-     * @param string $oldName
-     * @param string $newName
-     */
     private function updateRuleActions(string $oldName, string $newName): void
     {
-        $types   = ['set_category',];
+        $types   = ['set_category'];
         $actions = RuleAction::leftJoin('rules', 'rules.id', '=', 'rule_actions.rule_id')
-                             ->where('rules.user_id', $this->user->id)
-                             ->whereIn('rule_actions.action_type', $types)
-                             ->where('rule_actions.action_value', $oldName)
-                             ->get(['rule_actions.*']);
-        Log::debug(sprintf('Found %d actions to update.', $actions->count()));
+            ->where('rules.user_id', $this->user->id)
+            ->whereIn('rule_actions.action_type', $types)
+            ->where('rule_actions.action_value', $oldName)
+            ->get(['rule_actions.*'])
+        ;
+        app('log')->debug(sprintf('Found %d actions to update.', $actions->count()));
+
         /** @var RuleAction $action */
         foreach ($actions as $action) {
             $action->action_value = $newName;
             $action->save();
-            Log::debug(sprintf('Updated action %d: %s', $action->id, $action->action_value));
+            app('log')->debug(sprintf('Updated action %d: %s', $action->id, $action->action_value));
         }
     }
 
-    /**
-     * @param string $oldName
-     * @param string $newName
-     */
     private function updateRecurrences(string $oldName, string $newName): void
     {
         RecurrenceTransactionMeta::leftJoin('recurrences_transactions', 'rt_meta.rt_id', '=', 'recurrences_transactions.id')
-                                 ->leftJoin('recurrences', 'recurrences.id', '=', 'recurrences_transactions.recurrence_id')
-                                 ->where('recurrences.user_id', $this->user->id)
-                                 ->where('rt_meta.name', 'category_name')
-                                 ->where('rt_meta.value', $oldName)
-                                 ->update(['rt_meta.value' => $newName]);
+            ->leftJoin('recurrences', 'recurrences.id', '=', 'recurrences_transactions.recurrence_id')
+            ->where('recurrences.user_id', $this->user->id)
+            ->where('rt_meta.name', 'category_name')
+            ->where('rt_meta.value', $oldName)
+            ->update(['rt_meta.value' => $newName])
+        ;
     }
 
     /**
-     * @param Category $category
-     * @param array    $data
-     *
-     * @throws Exception
+     * @throws \Exception
      */
     private function updateNotes(Category $category, array $data): void
     {
-        $note = array_key_exists('notes', $data) ? $data['notes'] : null;
+        $note         = array_key_exists('notes', $data) ? $data['notes'] : null;
         if (null === $note) {
             return;
         }
@@ -158,7 +143,7 @@ class CategoryUpdateService
 
             return;
         }
-        $dbNote = $category->notes()->first();
+        $dbNote       = $category->notes()->first();
         if (null === $dbNote) {
             $dbNote = new Note();
             $dbNote->noteable()->associate($category);

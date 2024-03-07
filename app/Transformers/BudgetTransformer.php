@@ -40,8 +40,6 @@ class BudgetTransformer extends AbstractTransformer
 
     /**
      * BudgetTransformer constructor.
-     *
-
      */
     public function __construct()
     {
@@ -52,18 +50,14 @@ class BudgetTransformer extends AbstractTransformer
 
     /**
      * Transform a budget.
-     *
-     * @param Budget $budget
-     *
-     * @return array
      */
     public function transform(Budget $budget): array
     {
         $this->opsRepository->setUser($budget->user);
-        $start      = $this->parameters->get('start');
-        $end        = $this->parameters->get('end');
-        $autoBudget = $this->repository->getAutoBudget($budget);
-        $spent      = [];
+        $start          = $this->parameters->get('start');
+        $end            = $this->parameters->get('end');
+        $autoBudget     = $this->repository->getAutoBudget($budget);
+        $spent          = [];
         if (null !== $start && null !== $end) {
             $spent = $this->beautify($this->opsRepository->sumExpenses($start, $end, null, new Collection([$budget])));
         }
@@ -75,7 +69,7 @@ class BudgetTransformer extends AbstractTransformer
         $abPeriod       = null;
         $notes          = $this->repository->getNoteText($budget);
 
-        $types = [
+        $types          = [
             AutoBudget::AUTO_BUDGET_RESET    => 'reset',
             AutoBudget::AUTO_BUDGET_ROLLOVER => 'rollover',
             AutoBudget::AUTO_BUDGET_ADJUSTED => 'adjusted',
@@ -106,17 +100,12 @@ class BudgetTransformer extends AbstractTransformer
             'links'                     => [
                 [
                     'rel' => 'self',
-                    'uri' => '/budgets/' . $budget->id,
+                    'uri' => '/budgets/'.$budget->id,
                 ],
             ],
         ];
     }
 
-    /**
-     * @param array $array
-     *
-     * @return array
-     */
     private function beautify(array $array): array
     {
         $return = [];

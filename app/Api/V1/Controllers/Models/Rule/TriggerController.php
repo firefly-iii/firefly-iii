@@ -46,8 +46,6 @@ class TriggerController extends Controller
 
     /**
      * RuleController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -55,7 +53,7 @@ class TriggerController extends Controller
         $this->middleware(
             function ($request, $next) {
                 /** @var User $user */
-                $user = auth()->user();
+                $user                 = auth()->user();
 
                 $this->ruleRepository = app(RuleRepositoryInterface::class);
                 $this->ruleRepository->setUser($user);
@@ -68,18 +66,13 @@ class TriggerController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/rules/testRule
-     *
-     * @param TestRequest $request
-     * @param Rule        $rule
-     *
-     * @return JsonResponse
      */
     public function testRule(TestRequest $request, Rule $rule): JsonResponse
     {
-        $parameters = $request->getTestParameters();
+        $parameters   = $request->getTestParameters();
 
         /** @var RuleEngineInterface $ruleEngine */
-        $ruleEngine = app(RuleEngineInterface::class);
+        $ruleEngine   = app(RuleEngineInterface::class);
         $ruleEngine->setRules(new Collection([$rule]));
 
         // overrule the rule(s) if necessary.
@@ -96,21 +89,21 @@ class TriggerController extends Controller
             $ruleEngine->addOperator(['type' => 'account_id', 'value' => implode(',', $parameters['accounts'])]);
         }
 
-
         // file the rule(s)
         $transactions = $ruleEngine->find();
         $count        = $transactions->count();
 
-        $paginator = new LengthAwarePaginator($transactions, $count, 31337, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.rules.test', [$rule->id]) . $this->buildParams());
+        $paginator    = new LengthAwarePaginator($transactions, $count, 31337, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.rules.test', [$rule->id]).$this->buildParams());
 
         // resulting list is presented as JSON thing.
-        $manager = $this->getManager();
+        $manager      = $this->getManager();
+
         /** @var TransactionGroupTransformer $transformer */
-        $transformer = app(TransactionGroupTransformer::class);
+        $transformer  = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($transactions, $transformer, 'transactions');
+        $resource     = new FractalCollection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -121,11 +114,6 @@ class TriggerController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/rules/fireRule
      *
      * Execute the given rule group on a set of existing transactions.
-     *
-     * @param TriggerRequest $request
-     * @param Rule           $rule
-     *
-     * @return JsonResponse
      */
     public function triggerRule(TriggerRequest $request, Rule $rule): JsonResponse
     {
@@ -149,7 +137,6 @@ class TriggerController extends Controller
         if (array_key_exists('accounts', $parameters) && is_array($parameters['accounts']) && count($parameters['accounts']) > 0) {
             $ruleEngine->addOperator(['type' => 'account_id', 'value' => implode(',', $parameters['accounts'])]);
         }
-
 
         // fire the rule(s)
         $ruleEngine->fire();

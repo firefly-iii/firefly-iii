@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * TriggerController.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -33,43 +32,38 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class TriggerController
  */
 class TriggerController extends Controller
 {
-    /**
-     * @param Recurrence               $recurrence
-     * @param TriggerRecurrenceRequest $request
-     *
-     * @return RedirectResponse
-     */
     public function trigger(Recurrence $recurrence, TriggerRecurrenceRequest $request): RedirectResponse
     {
-        $all  = $request->getAll();
-        $date = $all['date'];
+        $all                     = $request->getAll();
+        $date                    = $all['date'];
 
         // grab the date from the last time the recurrence fired:
-        $backupDate = $recurrence->latest_date;
+        $backupDate              = $recurrence->latest_date;
 
         // fire the recurring cron job on the given date, then post-date the created transaction.
-        Log::info(sprintf('Trigger: will now fire recurring cron job task for date "%s".', $date->format('Y-m-d H:i:s')));
+        app('log')->info(sprintf('Trigger: will now fire recurring cron job task for date "%s".', $date->format('Y-m-d H:i:s')));
+
         /** @var CreateRecurringTransactions $job */
-        $job = app(CreateRecurringTransactions::class);
+        $job                     = app(CreateRecurringTransactions::class);
         $job->setRecurrences(new Collection([$recurrence]));
         $job->setDate($date);
         $job->setForce(false);
         $job->handle();
-        Log::debug('Done with recurrence.');
+        app('log')->debug('Done with recurrence.');
 
-        $groups = $job->getGroups();
+        $groups                  = $job->getGroups();
+
         /** @var TransactionGroup $group */
         foreach ($groups as $group) {
             /** @var TransactionJournal $journal */
             foreach ($group->transactionJournals as $journal) {
-                Log::debug(sprintf('Set date of journal #%d to today!', $journal->id));
+                app('log')->debug(sprintf('Set date of journal #%d to today!', $journal->id));
                 $journal->date = today(config('app.timezone'));
                 $journal->save();
             }
@@ -86,7 +80,6 @@ class TriggerController extends Controller
             $request->session()->flash('success', (string)trans('firefly.stored_journal_no_descr'));
             $request->session()->flash('success_url', route('transactions.show', [$first->id]));
         }
-
 
         return redirect(route('recurring.show', [$recurrence->id]));
     }

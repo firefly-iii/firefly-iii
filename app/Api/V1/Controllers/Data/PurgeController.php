@@ -35,6 +35,7 @@ use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -46,11 +47,10 @@ class PurgeController extends Controller
      * TODO cleanup and use repositories.
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/purgeData
-     *
-     * @return JsonResponse
      */
     public function purge(): JsonResponse
     {
+        /** @var User $user */
         $user = auth()->user();
 
         // some manual code, too lazy to call all repositories.
@@ -62,8 +62,10 @@ class PurgeController extends Controller
         Bill::whereUserId($user->id)->onlyTrashed()->forceDelete();
 
         // piggies
-        $set = PiggyBank::leftJoin('accounts', 'accounts.id', 'piggy_banks.account_id')
-                        ->where('accounts.user_id', $user->id)->onlyTrashed()->get(['piggy_banks.*']);
+        $set  = PiggyBank::leftJoin('accounts', 'accounts.id', 'piggy_banks.account_id')
+            ->where('accounts.user_id', $user->id)->onlyTrashed()->get(['piggy_banks.*'])
+        ;
+
         /** @var PiggyBank $piggy */
         foreach ($set as $piggy) {
             $piggy->forceDelete();
@@ -83,7 +85,6 @@ class PurgeController extends Controller
 
         // tags
         Tag::whereUserId($user->id)->onlyTrashed()->forceDelete();
-
 
         // accounts
         Account::whereUserId($user->id)->onlyTrashed()->forceDelete();

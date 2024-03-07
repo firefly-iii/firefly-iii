@@ -40,8 +40,6 @@ class StoreController extends Controller
 
     /**
      * Constructor.
-     *
-
      */
     public function __construct()
     {
@@ -62,21 +60,18 @@ class StoreController extends Controller
      *
      * Store new object.
      *
-     * @param StoreRequest $request
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function store(StoreRequest $request): JsonResponse
     {
-        $piggyBank = $this->repository->store($request->getAll());
-        $manager   = $this->getManager();
+        $piggyBank   = $this->repository->store($request->getAll());
+        $manager     = $this->getManager();
 
         /** @var PiggyBankTransformer $transformer */
         $transformer = app(PiggyBankTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($piggyBank, $transformer, 'piggy_banks');
+        $resource    = new Item($piggyBank, $transformer, 'piggy_banks');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

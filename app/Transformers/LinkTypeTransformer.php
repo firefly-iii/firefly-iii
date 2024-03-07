@@ -26,22 +26,17 @@ namespace FireflyIII\Transformers;
 use FireflyIII\Models\LinkType;
 
 /**
- *
  * Class LinkTypeTransformer
  */
 class LinkTypeTransformer extends AbstractTransformer
 {
     /**
      * Transform the currency.
-     *
-     * @param LinkType $linkType
-     *
-     * @return array
      */
     public function transform(LinkType $linkType): array
     {
         return [
-            'id'         => (int)$linkType->id,
+            'id'         => $linkType->id,
             'created_at' => $linkType->created_at->toAtomString(),
             'updated_at' => $linkType->updated_at->toAtomString(),
             'name'       => $linkType->name,
@@ -51,7 +46,7 @@ class LinkTypeTransformer extends AbstractTransformer
             'links'      => [
                 [
                     'rel' => 'self',
-                    'uri' => '/link_types/' . $linkType->id,
+                    'uri' => '/link_types/'.$linkType->id,
                 ],
             ],
         ];

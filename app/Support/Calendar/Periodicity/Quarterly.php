@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * Quarterly.php
  * Copyright (c) 2023 Antonio Spinelli <https://github.com/tonicospinelli>
@@ -30,5 +29,5 @@ namespace FireflyIII\Support\Calendar\Periodicity;
  */
 final class Quarterly extends Monthly
 {
-    public const INTERVAL = 3;
+    public const int INTERVAL = 3;
 }

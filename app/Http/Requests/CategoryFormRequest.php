@@ -27,19 +27,19 @@ use FireflyIII\Models\Category;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Validator;
 
 /**
  * Class CategoryFormRequest.
  */
 class CategoryFormRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Get information for the controller.
-     *
-     * @return array
      */
     public function getCategoryData(): array
     {
@@ -51,22 +51,29 @@ class CategoryFormRequest extends FormRequest
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {
-        $nameRule = 'required|between:1,100|uniqueObjectForUser:categories,name';
-        /** @var Category $category */
+        $nameRule = 'required|min:1|max:255|uniqueObjectForUser:categories,name';
+
+        /** @var null|Category $category */
         $category = $this->route()->parameter('category');
 
         if (null !== $category) {
-            $nameRule = 'required|between:1,100|uniqueObjectForUser:categories,name,' . $category->id;
+            $nameRule = 'required|min:1|max:255|uniqueObjectForUser:categories,name,'.$category->id;
         }
 
         // fixed
         return [
-            'name' => $nameRule,
+            'name'  => $nameRule,
+            'notes' => 'min:1|max:32768|nullable',
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        if ($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+        }
     }
 }

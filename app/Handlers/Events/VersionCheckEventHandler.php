@@ -28,9 +28,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Update\UpdateTrait;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use Illuminate\Support\Facades\Log;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class VersionCheckEventHandler
@@ -42,32 +39,29 @@ class VersionCheckEventHandler
     /**
      * Checks with GitHub to see if there is a new version.
      *
-     * @param RequestedVersionCheckStatus $event
-     *
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
+     *
      * @deprecated ?
      */
     public function checkForUpdates(RequestedVersionCheckStatus $event): void
     {
-        Log::debug('Now in checkForUpdates()');
+        app('log')->debug('Now in checkForUpdates()');
 
         // should not check for updates:
-        $permission = app('fireflyconfig')->get('permission_update_check', -1);
-        $value      = (int)$permission->data;
+        $permission    = app('fireflyconfig')->get('permission_update_check', -1);
+        $value         = (int)$permission->data;
         if (1 !== $value) {
-            Log::debug('Update check is not enabled.');
+            app('log')->debug('Update check is not enabled.');
             $this->warnToCheckForUpdates($event);
 
             return;
         }
 
         /** @var UserRepositoryInterface $repository */
-        $repository = app(UserRepositoryInterface::class);
-        $user       = $event->user;
+        $repository    = app(UserRepositoryInterface::class);
+        $user          = $event->user;
         if (!$repository->hasRole($user, 'owner')) {
-            Log::debug('User is not admin, done.');
+            app('log')->debug('User is not admin, done.');
 
             return;
         }
@@ -76,34 +70,30 @@ class VersionCheckEventHandler
         $lastCheckTime = app('fireflyconfig')->get('last_update_check', time());
         $now           = time();
         $diff          = $now - $lastCheckTime->data;
-        Log::debug(sprintf('Last check time is %d, current time is %d, difference is %d', $lastCheckTime->data, $now, $diff));
+        app('log')->debug(sprintf('Last check time is %d, current time is %d, difference is %d', $lastCheckTime->data, $now, $diff));
         if ($diff < 604800) {
-            Log::debug(sprintf('Checked for updates less than a week ago (on %s).', date('Y-m-d H:i:s', $lastCheckTime->data)));
+            app('log')->debug(sprintf('Checked for updates less than a week ago (on %s).', date('Y-m-d H:i:s', $lastCheckTime->data)));
 
             return;
         }
         // last check time was more than a week ago.
-        Log::debug('Have not checked for a new version in a week!');
-        $release = $this->getLatestRelease();
+        app('log')->debug('Have not checked for a new version in a week!');
+        $release       = $this->getLatestRelease();
 
         session()->flash($release['level'], $release['message']);
         app('fireflyconfig')->set('last_update_check', time());
     }
 
     /**
-     * @param RequestedVersionCheckStatus $event
-     *
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     protected function warnToCheckForUpdates(RequestedVersionCheckStatus $event): void
     {
         /** @var UserRepositoryInterface $repository */
-        $repository = app(UserRepositoryInterface::class);
-        $user       = $event->user;
+        $repository    = app(UserRepositoryInterface::class);
+        $user          = $event->user;
         if (!$repository->hasRole($user, 'owner')) {
-            Log::debug('User is not admin, done.');
+            app('log')->debug('User is not admin, done.');
 
             return;
         }
@@ -112,14 +102,14 @@ class VersionCheckEventHandler
         $lastCheckTime = app('fireflyconfig')->get('last_update_warning', time());
         $now           = time();
         $diff          = $now - $lastCheckTime->data;
-        Log::debug(sprintf('Last warning time is %d, current time is %d, difference is %d', $lastCheckTime->data, $now, $diff));
+        app('log')->debug(sprintf('Last warning time is %d, current time is %d, difference is %d', $lastCheckTime->data, $now, $diff));
         if ($diff < 604800 * 4) {
-            Log::debug(sprintf('Warned about updates less than four weeks ago (on %s).', date('Y-m-d H:i:s', $lastCheckTime->data)));
+            app('log')->debug(sprintf('Warned about updates less than four weeks ago (on %s).', date('Y-m-d H:i:s', $lastCheckTime->data)));
 
             return;
         }
         // last check time was more than a week ago.
-        Log::debug('Have warned about a new version in four weeks!');
+        app('log')->debug('Have warned about a new version in four weeks!');
 
         session()->flash('info', (string)trans('firefly.disabled_but_check'));
         app('fireflyconfig')->set('last_update_warning', time());

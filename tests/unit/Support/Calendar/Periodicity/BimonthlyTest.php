@@ -33,8 +33,12 @@ use FireflyIII\Support\Calendar\Periodicity\Interval;
  * @group support
  * @group calendar
  * @group periodicity
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class BimonthlyTest extends IntervalTestCase
+final class BimonthlyTest extends IntervalTestCase
 {
     public static function factory(): Interval
     {

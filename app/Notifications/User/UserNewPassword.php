@@ -39,8 +39,6 @@ class UserNewPassword extends Notification
 
     /**
      * Create a new notification instance.
-     *
-     * @return void
      */
     public function __construct(string $url)
     {
@@ -53,11 +51,12 @@ class UserNewPassword extends Notification
      * @param mixed $notifiable
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toArray($notifiable)
     {
         return [
-            //
         ];
     }
 
@@ -67,12 +66,15 @@ class UserNewPassword extends Notification
      * @param mixed $notifiable
      *
      * @return MailMessage
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toMail($notifiable)
     {
         return (new MailMessage())
             ->markdown('emails.password', ['url' => $this->url])
-            ->subject((string)trans('email.reset_pw_subject'));
+            ->subject((string)trans('email.reset_pw_subject'))
+        ;
     }
 
     /**
@@ -81,6 +83,8 @@ class UserNewPassword extends Notification
      * @param mixed $notifiable
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function via($notifiable)
     {

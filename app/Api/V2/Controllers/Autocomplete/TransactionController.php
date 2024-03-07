@@ -46,7 +46,7 @@ class TransactionController extends Controller
             function ($request, $next) {
                 $this->repository = app(JournalRepositoryInterface::class);
 
-                $userGroup = $this->validateUserGroup($request);
+                $userGroup        = $this->validateUserGroup($request);
                 if (null !== $userGroup) {
                     $this->repository->setUserGroup($userGroup);
                 }
@@ -64,14 +64,11 @@ class TransactionController extends Controller
      *  3. Request includes user_group_id
      *  4. Endpoint is documented.
      *  5. Collector uses user_group_id
-     *
-     *
-     * @return JsonResponse
      */
     public function transactionDescriptions(AutocompleteRequest $request): JsonResponse
     {
-        $data   = $request->getData();
-        $result = $this->repository->searchJournalDescriptions($data['query'], $data['limit']);
+        $data     = $request->getData();
+        $result   = $this->repository->searchJournalDescriptions($data['query'], $data['limit']);
 
         // limit and unique
         $filtered = $result->unique('description');
@@ -88,7 +85,5 @@ class TransactionController extends Controller
         }
 
         return response()->json($array);
-
     }
-
 }

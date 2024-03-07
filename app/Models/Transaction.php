@@ -25,6 +25,7 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
@@ -37,96 +38,94 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * FireflyIII\Models\Transaction
  *
- * @property int                             $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property bool                            $reconciled
- * @property int                             $account_id
- * @property int                             $transaction_journal_id
- * @property string|null                     $description
- * @property int|null                        $transaction_currency_id
- * @property string                          $modified
- * @property string                          $modified_foreign
- * @property string                          $date
- * @property string                          $max_date
- * @property string                          $amount
- * @property string|null                     $foreign_amount
- * @property int|null                        $foreign_currency_id
- * @property int                             $identifier
- * @property-read Account                    $account
- * @property-read Collection|Budget[]        $budgets
- * @property-read int|null                   $budgets_count
- * @property-read Collection|Category[]      $categories
- * @property-read int|null                   $categories_count
- * @property-read TransactionCurrency|null   $foreignCurrency
- * @property-read TransactionCurrency|null   $transactionCurrency
- * @property-read TransactionJournal         $transactionJournal
- * @method static Builder|Transaction after(Carbon $date)
- * @method static Builder|Transaction before(Carbon $date)
- * @method static Builder|Transaction newModelQuery()
- * @method static Builder|Transaction newQuery()
+ * @property int                      $id
+ * @property null|Carbon              $created_at
+ * @property null|Carbon              $updated_at
+ * @property null|Carbon              $deleted_at
+ * @property bool                     $reconciled
+ * @property int                      $account_id
+ * @property int                      $transaction_journal_id
+ * @property null|string              $description
+ * @property null|int                 $transaction_currency_id
+ * @property null|int|string          $modified
+ * @property null|int|string          $modified_foreign
+ * @property string                   $date
+ * @property string                   $max_date
+ * @property string                   $amount
+ * @property null|string              $foreign_amount
+ * @property null|int                 $foreign_currency_id
+ * @property int                      $identifier
+ * @property Account                  $account
+ * @property Budget[]|Collection      $budgets
+ * @property null|int                 $budgets_count
+ * @property Category[]|Collection    $categories
+ * @property null|int                 $categories_count
+ * @property null|TransactionCurrency $foreignCurrency
+ * @property null|TransactionCurrency $transactionCurrency
+ * @property TransactionJournal       $transactionJournal
+ *
+ * @method static Builder|Transaction                            after(Carbon $date)
+ * @method static Builder|Transaction                            before(Carbon $date)
+ * @method static Builder|Transaction                            newModelQuery()
+ * @method static Builder|Transaction                            newQuery()
  * @method static \Illuminate\Database\Query\Builder|Transaction onlyTrashed()
- * @method static Builder|Transaction query()
- * @method static Builder|Transaction transactionTypes($types)
- * @method static Builder|Transaction whereAccountId($value)
- * @method static Builder|Transaction whereAmount($value)
- * @method static Builder|Transaction whereCreatedAt($value)
- * @method static Builder|Transaction whereDeletedAt($value)
- * @method static Builder|Transaction whereDescription($value)
- * @method static Builder|Transaction whereForeignAmount($value)
- * @method static Builder|Transaction whereForeignCurrencyId($value)
- * @method static Builder|Transaction whereId($value)
- * @method static Builder|Transaction whereIdentifier($value)
- * @method static Builder|Transaction whereReconciled($value)
- * @method static Builder|Transaction whereTransactionCurrencyId($value)
- * @method static Builder|Transaction whereTransactionJournalId($value)
- * @method static Builder|Transaction whereUpdatedAt($value)
+ * @method static Builder|Transaction                            query()
+ * @method static Builder|Transaction                            transactionTypes($types)
+ * @method static Builder|Transaction                            whereAccountId($value)
+ * @method static Builder|Transaction                            whereAmount($value)
+ * @method static Builder|Transaction                            whereCreatedAt($value)
+ * @method static Builder|Transaction                            whereDeletedAt($value)
+ * @method static Builder|Transaction                            whereDescription($value)
+ * @method static Builder|Transaction                            whereForeignAmount($value)
+ * @method static Builder|Transaction                            whereForeignCurrencyId($value)
+ * @method static Builder|Transaction                            whereId($value)
+ * @method static Builder|Transaction                            whereIdentifier($value)
+ * @method static Builder|Transaction                            whereReconciled($value)
+ * @method static Builder|Transaction                            whereTransactionCurrencyId($value)
+ * @method static Builder|Transaction                            whereTransactionJournalId($value)
+ * @method static Builder|Transaction                            whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|Transaction withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Transaction withoutTrashed()
- * @property int                             $the_count
+ *
+ * @property int|string $the_count
+ *
  * @mixin Eloquent
  */
 class Transaction extends Model
 {
-    use SoftDeletes;
     use HasFactory;
+    use ReturnsIntegerIdTrait;
+    use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
     protected $casts
-        = [
-            'created_at'          => 'datetime',
-            'updated_at'          => 'datetime',
-            'deleted_at'          => 'datetime',
-            'identifier'          => 'int',
-            'encrypted'           => 'boolean', // model does not have these fields though
-            'bill_name_encrypted' => 'boolean',
-            'reconciled'          => 'boolean',
-        ];
-    /** @var array Fields that can be filled */
+                      = [
+                          'created_at'          => 'datetime',
+                          'updated_at'          => 'datetime',
+                          'deleted_at'          => 'datetime',
+                          'identifier'          => 'int',
+                          'encrypted'           => 'boolean', // model does not have these fields though
+                          'bill_name_encrypted' => 'boolean',
+                          'reconciled'          => 'boolean',
+                          'date'                => 'datetime',
+                      ];
+
     protected $fillable
-        = [
-            'account_id',
-            'transaction_journal_id',
-            'description',
-            'amount',
-            'identifier',
-            'transaction_currency_id',
-            'foreign_currency_id',
-            'foreign_amount',
-            'reconciled',
-        ];
-    /** @var array Hidden from view */
+                      = [
+                          'account_id',
+                          'transaction_journal_id',
+                          'description',
+                          'amount',
+                          'identifier',
+                          'transaction_currency_id',
+                          'foreign_currency_id',
+                          'foreign_amount',
+                          'reconciled',
+                      ];
+
     protected $hidden = ['encrypted'];
 
     /**
      * Get the account this object belongs to.
-     *
-     * @return BelongsTo
      */
     public function account(): BelongsTo
     {
@@ -135,8 +134,6 @@ class Transaction extends Model
 
     /**
      * Get the budget(s) this object belongs to.
-     *
-     * @return BelongsToMany
      */
     public function budgets(): BelongsToMany
     {
@@ -145,8 +142,6 @@ class Transaction extends Model
 
     /**
      * Get the category(ies) this object belongs to.
-     *
-     * @return BelongsToMany
      */
     public function categories(): BelongsToMany
     {
@@ -155,8 +150,6 @@ class Transaction extends Model
 
     /**
      * Get the currency this object belongs to.
-     *
-     * @return BelongsTo
      */
     public function foreignCurrency(): BelongsTo
     {
@@ -165,10 +158,6 @@ class Transaction extends Model
 
     /**
      * Check for transactions AFTER a specified date.
-     *
-     *
-     * @param Builder $query
-     * @param Carbon  $date
      */
     public function scopeAfter(Builder $query, Carbon $date): void
     {
@@ -180,18 +169,11 @@ class Transaction extends Model
 
     /**
      * Check if a table is joined.
-     *
-     * @param Builder $query
-     * @param string  $table
-     *
-     * @return bool
      */
     public static function isJoined(Builder $query, string $table): bool
     {
         $joins = $query->getQuery()->joins;
-        if (null === $joins) {
-            return false;
-        }
+
         foreach ($joins as $join) {
             if ($join->table === $table) {
                 return true;
@@ -203,10 +185,6 @@ class Transaction extends Model
 
     /**
      * Check for transactions BEFORE the specified date.
-     *
-     *
-     * @param Builder $query
-     * @param Carbon  $date
      */
     public function scopeBefore(Builder $query, Carbon $date): void
     {
@@ -216,11 +194,6 @@ class Transaction extends Model
         $query->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'));
     }
 
-    /**
-     *
-     * @param Builder $query
-     * @param array   $types
-     */
     public function scopeTransactionTypes(Builder $query, array $types): void
     {
         if (!self::isJoined($query, 'transaction_journals')) {
@@ -234,7 +207,6 @@ class Transaction extends Model
     }
 
     /**
-     *
      * @param mixed $value
      */
     public function setAmountAttribute($value): void
@@ -242,43 +214,47 @@ class Transaction extends Model
         $this->attributes['amount'] = (string)$value;
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function transactionCurrency(): BelongsTo
     {
         return $this->belongsTo(TransactionCurrency::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function transactionJournal(): BelongsTo
     {
         return $this->belongsTo(TransactionJournal::class);
     }
 
+    protected function accountId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int)$value,
+        );
+    }
+
     /**
      * Get the amount
-     *
-     * @return Attribute
      */
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (string)$value,
+            get: static fn ($value) => (string)$value,
         );
     }
 
     /**
      * Get the foreign amount
-     *
-     * @return Attribute
      */
     protected function foreignAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (string)$value,
+            get: static fn ($value) => (string)$value,
+        );
+    }
+
+    protected function transactionJournalId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int)$value,
         );
     }
 }

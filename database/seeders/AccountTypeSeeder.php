@@ -25,7 +25,6 @@ namespace Database\Seeders;
 
 use FireflyIII\Models\AccountType;
 use Illuminate\Database\Seeder;
-use PDOException;
 
 /**
  * Class AccountTypeSeeder.
@@ -52,7 +51,7 @@ class AccountTypeSeeder extends Seeder
         foreach ($types as $type) {
             try {
                 AccountType::create(['type' => $type]);
-            } catch (PDOException $e) {
+            } catch (\PDOException $e) {
                 // @ignoreException
             }
         }

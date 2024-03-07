@@ -23,14 +23,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
-use Closure;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\Webhook;
 use Illuminate\Http\Request;
-use Preferences;
 
 /**
  * Class InterestingMessage
@@ -40,52 +39,44 @@ class InterestingMessage
     /**
      * Flashes the user an interesting message if the URL parameters warrant it.
      *
-     * @param Request $request
-     * @param Closure $next
-     *
      * @return mixed
-     *
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, \Closure $next)
     {
         if ($this->testing()) {
             return $next($request);
         }
 
         if ($this->groupMessage($request)) {
-            Preferences::mark();
+            app('preferences')->mark();
             $this->handleGroupMessage($request);
         }
         if ($this->accountMessage($request)) {
-            Preferences::mark();
+            app('preferences')->mark();
             $this->handleAccountMessage($request);
         }
         if ($this->billMessage($request)) {
-            Preferences::mark();
+            app('preferences')->mark();
             $this->handleBillMessage($request);
         }
         if ($this->webhookMessage($request)) {
-            Preferences::mark();
+            app('preferences')->mark();
             $this->handleWebhookMessage($request);
+        }
+        if ($this->currencyMessage($request)) {
+            app('preferences')->mark();
+            $this->handleCurrencyMessage($request);
         }
 
         return $next($request);
     }
 
-    /**
-     * @return bool
-     */
     private function testing(): bool
     {
         // ignore middleware in test environment.
         return 'testing' === config('app.env') || !auth()->check();
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return bool
-     */
     private function groupMessage(Request $request): bool
     {
         // get parameters from request.
@@ -95,9 +86,6 @@ class InterestingMessage
         return null !== $transactionGroupId && null !== $message;
     }
 
-    /**
-     * @param Request $request
-     */
     private function handleGroupMessage(Request $request): void
     {
         // get parameters from request.
@@ -105,21 +93,21 @@ class InterestingMessage
         $message            = $request->get('message');
 
         // send message about newly created transaction group.
-        /** @var TransactionGroup $group */
-        $group = auth()->user()->transactionGroups()->with(['transactionJournals', 'transactionJournals.transactionType'])->find((int)$transactionGroupId);
+        /** @var null|TransactionGroup $group */
+        $group              = auth()->user()->transactionGroups()->with(['transactionJournals', 'transactionJournals.transactionType'])->find((int)$transactionGroupId);
 
         if (null === $group) {
             return;
         }
 
-        $count = $group->transactionJournals->count();
+        $count              = $group->transactionJournals->count();
 
-        /** @var TransactionJournal $journal */
-        $journal = $group->transactionJournals->first();
+        /** @var null|TransactionJournal $journal */
+        $journal            = $group->transactionJournals->first();
         if (null === $journal) {
             return;
         }
-        $title = $count > 1 ? $group->title : $journal->description;
+        $title              = $count > 1 ? $group->title : $journal->description;
         if ('created' === $message) {
             session()->flash('success_url', route('transactions.show', [$transactionGroupId]));
             session()->flash('success', (string)trans('firefly.stored_journal', ['description' => $title]));
@@ -136,11 +124,6 @@ class InterestingMessage
         }
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return bool
-     */
     private function accountMessage(Request $request): bool
     {
         // get parameters from request.
@@ -150,17 +133,14 @@ class InterestingMessage
         return null !== $accountId && null !== $message;
     }
 
-    /**
-     * @param Request $request
-     */
     private function handleAccountMessage(Request $request): void
     {
         // get parameters from request.
         $accountId = $request->get('account_id');
         $message   = $request->get('message');
 
-        /** @var Account $account */
-        $account = auth()->user()->accounts()->withTrashed()->find($accountId);
+        /** @var null|Account $account */
+        $account   = auth()->user()->accounts()->withTrashed()->find($accountId);
 
         if (null === $account) {
             return;
@@ -176,11 +156,6 @@ class InterestingMessage
         }
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return bool
-     */
     private function billMessage(Request $request): bool
     {
         // get parameters from request.
@@ -190,17 +165,14 @@ class InterestingMessage
         return null !== $billId && null !== $message;
     }
 
-    /**
-     * @param Request $request
-     */
     private function handleBillMessage(Request $request): void
     {
         // get parameters from request.
         $billId  = $request->get('bill_id');
         $message = $request->get('message');
 
-        /** @var Bill $bill */
-        $bill = auth()->user()->bills()->withTrashed()->find($billId);
+        /** @var null|Bill $bill */
+        $bill    = auth()->user()->bills()->withTrashed()->find($billId);
 
         if (null === $bill) {
             return;
@@ -213,31 +185,23 @@ class InterestingMessage
         }
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return bool
-     */
     private function webhookMessage(Request $request): bool
     {
         // get parameters from request.
-        $billId  = $request->get('webhook_id');
-        $message = $request->get('message');
+        $webhookId = $request->get('webhook_id');
+        $message   = $request->get('message');
 
-        return null !== $billId && null !== $message;
+        return null !== $webhookId && null !== $message;
     }
 
-    /**
-     * @param Request $request
-     */
     private function handleWebhookMessage(Request $request): void
     {
         // get parameters from request.
         $webhookId = $request->get('webhook_id');
         $message   = $request->get('message');
 
-        /** @var Webhook $webhook */
-        $webhook = auth()->user()->webhooks()->withTrashed()->find($webhookId);
+        /** @var null|Webhook $webhook */
+        $webhook   = auth()->user()->webhooks()->withTrashed()->find($webhookId);
 
         if (null === $webhook) {
             return;
@@ -250,6 +214,48 @@ class InterestingMessage
         }
         if ('created' === $message) {
             session()->flash('success', (string)trans('firefly.stored_new_webhook', ['title' => $webhook->title]));
+        }
+    }
+
+    private function currencyMessage(Request $request): bool
+    {
+        // get parameters from request.
+        $code    = $request->get('code');
+        $message = $request->get('message');
+
+        return null !== $code && null !== $message;
+    }
+
+    private function handleCurrencyMessage(Request $request): void
+    {
+        // params:
+        // get parameters from request.
+        $code     = $request->get('code');
+        $message  = $request->get('message');
+
+        /** @var null|TransactionCurrency $currency */
+        $currency = TransactionCurrency::whereCode($code)->first();
+
+        if (null === $currency) {
+            return;
+        }
+        if ('enabled' === $message) {
+            session()->flash('success', (string)trans('firefly.currency_is_now_enabled', ['name' => $currency->name]));
+        }
+        if ('enable_failed' === $message) {
+            session()->flash('error', (string)trans('firefly.could_not_enable_currency', ['name' => $currency->name]));
+        }
+        if ('disabled' === $message) {
+            session()->flash('success', (string)trans('firefly.currency_is_now_disabled', ['name' => $currency->name]));
+        }
+        if ('disable_failed' === $message) {
+            session()->flash('error', (string)trans('firefly.could_not_disable_currency', ['name' => $currency->name]));
+        }
+        if ('default' === $message) {
+            session()->flash('success', (string)trans('firefly.new_default_currency', ['name' => $currency->name]));
+        }
+        if ('default_failed' === $message) {
+            session()->flash('error', (string)trans('firefly.default_currency_failed', ['name' => $currency->name]));
         }
     }
 }

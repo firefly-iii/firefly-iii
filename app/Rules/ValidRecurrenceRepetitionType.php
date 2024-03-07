@@ -23,52 +23,36 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
-use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Contracts\Validation\ValidationRule;
 
 /**
  * Class ValidRecurrenceRepetitionType
- *
-
  */
-class ValidRecurrenceRepetitionType implements Rule
+class ValidRecurrenceRepetitionType implements ValidationRule
 {
-    /**
-     * Get the validation error message.
-     *
-     * @return string
-     */
-    public function message(): string
-    {
-        return (string)trans('validation.valid_recurrence_rep_type');
-    }
-
     /**
      * Determine if the validation rule passes.
      *
-     * @param string $attribute
-     * @param mixed  $value
-     *
-     * @return bool
-     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function passes($attribute, $value): bool
+    public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
         $value = (string)$value;
         if ('daily' === $value) {
-            return true;
+            return;
         }
-        //monthly,17
-        //ndom,3,7
+        // monthly,17
+        // ndom,3,7
         if (in_array(substr($value, 0, 6), ['yearly', 'weekly'], true)) {
-            return true;
+            return;
         }
         if (str_starts_with($value, 'monthly')) {
-            return true;
+            return;
         }
         if (str_starts_with($value, 'ndom')) {
-            return true;
+            return;
         }
 
-        return false;
+        $fail('validation.valid_recurrence_rep_type')->translate();
     }
 }

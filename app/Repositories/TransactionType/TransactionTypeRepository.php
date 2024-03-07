@@ -25,42 +25,30 @@ namespace FireflyIII\Repositories\TransactionType;
 
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class TransactionTypeRepository
  */
 class TransactionTypeRepository implements TransactionTypeRepositoryInterface
 {
-    /**
-     * @param TransactionType|null $type
-     * @param string|null          $typeString
-     *
-     * @return TransactionType
-     */
     public function findTransactionType(?TransactionType $type, ?string $typeString): TransactionType
     {
-        Log::debug('Now looking for a transaction type.');
+        app('log')->debug('Now looking for a transaction type.');
         if (null !== $type) {
-            Log::debug(sprintf('Found $type in parameters, its %s. Will return it.', $type->type));
+            app('log')->debug(sprintf('Found $type in parameters, its %s. Will return it.', $type->type));
 
             return $type;
         }
-        $typeString = $typeString ?? TransactionType::WITHDRAWAL;
-        $search     = $this->findByType($typeString);
+        $typeString ??= TransactionType::WITHDRAWAL;
+        $search = $this->findByType($typeString);
         if (null === $search) {
             $search = $this->findByType(TransactionType::WITHDRAWAL);
         }
-        Log::debug(sprintf('Tried to search for "%s", came up with "%s". Will return it.', $typeString, $search->type));
+        app('log')->debug(sprintf('Tried to search for "%s", came up with "%s". Will return it.', $typeString, $search->type));
 
         return $search;
     }
 
-    /**
-     * @param string $type
-     *
-     * @return TransactionType|null
-     */
     public function findByType(string $type): ?TransactionType
     {
         $search = ucfirst($type);
@@ -68,12 +56,6 @@ class TransactionTypeRepository implements TransactionTypeRepositoryInterface
         return TransactionType::whereType($search)->first();
     }
 
-    /**
-     * @param string $query
-     * @param int    $limit
-     *
-     * @return Collection
-     */
     public function searchTypes(string $query, int $limit): Collection
     {
         if ('' === $query) {

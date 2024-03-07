@@ -42,8 +42,8 @@ use Illuminate\Support\Collection;
  */
 class GenericRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     private Collection $accounts;
     private Collection $bills;
@@ -53,8 +53,6 @@ class GenericRequest extends FormRequest
 
     /**
      * Get all data from the request.
-     *
-     * @return array
      */
     public function getAll(): array
     {
@@ -64,13 +62,11 @@ class GenericRequest extends FormRequest
         ];
     }
 
-    /**
-     * @return Collection
-     */
     public function getAssetAccounts(): Collection
     {
         $this->parseAccounts();
         $return = new Collection();
+
         /** @var Account $account */
         foreach ($this->accounts as $account) {
             $type = $account->accountType->type;
@@ -82,9 +78,6 @@ class GenericRequest extends FormRequest
         return $return;
     }
 
-    /**
-     *
-     */
     private function parseAccounts(): void
     {
         if (0 !== $this->accounts->count()) {
@@ -92,7 +85,7 @@ class GenericRequest extends FormRequest
         }
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser(auth()->user());
-        $array = $this->get('accounts');
+        $array      = $this->get('accounts');
         if (is_array($array)) {
             foreach ($array as $accountId) {
                 $accountId = (int)$accountId;
@@ -104,9 +97,6 @@ class GenericRequest extends FormRequest
         }
     }
 
-    /**
-     * @return Collection
-     */
     public function getBills(): Collection
     {
         $this->parseBills();
@@ -114,9 +104,6 @@ class GenericRequest extends FormRequest
         return $this->bills;
     }
 
-    /**
-     *
-     */
     private function parseBills(): void
     {
         if (0 !== $this->bills->count()) {
@@ -124,7 +111,7 @@ class GenericRequest extends FormRequest
         }
         $repository = app(BillRepositoryInterface::class);
         $repository->setUser(auth()->user());
-        $array = $this->get('bills');
+        $array      = $this->get('bills');
         if (is_array($array)) {
             foreach ($array as $billId) {
                 $billId = (int)$billId;
@@ -136,9 +123,6 @@ class GenericRequest extends FormRequest
         }
     }
 
-    /**
-     * @return Collection
-     */
     public function getBudgets(): Collection
     {
         $this->parseBudgets();
@@ -146,9 +130,6 @@ class GenericRequest extends FormRequest
         return $this->budgets;
     }
 
-    /**
-     *
-     */
     private function parseBudgets(): void
     {
         if (0 !== $this->budgets->count()) {
@@ -156,7 +137,7 @@ class GenericRequest extends FormRequest
         }
         $repository = app(BudgetRepositoryInterface::class);
         $repository->setUser(auth()->user());
-        $array = $this->get('budgets');
+        $array      = $this->get('budgets');
         if (is_array($array)) {
             foreach ($array as $budgetId) {
                 $budgetId = (int)$budgetId;
@@ -168,9 +149,6 @@ class GenericRequest extends FormRequest
         }
     }
 
-    /**
-     * @return Collection
-     */
     public function getCategories(): Collection
     {
         $this->parseCategories();
@@ -178,9 +156,6 @@ class GenericRequest extends FormRequest
         return $this->categories;
     }
 
-    /**
-     *
-     */
     private function parseCategories(): void
     {
         if (0 !== $this->categories->count()) {
@@ -188,7 +163,7 @@ class GenericRequest extends FormRequest
         }
         $repository = app(CategoryRepositoryInterface::class);
         $repository->setUser(auth()->user());
-        $array = $this->get('categories');
+        $array      = $this->get('categories');
         if (is_array($array)) {
             foreach ($array as $categoryId) {
                 $categoryId = (int)$categoryId;
@@ -200,9 +175,6 @@ class GenericRequest extends FormRequest
         }
     }
 
-    /**
-     * @return Carbon
-     */
     public function getEnd(): Carbon
     {
         $date = $this->getCarbonDate('end');
@@ -211,17 +183,15 @@ class GenericRequest extends FormRequest
         return $date;
     }
 
-    /**
-     * @return Collection
-     */
     public function getExpenseAccounts(): Collection
     {
         $this->parseAccounts();
         $return = new Collection();
+
         /** @var Account $account */
         foreach ($this->accounts as $account) {
             $type = $account->accountType->type;
-            if ($type === AccountType::EXPENSE) {
+            if (AccountType::EXPENSE === $type) {
                 $return->push($account);
             }
         }
@@ -229,17 +199,15 @@ class GenericRequest extends FormRequest
         return $return;
     }
 
-    /**
-     * @return Collection
-     */
     public function getRevenueAccounts(): Collection
     {
         $this->parseAccounts();
         $return = new Collection();
+
         /** @var Account $account */
         foreach ($this->accounts as $account) {
             $type = $account->accountType->type;
-            if ($type === AccountType::REVENUE) {
+            if (AccountType::REVENUE === $type) {
                 $return->push($account);
             }
         }
@@ -247,9 +215,6 @@ class GenericRequest extends FormRequest
         return $return;
     }
 
-    /**
-     * @return Carbon
-     */
     public function getStart(): Carbon
     {
         $date = $this->getCarbonDate('start');
@@ -258,9 +223,6 @@ class GenericRequest extends FormRequest
         return $date;
     }
 
-    /**
-     * @return Collection
-     */
     public function getTags(): Collection
     {
         $this->parseTags();
@@ -268,9 +230,6 @@ class GenericRequest extends FormRequest
         return $this->tags;
     }
 
-    /**
-     *
-     */
     private function parseTags(): void
     {
         if (0 !== $this->tags->count()) {
@@ -278,7 +237,7 @@ class GenericRequest extends FormRequest
         }
         $repository = app(TagRepositoryInterface::class);
         $repository->setUser(auth()->user());
-        $array = $this->get('tags');
+        $array      = $this->get('tags');
         if (is_array($array)) {
             foreach ($array as $tagId) {
                 $tagId = (int)$tagId;
@@ -292,8 +251,6 @@ class GenericRequest extends FormRequest
 
     /**
      * The rules that the incoming request must be matched against.
-     *
-     * @return array
      */
     public function rules(): array
     {

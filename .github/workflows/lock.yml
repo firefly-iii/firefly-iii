@@ -1,4 +1,4 @@
-name: Lock old issues
+name: 'Issues - Lock old issues'
 
 on:
   workflow_dispatch:
@@ -15,5 +15,5 @@ jobs:
       - uses: JC5/lock-threads@main
         with:
           github-token: ${{ github.token }}
-          issue-inactive-days: 90
-          pr-inactive-days: 90
+          issue-inactive-days: 7
+          pr-inactive-days: 7

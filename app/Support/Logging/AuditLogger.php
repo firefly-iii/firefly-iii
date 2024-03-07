@@ -30,24 +30,19 @@ use Monolog\Handler\AbstractProcessingHandler;
 
 /**
  * Class AuditLogger
- *
-
  */
 class AuditLogger
 {
     /**
      * Customize the given logger instance.
-     *
-     * @param Logger $logger
-     *
-     * @return void
      */
-    public function __invoke(Logger $logger)
+    public function __invoke(Logger $logger): void
     {
         $processor = new AuditProcessor();
+
         /** @var AbstractProcessingHandler $handler */
         foreach ($logger->getHandlers() as $handler) {
-            $formatter = new LineFormatter("[%datetime%] %channel%.%level_name%: %message% %context% %extra%\n");
+            $formatter = new LineFormatter("[%datetime%] %channel%.%level_name%: %message% %context% %extra%\n", 'Y-m-d H:i:s', false, true);
             $handler->setFormatter($formatter);
             $handler->pushProcessor($processor);
         }

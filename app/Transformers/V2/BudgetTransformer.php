@@ -32,24 +32,19 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class BudgetTransformer extends AbstractTransformer
 {
-    //private OperationsRepositoryInterface $opsRepository;
-    //private BudgetRepositoryInterface     $repository;
+    // private OperationsRepositoryInterface $opsRepository;
+    // private BudgetRepositoryInterface     $repository;
 
     /**
      * BudgetTransformer constructor.
-     *
-
      */
     public function __construct()
     {
-        //$this->opsRepository = app(OperationsRepositoryInterface::class);
-        //$this->repository    = app(BudgetRepositoryInterface::class);
+        // $this->opsRepository = app(OperationsRepositoryInterface::class);
+        // $this->repository    = app(BudgetRepositoryInterface::class);
         $this->parameters = new ParameterBag();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function collectMetaData(Collection $objects): void
     {
         // TODO: Implement collectMetaData() method.
@@ -57,17 +52,13 @@ class BudgetTransformer extends AbstractTransformer
 
     /**
      * Transform a budget.
-     *
-     * @param Budget $budget
-     *
-     * @return array
      */
     public function transform(Budget $budget): array
     {
-        //$this->opsRepository->setUser($budget->user);
-        $start = $this->parameters->get('start');
-        $end   = $this->parameters->get('end');
-        //$autoBudget = $this->repository->getAutoBudget($budget);
+        // $this->opsRepository->setUser($budget->user);
+        // $start = $this->parameters->get('start');
+        // $end   = $this->parameters->get('end');
+        // $autoBudget = $this->repository->getAutoBudget($budget);
         //        $spent      = [];
         //        if (null !== $start && null !== $end) {
         //            $spent = $this->beautify($this->opsRepository->sumExpenses($start, $end, null, new Collection([$budget])));
@@ -114,21 +105,5 @@ class BudgetTransformer extends AbstractTransformer
                 ],
             ],
         ];
-    }
-
-    /**
-     * @param array $array
-     *
-     * @return array
-     */
-    private function beautify(array $array): array
-    {
-        $return = [];
-        foreach ($array as $data) {
-            $data['sum'] = number_format((float)$data['sum'], (int)$data['currency_decimal_places'], '.', '');
-            $return[]    = $data;
-        }
-
-        return $return;
     }
 }

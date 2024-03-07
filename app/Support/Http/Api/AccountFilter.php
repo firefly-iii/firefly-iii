@@ -27,17 +27,11 @@ use FireflyIII\Models\AccountType;
 
 /**
  * Trait AccountFilter
- *
-
  */
 trait AccountFilter
 {
     /**
      * All the available types.
-     *
-     * @param string $type
-     *
-     * @return array
      */
     protected function mapAccountTypes(string $type): array
     {
@@ -56,11 +50,11 @@ trait AccountFilter
                 AccountType::DEBT,
                 AccountType::MORTGAGE,
             ],
-            'asset'                      => [AccountType::DEFAULT, AccountType::ASSET,],
-            'cash'                       => [AccountType::CASH,],
-            'expense'                    => [AccountType::EXPENSE, AccountType::BENEFICIARY,],
-            'revenue'                    => [AccountType::REVENUE,],
-            'special'                    => [AccountType::CASH, AccountType::INITIAL_BALANCE, AccountType::IMPORT, AccountType::RECONCILIATION,],
+            'asset'                      => [AccountType::DEFAULT, AccountType::ASSET],
+            'cash'                       => [AccountType::CASH],
+            'expense'                    => [AccountType::EXPENSE, AccountType::BENEFICIARY],
+            'revenue'                    => [AccountType::REVENUE],
+            'special'                    => [AccountType::CASH, AccountType::INITIAL_BALANCE, AccountType::IMPORT, AccountType::RECONCILIATION],
             'hidden'                     => [AccountType::INITIAL_BALANCE, AccountType::IMPORT, AccountType::RECONCILIATION],
             'liability'                  => [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD],
             'liabilities'                => [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD],

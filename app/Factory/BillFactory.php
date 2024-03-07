@@ -30,8 +30,6 @@ use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use FireflyIII\Services\Internal\Support\BillServiceTrait;
 use FireflyIII\User;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\Log;
-use JsonException;
 
 /**
  * Class BillFactory
@@ -44,24 +42,21 @@ class BillFactory
     private User $user;
 
     /**
-     * @param array $data
-     *
-     * @return Bill|null
      * @throws FireflyException
-     * @throws JsonException
      */
     public function create(array $data): ?Bill
     {
-        Log::debug(sprintf('Now in %s', __METHOD__), $data);
-        $factory  = app(TransactionCurrencyFactory::class);
-        $currency = $factory->find((int)($data['currency_id'] ?? null), (string)($data['currency_code'] ?? null)) ??
-                    app('amount')->getDefaultCurrencyByUser($this->user);
+        app('log')->debug(sprintf('Now in %s', __METHOD__), $data);
+        $factory          = app(TransactionCurrencyFactory::class);
+        $currency         = $factory->find((int)($data['currency_id'] ?? null), (string)($data['currency_code'] ?? null)) ??
+                    app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
 
         try {
             $skip   = array_key_exists('skip', $data) ? $data['skip'] : 0;
             $active = array_key_exists('active', $data) ? $data['active'] : 0;
+
             /** @var Bill $bill */
-            $bill = Bill::create(
+            $bill   = Bill::create(
                 [
                     'name'                    => $data['name'],
                     'match'                   => 'MIGRATED_TO_RULES',
@@ -80,8 +75,9 @@ class BillFactory
                 ]
             );
         } catch (QueryException $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
+
             throw new FireflyException('400000: Could not store bill.', 0, $e);
         }
 
@@ -97,7 +93,7 @@ class BillFactory
             }
         }
         // try also with ID:
-        $objectGroupId = (int)($data['object_group_id'] ?? 0);
+        $objectGroupId    = (int)($data['object_group_id'] ?? 0);
         if (0 !== $objectGroupId) {
             $objectGroup = $this->findObjectGroupById($objectGroupId);
             if (null !== $objectGroup) {
@@ -109,12 +105,6 @@ class BillFactory
         return $bill;
     }
 
-    /**
-     * @param int|null    $billId
-     * @param null|string $billName
-     *
-     * @return Bill|null
-     */
     public function find(?int $billId, ?string $billName): ?Bill
     {
         $billId   = (int)$billId;
@@ -134,19 +124,11 @@ class BillFactory
         return $bill;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return Bill|null
-     */
     public function findByName(string $name): ?Bill
     {
         return $this->user->bills()->where('name', 'LIKE', sprintf('%%%s%%', $name))->first();
     }
 
-    /**
-     * @param User $user
-     */
     public function setUser(User $user): void
     {
         $this->user = $user;

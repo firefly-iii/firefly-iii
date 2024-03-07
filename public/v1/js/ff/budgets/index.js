@@ -94,7 +94,6 @@ function updateBudgetedAmount(e) {
             start: periodStart,
             end: periodEnd
         }).done(function (data) {
-
             input.prop('disabled', false);
             input.data('limit', data.id);
             // update amount left.

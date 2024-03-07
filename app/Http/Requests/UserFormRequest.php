@@ -26,21 +26,19 @@ namespace FireflyIII\Http\Requests;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Validator;
 
 /**
  * Class UserFormRequest.
- *
-
  */
 class UserFormRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Get data for controller.
-     *
-     * @return array
      */
     public function getUserData(): array
     {
@@ -55,8 +53,6 @@ class UserFormRequest extends FormRequest
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -64,9 +60,16 @@ class UserFormRequest extends FormRequest
             'id'           => 'required|exists:users,id',
             'email'        => 'email|required',
             'password'     => 'confirmed|secure_password',
-            'blocked_code' => 'between:0,30|nullable',
-            'blocked'      => 'between:0,1|numeric',
-            'is_owner'     => 'between:0,1|numeric',
+            'blocked_code' => 'min:0|max:32|nullable',
+            'blocked'      => 'min:0|max:1|numeric',
+            'is_owner'     => 'min:0|max:1|numeric',
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        if ($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+        }
     }
 }

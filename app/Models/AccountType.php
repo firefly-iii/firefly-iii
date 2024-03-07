@@ -23,22 +23,24 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Carbon;
 
 /**
  * FireflyIII\Models\AccountType
  *
- * @property int                       $id
- * @property Carbon|null               $created_at
- * @property Carbon|null               $updated_at
- * @property string                    $type
- * @property-read Collection|Account[] $accounts
- * @property-read int|null             $accounts_count
+ * @property int                  $id
+ * @property null|Carbon          $created_at
+ * @property null|Carbon          $updated_at
+ * @property string               $type
+ * @property Account[]|Collection $accounts
+ * @property null|int             $accounts_count
+ *
  * @method static Builder|AccountType newModelQuery()
  * @method static Builder|AccountType newQuery()
  * @method static Builder|AccountType query()
@@ -46,42 +48,36 @@ use Illuminate\Support\Carbon;
  * @method static Builder|AccountType whereId($value)
  * @method static Builder|AccountType whereType($value)
  * @method static Builder|AccountType whereUpdatedAt($value)
+ *
  * @mixin Eloquent
  */
 class AccountType extends Model
 {
-    public const ASSET            = 'Asset account';
-    public const BENEFICIARY      = 'Beneficiary account';
-    public const CASH             = 'Cash account';
-    public const CREDITCARD       = 'Credit card';
-    public const DEBT             = 'Debt';
-    public const DEFAULT          = 'Default account';
-    public const EXPENSE          = 'Expense account';
-    public const IMPORT           = 'Import account';
-    public const INITIAL_BALANCE  = 'Initial balance account';
-    public const LIABILITY_CREDIT = 'Liability credit account';
-    public const LOAN             = 'Loan';
-    public const MORTGAGE         = 'Mortgage';
-    public const RECONCILIATION   = 'Reconciliation account';
-    public const REVENUE          = 'Revenue account';
+    use ReturnsIntegerIdTrait;
 
+    public const string ASSET            = 'Asset account';
+    public const string BENEFICIARY      = 'Beneficiary account';
+    public const string CASH             = 'Cash account';
+    public const string CREDITCARD       = 'Credit card';
+    public const string DEBT             = 'Debt';
+    public const string DEFAULT          = 'Default account';
+    public const string EXPENSE          = 'Expense account';
+    public const string IMPORT           = 'Import account';
+    public const string INITIAL_BALANCE  = 'Initial balance account';
+    public const string LIABILITY_CREDIT = 'Liability credit account';
+    public const string LOAN             = 'Loan';
+    public const string MORTGAGE         = 'Mortgage';
+    public const string RECONCILIATION   = 'Reconciliation account';
+    public const string REVENUE          = 'Revenue account';
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
     protected $casts
-        = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-        ];
-    /** @var array Fields that can be filled */
-    protected $fillable = ['type'];
+                                         = [
+                                             'created_at' => 'datetime',
+                                             'updated_at' => 'datetime',
+                                         ];
 
-    /**
-     * @return HasMany
-     */
+    protected $fillable                  = ['type'];
+
     public function accounts(): HasMany
     {
         return $this->hasMany(Account::class);

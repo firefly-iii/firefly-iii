@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * BillRepositoryInterface.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -27,6 +26,7 @@ namespace FireflyIII\Repositories\UserGroups\Bill;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Bill;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -40,26 +40,14 @@ interface BillRepositoryInterface
      */
     public function correctOrder(): void;
 
-    /**
-     * @return Collection
-     */
     public function getActiveBills(): Collection;
 
-    /**
-     * @return Collection
-     */
     public function getBills(): Collection;
 
     /**
      * Between start and end, tells you on which date(s) the bill is expected to hit.
      *
      * TODO duplicate of method in other billrepositoryinterface
-     *
-     * @param Bill   $bill
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
      */
     public function getPayDatesInRange(Bill $bill, Carbon $start, Carbon $end): Collection;
 
@@ -68,31 +56,18 @@ interface BillRepositoryInterface
      * transaction. Whether it is there already, is not relevant.
      *
      * TODO duplicate of method in other bill repos
-     *
-     * @param Bill   $bill
-     * @param Carbon $date
-     *
-     * @return Carbon
      */
     public function nextDateMatch(Bill $bill, Carbon $date): Carbon;
 
+    public function setUser(User $user): void;
+
     /**
      * Collect multi-currency of sum of bills already paid.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
      */
     public function sumPaidInRange(Carbon $start, Carbon $end): array;
 
     /**
      * Collect multi-currency of sum of bills yet to pay.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
      */
     public function sumUnpaidInRange(Carbon $start, Carbon $end): array;
 }

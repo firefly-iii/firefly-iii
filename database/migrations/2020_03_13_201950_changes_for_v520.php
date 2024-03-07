@@ -34,8 +34,6 @@ class ChangesForV520 extends Migration
 {
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down(): void
     {
@@ -46,7 +44,7 @@ class ChangesForV520 extends Migration
     /**
      * Run the migrations.
      *
-     * @return void
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up(): void
     {
@@ -54,7 +52,7 @@ class ChangesForV520 extends Migration
             try {
                 Schema::create(
                     'auto_budgets',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->softDeletes();

@@ -27,7 +27,6 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use JsonException;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -38,10 +37,7 @@ class AccountTransformer extends AbstractTransformer
     protected AccountRepositoryInterface $repository;
 
     /**
-     *
      * AccountTransformer constructor.
-     *
-
      */
     public function __construct()
     {
@@ -52,39 +48,35 @@ class AccountTransformer extends AbstractTransformer
     /**
      * Transform the account.
      *
-     * @param Account $account
-     *
-     * @return array
      * @throws FireflyException
-     * @throws JsonException
      */
     public function transform(Account $account): array
     {
         $this->repository->setUser($account->user);
 
         // get account type:
-        $fullType           = $account->accountType->type;
-        $accountType        = (string)config(sprintf('firefly.shortNamesByFullName.%s', $fullType));
-        $liabilityType      = (string)config(sprintf('firefly.shortLiabilityNameByFullName.%s', $fullType));
-        $liabilityType      = '' === $liabilityType ? null : strtolower($liabilityType);
-        $liabilityDirection = $this->repository->getMetaValue($account, 'liability_direction');
+        $fullType                                                     = $account->accountType->type;
+        $accountType                                                  = (string)config(sprintf('firefly.shortNamesByFullName.%s', $fullType));
+        $liabilityType                                                = (string)config(sprintf('firefly.shortLiabilityNameByFullName.%s', $fullType));
+        $liabilityType                                                = '' === $liabilityType ? null : strtolower($liabilityType);
+        $liabilityDirection                                           = $this->repository->getMetaValue($account, 'liability_direction');
 
         // get account role (will only work if the type is asset.
-        $accountRole = $this->getAccountRole($account, $accountType);
-        $date        = $this->getDate();
+        $accountRole                                                  = $this->getAccountRole($account, $accountType);
+        $date                                                         = $this->getDate();
         $date->endOfDay();
 
         [$currencyId, $currencyCode, $currencySymbol, $decimalPlaces] = $this->getCurrency($account);
-        [$creditCardType, $monthlyPaymentDate] = $this->getCCInfo($account, $accountRole, $accountType);
-        [$openingBalance, $openingBalanceDate] = $this->getOpeningBalance($account, $accountType);
-        [$interest, $interestPeriod] = $this->getInterest($account, $accountType);
+        [$creditCardType, $monthlyPaymentDate]                        = $this->getCCInfo($account, $accountRole, $accountType);
+        [$openingBalance, $openingBalanceDate]                        = $this->getOpeningBalance($account, $accountType);
+        [$interest, $interestPeriod]                                  = $this->getInterest($account, $accountType);
 
-        $openingBalance  = app('steam')->bcround($openingBalance, $decimalPlaces);
-        $includeNetWorth = '0' !== $this->repository->getMetaValue($account, 'include_net_worth');
-        $longitude       = null;
-        $latitude        = null;
-        $zoomLevel       = null;
-        $location        = $this->repository->getLocation($account);
+        $openingBalance                                               = app('steam')->bcround($openingBalance, $decimalPlaces);
+        $includeNetWorth                                              = '0' !== $this->repository->getMetaValue($account, 'include_net_worth');
+        $longitude                                                    = null;
+        $latitude                                                     = null;
+        $zoomLevel                                                    = null;
+        $location                                                     = $this->repository->getLocation($account);
         if (null !== $location) {
             $longitude = $location->longitude;
             $latitude  = $location->latitude;
@@ -92,7 +84,7 @@ class AccountTransformer extends AbstractTransformer
         }
 
         // no order for some accounts:
-        $order = (int)$account->order;
+        $order                                                        = $account->order;
         if (!in_array(strtolower($accountType), ['liability', 'liabilities', 'asset'], true)) {
             $order = null;
         }
@@ -133,19 +125,12 @@ class AccountTransformer extends AbstractTransformer
             'links'                   => [
                 [
                     'rel' => 'self',
-                    'uri' => '/accounts/' . $account->id,
+                    'uri' => '/accounts/'.$account->id,
                 ],
             ],
         ];
     }
 
-    /**
-     * @param Account $account
-     *
-     * @param string  $accountType
-     *
-     * @return string|null
-     */
     private function getAccountRole(Account $account, string $accountType): ?string
     {
         $accountRole = $this->repository->getMetaValue($account, 'account_role');
@@ -158,8 +143,6 @@ class AccountTransformer extends AbstractTransformer
 
     /**
      * TODO duplicated in the V2 transformer.
-     *
-     * @return Carbon
      */
     private function getDate(): Carbon
     {
@@ -172,19 +155,15 @@ class AccountTransformer extends AbstractTransformer
     }
 
     /**
-     * @param Account $account
-     *
-     * @return array
      * @throws FireflyException
-     * @throws JsonException
      */
     private function getCurrency(Account $account): array
     {
-        $currency = $this->repository->getAccountCurrency($account);
+        $currency       = $this->repository->getAccountCurrency($account);
 
         // only grab default when result is null:
         if (null === $currency) {
-            $currency = app('amount')->getDefaultCurrencyByUser($account->user);
+            $currency = app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
         }
         $currencyId     = (string)$currency->id;
         $currencyCode   = $currency->code;
@@ -194,13 +173,6 @@ class AccountTransformer extends AbstractTransformer
         return [$currencyId, $currencyCode, $currencySymbol, $decimalPlaces];
     }
 
-    /**
-     * @param Account     $account
-     * @param string|null $accountRole
-     * @param string      $accountType
-     *
-     * @return array
-     */
     private function getCCInfo(Account $account, ?string $accountRole, string $accountType): array
     {
         $monthlyPaymentDate = null;
@@ -212,7 +184,11 @@ class AccountTransformer extends AbstractTransformer
         if (null !== $monthlyPaymentDate) {
             // try classic date:
             if (10 === strlen($monthlyPaymentDate)) {
-                $monthlyPaymentDate = Carbon::createFromFormat('!Y-m-d', $monthlyPaymentDate, config('app.timezone'))->toAtomString();
+                $object             = Carbon::createFromFormat('!Y-m-d', $monthlyPaymentDate, config('app.timezone'));
+                if (false === $object) {
+                    $object = today(config('app.timezone'));
+                }
+                $monthlyPaymentDate = $object->toAtomString();
             }
             if (10 !== strlen($monthlyPaymentDate)) {
                 $monthlyPaymentDate = Carbon::parse($monthlyPaymentDate, config('app.timezone'))->toAtomString();
@@ -223,12 +199,7 @@ class AccountTransformer extends AbstractTransformer
     }
 
     /**
-     * @param Account $account
-     * @param string  $accountType
-     *
-     * @return array
-     *
-     * TODO refactor call to get~OpeningBalanceAmount / Date because it is a lot of queries.
+     * TODO refactor call to get~OpeningBalanceAmount / Date because it is a lot of queries
      */
     private function getOpeningBalance(Account $account, string $accountType): array
     {
@@ -240,18 +211,16 @@ class AccountTransformer extends AbstractTransformer
             $openingBalanceDate = $this->repository->getOpeningBalanceDate($account);
         }
         if (null !== $openingBalanceDate) {
-            $openingBalanceDate = Carbon::createFromFormat('Y-m-d H:i:s', $openingBalanceDate, config('app.timezone'))->toAtomString();
+            $object             = Carbon::createFromFormat('Y-m-d H:i:s', $openingBalanceDate, config('app.timezone'));
+            if (false === $object) {
+                $object = today(config('app.timezone'));
+            }
+            $openingBalanceDate = $object->toAtomString();
         }
 
         return [$openingBalance, $openingBalanceDate];
     }
 
-    /**
-     * @param Account $account
-     * @param string  $accountType
-     *
-     * @return array
-     */
     private function getInterest(Account $account, string $accountType): array
     {
         $interest       = null;

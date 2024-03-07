@@ -26,7 +26,6 @@ namespace FireflyIII\Http\Controllers\Admin;
 use FireflyIII\Events\AdminRequestedTestMessage;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
-use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Notifications\UrlValidator;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
@@ -35,8 +34,6 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class HomeController.
@@ -45,8 +42,6 @@ class HomeController extends Controller
 {
     /**
      * ConfigurationController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -58,8 +53,6 @@ class HomeController extends Controller
      * Index of the admin.
      *
      * @return Factory|View
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function index()
     {
@@ -75,18 +68,13 @@ class HomeController extends Controller
         // admin notification settings:
         $notifications = [];
         foreach (config('firefly.admin_notifications') as $item) {
-            $notifications[$item] = FireflyConfig::get(sprintf('notification_%s', $item), true)->data;
+            $notifications[$item] = app('fireflyconfig')->get(sprintf('notification_%s', $item), true)->data;
         }
-        $slackUrl = FireflyConfig::get('slack_webhook_url', '')->data;
+        $slackUrl      = app('fireflyconfig')->get('slack_webhook_url', '')->data;
 
         return view('admin.index', compact('title', 'mainTitleIcon', 'email', 'notifications', 'slackUrl'));
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
     public function notifications(Request $request): RedirectResponse
     {
         foreach (config('firefly.admin_notifications') as $item) {
@@ -94,33 +82,33 @@ class HomeController extends Controller
             if ($request->has(sprintf('notification_%s', $item))) {
                 $value = true;
             }
-            FireflyConfig::set(sprintf('notification_%s', $item), $value);
+            app('fireflyconfig')->set(sprintf('notification_%s', $item), $value);
         }
         $url = (string)$request->get('slackUrl');
         if ('' === $url) {
-            FireflyConfig::delete('slack_webhook_url');
+            app('fireflyconfig')->delete('slack_webhook_url');
         }
         if (UrlValidator::isValidWebhookURL($url)) {
-            FireflyConfig::set('slack_webhook_url', $url);
+            app('fireflyconfig')->set('slack_webhook_url', $url);
         }
 
         session()->flash('success', (string)trans('firefly.notification_settings_saved'));
+
         return redirect(route('admin.index'));
     }
 
     /**
      * Send a test message to the admin.
      *
-     * @param Request $request
-     *
-     * @return RedirectResponse|Redirector
+     * @return Redirector|RedirectResponse
      */
-    public function testMessage(Request $request)
+    public function testMessage()
     {
         Log::channel('audit')->info('User sends test message.');
+
         /** @var User $user */
         $user = auth()->user();
-        Log::debug('Now in testMessage() controller.');
+        app('log')->debug('Now in testMessage() controller.');
         event(new AdminRequestedTestMessage($user));
         session()->flash('info', (string)trans('firefly.send_test_triggered'));
 

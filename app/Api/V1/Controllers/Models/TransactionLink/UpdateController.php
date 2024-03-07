@@ -44,8 +44,6 @@ class UpdateController extends Controller
 
     /**
      * TransactionLinkController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -53,7 +51,7 @@ class UpdateController extends Controller
         $this->middleware(
             function ($request, $next) {
                 /** @var User $user */
-                $user = auth()->user();
+                $user                    = auth()->user();
 
                 $this->repository        = app(LinkTypeRepositoryInterface::class);
                 $this->journalRepository = app(JournalRepositoryInterface::class);
@@ -71,11 +69,6 @@ class UpdateController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/links/updateTransactionLink
      *
      * Update object.
-     *
-     * @param UpdateRequest          $request
-     * @param TransactionJournalLink $journalLink
-     *
-     * @return JsonResponse
      */
     public function update(UpdateRequest $request, TransactionJournalLink $journalLink): JsonResponse
     {
@@ -87,7 +80,7 @@ class UpdateController extends Controller
         $transformer = app(TransactionLinkTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($journalLink, $transformer, 'transaction_links');
+        $resource    = new Item($journalLink, $transformer, 'transaction_links');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

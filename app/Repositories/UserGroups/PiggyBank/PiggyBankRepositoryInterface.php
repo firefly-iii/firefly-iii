@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * PiggyBankRepositoryInterface.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -34,8 +33,6 @@ interface PiggyBankRepositoryInterface
 {
     /**
      * Return all piggy banks.
-     *
-     * @return Collection
      */
     public function getPiggyBanks(): Collection;
 }

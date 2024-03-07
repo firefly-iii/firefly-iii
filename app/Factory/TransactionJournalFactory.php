@@ -25,11 +25,10 @@ declare(strict_types=1);
 namespace FireflyIII\Factory;
 
 use Carbon\Carbon;
-use Exception;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\Preference;
+use FireflyIII\Models\Location;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
@@ -39,20 +38,20 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use FireflyIII\Services\Internal\Support\JournalServiceTrait;
 use FireflyIII\Support\NullArrayObject;
 use FireflyIII\User;
 use FireflyIII\Validation\AccountValidator;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
-use JsonException;
 
 /**
  * Class TransactionJournalFactory
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class TransactionJournalFactory
 {
@@ -72,7 +71,7 @@ class TransactionJournalFactory
     /**
      * Constructor.
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function __construct()
     {
@@ -93,50 +92,49 @@ class TransactionJournalFactory
     /**
      * Store a new (set of) transaction journals.
      *
-     * @param array $data
-     *
-     * @return Collection
      * @throws DuplicateTransactionException
      * @throws FireflyException
-     * @throws JsonException
      */
     public function create(array $data): Collection
     {
-        Log::debug('Now in TransactionJournalFactory::create()');
+        app('log')->debug('Now in TransactionJournalFactory::create()');
         // convert to special object.
-        $dataObject = new NullArrayObject($data);
+        $dataObject   = new NullArrayObject($data);
 
-        Log::debug('Start of TransactionJournalFactory::create()');
+        app('log')->debug('Start of TransactionJournalFactory::create()');
         $collection   = new Collection();
         $transactions = $dataObject['transactions'] ?? [];
         if (0 === count($transactions)) {
-            Log::error('There are no transactions in the array, the TransactionJournalFactory cannot continue.');
+            app('log')->error('There are no transactions in the array, the TransactionJournalFactory cannot continue.');
 
             return new Collection();
         }
+
         try {
             /** @var array $row */
             foreach ($transactions as $index => $row) {
-                Log::debug(sprintf('Now creating journal %d/%d', $index + 1, count($transactions)));
+                app('log')->debug(sprintf('Now creating journal %d/%d', $index + 1, count($transactions)));
                 $journal = $this->createJournal(new NullArrayObject($row));
                 if (null !== $journal) {
                     $collection->push($journal);
                 }
                 if (null === $journal) {
-                    Log::error('The createJournal() method returned NULL. This may indicate an error.');
+                    app('log')->error('The createJournal() method returned NULL. This may indicate an error.');
                 }
             }
         } catch (DuplicateTransactionException $e) {
             app('log')->warning('TransactionJournalFactory::create() caught a duplicate journal in createJournal()');
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
             $this->forceDeleteOnError($collection);
+
             throw new DuplicateTransactionException($e->getMessage(), 0, $e);
         } catch (FireflyException $e) {
             app('log')->warning('TransactionJournalFactory::create() caught an exception.');
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
             $this->forceDeleteOnError($collection);
+
             throw new FireflyException($e->getMessage(), 0, $e);
         }
 
@@ -144,12 +142,13 @@ class TransactionJournalFactory
     }
 
     /**
-     * @param NullArrayObject $row
+     * TODO typeOverrule: the account validator may have another opinion on the transaction type. not sure what to do
+     * with this.
      *
-     * @return TransactionJournal|null
      * @throws DuplicateTransactionException
      * @throws FireflyException
-     * @throws JsonException
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     private function createJournal(NullArrayObject $row): ?TransactionJournal
     {
@@ -158,33 +157,30 @@ class TransactionJournalFactory
         $this->errorIfDuplicate($row['import_hash_v2']);
 
         /** Some basic fields */
-        $type            = $this->typeRepository->findTransactionType(null, $row['type']);
-        $carbon          = $row['date'] ?? today(config('app.timezone'));
-        $order           = $row['order'] ?? 0;
-        $currency        = $this->currencyRepository->findCurrency((int)$row['currency_id'], $row['currency_code']);
-        $foreignCurrency = $this->currencyRepository->findCurrencyNull($row['foreign_currency_id'], $row['foreign_currency_code']);
-        $bill            = $this->billRepository->findBill((int)$row['bill_id'], $row['bill_name']);
-        $billId          = TransactionType::WITHDRAWAL === $type->type && null !== $bill ? $bill->id : null;
-        $description     = (string)$row['description'];
+        $type                  = $this->typeRepository->findTransactionType(null, $row['type']);
+        $carbon                = $row['date'] ?? today(config('app.timezone'));
+        $order                 = $row['order'] ?? 0;
+        $currency              = $this->currencyRepository->findCurrency((int)$row['currency_id'], $row['currency_code']);
+        $foreignCurrency       = $this->currencyRepository->findCurrencyNull($row['foreign_currency_id'], $row['foreign_currency_code']);
+        $bill                  = $this->billRepository->findBill((int)$row['bill_id'], $row['bill_name']);
+        $billId                = TransactionType::WITHDRAWAL === $type->type && null !== $bill ? $bill->id : null;
+        $description           = (string)$row['description'];
 
-        /** Manipulate basic fields */
+        // Manipulate basic fields
         $carbon->setTimezone(config('app.timezone'));
 
         try {
             // validate source and destination using a new Validator.
             $this->validateAccounts($row);
         } catch (FireflyException $e) {
-            Log::error('Could not validate source or destination.');
-            Log::error($e->getMessage());
+            app('log')->error('Could not validate source or destination.');
+            app('log')->error($e->getMessage());
 
             return null;
         }
 
-        // typeOverrule: the account validator may have another opinion on the transaction type.
-        // not sure what to do with this.
-
         /** create or get source and destination accounts  */
-        $sourceInfo = [
+        $sourceInfo            = [
             'id'          => $row['source_id'],
             'name'        => $row['source_name'],
             'iban'        => $row['source_iban'],
@@ -193,7 +189,7 @@ class TransactionJournalFactory
             'currency_id' => $currency->id,
         ];
 
-        $destInfo = [
+        $destInfo              = [
             'id'          => $row['destination_id'],
             'name'        => $row['destination_name'],
             'iban'        => $row['destination_iban'],
@@ -201,28 +197,26 @@ class TransactionJournalFactory
             'bic'         => $row['destination_bic'],
             'currency_id' => $currency->id,
         ];
-        Log::debug('Source info:', $sourceInfo);
-        Log::debug('Destination info:', $destInfo);
-        Log::debug('Now calling getAccount for the source.');
-        $sourceAccount = $this->getAccount($type->type, 'source', $sourceInfo);
-        Log::debug('Now calling getAccount for the destination.');
-        $destinationAccount = $this->getAccount($type->type, 'destination', $destInfo);
-        Log::debug('Done with getAccount(2x)');
+        app('log')->debug('Source info:', $sourceInfo);
+        app('log')->debug('Destination info:', $destInfo);
+        $sourceAccount         = $this->getAccount($type->type, 'source', $sourceInfo);
+        $destinationAccount    = $this->getAccount($type->type, 'destination', $destInfo);
+        app('log')->debug('Done with getAccount(2x)');
 
         // this is the moment for a reconciliation sanity check (again).
         if (TransactionType::RECONCILIATION === $type->type) {
             [$sourceAccount, $destinationAccount] = $this->reconciliationSanityCheck($sourceAccount, $destinationAccount);
         }
 
-        $currency        = $this->getCurrencyByAccount($type->type, $currency, $sourceAccount, $destinationAccount);
-        $foreignCurrency = $this->compareCurrencies($currency, $foreignCurrency);
-        $foreignCurrency = $this->getForeignByAccount($type->type, $foreignCurrency, $destinationAccount);
-        $description     = $this->getDescription($description);
+        $currency              = $this->getCurrencyByAccount($type->type, $currency, $sourceAccount, $destinationAccount);
+        $foreignCurrency       = $this->compareCurrencies($currency, $foreignCurrency);
+        $foreignCurrency       = $this->getForeignByAccount($type->type, $foreignCurrency, $destinationAccount);
+        $description           = $this->getDescription($description);
 
-        Log::debug(sprintf('Date: %s (%s)', $carbon->toW3cString(), $carbon->getTimezone()->getName()));
+        app('log')->debug(sprintf('Date: %s (%s)', $carbon->toW3cString(), $carbon->getTimezone()->getName()));
 
         /** Create a basic journal. */
-        $journal = TransactionJournal::create(
+        $journal               = TransactionJournal::create(
             [
                 'user_id'                 => $this->user->id,
                 'user_group_id'           => $this->user->user_group_id,
@@ -236,10 +230,10 @@ class TransactionJournalFactory
                 'completed'               => 0,
             ]
         );
-        Log::debug(sprintf('Created new journal #%d: "%s"', $journal->id, $journal->description));
+        app('log')->debug(sprintf('Created new journal #%d: "%s"', $journal->id, $journal->description));
 
         /** Create two transactions. */
-        $transactionFactory = app(TransactionFactory::class);
+        $transactionFactory    = app(TransactionFactory::class);
         $transactionFactory->setUser($this->user);
         $transactionFactory->setJournal($journal);
         $transactionFactory->setAccount($sourceAccount);
@@ -247,19 +241,18 @@ class TransactionJournalFactory
         $transactionFactory->setAccountInformation($sourceInfo);
         $transactionFactory->setForeignCurrency($foreignCurrency);
         $transactionFactory->setReconciled($row['reconciled'] ?? false);
+
         try {
             $negative = $transactionFactory->createNegative((string)$row['amount'], (string)$row['foreign_amount']);
         } catch (FireflyException $e) {
-            Log::error('Exception creating negative transaction.');
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            app('log')->error(sprintf('Exception creating negative transaction: %s', $e->getMessage()));
             $this->forceDeleteOnError(new Collection([$journal]));
+
             throw new FireflyException($e->getMessage(), 0, $e);
         }
 
-        // and the destination one:
         /** @var TransactionFactory $transactionFactory */
-        $transactionFactory = app(TransactionFactory::class);
+        $transactionFactory    = app(TransactionFactory::class);
         $transactionFactory->setUser($this->user);
         $transactionFactory->setJournal($journal);
         $transactionFactory->setAccount($destinationAccount);
@@ -267,58 +260,43 @@ class TransactionJournalFactory
         $transactionFactory->setCurrency($currency);
         $transactionFactory->setForeignCurrency($foreignCurrency);
         $transactionFactory->setReconciled($row['reconciled'] ?? false);
+
         try {
             $transactionFactory->createPositive((string)$row['amount'], (string)$row['foreign_amount']);
         } catch (FireflyException $e) {
-            Log::error('Exception creating positive transaction.');
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-            app('log')->warning('Delete negative transaction.');
+            app('log')->error(sprintf('Exception creating positive transaction: %s', $e->getMessage()));
             $this->forceTrDelete($negative);
             $this->forceDeleteOnError(new Collection([$journal]));
+
             throw new FireflyException($e->getMessage(), 0, $e);
         }
-        // verify that journal has two transactions. Otherwise, delete and cancel.
-        $journal->completed = true;
+        $journal->completed    = true;
         $journal->save();
-
-        /** Link all other data to the journal. */
-
-        /** Link budget */
         $this->storeBudget($journal, $row);
-
-        /** Link category */
         $this->storeCategory($journal, $row);
-
-        /** Set notes */
         $this->storeNotes($journal, $row['notes']);
-
-        /** Set piggy bank */
         $this->storePiggyEvent($journal, $row);
-
-        /** Set tags */
         $this->storeTags($journal, $row['tags']);
-
-        /** set all meta fields */
         $this->storeMetaFields($journal, $row);
+        $this->storeLocation($journal, $row);
 
         return $journal;
     }
 
-    /**
-     * @param NullArrayObject $row
-     *
-     * @return string
-     * @throws JsonException
-     */
     private function hashArray(NullArrayObject $row): string
     {
         $dataRow = $row->getArrayCopy();
 
         unset($dataRow['import_hash_v2'], $dataRow['original_source']);
-        $json = json_encode($dataRow, JSON_THROW_ON_ERROR);
-        $hash = hash('sha256', $json);
-        Log::debug(sprintf('The hash is: %s', $hash), $dataRow);
+
+        try {
+            $json = json_encode($dataRow, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+            app('log')->error(sprintf('Could not encode dataRow: %s', $e->getMessage()));
+            $json = microtime();
+        }
+        $hash    = hash('sha256', $json);
+        app('log')->debug(sprintf('The hash is: %s', $hash), $dataRow);
 
         return $hash;
     }
@@ -326,68 +304,66 @@ class TransactionJournalFactory
     /**
      * If this transaction already exists, throw an error.
      *
-     * @param string $hash
-     *
      * @throws DuplicateTransactionException
-     * @throws JsonException
      */
     private function errorIfDuplicate(string $hash): void
     {
-        Log::debug(sprintf('In errorIfDuplicate(%s)', $hash));
+        app('log')->debug(sprintf('In errorIfDuplicate(%s)', $hash));
         if (false === $this->errorOnHash) {
             return;
         }
-        Log::debug('Will verify duplicate!');
-        /** @var TransactionJournalMeta|null $result */
+        app('log')->debug('Will verify duplicate!');
+
+        /** @var null|TransactionJournalMeta $result */
         $result = TransactionJournalMeta::withTrashed()
-                                        ->where('data', json_encode($hash, JSON_THROW_ON_ERROR))
-                                        ->with(['transactionJournal', 'transactionJournal.transactionGroup'])
-                                        ->first();
+            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
+            ->whereNotNull('transaction_journals.id')
+            ->where('transaction_journals.user_id', $this->user->id)
+            ->where('data', json_encode($hash, JSON_THROW_ON_ERROR))
+            ->with(['transactionJournal', 'transactionJournal.transactionGroup'])
+            ->first(['journal_meta.*'])
+        ;
         if (null !== $result) {
             app('log')->warning(sprintf('Found a duplicate in errorIfDuplicate because hash %s is not unique!', $hash));
             $journal = $result->transactionJournal()->withTrashed()->first();
             $group   = $journal?->transactionGroup()->withTrashed()->first();
-            $groupId = $group?->id;
-            if (null === $group) {
-                $groupId = 0;
-            }
+            $groupId = (int)$group?->id;
+
             throw new DuplicateTransactionException(sprintf('Duplicate of transaction #%d.', $groupId));
         }
     }
 
     /**
-     * @param NullArrayObject $data
-     *
      * @throws FireflyException
      */
     private function validateAccounts(NullArrayObject $data): void
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
-        $transactionType = $data['type'] ?? 'invalid';
+        app('log')->debug(sprintf('Now in %s', __METHOD__));
+        $transactionType  = $data['type'] ?? 'invalid';
         $this->accountValidator->setUser($this->user);
         $this->accountValidator->setTransactionType($transactionType);
 
         // validate source account.
-        $array       = [
-            'id'     => $data['source_id'] ? (int)$data['source_id'] : null,
-            'name'   => $data['source_name'] ? (string)$data['source_name'] : null,
-            'iban'   => $data['source_iban'] ? (string)$data['source_iban'] : null,
-            'number' => $data['source_number'] ? (string)$data['source_number'] : null,
+        $array            = [
+            'id'     => null !== $data['source_id'] ? (int)$data['source_id'] : null,
+            'name'   => null !== $data['source_name'] ? (string)$data['source_name'] : null,
+            'iban'   => null !== $data['source_iban'] ? (string)$data['source_iban'] : null,
+            'number' => null !== $data['source_number'] ? (string)$data['source_number'] : null,
         ];
-        $validSource = $this->accountValidator->validateSource($array);
+        $validSource      = $this->accountValidator->validateSource($array);
 
         // do something with result:
         if (false === $validSource) {
             throw new FireflyException(sprintf('Source: %s', $this->accountValidator->sourceError));
         }
-        Log::debug('Source seems valid.');
+        app('log')->debug('Source seems valid.');
 
         // validate destination account
-        $array = [
-            'id'     => $data['destination_id'] ? (int)$data['destination_id'] : null,
-            'name'   => $data['destination_name'] ? (string)$data['destination_name'] : null,
-            'iban'   => $data['destination_iban'] ? (string)$data['destination_iban'] : null,
-            'number' => $data['destination_number'] ? (string)$data['destination_number'] : null,
+        $array            = [
+            'id'     => null !== $data['destination_id'] ? (int)$data['destination_id'] : null,
+            'name'   => null !== $data['destination_name'] ? (string)$data['destination_name'] : null,
+            'iban'   => null !== $data['destination_iban'] ? (string)$data['destination_iban'] : null,
+            'number' => null !== $data['destination_number'] ? (string)$data['destination_number'] : null,
         ];
 
         $validDestination = $this->accountValidator->validateDestination($array);
@@ -399,8 +375,6 @@ class TransactionJournalFactory
 
     /**
      * Set the user.
-     *
-     * @param User $user
      */
     public function setUser(User $user): void
     {
@@ -414,49 +388,40 @@ class TransactionJournalFactory
         $this->accountRepository->setUser($this->user);
     }
 
-    /**
-     * @param Account|null $sourceAccount
-     * @param Account|null $destinationAccount
-     *
-     * @return array
-     */
     private function reconciliationSanityCheck(?Account $sourceAccount, ?Account $destinationAccount): array
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
+        app('log')->debug(sprintf('Now in %s', __METHOD__));
         if (null !== $sourceAccount && null !== $destinationAccount) {
-            Log::debug('Both accounts exist, simply return them.');
+            app('log')->debug('Both accounts exist, simply return them.');
+
             return [$sourceAccount, $destinationAccount];
         }
-        if (null !== $sourceAccount && null === $destinationAccount) {
-            Log::debug('Destination account is NULL, source account is not.');
+        if (null === $destinationAccount) { // @phpstan-ignore-line
+            app('log')->debug('Destination account is NULL, source account is not.');
             $account = $this->accountRepository->getReconciliation($sourceAccount);
-            Log::debug(sprintf('Will return account #%d ("%s") of type "%s"', $account->id, $account->name, $account->accountType->type));
+            app('log')->debug(sprintf('Will return account #%d ("%s") of type "%s"', $account->id, $account->name, $account->accountType->type));
+
             return [$sourceAccount, $account];
         }
 
-        if (null === $sourceAccount && null !== $destinationAccount) {
-            Log::debug('Source account is NULL, destination account is not.');
+        if (null === $sourceAccount) { // @phpstan-ignore-line
+            app('log')->debug('Source account is NULL, destination account is not.');
             $account = $this->accountRepository->getReconciliation($destinationAccount);
-            Log::debug(sprintf('Will return account #%d ("%s") of type "%s"', $account->id, $account->name, $account->accountType->type));
+            app('log')->debug(sprintf('Will return account #%d ("%s") of type "%s"', $account->id, $account->name, $account->accountType->type));
+
             return [$account, $destinationAccount];
         }
-        Log::debug('Unused fallback');
+        app('log')->debug('Unused fallback');  // @phpstan-ignore-line
+
         return [$sourceAccount, $destinationAccount];
     }
 
     /**
-     * @param string                   $type
-     * @param TransactionCurrency|null $currency
-     * @param Account                  $source
-     * @param Account                  $destination
-     *
-     * @return TransactionCurrency
      * @throws FireflyException
-     * @throws JsonException
      */
     private function getCurrencyByAccount(string $type, ?TransactionCurrency $currency, Account $source, Account $destination): TransactionCurrency
     {
-        Log::debug('Now in getCurrencyByAccount()');
+        app('log')->debug('Now in getCurrencyByAccount()');
 
         return match ($type) {
             default                  => $this->getCurrency($currency, $source),
@@ -465,35 +430,26 @@ class TransactionJournalFactory
     }
 
     /**
-     * @param TransactionCurrency|null $currency
-     * @param Account                  $account
-     *
-     * @return TransactionCurrency
      * @throws FireflyException
-     * @throws JsonException
      */
     private function getCurrency(?TransactionCurrency $currency, Account $account): TransactionCurrency
     {
-        Log::debug('Now in getCurrency()');
-        /** @var Preference|null $preference */
+        app('log')->debug('Now in getCurrency()');
+
+        /** @var null|TransactionCurrency $preference */
         $preference = $this->accountRepository->getAccountCurrency($account);
         if (null === $preference && null === $currency) {
             // return user's default:
-            return app('amount')->getDefaultCurrencyByUser($this->user);
+            return app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
         }
-        $result = ($preference ?? $currency) ?? app('amount')->getSystemCurrency();
-        Log::debug(sprintf('Currency is now #%d (%s) because of account #%d (%s)', $result->id, $result->code, $account->id, $account->name));
+        $result     = $preference ?? $currency;
+        app('log')->debug(sprintf('Currency is now #%d (%s) because of account #%d (%s)', $result->id, $result->code, $account->id, $account->name));
 
         return $result;
     }
 
     /**
      * Set foreign currency to NULL if it's the same as the normal currency:
-     *
-     * @param TransactionCurrency|null $currency
-     * @param TransactionCurrency|null $foreignCurrency
-     *
-     * @return TransactionCurrency|null
      */
     private function compareCurrencies(?TransactionCurrency $currency, ?TransactionCurrency $foreignCurrency): ?TransactionCurrency
     {
@@ -508,13 +464,7 @@ class TransactionJournalFactory
     }
 
     /**
-     * @param string                   $type
-     * @param TransactionCurrency|null $foreignCurrency
-     * @param Account                  $destination
-     *
-     * @return TransactionCurrency|null
      * @throws FireflyException
-     * @throws JsonException
      */
     private function getForeignByAccount(string $type, ?TransactionCurrency $foreignCurrency, Account $destination): ?TransactionCurrency
     {
@@ -525,11 +475,6 @@ class TransactionJournalFactory
         return $foreignCurrency;
     }
 
-    /**
-     * @param string $description
-     *
-     * @return string
-     */
     private function getDescription(string $description): string
     {
         $description = '' === $description ? '(empty description)' : $description;
@@ -540,23 +485,19 @@ class TransactionJournalFactory
     /**
      * Force the deletion of an entire set of transaction journals and their meta object in case of
      * an error creating a group.
-     *
-     * @param Collection $collection
      */
     private function forceDeleteOnError(Collection $collection): void
     {
-        Log::debug(sprintf('forceDeleteOnError on collection size %d item(s)', $collection->count()));
+        app('log')->debug(sprintf('forceDeleteOnError on collection size %d item(s)', $collection->count()));
         $service = app(JournalDestroyService::class);
+
         /** @var TransactionJournal $journal */
         foreach ($collection as $journal) {
-            Log::debug(sprintf('forceDeleteOnError on journal #%d', $journal->id));
+            app('log')->debug(sprintf('forceDeleteOnError on journal #%d', $journal->id));
             $service->destroy($journal);
         }
     }
 
-    /**
-     * @param Transaction $transaction
-     */
     private function forceTrDelete(Transaction $transaction): void
     {
         $transaction->delete();
@@ -564,29 +505,22 @@ class TransactionJournalFactory
 
     /**
      * Link a piggy bank to this journal.
-     *
-     * @param TransactionJournal $journal
-     * @param NullArrayObject    $data
      */
     private function storePiggyEvent(TransactionJournal $journal, NullArrayObject $data): void
     {
-        Log::debug('Will now store piggy event.');
+        app('log')->debug('Will now store piggy event.');
 
         $piggyBank = $this->piggyRepository->findPiggyBank((int)$data['piggy_bank_id'], $data['piggy_bank_name']);
 
         if (null !== $piggyBank) {
             $this->piggyEventFactory->create($journal, $piggyBank);
-            Log::debug('Create piggy event.');
+            app('log')->debug('Create piggy event.');
 
             return;
         }
-        Log::debug('Create no piggy event');
+        app('log')->debug('Create no piggy event');
     }
 
-    /**
-     * @param TransactionJournal $journal
-     * @param NullArrayObject    $transaction
-     */
     private function storeMetaFields(TransactionJournal $journal, NullArrayObject $transaction): void
     {
         foreach ($this->fields as $field) {
@@ -594,39 +528,43 @@ class TransactionJournalFactory
         }
     }
 
-    /**
-     * @param TransactionJournal $journal
-     * @param NullArrayObject    $data
-     * @param string             $field
-     */
     protected function storeMeta(TransactionJournal $journal, NullArrayObject $data, string $field): void
     {
-        $set = [
+        $set     = [
             'journal' => $journal,
             'name'    => $field,
             'data'    => (string)($data[$field] ?? ''),
         ];
         if ($data[$field] instanceof Carbon) {
             $data[$field]->setTimezone(config('app.timezone'));
-            Log::debug(sprintf('%s Date: %s (%s)', $field, $data[$field], $data[$field]->timezone->getName()));
+            app('log')->debug(sprintf('%s Date: %s (%s)', $field, $data[$field], $data[$field]->timezone->getName()));
             $set['data'] = $data[$field]->format('Y-m-d H:i:s');
         }
 
-        Log::debug(sprintf('Going to store meta-field "%s", with value "%s".', $set['name'], $set['data']));
+        app('log')->debug(sprintf('Going to store meta-field "%s", with value "%s".', $set['name'], $set['data']));
 
         /** @var TransactionJournalMetaFactory $factory */
         $factory = app(TransactionJournalMetaFactory::class);
         $factory->updateOrCreate($set);
     }
 
-    /**
-     * @param bool $errorOnHash
-     */
+    private function storeLocation(TransactionJournal $journal, NullArrayObject $data): void
+    {
+        if (true === $data['store_location']) {
+            $location             = new Location();
+            $location->longitude  = $data['longitude'];
+            $location->latitude   = $data['latitude'];
+            $location->zoom_level = $data['zoom_level'];
+            $location->locatable()->associate($journal);
+            $location->save();
+        }
+    }
+
     public function setErrorOnHash(bool $errorOnHash): void
     {
         $this->errorOnHash = $errorOnHash;
         if (true === $errorOnHash) {
-            Log::info('Will trigger duplication alert for this journal.');
+            app('log')->info('Will trigger duplication alert for this journal.');
         }
     }
 }

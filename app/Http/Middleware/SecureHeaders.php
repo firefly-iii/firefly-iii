@@ -23,13 +23,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
-use Closure;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Vite;
 
 /**
- *
  * Class SecureHeaders
  */
 class SecureHeaders
@@ -37,22 +34,20 @@ class SecureHeaders
     /**
      * Handle an incoming request.
      *
-     * @param Request $request
-     * @param Closure $next
-     *
      * @return mixed
-     * @throws Exception
+     *
+     * @throws \Exception
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, \Closure $next)
     {
         // generate and share nonce.
-        $nonce = base64_encode(random_bytes(16));
+        $nonce              = base64_encode(random_bytes(16));
         Vite::useCspNonce($nonce);
         app('view')->share('JS_NONCE', $nonce);
 
-        $response          = $next($request);
-        $trackingScriptSrc = $this->getTrackingScriptSource();
-        $csp               = [
+        $response           = $next($request);
+        $trackingScriptSrc  = $this->getTrackingScriptSource();
+        $csp                = [
             "default-src 'none'",
             "object-src 'none'",
             sprintf("script-src 'unsafe-eval' 'strict-dynamic' 'self' 'unsafe-inline' 'nonce-%1s' %2s", $nonce, $trackingScriptSrc),
@@ -64,10 +59,10 @@ class SecureHeaders
             "manifest-src 'self'",
         ];
 
-        $route     = $request->route();
-        $customUrl = '';
-        $authGuard = (string)config('firefly.authentication_guard');
-        $logoutUrl = (string)config('firefly.custom_logout_url');
+        $route              = $request->route();
+        $customUrl          = '';
+        $authGuard          = (string)config('firefly.authentication_guard');
+        $logoutUrl          = (string)config('firefly.custom_logout_url');
         if ('remote_user_guard' === $authGuard && '' !== $logoutUrl) {
             $customUrl = $logoutUrl;
         }
@@ -76,18 +71,18 @@ class SecureHeaders
             $csp[] = sprintf("form-action 'self' %s", $customUrl);
         }
 
-        $featurePolicies = [
+        $featurePolicies    = [
             "geolocation 'none'",
             "midi 'none'",
-            //"notifications 'none'",
-            //"push 'self'",
+            // "notifications 'none'",
+            // "push 'self'",
             "sync-xhr 'self'",
             "microphone 'none'",
             "camera 'none'",
             "magnetometer 'none'",
             "gyroscope 'none'",
-            //"speaker 'none'",
-            //"vibrate 'none'",
+            // "speaker 'none'",
+            // "vibrate 'none'",
             "fullscreen 'self'",
             "payment 'none'",
         ];
@@ -112,8 +107,6 @@ class SecureHeaders
 
     /**
      * Return part of a CSP header allowing scripts from Matomo.
-     *
-     * @return string
      */
     private function getTrackingScriptSource(): string
     {

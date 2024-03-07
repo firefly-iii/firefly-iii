@@ -23,25 +23,27 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Carbon;
 
 /**
  * FireflyIII\Models\PiggyBankEvent
  *
- * @property int                          $id
- * @property Carbon|null                  $created_at
- * @property Carbon|null                  $updated_at
- * @property int                          $piggy_bank_id
- * @property int|null                     $transaction_journal_id
- * @property Carbon                       $date
- * @property string                       $amount
- * @property PiggyBank                    $piggyBank
- * @property-read TransactionJournal|null $transactionJournal
+ * @property int                     $id
+ * @property null|Carbon             $created_at
+ * @property null|Carbon             $updated_at
+ * @property int                     $piggy_bank_id
+ * @property null|int                $transaction_journal_id
+ * @property Carbon                  $date
+ * @property string                  $amount
+ * @property PiggyBank               $piggyBank
+ * @property null|TransactionJournal $transactionJournal
+ *
  * @method static Builder|PiggyBankEvent newModelQuery()
  * @method static Builder|PiggyBankEvent newQuery()
  * @method static Builder|PiggyBankEvent query()
@@ -52,36 +54,30 @@ use Illuminate\Support\Carbon;
  * @method static Builder|PiggyBankEvent wherePiggyBankId($value)
  * @method static Builder|PiggyBankEvent whereTransactionJournalId($value)
  * @method static Builder|PiggyBankEvent whereUpdatedAt($value)
+ *
  * @mixin Eloquent
  */
 class PiggyBankEvent extends Model
 {
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
-    protected $casts
-        = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'date'       => 'date',
-        ];
-    /** @var array Fields that can be filled */
-    protected $fillable = ['piggy_bank_id', 'transaction_journal_id', 'date', 'amount'];
-    /** @var array Hidden from view */
-    protected $hidden = ['amount_encrypted'];
+    use ReturnsIntegerIdTrait;
 
-    /**
-     * @return BelongsTo
-     */
+    protected $casts
+                        = [
+                            'created_at' => 'datetime',
+                            'updated_at' => 'datetime',
+                            'date'       => 'date',
+                        ];
+
+    protected $fillable = ['piggy_bank_id', 'transaction_journal_id', 'date', 'amount'];
+
+    protected $hidden   = ['amount_encrypted'];
+
     public function piggyBank(): BelongsTo
     {
         return $this->belongsTo(PiggyBank::class);
     }
 
     /**
-     *
      * @param mixed $value
      */
     public function setAmountAttribute($value): void
@@ -89,9 +85,6 @@ class PiggyBankEvent extends Model
         $this->attributes['amount'] = (string)$value;
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function transactionJournal(): BelongsTo
     {
         return $this->belongsTo(TransactionJournal::class);
@@ -99,13 +92,18 @@ class PiggyBankEvent extends Model
 
     /**
      * Get the amount
-     *
-     * @return Attribute
      */
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (string)$value,
+            get: static fn ($value) => (string)$value,
+        );
+    }
+
+    protected function piggyBankId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int)$value,
         );
     }
 }

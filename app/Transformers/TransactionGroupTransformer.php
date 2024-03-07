@@ -36,7 +36,6 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\Support\NullArrayObject;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class TransactionGroupTransformer
@@ -49,8 +48,6 @@ class TransactionGroupTransformer extends AbstractTransformer
 
     /**
      * Constructor.
-     *
-
      */
     public function __construct()
     {
@@ -77,11 +74,6 @@ class TransactionGroupTransformer extends AbstractTransformer
         $this->metaDateFields = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date'];
     }
 
-    /**
-     * @param array $group
-     *
-     * @return array
-     */
     public function transform(array $group): array
     {
         $data  = new NullArrayObject($group);
@@ -97,17 +89,12 @@ class TransactionGroupTransformer extends AbstractTransformer
             'links'        => [
                 [
                     'rel' => 'self',
-                    'uri' => '/transactions/' . $first['transaction_group_id'],
+                    'uri' => '/transactions/'.$first['transaction_group_id'],
                 ],
             ],
         ];
     }
 
-    /**
-     * @param NullArrayObject $data
-     *
-     * @return array
-     */
     private function transformTransactions(NullArrayObject $data): array
     {
         $result       = [];
@@ -120,18 +107,16 @@ class TransactionGroupTransformer extends AbstractTransformer
     }
 
     /**
-     * @param array $transaction
-     *
-     * @return array
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     private function transformTransaction(array $transaction): array
     {
-        $row = new NullArrayObject($transaction);
+        $row           = new NullArrayObject($transaction);
 
         // amount:
         $amount        = app('steam')->positive((string)($row['amount'] ?? '0'));
         $foreignAmount = null;
-        if (null !== $row['foreign_amount'] && '' !== $row['foreign_amount'] && bccomp('0', $row['foreign_amount']) !== 0) {
+        if (null !== $row['foreign_amount'] && '' !== $row['foreign_amount'] && 0 !== bccomp('0', $row['foreign_amount'])) {
             $foreignAmount = app('steam')->positive($row['foreign_amount']);
         }
 
@@ -139,11 +124,10 @@ class TransactionGroupTransformer extends AbstractTransformer
         $metaDateData  = $this->groupRepos->getMetaDateFields((int)$row['transaction_journal_id'], $this->metaDateFields);
         $type          = $this->stringFromArray($transaction, 'transaction_type_type', TransactionType::WITHDRAWAL);
 
-
-        $longitude = null;
-        $latitude  = null;
-        $zoomLevel = null;
-        $location  = $this->getLocationById((int)$row['transaction_journal_id']);
+        $longitude     = null;
+        $latitude      = null;
+        $zoomLevel     = null;
+        $location      = $this->getLocationById((int)$row['transaction_journal_id']);
         if (null !== $location) {
             $longitude = $location->longitude;
             $latitude  = $location->latitude;
@@ -151,93 +135,86 @@ class TransactionGroupTransformer extends AbstractTransformer
         }
 
         return [
-            'user'                   => (string)$row['user_id'],
-            'transaction_journal_id' => (string)$row['transaction_journal_id'],
-            'type'                   => strtolower($type),
-            'date'                   => $row['date']->toAtomString(),
-            'order'                  => $row['order'],
+            'user'                            => (string)$row['user_id'],
+            'transaction_journal_id'          => (string)$row['transaction_journal_id'],
+            'type'                            => strtolower($type),
+            'date'                            => $row['date']->toAtomString(),
+            'order'                           => $row['order'],
 
-            'currency_id'             => (string)$row['currency_id'],
-            'currency_code'           => $row['currency_code'],
-            'currency_name'           => $row['currency_name'],
-            'currency_symbol'         => $row['currency_symbol'],
-            'currency_decimal_places' => (int)$row['currency_decimal_places'],
+            'currency_id'                     => (string)$row['currency_id'],
+            'currency_code'                   => $row['currency_code'],
+            'currency_name'                   => $row['currency_name'],
+            'currency_symbol'                 => $row['currency_symbol'],
+            'currency_decimal_places'         => (int)$row['currency_decimal_places'],
 
             'foreign_currency_id'             => $this->stringFromArray($transaction, 'foreign_currency_id', null),
             'foreign_currency_code'           => $row['foreign_currency_code'],
             'foreign_currency_symbol'         => $row['foreign_currency_symbol'],
             'foreign_currency_decimal_places' => $row['foreign_currency_decimal_places'],
 
-            'amount'         => $amount,
-            'foreign_amount' => $foreignAmount,
+            'amount'                          => $amount,
+            'foreign_amount'                  => $foreignAmount,
 
-            'description' => $row['description'],
+            'description'                     => $row['description'],
 
-            'source_id'   => (string)$row['source_account_id'],
-            'source_name' => $row['source_account_name'],
-            'source_iban' => $row['source_account_iban'],
-            'source_type' => $row['source_account_type'],
+            'source_id'                       => (string)$row['source_account_id'],
+            'source_name'                     => $row['source_account_name'],
+            'source_iban'                     => $row['source_account_iban'],
+            'source_type'                     => $row['source_account_type'],
 
-            'destination_id'   => (string)$row['destination_account_id'],
-            'destination_name' => $row['destination_account_name'],
-            'destination_iban' => $row['destination_account_iban'],
-            'destination_type' => $row['destination_account_type'],
+            'destination_id'                  => (string)$row['destination_account_id'],
+            'destination_name'                => $row['destination_account_name'],
+            'destination_iban'                => $row['destination_account_iban'],
+            'destination_type'                => $row['destination_account_type'],
 
-            'budget_id'   => $this->stringFromArray($transaction, 'budget_id', null),
-            'budget_name' => $row['budget_name'],
+            'budget_id'                       => $this->stringFromArray($transaction, 'budget_id', null),
+            'budget_name'                     => $row['budget_name'],
 
-            'category_id'   => $this->stringFromArray($transaction, 'category_id', null),
-            'category_name' => $row['category_name'],
+            'category_id'                     => $this->stringFromArray($transaction, 'category_id', null),
+            'category_name'                   => $row['category_name'],
 
-            'bill_id'   => $this->stringFromArray($transaction, 'bill_id', null),
-            'bill_name' => $row['bill_name'],
+            'bill_id'                         => $this->stringFromArray($transaction, 'bill_id', null),
+            'bill_name'                       => $row['bill_name'],
 
-            'reconciled' => $row['reconciled'],
-            'notes'      => $this->groupRepos->getNoteText((int)$row['transaction_journal_id']),
-            'tags'       => $this->groupRepos->getTags((int)$row['transaction_journal_id']),
+            'reconciled'                      => $row['reconciled'],
+            'notes'                           => $this->groupRepos->getNoteText((int)$row['transaction_journal_id']),
+            'tags'                            => $this->groupRepos->getTags((int)$row['transaction_journal_id']),
 
-            'internal_reference' => $metaFieldData['internal_reference'],
-            'external_id'        => $metaFieldData['external_id'],
-            'original_source'    => $metaFieldData['original_source'],
-            'recurrence_id'      => $this->stringFromArray($metaFieldData->getArrayCopy(), 'recurrence_id', null),
-            'recurrence_total'   => $this->integerFromArray($metaFieldData->getArrayCopy(), 'recurrence_total'),
-            'recurrence_count'   => $this->integerFromArray($metaFieldData->getArrayCopy(), 'recurrence_count'),
-            'bunq_payment_id'    => $metaFieldData['bunq_payment_id'],
-            'external_url'       => $metaFieldData['external_url'],
-            'import_hash_v2'     => $metaFieldData['import_hash_v2'],
+            'internal_reference'              => $metaFieldData['internal_reference'],
+            'external_id'                     => $metaFieldData['external_id'],
+            'original_source'                 => $metaFieldData['original_source'],
+            'recurrence_id'                   => $this->stringFromArray($metaFieldData->getArrayCopy(), 'recurrence_id', null),
+            'recurrence_total'                => $this->integerFromArray($metaFieldData->getArrayCopy(), 'recurrence_total'),
+            'recurrence_count'                => $this->integerFromArray($metaFieldData->getArrayCopy(), 'recurrence_count'),
+            'bunq_payment_id'                 => $metaFieldData['bunq_payment_id'],
+            'external_url'                    => $metaFieldData['external_url'],
+            'import_hash_v2'                  => $metaFieldData['import_hash_v2'],
 
-            'sepa_cc'       => $metaFieldData['sepa_cc'],
-            'sepa_ct_op'    => $metaFieldData['sepa_ct_op'],
-            'sepa_ct_id'    => $metaFieldData['sepa_ct_id'],
-            'sepa_db'       => $metaFieldData['sepa_db'],
-            'sepa_country'  => $metaFieldData['sepa_country'],
-            'sepa_ep'       => $metaFieldData['sepa_ep'],
-            'sepa_ci'       => $metaFieldData['sepa_ci'],
-            'sepa_batch_id' => $metaFieldData['sepa_batch_id'],
+            'sepa_cc'                         => $metaFieldData['sepa_cc'],
+            'sepa_ct_op'                      => $metaFieldData['sepa_ct_op'],
+            'sepa_ct_id'                      => $metaFieldData['sepa_ct_id'],
+            'sepa_db'                         => $metaFieldData['sepa_db'],
+            'sepa_country'                    => $metaFieldData['sepa_country'],
+            'sepa_ep'                         => $metaFieldData['sepa_ep'],
+            'sepa_ci'                         => $metaFieldData['sepa_ci'],
+            'sepa_batch_id'                   => $metaFieldData['sepa_batch_id'],
 
-            'interest_date' => $this->dateFromArray($metaDateData, 'interest_date'),
-            'book_date'     => $this->dateFromArray($metaDateData, 'book_date'),
-            'process_date'  => $this->dateFromArray($metaDateData, 'process_date'),
-            'due_date'      => $this->dateFromArray($metaDateData, 'due_date'),
-            'payment_date'  => $this->dateFromArray($metaDateData, 'payment_date'),
-            'invoice_date'  => $this->dateFromArray($metaDateData, 'invoice_date'),
+            'interest_date'                   => $this->dateFromArray($metaDateData, 'interest_date'),
+            'book_date'                       => $this->dateFromArray($metaDateData, 'book_date'),
+            'process_date'                    => $this->dateFromArray($metaDateData, 'process_date'),
+            'due_date'                        => $this->dateFromArray($metaDateData, 'due_date'),
+            'payment_date'                    => $this->dateFromArray($metaDateData, 'payment_date'),
+            'invoice_date'                    => $this->dateFromArray($metaDateData, 'invoice_date'),
 
             // location data
-            'longitude'     => $longitude,
-            'latitude'      => $latitude,
-            'zoom_level'    => $zoomLevel,
+            'longitude'                       => $longitude,
+            'latitude'                        => $latitude,
+            'zoom_level'                      => $zoomLevel,
 
-            'has_attachments' => $this->hasAttachments((int)$row['transaction_journal_id']),
+            'has_attachments'                 => $this->hasAttachments((int)$row['transaction_journal_id']),
         ];
     }
 
-    /**
-     * @param array       $array
-     * @param string      $key
-     * @param string|null $default
-     *
-     * @return string|null
-     */
     private function stringFromArray(array $array, string $key, ?string $default): ?string
     {
         if (array_key_exists($key, $array) && null === $array[$key]) {
@@ -250,42 +227,27 @@ class TransactionGroupTransformer extends AbstractTransformer
             if ('0' === $array[$key]) {
                 return $default;
             }
+
             return (string)$array[$key];
         }
 
         if (null !== $default) {
-            return (string)$default;
+            return $default;
         }
 
         return null;
     }
 
-    /**
-     * @param int $journalId
-     *
-     * @return Location|null
-     */
     private function getLocationById(int $journalId): ?Location
     {
         return $this->groupRepos->getLocation($journalId);
     }
 
-    /**
-     * @param TransactionJournal $journal
-     *
-     * @return Location|null
-     */
     private function getLocation(TransactionJournal $journal): ?Location
     {
         return $journal->locations()->first();
     }
 
-    /**
-     * @param array  $array
-     * @param string $key
-     *
-     * @return int|null
-     */
     private function integerFromArray(array $array, string $key): ?int
     {
         if (array_key_exists($key, $array)) {
@@ -295,12 +257,6 @@ class TransactionGroupTransformer extends AbstractTransformer
         return null;
     }
 
-    /**
-     * @param NullArrayObject $object
-     * @param string          $key
-     *
-     * @return string|null
-     */
     private function dateFromArray(NullArrayObject $object, string $key): ?string
     {
         if (null === $object[$key]) {
@@ -310,42 +266,35 @@ class TransactionGroupTransformer extends AbstractTransformer
         return $object[$key]->toAtomString();
     }
 
-    /**
-     * @param int $journalId
-     *
-     * @return bool
-     */
     private function hasAttachments(int $journalId): bool
     {
         return $this->groupRepos->countAttachments($journalId) > 0;
     }
 
     /**
-     * @param TransactionGroup $group
-     *
-     * @return array
      * @throws FireflyException
      */
     public function transformObject(TransactionGroup $group): array
     {
         try {
             $result = [
-                'id'           => (int)$group->id,
+                'id'           => $group->id,
                 'created_at'   => $group->created_at->toAtomString(),
                 'updated_at'   => $group->updated_at->toAtomString(),
-                'user'         => (int)$group->user_id,
+                'user'         => $group->user_id,
                 'group_title'  => $group->title,
                 'transactions' => $this->transformJournals($group->transactionJournals),
                 'links'        => [
                     [
                         'rel' => 'self',
-                        'uri' => '/transactions/' . $group->id,
+                        'uri' => '/transactions/'.$group->id,
                     ],
                 ],
             ];
         } catch (FireflyException $e) {
             app('log')->error($e->getMessage());
             app('log')->error($e->getTraceAsString());
+
             throw new FireflyException(sprintf('Transaction group #%d is broken. Please check out your log files.', $group->id), 0, $e);
         }
 
@@ -355,14 +304,12 @@ class TransactionGroupTransformer extends AbstractTransformer
     }
 
     /**
-     * @param Collection $transactionJournals
-     *
-     * @return array
      * @throws FireflyException
      */
     private function transformJournals(Collection $transactionJournals): array
     {
         $result = [];
+
         /** @var TransactionJournal $journal */
         foreach ($transactionJournals as $journal) {
             $result[] = $this->transformJournal($journal);
@@ -372,10 +319,9 @@ class TransactionGroupTransformer extends AbstractTransformer
     }
 
     /**
-     * @param TransactionJournal $journal
-     *
-     * @return array
      * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     private function transformJournal(TransactionJournal $journal): array
     {
@@ -383,8 +329,8 @@ class TransactionGroupTransformer extends AbstractTransformer
         $destination     = $this->getDestinationTransaction($journal);
         $type            = $journal->transactionType->type;
         $currency        = $source->transactionCurrency;
-        $amount          = app('steam')->bcround($this->getAmount($type, (string)$source->amount), $currency->decimal_places ?? 0);
-        $foreignAmount   = $this->getForeignAmount($type, null === $source->foreign_amount ? null : (string)$source->foreign_amount);
+        $amount          = app('steam')->bcround($this->getAmount($source->amount), $currency->decimal_places ?? 0);
+        $foreignAmount   = $this->getForeignAmount(null === $source->foreign_amount ? null : $source->foreign_amount);
         $metaFieldData   = $this->groupRepos->getMetaFields($journal->id, $this->metaFields);
         $metaDates       = $this->getDates($this->groupRepos->getMetaDateFields($journal->id, $this->metaDateFields));
         $foreignCurrency = $this->getForeignCurrency($source->foreignCurrency);
@@ -396,10 +342,10 @@ class TransactionGroupTransformer extends AbstractTransformer
             $foreignAmount = app('steam')->bcround($foreignAmount, $foreignCurrency['decimal_places'] ?? 0);
         }
 
-        $longitude = null;
-        $latitude  = null;
-        $zoomLevel = null;
-        $location  = $this->getLocation($journal);
+        $longitude       = null;
+        $latitude        = null;
+        $zoomLevel       = null;
+        $location        = $this->getLocation($journal);
         if (null !== $location) {
             $longitude = $location->longitude;
             $latitude  = $location->latitude;
@@ -407,84 +353,81 @@ class TransactionGroupTransformer extends AbstractTransformer
         }
 
         return [
-            'user'                   => (int)$journal->user_id,
-            'transaction_journal_id' => (int)$journal->id,
-            'type'                   => strtolower($type),
-            'date'                   => $journal->date->toAtomString(),
-            'order'                  => $journal->order,
+            'user'                            => $journal->user_id,
+            'transaction_journal_id'          => $journal->id,
+            'type'                            => strtolower($type),
+            'date'                            => $journal->date->toAtomString(),
+            'order'                           => $journal->order,
 
-            'currency_id'             => (int)$currency->id,
-            'currency_code'           => $currency->code,
-            'currency_symbol'         => $currency->symbol,
-            'currency_decimal_places' => (int)$currency->decimal_places,
+            'currency_id'                     => $currency->id,
+            'currency_code'                   => $currency->code,
+            'currency_symbol'                 => $currency->symbol,
+            'currency_decimal_places'         => $currency->decimal_places,
 
             'foreign_currency_id'             => $foreignCurrency['id'],
             'foreign_currency_code'           => $foreignCurrency['code'],
             'foreign_currency_symbol'         => $foreignCurrency['symbol'],
             'foreign_currency_decimal_places' => $foreignCurrency['decimal_places'],
 
-            'amount'         => app('steam')->bcround($amount, $currency->decimal_places),
-            'foreign_amount' => $foreignAmount,
+            'amount'                          => app('steam')->bcround($amount, $currency->decimal_places),
+            'foreign_amount'                  => $foreignAmount,
 
-            'description' => $journal->description,
+            'description'                     => $journal->description,
 
-            'source_id'   => (int)$source->account_id,
-            'source_name' => $source->account->name,
-            'source_iban' => $source->account->iban,
-            'source_type' => $source->account->accountType->type,
+            'source_id'                       => $source->account_id,
+            'source_name'                     => $source->account->name,
+            'source_iban'                     => $source->account->iban,
+            'source_type'                     => $source->account->accountType->type,
 
-            'destination_id'   => (int)$destination->account_id,
-            'destination_name' => $destination->account->name,
-            'destination_iban' => $destination->account->iban,
-            'destination_type' => $destination->account->accountType->type,
+            'destination_id'                  => $destination->account_id,
+            'destination_name'                => $destination->account->name,
+            'destination_iban'                => $destination->account->iban,
+            'destination_type'                => $destination->account->accountType->type,
 
-            'budget_id'   => $budget['id'],
-            'budget_name' => $budget['name'],
+            'budget_id'                       => $budget['id'],
+            'budget_name'                     => $budget['name'],
 
-            'category_id'   => $category['id'],
-            'category_name' => $category['name'],
+            'category_id'                     => $category['id'],
+            'category_name'                   => $category['name'],
 
-            'bill_id'   => $bill['id'],
-            'bill_name' => $bill['name'],
+            'bill_id'                         => $bill['id'],
+            'bill_name'                       => $bill['name'],
 
-            'reconciled' => $source->reconciled,
-            'notes'      => $this->groupRepos->getNoteText($journal->id),
-            'tags'       => $this->groupRepos->getTags($journal->id),
+            'reconciled'                      => $source->reconciled,
+            'notes'                           => $this->groupRepos->getNoteText($journal->id),
+            'tags'                            => $this->groupRepos->getTags($journal->id),
 
-            'internal_reference' => $metaFieldData['internal_reference'],
-            'external_id'        => $metaFieldData['external_id'],
-            'original_source'    => $metaFieldData['original_source'],
-            'recurrence_id'      => $metaFieldData['recurrence_id'],
-            'bunq_payment_id'    => $metaFieldData['bunq_payment_id'],
-            'import_hash_v2'     => $metaFieldData['import_hash_v2'],
+            'internal_reference'              => $metaFieldData['internal_reference'],
+            'external_id'                     => $metaFieldData['external_id'],
+            'original_source'                 => $metaFieldData['original_source'],
+            'recurrence_id'                   => $metaFieldData['recurrence_id'],
+            'bunq_payment_id'                 => $metaFieldData['bunq_payment_id'],
+            'import_hash_v2'                  => $metaFieldData['import_hash_v2'],
 
-            'sepa_cc'       => $metaFieldData['sepa_cc'],
-            'sepa_ct_op'    => $metaFieldData['sepa_ct_op'],
-            'sepa_ct_id'    => $metaFieldData['sepa_ct_id'],
-            'sepa_db'       => $metaFieldData['sepa_db'],
-            'sepa_country'  => $metaFieldData['sepa_country'],
-            'sepa_ep'       => $metaFieldData['sepa_ep'],
-            'sepa_ci'       => $metaFieldData['sepa_ci'],
-            'sepa_batch_id' => $metaFieldData['sepa_batch_id'],
+            'sepa_cc'                         => $metaFieldData['sepa_cc'],
+            'sepa_ct_op'                      => $metaFieldData['sepa_ct_op'],
+            'sepa_ct_id'                      => $metaFieldData['sepa_ct_id'],
+            'sepa_db'                         => $metaFieldData['sepa_db'],
+            'sepa_country'                    => $metaFieldData['sepa_country'],
+            'sepa_ep'                         => $metaFieldData['sepa_ep'],
+            'sepa_ci'                         => $metaFieldData['sepa_ci'],
+            'sepa_batch_id'                   => $metaFieldData['sepa_batch_id'],
 
-            'interest_date' => $metaDates['interest_date'],
-            'book_date'     => $metaDates['book_date'],
-            'process_date'  => $metaDates['process_date'],
-            'due_date'      => $metaDates['due_date'],
-            'payment_date'  => $metaDates['payment_date'],
-            'invoice_date'  => $metaDates['invoice_date'],
+            'interest_date'                   => $metaDates['interest_date'],
+            'book_date'                       => $metaDates['book_date'],
+            'process_date'                    => $metaDates['process_date'],
+            'due_date'                        => $metaDates['due_date'],
+            'payment_date'                    => $metaDates['payment_date'],
+            'invoice_date'                    => $metaDates['invoice_date'],
 
             // location data
-            'longitude'     => $longitude,
-            'latitude'      => $latitude,
-            'zoom_level'    => $zoomLevel,
+            'longitude'                       => $longitude,
+            'latitude'                        => $latitude,
+            'zoom_level'                      => $zoomLevel,
         ];
     }
 
     /**
-     * @param TransactionJournal $journal
-     *
-     * @return Transaction
      * @throws FireflyException
      */
     private function getSourceTransaction(TransactionJournal $journal): Transaction
@@ -502,9 +445,6 @@ class TransactionGroupTransformer extends AbstractTransformer
     }
 
     /**
-     * @param TransactionJournal $journal
-     *
-     * @return Transaction
      * @throws FireflyException
      */
     private function getDestinationTransaction(TransactionJournal $journal): Transaction
@@ -521,38 +461,21 @@ class TransactionGroupTransformer extends AbstractTransformer
         return $result;
     }
 
-    /**
-     * @param string $type
-     * @param string $amount
-     *
-     * @return string
-     */
-    private function getAmount(string $type, string $amount): string
+    private function getAmount(string $amount): string
     {
         return app('steam')->positive($amount);
     }
 
-    /**
-     * @param string      $type
-     * @param string|null $foreignAmount
-     *
-     * @return string|null
-     */
-    private function getForeignAmount(string $type, ?string $foreignAmount): ?string
+    private function getForeignAmount(?string $foreignAmount): ?string
     {
         $result = null;
-        if (null !== $foreignAmount && '' !== $foreignAmount && bccomp('0', $foreignAmount) !== 0) {
+        if (null !== $foreignAmount && '' !== $foreignAmount && 0 !== bccomp('0', $foreignAmount)) {
             $result = app('steam')->positive($foreignAmount);
         }
 
         return $result;
     }
 
-    /**
-     * @param NullArrayObject $dates
-     *
-     * @return array
-     */
     private function getDates(NullArrayObject $dates): array
     {
         $fields = [
@@ -574,14 +497,9 @@ class TransactionGroupTransformer extends AbstractTransformer
         return $return;
     }
 
-    /**
-     * @param TransactionCurrency|null $currency
-     *
-     * @return array
-     */
     private function getForeignCurrency(?TransactionCurrency $currency): array
     {
-        $array = [
+        $array                   = [
             'id'             => null,
             'code'           => null,
             'symbol'         => null,
@@ -590,62 +508,47 @@ class TransactionGroupTransformer extends AbstractTransformer
         if (null === $currency) {
             return $array;
         }
-        $array['id']             = (int)$currency->id;
+        $array['id']             = $currency->id;
         $array['code']           = $currency->code;
         $array['symbol']         = $currency->symbol;
-        $array['decimal_places'] = (int)$currency->decimal_places;
+        $array['decimal_places'] = $currency->decimal_places;
 
         return $array;
     }
 
-    /**
-     * @param Budget|null $budget
-     *
-     * @return array
-     */
     private function getBudget(?Budget $budget): array
     {
-        $array = [
+        $array         = [
             'id'   => null,
             'name' => null,
         ];
         if (null === $budget) {
             return $array;
         }
-        $array['id']   = (int)$budget->id;
+        $array['id']   = $budget->id;
         $array['name'] = $budget->name;
 
         return $array;
     }
 
-    /**
-     * @param Category|null $category
-     *
-     * @return array
-     */
     private function getCategory(?Category $category): array
     {
-        $array = [
+        $array         = [
             'id'   => null,
             'name' => null,
         ];
         if (null === $category) {
             return $array;
         }
-        $array['id']   = (int)$category->id;
+        $array['id']   = $category->id;
         $array['name'] = $category->name;
 
         return $array;
     }
 
-    /**
-     * @param Bill|null $bill
-     *
-     * @return array
-     */
     private function getBill(?Bill $bill): array
     {
-        $array = [
+        $array         = [
             'id'   => null,
             'name' => null,
         ];

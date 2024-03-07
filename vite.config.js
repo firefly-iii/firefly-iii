@@ -24,23 +24,42 @@ import manifestSRI from 'vite-plugin-manifest-sri';
 
 const host = '127.0.0.1';
 
+function manualChunks(id) {
+    if (id.includes('node_modules')) {
+        return 'vendor';
+    }
+};
+
 export default defineConfig({
+    build: {
+        rollupOptions: {
+            output: {
+                manualChunks,
+            },
+        }
+    },
     plugins: [
         laravel({
             input: [
                 'resources/assets/v2/sass/app.scss',
                 'resources/assets/v2/pages/dashboard/dashboard.js',
+
+                // transactions
                 'resources/assets/v2/pages/transactions/create.js',
+                'resources/assets/v2/pages/transactions/edit.js',
+                'resources/assets/v2/pages/transactions/show.js',
+                'resources/assets/v2/pages/transactions/index.js',
             ],
             refresh: true,
         }),
         manifestSRI(),
+
     ],
 
 
     server: {
         usePolling: true,
-        allowedHosts: '*.sd.local',
+        allowedHosts: '*.sd.internal',
         host: '0.0.0.0',
         hmr: {host},
         cors: true

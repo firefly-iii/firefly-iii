@@ -30,18 +30,14 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class StoreRequest
- *
-
  */
 class StoreRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Get all data from the request.
-     *
-     * @return array
      */
     public function getAll(): array
     {
@@ -56,8 +52,6 @@ class StoreRequest extends FormRequest
 
     /**
      * The rules that the incoming request must be matched against.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -72,9 +66,9 @@ class StoreRequest extends FormRequest
         $model  = $this->convertString('attachable_type');
 
         return [
-            'filename'        => 'required|between:1,255',
-            'title'           => 'between:1,255',
-            'notes'           => 'between:1,65000',
+            'filename'        => 'required|min:1|max:255',
+            'title'           => ['min:1', 'max:255'],
+            'notes'           => 'min:1|max:32768',
             'attachable_type' => sprintf('required|in:%s', $models),
             'attachable_id'   => ['required', 'numeric', new IsValidAttachmentModel($model)],
         ];

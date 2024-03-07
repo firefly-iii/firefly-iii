@@ -28,33 +28,27 @@ use Monolog\LogRecord;
 
 /**
  * Class AuditProcessor
- *
-
  */
 class AuditProcessor
 {
-    /**
-     * @param LogRecord $record
-     *
-     * @return LogRecord
-     */
     public function __invoke(LogRecord $record): LogRecord
     {
         if (auth()->check()) {
             $message = sprintf(
                 'AUDIT: %s (%s (%s) -> %s:%s)',
-                $record['message'],
+                $record['message'], // @phpstan-ignore-line
                 app('request')->ip(),
                 auth()->user()->email,
                 request()->method(),
                 request()->url()
             );
+
             return new LogRecord($record->datetime, $record->channel, $record->level, $message, $record->context, $record->extra, $record->formatted);
         }
 
         $message = sprintf(
             'AUDIT: %s (%s -> %s:%s)',
-            $record['message'],
+            $record['message'], // @phpstan-ignore-line
             app('request')->ip(),
             request()->method(),
             request()->url()

@@ -23,24 +23,21 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\PiggyBank;
 
+use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class StoreRequest
- *
-
  */
 class StoreRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Get all data from the request.
-     *
-     * @return array
      */
     public function getAll(): array
     {
@@ -63,18 +60,16 @@ class StoreRequest extends FormRequest
 
     /**
      * The rules that the incoming request must be matched against.
-     *
-     * @return array
      */
     public function rules(): array
     {
         return [
-            'name'               => 'required|between:1,255|uniquePiggyBankForUser',
-            'current_amount'     => ['numeric', 'gte:0', 'lte:target_amount'],
+            'name'               => 'required|min:1|max:255|uniquePiggyBankForUser',
+            'current_amount'     => ['nullable', new IsValidPositiveAmount()],
             'account_id'         => 'required|numeric|belongsToUser:accounts,id',
             'object_group_id'    => 'numeric|belongsToUser:object_groups,id',
-            'object_group_title' => 'between:1,255',
-            'target_amount'      => ['numeric', 'gte:0', 'lte:target_amount', 'required'],
+            'object_group_title' => ['min:1', 'max:255'],
+            'target_amount'      => ['required', new IsValidPositiveAmount()],
             'start_date'         => 'date|nullable',
             'target_date'        => 'date|nullable|after:start_date',
             'notes'              => 'max:65000',

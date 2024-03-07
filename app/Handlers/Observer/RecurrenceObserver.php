@@ -30,11 +30,6 @@ use FireflyIII\Models\Recurrence;
  */
 class RecurrenceObserver
 {
-    /**
-     * @param Recurrence $recurrence
-     *
-     * @return void
-     */
     public function deleting(Recurrence $recurrence): void
     {
         app('log')->debug('Observe "deleting" of a recurrence.');
@@ -48,7 +43,5 @@ class RecurrenceObserver
             $transaction->delete();
         }
         $recurrence->notes()->delete();
-
     }
-
 }

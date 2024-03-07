@@ -43,7 +43,7 @@ class ChangesForV431 extends Migration
             try {
                 Schema::table(
                     'budget_limits',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->string('repeat_freq', 30)->nullable();
                     }
                 );
@@ -56,7 +56,7 @@ class ChangesForV431 extends Migration
             try {
                 Schema::table(
                     'budget_limits',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->boolean('repeats')->default(0);
                     }
                 );
@@ -70,11 +70,11 @@ class ChangesForV431 extends Migration
             try {
                 Schema::table(
                     'budget_limits',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->renameColumn('start_date', 'startdate');
                     }
                 );
-            } catch (QueryException | ColumnDoesNotExist $e) {
+            } catch (ColumnDoesNotExist|QueryException $e) {
                 app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
                 app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
@@ -85,11 +85,11 @@ class ChangesForV431 extends Migration
             try {
                 Schema::table(
                     'budget_limits',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->dropColumn('end_date');
                     }
                 );
-            } catch (QueryException | ColumnDoesNotExist $e) {
+            } catch (ColumnDoesNotExist|QueryException $e) {
                 app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
                 app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
@@ -99,11 +99,11 @@ class ChangesForV431 extends Migration
             try {
                 Schema::table(
                     'transaction_currencies',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->dropColumn('decimal_places');
                     }
                 );
-            } catch (QueryException | ColumnDoesNotExist $e) {
+            } catch (ColumnDoesNotExist|QueryException $e) {
                 app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
                 app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
@@ -113,6 +113,7 @@ class ChangesForV431 extends Migration
     /**
      * Run the migrations.
      *
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up(): void
     {
@@ -121,7 +122,7 @@ class ChangesForV431 extends Migration
             try {
                 Schema::table(
                     'transaction_currencies',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->smallInteger('decimal_places', false, true)->default(2);
                     }
                 );
@@ -136,11 +137,11 @@ class ChangesForV431 extends Migration
             try {
                 Schema::table(
                     'budget_limits',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->renameColumn('startdate', 'start_date');
                     }
                 );
-            } catch (QueryException | ColumnDoesNotExist $e) {
+            } catch (ColumnDoesNotExist|QueryException $e) {
                 app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
                 app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
@@ -151,7 +152,7 @@ class ChangesForV431 extends Migration
             try {
                 Schema::table(
                     'budget_limits',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->date('end_date')->nullable()->after('start_date');
                     }
                 );
@@ -166,11 +167,11 @@ class ChangesForV431 extends Migration
             try {
                 Schema::table(
                     'budget_limits',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->dropColumn('repeats');
                     }
                 );
-            } catch (QueryException | ColumnDoesNotExist $e) {
+            } catch (ColumnDoesNotExist|QueryException $e) {
                 app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
                 app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
@@ -179,11 +180,11 @@ class ChangesForV431 extends Migration
             try {
                 Schema::table(
                     'budget_limits',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->dropColumn('repeat_freq');
                     }
                 );
-            } catch (QueryException | ColumnDoesNotExist $e) {
+            } catch (ColumnDoesNotExist|QueryException $e) {
                 app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
                 app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }

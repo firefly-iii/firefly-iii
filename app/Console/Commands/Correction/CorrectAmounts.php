@@ -34,7 +34,6 @@ use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\RuleTrigger;
 use Illuminate\Console\Command;
-use ValueError;
 
 /**
  * Class ReportSkeleton
@@ -46,9 +45,6 @@ class CorrectAmounts extends Command
     protected $description = 'This command makes sure positive and negative amounts are recorded correctly.';
     protected $signature   = 'firefly-iii:fix-amount-pos-neg';
 
-    /**
-     * @return int
-     */
     public function handle(): int
     {
         // auto budgets must be positive
@@ -70,13 +66,9 @@ class CorrectAmounts extends Command
         // rule_triggers must be positive or zero (amount_less, amount_more, amount_is)
         $this->fixRuleTriggers();
 
-
         return 0;
     }
 
-    /**
-     * @return void
-     */
     private function fixAutoBudgets(): void
     {
         $set   = AutoBudget::where('amount', '<', 0)->get();
@@ -86,17 +78,15 @@ class CorrectAmounts extends Command
 
             return;
         }
+
         /** @var AutoBudget $item */
         foreach ($set as $item) {
-            $item->amount = app('steam')->positive((string)$item->amount);
+            $item->amount = app('steam')->positive($item->amount);
             $item->save();
         }
         $this->friendlyInfo(sprintf('Corrected %d auto budget amount(s).', $count));
     }
 
-    /**
-     * @return void
-     */
     private function fixAvailableBudgets(): void
     {
         $set   = AvailableBudget::where('amount', '<', 0)->get();
@@ -106,17 +96,15 @@ class CorrectAmounts extends Command
 
             return;
         }
+
         /** @var AvailableBudget $item */
         foreach ($set as $item) {
-            $item->amount = app('steam')->positive((string)$item->amount);
+            $item->amount = app('steam')->positive($item->amount);
             $item->save();
         }
         $this->friendlyInfo(sprintf('Corrected %d available budget amount(s).', $count));
     }
 
-    /**
-     * @return void
-     */
     private function fixBills(): void
     {
         $set   = Bill::where('amount_min', '<', 0)->orWhere('amount_max', '<', 0)->get();
@@ -126,18 +114,16 @@ class CorrectAmounts extends Command
 
             return;
         }
+
         /** @var Bill $item */
         foreach ($set as $item) {
-            $item->amount_min = app('steam')->positive((string)$item->amount_min);
-            $item->amount_max = app('steam')->positive((string)$item->amount_max);
+            $item->amount_min = app('steam')->positive($item->amount_min);
+            $item->amount_max = app('steam')->positive($item->amount_max);
             $item->save();
         }
         $this->friendlyInfo(sprintf('Corrected %d bill amount(s).', $count));
     }
 
-    /**
-     * @return void
-     */
     private function fixBudgetLimits(): void
     {
         $set   = BudgetLimit::where('amount', '<', 0)->get();
@@ -147,17 +133,15 @@ class CorrectAmounts extends Command
 
             return;
         }
+
         /** @var BudgetLimit $item */
         foreach ($set as $item) {
-            $item->amount = app('steam')->positive((string)$item->amount);
+            $item->amount = app('steam')->positive($item->amount);
             $item->save();
         }
         $this->friendlyInfo(sprintf('Corrected %d budget limit amount(s).', $count));
     }
 
-    /**
-     * @return void
-     */
     private function fixExchangeRates(): void
     {
         $set   = CurrencyExchangeRate::where('rate', '<', 0)->get();
@@ -167,17 +151,15 @@ class CorrectAmounts extends Command
 
             return;
         }
-        /** @var BudgetLimit $item */
+
+        /** @var CurrencyExchangeRate $item */
         foreach ($set as $item) {
-            $item->rate = app('steam')->positive((string)$item->rate);
+            $item->rate = app('steam')->positive($item->rate);
             $item->save();
         }
         $this->friendlyInfo(sprintf('Corrected %d currency exchange rate(s).', $count));
     }
 
-    /**
-     * @return void
-     */
     private function fixRepetitions(): void
     {
         $set   = PiggyBankRepetition::where('currentamount', '<', 0)->get();
@@ -187,17 +169,15 @@ class CorrectAmounts extends Command
 
             return;
         }
+
         /** @var PiggyBankRepetition $item */
         foreach ($set as $item) {
-            $item->currentamount = app('steam')->positive((string)$item->currentamount);
+            $item->currentamount = app('steam')->positive($item->currentamount);
             $item->save();
         }
         $this->friendlyInfo(sprintf('Corrected %d piggy bank repetition amount(s).', $count));
     }
 
-    /**
-     * @return void
-     */
     private function fixPiggyBanks(): void
     {
         $set   = PiggyBank::where('targetamount', '<', 0)->get();
@@ -207,59 +187,58 @@ class CorrectAmounts extends Command
 
             return;
         }
-        /** @var PiggyBankRepetition $item */
+
+        /** @var PiggyBank $item */
         foreach ($set as $item) {
-            $item->targetamount = app('steam')->positive((string)$item->targetamount);
+            $item->targetamount = app('steam')->positive($item->targetamount);
             $item->save();
         }
         $this->friendlyInfo(sprintf('Corrected %d piggy bank amount(s).', $count));
     }
 
-    /**
-     * @return void
-     */
     private function fixRecurrences(): void
     {
         $set   = RecurrenceTransaction::where('amount', '<', 0)
-                                      ->orWhere('foreign_amount', '<', 0)
-                                      ->get();
+            ->orWhere('foreign_amount', '<', 0)
+            ->get()
+        ;
         $count = $set->count();
         if (0 === $count) {
             $this->friendlyPositive('All recurring transaction amounts are positive.');
 
             return;
         }
-        /** @var PiggyBankRepetition $item */
+
+        /** @var RecurrenceTransaction $item */
         foreach ($set as $item) {
-            $item->amount         = app('steam')->positive((string)$item->amount);
-            $item->foreign_amount = app('steam')->positive((string)$item->foreign_amount);
+            $item->amount         = app('steam')->positive($item->amount);
+            $item->foreign_amount = app('steam')->positive($item->foreign_amount);
             $item->save();
         }
         $this->friendlyInfo(sprintf('Corrected %d recurring transaction amount(s).', $count));
     }
 
-    /**
-     * @return void
-     */
     private function fixRuleTriggers(): void
     {
         $set   = RuleTrigger::whereIn('trigger_type', ['amount_less', 'amount_more', 'amount_is'])->get();
         $fixed = 0;
+
         /** @var RuleTrigger $item */
         foreach ($set as $item) {
             // basic check:
             $check = 0;
+
             try {
                 $check = bccomp((string)$item->trigger_value, '0');
-            } catch (ValueError $e) {
+            } catch (\ValueError $e) {
                 $this->friendlyError(sprintf('Rule #%d contained invalid %s-trigger "%s". The trigger has been removed, and the rule is disabled.', $item->rule_id, $item->trigger_type, $item->trigger_value));
                 $item->rule->active = false;
                 $item->rule->save();
                 $item->forceDelete();
             }
             if (-1 === $check) {
-                $fixed++;
-                $item->trigger_value = app('steam')->positive((string)$item->trigger_value);
+                ++$fixed;
+                $item->trigger_value = app('steam')->positive($item->trigger_value);
                 $item->save();
             }
         }
@@ -270,5 +249,4 @@ class CorrectAmounts extends Command
         }
         $this->friendlyInfo(sprintf('Corrected %d rule trigger amount(s).', $fixed));
     }
-
 }

@@ -35,7 +35,6 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Psr\Container\ContainerExceptionInterface;
@@ -47,13 +46,11 @@ use Psr\Container\NotFoundExceptionInterface;
  * This controller handles the registration of new users as well as their
  * validation and creation. By default this controller uses a trait to
  * provide this functionality without requiring any additional code.
- *
-
  */
 class RegisterController extends Controller
 {
-    use RegistersUsers;
     use CreateStuff;
+    use RegistersUsers;
 
     /**
      * Where to redirect users after registration.
@@ -78,9 +75,8 @@ class RegisterController extends Controller
     /**
      * Handle a registration request for the application.
      *
-     * @param Request $request
-     *
      * @return Application|Redirector|RedirectResponse
+     *
      * @throws FireflyException
      * @throws ValidationException
      */
@@ -95,10 +91,9 @@ class RegisterController extends Controller
             throw new FireflyException('Registration is currently not available :(');
         }
 
-
         $this->validator($request->all())->validate();
-        $user = $this->createUser($request->all());
-        Log::info(sprintf('Registered new user %s', $user->email));
+        $user              = $this->createUser($request->all());
+        app('log')->info(sprintf('Registered new user %s', $user->email));
         event(new RegisteredUser($user));
 
         $this->guard()->login($user);
@@ -115,37 +110,36 @@ class RegisterController extends Controller
     }
 
     /**
-     * @return bool
      * @throws FireflyException
      */
     protected function allowedToRegister(): bool
     {
         // is allowed to register?
         $allowRegistration = true;
+
         try {
             $singleUserMode = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
-        } catch (ContainerExceptionInterface | NotFoundExceptionInterface $e) {
+        } catch (ContainerExceptionInterface|NotFoundExceptionInterface $e) {
             $singleUserMode = true;
         }
-        $userCount = User::count();
-        $guard     = config('auth.defaults.guard');
+        $userCount         = User::count();
+        $guard             = config('auth.defaults.guard');
         if (true === $singleUserMode && $userCount > 0 && 'web' === $guard) {
             $allowRegistration = false;
         }
         if ('web' !== $guard) {
             $allowRegistration = false;
         }
+
         return $allowRegistration;
     }
 
     /**
      * Show the application registration form if the invitation code is valid.
      *
-     *
      * @return Factory|View
-     * @throws ContainerExceptionInterface
+     *
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
      */
     public function showInviteForm(Request $request, string $code)
     {
@@ -167,7 +161,7 @@ class RegisterController extends Controller
             return view('error', compact('message'));
         }
 
-        $email = $request->old('email');
+        $email             = $request->old('email');
 
         return view('auth.register', compact('isDemoSite', 'email', 'pageTitle', 'inviteCode'));
     }
@@ -175,12 +169,9 @@ class RegisterController extends Controller
     /**
      * Show the application registration form.
      *
-     * @param Request $request
-     *
      * @return Factory|View
-     * @throws ContainerExceptionInterface
+     *
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
      */
     public function showRegistrationForm(Request $request)
     {
@@ -194,7 +185,7 @@ class RegisterController extends Controller
             return view('error', compact('message'));
         }
 
-        $email = $request->old('email');
+        $email             = $request->old('email');
 
         return view('auth.register', compact('isDemoSite', 'email', 'pageTitle'));
     }

@@ -38,21 +38,18 @@ class ExportRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
 
-    /**
-     * @return array
-     */
     public function getAll(): array
     {
-        $result     = [
+        $result             = [
             'start' => $this->getCarbonDate('start') ?? today(config('app.timezone'))->subYear(),
             'end'   => $this->getCarbonDate('end') ?? today(config('app.timezone')),
             'type'  => $this->convertString('type'),
         ];
-        $parts      = explode(',', $this->convertString('accounts'));
-        $repository = app(AccountRepositoryInterface::class);
+        $parts              = explode(',', $this->convertString('accounts'));
+        $repository         = app(AccountRepositoryInterface::class);
         $repository->setUser(auth()->user());
 
-        $accounts = new Collection();
+        $accounts           = new Collection();
         foreach ($parts as $part) {
             $accountId = (int)$part;
             if (0 !== $accountId) {
@@ -69,14 +66,12 @@ class ExportRequest extends FormRequest
 
     /**
      * The rules that the incoming request must be matched against.
-     *
-     * @return array
      */
     public function rules(): array
     {
         return [
             'type'     => 'in:csv',
-            'accounts' => 'min:1|max:65536',
+            'accounts' => 'min:1|max:32768',
             'start'    => 'date|before:end',
             'end'      => 'date|after:start',
         ];

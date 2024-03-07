@@ -26,9 +26,5 @@ namespace FireflyIII\Events;
 
 /**
  * Class Event.
- *
-
  */
-abstract class Event
-{
-}
+abstract class Event {}

@@ -23,25 +23,27 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Carbon;
 
 /**
  * FireflyIII\Models\Role
  *
- * @property int                    $id
- * @property Carbon|null            $created_at
- * @property Carbon|null            $updated_at
- * @property string                 $name
- * @property string|null            $display_name
- * @property string|null            $description
- * @property-read Collection|User[] $users
- * @property-read int|null          $users_count
+ * @property int               $id
+ * @property null|Carbon       $created_at
+ * @property null|Carbon       $updated_at
+ * @property string            $name
+ * @property null|string       $display_name
+ * @property null|string       $description
+ * @property Collection|User[] $users
+ * @property null|int          $users_count
+ *
  * @method static Builder|Role newModelQuery()
  * @method static Builder|Role newQuery()
  * @method static Builder|Role query()
@@ -51,27 +53,21 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Role whereId($value)
  * @method static Builder|Role whereName($value)
  * @method static Builder|Role whereUpdatedAt($value)
+ *
  * @mixin Eloquent
  */
 class Role extends Model
 {
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
-    protected $casts
-        = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-        ];
+    use ReturnsIntegerIdTrait;
 
-    /** @var array Fields that can be filled */
+    protected $casts
+                        = [
+                            'created_at' => 'datetime',
+                            'updated_at' => 'datetime',
+                        ];
+
     protected $fillable = ['name', 'display_name', 'description'];
 
-    /**
-     * @return BelongsToMany
-     */
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class);

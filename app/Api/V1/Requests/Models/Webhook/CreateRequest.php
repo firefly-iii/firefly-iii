@@ -37,16 +37,13 @@ class CreateRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
 
-    /**
-     * @return array
-     */
     public function getData(): array
     {
-        $triggers   = Webhook::getTriggersForValidation();
-        $responses  = Webhook::getResponsesForValidation();
-        $deliveries = Webhook::getDeliveriesForValidation();
+        $triggers           = Webhook::getTriggersForValidation();
+        $responses          = Webhook::getResponsesForValidation();
+        $deliveries         = Webhook::getDeliveriesForValidation();
 
-        $fields = [
+        $fields             = [
             'title'    => ['title', 'convertString'],
             'active'   => ['active', 'boolean'],
             'trigger'  => ['trigger', 'convertString'],
@@ -57,31 +54,30 @@ class CreateRequest extends FormRequest
 
         // this is the way.
         $return             = $this->getAllData($fields);
-        $return['trigger']  = $triggers[$return['trigger']] ?? intval($return['trigger']);
-        $return['response'] = $responses[$return['response']] ?? intval($return['response']);
-        $return['delivery'] = $deliveries[$return['delivery']] ?? intval($return['delivery']);
+        $return['trigger']  = $triggers[$return['trigger']] ?? (int)$return['trigger'];
+        $return['response'] = $responses[$return['response']] ?? (int)$return['response'];
+        $return['delivery'] = $deliveries[$return['delivery']] ?? (int)$return['delivery'];
 
         return $return;
     }
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {
-        $triggers   = implode(',', array_keys(Webhook::getTriggersForValidation()));
-        $responses  = implode(',', array_keys(Webhook::getResponsesForValidation()));
-        $deliveries = implode(',', array_keys(Webhook::getDeliveriesForValidation()));
+        $triggers       = implode(',', array_keys(Webhook::getTriggersForValidation()));
+        $responses      = implode(',', array_keys(Webhook::getResponsesForValidation()));
+        $deliveries     = implode(',', array_keys(Webhook::getDeliveriesForValidation()));
+        $validProtocols = config('firefly.valid_url_protocols');
 
         return [
-            'title'    => 'required|between:1,512|uniqueObjectForUser:webhooks,title',
+            'title'    => 'required|min:1|max:255|uniqueObjectForUser:webhooks,title',
             'active'   => [new IsBoolean()],
             'trigger'  => sprintf('required|in:%s', $triggers),
             'response' => sprintf('required|in:%s', $responses),
             'delivery' => sprintf('required|in:%s', $deliveries),
-            'url'      => ['required', 'url', 'uniqueWebhook'],
+            'url'      => ['required', sprintf('url:%s', $validProtocols), 'uniqueWebhook'],
         ];
     }
 }

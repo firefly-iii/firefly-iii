@@ -44,8 +44,6 @@ class LinkController extends Controller
 
     /**
      * LinkController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -86,10 +84,7 @@ class LinkController extends Controller
     /**
      * Delete a link form.
      *
-     * @param Request  $request
-     * @param LinkType $linkType
-     *
-     * @return Factory|RedirectResponse|Redirector|View
+     * @return Factory|Redirector|RedirectResponse|View
      */
     public function delete(Request $request, LinkType $linkType)
     {
@@ -122,10 +117,7 @@ class LinkController extends Controller
     /**
      * Actually destroy the link.
      *
-     * @param Request  $request
-     * @param LinkType $linkType
-     *
-     * @return RedirectResponse|Redirector
+     * @return Redirector|RedirectResponse
      */
     public function destroy(Request $request, LinkType $linkType)
     {
@@ -143,10 +135,7 @@ class LinkController extends Controller
     /**
      * Edit a link form.
      *
-     * @param Request  $request
-     * @param LinkType $linkType
-     *
-     * @return Factory|RedirectResponse|Redirector|View
+     * @return Factory|Redirector|RedirectResponse|View
      */
     public function edit(Request $request, LinkType $linkType)
     {
@@ -182,7 +171,7 @@ class LinkController extends Controller
 
         Log::channel('audit')->info('User on index of link types in admin.');
         $linkTypes->each(
-            function (LinkType $linkType) {
+            function (LinkType $linkType): void {
                 $linkType->journalCount = $this->repository->countJournals($linkType);
             }
         );
@@ -192,8 +181,6 @@ class LinkController extends Controller
 
     /**
      * Show a single link.
-     *
-     * @param LinkType $linkType
      *
      * @return Factory|View
      */
@@ -211,9 +198,7 @@ class LinkController extends Controller
     /**
      * Store the new link.
      *
-     * @param LinkTypeFormRequest $request
-     *
-     * @return $this|RedirectResponse|Redirector
+     * @return $this|Redirector|RedirectResponse
      */
     public function store(LinkTypeFormRequest $request)
     {
@@ -242,10 +227,7 @@ class LinkController extends Controller
     /**
      * Update an existing link.
      *
-     * @param LinkTypeFormRequest $request
-     * @param LinkType            $linkType
-     *
-     * @return $this|RedirectResponse|Redirector
+     * @return $this|Redirector|RedirectResponse
      */
     public function update(LinkTypeFormRequest $request, LinkType $linkType)
     {
@@ -255,7 +237,7 @@ class LinkController extends Controller
             return redirect(route('admin.links.index'));
         }
 
-        $data = [
+        $data     = [
             'name'    => $request->convertString('name'),
             'inward'  => $request->convertString('inward'),
             'outward' => $request->convertString('outward'),

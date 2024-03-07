@@ -25,27 +25,25 @@ namespace FireflyIII\Api\V1\Requests\Models\Budget;
 
 use FireflyIII\Models\Budget;
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\AutoBudget\ValidatesAutoBudgetRequest;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 
 /**
  * Class UpdateRequest
- *
-
  */
 class UpdateRequest extends FormRequest
 {
+    use ChecksLogin;
     use ConvertsDataTypes;
     use ValidatesAutoBudgetRequest;
-    use ChecksLogin;
 
     /**
      * Get all data from the request.
-     *
-     * @return array
      */
     public function getAll(): array
     {
@@ -77,8 +75,6 @@ class UpdateRequest extends FormRequest
 
     /**
      * The rules that the incoming request must be matched against.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -86,31 +82,30 @@ class UpdateRequest extends FormRequest
         $budget = $this->route()->parameter('budget');
 
         return [
-            'name'                      => sprintf('between:1,100|uniqueObjectForUser:budgets,name,%d', $budget->id),
+            'name'                      => sprintf('min:1|max:100|uniqueObjectForUser:budgets,name,%d', $budget->id),
             'active'                    => [new IsBoolean()],
-            'notes'                     => 'nullable|between:1,65536',
+            'notes'                     => 'nullable|min:1|max:32768',
             'auto_budget_type'          => 'in:reset,rollover,adjusted,none',
             'auto_budget_currency_id'   => 'exists:transaction_currencies,id',
             'auto_budget_currency_code' => 'exists:transaction_currencies,code',
-            'auto_budget_amount'        => 'min:0|max:1000000000',
+            'auto_budget_amount'        => ['nullable', new IsValidPositiveAmount()],
             'auto_budget_period'        => 'in:daily,weekly,monthly,quarterly,half_year,yearly',
         ];
     }
 
     /**
      * Configure the validator instance with special rules for after the basic validation rules.
-     *
-     * @param Validator $validator
-     *
-     * @return void
      */
     public function withValidator(Validator $validator): void
     {
         $validator->after(
-            function (Validator $validator) {
+            function (Validator $validator): void {
                 // validate all account info
                 $this->validateAutoBudgetAmount($validator);
             }
         );
+        if ($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+        }
     }
 }

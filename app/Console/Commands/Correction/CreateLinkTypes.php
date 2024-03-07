@@ -34,23 +34,12 @@ class CreateLinkTypes extends Command
 {
     use ShowsFriendlyMessages;
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Creates all link types.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'firefly-iii:create-link-types';
+
+    protected $signature   = 'firefly-iii:create-link-types';
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle(): int
     {
@@ -62,8 +51,9 @@ class CreateLinkTypes extends Command
             'Reimbursement' => ['(partially) reimburses', 'is (partially) reimbursed by'],
         ];
         foreach ($set as $name => $values) {
-            $link = LinkType::where('name', $name)
-                            ->first();
+            $link           = LinkType::where('name', $name)
+                ->first()
+            ;
             if (null === $link) {
                 $link          = new LinkType();
                 $link->name    = $name;
@@ -78,6 +68,7 @@ class CreateLinkTypes extends Command
         if (0 === $count) {
             $this->friendlyPositive('All link types are OK');
         }
+
         return 0;
     }
 }

@@ -23,23 +23,16 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support;
 
-use Cache;
 use Illuminate\Support\Collection;
-use JsonException;
 
 /**
  * Class CacheProperties.
- *
-
  */
 class CacheProperties
 {
     protected string     $hash = '';
     protected Collection $properties;
 
-    /**
-     *
-     */
     public function __construct()
     {
         $this->properties = new Collection();
@@ -62,20 +55,14 @@ class CacheProperties
      */
     public function get()
     {
-        return Cache::get($this->hash);
+        return \Cache::get($this->hash);
     }
 
-    /**
-     * @return string
-     */
     public function getHash(): string
     {
         return $this->hash;
     }
 
-    /**
-     * @return bool
-     */
     public function has(): bool
     {
         if ('testing' === config('app.env')) {
@@ -83,18 +70,16 @@ class CacheProperties
         }
         $this->hash();
 
-        return Cache::has($this->hash);
+        return \Cache::has($this->hash);
     }
 
-    /**
-     */
     private function hash(): void
     {
-        $content = '';
+        $content    = '';
         foreach ($this->properties as $property) {
             try {
                 $content .= json_encode($property, JSON_THROW_ON_ERROR);
-            } catch (JsonException $e) {
+            } catch (\JsonException $e) {
                 // @ignoreException
                 $content .= hash('sha256', (string)time());
             }
@@ -107,6 +92,6 @@ class CacheProperties
      */
     public function store($data): void
     {
-        Cache::forever($this->hash, $data);
+        \Cache::forever($this->hash, $data);
     }
 }

@@ -211,7 +211,7 @@ export default {
             }
 
             if (this.transactionType.toString().toLowerCase() === 'deposit' && this.inputName.substr(0, 11).toLowerCase() === 'destination') {
-              // TODO also clear valye?
+              // TODO also clear value?
               this.inputDisabled = true;
             }
           }

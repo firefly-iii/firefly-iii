@@ -41,13 +41,25 @@ $(function () {
         console.log('action count is zero, add action.');
         addNewAction();
     }
-
+    makeRuleStrict();
     $('.add_rule_trigger').click(addNewTrigger);
     $('.add_rule_action').click(addNewAction);
+    $('#ffInput_strict').change(makeRuleStrict);
     $('.test_rule_triggers').click(testRuleTriggers);
     $('.remove-trigger').unbind('click').click(removeTrigger);
     $('.remove-action').unbind('click').click(removeAction);
 });
+
+function makeRuleStrict() {
+    var value = $('#ffInput_strict').is(':checked');
+    if(value) {
+        // is checked, stop processing triggers is not relevant.
+        $('.trigger-stop-processing').prop('checked', false);
+        $('.trigger-stop-processing').prop('disabled', true);
+        return;
+    }
+    $('.trigger-stop-processing').prop('disabled', false);
+}
 
 /**
  * This method triggers when a new trigger must be added to the form.
@@ -126,7 +138,7 @@ function removeTrigger(e) {
     // remove grand parent:
     target.parent().parent().remove();
 
-    // if now at zero, immediatly add one again:
+    // if now at zero, immediately add one again:
     if ($('.rule-trigger-tbody tr').length === 0) {
         addNewTrigger();
     }
@@ -147,7 +159,7 @@ function removeAction(e) {
     // remove grand parent:
     target.parent().parent().remove();
 
-    // if now at zero, immediatly add one again:
+    // if now at zero, immediately add one again:
     if ($('.rule-action-tbody tr').length === 0) {
         addNewAction();
     }
@@ -181,6 +193,7 @@ function onAddNewAction() {
         console.log('Trigger updateActionInput() for select ' + select);
         updateActionInput(select);
     });
+    makeRuleStrict();
 }
 
 /**
@@ -207,6 +220,7 @@ function onAddNewTrigger() {
         console.log('Trigger updateTriggerInput() for select ' + select);
         updateTriggerInput(select);
     });
+    makeRuleStrict();
 }
 
 /**
@@ -239,6 +253,8 @@ function updateActionInput(selectList) {
         case 'move_notes_to_descr':
         case 'clear_notes':
         case 'delete_transaction':
+        case 'set_source_to_cash':
+        case 'set_destination_to_cash':
         case 'remove_all_tags':
             console.log('Select list value is ' + selectList.val() + ', so input needs to be disabled.');
             inputResult.prop('disabled', true);

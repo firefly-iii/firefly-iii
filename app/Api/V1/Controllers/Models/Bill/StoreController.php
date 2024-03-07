@@ -43,8 +43,6 @@ class StoreController extends Controller
 
     /**
      * BillController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -65,22 +63,19 @@ class StoreController extends Controller
      *
      * Store a bill.
      *
-     * @param StoreRequest $request
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function store(StoreRequest $request): JsonResponse
     {
-        $data    = $request->getAll();
-        $bill    = $this->repository->store($data);
-        $manager = $this->getManager();
+        $data        = $request->getAll();
+        $bill        = $this->repository->store($data);
+        $manager     = $this->getManager();
 
         /** @var BillTransformer $transformer */
         $transformer = app(BillTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($bill, $transformer, 'bills');
+        $resource    = new Item($bill, $transformer, 'bills');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

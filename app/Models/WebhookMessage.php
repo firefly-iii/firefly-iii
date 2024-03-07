@@ -23,7 +23,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -31,24 +33,24 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\WebhookMessage
  *
- * @property int                              $id
- * @property Carbon|null                      $created_at
- * @property Carbon|null                      $updated_at
- * @property string|null                      $deleted_at
- * @property int                              $webhook_id
- * @property bool                             $sent
- * @property bool                             $errored
- * @property int                              $attempts
- * @property string                           $uuid
- * @property array                            $message
- * @property array|null                       $logs
- * @property-read Webhook                     $webhook
+ * @property int         $id
+ * @property null|Carbon $created_at
+ * @property null|Carbon $updated_at
+ * @property null|string $deleted_at
+ * @property int         $webhook_id
+ * @property bool        $sent
+ * @property bool        $errored
+ * @property int         $attempts
+ * @property string      $uuid
+ * @property array       $message
+ * @property null|array  $logs
+ * @property Webhook     $webhook
+ *
  * @method static Builder|WebhookMessage newModelQuery()
  * @method static Builder|WebhookMessage newQuery()
  * @method static Builder|WebhookMessage query()
@@ -63,12 +65,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|WebhookMessage whereUpdatedAt($value)
  * @method static Builder|WebhookMessage whereUuid($value)
  * @method static Builder|WebhookMessage whereWebhookId($value)
- * @property-read Collection|WebhookAttempt[] $webhookAttempts
- * @property-read int|null                    $webhook_attempts_count
+ *
+ * @property Collection|WebhookAttempt[] $webhookAttempts
+ * @property null|int                    $webhook_attempts_count
+ *
  * @mixin Eloquent
  */
 class WebhookMessage extends Model
 {
+    use ReturnsIntegerIdTrait;
+
     protected $casts
         = [
             'sent'    => 'boolean',
@@ -81,37 +87,31 @@ class WebhookMessage extends Model
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param string $value
-     *
-     * @return WebhookMessage
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): WebhookMessage
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $messageId = (int)$value;
+
             /** @var User $user */
-            $user = auth()->user();
-            /** @var WebhookMessage $message */
-            $message = self::find($messageId);
+            $user      = auth()->user();
+
+            /** @var null|WebhookMessage $message */
+            $message   = self::find($messageId);
             if (null !== $message && $message->webhook->user_id === $user->id) {
                 return $message;
             }
         }
+
         throw new NotFoundHttpException();
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function webhook(): BelongsTo
     {
         return $this->belongsTo(Webhook::class);
     }
 
-    /**
-     * @return HasMany
-     */
     public function webhookAttempts(): HasMany
     {
         return $this->hasMany(WebhookAttempt::class);
@@ -119,13 +119,18 @@ class WebhookMessage extends Model
 
     /**
      * Get the amount
-     *
-     * @return Attribute
      */
     protected function sent(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (bool)$value,
+            get: static fn ($value) => (bool)$value,
+        );
+    }
+
+    protected function webhookId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int)$value,
         );
     }
 }

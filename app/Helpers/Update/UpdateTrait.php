@@ -24,13 +24,9 @@ declare(strict_types=1);
 namespace FireflyIII\Helpers\Update;
 
 use FireflyIII\Services\FireflyIIIOrg\Update\UpdateRequestInterface;
-use Illuminate\Support\Facades\Log;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Trait UpdateTrait
- *
  */
 trait UpdateTrait
 {
@@ -38,18 +34,15 @@ trait UpdateTrait
      * Returns an array with info on the next release, if any.
      * 'message' => 'A new version is available.
      * 'level' => 'info' / 'success' / 'error'
-     *
-     * @return array
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function getLatestRelease(): array
     {
-        Log::debug('Now in getLatestRelease()');
+        app('log')->debug('Now in getLatestRelease()');
+
         /** @var UpdateRequestInterface $checker */
         $checker       = app(UpdateRequestInterface::class);
         $channelConfig = app('fireflyconfig')->get('update_channel', 'stable');
-        $channel       = $channelConfig ? $channelConfig->data : 'stable';
+        $channel       = (string)$channelConfig->data;
 
         return $checker->getUpdateInformation($channel);
     }

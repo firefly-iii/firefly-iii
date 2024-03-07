@@ -25,6 +25,49 @@ function getAccount() {
     return {
         id: '',
         name: '',
+        alpine_name: '',
+    };
+}
+
+export function defaultErrorSet() {
+    return {
+        description: [],
+
+        // amount information:
+        amount: [],
+        currency_code: [],
+        foreign_amount: [],
+        foreign_currency_code: [],
+
+        // source and destination
+        source_account: [],
+        destination_account: [],
+
+        // meta data information:
+        budget_id: [],
+        category_name: [],
+        piggy_bank_id: [],
+        bill_id: [],
+        tags: [],
+        notes: [],
+
+        // other meta fields:
+        internal_reference: [],
+        external_url: [],
+
+        // map
+        latitude: [],
+        longitude: [],
+        zoom_level: [],
+
+        // date and time
+        date: [],
+        interest_date: [],
+        book_date: [],
+        process_date: [],
+        due_date: [],
+        payment_date: [],
+        invoice_date: [],
     };
 }
 
@@ -33,9 +76,45 @@ export function createEmptySplit() {
     let formatted = format(now, 'yyyy-MM-dd HH:mm');
     return {
         description: '',
+
+        // amount information:
         amount: '',
+        currency_code: 'EUR',
+        foreign_amount: '',
+        foreign_currency_code: '',
+
+        // source and destination
         source_account: getAccount(),
         destination_account: getAccount(),
-        date: formatted
+
+        // meta data information:
+        budget_id: null,
+        category_name: '',
+        piggy_bank_id: null,
+        bill_id: null,
+        tags: [],
+        notes: '',
+
+        // other meta fields:
+        internal_reference: '',
+        external_url: '',
+
+        // map
+        hasLocation: false,
+        latitude: null,
+        longitude: null,
+        zoomLevel: null,
+
+
+        // date and time
+        date: formatted,
+        interest_date: '',
+        book_date: '',
+        process_date: '',
+        due_date: '',
+        payment_date: '',
+        invoice_date: '',
+
+        errors: defaultErrorSet(),
     };
 }

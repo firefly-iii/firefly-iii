@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Data;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
@@ -35,26 +36,28 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class DateRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Get all data from the request.
-     *
-     * @return array
      */
     public function getAll(): array
     {
+        $start = $this->getCarbonDate('start');
+        $end   = $this->getCarbonDate('end');
+        if ($start->diffInYears($end) > 5) {
+            throw new FireflyException('Date range out of range.');
+        }
+
         return [
-            'start' => $this->getCarbonDate('start'),
-            'end'   => $this->getCarbonDate('end'),
+            'start' => $start,
+            'end'   => $end,
         ];
     }
 
     /**
      * The rules that the incoming request must be matched against.
-     *
-     * @return array
      */
     public function rules(): array
     {

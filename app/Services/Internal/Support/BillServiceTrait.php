@@ -26,20 +26,12 @@ namespace FireflyIII\Services\Internal\Support;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Trait BillServiceTrait
- *
-
  */
 trait BillServiceTrait
 {
-    /**
-     * @param Bill   $bill
-     * @param string $oldName
-     * @param string $newName
-     */
     public function updateBillActions(Bill $bill, string $oldName, string $newName): void
     {
         if ($oldName === $newName) {
@@ -47,23 +39,18 @@ trait BillServiceTrait
         }
         $ruleIds = $bill->user->rules()->get(['id'])->pluck('id')->toArray();
         $set     = RuleAction::whereIn('rule_id', $ruleIds)
-                             ->where('action_type', 'link_to_bill')
-                             ->where('action_value', $oldName)->get();
+            ->where('action_type', 'link_to_bill')
+            ->where('action_value', $oldName)->get()
+        ;
 
         /** @var RuleAction $ruleAction */
         foreach ($set as $ruleAction) {
-            Log::debug(sprintf('Updated rule action #%d to search for new bill name "%s"', $ruleAction->id, $newName));
+            app('log')->debug(sprintf('Updated rule action #%d to search for new bill name "%s"', $ruleAction->id, $newName));
             $ruleAction->action_value = $newName;
             $ruleAction->save();
         }
     }
 
-    /**
-     * @param Bill   $bill
-     * @param string $note
-     *
-     * @return bool
-     */
     public function updateNote(Bill $bill, string $note): bool
     {
         if ('' === $note) {
@@ -74,7 +61,7 @@ trait BillServiceTrait
 
             return true;
         }
-        $dbNote = $bill->notes()->first();
+        $dbNote       = $bill->notes()->first();
         if (null === $dbNote) {
             $dbNote = new Note();
             $dbNote->noteable()->associate($bill);

@@ -37,20 +37,16 @@ class PeriodController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/insight/insightIncomeTotal
-     *
-     * @param GenericRequest $request
-     *
-     * @return JsonResponse
      */
     public function total(GenericRequest $request): JsonResponse
     {
-        $accounts = $request->getAssetAccounts();
-        $start    = $request->getStart();
-        $end      = $request->getEnd();
-        $response = [];
+        $accounts   = $request->getAssetAccounts();
+        $start      = $request->getStart();
+        $end        = $request->getEnd();
+        $response   = [];
 
         // collect all expenses in this period (regardless of type)
-        $collector = app(GroupCollectorInterface::class);
+        $collector  = app(GroupCollectorInterface::class);
         $collector->setTypes([TransactionType::DEPOSIT])->setRange($start, $end)->setDestinationAccounts($accounts);
         $genericSet = $collector->getExtractedJournals();
         foreach ($genericSet as $journal) {
@@ -58,7 +54,7 @@ class PeriodController extends Controller
             $foreignCurrencyId = (int)$journal['foreign_currency_id'];
 
             if (0 !== $currencyId) {
-                $response[$currencyId]                     = $response[$currencyId] ?? [
+                $response[$currencyId] ??= [
                     'difference'       => '0',
                     'difference_float' => 0,
                     'currency_id'      => (string)$currencyId,
@@ -68,7 +64,7 @@ class PeriodController extends Controller
                 $response[$currencyId]['difference_float'] = (float)$response[$currencyId]['difference']; // float but on purpose.
             }
             if (0 !== $foreignCurrencyId) {
-                $response[$foreignCurrencyId]                     = $response[$foreignCurrencyId] ?? [
+                $response[$foreignCurrencyId] ??= [
                     'difference'       => '0',
                     'difference_float' => 0,
                     'currency_id'      => (string)$foreignCurrencyId,

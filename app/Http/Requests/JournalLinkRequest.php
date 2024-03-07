@@ -27,19 +27,19 @@ use FireflyIII\Models\LinkType;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Validator;
 
 /**
  * Class JournalLink.
  */
 class JournalLinkRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Returns the data required by the controller.
-     *
-     * @return array
      */
     public function getLinkInfo(): array
     {
@@ -56,25 +56,31 @@ class JournalLinkRequest extends FormRequest
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {
         // all possible combinations of link types and inward / outward:
         $combinations = [];
         $linkTypes    = LinkType::get(['id']);
+
         /** @var LinkType $type */
         foreach ($linkTypes as $type) {
             $combinations[] = sprintf('%d_inward', $type->id);
             $combinations[] = sprintf('%d_outward', $type->id);
         }
-        $string = implode(',', $combinations);
+        $string       = implode(',', $combinations);
 
         // fixed
         return [
             'link_type' => sprintf('required|in:%s', $string),
             'opposing'  => 'belongsToUser:transaction_journals',
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        if ($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+        }
     }
 }

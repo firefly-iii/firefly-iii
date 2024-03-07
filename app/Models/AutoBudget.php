@@ -24,31 +24,33 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Carbon;
 
 /**
  * FireflyIII\Models\AutoBudget
  *
- * @property int                      $id
- * @property Carbon|null              $created_at
- * @property Carbon|null              $updated_at
- * @property Carbon|null              $deleted_at
- * @property int                      $budget_id
- * @property int                      $transaction_currency_id
- * @property int                      $auto_budget_type
- * @property string                   $amount
- * @property string                   $period
- * @property-read Budget              $budget
- * @property-read TransactionCurrency $transactionCurrency
+ * @property int                 $id
+ * @property null|Carbon         $created_at
+ * @property null|Carbon         $updated_at
+ * @property null|Carbon         $deleted_at
+ * @property int                 $budget_id
+ * @property int                 $transaction_currency_id
+ * @property int|string          $auto_budget_type
+ * @property string              $amount
+ * @property string              $period
+ * @property Budget              $budget
+ * @property TransactionCurrency $transactionCurrency
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget newQuery()
- * @method static Builder|AutoBudget onlyTrashed()
+ * @method static Builder|AutoBudget                               onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget query()
  * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget whereAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget whereAutoBudgetType($value)
@@ -59,42 +61,49 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget wherePeriod($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget whereTransactionCurrencyId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget whereUpdatedAt($value)
- * @method static Builder|AutoBudget withTrashed()
- * @method static Builder|AutoBudget withoutTrashed()
+ * @method static Builder|AutoBudget                               withTrashed()
+ * @method static Builder|AutoBudget                               withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class AutoBudget extends Model
 {
+    use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    public const AUTO_BUDGET_ADJUSTED = 3;
-    public const AUTO_BUDGET_RESET    = 1;
-    public const AUTO_BUDGET_ROLLOVER = 2;
-    protected $fillable = ['budget_id', 'amount', 'period'];
+    public const int AUTO_BUDGET_ADJUSTED = 3;
+    public const int AUTO_BUDGET_RESET    = 1;
+    public const int AUTO_BUDGET_ROLLOVER = 2;
+    protected $fillable                   = ['budget_id', 'amount', 'period'];
 
-    /**
-     * @return BelongsTo
-     */
     public function budget(): BelongsTo
     {
         return $this->belongsTo(Budget::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function transactionCurrency(): BelongsTo
     {
         return $this->belongsTo(TransactionCurrency::class);
     }
 
-    /**
-     * @return Attribute
-     */
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (string)$value,
+            get: static fn ($value) => (string)$value,
+        );
+    }
+
+    protected function budgetId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int)$value,
+        );
+    }
+
+    protected function transactionCurrencyId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int)$value,
         );
     }
 }

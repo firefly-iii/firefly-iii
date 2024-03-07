@@ -28,23 +28,18 @@ use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Collection;
 
 /**
  * Class ExchangeRateSeeder
  */
 class ExchangeRateSeeder extends Seeder
 {
-    private Collection $users;
-
-    /**
-     * @return void
-     */
     public function run(): void
     {
-        $count = User::count();
+        $count  = User::count();
         if (0 === $count) {
             app('log')->debug('Will not seed exchange rates yet.');
+
             return;
         }
         $users  = User::get();
@@ -76,41 +71,23 @@ class ExchangeRateSeeder extends Seeder
         }
     }
 
-    /**
-     * @param string $code
-     *
-     * @return TransactionCurrency|null
-     */
     private function getCurrency(string $code): ?TransactionCurrency
     {
         return TransactionCurrency::whereNull('deleted_at')->where('code', $code)->first();
     }
 
-    /**
-     * @param User                $user
-     * @param TransactionCurrency $from
-     * @param TransactionCurrency $to
-     * @param string              $date
-     *
-     * @return bool
-     */
     private function hasRate(User $user, TransactionCurrency $from, TransactionCurrency $to, string $date): bool
     {
         return $user->currencyExchangeRates()
-                    ->where('from_currency_id', $from->id)
-                    ->where('to_currency_id', $to->id)
-                    ->where('date', $date)
-                    ->count() > 0;
+            ->where('from_currency_id', $from->id)
+            ->where('to_currency_id', $to->id)
+            ->where('date', $date)
+            ->count() > 0
+        ;
     }
 
     /**
-     * @param User                $user
-     * @param TransactionCurrency $from
-     * @param TransactionCurrency $to
-     * @param string              $date
-     * @param float               $rate
-     *
-     * @return void
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     private function addRate(User $user, TransactionCurrency $from, TransactionCurrency $to, string $date, float $rate): void
     {

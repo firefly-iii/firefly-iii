@@ -43,30 +43,25 @@ class AccountController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v2)#/accounts/listTransactionByAccount
-     *
-     * @param ListRequest $request
-     * @param Account     $account
-     *
-     * @return JsonResponse
      */
     public function list(ListRequest $request, Account $account): JsonResponse
     {
         // collect transactions:
-        $page     = $request->getPage();
-        $page     = max($page, 1);
-        $pageSize = $this->parameters->get('limit');
-
+        $page      = $request->getPage();
+        $page      = max($page, 1);
+        $pageSize  = $this->parameters->get('limit');
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))
-                  ->withAPIInformation()
-                  ->setLimit($pageSize)
-                  ->setPage($page)
-                  ->setTypes($request->getTransactionTypes());
+            ->withAPIInformation()
+            ->setLimit($pageSize)
+            ->setPage($page)
+            ->setTypes($request->getTransactionTypes())
+        ;
 
-        $start = $request->getStartDate();
-        $end   = $request->getEndDate();
+        $start     = $request->getStartDate();
+        $end       = $request->getEndDate();
         if (null !== $start) {
             app('log')->debug(sprintf('Set start date to %s', $start->toIso8601String()));
             $collector->setStart($start);
@@ -87,6 +82,7 @@ class AccountController extends Controller
 
         return response()
             ->json($this->jsonApiList('transactions', $paginator, new TransactionGroupTransformer()))
-            ->header('Content-Type', self::CONTENT_TYPE);
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
 }

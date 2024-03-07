@@ -28,7 +28,6 @@ if ('v2' === env('FIREFLY_III_LAYOUT')) {
         realpath(base_path('resources/views'))];
 }
 
-
 return [
     /*
     |--------------------------------------------------------------------------
@@ -41,7 +40,7 @@ return [
     |
     */
 
-    'paths' => $paths,
+    'paths'    => $paths,
 
     /*
     |--------------------------------------------------------------------------
@@ -55,5 +54,4 @@ return [
     */
 
     'compiled' => realpath(storage_path('framework/views')),
-
 ];

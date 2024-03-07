@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests\Models\Bill;
 
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
@@ -33,22 +34,18 @@ use Illuminate\Validation\Validator;
 
 /**
  * Class StoreRequest
- *
-
  */
 class StoreRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Get all data from the request.
-     *
-     * @return array
      */
     public function getAll(): array
     {
-        Log::debug('Raw fields in Bill StoreRequest', $this->all());
+        app('log')->debug('Raw fields in Bill StoreRequest', $this->all());
         $fields = [
             'name'               => ['name', 'convertString'],
             'amount_min'         => ['amount_min', 'convertString'],
@@ -72,38 +69,32 @@ class StoreRequest extends FormRequest
 
     /**
      * The rules that the incoming request must be matched against.
-     *
-     * @return array
      */
     public function rules(): array
     {
         return [
-            'name'           => 'between:1,255|uniqueObjectForUser:bills,name',
-            'amount_min'     => 'numeric|gt:0|required',
-            'amount_max'     => 'numeric|gt:0|required',
+            'name'           => 'min:1|max:255|uniqueObjectForUser:bills,name',
+            'amount_min'     => ['required', new IsValidPositiveAmount()],
+            'amount_max'     => ['required', new IsValidPositiveAmount()],
             'currency_id'    => 'numeric|exists:transaction_currencies,id',
             'currency_code'  => 'min:3|max:51|exists:transaction_currencies,code',
             'date'           => 'date|required',
             'end_date'       => 'date|after:date',
             'extension_date' => 'date|after:date',
             'repeat_freq'    => 'in:weekly,monthly,quarterly,half-year,yearly|required',
-            'skip'           => 'between:0,31',
+            'skip'           => 'min:0|max:31|numeric',
             'active'         => [new IsBoolean()],
-            'notes'          => 'between:1,65536',
+            'notes'          => 'min:1|max:32768',
         ];
     }
 
     /**
      * Configure the validator instance.
-     *
-     * @param Validator $validator
-     *
-     * @return void
      */
     public function withValidator(Validator $validator): void
     {
         $validator->after(
-            static function (Validator $validator) {
+            static function (Validator $validator): void {
                 $data = $validator->getData();
                 $min  = (string)($data['amount_min'] ?? '0');
                 $max  = (string)($data['amount_max'] ?? '0');
@@ -113,5 +104,8 @@ class StoreRequest extends FormRequest
                 }
             }
         );
+        if ($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+        }
     }
 }

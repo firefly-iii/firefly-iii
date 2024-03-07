@@ -24,11 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Exceptions;
 
-use Exception;
-
 /**
  * Class DuplicateTransactionException
  */
-class DuplicateTransactionException extends Exception
-{
-}
+class DuplicateTransactionException extends \Exception {}

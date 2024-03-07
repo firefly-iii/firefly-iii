@@ -45,19 +45,15 @@ class RuleActionFailed extends Notification
 
     /**
      * Create a new notification instance.
-     *
-     * @return void
      */
     public function __construct(array $params)
     {
         [$mainMessage, $groupTitle, $groupLink, $ruleTitle, $ruleLink] = $params;
-        $this->message    = $mainMessage;
-        $this->groupTitle = $groupTitle;
-        $this->groupLink  = $groupLink;
-        $this->ruleTitle  = $ruleTitle;
-        $this->ruleLink   = $ruleLink;
-
-
+        $this->message                                                 = $mainMessage;
+        $this->groupTitle                                              = $groupTitle;
+        $this->groupLink                                               = $groupLink;
+        $this->ruleTitle                                               = $ruleTitle;
+        $this->ruleLink                                                = $ruleLink;
     }
 
     /**
@@ -66,11 +62,12 @@ class RuleActionFailed extends Notification
      * @param mixed $notifiable
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toArray($notifiable)
     {
         return [
-            //
         ];
     }
 
@@ -80,6 +77,8 @@ class RuleActionFailed extends Notification
      * @param mixed $notifiable
      *
      * @return SlackMessage
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toSlack($notifiable)
     {
@@ -88,9 +87,9 @@ class RuleActionFailed extends Notification
         $ruleTitle  = $this->ruleTitle;
         $ruleLink   = $this->ruleLink;
 
-        return (new SlackMessage())->content($this->message)->attachment(function ($attachment) use ($groupTitle, $groupLink) {
+        return (new SlackMessage())->content($this->message)->attachment(static function ($attachment) use ($groupTitle, $groupLink): void {
             $attachment->title((string)trans('rules.inspect_transaction', ['title' => $groupTitle]), $groupLink);
-        })->attachment(function ($attachment) use ($ruleTitle, $ruleLink) {
+        })->attachment(static function ($attachment) use ($ruleTitle, $ruleLink): void {
             $attachment->title((string)trans('rules.inspect_rule', ['title' => $ruleTitle]), $ruleLink);
         });
     }
@@ -101,17 +100,24 @@ class RuleActionFailed extends Notification
      * @param mixed $notifiable
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function via($notifiable)
     {
-        /** @var User|null $user */
+        /** @var null|User $user */
         $user     = auth()->user();
-        $slackUrl = null === $user ? '' : (string)app('preferences')->getForUser(auth()->user(), 'slack_webhook_url', '')->data;
-        if (UrlValidator::isValidWebhookURL($slackUrl)) {
-            app('log')->debug('Will send ruleActionFailed through Slack!');
+        $slackUrl = null === $user ? '' : app('preferences')->getForUser(auth()->user(), 'slack_webhook_url', '')->data;
+        if (is_array($slackUrl)) {
+            $slackUrl = '';
+        }
+        if (UrlValidator::isValidWebhookURL((string)$slackUrl)) {
+            app('log')->debug('Will send ruleActionFailed through Slack or Discord!');
+
             return ['slack'];
         }
-        app('log')->debug('Will NOT send ruleActionFailed through Slack');
+        app('log')->debug('Will NOT send ruleActionFailed through Slack or Discord');
+
         return [];
     }
 }

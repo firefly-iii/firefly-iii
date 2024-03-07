@@ -31,26 +31,9 @@ use Illuminate\Support\Collection;
  */
 interface TransactionTypeRepositoryInterface
 {
-    /**
-     * @param string $type
-     *
-     * @return TransactionType|null
-     */
     public function findByType(string $type): ?TransactionType;
 
-    /**
-     * @param TransactionType|null $type
-     * @param string|null          $typeString
-     *
-     * @return TransactionType
-     */
     public function findTransactionType(?TransactionType $type, ?string $typeString): TransactionType;
 
-    /**
-     * @param string $query
-     * @param int    $limit
-     *
-     * @return Collection
-     */
     public function searchTypes(string $query, int $limit): Collection;
 }

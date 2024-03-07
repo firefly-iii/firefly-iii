@@ -35,8 +35,6 @@ class ChangesForV475 extends Migration
 {
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down(): void
     {
@@ -50,7 +48,8 @@ class ChangesForV475 extends Migration
     /**
      * Run the migrations.
      *
-     * @return void
+     * @SuppressWarnings(PHPMD.ShortMethodName)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function up(): void
     {
@@ -58,7 +57,7 @@ class ChangesForV475 extends Migration
             try {
                 Schema::create(
                     'recurrences',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->softDeletes();
@@ -89,7 +88,7 @@ class ChangesForV475 extends Migration
             try {
                 Schema::create(
                     'recurrences_transactions',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->softDeletes();
@@ -120,7 +119,7 @@ class ChangesForV475 extends Migration
             try {
                 Schema::create(
                     'recurrences_repetitions',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->softDeletes();
@@ -143,7 +142,7 @@ class ChangesForV475 extends Migration
             try {
                 Schema::create(
                     'recurrences_meta',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->softDeletes();
@@ -165,7 +164,7 @@ class ChangesForV475 extends Migration
             try {
                 Schema::create(
                     'rt_meta',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->softDeletes();

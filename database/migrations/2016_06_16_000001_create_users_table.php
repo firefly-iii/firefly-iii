@@ -46,6 +46,7 @@ class CreateUsersTable extends Migration
     /**
      * Run the migrations.
      *
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up(): void
     {
@@ -53,7 +54,7 @@ class CreateUsersTable extends Migration
             try {
                 Schema::create(
                     'users',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->string('email', 255);

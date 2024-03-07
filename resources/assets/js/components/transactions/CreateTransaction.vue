@@ -501,7 +501,7 @@ export default {
             button.prop("disabled", true);
 
             axios.post(uri, data).then(response => {
-                // console.log('Did a succesfull POST');
+                // console.log('Did a successful POST');
                 // this method will ultimately send the user on (or not).
                 if (0 === this.collectAttachmentData(response)) {
                     // console.log('Will now go to redirectUser()');
@@ -749,6 +749,12 @@ export default {
                             case 'tags':
                                 this.transactions[transactionIndex].errors[fieldName] = errors.errors[key];
                                 break;
+                            case 'type':
+                                if(errors.errors[key].length > 0) {
+                                    this.transactions[transactionIndex].errors.source_account = [this.$t('firefly.select_source_account')];
+                                    this.transactions[transactionIndex].errors.destination_account = [this.$t('firefly.select_dest_account')];
+                                }
+                                break;
                             case 'source_name':
                             case 'source_id':
                                 this.transactions[transactionIndex].errors.source_account =
@@ -863,7 +869,10 @@ export default {
                 // console.log('Length == 1, set date to today.');
                 // set first date.
                 let today = new Date();
-                this.transactions[0].date = today.getFullYear() + '-' + ("0" + (today.getMonth() + 1)).slice(-2) + '-' + ("0" + today.getDate()).slice(-2);
+                this.transactions[0].date = today.getFullYear() + '-' + ("0" + (today.getMonth() + 1)).slice(-2) + '-' + ("0" + today.getDate()).slice(-2)
+                + 'T'+ ("0" + today.getHours()).slice(-2) +':' + ("0" + today.getMinutes()).slice(-2);
+                //console.log(this.transactions[0].date);
+
                 // call for extra clear thing:
                 // this.clearSource(0);
                 //this.clearDestination(0);

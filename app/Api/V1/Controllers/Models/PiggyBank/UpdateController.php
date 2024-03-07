@@ -40,8 +40,6 @@ class UpdateController extends Controller
 
     /**
      * Constructor.
-     *
-
      */
     public function __construct()
     {
@@ -61,27 +59,23 @@ class UpdateController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/piggy_banks/updatePiggyBank
      *
      * Update piggy bank.
-     *
-     * @param UpdateRequest $request
-     * @param PiggyBank     $piggyBank
-     *
-     * @return JsonResponse
      */
     public function update(UpdateRequest $request, PiggyBank $piggyBank): JsonResponse
     {
-        $data      = $request->getAll();
-        $piggyBank = $this->repository->update($piggyBank, $data);
+        $data        = $request->getAll();
+        $piggyBank   = $this->repository->update($piggyBank, $data);
 
         if (array_key_exists('current_amount', $data) && '' !== $data['current_amount']) {
             $this->repository->setCurrentAmount($piggyBank, $data['current_amount']);
         }
 
-        $manager = $this->getManager();
+        $manager     = $this->getManager();
+
         /** @var PiggyBankTransformer $transformer */
         $transformer = app(PiggyBankTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($piggyBank, $transformer, 'piggy_banks');
+        $resource    = new Item($piggyBank, $transformer, 'piggy_banks');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

@@ -30,10 +30,6 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\Log;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
-use Schema;
 
 /**
  * Class TransactionIdentifier
@@ -42,9 +38,9 @@ class TransactionIdentifier extends Command
 {
     use ShowsFriendlyMessages;
 
-    public const CONFIG_NAME = '480_transaction_identifier';
-    protected $description = 'Fixes transaction identifiers.';
-    protected $signature   = 'firefly-iii:transaction-identifiers {--F|force : Force the execution of this command.}';
+    public const string CONFIG_NAME = '480_transaction_identifier';
+    protected $description          = 'Fixes transaction identifiers.';
+    protected $signature            = 'firefly-iii:transaction-identifiers {--F|force : Force the execution of this command.}';
     private JournalCLIRepositoryInterface $cliRepository;
     private int                           $count;
 
@@ -58,10 +54,7 @@ class TransactionIdentifier extends Command
      * When either of these are the same amount, FF3 can't keep them apart: +3/-3, +3/-3, +3/-3. This happens more
      * often than you would think. So each set gets a number (1,2,3) to keep them apart.
      *
-     * @return int
-     * @throws ContainerExceptionInterface
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
      */
     public function handle(): int
     {
@@ -74,11 +67,12 @@ class TransactionIdentifier extends Command
         }
 
         // if table does not exist, return false
-        if (!Schema::hasTable('transaction_journals')) {
+        if (!\Schema::hasTable('transaction_journals')) {
             return 0;
         }
 
         $journals = $this->cliRepository->getSplitJournals();
+
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             $this->updateJournalIdentifiers($journal);
@@ -100,8 +94,6 @@ class TransactionIdentifier extends Command
      * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
      * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
      * be called from the handle method instead of using the constructor to initialize the command.
-     *
-
      */
     private function stupidLaravel(): void
     {
@@ -109,11 +101,6 @@ class TransactionIdentifier extends Command
         $this->count         = 0;
     }
 
-    /**
-     * @return bool
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
@@ -127,8 +114,6 @@ class TransactionIdentifier extends Command
     /**
      * Grab all positive transactions from this journal that are not deleted. for each one, grab the negative opposing
      * one which has 0 as an identifier and give it the same identifier.
-     *
-     * @param TransactionJournal $transactionJournal
      */
     private function updateJournalIdentifiers(TransactionJournal $transactionJournal): void
     {
@@ -145,33 +130,28 @@ class TransactionIdentifier extends Command
                 $opposing->identifier    = $identifier;
                 $transaction->save();
                 $opposing->save();
-                $exclude[] = $transaction->id;
-                $exclude[] = $opposing->id;
-                $this->count++;
+                $exclude[]               = $transaction->id;
+                $exclude[]               = $opposing->id;
+                ++$this->count;
             }
             ++$identifier;
         }
     }
 
-    /**
-     * @param Transaction $transaction
-     * @param array       $exclude
-     *
-     * @return Transaction|null
-     */
     private function findOpposing(Transaction $transaction, array $exclude): ?Transaction
     {
         // find opposing:
-        $amount = bcmul((string)$transaction->amount, '-1');
+        $amount = bcmul($transaction->amount, '-1');
 
         try {
             /** @var Transaction $opposing */
             $opposing = Transaction::where('transaction_journal_id', $transaction->transaction_journal_id)
-                                   ->where('amount', $amount)->where('identifier', '=', 0)
-                                   ->whereNotIn('id', $exclude)
-                                   ->first();
+                ->where('amount', $amount)->where('identifier', '=', 0)
+                ->whereNotIn('id', $exclude)
+                ->first()
+            ;
         } catch (QueryException $e) {
-            Log::error($e->getMessage());
+            app('log')->error($e->getMessage());
             $this->friendlyError('Firefly III could not find the "identifier" field in the "transactions" table.');
             $this->friendlyError(sprintf('This field is required for Firefly III version %s to run.', config('firefly.version')));
             $this->friendlyError('Please run "php artisan migrate" to add this field to the table.');
@@ -183,9 +163,6 @@ class TransactionIdentifier extends Command
         return $opposing;
     }
 
-    /**
-     *
-     */
     private function markAsExecuted(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);

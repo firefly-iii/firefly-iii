@@ -23,32 +23,19 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Integrity;
 
-use Artisan;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
-use Schema;
 
 /**
  * Class ReportIntegrity
- *
-
  */
 class ReportIntegrity extends Command
 {
     use ShowsFriendlyMessages;
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Will report on the integrity of your database.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'firefly-iii:report-integrity';
+
+    protected $signature   = 'firefly-iii:report-integrity';
 
     /**
      * Execute the console command.
@@ -56,7 +43,7 @@ class ReportIntegrity extends Command
     public function handle(): int
     {
         // if table does not exist, return false
-        if (!Schema::hasTable('users')) {
+        if (!\Schema::hasTable('users')) {
             return 1;
         }
         $commands = [

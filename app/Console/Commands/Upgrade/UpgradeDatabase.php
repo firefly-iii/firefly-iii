@@ -25,14 +25,11 @@ namespace FireflyIII\Console\Commands\Upgrade;
 
 set_time_limit(0);
 
-use Artisan;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 
 /**
  * Class UpgradeDatabase
- *
-
  */
 class UpgradeDatabase extends Command
 {
@@ -43,8 +40,6 @@ class UpgradeDatabase extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle(): int
     {
@@ -72,6 +67,7 @@ class UpgradeDatabase extends Command
             // also just in case, some integrity commands:
             'firefly-iii:create-group-memberships',
             'firefly-iii:upgrade-group-information',
+            'firefly-iii:upgrade-currency-preferences',
         ];
         $args     = [];
         if ($this->option('force')) {
@@ -89,9 +85,6 @@ class UpgradeDatabase extends Command
         return 0;
     }
 
-    /**
-     * @return void
-     */
     private function callInitialCommands(): void
     {
         $this->call('migrate', ['--seed' => true, '--force' => true, '--no-interaction' => true]);

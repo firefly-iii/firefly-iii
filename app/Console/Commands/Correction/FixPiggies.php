@@ -42,8 +42,6 @@ class FixPiggies extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle(): int
     {
@@ -55,13 +53,15 @@ class FixPiggies extends Command
             if (null === $event->transaction_journal_id) {
                 continue;
             }
-            /** @var TransactionJournal|null $journal */
+
+            /** @var null|TransactionJournal $journal */
             $journal = $event->transactionJournal;
 
             if (null === $journal) {
                 $event->transaction_journal_id = null;
                 $event->save();
-                $count++;
+                ++$count;
+
                 continue;
             }
         }

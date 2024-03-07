@@ -25,11 +25,11 @@ namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Support\Request\ChecksLogin;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Validator;
 
 /**
  * Class MassDeleteJournalRequest.
- *
-
  */
 class MassDeleteJournalRequest extends FormRequest
 {
@@ -37,8 +37,6 @@ class MassDeleteJournalRequest extends FormRequest
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -46,5 +44,12 @@ class MassDeleteJournalRequest extends FormRequest
         return [
             'confirm_mass_delete.*' => 'required|belongsToUser:transaction_journals,id',
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        if ($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+        }
     }
 }

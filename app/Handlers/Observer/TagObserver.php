@@ -30,11 +30,6 @@ use FireflyIII\Models\Tag;
  */
 class TagObserver
 {
-    /**
-     * @param Tag $tag
-     *
-     * @return void
-     */
     public function deleting(Tag $tag): void
     {
         app('log')->debug('Observe "deleting" of a tag.');
@@ -44,7 +39,5 @@ class TagObserver
         }
 
         $tag->locations()->delete();
-
     }
-
 }

@@ -28,21 +28,20 @@ use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Support\Request\GetRuleConfiguration;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Validator;
 
 /**
  * Class RuleFormRequest.
  */
 class RuleFormRequest extends FormRequest
 {
+    use ChecksLogin;
     use ConvertsDataTypes;
     use GetRuleConfiguration;
-    use ChecksLogin;
 
     /**
      * Get all data for controller.
-     *
-     * @return array
-     *
      */
     public function getRuleData(): array
     {
@@ -59,9 +58,6 @@ class RuleFormRequest extends FormRequest
         ];
     }
 
-    /**
-     * @return array
-     */
     private function getRuleTriggerData(): array
     {
         $return      = [];
@@ -84,11 +80,6 @@ class RuleFormRequest extends FormRequest
         return $return;
     }
 
-    /**
-     * @param array $array
-     *
-     * @return array
-     */
     public static function replaceAmountTrigger(array $array): array
     {
         // do some sneaky search and replace.
@@ -110,12 +101,10 @@ class RuleFormRequest extends FormRequest
         if (in_array($array['type'], $amountFields, true) && '0' === $array['value']) {
             $array['value'] = '0.00';
         }
+
         return $array;
     }
 
-    /**
-     * @return array
-     */
     private function getRuleActionData(): array
     {
         $return     = [];
@@ -136,41 +125,46 @@ class RuleFormRequest extends FormRequest
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {
-        $validTriggers = $this->getTriggers();
-        $validActions  = array_keys(config('firefly.rule-actions'));
+        $validTriggers   = $this->getTriggers();
+        $validActions    = array_keys(config('firefly.rule-actions'));
 
         // some actions require text (aka context):
-        $contextActions = implode(',', config('firefly.context-rule-actions'));
+        $contextActions  = implode(',', config('firefly.context-rule-actions'));
 
         // some triggers require text (aka context):
         $contextTriggers = implode(',', $this->getTriggersWithContext());
 
         // initial set of rules:
-        $rules = [
-            'title'            => 'required|between:1,100|uniqueObjectForUser:rules,title',
-            'description'      => 'between:1,5000|nullable',
+        $rules           = [
+            'title'            => 'required|min:1|max:255|uniqueObjectForUser:rules,title',
+            'description'      => 'min:1|max:32768|nullable',
             'stop_processing'  => 'boolean',
             'rule_group_id'    => 'required|belongsToUser:rule_groups',
             'trigger'          => 'required|in:store-journal,update-journal',
-            'triggers.*.type'  => 'required|in:' . implode(',', $validTriggers),
+            'triggers.*.type'  => 'required|in:'.implode(',', $validTriggers),
             'triggers.*.value' => sprintf('required_if:triggers.*.type,%s|max:1024|min:1|ruleTriggerValue', $contextTriggers),
-            'actions.*.type'   => 'required|in:' . implode(',', $validActions),
+            'actions.*.type'   => 'required|in:'.implode(',', $validActions),
             'actions.*.value'  => sprintf('required_if:actions.*.type,%s|min:0|max:1024|ruleActionValue', $contextActions),
             'strict'           => 'in:0,1',
         ];
 
-        /** @var Rule $rule */
-        $rule = $this->route()->parameter('rule');
+        /** @var null|Rule $rule */
+        $rule            = $this->route()->parameter('rule');
 
         if (null !== $rule) {
-            $rules['title'] = 'required|between:1,100|uniqueObjectForUser:rules,title,' . $rule->id;
+            $rules['title'] = 'required|min:1|max:255|uniqueObjectForUser:rules,title,'.$rule->id;
         }
 
         return $rules;
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        if ($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+        }
     }
 }

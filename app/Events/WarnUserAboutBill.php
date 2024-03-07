@@ -29,8 +29,6 @@ use Illuminate\Queue\SerializesModels;
 
 /**
  * Class WarnUserAboutBill.
- *
-
  */
 class WarnUserAboutBill extends Event
 {
@@ -40,11 +38,6 @@ class WarnUserAboutBill extends Event
     public int    $diff;
     public string $field;
 
-    /**
-     * @param Bill   $bill
-     * @param string $field
-     * @param int    $diff
-     */
     public function __construct(Bill $bill, string $field, int $diff)
     {
         $this->bill  = $bill;

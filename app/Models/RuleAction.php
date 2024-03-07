@@ -23,25 +23,28 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Carbon;
 
 /**
  * FireflyIII\Models\RuleAction
  *
  * @property int         $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
+ * @property null|Carbon $created_at
+ * @property null|Carbon $updated_at
  * @property int         $rule_id
- * @property string      $action_type
- * @property string      $action_value
+ * @property null|string $action_type
+ * @property null|string $action_value
  * @property int         $order
  * @property bool        $active
  * @property bool        $stop_processing
- * @property-read Rule   $rule
+ * @property Rule        $rule
+ *
  * @method static Builder|RuleAction newModelQuery()
  * @method static Builder|RuleAction newQuery()
  * @method static Builder|RuleAction query()
@@ -54,32 +57,40 @@ use Illuminate\Support\Carbon;
  * @method static Builder|RuleAction whereRuleId($value)
  * @method static Builder|RuleAction whereStopProcessing($value)
  * @method static Builder|RuleAction whereUpdatedAt($value)
+ *
  * @mixin Eloquent
  */
 class RuleAction extends Model
 {
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
-    protected $casts
-        = [
-            'created_at'      => 'datetime',
-            'updated_at'      => 'datetime',
-            'active'          => 'boolean',
-            'order'           => 'int',
-            'stop_processing' => 'boolean',
-        ];
+    use ReturnsIntegerIdTrait;
 
-    /** @var array Fields that can be filled */
+    protected $casts
+                        = [
+                            'created_at'      => 'datetime',
+                            'updated_at'      => 'datetime',
+                            'active'          => 'boolean',
+                            'order'           => 'int',
+                            'stop_processing' => 'boolean',
+                        ];
+
     protected $fillable = ['rule_id', 'action_type', 'action_value', 'order', 'active', 'stop_processing'];
 
-    /**
-     * @return BelongsTo
-     */
     public function rule(): BelongsTo
     {
         return $this->belongsTo(Rule::class);
+    }
+
+    protected function order(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int)$value,
+        );
+    }
+
+    protected function ruleId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int)$value,
+        );
     }
 }

@@ -33,7 +33,6 @@ use FireflyIII\Support\Http\Controllers\AugumentData;
 use FireflyIII\Support\Http\Controllers\TransactionCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
-use JsonException;
 
 /**
  * Separate controller because many helper functions are shared.
@@ -45,15 +44,11 @@ class ExpenseReportController extends Controller
     use AugumentData;
     use TransactionCalculation;
 
-    /** @var AccountRepositoryInterface The account repository */
-    protected $accountRepository;
-    /** @var GeneratorInterface Chart generation methods. */
-    protected $generator;
+    protected AccountRepositoryInterface $accountRepository;
+    protected GeneratorInterface         $generator;
 
     /**
      * ExpenseReportController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -73,17 +68,11 @@ class ExpenseReportController extends Controller
      *
      * TODO this chart is not multi currency aware.
      *
-     * @param Collection $accounts
-     * @param Collection $expense
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return JsonResponse
-     * @throws JsonException
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function mainChart(Collection $accounts, Collection $expense, Carbon $start, Carbon $end): JsonResponse
     {
-        $cache = new CacheProperties();
+        $cache        = new CacheProperties();
         $cache->addProperty('chart.expense.report.main');
         $cache->addProperty($accounts);
         $cache->addProperty($expense);
@@ -98,9 +87,8 @@ class ExpenseReportController extends Controller
         $chartData    = [];
         $currentStart = clone $start;
         $combined     = $this->combineAccounts($expense);
-        // make "all" set:
-        $all = new Collection();
-        foreach ($combined as $name => $combination) {
+        $all          = new Collection();
+        foreach ($combined as $combination) {
             $all = $all->merge($combination);
         }
 
@@ -112,28 +100,28 @@ class ExpenseReportController extends Controller
         foreach ($combined as $name => $combination) {
             // first is always expense account:
             /** @var Account $exp */
-            $exp                          = $combination->first();
-            $chartData[$exp->id . '-in']  = [
+            $exp                              = $combination->first();
+            $chartData[$exp->id.'-in']        = [
                 'label'   => sprintf('%s (%s)', $name, (string)trans('firefly.income')),
                 'type'    => 'bar',
                 'yAxisID' => 'y-axis-0',
                 'entries' => [],
             ];
-            $chartData[$exp->id . '-out'] = [
+            $chartData[$exp->id.'-out']       = [
                 'label'   => sprintf('%s (%s)', $name, (string)trans('firefly.expenses')),
                 'type'    => 'bar',
                 'yAxisID' => 'y-axis-0',
                 'entries' => [],
             ];
             // total in, total out:
-            $chartData[$exp->id . '-total-in']  = [
+            $chartData[$exp->id.'-total-in']  = [
                 'label'   => sprintf('%s (%s)', $name, (string)trans('firefly.sum_of_income')),
                 'type'    => 'line',
                 'fill'    => false,
                 'yAxisID' => 'y-axis-1',
                 'entries' => [],
             ];
-            $chartData[$exp->id . '-total-out'] = [
+            $chartData[$exp->id.'-total-out'] = [
                 'label'   => sprintf('%s (%s)', $name, (string)trans('firefly.sum_of_expenses')),
                 'type'    => 'line',
                 'fill'    => false,
@@ -146,30 +134,30 @@ class ExpenseReportController extends Controller
         $sumOfExpense = [];
 
         while ($currentStart < $end) {
-            $currentEnd = clone $currentStart;
-            $currentEnd = $currentEnd->$function();
+            $currentEnd   = clone $currentStart;
+            $currentEnd   = $currentEnd->{$function}(); // @phpstan-ignore-line
 
             // get expenses grouped by opposing name:
-            $expenses = $this->groupByName($this->getExpensesForOpposing($accounts, $all, $currentStart, $currentEnd));
-            $income   = $this->groupByName($this->getIncomeForOpposing($accounts, $all, $currentStart, $currentEnd));
-            $label    = $currentStart->isoFormat($format);
+            $expenses     = $this->groupByName($this->getExpensesForOpposing($accounts, $all, $currentStart, $currentEnd));
+            $income       = $this->groupByName($this->getIncomeForOpposing($accounts, $all, $currentStart, $currentEnd));
+            $label        = $currentStart->isoFormat($format);
 
             foreach ($combined as $name => $combination) {
                 // first is always expense account:
                 /** @var Account $exp */
-                $exp            = $combination->first();
-                $labelIn        = $exp->id . '-in';
-                $labelOut       = $exp->id . '-out';
-                $labelSumIn     = $exp->id . '-total-in';
-                $labelSumOut    = $exp->id . '-total-out';
-                $currentIncome  = bcmul($income[$name] ?? '0', '-1');
-                $currentExpense = $expenses[$name] ?? '0';
+                $exp                                        = $combination->first();
+                $labelIn                                    = $exp->id.'-in';
+                $labelOut                                   = $exp->id.'-out';
+                $labelSumIn                                 = $exp->id.'-total-in';
+                $labelSumOut                                = $exp->id.'-total-out';
+                $currentIncome                              = bcmul($income[$name] ?? '0', '-1');
+                $currentExpense                             = $expenses[$name] ?? '0';
 
                 // add to sum:
-                $sumOfIncome[$exp->id]  = $sumOfIncome[$exp->id] ?? '0';
-                $sumOfExpense[$exp->id] = $sumOfExpense[$exp->id] ?? '0';
-                $sumOfIncome[$exp->id]  = bcadd($sumOfIncome[$exp->id], $currentIncome);
-                $sumOfExpense[$exp->id] = bcadd($sumOfExpense[$exp->id], $currentExpense);
+                $sumOfIncome[$exp->id]  ??= '0';
+                $sumOfExpense[$exp->id] ??= '0';
+                $sumOfIncome[$exp->id]                      = bcadd($sumOfIncome[$exp->id], $currentIncome);
+                $sumOfExpense[$exp->id]                     = bcadd($sumOfExpense[$exp->id], $currentExpense);
 
                 // add to chart:
                 $chartData[$labelIn]['entries'][$label]     = $currentIncome;
@@ -177,23 +165,24 @@ class ExpenseReportController extends Controller
                 $chartData[$labelSumIn]['entries'][$label]  = $sumOfIncome[$exp->id];
                 $chartData[$labelSumOut]['entries'][$label] = $sumOfExpense[$exp->id];
             }
+
             /** @var Carbon $currentStart */
             $currentStart = clone $currentEnd;
             $currentStart->addDay();
             $currentStart->startOfDay();
         }
         // remove all empty entries to prevent cluttering:
-        $newSet = [];
+        $newSet       = [];
         foreach ($chartData as $key => $entry) {
             // TODO not sure, this is a bad comparison.
-            if (0 === !array_sum($entry['entries'])) {
+            if (array_sum($entry['entries']) > 0) {
                 $newSet[$key] = $entry;
             }
         }
         if (0 === count($newSet)) {
             $newSet = $chartData;
         }
-        $data = $this->generator->multiSet($newSet);
+        $data         = $this->generator->multiSet($newSet);
         $cache->store($data);
 
         return response()->json($data);

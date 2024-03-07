@@ -27,27 +27,24 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
-use Throwable;
 
 /**
  * Class MonthReportGenerator.
- *
-
  */
 class MultiYearReportGenerator implements ReportGeneratorInterface
 {
     /** @var Collection The accounts involved. */
     private $accounts;
+
     /** @var Carbon The end date. */
     private $end;
+
     /** @var Carbon The start date. */
     private $start;
 
     /**
      * Generates the report.
      *
-     * @return string
      * @throws FireflyException
      */
     public function generate(): string
@@ -61,20 +58,17 @@ class MultiYearReportGenerator implements ReportGeneratorInterface
                 'reports.default.multi-year',
                 compact('accountIds', 'reportType')
             )->with('start', $this->start)->with('end', $this->end)->render();
-        } catch (Throwable $e) {
-            Log::error(sprintf('Cannot render reports.default.multi-year: %s', $e->getMessage()));
-            Log::error($e->getTraceAsString());
+        } catch (\Throwable $e) {
+            app('log')->error(sprintf('Cannot render reports.default.multi-year: %s', $e->getMessage()));
+            app('log')->error($e->getTraceAsString());
             $result = sprintf('Could not render report view: %s', $e->getMessage());
+
             throw new FireflyException($result, 0, $e);
         }
     }
 
     /**
      * Sets the accounts used in the report.
-     *
-     * @param Collection $accounts
-     *
-     * @return ReportGeneratorInterface
      */
     public function setAccounts(Collection $accounts): ReportGeneratorInterface
     {
@@ -85,10 +79,6 @@ class MultiYearReportGenerator implements ReportGeneratorInterface
 
     /**
      * Sets the budgets used in the report.
-     *
-     * @param Collection $budgets
-     *
-     * @return ReportGeneratorInterface
      */
     public function setBudgets(Collection $budgets): ReportGeneratorInterface
     {
@@ -97,10 +87,6 @@ class MultiYearReportGenerator implements ReportGeneratorInterface
 
     /**
      * Sets the categories used in the report.
-     *
-     * @param Collection $categories
-     *
-     * @return ReportGeneratorInterface
      */
     public function setCategories(Collection $categories): ReportGeneratorInterface
     {
@@ -109,10 +95,6 @@ class MultiYearReportGenerator implements ReportGeneratorInterface
 
     /**
      * Sets the end date used in the report.
-     *
-     * @param Carbon $date
-     *
-     * @return ReportGeneratorInterface
      */
     public function setEndDate(Carbon $date): ReportGeneratorInterface
     {
@@ -123,10 +105,6 @@ class MultiYearReportGenerator implements ReportGeneratorInterface
 
     /**
      * Unused setter for expenses.
-     *
-     * @param Collection $expense
-     *
-     * @return ReportGeneratorInterface
      */
     public function setExpense(Collection $expense): ReportGeneratorInterface
     {
@@ -135,10 +113,6 @@ class MultiYearReportGenerator implements ReportGeneratorInterface
 
     /**
      * Set the start date of the report.
-     *
-     * @param Carbon $date
-     *
-     * @return ReportGeneratorInterface
      */
     public function setStartDate(Carbon $date): ReportGeneratorInterface
     {
@@ -149,10 +123,6 @@ class MultiYearReportGenerator implements ReportGeneratorInterface
 
     /**
      * Set the tags for the report.
-     *
-     * @param Collection $tags
-     *
-     * @return ReportGeneratorInterface
      */
     public function setTags(Collection $tags): ReportGeneratorInterface
     {
