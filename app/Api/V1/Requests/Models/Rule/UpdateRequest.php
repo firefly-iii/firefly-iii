@@ -140,7 +140,7 @@ class UpdateRequest extends FormRequest
             'triggers.*.stop_processing' => [new IsBoolean()],
             'triggers.*.active'          => [new IsBoolean()],
             'actions.*.type'             => 'required|in:'.implode(',', $validActions),
-            'actions.*.value'            => 'required_if:actions.*.type,'.$contextActions.'|ruleActionValue',
+            'actions.*.value'            => 'required_if:actions.*.type,'.$contextActions.'|ruleActionExpression|ruleActionValue',
             'actions.*.stop_processing'  => [new IsBoolean()],
             'actions.*.active'           => [new IsBoolean()],
             'strict'                     => [new IsBoolean()],

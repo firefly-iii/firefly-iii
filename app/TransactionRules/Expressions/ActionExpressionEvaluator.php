@@ -31,9 +31,10 @@ class ActionExpressionEvaluator
 {
     private static array $NAMES = array("transaction");
 
+    private ExpressionLanguage $expressionLanguage;
     private string $expr;
     private bool $isExpression;
-    private ExpressionLanguage $expressionLanguage;
+    private ?SyntaxError $validationError;
 
     public function __construct(ExpressionLanguage $expressionLanguage, string $expr)
     {
@@ -41,6 +42,7 @@ class ActionExpressionEvaluator
         $this->expr = $expr;
 
         $this->isExpression = self::isExpression($expr);
+        $this->validationError = $this->validate();
     }
 
     private static function isExpression(string $expr): bool
@@ -48,17 +50,17 @@ class ActionExpressionEvaluator
         return str_starts_with($expr, "=");
     }
 
-    public function isValid(): bool
+    private function validate(): ?SyntaxError
     {
         if (!$this->isExpression) {
-            return true;
+            return null;
         }
 
         try {
-            $this->lint(array());
-            return true;
+            $this->lint();
+            return null;
         } catch (SyntaxError $e) {
-            return false;
+            return $e;
         }
     }
 
@@ -67,13 +69,23 @@ class ActionExpressionEvaluator
         $this->expressionLanguage->lint($expr, self::$NAMES);
     }
 
-    public function lint(): void
+    private function lint(): void
     {
         if (!$this->isExpression) {
             return;
         }
 
         $this->lintExpression(substr($this->expr, 1));
+    }
+
+    public function isValid(): bool
+    {
+        return $this->validationError === null;
+    }
+
+    public function getValidationError()
+    {
+        return $this->validationError;
     }
 
     private function evaluateExpression(string $expr, array $journal): string

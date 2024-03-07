@@ -35,6 +35,8 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Services\Password\Verifier;
 use FireflyIII\Support\ParseDateString;
+use FireflyIII\TransactionRules\Expressions\ActionExpressionEvaluator;
+use FireflyIII\TransactionRules\Factory\ExpressionLanguageFactory;
 use FireflyIII\User;
 use Illuminate\Validation\Validator;
 use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
@@ -253,6 +255,31 @@ class FireflyValidator extends Validator
         return 1 === $count;
     }
 
+    public function validateRuleActionExpression(string $attribute, string $value = null): bool
+    {
+        $value ??= '';
+
+        $el = ExpressionLanguageFactory::get();
+        $evaluator = new ActionExpressionEvaluator($el, $value);
+
+        return $evaluator->isValid();
+    }
+
+    public function replaceRuleActionExpression(string $message, string $attribute): string
+    {
+        $value = $this->getValue($attribute);
+
+        $el = ExpressionLanguageFactory::get();
+        $evaluator = new ActionExpressionEvaluator($el, $value);
+        $err = $evaluator->getValidationError();
+
+        if ($err == null) {
+            return $message;
+        }
+
+        return str_replace(":error", $err->getMessage(), $message);
+    }
+
     public function validateRuleActionValue(string $attribute, string $value = null): bool
     {
         // first, get the index from this string:
@@ -266,6 +293,11 @@ class FireflyValidator extends Validator
         // if it's "invalid" return false.
         if ('invalid' === $actionType) {
             return false;
+        }
+
+        // if value is an expression, assume valid
+        if (str_starts_with($value, '=')) {
+            return true;
         }
 
         // if it's set_budget, verify the budget name:

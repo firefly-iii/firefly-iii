@@ -147,7 +147,7 @@ class RuleFormRequest extends FormRequest
             'triggers.*.type'  => 'required|in:'.implode(',', $validTriggers),
             'triggers.*.value' => sprintf('required_if:triggers.*.type,%s|max:1024|min:1|ruleTriggerValue', $contextTriggers),
             'actions.*.type'   => 'required|in:'.implode(',', $validActions),
-            'actions.*.value'  => sprintf('required_if:actions.*.type,%s|min:0|max:1024|ruleActionValue', $contextActions),
+            'actions.*.value'  => sprintf('required_if:actions.*.type,%s|min:0|max:1024|ruleActionExpression|ruleActionValue', $contextActions),
             'strict'           => 'in:0,1',
         ];
 

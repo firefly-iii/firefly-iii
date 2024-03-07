@@ -74,15 +74,14 @@ class ExpressionController extends Controller
         $expressionLanguage = ExpressionLanguageFactory::get();
         $evaluator = new ActionExpressionEvaluator($expressionLanguage, $expr);
 
-        try {
-            $evaluator->lint();
+        if ($evaluator->isValid()) {
             return response()->json([
                 "valid" => true,
             ]);
-        } catch (SyntaxError $e) {
+        } else {
             return response()->json([
                 "valid" => false,
-                "error" => $e->getMessage()
+                "error" => $evaluator->getValidationError()->getMessage()
             ]);
         }
     }
