@@ -51,9 +51,7 @@ class ActionFactory
         $class = self::getActionClass($action->action_type);
         app('log')->debug(sprintf('self::getActionClass("%s") = "%s"', $action->action_type, $class));
 
-        $expr = new ActionExpression($action->action_value);
-
-        return new $class($action, $expr); // @phpstan-ignore-line
+        return new $class($action); // @phpstan-ignore-line
     }
 
     /**

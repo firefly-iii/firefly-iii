@@ -19,7 +19,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
@@ -29,7 +28,6 @@ use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Factory\TagFactory;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\TransactionRules\Expressions\ActionExpression;
 use FireflyIII\User;
 
 /**
@@ -37,16 +35,14 @@ use FireflyIII\User;
  */
 class AddTag implements ActionInterface
 {
-    private RuleAction       $action;
-    private ActionExpression $expr;
+    private RuleAction $action;
 
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(RuleAction $action, ActionExpression $expr)
+    public function __construct(RuleAction $action)
     {
         $this->action = $action;
-        $this->expr   = $expr;
     }
 
     public function actOnArray(array $journal): bool
@@ -58,7 +54,7 @@ class AddTag implements ActionInterface
         /** @var User $user */
         $user    = User::find($journal['user_id']);
         $factory->setUser($user);
-        $tagName = $this->expr->evaluate($journal);
+        $tagName = $this->action->getValue($journal);
         $tag     = $factory->findOrCreate($tagName);
 
         if (null === $tag) {
@@ -71,7 +67,8 @@ class AddTag implements ActionInterface
         $count   = \DB::table('tag_transaction_journal')
             ->where('tag_id', $tag->id)
             ->where('transaction_journal_id', $journal['transaction_journal_id'])
-            ->count();
+            ->count()
+        ;
         if (0 === $count) {
             // add to journal:
             \DB::table('tag_transaction_journal')->insert(['tag_id' => $tag->id, 'transaction_journal_id' => $journal['transaction_journal_id']]);

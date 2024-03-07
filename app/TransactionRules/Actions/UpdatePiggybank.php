@@ -31,7 +31,6 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
-use FireflyIII\TransactionRules\Expressions\ActionExpression;
 use FireflyIII\User;
 
 /**
@@ -39,23 +38,22 @@ use FireflyIII\User;
  */
 class UpdatePiggybank implements ActionInterface
 {
-    private RuleAction       $action;
-    private ActionExpression $expr;
+    private RuleAction $action;
 
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(RuleAction $action, ActionExpression $expr)
+    public function __construct(RuleAction $action)
     {
         $this->action = $action;
-        $this->expr   = $expr;
     }
 
     public function actOnArray(array $journal): bool
     {
+        $actionValue = $this->action->getValue($journal);
+
         app('log')->debug(sprintf('Triggered rule action UpdatePiggybank on journal #%d', $journal['transaction_journal_id']));
 
-        $piggyBankName = $this->expr->evaluate($journal);
         // refresh the transaction type.
         /** @var User $user */
         $user        = User::find($journal['user_id']);
@@ -63,12 +61,12 @@ class UpdatePiggybank implements ActionInterface
         /** @var TransactionJournal $journalObj */
         $journalObj  = $user->transactionJournals()->find($journal['transaction_journal_id']);
 
-        $piggyBank   = $this->findPiggyBank($user, $piggyBankName);
+        $piggyBank   = $this->findPiggyBank($user, $actionValue);
         if (null === $piggyBank) {
             app('log')->info(
-                sprintf('No piggy bank named "%s", cant execute action #%d of rule #%d', $piggyBankName, $this->action->id, $this->action->rule_id)
+                sprintf('No piggy bank named "%s", cant execute action #%d of rule #%d', $actionValue, $this->action->id, $this->action->rule_id)
             );
-            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_piggy', ['name' => $piggyBankName])));
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_piggy', ['name' => $actionValue])));
 
             return false;
         }
@@ -130,7 +128,7 @@ class UpdatePiggybank implements ActionInterface
                 $destination->account_id
             )
         );
-        event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_link_piggy', ['name' => $piggyBankName])));
+        event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_link_piggy', ['name' => $actionValue])));
 
         return false;
     }

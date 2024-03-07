@@ -19,7 +19,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
@@ -27,31 +26,26 @@ namespace FireflyIII\TransactionRules\Actions;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\TransactionRules\Expressions\ActionExpression;
 
 /**
  * Class PrependDescription.
  */
 class PrependDescription implements ActionInterface
 {
-    private RuleAction       $action;
-    private ActionExpression $expr;
+    private RuleAction $action;
 
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(RuleAction $action, ActionExpression $expr)
+    public function __construct(RuleAction $action)
     {
         $this->action = $action;
-        $this->expr   = $expr;
     }
 
     public function actOnArray(array $journal): bool
     {
-        $actionValue = $this->expr->evaluate($journal);
-
         $before = $journal['description'];
-        $after  = sprintf('%s%s', $actionValue, $journal['description']);
+        $after  = sprintf('%s%s', $this->action->getValue($journal), $journal['description']);
         \DB::table('transaction_journals')->where('id', $journal['transaction_journal_id'])->limit(1)->update(['description' => $after]);
 
         // journal

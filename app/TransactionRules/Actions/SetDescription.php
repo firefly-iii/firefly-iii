@@ -19,7 +19,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
@@ -27,41 +26,39 @@ namespace FireflyIII\TransactionRules\Actions;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\TransactionRules\Expressions\ActionExpression;
 
 /**
  * Class SetDescription.
  */
 class SetDescription implements ActionInterface
 {
-    private RuleAction       $action;
-    private ActionExpression $expr;
+    private RuleAction $action;
 
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(RuleAction $action, ActionExpression $expr)
+    public function __construct(RuleAction $action)
     {
         $this->action = $action;
-        $this->expr   = $expr;
     }
 
     public function actOnArray(array $journal): bool
     {
         /** @var TransactionJournal $object */
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
-        $before = $journal['description'];
-        $after = $this->expr->evaluate($journal);
+        $before = $object->description;
+        $after  = $this->action->getValue($journal);
 
         \DB::table('transaction_journals')
             ->where('id', '=', $journal['transaction_journal_id'])
-            ->update(['description' => $this->action->action_value]);
+            ->update(['description' => $after])
+        ;
 
         app('log')->debug(
             sprintf(
                 'RuleAction SetDescription changed the description of journal #%d from "%s" to "%s".',
                 $journal['transaction_journal_id'],
-                $before,
+                $journal['description'],
                 $after
             )
         );

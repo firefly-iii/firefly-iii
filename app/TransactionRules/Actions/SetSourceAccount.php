@@ -19,7 +19,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
@@ -32,7 +31,6 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\TransactionRules\Expressions\ActionExpressionEvaluator;
 use FireflyIII\User;
 
 /**
@@ -41,21 +39,19 @@ use FireflyIII\User;
 class SetSourceAccount implements ActionInterface
 {
     private RuleAction                 $action;
-    private ActionExpressionEvaluator  $evaluator;
     private AccountRepositoryInterface $repository;
 
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(RuleAction $action, ActionExpressionEvaluator $evaluator)
+    public function __construct(RuleAction $action)
     {
         $this->action = $action;
-        $this->evaluator = $evaluator;
     }
 
     public function actOnArray(array $journal): bool
     {
-        $accountName = $this->evaluator->evaluate($journal);
+        $accountName      = $this->action->getValue($journal);
 
         /** @var User $user */
         $user             = User::find($journal['user_id']);
@@ -124,7 +120,8 @@ class SetSourceAccount implements ActionInterface
         \DB::table('transactions')
             ->where('transaction_journal_id', '=', $object->id)
             ->where('amount', '<', 0)
-            ->update(['account_id' => $newAccount->id]);
+            ->update(['account_id' => $newAccount->id])
+        ;
 
         event(new TriggeredAuditLog($this->action->rule, $object, 'set_source', null, $newAccount->name));
 
@@ -133,24 +130,24 @@ class SetSourceAccount implements ActionInterface
         return true;
     }
 
-    private function findAssetAccount(string $type, string $name): ?Account
+    private function findAssetAccount(string $type, string $accountName): ?Account
     {
         // switch on type:
         $allowed = config(sprintf('firefly.expected_source_types.source.%s', $type));
         $allowed = is_array($allowed) ? $allowed : [];
         app('log')->debug(sprintf('Check config for expected_source_types.source.%s, result is', $type), $allowed);
 
-        return $this->repository->findByName($name, $allowed);
+        return $this->repository->findByName($accountName, $allowed);
     }
 
-    private function findDepositSourceAccount(string $name): Account
+    private function findDepositSourceAccount(string $accountName): Account
     {
         $allowed = config('firefly.expected_source_types.source.Deposit');
-        $account = $this->repository->findByName($name, $allowed);
+        $account = $this->repository->findByName($accountName, $allowed);
         if (null === $account) {
             // create new revenue account with this name:
             $data    = [
-                'name'              => $name,
+                'name'              => $accountName,
                 'account_type_name' => 'revenue',
                 'account_type_id'   => null,
                 'virtual_balance'   => 0,

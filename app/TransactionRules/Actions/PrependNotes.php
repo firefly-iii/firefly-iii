@@ -19,7 +19,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
@@ -28,31 +27,28 @@ use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\TransactionRules\Expressions\ActionExpression;
 
 /**
  * Class PrependNotes.
  */
 class PrependNotes implements ActionInterface
 {
-    private RuleAction       $action;
-    private ActionExpression $expr;
+    private RuleAction $action;
 
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(RuleAction $action, ActionExpression $expr)
+    public function __construct(RuleAction $action)
     {
         $this->action = $action;
-        $this->expr   = $expr;
     }
 
     public function actOnArray(array $journal): bool
     {
-        $actionValue  = $this->expr->evaluate($journal);
         $dbNote       = Note::where('noteable_id', (int)$journal['transaction_journal_id'])
             ->where('noteable_type', TransactionJournal::class)
-            ->first(['notes.*']);
+            ->first(['notes.*'])
+        ;
         if (null === $dbNote) {
             $dbNote                = new Note();
             $dbNote->noteable_id   = (int)$journal['transaction_journal_id'];
@@ -60,8 +56,9 @@ class PrependNotes implements ActionInterface
             $dbNote->text          = '';
         }
         $before       = $dbNote->text;
-        app('log')->debug(sprintf('RuleAction PrependNotes prepended "%s" to "%s".', $actionValue, $dbNote->text));
-        $text         = sprintf('%s%s', $actionValue, $dbNote->text);
+        $after        = $this->action->getValue($journal);
+        app('log')->debug(sprintf('RuleAction PrependNotes prepended "%s" to "%s".', $after, $dbNote->text));
+        $text         = sprintf('%s%s', $after, $dbNote->text);
         $dbNote->text = $text;
         $dbNote->save();
 

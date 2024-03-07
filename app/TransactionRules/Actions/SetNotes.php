@@ -19,7 +19,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
@@ -28,29 +27,27 @@ use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\TransactionRules\Expressions\ActionExpression;
 
 /**
  * Class SetNotes.
  */
 class SetNotes implements ActionInterface
 {
-    private RuleAction       $action;
-    private ActionExpression $expr;
+    private RuleAction $action;
 
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(RuleAction $action, ActionExpression $expr)
+    public function __construct(RuleAction $action)
     {
         $this->action = $action;
-        $this->expr   = $expr;
     }
 
     public function actOnArray(array $journal): bool
     {
         $dbNote       = Note::where('noteable_id', $journal['transaction_journal_id'])
-            ->where('noteable_type', TransactionJournal::class)->first();
+            ->where('noteable_type', TransactionJournal::class)->first()
+        ;
         if (null === $dbNote) {
             $dbNote                = new Note();
             $dbNote->noteable_id   = $journal['transaction_journal_id'];
@@ -58,7 +55,7 @@ class SetNotes implements ActionInterface
             $dbNote->text          = '';
         }
         $oldNotes     = $dbNote->text;
-        $newNotes     = $this->expr->evaluate($journal);
+        $newNotes     = $this->action->getValue($journal);
         $dbNote->text = $newNotes;
         $dbNote->save();
 

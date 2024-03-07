@@ -19,7 +19,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
@@ -29,7 +28,6 @@ use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\TransactionRules\Expressions\ActionExpression;
 use FireflyIII\User;
 
 /**
@@ -37,23 +35,21 @@ use FireflyIII\User;
  */
 class SetCategory implements ActionInterface
 {
-    private RuleAction       $action;
-    private ActionExpression $expr;
+    private RuleAction $action;
 
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(RuleAction $action, ActionExpression $expr)
+    public function __construct(RuleAction $action)
     {
         $this->action = $action;
-        $this->expr   = $expr;
     }
 
     public function actOnArray(array $journal): bool
     {
         /** @var null|User $user */
         $user            = User::find($journal['user_id']);
-        $search          = $this->expr->evaluate($journal);
+        $search          = $this->action->getValue($journal);
         if (null === $user) {
             app('log')->error(sprintf('Journal has no valid user ID so action SetCategory("%s") cannot be applied', $search), $journal);
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_such_journal')));

@@ -26,6 +26,7 @@ namespace FireflyIII\Models;
 use Carbon\Carbon;
 use Eloquent;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use FireflyIII\TransactionRules\Expressions\ActionExpression;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -92,5 +93,11 @@ class RuleAction extends Model
         return Attribute::make(
             get: static fn ($value) => (int)$value,
         );
+    }
+
+    public function getValue(array $journal)
+    {
+        $expr = new ActionExpression($this->action_value);
+        return $expr->evaluate($journal);
     }
 }

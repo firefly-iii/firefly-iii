@@ -19,7 +19,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
@@ -28,7 +27,6 @@ use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\TransactionRules\Expressions\ActionExpression;
 use FireflyIII\User;
 
 /**
@@ -36,27 +34,25 @@ use FireflyIII\User;
  */
 class RemoveTag implements ActionInterface
 {
-    private RuleAction       $action;
-    private ActionExpression $expr;
+    private RuleAction $action;
 
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(RuleAction $action, ActionExpression $expr)
+    public function __construct(RuleAction $action)
     {
         $this->action = $action;
-        $this->expr   = $expr;
     }
 
     public function actOnArray(array $journal): bool
     {
-        // if tag does not exist, no need to continue:
-        $name   = $this->expr->evaluate($journal);
+        $name   = $this->action->getValue($journal);
 
         /** @var User $user */
         $user   = User::find($journal['user_id']);
         $tag    = $user->tags()->where('tag', $name)->first();
 
+        // if tag does not exist, no need to continue:
         if (null === $tag) {
             app('log')->debug(
                 sprintf('RuleAction RemoveTag tried to remove tag "%s" from journal #%d but no such tag exists.', $name, $journal['transaction_journal_id'])
@@ -79,7 +75,8 @@ class RemoveTag implements ActionInterface
         \DB::table('tag_transaction_journal')
             ->where('transaction_journal_id', $journal['transaction_journal_id'])
             ->where('tag_id', $tag->id)
-            ->delete();
+            ->delete()
+        ;
 
         /** @var TransactionJournal $object */
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);

@@ -19,7 +19,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
@@ -28,46 +27,44 @@ use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\TransactionRules\Expressions\ActionExpression;
 
 /**
  * Class AppendNotes.
  */
 class AppendNotes implements ActionInterface
 {
-    private RuleAction       $action;
-    private ActionExpression $expr;
+    private RuleAction $action;
 
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(RuleAction $action, ActionExpression $expr)
+    public function __construct(RuleAction $action)
     {
         $this->action = $action;
-        $this->expr   = $expr;
     }
 
     public function actOnArray(array $journal): bool
     {
-        $actionValue = $this->expr->evaluate($journal);
         $dbNote       = Note::where('noteable_id', (int)$journal['transaction_journal_id'])
             ->where('noteable_type', TransactionJournal::class)
-            ->first(['notes.*']);
+            ->first(['notes.*'])
+        ;
         if (null === $dbNote) {
             $dbNote                = new Note();
             $dbNote->noteable_id   = (int)$journal['transaction_journal_id'];
             $dbNote->noteable_type = TransactionJournal::class;
             $dbNote->text          = '';
         }
-        app('log')->debug(sprintf('RuleAction AppendNotes appended "%s" to "%s".', $actionValue, $dbNote->text));
         $before       = $dbNote->text;
-        $text         = sprintf('%s%s', $dbNote->text, $actionValue);
+        $append       = $this->action->getValue($journal);
+        $text         = sprintf('%s%s', $dbNote->text, $append);
         $dbNote->text = $text;
         $dbNote->save();
 
         /** @var TransactionJournal $object */
         $object       = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
 
+        app('log')->debug(sprintf('RuleAction AppendNotes appended "%s" to "%s".', $append, $before));
         event(new TriggeredAuditLog($this->action->rule, $object, 'update_notes', $before, $text));
 
         return true;

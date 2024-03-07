@@ -19,7 +19,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
@@ -32,7 +31,6 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\TransactionRules\Expressions\ActionExpressionEvaluator;
 use FireflyIII\User;
 
 /**
@@ -41,21 +39,19 @@ use FireflyIII\User;
 class SetDestinationAccount implements ActionInterface
 {
     private RuleAction                 $action;
-    private ActionExpressionEvaluator  $evaluator;
     private AccountRepositoryInterface $repository;
 
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(RuleAction $action, ActionExpressionEvaluator $evaluator)
+    public function __construct(RuleAction $action)
     {
         $this->action = $action;
-        $this->evaluator = $evaluator;
     }
 
     public function actOnArray(array $journal): bool
     {
-        $accountName = $this->evaluator->evaluate($journal);
+        $accountName      = $this->action->getValue($journal);
 
         /** @var User $user */
         $user             = User::find($journal['user_id']);
@@ -132,7 +128,8 @@ class SetDestinationAccount implements ActionInterface
         \DB::table('transactions')
             ->where('transaction_journal_id', '=', $object->id)
             ->where('amount', '>', 0)
-            ->update(['account_id' => $newAccount->id]);
+            ->update(['account_id' => $newAccount->id])
+        ;
 
         app('log')->debug(sprintf('Updated journal #%d (group #%d) and gave it new destination account ID.', $object->id, $object->transaction_group_id));
 

@@ -19,7 +19,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
@@ -30,7 +29,6 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
-use FireflyIII\TransactionRules\Expressions\ActionExpression;
 use FireflyIII\User;
 
 /**
@@ -38,16 +36,14 @@ use FireflyIII\User;
  */
 class LinkToBill implements ActionInterface
 {
-    private RuleAction       $action;
-    private ActionExpression $expr;
+    private RuleAction $action;
 
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(RuleAction $action, ActionExpression $expr)
+    public function __construct(RuleAction $action)
     {
         $this->action = $action;
-        $this->expr   = $expr;
     }
 
     public function actOnArray(array $journal): bool
@@ -58,12 +54,13 @@ class LinkToBill implements ActionInterface
         /** @var BillRepositoryInterface $repository */
         $repository = app(BillRepositoryInterface::class);
         $repository->setUser($user);
-        $billName   = $this->expr->evaluate($journal);
+        $billName   = $this->action->getValue($journal);
         $bill       = $repository->findByName($billName);
 
         if (null !== $bill && TransactionType::WITHDRAWAL === $journal['transaction_type_type']) {
             $count  = \DB::table('transaction_journals')->where('id', '=', $journal['transaction_journal_id'])
-                ->where('bill_id', $bill->id)->count();
+                ->where('bill_id', $bill->id)->count()
+            ;
             if (0 !== $count) {
                 app('log')->error(
                     sprintf(
@@ -79,7 +76,8 @@ class LinkToBill implements ActionInterface
 
             \DB::table('transaction_journals')
                 ->where('id', '=', $journal['transaction_journal_id'])
-                ->update(['bill_id' => $bill->id]);
+                ->update(['bill_id' => $bill->id])
+            ;
             app('log')->debug(
                 sprintf('RuleAction LinkToBill set the bill of journal #%d to bill #%d ("%s").', $journal['transaction_journal_id'], $bill->id, $bill->name)
             );

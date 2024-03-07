@@ -1,5 +1,4 @@
 <?php
-
 /**
  * ConvertToDeposit.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -35,39 +34,36 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\TransactionRules\Expressions\ActionExpression;
 
 /**
  * Class ConvertToDeposit
  */
 class ConvertToDeposit implements ActionInterface
 {
-    private RuleAction       $action;
-    private ActionExpression $expr;
+    private RuleAction $action;
 
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(RuleAction $action, ActionExpression $expr)
+    public function __construct(RuleAction $action)
     {
         $this->action = $action;
-        $this->expr   = $expr;
     }
 
     public function actOnArray(array $journal): bool
     {
-        $actionValue = $this->expr->evaluate($journal);
+        $actionValue = $this->action->getValue($journal);
 
         // make object from array (so the data is fresh).
         /** @var null|TransactionJournal $object */
-        $object     = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $object      = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         if (null === $object) {
             app('log')->error(sprintf('Cannot find journal #%d, cannot convert to deposit.', $journal['transaction_journal_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.journal_not_found')));
 
             return false;
         }
-        $groupCount = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
+        $groupCount  = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
         if ($groupCount > 1) {
             app('log')->error(sprintf('Group #%d has more than one transaction in it, cannot convert to deposit.', $journal['transaction_group_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.split_group')));
@@ -76,7 +72,7 @@ class ConvertToDeposit implements ActionInterface
         }
 
         app('log')->debug(sprintf('Convert journal #%d to deposit.', $journal['transaction_journal_id']));
-        $type       = $object->transactionType->type;
+        $type        = $object->transactionType->type;
         if (TransactionType::DEPOSIT === $type) {
             app('log')->error(sprintf('Journal #%d is already a deposit (rule #%d).', $journal['transaction_journal_id'], $this->action->rule_id));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.is_already_deposit')));
@@ -128,7 +124,7 @@ class ConvertToDeposit implements ActionInterface
      *
      * @throws FireflyException
      */
-    private function convertWithdrawalArray(TransactionJournal $journal, string $actionValue): bool
+    private function convertWithdrawalArray(TransactionJournal $journal, string $actionValue = ''): bool
     {
         $user            = $journal->user;
 
@@ -159,20 +155,23 @@ class ConvertToDeposit implements ActionInterface
         \DB::table('transactions')
             ->where('transaction_journal_id', '=', $journal->id)
             ->where('amount', '<', 0)
-            ->update(['account_id' => $opposingAccount->id]);
+            ->update(['account_id' => $opposingAccount->id])
+        ;
 
         // update the destination transaction and put in the original source account ID.
         \DB::table('transactions')
             ->where('transaction_journal_id', '=', $journal->id)
             ->where('amount', '>', 0)
-            ->update(['account_id' => $sourceAccount->id]);
+            ->update(['account_id' => $sourceAccount->id])
+        ;
 
         // change transaction type of journal:
         $newType         = TransactionType::whereType(TransactionType::DEPOSIT)->first();
 
         \DB::table('transaction_journals')
             ->where('id', '=', $journal->id)
-            ->update(['transaction_type_id' => $newType->id, 'bill_id' => null]);
+            ->update(['transaction_type_id' => $newType->id, 'bill_id' => null])
+        ;
 
         app('log')->debug('Converted withdrawal to deposit.');
 
@@ -214,7 +213,7 @@ class ConvertToDeposit implements ActionInterface
      *
      * @throws FireflyException
      */
-    private function convertTransferArray(TransactionJournal $journal, string $actionValue): bool
+    private function convertTransferArray(TransactionJournal $journal, string $actionValue = ''): bool
     {
         $user            = $journal->user;
 
@@ -238,20 +237,22 @@ class ConvertToDeposit implements ActionInterface
             $opposingAccount = $factory->findOrCreate($opposingName, AccountType::REVENUE);
         }
 
-        app('log')->debug(sprintf('ConvertToDeposit. Action value is "%s", revenue name is "%s"', $this->action->action_value, $opposingAccount->name));
+        app('log')->debug(sprintf('ConvertToDeposit. Action value is "%s", revenue name is "%s"', $actionValue, $opposingAccount->name));
 
         // update source transaction(s) to be revenue account
         \DB::table('transactions')
             ->where('transaction_journal_id', '=', $journal->id)
             ->where('amount', '<', 0)
-            ->update(['account_id' => $opposingAccount->id]);
+            ->update(['account_id' => $opposingAccount->id])
+        ;
 
         // change transaction type of journal:
         $newType         = TransactionType::whereType(TransactionType::DEPOSIT)->first();
 
         \DB::table('transaction_journals')
             ->where('id', '=', $journal->id)
-            ->update(['transaction_type_id' => $newType->id, 'bill_id' => null]);
+            ->update(['transaction_type_id' => $newType->id, 'bill_id' => null])
+        ;
 
         app('log')->debug('Converted transfer to deposit.');
 

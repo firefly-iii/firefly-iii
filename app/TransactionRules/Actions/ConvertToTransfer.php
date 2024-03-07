@@ -1,5 +1,4 @@
 <?php
-
 /**
  * ConvertToTransfer.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -34,23 +33,20 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\TransactionRules\Expressions\ActionExpression;
 
 /**
  * Class ConvertToTransfer
  */
 class ConvertToTransfer implements ActionInterface
 {
-    private RuleAction       $action;
-    private ActionExpression $expr;
+    private RuleAction $action;
 
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(RuleAction $action, ActionExpression $expr)
+    public function __construct(RuleAction $action)
     {
         $this->action = $action;
-        $this->expr   = $expr;
     }
 
     /**
@@ -59,7 +55,7 @@ class ConvertToTransfer implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
-        $actionValue = $this->expr->evaluate($journal);
+        $accountName  = $this->action->getValue($journal);
 
         // make object from array (so the data is fresh).
         /** @var null|TransactionJournal $object */
@@ -108,7 +104,7 @@ class ConvertToTransfer implements ActionInterface
             $expectedType = $this->getDestinationType($journalId);
             // Deposit? Replace source with account with same type as destination.
         }
-        $opposing     = $repository->findByName($actionValue, [$expectedType]);
+        $opposing     = $repository->findByName($accountName, [$expectedType]);
 
         if (null === $opposing) {
             app('log')->error(
@@ -116,11 +112,11 @@ class ConvertToTransfer implements ActionInterface
                     'Journal #%d cannot be converted because no valid %s account with name "%s" exists (rule #%d).',
                     $expectedType,
                     $journalId,
-                    $actionValue,
+                    $accountName,
                     $this->action->rule_id
                 )
             );
-            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_valid_opposing', ['name' => $actionValue])));
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_valid_opposing', ['name' => $accountName])));
 
             return false;
         }
@@ -214,14 +210,16 @@ class ConvertToTransfer implements ActionInterface
         \DB::table('transactions')
             ->where('transaction_journal_id', '=', $journal->id)
             ->where('amount', '>', 0)
-            ->update(['account_id' => $opposing->id]);
+            ->update(['account_id' => $opposing->id])
+        ;
 
         // change transaction type of journal:
         $newType       = TransactionType::whereType(TransactionType::TRANSFER)->first();
 
         \DB::table('transaction_journals')
             ->where('id', '=', $journal->id)
-            ->update(['transaction_type_id' => $newType->id, 'bill_id' => null]);
+            ->update(['transaction_type_id' => $newType->id, 'bill_id' => null])
+        ;
 
         app('log')->debug('Converted withdrawal to transfer.');
 
@@ -267,14 +265,16 @@ class ConvertToTransfer implements ActionInterface
         \DB::table('transactions')
             ->where('transaction_journal_id', '=', $journal->id)
             ->where('amount', '<', 0)
-            ->update(['account_id' => $opposing->id]);
+            ->update(['account_id' => $opposing->id])
+        ;
 
         // change transaction type of journal:
         $newType     = TransactionType::whereType(TransactionType::TRANSFER)->first();
 
         \DB::table('transaction_journals')
             ->where('id', '=', $journal->id)
-            ->update(['transaction_type_id' => $newType->id, 'bill_id' => null]);
+            ->update(['transaction_type_id' => $newType->id, 'bill_id' => null])
+        ;
 
         app('log')->debug('Converted deposit to transfer.');
 
