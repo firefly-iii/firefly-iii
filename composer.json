@@ -112,7 +112,7 @@
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.9",
-        "barryvdh/laravel-ide-helper": "2.*",
+        "barryvdh/laravel-ide-helper": "3.*",
         "ergebnis/phpstan-rules": "^2.1",
         "fakerphp/faker": "1.*",
         "filp/whoops": "2.*",

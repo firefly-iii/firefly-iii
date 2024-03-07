@@ -115,9 +115,9 @@ return [
         'handle_debts' => true,
         // see cer.php for exchange rates feature flag.
     ],
-    'version'                      => '6.1.10',
+    'version'                      => 'develop/2024-03-07',
     'api_version'                  => '2.0.12',
-    'db_version'                   => 22,
+    'db_version'                   => 23,
 
     // generic settings
     'maxUploadSize'                => 1073741824, // 1 GB
@@ -917,6 +917,7 @@ return [
     'sorting'                      => [
         'allowed' => [
             'transactions' => ['description', 'amount'],
+            'accounts'     => ['name'],
         ],
     ],
 ];

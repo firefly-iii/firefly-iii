@@ -191,7 +191,7 @@ export default () => ({
                 if (account.hasOwnProperty(i)) {
                     let accountId = account[i];
                     // grab account info for box:
-                    (new Get).get(accountId, new Date(window.store.get('end'))).then((response) => {
+                    (new Get).show(accountId, new Date(window.store.get('end'))).then((response) => {
                         let parent = response.data.data;
 
                         // get groups for account:

@@ -47,7 +47,7 @@ use Illuminate\Support\Facades\DB;
 class TransactionGroupTransformer extends AbstractTransformer
 {
     private array                 $accountTypes = []; // account types collection.
-    private ExchangeRateConverter $converter; // collection of all journals and some important meta-data.
+    private ExchangeRateConverter $converter;         // collection of all journals and some important meta-data.
     private array                 $currencies   = [];
     private TransactionCurrency   $default; // collection of all currencies for this transformer.
     private array                 $journals     = [];

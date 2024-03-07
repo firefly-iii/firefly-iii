@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V2\Request\Model\Transaction;
 
 use Carbon\Carbon;
+use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
@@ -36,6 +37,7 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class InfiniteListRequest extends FormRequest
 {
+    use AccountFilter;
     use ChecksLogin;
     use ConvertsDataTypes;
     use TransactionFilter;
@@ -81,6 +83,13 @@ class InfiniteListRequest extends FormRequest
         return $this->getCarbonDate('end');
     }
 
+    public function getAccountTypes(): array
+    {
+        $type = (string)$this->get('type', 'default');
+
+        return $this->mapAccountTypes($type);
+    }
+
     public function getPage(): int
     {
         $page = $this->convertInteger('page');
@@ -88,9 +97,9 @@ class InfiniteListRequest extends FormRequest
         return 0 === $page || $page > 65536 ? 1 : $page;
     }
 
-    public function getSortInstructions(): array
+    public function getSortInstructions(string $key): array
     {
-        $allowed = config('firefly.sorting.allowed.transactions');
+        $allowed = config(sprintf('firefly.sorting.allowed.%s', $key));
         $set     = $this->get('sorting', []);
         $result  = [];
         if (0 === count($set)) {

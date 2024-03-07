@@ -34,6 +34,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class ReconcileController
@@ -73,7 +74,6 @@ class ReconcileController extends Controller
         $accountCurrency = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
         $amount          = '0';
         $clearedAmount   = '0';
-        $route           = '';
 
         if (null === $start && null === $end) {
             throw new FireflyException('Invalid dates submitted.');
@@ -103,14 +103,11 @@ class ReconcileController extends Controller
             $clearedJournals = $collector->getExtractedJournals();
         }
 
-        app('log')->debug('Start transaction loop');
-
         /** @var array $journal */
         foreach ($journals as $journal) {
             $amount = $this->processJournal($account, $accountCurrency, $journal, $amount);
         }
         app('log')->debug(sprintf('Final amount is %s', $amount));
-        app('log')->debug('End transaction loop');
 
         /** @var array $journal */
         foreach ($clearedJournals as $journal) {
@@ -118,31 +115,17 @@ class ReconcileController extends Controller
                 $clearedAmount = $this->processJournal($account, $accountCurrency, $journal, $clearedAmount);
             }
         }
+        Log::debug(sprintf('Start balance: "%s"', $startBalance));
+        Log::debug(sprintf('End balance: "%s"', $endBalance));
+        Log::debug(sprintf('Cleared amount: "%s"', $clearedAmount));
+        Log::debug(sprintf('Amount: "%s"', $amount));
         $difference      = bcadd(bcadd(bcsub($startBalance, $endBalance), $clearedAmount), $amount);
         $diffCompare     = bccomp($difference, '0');
         $countCleared    = count($clearedJournals);
-
         $reconSum        = bcadd(bcadd($startBalance, $amount), $clearedAmount);
 
         try {
-            $view = view(
-                'accounts.reconcile.overview',
-                compact(
-                    'account',
-                    'start',
-                    'diffCompare',
-                    'difference',
-                    'end',
-                    'clearedAmount',
-                    'startBalance',
-                    'endBalance',
-                    'amount',
-                    'route',
-                    'countCleared',
-                    'reconSum',
-                    'selectedIds'
-                )
-            )->render();
+            $view = view('accounts.reconcile.overview', compact('account', 'start', 'diffCompare', 'difference', 'end', 'clearedAmount', 'startBalance', 'endBalance', 'amount', 'route', 'countCleared', 'reconSum', 'selectedIds'))->render();
         } catch (\Throwable $e) {
             app('log')->debug(sprintf('View error: %s', $e->getMessage()));
             app('log')->error($e->getTraceAsString());
@@ -151,12 +134,40 @@ class ReconcileController extends Controller
             throw new FireflyException($view, 0, $e);
         }
 
-        $return          = [
-            'post_url' => $route,
-            'html'     => $view,
-        ];
+        $return          = ['post_url' => $route, 'html' => $view];
 
         return response()->json($return);
+    }
+
+    private function processJournal(Account $account, TransactionCurrency $currency, array $journal, string $amount): string
+    {
+        $toAdd  = '0';
+        app('log')->debug(sprintf('User submitted %s #%d: "%s"', $journal['transaction_type_type'], $journal['transaction_journal_id'], $journal['description']));
+
+        // not much magic below we need to cover using tests.
+
+        if ($account->id === $journal['source_account_id']) {
+            if ($currency->id === $journal['currency_id']) {
+                $toAdd = $journal['amount'];
+            }
+            if (null !== $journal['foreign_currency_id'] && $journal['foreign_currency_id'] === $currency->id) {
+                $toAdd = $journal['foreign_amount'];
+            }
+        }
+        if ($account->id === $journal['destination_account_id']) {
+            if ($currency->id === $journal['currency_id']) {
+                $toAdd = bcmul($journal['amount'], '-1');
+            }
+            if (null !== $journal['foreign_currency_id'] && $journal['foreign_currency_id'] === $currency->id) {
+                $toAdd = bcmul($journal['foreign_amount'], '-1');
+            }
+        }
+
+        app('log')->debug(sprintf('Going to add %s to %s', $toAdd, $amount));
+        $amount = bcadd($amount, $toAdd);
+        app('log')->debug(sprintf('Result is %s', $amount));
+
+        return $amount;
     }
 
     /**
@@ -176,6 +187,7 @@ class ReconcileController extends Controller
         }
         $startDate      = clone $start;
         $startDate->subDay();
+        $end->endOfDay();
 
         $currency       = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
         $startBalance   = app('steam')->bcround(app('steam')->balance($account, $startDate), $currency->decimal_places);
@@ -212,37 +224,6 @@ class ReconcileController extends Controller
         }
 
         return response()->json(['html' => $html, 'startBalance' => $startBalance, 'endBalance' => $endBalance]);
-    }
-
-    private function processJournal(Account $account, TransactionCurrency $currency, array $journal, string $amount): string
-    {
-        $toAdd  = '0';
-        app('log')->debug(sprintf('User submitted %s #%d: "%s"', $journal['transaction_type_type'], $journal['transaction_journal_id'], $journal['description']));
-
-        // not much magic below we need to cover using tests.
-
-        if ($account->id === $journal['source_account_id']) {
-            if ($currency->id === $journal['currency_id']) {
-                $toAdd = $journal['amount'];
-            }
-            if (null !== $journal['foreign_currency_id'] && $journal['foreign_currency_id'] === $currency->id) {
-                $toAdd = $journal['foreign_amount'];
-            }
-        }
-        if ($account->id === $journal['destination_account_id']) {
-            if ($currency->id === $journal['currency_id']) {
-                $toAdd = bcmul($journal['amount'], '-1');
-            }
-            if (null !== $journal['foreign_currency_id'] && $journal['foreign_currency_id'] === $currency->id) {
-                $toAdd = bcmul($journal['foreign_amount'], '-1');
-            }
-        }
-
-        app('log')->debug(sprintf('Going to add %s to %s', $toAdd, $amount));
-        $amount = bcadd($amount, $toAdd);
-        app('log')->debug(sprintf('Result is %s', $amount));
-
-        return $amount;
     }
 
     /**

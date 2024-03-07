@@ -285,13 +285,6 @@ interface GroupCollectorInterface
      */
     public function getPaginatedGroups(): LengthAwarePaginator;
 
-    public function setSorting(array $instructions): self;
-
-    /**
-     * Sort the collection on a column.
-     */
-    public function sortCollection(Collection $collection): Collection;
-
     public function hasAnyTag(): self;
 
     /**
@@ -560,6 +553,8 @@ interface GroupCollectorInterface
 
     public function setSepaCT(string $sepaCT): self;
 
+    public function setSorting(array $instructions): self;
+
     /**
      * Set source accounts.
      */
@@ -619,6 +614,11 @@ interface GroupCollectorInterface
      * Either account can be set, but NOT both. This effectively excludes internal transfers.
      */
     public function setXorAccounts(Collection $accounts): self;
+
+    /**
+     * Sort the collection on a column.
+     */
+    public function sortCollection(Collection $collection): Collection;
 
     /**
      * Automatically include all stuff required to make API calls work.

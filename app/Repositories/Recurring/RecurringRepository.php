@@ -375,6 +375,12 @@ class RecurringRepository implements RecurringRepositoryInterface
         app('log')->debug('Now in getXOccurrencesSince()');
         $skipMod     = $repetition->repetition_skip + 1;
         $occurrences = [];
+
+        // to fix #8616, take a few days from both dates, then filter the list to make sure no entries
+        // from today or before are saved.
+        $date->subDays(4);
+        $afterDate->subDays(4);
+
         if ('daily' === $repetition->repetition_type) {
             $occurrences = $this->getXDailyOccurrencesSince($date, $afterDate, $count, $skipMod);
         }
@@ -407,7 +413,7 @@ class RecurringRepository implements RecurringRepositoryInterface
         }
         $filtered = [];
         foreach ($occurrences as $date) {
-            if ($date->lte($max)) {
+            if ($date->lte($max) && $date->gt(today())) {
                 $filtered[] = $date;
             }
         }

@@ -1941,7 +1941,7 @@ return [
     'categories'                                          => 'Kategorier',
     'edit_category'                                       => 'Redigera kategori ":name"',
     'no_category'                                         => '(utan kategori)',
-    'unknown_category_plain'                              => 'No category',
+    'unknown_category_plain'                              => 'Ingen kategori',
     'category'                                            => 'Kategori',
     'delete_category'                                     => 'Ta bort kategori ":name"',
     'deleted_category'                                    => 'Kategori ":name" togs bort',

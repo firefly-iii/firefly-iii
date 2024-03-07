@@ -44,12 +44,6 @@ const urlParts = window.location.href.split('/');
 const type = urlParts[urlParts.length - 1];
 ds.setType(type);
 
-document.addEventListener('cellEditRequest', () => {
-    console.log('Loaded through event listener.');
-    //loadPage();
-});
-let rowImmutableStore = [];
-
 let dataTable;
 const editableFields = ['description', 'amount', 'date'];
 
@@ -90,22 +84,18 @@ const onCellEditRequestMethod = (event) => {
 
 };
 
-document.addEventListener('cellValueChanged', () => {
-    console.log('I just realized a cell value has changed.');
-});
-document.addEventListener('onCellValueChanged', () => {
-    console.log('I just realized a cell value has changed.');
-});
-
-let doOnCellValueChanged = function (e) {
-    console.log('I just realized a cell value has changed.');
-};
-
 const gridOptions = {
     rowModelType: 'infinite',
     datasource: ds,
+    cacheOverflowSize: 1,
+    cacheBlockSize: 20,
     onCellEditRequest: onCellEditRequestMethod,
     readOnlyEdit: true,
+    getRowId: function (params) {
+        console.log('getRowId', params.data.id);
+        return params.data.id;
+    },
+
     // Row Data: The data to be displayed.
     // rowData: [
     // { description: "Tesla", model: "Model Y", price: 64950, electric: true },

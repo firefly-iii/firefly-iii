@@ -79,13 +79,14 @@ trait CalculateXOccurrencesSince
         while ($total < $count) {
             $domCorrected = min($dayOfMonth, $mutator->daysInMonth);
             $mutator->day = $domCorrected;
+            app('log')->debug(sprintf('Mutator is now %s', $mutator->format('Y-m-d')));
             if (0 === $attempts % $skipMod && $mutator->gte($afterDate)) {
+                app('log')->debug('Is added to the list.');
                 $return[] = clone $mutator;
                 ++$total;
             }
             ++$attempts;
             $mutator      = $mutator->endOfMonth()->addDay();
-            app('log')->debug(sprintf('Mutator is now %s', $mutator->format('Y-m-d')));
         }
 
         return $return;

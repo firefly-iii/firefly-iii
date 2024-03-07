@@ -104,6 +104,7 @@ Route::group(
         'as'        => 'api.v2.accounts.',
     ],
     static function (): void {
+        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
         Route::get('{account}', ['uses' => 'ShowController@show', 'as' => 'show']);
     }
 );
@@ -173,7 +174,6 @@ Route::group(
 );
 
 // V2 API route for budgets and budget limits:
-// TODO Validate from here down.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V2\Controllers\Model',

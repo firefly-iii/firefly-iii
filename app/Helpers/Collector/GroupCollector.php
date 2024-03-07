@@ -25,6 +25,7 @@ namespace FireflyIII\Helpers\Collector;
 
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
+use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\Extensions\AccountCollection;
 use FireflyIII\Helpers\Collector\Extensions\AmountCollection;
@@ -782,6 +783,35 @@ class GroupCollector implements GroupCollectorInterface
         return $currentCollection;
     }
 
+    #[\Override]
+    public function sortCollection(Collection $collection): Collection
+    {
+        /**
+         * @var string $field
+         * @var string $direction
+         */
+        foreach ($this->sorting as $field => $direction) {
+            $func       = 'ASC' === $direction ? 'sortBy' : 'sortByDesc';
+            $collection = $collection->{$func}(function (array $product, int $key) use ($field) { // @phpstan-ignore-line
+                // depends on $field:
+                if ('description' === $field) {
+                    if (1 === count($product['transactions'])) {
+                        return array_values($product['transactions'])[0][$field];
+                    }
+                    if (count($product['transactions']) > 1) {
+                        return $product['title'];
+                    }
+
+                    return 'zzz';
+                }
+
+                exit('here we are');
+            });
+        }
+
+        return $collection;
+    }
+
     /**
      * Same as getGroups but everything is in a paginator.
      */
@@ -792,6 +822,7 @@ class GroupCollector implements GroupCollectorInterface
             $this->setLimit(50);
         }
         if (null !== $this->startRow && null !== $this->endRow) {
+            /** @var int $total */
             $total = $this->endRow - $this->startRow;
 
             return new LengthAwarePaginator($set, $this->total, $total, 1);
@@ -927,6 +958,14 @@ class GroupCollector implements GroupCollectorInterface
                 );
             }
         );
+
+        return $this;
+    }
+
+    #[\Override]
+    public function setSorting(array $instructions): GroupCollectorInterface
+    {
+        $this->sorting = $instructions;
 
         return $this;
     }
@@ -1088,43 +1127,6 @@ class GroupCollector implements GroupCollectorInterface
             // include bill ID + name (if any)
             ->withBillInformation()
         ;
-
-        return $this;
-    }
-
-    #[\Override]
-    public function sortCollection(Collection $collection): Collection
-    {
-        /**
-         * @var string $field
-         * @var string $direction
-         */
-        foreach ($this->sorting as $field => $direction) {
-            $func       = 'ASC' === $direction ? 'sortBy' : 'sortByDesc';
-            $collection = $collection->{$func}(function (array $product, int $key) use ($field) { // @phpstan-ignore-line
-                // depends on $field:
-                if ('description' === $field) {
-                    if (1 === count($product['transactions'])) {
-                        return array_values($product['transactions'])[0][$field];
-                    }
-                    if (count($product['transactions']) > 1) {
-                        return $product['title'];
-                    }
-
-                    return 'zzz';
-                }
-
-                exit('here we are');
-            });
-        }
-
-        return $collection;
-    }
-
-    #[\Override]
-    public function setSorting(array $instructions): GroupCollectorInterface
-    {
-        $this->sorting = $instructions;
 
         return $this;
     }
