@@ -30,7 +30,7 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
-use FireflyIII\TransactionRules\Expressions\ActionExpressionEvaluator;
+use FireflyIII\TransactionRules\Expressions\ActionExpression;
 use FireflyIII\User;
 
 /**
@@ -38,16 +38,16 @@ use FireflyIII\User;
  */
 class LinkToBill implements ActionInterface
 {
-    private RuleAction                $action;
-    private ActionExpressionEvaluator $evaluator;
+    private RuleAction       $action;
+    private ActionExpression $expr;
 
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(RuleAction $action, ActionExpressionEvaluator $evaluator)
+    public function __construct(RuleAction $action, ActionExpression $expr)
     {
         $this->action = $action;
-        $this->evaluator = $evaluator;
+        $this->expr   = $expr;
     }
 
     public function actOnArray(array $journal): bool
@@ -58,7 +58,7 @@ class LinkToBill implements ActionInterface
         /** @var BillRepositoryInterface $repository */
         $repository = app(BillRepositoryInterface::class);
         $repository->setUser($user);
-        $billName   = $this->evaluator->evaluate($journal);
+        $billName   = $this->expr->evaluate($journal);
         $bill       = $repository->findByName($billName);
 
         if (null !== $bill && TransactionType::WITHDRAWAL === $journal['transaction_type_type']) {

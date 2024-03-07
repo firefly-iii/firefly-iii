@@ -28,7 +28,7 @@ use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\TransactionRules\Expressions\ActionExpressionEvaluator;
+use FireflyIII\TransactionRules\Expressions\ActionExpression;
 use FireflyIII\User;
 
 /**
@@ -36,22 +36,22 @@ use FireflyIII\User;
  */
 class RemoveTag implements ActionInterface
 {
-    private RuleAction                $action;
-    private ActionExpressionEvaluator $evaluator;
+    private RuleAction       $action;
+    private ActionExpression $expr;
 
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(RuleAction $action, ActionExpressionEvaluator $evaluator)
+    public function __construct(RuleAction $action, ActionExpression $expr)
     {
         $this->action = $action;
-        $this->evaluator = $evaluator;
+        $this->expr   = $expr;
     }
 
     public function actOnArray(array $journal): bool
     {
         // if tag does not exist, no need to continue:
-        $name   = $this->evaluator->evaluate($journal);
+        $name   = $this->expr->evaluate($journal);
 
         /** @var User $user */
         $user   = User::find($journal['user_id']);

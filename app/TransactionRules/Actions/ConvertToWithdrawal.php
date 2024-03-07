@@ -35,28 +35,28 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\TransactionRules\Expressions\ActionExpressionEvaluator;
+use FireflyIII\TransactionRules\Expressions\ActionExpression;
 
 /**
  * Class ConvertToWithdrawal
  */
 class ConvertToWithdrawal implements ActionInterface
 {
-    private RuleAction                $action;
-    private ActionExpressionEvaluator $evaluator;
+    private RuleAction       $action;
+    private ActionExpression $expr;
 
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(RuleAction $action, ActionExpressionEvaluator $evaluator)
+    public function __construct(RuleAction $action, ActionExpression $expr)
     {
         $this->action = $action;
-        $this->evaluator = $evaluator;
+        $this->expr   = $expr;
     }
 
     public function actOnArray(array $journal): bool
     {
-        $actionValue = $this->evaluator->evaluate($journal);
+        $actionValue = $this->expr->evaluate($journal);
 
         // make object from array (so the data is fresh).
         /** @var null|TransactionJournal $object */

@@ -28,8 +28,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Support\Domain;
 use FireflyIII\TransactionRules\Actions\ActionInterface;
-use FireflyIII\TransactionRules\Expressions\ActionExpressionEvaluator;
-use FireflyIII\TransactionRules\Factory\ExpressionLanguageFactory;
+use FireflyIII\TransactionRules\Expressions\ActionExpression;
 
 /**
  * Class ActionFactory can create actions.
@@ -52,10 +51,9 @@ class ActionFactory
         $class = self::getActionClass($action->action_type);
         app('log')->debug(sprintf('self::getActionClass("%s") = "%s"', $action->action_type, $class));
 
-        $expressionLanguage = ExpressionLanguageFactory::get();
-        $expressionEvaluator = new ActionExpressionEvaluator($expressionLanguage, $action->action_value);
+        $expr = new ActionExpression($action->action_value);
 
-        return new $class($action, $expressionEvaluator); // @phpstan-ignore-line
+        return new $class($action, $expr); // @phpstan-ignore-line
     }
 
     /**

@@ -26,11 +26,9 @@ namespace FireflyIII\Api\V1\Controllers\Models\Rule;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\Rule\ValidateExpressionRequest;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
-use FireflyIII\TransactionRules\Expressions\ActionExpressionEvaluator;
-use FireflyIII\TransactionRules\Factory\ExpressionLanguageFactory;
+use FireflyIII\TransactionRules\Expressions\ActionExpression;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use Symfony\Component\ExpressionLanguage\SyntaxError;
 
 /**
  * Class ExpressionController
@@ -70,18 +68,17 @@ class ExpressionController extends Controller
      */
     public function validateExpression(ValidateExpressionRequest $request): JsonResponse
     {
-        $expr = $request->getExpression();
-        $expressionLanguage = ExpressionLanguageFactory::get();
-        $evaluator = new ActionExpressionEvaluator($expressionLanguage, $expr);
+        $value = $request->getExpression();
+        $expr = new ActionExpression($value);
 
-        if ($evaluator->isValid()) {
+        if ($expr->isValid()) {
             return response()->json([
                 "valid" => true,
             ]);
         } else {
             return response()->json([
                 "valid" => false,
-                "error" => $evaluator->getValidationError()->getMessage()
+                "error" => $expr->getValidationError()->getMessage()
             ]);
         }
     }

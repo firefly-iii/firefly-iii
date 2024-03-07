@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ActionExpressionEvaluator.php
+ * ActionExpression.php
  * Copyright (c) 2024 Michael Thomas
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -27,7 +27,7 @@ namespace FireflyIII\TransactionRules\Expressions;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\ExpressionLanguage\SyntaxError;
 
-class ActionExpressionEvaluator
+class ActionExpression
 {
     private static array $NAMES = array("transaction");
 
@@ -36,9 +36,9 @@ class ActionExpressionEvaluator
     private bool $isExpression;
     private ?SyntaxError $validationError;
 
-    public function __construct(ExpressionLanguage $expressionLanguage, string $expr)
+    public function __construct(string $expr)
     {
-        $this->expressionLanguage = $expressionLanguage;
+        $this->expressionLanguage = app(ExpressionLanguage::class);
         $this->expr = $expr;
 
         $this->isExpression = self::isExpression($expr);

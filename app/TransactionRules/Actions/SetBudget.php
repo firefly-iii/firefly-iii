@@ -29,7 +29,7 @@ use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\TransactionRules\Expressions\ActionExpressionEvaluator;
+use FireflyIII\TransactionRules\Expressions\ActionExpression;
 use FireflyIII\User;
 
 /**
@@ -37,23 +37,23 @@ use FireflyIII\User;
  */
 class SetBudget implements ActionInterface
 {
-    private RuleAction                $action;
-    private ActionExpressionEvaluator $evaluator;
+    private RuleAction       $action;
+    private ActionExpression $expr;
 
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(RuleAction $action, ActionExpressionEvaluator $evaluator)
+    public function __construct(RuleAction $action, ActionExpression $expr)
     {
         $this->action = $action;
-        $this->evaluator = $evaluator;
+        $this->expr   = $expr;
     }
 
     public function actOnArray(array $journal): bool
     {
         /** @var User $user */
         $user          = User::find($journal['user_id']);
-        $search        = $this->evaluator->evaluate($journal);
+        $search        = $this->expr->evaluate($journal);
 
         $budget        = $user->budgets()->where('name', $search)->first();
         if (null === $budget) {

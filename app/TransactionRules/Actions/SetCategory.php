@@ -29,7 +29,7 @@ use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\TransactionRules\Expressions\ActionExpressionEvaluator;
+use FireflyIII\TransactionRules\Expressions\ActionExpression;
 use FireflyIII\User;
 
 /**
@@ -37,23 +37,23 @@ use FireflyIII\User;
  */
 class SetCategory implements ActionInterface
 {
-    private RuleAction                $action;
-    private ActionExpressionEvaluator $evaluator;
+    private RuleAction       $action;
+    private ActionExpression $expr;
 
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(RuleAction $action, ActionExpressionEvaluator $evaluator)
+    public function __construct(RuleAction $action, ActionExpression $expr)
     {
         $this->action = $action;
-        $this->evaluator = $evaluator;
+        $this->expr   = $expr;
     }
 
     public function actOnArray(array $journal): bool
     {
         /** @var null|User $user */
         $user            = User::find($journal['user_id']);
-        $search          = $this->evaluator->evaluate($journal);
+        $search          = $this->expr->evaluate($journal);
         if (null === $user) {
             app('log')->error(sprintf('Journal has no valid user ID so action SetCategory("%s") cannot be applied', $search), $journal);
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_such_journal')));

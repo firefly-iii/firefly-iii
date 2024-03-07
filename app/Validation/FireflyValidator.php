@@ -35,8 +35,7 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Services\Password\Verifier;
 use FireflyIII\Support\ParseDateString;
-use FireflyIII\TransactionRules\Expressions\ActionExpressionEvaluator;
-use FireflyIII\TransactionRules\Factory\ExpressionLanguageFactory;
+use FireflyIII\TransactionRules\Expressions\ActionExpression;
 use FireflyIII\User;
 use Illuminate\Validation\Validator;
 use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
@@ -258,20 +257,16 @@ class FireflyValidator extends Validator
     public function validateRuleActionExpression(string $attribute, string $value = null): bool
     {
         $value ??= '';
+        $expr = new ActionExpression($value);
 
-        $el = ExpressionLanguageFactory::get();
-        $evaluator = new ActionExpressionEvaluator($el, $value);
-
-        return $evaluator->isValid();
+        return $expr->isValid();
     }
 
     public function replaceRuleActionExpression(string $message, string $attribute): string
     {
         $value = $this->getValue($attribute);
-
-        $el = ExpressionLanguageFactory::get();
-        $evaluator = new ActionExpressionEvaluator($el, $value);
-        $err = $evaluator->getValidationError();
+        $expr = new ActionExpression($value);
+        $err = $expr->getValidationError();
 
         if ($err == null) {
             return $message;

@@ -28,23 +28,23 @@ use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\TransactionRules\Expressions\ActionExpressionEvaluator;
+use FireflyIII\TransactionRules\Expressions\ActionExpression;
 
 /**
  * Class SetNotes.
  */
 class SetNotes implements ActionInterface
 {
-    private RuleAction                $action;
-    private ActionExpressionEvaluator $evaluator;
+    private RuleAction       $action;
+    private ActionExpression $expr;
 
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(RuleAction $action, ActionExpressionEvaluator $evaluator)
+    public function __construct(RuleAction $action, ActionExpression $expr)
     {
         $this->action = $action;
-        $this->evaluator = $evaluator;
+        $this->expr   = $expr;
     }
 
     public function actOnArray(array $journal): bool
@@ -58,7 +58,7 @@ class SetNotes implements ActionInterface
             $dbNote->text          = '';
         }
         $oldNotes     = $dbNote->text;
-        $newNotes     = $this->evaluator->evaluate($journal);
+        $newNotes     = $this->expr->evaluate($journal);
         $dbNote->text = $newNotes;
         $dbNote->save();
 
