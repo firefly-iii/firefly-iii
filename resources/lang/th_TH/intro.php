@@ -38,29 +38,29 @@ return [
     'index_intro'                                             => 'ยินดีต้อนรับสู่หน้าหลักของ Firefly III โปรดสละเวลาอ่านบทแนะนำนี้เพื่อทำความเข้าใจว่า Firefly III ทำงานอย่างไร',
     'index_accounts-chart'                                    => 'กราฟนี้แสดงยอดคงเหลือปัจจุบันของบัญชีสินทรัพย์ของคุณ คุณสามารถเลือกบัญชีที่แสดงได้ที่นี่ในการตั้งค่าของคุณ',
     'index_box_out_holder'                                    => 'กล่องเล็กๆ นี้และกล่องข้างๆ จะทำให้คุณเห็นภาพรวมโดยย่อเกี่ยวกับสถานการณ์ทางการเงินของคุณ',
-    'index_help'                                              => 'If you ever need help with a page or a form, press this button.',
-    'index_outro'                                             => 'Most pages of Firefly III will start with a little tour like this one. Please contact me when you have questions or comments. Enjoy!',
-    'index_sidebar-toggle'                                    => 'To create new transactions, accounts or other things, use the menu under this icon.',
-    'index_cash_account'                                      => 'These are the accounts created so far. You can use the cash account to track cash expenses but it\'s not mandatory of course.',
+    'index_help'                                              => 'หากคุณต้องการความช่วยเหลือเกี่ยวกับหน้าหรือแบบฟอร์ม ให้กดปุ่มนี้',
+    'index_outro'                                             => 'หน้าเพจส่วนใหญ่ของ Firefly III จะเริ่มต้นด้วยการทัวร์เล็กๆ น้อยๆ แบบนี้ โปรดติดต่อฉันเมื่อคุณมีคำถามหรือความคิดเห็น Enjoy!',
+    'index_sidebar-toggle'                                    => 'หากต้องการสร้างธุรกรรม บัญชี หรือสิ่งอื่นๆ ใหม่ ให้ใช้เมนูใต้ไอคอนนี้',
+    'index_cash_account'                                      => 'นี่คือบัญชีที่สร้างขึ้นจนถึงตอนนี้ คุณสามารถใช้บัญชีเงินสดเพื่อติดตามค่าใช้จ่ายเงินสดได้ แต่ไม่ได้บังคับแน่นอน',
 
     // transactions
-    'transactions_create_basic_info'                          => 'Enter the basic information of your transaction. Source, destination, date and description.',
-    'transactions_create_amount_info'                         => 'Enter the amount of the transaction. If necessary the fields will auto-update for foreign amount info.',
-    'transactions_create_optional_info'                       => 'All of these fields are optional. Adding meta-data here will make your transactions better organised.',
-    'transactions_create_split'                               => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_basic_info'                          => 'ป้อนข้อมูลพื้นฐานของการทำธุรกรรมของคุณ อย่างเช่น แหล่งที่มา ปลายทาง วันที่ และคำอธิบาย',
+    'transactions_create_amount_info'                         => 'ป้อนจำนวนเงินของธุรกรรม หากจำเป็น ฟิลด์จะอัปเดตอัตโนมัติสำหรับข้อมูลจำนวนเงินต่างประเทศ',
+    'transactions_create_optional_info'                       => 'ฟิลด์ทั้งหมดนี้ไม่จำเป็นต้องกรอก การเพิ่มข้อมูลเมตาที่นี่จะทำให้ธุรกรรมของคุณจัดระเบียบได้ดีขึ้น',
+    'transactions_create_split'                               => 'หากคุณต้องการแยกธุรกรรม ให้เพิ่มด้วยปุ่มนี้',
 
     // create account:
-    'accounts_create_iban'                                    => 'Give your accounts a valid IBAN. This could make a data import very easy in the future.',
-    'accounts_create_asset_opening_balance'                   => 'Assets accounts may have an "opening balance", indicating the start of this account\'s history in Firefly III.',
-    'accounts_create_asset_currency'                          => 'Firefly III supports multiple currencies. Asset accounts have one main currency, which you must set here.',
-    'accounts_create_asset_virtual'                           => 'It can sometimes help to give your account a virtual balance: an extra amount always added to or removed from the actual balance.',
+    'accounts_create_iban'                                    => 'ให้ IBAN ที่ถูกต้องแก่บัญชีของคุณ ซึ่งอาจทำให้การนำเข้าข้อมูลในอนาคตเป็นเรื่องง่ายมาก',
+    'accounts_create_asset_opening_balance'                   => 'บัญชีสินทรัพย์อาจมี "ยอดดุลยกมา" ซึ่งบ่งบอกถึงจุดเริ่มต้นของประวัติของบัญชีนี้ใน Firefly III',
+    'accounts_create_asset_currency'                          => 'Firefly III รองรับหลายสกุลเงิน บัญชีสินทรัพย์จำเป็นต้องมีสกุลเงินหลักหนึ่งสกุล ซึ่งคุณต้องตั้งค่าที่นี่',
+    'accounts_create_asset_virtual'                           => 'บางครั้งการมอบยอดเสมือนให้กับบัญชีของคุณอาจช่วยได้: จำนวนเงินพิเศษจะถูกบวกเข้าหรือลบออกจากยอดจริงเสมอ',
 
     // budgets index
-    'budgets_index_intro'                                     => 'Budgets are used to manage your finances and form one of the core functions of Firefly III.',
-    'budgets_index_see_expenses_bar'                          => 'Spending money will slowly fill this bar.',
-    'budgets_index_navigate_periods'                          => 'Navigate through periods to easily set budgets ahead of time.',
-    'budgets_index_new_budget'                                => 'Create new budgets as you see fit.',
-    'budgets_index_list_of_budgets'                           => 'Use this table to set the amounts for each budget and see how you are doing.',
+    'budgets_index_intro'                                     => 'งบประมาณใช้เพื่อจัดการการเงินของคุณคือหนึ่งในหน้าที่หลักของ Firefly III',
+    'budgets_index_see_expenses_bar'                          => 'การใช้จ่ายเงินจะค่อยๆทำให้แถบนี้เต็ม',
+    'budgets_index_navigate_periods'                          => 'เลื่อนไปตามช่วงเวลาเพื่อตั้งงบประมาณล่วงหน้าได้อย่างง่ายดาย',
+    'budgets_index_new_budget'                                => 'สร้างงบประมาณใหม่ตามที่คุณต้องการ',
+    'budgets_index_list_of_budgets'                           => 'ใช้ตารางนี้เพื่อกำหนดจำนวนเงินสำหรับงบประมาณแต่ละอย่างและดูว่าคุณใช้จ่ายไปแล้วเท่าไร',
     'budgets_index_outro'                                     => 'To learn more about budgeting, checkout the help icon in the top right corner.',
 
     /*

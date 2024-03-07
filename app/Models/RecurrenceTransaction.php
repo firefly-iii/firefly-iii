@@ -91,25 +91,25 @@ class RecurrenceTransaction extends Model
 
     protected $casts
                      = [
-            'created_at'     => 'datetime',
-            'updated_at'     => 'datetime',
-            'deleted_at'     => 'datetime',
-            'amount'         => 'string',
-            'foreign_amount' => 'string',
-            'description'    => 'string',
-        ];
+                         'created_at'     => 'datetime',
+                         'updated_at'     => 'datetime',
+                         'deleted_at'     => 'datetime',
+                         'amount'         => 'string',
+                         'foreign_amount' => 'string',
+                         'description'    => 'string',
+                     ];
 
     protected $fillable
                      = [
-            'recurrence_id',
-            'transaction_currency_id',
-            'foreign_currency_id',
-            'source_id',
-            'destination_id',
-            'amount',
-            'foreign_amount',
-            'description',
-        ];
+                         'recurrence_id',
+                         'transaction_currency_id',
+                         'foreign_currency_id',
+                         'source_id',
+                         'destination_id',
+                         'amount',
+                         'foreign_amount',
+                         'description',
+                     ];
 
     /** @var string The table to store the data in */
     protected $table = 'recurrences_transactions';

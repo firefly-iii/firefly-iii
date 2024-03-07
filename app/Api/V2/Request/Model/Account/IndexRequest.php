@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V2\Request\Model\Account;
 
-
 use Carbon\Carbon;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Support\Request\ChecksLogin;
@@ -37,9 +36,9 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class IndexRequest extends FormRequest
 {
+    use AccountFilter;
     use ChecksLogin;
     use ConvertsDataTypes;
-    use AccountFilter;
 
     /**
      * Get all data from the request.
