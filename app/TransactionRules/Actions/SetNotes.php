@@ -19,6 +19,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
@@ -27,6 +28,7 @@ use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\TransactionRules\Expressions\ActionExpressionEvaluator;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -34,16 +36,18 @@ use Illuminate\Support\Facades\Log;
  */
 class SetNotes implements ActionInterface
 {
-    private RuleACtion $action;
+    private RuleACtion                $action;
+    private ActionExpressionEvaluator $evaluator;
 
     /**
      * TriggerInterface constructor.
      *
      * @param RuleAction $action
      */
-    public function __construct(RuleAction $action)
+    public function __construct(RuleAction $action, ActionExpressionEvaluator $evaluator)
     {
         $this->action = $action;
+        $this->evaluator = $evaluator;
     }
 
     /**
@@ -52,7 +56,7 @@ class SetNotes implements ActionInterface
     public function actOnArray(array $journal): bool
     {
         $dbNote = Note::where('noteable_id', $journal['transaction_journal_id'])
-                      ->where('noteable_type', TransactionJournal::class)->first();
+            ->where('noteable_type', TransactionJournal::class)->first();
         if (null === $dbNote) {
             $dbNote                = new Note();
             $dbNote->noteable_id   = $journal['transaction_journal_id'];
@@ -60,7 +64,8 @@ class SetNotes implements ActionInterface
             $dbNote->text          = '';
         }
         $oldNotes     = $dbNote->text;
-        $dbNote->text = $this->action->action_value;
+        $newNotes     = $this->evaluator->evaluate($journal);
+        $dbNote->text = $newNotes;
         $dbNote->save();
 
         Log::debug(
@@ -68,14 +73,14 @@ class SetNotes implements ActionInterface
                 'RuleAction SetNotes changed the notes of journal #%d from "%s" to "%s".',
                 $journal['transaction_journal_id'],
                 $oldNotes,
-                $this->action->action_value
+                $newNotes
             )
         );
 
         /** @var TransactionJournal $object */
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
 
-        event(new TriggeredAuditLog($this->action->rule, $object, 'update_notes', $oldNotes, $this->action->action_value));
+        event(new TriggeredAuditLog($this->action->rule, $object, 'update_notes', $oldNotes, $newNotes));
 
         return true;
     }

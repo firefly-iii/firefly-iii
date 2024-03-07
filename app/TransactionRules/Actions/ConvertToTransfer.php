@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ConvertToTransfer.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -34,6 +35,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\TransactionRules\Expressions\ActionExpressionEvaluator;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -42,16 +44,18 @@ use Illuminate\Support\Facades\Log;
  */
 class ConvertToTransfer implements ActionInterface
 {
-    private RuleAction $action;
+    private RuleAction                $action;
+    private ActionExpressionEvaluator $evaluator;
 
     /**
      * TriggerInterface constructor.
      *
      * @param RuleAction $action
      */
-    public function __construct(RuleAction $action)
+    public function __construct(RuleAction $action, ActionExpressionEvaluator $evaluator)
     {
         $this->action = $action;
+        $this->evaluator = $evaluator;
     }
 
     /**
@@ -59,6 +63,8 @@ class ConvertToTransfer implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
+        $actionValue = $this->evaluator->evaluate($journal);
+
         // make object from array (so the data is fresh).
         /** @var TransactionJournal|null $object */
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
@@ -103,7 +109,7 @@ class ConvertToTransfer implements ActionInterface
             $expectedType = $this->getDestinationType($journalId);
             // Deposit? Replace source with account with same type as destination.
         }
-        $opposing = $repository->findByName($this->action->action_value, [$expectedType]);
+        $opposing = $repository->findByName($actionValue, [$expectedType]);
 
         if (null === $opposing) {
             Log::error(
@@ -111,11 +117,11 @@ class ConvertToTransfer implements ActionInterface
                     'Journal #%d cannot be converted because no valid %s account with name "%s" exists (rule #%d).',
                     $expectedType,
                     $journalId,
-                    $this->action->action_value,
+                    $actionValue,
                     $this->action->rule_id
                 )
             );
-            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_valid_opposing', ['name' => $this->action->action_value])));
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_valid_opposing', ['name' => $actionValue])));
 
             return false;
         }
@@ -214,16 +220,16 @@ class ConvertToTransfer implements ActionInterface
 
         // update destination transaction:
         DB::table('transactions')
-          ->where('transaction_journal_id', '=', $journal->id)
-          ->where('amount', '>', 0)
-          ->update(['account_id' => $opposing->id]);
+            ->where('transaction_journal_id', '=', $journal->id)
+            ->where('amount', '>', 0)
+            ->update(['account_id' => $opposing->id]);
 
         // change transaction type of journal:
         $newType = TransactionType::whereType(TransactionType::TRANSFER)->first();
 
         DB::table('transaction_journals')
-          ->where('id', '=', $journal->id)
-          ->update(['transaction_type_id' => $newType->id, 'bill_id' => null]);
+            ->where('id', '=', $journal->id)
+            ->update(['transaction_type_id' => $newType->id, 'bill_id' => null]);
 
         Log::debug('Converted withdrawal to transfer.');
 
@@ -273,16 +279,16 @@ class ConvertToTransfer implements ActionInterface
 
         // update source transaction:
         DB::table('transactions')
-          ->where('transaction_journal_id', '=', $journal->id)
-          ->where('amount', '<', 0)
-          ->update(['account_id' => $opposing->id]);
+            ->where('transaction_journal_id', '=', $journal->id)
+            ->where('amount', '<', 0)
+            ->update(['account_id' => $opposing->id]);
 
         // change transaction type of journal:
         $newType = TransactionType::whereType(TransactionType::TRANSFER)->first();
 
         DB::table('transaction_journals')
-          ->where('id', '=', $journal->id)
-          ->update(['transaction_type_id' => $newType->id, 'bill_id' => null]);
+            ->where('id', '=', $journal->id)
+            ->update(['transaction_type_id' => $newType->id, 'bill_id' => null]);
 
         Log::debug('Converted deposit to transfer.');
 

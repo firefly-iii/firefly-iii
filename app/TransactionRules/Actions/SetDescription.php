@@ -19,6 +19,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
@@ -27,6 +28,7 @@ use DB;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\TransactionRules\Expressions\ActionExpressionEvaluator;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -34,16 +36,18 @@ use Illuminate\Support\Facades\Log;
  */
 class SetDescription implements ActionInterface
 {
-    private RuleAction $action;
+    private RuleAction                $action;
+    private ActionExpressionEvaluator $evaluator;
 
     /**
      * TriggerInterface constructor.
      *
      * @param RuleAction $action
      */
-    public function __construct(RuleAction $action)
+    public function __construct(RuleAction $action, ActionExpressionEvaluator $evaluator)
     {
         $this->action = $action;
+        $this->evaluator = $evaluator;
     }
 
     /**
@@ -53,22 +57,23 @@ class SetDescription implements ActionInterface
     {
         /** @var TransactionJournal $object */
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
-        $before = $object->description;
+        $before = $journal['description'];
+        $after = $this->evaluator->evaluate($journal);
 
         DB::table('transaction_journals')
-          ->where('id', '=', $journal['transaction_journal_id'])
-          ->update(['description' => $this->action->action_value]);
+            ->where('id', '=', $journal['transaction_journal_id'])
+            ->update(['description' => $after]);
 
         Log::debug(
             sprintf(
                 'RuleAction SetDescription changed the description of journal #%d from "%s" to "%s".',
                 $journal['transaction_journal_id'],
-                $journal['description'],
-                $this->action->action_value
+                $before,
+                $after
             )
         );
         $object->refresh();
-        event(new TriggeredAuditLog($this->action->rule, $object, 'update_description', $before, $this->action->action_value));
+        event(new TriggeredAuditLog($this->action->rule, $object, 'update_description', $before, $after));
 
         return true;
     }

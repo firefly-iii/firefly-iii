@@ -19,6 +19,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
@@ -28,6 +29,7 @@ use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\TransactionRules\Expressions\ActionExpressionEvaluator;
 use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
 
@@ -36,16 +38,18 @@ use Illuminate\Support\Facades\Log;
  */
 class RemoveTag implements ActionInterface
 {
-    private RuleAction $action;
+    private RuleAction                $action;
+    private ActionExpressionEvaluator $evaluator;
 
     /**
      * TriggerInterface constructor.
      *
      * @param RuleAction $action
      */
-    public function __construct(RuleAction $action)
+    public function __construct(RuleAction $action, ActionExpressionEvaluator $evaluator)
     {
         $this->action = $action;
+        $this->evaluator = $evaluator;
     }
 
     /**
@@ -54,7 +58,7 @@ class RemoveTag implements ActionInterface
     public function actOnArray(array $journal): bool
     {
         // if tag does not exist, no need to continue:
-        $name = $this->action->action_value;
+        $name = $this->evaluator->evaluate($journal);
         $user = User::find($journal['user_id']);
         $tag  = $user->tags()->where('tag', $name)->first();
 
@@ -76,9 +80,9 @@ class RemoveTag implements ActionInterface
 
         Log::debug(sprintf('RuleAction RemoveTag removed tag #%d ("%s") from journal #%d.', $tag->id, $tag->tag, $journal['transaction_journal_id']));
         DB::table('tag_transaction_journal')
-          ->where('transaction_journal_id', $journal['transaction_journal_id'])
-          ->where('tag_id', $tag->id)
-          ->delete();
+            ->where('transaction_journal_id', $journal['transaction_journal_id'])
+            ->where('tag_id', $tag->id)
+            ->delete();
 
         /** @var TransactionJournal $object */
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);

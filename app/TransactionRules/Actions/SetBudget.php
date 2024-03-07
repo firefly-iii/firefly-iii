@@ -19,6 +19,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
@@ -29,6 +30,7 @@ use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\TransactionRules\Expressions\ActionExpressionEvaluator;
 use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
 
@@ -37,16 +39,18 @@ use Illuminate\Support\Facades\Log;
  */
 class SetBudget implements ActionInterface
 {
-    private RuleAction $action;
+    private RuleAction                $action;
+    private ActionExpressionEvaluator $evaluator;
 
     /**
      * TriggerInterface constructor.
      *
      * @param RuleAction $action
      */
-    public function __construct(RuleAction $action)
+    public function __construct(RuleAction $action, ActionExpressionEvaluator $evaluator)
     {
         $this->action = $action;
+        $this->evaluator = $evaluator;
     }
 
     /**
@@ -55,7 +59,7 @@ class SetBudget implements ActionInterface
     public function actOnArray(array $journal): bool
     {
         $user   = User::find($journal['user_id']);
-        $search = $this->action->action_value;
+        $search = $this->evaluator->evaluate($journal);
 
         $budget = $user->budgets()->where('name', $search)->first();
         if (null === $budget) {

@@ -19,6 +19,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
@@ -29,6 +30,7 @@ use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Factory\TagFactory;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\TransactionRules\Expressions\ActionExpressionEvaluator;
 use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
 
@@ -37,16 +39,18 @@ use Illuminate\Support\Facades\Log;
  */
 class AddTag implements ActionInterface
 {
-    private RuleAction $action;
+    private RuleAction                $action;
+    private ActionExpressionEvaluator $evaluator;
 
     /**
      * TriggerInterface constructor.
      *
      * @param RuleAction $action
      */
-    public function __construct(RuleAction $action)
+    public function __construct(RuleAction $action, ActionExpressionEvaluator $evaluator)
     {
         $this->action = $action;
+        $this->evaluator = $evaluator;
     }
 
     /**
@@ -58,19 +62,20 @@ class AddTag implements ActionInterface
         /** @var TagFactory $factory */
         $factory = app(TagFactory::class);
         $factory->setUser(User::find($journal['user_id']));
-        $tag = $factory->findOrCreate($this->action->action_value);
+        $tagName = $this->evaluator->evaluate($journal);
+        $tag = $factory->findOrCreate($tagName);
 
         if (null === $tag) {
             // could not find, could not create tag.
-            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.find_or_create_tag_failed', ['tag' => $this->action->action_value])));
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.find_or_create_tag_failed', ['tag' => $tagName])));
 
             return false;
         }
 
         $count = DB::table('tag_transaction_journal')
-                   ->where('tag_id', $tag->id)
-                   ->where('transaction_journal_id', $journal['transaction_journal_id'])
-                   ->count();
+            ->where('tag_id', $tag->id)
+            ->where('transaction_journal_id', $journal['transaction_journal_id'])
+            ->count();
         if (0 === $count) {
             // add to journal:
             DB::table('tag_transaction_journal')->insert(['tag_id' => $tag->id, 'transaction_journal_id' => $journal['transaction_journal_id']]);
@@ -84,7 +89,7 @@ class AddTag implements ActionInterface
         Log::debug(
             sprintf('RuleAction AddTag fired but tag %d ("%s") was already added to journal %d.', $tag->id, $tag->tag, $journal['transaction_journal_id'])
         );
-        event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.tag_already_added', ['tag' => $this->action->action_value])));
+        event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.tag_already_added', ['tag' => $tagName])));
 
         return false;
     }

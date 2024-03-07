@@ -19,6 +19,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
@@ -32,6 +33,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\TransactionRules\Expressions\ActionExpressionEvaluator;
 use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
 
@@ -41,6 +43,7 @@ use Illuminate\Support\Facades\Log;
 class SetDestinationAccount implements ActionInterface
 {
     private RuleAction                 $action;
+    private ActionExpressionEvaluator  $evaluator;
     private AccountRepositoryInterface $repository;
 
     /**
@@ -48,9 +51,10 @@ class SetDestinationAccount implements ActionInterface
      *
      * @param RuleAction $action
      */
-    public function __construct(RuleAction $action)
+    public function __construct(RuleAction $action, ActionExpressionEvaluator $evaluator)
     {
         $this->action = $action;
+        $this->evaluator = $evaluator;
     }
 
     /**
@@ -58,6 +62,7 @@ class SetDestinationAccount implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
+        $accountName = $this->evaluator->evaluate($journal);
         $user = User::find($journal['user_id']);
         $type = $journal['transaction_type_type'];
         /** @var TransactionJournal|null $object */
@@ -73,16 +78,16 @@ class SetDestinationAccount implements ActionInterface
         $this->repository->setUser($user);
 
         // if this is a transfer or a deposit, the new destination account must be an asset account or a default account, and it MUST exist:
-        $newAccount = $this->findAssetAccount($type);
+        $newAccount = $this->findAssetAccount($type, $accountName);
         if ((TransactionType::DEPOSIT === $type || TransactionType::TRANSFER === $type) && null === $newAccount) {
             Log::error(
                 sprintf(
                     'Cant change destination account of journal #%d because no asset account with name "%s" exists.',
                     $object->id,
-                    $this->action->action_value
+                    $accountName
                 )
             );
-            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_asset', ['name' => $this->action->action_value])));
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_asset', ['name' => $accountName])));
             return false;
         }
 
@@ -116,7 +121,7 @@ class SetDestinationAccount implements ActionInterface
         // if this is a withdrawal, the new destination account must be a expense account and may be created:
         // or it is a liability, in which case it must be returned.
         if (TransactionType::WITHDRAWAL === $type) {
-            $newAccount = $this->findWithdrawalDestinationAccount();
+            $newAccount = $this->findWithdrawalDestinationAccount($accountName);
         }
 
         Log::debug(sprintf('New destination account is #%d ("%s").', $newAccount->id, $newAccount->name));
@@ -125,9 +130,9 @@ class SetDestinationAccount implements ActionInterface
 
         // update destination transaction with new destination account:
         DB::table('transactions')
-          ->where('transaction_journal_id', '=', $object->id)
-          ->where('amount', '>', 0)
-          ->update(['account_id' => $newAccount->id]);
+            ->where('transaction_journal_id', '=', $object->id)
+            ->where('amount', '>', 0)
+            ->update(['account_id' => $newAccount->id]);
 
         Log::debug(sprintf('Updated journal #%d (group #%d) and gave it new destination account ID.', $object->id, $object->transaction_group_id));
 
@@ -139,26 +144,26 @@ class SetDestinationAccount implements ActionInterface
      *
      * @return Account|null
      */
-    private function findAssetAccount(string $type): ?Account
+    private function findAssetAccount(string $type, string $accountName): ?Account
     {
         // switch on type:
         $allowed = config(sprintf('firefly.expected_source_types.destination.%s', $type));
         $allowed = is_array($allowed) ? $allowed : [];
         Log::debug(sprintf('Check config for expected_source_types.destination.%s, result is', $type), $allowed);
 
-        return $this->repository->findByName($this->action->action_value, $allowed);
+        return $this->repository->findByName($accountName, $allowed);
     }
 
     /**
      * @return Account
      */
-    private function findWithdrawalDestinationAccount(): Account
+    private function findWithdrawalDestinationAccount(string $accountName): Account
     {
         $allowed = config('firefly.expected_source_types.destination.Withdrawal');
-        $account = $this->repository->findByName($this->action->action_value, $allowed);
+        $account = $this->repository->findByName($accountName, $allowed);
         if (null === $account) {
             $data    = [
-                'name'              => $this->action->action_value,
+                'name'              => $accountName,
                 'account_type_name' => 'expense',
                 'account_type_id'   => null,
                 'virtual_balance'   => 0,

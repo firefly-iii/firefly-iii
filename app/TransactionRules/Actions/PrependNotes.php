@@ -19,6 +19,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
@@ -27,6 +28,7 @@ use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\TransactionRules\Expressions\ActionExpressionEvaluator;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -34,16 +36,18 @@ use Illuminate\Support\Facades\Log;
  */
 class PrependNotes implements ActionInterface
 {
-    private RuleAction $action;
+    private RuleAction                $action;
+    private ActionExpressionEvaluator $evaluator;
 
     /**
      * TriggerInterface constructor.
      *
      * @param RuleAction $action
      */
-    public function __construct(RuleAction $action)
+    public function __construct(RuleAction $action, ActionExpressionEvaluator $evaluator)
     {
         $this->action = $action;
+        $this->evaluator = $evaluator;
     }
 
     /**
@@ -51,9 +55,11 @@ class PrependNotes implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
+        $actionValue = $this->evaluator->evaluate($journal);
+
         $dbNote = Note::where('noteable_id', (int)$journal['transaction_journal_id'])
-                      ->where('noteable_type', TransactionJournal::class)
-                      ->first(['notes.*']);
+            ->where('noteable_type', TransactionJournal::class)
+            ->first(['notes.*']);
         if (null === $dbNote) {
             $dbNote                = new Note();
             $dbNote->noteable_id   = (int)$journal['transaction_journal_id'];
@@ -61,8 +67,8 @@ class PrependNotes implements ActionInterface
             $dbNote->text          = '';
         }
         $before = $dbNote->text;
-        Log::debug(sprintf('RuleAction PrependNotes prepended "%s" to "%s".', $this->action->action_value, $dbNote->text));
-        $text         = sprintf('%s%s', $this->action->action_value, $dbNote->text);
+        Log::debug(sprintf('RuleAction PrependNotes prepended "%s" to "%s".', $actionValue, $dbNote->text));
+        $text         = sprintf('%s%s', $actionValue, $dbNote->text);
         $dbNote->text = $text;
         $dbNote->save();
 
