@@ -29,7 +29,7 @@ use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class TestRequest
+ * Class ValidateExpressionRequest
  */
 class ValidateExpressionRequest extends FormRequest
 {
