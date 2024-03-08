@@ -29,7 +29,52 @@ use Symfony\Component\ExpressionLanguage\SyntaxError;
 
 class ActionExpression
 {
-    private static array $NAMES = array("transaction");
+    private static array $NAMES = array(
+        "id",
+        "created_at",
+        "updated_at",
+        "deleted_at",
+        "user_id",
+        "transaction_type_id",
+        "transaction_group_id",
+        "bill_id",
+        "transaction_currency_id",
+        "description",
+        "date",
+        "interest_date",
+        "book_date",
+        "process_date",
+        "order",
+        "tag_count",
+        "transaction_type_type",
+        "encrypted",
+        "completed",
+        "attachments",
+        "attachments_count",
+        "bill",
+        "budgets",
+        "budgets_count",
+        "categories",
+        "categories_count",
+        "destJournalLinks",
+        "dest_journal_links_count",
+        "notes",
+        "notes_count",
+        "piggyBankEvents",
+        "piggy_bank_events_count",
+        "sourceJournalLinks",
+        "source_journal_links_count",
+        "tags",
+        "tags_count",
+        "transactionCurrency",
+        "transactionGroup",
+        "transactionJournalMeta",
+        "transaction_journal_meta_count",
+        "transactionType",
+        "transactions",
+        "transactions_count",
+        "user",
+    );
 
     private ExpressionLanguage $expressionLanguage;
     private string $expr;
@@ -90,9 +135,7 @@ class ActionExpression
 
     private function evaluateExpression(string $expr, array $journal): string
     {
-        $result = $this->expressionLanguage->evaluate($expr, [
-            "transaction" => $journal
-        ]);
+        $result = $this->expressionLanguage->evaluate($expr, $journal);
         return strval($result);
     }
 
