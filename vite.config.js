@@ -41,7 +41,10 @@ export default defineConfig({
     plugins: [
         laravel({
             input: [
+                // css
                 'resources/assets/v2/sass/app.scss',
+
+                // dashboard
                 'resources/assets/v2/pages/dashboard/dashboard.js',
 
                 // accounts

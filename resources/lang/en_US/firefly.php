@@ -104,7 +104,7 @@ return [
     'two_factor_forgot'                                   => 'I forgot my two-factor thing.',
     'two_factor_lost_header'                              => 'Lost your two factor authentication?',
     'two_factor_lost_intro'                               => 'If you lost your backup codes as well, you have bad luck. This is not something you can fix from the web interface. You have two choices.',
-    'two_factor_lost_fix_self'                            => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working>this entry in the FAQ</a> for instructions.',
+    'two_factor_lost_fix_self'                            => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                           => 'Otherwise, email the site owner, <a href="mailto::site_owner">:site_owner</a> and ask them to reset your two factor authentication.',
     'mfa_backup_code'                                     => 'You have used a backup code to login to Firefly III. It can\'t be used again, so cross it from your list.',
     'pref_two_factor_new_backup_codes'                    => 'Get new backup codes',

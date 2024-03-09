@@ -1,3 +1,14 @@
+@extends('layout.v2.error')
+@section('content')
+<div class="row">
+    <div class="col">
+        <h1><a href="{{ route('index') }}"><strong>Firefly</strong> III</a></h1>
+    </div>
+</div>
+
+
+@endsection
+
 <!DOCTYPE html>
 <html lang="{{ trans('config.html_language') }}">
 <head>
@@ -28,7 +39,7 @@
 <body class="container">
 <div class="row">
     <div class="col-lg-10 col-lg-offset-1 col-md-12 col-sm-12 col-xs-12">
-        <h1><a href="{{ route('index') }}"><strong>Firefly</strong>III</a></h1>
+        <h1><a href="{{ route('index') }}"><strong>Firefly</strong>III</a></h1>xxxxxx
     </div>
 </div>
 <div class="row">
