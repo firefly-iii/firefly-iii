@@ -1,7 +1,7 @@
 @extends('layout.v2.error')
 @section('status_code','500')
 @section('status','Internal Server Error')
-@section('sub_title', trans('errors.error_occurred'))
+@section('sub_title', trans('errors.db_error_occurred'))
 @section('content')
     <div class="row">
         <div class="col">
@@ -58,7 +58,4 @@
             </div>
         </div>
     @endif
-
 @endsection
-
-
