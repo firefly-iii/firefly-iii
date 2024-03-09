@@ -120,12 +120,7 @@
 
     <!--end::Footer-->
 </div>
-<!--end::App Wrapper-->
-<!--begin::Script-->
 @include('partials.layout.scripts')
-<!--end::Script-->
-
 </body>
-<!--end::Body-->
 
 </html>

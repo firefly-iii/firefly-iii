@@ -67,10 +67,8 @@
     </title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!--
-    <link href="v2/css/fonts.css" rel="stylesheet">
-    <link rel="stylesheet" href="v2/css/adminlte.css">
-    -->
-    @yield('vite')
+    @yield('styles')
+    @vite(['resources/assets/v2/sass/app.scss'])
+
 
 </head>
