@@ -5,6 +5,14 @@ on:
   schedule:
     - cron: '0 0 * * *'
 
+concurrency:
+  group: lock-threads
+
+permissions:
+  issues: write
+  pull-requests: write
+  discussions: write
+
 jobs:
   lock:
     permissions:
@@ -12,7 +20,7 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
-      - uses: JC5/lock-threads@main
+      - uses: dessant/lock-threads@v5
         with:
           github-token: ${{ github.token }}
           issue-inactive-days: 7
