@@ -19,9 +19,27 @@
  */
 
 $color-mode-type: media-query;
+$link-decoration: none !default;
+
+.balance-box {
+    container: sidebar / inline-size;
+}
+
+.form-control {
+    appearance: auto;
+}
 
 // Bootstrap
-//@import "~bootstrap-sass/assets/stylesheets/bootstrap";
+// @import "bootstrap/scss/bootstrap";
+
+// admin LTE
+@import "admin-lte/src/scss/adminlte";
+
+// @import "~bootstrap-sass/assets/stylesheets/bootstrap";
+
+
+
+
 
 // Font awesome
 //@import "~font-awesome/css/font-awesome";

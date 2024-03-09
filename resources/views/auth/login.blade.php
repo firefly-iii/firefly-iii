@@ -48,11 +48,11 @@
             <form action="{{ route('login.post') }}" method="post">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                 @if(config('firefly.authentication_guard') === 'web')
-                <div class="input-group mb-3"> <input type="email" name="email" " class="form-control" placeholder="{{ trans('form.email') }}" value="@if(true===$IS_DEMO_SITE){{ $DEMO_USERNAME }}@else{{ $email }}@endif">
+                <div class="input-group mb-3"> <input type="email" name="email" autofocus required class="form-control" placeholder="{{ trans('form.email') }}" value="@if(true===$IS_DEMO_SITE){{ $DEMO_USERNAME }}@else{{ $email }}@endif">
                     <div class="input-group-text"> <em class="fa-solid fa-envelope"></em> </div>
                 </div>
                 @else
-                <div class="input-group mb-3"> <input type="text" autocomplete="username" " name="{{ $usernameField }}" class="form-control" placeholder="{{ trans('form.login_name') }}" value="{{ $email }}">
+                <div class="input-group mb-3"> <input type="text" autocomplete="username" autofocus required name="{{ $usernameField }}" class="form-control" placeholder="{{ trans('form.login_name') }}" value="{{ $email }}">
                     <div class="input-group-text"> <em class="fa-solid fa-user"></em> </div>
                 </div>
                 @endif
