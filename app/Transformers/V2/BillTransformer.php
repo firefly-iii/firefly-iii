@@ -54,7 +54,7 @@ class BillTransformer extends AbstractTransformer
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function collectMetaData(Collection $objects): void
+    public function collectMetaData(Collection $objects): Collection
     {
         $currencies       = [];
         $bills            = [];
@@ -175,6 +175,8 @@ class BillTransformer extends AbstractTransformer
                 ];
             }
         }
+
+        return $objects;
     }
 
     /**

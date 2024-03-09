@@ -42,7 +42,7 @@ class UserGroupTransformer extends AbstractTransformer
         $this->memberships = [];
     }
 
-    public function collectMetaData(Collection $objects): void
+    public function collectMetaData(Collection $objects): Collection
     {
         if (auth()->check()) {
             // collect memberships so they can be listed in the group.
@@ -67,6 +67,8 @@ class UserGroupTransformer extends AbstractTransformer
                 }
             }
         }
+
+        return $objects;
     }
 
     /**

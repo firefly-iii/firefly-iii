@@ -31,7 +31,10 @@ use Illuminate\Support\Collection;
  */
 class CurrencyTransformer extends AbstractTransformer
 {
-    public function collectMetaData(Collection $objects): void {}
+    public function collectMetaData(Collection $objects): Collection
+    {
+        return $objects;
+    }
 
     /**
      * Transform the currency.

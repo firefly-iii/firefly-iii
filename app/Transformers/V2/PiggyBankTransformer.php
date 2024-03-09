@@ -69,7 +69,7 @@ class PiggyBankTransformer extends AbstractTransformer
         //        $this->piggyRepos    = app(PiggyBankRepositoryInterface::class);
     }
 
-    public function collectMetaData(Collection $objects): void
+    public function collectMetaData(Collection $objects): Collection
     {
         // TODO move to repository (does not exist yet)
         $piggyBanks          = $objects->pluck('id')->toArray();
@@ -135,6 +135,8 @@ class PiggyBankTransformer extends AbstractTransformer
         Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         $this->default       = app('amount')->getDefaultCurrencyByUserGroup(auth()->user()->userGroup);
         $this->converter     = new ExchangeRateConverter();
+
+        return $objects;
     }
 
     /**

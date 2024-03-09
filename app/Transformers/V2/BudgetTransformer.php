@@ -45,9 +45,10 @@ class BudgetTransformer extends AbstractTransformer
         $this->parameters = new ParameterBag();
     }
 
-    public function collectMetaData(Collection $objects): void
+    public function collectMetaData(Collection $objects): Collection
     {
         // TODO: Implement collectMetaData() method.
+        return $objects;
     }
 
     /**

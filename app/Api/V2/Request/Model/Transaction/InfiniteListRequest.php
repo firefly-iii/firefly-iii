@@ -41,8 +41,8 @@ class InfiniteListRequest extends FormRequest
     use AccountFilter;
     use ChecksLogin;
     use ConvertsDataTypes;
-    use TransactionFilter;
     use GetSortInstructions;
+    use TransactionFilter;
 
     public function buildParams(): string
     {
@@ -98,7 +98,6 @@ class InfiniteListRequest extends FormRequest
 
         return 0 === $page || $page > 65536 ? 1 : $page;
     }
-
 
     public function getTransactionTypes(): array
     {

@@ -158,7 +158,7 @@ class Controller extends BaseController
 
         // the transformer, at this point, needs to collect information that ALL items in the collection
         // require, like meta-data and stuff like that, and save it for later.
-        $objects = $transformer->collectMetaData($objects);
+        $objects  = $transformer->collectMetaData($objects);
         $paginator->setCollection($objects);
 
         $resource = new FractalCollection($objects, $transformer, $key);

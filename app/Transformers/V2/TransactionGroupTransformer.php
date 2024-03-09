@@ -64,7 +64,7 @@ class TransactionGroupTransformer extends AbstractTransformer
     //    private array                 $journalCurrencies = [];
     //    private array                 $foreignCurrencies = [];
 
-    public function collectMetaData(Collection $objects): void
+    public function collectMetaData(Collection $objects): Collection
     {
         $collectForObjects = false;
 
@@ -94,6 +94,8 @@ class TransactionGroupTransformer extends AbstractTransformer
             // source accounts
             // destination accounts
         }
+
+        return $objects;
     }
 
     private function collectForArray(array $object): void

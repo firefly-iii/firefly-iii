@@ -74,20 +74,22 @@ class LoginController extends Controller
      *
      * @throws ValidationException
      */
-    public function login(Request $request): JsonResponse | RedirectResponse
+    public function login(Request $request): JsonResponse|RedirectResponse
     {
         Log::channel('audit')->info(sprintf('User is trying to login using "%s"', $request->get($this->username())));
         app('log')->debug('User is trying to login.');
+
         try {
             $this->validateLogin($request);
         } catch (ValidationException $e) {
             return redirect(route('login'))
                 ->withErrors(
                     [
-                        $this->username => trans('auth.failed')
+                        $this->username => trans('auth.failed'),
                     ]
                 )
-                ->onlyInput($this->username);
+                ->onlyInput($this->username)
+            ;
         }
         app('log')->debug('Login data is present.');
 
@@ -124,7 +126,6 @@ class LoginController extends Controller
         Log::channel('audit')->warning(sprintf('Login failed. Attempt for user "%s" failed.', $request->get($this->username())));
 
         $this->sendFailedLoginResponse($request);
-
 
         // @noinspection PhpUnreachableStatementInspection
         return response()->json([]);
@@ -166,8 +167,8 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
-        $authGuard = config('firefly.authentication_guard');
-        $logoutUrl = config('firefly.custom_logout_url');
+        $authGuard  = config('firefly.authentication_guard');
+        $logoutUrl  = config('firefly.custom_logout_url');
         if ('remote_user_guard' === $authGuard && '' !== $logoutUrl) {
             return redirect($logoutUrl);
         }
@@ -203,9 +204,9 @@ class LoginController extends Controller
     {
         Log::channel('audit')->info('Show login form (1.1).');
 
-        $count = \DB::table('users')->count();
-        $guard = config('auth.defaults.guard');
-        $title = (string)trans('firefly.login_page_title');
+        $count             = \DB::table('users')->count();
+        $guard             = config('auth.defaults.guard');
+        $title             = (string)trans('firefly.login_page_title');
 
         if (0 === $count && 'web' === $guard) {
             return redirect(route('register'));
@@ -225,16 +226,15 @@ class LoginController extends Controller
             $allowReset        = false;
         }
 
-        $email    = $request->old('email');
-        $remember = $request->old('remember');
+        $email             = $request->old('email');
+        $remember          = $request->old('remember');
 
-        $storeInCookie = config('google2fa.store_in_cookie', false);
+        $storeInCookie     = config('google2fa.store_in_cookie', false);
         if (false !== $storeInCookie) {
             $cookieName = config('google2fa.cookie_name', 'google2fa_token');
             request()->cookies->set($cookieName, 'invalid');
         }
-        $usernameField = $this->username();
-
+        $usernameField     = $this->username();
 
         return view('auth.login', compact('allowRegistration', 'email', 'remember', 'allowReset', 'title', 'usernameField'));
     }

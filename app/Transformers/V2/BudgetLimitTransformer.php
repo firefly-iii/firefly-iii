@@ -37,9 +37,10 @@ class BudgetLimitTransformer extends AbstractTransformer
             'budget',
         ];
 
-    public function collectMetaData(Collection $objects): void
+    public function collectMetaData(Collection $objects): Collection
     {
         // TODO: Implement collectMetaData() method.
+        return $objects;
     }
 
     /**

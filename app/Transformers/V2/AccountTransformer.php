@@ -32,7 +32,6 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class AccountTransformer
@@ -58,17 +57,18 @@ class AccountTransformer extends AbstractTransformer
         $this->convertedBalances = app('steam')->balancesByAccountsConverted($objects, $this->getDate());
 
         /** @var CurrencyRepositoryInterface $repository */
-        $repository    = app(CurrencyRepositoryInterface::class);
-        $this->default = app('amount')->getDefaultCurrency();
+        $repository              = app(CurrencyRepositoryInterface::class);
+        $this->default           = app('amount')->getDefaultCurrency();
 
         // get currencies:
-        $accountIds  = $objects->pluck('id')->toArray();
-        $meta        = AccountMeta::whereIn('account_id', $accountIds)
-                                  ->whereIn('name', ['currency_id','account_role','account_number'])
-                                  ->get(['account_meta.id', 'account_meta.account_id', 'account_meta.name', 'account_meta.data']);
-        $currencyIds = $meta->where('name','currency_id')->pluck('data')->toArray();
+        $accountIds              = $objects->pluck('id')->toArray();
+        $meta                    = AccountMeta::whereIn('account_id', $accountIds)
+            ->whereIn('name', ['currency_id', 'account_role', 'account_number'])
+            ->get(['account_meta.id', 'account_meta.account_id', 'account_meta.name', 'account_meta.data'])
+        ;
+        $currencyIds             = $meta->where('name', 'currency_id')->pluck('data')->toArray();
 
-        $currencies = $repository->getByIds($currencyIds);
+        $currencies              = $repository->getByIds($currencyIds);
         foreach ($currencies as $currency) {
             $id                    = $currency->id;
             $this->currencies[$id] = $currency;
@@ -79,9 +79,10 @@ class AccountTransformer extends AbstractTransformer
         }
         // get account types:
         // select accounts.id, account_types.type from account_types left join accounts on accounts.account_type_id = account_types.id;
-        $accountTypes = AccountType::leftJoin('accounts', 'accounts.account_type_id', '=', 'account_types.id')
-                                   ->whereIn('accounts.id', $accountIds)
-                                   ->get(['accounts.id', 'account_types.type']);
+        $accountTypes            = AccountType::leftJoin('accounts', 'accounts.account_type_id', '=', 'account_types.id')
+            ->whereIn('accounts.id', $accountIds)
+            ->get(['accounts.id', 'account_types.type'])
+        ;
 
         /** @var AccountType $row */
         foreach ($accountTypes as $row) {
@@ -89,36 +90,38 @@ class AccountTransformer extends AbstractTransformer
         }
 
         // TODO needs separate method.
-        $sort = $this->parameters->get('sort');
+        $sort                    = $this->parameters->get('sort');
         if (count($sort) > 0) {
             foreach ($sort as $column => $direction) {
                 // account_number + iban
                 if ('iban' === $column) {
                     $meta    = $this->accountMeta;
                     $objects = $objects->sort(function (Account $left, Account $right) use ($meta, $direction) {
-                        $leftIban  = trim(sprintf('%s%s', $left->iban, ($meta[$left->id]['account_number'] ?? '')));
-                        $rightIban = trim(sprintf('%s%s', $right->iban, ($meta[$right->id]['account_number'] ?? '')));
+                        $leftIban  = trim(sprintf('%s%s', $left->iban, $meta[$left->id]['account_number'] ?? ''));
+                        $rightIban = trim(sprintf('%s%s', $right->iban, $meta[$right->id]['account_number'] ?? ''));
                         if ('asc' === $direction) {
                             return strcasecmp($leftIban, $rightIban);
                         }
+
                         return strcasecmp($rightIban, $leftIban);
                     });
                 }
-                if('balance' === $column) {
-                    $balances    = $this->convertedBalances;
-                    $objects = $objects->sort(function (Account $left, Account $right) use ($balances, $direction) {
-                        $leftBalance = (float)($balances[$left->id]['native_balance'] ?? 0);
+                if ('balance' === $column) {
+                    $balances = $this->convertedBalances;
+                    $objects  = $objects->sort(function (Account $left, Account $right) use ($balances, $direction) {
+                        $leftBalance  = (float)($balances[$left->id]['native_balance'] ?? 0);
                         $rightBalance = (float)($balances[$right->id]['native_balance'] ?? 0);
                         if ('asc' === $direction) {
                             return $leftBalance <=> $rightBalance;
                         }
+
                         return $rightBalance <=> $leftBalance;
                     });
                 }
             }
-
         }
-        //$objects = $objects->sortByDesc('name');
+
+        // $objects = $objects->sortByDesc('name');
         return $objects;
     }
 
@@ -137,15 +140,15 @@ class AccountTransformer extends AbstractTransformer
      */
     public function transform(Account $account): array
     {
-        $id = $account->id;
+        $id            = $account->id;
 
         // various meta
-        $accountRole = $this->accountMeta[$id]['account_role'] ?? null;
-        $accountType = $this->accountTypes[$id];
-        $order       = $account->order;
+        $accountRole   = $this->accountMeta[$id]['account_role'] ?? null;
+        $accountType   = $this->accountTypes[$id];
+        $order         = $account->order;
 
         // no currency? use default
-        $currency = $this->default;
+        $currency      = $this->default;
         if (array_key_exists($id, $this->accountMeta) && 0 !== (int)$this->accountMeta[$id]['currency_id']) {
             $currency = $this->currencies[(int)$this->accountMeta[$id]['currency_id']];
         }
@@ -159,20 +162,20 @@ class AccountTransformer extends AbstractTransformer
         }
 
         return [
-            'id'                      => (string)$account->id,
-            'created_at'              => $account->created_at->toAtomString(),
-            'updated_at'              => $account->updated_at->toAtomString(),
-            'active'                  => $account->active,
-            'order'                   => $order,
-            'name'                    => $account->name,
-            'iban'                    => '' === (string)$account->iban ? null : $account->iban,
-            'account_number' => $this->accountMeta[$id]['account_number'] ?? null,
-            'type'                    => strtolower($accountType),
-            'account_role'            => $accountRole,
-            'currency_id'             => (string)$currency->id,
-            'currency_code'           => $currency->code,
-            'currency_symbol'         => $currency->symbol,
-            'currency_decimal_places' => $currency->decimal_places,
+            'id'                             => (string)$account->id,
+            'created_at'                     => $account->created_at->toAtomString(),
+            'updated_at'                     => $account->updated_at->toAtomString(),
+            'active'                         => $account->active,
+            'order'                          => $order,
+            'name'                           => $account->name,
+            'iban'                           => '' === (string)$account->iban ? null : $account->iban,
+            'account_number'                 => $this->accountMeta[$id]['account_number'] ?? null,
+            'type'                           => strtolower($accountType),
+            'account_role'                   => $accountRole,
+            'currency_id'                    => (string)$currency->id,
+            'currency_code'                  => $currency->code,
+            'currency_symbol'                => $currency->symbol,
+            'currency_decimal_places'        => $currency->decimal_places,
 
             'native_currency_id'             => (string)$this->default->id,
             'native_currency_code'           => $this->default->code,
@@ -206,7 +209,7 @@ class AccountTransformer extends AbstractTransformer
             'links'                          => [
                 [
                     'rel' => 'self',
-                    'uri' => '/accounts/' . $account->id,
+                    'uri' => '/accounts/'.$account->id,
                 ],
             ],
         ];

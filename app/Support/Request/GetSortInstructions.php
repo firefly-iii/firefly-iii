@@ -25,7 +25,6 @@ namespace FireflyIII\Support\Request;
 
 trait GetSortInstructions
 {
-
     final public function getSortInstructions(string $key): array
     {
         $allowed = config(sprintf('firefly.sorting.allowed.%s', $key));
@@ -50,5 +49,4 @@ trait GetSortInstructions
 
         return $result;
     }
-
 }
