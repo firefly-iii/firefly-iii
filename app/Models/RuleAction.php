@@ -95,7 +95,7 @@ class RuleAction extends Model
         );
     }
 
-    public function getValue(array $journal)
+    public function getValue(array $journal): string
     {
         $expr = new ActionExpression($this->action_value);
         return $expr->evaluate($journal);
