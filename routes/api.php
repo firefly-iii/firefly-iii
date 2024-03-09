@@ -606,7 +606,7 @@ Route::group(
         Route::put('{rule}', ['uses' => 'UpdateController@update', 'as' => 'update']);
         Route::delete('{rule}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
 
-        Route::post('validateExpression', ['uses' => 'ExpressionController@validateExpression', 'as' => 'validate']);
+        Route::post('validate-expression', ['uses' => 'ExpressionController@validateExpression', 'as' => 'validate']);
 
         Route::get('{rule}/test', ['uses' => 'TriggerController@testRule', 'as' => 'test']);
         // TODO give results back
