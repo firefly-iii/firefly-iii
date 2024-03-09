@@ -20,6 +20,11 @@
 
 $color-mode-type: media-query;
 $link-decoration: none !default;
+$font-family-sans-serif: "Roboto", sans-serif;
+
+$danger:        #CD5029 !default;
+$primary: #1E6581 !default;
+$success: #64B624 !default;
 
 .balance-box {
     container: sidebar / inline-size;
@@ -34,6 +39,7 @@ $link-decoration: none !default;
 
 // admin LTE
 @import "admin-lte/src/scss/adminlte";
+
 
 // @import "~bootstrap-sass/assets/stylesheets/bootstrap";
 
