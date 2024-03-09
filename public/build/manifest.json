@@ -214,10 +214,10 @@
     "integrity": "sha384-x17vRUDjWuxqceuMDNz/325LQPW85BoFU7068e9G3TPT01C1vfmQAfPcYxlWaYxn"
   },
   "resources/assets/v2/sass/app.scss": {
-    "file": "assets/app-f6ed354c.css",
+    "file": "assets/app-f061df42.css",
     "isEntry": true,
     "src": "resources/assets/v2/sass/app.scss",
-    "integrity": "sha384-tWa2gHwsXzAg1KhcbWUHkbgQKVq3XTdLCk2vyILRwc49slEubtoawRp+sr2iOWTg"
+    "integrity": "sha384-qR+u+VR9iZdGtMOhQb0OQHdg3DJ9HmP/3XRm12AfhAvufg7yg39Wse0wA+L8O9sc"
   },
   "vendor.css": {
     "file": "assets/vendor-52daf6b6.css",
