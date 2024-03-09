@@ -168,7 +168,7 @@ return [
 
     // Ignore this comment
 
-    'secure_password'                 => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password-security',
+    'secure_password'                 => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password',
     'valid_recurrence_rep_type'       => 'Invalid repetition type for recurring transactions.',
     'valid_recurrence_rep_moment'     => 'Invalid repetition moment for this type of repetition.',
     'invalid_account_info'            => 'Invalid account information.',

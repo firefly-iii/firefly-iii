@@ -67,11 +67,11 @@
                     <div class="input-group mb-3">
 
                         {% if config('firefly.authentication_guard') == 'web' %}
-                            <input type="email" id="focus" class="form-control" name="email"
+                            <input type="email" " class="form-control" name="email"
                                    placeholder="{{ trans('form.email') }}"
                                    value="{% if not IS_DEMO_SITE %}{{ email }}{% else %}{{ DEMO_USERNAME }}{% endif %}">
                         {% else %}
-                            <input type="text" id="focus"    autocomplete="username" name="{{ usernameField }}" value="{{ email }}"
+                            <input type="text" "    autocomplete="username" name="{{ usernameField }}" value="{{ email }}"
                                    class="form-control" placeholder="{{ trans('form.login_name') }}"/>
                         {% endif %}
                         <div class="input-group-append">
