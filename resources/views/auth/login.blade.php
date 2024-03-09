@@ -80,10 +80,3 @@
     </div>
 
 @endsection
-@section('scripts')
-<script nonce="{{ $JS_NONCE }}">
-    addEventListener("DOMContentLoaded", () => {
-        document.querySelector('#focus').focus();
-    });
-</script>
-@endsection

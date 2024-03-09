@@ -62,13 +62,8 @@
         })()
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="v2/css/fonts.css" rel="stylesheet">
-    <link rel="stylesheet" href="v2/css/adminlte.css">
-    <!-- session layout includes custom set of icons -->
-    <link href="v2-local/fa/css/fontawesome.min.css" rel="stylesheet" />
-    <link href="v2-local/fa/css/solid.min.css" rel="stylesheet" />
-
-</head> <!--end::Head--> <!--begin::Body-->
+    @vite(['resources/assets/v2/sass/app.scss'])
+</head>
 
 <body class="login-page bg-body-secondary">
 <div class="login-box">
@@ -78,8 +73,8 @@
     @yield('content')
 
 
-</div> <!-- /.login-box --> <!--begin::Third Party Plugin(OverlayScrollbars)-->
-<script src="v2/js/adminlte.js" nonce="{{ $JS_NONCE }}"></script>
+</div>
+
 @yield('scripts')
-</body><!--end::Body-->
+</body>
 </html>

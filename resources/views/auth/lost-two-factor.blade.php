@@ -13,7 +13,7 @@
 </div>
 
 <div class="row">
-    <div class="col-lg-10 col-lg-offset-1 col-md-12 col-sm-12 col-xs-12">
+    <div class="col">
         <p>
             {{ trans('firefly.two_factor_lost_intro') }}
         </p>

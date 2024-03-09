@@ -33,7 +33,7 @@
             <form action="{{ route('password.email') }}" method="post">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                 <div class="input-group mb-3">
-                    <input type="email" " class="form-control" name="email"
+                    <input type="email" autofocus required class="form-control" name="email"
                            placeholder="{{ trans('form.email') }}"/>
                     <div class="input-group-text"> <em class="fa-solid fa-envelope"></em> </div>
                 </div>
@@ -58,10 +58,4 @@
     </div>
 
 @endsection
-@section('scripts')
-<script nonce="{{ $JS_NONCE }}">
-    addEventListener("DOMContentLoaded", () => {
-        document.querySelector('#focus').focus();
-    });
-</script>
-@endsection
+

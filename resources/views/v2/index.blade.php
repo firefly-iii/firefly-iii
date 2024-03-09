@@ -54,6 +54,5 @@
 
 @endsection
 @section('scripts')
-    <!-- hier load -->
     @vite(['resources/assets/v2/pages/dashboard/dashboard.js'])
 @endsection

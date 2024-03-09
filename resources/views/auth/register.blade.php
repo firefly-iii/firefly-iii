@@ -29,17 +29,17 @@
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="invite_code" value="{{ $inviteCode ?? '' }}">
                 <div class="input-group mb-3">
-                    <input type="email" name="email" value="{{ $email }}" class="form-control" "
+                    <input type="email" name="email" autofocus required value="{{ $email }}" class="form-control" "
                            placeholder="{{ trans('form.email') }}"/>
                     <div class="input-group-text"> <em class="fa-solid fa-envelope"></em> </div>
                 </div>
                 <div class="input-group mb-3">
-                    <input type="password" autocomplete="new-password" class="form-control"
+                    <input type="password" autocomplete="new-password" required class="form-control"
                            placeholder="{{ trans('form.password') }}" name="password"/>
                     <div class="input-group-text"> <em class="fa-solid fa-lock"></em> </div>
                 </div>
                 <div class="input-group mb-3">
-                    <input type="password" autocomplete="new-password" class="form-control"
+                    <input type="password" autocomplete="new-password" required class="form-control"
                            placeholder="{{ trans('form.password_confirmation') }}" name="password_confirmation"/>
                     <div class="input-group-text"> <em class="fa-solid fa-lock"></em> </div>
                 </div>
@@ -76,10 +76,5 @@
 
 @endsection
 @section('scripts')
-    <script nonce="{{ $JS_NONCE }}" src="v2-local/bs/js/bootstrap.min.js"></script>
-<script nonce="{{ $JS_NONCE }}">
-    addEventListener("DOMContentLoaded", () => {
-        document.querySelector('#focus').focus();
-    });
-</script>
+    @vite(['resources/assets/v2/pages/dashboard/dashboard.js'])
 @endsection

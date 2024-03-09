@@ -28,7 +28,7 @@
             <form action="{{ route('two-factor.submit') }}" method="post">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                 <div class="input-group mb-3">
-                    <input type="text" name="one_time_password" inputmode="numeric" autocomplete="one-time-code" class="form-control" placeholder="{{ __('firefly.two_factor_code_here') }}" autofocus />
+                    <input type="text" autofocus required name="one_time_password" inputmode="numeric" autocomplete="one-time-code" class="form-control" placeholder="{{ __('firefly.two_factor_code_here') }}" autofocus />
                     <div class="input-group-text"> <em class="fa-solid fa-calculator"></em> </div>
                 </div>
                 <div class="row">

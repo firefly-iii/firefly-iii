@@ -28,17 +28,17 @@
                 <input type="hidden" name="token" value="{{ $token }}">
 
                 <div class="input-group mb-3">
-                    <input type="email" name="email" " class="form-control" value="{{ old('email') }}"
+                    <input type="email" name="email" required autofocus class="form-control" value="{{ old('email') }}"
                            placeholder="{{ trans('form.email') }}"/>
                     <div class="input-group-text"> <em class="fa-solid fa-envelope"></em> </div>
                 </div>
                 <div class="input-group mb-3">
-                    <input type="password" class="form-control" placeholder="{{ trans('form.password') }}"
+                    <input type="password" class="form-control" required placeholder="{{ trans('form.password') }}"
                            name="password"/>
                     <div class="input-group-text"> <em class="fa-solid fa-lock"></em> </div>
                 </div>
                 <div class="input-group mb-3">
-                    <input type="password" class="form-control" placeholder="{{ trans('form.password_confirmation') }}"
+                    <input type="password" class="form-control" required placeholder="{{ trans('form.password_confirmation') }}"
                            name="password_confirmation"/>
                     <div class="input-group-text"> <em class="fa-solid fa-lock"></em> </div>
                 </div>
@@ -77,11 +77,4 @@
     @include('partials.password-modal')
 
 @endsection
-@section('scripts')
-    <script nonce="{{ $JS_NONCE }}" src="v2-local/bs/js/bootstrap.min.js"></script>
-    <script nonce="{{ $JS_NONCE }}">
-        addEventListener("DOMContentLoaded", () => {
-            document.querySelector('#focus').focus();
-        });
-    </script>
-@endsection
+
