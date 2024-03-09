@@ -25,3 +25,4 @@ jobs:
           github-token: ${{ github.token }}
           issue-inactive-days: 7
           pr-inactive-days: 7
+          log-output: true
