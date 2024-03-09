@@ -1,6 +1,8 @@
 <?php
+
 /*
- * ExpressionController.php
+ *
+ * IsValidActionExpression.php
  * Copyright (c) 2024 Michael Thomas
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -19,31 +21,28 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Rules;
 
-namespace FireflyIII\Api\V1\Controllers\Models\Rule;
+use Closure;
+use Illuminate\Contracts\Validation\ValidationRule;
+use FireflyIII\TransactionRules\Expressions\ActionExpression;
 
-use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\Models\Rule\ValidateExpressionRequest;
-use Illuminate\Http\JsonResponse;
-
-/**
- * Class ExpressionController
- */
-class ExpressionController extends Controller
+class IsValidActionExpression implements ValidationRule
 {
     /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/rules/validateExpression
+     * Check that the given action expression is syntactically valid.
      *
-     * @param ValidateExpressionRequest $request
-     *
-     * @return JsonResponse
+     * @param  \Closure(string): \Illuminate\Translation\PotentiallyTranslatedString  $fail
      */
-    public function validateExpression(ValidateExpressionRequest $request): JsonResponse
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        return response()->json([
-            "valid" => true,
-        ]);
+        $value ??= '';
+        $expr = new ActionExpression($value);
+
+        if (!$expr->isValid()) {
+            $fail('validation.rule_action_expression')->translate([
+                'error' => $expr->getValidationError()->getMessage()
+            ]);
+        }
     }
 }

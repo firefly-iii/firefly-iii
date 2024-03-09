@@ -254,27 +254,6 @@ class FireflyValidator extends Validator
         return 1 === $count;
     }
 
-    public function validateRuleActionExpression(string $attribute, string $value = null): bool
-    {
-        $value ??= '';
-        $expr = new ActionExpression($value);
-
-        return $expr->isValid();
-    }
-
-    public function replaceRuleActionExpression(string $message, string $attribute): string
-    {
-        $value = $this->getValue($attribute);
-        $expr = new ActionExpression($value);
-        $err = $expr->getValidationError();
-
-        if ($err == null) {
-            return $message;
-        }
-
-        return str_replace(":error", $err->getMessage(), $message);
-    }
-
     public function validateRuleActionValue(string $attribute, string $value = null): bool
     {
         // first, get the index from this string:

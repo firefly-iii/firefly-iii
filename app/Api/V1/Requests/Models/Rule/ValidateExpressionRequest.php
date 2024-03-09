@@ -24,23 +24,42 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Rule;
 
+use FireflyIII\Rules\IsValidActionExpression;
 use FireflyIII\Support\Request\ChecksLogin;
-use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Class ValidateExpressionRequest
  */
 class ValidateExpressionRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
 
-    /**
-     * @return string
-     */
-    public function getExpression(): string
+    public function rules(): array
     {
-        return $this->convertString("expression");
+        return ['expression' => ['required', new IsValidActionExpression()]];
+    }
+
+    /**
+     * Handle a failed validation attempt.
+     *
+     * @param  \Illuminate\Contracts\Validation\Validator  $validator
+     * @return void
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    protected function failedValidation(Validator $validator): void
+    {
+        $error = $validator->errors()->first('expression');
+
+        throw new ValidationException(
+            $validator,
+            response()->json([
+                'valid' => false,
+                'error' => $error
+            ], 200)
+        );
     }
 }
