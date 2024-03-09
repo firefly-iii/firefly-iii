@@ -39,6 +39,8 @@ class ExpressionController extends Controller
      * @param ValidateExpressionRequest $request
      *
      * @return JsonResponse
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function validateExpression(ValidateExpressionRequest $request): JsonResponse
     {

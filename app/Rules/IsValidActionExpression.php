@@ -35,6 +35,8 @@ class IsValidActionExpression implements ValidationRule
      * Check that the given action expression is syntactically valid.
      *
      * @param  \Closure(string): \Illuminate\Translation\PotentiallyTranslatedString  $fail
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
