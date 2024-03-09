@@ -4,7 +4,7 @@
         <!--begin::Brand Link-->
         <a href="{{route('index') }}" class="brand-link">
             <!--begin::Brand Image-->
-            <img src="v2/i/logo.png" alt="Firefly III Logo"
+            <img src="images/logo.png" alt="Firefly III Logo"
                  class="brand-image opacity-75 shadow">
             <!--end::Brand Image-->
             <!--begin::Brand Text-->

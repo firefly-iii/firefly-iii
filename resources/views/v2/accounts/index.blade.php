@@ -57,11 +57,27 @@
                                 <thead>
                                 <tr>
                                     <td>&nbsp;</td>
-                                    <td>Active?</td>
-                                    <td>Name</td>
+                                    <td>
+                                        <a href="#" x-on:click.prevent="sort('active')">Active?</a>
+                                        <em x-show="sortingColumn === 'active' && sortDirection === 'asc'" class="fa-solid fa-arrow-down-wide-short"></em>
+                                        <em x-show="sortingColumn === 'active' && sortDirection === 'desc'" class="fa-solid fa-arrow-up-wide-short"></em>
+                                    </td>
+                                    <td>
+                                        <a href="#" x-on:click.prevent="sort('name')">Name</a>
+                                            <em x-show="sortingColumn === 'name' && sortDirection === 'asc'" class="fa-solid fa-arrow-down-z-a"></em>
+                                            <em x-show="sortingColumn === 'name' && sortDirection === 'desc'" class="fa-solid fa-arrow-up-z-a"></em>
+                                    </td>
                                     <td>Type</td>
-                                    <td>Account number</td>
-                                    <td>Current balance</td>
+                                    <td>
+                                        <a href="#" x-on:click.prevent="sort('iban')">Account number</a>
+                                        <em x-show="sortingColumn === 'iban' && sortDirection === 'asc'" class="fa-solid fa-arrow-down-z-a"></em>
+                                        <em x-show="sortingColumn === 'iban' && sortDirection === 'desc'" class="fa-solid fa-arrow-up-z-a"></em>
+                                    </td>
+                                    <td>
+                                        <a href="#" x-on:click.prevent="sort('balance')">Current balance</a>
+                                        <em x-show="sortingColumn === 'balance' && sortDirection === 'asc'" class="fa-solid fa-arrow-down-wide-short"></em>
+                                        <em x-show="sortingColumn === 'balance' && sortDirection === 'desc'" class="fa-solid fa-arrow-up-wide-short"></em>
+                                    </td>
                                     <td>Last activity</td>
                                     <td>Balance difference</td>
                                     <td>&nbsp;</td>
@@ -70,20 +86,46 @@
                                 <tbody>
                                 <template x-for="(account, index) in accounts" :key="index">
                                 <tr>
-                                    <td>&nbsp;</td>
+                                    <td>TODO</td>
                                     <td>
-                                        &nbsp;
+                                        <template x-if="account.active">
+                                            <em class="text-success fa-solid fa-check"></em>
+                                        &nbsp;</template>
+                                        <template x-if="!account.active">
+                                            <em class="text-danger fa-solid fa-xmark"></em>
+                                            &nbsp;</template>
                                     </td>
                                     <td>
                                         <a :href="'./accounts/show/' + account.id">
                                             <span x-text="account.name"></span>
                                         </a>
                                     </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>
+                                        <span x-text="account.type"></span>
+                                        <span x-text="account.role"></span>
+                                    </td>
+                                    <td>
+                                        <!-- IBAN and no account nr -->
+                                        <template x-if="'' === account.account_number && '' !== account.iban">
+                                            <span x-text="account.iban + 'A'"></span>
+                                        </template>
+                                        <!-- no IBAN and account nr -->
+                                        <template x-if="'' !== account.account_number && '' === account.iban">
+                                            <span x-text="account.account_number"></span>
+                                        </template>
+                                        <!-- both -->
+                                        <template x-if="'' !== account.account_number && '' !== account.iban">
+                                            <span>
+                                                <span x-text="account.iban"></span>
+                                                (<span x-text="account.account_number"></span>)
+                                            </span>
+                                        </template>
+                                    </td>
+                                    <td>
+                                        <span x-text="formatMoney(account.current_balance, account.currency_code)"></span>
+                                    </td>
+                                    <td>TODO</td>
+                                    <td>TODO</td>
                                     <td>&nbsp;</td>
                                 </tr>
                                 </template>

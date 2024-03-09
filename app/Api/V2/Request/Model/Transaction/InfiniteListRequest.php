@@ -29,6 +29,7 @@ use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
+use FireflyIII\Support\Request\GetSortInstructions;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -41,6 +42,7 @@ class InfiniteListRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
     use TransactionFilter;
+    use GetSortInstructions;
 
     public function buildParams(): string
     {
@@ -97,30 +99,6 @@ class InfiniteListRequest extends FormRequest
         return 0 === $page || $page > 65536 ? 1 : $page;
     }
 
-    public function getSortInstructions(string $key): array
-    {
-        $allowed = config(sprintf('firefly.sorting.allowed.%s', $key));
-        $set     = $this->get('sorting', []);
-        $result  = [];
-        if (0 === count($set)) {
-            return [];
-        }
-        foreach ($set as $info) {
-            $column          = $info['column'] ?? 'NOPE';
-            $direction       = $info['direction'] ?? 'NOPE';
-            if ('asc' !== $direction && 'desc' !== $direction) {
-                // skip invalid direction
-                continue;
-            }
-            if (false === in_array($column, $allowed, true)) {
-                // skip invalid column
-                continue;
-            }
-            $result[$column] = $direction;
-        }
-
-        return $result;
-    }
 
     public function getTransactionTypes(): array
     {

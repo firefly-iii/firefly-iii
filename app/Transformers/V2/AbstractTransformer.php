@@ -37,8 +37,11 @@ abstract class AbstractTransformer extends TransformerAbstract
 
     /**
      * This method is called exactly ONCE from FireflyIII\Api\V2\Controllers\Controller::jsonApiList
+     *
+     * @param Collection $objects
+     * @return Collection
      */
-    abstract public function collectMetaData(Collection $objects): void;
+    abstract public function collectMetaData(Collection $objects): Collection;
 
     final public function getParameters(): ParameterBag
     {

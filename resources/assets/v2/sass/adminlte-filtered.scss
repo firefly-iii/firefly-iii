@@ -1,0 +1,105 @@
+/*!
+ * adminlte-filteres.scss
+ * Copyright (c) 2024 james@firefly-iii.org.
+ *
+ * This file is part of Firefly III (https://github.com/firefly-iii).
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see https://www.gnu.org/licenses/.
+ */
+
+
+// less adminlte code because the CSS is massive otherwise.
+// copied from:
+
+/*!
+ *   AdminLTE v4.0.0-alpha2
+ *   Author: Colorlib
+ *   Website: AdminLTE.io <https://adminlte.io>
+ *   License: Open source - MIT <https://opensource.org/licenses/MIT>
+ */
+
+// Bootstrap Configuration
+// ---------------------------------------------------
+@import "bootstrap/scss/functions";
+
+// AdminLTE Configuration
+// ---------------------------------------------------
+@import "admin-lte/src/scss/bootstrap-variables"; // little modified are here
+
+// Bootstrap Configuration
+// ---------------------------------------------------
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/variables-dark";
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/utilities";
+
+// Bootstrap Layout & components
+@import "bootstrap/scss/root";
+@import "bootstrap/scss/reboot";
+@import "bootstrap/scss/type";
+@import "bootstrap/scss/images";
+@import "bootstrap/scss/containers";
+@import "bootstrap/scss/grid";
+@import "bootstrap/scss/tables";
+@import "bootstrap/scss/forms";
+@import "bootstrap/scss/buttons";
+@import "bootstrap/scss/transitions";
+@import "bootstrap/scss/dropdown";
+@import "bootstrap/scss/button-group";
+@import "bootstrap/scss/nav";
+@import "bootstrap/scss/navbar";
+@import "bootstrap/scss/card";
+//@import "bootstrap/scss/accordion";
+@import "bootstrap/scss/breadcrumb";
+@import "bootstrap/scss/pagination";
+@import "bootstrap/scss/badge";
+@import "bootstrap/scss/alert";
+@import "bootstrap/scss/progress";
+@import "bootstrap/scss/list-group";
+@import "bootstrap/scss/close";
+//@import "bootstrap/scss/toasts";
+@import "bootstrap/scss/modal";
+@import "bootstrap/scss/tooltip";
+@import "bootstrap/scss/popover";
+//@import "bootstrap/scss/carousel";
+@import "bootstrap/scss/spinners";
+@import "bootstrap/scss/offcanvas";
+@import "bootstrap/scss/placeholders";
+
+// Bootstrap Helpers
+@import "bootstrap/scss/helpers";
+
+// Bootstrap Utilities
+@import "bootstrap/scss/utilities/api";
+
+
+// AdminLTE Configuration
+// ---------------------------------------------------
+@import "admin-lte/src/scss/variables";
+@import "admin-lte/src/scss/variables-dark";
+@import "admin-lte/src/scss/mixins";
+
+// AdiminLTE Parts
+// ---------------------------------------------------
+@import "admin-lte/src/scss/parts/core";
+@import "admin-lte/src/scss/parts/components";
+@import "admin-lte/src/scss/parts/extra-components";
+
+// @import "admin-lte/src/scss/parts/pages";
+@import "admin-lte/src/scss/pages/login_and_register";
+
+@import "admin-lte/src/scss/parts/miscellaneous";
+
+

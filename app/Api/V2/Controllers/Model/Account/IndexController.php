@@ -47,7 +47,7 @@ class IndexController extends Controller
             function ($request, $next) {
                 $this->repository = app(AccountRepositoryInterface::class);
                 // new way of user group validation
-                $userGroup        = $this->validateUserGroup($request);
+                $userGroup = $this->validateUserGroup($request);
                 if (null !== $userGroup) {
                     $this->repository->setUserGroup($userGroup);
                 }
@@ -62,20 +62,23 @@ class IndexController extends Controller
      */
     public function index(IndexRequest $request): JsonResponse
     {
+
         $this->repository->resetAccountOrder();
-        $types       = $request->getAccountTypes();
-        $accounts    = $this->repository->getAccountsByType($types);
-        $pageSize    = $this->parameters->get('limit');
-        $count       = $accounts->count();
-        $accounts    = $accounts->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
-        $paginator   = new LengthAwarePaginator($accounts, $count, $pageSize, $this->parameters->get('page'));
-        $transformer = new AccountTransformer();
+        $types        = $request->getAccountTypes();
+        $instructions = $request->getSortInstructions('accounts');
+        $accounts     = $this->repository->getAccountsByType($types, $instructions);
+        $pageSize     = $this->parameters->get('limit');
+        $count        = $accounts->count();
+        $accounts     = $accounts->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $paginator    = new LengthAwarePaginator($accounts, $count, $pageSize, $this->parameters->get('page'));
+        $transformer  = new AccountTransformer();
+
+        $this->parameters->set('sort', $instructions);
         $transformer->setParameters($this->parameters); // give params to transformer
 
         return response()
             ->json($this->jsonApiList('accounts', $paginator, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE)
-        ;
+            ->header('Content-Type', self::CONTENT_TYPE);
     }
 
     public function infiniteList(InfiniteListRequest $request): JsonResponse
@@ -83,7 +86,7 @@ class IndexController extends Controller
         $this->repository->resetAccountOrder();
 
         // get accounts of the specified type, and return.
-        $types       = $request->getAccountTypes();
+        $types = $request->getAccountTypes();
 
         // get from repository
         $accounts    = $this->repository->getAccountsInOrder($types, $request->getSortInstructions('accounts'), $request->getStartRow(), $request->getEndRow());
@@ -95,7 +98,6 @@ class IndexController extends Controller
 
         return response()
             ->json($this->jsonApiList(self::RESOURCE_KEY, $paginator, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE)
-        ;
+            ->header('Content-Type', self::CONTENT_TYPE);
     }
 }

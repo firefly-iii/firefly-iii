@@ -51,8 +51,16 @@ let index = function () {
                 enabled: true
             },
         },
-
+        sortingColumn: '',
+        sortDirection: '',
         accounts: [],
+
+        sort(column) {
+            this.sortingColumn = column;
+            this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+            this.loadAccounts();
+            return false;
+        },
 
         formatMoney(amount, currencyCode) {
             return formatMoney(amount, currencyCode);
@@ -69,14 +77,29 @@ let index = function () {
         },
 
         loadAccounts() {
+            this.notifications.wait.show = true;
+            this.notifications.wait.text = i18next.t('firefly.wait_loading_data')
+            this.accounts = [];
+            // sort instructions
+            // &sorting[0][column]=description&sorting[0][direction]=asc
+            const sorting = [{column: this.sortingColumn, direction: this.sortDirection}];
             // one page only.
-            (new Get()).index({type: type, page: this.page}).then(response => {
+            (new Get()).index({sorting: sorting, type: type, page: this.page}).then(response => {
                 for (let i = 0; i < response.data.data.length; i++) {
                     if (response.data.data.hasOwnProperty(i)) {
                         let current = response.data.data[i];
                         let account = {
                             id: parseInt(current.id),
+                            active: current.attributes.active,
                             name: current.attributes.name,
+                            type: current.attributes.type,
+                            // role: current.attributes.account_role,
+                            iban: null === current.attributes.iban ? '' : current.attributes.iban.match(/.{1,4}/g).join(' '),
+                            account_number: null === current.attributes.account_number ? '' : current.attributes.account_number,
+                            current_balance: current.attributes.current_balance,
+                            currency_code: current.attributes.currency_code,
+                            native_current_balance: current.attributes.native_current_balance,
+                            native_currency_code: current.attributes.native_currency_code,
                         };
                         this.accounts.push(account);
                     }

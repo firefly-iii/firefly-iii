@@ -36,10 +36,14 @@ import {getVariable} from "../store/get-variable.js";
 import {getViewRange} from "../support/get-viewrange.js";
 import {loadTranslations} from "../support/load-translations.js";
 
+import adminlte from 'admin-lte';
+
+
 store.addPlugin(observePlugin);
 
 window.bootstrapped = false;
 window.store = store;
+
 
 
 // always grab the preference "marker" from Firefly III.
