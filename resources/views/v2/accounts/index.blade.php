@@ -1,7 +1,4 @@
 @extends('layout.v2')
-@section('vite')
-    @vite(['resources/assets/v2/sass/app.scss', 'resources/assets/v2/pages/accounts/index.js'])
-@endsection
 @section('content')
     <div class="app-content">
         <div class="container-fluid" x-data="index">
@@ -106,4 +103,7 @@
         </div>
     </div>
 
+@endsection
+@section('scripts')
+    @vite(['resources/assets/v2/pages/accounts/index.js'])
 @endsection
