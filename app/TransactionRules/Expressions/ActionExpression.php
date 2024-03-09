@@ -133,7 +133,7 @@ class ActionExpression
         return $this->validationError === null;
     }
 
-    public function getValidationError()
+    public function getValidationError(): ?SyntaxError
     {
         return $this->validationError;
     }

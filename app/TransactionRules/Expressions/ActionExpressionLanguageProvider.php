@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace FireflyIII\TransactionRules\Expressions;
 
 use Symfony\Component\ExpressionLanguage\ExpressionFunction;
