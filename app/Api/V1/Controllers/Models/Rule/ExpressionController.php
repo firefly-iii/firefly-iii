@@ -25,9 +25,7 @@ namespace FireflyIII\Api\V1\Controllers\Models\Rule;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\Rule\ValidateExpressionRequest;
-use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\TransactionRules\Expressions\ActionExpression;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -35,29 +33,6 @@ use Illuminate\Http\JsonResponse;
  */
 class ExpressionController extends Controller
 {
-    private RuleRepositoryInterface $ruleRepository;
-
-    /**
-     * RuleController constructor.
-     *
-
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                /** @var User $user */
-                $user = auth()->user();
-
-                $this->ruleRepository = app(RuleRepositoryInterface::class);
-                $this->ruleRepository->setUser($user);
-
-                return $next($request);
-            }
-        );
-    }
-
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/rules/validateExpression
