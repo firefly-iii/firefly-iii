@@ -55,7 +55,7 @@ class SecureHeaders
             "base-uri 'self'",
             "font-src 'self' data:",
             sprintf("connect-src 'self' %s", $trackingScriptSrc),
-            sprintf("img-src 'strict-dynamic' 'nonce-%1s'", $nonce),
+            sprintf("img-src 'self' 'strict-dynamic' 'nonce-%1s'", $nonce),
             "manifest-src 'self'",
         ];
 
