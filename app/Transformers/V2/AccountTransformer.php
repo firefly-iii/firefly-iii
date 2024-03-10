@@ -90,8 +90,9 @@ class AccountTransformer extends AbstractTransformer
         }
 
         // TODO needs separate method.
+        /** @var null|array $sort */
         $sort                    = $this->parameters->get('sort');
-        if (is_countable($sort) && count($sort) > 0) {
+        if (null !== $sort && count($sort) > 0) {
             foreach ($sort as $column => $direction) {
                 // account_number + iban
                 if ('iban' === $column) {

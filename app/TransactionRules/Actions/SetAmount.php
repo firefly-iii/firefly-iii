@@ -28,7 +28,6 @@ use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Support\Facades\Steam;
 use FireflyIII\TransactionRules\Traits\RefreshNotesTrait;
 
 class SetAmount implements ActionInterface
@@ -59,7 +58,7 @@ class SetAmount implements ActionInterface
 
         $value      = $this->action->getValue($journal);
 
-        if (!is_numeric($value) || '' === $value || 0 === bccomp((string)$value, '0')) {
+        if (!is_numeric($value) || 0 === bccomp($value, '0')) {
             app('log')->debug(sprintf('RuleAction SetAmount, amount "%s" is not a number or is zero, will not continue.', $value));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.journal_invalid_amount', ['amount' => $value])));
 
@@ -69,16 +68,14 @@ class SetAmount implements ActionInterface
         /** @var TransactionJournal $object */
         $object     = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
 
-        // doesn't actually do anything!
-        $positive   = Steam::positive($value);
-        $negative   = Steam::negative($value);
+        $positive   = app('steam')->positive($value);
+        $negative   = app('steam')->negative($value);
 
         $this->updatePositive($object, $positive);
         $this->updateNegative($object, $negative);
         $object->transactionGroup->touch();
 
         // event for audit log entry
-
         event(new TriggeredAuditLog(
             $this->action->rule,
             $object,

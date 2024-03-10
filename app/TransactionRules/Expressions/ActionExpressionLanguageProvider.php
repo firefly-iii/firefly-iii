@@ -27,38 +27,35 @@ namespace FireflyIII\TransactionRules\Expressions;
 use Symfony\Component\ExpressionLanguage\ExpressionFunction;
 use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 
+/**
+ * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+ */
 class ActionExpressionLanguageProvider implements ExpressionFunctionProviderInterface
 {
     public function getFunctions(): array
     {
+        $function = function ($arguments, $str): string {
+            if (!is_string($str)) {
+                return (string) $str;
+            }
+
+            return strtolower($str.'!');
+        };
+
         return [
             new ExpressionFunction(
-                'constant',
-                function ($str): string {
+                'constant2',
+                static function ($str): string {
                     return sprintf('(is_string(%1$s) ? strtolower(%1$s) : %1$s)', $str.'!');
                 },
-                // @SuppressWarnings(PHPMD.UnusedFormalParameter)
-                function ($arguments, $str): string {
-                    if (!is_string($str)) {
-                        return (string) $str;
-                    }
-
-                    return strtolower($str.'!');
-                }
+                $function
             ),
             new ExpressionFunction(
-                'enum',
-                function ($str): string {
-                    return sprintf('(is_string(%1$s) ? strtolower(%1$s) : %1$s)', $str.'?');
+                'constant',
+                static function ($str): string {
+                    return sprintf('(is_string(%1$s) ? strtolower(%1$s) : %1$s)', $str.'!');
                 },
-                // @SuppressWarnings(PHPMD.UnusedFormalParameter)
-                function ($arguments, $str): string {
-                    if (!is_string($str)) {
-                        return (string) $str;
-                    }
-
-                    return strtolower($str).'?';
-                }
+                $function
             ),
 
             ExpressionFunction::fromPhp('substr'),
