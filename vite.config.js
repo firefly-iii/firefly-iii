@@ -28,7 +28,7 @@ function manualChunks(id) {
     if (id.includes('node_modules')) {
         return 'vendor';
     }
-};
+}
 
 export default defineConfig({
     build: {
@@ -59,7 +59,7 @@ export default defineConfig({
             ],
             refresh: true,
         }),
-        manifestSRI(),
+        //manifestSRI(),
 
     ],
 
