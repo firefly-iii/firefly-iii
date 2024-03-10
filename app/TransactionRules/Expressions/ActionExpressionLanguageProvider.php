@@ -31,7 +31,28 @@ class ActionExpressionLanguageProvider implements ExpressionFunctionProviderInte
 {
     public function getFunctions(): array
     {
+
         return [
+
+            new ExpressionFunction('constant', function ($str): string {
+                return sprintf('(is_string(%1$s) ? strtolower(%1$s) : %1$s)', $str . '!');
+            }, function ($arguments, $str): string {
+                if (!is_string($str)) {
+                    return $str;
+                }
+
+                return strtolower($str . '!');
+            }),
+            new ExpressionFunction('enum', function ($str): string {
+                return sprintf('(is_string(%1$s) ? strtolower(%1$s) : %1$s)', $str . '?');
+            }, function ($arguments, $str): string {
+                if (!is_string($str)) {
+                    return $str;
+                }
+
+                return strtolower($str) . '?';
+            }),
+
             ExpressionFunction::fromPhp('substr'),
             ExpressionFunction::fromPhp('strlen'),
         ];
