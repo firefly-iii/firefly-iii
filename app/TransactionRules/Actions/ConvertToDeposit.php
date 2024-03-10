@@ -52,16 +52,18 @@ class ConvertToDeposit implements ActionInterface
 
     public function actOnArray(array $journal): bool
     {
+        $actionValue = $this->action->getValue($journal);
+
         // make object from array (so the data is fresh).
         /** @var null|TransactionJournal $object */
-        $object     = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $object      = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         if (null === $object) {
             app('log')->error(sprintf('Cannot find journal #%d, cannot convert to deposit.', $journal['transaction_journal_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.journal_not_found')));
 
             return false;
         }
-        $groupCount = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
+        $groupCount  = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
         if ($groupCount > 1) {
             app('log')->error(sprintf('Group #%d has more than one transaction in it, cannot convert to deposit.', $journal['transaction_group_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.split_group')));
@@ -70,7 +72,7 @@ class ConvertToDeposit implements ActionInterface
         }
 
         app('log')->debug(sprintf('Convert journal #%d to deposit.', $journal['transaction_journal_id']));
-        $type       = $object->transactionType->type;
+        $type        = $object->transactionType->type;
         if (TransactionType::DEPOSIT === $type) {
             app('log')->error(sprintf('Journal #%d is already a deposit (rule #%d).', $journal['transaction_journal_id'], $this->action->rule_id));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.is_already_deposit')));
@@ -82,7 +84,7 @@ class ConvertToDeposit implements ActionInterface
             app('log')->debug('Going to transform a withdrawal to a deposit.');
 
             try {
-                $res = $this->convertWithdrawalArray($object);
+                $res = $this->convertWithdrawalArray($object, $actionValue);
             } catch (FireflyException $e) {
                 app('log')->debug('Could not convert withdrawal to deposit.');
                 app('log')->error($e->getMessage());
@@ -99,7 +101,7 @@ class ConvertToDeposit implements ActionInterface
             app('log')->debug('Going to transform a transfer to a deposit.');
 
             try {
-                $res = $this->convertTransferArray($object);
+                $res = $this->convertTransferArray($object, $actionValue);
             } catch (FireflyException $e) {
                 app('log')->debug('Could not convert transfer to deposit.');
                 app('log')->error($e->getMessage());
@@ -122,7 +124,7 @@ class ConvertToDeposit implements ActionInterface
      *
      * @throws FireflyException
      */
-    private function convertWithdrawalArray(TransactionJournal $journal): bool
+    private function convertWithdrawalArray(TransactionJournal $journal, string $actionValue = ''): bool
     {
         $user            = $journal->user;
 
@@ -139,7 +141,7 @@ class ConvertToDeposit implements ActionInterface
 
         // get the action value, or use the original destination name in case the action value is empty:
         // this becomes a new or existing (revenue) account, which is the source of the new deposit.
-        $opposingName    = '' === $this->action->action_value ? $destAccount->name : $this->action->action_value;
+        $opposingName    = '' === $actionValue ? $destAccount->name : $actionValue;
         // we check all possible source account types if one exists:
         $validTypes      = config('firefly.expected_source_types.source.Deposit');
         $opposingAccount = $repository->findByName($opposingName, $validTypes);
@@ -147,7 +149,7 @@ class ConvertToDeposit implements ActionInterface
             $opposingAccount = $factory->findOrCreate($opposingName, AccountType::REVENUE);
         }
 
-        app('log')->debug(sprintf('ConvertToDeposit. Action value is "%s", new opposing name is "%s"', $this->action->action_value, $opposingAccount->name));
+        app('log')->debug(sprintf('ConvertToDeposit. Action value is "%s", new opposing name is "%s"', $actionValue, $opposingAccount->name));
 
         // update the source transaction and put in the new revenue ID.
         \DB::table('transactions')
@@ -211,7 +213,7 @@ class ConvertToDeposit implements ActionInterface
      *
      * @throws FireflyException
      */
-    private function convertTransferArray(TransactionJournal $journal): bool
+    private function convertTransferArray(TransactionJournal $journal, string $actionValue = ''): bool
     {
         $user            = $journal->user;
 
@@ -227,7 +229,7 @@ class ConvertToDeposit implements ActionInterface
 
         // get the action value, or use the original source name in case the action value is empty:
         // this becomes a new or existing (revenue) account, which is the source of the new deposit.
-        $opposingName    = '' === $this->action->action_value ? $sourceAccount->name : $this->action->action_value;
+        $opposingName    = '' === $actionValue ? $sourceAccount->name : $actionValue;
         // we check all possible source account types if one exists:
         $validTypes      = config('firefly.expected_source_types.source.Deposit');
         $opposingAccount = $repository->findByName($opposingName, $validTypes);
@@ -235,7 +237,7 @@ class ConvertToDeposit implements ActionInterface
             $opposingAccount = $factory->findOrCreate($opposingName, AccountType::REVENUE);
         }
 
-        app('log')->debug(sprintf('ConvertToDeposit. Action value is "%s", revenue name is "%s"', $this->action->action_value, $opposingAccount->name));
+        app('log')->debug(sprintf('ConvertToDeposit. Action value is "%s", revenue name is "%s"', $actionValue, $opposingAccount->name));
 
         // update source transaction(s) to be revenue account
         \DB::table('transactions')

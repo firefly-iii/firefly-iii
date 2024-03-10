@@ -54,11 +54,12 @@ class AddTag implements ActionInterface
         /** @var User $user */
         $user    = User::find($journal['user_id']);
         $factory->setUser($user);
-        $tag     = $factory->findOrCreate($this->action->action_value);
+        $tagName = $this->action->getValue($journal);
+        $tag     = $factory->findOrCreate($tagName);
 
         if (null === $tag) {
             // could not find, could not create tag.
-            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.find_or_create_tag_failed', ['tag' => $this->action->action_value])));
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.find_or_create_tag_failed', ['tag' => $tagName])));
 
             return false;
         }
@@ -84,7 +85,7 @@ class AddTag implements ActionInterface
         app('log')->debug(
             sprintf('RuleAction AddTag fired but tag %d ("%s") was already added to journal %d.', $tag->id, $tag->tag, $journal['transaction_journal_id'])
         );
-        event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.tag_already_added', ['tag' => $this->action->action_value])));
+        event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.tag_already_added', ['tag' => $tagName])));
 
         return false;
     }

@@ -55,7 +55,8 @@ class SetNotes implements ActionInterface
             $dbNote->text          = '';
         }
         $oldNotes     = $dbNote->text;
-        $dbNote->text = $this->action->action_value;
+        $newNotes     = $this->action->getValue($journal);
+        $dbNote->text = $newNotes;
         $dbNote->save();
 
         app('log')->debug(
@@ -63,14 +64,14 @@ class SetNotes implements ActionInterface
                 'RuleAction SetNotes changed the notes of journal #%d from "%s" to "%s".',
                 $journal['transaction_journal_id'],
                 $oldNotes,
-                $this->action->action_value
+                $newNotes
             )
         );
 
         /** @var TransactionJournal $object */
         $object       = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
 
-        event(new TriggeredAuditLog($this->action->rule, $object, 'update_notes', $oldNotes, $this->action->action_value));
+        event(new TriggeredAuditLog($this->action->rule, $object, 'update_notes', $oldNotes, $newNotes));
 
         return true;
     }

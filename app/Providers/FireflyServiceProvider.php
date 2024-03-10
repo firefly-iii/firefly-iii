@@ -69,9 +69,11 @@ use FireflyIII\Support\Preferences;
 use FireflyIII\Support\Steam;
 use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
 use FireflyIII\TransactionRules\Engine\SearchRuleEngine;
+use FireflyIII\TransactionRules\Expressions\ActionExpressionLanguageProvider;
 use FireflyIII\Validation\FireflyValidator;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 /**
  * Class FireflyServiceProvider.
@@ -197,6 +199,16 @@ class FireflyServiceProvider extends ServiceProvider
                 }
 
                 return $repository;
+            }
+        );
+
+        // rule expression language
+        $this->app->singleton(
+            ExpressionLanguage::class,
+            static function () {
+                $expressionLanguage = new ExpressionLanguage();
+                $expressionLanguage->registerProvider(new ActionExpressionLanguageProvider());
+                return $expressionLanguage;
             }
         );
 

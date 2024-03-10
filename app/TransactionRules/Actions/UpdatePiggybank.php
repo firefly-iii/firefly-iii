@@ -50,6 +50,8 @@ class UpdatePiggybank implements ActionInterface
 
     public function actOnArray(array $journal): bool
     {
+        $actionValue = $this->action->getValue($journal);
+
         app('log')->debug(sprintf('Triggered rule action UpdatePiggybank on journal #%d', $journal['transaction_journal_id']));
 
         // refresh the transaction type.
@@ -59,12 +61,12 @@ class UpdatePiggybank implements ActionInterface
         /** @var TransactionJournal $journalObj */
         $journalObj  = $user->transactionJournals()->find($journal['transaction_journal_id']);
 
-        $piggyBank   = $this->findPiggyBank($user);
+        $piggyBank   = $this->findPiggyBank($user, $actionValue);
         if (null === $piggyBank) {
             app('log')->info(
-                sprintf('No piggy bank named "%s", cant execute action #%d of rule #%d', $this->action->action_value, $this->action->id, $this->action->rule_id)
+                sprintf('No piggy bank named "%s", cant execute action #%d of rule #%d', $actionValue, $this->action->id, $this->action->rule_id)
             );
-            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_piggy', ['name' => $this->action->action_value])));
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_piggy', ['name' => $actionValue])));
 
             return false;
         }
@@ -126,14 +128,14 @@ class UpdatePiggybank implements ActionInterface
                 $destination->account_id
             )
         );
-        event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_link_piggy', ['name' => $this->action->action_value])));
+        event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_link_piggy', ['name' => $actionValue])));
 
         return false;
     }
 
-    private function findPiggyBank(User $user): ?PiggyBank
+    private function findPiggyBank(User $user, string $name): ?PiggyBank
     {
-        return $user->piggyBanks()->where('piggy_banks.name', $this->action->action_value)->first();
+        return $user->piggyBanks()->where('piggy_banks.name', $name)->first();
     }
 
     private function removeAmount(PiggyBank $piggyBank, TransactionJournal $journal, string $amount): void

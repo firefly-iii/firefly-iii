@@ -54,7 +54,7 @@ class LinkToBill implements ActionInterface
         /** @var BillRepositoryInterface $repository */
         $repository = app(BillRepositoryInterface::class);
         $repository->setUser($user);
-        $billName   = (string)$this->action->action_value;
+        $billName   = $this->action->getValue($journal);
         $bill       = $repository->findByName($billName);
 
         if (null !== $bill && TransactionType::WITHDRAWAL === $journal['transaction_type_type']) {

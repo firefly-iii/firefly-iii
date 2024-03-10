@@ -55,15 +55,16 @@ class AppendNotes implements ActionInterface
             $dbNote->noteable_type = TransactionJournal::class;
             $dbNote->text          = '';
         }
-        app('log')->debug(sprintf('RuleAction AppendNotes appended "%s" to "%s".', $this->action->action_value, $dbNote->text));
         $before       = $dbNote->text;
-        $text         = sprintf('%s%s', $dbNote->text, $this->action->action_value);
+        $append       = $this->action->getValue($journal);
+        $text         = sprintf('%s%s', $dbNote->text, $append);
         $dbNote->text = $text;
         $dbNote->save();
 
         /** @var TransactionJournal $object */
         $object       = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
 
+        app('log')->debug(sprintf('RuleAction AppendNotes appended "%s" to "%s".', $append, $before));
         event(new TriggeredAuditLog($this->action->rule, $object, 'update_notes', $before, $text));
 
         return true;

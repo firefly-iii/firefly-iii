@@ -55,6 +55,8 @@ class ConvertToTransfer implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
+        $accountName  = $this->action->getValue($journal);
+
         // make object from array (so the data is fresh).
         /** @var null|TransactionJournal $object */
         $object       = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
@@ -102,7 +104,7 @@ class ConvertToTransfer implements ActionInterface
             $expectedType = $this->getDestinationType($journalId);
             // Deposit? Replace source with account with same type as destination.
         }
-        $opposing     = $repository->findByName($this->action->action_value, [$expectedType]);
+        $opposing     = $repository->findByName($accountName, [$expectedType]);
 
         if (null === $opposing) {
             app('log')->error(
@@ -110,11 +112,11 @@ class ConvertToTransfer implements ActionInterface
                     'Journal #%d cannot be converted because no valid %s account with name "%s" exists (rule #%d).',
                     $expectedType,
                     $journalId,
-                    $this->action->action_value,
+                    $accountName,
                     $this->action->rule_id
                 )
             );
-            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_valid_opposing', ['name' => $this->action->action_value])));
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_valid_opposing', ['name' => $accountName])));
 
             return false;
         }

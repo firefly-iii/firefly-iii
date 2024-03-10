@@ -35,6 +35,7 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Services\Password\Verifier;
 use FireflyIII\Support\ParseDateString;
+use FireflyIII\TransactionRules\Expressions\ActionExpression;
 use FireflyIII\User;
 use Illuminate\Validation\Validator;
 use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
@@ -266,6 +267,11 @@ class FireflyValidator extends Validator
         // if it's "invalid" return false.
         if ('invalid' === $actionType) {
             return false;
+        }
+
+        // if value is an expression, assume valid
+        if (str_starts_with($value, '=')) {
+            return true;
         }
 
         // if it's set_budget, verify the budget name:

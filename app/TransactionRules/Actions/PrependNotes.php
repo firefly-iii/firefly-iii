@@ -56,8 +56,9 @@ class PrependNotes implements ActionInterface
             $dbNote->text          = '';
         }
         $before       = $dbNote->text;
-        app('log')->debug(sprintf('RuleAction PrependNotes prepended "%s" to "%s".', $this->action->action_value, $dbNote->text));
-        $text         = sprintf('%s%s', $this->action->action_value, $dbNote->text);
+        $after        = $this->action->getValue($journal);
+        app('log')->debug(sprintf('RuleAction PrependNotes prepended "%s" to "%s".', $after, $dbNote->text));
+        $text         = sprintf('%s%s', $after, $dbNote->text);
         $dbNote->text = $text;
         $dbNote->save();
 

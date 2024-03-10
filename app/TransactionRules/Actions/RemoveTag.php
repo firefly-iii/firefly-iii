@@ -46,13 +46,13 @@ class RemoveTag implements ActionInterface
 
     public function actOnArray(array $journal): bool
     {
-        // if tag does not exist, no need to continue:
-        $name   = $this->action->action_value;
+        $name   = $this->action->getValue($journal);
 
         /** @var User $user */
         $user   = User::find($journal['user_id']);
         $tag    = $user->tags()->where('tag', $name)->first();
 
+        // if tag does not exist, no need to continue:
         if (null === $tag) {
             app('log')->debug(
                 sprintf('RuleAction RemoveTag tried to remove tag "%s" from journal #%d but no such tag exists.', $name, $journal['transaction_journal_id'])

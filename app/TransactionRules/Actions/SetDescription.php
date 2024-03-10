@@ -47,10 +47,11 @@ class SetDescription implements ActionInterface
         /** @var TransactionJournal $object */
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         $before = $object->description;
+        $after  = $this->action->getValue($journal);
 
         \DB::table('transaction_journals')
             ->where('id', '=', $journal['transaction_journal_id'])
-            ->update(['description' => $this->action->action_value])
+            ->update(['description' => $after])
         ;
 
         app('log')->debug(
@@ -58,11 +59,11 @@ class SetDescription implements ActionInterface
                 'RuleAction SetDescription changed the description of journal #%d from "%s" to "%s".',
                 $journal['transaction_journal_id'],
                 $journal['description'],
-                $this->action->action_value
+                $after
             )
         );
         $object->refresh();
-        event(new TriggeredAuditLog($this->action->rule, $object, 'update_description', $before, $this->action->action_value));
+        event(new TriggeredAuditLog($this->action->rule, $object, 'update_description', $before, $after));
 
         return true;
     }

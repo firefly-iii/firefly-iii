@@ -51,6 +51,8 @@ class SetDestinationAccount implements ActionInterface
 
     public function actOnArray(array $journal): bool
     {
+        $accountName      = $this->action->getValue($journal);
+
         /** @var User $user */
         $user             = User::find($journal['user_id']);
 
@@ -68,16 +70,16 @@ class SetDestinationAccount implements ActionInterface
         $this->repository->setUser($user);
 
         // if this is a transfer or a deposit, the new destination account must be an asset account or a default account, and it MUST exist:
-        $newAccount       = $this->findAssetAccount($type);
+        $newAccount       = $this->findAssetAccount($type, $accountName);
         if ((TransactionType::DEPOSIT === $type || TransactionType::TRANSFER === $type) && null === $newAccount) {
             app('log')->error(
                 sprintf(
                     'Cant change destination account of journal #%d because no asset account with name "%s" exists.',
                     $object->id,
-                    $this->action->action_value
+                    $accountName
                 )
             );
-            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_asset', ['name' => $this->action->action_value])));
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_asset', ['name' => $accountName])));
 
             return false;
         }
@@ -115,7 +117,7 @@ class SetDestinationAccount implements ActionInterface
         // if this is a withdrawal, the new destination account must be a expense account and may be created:
         // or it is a liability, in which case it must be returned.
         if (TransactionType::WITHDRAWAL === $type) {
-            $newAccount = $this->findWithdrawalDestinationAccount();
+            $newAccount = $this->findWithdrawalDestinationAccount($accountName);
         }
 
         app('log')->debug(sprintf('New destination account is #%d ("%s").', $newAccount->id, $newAccount->name));
@@ -134,23 +136,23 @@ class SetDestinationAccount implements ActionInterface
         return true;
     }
 
-    private function findAssetAccount(string $type): ?Account
+    private function findAssetAccount(string $type, string $accountName): ?Account
     {
         // switch on type:
         $allowed = config(sprintf('firefly.expected_source_types.destination.%s', $type));
         $allowed = is_array($allowed) ? $allowed : [];
         app('log')->debug(sprintf('Check config for expected_source_types.destination.%s, result is', $type), $allowed);
 
-        return $this->repository->findByName($this->action->action_value, $allowed);
+        return $this->repository->findByName($accountName, $allowed);
     }
 
-    private function findWithdrawalDestinationAccount(): Account
+    private function findWithdrawalDestinationAccount(string $accountName): Account
     {
         $allowed = config('firefly.expected_source_types.destination.Withdrawal');
-        $account = $this->repository->findByName($this->action->action_value, $allowed);
+        $account = $this->repository->findByName($accountName, $allowed);
         if (null === $account) {
             $data    = [
-                'name'              => $this->action->action_value,
+                'name'              => $accountName,
                 'account_type_name' => 'expense',
                 'account_type_id'   => null,
                 'virtual_balance'   => 0,

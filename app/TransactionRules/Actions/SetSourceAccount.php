@@ -51,6 +51,8 @@ class SetSourceAccount implements ActionInterface
 
     public function actOnArray(array $journal): bool
     {
+        $accountName      = $this->action->getValue($journal);
+
         /** @var User $user */
         $user             = User::find($journal['user_id']);
 
@@ -67,12 +69,12 @@ class SetSourceAccount implements ActionInterface
         $this->repository->setUser($user);
 
         // if this is a transfer or a withdrawal, the new source account must be an asset account or a default account, and it MUST exist:
-        $newAccount       = $this->findAssetAccount($type);
+        $newAccount       = $this->findAssetAccount($type, $accountName);
         if ((TransactionType::WITHDRAWAL === $type || TransactionType::TRANSFER === $type) && null === $newAccount) {
             app('log')->error(
-                sprintf('Cant change source account of journal #%d because no asset account with name "%s" exists.', $object->id, $this->action->action_value)
+                sprintf('Cant change source account of journal #%d because no asset account with name "%s" exists.', $object->id, $accountName)
             );
-            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_asset', ['name' => $this->action->action_value])));
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_asset', ['name' => $accountName])));
 
             return false;
         }
@@ -109,7 +111,7 @@ class SetSourceAccount implements ActionInterface
         // if this is a deposit, the new source account must be a revenue account and may be created:
         // or it's a liability
         if (TransactionType::DEPOSIT === $type) {
-            $newAccount = $this->findDepositSourceAccount();
+            $newAccount = $this->findDepositSourceAccount($accountName);
         }
 
         app('log')->debug(sprintf('New source account is #%d ("%s").', $newAccount->id, $newAccount->name));
@@ -128,24 +130,24 @@ class SetSourceAccount implements ActionInterface
         return true;
     }
 
-    private function findAssetAccount(string $type): ?Account
+    private function findAssetAccount(string $type, string $accountName): ?Account
     {
         // switch on type:
         $allowed = config(sprintf('firefly.expected_source_types.source.%s', $type));
         $allowed = is_array($allowed) ? $allowed : [];
         app('log')->debug(sprintf('Check config for expected_source_types.source.%s, result is', $type), $allowed);
 
-        return $this->repository->findByName($this->action->action_value, $allowed);
+        return $this->repository->findByName($accountName, $allowed);
     }
 
-    private function findDepositSourceAccount(): Account
+    private function findDepositSourceAccount(string $accountName): Account
     {
         $allowed = config('firefly.expected_source_types.source.Deposit');
-        $account = $this->repository->findByName($this->action->action_value, $allowed);
+        $account = $this->repository->findByName($accountName, $allowed);
         if (null === $account) {
             // create new revenue account with this name:
             $data    = [
-                'name'              => $this->action->action_value,
+                'name'              => $accountName,
                 'account_type_name' => 'revenue',
                 'account_type_id'   => null,
                 'virtual_balance'   => 0,

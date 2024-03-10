@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests\Models\Rule;
 
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Rules\IsValidActionExpression;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Support\Request\GetRuleConfiguration;
@@ -123,7 +124,7 @@ class StoreRequest extends FormRequest
             'triggers.*.stop_processing' => [new IsBoolean()],
             'triggers.*.active'          => [new IsBoolean()],
             'actions.*.type'             => 'required|in:'.implode(',', $validActions),
-            'actions.*.value'            => 'required_if:actions.*.type,'.$contextActions.'|ruleActionValue',
+            'actions.*.value'            => ['required_if:actions.*.type,'.$contextActions, new IsValidActionExpression(), 'ruleActionValue'],
             'actions.*.stop_processing'  => [new IsBoolean()],
             'actions.*.active'           => [new IsBoolean()],
             'strict'                     => [new IsBoolean()],
