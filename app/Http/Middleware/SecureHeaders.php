@@ -50,12 +50,12 @@ class SecureHeaders
         $csp                = [
             "default-src 'none'",
             "object-src 'none'",
-            sprintf("script-src 'unsafe-eval' 'strict-dynamic' 'nonce-%1s' %2s", $nonce, $trackingScriptSrc),
+            sprintf("script-src 'unsafe-eval' 'strict-dynamic' 'nonce-%1s'", $nonce),
             "style-src 'unsafe-inline' 'self'",
             "base-uri 'self'",
             "font-src 'self' data:",
             sprintf("connect-src 'self' %s", $trackingScriptSrc),
-            sprintf("img-src 'strict-dynamic' 'self' %s", $trackingScriptSrc),
+            sprintf("img-src 'strict-dynamic' 'self' 'nonce-%1s'", $nonce),
             "manifest-src 'self'",
         ];
 
