@@ -26,12 +26,14 @@ namespace FireflyIII\TransactionRules\Actions;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\TransactionRules\Traits\RefreshNotesTrait;
 
 /**
  * Class SetDescription.
  */
 class SetDescription implements ActionInterface
 {
+    use RefreshNotesTrait;
     private RuleAction $action;
 
     /**
@@ -44,6 +46,8 @@ class SetDescription implements ActionInterface
 
     public function actOnArray(array $journal): bool
     {
+        $this->refreshNotes($journal);
+
         /** @var TransactionJournal $object */
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         $before = $object->description;

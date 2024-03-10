@@ -607,7 +607,6 @@ Route::group(
         Route::put('{rule}', ['uses' => 'UpdateController@update', 'as' => 'update']);
         Route::delete('{rule}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
 
-
         Route::get('{rule}/test', ['uses' => 'TriggerController@testRule', 'as' => 'test']);
         // TODO give results back
         Route::post('{rule}/trigger', ['uses' => 'TriggerController@triggerRule', 'as' => 'trigger']);

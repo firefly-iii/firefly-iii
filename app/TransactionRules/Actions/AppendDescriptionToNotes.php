@@ -51,6 +51,7 @@ class AppendDescriptionToNotes implements ActionInterface
     public function actOnArray(array $journal): bool
     {
         $this->refreshNotes($journal);
+
         /** @var null|TransactionJournal $object */
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         if (null === $object) {

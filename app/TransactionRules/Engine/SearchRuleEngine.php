@@ -53,10 +53,10 @@ class SearchRuleEngine implements RuleEngineInterface
 
     public function __construct()
     {
-        $this->rules       = new Collection();
-        $this->groups      = new Collection();
-        $this->operators   = [];
-        $this->resultCount = [];
+        $this->rules           = new Collection();
+        $this->groups          = new Collection();
+        $this->operators       = [];
+        $this->resultCount     = [];
 
         // always collect the triggers from the database, unless indicated otherwise.
         $this->refreshTriggers = true;
@@ -73,7 +73,7 @@ class SearchRuleEngine implements RuleEngineInterface
         app('log')->debug('SearchRuleEngine::find()');
         $collection = new Collection();
         foreach ($this->rules as $rule) {
-            $found = new Collection();
+            $found      = new Collection();
             if (true === $rule->strict) {
                 $found = $this->findStrictRule($rule);
             }
@@ -82,8 +82,9 @@ class SearchRuleEngine implements RuleEngineInterface
             }
             $collection = $collection->merge($found);
         }
-        $result = $collection->unique();
+        $result     = $collection->unique();
         app('log')->debug(sprintf('SearchRuleEngine::find() returns %d unique transactions.', $result->count()));
+
         return $result;
     }
 
@@ -93,8 +94,8 @@ class SearchRuleEngine implements RuleEngineInterface
     private function findStrictRule(Rule $rule): Collection
     {
         app('log')->debug(sprintf('Now in findStrictRule(#%d)', $rule->id ?? 0));
-        $searchArray = [];
-        $triggers    = [];
+        $searchArray  = [];
+        $triggers     = [];
         if ($this->refreshTriggers) {
             $triggers = $rule->ruleTriggers()->orderBy('order', 'ASC')->get();
         }
@@ -125,7 +126,7 @@ class SearchRuleEngine implements RuleEngineInterface
             app('log')->debug(sprintf('SearchRuleEngine:: add local added operator: %s:"%s"', $operator['type'], $operator['value']));
             $searchArray[$operator['type']][] = sprintf('"%s"', $operator['value']);
         }
-        $date = today(config('app.timezone'));
+        $date         = today(config('app.timezone'));
         if ($this->hasSpecificJournalTrigger($searchArray)) {
             $date = $this->setDateFromJournalTrigger($searchArray);
         }
@@ -145,7 +146,7 @@ class SearchRuleEngine implements RuleEngineInterface
             }
         }
 
-        $result = $searchEngine->searchTransactions();
+        $result       = $searchEngine->searchTransactions();
 
         return $result->getCollection();
     }
@@ -170,7 +171,7 @@ class SearchRuleEngine implements RuleEngineInterface
                 $dateTrigger = true;
             }
         }
-        $result = $journalTrigger && $dateTrigger;
+        $result         = $journalTrigger && $dateTrigger;
         app('log')->debug(sprintf('Result of hasSpecificJournalTrigger is %s.', var_export($result, true)));
 
         return $result;
@@ -189,7 +190,7 @@ class SearchRuleEngine implements RuleEngineInterface
         if (0 !== $journalId) {
             $repository = app(JournalRepositoryInterface::class);
             $repository->setUser($this->user);
-            $journal = $repository->find($journalId);
+            $journal    = $repository->find($journalId);
             if (null !== $journal) {
                 $date = $journal->date;
                 app('log')->debug(sprintf('Found journal #%d with date %s.', $journal->id, $journal->date->format('Y-m-d')));
@@ -265,10 +266,10 @@ class SearchRuleEngine implements RuleEngineInterface
                 $searchEngine->parseQuery(sprintf('%s:%s', $type, $value));
             }
 
-            $result     = $searchEngine->searchTransactions();
-            $collection = $result->getCollection();
+            $result       = $searchEngine->searchTransactions();
+            $collection   = $result->getCollection();
             app('log')->debug(sprintf('Found in this run, %d transactions', $collection->count()));
-            $total = $total->merge($collection);
+            $total        = $total->merge($collection);
             app('log')->debug(sprintf('Total collection is now %d transactions', $total->count()));
             ++$count;
             // if trigger says stop processing, do so.
@@ -282,7 +283,7 @@ class SearchRuleEngine implements RuleEngineInterface
         app('log')->debug(sprintf('Done running %d trigger(s)', $count));
 
         // make collection unique
-        $unique = $total->unique(
+        $unique   = $total->unique(
             static function (array $group) {
                 $str = '';
                 foreach ($group['transactions'] as $transaction) {
@@ -373,7 +374,7 @@ class SearchRuleEngine implements RuleEngineInterface
         $this->processResults($rule, $collection);
         app('log')->debug(sprintf('SearchRuleEngine:: done processing strict rule #%d', $rule->id));
 
-        $result = $collection->count() > 0;
+        $result     = $collection->count() > 0;
         if (true === $result) {
             app('log')->debug(sprintf('SearchRuleEngine:: rule #%d was triggered (on %d transaction(s)).', $rule->id, $collection->count()));
 
@@ -546,6 +547,7 @@ class SearchRuleEngine implements RuleEngineInterface
             $transaction['notes'] = $dbNote->text;
         }
         Log::debug(sprintf('Notes of journal #%d filled in.', $transaction['transaction_journal_id']));
+
         return $transaction;
     }
 }

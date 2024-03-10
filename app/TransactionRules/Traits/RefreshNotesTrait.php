@@ -29,11 +29,6 @@ use Illuminate\Support\Facades\Log;
 
 trait RefreshNotesTrait
 {
-    /**
-     * @param array $transaction
-     *
-     * @return array
-     */
     final protected function refreshNotes(array $transaction): array
     {
         $transaction['notes'] = '';
@@ -42,7 +37,7 @@ trait RefreshNotesTrait
             $transaction['notes'] = $dbNote->text;
         }
         Log::debug(sprintf('Notes of journal #%d refreshed.', $transaction['transaction_journal_id']));
+
         return $transaction;
     }
-
 }

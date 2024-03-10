@@ -26,9 +26,7 @@ namespace FireflyIII\Api\V1\Requests\Models\Rule;
 
 use FireflyIII\Rules\IsValidActionExpression;
 use FireflyIII\Support\Request\ChecksLogin;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\ValidationException;
 
 /**
  * Class ValidateExpressionRequest
@@ -41,6 +39,4 @@ class ValidateExpressionRequest extends FormRequest
     {
         return ['expression' => ['required', new IsValidActionExpression()]];
     }
-
-
 }
