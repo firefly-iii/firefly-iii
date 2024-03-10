@@ -114,7 +114,7 @@ return [
         'telemetry'         => false,
         'webhooks'          => true,
         'handle_debts'      => true,
-        'expression_engine' => true,
+        'expression_engine' => false,
         // see cer.php for exchange rates feature flag.
     ],
     'version'                      => 'develop/2024-03-07',
