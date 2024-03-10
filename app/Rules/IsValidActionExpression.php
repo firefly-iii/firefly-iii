@@ -40,13 +40,18 @@ class IsValidActionExpression implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
+        if (false === config('firefly.feature_flags.expression_engine')) {
+            return;
+        }
         $value ??= '';
-        $expr = new ActionExpression($value);
+        $expr  = new ActionExpression($value);
 
         if (!$expr->isValid()) {
-            $fail('validation.rule_action_expression')->translate([
-                'error' => $expr->getValidationError()->getMessage(),
-            ]);
+            $fail('validation.rule_action_expression')->translate(
+                [
+                    'error' => $expr->getValidationError()->getMessage(),
+                ]
+            );
         }
     }
 }

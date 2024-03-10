@@ -66,18 +66,21 @@ class RuleAction extends Model
     use ReturnsIntegerIdTrait;
 
     protected $casts
-                        = [
-                            'created_at'      => 'datetime',
-                            'updated_at'      => 'datetime',
-                            'active'          => 'boolean',
-                            'order'           => 'int',
-                            'stop_processing' => 'boolean',
-                        ];
+        = [
+            'created_at'      => 'datetime',
+            'updated_at'      => 'datetime',
+            'active'          => 'boolean',
+            'order'           => 'int',
+            'stop_processing' => 'boolean',
+        ];
 
     protected $fillable = ['rule_id', 'action_type', 'action_value', 'order', 'active', 'stop_processing'];
 
     public function getValue(array $journal): string
     {
+        if (false === config('firefly.feature_flags.expression_engine')) {
+            return (string)$this->action_value;
+        }
         $expr = new ActionExpression($this->action_value);
 
         return $expr->evaluate($journal);
@@ -91,14 +94,14 @@ class RuleAction extends Model
     protected function order(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn($value) => (int)$value,
         );
     }
 
     protected function ruleId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn($value) => (int)$value,
         );
     }
 }
