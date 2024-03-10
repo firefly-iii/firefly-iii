@@ -22,6 +22,9 @@
 
 SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
+echo "Running PHP CS Fixer"
 $SCRIPT_DIR/phpcs.sh
+echo "Running PHPStan"
 $SCRIPT_DIR/phpstan.sh
+echo "Running PHPMD"
 $SCRIPT_DIR/phpmd.sh

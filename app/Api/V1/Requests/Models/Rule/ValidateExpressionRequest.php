@@ -45,10 +45,7 @@ class ValidateExpressionRequest extends FormRequest
     /**
      * Handle a failed validation attempt.
      *
-     * @param  \Illuminate\Contracts\Validation\Validator  $validator
-     * @return void
-     *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     protected function failedValidation(Validator $validator): void
     {
@@ -58,7 +55,7 @@ class ValidateExpressionRequest extends FormRequest
             $validator,
             response()->json([
                 'valid' => false,
-                'error' => $error
+                'error' => $error,
             ], 200)
         );
     }

@@ -20,6 +20,7 @@
  */
 
 declare(strict_types=1);
+
 use FireflyIII\User;
 
 if ('ldap' === strtolower((string)env('AUTHENTICATION_GUARD'))) {

@@ -36,7 +36,7 @@ trait CollectorProperties
     public const string TEST = 'Test';
 
     /** @var array<int, string> */
-    public array $sorting;
+    public array    $sorting;
     private ?int    $endRow;
     private bool    $expandGroupSearch;
     private array   $fields;

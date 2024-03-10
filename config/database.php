@@ -21,8 +21,6 @@
 
 declare(strict_types=1);
 
-use Illuminate\Support\Str;
-
 $databaseUrl       = getenv('DATABASE_URL');
 $host              = '';
 $username          = '';

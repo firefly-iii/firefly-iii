@@ -76,6 +76,13 @@ class RuleAction extends Model
 
     protected $fillable = ['rule_id', 'action_type', 'action_value', 'order', 'active', 'stop_processing'];
 
+    public function getValue(array $journal): string
+    {
+        $expr = new ActionExpression($this->action_value);
+
+        return $expr->evaluate($journal);
+    }
+
     public function rule(): BelongsTo
     {
         return $this->belongsTo(Rule::class);
@@ -93,11 +100,5 @@ class RuleAction extends Model
         return Attribute::make(
             get: static fn ($value) => (int)$value,
         );
-    }
-
-    public function getValue(array $journal): string
-    {
-        $expr = new ActionExpression($this->action_value);
-        return $expr->evaluate($journal);
     }
 }

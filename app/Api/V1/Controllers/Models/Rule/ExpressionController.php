@@ -36,16 +36,12 @@ class ExpressionController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/rules/validateExpression
      *
-     * @param ValidateExpressionRequest $request
-     *
-     * @return JsonResponse
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function validateExpression(ValidateExpressionRequest $request): JsonResponse
     {
         return response()->json([
-            "valid" => true,
+            'valid' => true,
         ]);
     }
 }

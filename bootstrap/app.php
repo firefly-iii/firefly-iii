@@ -36,12 +36,12 @@ bcscale(12);
 
 if (!function_exists('envNonEmpty')) {
     /**
-     * @param string $key
-     * @param string|int|bool|null   $default
+     * @param string               $key
+     * @param string|int|bool|null $default
      *
      * @return mixed|null
      */
-    function envNonEmpty(string $key, string|int|bool|null $default = null)
+    function envNonEmpty(string $key, string | int | bool | null $default = null)
     {
         $result = env($key, $default);
         if ('' === $result) {

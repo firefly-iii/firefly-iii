@@ -42,19 +42,19 @@ class IndexRequest extends FormRequest
     use ConvertsDataTypes;
     use GetSortInstructions;
 
+    public function getAccountTypes(): array
+    {
+        $type = (string)$this->get('type', 'default');
+
+        return $this->mapAccountTypes($type);
+    }
+
     /**
      * Get all data from the request.
      */
     public function getDate(): Carbon
     {
         return $this->getCarbonDate('date');
-    }
-
-    public function getAccountTypes(): array
-    {
-        $type = (string)$this->get('type', 'default');
-
-        return $this->mapAccountTypes($type);
     }
 
     /**

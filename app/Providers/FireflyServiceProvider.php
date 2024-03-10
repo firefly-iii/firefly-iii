@@ -208,6 +208,7 @@ class FireflyServiceProvider extends ServiceProvider
             static function () {
                 $expressionLanguage = new ExpressionLanguage();
                 $expressionLanguage->registerProvider(new ActionExpressionLanguageProvider());
+
                 return $expressionLanguage;
             }
         );

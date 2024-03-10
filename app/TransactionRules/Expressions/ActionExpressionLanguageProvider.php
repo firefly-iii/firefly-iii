@@ -32,8 +32,8 @@ class ActionExpressionLanguageProvider implements ExpressionFunctionProviderInte
     public function getFunctions(): array
     {
         return [
-            ExpressionFunction::fromPhp("substr"),
-            ExpressionFunction::fromPhp("strlen")
+            ExpressionFunction::fromPhp('substr'),
+            ExpressionFunction::fromPhp('strlen'),
         ];
     }
 }
