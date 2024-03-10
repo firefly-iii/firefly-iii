@@ -31,6 +31,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Log;
 
 /**
  * FireflyIII\Models\RuleAction
@@ -79,11 +80,13 @@ class RuleAction extends Model
     public function getValue(array $journal): string
     {
         if (false === config('firefly.feature_flags.expression_engine')) {
+            Log::debug('Expression engine is disabled, returning action value as string.');
             return (string)$this->action_value;
         }
-        $expr = new ActionExpression($this->action_value);
-
-        return $expr->evaluate($journal);
+        $expr   = new ActionExpression($this->action_value);
+        $result = $expr->evaluate($journal);
+        Log::debug(sprintf('Expression engine is enabled, result of expression "%s" is "%s".', $this->action_value, $result));
+        return $result;
     }
 
     public function rule(): BelongsTo
