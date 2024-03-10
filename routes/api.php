@@ -602,11 +602,11 @@ Route::group(
     static function (): void {
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
+        Route::get('validate-expression', ['uses' => 'ExpressionController@validateExpression', 'as' => 'validate']);
         Route::get('{rule}', ['uses' => 'ShowController@show', 'as' => 'show']);
         Route::put('{rule}', ['uses' => 'UpdateController@update', 'as' => 'update']);
         Route::delete('{rule}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
 
-        Route::post('validate-expression', ['uses' => 'ExpressionController@validateExpression', 'as' => 'validate']);
 
         Route::get('{rule}/test', ['uses' => 'TriggerController@testRule', 'as' => 'test']);
         // TODO give results back
