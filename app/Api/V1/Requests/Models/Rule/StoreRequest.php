@@ -58,7 +58,6 @@ class StoreRequest extends FormRequest
             'active'           => ['active', 'boolean'],
         ];
         $data             = $this->getAllData($fields);
-
         $data['triggers'] = $this->getRuleTriggers();
         $data['actions']  = $this->getRuleActions();
 
@@ -106,8 +105,8 @@ class StoreRequest extends FormRequest
      */
     public function rules(): array
     {
-        $validTriggers   = $this->getTriggers();
-        $validActions    = array_keys(config('firefly.rule-actions'));
+        $validTriggers = $this->getTriggers();
+        $validActions  = array_keys(config('firefly.rule-actions'));
 
         // some triggers and actions require text:
         $contextTriggers = implode(',', $this->getTriggersWithContext());
@@ -119,12 +118,12 @@ class StoreRequest extends FormRequest
             'rule_group_id'              => 'belongsToUser:rule_groups|required_without:rule_group_title',
             'rule_group_title'           => 'nullable|min:1|max:255|required_without:rule_group_id|belongsToUser:rule_groups,title',
             'trigger'                    => 'required|in:store-journal,update-journal',
-            'triggers.*.type'            => 'required|in:'.implode(',', $validTriggers),
-            'triggers.*.value'           => 'required_if:actions.*.type,'.$contextTriggers.'|min:1|ruleTriggerValue|max:1024',
+            'triggers.*.type'            => 'required|in:' . implode(',', $validTriggers),
+            'triggers.*.value'           => 'required_if:actions.*.type,' . $contextTriggers . '|min:1|ruleTriggerValue|max:1024',
             'triggers.*.stop_processing' => [new IsBoolean()],
             'triggers.*.active'          => [new IsBoolean()],
-            'actions.*.type'             => 'required|in:'.implode(',', $validActions),
-            'actions.*.value'            => ['required_if:actions.*.type,'.$contextActions, new IsValidActionExpression(), 'ruleActionValue'],
+            'actions.*.type'             => 'required|in:' . implode(',', $validActions),
+            'actions.*.value'            => [sprintf('required_if:actions.*.type,%s', $contextActions), new IsValidActionExpression(), 'ruleActionValue'],
             'actions.*.stop_processing'  => [new IsBoolean()],
             'actions.*.active'           => [new IsBoolean()],
             'strict'                     => [new IsBoolean()],
@@ -182,10 +181,10 @@ class StoreRequest extends FormRequest
      */
     protected function atLeastOneActiveTrigger(Validator $validator): void
     {
-        $data          = $validator->getData();
+        $data = $validator->getData();
 
         /** @var null|array|int|string $triggers */
-        $triggers      = $data['triggers'] ?? [];
+        $triggers = $data['triggers'] ?? [];
         // need at least one trigger
         if (!is_countable($triggers) || 0 === count($triggers)) {
             return;
@@ -211,10 +210,10 @@ class StoreRequest extends FormRequest
      */
     protected function atLeastOneActiveAction(Validator $validator): void
     {
-        $data          = $validator->getData();
+        $data = $validator->getData();
 
         /** @var null|array|int|string $actions */
-        $actions       = $data['actions'] ?? [];
+        $actions = $data['actions'] ?? [];
         // need at least one trigger
         if (!is_countable($actions) || 0 === count($actions)) {
             return;
