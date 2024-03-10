@@ -79,6 +79,7 @@ class ActionExpression
         'due_date',
         'process_date',
         'destination_transaction_id',
+        'notes',
     ];
 
     private ExpressionLanguage $expressionLanguage;
@@ -97,7 +98,7 @@ class ActionExpression
 
     private static function isExpression(string $expr): bool
     {
-        return str_starts_with($expr, '=');
+        return str_starts_with($expr, '=') && strlen($expr) > 1;
     }
 
     private function validate(): ?SyntaxError

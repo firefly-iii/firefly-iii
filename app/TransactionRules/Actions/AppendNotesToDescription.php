@@ -33,6 +33,7 @@ use FireflyIII\Support\Request\ConvertsDataTypes;
 
 /**
  * Class AppendNotesToDescription
+ * TODO Can be replaced (and migrated) to action "set description" with a prefilled expression
  */
 class AppendNotesToDescription implements ActionInterface
 {

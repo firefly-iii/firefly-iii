@@ -32,6 +32,7 @@ use FireflyIII\Models\TransactionJournal;
 
 /**
  * Class MoveDescriptionToNotes
+ * TODO Can be replaced (and migrated) to action "set notes" with a prefilled expression
  */
 class MoveDescriptionToNotes implements ActionInterface
 {

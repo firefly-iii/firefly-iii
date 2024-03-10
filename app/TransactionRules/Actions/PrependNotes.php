@@ -30,6 +30,7 @@ use FireflyIII\Models\TransactionJournal;
 
 /**
  * Class PrependNotes.
+ * TODO Can be replaced (and migrated) to action "set notes" with a prefilled expression
  */
 class PrependNotes implements ActionInterface
 {
