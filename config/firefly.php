@@ -83,6 +83,7 @@ use FireflyIII\TransactionRules\Actions\PrependDescription;
 use FireflyIII\TransactionRules\Actions\PrependNotes;
 use FireflyIII\TransactionRules\Actions\RemoveAllTags;
 use FireflyIII\TransactionRules\Actions\RemoveTag;
+use FireflyIII\TransactionRules\Actions\SetAmount;
 use FireflyIII\TransactionRules\Actions\SetBudget;
 use FireflyIII\TransactionRules\Actions\SetCategory;
 use FireflyIII\TransactionRules\Actions\SetDescription;
@@ -109,11 +110,11 @@ return [
     ],
     // some feature flags:
     'feature_flags'                => [
-        'export'       => true,
-        'telemetry'    => false,
-        'webhooks'     => true,
-        'handle_debts' => true,
-        'expression_engine' => false,
+        'export'            => true,
+        'telemetry'         => false,
+        'webhooks'          => true,
+        'handle_debts'      => true,
+        'expression_engine' => true,
         // see cer.php for exchange rates feature flag.
     ],
     'version'                      => 'develop/2024-03-07',
@@ -521,6 +522,9 @@ return [
         'move_notes_to_descr'     => MoveNotesToDescription::class,
         'set_source_to_cash'      => SetSourceToCashAccount::class,
         'set_destination_to_cash' => SetDestinationToCashAccount::class,
+        'set_amount'              => SetAmount::class,
+        // 'set_foreign_amount' => SetForeignAmount::class,
+        // 'set_foreign_currency' => SetForeignCurrency::class,
     ],
     'context-rule-actions'         => [
         'set_category',

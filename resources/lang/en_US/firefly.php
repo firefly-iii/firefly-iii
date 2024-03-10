@@ -1250,6 +1250,8 @@ return [
     'rule_action_append_notes_to_descr'                   => 'Append notes to description',
     'rule_action_move_descr_to_notes'                     => 'Replace notes with description',
     'rule_action_move_notes_to_descr'                     => 'Replace description with notes',
+    'rule_action_set_amount_choice'                       => 'Set amount to ..',
+    'rule_action_set_amount'                              => 'Set amount to ":action_value"',
     'rule_action_set_destination_to_cash_choice'          => 'Set destination account to (cash)',
     'rule_action_set_source_to_cash_choice'               => 'Set source account to (cash)',
     'rulegroup_for_bills_title'                           => 'Rule group for bills',
@@ -2678,6 +2680,7 @@ return [
     'ale_action_add_to_piggy'                             => 'Piggy bank',
     'ale_action_remove_from_piggy'                        => 'Piggy bank',
     'ale_action_add_tag'                                  => 'Added tag',
+    'ale_action_update_amount'                            => 'Updated amount',
 
     // dashboard
     'enable_auto_convert'                                 => 'Enable currency conversion',

@@ -67,12 +67,12 @@ class RuleAction extends Model
 
     protected $casts
                         = [
-            'created_at'      => 'datetime',
-            'updated_at'      => 'datetime',
-            'active'          => 'boolean',
-            'order'           => 'int',
-            'stop_processing' => 'boolean',
-        ];
+                            'created_at'      => 'datetime',
+                            'updated_at'      => 'datetime',
+                            'active'          => 'boolean',
+                            'order'           => 'int',
+                            'stop_processing' => 'boolean',
+                        ];
 
     protected $fillable = ['rule_id', 'action_type', 'action_value', 'order', 'active', 'stop_processing'];
 

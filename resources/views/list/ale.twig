@@ -22,6 +22,12 @@
                     <code>{{ logEntry.after }}</code>
                 {% endif %}
 
+                {% if 'update_amount' == logEntry.action %}
+                    {{ formatAmountBySymbol(logEntry.before.amount, logEntry.before.currency_symbol, logEntry.before.decimal_places, true) }}
+                    &rarr;
+                    {{ formatAmountBySymbol(logEntry.after.amount, logEntry.after.currency_symbol, logEntry.after.decimal_places, true) }}
+                {% endif %}
+
                 {% if 'update_group_title' == logEntry.action %}
                     <code><s>{{ logEntry.before }}</s></code>
                     &rarr;
