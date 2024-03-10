@@ -42,21 +42,5 @@ class ValidateExpressionRequest extends FormRequest
         return ['expression' => ['required', new IsValidActionExpression()]];
     }
 
-    /**
-     * Handle a failed validation attempt.
-     *
-     * @throws ValidationException
-     */
-    protected function failedValidation(Validator $validator): void
-    {
-        $error = $validator->errors()->first('expression');
 
-        throw new ValidationException(
-            $validator,
-            response()->json([
-                'valid' => false,
-                'error' => $error,
-            ], 200)
-        );
-    }
 }
