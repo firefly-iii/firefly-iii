@@ -115,7 +115,8 @@ jobs:
           GH_TOKEN: ''
       - name: Build new JS
         run: |
-          npm upgrade
+          pwd
+          npm install
           npm run build
       - name: Build old JS
         id: old-js
