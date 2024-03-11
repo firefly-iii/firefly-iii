@@ -113,7 +113,7 @@ return [
     'two_factor_forgot'                                   => 'Elfelejtett kétlépcsős azonosítás.',
     'two_factor_lost_header'                              => 'Elvesztett kétlépcsős hitelesítés?',
     'two_factor_lost_intro'                               => 'Ha a biztonsági kódok is elvesztek, akkor bajban vagy. Ezt nem lehet a webes felületről megjavítani, így két lehetőséged van.',
-    'two_factor_lost_fix_self'                            => 'Ha saját példányt futtat a Firefly II-ból, akkor olvassa el a <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working>ezt a GYIK bejegyzést</a> instrukciókért.',
+    'two_factor_lost_fix_self'                            => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                           => 'Ellenkező esetben emailt kell küldeni a webhely tulajdonosának a <a href="mailto::site_owner">:site_owner</a> címre, és meg kell kérni, hogy állítsa vissza a kétfaktoros hitelesítést.',
     'mfa_backup_code'                                     => 'A biztonsági kód fel lett használva a Firefly III-hoz. Ezt többé nem használhatod fel, így a listáról ez kihúzható.',
     'pref_two_factor_new_backup_codes'                    => 'Új biztonsági kódok igénylése',
@@ -1286,6 +1286,8 @@ return [
     'rule_action_append_notes_to_descr'                   => 'Append notes to description',
     'rule_action_move_descr_to_notes'                     => 'Replace notes with description',
     'rule_action_move_notes_to_descr'                     => 'Replace description with notes',
+    'rule_action_set_amount_choice'                       => 'Set amount to ..',
+    'rule_action_set_amount'                              => 'Set amount to ":action_value"',
     'rule_action_set_destination_to_cash_choice'          => 'Set destination account to (cash)',
     'rule_action_set_source_to_cash_choice'               => 'Set source account to (cash)',
     'rulegroup_for_bills_title'                           => 'Szabálycsoport a számlákhoz',
@@ -2768,6 +2770,7 @@ return [
     'ale_action_add_to_piggy'                             => 'Piggy bank',
     'ale_action_remove_from_piggy'                        => 'Piggy bank',
     'ale_action_add_tag'                                  => 'Added tag',
+    'ale_action_update_amount'                            => 'Updated amount',
 
     // dashboard
     'enable_auto_convert'                                 => 'Enable currency conversion',

@@ -55,6 +55,7 @@ return [
     'reconciled_forbidden_field'      => 'This transaction is already reconciled, you cannot change the ":field"',
     'deleted_user'                    => 'Din cauza constrângerilor de securitate, nu vă puteți înregistra utilizând această adresă de e-mail.',
     'rule_trigger_value'              => 'Această valoare nu este validă pentru declanșatorul selectat.',
+    'rule_action_expression'          => 'Invalid expression. :error',
     'rule_action_value'               => 'Această valoare nu este validă pentru acțiunea selectată.',
     'file_already_attached'           => 'Fișierul încărcat ":name" este deja atașat acestui obiect.',
     'file_attached'                   => 'Fișierul ":name" a fost încărcat cu succes.',
@@ -195,7 +196,7 @@ return [
  *
  */
 
-    'secure_password'                 => 'Aceasta nu este o parolă sigură. Vă rugăm să încercați din nou. Pentru mai multe informații, vizitați https://bit.ly/FF3-password-security',
+    'secure_password'                 => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password',
     'valid_recurrence_rep_type'       => 'Tip de repetare nevalid pentru tranzacțiile recurente.',
     'valid_recurrence_rep_moment'     => 'Momentul repetiției nevalid pentru acest tip de repetare.',
     'invalid_account_info'            => 'Informațiile contului nevalide.',

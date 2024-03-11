@@ -55,6 +55,7 @@ return [
     'reconciled_forbidden_field'      => 'Ta transakcja jest już uzgodniona, nie można zmienić ":field"',
     'deleted_user'                    => 'Ze względu na zabezpieczenia nie możesz się zarejestrować używając tego adresu e-mail.',
     'rule_trigger_value'              => 'Ta wartość jest nieprawidłowa dla wybranego wyzwalacza.',
+    'rule_action_expression'          => 'Invalid expression. :error',
     'rule_action_value'               => 'Ta wartość jest nieprawidłowa dla wybranej akcji.',
     'file_already_attached'           => 'Przesłany plik ":name" jest już dołączony do tego obiektu.',
     'file_attached'                   => 'Pomyślnie wgrano plik ":name".',
@@ -195,7 +196,7 @@ return [
  *
  */
 
-    'secure_password'                 => 'To nie jest bezpieczne hasło. Proszę spróbować ponownie. Aby uzyskać więcej informacji odwiedź https://bit.ly/FF3-password-security',
+    'secure_password'                 => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password',
     'valid_recurrence_rep_type'       => 'Nieprawidłowy typ powtórzeń dla cyklicznych transakcji.',
     'valid_recurrence_rep_moment'     => 'Nieprawidłowy moment powtórzenia dla tego typu powtórzenia.',
     'invalid_account_info'            => 'Nieprawidłowe informacje o koncie.',

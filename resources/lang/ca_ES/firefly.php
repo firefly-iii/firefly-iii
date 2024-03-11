@@ -113,7 +113,7 @@ return [
     'two_factor_forgot'                                   => 'He oblidat la meva cosa de dos factors.',
     'two_factor_lost_header'                              => 'Has perdut la teva autenticació en dues passes?',
     'two_factor_lost_intro'                               => 'Si també has perdut els teus codis de seguretat, has tingut mala sort. No hi ha res que puguis fer per arreglar-ho des de la interfície web. Tens dues opcions.',
-    'two_factor_lost_fix_self'                            => 'Si tens la teva pròpia instància de Firefly III, llegeix <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working>aquesta entrada a les FAQ</a> per a obtenir instruccions.',
+    'two_factor_lost_fix_self'                            => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                           => 'Altrament, envia un correu al propietari del lloc, <a href="mailto::site_owner">:site_owner</a> i demana-li que reiniciï la teva autenticació de dues passes.',
     'mfa_backup_code'                                     => 'Has fet servir un codi de seguretat per iniciar sessió a Firefly III. No es pot tornar a utilitzar, així que ratlla\'l de la llista.',
     'pref_two_factor_new_backup_codes'                    => 'Obtenir nous codis de seguretat',
@@ -1286,6 +1286,8 @@ return [
     'rule_action_append_notes_to_descr'                   => 'Afegir notes a la descripció',
     'rule_action_move_descr_to_notes'                     => 'Substituir les notes per la descripció',
     'rule_action_move_notes_to_descr'                     => 'Substituir la descripció per les notes',
+    'rule_action_set_amount_choice'                       => 'Set amount to ..',
+    'rule_action_set_amount'                              => 'Set amount to ":action_value"',
     'rule_action_set_destination_to_cash_choice'          => 'Establir el compte destí a (efectiu)',
     'rule_action_set_source_to_cash_choice'               => 'Establir el compte font a (efectiu)',
     'rulegroup_for_bills_title'                           => 'Grup de regles per factures',
@@ -2768,6 +2770,7 @@ return [
     'ale_action_add_to_piggy'                             => 'Guardiola',
     'ale_action_remove_from_piggy'                        => 'Guardiola',
     'ale_action_add_tag'                                  => 'Etiqueta afegida',
+    'ale_action_update_amount'                            => 'Updated amount',
 
     // dashboard
     'enable_auto_convert'                                 => 'Habilita la conversió de moneda',

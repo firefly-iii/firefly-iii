@@ -42,7 +42,7 @@ return [
     'fatal_error'             => 'Er is een fatale fout opgetreden. Controleer de logbestanden in "storage/logs" of gebruik "docker logs -f [container]" om te zien wat er gebeurde.',
     'maintenance_mode'        => 'Firefly III is in onderhoudsmodus.',
     'be_right_back'           => 'Zo terug!',
-    'check_back'              => 'Firefly III is offline voor onderhoud. Kom later terug.',
+    'check_back'              => 'Firefly III is down for some necessary maintenance. Please check back in a second. If you happen to see this message on the demo site, just wait a few minutes. The database is reset every few hours.',
     'error_occurred'          => 'Oeps! Er is een fout opgetreden.',
     'db_error_occurred'       => 'Oeps! Er is een database-fout opgetreden.',
     'error_not_recoverable'   => 'Helaas was deze fout niet te herstellen :(. Firefly III is stuk. De fout is:',

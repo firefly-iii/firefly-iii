@@ -113,7 +113,7 @@ return [
     'two_factor_forgot'                                   => 'Ξέχασα τον παράγοντα ταυτοποίησης.',
     'two_factor_lost_header'                              => 'Χάσατε την ταυτότητα δύο παραγόντων;',
     'two_factor_lost_intro'                               => 'Εάν χάσατε τους εφεδρικούς κωδικούς σας επίσης, είστε άτυχοι. Αυτό δε μπορεί να διορθωθεί απευθείας. Έχετε δύο επιλογές.',
-    'two_factor_lost_fix_self'                            => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working>this entry in the FAQ</a> for instructions.',
+    'two_factor_lost_fix_self'                            => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                           => 'Ειδάλλως, στείλτε email στον ιδιοκτήτη του ιστότοπου, <a href="mailto::site_owner">:site_owner</a> και ζητήστε να σας επαναφέρει την ταυτότητα δύο παραγόντων.',
     'mfa_backup_code'                                     => 'Έχετε χρησιμοποιήσει ένα εφεδρικό κωδικό για να συνδεθείτε στο Firefly III. Δε μπορεί να χρησιμοποιηθεί ξανά, οπότε διαγράψτε το από τη λίστα σας.',
     'pref_two_factor_new_backup_codes'                    => 'Λάβετε νέους εφεδρικούς κωδικούς',
@@ -1286,6 +1286,8 @@ return [
     'rule_action_append_notes_to_descr'                   => 'Append notes to description',
     'rule_action_move_descr_to_notes'                     => 'Replace notes with description',
     'rule_action_move_notes_to_descr'                     => 'Replace description with notes',
+    'rule_action_set_amount_choice'                       => 'Set amount to ..',
+    'rule_action_set_amount'                              => 'Set amount to ":action_value"',
     'rule_action_set_destination_to_cash_choice'          => 'Set destination account to (cash)',
     'rule_action_set_source_to_cash_choice'               => 'Set source account to (cash)',
     'rulegroup_for_bills_title'                           => 'Ομάδα κανόνων για πάγια έξοδα',
@@ -2768,6 +2770,7 @@ return [
     'ale_action_add_to_piggy'                             => 'Κουμπαράς',
     'ale_action_remove_from_piggy'                        => 'Κουμπαράς',
     'ale_action_add_tag'                                  => 'Προστέθηκε ετικέτα',
+    'ale_action_update_amount'                            => 'Updated amount',
 
     // dashboard
     'enable_auto_convert'                                 => 'Enable currency conversion',

@@ -42,7 +42,7 @@ return [
     'fatal_error'             => 'Der opstod en alvorlig fejl. Tjek logfilerne i "storage/logs" eller brug "docker logs -f [container]" for at se, hvad der gik galt.',
     'maintenance_mode'        => 'Firefly III kører i vedligeholdelsestilstand.',
     'be_right_back'           => 'Er straks tilbage!',
-    'check_back'              => 'Firefly III er utilgængelig pga. en nødvendig vedligeholdelse. Tjek venligst tilbage om et sekund.',
+    'check_back'              => 'Firefly III is down for some necessary maintenance. Please check back in a second. If you happen to see this message on the demo site, just wait a few minutes. The database is reset every few hours.',
     'error_occurred'          => 'Beklager, der opstod en fejl.',
     'db_error_occurred'       => 'Hovsa! Der opstod en databasefejl.',
     'error_not_recoverable'   => 'Desværre er denne fejl uoprettelig :(. Firefly III brød sammen. Fejlen er:',

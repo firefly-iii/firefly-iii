@@ -55,6 +55,7 @@ return [
     'reconciled_forbidden_field'      => 'Denne transaksjonen er allerede avstemt. Du kan ikke endre ":field"',
     'deleted_user'                    => 'På grunn av sikkerhetsbegrensninger kan du ikke registreres med denne e-postadresse.',
     'rule_trigger_value'              => 'Denne verdien er ugyldig for den valgte triggeren.',
+    'rule_action_expression'          => 'Invalid expression. :error',
     'rule_action_value'               => 'Denne verdien er ugyldig for den valgte handlingen.',
     'file_already_attached'           => 'Opplastede fil ":name" er allerede knyttet til dette objektet.',
     'file_attached'                   => 'Opplasting av fil ":name" var vellykket.',
@@ -195,7 +196,7 @@ return [
  *
  */
 
-    'secure_password'                 => 'Dette er ikke et sikkert passord. Vennligst prøv igjen. For mer informasjon, se https://bit.ly/FF3-password-security',
+    'secure_password'                 => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password',
     'valid_recurrence_rep_type'       => 'Ugyldig repetisjons type for gjentakende transaksjoner.',
     'valid_recurrence_rep_moment'     => 'Ugyldig repetisjons tid for denne type repetisjon.',
     'invalid_account_info'            => 'Ugyldig konto informasjon.',

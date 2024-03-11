@@ -42,7 +42,7 @@ return [
     'fatal_error'             => '致命的なエラーが発生しました。"storage/logs"にあるログファイルを確認するか、"docker logs -f [container]"を使用して問題点を確認してください。',
     'maintenance_mode'        => 'Firefly III はメンテナンスモードです。',
     'be_right_back'           => 'メンテナンスはすぐに終わります。',
-    'check_back'              => '必要なメンテナンスを行っているため、Firefly IIIは一時停止しています。しばらくしてからもう一度確認してください。',
+    'check_back'              => 'Firefly III is down for some necessary maintenance. Please check back in a second. If you happen to see this message on the demo site, just wait a few minutes. The database is reset every few hours.',
     'error_occurred'          => '申し訳ありません。エラーが発生しました。',
     'db_error_occurred'       => 'おっと！データベースエラーが発生しました。',
     'error_not_recoverable'   => '残念ながら、このエラーは回復不可能です。Firefly IIIは故障しました。エラーログは以下の通りです:',

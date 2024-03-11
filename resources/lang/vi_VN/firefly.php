@@ -113,7 +113,7 @@ return [
     'two_factor_forgot'                                   => 'Tôi quên mất hai yếu tố.',
     'two_factor_lost_header'                              => 'Mất xác thực hai yếu tố của bạn?',
     'two_factor_lost_intro'                               => 'Nếu bạn bị mất mã dự phòng. Bạn có hai lựa chọn.',
-    'two_factor_lost_fix_self'                            => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working>this entry in the FAQ</a> for instructions.',
+    'two_factor_lost_fix_self'                            => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                           => 'Nếu không, gửi email cho chủ sở hữu trang web, <a href="mailto::site_owner">:site_owner</a> và yêu cầu họ đặt lại xác thực hai yếu tố của bạn.',
     'mfa_backup_code'                                     => 'Bạn đã sử dụng mã dự phòng để đăng nhập vào Firefly III. Nó không thể được sử dụng lại, vì vậy hãy gạch chéo nó khỏi danh sách của bạn.',
     'pref_two_factor_new_backup_codes'                    => 'Nhận mã dự phòng mới',
@@ -1286,6 +1286,8 @@ return [
     'rule_action_append_notes_to_descr'                   => 'Append notes to description',
     'rule_action_move_descr_to_notes'                     => 'Replace notes with description',
     'rule_action_move_notes_to_descr'                     => 'Replace description with notes',
+    'rule_action_set_amount_choice'                       => 'Set amount to ..',
+    'rule_action_set_amount'                              => 'Set amount to ":action_value"',
     'rule_action_set_destination_to_cash_choice'          => 'Set destination account to (cash)',
     'rule_action_set_source_to_cash_choice'               => 'Set source account to (cash)',
     'rulegroup_for_bills_title'                           => 'Nhóm quy tắc cho hóa đơn',
@@ -2768,6 +2770,7 @@ return [
     'ale_action_add_to_piggy'                             => 'Piggy bank',
     'ale_action_remove_from_piggy'                        => 'Piggy bank',
     'ale_action_add_tag'                                  => 'Added tag',
+    'ale_action_update_amount'                            => 'Updated amount',
 
     // dashboard
     'enable_auto_convert'                                 => 'Enable currency conversion',

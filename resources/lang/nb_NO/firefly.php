@@ -113,7 +113,7 @@ return [
     'two_factor_forgot'                                   => 'Jeg har glemt/mistet min tofaktor-ting.',
     'two_factor_lost_header'                              => 'Mistet tofaktorautentisering?',
     'two_factor_lost_intro'                               => 'Hvis du også har mistet sikkerhetskodene din, har du dårlig hell. Noe du ikke kan fikse fra webgrensesnittet. Du har to valg.',
-    'two_factor_lost_fix_self'                            => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working>this entry in the FAQ</a> for instructions.',
+    'two_factor_lost_fix_self'                            => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                           => 'Ellers sender du e-postadressen eieren, <a href="mailto::site_owner">:site_owner</a> og ber vedkommende om å tilbakestille tofaktorautentiseringen din.',
     'mfa_backup_code'                                     => 'Du har brukt en sikkerhetskode for å logge inn i Firefly III. Den kan ikke brukes igjen, så kryss den fra listen din.',
     'pref_two_factor_new_backup_codes'                    => 'Få nye sikkerhetskoder',
@@ -1286,6 +1286,8 @@ return [
     'rule_action_append_notes_to_descr'                   => 'Legg notater til beskrivelsen',
     'rule_action_move_descr_to_notes'                     => 'Erstatt notater med beskrivelse',
     'rule_action_move_notes_to_descr'                     => 'Erstatt beskrivelse med notater',
+    'rule_action_set_amount_choice'                       => 'Set amount to ..',
+    'rule_action_set_amount'                              => 'Set amount to ":action_value"',
     'rule_action_set_destination_to_cash_choice'          => 'Set destination account to (cash)',
     'rule_action_set_source_to_cash_choice'               => 'Set source account to (cash)',
     'rulegroup_for_bills_title'                           => 'Regelgruppe for regninger',
@@ -2768,6 +2770,7 @@ return [
     'ale_action_add_to_piggy'                             => 'Sparegris',
     'ale_action_remove_from_piggy'                        => 'Sparegris',
     'ale_action_add_tag'                                  => 'La til tagg',
+    'ale_action_update_amount'                            => 'Updated amount',
 
     // dashboard
     'enable_auto_convert'                                 => 'Aktiver valutakonvertering',

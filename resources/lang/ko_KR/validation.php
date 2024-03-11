@@ -55,6 +55,7 @@ return [
     'reconciled_forbidden_field'      => 'This transaction is already reconciled, you cannot change the ":field"',
     'deleted_user'                    => '보안 제약으로 인해 이 이메일 주소를 사용하여 등록할 수 없습니다.',
     'rule_trigger_value'              => '선택한 트리거에 대해 이 값은 유효하지 않습니다.',
+    'rule_action_expression'          => 'Invalid expression. :error',
     'rule_action_value'               => '선택한 액션에 대해 이 값은 유효하지 않습니다.',
     'file_already_attached'           => '업로드된 파일 ":name"이 이 개체에 이미 첨부되어 있습니다.',
     'file_attached'                   => '":name" 파일을 성공적으로 업로드했습니다.',
@@ -195,7 +196,7 @@ return [
  *
  */
 
-    'secure_password'                 => "안전한 비밀번호가 아닙니다. 다시 시도해 주세요. 자세한 내용은 https://bit.ly/FF3-password-security 를 \u{200b}\u{200b}방문하세요.",
+    'secure_password'                 => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password',
     'valid_recurrence_rep_type'       => '반복 거래에 대한 반복 유형이 잘못되었습니다.',
     'valid_recurrence_rep_moment'     => '이 유형의 반복에 대한 반복 시점이 잘못되었습니다.',
     'invalid_account_info'            => '잘못된 계정 정보입니다.',

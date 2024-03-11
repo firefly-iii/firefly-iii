@@ -113,7 +113,7 @@ return [
     'two_factor_forgot'                                   => 'Zapomniałem mojego uwierzytelnienia dwuskładnikowego.',
     'two_factor_lost_header'                              => 'Straciłeś uwierzytelnianie dwuskładnikowe?',
     'two_factor_lost_intro'                               => 'Jeżeli także nie masz kodów, to niestety nie masz szczęścia. To nie jest coś, co możemy naprawić z poziomu przeglądarki. Masz dwie opcje.',
-    'two_factor_lost_fix_self'                            => 'Jeśli jesteś właścicielem tej instalacji Firefly III, przeczytaj <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working>ten wpis w FAQ</a>, aby uzyskać instrukcje.',
+    'two_factor_lost_fix_self'                            => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                           => 'W przeciwnym razie, powiadom właściciela strony, <a href="mailto::site_owner">:site_owner</a> i poproś go o zresetowanie Twojego uwierzytelnienia dwuskładnikowego.',
     'mfa_backup_code'                                     => 'Użyłeś kodu zapasowego do zalogowania się do Firefly III. Nie możesz go użyć ponownie, więc wykreśl go z listy.',
     'pref_two_factor_new_backup_codes'                    => 'Wygeneruj nowe kody zapasowe',
@@ -1286,6 +1286,8 @@ return [
     'rule_action_append_notes_to_descr'                   => 'Dołącz notatki do opisu',
     'rule_action_move_descr_to_notes'                     => 'Zastąp notatki opisem',
     'rule_action_move_notes_to_descr'                     => 'Zastąp opis notatkami',
+    'rule_action_set_amount_choice'                       => 'Set amount to ..',
+    'rule_action_set_amount'                              => 'Set amount to ":action_value"',
     'rule_action_set_destination_to_cash_choice'          => 'Ustaw konto docelowe na konto gotówkowe',
     'rule_action_set_source_to_cash_choice'               => 'Ustaw konto źródłowe na konto gotówkowe',
     'rulegroup_for_bills_title'                           => 'Grupa reguł dla rachunków',
@@ -2768,6 +2770,7 @@ return [
     'ale_action_add_to_piggy'                             => 'Skarbonka',
     'ale_action_remove_from_piggy'                        => 'Skarbonka',
     'ale_action_add_tag'                                  => 'Dodano tag',
+    'ale_action_update_amount'                            => 'Updated amount',
 
     // dashboard
     'enable_auto_convert'                                 => 'Włącz przeliczenie walut',

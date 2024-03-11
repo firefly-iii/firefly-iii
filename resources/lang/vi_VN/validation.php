@@ -55,6 +55,7 @@ return [
     'reconciled_forbidden_field'      => 'Giao dịch này đã được đối chiếu, bạn không thể thay đổi ":field"',
     'deleted_user'                    => 'Do những hạn chế về bảo mật, bạn không thể đăng ký bằng địa chỉ email này.',
     'rule_trigger_value'              => 'Giá trị này không hợp lệ cho trình kích hoạt được chọn.',
+    'rule_action_expression'          => 'Invalid expression. :error',
     'rule_action_value'               => 'Giá trị này không hợp lệ cho hành động đã chọn.',
     'file_already_attached'           => 'Đã tải lên tập tin ":name" đã được gắn vào đối tượng này.',
     'file_attached'                   => 'Tải lên thành công tập tin ":name".',
@@ -195,7 +196,7 @@ return [
  *
  */
 
-    'secure_password'                 => 'Đây không phải là một mật khẩu an toàn. Vui lòng thử lại. Để biết thêm thông tin, hãy truy cập https://bit.ly/FF3-password-security',
+    'secure_password'                 => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password',
     'valid_recurrence_rep_type'       => 'Loại lặp lại không hợp lệ cho các giao dịch định kỳ.',
     'valid_recurrence_rep_moment'     => 'Khoảnh khắc lặp lại không hợp lệ cho loại lặp lại này.',
     'invalid_account_info'            => 'Thông tin tài khoản không hợp lệ.',

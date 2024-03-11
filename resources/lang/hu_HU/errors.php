@@ -42,7 +42,7 @@ return [
     'fatal_error'             => 'Súlyos hiba történt. Kérem ellenőrizze a részleteket a napló fájlokban a "storage/logs" könyvtárban vagy használja a "docker logs -f [container]" parancsot.',
     'maintenance_mode'        => 'Firefly III karbantartás alatt.',
     'be_right_back'           => 'Rögtön jövök!',
-    'check_back'              => 'FireFly III jelenleg karbantartás alatt. Kérem látogasson vissza később.',
+    'check_back'              => 'Firefly III is down for some necessary maintenance. Please check back in a second. If you happen to see this message on the demo site, just wait a few minutes. The database is reset every few hours.',
     'error_occurred'          => 'Hoppá! Hiba történt.',
     'db_error_occurred'       => 'Hoppá! Adatbázis hiba történt.',
     'error_not_recoverable'   => 'Sajnos a hiba után nem sikerült visszaállni :(. A futás megszakadt. A hiba:',

@@ -113,7 +113,7 @@ return [
     'two_factor_forgot'                                   => 'Esqueci-me da minha cena de 2 passos.',
     'two_factor_lost_header'                              => 'Perdeu a sua autenticação de 2 passos?',
     'two_factor_lost_intro'                               => 'Se também perdeu os códigos de backup, está com azar. Não é algo que se possa resolver pela interface web. Têm duas alternativas.',
-    'two_factor_lost_fix_self'                            => 'Se tiver a sua própria instância do Firefly III, por favor leia <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working> esta entrada no FAQ</a> para instruções.',
+    'two_factor_lost_fix_self'                            => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                           => 'Caso contrario, envie um email ao dono da plataforma, <a href="mailto::site_owner">:site_owner</a> e peça-lhe para reiniciar a sua autenticação de 2 passos.',
     'mfa_backup_code'                                     => 'Utilizou um código de backup para aceder ao Firefly III. Esse código não pode ser utilizado novamente, é melhor riscá-lo da sua lista.',
     'pref_two_factor_new_backup_codes'                    => 'Obter novos códigos de backup',
@@ -1286,6 +1286,8 @@ return [
     'rule_action_append_notes_to_descr'                   => 'Acrescentar notas à descrição',
     'rule_action_move_descr_to_notes'                     => 'Substituir notas por descrição',
     'rule_action_move_notes_to_descr'                     => 'Substituir descrição por notas',
+    'rule_action_set_amount_choice'                       => 'Set amount to ..',
+    'rule_action_set_amount'                              => 'Set amount to ":action_value"',
     'rule_action_set_destination_to_cash_choice'          => 'Definir a conta de destino para (cash)',
     'rule_action_set_source_to_cash_choice'               => 'Definir a conta de origem para (cash)',
     'rulegroup_for_bills_title'                           => 'Grupo de regras para encargos',
@@ -2768,6 +2770,7 @@ return [
     'ale_action_add_to_piggy'                             => 'Mealheiro',
     'ale_action_remove_from_piggy'                        => 'Mealheiro',
     'ale_action_add_tag'                                  => 'Etiqueta adicionada',
+    'ale_action_update_amount'                            => 'Updated amount',
 
     // dashboard
     'enable_auto_convert'                                 => 'Ativar a conversão de moeda',

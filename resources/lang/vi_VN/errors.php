@@ -42,7 +42,7 @@ return [
     'fatal_error'             => 'Có một lỗi nghiêm trọng. Vui lòng kiểm tra các tệp nhật ký trong "lưu trữ / nhật ký" hoặc sử dụng "nhật ký docker -f [container]" để xem những gì đang xảy ra.',
     'maintenance_mode'        => 'Firefly III đang bảo trì.',
     'be_right_back'           => 'Sẽ quay lại ngay!',
-    'check_back'              => 'Firefly III ngừng hoạt động để bảo trì. Vui lòng kiểm tra lại sau một giây.',
+    'check_back'              => 'Firefly III is down for some necessary maintenance. Please check back in a second. If you happen to see this message on the demo site, just wait a few minutes. The database is reset every few hours.',
     'error_occurred'          => 'Rất tiếc! Lỗi xảy ra.',
     'db_error_occurred'       => 'Ây dà! Có lỗi trong cơ sở dữ liệu.',
     'error_not_recoverable'   => 'Thật không may, lỗi này không thể phục hồi :(. Firefly III đã bị hỏng. Lỗi là:',

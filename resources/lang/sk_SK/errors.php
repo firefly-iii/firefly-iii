@@ -42,7 +42,7 @@ return [
     'fatal_error'             => 'Vyskytla sa závažná chyba. Prosím, pre zistenie, čo sa stalo, skontrolujte chybový záznam v "storage/logs" alebo použite "docker logs -f [container]".',
     'maintenance_mode'        => 'Firefly III je v údržbovom režime.',
     'be_right_back'           => 'Hneď sme späť!',
-    'check_back'              => 'Firefly III je nedostupný kvôli nevyhnutnej údržbe. Prosím, skúste to neskôr.',
+    'check_back'              => 'Firefly III is down for some necessary maintenance. Please check back in a second. If you happen to see this message on the demo site, just wait a few minutes. The database is reset every few hours.',
     'error_occurred'          => 'Ups! Vyskytla sa chyba.',
     'db_error_occurred'       => 'Whoops! A database error occurred.',
     'error_not_recoverable'   => 'Nanešťastie, túto chybu nie je možné opraviť :(. Firefly III sa pokazil. Chyba:',

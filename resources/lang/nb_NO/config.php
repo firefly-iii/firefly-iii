@@ -34,21 +34,21 @@
 declare(strict_types=1);
 
 return [
-    'html_language'                  => 'nb',
-    'locale'                         => 'no, nb, Norsk, nb_NO, nb_NO.utf8, nb_NO.UTF-8',
+    'html_language'            => 'nb',
+    'locale'                   => 'no, nb, Norsk, nb_NO, nb_NO.utf8, nb_NO.UTF-8',
     // 'month'                   => '%B %Y',
-    'month_js'                       => 'MMMM YYYY',
+    'month_js'                 => 'MMMM YYYY',
 
     // 'month_and_day'           => '%B %e, %Y',
-    'month_and_day_moment_js'        => 'MMM D, YYYY',
-    'month_and_day_fns'              => 'MMMM d, y',
-    'month_and_day_js'               => 'MMMM Do, YYYY',
+    'month_and_day_moment_js'  => 'MMM D, YYYY',
+    'month_and_day_fns'        => 'MMMM d, y',
+    'month_and_day_js'         => 'MMMM Do, YYYY',
 
     // 'month_and_date_day'      => '%A %B %e, %Y',
-    'month_and_date_day_js'          => 'dddd MMMM Do, YYYY',
+    'month_and_date_day_js'    => 'dddd MMMM Do, YYYY',
 
     // 'month_and_day_no_year'   => '%B %e',
-    'month_and_day_no_year_js'       => 'MMMM Do
+    'month_and_day_no_year_js' => 'MMMM Do
 CONTEXTREQUEST',
 
     /*
@@ -63,32 +63,32 @@ CONTEXTREQUEST',
  */
 
     // 'date_time'               => '%B %e, %Y, @ %T',
-    'date_time_js'                   => 'MMMM Do, YYYY, @ HH:mm:ss',
-    'date_time_fns'                  => 'do MMMM, yyyy @ HH:mm:ss',
-    'date_time_fns_short'            => 'MMMM do, yyyy @ HH:mm',
+    'date_time_js'             => 'MMMM Do, YYYY, @ HH:mm:ss',
+    'date_time_fns'            => 'do MMMM, yyyy @ HH:mm:ss',
+    'date_time_fns_short'      => 'MMMM do, yyyy @ HH:mm',
 
     // 'specific_day'            => '%e %B %Y',
-    'specific_day_js'                => 'D MMMM YYYY',
+    'specific_day_js'          => 'D MMMM YYYY',
 
     // 'week_in_year'            => 'Week %V, %G',
-    'week_in_year_js'                => '[Week] W, GGGG',
-    'week_in_year_fns'               => "'Week' w, yyyy",
+    'week_in_year_js'          => '[Week] W, GGGG',
+    'week_in_year_fns'         => "'Week' w, yyyy",
 
     // 'year'                    => '%Y',
-    'year_js'                        => 'YYYY',
+    'year_js'                  => 'YYYY',
 
     // 'half_year'               => '%B %Y',
-    'half_year_js'                   => '\QQ YYYY',
+    'half_year_js'             => '\QQ YYYY',
 
-    'quarter_fns'                    => "'kvartal'Q, yyyy",
-    'half_year_fns'                  => "'H{half}', yyyy",
-    'dow_1'                          => 'Mandag',
-    'dow_2'                          => 'Tirsdag',
-    'dow_3'                          => 'Onsdag',
-    'dow_4'                          => 'Torsdag',
-    'dow_5'                          => 'Fredag',
-    'dow_6'                          => 'Lørdag',
-    'dow_7'                          => 'Søndag',
+    'quarter_fns'              => "'kvartal'Q, yyyy",
+    'half_year_fns'            => "'H{half}', yyyy",
+    'dow_1'                    => 'Mandag',
+    'dow_2'                    => 'Tirsdag',
+    'dow_3'                    => 'Onsdag',
+    'dow_4'                    => 'Torsdag',
+    'dow_5'                    => 'Fredag',
+    'dow_6'                    => 'Lørdag',
+    'dow_7'                    => 'Søndag',
 ];
 
 /*

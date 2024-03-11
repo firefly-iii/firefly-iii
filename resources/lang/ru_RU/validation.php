@@ -55,6 +55,7 @@ return [
     'reconciled_forbidden_field'      => 'Эта транзакция уже сверена, вы не можете изменить ":field"',
     'deleted_user'                    => 'По соображениям безопасности, вы не можете зарегистрироваться, используя этот адрес электронной почты.',
     'rule_trigger_value'              => 'Это значение является недопустимым для выбранного триггера.',
+    'rule_action_expression'          => 'Invalid expression. :error',
     'rule_action_value'               => 'Это значение является недопустимым для выбранного действия.',
     'file_already_attached'           => 'Загруженный файл ":name" уже прикреплён к этому объекту.',
     'file_attached'                   => 'Файл ":name". успешно загружен.',
@@ -195,7 +196,7 @@ return [
  *
  */
 
-    'secure_password'                 => 'Это не безопасный пароль. Попробуйте еще раз. Подробнее можно узнать по ссылке https://bit.ly/FF3-password-security',
+    'secure_password'                 => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password',
     'valid_recurrence_rep_type'       => 'Недопустимый тип для повторяющихся транзакций.',
     'valid_recurrence_rep_moment'     => 'Неверный период повторения для данного типа повторений.',
     'invalid_account_info'            => 'Неверные данные о счёте.',

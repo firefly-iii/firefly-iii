@@ -42,7 +42,7 @@ return [
     'fatal_error'             => 'Hi ha hagut un error crític. Si us plau, comprova els fitxers de registre a "emmagatzematge/registre" o utilitza "docker logs -f [container]" per veure què està passant.',
     'maintenance_mode'        => 'Firefly III està en mode de manteniment.',
     'be_right_back'           => 'Fins ara!',
-    'check_back'              => 'Firefly III no està disponible per manteniment. Si us plau, torni en un moment.',
+    'check_back'              => 'Firefly III is down for some necessary maintenance. Please check back in a second. If you happen to see this message on the demo site, just wait a few minutes. The database is reset every few hours.',
     'error_occurred'          => 'Ups! Hi ha hagut un error.',
     'db_error_occurred'       => 'Ups! Hi ha hagut un error a la base de dades.',
     'error_not_recoverable'   => 'Malauradament, no s\'ha pogut recuperar d\'aquest error :(. Firefly III s\'ha trencat. L\'error és:',

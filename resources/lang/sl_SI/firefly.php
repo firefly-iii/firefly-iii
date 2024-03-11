@@ -113,7 +113,7 @@ return [
     'two_factor_forgot'                                   => 'Pozabil sem svojo reč za dva koraka.',
     'two_factor_lost_header'                              => 'Nimate dostopa do dvofaktorske avtentikacije?',
     'two_factor_lost_intro'                               => 'Če ste izgubili tudi varnostne kode imate res smolo. Tega ne morete popraviti preko spletnega vmesnika. Imate dve možnosti.',
-    'two_factor_lost_fix_self'                            => 'Če poganjate lastno namestitev Firefly III, preberite <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator -or-2fa-has-stopped-working>ta vnos v pogostih vprašanjih</a> za navodila.',
+    'two_factor_lost_fix_self'                            => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                           => 'V nasprotnem primeru pišite po e-pošti lastniku spletnega mesta <a href="mailto::site_owner">:site_owner</a> in ga prosite, da ponastavi vaše preverjanje pristnosti v dveh korakih.',
     'mfa_backup_code'                                     => 'V Firefly III si se prijavil z rezervno kodo. Te kode ne moreš več uporabiti zato jo na seznamu prečrtaj.',
     'pref_two_factor_new_backup_codes'                    => 'Pridobi nove varnostne kode',
@@ -1286,6 +1286,8 @@ return [
     'rule_action_append_notes_to_descr'                   => 'Dodaj opombe k opisu',
     'rule_action_move_descr_to_notes'                     => 'Opombe zamenjajte z opisom',
     'rule_action_move_notes_to_descr'                     => 'Zamenjajte opis z opombami',
+    'rule_action_set_amount_choice'                       => 'Set amount to ..',
+    'rule_action_set_amount'                              => 'Set amount to ":action_value"',
     'rule_action_set_destination_to_cash_choice'          => 'Nastavi ciljni račun na (gotovina)',
     'rule_action_set_source_to_cash_choice'               => 'Nastavi izvorni račun na (gotovina)',
     'rulegroup_for_bills_title'                           => 'Skupina pravil za račune',
@@ -2768,6 +2770,7 @@ return [
     'ale_action_add_to_piggy'                             => 'Hranilnik',
     'ale_action_remove_from_piggy'                        => 'Hranilnik',
     'ale_action_add_tag'                                  => 'Dodana oznaka',
+    'ale_action_update_amount'                            => 'Updated amount',
 
     // dashboard
     'enable_auto_convert'                                 => 'Omogoči pretvorbo valut',

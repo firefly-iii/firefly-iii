@@ -42,7 +42,7 @@ return [
     'fatal_error'             => 'Παρουσιάστηκε σοβαρό σφάλμα. Ελέγξτε τα αρχεία καταγραφής στο "storage/logs" ή χρησιμοποιήστε την εντολή "docker logs -f [container]" για να δείτε τι συμβαίνει.',
     'maintenance_mode'        => 'Το Firefly III βρίσκεται σε λειτουργία συντήρησης.',
     'be_right_back'           => 'Επιστρέφω αμέσως!',
-    'check_back'              => 'Το Firefly III είναι εκτός λειτουργίας για κάποια απαραίτητη συντήρηση. Ελέγξτε ξανά σε ένα δευτερόλεπτο.',
+    'check_back'              => 'Firefly III is down for some necessary maintenance. Please check back in a second. If you happen to see this message on the demo site, just wait a few minutes. The database is reset every few hours.',
     'error_occurred'          => 'Ωχ! Παρουσιάστηκε σφάλμα.',
     'db_error_occurred'       => 'Ουπς! Προέκυψε ένα σφάλμα στη βάση δεδομένων.',
     'error_not_recoverable'   => 'Δυστυχώς, αυτό το σφάλμα δεν ήταν δυνατό να ξεπεραστεί :(. Το Firefly III δε λειτουργεί. Το σφάλμα είναι:',

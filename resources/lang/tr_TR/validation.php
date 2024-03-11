@@ -55,6 +55,7 @@ return [
     'reconciled_forbidden_field'      => 'This transaction is already reconciled, you cannot change the ":field"',
     'deleted_user'                    => 'Güvenlik kısıtlamaları nedeniyle, bu e-posta adresini kullanarak kayıt yapamazsınız.',
     'rule_trigger_value'              => 'Bu eylem, seçili işlem için geçersizdir.',
+    'rule_action_expression'          => 'Invalid expression. :error',
     'rule_action_value'               => 'Bu eylem seçili işlem için geçersizdir.',
     'file_already_attached'           => 'Yüklenen dosya ":name" zaten bu nesneye bağlı.',
     'file_attached'                   => '":name" dosyası başarıyla yüklendi.',
@@ -195,7 +196,7 @@ return [
  *
  */
 
-    'secure_password'                 => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password-security',
+    'secure_password'                 => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password',
     'valid_recurrence_rep_type'       => 'Invalid repetition type for recurring transactions.',
     'valid_recurrence_rep_moment'     => 'Invalid repetition moment for this type of repetition.',
     'invalid_account_info'            => 'Geçersiz hesap bilgileri.',

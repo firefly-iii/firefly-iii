@@ -113,7 +113,7 @@ return [
     'two_factor_forgot'                                   => '我忘记了两步验证码',
     'two_factor_lost_header'                              => '遗失了您的两步验证吗？',
     'two_factor_lost_intro'                               => '如果您同时遗失了备份代码，很抱歉，您无法通过网页进行恢复。您可以通过下述方式进行操作。',
-    'two_factor_lost_fix_self'                            => '若您自行运行 Firefly III 服务，查看 <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working>常见问题解答</a> 来参考',
+    'two_factor_lost_fix_self'                            => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                           => '如果这不是您自己的 Firefly III 站点，请邮件联系站点管理员（<a href="mailto::site_owner">:site_owner</a>）协助您重置两步验证。',
     'mfa_backup_code'                                     => '您已使用备用代码登录到 Firefly III 。 您不能再使用它，因此请将其划掉。',
     'pref_two_factor_new_backup_codes'                    => '获取新的备份代码',
@@ -1286,6 +1286,8 @@ return [
     'rule_action_append_notes_to_descr'                   => '在描述后追加备注',
     'rule_action_move_descr_to_notes'                     => '用描述替换备注',
     'rule_action_move_notes_to_descr'                     => '用备注替换描述',
+    'rule_action_set_amount_choice'                       => 'Set amount to ..',
+    'rule_action_set_amount'                              => 'Set amount to ":action_value"',
     'rule_action_set_destination_to_cash_choice'          => '将目标帐户设置为 (现金)',
     'rule_action_set_source_to_cash_choice'               => '将源账户设置为 (现金)',
     'rulegroup_for_bills_title'                           => '账单规则组',
@@ -2769,6 +2771,7 @@ return [
     'ale_action_add_to_piggy'                             => '存钱罐',
     'ale_action_remove_from_piggy'                        => '存钱罐',
     'ale_action_add_tag'                                  => '添加标签',
+    'ale_action_update_amount'                            => 'Updated amount',
 
     // dashboard
     'enable_auto_convert'                                 => '启用货币转换',

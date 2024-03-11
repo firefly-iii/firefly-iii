@@ -55,6 +55,7 @@ return [
     'reconciled_forbidden_field'      => 'Ta transakcija je že usklajena, ne morete spremeniti ":field"',
     'deleted_user'                    => 'Iz varnostnih razlogov ne morete ustvariti uporabnika s takim e-poštnim naslovom.',
     'rule_trigger_value'              => 'Ta vrednost je neveljavna za izbrani sprožilec.',
+    'rule_action_expression'          => 'Invalid expression. :error',
     'rule_action_value'               => 'Ta vrednost ni veljavna za izbrano dejanje.',
     'file_already_attached'           => 'Naložena datoteka ":name" je že priložena temu predmetu.',
     'file_attached'                   => 'Datoteka ":name" je bila uspešno naložena.',
@@ -195,7 +196,7 @@ return [
  *
  */
 
-    'secure_password'                 => 'To ni varno geslo. Prosim poskusite ponovno. Za več informacij obiščite https://bit.ly/FF3-password-security',
+    'secure_password'                 => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password',
     'valid_recurrence_rep_type'       => 'Neveljavna vrsta ponavljanja za ponavljajoče se transakcije.',
     'valid_recurrence_rep_moment'     => 'Neveljaven trenutek ponovitve za to vrsto ponovitve.',
     'invalid_account_info'            => 'Neveljavni podatki o računu.',

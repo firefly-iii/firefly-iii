@@ -42,7 +42,7 @@ return [
     'fatal_error'             => 'A existat o eroare fatală. Vă rugăm să verificaţi fişierele de jurnal din "storage/logs" sau utilizaţi "docker logs -f [container] pentru a vedea ce se întâmplă.',
     'maintenance_mode'        => 'Firefly III este în modul de întreținere.',
     'be_right_back'           => 'Revin imediat!',
-    'check_back'              => 'Firefly III este oprit pentru o întreținere necesară. Vă rugăm să reveniți într-o secundă.',
+    'check_back'              => 'Firefly III is down for some necessary maintenance. Please check back in a second. If you happen to see this message on the demo site, just wait a few minutes. The database is reset every few hours.',
     'error_occurred'          => 'Ups! A apărut o eroare.',
     'db_error_occurred'       => 'Whoops! A database error occurred.',
     'error_not_recoverable'   => 'Din păcate, această eroare nu a putut fi recuperată :(. Firefly III s-a stricat. Eroarea este:',

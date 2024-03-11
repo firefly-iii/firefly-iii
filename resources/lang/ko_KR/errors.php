@@ -42,7 +42,7 @@ return [
     'fatal_error'             => '치명적인 오류가 발생했습니다. "storage/logs"에서 로그 파일을 확인하거나 "docker logs -f [container]"를 사용하여 진행 상황을 확인하세요.',
     'maintenance_mode'        => 'Firefly III는 유지 관리 모드입니다.',
     'be_right_back'           => '곧 돌아올게요!',
-    'check_back'              => 'Firefly III가 필수 점검을 위해 다운되었습니다. 잠시후 다시 확인해 주세요.',
+    'check_back'              => 'Firefly III is down for some necessary maintenance. Please check back in a second. If you happen to see this message on the demo site, just wait a few minutes. The database is reset every few hours.',
     'error_occurred'          => '이런! 오류가 발생했습니다.',
     'db_error_occurred'       => '이런! 데이터베이스 오류가 발생했습니다.',
     'error_not_recoverable'   => '안타깝게도 이 오류는 복구할 수 없습니다. :( Firefly III 고장. 에러:',

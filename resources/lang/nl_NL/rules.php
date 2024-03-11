@@ -70,4 +70,5 @@ return [
     'cannot_find_budget'                          => 'Firefly III kan budget ":name" niet vinden',
     'cannot_find_category'                        => 'Firefly III kan categorie ":name" niet vinden',
     'cannot_set_budget'                           => 'Firefly III kan budget ":name" niet instellen op een transactie van het type ":type"',
+    'journal_invalid_amount'                      => 'Firefly III can\'t set amount ":amount" because it is not a valid number.',
 ];

@@ -113,7 +113,7 @@ return [
     'two_factor_forgot'                                   => 'Ich kann keine 2FA-Codes generieren.',
     'two_factor_lost_header'                              => 'Haben Sie ihre Zwei-Faktor-Authentifizierung verloren?',
     'two_factor_lost_intro'                               => 'Wenn Sie auch Ihre Sicherungsschlüssel verloren haben, haben Sie Pech. Dies ist nichts, was Sie über die Weboberfläche beheben können. Sie haben jedoch zwei Möglichkeiten.',
-    'two_factor_lost_fix_self'                            => 'Wenn Sie Ihre eigene Instanz von Firefly III betreiben, lesen Sie <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working>diesen Eintrag im FAQ</a> für Anweisungen.',
+    'two_factor_lost_fix_self'                            => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                           => 'Ansonsten, mailen Sie dem Inhaber der Website, <a href="mailto::site_owner">:site_owner</a> und bitten Sie ihn, Ihre Zwei-Faktor Authentifizierung zurückzusetzen.',
     'mfa_backup_code'                                     => 'Sie haben sich mit einem Sicherungsschlüssel bei Firefly III angemeldet. Dieser kann nun nicht mehr verwendet werden, also streichen Sie ihn aus Ihrer Liste.',
     'pref_two_factor_new_backup_codes'                    => 'Neue Sicherungsschlüssel abrufen',
@@ -1286,6 +1286,8 @@ return [
     'rule_action_append_notes_to_descr'                   => 'Notizen an die Beschreibung anhängen',
     'rule_action_move_descr_to_notes'                     => 'Notizen durch die Beschreibung ersetzen',
     'rule_action_move_notes_to_descr'                     => 'Beschreibung durch die Notizen ersetzen',
+    'rule_action_set_amount_choice'                       => 'Set amount to ..',
+    'rule_action_set_amount'                              => 'Set amount to ":action_value"',
     'rule_action_set_destination_to_cash_choice'          => 'Zielkonto auf (Bargeld) setzen',
     'rule_action_set_source_to_cash_choice'               => 'Quellkonto auf (Bargeld) setzen',
     'rulegroup_for_bills_title'                           => 'Regelgruppe für Rechnungen',
@@ -2768,6 +2770,7 @@ return [
     'ale_action_add_to_piggy'                             => 'Sparschwein',
     'ale_action_remove_from_piggy'                        => 'Sparschwein',
     'ale_action_add_tag'                                  => 'Schlagwort hinzugefügt',
+    'ale_action_update_amount'                            => 'Updated amount',
 
     // dashboard
     'enable_auto_convert'                                 => 'Währungsumrechnung aktivieren',

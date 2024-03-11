@@ -42,7 +42,7 @@ return [
     'fatal_error'             => 'Tapahtui vakava virhe. Ole hyvä ja tarkista lokitiedostot "storage/logs" tai käytä komentoa "docker logs -f [container]" nähdäksesi mikä menee pieleen.',
     'maintenance_mode'        => 'Firefly III on huoltotilassa.',
     'be_right_back'           => 'Palaan pian!',
-    'check_back'              => 'Firefly III tekee joitain tarpeellisia huoltotoimenpiteitä. Ole hyvä ja yritä uudelleen hetken kuluttua.',
+    'check_back'              => 'Firefly III is down for some necessary maintenance. Please check back in a second. If you happen to see this message on the demo site, just wait a few minutes. The database is reset every few hours.',
     'error_occurred'          => 'Hupsista! Tapahtui virhe.',
     'db_error_occurred'       => 'Hupsista! Tapahtui tietokantavirhe.',
     'error_not_recoverable'   => 'Valitettavasti tästä virheestä ei pystytä palautumaan :(. Firefly III meni rikki. Virhe on:',

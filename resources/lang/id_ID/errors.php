@@ -42,7 +42,7 @@ return [
     'fatal_error'             => 'Ada kesalahan fatal. Silakan cek berkas log di "storage/logs" atau gunakan "docker logs -f [container]" untuk melihat apa yang terjadi.',
     'maintenance_mode'        => 'Firefly III sedang dalam mode pemeliharaan.',
     'be_right_back'           => 'Segera kembali!',
-    'check_back'              => 'Firefly III tidak dapat diakses untuk pemeliharaan. Silakan cek kembali beberapa saat lagi.',
+    'check_back'              => 'Firefly III is down for some necessary maintenance. Please check back in a second. If you happen to see this message on the demo site, just wait a few minutes. The database is reset every few hours.',
     'error_occurred'          => 'Ups! Terjadi kesalahan.',
     'db_error_occurred'       => 'Whoops! A database error occurred.',
     'error_not_recoverable'   => 'Sayangnya, kesalahan ini tidak dapat diperbaiki :(. Firefly III mengalami kerusakan. Kesalahan yang terjadi adalah:',

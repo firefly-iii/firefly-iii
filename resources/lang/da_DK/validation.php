@@ -55,6 +55,7 @@ return [
     'reconciled_forbidden_field'      => 'Denne transaktion er allerede forsonet, du kan ikke ændre ":field"',
     'deleted_user'                    => 'På grund af sikkerhedspolikker, kan du ikke registrere med denne email adresse.',
     'rule_trigger_value'              => 'Denne værdi er ikke gyldig for den valgte trigger.',
+    'rule_action_expression'          => 'Invalid expression. :error',
     'rule_action_value'               => 'Denne værdi er ikke gyldig for den valgte handling.',
     'file_already_attached'           => 'Den uploadede fil ":name" er allerede vedhælftet til dette objekt.',
     'file_attached'                   => 'Oploadede succesfuldt filen: ":name".',
@@ -195,7 +196,7 @@ return [
  *
  */
 
-    'secure_password'                 => 'Dette er ikke en sikker adgangskode. Prøv venligst igen. For mere information, besøg https://bit.ly/FF3-password-security',
+    'secure_password'                 => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password',
     'valid_recurrence_rep_type'       => 'Ugyldig type gentalgelse for periodiske transaktioner.',
     'valid_recurrence_rep_moment'     => 'Ugyldigt øjeblik for denne type gentagelse.',
     'invalid_account_info'            => 'Ugyldig kontoinformation.',

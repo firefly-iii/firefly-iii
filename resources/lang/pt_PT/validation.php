@@ -55,6 +55,7 @@ return [
     'reconciled_forbidden_field'      => 'Esta transação já está reconciliada, não pode alterar o ":field"',
     'deleted_user'                    => 'Devido a motivos de segurança, não se pode registar com este email.',
     'rule_trigger_value'              => 'Este valor é inválido para o gatilho selecionado.',
+    'rule_action_expression'          => 'Invalid expression. :error',
     'rule_action_value'               => 'Este valor é inválido para a ação selecionada.',
     'file_already_attached'           => 'O ficheiro ":name" carregado já está anexado a este objeto.',
     'file_attached'                   => 'Ficheiro carregado com sucesso ":name".',
@@ -195,7 +196,7 @@ return [
  *
  */
 
-    'secure_password'                 => 'Esta não é uma palavra-passe segura. Tente de novo por favor. Para mais informações visite https://bit.ly/FF3-password-security',
+    'secure_password'                 => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password',
     'valid_recurrence_rep_type'       => 'Tipo de repetição inválido para transações recorrentes.',
     'valid_recurrence_rep_moment'     => 'Momento inválido para este tipo de repetição.',
     'invalid_account_info'            => 'Informação de conta inválida.',

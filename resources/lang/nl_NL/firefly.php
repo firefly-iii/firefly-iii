@@ -113,7 +113,7 @@ return [
     'two_factor_forgot'                                   => 'Ik kan geen codes meer genereren.',
     'two_factor_lost_header'                              => 'Kan je geen codes meer genereren?',
     'two_factor_lost_intro'                               => 'Als je ook je backupcodes kwijt bent heb je pech gehad. Dit kan je niet via de web-interface fixen. Je kan kiezen.',
-    'two_factor_lost_fix_self'                            => 'Als dit jouw Firefly III-installatie is, lees dan <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working>deze entry in de FAQ</a>.',
+    'two_factor_lost_fix_self'                            => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                           => 'Zo niet, stuur dan een e-mail naar <a href="mailto::site_owner">:site_owner</a> en vraag of ze je authenticatie in twee stappen willen resetten.',
     'mfa_backup_code'                                     => 'Je hebt een backupcode gebruikt om in te loggen op Firefly III. Deze kan je niet meer gebruiken dus streep hem weg.',
     'pref_two_factor_new_backup_codes'                    => 'Nieuwe backupcodes genereren',
@@ -1286,6 +1286,8 @@ return [
     'rule_action_append_notes_to_descr'                   => 'Voeg notitie toe aan beschrijving',
     'rule_action_move_descr_to_notes'                     => 'Notitie vervangen door omschrijving',
     'rule_action_move_notes_to_descr'                     => 'Beschrijving vervangen door notitie',
+    'rule_action_set_amount_choice'                       => 'Set amount to ..',
+    'rule_action_set_amount'                              => 'Set amount to ":action_value"',
     'rule_action_set_destination_to_cash_choice'          => 'Verander doelrekening naar (cash)-rekening',
     'rule_action_set_source_to_cash_choice'               => 'Verander bronrekening naar (cash)-rekening',
     'rulegroup_for_bills_title'                           => 'Regelgroep voor contracten',
@@ -2768,6 +2770,7 @@ return [
     'ale_action_add_to_piggy'                             => 'Spaarpotje',
     'ale_action_remove_from_piggy'                        => 'Spaarpotje',
     'ale_action_add_tag'                                  => 'Tag toegevoegd',
+    'ale_action_update_amount'                            => 'Updated amount',
 
     // dashboard
     'enable_auto_convert'                                 => 'Doe valutaconversie',

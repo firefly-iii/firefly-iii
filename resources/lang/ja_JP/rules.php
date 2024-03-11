@@ -70,4 +70,5 @@ return [
     'cannot_find_budget'                          => 'Firefly IIIは予算「:name」を見つけらませんでした',
     'cannot_find_category'                        => 'Firefly IIIはカテゴリ「:name」を見つけらませんでした',
     'cannot_set_budget'                           => 'Firefly IIIは予算「:name」を取引種別「:type」に設定できません',
+    'journal_invalid_amount'                      => 'Firefly III can\'t set amount ":amount" because it is not a valid number.',
 ];

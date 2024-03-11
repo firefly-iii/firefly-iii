@@ -55,6 +55,7 @@ return [
     'reconciled_forbidden_field'      => 'This transaction is already reconciled, you cannot change the ":field"',
     'deleted_user'                    => '受安全限制，您無法使用此電子郵件地址註冊。',
     'rule_trigger_value'              => '此值不適用於選取的觸發器。',
+    'rule_action_expression'          => 'Invalid expression. :error',
     'rule_action_value'               => '此值不適用於選取的動作。',
     'file_already_attached'           => '上傳的檔案 ":name" 已附加到該物件上。',
     'file_attached'                   => '已成功上傳檔案 ":name"。',
@@ -195,7 +196,7 @@ return [
  *
  */
 
-    'secure_password'                 => '此密碼不安全，請再試一遍。如需更多資訊，請瀏覽 https://bit.ly/FF3-password-security',
+    'secure_password'                 => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password',
     'valid_recurrence_rep_type'       => '定期重複交易的重複類型無效。',
     'valid_recurrence_rep_moment'     => '重複時刻在此重複類型無效。',
     'invalid_account_info'            => '無效的帳戶資訊。',

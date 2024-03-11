@@ -113,7 +113,7 @@ return [
     'two_factor_forgot'                                   => '2要素認証端末を忘れてしまいました。',
     'two_factor_lost_header'                              => '2要素認証を紛失しましたか？',
     'two_factor_lost_intro'                               => 'バックアップコードも紛失してしまった場合、Webから修正する方法はありません。２つから選ぶことができます。',
-    'two_factor_lost_fix_self'                            => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working>this entry in the FAQ</a> for instructions.',
+    'two_factor_lost_fix_self'                            => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                           => 'または、サイト管理者 <a href="mailto::site_owner">:site_owner</a> に連絡して2要素認証をリセットしてもらうよう頼んでください。',
     'mfa_backup_code'                                     => 'あなたはバックアップコードを利用してログインしました。もし再び使用することが出来ないなら、リストから削除してください。',
     'pref_two_factor_new_backup_codes'                    => '新しいバックアップコードを取得',
@@ -1286,6 +1286,8 @@ return [
     'rule_action_append_notes_to_descr'                   => '概要の終わりにメモを追加',
     'rule_action_move_descr_to_notes'                     => 'メモを概要で置き換え',
     'rule_action_move_notes_to_descr'                     => '概要をメモで置き換え',
+    'rule_action_set_amount_choice'                       => 'Set amount to ..',
+    'rule_action_set_amount'                              => 'Set amount to ":action_value"',
     'rule_action_set_destination_to_cash_choice'          => 'Set destination account to (cash)',
     'rule_action_set_source_to_cash_choice'               => 'Set source account to (cash)',
     'rulegroup_for_bills_title'                           => '請求のルールグループ',
@@ -2768,6 +2770,7 @@ return [
     'ale_action_add_to_piggy'                             => '貯金箱',
     'ale_action_remove_from_piggy'                        => '貯金箱',
     'ale_action_add_tag'                                  => '追加したタグ',
+    'ale_action_update_amount'                            => 'Updated amount',
 
     // dashboard
     'enable_auto_convert'                                 => '通貨の変換を有効にする',

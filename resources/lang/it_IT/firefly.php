@@ -113,7 +113,7 @@ return [
     'two_factor_forgot'                                   => 'Ho dimenticato la mia chiave a due fattori.',
     'two_factor_lost_header'                              => 'Hai perso l\'autenticazione a due fattori?',
     'two_factor_lost_intro'                               => 'Se hai perso anche i codici di recupero, sei sfortunato. Questo non è qualcosa che puoi risolvere tramite l\'interfaccia web. Hai due scelte.',
-    'two_factor_lost_fix_self'                            => 'Se esegui la tua istanza di Firefly III, leggi <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working>questo articolo nelle Domande Frequenti</a> per delle istruzioni.',
+    'two_factor_lost_fix_self'                            => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                           => 'In caso contrario, invia un mail al proprietario del sito, <a href="mailto::site_owner">:site_owner</a>, e chiedi loro di resettare l\'autenticazione a due fattori.',
     'mfa_backup_code'                                     => 'Hai usato un codice di recupero per accedere a Firefly III. Questo codice non potrà essere utilizzato di nuovo, quindi cancellalo dalla lista.',
     'pref_two_factor_new_backup_codes'                    => 'Ottieni nuovi codici di recupero',
@@ -1286,6 +1286,8 @@ return [
     'rule_action_append_notes_to_descr'                   => 'Aggiungi le note alla descrizione',
     'rule_action_move_descr_to_notes'                     => 'Sostituisci le note con la descrizione',
     'rule_action_move_notes_to_descr'                     => 'Sostituisci la descrizione con le note',
+    'rule_action_set_amount_choice'                       => 'Set amount to ..',
+    'rule_action_set_amount'                              => 'Set amount to ":action_value"',
     'rule_action_set_destination_to_cash_choice'          => 'Imposta il conto di destinazione a (corrente)',
     'rule_action_set_source_to_cash_choice'               => 'Imposta il conto di origine a (corrente)',
     'rulegroup_for_bills_title'                           => 'Gruppo di regole per le bollette',
@@ -2768,6 +2770,7 @@ return [
     'ale_action_add_to_piggy'                             => 'Salvadanaio',
     'ale_action_remove_from_piggy'                        => 'Salvadanaio',
     'ale_action_add_tag'                                  => 'Etichette aggiunte',
+    'ale_action_update_amount'                            => 'Updated amount',
 
     // dashboard
     'enable_auto_convert'                                 => 'Abilita la conversione della valuta',

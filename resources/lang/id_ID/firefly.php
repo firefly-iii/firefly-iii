@@ -113,7 +113,7 @@ return [
     'two_factor_forgot'                                   => 'Saya lupa dua faktor saya.',
     'two_factor_lost_header'                              => 'Kehilangan Pengecekan keamanan dua faktor Anda?',
     'two_factor_lost_intro'                               => 'Jika Anda kehilangan kode cadangan Anda pula, keberuntungan Anda buruk sudah. Ini bukanlah sesuatu yang Anda dapat perbaiki dari antarmuka web. Anda mempunyai dua pilihan.',
-    'two_factor_lost_fix_self'                            => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working>this entry in the FAQ</a> for instructions.',
+    'two_factor_lost_fix_self'                            => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                           => 'Jika tidak, kirimkan email ke pemilik situs, <a href="mailto::site_owner">:site_owner</a> dan mintalah mereka untuk menyetel ulang Pengecekan keamanan dua faktor Anda.',
     'mfa_backup_code'                                     => 'Anda telah menggunakan sebuah kode cadangan untuk masuk ke Firefly III. Kode ini tidak dapat digunakan lagi, jadi coret itu dari daftar Anda.',
     'pref_two_factor_new_backup_codes'                    => 'Hasilkan kode cadangan baru',
@@ -1286,6 +1286,8 @@ return [
     'rule_action_append_notes_to_descr'                   => 'Append notes to description',
     'rule_action_move_descr_to_notes'                     => 'Replace notes with description',
     'rule_action_move_notes_to_descr'                     => 'Replace description with notes',
+    'rule_action_set_amount_choice'                       => 'Set amount to ..',
+    'rule_action_set_amount'                              => 'Set amount to ":action_value"',
     'rule_action_set_destination_to_cash_choice'          => 'Set destination account to (cash)',
     'rule_action_set_source_to_cash_choice'               => 'Set source account to (cash)',
     'rulegroup_for_bills_title'                           => 'Rule group for bills',
@@ -2768,6 +2770,7 @@ return [
     'ale_action_add_to_piggy'                             => 'Piggy bank',
     'ale_action_remove_from_piggy'                        => 'Piggy bank',
     'ale_action_add_tag'                                  => 'Added tag',
+    'ale_action_update_amount'                            => 'Updated amount',
 
     // dashboard
     'enable_auto_convert'                                 => 'Enable currency conversion',

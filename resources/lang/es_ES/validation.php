@@ -55,6 +55,7 @@ return [
     'reconciled_forbidden_field'      => 'Esta transacción ya está reconciliada, no puede cambiar ":field"',
     'deleted_user'                    => 'Debido a restricciones de seguridad, no se puede registrar utilizando esta dirección de correo electrónico.',
     'rule_trigger_value'              => 'Este valor es incorrecto para el disparador seleccionado.',
+    'rule_action_expression'          => 'Invalid expression. :error',
     'rule_action_value'               => 'Este valor es incorrecto para la acción seleccionada.',
     'file_already_attached'           => 'El archivo ":name" ya ha sido añadido a este objeto.',
     'file_attached'                   => 'Archivo ":name" subido con éxito.',
@@ -195,7 +196,7 @@ return [
  *
  */
 
-    'secure_password'                 => 'Esta contraseña no es segura. Por favor inténtalo de nuevo. Para más información, visita https://bit.ly/FF3-password-security',
+    'secure_password'                 => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password',
     'valid_recurrence_rep_type'       => 'Tipo de repetición no válido para transacciones recurrentes.',
     'valid_recurrence_rep_moment'     => 'Momento de repetición no válido para este tipo de repetición.',
     'invalid_account_info'            => 'Información de cuenta no válida.',

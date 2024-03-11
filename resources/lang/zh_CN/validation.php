@@ -55,6 +55,7 @@ return [
     'reconciled_forbidden_field'      => '这笔交易已经对账，您无法更改“:field”',
     'deleted_user'                    => '由于安全限制，您无法使用此电子邮件地址注册',
     'rule_trigger_value'              => '此值不能用于所选触发条件',
+    'rule_action_expression'          => 'Invalid expression. :error',
     'rule_action_value'               => '此值不能用于所选动作',
     'file_already_attached'           => '上传的文件“:name”已添加到此对象',
     'file_attached'                   => '成功上传文件“:name”',
@@ -195,7 +196,7 @@ return [
  *
  */
 
-    'secure_password'                 => '此密码不安全，请重试。访问 https://bit.ly/FF3-password-security 获取更多信息。',
+    'secure_password'                 => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password',
     'valid_recurrence_rep_type'       => '此重复类型不能用于定期交易',
     'valid_recurrence_rep_moment'     => '此重复时刻不能用于此重复类型',
     'invalid_account_info'            => '无效的账户信息',

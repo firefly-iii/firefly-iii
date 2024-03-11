@@ -55,6 +55,7 @@ return [
     'reconciled_forbidden_field'      => 'This transaction is already reconciled, you cannot change the ":field"',
     'deleted_user'                    => 'Поради съображения за сигурност не можете да се регистрирате, като използвате този имейл адрес.',
     'rule_trigger_value'              => 'Тази стойност е невалидна за избраното задействане.',
+    'rule_action_expression'          => 'Invalid expression. :error',
     'rule_action_value'               => 'Тази стойност е невалидна за избраното действие.',
     'file_already_attached'           => 'Каченият файл ":name" вече е прикачен към този обект.',
     'file_attached'                   => 'Успешно качен файл ":name".',
@@ -195,7 +196,7 @@ return [
  *
  */
 
-    'secure_password'                 => 'Това не е сигурна парола. Моля, опитайте отново. За повече информация посетете https://bit.ly/FF3-password-security',
+    'secure_password'                 => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password',
     'valid_recurrence_rep_type'       => 'Невалиден тип повторение за повтарящи се транзакции.',
     'valid_recurrence_rep_moment'     => 'Невалиден момент на повторение за този тип повторение.',
     'invalid_account_info'            => 'Невалидна информация за сметка.',

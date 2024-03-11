@@ -113,7 +113,7 @@ return [
     'two_factor_forgot'                                   => '2단계 인증을 잊었습니다.',
     'two_factor_lost_header'                              => '2단계 인증을 분실하셨나요?',
     'two_factor_lost_intro'                               => '백업 코드도 분실하셨다면 운이 나쁘신 것입니다. 이 문제는 웹 인터페이스에서 해결할 수 있는 문제가 아닙니다. 두 가지 선택지가 있습니다.',
-    'two_factor_lost_fix_self'                            => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working>this entry in the FAQ</a> for instructions.',
+    'two_factor_lost_fix_self'                            => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                           => '그렇지 않은 경우 사이트 소유자 <a href="mailto::site_owner">:site_owner</a>에게 이메일을 보내 2단계 인증을 재설정해 달라고 요청하세요.',
     'mfa_backup_code'                                     => '백업 코드를 사용하여 Firefly III에 로그인했습니다. 코드는 다시 사용할 수 없으므로 목록에서 삭제하세요.',
     'pref_two_factor_new_backup_codes'                    => '새 백업 코드 얻기',
@@ -1286,6 +1286,8 @@ return [
     'rule_action_append_notes_to_descr'                   => '설명에 메모 추가',
     'rule_action_move_descr_to_notes'                     => '노트를 설명으로 바꾸기',
     'rule_action_move_notes_to_descr'                     => '설명을 노트로 바꾸기',
+    'rule_action_set_amount_choice'                       => 'Set amount to ..',
+    'rule_action_set_amount'                              => 'Set amount to ":action_value"',
     'rule_action_set_destination_to_cash_choice'          => 'Set destination account to (cash)',
     'rule_action_set_source_to_cash_choice'               => 'Set source account to (cash)',
     'rulegroup_for_bills_title'                           => '청구서에 대한 규칙 그룹',
@@ -2768,6 +2770,7 @@ return [
     'ale_action_add_to_piggy'                             => '저금통',
     'ale_action_remove_from_piggy'                        => '저금통',
     'ale_action_add_tag'                                  => '태그 추가',
+    'ale_action_update_amount'                            => 'Updated amount',
 
     // dashboard
     'enable_auto_convert'                                 => '통화 변환 활성화',

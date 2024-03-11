@@ -113,7 +113,7 @@ return [
     'two_factor_forgot'                                   => 'Я забув свій двофакторний ключ.',
     'two_factor_lost_header'                              => 'Чи втрачено двофакторну аутентифікацію?',
     'two_factor_lost_intro'                               => 'Якщо ви втратили резервні копії, вам не пощастило. Через вебінтерфейс це неможливо виправити. Ви маєте виходи.',
-    'two_factor_lost_fix_self'                            => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working>this entry in the FAQ</a> for instructions.',
+    'two_factor_lost_fix_self'                            => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                           => 'В іншому випадку надішліть електронний лист адміністратору сервісу, <a href="mailto::site_owner">:site_owner</a> та попросіть його створити новий ключ двофакторної автентифікації.',
     'mfa_backup_code'                                     => 'Ви використали резервний код для входу в Firefly III. Його не можна використати повторно, тому видаліть його зі свого списку.',
     'pref_two_factor_new_backup_codes'                    => 'Отримати нові резервні коди',
@@ -1286,6 +1286,8 @@ return [
     'rule_action_append_notes_to_descr'                   => 'Додайте примітки до опису',
     'rule_action_move_descr_to_notes'                     => 'Замініть примітки в описі',
     'rule_action_move_notes_to_descr'                     => 'Замініть примітки в описі',
+    'rule_action_set_amount_choice'                       => 'Set amount to ..',
+    'rule_action_set_amount'                              => 'Set amount to ":action_value"',
     'rule_action_set_destination_to_cash_choice'          => 'Налаштувати цільовий рахунок як (готівковий)',
     'rule_action_set_source_to_cash_choice'               => 'Налаштувати вихідний рахунок як (готівковий)',
     'rulegroup_for_bills_title'                           => 'Група правил для рахунків до сплати',
@@ -2768,6 +2770,7 @@ return [
     'ale_action_add_to_piggy'                             => 'Скарбничка',
     'ale_action_remove_from_piggy'                        => 'Скарбничка',
     'ale_action_add_tag'                                  => 'Added tag',
+    'ale_action_update_amount'                            => 'Updated amount',
 
     // dashboard
     'enable_auto_convert'                                 => 'Enable currency conversion',

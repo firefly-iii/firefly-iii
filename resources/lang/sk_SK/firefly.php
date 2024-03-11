@@ -113,7 +113,7 @@ return [
     'two_factor_forgot'                                   => 'Zabudol(a) som si nástroj pro dvojfázové overenie.',
     'two_factor_lost_header'                              => 'Ztratili ste svoje dvojfázové overenie?',
     'two_factor_lost_intro'                               => 'Ak ste stratili aj svoje záložné kódy, máte smolu. Nie je to niečo, čo by ste mohli opraviť z webového rozhrania. Máte dve možnosti.',
-    'two_factor_lost_fix_self'                            => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working>this entry in the FAQ</a> for instructions.',
+    'two_factor_lost_fix_self'                            => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                           => 'V ostatných prípadoch napíšte prevádzkovateľovi, <a href="mailto::site_owner">:site_owner</a> a požiadajte ho o obnovenie vášho dvojfázového overenia.',
     'mfa_backup_code'                                     => 'Použitím záložného kódu, umožňujúceho prihlásenie do Firefly III, platnosť kódu zaniká. Takže kód, ktorým ste sa už prihlásili, už vám je k ničomu (nie je možné ho použiť opakovane) - preto si ho zo zoznamu vyškrtnite.',
     'pref_two_factor_new_backup_codes'                    => 'Získať nové záložní kódy',
@@ -1286,6 +1286,8 @@ return [
     'rule_action_append_notes_to_descr'                   => 'Append notes to description',
     'rule_action_move_descr_to_notes'                     => 'Replace notes with description',
     'rule_action_move_notes_to_descr'                     => 'Replace description with notes',
+    'rule_action_set_amount_choice'                       => 'Set amount to ..',
+    'rule_action_set_amount'                              => 'Set amount to ":action_value"',
     'rule_action_set_destination_to_cash_choice'          => 'Set destination account to (cash)',
     'rule_action_set_source_to_cash_choice'               => 'Set source account to (cash)',
     'rulegroup_for_bills_title'                           => 'Skupina pravidiel pre účty',
@@ -2768,6 +2770,7 @@ return [
     'ale_action_add_to_piggy'                             => 'Piggy bank',
     'ale_action_remove_from_piggy'                        => 'Piggy bank',
     'ale_action_add_tag'                                  => 'Added tag',
+    'ale_action_update_amount'                            => 'Updated amount',
 
     // dashboard
     'enable_auto_convert'                                 => 'Enable currency conversion',

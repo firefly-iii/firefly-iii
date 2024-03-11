@@ -42,7 +42,7 @@ return [
     'fatal_error'             => 'Si è verificato un errore fatale. Controlla i file di login "storage/Los" o usa "Docker Los f [container]" per vedere cosa sta succedendo.',
     'maintenance_mode'        => 'Firefox III è in modalità di manutenzione.',
     'be_right_back'           => 'Torno subito!',
-    'check_back'              => 'Firefly III non è in funzione per una manutenzione necessaria. Ricontrolla tra qualche secondo.',
+    'check_back'              => 'Firefly III is down for some necessary maintenance. Please check back in a second. If you happen to see this message on the demo site, just wait a few minutes. The database is reset every few hours.',
     'error_occurred'          => 'Oops! Si è verificato un errore.',
     'db_error_occurred'       => 'Oops! Si è verificato un errore del database.',
     'error_not_recoverable'   => 'Sfortunatamente questo errore non è riparabile :(. Firefly III è rotto. L\'errore è:',

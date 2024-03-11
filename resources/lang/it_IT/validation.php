@@ -55,6 +55,7 @@ return [
     'reconciled_forbidden_field'      => 'Questa transazione è già riconciliata, non è possibile modificare il campo ":field"',
     'deleted_user'                    => 'A causa dei vincoli di sicurezza, non è possibile registrarsi utilizzando questo indirizzo email.',
     'rule_trigger_value'              => 'Questo valore non è valido per il trigger selezionato.',
+    'rule_action_expression'          => 'Invalid expression. :error',
     'rule_action_value'               => 'Questo valore non è valido per l\'azione selezionata.',
     'file_already_attached'           => 'Il file caricato ":name" è già associato a questo oggetto.',
     'file_attached'                   => 'File caricato con successo ":name".',
@@ -195,7 +196,7 @@ return [
  *
  */
 
-    'secure_password'                 => 'Questa non è una password sicura. Riprova. Per maggiori informazioni visita https://bit.ly/FF3-password-security',
+    'secure_password'                 => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password',
     'valid_recurrence_rep_type'       => 'Il tipo di ripetizione della transazione ricorrente non è valido.',
     'valid_recurrence_rep_moment'     => 'Il momento di ripetizione per questo tipo di ripetizione non è valido.',
     'invalid_account_info'            => 'Informazione sul conto non valida.',

@@ -42,7 +42,7 @@ return [
     'fatal_error'             => 'Ölümcül bir hata vardı. Neler olduğunu görmek için lütfen "storage/ logs" içindeki günlük dosyalarını kontrol edin veya "docker logs -f [container]" kullanın.',
     'maintenance_mode'        => 'Firefly III bakım modunda.',
     'be_right_back'           => 'Hemen dönecek!',
-    'check_back'              => 'Firefly III gerekli bakım için hazır. Lütfen bir saniye sonra tekrar kontrol edin.',
+    'check_back'              => 'Firefly III is down for some necessary maintenance. Please check back in a second. If you happen to see this message on the demo site, just wait a few minutes. The database is reset every few hours.',
     'error_occurred'          => 'Hoppala! Bir hata oluştu.',
     'db_error_occurred'       => 'Whoops! A database error occurred.',
     'error_not_recoverable'   => 'Ne yazık ki, bu hata kurtarılamadı :(. Ateşböceği III kırıldı. Hata şu şekildedir:',

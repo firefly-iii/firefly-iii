@@ -55,6 +55,7 @@ return [
     'reconciled_forbidden_field'      => 'This transaction is already reconciled, you cannot change the ":field"',
     'deleted_user'                    => 'Z bezpečnostných dôvodov pre registráciu nemôžete použiť túto emailovú adresu.',
     'rule_trigger_value'              => 'Táto hodnota je pre označený spúšťač neplatná.',
+    'rule_action_expression'          => 'Invalid expression. :error',
     'rule_action_value'               => 'Táto hodnota je pre vybranú akciu neplatná.',
     'file_already_attached'           => 'Nahraný soubor ":name" je už k tomuto objektu pripojený.',
     'file_attached'                   => 'Soubor „:name“ úspěšně nahrán.',
@@ -195,7 +196,7 @@ return [
  *
  */
 
-    'secure_password'                 => 'Toto nie je bezpečné heslo. Skúste iné. Viac se dozviete na http://bit.ly/FF3-password-security',
+    'secure_password'                 => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password',
     'valid_recurrence_rep_type'       => 'Neplatný typ opakovania pre opakované transakcie.',
     'valid_recurrence_rep_moment'     => 'Neplatný moment opakovania pre tento typ opakovania.',
     'invalid_account_info'            => 'Neplatná informácia o účte.',

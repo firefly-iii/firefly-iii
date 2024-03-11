@@ -55,6 +55,7 @@ return [
     'reconciled_forbidden_field'      => 'Deze transactie is al afgestemd, dus je kan ":field" niet wijzigen',
     'deleted_user'                    => 'Je kan je niet registreren met dit e-mailadres.',
     'rule_trigger_value'              => 'Deze waarde is niet geldig voor de geselecteerde trigger.',
+    'rule_action_expression'          => 'Invalid expression. :error',
     'rule_action_value'               => 'Deze waarde is niet geldig voor de geselecteerde actie.',
     'file_already_attached'           => 'Het geuploade bestand ":name" is al gelinkt aan deze transactie.',
     'file_attached'                   => 'Bestand ":name" is succesvol geüpload.',
@@ -195,7 +196,7 @@ return [
  *
  */
 
-    'secure_password'                 => 'Dit is geen veilig wachtwoord. Probeer het nog een keer. Zie ook: https://bit.ly/FF3-password-security',
+    'secure_password'                 => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password',
     'valid_recurrence_rep_type'       => 'Dit is geen geldige herhaling voor periodieke transacties.',
     'valid_recurrence_rep_moment'     => 'Ongeldig herhaalmoment voor dit type herhaling.',
     'invalid_account_info'            => 'Ongeldige rekeninginformatie.',

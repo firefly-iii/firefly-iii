@@ -42,7 +42,7 @@ return [
     'fatal_error'             => 'Houve um erro fatal. Por favor, verifique os arquivos de log em "storage/logs" ou use "docker logs -f [container]" para ver o que está acontecendo.',
     'maintenance_mode'        => 'Firefly III está em modo de manutenção.',
     'be_right_back'           => 'Volta logo!',
-    'check_back'              => 'Firefly III está fora do ar devido a manutenção necessária. Acesse novamente em alguns instantes.',
+    'check_back'              => 'Firefly III is down for some necessary maintenance. Please check back in a second. If you happen to see this message on the demo site, just wait a few minutes. The database is reset every few hours.',
     'error_occurred'          => 'Ops! Aconteceu um erro.',
     'db_error_occurred'       => 'Ops! Ocorreu um erro no banco de dados.',
     'error_not_recoverable'   => 'Infelizmente este erro não é recuperável :(. Firefly III quebrou. O erro é:',

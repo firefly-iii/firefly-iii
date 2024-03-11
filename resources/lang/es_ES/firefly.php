@@ -113,7 +113,7 @@ return [
     'two_factor_forgot'                                   => 'Olvidé mi cosa de dos factores.',
     'two_factor_lost_header'                              => '¿Perdiste tu autenticación de doble factor?',
     'two_factor_lost_intro'                               => 'Si también perdiste tus códigos de copia de seguridad, tienes mala suerte. Esto no es algo que puedas arreglar desde la interfaz web. Tienes dos opciones.',
-    'two_factor_lost_fix_self'                            => 'Si ejecutas tu propia instancia de Firefly III, lee <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working>esta entrada en el FAQ</a> para obtener instrucciones.',
+    'two_factor_lost_fix_self'                            => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                           => 'De lo contrario, comunícate por mail con el dueño del sitio, <a href="mailto::site_owner">:site_owner</a> y pídele que restablezca tu autenticación de dos pasos.',
     'mfa_backup_code'                                     => 'Has usado un código de respaldo para iniciar sesión en Firefly III. No se puede usar de nuevo, así que táchalo de tu lista.',
     'pref_two_factor_new_backup_codes'                    => 'Obtener nuevos códigos de copia de seguridad',
@@ -1286,6 +1286,8 @@ return [
     'rule_action_append_notes_to_descr'                   => 'Añadir las notas a la descripción',
     'rule_action_move_descr_to_notes'                     => 'Reemplazar las notas con la descripción',
     'rule_action_move_notes_to_descr'                     => 'Reemplazar la descripción con notas',
+    'rule_action_set_amount_choice'                       => 'Set amount to ..',
+    'rule_action_set_amount'                              => 'Set amount to ":action_value"',
     'rule_action_set_destination_to_cash_choice'          => 'Establecer cuenta de destino a (cash)',
     'rule_action_set_source_to_cash_choice'               => 'Establecer cuenta de origen a (cash)',
     'rulegroup_for_bills_title'                           => 'Regla de grupo para facturas',
@@ -2768,6 +2770,7 @@ return [
     'ale_action_add_to_piggy'                             => 'Hucha',
     'ale_action_remove_from_piggy'                        => 'Hucha',
     'ale_action_add_tag'                                  => 'Etiqueta añadida',
+    'ale_action_update_amount'                            => 'Updated amount',
 
     // dashboard
     'enable_auto_convert'                                 => 'Habilitar conversión de moneda',

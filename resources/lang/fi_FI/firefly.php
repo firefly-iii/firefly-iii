@@ -113,7 +113,7 @@ return [
     'two_factor_forgot'                                   => 'Unohdin kaksivaiheisen tunnistusjuttuni.',
     'two_factor_lost_header'                              => 'Unohdit kaksivaiheisen tunnistuksen koodisi?',
     'two_factor_lost_intro'                               => 'Jos olet hävittänyt myös varakoodisi, onnesi on kääntynyt. Tätä et ikävä kyllä pysty korjaamaan selaimella. Sinulla on nyt kaksi vaihtoehtoa.',
-    'two_factor_lost_fix_self'                            => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working>this entry in the FAQ</a> for instructions.',
+    'two_factor_lost_fix_self'                            => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                           => 'Muussa tapauksessa, ota yhteyttä ylläpitäjään, <a href="mailto::site_owner">:site_owner</a> ja pyydä että kaksivaiheinen tunnistautumisesi nollataan.',
     'mfa_backup_code'                                     => 'Olet käyttänyt varakoodin kirjautuessasi Firefly III:een. Varakoodi on kertakäyttöinen, joten muista merkitä se käytetyksi.',
     'pref_two_factor_new_backup_codes'                    => 'Luo uudet varmistuskoodit',
@@ -1286,6 +1286,8 @@ return [
     'rule_action_append_notes_to_descr'                   => 'Append notes to description',
     'rule_action_move_descr_to_notes'                     => 'Replace notes with description',
     'rule_action_move_notes_to_descr'                     => 'Replace description with notes',
+    'rule_action_set_amount_choice'                       => 'Set amount to ..',
+    'rule_action_set_amount'                              => 'Set amount to ":action_value"',
     'rule_action_set_destination_to_cash_choice'          => 'Set destination account to (cash)',
     'rule_action_set_source_to_cash_choice'               => 'Set source account to (cash)',
     'rulegroup_for_bills_title'                           => 'Sääntöryhmä laskuille',
@@ -2768,6 +2770,7 @@ return [
     'ale_action_add_to_piggy'                             => 'Piggy bank',
     'ale_action_remove_from_piggy'                        => 'Piggy bank',
     'ale_action_add_tag'                                  => 'Added tag',
+    'ale_action_update_amount'                            => 'Updated amount',
 
     // dashboard
     'enable_auto_convert'                                 => 'Enable currency conversion',

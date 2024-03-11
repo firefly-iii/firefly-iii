@@ -42,7 +42,7 @@ return [
     'fatal_error'             => 'Сталася фатальна помилка. Перевірте файли журналів у «storage/logs» або скористайтеся «docker logs -f [container]», щоб побачити, що відбувається.',
     'maintenance_mode'        => 'Firefly III знаходиться в режимі обслуговування.',
     'be_right_back'           => 'Незабаром повернусь!',
-    'check_back'              => 'Firefly III вимкнено для необхідного обслуговування. Перевірте за секунду.',
+    'check_back'              => 'Firefly III is down for some necessary maintenance. Please check back in a second. If you happen to see this message on the demo site, just wait a few minutes. The database is reset every few hours.',
     'error_occurred'          => 'Ой! Сталася помилка.',
     'db_error_occurred'       => 'Ой! Сталася помилка бази даних.',
     'error_not_recoverable'   => 'На жаль, цю помилку не можна виправити :(. Firefly III пошкоджено. Помилка:',

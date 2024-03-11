@@ -55,6 +55,7 @@ return [
     'reconciled_forbidden_field'      => 'This transaction is already reconciled, you cannot change the ":field"',
     'deleted_user'                    => 'Due to security constraints, you cannot register using this email address.',
     'rule_trigger_value'              => 'This value is invalid for the selected trigger.',
+    'rule_action_expression'          => 'Invalid expression. :error',
     'rule_action_value'               => 'This value is invalid for the selected action.',
     'file_already_attached'           => 'Uploaded file ":name" is already attached to this object.',
     'file_attached'                   => 'Successfully uploaded file ":name".',
@@ -195,7 +196,7 @@ return [
  *
  */
 
-    'secure_password'                 => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password-security',
+    'secure_password'                 => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password',
     'valid_recurrence_rep_type'       => 'Invalid repetition type for recurring transactions.',
     'valid_recurrence_rep_moment'     => 'Invalid repetition moment for this type of repetition.',
     'invalid_account_info'            => 'Invalid account information.',

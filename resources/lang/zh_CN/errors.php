@@ -42,7 +42,7 @@ return [
     'fatal_error'             => '发生致命错误：请检查位于“storage/logs”目录的日志文件，或使用“docker logs -f [container]”命令查看相关信息。',
     'maintenance_mode'        => 'Firefly III 已启用维护模式',
     'be_right_back'           => '敬请期待！',
-    'check_back'              => 'Firefly III 正在进行必要的维护，请稍后再试',
+    'check_back'              => 'Firefly III is down for some necessary maintenance. Please check back in a second. If you happen to see this message on the demo site, just wait a few minutes. The database is reset every few hours.',
     'error_occurred'          => '很抱歉，出现错误',
     'db_error_occurred'       => '哎呀！发生数据库错误。',
     'error_not_recoverable'   => '很遗憾，该错误无法恢复 :( Firefly III 已崩溃。错误信息：',

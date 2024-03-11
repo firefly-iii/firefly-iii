@@ -1,0 +1,43 @@
+{
+    "config": {
+        "html_language": "zh-cn",
+        "date_time_fns": "YYYY\u5e74M\u6708D\u65e5 HH:mm:ss",
+        "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
+    },
+    "firefly": {
+        "spent": "\u652f\u51fa",
+        "left": "\u5269\u4f59",
+        "paid": "\u5df2\u4ed8\u6b3e",
+        "errors_submission_v2": "\u60a8\u7684\u63d0\u4ea4\u6709\u8bef\uff0c\u8bf7\u67e5\u770b\u4e0b\u9762\u8f93\u51fa\u7684\u9519\u8bef\u4fe1\u606f: %{errorMessage}",
+        "unpaid": "\u672a\u4ed8\u6b3e",
+        "default_group_title_name_plain": "\u672a\u5206\u7ec4",
+        "subscriptions_in_group": "\u5206\u7ec4\u201c%{title}\u201d\u8ba2\u9605",
+        "subscr_expected_x_times": "\u6b64\u5468\u671f\u9884\u8ba1\u652f\u4ed8%{amount}%{times}\u6b21",
+        "overspent": "\u8d85\u652f",
+        "money_flowing_in": "\u6d41\u5165",
+        "money_flowing_out": "\u6d41\u51fa",
+        "category": "\u5206\u7c7b",
+        "unknown_category_plain": "\u6ca1\u6709\u5206\u7c7b",
+        "all_money": "\u5168\u90e8\u8d44\u91d1",
+        "unknown_source_plain": "\u672a\u77e5\u6765\u6e90\u8d26\u6237",
+        "unknown_dest_plain": "\u672a\u77e5\u76ee\u6807\u8d26\u6237",
+        "unknown_any_plain": "\u672a\u77e5\u8d26\u6237",
+        "unknown_budget_plain": "\u65e0\u9884\u7b97",
+        "stored_journal_js": "\u6210\u529f\u521b\u5efa\u65b0\u4ea4\u6613 \"%{description}\"",
+        "wait_loading_transaction": "\u8bf7\u7b49\u5f85\u8868\u5355\u52a0\u8f7d",
+        "nothing_found": "(\u6ca1\u6709\u627e\u5230)",
+        "wait_loading_data": "\u8bf7\u7b49\u5f85\u60a8\u7684\u4fe1\u606f\u52a0\u8f7d...",
+        "Transfer": "\u8f6c\u8d26",
+        "Withdrawal": "\u652f\u51fa",
+        "Deposit": "\u6536\u5165",
+        "expense_account": "\u652f\u51fa\u8d26\u6237",
+        "revenue_account": "\u6536\u5165\u8d26\u6237",
+        "budget": "\u9884\u7b97",
+        "account_type_Asset account": "\u8d44\u4ea7\u8d26\u6237",
+        "account_type_Expense account": "\u652f\u51fa\u8d26\u6237",
+        "account_type_Revenue account": "\u6536\u5165\u8d26\u6237",
+        "account_type_Debt": "\u6b20\u6b3e",
+        "account_type_Loan": "\u8d37\u6b3e",
+        "account_type_Mortgage": "\u62b5\u62bc"
+    }
+}
