@@ -143,7 +143,7 @@ class ReportController extends Controller
         $cache->addProperty($accounts);
         $cache->addProperty($end);
         if ($cache->has()) {
-            return response()->json($cache->get());
+            // return response()->json($cache->get());
         }
 
         app('log')->debug('Going to do operations for accounts ', $accounts->pluck('id')->toArray());
@@ -220,11 +220,14 @@ class ReportController extends Controller
                 $currentEnd = app('navigation')->endOfPeriod($currentEnd, $preferredRange);
             }
             while ($currentStart <= $currentEnd) {
-                $key                        = $currentStart->format($format);
-                $title                      = $currentStart->isoFormat($titleFormat);
-                $income['entries'][$title]  = app('steam')->bcround($currency[$key]['earned'] ?? '0', $currency['currency_decimal_places']);
-                $expense['entries'][$title] = app('steam')->bcround($currency[$key]['spent'] ?? '0', $currency['currency_decimal_places']);
-                $currentStart               = app('navigation')->addPeriod($currentStart, $preferredRange, 0);
+                $key          = $currentStart->format($format);
+                $title        = $currentStart->isoFormat($titleFormat);
+                // #8663 make sure the period exists in the data previously collected.
+                if (array_key_exists($key, $currency)) {
+                    $income['entries'][$title]  = app('steam')->bcround($currency[$key]['earned'] ?? '0', $currency['currency_decimal_places']);
+                    $expense['entries'][$title] = app('steam')->bcround($currency[$key]['spent'] ?? '0', $currency['currency_decimal_places']);
+                }
+                $currentStart = app('navigation')->addPeriod($currentStart, $preferredRange, 0);
             }
 
             $chartData[]  = $income;
