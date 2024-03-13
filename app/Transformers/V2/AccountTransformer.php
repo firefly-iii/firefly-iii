@@ -29,9 +29,11 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class AccountTransformer
@@ -39,6 +41,7 @@ use Illuminate\Support\Collection;
 class AccountTransformer extends AbstractTransformer
 {
     private array               $accountMeta;
+    private array $lastActivity;
     private array               $accountTypes;
     private array               $balances;
     private array               $convertedBalances;
@@ -50,9 +53,11 @@ class AccountTransformer extends AbstractTransformer
      */
     public function collectMetaData(Collection $objects): Collection
     {
+        // TODO separate methods
         $this->currencies        = [];
         $this->accountMeta       = [];
         $this->accountTypes      = [];
+        $this->lastActivity      = [];
         $this->balances          = app('steam')->balancesByAccounts($objects, $this->getDate());
         $this->convertedBalances = app('steam')->balancesByAccountsConverted($objects, $this->getDate());
 
@@ -62,6 +67,7 @@ class AccountTransformer extends AbstractTransformer
 
         // get currencies:
         $accountIds              = $objects->pluck('id')->toArray();
+        // TODO move query to repository
         $meta                    = AccountMeta::whereIn('account_id', $accountIds)
             ->whereIn('name', ['currency_id', 'account_role', 'account_number'])
             ->get(['account_meta.id', 'account_meta.account_id', 'account_meta.name', 'account_meta.data'])
@@ -79,6 +85,7 @@ class AccountTransformer extends AbstractTransformer
         }
         // get account types:
         // select accounts.id, account_types.type from account_types left join accounts on accounts.account_type_id = account_types.id;
+        // TODO move query to repository
         $accountTypes            = AccountType::leftJoin('accounts', 'accounts.account_type_id', '=', 'account_types.id')
             ->whereIn('accounts.id', $accountIds)
             ->get(['accounts.id', 'account_types.type'])
@@ -87,6 +94,16 @@ class AccountTransformer extends AbstractTransformer
         /** @var AccountType $row */
         foreach ($accountTypes as $row) {
             $this->accountTypes[$row->id] = (string)config(sprintf('firefly.shortNamesByFullName.%s', $row->type));
+        }
+
+        // get last activity
+        // TODO move query to repository
+        $array = Transaction::whereIn('account_id',$accountIds)
+            ->leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
+            ->groupBy('transactions.account_id')
+            ->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) as date_max')])->toArray();
+        foreach($array as $row){
+            $this->lastActivity[(int)$row['account_id']] = Carbon::parse($row['date_max'], config('app.timezone'));
         }
 
         // TODO needs separate method.
@@ -189,6 +206,7 @@ class AccountTransformer extends AbstractTransformer
             'current_balance_date'           => $this->getDate()->endOfDay()->toAtomString(),
 
             // more meta
+            'last_activity'                  => array_key_exists($id, $this->lastActivity) ? $this->lastActivity[$id]->toAtomString() : null,
 
             //            'notes'                   => $this->repository->getNoteText($account),
             //            'monthly_payment_date'    => $monthlyPaymentDate,

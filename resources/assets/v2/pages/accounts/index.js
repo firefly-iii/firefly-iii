@@ -93,13 +93,14 @@ let index = function () {
                             active: current.attributes.active,
                             name: current.attributes.name,
                             type: current.attributes.type,
-                            // role: current.attributes.account_role,
+                            role: current.attributes.account_role,
                             iban: null === current.attributes.iban ? '' : current.attributes.iban.match(/.{1,4}/g).join(' '),
                             account_number: null === current.attributes.account_number ? '' : current.attributes.account_number,
                             current_balance: current.attributes.current_balance,
                             currency_code: current.attributes.currency_code,
                             native_current_balance: current.attributes.native_current_balance,
                             native_currency_code: current.attributes.native_currency_code,
+                            last_activity: null === current.attributes.last_activity ? '' : format(new Date(current.attributes.last_activity),'P'),
                         };
                         this.accounts.push(account);
                     }

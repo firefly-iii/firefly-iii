@@ -124,8 +124,10 @@
                                     <td>
                                         <span x-text="formatMoney(account.current_balance, account.currency_code)"></span>
                                     </td>
-                                    <td>TODO</td>
-                                    <td>TODO</td>
+                                    <td>
+                                        <span x-text="account.last_activity"></span>
+                                    </td>
+                                    <td>TODO 2  </td>
                                     <td>&nbsp;</td>
                                 </tr>
                                 </template>
