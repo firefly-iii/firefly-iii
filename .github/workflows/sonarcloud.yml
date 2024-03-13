@@ -45,15 +45,6 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --prefer-dist --no-interaction --no-progress --no-scripts
 
-      - name: PHPStan
-        run: .ci/phpstan.sh
-
-      - name: PHPMD
-        run: .ci/phpmd.sh
-
-      - name: PHP CS Fixer
-        run: .ci/phpcs.sh
-
       - name: "Create database file"
         run: touch storage/database/database.sqlite
 
