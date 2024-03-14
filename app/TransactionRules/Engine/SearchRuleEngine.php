@@ -108,9 +108,13 @@ class SearchRuleEngine implements RuleEngineInterface
             if (false === $ruleTrigger->active) {
                 continue;
             }
+            $contextSearch = $ruleTrigger->trigger_type;
+            if(str_starts_with($ruleTrigger->trigger_type, '-')) {
+                $contextSearch = substr($ruleTrigger->trigger_type, 1);
+            }
 
             // if the trigger needs no context, value is different:
-            $needsContext = (bool)(config(sprintf('search.operators.%s.needs_context', $ruleTrigger->trigger_type)) ?? true);
+            $needsContext = (bool)(config(sprintf('search.operators.%s.needs_context', $contextSearch)) ?? true);
             if (false === $needsContext) {
                 app('log')->debug(sprintf('SearchRuleEngine:: add a rule trigger (no context): %s:true', $ruleTrigger->trigger_type));
                 $searchArray[$ruleTrigger->trigger_type][] = 'true';
