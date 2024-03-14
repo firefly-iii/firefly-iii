@@ -56,16 +56,16 @@ return [
  */
 
     // invite
-    'invitation_created_subject'              => 'An invitation has been created',
-    'invitation_created_body'                 => 'Admin user ":email" created a user invitation which can be used by whoever is behind email address ":invitee". The invite will be valid for 48hrs.',
-    'invite_user_subject'                     => 'You\'ve been invited to create a Firefly III account.',
-    'invitation_introduction'                 => 'You\'ve been invited to create a Firefly III account on **:host**. Firefly III  is a personal, self-hosted, private personal finance manager. All the cool kids are using it.',
-    'invitation_invited_by'                   => 'You\'ve been invited by ":admin" and this invitation was sent to ":invitee". That\'s you, right?',
-    'invitation_url'                          => 'The invitation is valid for 48 hours and can be redeemed by surfing to [Firefly III](:url). Enjoy!',
+    'invitation_created_subject'              => 'Pozvánka byla vytvořena',
+    'invitation_created_body'                 => 'Admin uživatel ":email" vytvořil uživatelskou pozvánku, kterou může použít kdokoliv, kdo stojí za e-mailovou adresou ":invitee". Pozvánka bude platná 48 hodin.',
+    'invite_user_subject'                     => 'Byli jste pozváni k vytvoření účtu Firefly III.',
+    'invitation_introduction'                 => 'Byli jste pozváni k vytvoření účtu Firefly III na **:host**. Firefly III je osobní, vlastní soukromý správce financí.',
+    'invitation_invited_by'                   => 'Byli jste pozváni ":admin" a tato pozvánka byla odeslána na ":invitee". To jste vy, že?',
+    'invitation_url'                          => 'Pozvánka je platná 48 hodin a může být využita kliknutím na [Firefly III](:url). Užívejte si ji!',
 
     // new IP
     'login_from_new_ip'                       => 'Nové přihlášení do Firefly III',
-    'slack_login_from_new_ip'                 => 'New Firefly III login from IP :ip (:host)',
+    'slack_login_from_new_ip'                 => 'Nové přihlášení Firefly III z IP :ip (:host)',
     'new_ip_body'                             => 'Firefly III zjistil nové přihlášení na Vašem účtu z neznámé IP adresy. Pokud jste se nikdy nepřihlásili z IP adresy níže, nebo to bylo před více než šesti měsíci, Firefly III Vás upozorní.',
     'new_ip_warning'                          => 'Pokud rozpoznáte tuto IP adresu nebo přihlašovací jméno, můžete tuto zprávu ignorovat. Pokud jste se nepřihlásili, nebo jestli nemáte tušení, o co jde, ověřte zabezpečení hesla, změňte ho a odhlásíte všechny ostatní relace. Chcete-li to provést, jděte na stránku svého profilu. Samozřejmě už máte dvoufaktorové přihlašování povoleno, že? Zůstaňte v bezpečí!',
     'ip_address'                              => 'IP adresa',
@@ -80,9 +80,9 @@ return [
 
     // registered
     'registered_subject'                      => 'Vítejte ve Firefly III!',
-    'registered_subject_admin'                => 'A new user has registered',
-    'admin_new_user_registered'               => 'A new user has registered. User **:email** was given user ID #:id.',
-    'registered_welcome'                      => 'Welcome to [Firefly III](:address). Your registration has made it, and this email is here to confirm it. Yay!',
+    'registered_subject_admin'                => 'Nový uživatel se zaregistroval',
+    'admin_new_user_registered'               => 'Nový uživatel se zaregistroval. Uživatel **:email** dostal uživateleské ID #:id.',
+    'registered_welcome'                      => 'Vítejte v [Firefly III](:address). Vaše registrace proběhla a tento e-mail je zde pro potvrzení. Jupí!',
     'registered_pw'                           => 'If you have forgotten your password already, please reset it using [the password reset tool](:address/password/reset).',
     'registered_help'                         => 'V pravém horním rohu každé stránky je ikona nápovědy. Pokud potřebujete pomoc, klikněte na ní!',
     'registered_closing'                      => 'Užívejte!',
@@ -102,7 +102,7 @@ return [
  */
 
     // new version
-    'new_version_email_subject'               => 'A new Firefly III version is available',
+    'new_version_email_subject'               => 'Je dostupná nová verze Firefly III',
 
     // email change
     'email_change_subject'                    => 'Vaše Firefly III e-mailová adresa se změnila',
@@ -110,9 +110,9 @@ return [
     'email_change_body_to_old'                => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this to happen, you **must** follow the "undo"-link below to protect your account!',
     'email_change_ignore'                     => 'Pokud jste iniciovali tuto změnu, můžete tuto zprávu klidně ignorovat.',
     'email_change_old'                        => 'Stará e-mailová adresa byla: :email',
-    'email_change_old_strong'                 => 'The old email address was: **:email**',
+    'email_change_old_strong'                 => 'Stará e-mailová adresa byla: **:email**',
     'email_change_new'                        => 'Nová e-mailová adresa je: :email',
-    'email_change_new_strong'                 => 'The new email address is: **:email**',
+    'email_change_new_strong'                 => 'Nová e-mailová adresa je: **:email**',
     'email_change_instructions'               => 'Dokud nepotvrdíte tuto změnu, tak nemůžete používat Firefly III. Postupujte prosím kliknutím na níže uvedený odkaz.',
     'email_change_undo_link'                  => 'Změnu vrátíte zpět kliknutím na odkaz:',
 
@@ -169,7 +169,7 @@ return [
     'bill_warning_extension_date'             => 'Your bill **":name"** is due to be extended or cancelled on :date. This moment will pass in about **:diff days**.',
     'bill_warning_end_date_zero'              => 'Your bill **":name"** is due to end on :date. This moment will pass **TODAY!**',
     'bill_warning_extension_date_zero'        => 'Your bill **":name"** is due to be extended or cancelled on :date. This moment will pass **TODAY!**',
-    'bill_warning_please_action'              => 'Please take the appropriate action.',
+    'bill_warning_please_action'              => 'Přijměte prosím odpovídající opatření.',
 ];
 /*
  * PLEASE DO NOT EDIT THIS FILE DIRECTLY.

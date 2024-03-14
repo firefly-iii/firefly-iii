@@ -44,7 +44,7 @@ return [
     'be_right_back'           => 'Hned jsme zpět!',
     'check_back'              => 'Firefly III is down for some necessary maintenance. Please check back in a second. If you happen to see this message on the demo site, just wait a few minutes. The database is reset every few hours.',
     'error_occurred'          => 'Jejda! Došlo k chybě.',
-    'db_error_occurred'       => 'Whoops! A database error occurred.',
+    'db_error_occurred'       => 'Jejda! Došlo k chybě databáze.',
     'error_not_recoverable'   => 'Bohužel, tato chyba je neopravitelná :(. Firefly III se pokazil. Chyba je:',
     'error'                   => 'Chyba',
     'error_location'          => 'Došlo k chybě v souboru <span style="font-family: monospace;">:file</span> na řádku :line s kódem :code.',
@@ -63,7 +63,7 @@ return [
  */
 
     'collect_info'            => 'Shromažďujte prosím další informace do adresáře <code>storage/logs</code>, kde najdete chybové záznamy. Pokud používáte Docker, použijte <code>docker logs -f [container]</code>.',
-    'collect_info_more'       => 'You can read more about collecting error information in <a href="https://docs.firefly-iii.org/how-to/general/debug/">the FAQ</a>.',
+    'collect_info_more'       => 'Více o sběru informací o chybě si můžete přečíst v <a href="https://docs.firefly-iii.org/how-to/general/debug/">FAQ</a>.',
     'github_help'             => 'Získejte nápovědu na GitHub',
     'github_instructions'     => 'Jste více než vítáni při otevření nových hlášení <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">na GitHub</a></strong>.',
     'use_search'              => 'Použijte vyhledávání!',
