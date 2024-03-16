@@ -312,6 +312,9 @@ class TagController extends Controller
         if (count($this->attachmentsHelper->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachmentsHelper->getMessages()->get('attachments'));
         }
+        if (count($this->attachmentsHelper->getErrors()->get('attachments')) > 0) {
+            $request->session()->flash('error', $this->attachmentsHelper->getErrors()->get('attachments'));
+        }
         $redirect = redirect($this->getPreviousUrl('tags.create.url'));
         if (1 === (int)$request->get('create_another')) {
             session()->put('tags.create.fromStore', true);
@@ -346,6 +349,9 @@ class TagController extends Controller
 
         if (count($this->attachmentsHelper->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachmentsHelper->getMessages()->get('attachments'));
+        }
+        if (count($this->attachmentsHelper->getErrors()->get('attachments')) > 0) {
+            $request->session()->flash('error', $this->attachmentsHelper->getErrors()->get('attachments'));
         }
         $redirect = redirect($this->getPreviousUrl('tags.edit.url'));
         if (1 === (int)$request->get('return_to_edit')) {

@@ -236,7 +236,8 @@ class AttachmentHelper implements AttachmentHelperInterface
             $fileObject->rewind();
 
             if (0 === $file->getSize()) {
-                throw new FireflyException('Cannot upload empty or non-existent file.');
+                $this->errors->add('attachments', trans('validation.file_zero_length'));
+                return null;
             }
 
             $content              = (string)$fileObject->fread($file->getSize());
