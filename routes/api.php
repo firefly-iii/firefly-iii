@@ -106,6 +106,7 @@ Route::group(
     static function (): void {
         Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
         Route::get('{account}', ['uses' => 'ShowController@show', 'as' => 'show']);
+        Route::put('{account}', ['uses' => 'UpdateController@update', 'as' => 'update']);
     }
 );
 

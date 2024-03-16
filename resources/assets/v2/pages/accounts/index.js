@@ -28,6 +28,8 @@ import '@ag-grid-community/styles/ag-grid.css';
 import '@ag-grid-community/styles/ag-theme-alpine.css';
 import '../../css/grid-ff3-theme.css';
 import Get from "../../api/v2/model/account/get.js";
+import GenericEditor from "../../support/editable/GenericEditor.js";
+import Put from "../../api/v2/model/account/put.js";
 
 // set type from URL
 const urlParts = window.location.href.split('/');
@@ -51,6 +53,7 @@ let index = function () {
                 enabled: true
             },
         },
+        editors: {},
         sortingColumn: '',
         sortDirection: '',
         accounts: [],
@@ -75,7 +78,36 @@ let index = function () {
             this.notifications.wait.text = i18next.t('firefly.wait_loading_data')
             this.loadAccounts();
         },
-
+        submitInlineEdit(e) {
+            e.preventDefault();
+            const newTarget = e.currentTarget;
+            const index = newTarget.dataset.index;
+            const newValue = document.querySelectorAll('[data-index="'+index+'input"]')[0].value ?? '';
+            if('' === newValue) {
+                return;
+            }
+            // submit the field in an update thing?
+            const fieldName = this.editors[index].options.field;
+            const params = {};
+            params[fieldName] = newValue;
+            console.log(params);
+            console.log('New value is ' + newValue + ' for account #' + this.editors[index].options.id);
+            (new Put()).put(this.editors[index].options.id, params);
+        },
+        cancelInlineEdit(e) {
+            const newTarget = e.currentTarget;
+            const index = newTarget.dataset.index;
+            this.editors[index].cancel();
+        },
+        triggerEdit(e) {
+            const target = e.currentTarget;
+            const index = target.dataset.index;
+            // get parent:
+            this.editors[index] = new GenericEditor();
+            this.editors[index].setElement(target);
+            this.editors[index].init();
+            this.editors[index].replace();
+        },
         loadAccounts() {
             this.notifications.wait.show = true;
             this.notifications.wait.text = i18next.t('firefly.wait_loading_data')
@@ -100,13 +132,13 @@ let index = function () {
                             currency_code: current.attributes.currency_code,
                             native_current_balance: current.attributes.native_current_balance,
                             native_currency_code: current.attributes.native_currency_code,
-                            last_activity: null === current.attributes.last_activity ? '' : format(new Date(current.attributes.last_activity),'P'),
+                            last_activity: null === current.attributes.last_activity ? '' : format(new Date(current.attributes.last_activity), 'P'),
                         };
                         this.accounts.push(account);
                     }
                 }
                 this.notifications.wait.show = false;
-
+                // add click trigger thing.
             });
         },
     }

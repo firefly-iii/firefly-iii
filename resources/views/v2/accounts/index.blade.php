@@ -99,6 +99,7 @@
                                         <a :href="'./accounts/show/' + account.id">
                                             <span x-text="account.name"></span>
                                         </a>
+                                        <em  :data-index="account.id + 'name'" @click="triggerEdit" data-type="text" data-model="Account" :data-id="account.id" data-field="name" :data-value="account.name" class="hidden-edit-button inline-edit-button fa-solid fa-pencil" data-id="1"></em>
                                     </td>
                                     <td>
                                         <span x-text="account.type"></span>
@@ -146,6 +147,8 @@
             </div>
         </div>
     </div>
+
+
 
 @endsection
 @section('scripts')

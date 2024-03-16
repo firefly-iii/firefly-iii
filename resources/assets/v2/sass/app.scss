@@ -22,7 +22,7 @@ $color-mode-type: media-query;
 $link-decoration: none !default;
 $font-family-sans-serif: "Roboto", sans-serif;
 
-$danger:        #CD5029 !default;
+$danger: #CD5029 !default;
 $primary: #1E6581 !default;
 $success: #64B624 !default;
 
@@ -43,7 +43,13 @@ $success: #64B624 !default;
 
 // @import "~bootstrap-sass/assets/stylesheets/bootstrap";
 
-
+// hover buttons
+.hidden-edit-button {
+    cursor: pointer;
+}
+td:not(:hover) .hidden-edit-button {
+    visibility: hidden;
+}
 
 
 
