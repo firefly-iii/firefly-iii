@@ -237,6 +237,7 @@ class AttachmentHelper implements AttachmentHelperInterface
 
             if (0 === $file->getSize()) {
                 $this->errors->add('attachments', trans('validation.file_zero_length'));
+
                 return null;
             }
 
