@@ -35,13 +35,12 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateRequest extends FormRequest
 {
-    use ChecksLogin;
     use AppendsLocationData;
+    use ChecksLogin;
     use ConvertsDataTypes;
 
     /**
      * TODO is a duplicate of the v1 update thing.
-     * @return array
      */
     public function getUpdateData(): array
     {
@@ -114,6 +113,4 @@ class UpdateRequest extends FormRequest
 
         return Location::requestRules($rules);
     }
-
-
 }

@@ -68,14 +68,12 @@ class UpdateController extends Controller
         $account->refresh();
         app('preferences')->mark();
 
-        $transformer = new AccountTransformer();
+        $transformer  = new AccountTransformer();
         $transformer->setParameters($this->parameters);
 
         return response()
             ->api($this->jsonApiObject('accounts', $account, $transformer))
             ->header('Content-Type', self::CONTENT_TYPE)
-            ;
+        ;
     }
-
-
 }

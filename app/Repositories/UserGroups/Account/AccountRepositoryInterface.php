@@ -72,7 +72,7 @@ interface AccountRepositoryInterface
 
     public function setUser(User $user): void;
 
-    public function update(Account $account,array $data): Account;
+    public function update(Account $account, array $data): Account;
 
     public function setUserGroup(UserGroup $userGroup): void;
 }

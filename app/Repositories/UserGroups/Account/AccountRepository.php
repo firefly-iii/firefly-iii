@@ -293,7 +293,8 @@ class AccountRepository implements AccountRepositoryInterface
         return $dbQuery->take($limit)->get(['accounts.*']);
     }
 
-    #[\Override] public function update(Account $account, array $data): Account
+    #[\Override]
+    public function update(Account $account, array $data): Account
     {
         /** @var AccountUpdateService $service */
         $service = app(AccountUpdateService::class);
