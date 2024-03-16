@@ -68,11 +68,6 @@ class MigrateRuleActions extends Command
         return false;
     }
 
-    private function markAsExecuted(): void
-    {
-        app('fireflyconfig')->set(self::CONFIG_NAME, true);
-    }
-
     private function replaceEqualSign(): void
     {
         $count   = 0;

@@ -101,7 +101,7 @@ class AccountTransformer extends AbstractTransformer
         $array                   = Transaction::whereIn('account_id', $accountIds)
             ->leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
             ->groupBy('transactions.account_id')
-            ->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) as date_max')])->toArray()
+            ->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) as date_max')])->toArray() // @phpstan-ignore-line
         ;
         foreach ($array as $row) {
             $this->lastActivity[(int)$row['account_id']] = Carbon::parse($row['date_max'], config('app.timezone'));
