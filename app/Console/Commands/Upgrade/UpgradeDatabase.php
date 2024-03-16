@@ -63,6 +63,7 @@ class UpgradeDatabase extends Command
             'firefly-iii:upgrade-liabilities',
             'firefly-iii:liabilities-600',
             'firefly-iii:budget-limit-periods',
+            'firefly-iii:migrate-rule-actions',
             'firefly-iii:restore-oauth-keys',
             // also just in case, some integrity commands:
             'firefly-iii:create-group-memberships',

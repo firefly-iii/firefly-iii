@@ -53,6 +53,9 @@ class SetDescription implements ActionInterface
         $before = $object->description;
         $after  = $this->action->getValue($journal);
 
+        // replace newlines.
+        $after  = str_replace(["\r", "\n", "\t", "\036", "\025"], '', $after);
+
         \DB::table('transaction_journals')
             ->where('id', '=', $journal['transaction_journal_id'])
             ->update(['description' => $after])

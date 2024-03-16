@@ -85,6 +85,10 @@ class RuleAction extends Model
 
             return (string)$this->action_value;
         }
+        if (true === config('firefly.feature_flags.expression_engine') && str_starts_with($this->action_value, '\=')) {
+            // return literal string.
+            return substr($this->action_value, 1);
+        }
         $expr = new ActionExpression($this->action_value);
 
         try {

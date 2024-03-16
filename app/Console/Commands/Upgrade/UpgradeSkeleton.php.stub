@@ -26,11 +26,11 @@ class UpgradeSkeleton extends Command
     {
         $start = microtime(true);
         if ($this->isExecuted() && true !== $this->option('force')) {
-            $this->info('FRIENDLY This command has already been executed.');
+            $this->friendlyInfo('This command has already been executed.');
 
             return 0;
         }
-        $this->warn('Congrats, you found the skeleton command. Boo!');
+        $this->friendlyWarning('Congrats, you found the skeleton command. Boo!');
 
         //$this->markAsExecuted();
 
