@@ -40,6 +40,7 @@ class AppendNotesToDescription implements ActionInterface
 {
     use ConvertsDataTypes;
     use RefreshNotesTrait;
+
     private RuleAction $action;
 
     /**

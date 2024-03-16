@@ -33,6 +33,7 @@ use FireflyIII\TransactionRules\Traits\RefreshNotesTrait;
 class SetAmount implements ActionInterface
 {
     use RefreshNotesTrait;
+
     private RuleAction $action;
 
     /**
@@ -105,6 +106,13 @@ class SetAmount implements ActionInterface
         $this->updateAmount($transaction, $amount);
     }
 
+    private function updateAmount(Transaction $transaction, string $amount): void
+    {
+        $transaction->amount = $amount;
+        $transaction->save();
+        $transaction->transactionJournal->touch();
+    }
+
     private function updateNegative(TransactionJournal $object, string $amount): void
     {
         /** @var null|Transaction $transaction */
@@ -113,12 +121,5 @@ class SetAmount implements ActionInterface
             return;
         }
         $this->updateAmount($transaction, $amount);
-    }
-
-    private function updateAmount(Transaction $transaction, string $amount): void
-    {
-        $transaction->amount = $amount;
-        $transaction->save();
-        $transaction->transactionJournal->touch();
     }
 }

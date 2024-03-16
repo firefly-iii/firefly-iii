@@ -41,12 +41,12 @@ use Illuminate\Support\Facades\DB;
 class AccountTransformer extends AbstractTransformer
 {
     private array               $accountMeta;
-    private array $lastActivity;
     private array               $accountTypes;
     private array               $balances;
     private array               $convertedBalances;
     private array               $currencies;
     private TransactionCurrency $default;
+    private array               $lastActivity;
 
     /**
      * @throws FireflyException

@@ -35,6 +35,7 @@ use FireflyIII\TransactionRules\Traits\RefreshNotesTrait;
 class AppendDescription implements ActionInterface
 {
     use RefreshNotesTrait;
+
     private RuleAction $action;
 
     /**
