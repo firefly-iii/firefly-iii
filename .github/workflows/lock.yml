@@ -18,11 +18,12 @@ jobs:
     permissions:
       issues: write
       pull-requests: write
+      discussions: write
     runs-on: ubuntu-latest
     steps:
       - uses: dessant/lock-threads@v5
         with:
-          github-token: ${{ github.token }}
-          issue-inactive-days: 7
-          pr-inactive-days: 7
+          issue-inactive-days: 21
+          pr-inactive-days: 21
+          discussion-inactive-days: 21
           log-output: true
