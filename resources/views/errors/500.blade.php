@@ -16,7 +16,7 @@
             </p>
         </div>
     </div>
-    @if(!$debug)
+    @if(!($debug ?? false))
         <div class="row">
             <div class="col">
                 <h4>
@@ -42,7 +42,7 @@
             </div>
         </div>
     @endif
-    @if($debug)
+    @if($debug ?? false)
         <div class="row">
             <div class="col">
                 <h4>{{ trans('errors.error') }}</h4>
