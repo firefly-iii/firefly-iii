@@ -46,7 +46,7 @@ trait DateCalculation
             $difference = $today->diffInDays($end);
         }
 
-        return 0 === $difference ? 1 : $difference;
+        return (int) (0 === $difference ? 1 : $difference);
     }
 
     /**
@@ -63,7 +63,7 @@ trait DateCalculation
             $difference = $start->diffInDays($today) + 1;
         }
 
-        return $difference;
+        return (int) $difference;
     }
 
     protected function calculateStep(Carbon $start, Carbon $end): string

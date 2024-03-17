@@ -35,13 +35,14 @@ use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepository;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Journal\JournalRepository as GroupJournalRepository;
 use FireflyIII\Repositories\UserGroups\Journal\JournalRepositoryInterface as GroupJournalRepositoryInterface;
+use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
 /**
  * Class JournalServiceProvider.
  */
-class JournalServiceProvider extends ServiceProvider
+class JournalServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /**
      * Bootstrap the application services.

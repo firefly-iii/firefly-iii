@@ -27,13 +27,14 @@ use FireflyIII\Repositories\Bill\BillRepository;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Bill\BillRepository as AdminBillRepository;
 use FireflyIII\Repositories\UserGroups\Bill\BillRepositoryInterface as AdminBillRepositoryInterface;
+use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
 /**
  * Class BillServiceProvider.
  */
-class BillServiceProvider extends ServiceProvider
+class BillServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /**
      * Bootstrap the application services.

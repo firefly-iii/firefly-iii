@@ -39,13 +39,14 @@ use FireflyIII\Repositories\UserGroups\Budget\BudgetRepository as AdminBudgetRep
 use FireflyIII\Repositories\UserGroups\Budget\BudgetRepositoryInterface as AdminBudgetRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Budget\OperationsRepository as AdminOperationsRepository;
 use FireflyIII\Repositories\UserGroups\Budget\OperationsRepositoryInterface as AdminOperationsRepositoryInterface;
+use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
 /**
  * Class BudgetServiceProvider.
  */
-class BudgetServiceProvider extends ServiceProvider
+class BudgetServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /**
      * Bootstrap the application services.

@@ -27,13 +27,14 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepository;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\PiggyBank\PiggyBankRepository as AdminPiggyBankRepository;
 use FireflyIII\Repositories\UserGroups\PiggyBank\PiggyBankRepositoryInterface as AdminPiggyBankRepositoryInterface;
+use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
 /**
  * Class PiggyBankServiceProvider.
  */
-class PiggyBankServiceProvider extends ServiceProvider
+class PiggyBankServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /**
      * Bootstrap the application services.

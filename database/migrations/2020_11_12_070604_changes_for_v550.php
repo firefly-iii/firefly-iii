@@ -76,7 +76,7 @@ class ChangesForV550 extends Migration
                         $table->dropColumn('budget_limit_id');
                     }
                 );
-            } catch (ColumnDoesNotExist|QueryException $e) {
+            } catch (ColumnDoesNotExist | QueryException $e) {
                 app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
                 app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
@@ -95,7 +95,7 @@ class ChangesForV550 extends Migration
                         $table->dropColumn('period');
                     }
                 );
-            } catch (ColumnDoesNotExist|QueryException $e) {
+            } catch (ColumnDoesNotExist | QueryException $e) {
                 app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
                 app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
@@ -108,7 +108,7 @@ class ChangesForV550 extends Migration
                         $table->dropColumn('generated');
                     }
                 );
-            } catch (ColumnDoesNotExist|QueryException $e) {
+            } catch (ColumnDoesNotExist | QueryException $e) {
                 app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
                 app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
@@ -231,7 +231,6 @@ class ChangesForV550 extends Migration
                         $table->unsignedSmallInteger('delivery');
                         $table->string('url', 1024);
                         $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-                        $table->unique(['user_id', 'title']);
                     }
                 );
             } catch (QueryException $e) {

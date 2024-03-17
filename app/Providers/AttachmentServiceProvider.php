@@ -25,13 +25,14 @@ namespace FireflyIII\Providers;
 
 use FireflyIII\Repositories\Attachment\AttachmentRepository;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
+use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
 /**
  * Class AttachmentServiceProvider.
  */
-class AttachmentServiceProvider extends ServiceProvider
+class AttachmentServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /**
      * Bootstrap the application services.

@@ -25,13 +25,14 @@ namespace FireflyIII\Providers;
 
 use FireflyIII\Repositories\LinkType\LinkTypeRepository;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
+use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
 /**
  * Class AdminServiceProvider
  */
-class AdminServiceProvider extends ServiceProvider
+class AdminServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /**
      * Bootstrap the application services.

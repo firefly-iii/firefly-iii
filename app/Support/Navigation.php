@@ -304,7 +304,7 @@ class Navigation
     {
         $endOfMonth = $date->copy()->endOfMonth();
 
-        return $date->diffInDays($endOfMonth);
+        return (int) $date->diffInDays($endOfMonth);
     }
 
     public function diffInPeriods(string $period, int $skip, Carbon $beginning, Carbon $end): int

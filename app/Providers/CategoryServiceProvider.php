@@ -31,13 +31,14 @@ use FireflyIII\Repositories\Category\OperationsRepository;
 use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Category\CategoryRepository as UserGroupCategoryRepository;
 use FireflyIII\Repositories\UserGroups\Category\CategoryRepositoryInterface as UserGroupCategoryRepositoryInterface;
+use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
 /**
  * Class CategoryServiceProvider.
  */
-class CategoryServiceProvider extends ServiceProvider
+class CategoryServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /**
      * Bootstrap the application services.

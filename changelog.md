@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.1.11 - 2024-03-25
+
+### Removed
+
+- Support for Mandrill because the necessary packages aren't maintained anymore.
+
+
+
 ## 6.1.10 - 2024-03-03
 
 ### Added

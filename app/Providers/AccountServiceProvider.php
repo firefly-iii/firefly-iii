@@ -31,13 +31,14 @@ use FireflyIII\Repositories\Account\OperationsRepository;
 use FireflyIII\Repositories\Account\OperationsRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Account\AccountRepository as AdminAccountRepository;
 use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface as AdminAccountRepositoryInterface;
+use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
 /**
  * Class AccountServiceProvider.
  */
-class AccountServiceProvider extends ServiceProvider
+class AccountServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /**
      * Bootstrap the application services.

@@ -25,13 +25,14 @@ namespace FireflyIII\Providers;
 
 use FireflyIII\Repositories\Rule\RuleRepository;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
+use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
 /**
  * Class RuleServiceProvider.
  */
-class RuleServiceProvider extends ServiceProvider
+class RuleServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /**
      * Bootstrap the application services.

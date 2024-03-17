@@ -25,13 +25,14 @@ namespace FireflyIII\Providers;
 
 use FireflyIII\Support\Search\OperatorQuerySearch;
 use FireflyIII\Support\Search\SearchInterface;
+use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
 /**
  * Class SearchServiceProvider.
  */
-class SearchServiceProvider extends ServiceProvider
+class SearchServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /**
      * Bootstrap the application services.
