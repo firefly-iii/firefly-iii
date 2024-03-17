@@ -34,7 +34,7 @@ use Illuminate\Support\ServiceProvider;
 /**
  * Class CurrencyServiceProvider.
  */
-class CurrencyServiceProvider extends ServiceProvider 
+class CurrencyServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
