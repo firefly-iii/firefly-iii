@@ -113,7 +113,7 @@ class BoxController extends Controller
         $spentAmount       = $spent[$currency->id]['sum'] ?? '0';
         app('log')->debug(sprintf('Spent for default currency for all budgets in this period: %s', $spentAmount));
 
-        $days              = $today->between($start, $end) ? $today->diffInDays($start) + 1 : $end->diffInDays($start) + 1;
+        $days              = (int)($today->between($start, $end) ? $today->diffInDays($start, true) + 1 : $end->diffInDays($start, true) + 1);
         app('log')->debug(sprintf('Number of days left: %d', $days));
         $spentPerDay       = bcdiv($spentAmount, (string)$days);
         app('log')->debug(sprintf('Available to spend per day: %s', $spentPerDay));

@@ -40,12 +40,12 @@ class ReportGeneratorFactory
     {
         $period = 'Month';
         // more than two months date difference means year report.
-        if ($start->diffInMonths($end) > 1) {
+        if ($start->diffInMonths($end, true) > 1) {
             $period = 'Year';
         }
 
-        // more than one year date difference means multi year report.
-        if ($start->diffInMonths($end) > 12) {
+        // more than one year date difference means multi-year report.
+        if ($start->diffInMonths($end, true) > 12) {
             $period = 'MultiYear';
         }
 

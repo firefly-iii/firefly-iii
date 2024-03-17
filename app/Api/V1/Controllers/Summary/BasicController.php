@@ -281,7 +281,7 @@ class BasicController extends Controller
             $spentInCurrency = $row['sum'];
             $leftToSpend     = bcadd($amount, $spentInCurrency);
 
-            $days            = $today->diffInDays($end) + 1;
+            $days            = (int)$today->diffInDays($end, true) + 1;
             $perDay          = '0';
             if (0 !== $days && bccomp($leftToSpend, '0') > -1) {
                 $perDay = bcdiv($leftToSpend, (string)$days);

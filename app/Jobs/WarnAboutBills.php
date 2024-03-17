@@ -128,7 +128,7 @@ class WarnAboutBills implements ShouldQueue
         $today  = clone $this->date;
         $carbon = clone $bill->{$field};
 
-        return $today->diffInDays($carbon, false);
+        return (int) $today->diffInDays($carbon);
     }
 
     private function sendWarning(Bill $bill, string $field): void

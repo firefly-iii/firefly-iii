@@ -48,7 +48,7 @@ final class BillDateCalculatorTest extends TestCase
     {
         // Carbon $earliest, Carbon $latest, Carbon $billStart, string $period, int $skip, ?Carbon $lastPaid
         return [
-            // basic monthly bill.
+            // basic monthly bill.x
             '1Ma' => ['earliest' => Carbon::parse('2023-11-01'), 'latest' => Carbon::parse('2023-11-30'), 'billStart' => Carbon::parse('2023-01-01'), 'period' => 'monthly', 'skip' => 0, 'lastPaid' => null, 'expected' => ['2023-11-01']],
             // already paid on the first, expect it next month.
             '1Mb' => ['earliest' => Carbon::parse('2023-11-01'), 'latest' => Carbon::parse('2023-11-30'), 'billStart' => Carbon::parse('2023-01-01'), 'period' => 'monthly', 'skip' => 0, 'lastPaid' => Carbon::parse('2023-11-01'), 'expected' => ['2023-12-01']],

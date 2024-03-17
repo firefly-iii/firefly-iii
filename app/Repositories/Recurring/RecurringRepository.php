@@ -476,7 +476,7 @@ class RecurringRepository implements RecurringRepositoryInterface
             if (false === $repDate) {
                 $repDate = clone $today;
             }
-            $diffInYears = $today->diffInYears($repDate);
+            $diffInYears = (int) $today->diffInYears($repDate, true);
             $repDate->addYears($diffInYears); // technically not necessary.
             $string      = $repDate->isoFormat((string)trans('config.month_and_day_no_year_js'));
 

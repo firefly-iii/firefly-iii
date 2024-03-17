@@ -39,7 +39,7 @@ trait DateCalculation
      */
     public function activeDaysLeft(Carbon $start, Carbon $end): int
     {
-        $difference = $start->diffInDays($end) + 1;
+        $difference = (int)($start->diffInDays($end, true) + 1);
         $today      = today(config('app.timezone'))->startOfDay();
 
         if ($start->lte($today) && $end->gte($today)) {
@@ -56,11 +56,11 @@ trait DateCalculation
      */
     protected function activeDaysPassed(Carbon $start, Carbon $end): int
     {
-        $difference = $start->diffInDays($end) + 1;
+        $difference = $start->diffInDays($end, true) + 1;
         $today      = today(config('app.timezone'))->startOfDay();
 
         if ($start->lte($today) && $end->gte($today)) {
-            $difference = $start->diffInDays($today) + 1;
+            $difference = $start->diffInDays($today, true) + 1;
         }
 
         return (int) $difference;
@@ -69,7 +69,7 @@ trait DateCalculation
     protected function calculateStep(Carbon $start, Carbon $end): string
     {
         $step   = '1D';
-        $months = $start->diffInMonths($end);
+        $months = $start->diffInMonths($end, true);
         if ($months > 3) {
             $step = '1W';
         }

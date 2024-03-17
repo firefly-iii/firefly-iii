@@ -298,7 +298,7 @@ class BasicController extends Controller
             app('log')->debug(sprintf('Amount left is %s', $left));
 
             // how much left per day?
-            $days                    = $today->diffInDays($end) + 1;
+            $days                    = (int) $today->diffInDays($end,true) + 1;
             $perDay                  = '0';
             $perDayNative            = '0';
             if (0 !== $days && bccomp($left, '0') > -1) {

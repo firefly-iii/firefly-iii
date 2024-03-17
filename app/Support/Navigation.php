@@ -252,7 +252,7 @@ class Navigation
 
                 /** @var Carbon $tEnd */
                 $tEnd       = session('end', today(config('app.timezone'))->endOfMonth());
-                $diffInDays = $tStart->diffInDays($tEnd);
+                $diffInDays = (int) $tStart->diffInDays($tEnd, true);
             }
             Log::debug(sprintf('Diff in days is %d', $diffInDays));
             $currentEnd->addDays($diffInDays);
@@ -304,7 +304,7 @@ class Navigation
     {
         $endOfMonth = $date->copy()->endOfMonth();
 
-        return (int) $date->diffInDays($endOfMonth);
+        return (int) $date->diffInDays($endOfMonth, true);
     }
 
     public function diffInPeriods(string $period, int $skip, Carbon $beginning, Carbon $end): int
@@ -317,12 +317,12 @@ class Navigation
             $end->format('Y-m-d')
         ));
         $map       = [
-            'daily'     => 'floatDiffInDays',
-            'weekly'    => 'floatDiffInWeeks',
-            'monthly'   => 'floatDiffInMonths',
-            'quarterly' => 'floatDiffInMonths',
-            'half-year' => 'floatDiffInMonths',
-            'yearly'    => 'floatDiffInYears',
+            'daily'     => 'diffInDays',
+            'weekly'    => 'diffInWeeks',
+            'monthly'   => 'diffInMonths',
+            'quarterly' => 'diffInMonths',
+            'half-year' => 'diffInMonths',
+            'yearly'    => 'diffInYears',
         ];
         if (!array_key_exists($period, $map)) {
             Log::warning(sprintf('No diffInPeriods for period "%s"', $period));
@@ -331,7 +331,7 @@ class Navigation
         }
         $func      = $map[$period];
         // first do the diff
-        $floatDiff = $beginning->{$func}($end); // @phpstan-ignore-line
+        $floatDiff = $beginning->{$func}($end, true); // @phpstan-ignore-line
 
         // then correct for quarterly or half-year
         if ('quarterly' === $period) {
@@ -442,13 +442,13 @@ class Navigation
         $format        = $this->preferredCarbonFormat($start, $end);
         $displayFormat = (string)trans('config.month_and_day_js', [], $locale);
         // increment by month (for year)
-        if ($start->diffInMonths($end) > 1) {
+        if ($start->diffInMonths($end, true) > 1) {
             $increment     = 'addMonth';
             $displayFormat = (string)trans('config.month_js');
         }
 
-        // increment by year (for multi year)
-        if ($start->diffInMonths($end) > 12) {
+        // increment by year (for multi-year)
+        if ($start->diffInMonths($end, true) > 12) {
             $increment     = 'addYear';
             $displayFormat = (string)trans('config.year_js');
         }
@@ -471,11 +471,11 @@ class Navigation
     public function preferredCarbonFormat(Carbon $start, Carbon $end): string
     {
         $format = 'Y-m-d';
-        if ($start->diffInMonths($end) > 1) {
+        if ($start->diffInMonths($end, true) > 0) {
             $format = 'Y-m';
         }
 
-        if ($start->diffInMonths($end) > 12) {
+        if ($start->diffInMonths($end, true) > 12) {
             $format = 'Y';
         }
 
@@ -540,11 +540,11 @@ class Navigation
     {
         $locale = app('steam')->getLocale();
         $format = (string)trans('config.month_and_day_js', [], $locale);
-        if ($start->diffInMonths($end) > 1) {
+        if ($start->diffInMonths($end, true) > 1) {
             $format = (string)trans('config.month_js', [], $locale);
         }
 
-        if ($start->diffInMonths($end) > 12) {
+        if ($start->diffInMonths($end, true) > 12) {
             $format = (string)trans('config.year_js', [], $locale);
         }
 
@@ -558,11 +558,11 @@ class Navigation
     public function preferredEndOfPeriod(Carbon $start, Carbon $end): string
     {
         $format = 'endOfDay';
-        if ($start->diffInMonths($end) > 1) {
+        if ($start->diffInMonths($end, true) > 1) {
             $format = 'endOfMonth';
         }
 
-        if ($start->diffInMonths($end) > 12) {
+        if ($start->diffInMonths($end, true) > 12) {
             $format = 'endOfYear';
         }
 
@@ -576,11 +576,11 @@ class Navigation
     public function preferredRangeFormat(Carbon $start, Carbon $end): string
     {
         $format = '1D';
-        if ($start->diffInMonths($end) > 1) {
+        if ($start->diffInMonths($end, true) > 1) {
             $format = '1M';
         }
 
-        if ($start->diffInMonths($end) > 12) {
+        if ($start->diffInMonths($end, true) > 12) {
             $format = '1Y';
         }
 
@@ -594,11 +594,11 @@ class Navigation
     public function preferredSqlFormat(Carbon $start, Carbon $end): string
     {
         $format = '%Y-%m-%d';
-        if ($start->diffInMonths($end) > 1) {
+        if ($start->diffInMonths($end, true) > 1) {
             $format = '%Y-%m';
         }
 
-        if ($start->diffInMonths($end) > 12) {
+        if ($start->diffInMonths($end, true) > 12) {
             $format = '%Y';
         }
 
@@ -654,7 +654,7 @@ class Navigation
 
             /** @var Carbon $tEnd */
             $tEnd       = session('end', today(config('app.timezone'))->endOfMonth());
-            $diffInDays = $tStart->diffInDays($tEnd);
+            $diffInDays = (int) $tStart->diffInDays($tEnd, true);
             $date->subDays($diffInDays * $subtract);
 
             return $date;

@@ -405,7 +405,7 @@ class UserEventHandler
             }
             // clean up old entries (6 months)
             $carbon = Carbon::createFromFormat('Y-m-d H:i:s', $preference[$index]['time']);
-            if (false !== $carbon && $carbon->diffInMonths(today()) > 6) {
+            if (false !== $carbon && $carbon->diffInMonths(today(), true) > 6) {
                 app('log')->debug(sprintf('Entry for %s is very old, remove it.', $row['ip']));
                 unset($preference[$index]);
             }

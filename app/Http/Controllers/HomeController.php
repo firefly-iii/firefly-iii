@@ -97,10 +97,10 @@ class HomeController extends Controller
             app('log')->debug('Range is now marked as "custom".');
         }
 
-        $diff          = $start->diffInDays($end) + 1;
+        $diff          = $start->diffInDays($end, true) + 1;
 
         if ($diff > 50) {
-            $request->session()->flash('warning', (string)trans('firefly.warning_much_data', ['days' => $diff]));
+            $request->session()->flash('warning', (string)trans('firefly.warning_much_data', ['days' => (int)$diff]));
         }
 
         $request->session()->put('is_custom_range', $isCustomRange);
