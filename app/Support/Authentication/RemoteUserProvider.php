@@ -121,10 +121,8 @@ class RemoteUserProvider implements UserProvider
         throw new FireflyException(sprintf('C) Did not implement %s', __METHOD__));
     }
 
-    /**
-     * @inheritDoc
-     */
-    #[\Override] public function rehashPasswordIfRequired(Authenticatable $user, array $credentials, bool $force = false)
+    #[\Override]
+    public function rehashPasswordIfRequired(Authenticatable $user, array $credentials, bool $force = false): void
     {
         app('log')->debug(sprintf('Now at %s', __METHOD__));
 

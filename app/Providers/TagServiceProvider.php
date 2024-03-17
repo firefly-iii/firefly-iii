@@ -29,7 +29,6 @@ use FireflyIII\Repositories\Tag\TagRepository;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Tag\TagRepository as UserGroupTagRepository;
 use FireflyIII\Repositories\UserGroups\Tag\TagRepositoryInterface as UserGroupTagRepositoryInterface;
-use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 

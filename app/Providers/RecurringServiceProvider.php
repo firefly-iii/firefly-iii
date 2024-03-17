@@ -25,7 +25,6 @@ namespace FireflyIII\Providers;
 
 use FireflyIII\Repositories\Recurring\RecurringRepository;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
-use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 

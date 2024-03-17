@@ -27,7 +27,6 @@ use FireflyIII\Repositories\Currency\CurrencyRepository;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepository as GroupCurrencyRepository;
 use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface as GroupCurrencyRepositoryInterface;
-use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 

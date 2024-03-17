@@ -25,7 +25,6 @@ namespace FireflyIII\Providers;
 
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepository;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
-use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 

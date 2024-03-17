@@ -32,7 +32,7 @@ use Illuminate\Support\ServiceProvider;
 /**
  * Class SearchServiceProvider.
  */
-class SearchServiceProvider extends ServiceProvider implements DeferrableProvider
+class SearchServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.

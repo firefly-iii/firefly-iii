@@ -32,7 +32,7 @@ use Illuminate\Support\ServiceProvider;
 /**
  * Class AttachmentServiceProvider.
  */
-class AttachmentServiceProvider extends ServiceProvider implements DeferrableProvider
+class AttachmentServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
