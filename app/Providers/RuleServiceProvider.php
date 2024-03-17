@@ -32,7 +32,7 @@ use Illuminate\Support\ServiceProvider;
 /**
  * Class RuleServiceProvider.
  */
-class RuleServiceProvider extends ServiceProvider implements DeferrableProvider
+class RuleServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.

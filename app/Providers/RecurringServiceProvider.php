@@ -32,7 +32,7 @@ use Illuminate\Support\ServiceProvider;
 /**
  * Class RecurringServiceProvider.
  */
-class RecurringServiceProvider extends ServiceProvider implements DeferrableProvider
+class RecurringServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.

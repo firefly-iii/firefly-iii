@@ -46,7 +46,7 @@ use Illuminate\Support\ServiceProvider;
 /**
  * Class BudgetServiceProvider.
  */
-class BudgetServiceProvider extends ServiceProvider 
+class BudgetServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.

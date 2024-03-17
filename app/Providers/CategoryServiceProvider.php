@@ -38,7 +38,7 @@ use Illuminate\Support\ServiceProvider;
 /**
  * Class CategoryServiceProvider.
  */
-class CategoryServiceProvider extends ServiceProvider implements DeferrableProvider
+class CategoryServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.

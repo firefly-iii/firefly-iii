@@ -34,7 +34,7 @@ use Illuminate\Support\ServiceProvider;
 /**
  * Class PiggyBankServiceProvider.
  */
-class PiggyBankServiceProvider extends ServiceProvider implements DeferrableProvider
+class PiggyBankServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
