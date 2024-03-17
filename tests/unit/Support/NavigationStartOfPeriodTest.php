@@ -27,7 +27,7 @@ namespace Tests\unit\Support;
 use Carbon\Carbon;
 use FireflyIII\Support\Navigation;
 use Illuminate\Support\Facades\Log;
-use PHPUnit\Framework\TestCase;
+use Tests\integration\TestCase;
 
 /**
  * @group unit-test
@@ -101,6 +101,8 @@ final class NavigationStartOfPeriodTest extends TestCase
      */
     public function testGivenADateAndUnknownFrequencyWhenCalculateTheDateThenReturnsTheSameDateSuccessful(string $frequency, Carbon $from, Carbon $expected): void
     {
+        Log::spy();
+
         Log::shouldReceive('error')
             ->with(sprintf('Cannot do startOfPeriod for $repeat_freq "%s"', $frequency))
             ->andReturnNull()

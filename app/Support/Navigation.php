@@ -161,7 +161,7 @@ class Navigation
     public function startOfPeriod(Carbon $theDate, string $repeatFreq): Carbon
     {
         $date        = clone $theDate;
-
+        Log::debug(sprintf('Now in startOfPeriod("%s", "%s")', $date->toIso8601String(), $repeatFreq));
         $functionMap = [
             '1D'        => 'startOfDay',
             'daily'     => 'startOfDay',
@@ -178,15 +178,33 @@ class Navigation
             'yearly'    => 'startOfYear',
             '1Y'        => 'startOfYear',
         ];
+
+        $parameterMap = [
+            'startOfWeek' => [Carbon::MONDAY],
+        ];
+
         if (array_key_exists($repeatFreq, $functionMap)) {
             $function = $functionMap[$repeatFreq];
+            Log::debug(sprintf('Function is ->%s()', $function));
+            if(array_key_exists($function, $parameterMap)) {
+                Log::debug(sprintf('Parameter map, function becomes ->%s(%s)', $function, join(', ', $parameterMap[$function])));
+                $date->{$function}($parameterMap[$function][0]);
+                Log::debug(sprintf('Result is "%s"', $date->toIso8601String()));
+
+                return $date;
+            }
+
+
             $date->{$function}(); // @phpstan-ignore-line
+            Log::debug(sprintf('Result is "%s"', $date->toIso8601String()));
 
             return $date;
         }
         if ('half-year' === $repeatFreq || '6M' === $repeatFreq) {
             $skipTo = $date->month > 7 ? 6 : 0;
             $date->startOfYear()->addMonths($skipTo);
+            Log::debug(sprintf('Custom call for "%s": addMonths(%d)', $repeatFreq, $skipTo));
+            Log::debug(sprintf('Result is "%s"', $date->toIso8601String()));
 
             return $date;
         }
@@ -202,10 +220,12 @@ class Navigation
             default   => null,
         };
         if (null !== $result) {
+            Log::debug(sprintf('Result is "%s"', $date->toIso8601String()));
             return $result;
         }
 
         if ('custom' === $repeatFreq) {
+            Log::debug(sprintf('Custom, result is "%s"', $date->toIso8601String()));
             return $date; // the date is already at the start.
         }
         Log::error(sprintf('Cannot do startOfPeriod for $repeat_freq "%s"', $repeatFreq));
@@ -216,6 +236,7 @@ class Navigation
     public function endOfPeriod(Carbon $end, string $repeatFreq): Carbon
     {
         $currentEnd  = clone $end;
+        Log::debug(sprintf('Now in endOfPeriod("%s", "%s").', $currentEnd->toIso8601String(), $repeatFreq));
 
         $functionMap = [
             '1D'        => 'endOfDay',
@@ -296,6 +317,7 @@ class Navigation
         if (in_array($repeatFreq, $subDay, true)) {
             $currentEnd->subDay();
         }
+        Log::debug(sprintf('Final result: %s', $currentEnd->toIso8601String()));
 
         return $currentEnd;
     }
@@ -471,11 +493,11 @@ class Navigation
     public function preferredCarbonFormat(Carbon $start, Carbon $end): string
     {
         $format = 'Y-m-d';
-        if ($start->diffInMonths($end, true) > 0) {
+        if ((int)$start->diffInMonths($end, true) > 1) {
             $format = 'Y-m';
         }
 
-        if ($start->diffInMonths($end, true) > 12) {
+        if ((int)$start->diffInMonths($end, true) > 12) {
             $format = 'Y';
         }
 
@@ -558,11 +580,11 @@ class Navigation
     public function preferredEndOfPeriod(Carbon $start, Carbon $end): string
     {
         $format = 'endOfDay';
-        if ($start->diffInMonths($end, true) > 1) {
+        if ((int)$start->diffInMonths($end, true) > 1) {
             $format = 'endOfMonth';
         }
 
-        if ($start->diffInMonths($end, true) > 12) {
+        if ((int)$start->diffInMonths($end, true) > 12) {
             $format = 'endOfYear';
         }
 
@@ -576,11 +598,11 @@ class Navigation
     public function preferredRangeFormat(Carbon $start, Carbon $end): string
     {
         $format = '1D';
-        if ($start->diffInMonths($end, true) > 1) {
+        if ((int)$start->diffInMonths($end, true) > 1) {
             $format = '1M';
         }
 
-        if ($start->diffInMonths($end, true) > 12) {
+        if ((int)$start->diffInMonths($end, true) > 12) {
             $format = '1Y';
         }
 
@@ -594,11 +616,11 @@ class Navigation
     public function preferredSqlFormat(Carbon $start, Carbon $end): string
     {
         $format = '%Y-%m-%d';
-        if ($start->diffInMonths($end, true) > 1) {
+        if ((int)$start->diffInMonths($end, true) > 1) {
             $format = '%Y-%m';
         }
 
-        if ($start->diffInMonths($end, true) > 12) {
+        if ((int)$start->diffInMonths($end, true) > 12) {
             $format = '%Y';
         }
 

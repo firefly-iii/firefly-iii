@@ -27,7 +27,7 @@ namespace Tests\unit\Support\Calendar;
 use FireflyIII\Exceptions\IntervalException;
 use FireflyIII\Support\Calendar\Calculator;
 use FireflyIII\Support\Calendar\Periodicity;
-use PHPUnit\Framework\TestCase;
+use Tests\integration\TestCase;
 use Tests\unit\Support\Calendar\Periodicity\BimonthlyTest;
 use Tests\unit\Support\Calendar\Periodicity\DailyTest;
 use Tests\unit\Support\Calendar\Periodicity\FortnightlyTest;

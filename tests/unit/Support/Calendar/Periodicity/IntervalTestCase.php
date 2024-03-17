@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace Tests\unit\Support\Calendar\Periodicity;
 
 use FireflyIII\Support\Calendar\Periodicity\Interval;
-use PHPUnit\Framework\TestCase;
+use Tests\integration\TestCase;
 
 abstract class IntervalTestCase extends TestCase
 {

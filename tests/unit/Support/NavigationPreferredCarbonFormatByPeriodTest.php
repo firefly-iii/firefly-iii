@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace Tests\unit\Support;
 
 use FireflyIII\Support\Navigation;
-use PHPUnit\Framework\TestCase;
+use Tests\integration\TestCase;
 
 /**
  * @group unit-test

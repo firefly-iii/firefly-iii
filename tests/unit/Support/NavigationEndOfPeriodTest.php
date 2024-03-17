@@ -82,8 +82,9 @@ final class NavigationEndOfPeriodTest extends TestCase
      */
     public function testGivenADateAndFrequencyWhenCalculateTheDateThenReturnsTheExpectedDateSuccessful(string $frequency, Carbon $from, Carbon $expected): void
     {
-        $period = $this->navigation->endOfPeriod($from, $frequency);
+        $period = clone $this->navigation->endOfPeriod($from, $frequency);
         self::assertSame($expected->toDateString(), $period->toDateString());
+
     }
 
     public static function provideUnknownFrequencies(): iterable

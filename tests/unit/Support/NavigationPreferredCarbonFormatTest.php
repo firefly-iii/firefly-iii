@@ -26,7 +26,7 @@ namespace Tests\unit\Support;
 
 use Carbon\Carbon;
 use FireflyIII\Support\Navigation;
-use PHPUnit\Framework\TestCase;
+use Tests\integration\TestCase;
 
 /**
  * @group unit-test
