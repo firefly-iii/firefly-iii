@@ -41,7 +41,7 @@ use Illuminate\Support\ServiceProvider;
 /**
  * Class JournalServiceProvider.
  */
-class JournalServiceProvider extends ServiceProvider 
+class JournalServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
