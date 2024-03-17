@@ -36,7 +36,7 @@ use Illuminate\Support\ServiceProvider;
 /**
  * Class TagServiceProvider.
  */
-class TagServiceProvider extends ServiceProvider 
+class TagServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
