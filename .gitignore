@@ -9,4 +9,4 @@ yarn-error.log
 coverage.xml
 
 # ignore generated files.
-#public/build
+public/build
