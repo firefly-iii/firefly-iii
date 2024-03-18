@@ -59,6 +59,7 @@ return [
     'rule_action_value'               => 'Denne værdi er ikke gyldig for den valgte handling.',
     'file_already_attached'           => 'Den uploadede fil ":name" er allerede vedhælftet til dette objekt.',
     'file_attached'                   => 'Oploadede succesfuldt filen: ":name".',
+    'file_zero'                       => 'The file is zero bytes in size.',
     'must_exist'                      => 'ID\'et i feltet :attribute eksisterer ikke i databasen.',
     'all_accounts_equal'              => 'Alle konti i dette felt skal være ens.',
     'group_title_mandatory'           => 'En gruppetitel er påkrævet når der er mere end en overførsel.',

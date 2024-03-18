@@ -25,7 +25,6 @@ namespace FireflyIII\Providers;
 
 use FireflyIII\Support\Search\OperatorQuerySearch;
 use FireflyIII\Support\Search\SearchInterface;
-use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 

@@ -59,6 +59,7 @@ return [
     'rule_action_value'               => 'Arvo ei kelpaa valitulle toiminnolle.',
     'file_already_attached'           => 'Kohteella on jo liite nimeltä ":name".',
     'file_attached'                   => 'Liitteen ":name" lataus onnistui.',
+    'file_zero'                       => 'The file is zero bytes in size.',
     'must_exist'                      => 'Tunnistetta kentässä :attribute ei löydy tietokannasta.',
     'all_accounts_equal'              => 'Kaikkien tässä kentässä olevien tilien täytyy olla samoja.',
     'group_title_mandatory'           => 'Kun tapahtumia on enemmän kuin yksi, kokonaisuudelle tarvitaan oma otsikko.',

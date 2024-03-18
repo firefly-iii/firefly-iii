@@ -160,9 +160,9 @@ class Navigation
 
     public function startOfPeriod(Carbon $theDate, string $repeatFreq): Carbon
     {
-        $date        = clone $theDate;
+        $date         = clone $theDate;
         Log::debug(sprintf('Now in startOfPeriod("%s", "%s")', $date->toIso8601String(), $repeatFreq));
-        $functionMap = [
+        $functionMap  = [
             '1D'        => 'startOfDay',
             'daily'     => 'startOfDay',
             '1W'        => 'startOfWeek',
@@ -186,14 +186,13 @@ class Navigation
         if (array_key_exists($repeatFreq, $functionMap)) {
             $function = $functionMap[$repeatFreq];
             Log::debug(sprintf('Function is ->%s()', $function));
-            if(array_key_exists($function, $parameterMap)) {
-                Log::debug(sprintf('Parameter map, function becomes ->%s(%s)', $function, join(', ', $parameterMap[$function])));
+            if (array_key_exists($function, $parameterMap)) {
+                Log::debug(sprintf('Parameter map, function becomes ->%s(%s)', $function, implode(', ', $parameterMap[$function])));
                 $date->{$function}($parameterMap[$function][0]);
                 Log::debug(sprintf('Result is "%s"', $date->toIso8601String()));
 
                 return $date;
             }
-
 
             $date->{$function}(); // @phpstan-ignore-line
             Log::debug(sprintf('Result is "%s"', $date->toIso8601String()));
@@ -209,7 +208,7 @@ class Navigation
             return $date;
         }
 
-        $result      = match ($repeatFreq) {
+        $result       = match ($repeatFreq) {
             'last7'   => $date->subDays(7)->startOfDay(),
             'last30'  => $date->subDays(30)->startOfDay(),
             'last90'  => $date->subDays(90)->startOfDay(),
@@ -221,11 +220,13 @@ class Navigation
         };
         if (null !== $result) {
             Log::debug(sprintf('Result is "%s"', $date->toIso8601String()));
+
             return $result;
         }
 
         if ('custom' === $repeatFreq) {
             Log::debug(sprintf('Custom, result is "%s"', $date->toIso8601String()));
+
             return $date; // the date is already at the start.
         }
         Log::error(sprintf('Cannot do startOfPeriod for $repeat_freq "%s"', $repeatFreq));

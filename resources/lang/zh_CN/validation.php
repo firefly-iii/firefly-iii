@@ -59,6 +59,7 @@ return [
     'rule_action_value'               => '此值不能用于所选动作',
     'file_already_attached'           => '上传的文件“:name”已添加到此对象',
     'file_attached'                   => '成功上传文件“:name”',
+    'file_zero'                       => 'The file is zero bytes in size.',
     'must_exist'                      => '数据库中不存在字段 :attribute 的 ID',
     'all_accounts_equal'              => '此字段中的所有账户必须相同',
     'group_title_mandatory'           => '在有超过一笔交易时，组标题为必填项',

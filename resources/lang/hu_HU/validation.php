@@ -59,6 +59,7 @@ return [
     'rule_action_value'               => 'Ez az érték érvénytelen a kiválasztott művelethez.',
     'file_already_attached'           => 'A feltöltött ":name" fájl már csatolva van ehhez az objektumhoz.',
     'file_attached'                   => '":name" fájl sikeresen feltöltve.',
+    'file_zero'                       => 'The file is zero bytes in size.',
     'must_exist'                      => 'Az ID mező :attribute nem létezik az adatbázisban.',
     'all_accounts_equal'              => 'Ebben a mezőben minden számlának meg kell egyeznie.',
     'group_title_mandatory'           => 'A csoportcím kötelező ha egynél több tranzakció van.',

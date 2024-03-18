@@ -84,7 +84,6 @@ final class NavigationEndOfPeriodTest extends TestCase
     {
         $period = clone $this->navigation->endOfPeriod($from, $frequency);
         self::assertSame($expected->toDateString(), $period->toDateString());
-
     }
 
     public static function provideUnknownFrequencies(): iterable

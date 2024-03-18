@@ -59,6 +59,7 @@ return [
     'rule_action_value'               => '此值不適用於選取的動作。',
     'file_already_attached'           => '上傳的檔案 ":name" 已附加到該物件上。',
     'file_attached'                   => '已成功上傳檔案 ":name"。',
+    'file_zero'                       => 'The file is zero bytes in size.',
     'must_exist'                      => '欄位 :attribute 的 ID 不存在於資料庫。',
     'all_accounts_equal'              => '此欄位中的所有帳戶必須相等。',
     'group_title_mandatory'           => '多於一筆交易時，須要群組標題。',

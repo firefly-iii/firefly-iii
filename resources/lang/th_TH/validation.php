@@ -59,6 +59,7 @@ return [
     'rule_action_value'               => 'This value is invalid for the selected action.',
     'file_already_attached'           => 'Uploaded file ":name" is already attached to this object.',
     'file_attached'                   => 'Successfully uploaded file ":name".',
+    'file_zero'                       => 'The file is zero bytes in size.',
     'must_exist'                      => 'The ID in field :attribute does not exist in the database.',
     'all_accounts_equal'              => 'All accounts in this field must be equal.',
     'group_title_mandatory'           => 'A group title is mandatory when there is more than one transaction.',

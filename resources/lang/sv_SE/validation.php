@@ -59,6 +59,7 @@ return [
     'rule_action_value'               => 'Detta värde är ogiltigt för den valda åtgärden.',
     'file_already_attached'           => 'Den uppladdade filen ”:name” är redan kopplad till detta objekt.',
     'file_attached'                   => 'Filen ”:name” har laddats upp.',
+    'file_zero'                       => 'The file is zero bytes in size.',
     'must_exist'                      => 'ID i fältet :attribute finns inte i databasen.',
     'all_accounts_equal'              => 'Alla konton i detta fält måste vara lika.',
     'group_title_mandatory'           => 'En grupptitel är obligatorisk vid mer än en transaktion.',

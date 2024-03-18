@@ -59,6 +59,7 @@ return [
     'rule_action_value'               => 'Bu eylem seçili işlem için geçersizdir.',
     'file_already_attached'           => 'Yüklenen dosya ":name" zaten bu nesneye bağlı.',
     'file_attached'                   => '":name" dosyası başarıyla yüklendi.',
+    'file_zero'                       => 'The file is zero bytes in size.',
     'must_exist'                      => 'ID alanı :attribute veritabanın içinde yok.',
     'all_accounts_equal'              => 'Bu alandaki tüm hesapları eşit olmalıdır.',
     'group_title_mandatory'           => 'Birden fazla işlem olduğunda grup başlığı zorunludur.',

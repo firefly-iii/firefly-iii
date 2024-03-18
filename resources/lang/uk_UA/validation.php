@@ -59,6 +59,7 @@ return [
     'rule_action_value'               => 'Це значення є неприпустимим для вибраної дії.',
     'file_already_attached'           => 'Файл ":name" вже прикріплено до цього об\'єкта.',
     'file_attached'                   => 'Успішно завантажено файл ":name".',
+    'file_zero'                       => 'The file is zero bytes in size.',
     'must_exist'                      => 'ID в полі :attribute не існує в базі даних.',
     'all_accounts_equal'              => 'Всі рахунки в цьому полі повинні бути рівні.',
     'group_title_mandatory'           => 'Назва групи є обов\'язковою при наявності більше однієї транзакції.',

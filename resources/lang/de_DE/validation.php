@@ -59,6 +59,7 @@ return [
     'rule_action_value'               => 'Dieser Wert ist für die gewählte Aktion ungültig.',
     'file_already_attached'           => 'Die hochgeladene Datei „:name” ist diesem Objekt bereits angehängt.',
     'file_attached'                   => 'Datei „:name” erfolgreich hochgeladen.',
+    'file_zero'                       => 'The file is zero bytes in size.',
     'must_exist'                      => 'Die ID in Feld :attribute existiert nicht in der Datenbank.',
     'all_accounts_equal'              => 'Alle Konten in diesem Feld müssen identisch sein.',
     'group_title_mandatory'           => 'Ein Gruppentitel ist zwingend erforderlich, wenn mehr als eine Buchung vorliegt.',

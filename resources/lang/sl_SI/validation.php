@@ -59,6 +59,7 @@ return [
     'rule_action_value'               => 'Ta vrednost ni veljavna za izbrano dejanje.',
     'file_already_attached'           => 'Naložena datoteka ":name" je že priložena temu predmetu.',
     'file_attached'                   => 'Datoteka ":name" je bila uspešno naložena.',
+    'file_zero'                       => 'The file is zero bytes in size.',
     'must_exist'                      => 'ID v polju :attribute ne obstaja v bazi podatkov.',
     'all_accounts_equal'              => 'Vsi računi v tem polju morajo biti enaki.',
     'group_title_mandatory'           => 'Naslov skupine je obvezen, če obstaja več kot ena transakcija.',

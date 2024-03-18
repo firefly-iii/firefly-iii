@@ -59,6 +59,7 @@ return [
     'rule_action_value'               => 'Această valoare nu este validă pentru acțiunea selectată.',
     'file_already_attached'           => 'Fișierul încărcat ":name" este deja atașat acestui obiect.',
     'file_attached'                   => 'Fișierul ":name" a fost încărcat cu succes.',
+    'file_zero'                       => 'The file is zero bytes in size.',
     'must_exist'                      => 'Câmpul ID :attribute nu există în baza de date.',
     'all_accounts_equal'              => 'Toate conturile din acest câmp trebuie să fie egale.',
     'group_title_mandatory'           => 'Un titlu de grup este obligatoriu atunci când există mai multe tranzacții.',

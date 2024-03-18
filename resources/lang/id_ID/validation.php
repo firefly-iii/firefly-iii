@@ -59,6 +59,7 @@ return [
     'rule_action_value'               => 'Nilai ini tidak valid untuk tindakan yang dipilih.',
     'file_already_attached'           => 'Upload file ";name" sudah terpasang pada objek ini.',
     'file_attached'                   => 'Berhasil mengunggah file ": name".',
+    'file_zero'                       => 'The file is zero bytes in size.',
     'must_exist'                      => 'ID di bidang :attribute tidak ada di database.',
     'all_accounts_equal'              => 'Semua akun di bidang ini harus sama.',
     'group_title_mandatory'           => 'Sebuah judul grup wajib diisi bila terdapat lebih dari satu transaksi.',

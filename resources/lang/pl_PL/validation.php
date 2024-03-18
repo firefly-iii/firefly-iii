@@ -59,6 +59,7 @@ return [
     'rule_action_value'               => 'Ta wartość jest nieprawidłowa dla wybranej akcji.',
     'file_already_attached'           => 'Przesłany plik ":name" jest już dołączony do tego obiektu.',
     'file_attached'                   => 'Pomyślnie wgrano plik ":name".',
+    'file_zero'                       => 'The file is zero bytes in size.',
     'must_exist'                      => 'Identyfikator w polu :attribute nie istnieje w bazie danych.',
     'all_accounts_equal'              => 'Wszystkie konta w tym polu muszą być takie same.',
     'group_title_mandatory'           => 'Tytuł grupy jest obowiązkowy, gdy istnieje więcej niż jedna transakcja.',

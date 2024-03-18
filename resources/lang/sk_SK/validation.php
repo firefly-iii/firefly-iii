@@ -59,6 +59,7 @@ return [
     'rule_action_value'               => 'Táto hodnota je pre vybranú akciu neplatná.',
     'file_already_attached'           => 'Nahraný soubor ":name" je už k tomuto objektu pripojený.',
     'file_attached'                   => 'Soubor „:name“ úspěšně nahrán.',
+    'file_zero'                       => 'The file is zero bytes in size.',
     'must_exist'                      => 'Identifikátor v poli :attribute v databáze neexistuje.',
     'all_accounts_equal'              => 'Všetky účty v tomto poli musia byť zhodné.',
     'group_title_mandatory'           => 'Ak je tu viac než jedna transakcia, je potrebné vyplniť názov skupiny.',

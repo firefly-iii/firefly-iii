@@ -25,7 +25,6 @@ namespace FireflyIII\Providers;
 
 use FireflyIII\Repositories\Attachment\AttachmentRepository;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
-use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 

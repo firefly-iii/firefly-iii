@@ -59,6 +59,7 @@ return [
     'rule_action_value'               => 'Тази стойност е невалидна за избраното действие.',
     'file_already_attached'           => 'Каченият файл ":name" вече е прикачен към този обект.',
     'file_attached'                   => 'Успешно качен файл ":name".',
+    'file_zero'                       => 'The file is zero bytes in size.',
     'must_exist'                      => 'Идентификаторът в поле :attribute не съществува в базата данни.',
     'all_accounts_equal'              => 'Всички сметки в това поле трябва да са еднакви.',
     'group_title_mandatory'           => 'Заглавието на групата е задължително, когато има повече от една транзакция.',

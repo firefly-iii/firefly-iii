@@ -59,6 +59,7 @@ return [
     'rule_action_value'               => 'Deze waarde is niet geldig voor de geselecteerde actie.',
     'file_already_attached'           => 'Het geuploade bestand ":name" is al gelinkt aan deze transactie.',
     'file_attached'                   => 'Bestand ":name" is succesvol geüpload.',
+    'file_zero'                       => 'The file is zero bytes in size.',
     'must_exist'                      => 'Het ID in veld :attribute bestaat niet.',
     'all_accounts_equal'              => 'Alle rekeningen in dit veld moeten gelijk zijn.',
     'group_title_mandatory'           => 'Een groepstitel is verplicht wanneer er meer dan één transactie is.',

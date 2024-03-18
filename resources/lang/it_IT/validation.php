@@ -59,6 +59,7 @@ return [
     'rule_action_value'               => 'Questo valore non è valido per l\'azione selezionata.',
     'file_already_attached'           => 'Il file caricato ":name" è già associato a questo oggetto.',
     'file_attached'                   => 'File caricato con successo ":name".',
+    'file_zero'                       => 'The file is zero bytes in size.',
     'must_exist'                      => 'L\'ID nel campo :attribute non esiste nel database.',
     'all_accounts_equal'              => 'Tutti i conti in questo campo devono essere uguali.',
     'group_title_mandatory'           => 'Il titolo del gruppo è obbligatorio quando ci sono più di una transazione.',

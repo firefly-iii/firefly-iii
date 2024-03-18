@@ -59,6 +59,7 @@ return [
     'rule_action_value'               => 'Это значение является недопустимым для выбранного действия.',
     'file_already_attached'           => 'Загруженный файл ":name" уже прикреплён к этому объекту.',
     'file_attached'                   => 'Файл ":name". успешно загружен.',
+    'file_zero'                       => 'The file is zero bytes in size.',
     'must_exist'                      => 'ID в поле field :attribute не существует в базе данных.',
     'all_accounts_equal'              => 'Все счета в данном поле должны совпадать.',
     'group_title_mandatory'           => 'Название группы является обязательным, если транзакций несколько.',

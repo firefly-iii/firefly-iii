@@ -59,6 +59,7 @@ return [
     'rule_action_value'               => 'Aquest valor és invàlid per l\'acció seleccionada.',
     'file_already_attached'           => 'El fitxer ":name" ja s\'havia afegit a aquest objecte.',
     'file_attached'                   => 'El fitxer ":name" s\'ha pujat satisfactòriament.',
+    'file_zero'                       => 'The file is zero bytes in size.',
     'must_exist'                      => 'L\'ID del camp :attribute no existeix a la base de dades.',
     'all_accounts_equal'              => 'Tots els comptes d\'aquest camp han de ser iguals.',
     'group_title_mandatory'           => 'El títol de grup és obligatori quan hi ha més d\'una transacció.',

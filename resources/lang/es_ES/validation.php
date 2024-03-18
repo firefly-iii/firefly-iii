@@ -59,6 +59,7 @@ return [
     'rule_action_value'               => 'Este valor es incorrecto para la acción seleccionada.',
     'file_already_attached'           => 'El archivo ":name" ya ha sido añadido a este objeto.',
     'file_attached'                   => 'Archivo ":name" subido con éxito.',
+    'file_zero'                       => 'The file is zero bytes in size.',
     'must_exist'                      => 'El ID introducido en :attribute no existe en la base de datos.',
     'all_accounts_equal'              => 'Todas las cuentas en este campo deben ser iguales.',
     'group_title_mandatory'           => 'Un título de grupo es obligatorio cuando hay más de una transacción.',

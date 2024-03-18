@@ -59,6 +59,7 @@ return [
     'rule_action_value'               => 'この値は選択された操作には無効です。',
     'file_already_attached'           => 'アップロードされたファイル ":name"は既に対象に割り当てられています。',
     'file_attached'                   => 'ファイル ":name" のアップロードに成功しました。',
+    'file_zero'                       => 'The file is zero bytes in size.',
     'must_exist'                      => ':attribute のIDはデータベースに存在しません。',
     'all_accounts_equal'              => 'この欄のすべての口座は一致している必要があります。',
     'group_title_mandatory'           => '一つ以上の取引がある場合、グループ名は必須です。',

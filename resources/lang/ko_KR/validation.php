@@ -59,6 +59,7 @@ return [
     'rule_action_value'               => '선택한 액션에 대해 이 값은 유효하지 않습니다.',
     'file_already_attached'           => '업로드된 파일 ":name"이 이 개체에 이미 첨부되어 있습니다.',
     'file_attached'                   => '":name" 파일을 성공적으로 업로드했습니다.',
+    'file_zero'                       => 'The file is zero bytes in size.',
     'must_exist'                      => ':attribute 필드의 ID가 데이터베이스에 존재하지 않습니다.',
     'all_accounts_equal'              => '이 필드의 모든 계정은 동일해야 합니다.',
     'group_title_mandatory'           => '거래가 두 개 이상일 경우 그룹 제목은 필수입니다.',

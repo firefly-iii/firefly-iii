@@ -59,6 +59,7 @@ return [
     'rule_action_value'               => 'Denne verdien er ugyldig for den valde handlinga.',
     'file_already_attached'           => 'Opplastede fil ":name" er allereie knytt til dette objektet.',
     'file_attached'                   => 'Opplasting av fil ":name" var vellukka.',
+    'file_zero'                       => 'The file is zero bytes in size.',
     'must_exist'                      => 'IDen i feltet :attribute eksisterar ikkje i databasen.',
     'all_accounts_equal'              => 'Alle kontoar i dette feltet må vera like.',
     'group_title_mandatory'           => 'Ein gruppetittel er obligatorisk når det er meir enn ein transaksjon.',

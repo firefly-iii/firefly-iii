@@ -59,6 +59,7 @@ return [
     'rule_action_value'               => 'Giá trị này không hợp lệ cho hành động đã chọn.',
     'file_already_attached'           => 'Đã tải lên tập tin ":name" đã được gắn vào đối tượng này.',
     'file_attached'                   => 'Tải lên thành công tập tin ":name".',
+    'file_zero'                       => 'The file is zero bytes in size.',
     'must_exist'                      => 'Tải lên thành công tập tin....',
     'all_accounts_equal'              => 'ID trong trường: thuộc tính không tồn tại trong cơ sở dữ liệu....',
     'group_title_mandatory'           => 'Tiêu đề nhóm là bắt buộc khi có nhiều hơn một giao dịch.',
