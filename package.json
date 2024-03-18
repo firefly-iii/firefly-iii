@@ -10,7 +10,7 @@
         "axios": "^1.6.3",
         "laravel-vite-plugin": "^0.8.1",
         "patch-package": "^8.0.0",
-        "sass": "^1.69.6",
+        "sass": "^1.72.0",
         "vite": "^4.5.2",
         "vite-plugin-manifest-sri": "^0.1.0"
     },
