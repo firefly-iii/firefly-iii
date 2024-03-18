@@ -7,3 +7,6 @@ yarn-error.log
 .env
 /.ci/php-cs-fixer/vendor
 coverage.xml
+
+# ignore generated files.
+#public/build
