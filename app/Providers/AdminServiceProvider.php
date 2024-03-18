@@ -32,7 +32,7 @@ use Illuminate\Support\ServiceProvider;
 /**
  * Class AdminServiceProvider
  */
-class AdminServiceProvider extends ServiceProvider implements DeferrableProvider
+class AdminServiceProvider extends ServiceProvider 
 {
     /**
      * Bootstrap the application services.
