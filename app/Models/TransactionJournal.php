@@ -138,32 +138,32 @@ class TransactionJournal extends Model
 
     protected $casts
                       = [
-                          'created_at'    => 'datetime',
-                          'updated_at'    => 'datetime',
-                          'deleted_at'    => 'datetime',
-                          'date'          => 'datetime',
-                          'interest_date' => 'date',
-                          'book_date'     => 'date',
-                          'process_date'  => 'date',
-                          'order'         => 'int',
-                          'tag_count'     => 'int',
-                          'encrypted'     => 'boolean',
-                          'completed'     => 'boolean',
-                      ];
+            'created_at'    => 'datetime',
+            'updated_at'    => 'datetime',
+            'deleted_at'    => 'datetime',
+            'date'          => 'datetime',
+            'interest_date' => 'date',
+            'book_date'     => 'date',
+            'process_date'  => 'date',
+            'order'         => 'int',
+            'tag_count'     => 'int',
+            'encrypted'     => 'boolean',
+            'completed'     => 'boolean',
+        ];
 
     protected $fillable
                       = [
-                          'user_id',
-                          'user_group_id',
-                          'transaction_type_id',
-                          'bill_id',
-                          'tag_count',
-                          'transaction_currency_id',
-                          'description',
-                          'completed',
-                          'order',
-                          'date',
-                      ];
+            'user_id',
+            'user_group_id',
+            'transaction_type_id',
+            'bill_id',
+            'tag_count',
+            'transaction_currency_id',
+            'description',
+            'completed',
+            'order',
+            'date',
+        ];
 
     protected $hidden = ['encrypted'];
 

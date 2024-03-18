@@ -61,7 +61,7 @@ interface BudgetRepositoryInterface
 
     public function destroyAutoBudget(Budget $budget): void;
 
-    public function find(int $budgetId = null): ?Budget;
+    public function find(?int $budgetId = null): ?Budget;
 
     public function findBudget(?int $budgetId, ?string $budgetName): ?Budget;
 

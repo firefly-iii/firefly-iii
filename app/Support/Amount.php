@@ -40,7 +40,7 @@ class Amount
      *
      * @throws FireflyException
      */
-    public function formatAnything(TransactionCurrency $format, string $amount, bool $coloured = null): string
+    public function formatAnything(TransactionCurrency $format, string $amount, ?bool $coloured = null): string
     {
         return $this->formatFlat($format->symbol, $format->decimal_places, $amount, $coloured);
     }
@@ -53,7 +53,7 @@ class Amount
      *
      * @SuppressWarnings(PHPMD.MissingImport)
      */
-    public function formatFlat(string $symbol, int $decimalPlaces, string $amount, bool $coloured = null): string
+    public function formatFlat(string $symbol, int $decimalPlaces, string $amount, ?bool $coloured = null): string
     {
         $locale  = app('steam')->getLocale();
         $rounded = app('steam')->bcround($amount, $decimalPlaces);

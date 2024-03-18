@@ -75,7 +75,7 @@ class ShowController extends Controller
      *
      * @throws FireflyException
      */
-    public function noBudget(Request $request, Carbon $start = null, Carbon $end = null)
+    public function noBudget(Request $request, ?Carbon $start = null, ?Carbon $end = null)
     {
         // @var Carbon $start
         $start ??= session('start');

@@ -45,7 +45,7 @@ trait TransactionValidation
      *
      * Inclusion of user and/or group is optional.
      */
-    public function validateAccountInformation(Validator $validator, User $user = null, UserGroup $userGroup = null): void
+    public function validateAccountInformation(Validator $validator, ?User $user = null, ?UserGroup $userGroup = null): void
     {
         if ($validator->errors()->count() > 0) {
             return;

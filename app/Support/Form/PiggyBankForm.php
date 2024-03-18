@@ -40,7 +40,7 @@ class PiggyBankForm
      *
      * @param mixed $value
      */
-    public function piggyBankList(string $name, $value = null, array $options = null): string
+    public function piggyBankList(string $name, $value = null, ?array $options = null): string
     {
         // make repositories
         /** @var PiggyBankRepositoryInterface $repository */

@@ -62,10 +62,10 @@ class Configuration extends Model
 
     protected $casts
                      = [
-                         'created_at' => 'datetime',
-                         'updated_at' => 'datetime',
-                         'deleted_at' => 'datetime',
-                     ];
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
+        ];
 
     /** @var string The table to store the data in */
     protected $table = 'configuration';

@@ -438,7 +438,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      *
      * @param null|int $budgetId |null
      */
-    public function find(int $budgetId = null): ?Budget
+    public function find(?int $budgetId = null): ?Budget
     {
         return $this->user->budgets()->find($budgetId);
     }

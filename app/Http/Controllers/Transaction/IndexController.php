@@ -69,7 +69,7 @@ class IndexController extends Controller
      *
      * @throws FireflyException
      */
-    public function index(Request $request, string $objectType, Carbon $start = null, Carbon $end = null)
+    public function index(Request $request, string $objectType, ?Carbon $start = null, ?Carbon $end = null)
     {
         if ('transfers' === $objectType) {
             $objectType = 'transfer';

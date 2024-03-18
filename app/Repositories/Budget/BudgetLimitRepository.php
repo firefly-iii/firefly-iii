@@ -122,7 +122,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         $budgetLimit->delete();
     }
 
-    public function getAllBudgetLimitsByCurrency(TransactionCurrency $currency, Carbon $start = null, Carbon $end = null): Collection
+    public function getAllBudgetLimitsByCurrency(TransactionCurrency $currency, ?Carbon $start = null, ?Carbon $end = null): Collection
     {
         return $this->getAllBudgetLimits($start, $end)->filter(
             static function (BudgetLimit $budgetLimit) use ($currency) {
@@ -131,7 +131,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         );
     }
 
-    public function getAllBudgetLimits(Carbon $start = null, Carbon $end = null): Collection
+    public function getAllBudgetLimits(?Carbon $start = null, ?Carbon $end = null): Collection
     {
         // both are NULL:
         if (null === $start && null === $end) {
@@ -198,7 +198,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         ;
     }
 
-    public function getBudgetLimits(Budget $budget, Carbon $start = null, Carbon $end = null): Collection
+    public function getBudgetLimits(Budget $budget, ?Carbon $start = null, ?Carbon $end = null): Collection
     {
         if (null === $end && null === $start) {
             return $budget->budgetlimits()->with(['transactionCurrency'])->orderBy('budget_limits.start_date', 'DESC')->get(['budget_limits.*']);

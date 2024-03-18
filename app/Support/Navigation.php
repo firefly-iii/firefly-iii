@@ -38,7 +38,7 @@ class Navigation
 {
     private Calculator $calculator;
 
-    public function __construct(Calculator $calculator = null)
+    public function __construct(?Calculator $calculator = null)
     {
         $this->calculator = $calculator instanceof Calculator ? $calculator : new Calculator();
     }
@@ -631,7 +631,7 @@ class Navigation
     /**
      * @throws FireflyException
      */
-    public function subtractPeriod(Carbon $theDate, string $repeatFreq, int $subtract = null): Carbon
+    public function subtractPeriod(Carbon $theDate, string $repeatFreq, ?int $subtract = null): Carbon
     {
         $subtract ??= 1;
         $date        = clone $theDate;

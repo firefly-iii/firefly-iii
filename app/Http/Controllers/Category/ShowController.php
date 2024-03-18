@@ -71,7 +71,7 @@ class ShowController extends Controller
      *
      * @throws FireflyException
      */
-    public function show(Request $request, Category $category, Carbon $start = null, Carbon $end = null)
+    public function show(Request $request, Category $category, ?Carbon $start = null, ?Carbon $end = null)
     {
         // @var Carbon $start
         $start ??= session('start', today(config('app.timezone'))->startOfMonth());

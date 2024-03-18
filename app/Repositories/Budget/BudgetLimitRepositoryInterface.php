@@ -57,11 +57,11 @@ interface BudgetLimitRepositoryInterface
     /**
      * TODO this method is not multi currency aware.
      */
-    public function getAllBudgetLimits(Carbon $start = null, Carbon $end = null): Collection;
+    public function getAllBudgetLimits(?Carbon $start = null, ?Carbon $end = null): Collection;
 
-    public function getAllBudgetLimitsByCurrency(TransactionCurrency $currency, Carbon $start = null, Carbon $end = null): Collection;
+    public function getAllBudgetLimitsByCurrency(TransactionCurrency $currency, ?Carbon $start = null, ?Carbon $end = null): Collection;
 
-    public function getBudgetLimits(Budget $budget, Carbon $start = null, Carbon $end = null): Collection;
+    public function getBudgetLimits(Budget $budget, ?Carbon $start = null, ?Carbon $end = null): Collection;
 
     public function setUser(null|Authenticatable|User $user): void;
 

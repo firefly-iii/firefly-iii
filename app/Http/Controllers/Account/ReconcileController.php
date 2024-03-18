@@ -75,7 +75,7 @@ class ReconcileController extends Controller
      *
      * @throws FireflyException
      *                                              */
-    public function reconcile(Account $account, Carbon $start = null, Carbon $end = null)
+    public function reconcile(Account $account, ?Carbon $start = null, ?Carbon $end = null)
     {
         if (!$this->isEditableAccount($account)) {
             return $this->redirectAccountToAccount($account);

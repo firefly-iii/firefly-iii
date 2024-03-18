@@ -67,7 +67,7 @@ class ReconcileController extends Controller
      *
      * @throws FireflyException
      */
-    public function overview(Request $request, Account $account = null, Carbon $start = null, Carbon $end = null): JsonResponse
+    public function overview(Request $request, ?Account $account = null, ?Carbon $start = null, ?Carbon $end = null): JsonResponse
     {
         $startBalance    = $request->get('startBalance');
         $endBalance      = $request->get('endBalance');
@@ -177,7 +177,7 @@ class ReconcileController extends Controller
      *
      * @throws FireflyException
      */
-    public function transactions(Account $account, Carbon $start = null, Carbon $end = null)
+    public function transactions(Account $account, ?Carbon $start = null, ?Carbon $end = null)
     {
         if (null === $start || null === $end) {
             throw new FireflyException('Invalid dates submitted.');

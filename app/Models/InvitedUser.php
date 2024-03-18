@@ -70,9 +70,9 @@ class InvitedUser extends Model
 
     protected $casts
                         = [
-                            'expires'  => 'datetime',
-                            'redeemed' => 'boolean',
-                        ];
+            'expires'  => 'datetime',
+            'redeemed' => 'boolean',
+        ];
     protected $fillable = ['user_id', 'email', 'invite_code', 'expires', 'redeemed'];
 
     /**

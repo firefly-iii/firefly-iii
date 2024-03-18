@@ -34,7 +34,7 @@ class RuleForm
 {
     use FormSupport;
 
-    public function ruleGroupList(string $name, mixed $value = null, array $options = null): string
+    public function ruleGroupList(string $name, mixed $value = null, ?array $options = null): string
     {
         /** @var RuleGroupRepositoryInterface $groupRepos */
         $groupRepos = app(RuleGroupRepositoryInterface::class);
@@ -54,7 +54,7 @@ class RuleForm
     /**
      * @param null $value
      */
-    public function ruleGroupListWithEmpty(string $name, $value = null, array $options = null): string
+    public function ruleGroupListWithEmpty(string $name, $value = null, ?array $options = null): string
     {
         $options ??= [];
         $options['class'] = 'form-control';

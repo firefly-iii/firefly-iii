@@ -93,11 +93,11 @@ class Webhook extends Model
 
     protected $casts
                         = [
-                            'active'   => 'boolean',
-                            'trigger'  => 'integer',
-                            'response' => 'integer',
-                            'delivery' => 'integer',
-                        ];
+            'active'   => 'boolean',
+            'trigger'  => 'integer',
+            'response' => 'integer',
+            'delivery' => 'integer',
+        ];
     protected $fillable = ['active', 'trigger', 'response', 'delivery', 'user_id', 'user_group_id', 'url', 'title', 'secret'];
 
     public static function getDeliveries(): array

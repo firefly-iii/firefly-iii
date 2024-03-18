@@ -85,7 +85,7 @@ class IndexController extends Controller
      *
      * @throws FireflyException
      *                                              */
-    public function index(Carbon $start = null, Carbon $end = null)
+    public function index(?Carbon $start = null, ?Carbon $end = null)
     {
         $this->abRepository->cleanup();
         app('log')->debug(sprintf('Start of IndexController::index("%s", "%s")', $start?->format('Y-m-d'), $end?->format('Y-m-d')));

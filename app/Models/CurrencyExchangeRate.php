@@ -82,13 +82,13 @@ class CurrencyExchangeRate extends Model
 
     protected $casts
                         = [
-                            'created_at'       => 'datetime',
-                            'updated_at'       => 'datetime',
-                            'user_id'          => 'int',
-                            'from_currency_id' => 'int',
-                            'to_currency_id'   => 'int',
-                            'date'             => 'datetime',
-                        ];
+            'created_at'       => 'datetime',
+            'updated_at'       => 'datetime',
+            'user_id'          => 'int',
+            'from_currency_id' => 'int',
+            'to_currency_id'   => 'int',
+            'date'             => 'datetime',
+        ];
     protected $fillable = ['user_id', 'from_currency_id', 'to_currency_id', 'date', 'rate'];
 
     public function fromCurrency(): BelongsTo

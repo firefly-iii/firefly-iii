@@ -76,7 +76,7 @@ class CreateController extends Controller
      *
      * @throws FireflyException
      */
-    public function create(Request $request, RuleGroup $ruleGroup = null)
+    public function create(Request $request, ?RuleGroup $ruleGroup = null)
     {
         $this->createDefaultRuleGroup();
         $preFilled    = [

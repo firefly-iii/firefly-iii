@@ -44,7 +44,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
         return $linkType->transactionJournalLinks()->count();
     }
 
-    public function destroy(LinkType $linkType, LinkType $moveTo = null): bool
+    public function destroy(LinkType $linkType, ?LinkType $moveTo = null): bool
     {
         if (null !== $moveTo) {
             TransactionJournalLink::where('link_type_id', $linkType->id)->update(['link_type_id' => $moveTo->id]);
@@ -113,7 +113,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
     /**
      * Returns all the journal links (of a specific type).
      */
-    public function getJournalLinks(LinkType $linkType = null): Collection
+    public function getJournalLinks(?LinkType $linkType = null): Collection
     {
         $query = TransactionJournalLink::with(['source', 'destination'])
             ->leftJoin('transaction_journals as source_journals', 'journal_links.source_id', '=', 'source_journals.id')
@@ -225,7 +225,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
         return LinkType::find($linkTypeId);
     }
 
-    public function findByName(string $name = null): ?LinkType
+    public function findByName(?string $name = null): ?LinkType
     {
         if (null === $name) {
             return null;

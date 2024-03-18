@@ -43,7 +43,7 @@ class AccountForm
     /**
      * Grouped dropdown list of all accounts that are valid as the destination of a withdrawal.
      */
-    public function activeDepositDestinations(string $name, mixed $value = null, array $options = null): string
+    public function activeDepositDestinations(string $name, mixed $value = null, ?array $options = null): string
     {
         $types                    = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN, AccountType::REVENUE];
         $repository               = $this->getAccountRepository();
@@ -55,7 +55,7 @@ class AccountForm
         return $this->select($name, $grouped, $value, $options);
     }
 
-    private function getAccountsGrouped(array $types, AccountRepositoryInterface $repository = null): array
+    private function getAccountsGrouped(array $types, ?AccountRepositoryInterface $repository = null): array
     {
         if (null === $repository) {
             $repository = $this->getAccountRepository();
@@ -89,7 +89,7 @@ class AccountForm
     /**
      * Grouped dropdown list of all accounts that are valid as the destination of a withdrawal.
      */
-    public function activeWithdrawalDestinations(string $name, mixed $value = null, array $options = null): string
+    public function activeWithdrawalDestinations(string $name, mixed $value = null, ?array $options = null): string
     {
         $types                    = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN, AccountType::EXPENSE];
         $repository               = $this->getAccountRepository();
@@ -107,7 +107,7 @@ class AccountForm
      *
      * @throws FireflyException
      */
-    public function assetAccountCheckList(string $name, array $options = null): string
+    public function assetAccountCheckList(string $name, ?array $options = null): string
     {
         $options ??= [];
         $label    = $this->label($name, $options);
@@ -138,7 +138,7 @@ class AccountForm
      *
      * @param mixed $value
      */
-    public function assetAccountList(string $name, $value = null, array $options = null): string
+    public function assetAccountList(string $name, $value = null, ?array $options = null): string
     {
         $types   = [AccountType::ASSET, AccountType::DEFAULT];
         $grouped = $this->getAccountsGrouped($types);
@@ -151,7 +151,7 @@ class AccountForm
      *
      * @param mixed $value
      */
-    public function longAccountList(string $name, $value = null, array $options = null): string
+    public function longAccountList(string $name, $value = null, ?array $options = null): string
     {
         $types   = [AccountType::ASSET, AccountType::DEFAULT, AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN];
         $grouped = $this->getAccountsGrouped($types);

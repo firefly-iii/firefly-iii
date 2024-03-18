@@ -253,7 +253,7 @@ class FireflyValidator extends Validator
         return 1 === $count;
     }
 
-    public function validateRuleActionValue(string $attribute, string $value = null): bool
+    public function validateRuleActionValue(string $attribute, ?string $value = null): bool
     {
         // first, get the index from this string:
         $value ??= '';
@@ -324,7 +324,7 @@ class FireflyValidator extends Validator
     /**
      * $attribute has the format triggers.%d.value.
      */
-    public function validateRuleTriggerValue(string $attribute, string $value = null): bool
+    public function validateRuleTriggerValue(string $attribute, ?string $value = null): bool
     {
         // first, get the index from this string:
         $parts       = explode('.', $attribute);

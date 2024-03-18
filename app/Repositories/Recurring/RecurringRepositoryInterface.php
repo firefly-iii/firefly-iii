@@ -83,7 +83,7 @@ interface RecurringRepositoryInterface
     /**
      * Returns the count of journals created for this recurrence, possibly limited by time.
      */
-    public function getJournalCount(Recurrence $recurrence, Carbon $start = null, Carbon $end = null): int;
+    public function getJournalCount(Recurrence $recurrence, ?Carbon $start = null, ?Carbon $end = null): int;
 
     /**
      * Get journal ID's for journals created by this recurring transaction.

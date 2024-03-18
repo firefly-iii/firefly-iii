@@ -37,7 +37,7 @@ interface LinkTypeRepositoryInterface
 {
     public function countJournals(LinkType $linkType): int;
 
-    public function destroy(LinkType $linkType, LinkType $moveTo = null): bool;
+    public function destroy(LinkType $linkType, ?LinkType $moveTo = null): bool;
 
     public function destroyLink(TransactionJournalLink $link): bool;
 
@@ -46,7 +46,7 @@ interface LinkTypeRepositoryInterface
     /**
      * Find link type by name.
      */
-    public function findByName(string $name = null): ?LinkType;
+    public function findByName(?string $name = null): ?LinkType;
 
     /**
      * Check if link exists between journals.
@@ -65,7 +65,7 @@ interface LinkTypeRepositoryInterface
      */
     public function getJournalIds(LinkType $linkType): array;
 
-    public function getJournalLinks(LinkType $linkType = null): Collection;
+    public function getJournalLinks(?LinkType $linkType = null): Collection;
 
     /**
      * Return list of existing connections.

@@ -53,40 +53,40 @@ class ForceDecimalSize extends Command
 {
     use ShowsFriendlyMessages;
 
-    protected $description      = 'This command resizes DECIMAL columns in MySQL or PostgreSQL and correct amounts (only MySQL).';
-    protected $signature        = 'firefly-iii:force-decimal-size';
+    protected $description = 'This command resizes DECIMAL columns in MySQL or PostgreSQL and correct amounts (only MySQL).';
+    protected $signature   = 'firefly-iii:force-decimal-size';
     private string $cast;
     private array  $classes
-                                = [
-                                    'accounts'                 => Account::class,
-                                    'auto_budgets'             => AutoBudget::class,
-                                    'available_budgets'        => AvailableBudget::class,
-                                    'bills'                    => Bill::class,
-                                    'budget_limits'            => BudgetLimit::class,
-                                    'piggy_bank_events'        => PiggyBankEvent::class,
-                                    'piggy_bank_repetitions'   => PiggyBankRepetition::class,
-                                    'piggy_banks'              => PiggyBank::class,
-                                    'recurrences_transactions' => RecurrenceTransaction::class,
-                                    'transactions'             => Transaction::class,
-                                ];
+                           = [
+            'accounts'                 => Account::class,
+            'auto_budgets'             => AutoBudget::class,
+            'available_budgets'        => AvailableBudget::class,
+            'bills'                    => Bill::class,
+            'budget_limits'            => BudgetLimit::class,
+            'piggy_bank_events'        => PiggyBankEvent::class,
+            'piggy_bank_repetitions'   => PiggyBankRepetition::class,
+            'piggy_banks'              => PiggyBank::class,
+            'recurrences_transactions' => RecurrenceTransaction::class,
+            'transactions'             => Transaction::class,
+        ];
 
     private string $operator;
     private string $regularExpression;
     private array  $tables
-                                = [
-                                    'accounts'                 => ['virtual_balance'],
-                                    'auto_budgets'             => ['amount'],
-                                    'available_budgets'        => ['amount'],
-                                    'bills'                    => ['amount_min', 'amount_max'],
-                                    'budget_limits'            => ['amount'],
-                                    'currency_exchange_rates'  => ['rate', 'user_rate'],
-                                    'limit_repetitions'        => ['amount'],
-                                    'piggy_bank_events'        => ['amount'],
-                                    'piggy_bank_repetitions'   => ['currentamount'],
-                                    'piggy_banks'              => ['targetamount'],
-                                    'recurrences_transactions' => ['amount', 'foreign_amount'],
-                                    'transactions'             => ['amount', 'foreign_amount'],
-                                ];
+                           = [
+            'accounts'                 => ['virtual_balance'],
+            'auto_budgets'             => ['amount'],
+            'available_budgets'        => ['amount'],
+            'bills'                    => ['amount_min', 'amount_max'],
+            'budget_limits'            => ['amount'],
+            'currency_exchange_rates'  => ['rate', 'user_rate'],
+            'limit_repetitions'        => ['amount'],
+            'piggy_bank_events'        => ['amount'],
+            'piggy_bank_repetitions'   => ['currentamount'],
+            'piggy_banks'              => ['targetamount'],
+            'recurrences_transactions' => ['amount', 'foreign_amount'],
+            'transactions'             => ['amount', 'foreign_amount'],
+        ];
 
     /**
      * Execute the console command.

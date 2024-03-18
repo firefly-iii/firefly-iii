@@ -187,10 +187,10 @@ class User extends Authenticatable
 
     protected $casts
                         = [
-                            'created_at' => 'datetime',
-                            'updated_at' => 'datetime',
-                            'blocked'    => 'boolean',
-                        ];
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'blocked'    => 'boolean',
+        ];
     protected $fillable = ['email', 'password', 'blocked', 'blocked_code'];
     protected $hidden   = ['password', 'remember_token'];
     protected $table    = 'users';

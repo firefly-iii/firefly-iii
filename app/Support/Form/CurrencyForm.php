@@ -42,7 +42,7 @@ class CurrencyForm
      *
      * @throws FireflyException
      */
-    public function amount(string $name, $value = null, array $options = null): string
+    public function amount(string $name, $value = null, ?array $options = null): string
     {
         return $this->currencyField($name, 'amount', $value, $options);
     }
@@ -50,7 +50,7 @@ class CurrencyForm
     /**
      * @throws FireflyException
      */
-    protected function currencyField(string $name, string $view, mixed $value = null, array $options = null): string
+    protected function currencyField(string $name, string $view, mixed $value = null, ?array $options = null): string
     {
         $label           = $this->label($name, $options);
         $options         = $this->expandOptionArray($name, $label, $options);
@@ -106,7 +106,7 @@ class CurrencyForm
      *
      * @throws FireflyException
      */
-    public function balanceAll(string $name, $value = null, array $options = null): string
+    public function balanceAll(string $name, $value = null, ?array $options = null): string
     {
         return $this->allCurrencyField($name, 'balance', $value, $options);
     }
@@ -118,7 +118,7 @@ class CurrencyForm
      *
      * @throws FireflyException
      */
-    protected function allCurrencyField(string $name, string $view, $value = null, array $options = null): string
+    protected function allCurrencyField(string $name, string $view, $value = null, ?array $options = null): string
     {
         $label           = $this->label($name, $options);
         $options         = $this->expandOptionArray($name, $label, $options);
@@ -173,7 +173,7 @@ class CurrencyForm
      *
      * @param mixed $value
      */
-    public function currencyList(string $name, $value = null, array $options = null): string
+    public function currencyList(string $name, $value = null, ?array $options = null): string
     {
         /** @var CurrencyRepositoryInterface $currencyRepos */
         $currencyRepos = app(CurrencyRepositoryInterface::class);
@@ -195,7 +195,7 @@ class CurrencyForm
      *
      * @param mixed $value
      */
-    public function currencyListEmpty(string $name, $value = null, array $options = null): string
+    public function currencyListEmpty(string $name, $value = null, ?array $options = null): string
     {
         /** @var CurrencyRepositoryInterface $currencyRepos */
         $currencyRepos = app(CurrencyRepositoryInterface::class);

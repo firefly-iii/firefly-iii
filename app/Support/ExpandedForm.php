@@ -40,7 +40,7 @@ class ExpandedForm
      *
      * @throws FireflyException
      */
-    public function amountNoCurrency(string $name, $value = null, array $options = null): string
+    public function amountNoCurrency(string $name, $value = null, ?array $options = null): string
     {
         $options ??= [];
         $label           = $this->label($name, $options);
@@ -71,7 +71,7 @@ class ExpandedForm
      *
      * @throws FireflyException
      */
-    public function checkbox(string $name, int $value = null, $checked = null, array $options = null): string
+    public function checkbox(string $name, ?int $value = null, $checked = null, ?array $options = null): string
     {
         $options ??= [];
         $value   ??= 1;
@@ -106,7 +106,7 @@ class ExpandedForm
      *
      * @throws FireflyException
      */
-    public function date(string $name, $value = null, array $options = null): string
+    public function date(string $name, $value = null, ?array $options = null): string
     {
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
@@ -129,7 +129,7 @@ class ExpandedForm
     /**
      * @throws FireflyException
      */
-    public function file(string $name, array $options = null): string
+    public function file(string $name, ?array $options = null): string
     {
         $options ??= [];
         $label   = $this->label($name, $options);
@@ -153,7 +153,7 @@ class ExpandedForm
      *
      * @throws FireflyException
      */
-    public function integer(string $name, $value = null, array $options = null): string
+    public function integer(string $name, $value = null, ?array $options = null): string
     {
         $options         ??= [];
         $label   = $this->label($name, $options);
@@ -179,7 +179,7 @@ class ExpandedForm
      *
      * @throws FireflyException
      */
-    public function location(string $name, $value = null, array $options = null): string
+    public function location(string $name, $value = null, ?array $options = null): string
     {
         $options ??= [];
         $label   = $this->label($name, $options);
@@ -227,7 +227,7 @@ class ExpandedForm
      *
      * @throws FireflyException
      */
-    public function objectGroup($value = null, array $options = null): string
+    public function objectGroup($value = null, ?array $options = null): string
     {
         $name            = 'object_group';
         $label           = $this->label($name, $options);
@@ -272,7 +272,7 @@ class ExpandedForm
     /**
      * @throws FireflyException
      */
-    public function password(string $name, array $options = null): string
+    public function password(string $name, ?array $options = null): string
     {
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
@@ -297,7 +297,7 @@ class ExpandedForm
      *
      * @throws FireflyException
      */
-    public function percentage(string $name, $value = null, array $options = null): string
+    public function percentage(string $name, $value = null, ?array $options = null): string
     {
         $label           = $this->label($name, $options);
         $options         = $this->expandOptionArray($name, $label, $options);
@@ -323,7 +323,7 @@ class ExpandedForm
      *
      * @throws FireflyException
      */
-    public function staticText(string $name, $value, array $options = null): string
+    public function staticText(string $name, $value, ?array $options = null): string
     {
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
@@ -346,7 +346,7 @@ class ExpandedForm
      *
      * @throws FireflyException
      */
-    public function text(string $name, $value = null, array $options = null): string
+    public function text(string $name, $value = null, ?array $options = null): string
     {
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
@@ -370,7 +370,7 @@ class ExpandedForm
      *
      * @throws FireflyException
      */
-    public function textarea(string $name, $value = null, array $options = null): string
+    public function textarea(string $name, $value = null, ?array $options = null): string
     {
         $label           = $this->label($name, $options);
         $options         = $this->expandOptionArray($name, $label, $options);

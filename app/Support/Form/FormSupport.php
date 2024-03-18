@@ -36,7 +36,7 @@ trait FormSupport
     /**
      * @param mixed $selected
      */
-    public function select(string $name, array $list = null, $selected = null, array $options = null): string
+    public function select(string $name, ?array $list = null, $selected = null, ?array $options = null): string
     {
         $list ??= [];
         $label    = $this->label($name, $options);
@@ -55,7 +55,7 @@ trait FormSupport
         return $html;
     }
 
-    protected function label(string $name, array $options = null): string
+    protected function label(string $name, ?array $options = null): string
     {
         $options ??= [];
         if (array_key_exists('label', $options)) {
@@ -69,7 +69,7 @@ trait FormSupport
     /**
      * @param mixed $label
      */
-    protected function expandOptionArray(string $name, $label, array $options = null): array
+    protected function expandOptionArray(string $name, $label, ?array $options = null): array
     {
         $options ??= [];
         $name                    = str_replace('[]', '', $name);

@@ -38,7 +38,7 @@ class IntroController extends Controller
     /**
      * Returns the introduction wizard for a page.
      */
-    public function getIntroSteps(string $route, string $specificPage = null): JsonResponse
+    public function getIntroSteps(string $route, ?string $specificPage = null): JsonResponse
     {
         app('log')->debug(sprintf('getIntroSteps for route "%s" and page "%s"', $route, $specificPage));
         $specificPage ??= '';
@@ -91,7 +91,7 @@ class IntroController extends Controller
      *
      * @throws FireflyException
      */
-    public function postEnable(string $route, string $specialPage = null): JsonResponse
+    public function postEnable(string $route, ?string $specialPage = null): JsonResponse
     {
         $specialPage ??= '';
         $route = str_replace('.', '_', $route);
@@ -111,7 +111,7 @@ class IntroController extends Controller
      *
      * @throws FireflyException
      */
-    public function postFinished(string $route, string $specialPage = null): JsonResponse
+    public function postFinished(string $route, ?string $specialPage = null): JsonResponse
     {
         $specialPage ??= '';
         $key = 'shown_demo_'.$route;

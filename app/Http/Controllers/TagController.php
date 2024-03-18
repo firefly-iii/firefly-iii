@@ -215,7 +215,7 @@ class TagController extends Controller
      *
      * @throws FireflyException
      */
-    public function show(Request $request, Tag $tag, Carbon $start = null, Carbon $end = null)
+    public function show(Request $request, Tag $tag, ?Carbon $start = null, ?Carbon $end = null)
     {
         // default values:
         $subTitleIcon = 'fa-tag';

@@ -75,7 +75,7 @@ class ShowController extends Controller
      *
      * @throws FireflyException
      *                                              */
-    public function show(Request $request, Account $account, Carbon $start = null, Carbon $end = null)
+    public function show(Request $request, Account $account, ?Carbon $start = null, ?Carbon $end = null)
     {
         $objectType       = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
 

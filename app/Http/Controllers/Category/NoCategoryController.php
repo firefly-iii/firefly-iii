@@ -70,7 +70,7 @@ class NoCategoryController extends Controller
      *
      * @throws FireflyException
      */
-    public function show(Request $request, Carbon $start = null, Carbon $end = null)
+    public function show(Request $request, ?Carbon $start = null, ?Carbon $end = null)
     {
         app('log')->debug('Start of noCategory()');
         // @var Carbon $start

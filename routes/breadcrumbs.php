@@ -103,7 +103,7 @@ Breadcrumbs::for(
 
 Breadcrumbs::for(
     'accounts.show',
-    static function (Generator $breadcrumbs, Account $account, Carbon $start = null, Carbon $end = null): void {
+    static function (Generator $breadcrumbs, Account $account, ?Carbon $start = null, ?Carbon $end = null): void {
         $what = config('firefly.shortNamesByFullName.'.$account->accountType->type);
 
         $breadcrumbs->parent('accounts.index', $what);
@@ -438,7 +438,7 @@ Breadcrumbs::for(
 
 Breadcrumbs::for(
     'budgets.no-budget',
-    static function (Generator $breadcrumbs, Carbon $start = null, Carbon $end = null): void {
+    static function (Generator $breadcrumbs, ?Carbon $start = null, ?Carbon $end = null): void {
         $breadcrumbs->parent('budgets.index');
         $breadcrumbs->push(trans('firefly.journals_without_budget'), route('budgets.no-budget'));
         if (null !== $start && null !== $end) {
@@ -526,7 +526,7 @@ Breadcrumbs::for(
 
 Breadcrumbs::for(
     'categories.show',
-    static function (Generator $breadcrumbs, Category $category, Carbon $start = null, Carbon $end = null): void {
+    static function (Generator $breadcrumbs, Category $category, ?Carbon $start = null, ?Carbon $end = null): void {
         $breadcrumbs->parent('categories.index');
         $breadcrumbs->push(limitStringLength($category->name), route('categories.show', [$category->id]));
         if (null !== $start && null !== $end) {
@@ -553,7 +553,7 @@ Breadcrumbs::for(
 
 Breadcrumbs::for(
     'categories.no-category',
-    static function (Generator $breadcrumbs, Carbon $start = null, Carbon $end = null): void {
+    static function (Generator $breadcrumbs, ?Carbon $start = null, ?Carbon $end = null): void {
         $breadcrumbs->parent('categories.index');
         $breadcrumbs->push(trans('firefly.journals_without_category'), route('categories.no-category'));
         if (null !== $start && null !== $end) {
@@ -902,7 +902,7 @@ Breadcrumbs::for(
 
 Breadcrumbs::for(
     'rules.create',
-    static function (Generator $breadcrumbs, RuleGroup $ruleGroup = null): void {
+    static function (Generator $breadcrumbs, ?RuleGroup $ruleGroup = null): void {
         $breadcrumbs->parent('rules.index');
         if (null === $ruleGroup) {
             $breadcrumbs->push(trans('firefly.make_new_rule_no_group'), route('rules.create'));
@@ -1031,7 +1031,7 @@ Breadcrumbs::for(
 
 Breadcrumbs::for(
     'tags.show',
-    static function (Generator $breadcrumbs, Tag $tag, Carbon $start = null, Carbon $end = null): void {
+    static function (Generator $breadcrumbs, Tag $tag, ?Carbon $start = null, ?Carbon $end = null): void {
         $breadcrumbs->parent('tags.index');
 
         $breadcrumbs->push($tag->tag, route('tags.show', [$tag->id, $start, $end]));
@@ -1062,7 +1062,7 @@ Breadcrumbs::for(
 
 Breadcrumbs::for(
     'transactions.index',
-    static function (Generator $breadcrumbs, string $what, Carbon $start = null, Carbon $end = null): void {
+    static function (Generator $breadcrumbs, string $what, ?Carbon $start = null, ?Carbon $end = null): void {
         $breadcrumbs->parent('home');
         $breadcrumbs->push(trans('breadcrumbs.'.$what.'_list'), route('transactions.index', [$what]));
 

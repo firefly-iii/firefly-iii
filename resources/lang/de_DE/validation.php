@@ -55,11 +55,11 @@ return [
     'reconciled_forbidden_field'      => 'Diese Buchung ist bereits abgeglichen, Sie können das „:field” nicht ändern',
     'deleted_user'                    => 'Aufgrund von Sicherheitsbeschränkungen ist eine Registrierung mit dieser E-Mail-Adresse nicht zugelassen.',
     'rule_trigger_value'              => 'Dieser Wert ist für den ausgewählten Auslöser ungültig.',
-    'rule_action_expression'          => 'Invalid expression. :error',
+    'rule_action_expression'          => 'Ungültiger Ausdruck :error',
     'rule_action_value'               => 'Dieser Wert ist für die gewählte Aktion ungültig.',
     'file_already_attached'           => 'Die hochgeladene Datei „:name” ist diesem Objekt bereits angehängt.',
     'file_attached'                   => 'Datei „:name” erfolgreich hochgeladen.',
-    'file_zero'                       => 'The file is zero bytes in size.',
+    'file_zero'                       => 'Die Datei hat eine Größe von null Bytes.',
     'must_exist'                      => 'Die ID in Feld :attribute existiert nicht in der Datenbank.',
     'all_accounts_equal'              => 'Alle Konten in diesem Feld müssen identisch sein.',
     'group_title_mandatory'           => 'Ein Gruppentitel ist zwingend erforderlich, wenn mehr als eine Buchung vorliegt.',
@@ -197,7 +197,7 @@ return [
  *
  */
 
-    'secure_password'                 => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password',
+    'secure_password'                 => 'Dies ist ein unsicheres Passwort. Bitte versuchen Sie es erneut. Weitere Informationen finden Sie unter https://bit.ly/FF3-password',
     'valid_recurrence_rep_type'       => 'Ungültige Wiederholungsart für Daueraufträge.',
     'valid_recurrence_rep_moment'     => 'Ungültiges Wiederholungsmoment für diese Art der Wiederholung.',
     'invalid_account_info'            => 'Ungültige Kontodaten.',

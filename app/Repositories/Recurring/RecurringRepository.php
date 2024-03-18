@@ -202,7 +202,7 @@ class RecurringRepository implements RecurringRepositoryInterface
     /**
      * Returns the journals created for this recurrence, possibly limited by time.
      */
-    public function getJournalCount(Recurrence $recurrence, Carbon $start = null, Carbon $end = null): int
+    public function getJournalCount(Recurrence $recurrence, ?Carbon $start = null, ?Carbon $end = null): int
     {
         $query = TransactionJournal::leftJoin('journal_meta', 'journal_meta.transaction_journal_id', '=', 'transaction_journals.id')
             ->where('transaction_journals.user_id', $recurrence->user_id)
