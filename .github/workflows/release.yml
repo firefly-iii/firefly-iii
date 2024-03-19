@@ -158,7 +158,7 @@ jobs:
           git push
 
           # zip everything
-          zip -rq $zipName . -x "*.git*" "*.ci*" "*.github*" "*node_modules*"
+          zip -rq $zipName . -x "*.git*" "*.ci*" "*.github*" "*node_modules*" "*output.txt*"
 
           if [[ "develop" == "$version" ]]; then
             echo "Create nightly release."
