@@ -78,7 +78,7 @@ return [
     'reports_index_intro'                                     => 'Utilizați aceste rapoarte pentru a obține informații detaliate despre finanțele dumneavoastră.',
     'reports_index_inputReportType'                           => 'Alegeți un tip de raport. Consultați paginile de ajutor pentru a vedea ce arată fiecare raport.',
     'reports_index_inputAccountsSelect'                       => 'Puteți exclude sau include conturi de active după cum doriți.',
-    'reports_index_inputDateRange'                            => 'The selected date range is entirely up to you: from one day to 10 years or more.',
+    'reports_index_inputDateRange'                            => 'Intervalul de date selectat depinde în întregime de dvs.: de la o zi la 10 ani sau mai mult.',
     'reports_index_extra-options-box'                         => 'În funcție de raportul pe care l-ați selectat, puteți selecta filtre și opțiuni suplimentare aici. Urmăriți această casetă când modificați tipurile de rapoarte.',
 
     // reports (reports)

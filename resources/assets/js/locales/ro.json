@@ -109,7 +109,7 @@
         "webhook_messages": "Webhook message",
         "inactive": "Inactiv",
         "no_webhook_messages": "There are no webhook messages",
-        "inspect": "Inspect",
+        "inspect": "Inspecta\u021bi",
         "create_new_webhook": "Create new webhook",
         "webhooks": "Webhook-uri",
         "webhook_trigger_form_help": "Indicate on what event the webhook will trigger",
@@ -126,8 +126,8 @@
         "attempt_content_help": "These are all the unsuccessful attempts of this webhook message to submit to the configured URL. After some time, Firefly III will stop trying.",
         "no_attempts": "There are no unsuccessful attempts. That's a good thing!",
         "webhook_attempt_at": "Attempt at {moment}",
-        "logs": "Logs",
-        "response": "Response",
+        "logs": "Jurnale",
+        "response": "R\u0103spuns",
         "visit_webhook_url": "Visit webhook URL",
         "reset_webhook_secret": "Reset webhook secret"
     },
@@ -143,15 +143,15 @@
         "payment_date": "Data de plat\u0103",
         "invoice_date": "Data facturii",
         "internal_reference": "Referin\u021b\u0103 intern\u0103",
-        "webhook_response": "Response",
-        "webhook_trigger": "Trigger",
-        "webhook_delivery": "Delivery"
+        "webhook_response": "R\u0103spuns",
+        "webhook_trigger": "Declan\u0219ator",
+        "webhook_delivery": "Livrare"
     },
     "list": {
         "active": "Este activ?",
-        "trigger": "Trigger",
-        "response": "Response",
-        "delivery": "Delivery",
+        "trigger": "Declan\u0219ator",
+        "response": "R\u0103spuns",
+        "delivery": "Livrare",
         "url": "URL",
         "secret": "Secret"
     },
