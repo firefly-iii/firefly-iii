@@ -3,13 +3,39 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 6.1.11 - 2024-03-25
+## 6.1.11 - 2024-03-20
+
+### Added
+
+- New expression engine by @michaelhthomas, still disabled though.
+- Missing database indexes to speed up performance.
+- A button to the experimental `v2`-layout to go back to `v1`.
+
+### Changed
+
+- New login/register screens
+- New CSP headers
+
+### Deprecated
+
+- Dropped all old v3 code.
+- Dropped all generated JS and CSS, thanks @paulius-valiunas!
+
+### Fixed
+
+- #8569
+- #8608
+- #8616
+- #8634
+- #8632
+- #8663
+- #8671
+- #8672
+- #8668
 
 ### Removed
 
 - Support for Mandrill because the necessary packages aren't maintained anymore.
-
-
 
 ## 6.1.10 - 2024-03-03
 
