@@ -23,15 +23,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #8569
-- #8608
-- #8616
-- #8634
-- #8632
-- #8663
-- #8671
-- #8672
-- #8668
+- [Discussion 8569](https://github.com/orgs/firefly-iii/discussions/8569) (What is classed as an "automatic transaction" when it comes to notifications?) started by @digitlength
+- [Issue 8608](https://github.com/firefly-iii/firefly-iii/issues/8608) (404 error when deleting a category) reported by @Jademalo
+- [Issue 8616](https://github.com/firefly-iii/firefly-iii/issues/8616) (Create right now option for recurring transaction missing during weekend) reported by @Transportman
+- [PR 8634](https://github.com/firefly-iii/firefly-iii/pull/8634) ([trivial] fix broken link in readme) reported by @WardenJakx
+- [Issue 8632](https://github.com/firefly-iii/firefly-iii/issues/8632) (No search results returned when using `tag_contains` and `tag_starts`) reported by @Call-Me-G-Now
+- [Issue 8663](https://github.com/firefly-iii/firefly-iii/issues/8663) (Graph error on Reports) reported by @nicolopozzato
+- [Issue 8671](https://github.com/firefly-iii/firefly-iii/issues/8671) (Rule with -has_any_category:true trigger not triggering) reported by @pvieira84
+- [Issue 8672](https://github.com/firefly-iii/firefly-iii/issues/8672) (Can't remove foreign amount using the trash icon) reported by @danielnetop
+- [Issue 8668](https://github.com/firefly-iii/firefly-iii/issues/8668) (Not possible to upload CSV file as an attachment) reported by @dbtdsilva
 
 ### Removed
 
