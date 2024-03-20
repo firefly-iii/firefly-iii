@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.1.12 - 2024-03-21
+
+### Fixed
+
+- Exclude debug files from release zip file
+- Drop a duplicate index
+- Replace broken Laravel Passport commands
+- #8692
+- #8694
+
 ## 6.1.11 - 2024-03-20
 
 ### Added
