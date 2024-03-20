@@ -117,7 +117,7 @@ return [
         'expression_engine' => false,
         // see cer.php for exchange rates feature flag.
     ],
-    'version'                      => '6.1.11',
+    'version'                      => '6.1.12',
     'api_version'                  => '2.0.12',
     'db_version'                   => 23,
 

@@ -57,11 +57,11 @@ return [
 
     // invite
     'invitation_created_subject'              => 'A fost creată o invitație',
-    'invitation_created_body'                 => 'Admin user ":email" created a user invitation which can be used by whoever is behind email address ":invitee". The invite will be valid for 48hrs.',
-    'invite_user_subject'                     => 'You\'ve been invited to create a Firefly III account.',
-    'invitation_introduction'                 => 'You\'ve been invited to create a Firefly III account on **:host**. Firefly III  is a personal, self-hosted, private personal finance manager. All the cool kids are using it.',
-    'invitation_invited_by'                   => 'You\'ve been invited by ":admin" and this invitation was sent to ":invitee". That\'s you, right?',
-    'invitation_url'                          => 'The invitation is valid for 48 hours and can be redeemed by surfing to [Firefly III](:url). Enjoy!',
+    'invitation_created_body'                 => 'Utilizatorul admin ":email" a creat o invitație de utilizator care poate fi utilizată de către oricine se află în spatele adresei de e-mail ":invitee". Invitația va fi valabilă pentru 48 de ore.',
+    'invite_user_subject'                     => 'Ați fost invitat să creați un cont Firefly III.',
+    'invitation_introduction'                 => 'Ați fost invitat să creați un cont Firefly III pe **:host**. Firefly III este un manager personal de finanțe, personal personal. Toți copiii grozavi îl folosesc.',
+    'invitation_invited_by'                   => 'Ai fost invitat de ":admin" și această invitație a fost trimisă la ":invitee". Asta ești tu, nu?',
+    'invitation_url'                          => 'Invitația este valabilă pentru 48 de ore și poate fi răscumpărată prin navigarea la [Firefly III](:url). Bucurați-vă!',
 
     // new IP
     'login_from_new_ip'                       => 'Autentificare nouă pe Firefly III',
@@ -75,15 +75,15 @@ return [
     // access token created
     'access_token_created_subject'            => 'Un nou token de acces a fost creat',
     'access_token_created_body'               => 'Cineva (sperăm că dvs.) tocmai a creat un nou Firefly III API Access Token pentru contul dvs. de utilizator.',
-    'access_token_created_explanation'        => 'With this token, they can access **all** of your financial records through the Firefly III API.',
-    'access_token_created_revoke'             => 'If this wasn\'t you, please revoke this token as soon as possible at :url',
+    'access_token_created_explanation'        => 'Cu acest token, pot accesa **toate** din înregistrările financiare prin API-ul Firefly III.',
+    'access_token_created_revoke'             => 'Dacă nu ai fost tu, te rugăm să revoci acest token cât mai curând posibil la :url',
 
     // registered
     'registered_subject'                      => 'Bun venit la Firefly III!',
-    'registered_subject_admin'                => 'A new user has registered',
-    'admin_new_user_registered'               => 'A new user has registered. User **:email** was given user ID #:id.',
-    'registered_welcome'                      => 'Welcome to [Firefly III](:address). Your registration has made it, and this email is here to confirm it. Yay!',
-    'registered_pw'                           => 'If you have forgotten your password already, please reset it using [the password reset tool](:address/password/reset).',
+    'registered_subject_admin'                => 'S-a înregistrat un utilizator nou',
+    'admin_new_user_registered'               => 'S-a înregistrat un utilizator nou. Utilizatorul **:email** a primit ID-ul de utilizator #:id.',
+    'registered_welcome'                      => 'Bine ați venit la [Firefly III](:address). Înregistrarea dvs. a făcut-o, și acest e-mail este aici pentru a-l confirma. Yay!',
+    'registered_pw'                           => 'Dacă v-ați uitat deja parola, vă rugăm să o resetați folosind [instrumentul de resetare a parolei](:address/parolă/resetare).',
     'registered_help'                         => 'Există o pictogramă de ajutor în colțul din dreapta sus al fiecărei pagini. Dacă ai nevoie de ajutor, apasă pe ea!',
     'registered_closing'                      => 'Bucurați-vă de el!',
     'registered_firefly_iii_link'             => 'Firefly III:',
@@ -102,30 +102,30 @@ return [
  */
 
     // new version
-    'new_version_email_subject'               => 'A new Firefly III version is available',
+    'new_version_email_subject'               => 'O nouă versiune Firefly III este disponibilă',
 
     // email change
     'email_change_subject'                    => 'Adresa ta de email a fost schimbată',
     'email_change_body_to_new'                => 'Dumneavoastră sau cineva cu acces la contul dvs. Firefly III v-a schimbat adresa de e-mail. Dacă nu ați așteptat acest mesaj, vă rugăm să îl ignorați și să îl ștergeți.',
-    'email_change_body_to_old'                => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this to happen, you **must** follow the "undo"-link below to protect your account!',
+    'email_change_body_to_old'                => 'Dumneavoastră sau cineva cu acces la contul dvs. Firefly III v-a schimbat adresa de e-mail. Dacă nu v-ați așteptat ca acest lucru să se întâmple, **trebuie** să urmați linkul "undo" de mai jos pentru a vă proteja contul!',
     'email_change_ignore'                     => 'Dacă ați inițiat această schimbare, puteți ignora în siguranță acest mesaj.',
     'email_change_old'                        => 'Vechea adresă de e-mail a fost: :email',
-    'email_change_old_strong'                 => 'The old email address was: **:email**',
+    'email_change_old_strong'                 => 'Vechea adresă de e-mail a fost: **:email**',
     'email_change_new'                        => 'Noua adresă de e-mail este: :email',
-    'email_change_new_strong'                 => 'The new email address is: **:email**',
+    'email_change_new_strong'                 => 'Noua adresă de e-mail este: **:email**',
     'email_change_instructions'               => 'Nu puteți utiliza Firefly III până când nu confirmați această modificare. Vă rugăm să urmați link-ul de mai jos pentru a face acest lucru.',
     'email_change_undo_link'                  => 'Pentru a anula modificarea, urmați acest link:',
 
     // OAuth token created
     'oauth_created_subject'                   => 'Un nou client OAuth a fost creat',
-    'oauth_created_body'                      => 'Somebody (hopefully you) just created a new Firefly III API OAuth Client for your user account. It\'s labeled ":name" and has callback URL `:url`.',
-    'oauth_created_explanation'               => 'With this client, they can access **all** of your financial records through the Firefly III API.',
-    'oauth_created_undo'                      => 'If this wasn\'t you, please revoke this client as soon as possible at `:url`',
+    'oauth_created_body'                      => 'Cineva (sperăm că dvs.) tocmai a creat un nou client Firefly III API OAuth pentru contul dvs. de utilizator. Este etichetat ":name" şi are URL-ul de apel invers `:url`.',
+    'oauth_created_explanation'               => 'Cu acest client, ei pot accesa **toate** din înregistrările financiare prin API-ul Firefly III.',
+    'oauth_created_undo'                      => 'Dacă nu aţi fost dumneavoastră, vă rugăm să revocaţi acest client cât mai curând posibil la `:url`',
 
     // reset password
     'reset_pw_subject'                        => 'Solicitarea de resetare a parolei',
     'reset_pw_instructions'                   => 'Cineva a încercat să-ți reseteze parola. Dacă ai fost, te rugăm să urmezi link-ul de mai jos pentru a face acest lucru.',
-    'reset_pw_warning'                        => '**PLEASE** verify that the link actually goes to the Firefly III you expect it to go!',
+    'reset_pw_warning'                        => '**PLEASE** verifică dacă linkul chiar merge la Firefly III pe care te aștepți să-l merge!',
 
     // error
     'error_subject'                           => 'Am descoperit o eroare în Firefly III',
@@ -142,8 +142,8 @@ return [
     'error_github_html'                       => 'Dacă preferați, puteți de asemenea deschide o nouă problemă pe <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>.',
     'error_github_text'                       => 'Dacă preferați, puteți de asemenea deschide o nouă problemă pe <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>.',
     'error_stacktrace_below'                  => 'Stacktrack-ul complet este mai jos:',
-    'error_headers'                           => 'The following headers may also be relevant:',
-    'error_post'                              => 'This was submitted by the user:',
+    'error_headers'                           => 'Următoarele antete pot fi, de asemenea, relevante:',
+    'error_post'                              => 'Acest lucru a fost trimis de utilizator:',
 
     /*
  * PLEASE DO NOT EDIT THIS FILE DIRECTLY.
@@ -161,15 +161,15 @@ return [
     'new_journals_header'                     => 'Firefly III a creat o tranzacție pentru dvs. O puteți găsi în instalarea dvs. Firefly III:|Firefly III a creat :count tranzacții pentru dvs. Le puteți găsi în instalarea Firefly III:',
 
     // bill warning
-    'bill_warning_subject_end_date'           => 'Your bill ":name" is due to end in :diff days',
-    'bill_warning_subject_now_end_date'       => 'Your bill ":name" is due to end TODAY',
-    'bill_warning_subject_extension_date'     => 'Your bill ":name" is due to be extended or cancelled in :diff days',
-    'bill_warning_subject_now_extension_date' => 'Your bill ":name" is due to be extended or cancelled TODAY',
-    'bill_warning_end_date'                   => 'Your bill **":name"** is due to end on :date. This moment will pass in about **:diff days**.',
-    'bill_warning_extension_date'             => 'Your bill **":name"** is due to be extended or cancelled on :date. This moment will pass in about **:diff days**.',
-    'bill_warning_end_date_zero'              => 'Your bill **":name"** is due to end on :date. This moment will pass **TODAY!**',
-    'bill_warning_extension_date_zero'        => 'Your bill **":name"** is due to be extended or cancelled on :date. This moment will pass **TODAY!**',
-    'bill_warning_please_action'              => 'Please take the appropriate action.',
+    'bill_warning_subject_end_date'           => 'Factura dvs. ":name" trebuie să fie scadentă in :diff zile',
+    'bill_warning_subject_now_end_date'       => 'Factura ta ":name" este scadenta azi',
+    'bill_warning_subject_extension_date'     => 'Factura ta ":name" urmează să fie prelungită sau anulată în :diff zile',
+    'bill_warning_subject_now_extension_date' => 'Factura dvs. ":name" urmează să fie extinsă sau anulată',
+    'bill_warning_end_date'                   => 'Factura ta **":name"** urmează să fie scadenta pe :date. Acest moment va trece în aproximativ **:diff zile**.',
+    'bill_warning_extension_date'             => 'Factura ta **":name"** urmează să fie prelungită sau anulată pe :date. Acest moment va trece în aproximativ **:diff zile**.',
+    'bill_warning_end_date_zero'              => 'Factura ta **":name"** urmează să se termine pe :date. Acest moment va trece **ASTAZI**',
+    'bill_warning_extension_date_zero'        => 'Factura dvs. **":name"** urmează să fie extinsă sau anulată pe :date. Acest moment va trece **ASTAZI**',
+    'bill_warning_please_action'              => 'Vă rugăm să luați măsurile corespunzătoare.',
 ];
 /*
  * PLEASE DO NOT EDIT THIS FILE DIRECTLY.

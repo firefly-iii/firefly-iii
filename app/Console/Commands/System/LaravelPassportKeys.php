@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * LaravelPassportKeys.php
  * Copyright (c) 2024 james@firefly-iii.org.
@@ -35,7 +37,7 @@ class LaravelPassportKeys extends Command
      *
      * @var string
      */
-    protected $signature = 'firefly-iii:laravel-passport-keys';
+    protected $signature   = 'firefly-iii:laravel-passport-keys';
 
     /**
      * The console command description.
@@ -53,10 +55,11 @@ class LaravelPassportKeys extends Command
         $result = Artisan::output();
         if (str_contains($result, 'Encryption keys already exist')) {
             $this->friendlyInfo('Encryption keys exist already.');
-            return CommandAlias::SUCCESS;
 
+            return CommandAlias::SUCCESS;
         }
         $this->friendlyPositive('Encryption keys have been created, nice!');
+
         return CommandAlias::SUCCESS;
     }
 }

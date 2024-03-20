@@ -63,7 +63,7 @@ return [
  */
 
     'collect_info'            => 'Vă rugăm să colectați mai multe informații în directorul <code>storage/logs</code> unde veți găsi fișiere jurnal. Dacă rulați Docker, folosiți <code>docker logs -f[container]</code>.',
-    'collect_info_more'       => 'You can read more about collecting error information in <a href="https://docs.firefly-iii.org/how-to/general/debug/">the FAQ</a>.',
+    'collect_info_more'       => 'Poți citi mai multe despre colectarea informațiilor despre erori în <a href="https://docs.firefly-iii.org/how-to/general/debug/">FAQ</a>.',
     'github_help'             => 'Obțineți ajutor pe GitHub',
     'github_instructions'     => 'Dacă sunteți sigur că această pagină ar trebui să existe, vă rugăm să deschideți un tichet pe <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
     'use_search'              => 'Folosește căutarea!',
@@ -71,7 +71,7 @@ return [
     'tell_more'               => 'Spune-ne mai mult decât „spune Whoops!”',
     'include_logs'            => 'Include jurnalele de erori (a se vedea mai sus).',
     'what_did_you_do'         => 'Spune-ne ce făceai.',
-    'offline_header'          => 'You are probably offline',
-    'offline_unreachable'     => 'Firefly III is unreachable. Your device is currently offline or the server is not working.',
-    'offline_github'          => 'If you are sure both your device and the server are online, please open a ticket on <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
+    'offline_header'          => 'Ești probabil offline',
+    'offline_unreachable'     => 'Firefly III nu este accesibil. Dispozitivul dvs. este momentan offline sau serverul nu funcționează.',
+    'offline_github'          => 'Dacă sunteți sigur că atât dispozitivul cât și serverul sunt online, vă rugăm să deschideți un bilet pe <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
 ];
