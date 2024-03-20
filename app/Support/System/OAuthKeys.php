@@ -88,7 +88,7 @@ class OAuthKeys
     public static function generateKeys(): void
     {
         \Artisan::registerCommand(new KeysCommand());
-        \Artisan::call('passport:keys');
+        \Artisan::call('firefly-iii:laravel-passport-keys');
     }
 
     public static function storeKeysInDB(): void

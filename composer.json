@@ -167,7 +167,7 @@
             "@php artisan firefly-iii:upgrade-database",
             "@php artisan firefly-iii:correct-database",
             "@php artisan firefly-iii:report-integrity",
-            "@php artisan passport:keys",
+            "@php artisan firefly-iii:laravel-passport-keys",
             "@php artisan firefly:instructions update"
         ],
         "post-install-cmd": [
