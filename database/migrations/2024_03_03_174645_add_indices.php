@@ -24,7 +24,6 @@ return new class () extends Migration {
             'journal_meta'                 => ['transaction_journal_id', 'data', 'name'],
             'category_transaction_journal' => ['transaction_journal_id'],
             'categories'                   => ['user_id', 'user_group_id'],
-            'transaction_currencies'       => ['code'],
             'transaction_groups'           => ['user_id', 'user_group_id'],
             'transaction_journals'         => ['user_id', 'user_group_id', 'date', 'transaction_group_id', 'transaction_type_id', 'transaction_currency_id', 'bill_id'],
             'transactions'                 => ['account_id', 'transaction_journal_id', 'transaction_currency_id', 'foreign_currency_id'],
