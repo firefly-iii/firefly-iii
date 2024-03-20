@@ -3,7 +3,7 @@ name: 'Issues - Lock old issues'
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 2 * * *'
 
 concurrency:
   group: lock-threads
