@@ -31,6 +31,7 @@ function manualChunks(id) {
 }
 
 export default defineConfig({
+    base: './',
     build: {
         rollupOptions: {
             output: {
