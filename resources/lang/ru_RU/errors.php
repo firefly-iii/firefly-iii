@@ -42,7 +42,7 @@ return [
     'fatal_error'             => 'Произошла фатальная ошибка. Пожалуйста, проверьте файлы журнала в "storage/logs" или используйте "docker logs -f [container]", чтобы узнать, что происходит.',
     'maintenance_mode'        => 'Firefly III находится в режиме обслуживания.',
     'be_right_back'           => 'Временно недоступен!',
-    'check_back'              => 'Firefly III is down for some necessary maintenance. Please check back in a second. If you happen to see this message on the demo site, just wait a few minutes. The database is reset every few hours.',
+    'check_back'              => 'Firefly III отключён на время обслуживания. Пожалуйста, зайдите снова через некоторое время. Если вы видите это сообщение на демо-сайте, просто подождите пару минут. База данных обновляется каждые несколько часов.',
     'error_occurred'          => 'Упс! Произошла ошибка.',
     'db_error_occurred'       => 'Упс! Произошла ошибка базы данных.',
     'error_not_recoverable'   => 'К сожалению, эта ошибка не была исправлена :(. Firefly III сломался. Ошибка:',

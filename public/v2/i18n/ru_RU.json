@@ -2,7 +2,7 @@
     "config": {
         "html_language": "ru",
         "date_time_fns": "Do MMMM yyyy, @ HH:mm:ss",
-        "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
+        "date_time_fns_short": "Do MMMM YYYY \u0432 HH:mm"
     },
     "firefly": {
         "spent": "\u0420\u0430\u0441\u0445\u043e\u0434",

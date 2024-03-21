@@ -197,7 +197,7 @@ return [
  *
  */
 
-    'secure_password'                 => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password',
+    'secure_password'                 => 'Это небезопасный пароль. Попробуйте еще раз! Подробнее: https://bit.ly/FF3-password',
     'valid_recurrence_rep_type'       => 'Недопустимый тип для повторяющихся транзакций.',
     'valid_recurrence_rep_moment'     => 'Неверный период повторения для данного типа повторений.',
     'invalid_account_info'            => 'Неверные данные о счёте.',
