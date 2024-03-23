@@ -2,6 +2,7 @@
     "config": {
         "html_language": "ko",
         "date_time_fns": "YYYY\ub144 M\uc6d4 D\uc77c HH:mm:ss",
+        "month_and_day_fns": "y\ub144 MMMM d\uc77c",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
     },
     "firefly": {
@@ -38,6 +39,11 @@
         "account_type_Revenue account": "Revenue account",
         "account_type_Debt": "\ub300\ucd9c",
         "account_type_Loan": "\ube5a",
-        "account_type_Mortgage": "\ubaa8\uae30\uc9c0"
+        "account_type_Mortgage": "\ubaa8\uae30\uc9c0",
+        "account_role_defaultAsset": "\uae30\ubcf8 \uc790\uc0b0 \uacc4\uc815",
+        "account_role_sharedAsset": "\uacf5\uc720 \uc790\uc0b0 \uacc4\uc815",
+        "account_role_savingAsset": "\uc608\uae08 \uacc4\uc88c",
+        "account_role_ccAsset": "\uc2e0\uc6a9\uce74\ub4dc",
+        "account_role_cashWalletAsset": "\ud604\uae08 \uc9c0\uac11"
     }
 }

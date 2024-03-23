@@ -1203,12 +1203,12 @@ Route::group(
     static function (): void {
         // show groups:
         // TODO improve these routes
-        Route::get('{what}/all', ['uses' => 'Transaction\IndexController@indexAll', 'as' => 'index.all'])->where(
-            ['what' => 'withdrawal|deposit|transfers|transfer|all']
+        Route::get('{objectType}/all', ['uses' => 'Transaction\IndexController@indexAll', 'as' => 'index.all'])->where(
+            ['objectType' => 'withdrawal|deposit|transfers|transfer|all']
         );
 
-        Route::get('{what}/{start_date?}/{end_date?}', ['uses' => 'Transaction\IndexController@index', 'as' => 'index'])->where(
-            ['what' => 'withdrawal|deposit|transfers|transfer|all']
+        Route::get('{objectType}/{start_date?}/{end_date?}', ['uses' => 'Transaction\IndexController@index', 'as' => 'index'])->where(
+            ['objectType' => 'withdrawal|deposit|transfers|transfer|all']
         )->where(['start_date' => DATEFORMAT])
             ->where(['end_date' => DATEFORMAT])
         ;

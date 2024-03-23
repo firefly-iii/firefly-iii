@@ -2,6 +2,7 @@
     "config": {
         "html_language": "hu",
         "date_time_fns": "MMMM do, yyyy @ HH:mm:ss",
+        "month_and_day_fns": "MMMM d, y",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
     },
     "firefly": {
@@ -38,6 +39,11 @@
         "account_type_Revenue account": "Revenue account",
         "account_type_Debt": "Ad\u00f3ss\u00e1g",
         "account_type_Loan": "Hitel",
-        "account_type_Mortgage": "Jelz\u00e1log"
+        "account_type_Mortgage": "Jelz\u00e1log",
+        "account_role_defaultAsset": "Alap\u00e9rtelmezett eszk\u00f6zsz\u00e1mla",
+        "account_role_sharedAsset": "Megosztott eszk\u00f6zsz\u00e1mla",
+        "account_role_savingAsset": "Megtakar\u00edt\u00e1si sz\u00e1mla",
+        "account_role_ccAsset": "Hitelk\u00e1rtya",
+        "account_role_cashWalletAsset": "K\u00e9szp\u00e9nz"
     }
 }

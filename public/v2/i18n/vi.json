@@ -2,6 +2,7 @@
     "config": {
         "html_language": "vi",
         "date_time_fns": "d MMMM yyyy @ HH:mm:ss",
+        "month_and_day_fns": "MMMM d, y",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
     },
     "firefly": {
@@ -38,6 +39,11 @@
         "account_type_Revenue account": "Revenue account",
         "account_type_Debt": "M\u00f3n n\u1ee3",
         "account_type_Loan": "Ti\u1ec1n vay",
-        "account_type_Mortgage": "Th\u1ebf ch\u1ea5p"
+        "account_type_Mortgage": "Th\u1ebf ch\u1ea5p",
+        "account_role_defaultAsset": "t\u00e0i kho\u1ea3n m\u1eb7c \u0111\u1ecbnh",
+        "account_role_sharedAsset": "t\u00e0i kho\u1ea3n d\u00f9ng chung",
+        "account_role_savingAsset": "T\u00e0i kho\u1ea3n ti\u1ebft ki\u1ec7m",
+        "account_role_ccAsset": "Th\u1ebb t\u00edn d\u1ee5ng",
+        "account_role_cashWalletAsset": "V\u00ed ti\u1ec1n m\u1eb7t"
     }
 }

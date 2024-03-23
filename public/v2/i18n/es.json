@@ -2,6 +2,7 @@
     "config": {
         "html_language": "es",
         "date_time_fns": "El MMMM hacer, yyyy a las HH:mm:ss",
+        "month_and_day_fns": "d MMMM y",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
     },
     "firefly": {
@@ -38,6 +39,11 @@
         "account_type_Revenue account": "Cuenta de ingresos",
         "account_type_Debt": "Deuda",
         "account_type_Loan": "Pr\u00e9stamo",
-        "account_type_Mortgage": "Hipoteca"
+        "account_type_Mortgage": "Hipoteca",
+        "account_role_defaultAsset": "Cuentas de ingresos por defecto",
+        "account_role_sharedAsset": "Cuenta de ingresos compartida",
+        "account_role_savingAsset": "Cuentas de ahorros",
+        "account_role_ccAsset": "Tarjeta de Cr\u00e9dito",
+        "account_role_cashWalletAsset": "Billetera de efectivo"
     }
 }

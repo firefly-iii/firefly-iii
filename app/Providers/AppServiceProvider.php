@@ -24,11 +24,11 @@ declare(strict_types=1);
 namespace FireflyIII\Providers;
 
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
-use Laravel\Passport\Passport;
-use Laravel\Sanctum\Sanctum;
 
 /**
  * Class AppServiceProvider
@@ -52,8 +52,7 @@ class AppServiceProvider extends ServiceProvider
 
             return response()
                 ->json($value)
-                ->withHeaders($headers)
-            ;
+                ->withHeaders($headers);
         });
 
         // blade extension
@@ -65,9 +64,14 @@ class AppServiceProvider extends ServiceProvider
 
             return '';
         });
-        Blade::if('partialroute', function (string $route) {
-            $name = \Route::getCurrentRoute()->getName() ?? '';
-            if (str_contains($name, $route)) {
+        Blade::if('partialroute', function (string $route, string $firstParam = '') {
+            $name    = Route::getCurrentRoute()->getName() ?? '';
+            if ('' === $firstParam && str_contains($name, $route)) {
+                return true;
+            }
+            $params  = Route::getCurrentRoute()->parameters() ?? [];
+            $objectType = $params['objectType'] ?? '';
+            if ($objectType === $firstParam && str_contains($name, $route)) {
                 return true;
             }
 

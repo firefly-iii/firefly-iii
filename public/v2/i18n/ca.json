@@ -2,6 +2,7 @@
     "config": {
         "html_language": "ca",
         "date_time_fns": "D [de\/d'] MMMM yyyy [a les] HH:mm:ss",
+        "month_and_day_fns": "d MMMM y",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
     },
     "firefly": {
@@ -38,6 +39,11 @@
         "account_type_Revenue account": "Compte d'ingressos",
         "account_type_Debt": "Deute",
         "account_type_Loan": "Cr\u00e8dit",
-        "account_type_Mortgage": "Hipoteca"
+        "account_type_Mortgage": "Hipoteca",
+        "account_role_defaultAsset": "Compte d'actius per defecte",
+        "account_role_sharedAsset": "Compte d'actius compartit",
+        "account_role_savingAsset": "Compte d'estalvis",
+        "account_role_ccAsset": "Targeta de cr\u00e8dit",
+        "account_role_cashWalletAsset": "Cartera d'efectiu"
     }
 }

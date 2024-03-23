@@ -116,8 +116,12 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <span x-text="account.type"></span>
-                                        <span x-text="account.role"></span>
+                                        <template x-if="null === account.role || '' === account.role">
+                                            <span><em>{{ __('firefly.no_account_role') }}</em></span>
+                                        </template>
+                                        <template x-if="null !== account.role && '' !== account.role">
+                                            <span x-text="accountRole(account.role)"></span>"
+                                        </template>
                                     </td>
                                     <td>
                                         <!-- IBAN and no account nr -->

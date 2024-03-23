@@ -2,6 +2,7 @@
     "config": {
         "html_language": "fr",
         "date_time_fns": "do MMMM, yyyy @ HH:mm:ss",
+        "month_and_day_fns": "d MMMM y",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
     },
     "firefly": {
@@ -38,6 +39,11 @@
         "account_type_Revenue account": "Compte de recettes",
         "account_type_Debt": "Dette",
         "account_type_Loan": "Pr\u00eat",
-        "account_type_Mortgage": "Pr\u00eat hypoth\u00e9caire"
+        "account_type_Mortgage": "Pr\u00eat hypoth\u00e9caire",
+        "account_role_defaultAsset": "Compte d'actif par d\u00e9faut",
+        "account_role_sharedAsset": "Compte d'actif partag\u00e9",
+        "account_role_savingAsset": "Compte d\u2019\u00e9pargne",
+        "account_role_ccAsset": "Carte de cr\u00e9dit",
+        "account_role_cashWalletAsset": "Porte-monnaie"
     }
 }

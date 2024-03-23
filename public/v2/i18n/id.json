@@ -2,6 +2,7 @@
     "config": {
         "html_language": "id",
         "date_time_fns": "do MMMM yyyy @ HH:mm:ss",
+        "month_and_day_fns": "d MMMM, y",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
     },
     "firefly": {
@@ -38,6 +39,11 @@
         "account_type_Revenue account": "Revenue account",
         "account_type_Debt": "Debt",
         "account_type_Loan": "Loan",
-        "account_type_Mortgage": "Mortgage"
+        "account_type_Mortgage": "Mortgage",
+        "account_role_defaultAsset": "Akun aset standar",
+        "account_role_sharedAsset": "Akun aset bersama",
+        "account_role_savingAsset": "Rekening tabungan",
+        "account_role_ccAsset": "Kartu kredit",
+        "account_role_cashWalletAsset": "Cash wallet"
     }
 }

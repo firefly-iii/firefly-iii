@@ -2,6 +2,7 @@
     "config": {
         "html_language": "en",
         "date_time_fns": "MMMM do, yyyy @ HH:mm:ss",
+        "month_and_day_fns": "MMMM d, y",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
     },
     "firefly": {
@@ -38,6 +39,11 @@
         "account_type_Revenue account": "Revenue account",
         "account_type_Debt": "Debt",
         "account_type_Loan": "Loan",
-        "account_type_Mortgage": "Mortgage"
+        "account_type_Mortgage": "Mortgage",
+        "account_role_defaultAsset": "Default asset account",
+        "account_role_sharedAsset": "Shared asset account",
+        "account_role_savingAsset": "Savings account",
+        "account_role_ccAsset": "Credit card",
+        "account_role_cashWalletAsset": "Cash wallet"
     }
 }

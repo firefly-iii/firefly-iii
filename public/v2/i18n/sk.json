@@ -2,6 +2,7 @@
     "config": {
         "html_language": "sk",
         "date_time_fns": "MMMM do, yyyy @ HH:mm:ss",
+        "month_and_day_fns": "MMMM d, y",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
     },
     "firefly": {
@@ -38,6 +39,11 @@
         "account_type_Revenue account": "Revenue account",
         "account_type_Debt": "Dlh",
         "account_type_Loan": "P\u00f4\u017ei\u010dka",
-        "account_type_Mortgage": "Hypot\u00e9ka"
+        "account_type_Mortgage": "Hypot\u00e9ka",
+        "account_role_defaultAsset": "Predvolen\u00fd \u00fa\u010det akt\u00edv",
+        "account_role_sharedAsset": "Zdie\u013ean\u00fd \u00fa\u010det akt\u00edv",
+        "account_role_savingAsset": "\u0160etriaci \u00fa\u010det",
+        "account_role_ccAsset": "Kreditn\u00e1 karta",
+        "account_role_cashWalletAsset": "Pe\u0148a\u017eenka"
     }
 }

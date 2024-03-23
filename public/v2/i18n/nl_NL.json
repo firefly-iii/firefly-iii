@@ -2,6 +2,7 @@
     "config": {
         "html_language": "nl",
         "date_time_fns": "d MMMM yyyy @ HH:mm:ss",
+        "month_and_day_fns": "d MMMM y",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
     },
     "firefly": {
@@ -38,6 +39,11 @@
         "account_type_Revenue account": "Debiteur",
         "account_type_Debt": "Schuld",
         "account_type_Loan": "Lening",
-        "account_type_Mortgage": "Hypotheek"
+        "account_type_Mortgage": "Hypotheek",
+        "account_role_defaultAsset": "Standaard betaalrekening",
+        "account_role_sharedAsset": "Gedeelde betaalrekening",
+        "account_role_savingAsset": "Spaarrekening",
+        "account_role_ccAsset": "Credit card",
+        "account_role_cashWalletAsset": "Cash"
     }
 }

@@ -2,6 +2,7 @@
     "config": {
         "html_language": "fi",
         "date_time_fns": "MMMM do, yyyy @ HH:mm:ss",
+        "month_and_day_fns": "MMMM d, y",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
     },
     "firefly": {
@@ -38,6 +39,11 @@
         "account_type_Revenue account": "Revenue account",
         "account_type_Debt": "Velka",
         "account_type_Loan": "Laina",
-        "account_type_Mortgage": "Kiinnelaina"
+        "account_type_Mortgage": "Kiinnelaina",
+        "account_role_defaultAsset": "Oletusk\u00e4ytt\u00f6tili",
+        "account_role_sharedAsset": "Jaettu k\u00e4ytt\u00f6tili",
+        "account_role_savingAsset": "S\u00e4\u00e4st\u00f6tili",
+        "account_role_ccAsset": "Luottokortti",
+        "account_role_cashWalletAsset": "K\u00e4teinen"
     }
 }

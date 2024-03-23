@@ -2,6 +2,7 @@
     "config": {
         "html_language": "ro",
         "date_time_fns": "MMMM do yyy @ HH:mm:ss",
+        "month_and_day_fns": "MMMM d, y",
         "date_time_fns_short": "MMMM do yyy @ HH:mm"
     },
     "firefly": {
@@ -38,6 +39,11 @@
         "account_type_Revenue account": "Cont de venituri",
         "account_type_Debt": "Datorie",
         "account_type_Loan": "\u00cemprumut",
-        "account_type_Mortgage": "Credit ipotecar"
+        "account_type_Mortgage": "Credit ipotecar",
+        "account_role_defaultAsset": "Contul implicit activ",
+        "account_role_sharedAsset": "Contul de active partajat",
+        "account_role_savingAsset": "Cont de economii",
+        "account_role_ccAsset": "Card de credit",
+        "account_role_cashWalletAsset": "Cash - Numerar"
     }
 }

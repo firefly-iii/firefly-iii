@@ -2,6 +2,7 @@
     "config": {
         "html_language": "it",
         "date_time_fns": "do MMMM yyyy @ HH:mm:ss",
+        "month_and_day_fns": "d MMMM y",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
     },
     "firefly": {
@@ -38,6 +39,11 @@
         "account_type_Revenue account": "Conto di entrate",
         "account_type_Debt": "Debito",
         "account_type_Loan": "Prestito",
-        "account_type_Mortgage": "Mutuo"
+        "account_type_Mortgage": "Mutuo",
+        "account_role_defaultAsset": "Conto attivit\u00e0 predefinito",
+        "account_role_sharedAsset": "Conto attivit\u00e0 condiviso",
+        "account_role_savingAsset": "Conto risparmio",
+        "account_role_ccAsset": "Carta di credito",
+        "account_role_cashWalletAsset": "Portafoglio"
     }
 }

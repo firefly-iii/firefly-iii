@@ -50,7 +50,7 @@
                 </li>
                 <li class="nav-header">{{ strtoupper(__('firefly.accounting'))  }}</li>
                 <li class="nav-item @partialroute('transactions') menu-open @endpartialroute">
-                    <a href="#" class="nav-link">
+                    <a href="#" class="nav-link  @partialroute('transactions') active @endpartialroute">
                         <em class="nav-icon fa-solid fa-arrow-right-arrow-left"></em>
                         <p>
                             {{ __('firefly.transactions') }}
@@ -59,25 +59,25 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ route('transactions.index',['withdrawal']) }}" class="nav-link">
+                            <a href="{{ route('transactions.index',['withdrawal']) }}" class="nav-link @partialroute('transactions', 'withdrawal') active @endpartialroute">
                                 <em class="nav-icon fa-solid fa-arrow-left"></em>
                                 <p>{{ __('firefly.expenses')  }}</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('transactions.index', ['deposit']) }}" class="nav-link">
+                            <a href="{{ route('transactions.index', ['deposit']) }}" class="nav-link @partialroute('transactions', 'deposit') active @endpartialroute">
                                 <em class="nav-icon fa-solid fa-arrow-right"></em>
                                 <p>{{ __('firefly.income') }}</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('transactions.index', ['transfers']) }}" class="nav-link">
+                            <a href="{{ route('transactions.index', ['transfers']) }}" class="nav-link @partialroute('transactions', 'transfers') active @endpartialroute">
                                 <i class="nav-icon fa-solid fa-arrows-rotate"></i>
                                 <p>{{ __('firefly.transfers') }}</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('transactions.index', ['all']) }}" class="nav-link">
+                            <a href="{{ route('transactions.index', ['all']) }}" class="nav-link @partialroute('transactions', 'all') active @endpartialroute">
                                 <i class="nav-icon fa-solid fa-arrows-turn-to-dots"></i>
                                 <p>{{ __('firefly.all_transactions') }}</p>
                             </a>
@@ -114,8 +114,8 @@
                     </ul>
                 </li>
                 <li class="nav-header">{{ strtoupper(__('firefly.others'))  }}</li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
+                <li class="nav-item @partialroute('accounts') menu-open @endpartialroute">
+                    <a href="#" class="nav-link @partialroute('accounts') active @endpartialroute">
                         <i class="nav-icon fa-regular fa-credit-card"></i>
                         <p>
                             {{ __('firefly.accounts') }}
@@ -124,25 +124,25 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ route('accounts.index', ['asset']) }}" class="nav-link">
+                            <a href="{{ route('accounts.index', ['asset']) }}" class="nav-link @partialroute('accounts', 'asset') active @endpartialroute">
                                 <i class="nav-icon fa-solid fa-money-bills"></i>
                                 <p>{{ __('firefly.asset_accounts') }}</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('accounts.index', ['expense']) }}" class="nav-link">
+                            <a href="{{ route('accounts.index', ['expense']) }}" class="nav-link @partialroute('accounts', 'expense') active @endpartialroute">
                                 <i class="nav-icon fa-solid fa-cart-shopping"></i>
                                 <p>{{ __('firefly.expense_accounts') }}</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('accounts.index', ['revenue']) }}" class="nav-link">
+                            <a href="{{ route('accounts.index', ['revenue']) }}" class="nav-link @partialroute('accounts', 'assset') revenue @endpartialroute">
                                 <i class="nav-icon fa-solid fa-money-bill-trend-up"></i>
                                 <p>{{ __('firefly.revenue_accounts') }}</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('accounts.index', ['liabilities']) }}" class="nav-link">
+                            <a href="{{ route('accounts.index', ['liabilities']) }}" class="nav-link @partialroute('accounts', 'liabilities') active @endpartialroute">
                                 <i class="nav-icon fa-solid fa-landmark"></i>
                                 <p>{{ __('firefly.liabilities') }}</p>
                             </a>

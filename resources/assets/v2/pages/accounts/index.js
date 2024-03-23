@@ -58,6 +58,10 @@ let index = function () {
         sortDirection: '',
         accounts: [],
 
+        accountRole(roleName) {
+            return i18next.t('firefly.account_role_' + roleName);
+        },
+
         sort(column) {
             this.sortingColumn = column;
             this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
@@ -144,7 +148,7 @@ let index = function () {
                             currency_code: current.attributes.currency_code,
                             native_current_balance: current.attributes.native_current_balance,
                             native_currency_code: current.attributes.native_currency_code,
-                            last_activity: null === current.attributes.last_activity ? '' : format(new Date(current.attributes.last_activity), 'P'),
+                            last_activity: null === current.attributes.last_activity ? '' : format(new Date(current.attributes.last_activity), i18next.t('config.month_and_day_fns')),
                         };
                         this.accounts.push(account);
                     }
