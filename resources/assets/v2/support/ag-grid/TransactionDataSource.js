@@ -20,7 +20,7 @@
 
 import Get from "../../api/v2/model/transaction/get.js";
 
-export default class TransactionDataSource {
+    export default class TransactionDataSource {
     constructor() {
         this.type = 'all';
         this.rowCount = null;

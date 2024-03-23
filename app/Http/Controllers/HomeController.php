@@ -89,7 +89,7 @@ class HomeController extends Controller
         $label         = $request->get('label');
         $isCustomRange = false;
 
-        app('log')->debug('Received dateRange', ['start' => $stringStart, 'end' => $stringEnd, 'label' => $request->get('label')]);
+        app('log')->debug('dateRange: Received dateRange', ['start' => $stringStart, 'end' => $stringEnd, 'label' => $request->get('label')]);
         // check if the label is "everything" or "Custom range" which will betray
         // a possible problem with the budgets.
         if ($label === (string)trans('firefly.everything') || $label === (string)trans('firefly.customRange')) {
@@ -99,7 +99,7 @@ class HomeController extends Controller
 
         $diff          = $start->diffInDays($end, true) + 1;
 
-        if ($diff > 50) {
+        if ($diff > 366) {
             $request->session()->flash('warning', (string)trans('firefly.warning_much_data', ['days' => (int)$diff]));
         }
 

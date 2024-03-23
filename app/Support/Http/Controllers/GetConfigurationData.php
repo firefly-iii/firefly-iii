@@ -25,6 +25,7 @@ namespace FireflyIII\Support\Http\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait GetConfigurationData
@@ -82,6 +83,8 @@ trait GetConfigurationData
     {
         $viewRange      = app('navigation')->getViewRange(false);
 
+        Log::debug(sprintf('dateRange: the view range is "%s"', $viewRange));
+
         /** @var Carbon $start */
         $start          = session('start');
 
@@ -97,6 +100,7 @@ trait GetConfigurationData
             // first range is the current range:
             $title => [$start, $end],
         ];
+        Log::debug(sprintf('dateRange: the date range in the session is"%s" - "%s"', $start->format('Y-m-d'), $end->format('Y-m-d')));
 
         // when current range is a custom range, add the current period as the next range.
         if ($isCustom) {

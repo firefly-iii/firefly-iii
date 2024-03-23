@@ -96,10 +96,24 @@
                                             &nbsp;</template>
                                     </td>
                                     <td>
-                                        <a :href="'./accounts/show/' + account.id">
-                                            <span x-text="account.name"></span>
-                                        </a>
-                                        <em  :data-index="account.id + 'name'" @click="triggerEdit" data-type="text" data-model="Account" :data-id="account.id" data-field="name" :data-value="account.name" class="hidden-edit-button inline-edit-button fa-solid fa-pencil" data-id="1"></em>
+                                        <!-- render content using a function -->
+                                        <span x-html="renderObjectValue('name', account)" x-show="!account.nameEditorVisible"></span>
+
+                                        <!-- edit buttons -->
+                                        <em x-show="!account.nameEditorVisible" :data-id="account.id" :data-index="index" @click="triggerEdit" data-type="text" class="hidden-edit-button inline-edit-button fa-solid fa-pencil" :data-id="account.id"></em>
+
+                                        <!-- edit things -->
+                                        <div class="row" x-show="account.nameEditorVisible">
+                                        <div class="col-8">
+                                            <input :data-index="index" data-field="name" autocomplete="off" type="text" class="form-control form-control-sm" id="input" name="name" :value="account.name" :placeholder="account.value" autofocus>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="btn-group btn-group-sm" role="group" aria-label="Options">
+                                                <button :data-index="index" :data-id="account.id" data-field="name" type="button" @click="cancelInlineEdit" class="btn btn-danger"><em class="fa-solid fa-xmark text-white"></em></button>
+                                                <button :data-index="index" :data-id="account.id" data-field="name" type="submit" @click="submitInlineEdit" class="btn btn-success"><em class="fa-solid fa-check"></em></button>
+                                            </div>
+                                        </div>
+                                        </div>
                                     </td>
                                     <td>
                                         <span x-text="account.type"></span>

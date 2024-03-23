@@ -28,8 +28,8 @@ import '@ag-grid-community/styles/ag-grid.css';
 import '@ag-grid-community/styles/ag-theme-alpine.css';
 import '../../css/grid-ff3-theme.css';
 import Get from "../../api/v2/model/account/get.js";
-import GenericEditor from "../../support/editable/GenericEditor.js";
 import Put from "../../api/v2/model/account/put.js";
+import AccountRenderer from "../../support/renderers/AccountRenderer.js";
 
 // set type from URL
 const urlParts = window.location.href.split('/');
@@ -78,35 +78,46 @@ let index = function () {
             this.notifications.wait.text = i18next.t('firefly.wait_loading_data')
             this.loadAccounts();
         },
+        renderObjectValue(field, account) {
+            let renderer = new AccountRenderer();
+            if ('name' === field) {
+                return renderer.renderName(account);
+            }
+        },
         submitInlineEdit(e) {
             e.preventDefault();
             const newTarget = e.currentTarget;
             const index = newTarget.dataset.index;
-            const newValue = document.querySelectorAll('[data-index="'+index+'input"]')[0].value ?? '';
-            if('' === newValue) {
+            const fieldName = newTarget.dataset.field;
+            const accountId = newTarget.dataset.id;
+            // need to find the input thing
+            console.log('Clicked edit button for account on index #' + index + ' and field ' + fieldName);
+            const querySelector = 'input[data-field="' + fieldName + '"][data-index="' + index + '"]';
+            console.log(querySelector);
+            const newValue = document.querySelectorAll(querySelector)[0].value ?? '';
+            if ('' === newValue) {
                 return;
             }
-            // submit the field in an update thing?
-            const fieldName = this.editors[index].options.field;
+            console.log('new field name is ' + fieldName + '=' + newValue + ' for account #' + newTarget.dataset.id);
             const params = {};
             params[fieldName] = newValue;
-            console.log(params);
-            console.log('New value is ' + newValue + ' for account #' + this.editors[index].options.id);
-            (new Put()).put(this.editors[index].options.id, params);
+            (new Put()).put(accountId, params);
+
+            // update value, should auto render correctly!
+            this.accounts[index][fieldName] = newValue;
+            this.accounts[index].nameEditorVisible = false;
         },
         cancelInlineEdit(e) {
             const newTarget = e.currentTarget;
             const index = newTarget.dataset.index;
-            this.editors[index].cancel();
+            this.accounts[index].nameEditorVisible = false;
         },
         triggerEdit(e) {
             const target = e.currentTarget;
             const index = target.dataset.index;
-            // get parent:
-            this.editors[index] = new GenericEditor();
-            this.editors[index].setElement(target);
-            this.editors[index].init();
-            this.editors[index].replace();
+            const id = target.dataset.id;
+            console.log('Index of this row is ' + index + ' and ID is ' + id);
+            this.accounts[index].nameEditorVisible = true;
         },
         loadAccounts() {
             this.notifications.wait.show = true;
@@ -124,6 +135,7 @@ let index = function () {
                             id: parseInt(current.id),
                             active: current.attributes.active,
                             name: current.attributes.name,
+                            nameEditorVisible: false,
                             type: current.attributes.type,
                             role: current.attributes.account_role,
                             iban: null === current.attributes.iban ? '' : current.attributes.iban.match(/.{1,4}/g).join(' '),
