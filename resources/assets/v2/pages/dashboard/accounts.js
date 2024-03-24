@@ -27,6 +27,7 @@ import {Chart} from 'chart.js';
 import {getDefaultChartSettings} from "../../support/default-chart-settings.js";
 import {getColors} from "../../support/get-colors.js";
 import {getCacheKey} from "../../support/get-cache-key.js";
+import {getConfiguration} from "../../store/get-configuration.js";
 
 // this is very ugly, but I have no better ideas at the moment to save the currency info
 // for each series.
@@ -40,6 +41,7 @@ export default () => ({
     loadingAccounts: false,
     accountList: [],
     autoConversion: false,
+    autoConversionAvailable: false,
     chartOptions: null,
     switchAutoConversion() {
         this.autoConversion = !this.autoConversion;
@@ -215,8 +217,16 @@ export default () => ({
                                 for (let iii = 0; iii < current.attributes.transactions.length; iii++) {
                                     let currentTransaction = current.attributes.transactions[iii];
                                     //console.log(currentTransaction);
-                                    const nativeAmountRaw = 'withdrawal' === currentTransaction.type ? parseFloat(currentTransaction.native_amount) * -1 : parseFloat(currentTransaction.native_amount);
-                                    const amountRaw = 'withdrawal' === currentTransaction.type ? parseFloat(currentTransaction.amount) * -1 : parseFloat(currentTransaction.amount);
+                                    let nativeAmountRaw = 'withdrawal' === currentTransaction.type ? parseFloat(currentTransaction.native_amount) * -1 : parseFloat(currentTransaction.native_amount);
+                                    let amountRaw = 'withdrawal' === currentTransaction.type ? parseFloat(currentTransaction.amount) * -1 : parseFloat(currentTransaction.amount);
+
+                                    // if transfer and source is this account, multiply again
+                                    if('transfer' === currentTransaction.type && parseInt(currentTransaction.source_id) === accountId) { //
+                                        console.log('transfer', parseInt(currentTransaction.source_id), accountId);
+                                        nativeAmountRaw = nativeAmountRaw * -1;
+                                        amountRaw = amountRaw * -1;
+                                    }
+
                                     group.transactions.push({
                                         description: currentTransaction.description,
                                         id: current.id,
@@ -259,9 +269,12 @@ export default () => ({
 
     init() {
         // console.log('accounts init');
-        Promise.all([getVariable('viewRange', '1M'), getVariable('autoConversion', false), getVariable('language', 'en_US')]).then((values) => {
+        Promise.all([getVariable('viewRange', '1M'), getVariable('autoConversion', false), getVariable('language', 'en_US'),
+            getConfiguration('cer.enabled', false)
+        ]).then((values) => {
             //console.log('accounts after promises');
-            this.autoConversion = values[1];
+            this.autoConversion = values[1] && values[3];
+            this.autoConversionAvailable = values[3];
             afterPromises = true;
 
             // main dashboard chart:

@@ -34,6 +34,10 @@ class EitherConfigKey
 {
     public static array $static
         = [
+            // currency conversion
+            'cer.enabled',
+
+            // firefly iii settings
             'firefly.version',
             'firefly.api_version',
             'firefly.default_location',

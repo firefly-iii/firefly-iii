@@ -63,7 +63,7 @@
                 <template x-if="!loading && billBox.unpaid.length > 0">
                     <p><a href="{{ route('bills.index') }}">{{ __('firefly.bills_to_pay') }}</a></p>
                 </template>
-                <template x-if="0 === billBox.unpaid.length">
+                <template x-if="0 === billBox.unpaid.length && !loading">
                     <p>No subscriptions are waiting to be paid</p>
                 </template>
             </div>
