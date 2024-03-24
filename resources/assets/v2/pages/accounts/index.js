@@ -32,8 +32,21 @@ import Put from "../../api/v2/model/account/put.js";
 import AccountRenderer from "../../support/renderers/AccountRenderer.js";
 
 // set type from URL
-const urlParts = window.location.href.split('/');
+const beforeQuery = window.location.href.split('?');
+const urlParts = beforeQuery[0].split('/');
 const type = urlParts[urlParts.length - 1];
+
+let sortingColumn = '';
+let sortDirection = '';
+
+// get sort parameters
+const params = new Proxy(new URLSearchParams(window.location.search), {
+    get: (searchParams, prop) => searchParams.get(prop),
+});
+// Get the value of "some_key" in eg "https://example.com/?some_key=some_value"
+sortingColumn = params.column ?? '';
+sortDirection = params.direction ?? '';
+
 
 let index = function () {
     return {
@@ -54,8 +67,8 @@ let index = function () {
             },
         },
         editors: {},
-        sortingColumn: '',
-        sortDirection: '',
+        sortingColumn: sortingColumn,
+        sortDirection: sortDirection,
         accounts: [],
 
         accountRole(roleName) {
@@ -65,6 +78,10 @@ let index = function () {
         sort(column) {
             this.sortingColumn = column;
             this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+            const url = './accounts/'+type+'?column='+column+'&direction='+this.sortDirection;
+
+            window.history.pushState({}, "", url);
+
             this.loadAccounts();
             return false;
         },
@@ -130,7 +147,7 @@ let index = function () {
             // sort instructions
             // &sorting[0][column]=description&sorting[0][direction]=asc
             const sorting = [{column: this.sortingColumn, direction: this.sortDirection}];
-            // one page only.
+            // one page only.o
             (new Get()).index({sorting: sorting, type: type, page: this.page}).then(response => {
                 for (let i = 0; i < response.data.data.length; i++) {
                     if (response.data.data.hasOwnProperty(i)) {

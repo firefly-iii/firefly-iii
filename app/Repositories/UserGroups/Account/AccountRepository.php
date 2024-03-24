@@ -63,8 +63,7 @@ class AccountRepository implements AccountRepositoryInterface
                     $q1->where('account_meta.name', '=', 'account_number');
                     $q1->where('account_meta.data', '=', $json);
                 }
-            )
-        ;
+            );
 
         if (0 !== count($types)) {
             $dbQuery->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
@@ -90,7 +89,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     public function findByName(string $name, array $types): ?Account
     {
-        $query   = $this->userGroup->accounts();
+        $query = $this->userGroup->accounts();
 
         if (0 !== count($types)) {
             $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
@@ -114,8 +113,8 @@ class AccountRepository implements AccountRepositoryInterface
 
     public function getAccountCurrency(Account $account): ?TransactionCurrency
     {
-        $type       = $account->accountType->type;
-        $list       = config('firefly.valid_currency_account_types');
+        $type = $account->accountType->type;
+        $list = config('firefly.valid_currency_account_types');
 
         // return null if not in this list.
         if (!in_array($type, $list, true)) {
@@ -248,7 +247,11 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         // add sort parameters. At this point they're filtered to allowed fields to sort by:
+        $hasActiveColumn = array_key_exists('active', $sort);
         if (count($sort) > 0) {
+            if (false === $hasActiveColumn) {
+                $query->orderBy('accounts.active', 'DESC');
+            }
             foreach ($sort as $column => $direction) {
                 if (in_array($column, $sortable, true)) {
                     $query->orderBy(sprintf('accounts.%s', $column), $direction);
@@ -258,9 +261,9 @@ class AccountRepository implements AccountRepositoryInterface
 
         if (0 === count($sort)) {
             if (0 !== count($res)) {
-                $query->orderBy('accounts.order', 'ASC');
+                $query->orderBy('accounts.active', 'DESC');
             }
-            $query->orderBy('accounts.active', 'DESC');
+            $query->orderBy('accounts.order', 'ASC');
             $query->orderBy('accounts.name', 'ASC');
         }
 
@@ -271,12 +274,11 @@ class AccountRepository implements AccountRepositoryInterface
     {
         // search by group, not by user
         $dbQuery = $this->userGroup->accounts()
-            ->where('active', true)
-            ->orderBy('accounts.order', 'ASC')
-            ->orderBy('accounts.account_type_id', 'ASC')
-            ->orderBy('accounts.name', 'ASC')
-            ->with(['accountType'])
-        ;
+                                   ->where('active', true)
+                                   ->orderBy('accounts.order', 'ASC')
+                                   ->orderBy('accounts.account_type_id', 'ASC')
+                                   ->orderBy('accounts.name', 'ASC')
+                                   ->with(['accountType']);
         if ('' !== $query) {
             // split query on spaces just in case:
             $parts = explode(' ', $query);
