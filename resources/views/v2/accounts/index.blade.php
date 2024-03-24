@@ -78,7 +78,11 @@
                                         <em x-show="sortingColumn === 'balance' && sortDirection === 'asc'" class="fa-solid fa-arrow-down-wide-short"></em>
                                         <em x-show="sortingColumn === 'balance' && sortDirection === 'desc'" class="fa-solid fa-arrow-up-wide-short"></em>
                                     </td>
-                                    <td>Last activity</td>
+                                    <td>
+                                        <a href="#" x-on:click.prevent="sort('last_activity')">Last activity</a>
+                                        <em x-show="sortingColumn === 'last_activity' && sortDirection === 'asc'" class="fa-solid fa-arrow-down-wide-short"></em>
+                                        <em x-show="sortingColumn === 'last_activity' && sortDirection === 'desc'" class="fa-solid fa-arrow-up-wide-short"></em>
+                                    </td>
                                     <td>Balance difference</td>
                                     <td>&nbsp;</td>
                                 </tr>
@@ -126,7 +130,7 @@
                                     <td>
                                         <!-- IBAN and no account nr -->
                                         <template x-if="'' === account.account_number && '' !== account.iban">
-                                            <span x-text="account.iban + 'A'"></span>
+                                            <span x-text="account.iban"></span>
                                         </template>
                                         <!-- no IBAN and account nr -->
                                         <template x-if="'' !== account.account_number && '' === account.iban">

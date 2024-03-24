@@ -1,10 +1,8 @@
-<div class="row" x-data="boxes">
-    <!--begin::Col-->
+<div class="row mb-2" x-data="boxes">
     <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12">
-        <!--begin::Small Box Widget 1-->
         <div class="small-box text-bg-primary">
-                <div class="inner balance-box">
-                <h3>
+            <div class="inner balance-box">
+                <h3 class="hover-expand">
                     <template x-for="(amount, index) in balanceBox.amounts" :key="index">
                         <span>
                             <span x-text="amount"></span><span
@@ -27,7 +25,7 @@
                 <i class="fa-solid fa-scale-balanced"></i>
             </span>
 
-            <span class="small-box-footer">
+            <span class="small-box-footer hover-footer">
                 <template x-for="(subtitle, index) in balanceBox.subtitles" :key="index">
                         <span>
                             <span x-text="subtitle"></span><span
@@ -39,11 +37,11 @@
         <!--end::Small Box Widget 1-->
     </div>
     <!--end::Col-->
-    <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12">
+    <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12"  style="flex-grow: 1;">
         <!--begin::Small Box Widget 2-->
         <div class="small-box text-bg-success">
             <div class="inner">
-                <h3>
+                <h3 class="hover-expand">
                     <template x-for="(amount, index) in billBox.unpaid" :key="index">
                         <span>
                             <span x-text="amount"></span><span
@@ -77,11 +75,11 @@
         <!--end::Small Box Widget 2-->
     </div>
     <!--end::Col-->
-    <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12">
+    <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12"  style="flex-grow: 1;">
         <!--begin::Small Box Widget 3-->
         <div class="small-box text-bg-warning">
             <div class="inner">
-                <h3>
+                <h3 class="hover-expand">
                     <template x-for="(amount, index) in leftBox.left" :key="index">
                         <span>
                             <span x-text="amount"></span><span
@@ -115,11 +113,11 @@
         <!--end::Small Box Widget 3-->
     </div>
     <!--end::Col-->
-    <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12">
+    <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12" style="flex-grow: 1;">
         <!--begin::Small Box Widget 4-->
         <div class="small-box text-bg-danger">
             <div class="inner">
-                <h3>
+                <h3 class="hover-expand">
                     <template x-for="(amount, index) in netBox.net" :key="index">
                         <span>
                             <span x-text="amount"></span><span

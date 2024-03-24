@@ -26,8 +26,13 @@ $danger: #CD5029 !default;
 $primary: #1E6581 !default;
 $success: #64B624 !default;
 
-.balance-box {
+h3.hover-expand {
+    overflow-x: hidden;
+    text-overflow: ellipsis
+}
+h3.hover-expand:hover {
     container: sidebar / inline-size;
+    overflow-x: scroll;
 }
 
 .form-control {
