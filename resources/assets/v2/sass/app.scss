@@ -26,12 +26,23 @@ $danger: #CD5029 !default;
 $primary: #1E6581 !default;
 $success: #64B624 !default;
 
+.hover-footer {
+    overflow-x:hidden;
+    width:100%;
+    text-align:right;
+    white-space: nowrap;
+    text-overflow: ellipsis
+}
+.hover-footer:hover {
+    overflow: auto;
+    text-overflow: unset;
+    white-space: normal;
+}
 h3.hover-expand {
     overflow-x: hidden;
     text-overflow: ellipsis
 }
 h3.hover-expand:hover {
-    container: sidebar / inline-size;
     overflow-x: scroll;
 }
 

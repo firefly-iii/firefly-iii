@@ -25,14 +25,14 @@
                 <i class="fa-solid fa-scale-balanced"></i>
             </span>
 
-            <span class="small-box-footer hover-footer">
+            <div class="small-box-footer hover-footer">
                 <template x-for="(subtitle, index) in balanceBox.subtitles" :key="index">
                         <span>
                             <span x-text="subtitle"></span><span
                                 :class="{ 'invisible': (balanceBox.amounts.length == index+1) }"> &amp; </span>
                         </span>
                     </template>
-            </span>
+            </div>
         </div>
         <!--end::Small Box Widget 1-->
     </div>
@@ -41,6 +41,10 @@
         <!--begin::Small Box Widget 2-->
         <div class="small-box text-bg-success">
             <div class="inner">
+                <template x-if="0 === billBox.unpaid.length">
+                    <h3>&nbsp;</h3>
+                </template>
+                <template x-if="billBox.unpaid.length > 0">
                 <h3 class="hover-expand">
                     <template x-for="(amount, index) in billBox.unpaid" :key="index">
                         <span>
@@ -48,21 +52,31 @@
                                 :class="{ 'invisible': (billBox.unpaid.length == index+1) }">, </span>
                         </span>
                     </template>
+                    <span x-text="billBox.unpaid.length"></span>
                 </h3>
-
+                </template>
                 <template x-if="loading">
                     <p>
                         <em class="fa-solid fa-spinner fa-spin"></em>
                     </p>
                 </template>
-                <template x-if="!loading">
+                <template x-if="!loading && billBox.unpaid.length > 0">
                     <p><a href="{{ route('bills.index') }}">{{ __('firefly.bills_to_pay') }}</a></p>
+                </template>
+                <template x-if="0 === billBox.unpaid.length">
+                    <p>No subscriptions are waiting to be paid</p>
                 </template>
             </div>
             <span class="small-box-icon">
                 <em class="fa-regular fa-calendar"></em>
             </span>
             <span class="small-box-footer">
+                <template x-if="0 === billBox.paid.length">
+                    <span>&nbsp;</span>
+                </template>
+                <template x-if="billBox.paid.length > 0">
+                    <span>
+                    {{ __('firefly.unpaid') }}:
                 {{ __('firefly.paid') }}:
                 <template x-for="(amount, index) in billBox.paid" :key="index">
                         <span>
@@ -70,6 +84,8 @@
                                 :class="{ 'invisible': (billBox.paid.length == index+1) }">, </span>
                         </span>
                     </template>
+                        </span>
+                </template>
             </span>
         </div>
         <!--end::Small Box Widget 2-->
