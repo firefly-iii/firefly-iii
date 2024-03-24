@@ -5,6 +5,10 @@
         "month_and_day_fns": "d MMMM y",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
     },
+    "validation": {
+        "bad_type_source": "Firefly III kan inte avg\u00f6ra transaktionstypen baserat p\u00e5 detta k\u00e4llkonto.",
+        "bad_type_destination": "Firefly III can't determine the transaction type based on this destination account."
+    },
     "firefly": {
         "spent": "Spenderat",
         "left": "\u00c5terst\u00e5r",

@@ -5,6 +5,10 @@
         "month_and_day_fns": "MMMM d, y",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
     },
+    "validation": {
+        "bad_type_source": "A Firefly III nem tudja eld\u00f6nteni a tranzakci\u00f3 t\u00edpus\u00e1t a forr\u00e1ssz\u00e1mla alapj\u00e1n.",
+        "bad_type_destination": "A Firefly III nem tudja eld\u00f6nteni a tranzakci\u00f3 t\u00edpus\u00e1t a c\u00e9lsz\u00e1mla alapj\u00e1n."
+    },
     "firefly": {
         "spent": "Elk\u00f6lt\u00f6tt",
         "left": "Maradv\u00e1ny",

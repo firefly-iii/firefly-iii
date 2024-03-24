@@ -66,7 +66,7 @@ let transactions = function () {
             isSubmitting: false,
             returnHereButton: false,
             saveAsNewButton: false, // edit form only
-            resetButton: true,
+            resetButton: false,
             rulesButton: true,
             webhooksButton: true,
         },
@@ -89,7 +89,10 @@ let transactions = function () {
 
         // properties for the entire transaction group
         groupProperties: {
-            transactionType: 'unknown', title: null, id: null, totalAmount: 0,
+            transactionType: 'unknown',
+            title: null,
+            id: null,
+            totalAmount: 0,
         },
 
         // notifications
@@ -369,7 +372,8 @@ let transactions = function () {
             };
 
             // catch for group title:
-            if (null === this.groupProperties.title && transactions.length > 1) {
+            // TODO later this must be handled with more care (ie use the group title input)
+            if (transactions.length > 1) {
                 submission.group_title = transactions[0].description;
             }
 
@@ -381,6 +385,7 @@ let transactions = function () {
                 // submission was a success!
                 this.groupProperties.id = parseInt(group.id);
                 this.groupProperties.title = group.attributes.group_title ?? group.attributes.transactions[0].description
+                console.log('group title is now: ', this.groupProperties.title);
 
                 // process attachments, if any:
                 const attachmentCount = processAttachments(this.groupProperties.id, group.attributes.transactions);
@@ -414,10 +419,12 @@ let transactions = function () {
             this.notifications.wait.show = false;
 
             if (this.formStates.returnHereButton) {
-
                 this.notifications.success.show = true;
                 this.notifications.success.url = 'transactions/show/' + this.groupProperties.id;
-                this.notifications.success.text = i18next.t('firefly.stored_journal_js', {description: this.groupProperties.title});
+                this.notifications.success.text = i18next.t('firefly.stored_journal_js', {description: this.groupProperties.title, interpolation: { escapeValue: false }});
+                this.formStates.isSubmitting = false;
+                // reset group title again
+                this.groupProperties.title = null;
 
                 if (this.formStates.resetButton) {
                     this.entries = [];

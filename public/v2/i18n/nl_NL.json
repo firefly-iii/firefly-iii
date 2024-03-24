@@ -5,6 +5,10 @@
         "month_and_day_fns": "d MMMM y",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
     },
+    "validation": {
+        "bad_type_source": "Firefly III kan het transactietype niet bepalen op basis van deze bronrekening.",
+        "bad_type_destination": "Firefly III kan het transactietype niet bepalen op basis van deze doelrekening."
+    },
     "firefly": {
         "spent": "Uitgegeven",
         "left": "Over",

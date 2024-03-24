@@ -1,4 +1,5 @@
-<div :class="{'tab-pane fade pt-2':true, 'show active': index ===0}" :id="'split-'+index+'-pane'" role="tabpanel" :aria-labelledby="'split-'+index+'-tab'" tabindex="0" x-init="addedSplit()">
+<div :class="{'tab-pane fade pt-2':true, 'show active': index ===0}" :id="'split-'+index+'-pane'" role="tabpanel"
+     :aria-labelledby="'split-'+index+'-tab'" tabindex="0" x-init="addedSplit()">
     <div class="row mb-2">
         <div class="col-xl-6 col-lg-6 col-md-12 col-xs-12 mb-2">
             <!-- BASIC TRANSACTION INFORMATION -->
@@ -109,19 +110,23 @@
                 <div class="card-footer">
                     <div class="row">
                         <div class="col text-end">
-                            <button class="btn btn-success" :disabled="formStates.isSubmitting" @click="submitTransaction()">Submit</button>
+                            <div class="btn-group">
+                                <template x-if="1 !== entries.length">
+                                    <button :disabled="formStates.isSubmitting" class="btn btn-danger text-white"
+                                            @click="removeSplit(index)">{{ __('firefly.transaction_remove_split') }}</button>
+                                </template>
+                                <button @click="addSplit()" class="btn btn-info"
+                                        :disabled="formStates.isSubmitting">{{ __('firefly.add_another_split')  }}</button>
+                                <button class="btn btn-success text-white" :disabled="formStates.isSubmitting"
+                                        @click="submitTransaction()">{{ __('firefly.submit') }}</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-12">
-            <template x-if="0 !== index">
-                <button :disabled="formStates.isSubmitting" class="btn btn-danger" @click="removeSplit(index)">
-                    Remove this split
-                </button>
-            </template>
-            <button class="btn btn-info" :disabled="formStates.isSubmitting">Add another split</button>
+
         </div>
     </div>
 </div>

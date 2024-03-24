@@ -12,6 +12,7 @@
                 <select class="form-control"
                         :id="'budget_id_' + index"
                         x-model="transaction.budget_id"
+                        @keyup.enter="submitTransaction()"
                 >
                     <template x-for="budget in formData.budgets">
                         <option :label="budget.name" :value="budget.id" :selected="budget.id == transaction.budget_id"

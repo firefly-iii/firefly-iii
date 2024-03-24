@@ -5,6 +5,10 @@
         "month_and_day_fns": "MMMM d, y",
         "date_time_fns_short": "MMMM do yyy @ HH:mm"
     },
+    "validation": {
+        "bad_type_source": "Firefly III nu poate determina tipul de tranzac\u021bie pe baza acestui cont surs\u0103.",
+        "bad_type_destination": "Firefly III nu poate determina tipul de tranzac\u021bie bazat pe acest cont de destina\u021bie."
+    },
     "firefly": {
         "spent": "Cheltuit",
         "left": "R\u0103mas",

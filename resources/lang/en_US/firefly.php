@@ -1935,7 +1935,7 @@ return [
     'deleted_transfer'                                    => 'Successfully deleted transfer ":description"',
     'deleted_reconciliation'                              => 'Successfully deleted reconciliation transaction ":description"',
     'stored_journal'                                      => 'Successfully created new transaction ":description"',
-    'stored_journal_js'                                   => 'Successfully created new transaction "%{description}"',
+    'stored_journal_js'                                   => 'Successfully created new transaction "{{description}}"',
     'stored_journal_no_descr'                             => 'Successfully created your new transaction',
     'updated_journal_no_descr'                            => 'Successfully updated your transaction',
     'select_transactions'                                 => 'Select transactions',
@@ -2489,8 +2489,9 @@ return [
     'store_as_new'                                        => 'Store as a new transaction instead of updating.',
     'reset_after'                                         => 'Reset form after submission',
     'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below.',
-    'errors_submission_v2'                                => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
+    'errors_submission_v2'                                => 'There was something wrong with your submission. Please check out the errors below: {{errorMessage}}',
     'transaction_expand_split'                            => 'Expand split',
+    'transaction_remove_split'                            => 'Remove split',
     'transaction_collapse_split'                          => 'Collapse split',
 
     // object groups

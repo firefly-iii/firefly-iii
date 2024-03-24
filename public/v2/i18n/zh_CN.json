@@ -5,6 +5,10 @@
         "month_and_day_fns": "YYYY\u5e74M\u6708D\u65e5",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
     },
+    "validation": {
+        "bad_type_source": "Firefly III \u65e0\u6cd5\u786e\u5b9a\u57fa\u4e8e\u6b64\u6e90\u8d26\u6237\u7684\u4ea4\u6613\u7c7b\u578b\u3002",
+        "bad_type_destination": "Firefly III \u65e0\u6cd5\u786e\u5b9a\u57fa\u4e8e\u6b64\u76ee\u6807\u5e10\u6237\u7684\u4ea4\u6613\u7c7b\u578b\u3002"
+    },
     "firefly": {
         "spent": "\u652f\u51fa",
         "left": "\u5269\u4f59",

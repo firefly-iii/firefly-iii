@@ -6,6 +6,7 @@
         <input type="search"
                class="form-control ac-category"
                :id="'category_name_' + index"
+               @keyup.enter="submitTransaction()"
                x-model="transaction.category_name"
                :data-index="index"
                placeholder="{{ __('firefly.category')  }}">

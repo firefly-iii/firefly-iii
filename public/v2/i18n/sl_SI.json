@@ -5,6 +5,10 @@
         "month_and_day_fns": "MMMM d, y",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
     },
+    "validation": {
+        "bad_type_source": "Na podlagi tega izvornega ra\u010duna Firefly III ne more dolo\u010diti vrste transakcije.",
+        "bad_type_destination": "Na podlagi tega ciljnega ra\u010duna Firefly III ne more dolo\u010diti vrste transakcije."
+    },
     "firefly": {
         "spent": "Porabljeno",
         "left": "Preostalo",

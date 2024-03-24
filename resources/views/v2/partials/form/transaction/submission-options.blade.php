@@ -34,6 +34,6 @@
 </div>
 
 <div class="form-check">
-    <input class="form-check-input" type="checkbox" id="webhookButton" :checked="formStates.webhookButton">
-    <label class="form-check-label" for="webhookButton">{{ __('firefly.fire_webhooks_checkbox') }}</label>
+    <input class="form-check-input" type="checkbox" id="webhooksButton" :checked="formStates.webhooksButton">
+    <label class="form-check-label" for="webhooksButton">{{ __('firefly.fire_webhooks_checkbox') }}</label>
 </div>
