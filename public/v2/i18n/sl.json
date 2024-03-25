@@ -2,18 +2,13 @@
     "config": {
         "html_language": "sl",
         "date_time_fns": "MMMM do, yyyy @ HH:mm:ss",
-        "month_and_day_fns": "MMMM d, y",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
-    },
-    "validation": {
-        "bad_type_source": "Na podlagi tega izvornega ra\u010duna Firefly III ne more dolo\u010diti vrste transakcije.",
-        "bad_type_destination": "Na podlagi tega ciljnega ra\u010duna Firefly III ne more dolo\u010diti vrste transakcije."
     },
     "firefly": {
         "spent": "Porabljeno",
         "left": "Preostalo",
         "paid": "Pla\u010dano",
-        "errors_submission_v2": "Nekaj je bilo narobe z va\u0161o oddajo. Preverite spodnje napake: %{errorMessage}",
+        "errors_submission_v2": "There was something wrong with your submission. Please check out the errors below: {{errorMessage}}",
         "unpaid": "Nepla\u010dano",
         "default_group_title_name_plain": "nezdru\u017eeno",
         "subscriptions_in_group": "Naro\u010dnine v skupini \"%{title}\"",
@@ -28,7 +23,7 @@
         "unknown_dest_plain": "Neznan ciljni ra\u010dun",
         "unknown_any_plain": "Neznan ra\u010dun",
         "unknown_budget_plain": "Ni prora\u010duna",
-        "stored_journal_js": "Nova transakcija \"%{description}\" je uspe\u0161no ustvarjena",
+        "stored_journal_js": "Successfully created new transaction \"{{description}}\"",
         "wait_loading_transaction": "Po\u010dakajte, da se obrazec nalo\u017ei",
         "nothing_found": "(ni\u010d najdenega)",
         "wait_loading_data": "Po\u010dakajte, da se va\u0161i podatki nalo\u017eijo...",
@@ -43,11 +38,6 @@
         "account_type_Revenue account": "Ra\u010dun prihodkov",
         "account_type_Debt": "Dolg",
         "account_type_Loan": "Posojilo",
-        "account_type_Mortgage": "Hipoteka",
-        "account_role_defaultAsset": "Privzeti ra\u010dun sredstev",
-        "account_role_sharedAsset": "Skupni ra\u010dun sredstev",
-        "account_role_savingAsset": "Var\u010devalni ra\u010dun",
-        "account_role_ccAsset": "Kreditna kartica",
-        "account_role_cashWalletAsset": "Gotovina"
+        "account_type_Mortgage": "Hipoteka"
     }
 }

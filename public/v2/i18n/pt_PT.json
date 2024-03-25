@@ -2,18 +2,13 @@
     "config": {
         "html_language": "pt",
         "date_time_fns": "DO [de] MMMM YYYY, @ HH:mm:ss",
-        "month_and_day_fns": "d MMMM y",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
-    },
-    "validation": {
-        "bad_type_source": "O Firefly III n\u00e3o consegue determinar o tipo de transa\u00e7\u00e3o baseado nesta conta de origem.",
-        "bad_type_destination": "O Firefly III n\u00e3o consegue determinar o tipo de transa\u00e7\u00e3o baseado nesta conta de destino."
     },
     "firefly": {
         "spent": "Gasto",
         "left": "Em falta",
         "paid": "Pago",
-        "errors_submission_v2": "Algo correu mal com o envio dos dados. Por favor verifique e corrija os erros abaixo: %{errorMessage}",
+        "errors_submission_v2": "There was something wrong with your submission. Please check out the errors below: {{errorMessage}}",
         "unpaid": "Por pagar",
         "default_group_title_name_plain": "sem grupo",
         "subscriptions_in_group": "Subscri\u00e7\u00e3o no grupo \"%{title}\"",
@@ -28,7 +23,7 @@
         "unknown_dest_plain": "Conta de destino desconhecida",
         "unknown_any_plain": "Conta desconhecida",
         "unknown_budget_plain": "Sem or\u00e7amento",
-        "stored_journal_js": "A transa\u00e7\u00e3o \"%{description}\" foi criada com sucesso",
+        "stored_journal_js": "Successfully created new transaction \"{{description}}\"",
         "wait_loading_transaction": "Por favor, aguarde o formul\u00e1rio carregar",
         "nothing_found": "(sem resultados)",
         "wait_loading_data": "Por favor, aguarde enquanto carregamos a sua informa\u00e7\u00e3o...",
@@ -43,11 +38,6 @@
         "account_type_Revenue account": "Conta de receitas",
         "account_type_Debt": "D\u00edvida",
         "account_type_Loan": "Empr\u00e9stimo",
-        "account_type_Mortgage": "Hipoteca",
-        "account_role_defaultAsset": "Conta de ativos predefinida",
-        "account_role_sharedAsset": "Conta de ativos partilhados",
-        "account_role_savingAsset": "Conta poupan\u00e7a",
-        "account_role_ccAsset": "Cart\u00e3o de cr\u00e9dito",
-        "account_role_cashWalletAsset": "Carteira de dinheiro"
+        "account_type_Mortgage": "Hipoteca"
     }
 }

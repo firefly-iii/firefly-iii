@@ -1989,7 +1989,7 @@ return [
     'deleted_transfer'                                    => 'Transferência ":description" excluída com sucesso',
     'deleted_reconciliation'                              => 'Transação de reconciliação ":description" excluída com sucesso',
     'stored_journal'                                      => 'Transação ":description" incluída com sucesso',
-    'stored_journal_js'                                   => 'Transação "%{description}" criada com sucesso',
+    'stored_journal_js'                                   => 'Successfully created new transaction "{{description}}"',
     'stored_journal_no_descr'                             => 'Transação criada com sucesso',
     'updated_journal_no_descr'                            => 'Transação atualizada com sucesso',
     'select_transactions'                                 => 'Selecione as transações',
@@ -2297,6 +2297,7 @@ return [
     'description'                                         => 'Descrição',
     'sum_of_period'                                       => 'Soma de período',
     'average_in_period'                                   => 'Média do período',
+    'no_account_role'                                     => '(no role)',
     'account_role_defaultAsset'                           => 'Conta padrão',
     'account_role_sharedAsset'                            => 'Contas de ativos compartilhadas',
     'account_role_savingAsset'                            => 'Conta poupança',
@@ -2569,8 +2570,9 @@ return [
     'store_as_new'                                        => 'Armazene como uma nova transação em vez de atualizar.',
     'reset_after'                                         => 'Limpar o formulário após o envio',
     'errors_submission'                                   => 'Algo deu errado com seu envio. Por favor, verifique os erros abaixo.',
-    'errors_submission_v2'                                => 'Algo deu errado com seu envio. Por favor, verifique os erros abaixo: %{errorMessage}',
+    'errors_submission_v2'                                => 'There was something wrong with your submission. Please check out the errors below: {{errorMessage}}',
     'transaction_expand_split'                            => 'Exibir divisão',
+    'transaction_remove_split'                            => 'Remove split',
     'transaction_collapse_split'                          => 'Esconder divisão',
 
     // object groups

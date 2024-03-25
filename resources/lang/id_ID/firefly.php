@@ -1989,7 +1989,7 @@ return [
     'deleted_transfer'                                    => 'Berhasil menghapus transfer ":description"',
     'deleted_reconciliation'                              => 'Successfully deleted reconciliation transaction ":description"',
     'stored_journal'                                      => 'Berhasil membuat transaksi baru ":description"',
-    'stored_journal_js'                                   => 'Successfully created new transaction "%{description}"',
+    'stored_journal_js'                                   => 'Successfully created new transaction "{{description}}"',
     'stored_journal_no_descr'                             => 'Successfully created your new transaction',
     'updated_journal_no_descr'                            => 'Successfully updated your transaction',
     'select_transactions'                                 => 'Pilih transaksi',
@@ -2297,6 +2297,7 @@ return [
     'description'                                         => 'Deskripsi',
     'sum_of_period'                                       => 'Jumlah periode',
     'average_in_period'                                   => 'Rata-rata dalam periode',
+    'no_account_role'                                     => '(no role)',
     'account_role_defaultAsset'                           => 'Akun aset standar',
     'account_role_sharedAsset'                            => 'Akun aset bersama',
     'account_role_savingAsset'                            => 'Rekening tabungan',
@@ -2569,8 +2570,9 @@ return [
     'store_as_new'                                        => 'Store as a new transaction instead of updating.',
     'reset_after'                                         => 'Reset form after submission',
     'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below.',
-    'errors_submission_v2'                                => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
+    'errors_submission_v2'                                => 'There was something wrong with your submission. Please check out the errors below: {{errorMessage}}',
     'transaction_expand_split'                            => 'Kembangkan pemisahan',
+    'transaction_remove_split'                            => 'Remove split',
     'transaction_collapse_split'                          => 'Kempiskan pemisahan',
 
     // object groups

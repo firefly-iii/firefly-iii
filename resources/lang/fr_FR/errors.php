@@ -42,7 +42,7 @@ return [
     'fatal_error'             => 'Il y a eu une erreur fatale. Veuillez vérifier les fichiers journaux dans "storage/logs" ou utilisez "docker logs -f [container]" pour voir ce qui se passe.',
     'maintenance_mode'        => 'Firefly III est en mode maintenance.',
     'be_right_back'           => 'Je reviens tout de suite !',
-    'check_back'              => 'Firefly III is down for some necessary maintenance. Please check back in a second. If you happen to see this message on the demo site, just wait a few minutes. The database is reset every few hours.',
+    'check_back'              => 'Firefly III est indisponible pour une maintenance nécessaire. Veuillez revenir dans une seconde. Si vous voyez ce message sur le site de démonstration, attendez quelques minutes. La base de données est réinitialisée toutes les quelques heures.',
     'error_occurred'          => 'Oups ! Une erreur est survenue.',
     'db_error_occurred'       => 'Oups! Une erreur de base de données s\'est produite.',
     'error_not_recoverable'   => 'Malheureusement, cette erreur n\'a pas pu être récupérée :(. Firefly III s\'est cassé. L\'erreur est :',

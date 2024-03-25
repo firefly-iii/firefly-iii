@@ -2,18 +2,13 @@
     "config": {
         "html_language": "ro",
         "date_time_fns": "MMMM do yyy @ HH:mm:ss",
-        "month_and_day_fns": "MMMM d, y",
         "date_time_fns_short": "MMMM do yyy @ HH:mm"
-    },
-    "validation": {
-        "bad_type_source": "Firefly III nu poate determina tipul de tranzac\u021bie pe baza acestui cont surs\u0103.",
-        "bad_type_destination": "Firefly III nu poate determina tipul de tranzac\u021bie bazat pe acest cont de destina\u021bie."
     },
     "firefly": {
         "spent": "Cheltuit",
         "left": "R\u0103mas",
         "paid": "Pl\u0103tit",
-        "errors_submission_v2": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
+        "errors_submission_v2": "There was something wrong with your submission. Please check out the errors below: {{errorMessage}}",
         "unpaid": "Nepl\u0103tit",
         "default_group_title_name_plain": "ungrouped",
         "subscriptions_in_group": "Subscriptions in group \"%{title}\"",
@@ -28,7 +23,7 @@
         "unknown_dest_plain": "Cont de destina\u021bie necunoscut",
         "unknown_any_plain": "Cont necunoscut",
         "unknown_budget_plain": "F\u0103r\u0103 buget",
-        "stored_journal_js": "Tranzac\u021bie nou\u0103 creat\u0103 cu succes \"%{description}\"",
+        "stored_journal_js": "Successfully created new transaction \"{{description}}\"",
         "wait_loading_transaction": "V\u0103 rug\u0103m s\u0103 a\u015ftepta\u0163i ca formularul s\u0103 se \u00eencarce",
         "nothing_found": "nu a fost g\u0103sit nimic",
         "wait_loading_data": "V\u0103 rug\u0103m s\u0103 a\u0219tepta\u021bi ca informa\u021biile dvs. s\u0103 se \u00eencarce...",
@@ -43,11 +38,6 @@
         "account_type_Revenue account": "Cont de venituri",
         "account_type_Debt": "Datorie",
         "account_type_Loan": "\u00cemprumut",
-        "account_type_Mortgage": "Credit ipotecar",
-        "account_role_defaultAsset": "Contul implicit activ",
-        "account_role_sharedAsset": "Contul de active partajat",
-        "account_role_savingAsset": "Cont de economii",
-        "account_role_ccAsset": "Card de credit",
-        "account_role_cashWalletAsset": "Cash - Numerar"
+        "account_type_Mortgage": "Credit ipotecar"
     }
 }

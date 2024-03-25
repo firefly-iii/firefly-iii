@@ -2,18 +2,13 @@
     "config": {
         "html_language": "fi",
         "date_time_fns": "MMMM do, yyyy @ HH:mm:ss",
-        "month_and_day_fns": "MMMM d, y",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
-    },
-    "validation": {
-        "bad_type_source": "Firefly III can't determine the transaction type based on this source account.",
-        "bad_type_destination": "Firefly III can't determine the transaction type based on this destination account."
     },
     "firefly": {
         "spent": "K\u00e4ytetty",
         "left": "J\u00e4ljell\u00e4",
         "paid": "Maksettu",
-        "errors_submission_v2": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
+        "errors_submission_v2": "There was something wrong with your submission. Please check out the errors below: {{errorMessage}}",
         "unpaid": "Maksamatta",
         "default_group_title_name_plain": "ungrouped",
         "subscriptions_in_group": "Subscriptions in group \"%{title}\"",
@@ -28,7 +23,7 @@
         "unknown_dest_plain": "Unknown destination account",
         "unknown_any_plain": "Unknown account",
         "unknown_budget_plain": "No budget",
-        "stored_journal_js": "Successfully created new transaction \"%{description}\"",
+        "stored_journal_js": "Successfully created new transaction \"{{description}}\"",
         "wait_loading_transaction": "Please wait for the form to load",
         "nothing_found": "(nothing found)",
         "wait_loading_data": "Please wait for your information to load...",
@@ -43,11 +38,6 @@
         "account_type_Revenue account": "Revenue account",
         "account_type_Debt": "Velka",
         "account_type_Loan": "Laina",
-        "account_type_Mortgage": "Kiinnelaina",
-        "account_role_defaultAsset": "Oletusk\u00e4ytt\u00f6tili",
-        "account_role_sharedAsset": "Jaettu k\u00e4ytt\u00f6tili",
-        "account_role_savingAsset": "S\u00e4\u00e4st\u00f6tili",
-        "account_role_ccAsset": "Luottokortti",
-        "account_role_cashWalletAsset": "K\u00e4teinen"
+        "account_type_Mortgage": "Kiinnelaina"
     }
 }

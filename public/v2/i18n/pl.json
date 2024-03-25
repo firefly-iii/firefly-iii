@@ -2,18 +2,13 @@
     "config": {
         "html_language": "pl",
         "date_time_fns": "do MMMM yyyy @ HH:mm:ss",
-        "month_and_day_fns": "d MMMM y",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
-    },
-    "validation": {
-        "bad_type_source": "Firefly III can't determine the transaction type based on this source account.",
-        "bad_type_destination": "Firefly III can't determine the transaction type based on this destination account."
     },
     "firefly": {
         "spent": "Wydano",
         "left": "Pozosta\u0142o",
         "paid": "Zap\u0142acone",
-        "errors_submission_v2": "Co\u015b posz\u0142o nie tak w czasie zapisu. Prosz\u0119, sprawd\u017a b\u0142\u0119dy poni\u017cej: %{errorMessage}",
+        "errors_submission_v2": "There was something wrong with your submission. Please check out the errors below: {{errorMessage}}",
         "unpaid": "Niezap\u0142acone",
         "default_group_title_name_plain": "bez grupy",
         "subscriptions_in_group": "Subskrypcje w grupie \"%{title}\"",
@@ -28,7 +23,7 @@
         "unknown_dest_plain": "Nieznane konto docelowe",
         "unknown_any_plain": "Nieznane konto",
         "unknown_budget_plain": "Brak bud\u017cetu",
-        "stored_journal_js": "Pomy\u015blnie utworzono now\u0105 transakcj\u0119 \"%{description}\"",
+        "stored_journal_js": "Successfully created new transaction \"{{description}}\"",
         "wait_loading_transaction": "Poczekaj na za\u0142adowanie formularza",
         "nothing_found": "(nic nie znaleziono)",
         "wait_loading_data": "Please wait for your information to load...",
@@ -43,11 +38,6 @@
         "account_type_Revenue account": "Konto przychod\u00f3w",
         "account_type_Debt": "D\u0142ug",
         "account_type_Loan": "Po\u017cyczka",
-        "account_type_Mortgage": "Hipoteka",
-        "account_role_defaultAsset": "Domy\u015blne konto aktyw\u00f3w",
-        "account_role_sharedAsset": "Wsp\u00f3\u0142dzielone konto aktyw\u00f3w",
-        "account_role_savingAsset": "Konto oszcz\u0119dno\u015bciowe",
-        "account_role_ccAsset": "Karta kredytowa",
-        "account_role_cashWalletAsset": "Portfel got\u00f3wkowy"
+        "account_type_Mortgage": "Hipoteka"
     }
 }

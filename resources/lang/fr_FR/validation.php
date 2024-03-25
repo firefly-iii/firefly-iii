@@ -55,11 +55,11 @@ return [
     'reconciled_forbidden_field'      => 'Cette opération est déjà rappochée, vous ne pouvez pas modifier «:field»',
     'deleted_user'                    => 'Compte tenu des contraintes de sécurité, vous ne pouvez pas vous inscrire en utilisant cette adresse e-mail.',
     'rule_trigger_value'              => 'Cette valeur n’est pas valide pour le déclencheur sélectionné.',
-    'rule_action_expression'          => 'Invalid expression. :error',
+    'rule_action_expression'          => 'Expression non valide. :error',
     'rule_action_value'               => 'Cette valeur n’est pas valide pour l’action sélectionnée.',
     'file_already_attached'           => 'Le fichier téléchargé ":name" est déjà attaché à cet objet.',
     'file_attached'                   => 'Fichier ":name" téléchargé avec succès.',
-    'file_zero'                       => 'The file is zero bytes in size.',
+    'file_zero'                       => 'Le taille du fichier est de zéro octet.',
     'must_exist'                      => 'L\'ID dans le champ :attribute n\'existe pas dans la base de données.',
     'all_accounts_equal'              => 'Tous les comptes dans ce champ doivent être égaux.',
     'group_title_mandatory'           => 'Un titre de groupe est obligatoire lorsqu\'il y a plus d\'une opération.',
@@ -197,7 +197,7 @@ return [
  *
  */
 
-    'secure_password'                 => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password',
+    'secure_password'                 => 'Ce mot de passe n\'est pas sécurisé. Veuillez réessayer. Pour plus d\'informations, visitez le site https://bit.ly/FF3-password',
     'valid_recurrence_rep_type'       => 'Type de répétition non valide pour des opérations périodiques.',
     'valid_recurrence_rep_moment'     => 'Période de répétition non valide pour ce type de répétition.',
     'invalid_account_info'            => 'Informations de compte non valides.',

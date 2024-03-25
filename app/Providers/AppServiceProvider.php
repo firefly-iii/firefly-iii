@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Providers;
 
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
@@ -52,7 +51,8 @@ class AppServiceProvider extends ServiceProvider
 
             return response()
                 ->json($value)
-                ->withHeaders($headers);
+                ->withHeaders($headers)
+            ;
         });
 
         // blade extension
@@ -65,11 +65,11 @@ class AppServiceProvider extends ServiceProvider
             return '';
         });
         Blade::if('partialroute', function (string $route, string $firstParam = '') {
-            $name    = Route::getCurrentRoute()->getName() ?? '';
+            $name       = Route::getCurrentRoute()->getName() ?? '';
             if ('' === $firstParam && str_contains($name, $route)) {
                 return true;
             }
-            $params  = Route::getCurrentRoute()->parameters() ?? [];
+            $params     = Route::getCurrentRoute()->parameters() ?? [];
             $objectType = $params['objectType'] ?? '';
             if ($objectType === $firstParam && str_contains($name, $route)) {
                 return true;

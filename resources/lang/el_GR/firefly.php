@@ -1989,7 +1989,7 @@ return [
     'deleted_transfer'                                    => 'Επιτυχής διαγραφή της μεταφοράς ":description"',
     'deleted_reconciliation'                              => 'Επιτυχής διαγραφή της τακτοποιημένης συναλλαγής ":description"',
     'stored_journal'                                      => 'Δημιουργήθηκε επιτυχώς η νέα συναλλαγή ":description"',
-    'stored_journal_js'                                   => 'Δημιουργήθηκε επιτυχώς η νέα συναλλαγή "%{description}"',
+    'stored_journal_js'                                   => 'Successfully created new transaction "{{description}}"',
     'stored_journal_no_descr'                             => 'Δημιουργήθηκε επιτυχώς η νέα συναλλαγή',
     'updated_journal_no_descr'                            => 'Ενημερώθηκε επιτυχώς η συναλλαγή σας',
     'select_transactions'                                 => 'Επιλέξτε συναλλαγές',
@@ -2297,6 +2297,7 @@ return [
     'description'                                         => 'Περιγραφή',
     'sum_of_period'                                       => 'Σύνολο περιόδου',
     'average_in_period'                                   => 'Μέσος όρος περιόδου',
+    'no_account_role'                                     => '(no role)',
     'account_role_defaultAsset'                           => 'Βασικός λογαριασμός κεφαλαίου',
     'account_role_sharedAsset'                            => 'Κοινός λογαριασμός κεφαλαίου',
     'account_role_savingAsset'                            => 'Λογαριασμός αποταμίευσης',
@@ -2569,8 +2570,9 @@ return [
     'store_as_new'                                        => 'Αποθήκευση ως νέα συναλλαγή αντί για ενημέρωση.',
     'reset_after'                                         => 'Επαναφορά φόρμας μετά την υποβολή',
     'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below.',
-    'errors_submission_v2'                                => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
+    'errors_submission_v2'                                => 'There was something wrong with your submission. Please check out the errors below: {{errorMessage}}',
     'transaction_expand_split'                            => 'Ανάπτυξη διαχωρισμού',
+    'transaction_remove_split'                            => 'Remove split',
     'transaction_collapse_split'                          => 'Σύμπτυξη διαχωρισμού',
 
     // object groups

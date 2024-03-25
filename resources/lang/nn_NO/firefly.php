@@ -1989,7 +1989,7 @@ return [
     'deleted_transfer'                                    => 'Sletta overføring ":description"',
     'deleted_reconciliation'                              => 'Sletta avstemmingstransaksjon ":description"',
     'stored_journal'                                      => 'Opprettet ny transaksjon ":description"',
-    'stored_journal_js'                                   => 'Transaksjonen «%{description}» vart oppretta',
+    'stored_journal_js'                                   => 'Successfully created new transaction "{{description}}"',
     'stored_journal_no_descr'                             => 'Vellykket! Ny transaksjon er opprettet',
     'updated_journal_no_descr'                            => 'Transaksjonen din vart oppdatert',
     'select_transactions'                                 => 'Vel transaksjonar',
@@ -2297,6 +2297,7 @@ return [
     'description'                                         => 'Beskriving',
     'sum_of_period'                                       => 'Sum for perioden',
     'average_in_period'                                   => 'Gjennomsnitt for periode',
+    'no_account_role'                                     => '(no role)',
     'account_role_defaultAsset'                           => 'Standard aktivakonto',
     'account_role_sharedAsset'                            => 'Delt aktivakonto',
     'account_role_savingAsset'                            => 'Sparekonto',
@@ -2569,8 +2570,9 @@ return [
     'store_as_new'                                        => 'Lagra som ein ny transaksjon istedenfor å oppdatera.',
     'reset_after'                                         => 'Nullstill skjema etter innsending',
     'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below.',
-    'errors_submission_v2'                                => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
+    'errors_submission_v2'                                => 'There was something wrong with your submission. Please check out the errors below: {{errorMessage}}',
     'transaction_expand_split'                            => 'Utvid splitt',
+    'transaction_remove_split'                            => 'Remove split',
     'transaction_collapse_split'                          => 'Kollaps deling',
 
     // object groups

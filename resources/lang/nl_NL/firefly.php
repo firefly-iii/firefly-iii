@@ -1989,7 +1989,7 @@ return [
     'deleted_transfer'                                    => 'Overschrijving ":description" verwijderd',
     'deleted_reconciliation'                              => 'Afstemming ":description" verwijderd',
     'stored_journal'                                      => 'Nieuw transactie ":description" opgeslagen',
-    'stored_journal_js'                                   => 'Nieuw transactie "%{description}" opgeslagen',
+    'stored_journal_js'                                   => 'Successfully created new transaction "{{description}}"',
     'stored_journal_no_descr'                             => 'Je nieuwe transactie is succesvol aangemaakt',
     'updated_journal_no_descr'                            => 'De transactie is geüpdatet',
     'select_transactions'                                 => 'Selecteer transacties',
@@ -2297,6 +2297,7 @@ return [
     'description'                                         => 'Omschrijving',
     'sum_of_period'                                       => 'Som van periode',
     'average_in_period'                                   => 'Gemiddelde in periode',
+    'no_account_role'                                     => '(no role)',
     'account_role_defaultAsset'                           => 'Standaard betaalrekening',
     'account_role_sharedAsset'                            => 'Gedeelde betaalrekening',
     'account_role_savingAsset'                            => 'Spaarrekening',
@@ -2569,8 +2570,9 @@ return [
     'store_as_new'                                        => 'Opslaan als nieuwe transactie ipv de huidige bij te werken.',
     'reset_after'                                         => 'Reset formulier na opslaan',
     'errors_submission'                                   => 'Er ging iets mis. Check de errors.',
-    'errors_submission_v2'                                => 'Er ging iets mis. Check de errors: %{errorMessage}',
+    'errors_submission_v2'                                => 'There was something wrong with your submission. Please check out the errors below: {{errorMessage}}',
     'transaction_expand_split'                            => 'Split uitklappen',
+    'transaction_remove_split'                            => 'Remove split',
     'transaction_collapse_split'                          => 'Split inklappen',
 
     // object groups

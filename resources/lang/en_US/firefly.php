@@ -2234,7 +2234,7 @@ return [
     'description'                                         => 'Description',
     'sum_of_period'                                       => 'Sum of period',
     'average_in_period'                                   => 'Average in period',
-    'no_account_role' => '(no role)',
+    'no_account_role'                                     => '(no role)',
     'account_role_defaultAsset'                           => 'Default asset account',
     'account_role_sharedAsset'                            => 'Shared asset account',
     'account_role_savingAsset'                            => 'Savings account',

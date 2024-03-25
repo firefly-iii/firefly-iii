@@ -2,18 +2,13 @@
     "config": {
         "html_language": "it",
         "date_time_fns": "do MMMM yyyy @ HH:mm:ss",
-        "month_and_day_fns": "d MMMM y",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
-    },
-    "validation": {
-        "bad_type_source": "Firefly III non pu\u00f2 determinare il tipo di transazione in base a questo account sorgente.",
-        "bad_type_destination": "Firefly III non pu\u00f2 determinare il tipo di transazione in base a questo account di destinazione."
     },
     "firefly": {
         "spent": "Speso",
         "left": "Resto",
         "paid": "Pagati",
-        "errors_submission_v2": "Errore durante l'invio. Controlla gli errori segnalati qui sotto: %{errorMessage}",
+        "errors_submission_v2": "There was something wrong with your submission. Please check out the errors below: {{errorMessage}}",
         "unpaid": "Da pagare",
         "default_group_title_name_plain": "non raggruppato",
         "subscriptions_in_group": "Abbonamenti nel gruppo \"%{title}\"",
@@ -28,7 +23,7 @@
         "unknown_dest_plain": "Conto di destinazione sconosciuto",
         "unknown_any_plain": "Conto sconosciuto",
         "unknown_budget_plain": "Nessun budget",
-        "stored_journal_js": "Nuova transazione \"%{description}\" creata correttamente",
+        "stored_journal_js": "Successfully created new transaction \"{{description}}\"",
         "wait_loading_transaction": "Attendi il caricamento del modello",
         "nothing_found": "(nessun risultato)",
         "wait_loading_data": "Ti preghiamo di attendere il caricamento delle tue informazioni...",
@@ -43,11 +38,6 @@
         "account_type_Revenue account": "Conto di entrate",
         "account_type_Debt": "Debito",
         "account_type_Loan": "Prestito",
-        "account_type_Mortgage": "Mutuo",
-        "account_role_defaultAsset": "Conto attivit\u00e0 predefinito",
-        "account_role_sharedAsset": "Conto attivit\u00e0 condiviso",
-        "account_role_savingAsset": "Conto risparmio",
-        "account_role_ccAsset": "Carta di credito",
-        "account_role_cashWalletAsset": "Portafoglio"
+        "account_type_Mortgage": "Mutuo"
     }
 }

@@ -1989,7 +1989,7 @@ return [
     'deleted_transfer'                                    => 'Prenos ":description" je uspešno izbrisan',
     'deleted_reconciliation'                              => 'Transakcija usklajevanja ":description" je bila uspešno izbrisana',
     'stored_journal'                                      => 'Nova transakcija ":description" je uspešno ustvarjena',
-    'stored_journal_js'                                   => 'Nova transakcija "%{description}" je uspešno ustvarjena',
+    'stored_journal_js'                                   => 'Successfully created new transaction "{{description}}"',
     'stored_journal_no_descr'                             => 'Vaša nova transakcija je uspešno ustvarjena',
     'updated_journal_no_descr'                            => 'Vaša transakcija je bila uspešno posodobljena',
     'select_transactions'                                 => 'Izberi transakcije',
@@ -2297,6 +2297,7 @@ return [
     'description'                                         => 'Opis',
     'sum_of_period'                                       => 'Seštevek obdobja',
     'average_in_period'                                   => 'Povprečno v obdobju',
+    'no_account_role'                                     => '(no role)',
     'account_role_defaultAsset'                           => 'Privzeti račun sredstev',
     'account_role_sharedAsset'                            => 'Skupni račun sredstev',
     'account_role_savingAsset'                            => 'Varčevalni račun',
@@ -2569,8 +2570,9 @@ return [
     'store_as_new'                                        => 'Shranite kot novo transakcijo namesto posodabljanja.',
     'reset_after'                                         => 'Po predložitvi ponastavite obrazec',
     'errors_submission'                                   => 'Nekaj je bilo narobe z vašo oddajo. Preverite spodnje napake.',
-    'errors_submission_v2'                                => 'Nekaj je bilo narobe z vašo oddajo. Preverite spodnje napake: %{errorMessage}',
+    'errors_submission_v2'                                => 'There was something wrong with your submission. Please check out the errors below: {{errorMessage}}',
     'transaction_expand_split'                            => 'Razširi razdelitev',
+    'transaction_remove_split'                            => 'Remove split',
     'transaction_collapse_split'                          => 'Skrči razdelitev',
 
     // object groups

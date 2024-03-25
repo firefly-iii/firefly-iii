@@ -2,18 +2,13 @@
     "config": {
         "html_language": "nb",
         "date_time_fns": "do MMMM, yyyy @ HH:mm:ss",
-        "month_and_day_fns": "MMMM d, y",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
-    },
-    "validation": {
-        "bad_type_source": "Firefly III can't determine the transaction type based on this source account.",
-        "bad_type_destination": "Firefly III can't determine the transaction type based on this destination account."
     },
     "firefly": {
         "spent": "Brukt",
         "left": "Gjenv\u00e6rende",
         "paid": "Betalt",
-        "errors_submission_v2": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
+        "errors_submission_v2": "There was something wrong with your submission. Please check out the errors below: {{errorMessage}}",
         "unpaid": "Ikke betalt",
         "default_group_title_name_plain": "ikke gruppert",
         "subscriptions_in_group": "Abonnementer i gruppe \"%{title}\"",
@@ -28,7 +23,7 @@
         "unknown_dest_plain": "Ukjent destinasjonskonto",
         "unknown_any_plain": "Ukjent konto",
         "unknown_budget_plain": "Mangler budsjett",
-        "stored_journal_js": "Successfully created new transaction \"%{description}\"",
+        "stored_journal_js": "Successfully created new transaction \"{{description}}\"",
         "wait_loading_transaction": "Please wait for the form to load",
         "nothing_found": "(nothing found)",
         "wait_loading_data": "Please wait for your information to load...",
@@ -43,11 +38,6 @@
         "account_type_Revenue account": "Inntektskonto",
         "account_type_Debt": "Gjeld",
         "account_type_Loan": "L\u00e5n",
-        "account_type_Mortgage": "Boligl\u00e5n",
-        "account_role_defaultAsset": "Standard aktivakonto",
-        "account_role_sharedAsset": "Delt aktivakonto",
-        "account_role_savingAsset": "Sparekonto",
-        "account_role_ccAsset": "Kredittkort",
-        "account_role_cashWalletAsset": "Kontant lommebok"
+        "account_type_Mortgage": "Boligl\u00e5n"
     }
 }

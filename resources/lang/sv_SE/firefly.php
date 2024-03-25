@@ -1989,7 +1989,7 @@ return [
     'deleted_transfer'                                    => 'Överföring ":description" har tagits bort',
     'deleted_reconciliation'                              => 'Avstämningstransaktionen ":description" togs bort lyckat',
     'stored_journal'                                      => 'Skapade ny transaktion ":description"',
-    'stored_journal_js'                                   => 'Successfully created new transaction "%{description}"',
+    'stored_journal_js'                                   => 'Successfully created new transaction "{{description}}"',
     'stored_journal_no_descr'                             => 'Ny transaktion skapades lyckat',
     'updated_journal_no_descr'                            => 'Transaktion har uppdaterats',
     'select_transactions'                                 => 'Välj transaktioner',
@@ -2298,6 +2298,7 @@ return [
     'description'                                         => 'Beskrivning',
     'sum_of_period'                                       => 'Summa på period',
     'average_in_period'                                   => 'Medel av period',
+    'no_account_role'                                     => '(no role)',
     'account_role_defaultAsset'                           => 'Förvalt tillgångskonto',
     'account_role_sharedAsset'                            => 'Delat tillgångskonto',
     'account_role_savingAsset'                            => 'Sparkonto',
@@ -2570,8 +2571,9 @@ return [
     'store_as_new'                                        => 'Spara en ny transaktion istället för att uppdatera.',
     'reset_after'                                         => 'Återställ formulär efter inskickat',
     'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below.',
-    'errors_submission_v2'                                => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
+    'errors_submission_v2'                                => 'There was something wrong with your submission. Please check out the errors below: {{errorMessage}}',
     'transaction_expand_split'                            => 'Expandera delningen',
+    'transaction_remove_split'                            => 'Remove split',
     'transaction_collapse_split'                          => 'Minimera delning',
 
     // object groups

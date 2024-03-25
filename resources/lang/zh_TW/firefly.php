@@ -1989,7 +1989,7 @@ return [
     'deleted_transfer'                                    => '已成功刪除轉帳 “:description”',
     'deleted_reconciliation'                              => 'Successfully deleted reconciliation transaction ":description"',
     'stored_journal'                                      => '已成功建立新交易 “:description”',
-    'stored_journal_js'                                   => 'Successfully created new transaction "%{description}"',
+    'stored_journal_js'                                   => 'Successfully created new transaction "{{description}}"',
     'stored_journal_no_descr'                             => '已成功建立新交易',
     'updated_journal_no_descr'                            => '已成功更新您的交易',
     'select_transactions'                                 => '選擇交易',
@@ -2297,6 +2297,7 @@ return [
     'description'                                         => '描述',
     'sum_of_period'                                       => '区间内的总和',
     'average_in_period'                                   => '區間平均',
+    'no_account_role'                                     => '(no role)',
     'account_role_defaultAsset'                           => '預設資產帳戶',
     'account_role_sharedAsset'                            => '共用資產帳戶',
     'account_role_savingAsset'                            => '儲蓄帳戶',
@@ -2569,8 +2570,9 @@ return [
     'store_as_new'                                        => 'Store as a new transaction instead of updating.',
     'reset_after'                                         => 'Reset form after submission',
     'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below.',
-    'errors_submission_v2'                                => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
+    'errors_submission_v2'                                => 'There was something wrong with your submission. Please check out the errors below: {{errorMessage}}',
     'transaction_expand_split'                            => 'Expand split',
+    'transaction_remove_split'                            => 'Remove split',
     'transaction_collapse_split'                          => 'Collapse split',
 
     // object groups

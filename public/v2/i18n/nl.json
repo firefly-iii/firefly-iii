@@ -2,18 +2,13 @@
     "config": {
         "html_language": "nl",
         "date_time_fns": "d MMMM yyyy @ HH:mm:ss",
-        "month_and_day_fns": "d MMMM y",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
-    },
-    "validation": {
-        "bad_type_source": "Firefly III kan het transactietype niet bepalen op basis van deze bronrekening.",
-        "bad_type_destination": "Firefly III kan het transactietype niet bepalen op basis van deze doelrekening."
     },
     "firefly": {
         "spent": "Uitgegeven",
         "left": "Over",
         "paid": "Betaald",
-        "errors_submission_v2": "Er ging iets mis. Check de errors: %{errorMessage}",
+        "errors_submission_v2": "There was something wrong with your submission. Please check out the errors below: {{errorMessage}}",
         "unpaid": "Niet betaald",
         "default_group_title_name_plain": "ongegroepeerd",
         "subscriptions_in_group": "Abonnementen in groep \"%{title}\"",
@@ -28,7 +23,7 @@
         "unknown_dest_plain": "Onbekende doelrekening",
         "unknown_any_plain": "Onbekende rekening",
         "unknown_budget_plain": "Geen budget",
-        "stored_journal_js": "Nieuw transactie \"%{description}\" opgeslagen",
+        "stored_journal_js": "Successfully created new transaction \"{{description}}\"",
         "wait_loading_transaction": "Wacht even tot het formulier geladen is",
         "nothing_found": "(niets gevonden)",
         "wait_loading_data": "Wacht even tot de gegevens er zijn...",
@@ -43,11 +38,6 @@
         "account_type_Revenue account": "Debiteur",
         "account_type_Debt": "Schuld",
         "account_type_Loan": "Lening",
-        "account_type_Mortgage": "Hypotheek",
-        "account_role_defaultAsset": "Standaard betaalrekening",
-        "account_role_sharedAsset": "Gedeelde betaalrekening",
-        "account_role_savingAsset": "Spaarrekening",
-        "account_role_ccAsset": "Credit card",
-        "account_role_cashWalletAsset": "Cash"
+        "account_type_Mortgage": "Hypotheek"
     }
 }

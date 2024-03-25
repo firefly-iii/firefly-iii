@@ -2,18 +2,13 @@
     "config": {
         "html_language": "hu",
         "date_time_fns": "MMMM do, yyyy @ HH:mm:ss",
-        "month_and_day_fns": "MMMM d, y",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
-    },
-    "validation": {
-        "bad_type_source": "A Firefly III nem tudja eld\u00f6nteni a tranzakci\u00f3 t\u00edpus\u00e1t a forr\u00e1ssz\u00e1mla alapj\u00e1n.",
-        "bad_type_destination": "A Firefly III nem tudja eld\u00f6nteni a tranzakci\u00f3 t\u00edpus\u00e1t a c\u00e9lsz\u00e1mla alapj\u00e1n."
     },
     "firefly": {
         "spent": "Elk\u00f6lt\u00f6tt",
         "left": "Maradv\u00e1ny",
         "paid": "Kifizetve",
-        "errors_submission_v2": "Hiba t\u00f6rt\u00e9nt a bek\u00fcld\u00e9s sor\u00e1n. K\u00e9rlek jav\u00edtsd az al\u00e1bbi hib\u00e1kat: %{errorMessage}",
+        "errors_submission_v2": "There was something wrong with your submission. Please check out the errors below: {{errorMessage}}",
         "unpaid": "Nincs fizetve",
         "default_group_title_name_plain": "ungrouped",
         "subscriptions_in_group": "Subscriptions in group \"%{title}\"",
@@ -28,7 +23,7 @@
         "unknown_dest_plain": "Unknown destination account",
         "unknown_any_plain": "Unknown account",
         "unknown_budget_plain": "No budget",
-        "stored_journal_js": "Successfully created new transaction \"%{description}\"",
+        "stored_journal_js": "Successfully created new transaction \"{{description}}\"",
         "wait_loading_transaction": "K\u00e9rlek v\u00e1rj az \u0171rlap bet\u00f6lt\u00e9s\u00e9ig",
         "nothing_found": "(nincs tal\u00e1lat)",
         "wait_loading_data": "K\u00e9rlek v\u00e1rj am\u00edg bet\u00f6ltj\u00fck az adatokat...",
@@ -43,11 +38,6 @@
         "account_type_Revenue account": "Revenue account",
         "account_type_Debt": "Ad\u00f3ss\u00e1g",
         "account_type_Loan": "Hitel",
-        "account_type_Mortgage": "Jelz\u00e1log",
-        "account_role_defaultAsset": "Alap\u00e9rtelmezett eszk\u00f6zsz\u00e1mla",
-        "account_role_sharedAsset": "Megosztott eszk\u00f6zsz\u00e1mla",
-        "account_role_savingAsset": "Megtakar\u00edt\u00e1si sz\u00e1mla",
-        "account_role_ccAsset": "Hitelk\u00e1rtya",
-        "account_role_cashWalletAsset": "K\u00e9szp\u00e9nz"
+        "account_type_Mortgage": "Jelz\u00e1log"
     }
 }

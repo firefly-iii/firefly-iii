@@ -1989,7 +1989,7 @@ return [
     'deleted_transfer'                                    => 'Transferul ":description" șters cu succes',
     'deleted_reconciliation'                              => 'Tranzacție de reconciliere ":description" a fost ștearsă cu succes',
     'stored_journal'                                      => 'A fost creată cu succes o tranzacție nouă ":description"',
-    'stored_journal_js'                                   => 'Tranzacție nouă creată cu succes "%{description}"',
+    'stored_journal_js'                                   => 'Successfully created new transaction "{{description}}"',
     'stored_journal_no_descr'                             => 'Tranzacția s-a creat cu succes',
     'updated_journal_no_descr'                            => 'Tranzacția s-a actualizat cu succes',
     'select_transactions'                                 => 'Selectați tranzacțiile',
@@ -2297,6 +2297,7 @@ return [
     'description'                                         => 'Descriere',
     'sum_of_period'                                       => 'Suma perioadei',
     'average_in_period'                                   => 'Media în perioada',
+    'no_account_role'                                     => '(no role)',
     'account_role_defaultAsset'                           => 'Contul implicit activ',
     'account_role_sharedAsset'                            => 'Contul de active partajat',
     'account_role_savingAsset'                            => 'Cont de economii',
@@ -2569,8 +2570,9 @@ return [
     'store_as_new'                                        => 'Stocați ca o tranzacție nouă în loc să actualizați.',
     'reset_after'                                         => 'Resetați formularul după trimitere',
     'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below.',
-    'errors_submission_v2'                                => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
+    'errors_submission_v2'                                => 'There was something wrong with your submission. Please check out the errors below: {{errorMessage}}',
     'transaction_expand_split'                            => 'Expand split',
+    'transaction_remove_split'                            => 'Remove split',
     'transaction_collapse_split'                          => 'Collapse split',
 
     // object groups

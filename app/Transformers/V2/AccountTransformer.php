@@ -138,13 +138,14 @@ class AccountTransformer extends AbstractTransformer
                     });
                 }
                 if ('last_activity' === $column) {
-                    $dates = $this->lastActivity;
-                    $objects  = $objects->sort(function (Account $left, Account $right) use ($dates, $direction) {
+                    $dates   = $this->lastActivity;
+                    $objects = $objects->sort(function (Account $left, Account $right) use ($dates, $direction) {
                         $leftDate  = $dates[$left->id] ?? Carbon::create(1900, 1, 1, 0, 0, 0);
                         $rightDate = $dates[$right->id] ?? Carbon::create(1900, 1, 1, 0, 0, 0);
                         if ('asc' === $direction) {
                             return $leftDate->gt($rightDate) ? 1 : -1;
                         }
+
                         return $rightDate->gt($leftDate) ? 1 : -1;
                     });
                 }

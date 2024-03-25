@@ -55,11 +55,11 @@ return [
     'reconciled_forbidden_field'      => 'Aquesta transacció ja està reconciliada, no pots canviar el ":field"',
     'deleted_user'                    => 'Per restriccions de seguretat, no et pots registrar amb aquesta adreça de correu electrònic.',
     'rule_trigger_value'              => 'Aquest valor és invàlid per l\'activador seleccionat.',
-    'rule_action_expression'          => 'Invalid expression. :error',
+    'rule_action_expression'          => 'Expressió invàlida. :error',
     'rule_action_value'               => 'Aquest valor és invàlid per l\'acció seleccionada.',
     'file_already_attached'           => 'El fitxer ":name" ja s\'havia afegit a aquest objecte.',
     'file_attached'                   => 'El fitxer ":name" s\'ha pujat satisfactòriament.',
-    'file_zero'                       => 'The file is zero bytes in size.',
+    'file_zero'                       => 'La mida de l\'arxiu és de zero bytes.',
     'must_exist'                      => 'L\'ID del camp :attribute no existeix a la base de dades.',
     'all_accounts_equal'              => 'Tots els comptes d\'aquest camp han de ser iguals.',
     'group_title_mandatory'           => 'El títol de grup és obligatori quan hi ha més d\'una transacció.',
@@ -197,7 +197,7 @@ return [
  *
  */
 
-    'secure_password'                 => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password',
+    'secure_password'                 => 'Aquesta contrasenya no és segura. Si us plau, prova-ho de nou. Per més informació, visita https://bit.ly/FF3-password',
     'valid_recurrence_rep_type'       => 'Tipus de repetició invàlid per transaccions periòdiques.',
     'valid_recurrence_rep_moment'     => 'Moment de repetició invàlid per aquest tipus de repetició.',
     'invalid_account_info'            => 'Informació de compte invàlida.',

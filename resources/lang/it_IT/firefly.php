@@ -1989,7 +1989,7 @@ return [
     'deleted_transfer'                                    => 'Trasferimento ":description" eliminato correttamente',
     'deleted_reconciliation'                              => 'Transazione di riconciliazione ":description" elimina con successo',
     'stored_journal'                                      => 'Nuova transazione ":description" creata correttamente',
-    'stored_journal_js'                                   => 'Nuova transazione "%{description}" creata correttamente',
+    'stored_journal_js'                                   => 'Successfully created new transaction "{{description}}"',
     'stored_journal_no_descr'                             => 'Hai creato con successo la nuova transazione',
     'updated_journal_no_descr'                            => 'Transazione aggiornata con successo',
     'select_transactions'                                 => 'Seleziona transazioni',
@@ -2297,6 +2297,7 @@ return [
     'description'                                         => 'Descrizione',
     'sum_of_period'                                       => 'Somma del periodo',
     'average_in_period'                                   => 'Media nel periodo',
+    'no_account_role'                                     => '(no role)',
     'account_role_defaultAsset'                           => 'Conto attività predefinito',
     'account_role_sharedAsset'                            => 'Conto attività condiviso',
     'account_role_savingAsset'                            => 'Conto risparmio',
@@ -2569,8 +2570,9 @@ return [
     'store_as_new'                                        => 'Salva come nuova transazione invece di aggiornarla.',
     'reset_after'                                         => 'Resetta il modulo dopo l\'invio',
     'errors_submission'                                   => 'Errore durante l\'invio. Controlla gli errori segnalati qui sotto.',
-    'errors_submission_v2'                                => 'Errore durante l\'invio. Controlla gli errori segnalati qui sotto: %{errorMessage}',
+    'errors_submission_v2'                                => 'There was something wrong with your submission. Please check out the errors below: {{errorMessage}}',
     'transaction_expand_split'                            => 'Espandi suddivisione',
+    'transaction_remove_split'                            => 'Remove split',
     'transaction_collapse_split'                          => 'Comprimi suddivisione',
 
     // object groups

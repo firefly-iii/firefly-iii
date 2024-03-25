@@ -1990,7 +1990,7 @@ return [
     'deleted_transfer'                                    => '已成功删除转账“:description”',
     'deleted_reconciliation'                              => '成功删除对账交易“:description”',
     'stored_journal'                                      => '成功创建新交易“:description”',
-    'stored_journal_js'                                   => '成功创建新交易 "%{description}"',
+    'stored_journal_js'                                   => 'Successfully created new transaction "{{description}}"',
     'stored_journal_no_descr'                             => '成功创建您的新交易',
     'updated_journal_no_descr'                            => '成功更新您的交易',
     'select_transactions'                                 => '选择交易',
@@ -2298,6 +2298,7 @@ return [
     'description'                                         => '描述',
     'sum_of_period'                                       => '区间内的总和',
     'average_in_period'                                   => '区间平均',
+    'no_account_role'                                     => '(no role)',
     'account_role_defaultAsset'                           => '默认资产账户',
     'account_role_sharedAsset'                            => '共用资产账户',
     'account_role_savingAsset'                            => '储蓄账户',
@@ -2570,8 +2571,9 @@ return [
     'store_as_new'                                        => '保存为新交易而不是更新此交易。',
     'reset_after'                                         => '提交后重置表单',
     'errors_submission'                                   => '您的提交有误，请查看下面输出的错误信息。',
-    'errors_submission_v2'                                => '您的提交有误，请查看下面输出的错误信息: %{errorMessage}',
+    'errors_submission_v2'                                => 'There was something wrong with your submission. Please check out the errors below: {{errorMessage}}',
     'transaction_expand_split'                            => '展开拆分',
+    'transaction_remove_split'                            => 'Remove split',
     'transaction_collapse_split'                          => '折叠拆分',
 
     // object groups

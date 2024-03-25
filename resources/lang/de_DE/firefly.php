@@ -1989,7 +1989,7 @@ return [
     'deleted_transfer'                                    => 'Umbuchung ":description" erfolgreich gelöscht',
     'deleted_reconciliation'                              => 'Ausgleichsbuchung „:description” erfolgreich gelöscht',
     'stored_journal'                                      => 'Neue Überweisung ":description" erfolgreich erstellt',
-    'stored_journal_js'                                   => 'Neue Buchung „%{description}” erfolgreich erstellt',
+    'stored_journal_js'                                   => 'Successfully created new transaction "{{description}}"',
     'stored_journal_no_descr'                             => 'Ihre neue Buchung wurde erfolgreich erstellt',
     'updated_journal_no_descr'                            => 'Ihre Buchung wurde erfolgreich aktualisiert',
     'select_transactions'                                 => 'Buchungen auswählen',
@@ -2297,6 +2297,7 @@ return [
     'description'                                         => 'Beschreibung',
     'sum_of_period'                                       => 'Summe des Zeitraums',
     'average_in_period'                                   => 'Durchschnitt im Zeitraum',
+    'no_account_role'                                     => '(no role)',
     'account_role_defaultAsset'                           => 'Standard-Bestandskonto',
     'account_role_sharedAsset'                            => 'Gemeinsames Bestandskonto',
     'account_role_savingAsset'                            => 'Sparkonto',
@@ -2569,8 +2570,9 @@ return [
     'store_as_new'                                        => 'Als neue Buchung speichern statt zu aktualisieren.',
     'reset_after'                                         => 'Formular nach der Übermittlung zurücksetzen',
     'errors_submission'                                   => 'Bei Ihren Eingaben stimmt etwas nicht. Bitte überprüfen Sie die unten stehenden Fehler.',
-    'errors_submission_v2'                                => 'Bei Ihren Eingaben stimmt etwas nicht. Bitte überprüfen Sie die nachfolgenden Fehler: %{errorMessage}',
+    'errors_submission_v2'                                => 'There was something wrong with your submission. Please check out the errors below: {{errorMessage}}',
     'transaction_expand_split'                            => 'Aufteilung erweitern',
+    'transaction_remove_split'                            => 'Remove split',
     'transaction_collapse_split'                          => 'Aufteilung reduzieren',
 
     // object groups

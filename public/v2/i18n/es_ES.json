@@ -2,18 +2,13 @@
     "config": {
         "html_language": "es",
         "date_time_fns": "El MMMM hacer, yyyy a las HH:mm:ss",
-        "month_and_day_fns": "d MMMM y",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
-    },
-    "validation": {
-        "bad_type_source": "Firefly III no puede determinar el tipo de transacci\u00f3n basado en esta cuenta de origen.",
-        "bad_type_destination": "Firefly III no puede determinar el tipo de transacci\u00f3n basado en esta cuenta de destino."
     },
     "firefly": {
         "spent": "Gastado",
         "left": "Disponible",
         "paid": "Pagado",
-        "errors_submission_v2": "Hubo un problema con su env\u00edo. Por favor, compruebe los siguientes errores: %{errorMessage}",
+        "errors_submission_v2": "There was something wrong with your submission. Please check out the errors below: {{errorMessage}}",
         "unpaid": "No pagado",
         "default_group_title_name_plain": "sin agrupar",
         "subscriptions_in_group": "Suscripciones en el grupo \"%{title}\"",
@@ -28,7 +23,7 @@
         "unknown_dest_plain": "Direcci\u00f3n de destino desconocida",
         "unknown_any_plain": "Cuenta desconocida",
         "unknown_budget_plain": "Sin presupuesto",
-        "stored_journal_js": "Nueva transacci\u00f3n creada con \u00e9xito \"%{description}\"",
+        "stored_journal_js": "Successfully created new transaction \"{{description}}\"",
         "wait_loading_transaction": "Por favor, espere a que se cargue el formulario",
         "nothing_found": "(no se encontr\u00f3 nada)",
         "wait_loading_data": "Por favor, espere a que su informaci\u00f3n se cargue...",
@@ -43,11 +38,6 @@
         "account_type_Revenue account": "Cuenta de ingresos",
         "account_type_Debt": "Deuda",
         "account_type_Loan": "Pr\u00e9stamo",
-        "account_type_Mortgage": "Hipoteca",
-        "account_role_defaultAsset": "Cuentas de ingresos por defecto",
-        "account_role_sharedAsset": "Cuenta de ingresos compartida",
-        "account_role_savingAsset": "Cuentas de ahorros",
-        "account_role_ccAsset": "Tarjeta de Cr\u00e9dito",
-        "account_role_cashWalletAsset": "Billetera de efectivo"
+        "account_type_Mortgage": "Hipoteca"
     }
 }

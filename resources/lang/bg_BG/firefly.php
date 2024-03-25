@@ -1989,7 +1989,7 @@ return [
     'deleted_transfer'                                    => 'Прехвърлянето ":description" бе успешно изтрито',
     'deleted_reconciliation'                              => 'Транзакцията за съгласуване ":description" бе успешно изтрита',
     'stored_journal'                                      => 'Успешно създадена нова транзакция ":description"',
-    'stored_journal_js'                                   => 'Successfully created new transaction "%{description}"',
+    'stored_journal_js'                                   => 'Successfully created new transaction "{{description}}"',
     'stored_journal_no_descr'                             => 'Новата ви транзакция бе успешно създадена',
     'updated_journal_no_descr'                            => 'Транзакция бе успешно обновена',
     'select_transactions'                                 => 'Избери транзакции',
@@ -2297,6 +2297,7 @@ return [
     'description'                                         => 'Описание',
     'sum_of_period'                                       => 'Сума за периода',
     'average_in_period'                                   => 'Средно за периода',
+    'no_account_role'                                     => '(no role)',
     'account_role_defaultAsset'                           => 'Сметка за активи по подразбиране',
     'account_role_sharedAsset'                            => 'Сметка за споделени активи',
     'account_role_savingAsset'                            => 'Спестовна сметка',
@@ -2569,8 +2570,9 @@ return [
     'store_as_new'                                        => 'Съхранете като нова транзакция, вместо да я актуализирате.',
     'reset_after'                                         => 'Изчистване на формуляра след изпращане',
     'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below.',
-    'errors_submission_v2'                                => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
+    'errors_submission_v2'                                => 'There was something wrong with your submission. Please check out the errors below: {{errorMessage}}',
     'transaction_expand_split'                            => 'Разшири раздел',
+    'transaction_remove_split'                            => 'Remove split',
     'transaction_collapse_split'                          => 'Свий раздел',
 
     // object groups

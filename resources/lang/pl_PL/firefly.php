@@ -1989,7 +1989,7 @@ return [
     'deleted_transfer'                                    => 'Pomyślnie usunięto transfer ":description"',
     'deleted_reconciliation'                              => 'Pomyślnie usunięto transakcję uzgadniania ":description"',
     'stored_journal'                                      => 'Pomyślnie utworzono nową transakcję ":description"',
-    'stored_journal_js'                                   => 'Pomyślnie utworzono nową transakcję "%{description}"',
+    'stored_journal_js'                                   => 'Successfully created new transaction "{{description}}"',
     'stored_journal_no_descr'                             => 'Pomyślnie utworzono nową transakcję',
     'updated_journal_no_descr'                            => 'Pomyślnie zaktualizowano Twoją transakcję',
     'select_transactions'                                 => 'Wybierz transakcje',
@@ -2297,6 +2297,7 @@ return [
     'description'                                         => 'Opis',
     'sum_of_period'                                       => 'Suma dla tego okresu',
     'average_in_period'                                   => 'Średnia dla tego okresu',
+    'no_account_role'                                     => '(no role)',
     'account_role_defaultAsset'                           => 'Domyślne konto aktywów',
     'account_role_sharedAsset'                            => 'Współdzielone konto aktywów',
     'account_role_savingAsset'                            => 'Konto oszczędnościowe',
@@ -2569,8 +2570,9 @@ return [
     'store_as_new'                                        => 'Zapisz jako nową zamiast aktualizować.',
     'reset_after'                                         => 'Wyczyść formularz po zapisaniu',
     'errors_submission'                                   => 'Coś poszło nie tak w czasie zapisu. Proszę, sprawdź błędy poniżej.',
-    'errors_submission_v2'                                => 'Coś poszło nie tak w czasie zapisu. Proszę, sprawdź błędy poniżej: %{errorMessage}',
+    'errors_submission_v2'                                => 'There was something wrong with your submission. Please check out the errors below: {{errorMessage}}',
     'transaction_expand_split'                            => 'Rozwiń podział',
+    'transaction_remove_split'                            => 'Remove split',
     'transaction_collapse_split'                          => 'Zwiń podział',
 
     // object groups
