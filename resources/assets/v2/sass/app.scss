@@ -43,7 +43,7 @@ h3.hover-expand {
     text-overflow: ellipsis
 }
 h3.hover-expand:hover {
-    overflow-x: scroll;
+    overflow-x: auto;
 }
 
 .form-control {

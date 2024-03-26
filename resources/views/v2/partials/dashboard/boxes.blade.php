@@ -52,7 +52,6 @@
                                 :class="{ 'invisible': (billBox.unpaid.length == index+1) }">, </span>
                         </span>
                     </template>
-                    <span x-text="billBox.unpaid.length"></span>
                 </h3>
                 </template>
                 <template x-if="loading">
@@ -76,7 +75,6 @@
                 </template>
                 <template x-if="billBox.paid.length > 0">
                     <span>
-                    {{ __('firefly.unpaid') }}:
                 {{ __('firefly.paid') }}:
                 <template x-for="(amount, index) in billBox.paid" :key="index">
                         <span>
