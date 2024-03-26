@@ -23,7 +23,7 @@
         "unknown_dest_plain": "Unknown destination account",
         "unknown_any_plain": "Unknown account",
         "unknown_budget_plain": "No budget",
-        "stored_journal_js": "Successfully created new transaction \"{{description}}\"",
+        "stored_journal_js": "\"{{description}}\" \u00faj tranzakci\u00f3 sikeresen l\u00e9trehozva",
         "wait_loading_transaction": "K\u00e9rlek v\u00e1rj az \u0171rlap bet\u00f6lt\u00e9s\u00e9ig",
         "nothing_found": "(nincs tal\u00e1lat)",
         "wait_loading_data": "K\u00e9rlek v\u00e1rj am\u00edg bet\u00f6ltj\u00fck az adatokat...",

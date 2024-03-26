@@ -42,7 +42,7 @@ return [
     'fatal_error'             => 'Prišlo je do usodne napake. Preverite dnevniške datoteke v "storage/logs" ali uporabite "docker logs -f [container]", da vidite, kaj se dogaja.',
     'maintenance_mode'        => 'Firefly III je v vzdrževalnem načinu.',
     'be_right_back'           => 'Takoj se vrnem!',
-    'check_back'              => 'Firefly III is down for some necessary maintenance. Please check back in a second. If you happen to see this message on the demo site, just wait a few minutes. The database is reset every few hours.',
+    'check_back'              => 'Firefly III ne deluje zaradi potrebnega vzdrževanja. Preverite znova čez sekundo. Če slučajno vidite to sporočilo na demo strani, počakajte nekaj minut. Baza podatkov se ponastavi vsakih nekaj ur.',
     'error_occurred'          => 'Ups! Zgodila se je napaka.',
     'db_error_occurred'       => 'Ups! Prišlo je do napake v podatkovni bazi.',
     'error_not_recoverable'   => 'Na žalost te napake ni bilo mogoče obnoviti :(. Firefly III se je pokvaril. Napaka je:',
