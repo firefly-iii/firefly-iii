@@ -160,6 +160,9 @@ jobs:
           # zip everything
           zip -rq $zipName . -x "*.git*" "*.ci*" "*.github*" "*node_modules*" "*output.txt*"
 
+          # add sha256 sum
+          sha256sum -b $zipName > $zipName.sha256
+
           if [[ "develop" == "$version" ]]; then
             echo "Create nightly release."
             git tag -a $releaseName -m "Nightly development release '$version' on $(date +'%Y-%m-%d')"
@@ -171,6 +174,9 @@ jobs:
             # add zip file to release.
             gh release upload $releaseName $zipName
 
+            # add sha256 sum to release
+            gh release upload $releaseName $zipName.sha256
+
           else
             echo "Create default release."
             git tag -a $releaseName -m "Here be changelog"
@@ -178,8 +184,11 @@ jobs:
             gh release create $releaseName -F output.txt -t "$releaseName" --verify-tag
             # add zip file to release.
             gh release upload $releaseName $zipName
+            # add sha256 sum to release
+            gh release upload $releaseName $zipName.sha256
             rm output.txt
             rm $zipName
+            rm $zipName.sha256
             git checkout develop
             git merge main
             git push
