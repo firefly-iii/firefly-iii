@@ -1989,7 +1989,7 @@ return [
     'deleted_transfer'                                    => '":description" átvezetés sikeresen törölve',
     'deleted_reconciliation'                              => '":description" egyeztető tranzakció sikeresen törölve',
     'stored_journal'                                      => '":description" új tranzakció sikeresen létrehozva',
-    'stored_journal_js'                                   => 'Successfully created new transaction "{{description}}"',
+    'stored_journal_js'                                   => '"{{description}}" új tranzakció sikeresen létrehozva',
     'stored_journal_no_descr'                             => 'Új tranzakció sikeresen létrehozva',
     'updated_journal_no_descr'                            => 'Tranzakció sikeresen frissítve',
     'select_transactions'                                 => 'Tranzakciók kiválasztása',
