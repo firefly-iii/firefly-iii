@@ -169,7 +169,7 @@ jobs:
             git push origin $releaseName
             gh release create $releaseName -p --verify-tag \
               -t "Development release for $(date +'%Y-%m-%d')" \
-              -n "Bi-weekly development release of Firefly III with the latest fixes, translations and features. This release was created on **$(date +'%Y-%m-%d')** and may contain bugs. Use at your own risk. Docker users can find this release under the \`develop\` tag."
+              -n "Bi-weekly development release of Firefly III with the latest fixes, translations and features. Docker users can find this release under the \`develop\` tag.\n\nThis release was created on **$(date +'%Y-%m-%d')** and may contain unexpected bugs. Data loss is rare but is not impossible.\n\n* Please read the installation instructions for [Docker](https://docs.firefly-iii.org/how-to/firefly-iii/installation/docker/), [Portainer](https://docs.firefly-iii.org/how-to/firefly-iii/installation/portainer/), [Kubernetes](https://docs.firefly-iii.org/how-to/firefly-iii/installation/kubernetes/) or [self-managed servers](https://docs.firefly-iii.org/how-to/firefly-iii/installation/self-managed/)\n* Or read the upgrade instructions for [Docker](https://docs.firefly-iii.org/how-to/firefly-iii/upgrade/docker/), [Kubernetes](https://docs.firefly-iii.org/how-to/firefly-iii/upgrade/kubernetes/) or [self-managed servers](https://docs.firefly-iii.org/how-to/firefly-iii/upgrade/self-managed/)\n\n:warning: Please be careful with this pre-release, as is may not work as expected."
 
             # add zip file to release.
             gh release upload $releaseName $zipName
