@@ -64,7 +64,7 @@ return [
     // 'date_time'               => '%B %e, %Y, @ %T',
     'date_time_js'             => 'YYYY年M月D日 HH:mm:ss',
     'date_time_fns'            => 'YYYY年M月D日 HH:mm:ss',
-    'date_time_fns_short'      => 'MMMM do, yyyy @ HH:mm',
+    'date_time_fns_short'      => 'MMMM 执行, yyyy @ HH:mm',
 
     // 'specific_day'            => '%e %B %Y',
     'specific_day_js'          => 'YYYY年M月D日',

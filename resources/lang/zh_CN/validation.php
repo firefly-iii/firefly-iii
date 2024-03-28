@@ -55,11 +55,11 @@ return [
     'reconciled_forbidden_field'      => '这笔交易已经对账，您无法更改“:field”',
     'deleted_user'                    => '由于安全限制，您无法使用此电子邮件地址注册',
     'rule_trigger_value'              => '此值不能用于所选触发条件',
-    'rule_action_expression'          => 'Invalid expression. :error',
+    'rule_action_expression'          => '无效表达式. :error',
     'rule_action_value'               => '此值不能用于所选动作',
     'file_already_attached'           => '上传的文件“:name”已添加到此对象',
     'file_attached'                   => '成功上传文件“:name”',
-    'file_zero'                       => 'The file is zero bytes in size.',
+    'file_zero'                       => '文件大小为零字节。',
     'must_exist'                      => '数据库中不存在字段 :attribute 的 ID',
     'all_accounts_equal'              => '此字段中的所有账户必须相同',
     'group_title_mandatory'           => '在有超过一笔交易时，组标题为必填项',
@@ -197,7 +197,7 @@ return [
  *
  */
 
-    'secure_password'                 => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password',
+    'secure_password'                 => '这不是一个安全的密码。请再试一次。欲了解更多信息，请访问 https://bit.ly/FF3-password',
     'valid_recurrence_rep_type'       => '此重复类型不能用于定期交易',
     'valid_recurrence_rep_moment'     => '此重复时刻不能用于此重复类型',
     'invalid_account_info'            => '无效的账户信息',

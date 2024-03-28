@@ -70,5 +70,5 @@ return [
     'cannot_find_budget'                          => 'Firefly III 找不到预算“:name”',
     'cannot_find_category'                        => 'Firefly III 找不到分类“:name”',
     'cannot_set_budget'                           => 'Firefly III 无法设置预算“:name”为类型“:type”的交易',
-    'journal_invalid_amount'                      => 'Firefly III can\'t set amount ":amount" because it is not a valid number.',
+    'journal_invalid_amount'                      => 'Firefly III 无法设置金额 ":amount" 因为它不是一个有效的数字。',
 ];
