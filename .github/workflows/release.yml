@@ -161,7 +161,8 @@ jobs:
 
           # zip and tar everything
           zip -rq $zipName . -x "*.git*" "*.ci*" "*.github*" "*node_modules*" "*output.txt*"
-          tar --exclude='./.git' --exclude='./.ci' --exclude='./.github' --exclude='./node_modules' --exclude='./output.txt' -czf $tarName .
+          touch $tarName
+          tar --exclude=$tarName --exclude='./.git' --exclude='./.ci' --exclude='./.github' --exclude='./node_modules' --exclude='./output.txt' -czf $tarName .
 
           # add sha256 sum
           sha256sum -b $zipName > $zipName.sha256
