@@ -143,11 +143,13 @@ jobs:
 
           releaseName=$version
           zipName=FireflyIII-$version.zip
+          tarName=FireflyIII-$version.tar.gz
 
           if [[ "develop" == "$version" ]]; then
             [[ -z $(git status --untracked-files=normal --porcelain) ]] && echo "this branch is clean, no need to push..." && exit 0;
             releaseName=$version-$(date +'%Y%m%d')
             zipName=FireflyIII-develop.zip
+            tarName=FireflyIII-develop.tar.gz
           fi
 
           git add -A
@@ -157,11 +159,14 @@ jobs:
           git commit -m "Auto commit for release '$version' on $(date +'%Y-%m-%d')" || true
           git push
 
-          # zip everything
+          # zip and tar everything
           zip -rq $zipName . -x "*.git*" "*.ci*" "*.github*" "*node_modules*" "*output.txt*"
+          touch $tarName
+          tar --exclude=$tarName --exclude='./.git' --exclude='./.ci' --exclude='./.github' --exclude='./node_modules' --exclude='./output.txt' -czf $tarName .
 
           # add sha256 sum
           sha256sum -b $zipName > $zipName.sha256
+          sha256sum -b $tarName > $tarName.sha256
 
           if [[ "develop" == "$version" ]]; then
             # add text to output.txt (instructions)
@@ -185,9 +190,11 @@ jobs:
 
             # add zip file to release.
             gh release upload $releaseName $zipName
+            gh release upload $releaseName $tarName
 
             # add sha256 sum to release
             gh release upload $releaseName $zipName.sha256
+            gh release upload $releaseName $tarName.sha256
 
             # rm output.txt again
             rm output.txt
