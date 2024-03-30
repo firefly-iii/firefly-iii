@@ -110,7 +110,10 @@ class BillTransformer extends AbstractTransformer
             $nem     = $nemDate->toAtomString();
 
             // nullify again when it's outside the current view range.
-            if ($nemDate->lt($this->parameters->get('start')) || $nemDate->gt($this->parameters->get('end'))) {
+            if (
+                (null !== $this->parameters->get('start') && $nemDate->lt($this->parameters->get('start'))) ||
+                (null !== $this->parameters->get('end') && $nemDate->gt($this->parameters->get('end')))
+            ) {
                 $nem          = null;
                 $nemDate      = null;
                 $firstPayDate = null;

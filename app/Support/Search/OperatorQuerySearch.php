@@ -177,7 +177,7 @@ class OperatorQuerySearch implements SearchInterface
             default:
                 app('log')->error(sprintf('Cannot handle node %s', $class));
 
-                throw new FireflyException(sprintf('Firefly III search cant handle "%s"-nodes', $class));
+                throw new FireflyException(sprintf('Firefly III search can\'t handle "%s"-nodes', $class));
 
             case Subquery::class:
                 // loop all notes in subquery:
