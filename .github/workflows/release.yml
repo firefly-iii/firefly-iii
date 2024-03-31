@@ -167,6 +167,7 @@ jobs:
               echo "Tag $releaseName exists already."
               releaseName="$originalName"."$tagCount"
               echo "Tag for release is now $releaseName"
+              tagCount=$((tagCount+1))
             else
              echo "Tag $releaseName does not exist, can continue"
              tagFound=false
