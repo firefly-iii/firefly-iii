@@ -98,7 +98,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface
     public function get(): Collection
     {
         $collection  = new Collection();
-        $set = [];
+        $set         = [];
         $memberships = $this->user->groupMemberships()->get();
 
         /** @var GroupMembership $membership */
@@ -106,7 +106,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface
             /** @var null|UserGroup $group */
             $group = $membership->userGroup()->first();
             if (null !== $group) {
-                $groupId = (int)$group->id;
+                $groupId       = (int)$group->id;
                 if (in_array($groupId, $set, true)) {
                     continue;
                 }

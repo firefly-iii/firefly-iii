@@ -25,10 +25,7 @@ namespace FireflyIII\Api\V2\Controllers\UserGroup;
 
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Model\Account\IndexRequest;
-use FireflyIII\Api\V2\Request\Model\Transaction\InfiniteListRequest;
 use FireflyIII\Repositories\UserGroup\UserGroupRepositoryInterface;
-use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
-use FireflyIII\Transformers\V2\AccountTransformer;
 use FireflyIII\Transformers\V2\UserGroupTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -37,7 +34,7 @@ class IndexController extends Controller
 {
     public const string RESOURCE_KEY = 'user_groups';
 
-private UserGroupRepositoryInterface $repository;
+    private UserGroupRepositoryInterface $repository;
 
     /**
      * AccountController constructor.
@@ -59,12 +56,12 @@ private UserGroupRepositoryInterface $repository;
      */
     public function index(IndexRequest $request): JsonResponse
     {
-        $administrations     = $this->repository->get();
-        $pageSize     = $this->parameters->get('limit');
-        $count        = $administrations->count();
-        $administrations     = $administrations->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
-        $paginator    = new LengthAwarePaginator($administrations, $count, $pageSize, $this->parameters->get('page'));
-        $transformer  = new UserGroupTransformer();
+        $administrations = $this->repository->get();
+        $pageSize        = $this->parameters->get('limit');
+        $count           = $administrations->count();
+        $administrations = $administrations->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $paginator       = new LengthAwarePaginator($administrations, $count, $pageSize, $this->parameters->get('page'));
+        $transformer     = new UserGroupTransformer();
 
         $transformer->setParameters($this->parameters); // give params to transformer
 
@@ -73,6 +70,4 @@ private UserGroupRepositoryInterface $repository;
             ->header('Content-Type', self::CONTENT_TYPE)
         ;
     }
-
-
 }
