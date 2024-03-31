@@ -324,7 +324,7 @@
                                                         {# the amount left is automatically calculated. #}
                                                         {{ formatAmountBySymbol(spentInfo.spent + budgetLimit.amount, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }}
                                                         {% if spentInfo.spent + budgetLimit.amount > 0 %}
-                                                            ({{ formatAmountBySymbol((spentInfo.spent + budgetLimit.amount) / activeDaysLeft, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }})
+                                                            ({{ formatAmountBySymbol((0 is same as(activeDaysLeft)) ? (spentInfo.spent + budgetLimit.amount) : (spentInfo.spent + budgetLimit.amount) / activeDaysLeft, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }})
                                                         {% else %}
                                                             ({{ formatAmountBySymbol(0, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }})
                                                         {% endif %}
