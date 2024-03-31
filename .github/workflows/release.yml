@@ -161,7 +161,7 @@ jobs:
           # in both cases, if the release or tag already exists, add ".1" until it no longer exists.
           tagFound=true
           tagCount=1
-          while [ $tagFound ]
+          while [ "$tagFound" = true ]
           do
             if [ $(git tag -l "$releaseName") ]; then
               echo "Tag $releaseName exists already."
