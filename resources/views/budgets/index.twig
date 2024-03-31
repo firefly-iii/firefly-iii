@@ -324,7 +324,11 @@
                                                         {# the amount left is automatically calculated. #}
                                                         {{ formatAmountBySymbol(spentInfo.spent + budgetLimit.amount, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }}
                                                         {% if spentInfo.spent + budgetLimit.amount > 0 %}
-                                                            ({{ formatAmountBySymbol((0 is same as(activeDaysLeft)) ? (spentInfo.spent + budgetLimit.amount) : (spentInfo.spent + budgetLimit.amount) / activeDaysLeft, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }})
+                                                            {% if 0 == activeDaysLeft %}
+                                                                ({{ formatAmountBySymbol(spentInfo.spent + budgetLimit.amount, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }})
+                                                            {% else %}
+                                                                ({{ formatAmountBySymbol((spentInfo.spent + budgetLimit.amount) / activeDaysLeft, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }})
+                                                            {% endif %}
                                                         {% else %}
                                                             ({{ formatAmountBySymbol(0, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }})
                                                         {% endif %}
@@ -347,7 +351,11 @@
                                                       data-value="{{ spentInfo.spent + budgetLimit.amount }}" class="amount_left">
                                                 {{ formatAmountBySymbol(budgetLimit.amount, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }}
                                                     {% if budgetLimit.in_range %}
-                                                        ({{ formatAmountBySymbol(budgetLimit.amount / activeDaysLeft, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }})
+                                                        {% if 0 == activeDaysLeft %}
+                                                            ({{ formatAmountBySymbol(budgetLimit.amount, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }})
+                                                        {% else %}
+                                                            ({{ formatAmountBySymbol(budgetLimit.amount / activeDaysLeft, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }})
+                                                        {% endif %}
                                                     {% endif %}
                                             </span>
                                                 <br/>
