@@ -2,7 +2,12 @@
     "config": {
         "html_language": "pl",
         "date_time_fns": "do MMMM yyyy @ HH:mm:ss",
+        "month_and_day_fns": "d MMMM y",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
+    },
+    "validation": {
+        "bad_type_source": "Firefly III can't determine the transaction type based on this source account.",
+        "bad_type_destination": "Firefly III can't determine the transaction type based on this destination account."
     },
     "firefly": {
         "spent": "Wydano",
@@ -38,6 +43,11 @@
         "account_type_Revenue account": "Konto przychod\u00f3w",
         "account_type_Debt": "D\u0142ug",
         "account_type_Loan": "Po\u017cyczka",
-        "account_type_Mortgage": "Hipoteka"
+        "account_type_Mortgage": "Hipoteka",
+        "account_role_defaultAsset": "Domy\u015blne konto aktyw\u00f3w",
+        "account_role_sharedAsset": "Wsp\u00f3\u0142dzielone konto aktyw\u00f3w",
+        "account_role_savingAsset": "Konto oszcz\u0119dno\u015bciowe",
+        "account_role_ccAsset": "Karta kredytowa",
+        "account_role_cashWalletAsset": "Portfel got\u00f3wkowy"
     }
 }

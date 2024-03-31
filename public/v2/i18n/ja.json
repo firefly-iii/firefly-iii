@@ -2,7 +2,12 @@
     "config": {
         "html_language": "ja",
         "date_time_fns": "yyyy\u5e74MMMM\u6708do\u65e5 HH:mm:ss",
+        "month_and_day_fns": "y\u5e74 MMMM d\u65e5",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
+    },
+    "validation": {
+        "bad_type_source": "Firefly III can't determine the transaction type based on this source account.",
+        "bad_type_destination": "Firefly III can't determine the transaction type based on this destination account."
     },
     "firefly": {
         "spent": "\u652f\u51fa",
@@ -38,6 +43,11 @@
         "account_type_Revenue account": "\u53ce\u5165\u53e3\u5ea7",
         "account_type_Debt": "\u501f\u91d1",
         "account_type_Loan": "\u30ed\u30fc\u30f3",
-        "account_type_Mortgage": "\u4f4f\u5b85\u30ed\u30fc\u30f3"
+        "account_type_Mortgage": "\u4f4f\u5b85\u30ed\u30fc\u30f3",
+        "account_role_defaultAsset": "\u30c7\u30d5\u30a9\u30eb\u30c8\u306e\u8cc7\u7523\u53e3\u5ea7",
+        "account_role_sharedAsset": "\u5171\u6709\u8cc7\u7523\u53e3\u5ea7",
+        "account_role_savingAsset": "\u8caf\u84c4\u53e3\u5ea7",
+        "account_role_ccAsset": "\u30af\u30ec\u30b8\u30c3\u30c8\u30ab\u30fc\u30c9",
+        "account_role_cashWalletAsset": "\u73fe\u91d1"
     }
 }

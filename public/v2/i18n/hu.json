@@ -2,7 +2,12 @@
     "config": {
         "html_language": "hu",
         "date_time_fns": "MMMM do, yyyy @ HH:mm:ss",
+        "month_and_day_fns": "MMMM d, y",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
+    },
+    "validation": {
+        "bad_type_source": "A Firefly III nem tudja eld\u00f6nteni a tranzakci\u00f3 t\u00edpus\u00e1t a forr\u00e1ssz\u00e1mla alapj\u00e1n.",
+        "bad_type_destination": "A Firefly III nem tudja eld\u00f6nteni a tranzakci\u00f3 t\u00edpus\u00e1t a c\u00e9lsz\u00e1mla alapj\u00e1n."
     },
     "firefly": {
         "spent": "Elk\u00f6lt\u00f6tt",
@@ -38,6 +43,11 @@
         "account_type_Revenue account": "Revenue account",
         "account_type_Debt": "Ad\u00f3ss\u00e1g",
         "account_type_Loan": "Hitel",
-        "account_type_Mortgage": "Jelz\u00e1log"
+        "account_type_Mortgage": "Jelz\u00e1log",
+        "account_role_defaultAsset": "Alap\u00e9rtelmezett eszk\u00f6zsz\u00e1mla",
+        "account_role_sharedAsset": "Megosztott eszk\u00f6zsz\u00e1mla",
+        "account_role_savingAsset": "Megtakar\u00edt\u00e1si sz\u00e1mla",
+        "account_role_ccAsset": "Hitelk\u00e1rtya",
+        "account_role_cashWalletAsset": "K\u00e9szp\u00e9nz"
     }
 }

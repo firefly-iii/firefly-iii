@@ -2,7 +2,12 @@
     "config": {
         "html_language": "pt-br",
         "date_time_fns": "dd 'de' MMMM 'de' yyyy, '\u00e0s' HH:mm:ss",
+        "month_and_day_fns": "d [de] MMMM [de] y",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
+    },
+    "validation": {
+        "bad_type_source": "Firefly III n\u00e3o conseguiu determinar o tipo de transa\u00e7\u00e3o baseado nesta conta de origem.",
+        "bad_type_destination": "Firefly III n\u00e3o conseguiu determinar o tipo de transa\u00e7\u00e3o baseado nesta conta destino."
     },
     "firefly": {
         "spent": "Gasto",
@@ -38,6 +43,11 @@
         "account_type_Revenue account": "Conta de receitas",
         "account_type_Debt": "D\u00edvida",
         "account_type_Loan": "Empr\u00e9stimo",
-        "account_type_Mortgage": "Hipoteca"
+        "account_type_Mortgage": "Hipoteca",
+        "account_role_defaultAsset": "Conta padr\u00e3o",
+        "account_role_sharedAsset": "Contas de ativos compartilhadas",
+        "account_role_savingAsset": "Conta poupan\u00e7a",
+        "account_role_ccAsset": "Cart\u00e3o de cr\u00e9dito",
+        "account_role_cashWalletAsset": "Carteira de dinheiro"
     }
 }

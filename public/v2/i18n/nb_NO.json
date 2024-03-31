@@ -2,7 +2,12 @@
     "config": {
         "html_language": "nb",
         "date_time_fns": "do MMMM, yyyy @ HH:mm:ss",
+        "month_and_day_fns": "MMMM d, y",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
+    },
+    "validation": {
+        "bad_type_source": "Firefly III can't determine the transaction type based on this source account.",
+        "bad_type_destination": "Firefly III can't determine the transaction type based on this destination account."
     },
     "firefly": {
         "spent": "Brukt",
@@ -38,6 +43,11 @@
         "account_type_Revenue account": "Inntektskonto",
         "account_type_Debt": "Gjeld",
         "account_type_Loan": "L\u00e5n",
-        "account_type_Mortgage": "Boligl\u00e5n"
+        "account_type_Mortgage": "Boligl\u00e5n",
+        "account_role_defaultAsset": "Standard aktivakonto",
+        "account_role_sharedAsset": "Delt aktivakonto",
+        "account_role_savingAsset": "Sparekonto",
+        "account_role_ccAsset": "Kredittkort",
+        "account_role_cashWalletAsset": "Kontant lommebok"
     }
 }

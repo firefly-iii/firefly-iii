@@ -2,7 +2,12 @@
     "config": {
         "html_language": "tr",
         "date_time_fns": "MMMM do, yyyy @ HH:mm:ss",
+        "month_and_day_fns": "MMMM d, y",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
+    },
+    "validation": {
+        "bad_type_source": "Firefly III can't determine the transaction type based on this source account.",
+        "bad_type_destination": "Firefly III can't determine the transaction type based on this destination account."
     },
     "firefly": {
         "spent": "Harcanan",
@@ -38,6 +43,11 @@
         "account_type_Revenue account": "Revenue account",
         "account_type_Debt": "Debt",
         "account_type_Loan": "Loan",
-        "account_type_Mortgage": "Mortgage"
+        "account_type_Mortgage": "Mortgage",
+        "account_role_defaultAsset": "Varsay\u0131lan varl\u0131k hesab\u0131",
+        "account_role_sharedAsset": "Payla\u015f\u0131lan varl\u0131k hesab\u0131",
+        "account_role_savingAsset": "Birikim hesab\u0131",
+        "account_role_ccAsset": "Kredi Kart\u0131",
+        "account_role_cashWalletAsset": "Nakit c\u00fczdan"
     }
 }

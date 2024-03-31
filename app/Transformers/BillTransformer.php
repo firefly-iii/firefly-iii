@@ -111,8 +111,8 @@ class BillTransformer extends AbstractTransformer
 
             // nullify again when it's outside the current view range.
             if (
-                (null !== $this->parameters->get('start') && $nemDate->lt($this->parameters->get('start'))) ||
-                (null !== $this->parameters->get('end') && $nemDate->gt($this->parameters->get('end')))
+                (null !== $this->parameters->get('start') && $nemDate->lt($this->parameters->get('start')))
+                || (null !== $this->parameters->get('end') && $nemDate->gt($this->parameters->get('end')))
             ) {
                 $nem          = null;
                 $nemDate      = null;

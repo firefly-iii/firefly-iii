@@ -2,7 +2,12 @@
     "config": {
         "html_language": "sv",
         "date_time_fns": "MMMM do, yyyy @ HH:mm:ss",
+        "month_and_day_fns": "d MMMM y",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
+    },
+    "validation": {
+        "bad_type_source": "Firefly III kan inte avg\u00f6ra transaktionstypen baserat p\u00e5 detta k\u00e4llkonto.",
+        "bad_type_destination": "Firefly III can't determine the transaction type based on this destination account."
     },
     "firefly": {
         "spent": "Spenderat",
@@ -38,6 +43,11 @@
         "account_type_Revenue account": "Revenue account",
         "account_type_Debt": "Skuld",
         "account_type_Loan": "L\u00e5n",
-        "account_type_Mortgage": "Bol\u00e5n"
+        "account_type_Mortgage": "Bol\u00e5n",
+        "account_role_defaultAsset": "F\u00f6rvalt tillg\u00e5ngskonto",
+        "account_role_sharedAsset": "Delat tillg\u00e5ngskonto",
+        "account_role_savingAsset": "Sparkonto",
+        "account_role_ccAsset": "Kreditkort",
+        "account_role_cashWalletAsset": "Pl\u00e5nbok"
     }
 }

@@ -2,7 +2,12 @@
     "config": {
         "html_language": "cs",
         "date_time_fns": "MMMM do, yyyy @ HH:mm:ss",
+        "month_and_day_fns": "d MMMM, y",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
+    },
+    "validation": {
+        "bad_type_source": "Firefly III can't determine the transaction type based on this source account.",
+        "bad_type_destination": "Firefly III can't determine the transaction type based on this destination account."
     },
     "firefly": {
         "spent": "Utraceno",
@@ -38,6 +43,11 @@
         "account_type_Revenue account": "Revenue account",
         "account_type_Debt": "Dluh",
         "account_type_Loan": "P\u016fj\u010dka",
-        "account_type_Mortgage": "Hypot\u00e9ka"
+        "account_type_Mortgage": "Hypot\u00e9ka",
+        "account_role_defaultAsset": "V\u00fdchoz\u00ed \u00fa\u010det aktiv",
+        "account_role_sharedAsset": "Sd\u00edlen\u00fd \u00fa\u010det aktiv",
+        "account_role_savingAsset": "Spo\u0159ic\u00ed \u00fa\u010det",
+        "account_role_ccAsset": "Kreditn\u00ed karta",
+        "account_role_cashWalletAsset": "Pen\u011b\u017eenka"
     }
 }
