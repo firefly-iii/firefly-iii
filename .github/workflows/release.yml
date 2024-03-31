@@ -141,6 +141,11 @@ jobs:
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git config advice.addIgnoredFile false
 
+          # update composer (again)
+          composer validate --strict
+          composer update --no-dev --no-scripts --no-plugins
+          composer dump-autoload
+
           releaseName=$version
           zipName=FireflyIII-$version.zip
           tarName=FireflyIII-$version.tar.gz
