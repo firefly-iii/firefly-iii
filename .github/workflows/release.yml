@@ -147,15 +147,33 @@ jobs:
           composer dump-autoload
 
           releaseName=$version
-          zipName=FireflyIII-$version.zip
+          originalName=$version
           tarName=FireflyIII-$version.tar.gz
 
           if [[ "develop" == "$version" ]]; then
             [[ -z $(git status --untracked-files=normal --porcelain) ]] && echo "this branch is clean, no need to push..." && exit 0;
             releaseName=$version-$(date +'%Y%m%d')
+            originalName=$releaseName
             zipName=FireflyIII-develop.zip
             tarName=FireflyIII-develop.tar.gz
           fi
+
+          # in both cases, if the release or tag already exists, add ".1" until it no longer exists.
+          tagFound=true
+          tagCount=1
+          while [ $tagFound ]
+          do
+            if [ $(git tag -l "$releaseName") ]; then
+              echo "Tag $releaseName exists already."
+              releaseName="$originalName"."$tagCount"
+              echo "Tag for release is now $releaseName"
+            else
+             echo "Tag $releaseName does not exist, can continue"
+             tagFound=false
+            fi
+          done
+          echo "Will use tag and release name $releaseName."
+          exit 0
 
           git add -A
           if test -f "output.txt"; then
