@@ -36,10 +36,14 @@ use Illuminate\Support\Collection;
 class UserGroupTransformer extends AbstractTransformer
 {
     private array $memberships;
+    private array $membershipsVisible;
+    private array $inUse;
 
     public function __construct()
     {
-        $this->memberships = [];
+        $this->memberships        = [];
+        $this->membershipsVisible = [];
+        $this->inUse = [];
     }
 
     public function collectMetaData(Collection $objects): Collection
@@ -51,8 +55,10 @@ class UserGroupTransformer extends AbstractTransformer
 
             /** @var UserGroup $userGroup */
             foreach ($objects as $userGroup) {
-                $userGroupId = $userGroup->id;
-                $access      = $user->hasRoleInGroupOrOwner($userGroup, UserRoleEnum::VIEW_MEMBERSHIPS) || $user->hasRole('owner');
+                $userGroupId                            = $userGroup->id;
+                $this->inUse[$userGroupId]              = $user->user_group_id === $userGroupId;
+                $access                                 = $user->hasRoleInGroupOrOwner($userGroup, UserRoleEnum::VIEW_MEMBERSHIPS) || $user->hasRole('owner');
+                $this->membershipsVisible[$userGroupId] = $access;
                 if ($access) {
                     $groupMemberships = $userGroup->groupMemberships()->get();
 
@@ -62,6 +68,7 @@ class UserGroupTransformer extends AbstractTransformer
                             'user_id'    => (string)$groupMembership->user_id,
                             'user_email' => $groupMembership->user->email,
                             'role'       => $groupMembership->userRole->title,
+                            'you'        => $groupMembership->user_id === $user->id,
                         ];
                     }
                 }
@@ -77,11 +84,13 @@ class UserGroupTransformer extends AbstractTransformer
     public function transform(UserGroup $userGroup): array
     {
         return [
-            'id'         => $userGroup->id,
-            'created_at' => $userGroup->created_at->toAtomString(),
-            'updated_at' => $userGroup->updated_at->toAtomString(),
-            'title'      => $userGroup->title,
-            'members'    => $this->memberships[$userGroup->id] ?? [],
+            'id'              => $userGroup->id,
+            'created_at'      => $userGroup->created_at->toAtomString(),
+            'updated_at'      => $userGroup->updated_at->toAtomString(),
+            'in_use' => $this->inUse[$userGroup->id] ?? false,
+            'title'           => $userGroup->title,
+            'can_see_members' => $this->membershipsVisible[$userGroup->id] ?? false,
+            'members'         => $this->memberships[$userGroup->id] ?? [],
         ];
         // if the user has a specific role in this group, then collect the memberships.
     }

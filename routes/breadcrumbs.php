@@ -1280,3 +1280,11 @@ Breadcrumbs::for(
         $breadcrumbs->push(trans('firefly.edit_webhook', ['title' => limitStringLength($webhook->title)]), route('webhooks.edit', [$webhook->id]));
     }
 );
+
+Breadcrumbs::for(
+    'administrations.index',
+    static function (Generator $breadcrumbs): void {
+        $breadcrumbs->parent('index');
+        $breadcrumbs->push(trans('firefly.administrations_breadcrumb'), route('administrations.index'));
+    }
+);

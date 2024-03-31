@@ -37,9 +37,9 @@
             {{ __('firefly.preferences') }}
         </a>
         <div class="dropdown-divider"></div>
-        <a href="#" class="dropdown-item">
+        <a href="{{ route('administrations.index') }}" class="dropdown-item">
             <em class="fa-solid fa-money-bill-transfer me-2"></em>
-            TODO {{ __('firefly.administrations_index_menu') }}
+            {{ __('firefly.administrations_index_menu') }}
         </a>
     </div>
 </li>

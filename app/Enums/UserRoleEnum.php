@@ -41,7 +41,6 @@ enum UserRoleEnum: string
     // manage other financial objects:
     case MANAGE_BUDGETS       = 'mng_budgets';
     case MANAGE_PIGGY_BANKS   = 'mng_piggies';
-    case MANAGE_REPETITIONS   = 'mng_reps';
     case MANAGE_SUBSCRIPTIONS = 'mng_subscriptions';
     case MANAGE_RULES         = 'mng_rules';
     case MANAGE_RECURRING     = 'mng_recurring';
@@ -51,7 +50,7 @@ enum UserRoleEnum: string
     // view and generate reports
     case VIEW_REPORTS         = 'view_reports';
 
-    // view memberships. needs FULL to manage them.
+    // view memberships AND roles. needs FULL to manage them.
     case VIEW_MEMBERSHIPS     = 'view_memberships';
 
     // everything the creator can, except remove/change original creator and delete group
