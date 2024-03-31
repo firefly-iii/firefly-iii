@@ -24,21 +24,22 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\UserGroup;
 
 use FireflyIII\Http\Controllers\Controller;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Application;
 
 class CreateController extends Controller
 {
-
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
+     * @return Application|Factory|\Illuminate\Contracts\Foundation\Application|View
      */
     public function create()
     {
-        $title    = (string)trans('firefly.administrations_page_title');
-        $subTitle = (string)trans('firefly.administrations_page_sub_title');
+        $title         = (string)trans('firefly.administrations_page_title');
+        $subTitle      = (string)trans('firefly.administrations_page_sub_title');
         $mainTitleIcon = 'fa-book';
         app('log')->debug(sprintf('Now at %s', __METHOD__));
 
         return view('administrations.create')->with(compact('title', 'subTitle', 'mainTitleIcon'));
     }
-
 }
