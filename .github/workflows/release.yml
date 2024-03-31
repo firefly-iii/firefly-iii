@@ -173,7 +173,6 @@ jobs:
             fi
           done
           echo "Will use tag and release name $releaseName."
-          exit 0
 
           git add -A
           if test -f "output.txt"; then
