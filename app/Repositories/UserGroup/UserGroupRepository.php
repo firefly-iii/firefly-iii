@@ -288,4 +288,10 @@ class UserGroupRepository implements UserGroupRepositoryInterface
 
         return $roles;
     }
+
+    #[\Override] public function useUserGroup(UserGroup $userGroup): void
+    {
+        $this->user->user_group_id = $userGroup->id;
+        $this->user->save();
+    }
 }

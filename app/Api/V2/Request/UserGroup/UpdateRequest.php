@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V2\Request\UserGroup;
 
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\UserGroup;
+use FireflyIII\Rules\IsDefaultUserGroupName;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
@@ -53,7 +54,7 @@ class UpdateRequest extends FormRequest
         $userGroup = $this->route()->parameter('userGroup');
 
         return [
-            'title' => sprintf('required|min:1|max:255|unique:user_groups,title,%d', $userGroup->id),
+            'title' => ['required', 'min:1', 'max:255', sprintf('unique:user_groups,title,%d', $userGroup->id), new IsDefaultUserGroupName($userGroup)],
         ];
     }
 }

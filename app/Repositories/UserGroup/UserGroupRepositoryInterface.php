@@ -38,6 +38,8 @@ interface UserGroupRepositoryInterface
 
     public function get(): Collection;
 
+    public function useUserGroup(UserGroup $userGroup): void;
+
     public function getAll(): Collection;
 
     public function setUser(null|Authenticatable|User $user): void;

@@ -53,6 +53,8 @@ export default defineConfig({
 
                 // administrations
                 'resources/assets/v2/pages/administrations/index.js',
+                'resources/assets/v2/pages/administrations/create.js',
+                'resources/assets/v2/pages/administrations/edit.js',
 
                 // transactions
                 'resources/assets/v2/pages/transactions/create.js',
