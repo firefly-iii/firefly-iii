@@ -73,7 +73,8 @@ let transactions = function () {
 
         // form behaviour during transaction
         formBehaviour: {
-            formType: 'create', foreignCurrencyEnabled: true,
+            formType: 'create',
+            foreignCurrencyEnabled: true,
         },
 
         // form data (except transactions) is stored in formData

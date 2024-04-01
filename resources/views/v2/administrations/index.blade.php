@@ -16,7 +16,7 @@
             </div>
             <div class="row mb-3">
                 <template x-for="(group, index) in userGroups" :key="index">
-                    <div class="col-xl-4 col-lg-4 col-sm-6 col-xs-12">
+                    <div class="col-xl-4 col-lg-4 col-sm-6 col-xs-12 mb-3">
                         <div class="card">
                             <div class="card-header">
                                 <h3 class="card-title">Administration "<span x-text="group.title"></span>"</h3>

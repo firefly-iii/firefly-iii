@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class () extends Migration {
     private const string QUERY_ERROR = 'Could not execute query (table "%s", field "%s"): %s';
-    private const string EXPL        = 'If the index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.';
+    private const string EXPL        = 'If the index already exists (see error), or if MySQL can\'t do it, this is not an problem. Otherwise, please open a GitHub discussion.';
 
     /**
      * Run the migrations.

@@ -19,13 +19,19 @@
  */
 
 import '../../boot/bootstrap.js';
-import dates from "./shared/dates.js";
+import dates from "../shared/dates.js";
+import Post from "../../api/v2/model/user-group/post.js";
+import i18next from "i18next";
 
 
-let somethings = function() {
+let administrations = function () {
     return {
+        title: '',
+        errors: {
+            title: []
+        },
+
         // notifications
-        // TODO duplicate code
         notifications: {
             error: {
                 show: false, text: '', url: '',
@@ -37,7 +43,6 @@ let somethings = function() {
             }
         },
         // state of the form is stored in formState:
-        // TODO duplicate code
         formStates: {
             isSubmitting: false,
             returnHereButton: false,
@@ -46,14 +51,34 @@ let somethings = function() {
         },
 
         // form behaviour
-        // TODO duplicate code
         formBehaviour: {
             formType: 'create', // or 'update'
         },
+        changedTitle() {
+
+        },
 
         pageProperties: {},
-        functionName() {
+        submitForm() {
+            (new Post()).post({title: this.title}).then(response => {
+                if (this.formStates.returnHereButton) {
+                    this.notifications.success.show = true;
+                    this.notifications.success.text = i18next.t('firefly.new_administration_created', {title: response.data.data.attributes.title});
+                    this.notifications.success.url = './administrations';
+                }
+                if (this.formStates.resetButton) {
+                    this.title = '';
+                }
+                if (!this.formStates.returnHereButton) {
+                    window.location.href = './administrations?user_group_id=' + parseInt(response.data.data.id) + '&message=created';
+                }
+            }).catch(error => {
+                console.error(error);
+            });
 
+        },
+        cancelForm() {
+            window.location.href = './administrations';
         },
         init() {
 
@@ -62,7 +87,7 @@ let somethings = function() {
 }
 
 
-let comps = {somethings, dates};
+let comps = {administrations, dates};
 
 function loadPage() {
     Object.keys(comps).forEach(comp => {
