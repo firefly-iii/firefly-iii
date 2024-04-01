@@ -115,7 +115,7 @@ class NewUserController extends Controller
 
         // store frontpage preferences:
         $accounts      = $this->repository->getAccountsByType([AccountType::ASSET])->pluck('id')->toArray();
-        app('preferences')->set('frontPageAccounts', $accounts);
+        app('preferences')->set('frontpageAccounts', $accounts);
 
         // mark.
         app('preferences')->mark();

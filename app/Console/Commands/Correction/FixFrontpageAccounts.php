@@ -50,7 +50,7 @@ class FixFrontpageAccounts extends Command
 
         /** @var User $user */
         foreach ($users as $user) {
-            $preference = app('preferences')->getForUser($user, 'frontPageAccounts');
+            $preference = app('preferences')->getForUser($user, 'frontpageAccounts');
             if (null !== $preference) {
                 $this->fixPreference($preference);
             }
@@ -83,6 +83,6 @@ class FixFrontpageAccounts extends Command
                 }
             }
         }
-        app('preferences')->setForUser($preference->user, 'frontPageAccounts', $fixed);
+        app('preferences')->setForUser($preference->user, 'frontpageAccounts', $fixed);
     }
 }

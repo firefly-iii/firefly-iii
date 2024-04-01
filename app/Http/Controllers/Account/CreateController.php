@@ -145,13 +145,13 @@ class CreateController extends Controller
         Log::channel('audit')->info('Stored new account.', $data);
 
         // update preferences if necessary:
-        $frontPage = app('preferences')->get('frontPageAccounts', [])->data;
-        if (!is_array($frontPage)) {
-            $frontPage = [];
+        $frontpage = app('preferences')->get('frontpageAccounts', [])->data;
+        if (!is_array($frontpage)) {
+            $frontpage = [];
         }
         if (AccountType::ASSET === $account->accountType->type) {
-            $frontPage[] = $account->id;
-            app('preferences')->set('frontPageAccounts', $frontPage);
+            $frontpage[] = $account->id;
+            app('preferences')->set('frontpageAccounts', $frontpage);
         }
 
         // store attachment(s):

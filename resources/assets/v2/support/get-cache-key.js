@@ -19,9 +19,11 @@
  */
 
 import {format} from "date-fns";
+import store from "store";
 
 function getCacheKey(string, start, end) {
-    const cacheKey = format(start, 'y-MM-dd') + '_' + format(end, 'y-MM-dd') + '_' + string;
+    const localValue = store.get('lastActivity');
+    const cacheKey = format(start, 'y-MM-dd') + '_' + format(end, 'y-MM-dd') + '_' + string + localValue;
     console.log('getCacheKey: ' + cacheKey);
     return String(cacheKey);
 }

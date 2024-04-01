@@ -35,6 +35,7 @@ export default () => ({
     getFreshData() {
         const start = new Date(window.store.get('start'));
         const end = new Date(window.store.get('end'));
+        // needs user data.
         const cacheKey = getCacheKey(PIGGY_CACHE_KEY, start, end);
 
         const cacheValid = window.store.get('cacheValid');

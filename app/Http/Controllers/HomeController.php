@@ -129,10 +129,10 @@ class HomeController extends Controller
         }
         $subTitle       = (string)trans('firefly.welcome_back');
         $transactions   = [];
-        $frontPage      = app('preferences')->getFresh('frontPageAccounts', $repository->getAccountsByType([AccountType::ASSET])->pluck('id')->toArray());
-        $frontPageArray = $frontPage->data;
-        if (!is_array($frontPageArray)) {
-            $frontPageArray = [];
+        $frontpage      = app('preferences')->getFresh('frontpageAccounts', $repository->getAccountsByType([AccountType::ASSET])->pluck('id')->toArray());
+        $frontpageArray = $frontpage->data;
+        if (!is_array($frontpageArray)) {
+            $frontpageArray = [];
         }
 
         /** @var Carbon $start */
@@ -140,13 +140,13 @@ class HomeController extends Controller
 
         /** @var Carbon $end */
         $end            = session('end', today(config('app.timezone'))->endOfMonth());
-        $accounts       = $repository->getAccountsById($frontPageArray);
+        $accounts       = $repository->getAccountsById($frontpageArray);
         $today          = today(config('app.timezone'));
 
         // sort frontpage accounts by order
         $accounts       = $accounts->sortBy('order');
 
-        app('log')->debug('Frontpage accounts are ', $frontPageArray);
+        app('log')->debug('Frontpage accounts are ', $frontpageArray);
 
         /** @var BillRepositoryInterface $billRepository */
         $billRepository = app(BillRepositoryInterface::class);

@@ -301,14 +301,14 @@ class AccountController extends Controller
         $end            = clone session('end', today(config('app.timezone'))->endOfMonth());
         $defaultSet     = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray();
         app('log')->debug('Default set is ', $defaultSet);
-        $frontPage      = app('preferences')->get('frontPageAccounts', $defaultSet);
-        $frontPageArray = !is_array($frontPage->data) ? [] : $frontPage->data;
-        app('log')->debug('Frontpage preference set is ', $frontPageArray);
-        if (0 === count($frontPageArray)) {
-            app('preferences')->set('frontPageAccounts', $defaultSet);
+        $frontpage      = app('preferences')->get('frontpageAccounts', $defaultSet);
+        $frontpageArray = !is_array($frontpage->data) ? [] : $frontpage->data;
+        app('log')->debug('Frontpage preference set is ', $frontpageArray);
+        if (0 === count($frontpageArray)) {
+            app('preferences')->set('frontpageAccounts', $defaultSet);
             app('log')->debug('frontpage set is empty!');
         }
-        $accounts       = $repository->getAccountsById($frontPageArray);
+        $accounts       = $repository->getAccountsById($frontpageArray);
 
         return response()->json($this->accountBalanceChart($accounts, $start, $end));
     }

@@ -98,14 +98,14 @@ class AccountController extends Controller
         // user's preferences
         if (0 === $accounts->count()) {
             $defaultSet = $this->repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT])->pluck('id')->toArray();
-            $frontPage  = app('preferences')->get('frontPageAccounts', $defaultSet);
+            $frontpage  = app('preferences')->get('frontpageAccounts', $defaultSet);
 
-            if (!(is_array($frontPage->data) && count($frontPage->data) > 0)) {
-                $frontPage->data = $defaultSet;
-                $frontPage->save();
+            if (!(is_array($frontpage->data) && count($frontpage->data) > 0)) {
+                $frontpage->data = $defaultSet;
+                $frontpage->save();
             }
 
-            $accounts   = $this->repository->getAccountsById($frontPage->data);
+            $accounts   = $this->repository->getAccountsById($frontpage->data);
         }
 
         // both options are overruled by "preselected"

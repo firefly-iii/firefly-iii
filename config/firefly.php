@@ -216,13 +216,13 @@ return [
     ],
 
     // administration specific preferences
-    'admin_specific_prefs'         => ['frontPageAccounts', 'lastActivity'],
+    'admin_specific_prefs'         => ['frontpageAccounts', 'lastActivity'],
 
     // default user-related values
     'darkMode'                     => 'browser',
     'list_length'                  => 10, // to be removed if v1 is cancelled.
     'default_preferences'          => [
-        'frontPageAccounts'  => [],
+        'frontpageAccounts'  => [],
         'listPageSize'       => 50,
         'currencyPreference' => 'EUR',
         'language'           => 'en_US',
