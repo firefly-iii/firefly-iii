@@ -16,10 +16,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #8648
-- #8725
-- #8732
-- #8735
+- [Issue 8648](https://github.com/firefly-iii/firefly-iii/issues/8648) (Crashes during initial setup with PG 16 dbs) reported by @Lysholm
+- [Issue 8725](https://github.com/firefly-iii/firefly-iii/issues/8725) (API: Call to `api/v1/bills` without arguments fails) reported by @dreautall
+- [Issue 8732](https://github.com/firefly-iii/firefly-iii/issues/8732) (Error "Division by zero" when opening the "Budget" section) reported by @mrResident
+- [PR 8735](https://github.com/firefly-iii/firefly-iii/pull/8735) (Fix `Division error by zero` in budget views) reported by @mansuf
 
 ## 6.1.12 - 2024-03-21
 
