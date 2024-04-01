@@ -264,6 +264,7 @@ return [
 
     // no access to administration:
     'no_access_user_group'            => 'You do not have the correct access rights for this administration.',
+    'administration_owner_rename' => 'You can\'t rename your standard administration.',
 ];
 
 // Ignore this comment

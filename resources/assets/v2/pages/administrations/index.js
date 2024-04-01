@@ -27,6 +27,7 @@ import '@ag-grid-community/styles/ag-grid.css';
 import '@ag-grid-community/styles/ag-theme-alpine.css';
 import '../../css/grid-ff3-theme.css';
 import Get from "../../api/v2/model/user-group/get.js";
+import Post from "../../api/v2/model/user-group/post.js";
 
 let index = function () {
     return {
@@ -53,6 +54,13 @@ let index = function () {
             this.notifications.wait.text = i18next.t('firefly.wait_loading_data')
             this.loadAdministrations();
         },
+        useAdministration(id) {
+            let groupId = parseInt(id);
+            // try to post "use", then reload administrations.
+            (new Post()).use(groupId).then(response => {
+               this.loadAdministrations();
+            });
+        },
 
         loadAdministrations() {
             this.notifications.wait.show = true;
@@ -73,16 +81,13 @@ let index = function () {
                             membersVisible: current.attributes.can_see_members,
                             members: [],
                         };
-                        console.log('Processing group #' + group.id + ' (' + group.title + ')' );
                         let memberships = {};
                         for (let j = 0; j < current.attributes.members.length; j++) {
                             let member = current.attributes.members[j];
-                            console.log('Found member ' + member.user_email, member.you, member.role);
                             if ('owner' === member.role) {
                                 group.owner = i18next.t('firefly.administration_owner', {email: member.user_email});
                             }
                             if (true === member.you && 'owner' === member.role) {
-                                console.log('You are owner of group ' + group.title );
                                 group.isOwner = true;
                             }
                             if (true === member.you) {

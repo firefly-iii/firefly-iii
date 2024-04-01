@@ -22,11 +22,14 @@ import '../../boot/bootstrap.js';
 import dates from "../shared/dates.js";
 import Post from "../../api/v2/model/user-group/post.js";
 import i18next from "i18next";
+import Get from "../../api/v2/model/user-group/get.js";
+import Put from "../../api/v2/model/user-group/put.js";
 
 
 let administrations = function () {
     return {
         title: '',
+        id: 0,
         errors: {
             title: []
         },
@@ -52,7 +55,7 @@ let administrations = function () {
 
         // form behaviour
         formBehaviour: {
-            formType: 'create', // or 'update'
+            formType: 'update', // or 'update'
         },
         changedTitle() {
 
@@ -60,18 +63,20 @@ let administrations = function () {
 
         pageProperties: {},
         submitForm() {
-            this.errors.title = [];
-            (new Post()).post({title: this.title}).then(response => {
+            console.log('submitForm');
+            (new Put()).put({title: this.title}, {id: this.id}).then(response => {
                 if (this.formStates.returnHereButton) {
                     this.notifications.success.show = true;
-                    this.notifications.success.text = i18next.t('firefly.new_administration_created', {title: response.data.data.attributes.title});
+                    this.notifications.success.text = i18next.t('firefly.updated_administration', {title: response.data.data.attributes.title});
+                    // TODO needs a better redirect.
                     this.notifications.success.url = './administrations';
                 }
                 if (this.formStates.resetButton) {
                     this.title = '';
                 }
                 if (!this.formStates.returnHereButton) {
-                    window.location.href = './administrations?user_group_id=' + parseInt(response.data.data.id) + '&message=created';
+                    // TODO needs a better redirect.
+                    window.location.href = './administrations?user_group_id=' + parseInt(response.data.data.id) + '&message=updated';
                 }
             }).catch(error => {
                 this.errors.title = error.response.data.errors.title;
@@ -82,7 +87,12 @@ let administrations = function () {
             window.location.href = './administrations';
         },
         init() {
-
+            const page = window.location.href.split('/');
+            const groupId = parseInt(page[page.length - 1]);
+            (new Get()).show(groupId, {}).then(response => {
+                this.title = response.data.data.attributes.title;
+                this.id = parseInt(response.data.data.id);
+            });
         }
     }
 }

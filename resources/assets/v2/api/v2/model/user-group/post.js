@@ -25,4 +25,9 @@ export default class Post {
         let url = './api/v2/user-groups';
         return api.post(url, submission);
     }
+
+    use(groupId) {
+        let url = './api/v2/user-groups/' + groupId  + '/use';
+        return api.post(url, {});
+    }
 }

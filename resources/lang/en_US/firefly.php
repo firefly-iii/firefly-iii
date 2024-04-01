@@ -1391,8 +1391,11 @@ return [
     'administration_you'                                  => 'Your role: {{role}}',
     'other_users_in_admin'                                => 'Other users in this administration',
     'administrations_create_breadcrumb'                   => 'Create new financial administration',
+    'administrations_page_create_sub_title'                => 'Create new financial administration',
     'basic_administration_information'                    => 'Basic administration information',
     'new_administration_created'                          => 'New financial administration "{{title}}" has been created',
+    'edit_administration_breadcrumb' => 'Edit financial administration ":title"',
+    'administrations_page_edit_sub_title'=> 'Edit financial administration ":title"',
 
     // roles
     'administration_role_owner'                           => 'Owner',

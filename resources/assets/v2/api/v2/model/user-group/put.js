@@ -1,6 +1,6 @@
 /*
- * list.js
- * Copyright (c) 2022 james@firefly-iii.org
+ * post.js
+ * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -19,27 +19,10 @@
  */
 
 import {api} from "../../../../boot/axios";
-import format from "date-fns/format";
 
-export default class Get {
-
-    /**
-     *
-     * @param identifier
-     * @param params
-     * @returns {Promise<AxiosResponse<any>>}
-     */
-    show(identifier, params) {
-        return api.get('/api/v2/user-groups/' + identifier, {params: params});
+export default class Put {
+    put(submission, params) {
+        let url = '/api/v2/user-groups/' + parseInt(params.id);
+        return api.put(url, submission);
     }
-
-    /**
-     *
-     * @param params
-     * @returns {Promise<AxiosResponse<any>>}
-     */
-    index(params) {
-        return api.get('/api/v2/user-groups', {params: params});
-    }
-
 }
