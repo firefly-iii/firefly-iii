@@ -1390,9 +1390,9 @@ return [
     'administration_owner'                                => 'Administration owner: {{email}}',
     'administration_you'                                  => 'Your role: {{role}}',
     'other_users_in_admin'                                => 'Other users in this administration',
-    'administrations_create_breadcrumb' => 'Create new financial administration',
-    'basic_administration_information' => 'Basic administration information',
-    'new_administration_created' => 'New financial administration "{{title}}" has been created',
+    'administrations_create_breadcrumb'                   => 'Create new financial administration',
+    'basic_administration_information'                    => 'Basic administration information',
+    'new_administration_created'                          => 'New financial administration "{{title}}" has been created',
 
     // roles
     'administration_role_owner'                           => 'Owner',
