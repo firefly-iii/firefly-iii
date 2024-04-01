@@ -35,12 +35,14 @@ class PreferenceTransformer extends AbstractTransformer
      */
     public function transform(Preference $preference): array
     {
+        $userGroupId = $preference->user_group_id === 0 ? null : $preference->user_group_id;
         return [
-            'id'         => $preference->id,
-            'created_at' => $preference->created_at->toAtomString(),
-            'updated_at' => $preference->updated_at->toAtomString(),
-            'name'       => $preference->name,
-            'data'       => $preference->data,
+            'id'            => $preference->id,
+            'created_at'    => $preference->created_at->toAtomString(),
+            'updated_at'    => $preference->updated_at->toAtomString(),
+            'user_group_id' => $userGroupId,
+            'name'          => $preference->name,
+            'data'          => $preference->data,
         ];
     }
 }

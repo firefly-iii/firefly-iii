@@ -28,6 +28,8 @@ use FireflyIII\Models\Preference;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Session;
 
 /**
  * Class Preferences.
@@ -42,24 +44,15 @@ class Preferences
         }
 
         return Preference::where('user_id', $user->id)
-            ->where(function(Builder $q) use($user) {
-                $q->whereNull('user_group_id');
-                $q->orWhere('user_group_id', $user->user_group_id);
-            })
+                         ->where(function (Builder $q) use ($user) {
+                             $q->whereNull('user_group_id');
+                             $q->orWhere('user_group_id', $user->user_group_id);
+                         })
                          ->get();
     }
 
-    /**
-     * @param mixed $default
-     *
-     * @throws FireflyException
-     */
-    public function get(string $name, $default = null): ?Preference
+    public function get(string $name, null | array | bool | int | string $default = null): ?Preference
     {
-        if ('currencyPreference' === $name) {
-            throw new FireflyException('No longer supports "currencyPreference", please refactor me.');
-        }
-
         /** @var null|User $user */
         $user = auth()->user();
         if (null === $user) {
@@ -72,20 +65,12 @@ class Preferences
         return $this->getForUser($user, $name, $default);
     }
 
-    /**
-     * @throws FireflyException
-     */
-    public function getForUser(User $user, string $name, null|array|bool|int|string $default = null): ?Preference
+    public function getForUser(User $user, string $name, null | array | bool | int | string $default = null): ?Preference
     {
-        if ('currencyPreference' === $name) {
-            throw new FireflyException('No longer supports "currencyPreference", please refactor me.');
-        }
-        $preference = Preference::
-            where(function(Builder $q) use($user) {
-                $q->whereNull('user_group_id');
-                $q->orWhere('user_group_id', $user->user_group_id);
-            })
-        ->where('user_id', $user->id)->where('name', $name)->first(['id', 'user_id', 'name', 'data', 'updated_at', 'created_at']);
+        // don't care about user group ID, except for some specific preferences.
+        $userGroupId = $this->getUserGroupId($user, $name);
+        $preference = Preference::where('user_group_id', $userGroupId)->where('user_id', $user->id)->where('name', $name)->first(['id', 'user_id', 'name', 'data', 'updated_at', 'created_at']);
+
         if (null !== $preference && null === $preference->data) {
             $preference->delete();
             $preference = null;
@@ -103,17 +88,11 @@ class Preferences
         return $this->setForUser($user, $name, $default);
     }
 
-    /**
-     * @throws FireflyException
-     */
     public function delete(string $name): bool
     {
-        if ('currencyPreference' === $name) {
-            throw new FireflyException('No longer supports "currencyPreference", please refactor me.');
-        }
         $fullName = sprintf('preference%s%s', auth()->user()->id, $name);
-        if (\Cache::has($fullName)) {
-            \Cache::forget($fullName);
+        if (Cache::has($fullName)) {
+            Cache::forget($fullName);
         }
         Preference::where('user_id', auth()->user()->id)->where('name', $name)->delete();
 
@@ -122,35 +101,19 @@ class Preferences
 
     public function forget(User $user, string $name): void
     {
-        if ('currencyPreference' === $name) {
-            throw new FireflyException('No longer supports "currencyPreference", please refactor me.');
-        }
         $key = sprintf('preference%s%s', $user->id, $name);
-        \Cache::forget($key);
-        \Cache::put($key, '', 5);
+        Cache::forget($key);
+        Cache::put($key, '', 5);
     }
 
-    /**
-     * @param mixed $value
-     *
-     * @throws FireflyException
-     */
-    public function setForUser(User $user, string $name, $value): Preference
+    public function setForUser(User $user, string $name, null | array | bool | int | string $value): Preference
     {
-        if ('currencyPreference' === $name) {
-            throw new FireflyException('No longer supports "currencyPreference", please refactor me.');
-        }
-        $fullName   = sprintf('preference%s%s', $user->id, $name);
-        \Cache::forget($fullName);
-
-        $groupId = null;
-        $items = config('firefly.admin_specific_prefs');
-        if(in_array($name, $items, true)) {
-            $groupId = (int)$user->user_group_id;
-        }
+        $fullName = sprintf('preference%s%s', $user->id, $name);
+        $groupId  = $this->getUserGroupId($user, $name);
+        Cache::forget($fullName);
 
         /** @var null|Preference $pref */
-        $pref       = Preference::where('user_group_id', $groupId)->where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data', 'updated_at', 'created_at']);
+        $pref = Preference::where('user_group_id', $groupId)->where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data', 'updated_at', 'created_at']);
 
         if (null !== $pref && null === $value) {
             $pref->delete();
@@ -161,41 +124,42 @@ class Preferences
             return new Preference();
         }
         if (null === $pref) {
-            $pref          = new Preference();
-            $pref->user_id = (int)$user->id;
+            $pref                = new Preference();
+            $pref->user_id       = (int)$user->id;
             $pref->user_group_id = $groupId;
-            $pref->name    = $name;
+            $pref->name          = $name;
         }
         $pref->data = $value;
-
-        try {
-            $pref->save();
-        } catch (\PDOException $e) {
-            throw new FireflyException(sprintf('Could not save preference: %s', $e->getMessage()), 0, $e);
-        }
-        \Cache::forever($fullName, $pref);
+        $pref->save();
+        Cache::forever($fullName, $pref);
 
         return $pref;
     }
 
     public function beginsWith(User $user, string $search): Collection
     {
-        return Preference::where('user_id', $user->id)->where('name', 'LIKE', $search.'%')->get();
+        return Preference::where('user_id', $user->id)->where('name', 'LIKE', $search . '%')->get();
     }
 
+    /**
+     * Find by name, has no user ID in it, because the method is called from an unauthenticated route any way.
+     */
     public function findByName(string $name): Collection
     {
-        if ('currencyPreference' === $name) {
-            throw new FireflyException('No longer supports "currencyPreference", please refactor me.');
-        }
-
         return Preference::where('name', $name)->get();
     }
 
     public function getArrayForUser(User $user, array $list): array
     {
         $result      = [];
-        $preferences = Preference::where('user_id', $user->id)->whereIn('name', $list)->get(['id', 'name', 'data']);
+        $preferences = Preference
+            ::where('user_id', $user->id)
+            ->where(function (Builder $q) use ($user) {
+                $q->whereNull('user_group_id');
+                $q->orWhere('user_group_id', $user->user_group_id);
+            })
+            ->whereIn('name', $list)
+            ->get(['id', 'name', 'data']);
 
         /** @var Preference $preference */
         foreach ($preferences as $preference) {
@@ -210,17 +174,8 @@ class Preferences
         return $result;
     }
 
-    /**
-     * @param mixed $default
-     *
-     * @throws FireflyException
-     */
-    public function getFresh(string $name, $default = null): ?Preference
+    public function getFresh(string $name, null | array | bool | int | string $default = null): ?Preference
     {
-        if ('currencyPreference' === $name) {
-            throw new FireflyException('No longer supports "currencyPreference", please refactor me.');
-        }
-
         /** @var null|User $user */
         $user = auth()->user();
         if (null === $user) {
@@ -228,22 +183,6 @@ class Preferences
             $preference->data = $default;
 
             return $preference;
-        }
-
-        return $this->getFreshForUser($user, $name, $default);
-    }
-
-    /**
-     * TODO remove me.
-     *
-     * @param null $default
-     *
-     * @throws FireflyException
-     */
-    public function getFreshForUser(User $user, string $name, $default = null): ?Preference
-    {
-        if ('currencyPreference' === $name) {
-            throw new FireflyException('No longer supports "currencyPreference", please refactor me.');
         }
 
         return $this->getForUser($user, $name, $default);
@@ -270,19 +209,12 @@ class Preferences
     public function mark(): void
     {
         $this->set('lastActivity', microtime());
-        \Session::forget('first');
+        Session::forget('first');
     }
 
-    /**
-     * @param mixed $value
-     *
-     * @throws FireflyException
-     */
-    public function set(string $name, $value): Preference
+    public function set(string $name, null | array | bool | int | string $value): Preference
     {
-        if ('currencyPreference' === $name) {
-            throw new FireflyException('No longer supports "currencyPreference", please refactor me.');
-        }
+        /** @var User $user */
         $user = auth()->user();
         if (null === $user) {
             // make new preference, return it:
@@ -294,5 +226,15 @@ class Preferences
         }
 
         return $this->setForUser($user, $name, $value);
+    }
+
+    private function getUserGroupId(User $user, string $preferenceName): ?int
+    {
+        $groupId = null;
+        $items   = config('firefly.admin_specific_prefs');
+        if (in_array($preferenceName, $items, true)) {
+            $groupId = (int)$user->user_group_id;
+        }
+        return $groupId;
     }
 }

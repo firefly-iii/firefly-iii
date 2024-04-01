@@ -54,7 +54,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Preference whereUpdatedAt($value)
  * @method static Builder|Preference whereUserId($value)
  *
- * @property mixed $user_group_id
+ * @property mixed                 $user_group_id
  *
  * @mixin Eloquent
  */
@@ -64,7 +64,7 @@ class Preference extends Model
     use ReturnsIntegerUserIdTrait;
 
     protected $casts
-                        = [
+        = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'data'       => 'array',
@@ -81,22 +81,38 @@ class Preference extends Model
     {
         if (auth()->check()) {
             /** @var User $user */
-            $user       = auth()->user();
+            $user = auth()->user();
 
-            /** @var null|Preference $preference */
-            $preference = $user->preferences()->where('name', $value)->first();
+            // some preferences do not have an administration ID.
+            // some need it, to make sure the correct one is selected.
+            $userGroupId = (int)$user->user_group_id;
+            $userGroupId = $userGroupId === 0 ? null : $userGroupId;
+            /** @var Preference|null $preference */
+            $preference = null;
+            $items      = config('firefly.admin_specific_prefs');
+            if (null !== $userGroupId && in_array($value, $items, true)) {
+                // find a preference with a specific user_group_id
+                $preference = $user->preferences()->where('user_group_id', $userGroupId)->where('name', $value)->first();
+            }
+            if (!in_array($value, $items, true)) {
+                // find any one.
+                $preference = $user->preferences()->where('name', $value)->first();
+            }
+
+            // try again with ID, but this time don't care about the preferred user_group_id
             if (null === $preference) {
                 $preference = $user->preferences()->where('id', (int)$value)->first();
             }
             if (null !== $preference) {
                 return $preference;
             }
-            $default    = config('firefly.default_preferences');
+            $default = config('firefly.default_preferences');
             if (array_key_exists($value, $default)) {
-                $preference          = new self();
-                $preference->name    = $value;
-                $preference->data    = $default[$value];
-                $preference->user_id = (int)$user->id;
+                $preference                = new self();
+                $preference->name          = $value;
+                $preference->data          = $default[$value];
+                $preference->user_id       = (int)$user->id;
+                $preference->user_group_id = in_array($value, $items, true) ? $userGroupId : null;
                 $preference->save();
 
                 return $preference;
