@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.1.13 - 2024-04-01
+
+### Added
+
+- sha256 checksums for the release files
+- git HEAD added to the release files for easier validation
+
+### Changed
+
+- Updated pages in the `v2`-layout
+
+### Fixed
+
+- #8648
+- #8725
+- #8732
+- #8735
+
 ## 6.1.12 - 2024-03-21
 
 ### Fixed
