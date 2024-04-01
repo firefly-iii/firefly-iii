@@ -180,6 +180,7 @@ jobs:
           echo "Will use tag and release name $releaseName."
 
           # add all content, except output.txt (this contains the changelog and/or the download instructions)
+          echo 'Add all and reset output.txt'
           git add -A
           if test -f "output.txt"; then
             git reset output.txt
@@ -188,16 +189,19 @@ jobs:
           git push
 
           # zip and tar everything
+          echo 'Zip and tar...'
           zip -rq $zipName . -x "*.git*" "*.ci*" "*.github*" "*node_modules*" "*output.txt*"
           touch $tarName
           tar --exclude=$tarName --exclude='./.git' --exclude='./.ci' --exclude='./.github' --exclude='./node_modules' --exclude='./output.txt' -czf $tarName .
 
           # add sha256 sum
+          echo 'Sha sum ...'
           sha256sum -b $zipName > $zipName.sha256
           sha256sum -b $tarName > $tarName.sha256
 
           # create a development (nightly) release:
           if [[ "develop" == "$version" ]]; then
+            echo 'Develop release.'
             # add text to output.txt (instructions)
             rm output.txt
             echo "Bi-weekly development release of Firefly III with the latest fixes, translations and features. Docker users can find this release under the \`develop\` tag." >> output.txt
@@ -230,6 +234,7 @@ jobs:
             echo $HEAD > HEAD.txt
             gh release upload $releaseName HEAD.txt
           else
+            echo 'MAIN (real) release'
             # add text to output.txt (more instructions)
             echo '' >> output.txt
             echo '### Instructions' >> output.txt
