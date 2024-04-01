@@ -240,13 +240,29 @@ jobs:
             git tag -a $releaseName -m "Here be changelog"
             git push origin $releaseName
             gh release create $releaseName -F output.txt -t "$releaseName" --verify-tag
-            # add zip file to release.
+
+            # add archive files to release
             gh release upload $releaseName $zipName
-            # add sha256 sum to release
+            gh release upload $releaseName $tarName
+
+            # add sha256 sums to release
             gh release upload $releaseName $zipName.sha256
+            gh release upload $releaseName $tarName.sha256
+
+            # get current HEAD and add as file to the release
+            HEAD=$(git rev-parse HEAD)
+            echo $HEAD > HEAD.txt
+            gh release upload $releaseName HEAD.txt
+
+            # remove all temporary files
             rm output.txt
+            rm HEAD.txt
             rm $zipName
             rm $zipName.sha256
+            rm $tarName
+            rm $tarName.sha256
+
+            # merge main back into develop
             git checkout develop
             git merge main
             git push
