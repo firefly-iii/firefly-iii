@@ -61,6 +61,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|InvitedUser whereUpdatedAt($value)
  * @method static Builder|InvitedUser whereUserId($value)
  *
+ * @property mixed $user_group_id
+ *
  * @mixin Eloquent
  */
 class InvitedUser extends Model

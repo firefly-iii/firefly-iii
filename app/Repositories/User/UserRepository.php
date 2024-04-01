@@ -392,4 +392,28 @@ class UserRepository implements UserRepositoryInterface
 
         return null !== $invitee;
     }
+
+    #[\Override]
+    public function getUserGroups(User $user): Collection
+    {
+        $memberships = $user->groupMemberships()->get();
+        $set         = [];
+        $collection  = new Collection();
+
+        /** @var GroupMembership $membership */
+        foreach ($memberships as $membership) {
+            /** @var null|UserGroup $group */
+            $group = $membership->userGroup()->first();
+            if (null !== $group) {
+                $groupId       = (int)$group->id;
+                if (in_array($groupId, $set, true)) {
+                    continue;
+                }
+                $set[$groupId] = $group;
+            }
+        }
+        $collection->push(...$set);
+
+        return $collection;
+    }
 }

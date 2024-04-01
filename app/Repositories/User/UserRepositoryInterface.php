@@ -59,6 +59,8 @@ interface UserRepositoryInterface
 
     public function changeStatus(User $user, bool $isBlocked, string $code): bool;
 
+    public function getUserGroups(User $user): Collection;
+
     /**
      * Returns a count of all users.
      */

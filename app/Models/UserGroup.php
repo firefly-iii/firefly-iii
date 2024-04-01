@@ -98,7 +98,7 @@ class UserGroup extends Model
 {
     use ReturnsIntegerIdTrait;
 
-    protected $fillable = ['title'];
+    protected $fillable = ['title', 'default_administration'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).

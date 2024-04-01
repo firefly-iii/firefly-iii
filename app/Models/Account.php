@@ -110,6 +110,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static EloquentBuilder|Account whereUserGroupId($value)
  *
  * @property null|UserGroup $userGroup
+ * @property mixed          $account_id
  *
  * @mixin Eloquent
  */

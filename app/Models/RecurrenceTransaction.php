@@ -81,6 +81,7 @@ use Illuminate\Database\Query\Builder;
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceTransaction whereTransactionTypeId($value)
  *
  * @property null|TransactionType $transactionType
+ * @property mixed                $user_id
  *
  * @mixin Eloquent
  */
