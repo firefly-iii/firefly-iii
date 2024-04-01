@@ -235,6 +235,7 @@ jobs:
             gh release upload $releaseName HEAD.txt
           else
             echo 'MAIN (real) release'
+            sudo chown -R runner:docker output.txt
             # add text to output.txt (more instructions)
             echo '' >> output.txt
             echo '### Instructions' >> output.txt
