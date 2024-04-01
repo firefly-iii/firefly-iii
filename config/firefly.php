@@ -215,6 +215,9 @@ return [
         'zoom_level' => env('MAP_DEFAULT_ZOOM', '6'),
     ],
 
+    // administration specific preferences
+    'admin_specific_prefs' => ['frontpageAccounts'],
+
     // default user-related values
     'darkMode'                     => 'browser',
     'list_length'                  => 10, // to be removed if v1 is cancelled.

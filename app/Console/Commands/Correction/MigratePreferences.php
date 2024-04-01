@@ -47,7 +47,7 @@ class MigratePreferences extends Command
      */
     public function handle(): int
     {
-        $items = ['frontpageAccounts'];
+        $items = config('firefly.admin_specific_prefs');
         $users = User::get();
         /** @var User $user */
         foreach($users as $user) {

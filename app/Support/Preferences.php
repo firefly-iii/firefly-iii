@@ -26,6 +26,7 @@ namespace FireflyIII\Support;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Preference;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
 /**
@@ -40,7 +41,12 @@ class Preferences
             return new Collection();
         }
 
-        return Preference::where('user_id', $user->id)->get();
+        return Preference::where('user_id', $user->id)
+            ->where(function(Builder $q) use($user) {
+                $q->whereNull('user_group_id');
+                $q->orWhere('user_group_id', $user->user_group_id);
+            })
+                         ->get();
     }
 
     /**
@@ -74,7 +80,12 @@ class Preferences
         if ('currencyPreference' === $name) {
             throw new FireflyException('No longer supports "currencyPreference", please refactor me.');
         }
-        $preference = Preference::where('user_id', $user->id)->where('name', $name)->first(['id', 'user_id', 'name', 'data', 'updated_at', 'created_at']);
+        $preference = Preference::
+            where(function(Builder $q) use($user) {
+                $q->whereNull('user_group_id');
+                $q->orWhere('user_group_id', $user->user_group_id);
+            })
+        ->where('user_id', $user->id)->where('name', $name)->first(['id', 'user_id', 'name', 'data', 'updated_at', 'created_at']);
         if (null !== $preference && null === $preference->data) {
             $preference->delete();
             $preference = null;
@@ -132,8 +143,14 @@ class Preferences
         $fullName   = sprintf('preference%s%s', $user->id, $name);
         \Cache::forget($fullName);
 
+        $groupId = null;
+        $items = config('firefly.admin_specific_prefs');
+        if(in_array($name, $items, true)) {
+            $groupId = (int)$user->user_group_id;
+        }
+
         /** @var null|Preference $pref */
-        $pref       = Preference::where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data', 'updated_at', 'created_at']);
+        $pref       = Preference::where('user_group_id', $groupId)->where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data', 'updated_at', 'created_at']);
 
         if (null !== $pref && null === $value) {
             $pref->delete();
@@ -146,6 +163,7 @@ class Preferences
         if (null === $pref) {
             $pref          = new Preference();
             $pref->user_id = (int)$user->id;
+            $pref->user_group_id = $groupId;
             $pref->name    = $name;
         }
         $pref->data = $value;
@@ -275,6 +293,6 @@ class Preferences
             return $pref;
         }
 
-        return $this->setForUser(auth()->user(), $name, $value);
+        return $this->setForUser($user, $name, $value);
     }
 }
