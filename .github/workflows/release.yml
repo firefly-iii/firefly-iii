@@ -145,6 +145,7 @@ jobs:
           # set some variables
           releaseName=$version
           originalName=$version
+          zipName=FireflyIII-$version.zip
           tarName=FireflyIII-$version.tar.gz
 
           # update composer (again)
