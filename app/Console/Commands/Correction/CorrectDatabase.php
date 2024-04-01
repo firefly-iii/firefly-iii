@@ -73,6 +73,7 @@ class CorrectDatabase extends Command
             // new!
             'firefly-iii:unify-group-accounts',
             'firefly-iii:trigger-credit-recalculation',
+            'firefly-iii:migrate-preferences'
         ];
         foreach ($commands as $command) {
             $this->friendlyLine(sprintf('Now executing command "%s"', $command));
