@@ -63,6 +63,7 @@ let index = function () {
         },
 
         loadAdministrations() {
+            this.userGroups = [];
             this.notifications.wait.show = true;
             this.notifications.wait.text = i18next.t('firefly.wait_loading_data')
             this.accounts = [];
