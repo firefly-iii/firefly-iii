@@ -41,7 +41,7 @@ return [
 
     // 'month_and_day'           => '%B %e, %Y',
     'month_and_day_moment_js'  => 'YYYY. MMM. D.',
-    'month_and_day_fns'        => 'MMMM d, y',
+    'month_and_day_fns'        => 'HHHH n, é',
     'month_and_day_js'         => 'YYYY. MMMM DD.',
 
     // 'month_and_date_day'      => '%A %B %e, %Y',

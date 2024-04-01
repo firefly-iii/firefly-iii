@@ -219,7 +219,7 @@ return [
     'login_name'                  => 'Logga in',
     'is_owner'                    => 'Admin?',
     'url'                         => 'Länk',
-    'bill_end_date'               => 'End date',
+    'bill_end_date'               => 'Slutdatum',
 
     // import
     'apply_rules'                 => 'Tillämpa regler',
