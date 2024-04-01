@@ -136,20 +136,23 @@ jobs:
           .ci/phpcs.sh
       - name: Release
         run: |
+          # do some configuration
           sudo timedatectl set-timezone Europe/Amsterdam
           git config user.name github-actions
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git config advice.addIgnoredFile false
+
+          # set some variables
+          releaseName=$version
+          originalName=$version
+          tarName=FireflyIII-$version.tar.gz
 
           # update composer (again)
           composer validate --strict
           composer update --no-dev --no-scripts --no-plugins
           composer dump-autoload
 
-          releaseName=$version
-          originalName=$version
-          tarName=FireflyIII-$version.tar.gz
-
+          # if this is a develop build, slightly different variable names.
           if [[ "develop" == "$version" ]]; then
             [[ -z $(git status --untracked-files=normal --porcelain) ]] && echo "this branch is clean, no need to push..." && exit 0;
             releaseName=$version-$(date +'%Y%m%d')
@@ -175,6 +178,7 @@ jobs:
           done
           echo "Will use tag and release name $releaseName."
 
+          # add all content, except output.txt (this contains the changelog and/or the download instructions)
           git add -A
           if test -f "output.txt"; then
             git reset output.txt
@@ -191,6 +195,7 @@ jobs:
           sha256sum -b $zipName > $zipName.sha256
           sha256sum -b $tarName > $tarName.sha256
 
+          # create a development (nightly) release:
           if [[ "develop" == "$version" ]]; then
             # add text to output.txt (instructions)
             rm output.txt
@@ -219,8 +224,10 @@ jobs:
             gh release upload $releaseName $zipName.sha256
             gh release upload $releaseName $tarName.sha256
 
-            # rm output.txt again
-            rm output.txt
+            # get current HEAD and add as file to the release
+            HEAD=$(git rev-parse HEAD)
+            echo $HEAD > HEAD.txt
+            gh release upload $releaseName HEAD.txt
           else
             # add text to output.txt (more instructions)
             echo '' >> output.txt
