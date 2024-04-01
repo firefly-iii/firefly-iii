@@ -74,5 +74,7 @@ interface AccountRepositoryInterface
 
     public function setUserGroup(UserGroup $userGroup): void;
 
+    public function getUserGroup(): UserGroup;
+
     public function update(Account $account, array $data): Account;
 }

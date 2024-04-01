@@ -25,7 +25,6 @@ import formatMoney from "../../util/format-money.js";
 import Get from "../../api/v2/model/account/get.js";
 import {Chart} from 'chart.js';
 import {getDefaultChartSettings} from "../../support/default-chart-settings.js";
-import {getColors} from "../../support/get-colors.js";
 import {getCacheKey} from "../../support/get-cache-key.js";
 import {getConfiguration} from "../../store/get-configuration.js";
 
