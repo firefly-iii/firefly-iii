@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * MigratePreferences.php
  * Copyright (c) 2024 james@firefly-iii.org.
@@ -33,7 +35,7 @@ class MigratePreferences extends Command
      *
      * @var string
      */
-    protected $signature = 'firefly-iii:migrate-preferences';
+    protected $signature   = 'firefly-iii:migrate-preferences';
 
     /**
      * The console command description.
@@ -49,25 +51,25 @@ class MigratePreferences extends Command
     {
         $items = config('firefly.admin_specific_prefs');
         $users = User::get();
+
         /** @var User $user */
-        foreach($users as $user) {
+        foreach ($users as $user) {
             $count = 0;
-            foreach($items as $item) {
+            foreach ($items as $item) {
                 $preference = Preference::where('name', $item)->where('user_id', $user->id)->first();
-                if(null === $preference) {
+                if (null === $preference) {
                     continue;
                 }
-                if(null !== $preference->user_group_id) {
+                if (null !== $preference->user_group_id) {
                     $preference->user_group_id = $user->user_group_id;
                     $preference->save();
-                    $count++;
+                    ++$count;
                 }
             }
-            if($count > 0) {
+            if ($count > 0) {
                 $this->info(sprintf('Migrated %d preference(s) for user #%d ("%s").', $count, $user->id, $user->email));
             }
         }
-
 
         return CommandAlias::SUCCESS;
     }

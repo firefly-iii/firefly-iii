@@ -24,12 +24,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use FireflyIII\Repositories\UserGroup\UserGroupRepositoryInterface;
 use FireflyIII\User;
-use FireflyIII\Validation\AccountValidator;
 use Illuminate\Contracts\Validation\ValidationRule;
 
 /**
@@ -38,8 +35,10 @@ use Illuminate\Contracts\Validation\ValidationRule;
 class IsDefaultUserGroupName implements ValidationRule
 {
     private UserGroup $userGroup;
-    public function __construct(UserGroup $userGroup) {
-        $this->userGroup =$userGroup;
+
+    public function __construct(UserGroup $userGroup)
+    {
+        $this->userGroup = $userGroup;
     }
 
     /**
@@ -51,12 +50,13 @@ class IsDefaultUserGroupName implements ValidationRule
 
         // are you owner of this group and the name is the same? fail.
         /** @var User $user */
-        $user = auth()->user();
+        $user      = auth()->user();
+
         /** @var UserRepositoryInterface $userRepos */
         $userRepos = app(UserRepositoryInterface::class);
 
-        $roles = $userRepos->getRolesInGroup($user, $this->userGroup->id);
-        if($this->userGroup->title === $user->email && in_array('owner', $roles, true)) {
+        $roles     = $userRepos->getRolesInGroup($user, $this->userGroup->id);
+        if ($this->userGroup->title === $user->email && in_array('owner', $roles, true)) {
             $fail('validation.administration_owner_rename')->translate();
         }
     }

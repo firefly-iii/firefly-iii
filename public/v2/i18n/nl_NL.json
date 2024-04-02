@@ -3,7 +3,7 @@
         "html_language": "nl",
         "date_time_fns": "d MMMM yyyy @ HH:mm:ss",
         "month_and_day_fns": "d MMMM y",
-        "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
+        "date_time_fns_short": "d MMMM yyyy @ HH:mm"
     },
     "validation": {
         "bad_type_source": "Firefly III kan het transactietype niet bepalen op basis van deze bronrekening.",

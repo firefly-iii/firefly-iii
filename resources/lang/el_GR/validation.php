@@ -300,6 +300,7 @@ return [
 
     // no access to administration:
     'no_access_user_group'            => 'Δεν έχετε τα σωστά δικαιώματα πρόσβασης για αυτή τη διαχείριση.',
+    'administration_owner_rename'     => 'You can\'t rename your standard administration.',
 ];
 
 /*

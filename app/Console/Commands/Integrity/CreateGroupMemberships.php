@@ -41,8 +41,8 @@ class CreateGroupMemberships extends Command
     use ShowsFriendlyMessages;
 
     public const string CONFIG_NAME = '560_create_group_memberships';
-    protected $description = 'Update group memberships';
-    protected $signature   = 'firefly-iii:create-group-memberships';
+    protected $description          = 'Update group memberships';
+    protected $signature            = 'firefly-iii:create-group-memberships';
 
     /**
      * Execute the console command.
@@ -78,19 +78,20 @@ class CreateGroupMemberships extends Command
     public static function createGroupMembership(User $user): void
     {
         // check if membership exists
-        $userGroup = UserGroup::where('title', $user->email)->first();
+        $userGroup  = UserGroup::where('title', $user->email)->first();
         if (null === $userGroup) {
             $userGroup = UserGroup::create(['title' => $user->email, 'default_administration' => true]);
         }
 
-        $userRole = UserRole::where('title', UserRoleEnum::OWNER->value)->first();
+        $userRole   = UserRole::where('title', UserRoleEnum::OWNER->value)->first();
 
         if (null === $userRole) {
             throw new FireflyException('Firefly III could not find a user role. Please make sure all migrations have run.');
         }
         $membership = GroupMembership::where('user_id', $user->id)
-                                     ->where('user_group_id', $userGroup->id)
-                                     ->where('user_role_id', $userRole->id)->first();
+            ->where('user_group_id', $userGroup->id)
+            ->where('user_role_id', $userRole->id)->first()
+        ;
         if (null === $membership) {
             GroupMembership::create(
                 [
@@ -105,5 +106,4 @@ class CreateGroupMemberships extends Command
             $user->save();
         }
     }
-
 }

@@ -1308,7 +1308,7 @@ Breadcrumbs::for(
 Breadcrumbs::for(
     'administrations.edit',
     static function (Generator $breadcrumbs, UserGroup $userGroup): void {
-        $breadcrumbs->parent('administrations.show',$userGroup);
+        $breadcrumbs->parent('administrations.show', $userGroup);
         $breadcrumbs->push(trans('firefly.edit_administration_breadcrumb', ['title' => limitStringLength($userGroup->title)]), route('administrations.edit', [$userGroup->id]));
     }
 );

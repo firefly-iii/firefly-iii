@@ -55,11 +55,11 @@ return [
     'reconciled_forbidden_field'      => 'Deze transactie is al afgestemd, dus je kan ":field" niet wijzigen',
     'deleted_user'                    => 'Je kan je niet registreren met dit e-mailadres.',
     'rule_trigger_value'              => 'Deze waarde is niet geldig voor de geselecteerde trigger.',
-    'rule_action_expression'          => 'Invalid expression. :error',
+    'rule_action_expression'          => 'Ongeldige expressie (foutmelding in het Engels): :error',
     'rule_action_value'               => 'Deze waarde is niet geldig voor de geselecteerde actie.',
     'file_already_attached'           => 'Het geuploade bestand ":name" is al gelinkt aan deze transactie.',
     'file_attached'                   => 'Bestand ":name" is succesvol geüpload.',
-    'file_zero'                       => 'The file is zero bytes in size.',
+    'file_zero'                       => 'Het bestand is nul bytes.',
     'must_exist'                      => 'Het ID in veld :attribute bestaat niet.',
     'all_accounts_equal'              => 'Alle rekeningen in dit veld moeten gelijk zijn.',
     'group_title_mandatory'           => 'Een groepstitel is verplicht wanneer er meer dan één transactie is.',
@@ -197,7 +197,7 @@ return [
  *
  */
 
-    'secure_password'                 => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password',
+    'secure_password'                 => 'Dit is geen veilig wachtwoord. Probeer het nog een keer. Zie ook: https://bit.ly/FF3-password',
     'valid_recurrence_rep_type'       => 'Dit is geen geldige herhaling voor periodieke transacties.',
     'valid_recurrence_rep_moment'     => 'Ongeldig herhaalmoment voor dit type herhaling.',
     'invalid_account_info'            => 'Ongeldige rekeninginformatie.',
@@ -300,6 +300,7 @@ return [
 
     // no access to administration:
     'no_access_user_group'            => 'Je hebt niet de juiste toegangsrechten voor deze administratie.',
+    'administration_owner_rename'     => 'Je kan je standaardgrootboek niet hernoemen.',
 ];
 
 /*

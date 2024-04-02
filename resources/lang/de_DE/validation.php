@@ -300,6 +300,7 @@ return [
 
     // no access to administration:
     'no_access_user_group'            => 'Für diese Verwaltung haben Sie nicht die erforderlichen Zugriffsrechte.',
+    'administration_owner_rename'     => 'You can\'t rename your standard administration.',
 ];
 
 /*
