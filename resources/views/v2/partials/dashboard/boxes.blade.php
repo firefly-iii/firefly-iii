@@ -3,6 +3,9 @@
         <div class="small-box text-bg-primary">
             <div class="inner balance-box">
                 <h3 class="hover-expand">
+                    <template x-if="0 === balanceBox.amounts.length">
+                        <span>&nbsp;</span>
+                    </template>
                     <template x-for="(amount, index) in balanceBox.amounts" :key="index">
                         <span>
                             <span x-text="amount"></span><span
@@ -15,9 +18,14 @@
                         <em class="fa-solid fa-spinner fa-spin"></em>
                     </p>
                 </template>
-                <template x-if="!loading">
+                <template x-if="!loading && 0 !== balanceBox.amounts.length">
                     <p>
                         <a href="{{ route('reports.report.default', ['allAssetAccounts',$start->format('Ymd'),$end->format('Ymd')]) }}">{{ __('firefly.in_out_period') }}</a>
+                    </p>
+                </template>
+                <template x-if="!loading && 0 === balanceBox.amounts.length">
+                    <p>
+                        TODO (no money in or out)
                     </p>
                 </template>
             </div>
@@ -26,6 +34,9 @@
             </span>
 
             <div class="small-box-footer hover-footer">
+                <template x-if="0 === balanceBox.subtitles.length">
+                    <span>&nbsp;</span>
+                </template>
                 <template x-for="(subtitle, index) in balanceBox.subtitles" :key="index">
                         <span>
                             <span x-text="subtitle"></span><span
@@ -63,7 +74,7 @@
                     <p><a href="{{ route('bills.index') }}">{{ __('firefly.bills_to_pay') }}</a></p>
                 </template>
                 <template x-if="0 === billBox.unpaid.length && !loading">
-                    <p>No subscriptions are waiting to be paid</p>
+                    <p>TODO No subscriptions are waiting to be paid</p>
                 </template>
             </div>
             <span class="small-box-icon">
@@ -94,6 +105,9 @@
         <div class="small-box text-bg-warning">
             <div class="inner">
                 <h3 class="hover-expand">
+                    <template x-if="0 === leftBox.left.length">
+                        <span>&nbsp;</span>
+                    </template>
                     <template x-for="(amount, index) in leftBox.left" :key="index">
                         <span>
                             <span x-text="amount"></span><span
@@ -107,15 +121,23 @@
                         <em class="fa-solid fa-spinner fa-spin"></em>
                     </p>
                 </template>
-                <template x-if="!loading">
+                <template x-if="!loading && 0 !== leftBox.left.length">
                     <p><a href="{{ route('budgets.index') }}">{{ __('firefly.left_to_spend') }}</a></p>
+                </template>
+                <template x-if="!loading && 0 === leftBox.left.length">
+                    <p>TODO no money is budgeted in this period</p>
                 </template>
             </div>
             <span class="small-box-icon">
                 <em class="fa-solid fa-money-check-dollar"></em>
             </span>
             <span class="small-box-footer">
-                {{ __('firefly.per_day') }}:
+                <template x-if="0 !== leftBox.perDay.length">
+                    <span>{{ __('firefly.per_day') }}:</span>
+                </template>
+                <template x-if="0 === leftBox.perDay.length">
+                    <span>&nbsp;</span>
+                </template>
                  <template x-for="(amount, index) in leftBox.perDay" :key="index">
                         <span>
                             <span x-text="amount"></span><span
