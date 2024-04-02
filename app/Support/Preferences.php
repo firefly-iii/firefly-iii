@@ -232,7 +232,7 @@ class Preferences
     private function getUserGroupId(User $user, string $preferenceName): ?int
     {
         $groupId = null;
-        $items   = config('firefly.admin_specific_prefs');
+        $items   = config('firefly.admin_specific_prefs') ?? [];
         if (in_array($preferenceName, $items, true)) {
             $groupId = (int)$user->user_group_id;
         }
