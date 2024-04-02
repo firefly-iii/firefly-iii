@@ -89,6 +89,17 @@ class Preferences
         return $this->setForUser($user, $name, $default);
     }
 
+    private function getUserGroupId(User $user, string $preferenceName): ?int
+    {
+        $groupId = null;
+        $items   = config('firefly.admin_specific_prefs') ?? [];
+        if (in_array($preferenceName, $items, true)) {
+            $groupId = (int)$user->user_group_id;
+        }
+
+        return $groupId;
+    }
+
     public function delete(string $name): bool
     {
         $fullName = sprintf('preference%s%s', auth()->user()->id, $name);
@@ -215,7 +226,7 @@ class Preferences
 
     public function set(string $name, null|array|bool|int|string $value): Preference
     {
-        /** @var User $user */
+        /** @var null|User $user */
         $user = auth()->user();
         if (null === $user) {
             // make new preference, return it:
@@ -227,16 +238,5 @@ class Preferences
         }
 
         return $this->setForUser($user, $name, $value);
-    }
-
-    private function getUserGroupId(User $user, string $preferenceName): ?int
-    {
-        $groupId = null;
-        $items   = config('firefly.admin_specific_prefs') ?? [];
-        if (in_array($preferenceName, $items, true)) {
-            $groupId = (int)$user->user_group_id;
-        }
-
-        return $groupId;
     }
 }

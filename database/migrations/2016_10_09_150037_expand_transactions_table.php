@@ -21,7 +21,6 @@
  */
 declare(strict_types=1);
 
-use Doctrine\DBAL\Schema\Exception\ColumnDoesNotExist;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
@@ -46,7 +45,7 @@ class ExpandTransactionsTable extends Migration
                         $table->dropColumn('identifier');
                     }
                 );
-            } catch (ColumnDoesNotExist|QueryException $e) {
+            } catch (QueryException $e) {
                 app('log')->error(sprintf('Could not drop column "identifier": %s', $e->getMessage()));
                 app('log')->error('If the column does not exist, this is not an problem. Otherwise, please open a GitHub discussion.');
             }

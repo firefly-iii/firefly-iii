@@ -223,8 +223,8 @@ class PreferencesController extends Controller
 
         // same for locale:
         if (!auth()->user()->hasRole('demo')) {
-            /** @var Preference $locale */
-            $locale = $request->get('locale');
+            $locale = (string) $request->get('locale');
+            $locale = '' === $locale ? null : $locale;
             app('preferences')->set('locale', $locale);
         }
 

@@ -3,7 +3,7 @@ name: "Issues - Command to close duplicate issues"
 # the workflow to execute on is comments that are newly created
 on:
   issue_comment:
-    types: [created]
+    types: [ created ]
 
 permissions:
   issues: write

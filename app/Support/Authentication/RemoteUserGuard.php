@@ -146,7 +146,7 @@ class RemoteUserGuard implements Guard
         return $this->user?->id;
     }
 
-    public function setUser(null|Authenticatable|User $user): void
+    public function setUser(null|Authenticatable|User $user): void // @phpstan-ignore-line
     {
         app('log')->debug(sprintf('Now at %s', __METHOD__));
         if ($user instanceof User) {

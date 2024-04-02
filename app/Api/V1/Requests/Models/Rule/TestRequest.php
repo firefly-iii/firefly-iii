@@ -54,17 +54,13 @@ class TestRequest extends FormRequest
 
     private function getDate(string $field): ?Carbon
     {
-        $value  = $this->query($field);
+        $value = $this->query($field);
         if (is_array($value)) {
             return null;
         }
-        $value  = (string)$value;
-        $result = null === $this->query($field) ? null : Carbon::createFromFormat('Y-m-d', substr($value, 0, 10));
-        if (false === $result) {
-            return null;
-        }
+        $value = (string)$value;
 
-        return $result;
+        return null === $this->query($field) ? null : Carbon::createFromFormat('Y-m-d', substr($value, 0, 10));
     }
 
     private function getAccounts(): array

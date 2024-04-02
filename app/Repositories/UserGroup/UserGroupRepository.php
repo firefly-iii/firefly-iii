@@ -106,8 +106,8 @@ class UserGroupRepository implements UserGroupRepositoryInterface
             /** @var null|UserGroup $group */
             $group = $membership->userGroup()->first();
             if (null !== $group) {
-                $groupId       = (int)$group->id;
-                if (in_array($groupId, $set, true)) {
+                $groupId       = $group->id;
+                if (in_array($groupId, array_keys($set), true)) {
                     continue;
                 }
                 $set[$groupId] = $group;

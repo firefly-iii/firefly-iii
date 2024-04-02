@@ -21,7 +21,6 @@
 
 declare(strict_types=1);
 
-use Doctrine\DBAL\Schema\Exception\ColumnDoesNotExist;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
@@ -57,7 +56,7 @@ class ChangesForV480 extends Migration
 
                         try {
                             $table->dropColumn('transaction_group_id');
-                        } catch (ColumnDoesNotExist|QueryException $e) {
+                        } catch (QueryException $e) {
                             app('log')->error(sprintf('Could not drop column: %s', $e->getMessage()));
                             app('log')->error('If the column does not exist, this is not an problem. Otherwise, please open a GitHub discussion.');
                         }
@@ -77,7 +76,7 @@ class ChangesForV480 extends Migration
                     static function (Blueprint $table): void {
                         try {
                             $table->dropColumn('stop_processing');
-                        } catch (ColumnDoesNotExist|QueryException $e) {
+                        } catch (QueryException $e) {
                             app('log')->error(sprintf('Could not drop column: %s', $e->getMessage()));
                             app('log')->error('If the column does not exist, this is not an problem. Otherwise, please open a GitHub discussion.');
                         }
@@ -97,7 +96,7 @@ class ChangesForV480 extends Migration
                     static function (Blueprint $table): void {
                         try {
                             $table->dropColumn('mfa_secret');
-                        } catch (ColumnDoesNotExist|QueryException $e) {
+                        } catch (QueryException $e) {
                             app('log')->error(sprintf('Could not drop column: %s', $e->getMessage()));
                             app('log')->error('If the column does not exist, this is not an problem. Otherwise, please open a GitHub discussion.');
                         }

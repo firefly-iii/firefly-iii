@@ -30,19 +30,9 @@ use Symfony\Component\Console\Command\Command as CommandAlias;
 
 class MigratePreferences extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature   = 'firefly-iii:migrate-preferences';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Give Firefly III preferences a user group ID so they can be made administration specific.';
+
+    protected $signature   = 'firefly-iii:migrate-preferences';
 
     /**
      * Execute the console command.

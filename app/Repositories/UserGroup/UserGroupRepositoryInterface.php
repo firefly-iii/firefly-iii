@@ -38,8 +38,6 @@ interface UserGroupRepositoryInterface
 
     public function get(): Collection;
 
-    public function useUserGroup(UserGroup $userGroup): void;
-
     public function getAll(): Collection;
 
     public function setUser(null|Authenticatable|User $user): void;
@@ -49,4 +47,6 @@ interface UserGroupRepositoryInterface
     public function update(UserGroup $userGroup, array $data): UserGroup;
 
     public function updateMembership(UserGroup $userGroup, array $data): UserGroup;
+
+    public function useUserGroup(UserGroup $userGroup): void;
 }

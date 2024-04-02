@@ -36,13 +36,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\Preference
  *
- * @property int                   $id
- * @property null|Carbon           $created_at
- * @property null|Carbon           $updated_at
- * @property int                   $user_id
- * @property string                $name
- * @property null|array|int|string $data
- * @property User                  $user
+ * @property int                        $id
+ * @property null|Carbon                $created_at
+ * @property null|Carbon                $updated_at
+ * @property int                        $user_id
+ * @property string                     $name
+ * @property null|array|bool|int|string $data
+ * @property User                       $user
  *
  * @method static Builder|Preference newModelQuery()
  * @method static Builder|Preference newQuery()

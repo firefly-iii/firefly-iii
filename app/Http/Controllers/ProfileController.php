@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
-use Auth;
 use FireflyIII\Events\UserChangedEmail;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Exceptions\ValidationException;
@@ -467,9 +466,7 @@ class ProfileController extends Controller
         if (is_array($secret)) {
             $secret = null;
         }
-        if (is_int($secret)) {
-            $secret = (string)$secret;
-        }
+        $secret     = (string)$secret;
 
         $repository->setMFACode($user, $secret);
 

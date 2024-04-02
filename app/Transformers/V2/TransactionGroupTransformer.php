@@ -462,7 +462,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         //        app('log')->debug(sprintf('Now in date("%s")', $string));
         if (10 === strlen($string)) {
             $res = Carbon::createFromFormat('Y-m-d', $string, config('app.timezone'));
-            if (false === $res) {
+            if (null === $res) {
                 return null;
             }
 
@@ -473,7 +473,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         }
         if (19 === strlen($string) && str_contains($string, 'T')) {
             $res = Carbon::createFromFormat('Y-m-d\TH:i:s', substr($string, 0, 19), config('app.timezone'));
-            if (false === $res) {
+            if (null === $res) {
                 return null;
             }
 
@@ -482,7 +482,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
         // 2022-01-01 01:01:01
         $res = Carbon::createFromFormat('Y-m-d H:i:s', substr($string, 0, 19), config('app.timezone'));
-        if (false === $res) {
+        if (null === $res) {
             return null;
         }
 

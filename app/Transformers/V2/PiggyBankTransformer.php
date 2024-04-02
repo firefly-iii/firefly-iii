@@ -248,7 +248,7 @@ class PiggyBankTransformer extends AbstractTransformer
         if (bccomp($currentAmount, $targetAmount) < 1) {
             $now             = today(config('app.timezone'));
             $startDate       = null !== $startDate && $startDate->gte($now) ? $startDate : $now;
-            $diffInMonths    = (int) $startDate->diffInMonths($targetDate);
+            $diffInMonths    = (int)$startDate->diffInMonths($targetDate);
             $remainingAmount = bcsub($targetAmount, $currentAmount);
 
             // more than 1 month to go and still need money to save:

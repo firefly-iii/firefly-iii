@@ -188,7 +188,7 @@ class Navigation
             Log::debug(sprintf('Function is ->%s()', $function));
             if (array_key_exists($function, $parameterMap)) {
                 Log::debug(sprintf('Parameter map, function becomes ->%s(%s)', $function, implode(', ', $parameterMap[$function])));
-                $date->{$function}($parameterMap[$function][0]);
+                $date->{$function}($parameterMap[$function][0]); // @phpstan-ignore-line
                 Log::debug(sprintf('Result is "%s"', $date->toIso8601String()));
 
                 return $date;
@@ -274,7 +274,7 @@ class Navigation
 
                 /** @var Carbon $tEnd */
                 $tEnd       = session('end', today(config('app.timezone'))->endOfMonth());
-                $diffInDays = (int) $tStart->diffInDays($tEnd, true);
+                $diffInDays = (int)$tStart->diffInDays($tEnd, true);
             }
             Log::debug(sprintf('Diff in days is %d', $diffInDays));
             $currentEnd->addDays($diffInDays);
@@ -327,7 +327,7 @@ class Navigation
     {
         $endOfMonth = $date->copy()->endOfMonth();
 
-        return (int) $date->diffInDays($endOfMonth, true);
+        return (int)$date->diffInDays($endOfMonth, true);
     }
 
     public function diffInPeriods(string $period, int $skip, Carbon $beginning, Carbon $end): int
@@ -677,7 +677,7 @@ class Navigation
 
             /** @var Carbon $tEnd */
             $tEnd       = session('end', today(config('app.timezone'))->endOfMonth());
-            $diffInDays = (int) $tStart->diffInDays($tEnd, true);
+            $diffInDays = (int)$tStart->diffInDays($tEnd, true);
             $date->subDays($diffInDays * $subtract);
 
             return $date;

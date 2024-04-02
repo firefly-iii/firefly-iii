@@ -21,7 +21,6 @@
  */
 declare(strict_types=1);
 
-use Doctrine\DBAL\Schema\Exception\ColumnDoesNotExist;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
@@ -74,7 +73,7 @@ class ChangesForV431 extends Migration
                         $table->renameColumn('start_date', 'startdate');
                     }
                 );
-            } catch (ColumnDoesNotExist|QueryException $e) {
+            } catch (QueryException $e) {
                 app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
                 app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
@@ -89,7 +88,7 @@ class ChangesForV431 extends Migration
                         $table->dropColumn('end_date');
                     }
                 );
-            } catch (ColumnDoesNotExist|QueryException $e) {
+            } catch (QueryException $e) {
                 app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
                 app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
@@ -103,7 +102,7 @@ class ChangesForV431 extends Migration
                         $table->dropColumn('decimal_places');
                     }
                 );
-            } catch (ColumnDoesNotExist|QueryException $e) {
+            } catch (QueryException $e) {
                 app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
                 app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
@@ -141,7 +140,7 @@ class ChangesForV431 extends Migration
                         $table->renameColumn('startdate', 'start_date');
                     }
                 );
-            } catch (ColumnDoesNotExist|QueryException $e) {
+            } catch (QueryException $e) {
                 app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
                 app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
@@ -171,7 +170,7 @@ class ChangesForV431 extends Migration
                         $table->dropColumn('repeats');
                     }
                 );
-            } catch (ColumnDoesNotExist|QueryException $e) {
+            } catch (QueryException $e) {
                 app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
                 app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
@@ -184,7 +183,7 @@ class ChangesForV431 extends Migration
                         $table->dropColumn('repeat_freq');
                     }
                 );
-            } catch (ColumnDoesNotExist|QueryException $e) {
+            } catch (QueryException $e) {
                 app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
                 app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }

@@ -19,9 +19,9 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<ruleset name="pcsg-generated-ruleset"
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         name="pcsg-generated-ruleset"
          xmlns="http://pmd.sf.net/ruleset/1.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 http://pmd.sf.net/ruleset_xml_schema.xsd"
          xsi:noNamespaceSchemaLocation="http://pmd.sf.net/ruleset_xml_schema.xsd">
     <description>Firefly III ruleset.</description>

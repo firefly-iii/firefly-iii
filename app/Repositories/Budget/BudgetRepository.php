@@ -183,21 +183,21 @@ class BudgetRepository implements BudgetRepositoryInterface
         //    |-----------|
         //  |----------------|
         if ($start->gte($limit->start_date) && $end->lte($limit->end_date)) {
-            return (int) $start->diffInDays($end, true) + 1; // add one day
+            return (int)$start->diffInDays($end, true) + 1; // add one day
         }
         // limit starts earlier and limit ends first:
         //    |-----------|
         // |-------|
         if ($limit->start_date->lte($start) && $limit->end_date->lte($end)) {
             // return days in the range $start-$limit_end
-            return (int) $start->diffInDays($limit->end_date, true) + 1; // add one day, the day itself
+            return (int)$start->diffInDays($limit->end_date, true) + 1; // add one day, the day itself
         }
         // limit starts later and limit ends earlier
         //    |-----------|
         //           |-------|
         if ($limit->start_date->gte($start) && $limit->end_date->gte($end)) {
             // return days in the range $limit_start - $end
-            return (int) $limit->start_date->diffInDays($end, true) + 1; // add one day, the day itself
+            return (int)$limit->start_date->diffInDays($end, true) + 1; // add one day, the day itself
         }
 
         return 0;

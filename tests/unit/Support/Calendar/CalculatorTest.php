@@ -68,6 +68,20 @@ final class CalculatorTest extends TestCase
         }
     }
 
+    private static function convert(Periodicity $periodicity, array $intervals): array
+    {
+        $periodicityIntervals = [];
+
+        /** @var IntervalProvider $interval */
+        foreach ($intervals as $index => $interval) {
+            $calculator                                             = CalculatorProvider::from($periodicity, $interval);
+
+            $periodicityIntervals["#{$index} {$calculator->label}"] = [$calculator];
+        }
+
+        return $periodicityIntervals;
+    }
+
     public static function provideSkippedIntervals(): iterable
     {
         return CalculatorProvider::providePeriodicityWithSkippedIntervals();
@@ -95,19 +109,5 @@ final class CalculatorTest extends TestCase
         $calculator = new Calculator();
         $period     = $calculator->nextDateByInterval($provider->epoch(), $provider->periodicity, $provider->skip);
         self::assertSame($provider->expected()->toDateString(), $period->toDateString());
-    }
-
-    private static function convert(Periodicity $periodicity, array $intervals): array
-    {
-        $periodicityIntervals = [];
-
-        /** @var IntervalProvider $interval */
-        foreach ($intervals as $index => $interval) {
-            $calculator                                             = CalculatorProvider::from($periodicity, $interval);
-
-            $periodicityIntervals["#{$index} {$calculator->label}"] = [$calculator];
-        }
-
-        return $periodicityIntervals;
     }
 }

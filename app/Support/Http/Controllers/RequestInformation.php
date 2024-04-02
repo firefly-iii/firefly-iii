@@ -145,14 +145,14 @@ trait RequestInformation
         $attributes['location'] ??= '';
         $attributes['accounts']  = AccountList::routeBinder($attributes['accounts'] ?? '', new Route('get', '', []));
         $date                    = Carbon::createFromFormat('Ymd', $attributes['startDate']);
-        if (false === $date) {
+        if (null === $date) {
             $date = today(config('app.timezone'));
         }
         $date->startOfMonth();
         $attributes['startDate'] = $date;
 
         $date2                   = Carbon::createFromFormat('Ymd', $attributes['endDate']);
-        if (false === $date2) {
+        if (null === $date2) {
             $date2 = today(config('app.timezone'));
         }
         $date2->endOfDay();

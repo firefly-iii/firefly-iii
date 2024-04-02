@@ -22,7 +22,6 @@
 
 declare(strict_types=1);
 
-use Doctrine\DBAL\Schema\Exception\ColumnDoesNotExist;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
@@ -43,7 +42,7 @@ class AddLdapColumnsToUsersTable extends Migration
                         $table->dropColumn(['domain']);
                     }
                 );
-            } catch (ColumnDoesNotExist|QueryException $e) {
+            } catch (QueryException $e) {
                 app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
                 app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }

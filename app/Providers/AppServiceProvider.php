@@ -69,7 +69,10 @@ class AppServiceProvider extends ServiceProvider
             if ('' === $firstParam && str_contains($name, $route)) {
                 return true;
             }
-            $params     = Route::getCurrentRoute()->parameters() ?? [];
+
+            /** @var null|array $params */
+            $params     = Route::getCurrentRoute()->parameters();
+            $params ??= [];
             $objectType = $params['objectType'] ?? '';
             if ($objectType === $firstParam && str_contains($name, $route)) {
                 return true;

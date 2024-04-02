@@ -77,15 +77,6 @@ final class NavigationEndOfPeriodTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider        provideDates
-     */
-    public function testGivenADateAndFrequencyWhenCalculateTheDateThenReturnsTheExpectedDateSuccessful(string $frequency, Carbon $from, Carbon $expected): void
-    {
-        $period = clone $this->navigation->endOfPeriod($from, $frequency);
-        self::assertSame($expected->toDateString(), $period->toDateString());
-    }
-
     public static function provideUnknownFrequencies(): iterable
     {
         return [
@@ -93,6 +84,15 @@ final class NavigationEndOfPeriodTest extends TestCase
             'unknown' => ['frequency' => 'unknown', 'from' => Carbon::now(), 'expected' => Carbon::now()->startOfDay()],
             'empty'   => ['frequency' => '', 'from' => Carbon::now(), 'expected' => Carbon::now()->startOfDay()],
         ];
+    }
+
+    /**
+     * @dataProvider        provideDates
+     */
+    public function testGivenADateAndFrequencyWhenCalculateTheDateThenReturnsTheExpectedDateSuccessful(string $frequency, Carbon $from, Carbon $expected): void
+    {
+        $period = clone $this->navigation->endOfPeriod($from, $frequency);
+        self::assertSame($expected->toDateString(), $period->toDateString());
     }
 
     /**

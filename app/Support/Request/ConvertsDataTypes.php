@@ -250,7 +250,7 @@ trait ConvertsDataTypes
 
                 return null;
             }
-            if (false === $carbon) {
+            if (null === $carbon) {
                 app('log')->error(sprintf('[2] "%s" is of an invalid format.', $value));
 
                 return null;

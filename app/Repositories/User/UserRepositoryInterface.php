@@ -59,8 +59,6 @@ interface UserRepositoryInterface
 
     public function changeStatus(User $user, bool $isBlocked, string $code): bool;
 
-    public function getUserGroups(User $user): Collection;
-
     /**
      * Returns a count of all users.
      */
@@ -95,6 +93,8 @@ interface UserRepositoryInterface
      * Return basic user information.
      */
     public function getUserData(User $user): array;
+
+    public function getUserGroups(User $user): Collection;
 
     public function hasRole(null|Authenticatable|User $user, string $role): bool;
 

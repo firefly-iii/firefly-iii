@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support;
 
 use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use Carbon\Exceptions\InvalidFormatException;
 use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Support\Facades\Log;
@@ -122,12 +123,12 @@ class ParseDateString
     {
         $today = today(config('app.timezone'))->startOfDay();
 
-        return match ($keyword) {
+        return match ($keyword) { // @phpstan-ignore-line
             default                 => $today,
             'yesterday'             => $today->subDay(),
             'tomorrow'              => $today->addDay(),
-            'start of this week'    => $today->startOfWeek(Carbon::MONDAY),
-            'end of this week'      => $today->endOfWeek(Carbon::SUNDAY),
+            'start of this week'    => $today->startOfWeek(CarbonInterface::MONDAY),
+            'end of this week'      => $today->endOfWeek(CarbonInterface::SUNDAY),
             'start of this month'   => $today->startOfMonth(),
             'end of this month'     => $today->endOfMonth(),
             'start of this quarter' => $today->startOfQuarter(),

@@ -54,14 +54,6 @@ class UpdateController extends Controller
         );
     }
 
-    public function useUserGroup(UserGroup $userGroup): JsonResponse
-    {
-        // group validation is already in place, so can just update the user.
-        $this->repository->useUserGroup($userGroup);
-
-        return response()->json([], 204);
-    }
-
     public function update(UpdateRequest $request, UserGroup $userGroup): JsonResponse
     {
         $all         = $request->getAll();
@@ -86,5 +78,13 @@ class UpdateController extends Controller
             ->api($this->jsonApiObject('user-groups', $userGroup, $transformer))
             ->header('Content-Type', self::CONTENT_TYPE)
         ;
+    }
+
+    public function useUserGroup(UserGroup $userGroup): JsonResponse
+    {
+        // group validation is already in place, so can just update the user.
+        $this->repository->useUserGroup($userGroup);
+
+        return response()->json([], 204);
     }
 }

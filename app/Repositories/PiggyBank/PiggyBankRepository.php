@@ -301,7 +301,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         if (null !== $piggyBank->targetdate && $repetition->currentamount < $piggyBank->targetamount) {
             $now             = today(config('app.timezone'));
             $startDate       = null !== $piggyBank->startdate && $piggyBank->startdate->gte($now) ? $piggyBank->startdate : $now;
-            $diffInMonths    = (int) $startDate->diffInMonths($piggyBank->targetdate);
+            $diffInMonths    = (int)$startDate->diffInMonths($piggyBank->targetdate);
             $remainingAmount = bcsub($piggyBank->targetamount, $repetition->currentamount);
 
             // more than 1 month to go and still need money to save:

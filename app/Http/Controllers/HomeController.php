@@ -79,10 +79,10 @@ class HomeController extends Controller
             app('log')->error(sprintf('End could not parse date string "%s" so ignore it.', $stringEnd));
             $end = Carbon::now()->endOfMonth();
         }
-        if (false === $start) {
+        if (null === $start) {
             $start = Carbon::now()->startOfMonth();
         }
-        if (false === $end) {
+        if (null === $end) {
             $end = Carbon::now()->endOfMonth();
         }
 

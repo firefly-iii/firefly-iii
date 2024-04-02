@@ -32,24 +32,13 @@ class LaravelPassportKeys extends Command
 {
     use ShowsFriendlyMessages;
 
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature   = 'firefly-iii:laravel-passport-keys';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Calls the Laravel "passport:keys" but doesn\'t exit 1.';
+    protected $signature   = 'firefly-iii:laravel-passport-keys';
 
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): int
     {
         Artisan::call('passport:keys --no-interaction', []);
         $result = Artisan::output();

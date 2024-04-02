@@ -36,6 +36,14 @@ use Illuminate\Contracts\Auth\UserProvider;
  */
 class RemoteUserProvider implements UserProvider
 {
+    #[\Override]
+    public function rehashPasswordIfRequired(Authenticatable $user, array $credentials, bool $force = false): void
+    {
+        app('log')->debug(sprintf('Now at %s', __METHOD__));
+
+        throw new FireflyException(sprintf('Did not implement %s', __METHOD__));
+    }
+
     /**
      * @throws FireflyException
      *
@@ -119,13 +127,5 @@ class RemoteUserProvider implements UserProvider
         app('log')->debug(sprintf('Now at %s', __METHOD__));
 
         throw new FireflyException(sprintf('C) Did not implement %s', __METHOD__));
-    }
-
-    #[\Override]
-    public function rehashPasswordIfRequired(Authenticatable $user, array $credentials, bool $force = false): void
-    {
-        app('log')->debug(sprintf('Now at %s', __METHOD__));
-
-        throw new FireflyException(sprintf('Did not implement %s', __METHOD__));
     }
 }

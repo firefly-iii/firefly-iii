@@ -185,7 +185,7 @@ class AccountTransformer extends AbstractTransformer
             // try classic date:
             if (10 === strlen($monthlyPaymentDate)) {
                 $object             = Carbon::createFromFormat('!Y-m-d', $monthlyPaymentDate, config('app.timezone'));
-                if (false === $object) {
+                if (null === $object) {
                     $object = today(config('app.timezone'));
                 }
                 $monthlyPaymentDate = $object->toAtomString();
@@ -212,7 +212,7 @@ class AccountTransformer extends AbstractTransformer
         }
         if (null !== $openingBalanceDate) {
             $object             = Carbon::createFromFormat('Y-m-d H:i:s', $openingBalanceDate, config('app.timezone'));
-            if (false === $object) {
+            if (null === $object) {
                 $object = today(config('app.timezone'));
             }
             $openingBalanceDate = $object->toAtomString();

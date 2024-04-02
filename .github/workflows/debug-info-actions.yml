@@ -3,9 +3,9 @@ name: 'Issues - Respond to hidden commands'
 # the workflow to execute on is comments that are newly created
 on:
   issues:
-    types: [opened, edited]
+    types: [ opened, edited ]
   issue_comment:
-    types: [created]
+    types: [ created ]
 
 # permissions needed for reacting to IssueOps commands on issues and PRs
 permissions:
