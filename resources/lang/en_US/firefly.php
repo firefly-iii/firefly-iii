@@ -1395,7 +1395,7 @@ return [
     'basic_administration_information'                    => 'Basic administration information',
     'new_administration_created'                          => 'New financial administration "{{title}}" has been created',
     'edit_administration_breadcrumb' => 'Edit financial administration ":title"',
-    'administrations_page_edit_sub_title'=> 'Edit financial administration ":title"',
+    'administrations_page_edit_sub_title' => 'Edit financial administration ":title"',
 
     // roles
     'administration_role_owner'                           => 'Owner',
