@@ -146,12 +146,12 @@
                                                     <div class="col-sm-10">
                                                         <div class="checkbox">
                                                             <label>
-                                                                {% if id in frontPageAccounts or frontPageAccounts|length == 0 %}
-                                                                    <input type="checkbox" name="frontPageAccounts[]"
+                                                                {% if id in frontpageAccounts or frontpageAccounts|length == 0 %}
+                                                                    <input type="checkbox" name="frontpageAccounts[]"
                                                                            value="{{ id }}"
                                                                            checked> {{ name }}
                                                                 {% else %}
-                                                                    <input type="checkbox" name="frontPageAccounts[]"
+                                                                    <input type="checkbox" name="frontpageAccounts[]"
                                                                            value="{{ id }}"> {{ name }}
                                                                 {% endif %}
                                                             </label>
