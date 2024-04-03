@@ -44,6 +44,7 @@ use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Services\Internal\Support\JournalServiceTrait;
 use FireflyIII\Support\NullArrayObject;
 use FireflyIII\Validation\AccountValidator;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class to centralise code that updates a journal given the input by system.
@@ -187,7 +188,7 @@ class JournalUpdateService
 
         // make new account validator.
         $expectedType = $this->getExpectedType();
-        app('log')->debug(sprintf('Expected type (new or unchanged) is %s', $expectedType));
+        app('log')->debug(sprintf('(a) Expected type (new or unchanged) is %s', $expectedType));
 
         // make a new validator.
         /** @var AccountValidator $validator */
@@ -273,7 +274,7 @@ class JournalUpdateService
 
         // make new account validator.
         $expectedType      = $this->getExpectedType();
-        app('log')->debug(sprintf('Expected type (new or unchanged) is %s', $expectedType));
+        app('log')->debug(sprintf('(b) Expected type (new or unchanged) is %s', $expectedType));
 
         // make a new validator.
         /** @var AccountValidator $validator */
@@ -404,7 +405,7 @@ class JournalUpdateService
 
         // make new account validator.
         $expectedType = $this->getExpectedType();
-        app('log')->debug(sprintf('Expected type (new or unchanged) is %s', $expectedType));
+        app('log')->debug(sprintf('(c) Expected type (new or unchanged) is %s', $expectedType));
 
         try {
             $result = $this->getAccount($expectedType, 'destination', $destInfo);
