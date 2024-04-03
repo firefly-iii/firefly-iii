@@ -26,6 +26,12 @@ $danger: #CD5029 !default;
 $primary: #1E6581 !default;
 $success: #64B624 !default;
 
+/*
+Remove bottom margin from unstyled lists
+ */
+.list-no-margin {margin-bottom: 0;}
+.list-no-margin li.list-indent {margin-left:1.6em;}
+
 .hover-footer {
     overflow-x:hidden;
     width:100%;

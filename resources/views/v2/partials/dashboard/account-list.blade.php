@@ -27,53 +27,53 @@
                             <tr>
                                 <td>
                                     <template x-if="group.title">
-                                                            <span>
-                                                                TODO ICON
-                                                                <a
-                                                                    :href="'{{route('transactions.show', '') }}/' + group.id"
-                                                                    x-text="group.title"></a><br/></span>
+                                        <span>
+                                            <template x-if="group.transactions[0].type === 'withdrawal'">
+                                                <span class="text-muted fa-solid fa-arrow-left fa-fw"></span>
+                                            </template>
+                                            <template x-if="group.transactions[0].type === 'deposit'">
+                                               <span class="text-muted fa-solid fa-arrow-right fa-fw"></span>
+                                            </template>
+                                            <template x-if="group.transactions[0].type === 'transfer'">
+                                                <span class="text-muted fa-solid fa-arrows-rotate fa-fw"></span>
+                                            </template>
+                                        <a :href="'{{route('transactions.show', '') }}/' + group.id" x-text="group.title"></a><br/></span>
                                     </template>
+                                    <ul class="list-unstyled list-no-margin">
                                     <template x-for="transaction in group.transactions">
-                                                            <span>
-                                                                <template x-if="group.title">
-                                                                    <span>-
-                                                                        <span
-                                                                            x-text="transaction.description"></span><br>
-                                                                    </span>
-                                                                </template>
-                                                                <template x-if="!group.title">
-                                                                    <span>
-                                                                        <!-- withdrawal -->
-                                                                        <template
-                                                                            x-if="transaction.type == 'withdrawal'">
-                                                                            <span
-                                                                                class="text-muted fa-solid fa-arrow-left fa-fw"></span>
-                                                                        </template>
-                                                                        <template x-if="transaction.type == 'deposit'">
-                                                                            <span
-                                                                                class="text-muted fa-solid fa-arrow-right fa-fw"></span>
-                                                                        </template>
-                                                                        <template x-if="transaction.type == 'transfer'">
-                                                                            <span
-                                                                                class="text-muted fa-solid fa-arrows-rotate fa-fw"></span>
-                                                                        </template>
-                                                                        <a
-                                                                            :href="'{{route('transactions.show', '') }}/' + group.id"
-                                                                            x-text="transaction.description"></a><br>
-                                                                    </span>
-                                                                </template>
-                                                            </span>
+                                        <li :class="{'list-indent': group.title}">
+                                            <template x-if="group.title">
+                                                <span x-text="transaction.description"></span>
+                                            </template>
+                                            <template x-if="!group.title">
+                                                <span>
+                                                  <template x-if="transaction.type == 'withdrawal'">
+                                                      <span class="text-muted fa-solid fa-arrow-left fa-fw"></span>
+                                                  </template>
+                                                  <template x-if="transaction.type == 'deposit'">
+                                                      <span class="text-muted fa-solid fa-arrow-right fa-fw"></span>
+                                                  </template>
+                                                  <template x-if="transaction.type == 'transfer'">
+                                                      <span class="text-muted fa-solid fa-arrows-rotate fa-fw"></span>
+                                                  </template>
+                                                  <a :href="'{{route('transactions.show', '') }}/' + group.id" x-text="transaction.description"></a>
+                                                </span>
+                                            </template>
+                                            </li>
                                     </template>
+                                    </ul>
                                 </td>
                                 <td style="width:30%;" class="text-end">
                                     <template x-if="group.title">
                                         <span><br/></span>
                                     </template>
+                                    <ul class="list-unstyled list-no-margin">
                                     <template x-for="transaction in group.transactions">
-                                                            <span>
-                                                               @include('partials.elements.amount', ['autoConversion' => true,'type' => 'transaction.type','amount' => 'transaction.amount','native' => 'transaction.native_amount'])
-                                                            </span>
+                                        <li>
+                                            @include('partials.elements.amount', ['autoConversion' => true,'type' => 'transaction.type','amount' => 'transaction.amount','native' => 'transaction.native_amount'])
+                                        </li>
                                     </template>
+                                    </ul>
                                 </td>
                             </tr>
                         </template>
