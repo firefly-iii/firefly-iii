@@ -9,6 +9,8 @@ Thank you for submitting new code to Firefly III, or any of the related projects
 
 Perhaps open an issue first, before you open a PR?
 
+See also: https://docs.firefly-iii.org/explanation/support/#contributing-code
+
 -->
     
 This PR fixes issue # (if relevant).
