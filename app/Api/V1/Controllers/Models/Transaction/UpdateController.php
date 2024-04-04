@@ -72,8 +72,8 @@ class UpdateController extends Controller
         app('log')->debug('Now in update routine for transaction group!');
         $data             = $request->getAll();
 
-        # Fixes 8750.
-        foreach($data['transactions'] as $index => $info) {
+        // Fixes 8750.
+        foreach ($data['transactions'] as $index => $info) {
             unset($data['transactions'][$index]['type']);
         }
 

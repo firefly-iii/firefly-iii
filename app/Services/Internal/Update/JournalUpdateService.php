@@ -44,7 +44,6 @@ use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Services\Internal\Support\JournalServiceTrait;
 use FireflyIII\Support\NullArrayObject;
 use FireflyIII\Validation\AccountValidator;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class to centralise code that updates a journal given the input by system.
