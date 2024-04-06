@@ -17,7 +17,7 @@ jobs:
       - uses: actions/stale@v9
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          stale-issue-message: >
+          stale-issue-message: |
             Hi there!
 
             This is an automatic reply. `Share and enjoy`
@@ -25,7 +25,7 @@ jobs:
             This issue has been automatically marked as stale because it has not had recent activity. It will be closed if no further activity occurs.
 
             Thank you for your contributions.
-          stale-pr-message: >
+          stale-pr-message: |
             Hi there!
 
             This is an automatic reply. `Share and enjoy`
