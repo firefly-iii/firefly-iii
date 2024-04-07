@@ -1,6 +1,6 @@
 @extends('layout.v2')
 @section('scripts')
-    @vite(['resources/assets/v2/pages/administrations/index.js'])
+    @vite(['src/pages/administrations/index.js'])
 @endsection
 @section('content')
     <div class="app-content">

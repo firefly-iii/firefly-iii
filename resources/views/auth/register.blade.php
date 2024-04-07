@@ -76,5 +76,5 @@
 
 @endsection
 @section('scripts')
-    @vite(['resources/assets/v2/pages/dashboard/dashboard.js'])
+    @vite(['src/pages/dashboard/dashboard.js'])
 @endsection

@@ -1,6 +1,6 @@
 /*
  * vite.config.js
- * Copyright (c) 2023 james@firefly-iii.org
+ * Copyright (c) 2024 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -15,7 +15,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
 import {defineConfig} from 'vite';
@@ -43,26 +43,26 @@ export default defineConfig({
         laravel({
             input: [
                 // css
-                'resources/assets/v2/sass/app.scss',
+                'src/sass/app.scss',
 
                 // dashboard
-                'resources/assets/v2/pages/dashboard/dashboard.js',
+                'src/pages/dashboard/dashboard.js',
 
                 // accounts
-                'resources/assets/v2/pages/accounts/index.js',
+                'src/pages/accounts/index.js',
 
                 // administrations
-                'resources/assets/v2/pages/administrations/index.js',
-                'resources/assets/v2/pages/administrations/create.js',
-                'resources/assets/v2/pages/administrations/edit.js',
+                'src/pages/administrations/index.js',
+                'src/pages/administrations/create.js',
+                'src/pages/administrations/edit.js',
 
                 // transactions
-                'resources/assets/v2/pages/transactions/create.js',
-                'resources/assets/v2/pages/transactions/edit.js',
-                'resources/assets/v2/pages/transactions/show.js',
-                'resources/assets/v2/pages/transactions/index.js',
-
+                'src/pages/transactions/create.js',
+                'src/pages/transactions/edit.js',
+                'src/pages/transactions/show.js',
+                'src/pages/transactions/index.js',
             ],
+            publicDirectory: '../../../public',
             refresh: true,
         }),
         //manifestSRI(),

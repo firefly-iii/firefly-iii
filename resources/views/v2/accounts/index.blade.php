@@ -174,5 +174,5 @@
 
 @endsection
 @section('scripts')
-    @vite(['resources/assets/v2/pages/accounts/index.js'])
+    @vite(['src/pages/accounts/index.js'])
 @endsection

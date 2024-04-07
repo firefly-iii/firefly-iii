@@ -4,7 +4,7 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build",
-        "postinstall": "patch-package"
+        "postinstall": "patch-package --error-on-fail"
     },
     "devDependencies": {
         "axios": "^1.6.8",

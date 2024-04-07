@@ -68,7 +68,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @yield('styles')
-    @vite(['resources/assets/v2/sass/app.scss'])
+    @vite(['src/sass/app.scss'])
 
 
 </head>
