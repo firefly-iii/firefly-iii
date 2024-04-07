@@ -1,4 +1,7 @@
 {
+    "scripts": {
+        "postinstall": "patch-package --error-on-fail"
+    },
     "workspaces": [
         "resources/assets/v1",
         "resources/assets/v2"
