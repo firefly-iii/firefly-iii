@@ -1,40 +1,6 @@
 {
-    "private": true,
-    "type": "module",
-    "scripts": {
-        "dev": "vite",
-        "build": "vite build",
-        "postinstall": "patch-package"
-    },
-    "devDependencies": {
-        "axios": "^1.6.8",
-        "laravel-vite-plugin": "^0.8.1",
-        "patch-package": "^8.0.0",
-        "sass": "^1.72.0",
-        "vite": "^4.5.3",
-        "vite-plugin-manifest-sri": "^0.1.0"
-    },
-    "dependencies": {
-        "@ag-grid-community/client-side-row-model": "^31.0.3",
-        "@ag-grid-community/core": "^31.0.3",
-        "@ag-grid-community/infinite-row-model": "^31.0.3",
-        "@ag-grid-community/styles": "^31.0.3",
-        "@fortawesome/fontawesome-free": "^6.4.0",
-        "@popperjs/core": "^2.11.8",
-        "admin-lte": "^4.0.0-alpha3",
-        "alpinejs": "^3.13.7",
-        "bootstrap": "^5.3.0",
-        "bootstrap5-autocomplete": "^1.1.22",
-        "bootstrap5-tags": "^1.6.15",
-        "chart.js": "^4.4.0",
-        "chartjs-adapter-date-fns": "^3.0.0",
-        "chartjs-chart-sankey": "^0.12.0",
-        "date-fns": "^3.6.0",
-        "i18next": "^23.10.1",
-        "i18next-chained-backend": "^4.6.2",
-        "i18next-http-backend": "^2.4.2",
-        "i18next-localstorage-backend": "^4.2.0",
-        "leaflet": "^1.9.4",
-        "store": "^2.0.12"
-    }
+    "workspaces": [
+        "resources/assets/v1",
+        "resources/assets/v2"
+    ]
 }

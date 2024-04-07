@@ -1,0 +1,32 @@
+{
+    "name": "v1",
+    "private": true,
+    "scripts": {
+        "development": "mix",
+        "watch": "mix watch",
+        "watch-poll": "mix watch -- --watch-options-poll=1000",
+        "hot": "mix watch --hot",
+        "production": "mix --production",
+        "prod": "mix --production"
+    },
+    "dependencies": {
+        "date-fns": "^2.30.0",
+        "stream-browserify": "^3.0.0"
+    },
+    "devDependencies": {
+        "@johmun/vue-tags-input": "^2",
+        "@vue/compiler-sfc": "^3.3.4",
+        "axios": "^1.3",
+        "bootstrap-sass": "^3",
+        "cross-env": "^7.0",
+        "font-awesome": "^4.7.0",
+        "jquery": "^3",
+        "laravel-mix": "^6.0",
+        "postcss": "^8.4",
+        "uiv": "^1.4",
+        "vue": "^2.7",
+        "vue-i18n": "^8",
+        "vue-loader": "^15",
+        "vue-template-compiler": "^2.7"
+    }
+}
