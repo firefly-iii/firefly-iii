@@ -3,7 +3,7 @@
     "private": true,
     "scripts": {
         "dev": "vite",
-        "build": "vite build",
+        "build": "vite build --emptyOutDir",
         "postinstall": "patch-package --error-on-fail"
     },
     "devDependencies": {
