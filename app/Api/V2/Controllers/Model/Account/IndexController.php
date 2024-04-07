@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V2\Controllers\Model\Account;
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Model\Account\IndexRequest;
 use FireflyIII\Api\V2\Request\Model\Transaction\InfiniteListRequest;
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
 use FireflyIII\Transformers\V2\AccountTransformer;
 use Illuminate\Http\JsonResponse;
@@ -36,6 +37,7 @@ class IndexController extends Controller
     public const string RESOURCE_KEY = 'accounts';
 
     private AccountRepositoryInterface $repository;
+    protected array                    $acceptedRoles = [UserRoleEnum::READ_ONLY, UserRoleEnum::MANAGE_TRANSACTIONS];
 
     /**
      * AccountController constructor.
@@ -47,10 +49,8 @@ class IndexController extends Controller
             function ($request, $next) {
                 $this->repository = app(AccountRepositoryInterface::class);
                 // new way of user group validation
-                $userGroup        = $this->validateUserGroup($request);
-                if (null !== $userGroup) {
-                    $this->repository->setUserGroup($userGroup);
-                }
+                $userGroup = $this->validateUserGroup($request);
+                $this->repository->setUserGroup($userGroup);
 
                 return $next($request);
             }
@@ -77,8 +77,7 @@ class IndexController extends Controller
 
         return response()
             ->json($this->jsonApiList('accounts', $paginator, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE)
-        ;
+            ->header('Content-Type', self::CONTENT_TYPE);
     }
 
     public function infiniteList(InfiniteListRequest $request): JsonResponse
@@ -86,7 +85,7 @@ class IndexController extends Controller
         $this->repository->resetAccountOrder();
 
         // get accounts of the specified type, and return.
-        $types       = $request->getAccountTypes();
+        $types = $request->getAccountTypes();
 
         // get from repository
         $accounts    = $this->repository->getAccountsInOrder($types, $request->getSortInstructions('accounts'), $request->getStartRow(), $request->getEndRow());
@@ -98,7 +97,6 @@ class IndexController extends Controller
 
         return response()
             ->json($this->jsonApiList(self::RESOURCE_KEY, $paginator, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE)
-        ;
+            ->header('Content-Type', self::CONTENT_TYPE);
     }
 }

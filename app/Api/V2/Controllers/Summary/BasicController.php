@@ -76,14 +76,12 @@ class BasicController extends Controller
                 $this->currencyRepos     = app(CurrencyRepositoryInterface::class);
                 $this->opsRepository     = app(OperationsRepositoryInterface::class);
 
-                $userGroup               = $this->validateUserGroup($request);
-                if (null !== $userGroup) {
-                    $this->abRepository->setUserGroup($userGroup);
-                    $this->accountRepository->setUserGroup($userGroup);
-                    $this->billRepository->setUserGroup($userGroup);
-                    $this->budgetRepository->setUserGroup($userGroup);
-                    $this->opsRepository->setUserGroup($userGroup);
-                }
+                $userGroup = $this->validateUserGroup($request);
+                $this->abRepository->setUserGroup($userGroup);
+                $this->accountRepository->setUserGroup($userGroup);
+                $this->billRepository->setUserGroup($userGroup);
+                $this->budgetRepository->setUserGroup($userGroup);
+                $this->opsRepository->setUserGroup($userGroup);
 
                 return $next($request);
             }
@@ -101,8 +99,8 @@ class BasicController extends Controller
     public function basic(DateRequest $request): JsonResponse
     {
         // parameters for boxes:
-        $start        = $this->parameters->get('start');
-        $end          = $this->parameters->get('end');
+        $start = $this->parameters->get('start');
+        $end   = $this->parameters->get('end');
 
         // balance information:
         $balanceData  = $this->getBalanceInformation($start, $end);
@@ -119,13 +117,13 @@ class BasicController extends Controller
      */
     private function getBalanceInformation(Carbon $start, Carbon $end): array
     {
-        $object    = new SummaryBalanceGrouped();
-        $default   = app('amount')->getDefaultCurrency();
+        $object  = new SummaryBalanceGrouped();
+        $default = app('amount')->getDefaultCurrency();
 
         $object->setDefault($default);
 
         /** @var User $user */
-        $user      = auth()->user();
+        $user = auth()->user();
 
         // collect income of user using the new group collector.
         /** @var GroupCollectorInterface $collector */
@@ -137,10 +135,9 @@ class BasicController extends Controller
             ->setPage($this->parameters->get('page'))
             // set types of transactions to return.
             ->setTypes([TransactionType::DEPOSIT])
-            ->setRange($start, $end)
-        ;
+            ->setRange($start, $end);
 
-        $set       = $collector->getExtractedJournals();
+        $set = $collector->getExtractedJournals();
         $object->groupTransactions('income', $set);
 
         // collect expenses of user using the new group collector.
@@ -153,9 +150,8 @@ class BasicController extends Controller
             ->setPage($this->parameters->get('page'))
             // set types of transactions to return.
             ->setTypes([TransactionType::WITHDRAWAL])
-            ->setRange($start, $end)
-        ;
-        $set       = $collector->getExtractedJournals();
+            ->setRange($start, $end);
+        $set = $collector->getExtractedJournals();
         $object->groupTransactions('expense', $set);
 
         return $object->groupData();
@@ -170,7 +166,7 @@ class BasicController extends Controller
         $paidAmount   = $this->billRepository->sumPaidInRange($start, $end);
         $unpaidAmount = $this->billRepository->sumUnpaidInRange($start, $end);
 
-        $return       = [];
+        $return = [];
 
         /**
          * @var array $info
@@ -230,14 +226,14 @@ class BasicController extends Controller
     {
         Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         app('log')->debug('Now in getLeftToSpendInfo');
-        $return       = [];
-        $today        = today(config('app.timezone'));
-        $available    = $this->abRepository->getAvailableBudgetWithCurrency($start, $end);
-        $budgets      = $this->budgetRepository->getActiveBudgets();
-        $spent        = $this->opsRepository->listExpenses($start, $end, null, $budgets);
-        $default      = app('amount')->getDefaultCurrency();
-        $currencies   = [];
-        $converter    = new ExchangeRateConverter();
+        $return     = [];
+        $today      = today(config('app.timezone'));
+        $available  = $this->abRepository->getAvailableBudgetWithCurrency($start, $end);
+        $budgets    = $this->budgetRepository->getActiveBudgets();
+        $spent      = $this->opsRepository->listExpenses($start, $end, null, $budgets);
+        $default    = app('amount')->getDefaultCurrency();
+        $currencies = [];
+        $converter  = new ExchangeRateConverter();
 
         // native info:
         $nativeLeft   = [
@@ -263,8 +259,8 @@ class BasicController extends Controller
          */
         foreach ($spent as $currencyId => $row) {
             app('log')->debug(sprintf('Processing spent array in currency #%d', $currencyId));
-            $spent                   = '0';
-            $spentNative             = '0';
+            $spent       = '0';
+            $spentNative = '0';
 
             // get the sum from the array of transactions (double loop but who cares)
             /** @var array $budget */
@@ -281,8 +277,8 @@ class BasicController extends Controller
                     if ((int)$journal['foreign_currency_id'] === $default->id) {
                         $amountNative = $journal['foreign_amount'];
                     }
-                    $spent                   = bcadd($spent, $amount);
-                    $spentNative             = bcadd($spentNative, $amountNative);
+                    $spent       = bcadd($spent, $amount);
+                    $spentNative = bcadd($spentNative, $amountNative);
                 }
                 app('log')->debug(sprintf('Total spent in budget "%s" is %s', $budget['name'], $spent));
             }
@@ -298,9 +294,9 @@ class BasicController extends Controller
             app('log')->debug(sprintf('Amount left is %s', $left));
 
             // how much left per day?
-            $days                    = (int)$today->diffInDays($end, true) + 1;
-            $perDay                  = '0';
-            $perDayNative            = '0';
+            $days         = (int)$today->diffInDays($end, true) + 1;
+            $perDay       = '0';
+            $perDayNative = '0';
             if (0 !== $days && bccomp($left, '0') > -1) {
                 $perDay = bcdiv($left, (string)$days);
             }
@@ -309,7 +305,7 @@ class BasicController extends Controller
             }
 
             // left
-            $return[]                = [
+            $return[] = [
                 'key'                     => sprintf('left-to-spend-in-%s', $row['currency_code']),
                 'value'                   => $left,
                 'currency_id'             => (string)$row['currency_id'],
@@ -318,10 +314,10 @@ class BasicController extends Controller
                 'currency_decimal_places' => (int)$row['currency_decimal_places'],
             ];
             // left (native)
-            $nativeLeft['value']     = $leftNative;
+            $nativeLeft['value'] = $leftNative;
 
             // left per day:
-            $return[]                = [
+            $return[] = [
                 'key'                     => sprintf('left-per-day-to-spend-in-%s', $row['currency_code']),
                 'value'                   => $perDay,
                 'currency_id'             => (string)$row['currency_id'],
@@ -331,10 +327,10 @@ class BasicController extends Controller
             ];
 
             // left per day (native)
-            $nativePerDay['value']   = $perDayNative;
+            $nativePerDay['value'] = $perDayNative;
         }
-        $return[]     = $nativeLeft;
-        $return[]     = $nativePerDay;
+        $return[] = $nativeLeft;
+        $return[] = $nativePerDay;
         $converter->summarize();
 
         return $return;
@@ -343,8 +339,8 @@ class BasicController extends Controller
     private function getNetWorthInfo(Carbon $start, Carbon $end): array
     {
         /** @var UserGroup $userGroup */
-        $userGroup      = auth()->user()->userGroup;
-        $date           = today(config('app.timezone'))->startOfDay();
+        $userGroup = auth()->user()->userGroup;
+        $date      = today(config('app.timezone'))->startOfDay();
         // start and end in the future? use $end
         if ($this->notInDateRange($date, $start, $end)) {
             /** @var Carbon $date */
@@ -354,12 +350,12 @@ class BasicController extends Controller
         /** @var NetWorthInterface $netWorthHelper */
         $netWorthHelper = app(NetWorthInterface::class);
         $netWorthHelper->setUserGroup($userGroup);
-        $allAccounts    = $this->accountRepository->getActiveAccountsByType(
+        $allAccounts = $this->accountRepository->getActiveAccountsByType(
             [AccountType::ASSET, AccountType::DEFAULT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::DEBT]
         );
 
         // filter list on preference of being included.
-        $filtered       = $allAccounts->filter(
+        $filtered = $allAccounts->filter(
             function (Account $account) {
                 $includeNetWorth = $this->accountRepository->getMetaValue($account, 'include_net_worth');
 
@@ -367,10 +363,10 @@ class BasicController extends Controller
             }
         );
 
-        $netWorthSet    = $netWorthHelper->byAccounts($filtered, $date);
-        $return         = [];
+        $netWorthSet = $netWorthHelper->byAccounts($filtered, $date);
+        $return      = [];
         // in native amount
-        $return[]       = [
+        $return[] = [
             'key'                     => 'net-worth-in-native',
             'value'                   => $netWorthSet['native']['balance'],
             'currency_id'             => (string)$netWorthSet['native']['currency_id'],

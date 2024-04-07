@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Exceptions;
 
 use FireflyIII\Jobs\MailError;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -96,6 +97,13 @@ class Handler extends ExceptionHandler
             app('log')->debug('Return JSON not found error.');
 
             return response()->json(['message' => 'Resource not found', 'exception' => 'NotFoundHttpException'], 404);
+        }
+
+        if ($e instanceof AuthorizationException && $expectsJson) {
+            // somehow Laravel handler does not catch this:
+            app('log')->debug('Return JSON unauthorized error.');
+
+            return response()->json(['message' => $e->getMessage(), 'exception' => 'AuthorizationException'], 401);
         }
 
         if ($e instanceof AuthenticationException && $expectsJson) {

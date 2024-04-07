@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V2\Request\Chart;
 
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
@@ -38,6 +39,8 @@ class DashboardChartRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
     use ValidatesUserGroupTrait;
+
+    protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
     /**
      * Get all data from the request.

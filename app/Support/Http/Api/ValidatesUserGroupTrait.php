@@ -23,11 +23,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Http\Api;
 
-use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\GroupMembership;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 /**
  * Trait ValidatesUserGroupTrait
@@ -35,37 +38,63 @@ use Illuminate\Http\Request;
 trait ValidatesUserGroupTrait
 {
     /**
-     * This check does not validate which rights the user has, that comes later.
-     *
-     * @throws FireflyException
+     * @throws AuthorizationException
+     * @throws AuthenticationException
      */
-    protected function validateUserGroup(Request $request): ?UserGroup
+    protected function validateUserGroup(Request $request): UserGroup
     {
+        app('log')->debug(sprintf('validateUserGroup: %s', get_class($this)));
         if (!auth()->check()) {
             app('log')->debug('validateUserGroup: user is not logged in, return NULL.');
 
-            return null;
+            throw new AuthenticationException();
         }
 
         /** @var User $user */
-        $user       = auth()->user();
+        $user = auth()->user();
+        $groupId = 0;
         if (!$request->has('user_group_id')) {
-            $group = $user->userGroup;
-            app('log')->debug(sprintf('validateUserGroup: no user group submitted, return default group #%d.', $group?->id));
-
-            return $group;
+            $groupId       = $user->user_group_id;
+            app('log')->debug(sprintf('validateUserGroup: no user group submitted, use default group #%d.', $groupId));
         }
-        $groupId    = (int)$request->get('user_group_id');
-
-        /** @var null|GroupMembership $membership */
+        if ($request->has('user_group_id')) {
+            $groupId = (int)$request->get('user_group_id');
+            app('log')->debug(sprintf('validateUserGroup: user group submitted, search for memberships in group #%d.', $groupId));
+        }
+        /** @var GroupMembership|null $membership */
         $membership = $user->groupMemberships()->where('user_group_id', $groupId)->first();
+
         if (null === $membership) {
-            app('log')->debug('validateUserGroup: user has no access to this group.');
-
-            throw new FireflyException((string)trans('validation.belongs_user_or_user_group'));
+            app('log')->debug(sprintf('validateUserGroup: user has no access to group #%d.', $groupId));
+            throw new AuthorizationException((string)trans('validation.no_access_group'));
         }
-        app('log')->debug(sprintf('validateUserGroup: user has role "%s" in group #%d.', $membership->userRole->title, $membership->userGroup->id));
 
-        return $membership->userGroup;
+        // need to get the group from the membership:
+        /** @var UserGroup|null $group */
+        $group = $membership->userGroup;
+        if (null === $group) {
+            app('log')->debug(sprintf('validateUserGroup: group #%d does not exist.', $groupId));
+            throw new AuthorizationException((string)trans('validation.belongs_user_or_user_group'));
+        }
+        app('log')->debug(sprintf('validateUserGroup: validate access of user to group #%d ("%s").', $groupId, $group->title));
+        $roles = property_exists($this, 'acceptedRoles') ? $this->acceptedRoles : [];
+        if(0 === count($roles)) {
+            app('log')->debug('validateUserGroup: no roles defined, so no access.');
+
+            throw new AuthorizationException((string)trans('validation.no_accepted_roles_defined'));
+        }
+        app('log')->debug(sprintf('validateUserGroup: have %d roles to check.', count($roles)), $roles);
+        /** @var UserRoleEnum $role */
+        foreach($roles as $role) {
+            if($user->hasRoleInGroupOrOwner($group, $role)) {
+                app('log')->debug(sprintf('validateUserGroup: User has role "%s" in group #%d, return the group.', $role->value, $groupId));
+                return $group;
+            }
+            app('log')->debug(sprintf('validateUserGroup: User does NOT have role "%s" in group #%d, continue searching.', $role->value, $groupId));
+        }
+
+        app('log')->debug('validateUserGroup: User does NOT have enough rights to access endpoint.');
+
+        throw new AuthorizationException((string)trans('validation.belongs_user_or_user_group'));
     }
 }

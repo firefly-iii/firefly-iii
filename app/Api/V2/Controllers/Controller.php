@@ -27,6 +27,7 @@ namespace FireflyIII\Api\V2\Controllers;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use Carbon\Exceptions\InvalidFormatException;
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\Transformers\V2\AbstractTransformer;
 use Illuminate\Database\Eloquent\Model;
@@ -55,6 +56,7 @@ class Controller extends BaseController
 
     protected const string CONTENT_TYPE = 'application/vnd.api+json';
     protected ParameterBag $parameters;
+    protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
     public function __construct()
     {

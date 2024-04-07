@@ -39,7 +39,7 @@ return [
     | the usual Laravel view path has already been registered for you.
     |
     */
-
+    'layout' => env('FIREFLY_III_LAYOUT', 'v1'),
     'paths'    => $paths,
 
     /*

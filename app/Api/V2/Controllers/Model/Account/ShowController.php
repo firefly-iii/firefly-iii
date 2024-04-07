@@ -25,7 +25,9 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V2\Controllers\Model\Account;
 
 use FireflyIII\Api\V2\Controllers\Controller;
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\Account;
+use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
 use FireflyIII\Transformers\V2\AccountTransformer;
 use Illuminate\Http\JsonResponse;
 
@@ -36,6 +38,28 @@ use Illuminate\Http\JsonResponse;
  */
 class ShowController extends Controller
 {
+    public const string RESOURCE_KEY = 'accounts';
+
+    private AccountRepositoryInterface $repository;
+    protected array                    $acceptedRoles = [UserRoleEnum::READ_ONLY, UserRoleEnum::MANAGE_TRANSACTIONS];
+    /**
+     * AccountController constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->middleware(
+            function ($request, $next) {
+                $this->repository = app(AccountRepositoryInterface::class);
+                // new way of user group validation
+                $userGroup = $this->validateUserGroup($request);
+                $this->repository->setUserGroup($userGroup);
+
+                return $next($request);
+            }
+        );
+    }
+
     /**
      * TODO this endpoint is not yet reachable.
      */
