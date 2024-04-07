@@ -88,7 +88,7 @@ class MailError extends Job implements ShouldQueue
                         }
                     }
                 );
-            } catch (\Exception|TransportException $e) { // @phpstan-ignore-line
+            } catch (\Exception | TransportException $e) { // @phpstan-ignore-line
                 $message = $e->getMessage();
                 if (str_contains($message, 'Bcc')) {
                     app('log')->warning('[Bcc] Could not email or log the error. Please validate your email settings, use the .env.example file as a guide.');
@@ -109,19 +109,23 @@ class MailError extends Job implements ShouldQueue
     private function reachedLimit(): bool
     {
         Log::debug('reachedLimit()');
-        $types  = [
+        $types     = [
             '5m'  => ['limit' => 5, 'reset' => 5 * 60],
             '1h'  => ['limit' => 15, 'reset' => 60 * 60],
             '24h' => ['limit' => 15, 'reset' => 24 * 60 * 60],
         ];
-        $file   = storage_path('framework/cache/error-count.json');
-        $limits = [];
-        if (!is_writable($file)) {
-            Log::error(sprintf('MailError: cannot write to "%s", cannot rate limit errors!', $file));
+        $file      = storage_path('framework/cache/error-count.json');
+        $directory = storage_path('framework/cache');
+        $limits    = [];
+
+        if (!is_writable($directory)) {
+            Log::error(sprintf('MailError: cannot write to "%s", cannot rate limit errors!', $directory));
 
             return false;
         }
+
         if (!file_exists($file)) {
+
             Log::debug(sprintf('Wrote new file in "%s"', $file));
             file_put_contents($file, json_encode($limits, JSON_PRETTY_PRINT));
         }
