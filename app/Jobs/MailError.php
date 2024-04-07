@@ -73,9 +73,9 @@ class MailError extends Job implements ShouldQueue
         // limit number of error mails that can be sent.
         if ($this->reachedLimit()) {
             Log::info('MailError: reached limit, not sending email.');
+
             return;
         }
-
 
         if ($this->attempts() < 3 && '' !== $email) {
             try {
@@ -88,7 +88,7 @@ class MailError extends Job implements ShouldQueue
                         }
                     }
                 );
-            } catch (\Exception | TransportException $e) { // @phpstan-ignore-line
+            } catch (\Exception|TransportException $e) { // @phpstan-ignore-line
                 $message = $e->getMessage();
                 if (str_contains($message, 'Bcc')) {
                     app('log')->warning('[Bcc] Could not email or log the error. Please validate your email settings, use the .env.example file as a guide.');
@@ -106,9 +106,6 @@ class MailError extends Job implements ShouldQueue
         }
     }
 
-    /**
-     * @return bool
-     */
     private function reachedLimit(): bool
     {
         Log::debug('reachedLimit()');
@@ -119,8 +116,9 @@ class MailError extends Job implements ShouldQueue
         ];
         $file   = storage_path('framework/cache/error-count.json');
         $limits = [];
-        if(!is_writable($file)) {
+        if (!is_writable($file)) {
             Log::error(sprintf('MailError: cannot write to "%s", cannot rate limit errors!', $file));
+
             return false;
         }
         if (!file_exists($file)) {
@@ -143,7 +141,7 @@ class MailError extends Job implements ShouldQueue
             }
 
             if (time() - $limits[$type]['time'] > $info['reset']) {
-                Log::debug(sprintf('Time past for this limit is %d seconds, exceeding %d seconds. Reset to zero.', (time() - $limits[$type]['time']), $info['reset']));
+                Log::debug(sprintf('Time past for this limit is %d seconds, exceeding %d seconds. Reset to zero.', time() - $limits[$type]['time'], $info['reset']));
                 $limits[$type] = [
                     'time' => time(),
                     'sent' => 0,
@@ -152,13 +150,14 @@ class MailError extends Job implements ShouldQueue
 
             if ($limits[$type]['sent'] > $info['limit']) {
                 Log::warning(sprintf('Sent %d emails in %s, return true.', $limits[$type]['sent'], $type));
+
                 return true;
             }
-            $limits[$type]['sent']++;
+            ++$limits[$type]['sent'];
         }
         file_put_contents($file, json_encode($limits, JSON_PRETTY_PRINT));
         Log::debug('No limits reached, return FALSE.');
-        return false;
 
+        return false;
     }
 }
