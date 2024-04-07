@@ -10,3 +10,7 @@ coverage.xml
 
 # ignore generated files.
 public/build
+
+# ignore v1 build files
+resources/assets/v1/node_modules
+resources/assets/v1/build
