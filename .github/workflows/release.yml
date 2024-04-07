@@ -113,20 +113,12 @@ jobs:
         env:
           FIREFLY_III_ROOT: /github/workspace
           GH_TOKEN: ''
-      - name: Build new JS
+      - name: Build JS
         run: |
           npm install
           npm update
-          npm run build
-      - name: Build old JS
-        id: old-js
-        uses: JC5/firefly-iii-dev@v37
-        with:
-          action: 'ff3:old-js'
-          output: ''
-        env:
-          FIREFLY_III_ROOT: /github/workspace
-          GH_TOKEN: ''
+          npm run prod  --workspace=v1
+          npm run build --workspace=v2
       - name: Run CI
         run: |
           rm -rf vendor composer.lock
