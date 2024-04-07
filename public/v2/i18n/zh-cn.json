@@ -3,7 +3,11 @@
         "html_language": "zh-cn",
         "date_time_fns": "YYYY\u5e74M\u6708D\u65e5 HH:mm:ss",
         "month_and_day_fns": "YYYY\u5e74M\u6708D\u65e5",
+        "does_not_exist": "(config.does_not_exist)",
         "date_time_fns_short": "MMMM \u6267\u884c, yyyy @ HH:mm"
+    },
+    "form": {
+        "title": "\u6807\u9898"
     },
     "validation": {
         "bad_type_source": "Firefly III \u65e0\u6cd5\u786e\u5b9a\u57fa\u4e8e\u6b64\u6e90\u8d26\u6237\u7684\u4ea4\u6613\u7c7b\u578b\u3002",
@@ -11,6 +15,22 @@
     },
     "firefly": {
         "spent": "\u652f\u51fa",
+        "administration_owner": "Administration owner: {{email}}",
+        "administration_you": "Your role: {{role}}",
+        "administration_role_owner": "Owner",
+        "administration_role_ro": "Read-only",
+        "administration_role_mng_trx": "Manage transactions",
+        "administration_role_mng_meta": "Manage classification and meta-data",
+        "administration_role_mng_budgets": "Manage budgets",
+        "administration_role_mng_piggies": "Manage piggy banks",
+        "administration_role_mng_subscriptions": "Manage subscriptions",
+        "administration_role_mng_rules": "Manage rules",
+        "administration_role_mng_recurring": "Manage recurring transactions ",
+        "administration_role_mng_webhooks": "Manage webhooks",
+        "administration_role_mng_currencies": "Manage currencies",
+        "administration_role_view_reports": "View reports",
+        "administration_role_full": "Full access",
+        "new_administration_created": "New financial administration \"{{title}}\" has been created",
         "left": "\u5269\u4f59",
         "paid": "\u5df2\u4ed8\u6b3e",
         "errors_submission_v2": "\u60a8\u63d0\u4ea4\u7684\u5185\u5bb9\u6709\u8bef\uff0c\u8bf7\u68c0\u67e5\u9519\u8bef\u4fe1\u606f: {{errorMessage}}",

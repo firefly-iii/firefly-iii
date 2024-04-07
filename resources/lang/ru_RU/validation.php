@@ -68,6 +68,8 @@ return [
     'invalid_selection'               => 'Вы сделали неправильный выбор.',
     'belongs_user'                    => 'Это значение связано с объектом, который не существует.',
     'belongs_user_or_user_group'      => 'Это значение связано с объектом, который не существует в Вашем текущем финансовом администрировании.',
+    'no_access_group'                 => 'The user has no access to this user group.',
+    'no_accepted_roles_defined'       => 'No access roles have been defined for this endpoint, access denied.',
     'at_least_one_transaction'        => 'Необходима как минимум одна транзакция.',
     'recurring_transaction_id'        => 'Необходима минимум одна транзакция.',
     'need_id_to_match'                => 'Вы должны отправить эту запись с ID для того, чтобы API мог сопоставить её.',
@@ -300,7 +302,7 @@ return [
 
     // no access to administration:
     'no_access_user_group'            => 'У вас нет необходимых прав доступа для данного административного действия.',
-    'administration_owner_rename'     => 'You can\'t rename your standard administration.',
+    'administration_owner_rename'     => 'Вы не можете переименовать ваше стандартное управление.',
 ];
 
 /*

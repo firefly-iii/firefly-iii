@@ -56,7 +56,7 @@ class Controller extends BaseController
 
     protected const string CONTENT_TYPE = 'application/vnd.api+json';
     protected ParameterBag $parameters;
-    protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
+    protected array $acceptedRoles      = [UserRoleEnum::READ_ONLY];
 
     public function __construct()
     {

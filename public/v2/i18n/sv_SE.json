@@ -3,7 +3,11 @@
         "html_language": "sv",
         "date_time_fns": "MMMM do, yyyy @ HH:mm:ss",
         "month_and_day_fns": "d MMMM y",
+        "does_not_exist": "(config.does_not_exist)",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
+    },
+    "form": {
+        "title": "Titel"
     },
     "validation": {
         "bad_type_source": "Firefly III kan inte avg\u00f6ra transaktionstypen baserat p\u00e5 detta k\u00e4llkonto.",
@@ -11,6 +15,22 @@
     },
     "firefly": {
         "spent": "Spenderat",
+        "administration_owner": "Administration owner: {{email}}",
+        "administration_you": "Din roll: {{role}}",
+        "administration_role_owner": "Owner",
+        "administration_role_ro": "Read-only",
+        "administration_role_mng_trx": "Hantera transaktioner",
+        "administration_role_mng_meta": "Manage classification and meta-data",
+        "administration_role_mng_budgets": "Manage budgets",
+        "administration_role_mng_piggies": "Hantera spargrisar",
+        "administration_role_mng_subscriptions": "Hantera prenumerationer",
+        "administration_role_mng_rules": "Hantera regler",
+        "administration_role_mng_recurring": "Hantera \u00e5terkommande transaktioner ",
+        "administration_role_mng_webhooks": "Manage webhooks",
+        "administration_role_mng_currencies": "Hantera valutor",
+        "administration_role_view_reports": "Visa rapporter",
+        "administration_role_full": "Full access",
+        "new_administration_created": "New financial administration \"{{title}}\" has been created",
         "left": "\u00c5terst\u00e5r",
         "paid": "Betald",
         "errors_submission_v2": "There was something wrong with your submission. Please check out the errors below: {{errorMessage}}",

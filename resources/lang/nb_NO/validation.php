@@ -68,6 +68,8 @@ return [
     'invalid_selection'               => 'Dine valg er ugyldig.',
     'belongs_user'                    => 'Denne verdien er knyttet til et objekt som ikke ser ut til å eksistere.',
     'belongs_user_or_user_group'      => 'Denne verdien er knyttet til et objekt som ikke ser ut til å eksistere i din nåværende økonomiske administrasjon.',
+    'no_access_group'                 => 'The user has no access to this user group.',
+    'no_accepted_roles_defined'       => 'No access roles have been defined for this endpoint, access denied.',
     'at_least_one_transaction'        => 'Trenger minst én transaksjon.',
     'recurring_transaction_id'        => 'Trenger minst én transaksjon.',
     'need_id_to_match'                => 'Du må sende inn denne oppføringen med en ID for at APIen skal kunne identifisere den.',

@@ -3,7 +3,11 @@
         "html_language": "bg",
         "date_time_fns": "MMMM do, yyyy @ HH:mm:ss",
         "month_and_day_fns": "d MMMM y",
+        "does_not_exist": "(config.does_not_exist)",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
+    },
+    "form": {
+        "title": "\u0417\u0430\u0433\u043b\u0430\u0432\u0438\u0435"
     },
     "validation": {
         "bad_type_source": "Firefly III can't determine the transaction type based on this source account.",
@@ -11,6 +15,22 @@
     },
     "firefly": {
         "spent": "\u041f\u043e\u0445\u0430\u0440\u0447\u0435\u043d\u0438",
+        "administration_owner": "Administration owner: {{email}}",
+        "administration_you": "Your role: {{role}}",
+        "administration_role_owner": "Owner",
+        "administration_role_ro": "Read-only",
+        "administration_role_mng_trx": "Manage transactions",
+        "administration_role_mng_meta": "Manage classification and meta-data",
+        "administration_role_mng_budgets": "Manage budgets",
+        "administration_role_mng_piggies": "Manage piggy banks",
+        "administration_role_mng_subscriptions": "Manage subscriptions",
+        "administration_role_mng_rules": "Manage rules",
+        "administration_role_mng_recurring": "Manage recurring transactions ",
+        "administration_role_mng_webhooks": "Manage webhooks",
+        "administration_role_mng_currencies": "Manage currencies",
+        "administration_role_view_reports": "View reports",
+        "administration_role_full": "Full access",
+        "new_administration_created": "New financial administration \"{{title}}\" has been created",
         "left": "\u041e\u0441\u0442\u0430\u043d\u0430\u043b\u0438",
         "paid": "\u041f\u043b\u0430\u0442\u0435\u043d\u0438",
         "errors_submission_v2": "There was something wrong with your submission. Please check out the errors below: {{errorMessage}}",

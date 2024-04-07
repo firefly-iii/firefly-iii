@@ -20,6 +20,7 @@
  */
 
 declare(strict_types=1);
+
 return [
     'json'      => [
         'v2' => [
@@ -32,7 +33,6 @@ return [
             ],
             'form'       => [
                 'title',
-
             ],
             'validation' => [
                 'bad_type_source',

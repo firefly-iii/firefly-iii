@@ -3,7 +3,11 @@
         "html_language": "nl",
         "date_time_fns": "d MMMM yyyy @ HH:mm:ss",
         "month_and_day_fns": "d MMMM y",
+        "does_not_exist": "(config.does_not_exist)",
         "date_time_fns_short": "d MMMM yyyy @ HH:mm"
+    },
+    "form": {
+        "title": "Titel"
     },
     "validation": {
         "bad_type_source": "Firefly III kan het transactietype niet bepalen op basis van deze bronrekening.",
@@ -11,6 +15,22 @@
     },
     "firefly": {
         "spent": "Uitgegeven",
+        "administration_owner": "Grootboekeigenaar: {{email}}",
+        "administration_you": "Jouw rol: {{role}}",
+        "administration_role_owner": "Owner",
+        "administration_role_ro": "Read-only",
+        "administration_role_mng_trx": "Manage transactions",
+        "administration_role_mng_meta": "Manage classification and meta-data",
+        "administration_role_mng_budgets": "Manage budgets",
+        "administration_role_mng_piggies": "Manage piggy banks",
+        "administration_role_mng_subscriptions": "Manage subscriptions",
+        "administration_role_mng_rules": "Manage rules",
+        "administration_role_mng_recurring": "Manage recurring transactions ",
+        "administration_role_mng_webhooks": "Manage webhooks",
+        "administration_role_mng_currencies": "Manage currencies",
+        "administration_role_view_reports": "View reports",
+        "administration_role_full": "Full access",
+        "new_administration_created": "New financial administration \"{{title}}\" has been created",
         "left": "Over",
         "paid": "Betaald",
         "errors_submission_v2": "There was something wrong with your submission. Please check out the errors below: {{errorMessage}}",

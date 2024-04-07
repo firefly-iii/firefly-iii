@@ -68,6 +68,8 @@ return [
     'invalid_selection'               => '선택이 잘못되었습니다.',
     'belongs_user'                    => 'This value is linked to an object that does not seem to exist.',
     'belongs_user_or_user_group'      => 'This value is linked to an object that does not seem to exist in your current financial administration.',
+    'no_access_group'                 => 'The user has no access to this user group.',
+    'no_accepted_roles_defined'       => 'No access roles have been defined for this endpoint, access denied.',
     'at_least_one_transaction'        => '하나 이상의 거래가 필요합니다.',
     'recurring_transaction_id'        => '하나 이상의 거래가 필요합니다.',
     'need_id_to_match'                => 'API가 일치시킬수 있도록 이 엔트리를 ID와 함께 제출해야 합니다.',

@@ -68,6 +68,8 @@ return [
     'invalid_selection'               => 'Lựa chọn của bạn không hợp lệ.',
     'belongs_user'                    => 'Giá trị này liên kết đến thực thể dường như không tồn tại.',
     'belongs_user_or_user_group'      => 'Giá trị này liên kết đến thực thể dường như không tồn tại trong phần quản trị tài chính hiện thời.',
+    'no_access_group'                 => 'The user has no access to this user group.',
+    'no_accepted_roles_defined'       => 'No access roles have been defined for this endpoint, access denied.',
     'at_least_one_transaction'        => 'Cần ít nhất một giao dịch.',
     'recurring_transaction_id'        => 'Cần ít nhất một giao dịch.',
     'need_id_to_match'                => 'You need to submit this entry with an ID for the API to be able to match it.',

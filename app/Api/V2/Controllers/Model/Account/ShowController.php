@@ -38,10 +38,11 @@ use Illuminate\Http\JsonResponse;
  */
 class ShowController extends Controller
 {
-    public const string RESOURCE_KEY = 'accounts';
+    public const string RESOURCE_KEY                  = 'accounts';
 
     private AccountRepositoryInterface $repository;
     protected array                    $acceptedRoles = [UserRoleEnum::READ_ONLY, UserRoleEnum::MANAGE_TRANSACTIONS];
+
     /**
      * AccountController constructor.
      */
@@ -52,7 +53,7 @@ class ShowController extends Controller
             function ($request, $next) {
                 $this->repository = app(AccountRepositoryInterface::class);
                 // new way of user group validation
-                $userGroup = $this->validateUserGroup($request);
+                $userGroup        = $this->validateUserGroup($request);
                 $this->repository->setUserGroup($userGroup);
 
                 return $next($request);

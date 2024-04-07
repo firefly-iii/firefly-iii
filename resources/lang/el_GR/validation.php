@@ -68,6 +68,8 @@ return [
     'invalid_selection'               => 'Η επιλογή σας δεν είναι έγκυρη.',
     'belongs_user'                    => 'Αυτή η τιμή συνδέεται με ένα αντικείμενο που δεν φαίνεται να υπάρχει.',
     'belongs_user_or_user_group'      => 'Αυτή η τιμή συνδέεται με ένα αντικείμενο που δεν φαίνεται να υπάρχει στην τρέχουσα οικονομική σας διαχείριση.',
+    'no_access_group'                 => 'The user has no access to this user group.',
+    'no_accepted_roles_defined'       => 'No access roles have been defined for this endpoint, access denied.',
     'at_least_one_transaction'        => 'Απαιτείται τουλάχιστο μία συναλλαγή.',
     'recurring_transaction_id'        => 'Απαιτείται τουλάχιστον μία συναλλαγή.',
     'need_id_to_match'                => 'Πρέπει να υποβάλετε αυτήν την καταχώρηση με ένα ID για να μπορεί το API να το ταιριάζει.',

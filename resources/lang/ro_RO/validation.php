@@ -68,6 +68,8 @@ return [
     'invalid_selection'               => 'Selecția dvs. este nevalidă.',
     'belongs_user'                    => 'Această valoare este legată de un obiect care pare să nu existe.',
     'belongs_user_or_user_group'      => 'Această valoare este legată de un obiect care nu pare să existe în administrația financiară curentă.',
+    'no_access_group'                 => 'The user has no access to this user group.',
+    'no_accepted_roles_defined'       => 'No access roles have been defined for this endpoint, access denied.',
     'at_least_one_transaction'        => 'Aveți nevoie de cel puțin o tranzacție.',
     'recurring_transaction_id'        => 'Aveți nevoie de cel puțin o tranzacție.',
     'need_id_to_match'                => 'Trebuie să adaugati această intrare cu un ID pentru API pentru a putea să se potrivească.',

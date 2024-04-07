@@ -68,6 +68,8 @@ return [
     'invalid_selection'               => '您的选择无效',
     'belongs_user'                    => '此值关联至一个似乎不存在的对象。',
     'belongs_user_or_user_group'      => '此值关联至当前财务管理中一个似乎不存在的对象。',
+    'no_access_group'                 => 'The user has no access to this user group.',
+    'no_accepted_roles_defined'       => 'No access roles have been defined for this endpoint, access denied.',
     'at_least_one_transaction'        => '至少需要一笔交易',
     'recurring_transaction_id'        => '至少需要一笔交易。',
     'need_id_to_match'                => '您需要提交一个含有ID的条目，API才能匹配。',

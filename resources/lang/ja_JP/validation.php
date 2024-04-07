@@ -68,6 +68,8 @@ return [
     'invalid_selection'               => 'あなたの選択は無効です。',
     'belongs_user'                    => 'この値は存在しないオブジェクトにリンクされています。',
     'belongs_user_or_user_group'      => 'この値は現在の財務管理に属していないオブジェクトにリンクされています。',
+    'no_access_group'                 => 'The user has no access to this user group.',
+    'no_accepted_roles_defined'       => 'No access roles have been defined for this endpoint, access denied.',
     'at_least_one_transaction'        => '最低でも一つの取引が必要です。',
     'recurring_transaction_id'        => '少なくとも 1 つの取引が必要です。',
     'need_id_to_match'                => 'APIを一致させるためにこのエントリをIDで送信する必要があります。',

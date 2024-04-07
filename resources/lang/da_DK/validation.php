@@ -68,6 +68,8 @@ return [
     'invalid_selection'               => 'Din markering er ikke gyldig.',
     'belongs_user'                    => 'Denne værdi er knyttet til et objekt, der ikke ser ud til at eksistere.',
     'belongs_user_or_user_group'      => 'Denne værdi er knyttet til et objekt, der ikke ser ud til at eksistere i din nuværende økonomiske administration.',
+    'no_access_group'                 => 'The user has no access to this user group.',
+    'no_accepted_roles_defined'       => 'No access roles have been defined for this endpoint, access denied.',
     'at_least_one_transaction'        => 'Kræver mindst en overførsel.',
     'recurring_transaction_id'        => 'Kræver mindst en overførsel.',
     'need_id_to_match'                => 'Du skal indsende denne post med et ID for, at APIet kan matche det.',

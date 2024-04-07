@@ -68,6 +68,8 @@ return [
     'invalid_selection'               => 'La tua selezione non è valida.',
     'belongs_user'                    => 'Questo valore è collegato a un oggetto che non sembra esistere.',
     'belongs_user_or_user_group'      => 'Questo valore è collegato a un oggetto che non sembra esistere nella tua attuale amministrazione finanziaria.',
+    'no_access_group'                 => 'The user has no access to this user group.',
+    'no_accepted_roles_defined'       => 'No access roles have been defined for this endpoint, access denied.',
     'at_least_one_transaction'        => 'Hai bisogno di almeno una transazione.',
     'recurring_transaction_id'        => 'Hai bisogno di almeno una transazione.',
     'need_id_to_match'                => 'È necessario inviare questa voce con un ID affinché l\'API sia in grado di abbinarla.',

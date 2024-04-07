@@ -68,6 +68,8 @@ return [
     'invalid_selection'               => 'Érvénytelen kiválasztás.',
     'belongs_user'                    => 'This value is linked to an object that does not seem to exist.',
     'belongs_user_or_user_group'      => 'This value is linked to an object that does not seem to exist in your current financial administration.',
+    'no_access_group'                 => 'The user has no access to this user group.',
+    'no_accepted_roles_defined'       => 'No access roles have been defined for this endpoint, access denied.',
     'at_least_one_transaction'        => 'Legalább egy tranzakció szükséges.',
     'recurring_transaction_id'        => 'Need at least one transaction.',
     'need_id_to_match'                => 'You need to submit this entry with an ID for the API to be able to match it.',

@@ -3,7 +3,11 @@
         "html_language": "fr",
         "date_time_fns": "do MMMM, yyyy @ HH:mm:ss",
         "month_and_day_fns": "d MMMM y",
+        "does_not_exist": "(config.does_not_exist)",
         "date_time_fns_short": "do MMMM, yyyy @ HH:mm"
+    },
+    "form": {
+        "title": "Titre"
     },
     "validation": {
         "bad_type_source": "Firefly III ne peut pas d\u00e9terminer le type de transaction bas\u00e9 sur ce compte source.",
@@ -11,6 +15,22 @@
     },
     "firefly": {
         "spent": "D\u00e9pens\u00e9",
+        "administration_owner": "Propri\u00e9taire de l'administration : {{email}}",
+        "administration_you": "Votre r\u00f4le : {{role}}",
+        "administration_role_owner": "Propri\u00e9taire",
+        "administration_role_ro": "Lecture seule",
+        "administration_role_mng_trx": "G\u00e9rer les op\u00e9rations",
+        "administration_role_mng_meta": "G\u00e9rer la classification et les m\u00e9tadonn\u00e9es",
+        "administration_role_mng_budgets": "G\u00e9rer les budgets",
+        "administration_role_mng_piggies": "G\u00e9rer les tirelires",
+        "administration_role_mng_subscriptions": "G\u00e9rer les abonnements",
+        "administration_role_mng_rules": "G\u00e9rer les r\u00e8gles",
+        "administration_role_mng_recurring": "G\u00e9rer les op\u00e9rations p\u00e9riodiques ",
+        "administration_role_mng_webhooks": "G\u00e9rer les webhooks",
+        "administration_role_mng_currencies": "G\u00e9rer les devises",
+        "administration_role_view_reports": "Afficher les rapports",
+        "administration_role_full": "Acc\u00e8s complet",
+        "new_administration_created": "La nouvelle administration financi\u00e8re \"{{title}}\" a \u00e9t\u00e9 cr\u00e9\u00e9e",
         "left": "Reste",
         "paid": "Pay\u00e9",
         "errors_submission_v2": "Certaines informations ne sont pas correctes dans votre formulaire. Veuillez v\u00e9rifier les erreurs ci-dessous : {{errorMessage}}",

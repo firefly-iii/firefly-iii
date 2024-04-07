@@ -3,7 +3,11 @@
         "html_language": "sl",
         "date_time_fns": "MMMM do, yyyy @ HH:mm:ss",
         "month_and_day_fns": "MMMM d, y",
+        "does_not_exist": "(config.does_not_exist)",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
+    },
+    "form": {
+        "title": "Naslov"
     },
     "validation": {
         "bad_type_source": "Na podlagi tega izvornega ra\u010duna Firefly III ne more dolo\u010diti vrste transakcije.",
@@ -11,6 +15,22 @@
     },
     "firefly": {
         "spent": "Porabljeno",
+        "administration_owner": "Lastnik administracije: {{email}}",
+        "administration_you": "Va\u0161a vloga: {{role}}",
+        "administration_role_owner": "Lastnik",
+        "administration_role_ro": "Samo za branje",
+        "administration_role_mng_trx": "Upravljanje transakcij",
+        "administration_role_mng_meta": "Upravljanje klasifikacij in metapodatkov",
+        "administration_role_mng_budgets": "Upravljaj prora\u010dune",
+        "administration_role_mng_piggies": "Upravljaj hranilnike",
+        "administration_role_mng_subscriptions": "Upravljanje naro\u010dnin",
+        "administration_role_mng_rules": "Upravljaj pravila",
+        "administration_role_mng_recurring": "Upravljaj ponavljajo\u010de transakcije",
+        "administration_role_mng_webhooks": "Upravljaj webhooke",
+        "administration_role_mng_currencies": "Upravljanje valut",
+        "administration_role_view_reports": "Prikaz poro\u010dil",
+        "administration_role_full": "Neomejen dostop",
+        "new_administration_created": "New financial administration \"{{title}}\" has been created",
         "left": "Preostalo",
         "paid": "Pla\u010dano",
         "errors_submission_v2": "Nekaj je bilo narobe z va\u0161o oddajo. Preverite spodnje napake: {{errorMessage}}",

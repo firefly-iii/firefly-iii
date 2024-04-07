@@ -3,7 +3,11 @@
         "html_language": "ca",
         "date_time_fns": "D [de\/d'] MMMM yyyy [a les] HH:mm:ss",
         "month_and_day_fns": "d MMMM y",
+        "does_not_exist": "(config.does_not_exist)",
         "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
+    },
+    "form": {
+        "title": "T\u00edtol"
     },
     "validation": {
         "bad_type_source": "Firefly III no pot determinar el tipus de transacci\u00f3 a partir d'aquest compte font.",
@@ -11,6 +15,22 @@
     },
     "firefly": {
         "spent": "Gastat",
+        "administration_owner": "Administration owner: {{email}}",
+        "administration_you": "Your role: {{role}}",
+        "administration_role_owner": "Owner",
+        "administration_role_ro": "Read-only",
+        "administration_role_mng_trx": "Manage transactions",
+        "administration_role_mng_meta": "Manage classification and meta-data",
+        "administration_role_mng_budgets": "Manage budgets",
+        "administration_role_mng_piggies": "Manage piggy banks",
+        "administration_role_mng_subscriptions": "Manage subscriptions",
+        "administration_role_mng_rules": "Manage rules",
+        "administration_role_mng_recurring": "Manage recurring transactions ",
+        "administration_role_mng_webhooks": "Manage webhooks",
+        "administration_role_mng_currencies": "Manage currencies",
+        "administration_role_view_reports": "View reports",
+        "administration_role_full": "Full access",
+        "new_administration_created": "New financial administration \"{{title}}\" has been created",
         "left": "Queda",
         "paid": "Pagat",
         "errors_submission_v2": "Hi ha hagut un error amb el teu enviament. Per favor, comprova els seg\u00fcents errors: {{errorMessage}}",

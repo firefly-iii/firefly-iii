@@ -68,6 +68,8 @@ return [
     'invalid_selection'               => 'Twój wybór jest nieprawidłowy.',
     'belongs_user'                    => 'Ta wartość jest powiązana z obiektem, który nie istnieje.',
     'belongs_user_or_user_group'      => 'This value is linked to an object that does not seem to exist in your current financial administration.',
+    'no_access_group'                 => 'The user has no access to this user group.',
+    'no_accepted_roles_defined'       => 'No access roles have been defined for this endpoint, access denied.',
     'at_least_one_transaction'        => 'Wymaga co najmniej jednej transakcji.',
     'recurring_transaction_id'        => 'Wymaga co najmniej jednej transakcji.',
     'need_id_to_match'                => 'Musisz przesłać ten wpis z ID dla API, aby móc go dopasować.',
