@@ -70,7 +70,7 @@ abstract class Controller extends BaseController
         $logoutUrl        = config('firefly.custom_logout_url');
 
         // overrule v2 layout back to v1.
-        if ('true' === request()->get('force_default_layout') && 'v2' === config('firefly.layout')) {
+        if ('true' === request()->get('force_default_layout') && 'v2' === config('view.layout')) {
             app('view')->getFinder()->setPaths([realpath(base_path('resources/views'))]); // @phpstan-ignore-line
         }
 

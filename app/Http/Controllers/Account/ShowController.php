@@ -106,7 +106,7 @@ class ShowController extends Controller
         $periods          = $this->getAccountPeriodOverview($account, $firstTransaction, $end);
 
         // if layout = v2, overrule the page title.
-        if ('v1' !== config('firefly.layout')) {
+        if ('v1' !== config('view.layout')) {
             $subTitle = (string)trans('firefly.all_journals_for_account', ['name' => $account->name]);
         }
 

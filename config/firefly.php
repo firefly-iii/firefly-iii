@@ -206,7 +206,6 @@ return [
 
     // web configuration:
     'trusted_proxies'              => env('TRUSTED_PROXIES', ''),
-    'layout'                       => envNonEmpty('FIREFLY_III_LAYOUT', 'v1'),
 
     // map configuration
     'default_location'             => [
