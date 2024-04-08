@@ -20,7 +20,7 @@
 
 import {defineConfig} from 'vite';
 import laravel from 'laravel-vite-plugin';
-import manifestSRI from 'vite-plugin-manifest-sri';
+// import manifestSRI from 'vite-plugin-manifest-sri';
 
 const host = '127.0.0.1';
 
