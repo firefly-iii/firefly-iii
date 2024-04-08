@@ -88,7 +88,7 @@ class MailError extends Job implements ShouldQueue
                         }
                     }
                 );
-            } catch (\Exception | TransportException $e) { // @phpstan-ignore-line
+            } catch (\Exception|TransportException $e) { // @phpstan-ignore-line
                 $message = $e->getMessage();
                 if (str_contains($message, 'Bcc')) {
                     app('log')->warning('[Bcc] Could not email or log the error. Please validate your email settings, use the .env.example file as a guide.');
@@ -125,7 +125,6 @@ class MailError extends Job implements ShouldQueue
         }
 
         if (!file_exists($file)) {
-
             Log::debug(sprintf('Wrote new file in "%s"', $file));
             file_put_contents($file, json_encode($limits, JSON_PRETTY_PRINT));
         }

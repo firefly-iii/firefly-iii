@@ -55,11 +55,11 @@ return [
     'reconciled_forbidden_field'      => 'Esta transação já está reconciliada, não pode alterar o ":field"',
     'deleted_user'                    => 'Devido a motivos de segurança, não se pode registar com este email.',
     'rule_trigger_value'              => 'Este valor é inválido para o gatilho selecionado.',
-    'rule_action_expression'          => 'Invalid expression. :error',
+    'rule_action_expression'          => 'Expressão inválida. :error',
     'rule_action_value'               => 'Este valor é inválido para a ação selecionada.',
     'file_already_attached'           => 'O ficheiro ":name" carregado já está anexado a este objeto.',
     'file_attached'                   => 'Ficheiro carregado com sucesso ":name".',
-    'file_zero'                       => 'The file is zero bytes in size.',
+    'file_zero'                       => 'O tamanho do ficheiro é nulo.',
     'must_exist'                      => 'O ID no campo :attribute não existe na base de dados.',
     'all_accounts_equal'              => 'Todas as contas neste campo têm de ser iguais.',
     'group_title_mandatory'           => 'Um título de grupo é obrigatório quando existe mais de uma transação.',
@@ -68,8 +68,8 @@ return [
     'invalid_selection'               => 'A sua seleção é invalida.',
     'belongs_user'                    => 'Esse valor está ligado a um objeto que parece não existir.',
     'belongs_user_or_user_group'      => 'Esse valor está ligado a um objeto que parece não existir na sua administração financeira atual.',
-    'no_access_group'                 => 'The user has no access to this user group.',
-    'no_accepted_roles_defined'       => 'No access roles have been defined for this endpoint, access denied.',
+    'no_access_group'                 => 'O utilizador não tem acesso a este grupo.',
+    'no_accepted_roles_defined'       => 'Nenhum acesso foi definido para este endpoint, acesso recusado.',
     'at_least_one_transaction'        => 'Necessita pelo menos de uma transação.',
     'recurring_transaction_id'        => 'Precisa de pelo menos uma transação.',
     'need_id_to_match'                => 'Precisa de enviar esta entrada com um ID para corresponder com a API.',
@@ -199,7 +199,7 @@ return [
  *
  */
 
-    'secure_password'                 => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password',
+    'secure_password'                 => 'Palavra-passe não é segura. Por favor, tente novamente. Para mais informações visite https://bit.ly/FF3-password',
     'valid_recurrence_rep_type'       => 'Tipo de repetição inválido para transações recorrentes.',
     'valid_recurrence_rep_moment'     => 'Momento inválido para este tipo de repetição.',
     'invalid_account_info'            => 'Informação de conta inválida.',
@@ -302,7 +302,7 @@ return [
 
     // no access to administration:
     'no_access_user_group'            => 'Não tem as permissões de acesso necessárias para esta administração.',
-    'administration_owner_rename'     => 'You can\'t rename your standard administration.',
+    'administration_owner_rename'     => 'Não pode modificar o nome da sua administração padrão.',
 ];
 
 /*
