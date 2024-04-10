@@ -27,6 +27,7 @@ namespace FireflyIII\Api\V2\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Chart\BalanceChartRequest;
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionCurrency;
@@ -42,6 +43,8 @@ use Illuminate\Support\Collection;
 class BalanceController extends Controller
 {
     use CleansChartData;
+    protected array                    $acceptedRoles = [UserRoleEnum::READ_ONLY];
+
 
     /**
      * The code is practically a duplicate of ReportController::operations.
