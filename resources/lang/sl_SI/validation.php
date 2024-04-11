@@ -69,7 +69,7 @@ return [
     'belongs_user'                    => 'Ta vrednost je povezana z objektom, za katerega se zdi, da ne obstaja.',
     'belongs_user_or_user_group'      => 'Ta vrednost je povezana z objektom, za katerega se zdi, da ne obstaja v vaši trenutni finančni upravi.',
     'no_access_group'                 => 'Uporabnik nima dostopa do te uporabniške skupine.',
-    'no_accepted_roles_defined'       => 'No access roles have been defined for this endpoint, access denied.',
+    'no_accepted_roles_defined'       => 'Za to končno točko ni bila definirana nobena dostopna vloga, dostop je zavrnjen.',
     'at_least_one_transaction'        => 'Potrebujete vsaj eno transakcijo.',
     'recurring_transaction_id'        => 'Potrebujete vsaj eno transakcijo.',
     'need_id_to_match'                => 'Ta vnos morate predložiti z ID-jem za API, da ga lahko povežete.',
@@ -302,7 +302,7 @@ return [
 
     // no access to administration:
     'no_access_user_group'            => 'Nimate ustreznih pravic dostopa do te administracije.',
-    'administration_owner_rename'     => 'You can\'t rename your standard administration.',
+    'administration_owner_rename'     => 'Standardne administracije ne morete preimenovati.',
 ];
 
 /*

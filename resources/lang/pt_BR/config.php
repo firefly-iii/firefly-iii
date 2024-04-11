@@ -64,7 +64,7 @@ return [
     // 'date_time'               => '%B %e, %Y, @ %T',
     'date_time_js'             => 'DD [de] MMMM [de] YYYY, [às] HH:mm:ss',
     'date_time_fns'            => 'dd \'de\' MMMM \'de\' yyyy, \'às\' HH:mm:ss',
-    'date_time_fns_short'      => 'MMMM do, yyyy @ HH:mm',
+    'date_time_fns_short'      => 'dd/MMM/yyyy HH:mm',
 
     // 'specific_day'            => '%e %B %Y',
     'specific_day_js'          => 'DD [de] MMMM [de] YYYY',

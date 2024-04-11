@@ -30,7 +30,7 @@
         "administration_role_mng_currencies": "Upravljanje valut",
         "administration_role_view_reports": "Prikaz poro\u010dil",
         "administration_role_full": "Neomejen dostop",
-        "new_administration_created": "New financial administration \"{{title}}\" has been created",
+        "new_administration_created": "Ustvarjena je bila nova finan\u010dna administracija \"{{title}}\"",
         "left": "Preostalo",
         "paid": "Pla\u010dano",
         "errors_submission_v2": "Nekaj je bilo narobe z va\u0161o oddajo. Preverite spodnje napake: {{errorMessage}}",

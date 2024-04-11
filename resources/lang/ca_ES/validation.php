@@ -68,8 +68,8 @@ return [
     'invalid_selection'               => 'La selecció és invàlida.',
     'belongs_user'                    => 'Aquest valor està enllaçat a un objecte que sembla que no existeix.',
     'belongs_user_or_user_group'      => 'Aquest valor està enllaçat a un objecte que sembla no existir a la teva administració financera actual.',
-    'no_access_group'                 => 'The user has no access to this user group.',
-    'no_accepted_roles_defined'       => 'No access roles have been defined for this endpoint, access denied.',
+    'no_access_group'                 => 'L\'usuari no té accés a aquest grup d\'usuaris.',
+    'no_accepted_roles_defined'       => 'No s\'ha definit cap rol d\'accés per a aquest endpoint, accés denegat.',
     'at_least_one_transaction'        => 'Necessites almenys una transacció.',
     'recurring_transaction_id'        => 'Necessites almenys una transacció.',
     'need_id_to_match'                => 'Has d\'enviar aquesta entrada amb un ID perquè l\'API sigui capaç de comparar-lo.',
@@ -302,7 +302,7 @@ return [
 
     // no access to administration:
     'no_access_user_group'            => 'No tens accés a aquesta administració.',
-    'administration_owner_rename'     => 'You can\'t rename your standard administration.',
+    'administration_owner_rename'     => 'No pots canviar el nom de la teva administració estàndard.',
 ];
 
 /*

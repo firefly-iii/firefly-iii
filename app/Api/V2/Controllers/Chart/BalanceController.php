@@ -45,7 +45,6 @@ class BalanceController extends Controller
     use CleansChartData;
     protected array                    $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
-
     /**
      * The code is practically a duplicate of ReportController::operations.
      *

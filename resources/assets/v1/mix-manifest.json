@@ -149,13 +149,5 @@
     "/public/v1/js/profile.js": "/public/v1/js/profile.js",
     "/public/v1/js/profile.js.LICENSE.txt": "/public/v1/js/profile.js.LICENSE.txt",
     "/public/v1/js/show.js": "/public/v1/js/show.js",
-    "/public/v1/js/show.js.LICENSE.txt": "/public/v1/js/show.js.LICENSE.txt",
-    "/public/v1/js/webhooks/create.js": "/public/v1/js/webhooks/create.js",
-    "/public/v1/js/webhooks/create.js.LICENSE.txt": "/public/v1/js/webhooks/create.js.LICENSE.txt",
-    "/public/v1/js/webhooks/edit.js": "/public/v1/js/webhooks/edit.js",
-    "/public/v1/js/webhooks/edit.js.LICENSE.txt": "/public/v1/js/webhooks/edit.js.LICENSE.txt",
-    "/public/v1/js/webhooks/index.js": "/public/v1/js/webhooks/index.js",
-    "/public/v1/js/webhooks/index.js.LICENSE.txt": "/public/v1/js/webhooks/index.js.LICENSE.txt",
-    "/public/v1/js/webhooks/show.js": "/public/v1/js/webhooks/show.js",
-    "/public/v1/js/webhooks/show.js.LICENSE.txt": "/public/v1/js/webhooks/show.js.LICENSE.txt"
+    "/public/v1/js/show.js.LICENSE.txt": "/public/v1/js/show.js.LICENSE.txt"
 }

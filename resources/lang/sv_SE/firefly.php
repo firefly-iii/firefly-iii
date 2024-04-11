@@ -1455,7 +1455,7 @@ return [
     'purge_all_data'                                      => 'Purge all deleted records',
     'purge_data'                                          => 'Purge data',
     'purged_all_records'                                  => 'All deleted records have been purged.',
-    'delete_data_title'                                   => 'Delete data from Firefly III',
+    'delete_data_title'                                   => 'Radera data från Firefly III',
     'permanent_delete_stuff'                              => 'You can delete stuff from Firefly III. Using the buttons below means that your items will be removed from view and hidden. There is no undo-button for this, but the items may remain in the database where you can salvage them if necessary.',
     'other_sessions_logged_out'                           => 'Alla dina andra sessioner har loggats ut.',
     'delete_unused_accounts'                              => 'Deleting unused accounts will clean your auto-complete lists.',

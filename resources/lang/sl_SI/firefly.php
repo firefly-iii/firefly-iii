@@ -1426,12 +1426,12 @@ return [
     'administration_owner'                                => 'Lastnik administracije: {{email}}',
     'administration_you'                                  => 'Vaša vloga: {{role}}',
     'other_users_in_admin'                                => 'Drugi uporabniki v tej administraciji',
-    'administrations_create_breadcrumb'                   => 'Create new financial administration',
-    'administrations_page_create_sub_title'               => 'Create new financial administration',
-    'basic_administration_information'                    => 'Basic administration information',
-    'new_administration_created'                          => 'New financial administration "{{title}}" has been created',
-    'edit_administration_breadcrumb'                      => 'Edit financial administration ":title"',
-    'administrations_page_edit_sub_title'                 => 'Edit financial administration ":title"',
+    'administrations_create_breadcrumb'                   => 'Ustvari novo finančno administracijo',
+    'administrations_page_create_sub_title'               => 'Ustvari novo finančno administracijo',
+    'basic_administration_information'                    => 'Osnovne informacije o administraciji',
+    'new_administration_created'                          => 'Ustvarjena je bila nova finančna administracija "{{title}}"',
+    'edit_administration_breadcrumb'                      => 'Uredi finančno administracijo ":title"',
+    'administrations_page_edit_sub_title'                 => 'Uredi finančno administracijo ":title"',
 
     // roles
     'administration_role_owner'                           => 'Lastnik',

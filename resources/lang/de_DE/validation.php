@@ -68,7 +68,7 @@ return [
     'invalid_selection'               => 'Ihre Auswahl ist ungültig.',
     'belongs_user'                    => 'Dieser Wert verweist auf ein Objekt, das offenbar nicht existiert.',
     'belongs_user_or_user_group'      => 'Dieser Wert verweist auf ein Objekt, das in Ihrer aktuellen Finanzverwaltung offenbar nicht existiert.',
-    'no_access_group'                 => 'The user has no access to this user group.',
+    'no_access_group'                 => 'Der Benutzer hat keinen Zugriff auf diese Benutzergruppe.',
     'no_accepted_roles_defined'       => 'No access roles have been defined for this endpoint, access denied.',
     'at_least_one_transaction'        => 'Sie brauchen mindestens eine Transaktion.',
     'recurring_transaction_id'        => 'Sie benötigen mindestens eine Buchung.',
