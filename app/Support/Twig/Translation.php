@@ -49,6 +49,7 @@ class Translation extends AbstractExtension
     {
         return [
             $this->journalLinkTranslation(),
+            $this->laravelTranslation(),
         ];
     }
 
@@ -66,6 +67,21 @@ class Translation extends AbstractExtension
                 return $translation;
             },
             ['is_safe' => ['html']]
+        );
+    }
+
+    public function laravelTranslation(): TwigFunction
+    {
+        return new TwigFunction(
+            '__',
+            static function (string $key) {
+                $translation = trans($key);
+                if ($key === $translation) {
+                    return $key;
+                }
+
+                return $translation;
+            }
         );
     }
 }
