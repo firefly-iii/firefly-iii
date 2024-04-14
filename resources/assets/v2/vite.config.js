@@ -20,7 +20,7 @@
 
 import {defineConfig} from 'vite';
 import laravel from 'laravel-vite-plugin';
-// import manifestSRI from 'vite-plugin-manifest-sri';
+import manifestSRI from 'vite-plugin-manifest-sri';
 
 const host = '127.0.0.1';
 
@@ -65,20 +65,13 @@ export default defineConfig({
             publicDirectory: '../../../public',
             refresh: true,
         }),
-        //manifestSRI(),
+        manifestSRI(),
 
     ],
 
 
     server: {
         usePolling: true,
-        allowedHosts: '*.sd.internal',
-        host: '0.0.0.0',
-        hmr: {host},
-        cors: true
-        // https: {
-        //     key: fs.readFileSync(`/Users/sander/Sites/vm/tls-certificates/wildcard.sd.local.key`),
-        //     cert: fs.readFileSync(`/Users/sander/Sites/vm/tls-certificates/wildcard.sd.local.crt`),
-        // },
+        host: '10.0.0.15',
     },
 });
