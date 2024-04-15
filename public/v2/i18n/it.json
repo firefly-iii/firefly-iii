@@ -4,7 +4,7 @@
         "date_time_fns": "do MMMM yyyy @ HH:mm:ss",
         "month_and_day_fns": "d MMMM y",
         "does_not_exist": "(config.does_not_exist)",
-        "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
+        "date_time_fns_short": "do MMMM yyyy @ HH:mm"
     },
     "form": {
         "title": "Titolo"
@@ -17,10 +17,10 @@
         "spent": "Speso",
         "administration_owner": "Administration owner: {{email}}",
         "administration_you": "Your role: {{role}}",
-        "administration_role_owner": "Owner",
-        "administration_role_ro": "Read-only",
-        "administration_role_mng_trx": "Manage transactions",
-        "administration_role_mng_meta": "Manage classification and meta-data",
+        "administration_role_owner": "Proprietario",
+        "administration_role_ro": "Sola lettura",
+        "administration_role_mng_trx": "Gestisci le transazioni",
+        "administration_role_mng_meta": "Gestisci classificazione e meta-dati",
         "administration_role_mng_budgets": "Manage budgets",
         "administration_role_mng_piggies": "Manage piggy banks",
         "administration_role_mng_subscriptions": "Manage subscriptions",
@@ -48,7 +48,7 @@
         "unknown_dest_plain": "Conto di destinazione sconosciuto",
         "unknown_any_plain": "Conto sconosciuto",
         "unknown_budget_plain": "Nessun budget",
-        "stored_journal_js": "Successfully created new transaction \"{{description}}\"",
+        "stored_journal_js": "Nuova transazione \"{{description}} \" creata con successo",
         "wait_loading_transaction": "Attendi il caricamento del modello",
         "nothing_found": "(nessun risultato)",
         "wait_loading_data": "Ti preghiamo di attendere il caricamento delle tue informazioni...",

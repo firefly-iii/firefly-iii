@@ -108,6 +108,7 @@ class ForgotPasswordController extends Controller
         $host           = request()->host();
         if ($configuredHost !== $host) {
             Log::error(sprintf('Host header is "%s", APP_URL is "%s".', $host, $configuredHost));
+
             throw new FireflyException('The Host-header does not match the host in the APP_URL environment variable. Please make sure these match. See also: https://bit.ly/FF3-host-header');
         }
     }

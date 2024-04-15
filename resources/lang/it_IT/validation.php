@@ -55,11 +55,11 @@ return [
     'reconciled_forbidden_field'      => 'Questa transazione è già riconciliata, non è possibile modificare il campo ":field"',
     'deleted_user'                    => 'A causa dei vincoli di sicurezza, non è possibile registrarsi utilizzando questo indirizzo email.',
     'rule_trigger_value'              => 'Questo valore non è valido per il trigger selezionato.',
-    'rule_action_expression'          => 'Invalid expression. :error',
+    'rule_action_expression'          => 'Espressione non valida. :error',
     'rule_action_value'               => 'Questo valore non è valido per l\'azione selezionata.',
     'file_already_attached'           => 'Il file caricato ":name" è già associato a questo oggetto.',
     'file_attached'                   => 'File caricato con successo ":name".',
-    'file_zero'                       => 'The file is zero bytes in size.',
+    'file_zero'                       => 'Il file ha dimensione zero.',
     'must_exist'                      => 'L\'ID nel campo :attribute non esiste nel database.',
     'all_accounts_equal'              => 'Tutti i conti in questo campo devono essere uguali.',
     'group_title_mandatory'           => 'Il titolo del gruppo è obbligatorio quando ci sono più di una transazione.',
@@ -68,8 +68,8 @@ return [
     'invalid_selection'               => 'La tua selezione non è valida.',
     'belongs_user'                    => 'Questo valore è collegato a un oggetto che non sembra esistere.',
     'belongs_user_or_user_group'      => 'Questo valore è collegato a un oggetto che non sembra esistere nella tua attuale amministrazione finanziaria.',
-    'no_access_group'                 => 'The user has no access to this user group.',
-    'no_accepted_roles_defined'       => 'No access roles have been defined for this endpoint, access denied.',
+    'no_access_group'                 => 'L\'utente non ha accesso a questo gruppo.',
+    'no_accepted_roles_defined'       => 'Nessun ruolo di accesso è stato definito per questo endpoint, accesso negato.',
     'at_least_one_transaction'        => 'Hai bisogno di almeno una transazione.',
     'recurring_transaction_id'        => 'Hai bisogno di almeno una transazione.',
     'need_id_to_match'                => 'È necessario inviare questa voce con un ID affinché l\'API sia in grado di abbinarla.',
@@ -199,7 +199,7 @@ return [
  *
  */
 
-    'secure_password'                 => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password',
+    'secure_password'                 => 'Questa non è una password sicura. Per favore riprova. Per ulteriori informazioni, visita https://bit.ly/FF3-password',
     'valid_recurrence_rep_type'       => 'Il tipo di ripetizione della transazione ricorrente non è valido.',
     'valid_recurrence_rep_moment'     => 'Il momento di ripetizione per questo tipo di ripetizione non è valido.',
     'invalid_account_info'            => 'Informazione sul conto non valida.',
