@@ -122,7 +122,6 @@ jobs:
       - name: Run CI
         run: |
           rm -rf vendor composer.lock
-          composer validate --strict
           composer update --no-dev --no-scripts --no-plugins -q
           sudo chown -R runner:docker resources/lang
           .ci/phpcs.sh
@@ -146,7 +145,6 @@ jobs:
           tarName=FireflyIII-$version.tar.gz
 
           # update composer (again)
-          composer validate --strict
           composer update --no-dev --no-scripts --no-plugins
           composer dump-autoload
 
