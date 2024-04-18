@@ -84,7 +84,7 @@ class PreferencesController extends Controller
     {
         $manager     = $this->getManager();
 
-        if('currencyPreference' === $preference->name) {
+        if ('currencyPreference' === $preference->name) {
             throw new FireflyException('Please use api/v1/currencies/default instead.');
         }
 
@@ -108,7 +108,7 @@ class PreferencesController extends Controller
         $manager     = $this->getManager();
         $data        = $request->getAll();
 
-        if('currencyPreference' === $data['name']) {
+        if ('currencyPreference' === $data['name']) {
             throw new FireflyException('Please use api/v1/currencies/default instead.');
         }
 
@@ -131,7 +131,7 @@ class PreferencesController extends Controller
      */
     public function update(PreferenceUpdateRequest $request, Preference $preference): JsonResponse
     {
-        if('currencyPreference' === $preference->name) {
+        if ('currencyPreference' === $preference->name) {
             throw new FireflyException('Please use api/v1/currencies/default instead.');
         }
 
