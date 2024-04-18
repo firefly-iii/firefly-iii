@@ -44,6 +44,7 @@ class Preferences
         }
 
         return Preference::where('user_id', $user->id)
+            ->where('name','!=','currencyPreference')
             ->where(function (Builder $q) use ($user): void {
                 $q->whereNull('user_group_id');
                 $q->orWhere('user_group_id', $user->user_group_id);

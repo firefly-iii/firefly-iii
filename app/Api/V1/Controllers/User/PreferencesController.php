@@ -84,6 +84,10 @@ class PreferencesController extends Controller
     {
         $manager     = $this->getManager();
 
+        if('currencyPreference' === $preference->name) {
+            throw new FireflyException('Please use api/v1/currencies/default instead.');
+        }
+
         /** @var PreferenceTransformer $transformer */
         $transformer = app(PreferenceTransformer::class);
         $transformer->setParameters($this->parameters);
@@ -103,6 +107,11 @@ class PreferencesController extends Controller
     {
         $manager     = $this->getManager();
         $data        = $request->getAll();
+
+        if('currencyPreference' === $data['name']) {
+            throw new FireflyException('Please use api/v1/currencies/default instead.');
+        }
+
         $pref        = app('preferences')->set($data['name'], $data['data']);
 
         /** @var PreferenceTransformer $transformer */
@@ -122,6 +131,10 @@ class PreferencesController extends Controller
      */
     public function update(PreferenceUpdateRequest $request, Preference $preference): JsonResponse
     {
+        if('currencyPreference' === $preference->name) {
+            throw new FireflyException('Please use api/v1/currencies/default instead.');
+        }
+
         $manager     = $this->getManager();
         $data        = $request->getAll();
         $pref        = app('preferences')->set($preference->name, $data['data']);
