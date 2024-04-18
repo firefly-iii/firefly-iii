@@ -101,6 +101,7 @@
         "psr/log": "<4",
         "ramsey/uuid": "^4.7",
         "rcrowe/twigbridge": "^0.14",
+        "twig/twig": "3.8.0",
         "spatie/laravel-html": "^3.2",
         "spatie/laravel-ignition": "^2",
         "spatie/period": "^2.4",
