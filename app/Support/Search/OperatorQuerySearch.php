@@ -159,6 +159,10 @@ class OperatorQuerySearch implements SearchInterface
         foreach ($query1->getNodes() as $searchNode) {
             $this->handleSearchNode($searchNode);
         }
+
+        // add missing information
+        $this->collector->withBillInformation();
+
         $this->collector->setSearchWords($this->words);
         $this->collector->excludeSearchWords($this->prohibitedWords);
     }
