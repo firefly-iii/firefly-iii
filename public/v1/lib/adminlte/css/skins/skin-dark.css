@@ -103,6 +103,12 @@
 .skin-firefly-iii .btn-info {
   color: #fff;
 }
+.skin-firefly-iii .btn-danger {
+  color: #fff;
+}
+.skin-firefly-iii .btn-warning {
+  color: #fff;
+}
 .skin-firefly-iii .btn-default {
   background-color: #55606a;
   color: #bec5cb;
@@ -248,6 +254,11 @@
 }
 .skin-firefly-iii .content-header > .breadcrumb > li > a {
   color: #bec5cb;
+}
+.skin-firefly-iii .table > thead > tr > th,
+.skin-firefly-iii .table > tbody > tr > th,
+.skin-firefly-iii .table > tfoot > tr > th {
+  border-bottom: 2px #c9d1d9 solid;
 }
 .skin-firefly-iii .table > thead > tr > th,
 .skin-firefly-iii .table > tbody > tr > th,
@@ -480,6 +491,7 @@
 .skin-firefly-iii .nav-tabs-custom > .nav-tabs > li.active > a {
   border-left-color: #353c42;
   border-right-color: #353c42;
+  color: #bec5cb;
 }
 .skin-firefly-iii .nav-tabs-custom > .nav-tabs.pull-right > li:first-of-type.active > a {
   border-left-color: #353c42;
@@ -511,7 +523,7 @@
   background-color: #272c30;
 }
 .skin-firefly-iii .input-group .input-group-addon {
-  border-right: 1px solid #272c30;
+  border: 1px solid #272c30;
 }
 .skin-firefly-iii .form-control {
   border-color: #272c30;
