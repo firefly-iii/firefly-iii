@@ -69,6 +69,7 @@ let transactions = function () {
             resetButton: false,
             rulesButton: true,
             webhooksButton: true,
+            categorySelectVisible: false
         },
 
         // form behaviour during transaction
@@ -343,7 +344,13 @@ let transactions = function () {
             // destination can never be revenue account
             this.filters.destination = ['Expense account', 'Loan', 'Debt', 'Mortgage', 'Asset account'];
         },
-
+        keyUpFromCategory(e) {
+            if (e.key === 'Enter' && false === this.formStates.categorySelectVisible) {
+                this.submitTransaction();
+                return;
+            }
+            this.formStates.categorySelectVisible = document.querySelector('input.ac-category').nextSibling.classList.contains('show');
+        },
         submitTransaction() {
             // reset all messages:
             this.notifications.error.show = false;
@@ -422,7 +429,10 @@ let transactions = function () {
             if (this.formStates.returnHereButton) {
                 this.notifications.success.show = true;
                 this.notifications.success.url = 'transactions/show/' + this.groupProperties.id;
-                this.notifications.success.text = i18next.t('firefly.stored_journal_js', {description: this.groupProperties.title, interpolation: { escapeValue: false }});
+                this.notifications.success.text = i18next.t('firefly.stored_journal_js', {
+                    description: this.groupProperties.title,
+                    interpolation: {escapeValue: false}
+                });
                 this.formStates.isSubmitting = false;
                 // reset group title again
                 this.groupProperties.title = null;

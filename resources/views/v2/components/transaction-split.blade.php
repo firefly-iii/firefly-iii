@@ -111,12 +111,12 @@
                     <div class="row">
                         <div class="col text-end">
                             <div class="btn-group">
+                                <button @click="addSplit()" class="btn btn-secondary"
+                                        :disabled="formStates.isSubmitting">{{ __('firefly.add_another_split')  }}</button>
                                 <template x-if="1 !== entries.length">
                                     <button :disabled="formStates.isSubmitting" class="btn btn-danger text-white"
                                             @click="removeSplit(index)">{{ __('firefly.transaction_remove_split') }}</button>
                                 </template>
-                                <button @click="addSplit()" class="btn btn-info"
-                                        :disabled="formStates.isSubmitting">{{ __('firefly.add_another_split')  }}</button>
                                 <button class="btn btn-success text-white" :disabled="formStates.isSubmitting"
                                         @click="submitTransaction()">{{ __('firefly.submit') }}</button>
                             </div>

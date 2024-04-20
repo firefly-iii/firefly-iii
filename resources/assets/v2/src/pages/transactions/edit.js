@@ -72,6 +72,7 @@ let transactions = function () {
             resetButton: true,
             rulesButton: true,
             webhooksButton: true,
+            categorySelectVisible: false,
         },
 
         // form behaviour during transaction
@@ -109,6 +110,14 @@ let transactions = function () {
                 show: false, text: '',
 
             }
+        },
+
+        keyUpFromCategory(e) {
+            if (e.key === 'Enter' && false === this.formStates.categorySelectVisible) {
+                this.submitTransaction();
+                return;
+            }
+            this.formStates.categorySelectVisible = document.querySelector('input.ac-category').nextSibling.classList.contains('show');
         },
 
         // submit the transaction form.
