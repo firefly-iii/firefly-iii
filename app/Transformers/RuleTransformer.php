@@ -34,8 +34,7 @@ use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
  */
 class RuleTransformer extends AbstractTransformer
 {
-    /** @var RuleRepositoryInterface */
-    private $ruleRepository;
+    private RuleRepositoryInterface $ruleRepository;
 
     /**
      * CurrencyTransformer constructor.
@@ -72,7 +71,7 @@ class RuleTransformer extends AbstractTransformer
             'links'            => [
                 [
                     'rel' => 'self',
-                    'uri' => '/rules/'.$rule->id,
+                    'uri' => '/rules/' . $rule->id,
                 ],
             ],
         ];
@@ -109,18 +108,27 @@ class RuleTransformer extends AbstractTransformer
             if ('user_action' === $ruleTrigger->trigger_type) {
                 continue;
             }
+            $triggerType = (string) $ruleTrigger->trigger_type;
             $triggerValue = (string)$ruleTrigger->trigger_value;
-            $needsContext = config(sprintf('search.operators.%s.needs_context', $ruleTrigger->trigger_type), true);
+            $prohibited   = false;
+
+            if(str_starts_with($triggerType, '-')) {
+                $prohibited = true;
+                $triggerType = substr($triggerType, 1);
+            }
+
+            $needsContext = config(sprintf('search.operators.%s.needs_context', $triggerType), true);
             if (false === $needsContext) {
                 $triggerValue = 'true';
             }
 
-            $result[]     = [
+            $result[] = [
                 'id'              => (string)$ruleTrigger->id,
                 'created_at'      => $ruleTrigger->created_at->toAtomString(),
                 'updated_at'      => $ruleTrigger->updated_at->toAtomString(),
-                'type'            => $ruleTrigger->trigger_type,
+                'type'            => $triggerType,
                 'value'           => $triggerValue,
+                'prohibited'      => $prohibited,
                 'order'           => $ruleTrigger->order,
                 'active'          => $ruleTrigger->active,
                 'stop_processing' => $ruleTrigger->stop_processing,
