@@ -2,7 +2,16 @@
     <a class="nav-link" href="{{ route(Route::current()->getName(), Route::current()->parameters()) }}?force_default_layout=true">
         <i class="fa-solid fa-landmark"></i>
     </a>
-
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="#">
+        <em class="fa-solid fa-sliders"></em>
+    </a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="#">
+        <em class="fa-solid fa-hat-wizard"></em>
+    </a>
 </li>
 <li class="nav-item dropdown">
     <a class="nav-link" data-bs-toggle="dropdown" href="#">

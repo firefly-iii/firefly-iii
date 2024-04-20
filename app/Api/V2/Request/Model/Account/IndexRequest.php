@@ -44,14 +44,11 @@ class IndexRequest extends FormRequest
 
     public function getAccountTypes(): array
     {
-        $type = (string)$this->get('type', 'default');
+        $type = (string) $this->get('type', 'default');
 
         return $this->mapAccountTypes($type);
     }
 
-    /**
-     * Get all data from the request.
-     */
     public function getDate(): Carbon
     {
         return $this->getCarbonDate('date');
@@ -63,7 +60,9 @@ class IndexRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'date' => 'date|after:1900-01-01|before:2099-12-31',
+            'date'  => 'date|after:1900-01-01|before:2099-12-31',
+            'start' => 'date|after:1900-01-01|before:2099-12-31|before:end|required_with:end',
+            'end'   => 'date|after:1900-01-01|before:2099-12-31|after:start|required_with:start',
         ];
     }
 }

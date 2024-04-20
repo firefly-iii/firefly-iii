@@ -58,7 +58,7 @@ class IndexController extends Controller
     }
 
     /**
-     * TODO see autocomplete/accountcontroller for list.
+     * TODO see autocomplete/account controller for list.
      */
     public function index(IndexRequest $request): JsonResponse
     {
@@ -77,28 +77,6 @@ class IndexController extends Controller
 
         return response()
             ->json($this->jsonApiList('accounts', $paginator, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE)
-        ;
-    }
-
-    public function infiniteList(InfiniteListRequest $request): JsonResponse
-    {
-        $this->repository->resetAccountOrder();
-
-        // get accounts of the specified type, and return.
-        $types       = $request->getAccountTypes();
-
-        // get from repository
-        $accounts    = $this->repository->getAccountsInOrder($types, $request->getSortInstructions('accounts'), $request->getStartRow(), $request->getEndRow());
-        $total       = $this->repository->countAccounts($types);
-        $count       = $request->getEndRow() - $request->getStartRow();
-        $paginator   = new LengthAwarePaginator($accounts, $total, $count, $this->parameters->get('page'));
-        $transformer = new AccountTransformer();
-        $transformer->setParameters($this->parameters); // give params to transformer
-
-        return response()
-            ->json($this->jsonApiList(self::RESOURCE_KEY, $paginator, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE)
-        ;
+            ->header('Content-Type', self::CONTENT_TYPE);
     }
 }

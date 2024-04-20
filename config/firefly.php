@@ -924,7 +924,7 @@ return [
     'sorting'                      => [
         'allowed' => [
             'transactions' => ['description', 'amount'],
-            'accounts'     => ['name', 'active', 'iban', 'balance', 'last_activity'],
+            'accounts'     => ['name', 'active', 'iban', 'balance', 'last_activity','balance_difference'],
         ],
     ],
 ];

@@ -35,7 +35,10 @@
 
                 <!-- begin date range drop down -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link daterange-holder" data-bs-toggle="dropdown" href="#"></a>
+                    <a class="nav-link daterange-holder d-none d-sm-block" data-bs-toggle="dropdown" href="#"></a>
+                    <a class="nav-link daterange-icon d-block d-sm-none" data-bs-toggle="dropdown" href="#">
+                        <em class="fa-regular fa-calendar-days"></em>
+                    </a>
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                         <a href="#" class="dropdown-item daterange-current" @click="changeDateRange">
 

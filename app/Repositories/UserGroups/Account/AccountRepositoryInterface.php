@@ -37,6 +37,12 @@ interface AccountRepositoryInterface
 {
     public function countAccounts(array $types): int;
 
+    public function getAccountTypes(Collection $accounts): Collection;
+
+    public function getLastActivity(Collection $accounts): array;
+
+    public function getMetaValues(Collection $accounts, array $fields): Collection;
+
     public function find(int $accountId): ?Account;
 
     public function findByAccountNumber(string $number, array $types): ?Account;

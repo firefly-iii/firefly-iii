@@ -83,14 +83,30 @@
                                         <em x-show="sortingColumn === 'last_activity' && sortDirection === 'asc'" class="fa-solid fa-arrow-down-wide-short"></em>
                                         <em x-show="sortingColumn === 'last_activity' && sortDirection === 'desc'" class="fa-solid fa-arrow-up-wide-short"></em>
                                     </td>
-                                    <td>Balance difference</td>
-                                    <td>&nbsp;</td>
+                                    <td>
+                                        <a href="#" x-on:click.prevent="sort('balance_difference')">Balance difference</a>
+                                        <em x-show="sortingColumn === 'balance_difference' && sortDirection === 'asc'" class="fa-solid fa-arrow-down-wide-short"></em>
+                                        <em x-show="sortingColumn === 'balance_difference' && sortDirection === 'desc'" class="fa-solid fa-arrow-up-wide-short"></em>
+                                    </td>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <template x-for="(account, index) in accounts" :key="index">
                                 <tr>
-                                    <td>TODO</td>
+                                    <td>
+                                        <!-- Example split danger button -->
+                                        <div class="btn-group btn-group-sm">
+                                            <a :href="'./accounts/edit/' + account.id" class="btn btn-sm btn-light"><em class="fa-solid fa-pencil"></em></a>
+                                            <button type="button" class="btn btn-light dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <span class="visually-hidden">{{ __('firefly.toggle_dropdown') }}</span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" :href="'./accounts/show/' + account.id"><em class="fa-solid fa-eye"></em> {{ __('firefly.show') }}</a></li>
+                                                <li><a class="dropdown-item" :href="'./accounts/reconcile/' + account.id"><em class="fa-solid fa-calculator"></em> {{ __('firefly.reconcile_selected')  }}</a></li>
+                                                <li><a class="dropdown-item" :href="'./accounts/delete/' + account.id"><em class="fa-solid fa-trash"></em> {{ __('firefly.delete') }}</a></li>
+                                            </ul>
+                                        </div>
+                                    </td>
                                     <td>
                                         <template x-if="account.active">
                                             <em class="text-success fa-solid fa-check"></em>
@@ -150,8 +166,11 @@
                                     <td>
                                         <span x-text="account.last_activity"></span>
                                     </td>
-                                    <td>TODO 2  </td>
-                                    <td>&nbsp;</td>
+                                    <td>
+                                        <template x-if="null !== account.balance_difference">
+                                            <span x-text="formatMoney(account.balance_difference, account.currency_code)"></span>
+                                        </template>
+                                    </td>
                                 </tr>
                                 </template>
                                 </tbody>

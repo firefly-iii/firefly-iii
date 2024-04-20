@@ -23,6 +23,7 @@ import {format} from "date-fns";
 import {getVariable} from "../../store/get-variable.js";
 import formatMoney from "../../util/format-money.js";
 import {getCacheKey} from "../../support/get-cache-key.js";
+import {cleanupCache} from "../../support/cleanup-cache.js";
 
 let afterPromises = false;
 export default () => ({
@@ -38,6 +39,7 @@ export default () => ({
         const start = new Date(window.store.get('start'));
         const end = new Date(window.store.get('end'));
         const boxesCacheKey = getCacheKey('dashboard-boxes-data', start, end);
+        cleanupCache();
 
         const cacheValid = window.store.get('cacheValid');
         let cachedData = window.store.get(boxesCacheKey);

@@ -295,4 +295,15 @@ class UserGroupRepository implements UserGroupRepositoryInterface
         $this->user->user_group_id = $userGroup->id;
         $this->user->save();
     }
+
+    #[\Override] public function getMembershipsFromGroupId(int $groupId): Collection
+    {
+        return $this->user->groupMemberships()->where('user_group_id', $groupId)->get();
+    }
+
+
+    #[\Override] public function getById(int $id): ?UserGroup
+    {
+        return UserGroup::find($id);
+    }
 }

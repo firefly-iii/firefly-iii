@@ -21,6 +21,7 @@
 import {defineConfig} from 'vite';
 import laravel from 'laravel-vite-plugin';
 import manifestSRI from 'vite-plugin-manifest-sri';
+import * as fs from "fs";
 
 const host = '127.0.0.1';
 
@@ -64,8 +65,8 @@ export default defineConfig({
             ],
             publicDirectory: '../../../public',
             refresh: true,
-        }) //,
-        // manifestSRI(),
+        }),
+        manifestSRI(),
 
     ],
 
@@ -73,5 +74,12 @@ export default defineConfig({
     server: {
         usePolling: true,
         host: '10.0.0.15',
+        // hmr: {
+        //     protocol: 'wss',
+        // },
+        https: {
+            key: fs.readFileSync(`/sites/vm/tls-certificates/wildcard.sd.internal.key`),
+            cert: fs.readFileSync(`/sites/vm/tls-certificates/wildcard.sd.internal.crt`),
+        },
     },
 });

@@ -77,7 +77,7 @@ let index = function () {
         sort(column) {
             this.sortingColumn = column;
             this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
-            const url = './accounts/'+type+'?column='+column+'&direction='+this.sortDirection;
+            const url = './accounts/' + type + '?column=' + column + '&direction=' + this.sortDirection;
 
             window.history.pushState({}, "", url);
 
@@ -140,6 +140,11 @@ let index = function () {
             this.accounts[index].nameEditorVisible = true;
         },
         loadAccounts() {
+
+            // get start and end from the store:
+            const start = new Date(window.store.get('start'));
+            const end = new Date(window.store.get('end'));
+
             this.notifications.wait.show = true;
             this.notifications.wait.text = i18next.t('firefly.wait_loading_data')
             this.accounts = [];
@@ -147,7 +152,7 @@ let index = function () {
             // &sorting[0][column]=description&sorting[0][direction]=asc
             const sorting = [{column: this.sortingColumn, direction: this.sortDirection}];
             // one page only.o
-            (new Get()).index({sorting: sorting, type: type, page: this.page}).then(response => {
+            (new Get()).index({sorting: sorting, type: type, page: this.page, start: start, end: end}).then(response => {
                 for (let i = 0; i < response.data.data.length; i++) {
                     if (response.data.data.hasOwnProperty(i)) {
                         let current = response.data.data[i];
@@ -165,7 +170,10 @@ let index = function () {
                             native_current_balance: current.attributes.native_current_balance,
                             native_currency_code: current.attributes.native_currency_code,
                             last_activity: null === current.attributes.last_activity ? '' : format(new Date(current.attributes.last_activity), i18next.t('config.month_and_day_fns')),
+                            balance_difference: current.attributes.balance_difference,
+                            native_balance_difference: current.attributes.native_balance_difference
                         };
+                        console.log(current.attributes.balance_difference);
                         this.accounts.push(account);
                     }
                 }

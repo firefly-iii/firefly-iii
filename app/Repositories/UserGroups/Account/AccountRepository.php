@@ -27,11 +27,13 @@ namespace FireflyIII\Repositories\UserGroups\Account;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Services\Internal\Update\AccountUpdateService;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class AccountRepository
@@ -63,8 +65,7 @@ class AccountRepository implements AccountRepositoryInterface
                     $q1->where('account_meta.name', '=', 'account_number');
                     $q1->where('account_meta.data', '=', $json);
                 }
-            )
-        ;
+            );
 
         if (0 !== count($types)) {
             $dbQuery->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
@@ -90,7 +91,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     public function findByName(string $name, array $types): ?Account
     {
-        $query   = $this->userGroup->accounts();
+        $query = $this->userGroup->accounts();
 
         if (0 !== count($types)) {
             $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
@@ -114,14 +115,14 @@ class AccountRepository implements AccountRepositoryInterface
 
     public function getAccountCurrency(Account $account): ?TransactionCurrency
     {
-        $type       = $account->accountType->type;
-        $list       = config('firefly.valid_currency_account_types');
+        $type = $account->accountType->type;
+        $list = config('firefly.valid_currency_account_types');
 
         // return null if not in this list.
         if (!in_array($type, $list, true)) {
             return null;
         }
-        $currencyId = (int)$this->getMetaValue($account, 'currency_id');
+        $currencyId = (int) $this->getMetaValue($account, 'currency_id');
         if ($currencyId > 0) {
             return TransactionCurrency::find($currencyId);
         }
@@ -143,7 +144,7 @@ class AccountRepository implements AccountRepositoryInterface
             return null;
         }
         if (1 === $result->count()) {
-            return (string)$result->first()->data;
+            return (string) $result->first()->data;
         }
 
         return null;
@@ -228,7 +229,7 @@ class AccountRepository implements AccountRepositoryInterface
 
                     continue;
                 }
-                if ($index !== (int)$account->order) {
+                if ($index !== (int) $account->order) {
                     app('log')->debug(sprintf('Account #%d ("%s"): order should %d be but is %d.', $account->id, $account->name, $index, $account->order));
                     $account->order = $index;
                     $account->save();
@@ -240,9 +241,9 @@ class AccountRepository implements AccountRepositoryInterface
 
     public function getAccountsByType(array $types, ?array $sort = []): Collection
     {
-        $sortable        = ['name', 'active']; // TODO yes this is a duplicate array.
-        $res             = array_intersect([AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT], $types);
-        $query           = $this->userGroup->accounts();
+        $sortable = ['name', 'active']; // TODO yes this is a duplicate array.
+        $res      = array_intersect([AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT], $types);
+        $query    = $this->userGroup->accounts();
         if (0 !== count($types)) {
             $query->accountTypeIn($types);
         }
@@ -275,12 +276,11 @@ class AccountRepository implements AccountRepositoryInterface
     {
         // search by group, not by user
         $dbQuery = $this->userGroup->accounts()
-            ->where('active', true)
-            ->orderBy('accounts.order', 'ASC')
-            ->orderBy('accounts.account_type_id', 'ASC')
-            ->orderBy('accounts.name', 'ASC')
-            ->with(['accountType'])
-        ;
+                                   ->where('active', true)
+                                   ->orderBy('accounts.order', 'ASC')
+                                   ->orderBy('accounts.account_type_id', 'ASC')
+                                   ->orderBy('accounts.name', 'ASC')
+                                   ->with(['accountType']);
         if ('' !== $query) {
             // split query on spaces just in case:
             $parts = explode(' ', $query);
@@ -304,5 +304,31 @@ class AccountRepository implements AccountRepositoryInterface
         $service = app(AccountUpdateService::class);
 
         return $service->update($account, $data);
+    }
+
+    #[\Override] public function getMetaValues(Collection $accounts, array $fields): Collection
+    {
+        $query = AccountMeta::whereIn('account_id', $accounts->pluck('id')->toArray());
+        if (count($fields) > 0) {
+            $query->whereIn('name', $fields);
+        }
+        return $query->get(['account_meta.id', 'account_meta.account_id', 'account_meta.name', 'account_meta.data']);
+    }
+
+    #[\Override] public function getAccountTypes(Collection $accounts): Collection
+    {
+        return AccountType::leftJoin('accounts', 'accounts.account_type_id', '=', 'account_types.id')
+                          ->whereIn('accounts.id', $accounts->pluck('id')->toArray())
+                          ->get(['accounts.id', 'account_types.type']);
+
+    }
+
+    #[\Override] public function getLastActivity(Collection $accounts): array
+    {
+        return Transaction::whereIn('account_id', $accounts->pluck('id')->toArray())
+                          ->leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
+                          ->groupBy('transactions.account_id')
+                          ->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) as date_max')])->toArray() // @phpstan-ignore-line
+            ;
     }
 }

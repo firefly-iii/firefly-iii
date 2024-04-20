@@ -21,11 +21,14 @@
 import {format} from "date-fns";
 import store from "store";
 
-function getCacheKey(string, start, end) {
+function cleanupCache() {
     const localValue = store.get('lastActivity');
-    const cacheKey = 'dcx' + format(start, 'yMMdd')+ format(end, 'yMMdd') + string + localValue;
-    console.log('getCacheKey: ' + cacheKey);
-    return String(cacheKey);
+
+    store.each(function(value, key) {
+        if(key.startsWith('dcx') && !key.includes(localValue)) {
+            store.remove(key);
+        }
+    });
 }
 
-export {getCacheKey};
+export {cleanupCache};
