@@ -23,217 +23,12 @@ import dates from "../shared/dates.js";
 import i18next from "i18next";
 import {format} from "date-fns";
 import formatMoney from "../../util/format-money.js";
-import Put from "../../api/v2/model/transaction/put.js";
-
-import {createGrid, ModuleRegistry} from "@ag-grid-community/core";
 
 import '@ag-grid-community/styles/ag-grid.css';
 import '@ag-grid-community/styles/ag-theme-alpine.css';
 import '../../css/grid-ff3-theme.css';
+import Get from "../../api/v2/model/transaction/get.js";
 
-import AmountEditor from "../../support/ag-grid/AmountEditor.js";
-
-import TransactionDataSource from "../../support/ag-grid/TransactionDataSource.js";
-import {InfiniteRowModelModule} from '@ag-grid-community/infinite-row-model';
-import DateTimeEditor from "../../support/ag-grid/DateTimeEditor.js";
-
-const ds = new TransactionDataSource();
-
-// set type from URL
-const urlParts = window.location.href.split('/');
-const type = urlParts[urlParts.length - 1];
-ds.setType(type);
-
-let dataTable;
-const editableFields = ['description', 'amount', 'date'];
-
-const onCellEditRequestMethod = (event) => {
-    console.log('onCellEditRequestMethod');
-    const data = event.data;
-    const field = event.colDef.field;
-    let newValue = event.newValue;
-    if (!editableFields.includes(field)) {
-        console.log('Field ' + field + ' is not editable.');
-        return;
-    }
-
-    // this needs to be better
-    if ('amount' === field) {
-        newValue = event.newValue.amount;
-        console.log('New value is now' + newValue);
-    }
-
-    console.log('New value for field "' + field + '" in transaction journal #' + data.transaction_journal_id + ' of group #' + data.id + ' is "' + newValue + '"');
-    data[field] = newValue;
-    let rowNode = dataTable.getRowNode(String(event.rowIndex));
-    rowNode.updateData(data);
-
-    // then push update to Firefly III over API:
-    let submission = {
-        transactions: [
-            {
-                transaction_journal_id: data.transaction_journal_id,
-            }
-        ]
-    };
-    submission.transactions[0][field] = newValue;
-
-    let putter = new Put();
-    putter.put(submission, {id: data.id});
-
-
-};
-
-const gridOptions = {
-    rowModelType: 'infinite',
-    datasource: ds,
-    cacheOverflowSize: 1,
-    cacheBlockSize: 20,
-    onCellEditRequest: onCellEditRequestMethod,
-    readOnlyEdit: true,
-    getRowId: function (params) {
-        console.log('getRowId', params.data.id);
-        return params.data.id;
-    },
-
-    // Row Data: The data to be displayed.
-    // rowData: [
-    // { description: "Tesla", model: "Model Y", price: 64950, electric: true },
-    // { description: "Ford", model: "F-Series", price: 33850, electric: false },
-    // { description: "Toyota", model: "Corolla", price: 29600, electric: false },
-    // ],
-    // Column Definitions: Defines & controls grid columns.
-    columnDefs: [
-        {
-            field: "icon",
-            editable: false,
-            headerName: '',
-            sortable: false,
-            width: 40,
-            cellRenderer: function (params) {
-                if (params.getValue()) {
-                    return '<a href="./transactions/show/' + parseInt(params.value.id) + '"><em class="' + params.value.classes + '"></em></a>';
-                }
-                return '';
-            }
-        },
-        {
-            field: "description",
-            cellDataType: 'text',
-            editable: true,
-            // cellRenderer: function (params) {
-            //     if (params.getValue()) {
-            //         return '<a href="#">' + params.getValue() + '</a>';
-            //     }
-            //     return '';
-            // }
-
-        },
-        {
-            field: "amount",
-            editable: function (params) {
-                // only when NO foreign amount.
-                return null === params.data.amount.foreign_amount && null === params.data.amount.foreign_currency_code;
-            },
-            cellEditor: AmountEditor,
-            cellRenderer(params) {
-                if (params.getValue()) {
-                    let returnString = '';
-                    let amount = parseFloat(params.getValue().amount);
-                    let obj = params.getValue();
-                    let stringClass = 'text-danger';
-                    if (obj.type === 'withdrawal') {
-                        amount = amount * -1;
-                    }
-                    if (obj.type === 'deposit') {
-                        stringClass = 'text-success';
-                    }
-                    if (obj.type === 'transfer') {
-                        stringClass = 'text-info';
-                    }
-                    returnString += '<span class="' + stringClass + '">' + formatMoney(amount, params.getValue().currency_code) + '</span>';
-
-                    // foreign amount:
-                    if (obj.foreign_amount) {
-                        let foreignAmount = parseFloat(params.getValue().foreign_amount);
-                        if (obj.type === 'withdrawal') {
-                            foreignAmount = foreignAmount * -1;
-                        }
-                        returnString += ' (<span class="' + stringClass + '">' + formatMoney(foreignAmount, obj.foreign_currency_code) + '</span>)';
-                    }
-                    return returnString;
-                }
-                return '';
-            }
-
-        },
-        {
-            field: "date",
-            editable: true,
-            cellDataType: 'date',
-            cellEditor: DateTimeEditor,
-            cellEditorPopup: true,
-            cellEditorPopupPosition: 'under',
-            cellRenderer(params) {
-                if (params.getValue()) {
-                    return format(params.getValue(), i18next.t('config.date_time_fns_short'));
-                }
-                return '';
-            }
-        },
-        {
-            field: "from",
-            cellDataType: 'text',
-            cellRenderer: function (params) {
-                if (params.getValue()) {
-                    let obj = params.getValue();
-                    return '<a href="./accounts/show/' + obj.id + '">' + obj.name + '</a>';
-                }
-                return '';
-            }
-        },
-        {
-            field: "to",
-            cellDataType: 'text',
-            cellRenderer: function (params) {
-                if (params.getValue()) {
-                    let obj = params.getValue();
-                    return '<a href="./accounts/show/' + obj.id + '">' + obj.name + '</a>';
-                }
-                return '';
-            }
-        },
-        {
-            field: "category",
-            cellDataType: 'text',
-            cellRenderer: function (params) {
-                if (params.getValue()) {
-                    let obj = params.getValue();
-                    if (null !== obj.id) {
-                        return '<a href="./categories/show/' + obj.id + '">' + obj.name + '</a>';
-                    }
-                }
-                return '';
-            }
-        },
-        {
-            field: "budget",
-            cellDataType: 'text',
-            cellRenderer: function (params) {
-                if (params.getValue()) {
-                    let obj = params.getValue();
-                    if (null !== obj.id) {
-                        return '<a href="./budgets/show/' + obj.id + '">' + obj.name + '</a>';
-                    }
-                }
-                return '';
-            }
-        },
-    ]
-};
-
-
-ModuleRegistry.registerModules([InfiniteRowModelModule]);
 let index = function () {
     return {
         // notifications
@@ -276,36 +71,56 @@ let index = function () {
             return format(date, i18next.t('config.date_time_fns'));
         },
         init() {
-            this.notifications.wait.show = true;
-            this.notifications.wait.text = i18next.t('firefly.wait_loading_data')
             // TODO need date range.
             // TODO handle page number
-            //this.getTransactions(this.page);
+            this.getTransactions(this.page);``
 
             // Your Javascript code to create the grid
-            dataTable = createGrid(document.querySelector('#grid'), gridOptions);
+            // dataTable = createGrid(document.querySelector('#grid'), gridOptions);
 
 
         },
-        // getTransactions(page) {
-        //     const urlParts = window.location.href.split('/');
-        //     const type = urlParts[urlParts.length - 1];
-        //     let getter = new Get();
-        //
-        //     getter.list({page: page, type: type}).then(response => {
-        //         this.parseTransactions(response.data.data)
-        //
-        //         // set meta data
-        //         this.totalPages = response.data.meta.pagination.total_pages;
-        //         this.perPage = response.data.meta.pagination.per_page;
-        //         this.page = response.data.meta.pagination.current_page;
-        //     }).catch(error => {
-        //         // to do this is auto generated
-        //         this.notifications.wait.show = false;
-        //         this.notifications.error.show = true;
-        //         this.notifications.error.text = error.response.data.message;
-        //     });
-        // },
+        getTransactions(page) {
+            this.notifications.wait.show = true;
+            this.notifications.wait.text = i18next.t('firefly.wait_loading_data')
+            this.transactions = [];
+            const urlParts = window.location.href.split('/');
+            const type = urlParts[urlParts.length - 1];
+            let getter = new Get();
+
+            getter.list({page: page, type: type}).then(response => {
+                this.parseTransactions(response.data.data)
+
+                // set meta data
+                this.totalPages = response.data.meta.pagination.total_pages;
+                this.perPage = response.data.meta.pagination.per_page;
+                this.page = response.data.meta.pagination.current_page;
+            }).catch(error => {
+                // to do this is auto generated
+                this.notifications.wait.show = false;
+                this.notifications.error.show = true;
+                this.notifications.error.text = error.response.data.message;
+            });
+        },
+        previousPage() {
+            if(this.page > 1) {
+                this.page--;
+                }
+            this.getTransactions(this.page);
+        },
+        nextPage() {
+            if(this.page < this.totalPages) {
+                this.page++;
+            }
+            this.getTransactions(this.page);
+        },
+        gotoPage(i) {
+            if(i > 0 && i <= this.totalPages) {
+                this.page = i;
+            }
+            this.getTransactions(this.page);
+        },
+
         parseTransactions(data) {
             // no parse, just save
             for (let i in data) {
@@ -321,7 +136,7 @@ let index = function () {
 
 
                             transaction.split = isSplit;
-                            tranaction.icon = 'fa fa-solid fa-arrow-left';
+                            transaction.icon = 'fa fa-solid fa-arrow-left';
                             transaction.firstSplit = firstSplit;
                             transaction.group_title = current.attributes.group_title;
                             transaction.id = current.id;
