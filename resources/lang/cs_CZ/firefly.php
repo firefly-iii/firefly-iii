@@ -2144,6 +2144,7 @@ return [
     'logout'                                              => 'Odhlásit se',
     'logout_other_sessions'                               => 'Logout all other sessions',
     'toggleNavigation'                                    => 'Vyp/zap. navigaci',
+    'toggle_dropdown'                                     => 'Toggle dropdown',
     'searchPlaceholder'                                   => 'Hledat…',
     'version'                                             => 'Verze',
     'dashboard'                                           => 'Přehled',

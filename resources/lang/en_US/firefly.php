@@ -2090,7 +2090,7 @@ return [
     'logout'                                              => 'Logout',
     'logout_other_sessions'                               => 'Logout all other sessions',
     'toggleNavigation'                                    => 'Toggle navigation',
-    'toggle_dropdown'                                    => 'Toggle dropdown',
+    'toggle_dropdown'                                     => 'Toggle dropdown',
     'searchPlaceholder'                                   => 'Search...',
     'version'                                             => 'Version',
     'dashboard'                                           => 'Dashboard',

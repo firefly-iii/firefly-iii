@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Vite;
+use Barryvdh\Debugbar\Facades\Debugbar;
 
 /**
  * Class SecureHeaders
@@ -41,16 +42,16 @@ class SecureHeaders
     public function handle(Request $request, \Closure $next)
     {
         // generate and share nonce.
-        $nonce = base64_encode(random_bytes(16));
+        $nonce              = base64_encode(random_bytes(16));
         Vite::useCspNonce($nonce);
-        if(class_exists('Barryvdh\Debugbar\Facades\Debugbar')) {
-            \Barryvdh\Debugbar\Facades\Debugbar::getJavascriptRenderer()->setCspNonce($nonce);
+        if (class_exists('Barryvdh\Debugbar\Facades\Debugbar')) {
+            Debugbar::getJavascriptRenderer()->setCspNonce($nonce);
         }
         app('view')->share('JS_NONCE', $nonce);
 
-        $response          = $next($request);
-        $trackingScriptSrc = $this->getTrackingScriptSource();
-        $csp               = [
+        $response           = $next($request);
+        $trackingScriptSrc  = $this->getTrackingScriptSource();
+        $csp                = [
             "default-src 'none'",
             "object-src 'none'",
             sprintf("script-src 'unsafe-eval' 'strict-dynamic' 'nonce-%1s'", $nonce),
@@ -77,11 +78,10 @@ class SecureHeaders
             ];
         }
 
-
-        $route     = $request->route();
-        $customUrl = '';
-        $authGuard = (string) config('firefly.authentication_guard');
-        $logoutUrl = (string) config('firefly.custom_logout_url');
+        $route              = $request->route();
+        $customUrl          = '';
+        $authGuard          = (string) config('firefly.authentication_guard');
+        $logoutUrl          = (string) config('firefly.custom_logout_url');
         if ('remote_user_guard' === $authGuard && '' !== $logoutUrl) {
             $customUrl = $logoutUrl;
         }
@@ -90,7 +90,7 @@ class SecureHeaders
             $csp[] = sprintf("form-action 'self' %s", $customUrl);
         }
 
-        $featurePolicies = [
+        $featurePolicies    = [
             "geolocation 'none'",
             "midi 'none'",
             // "notifications 'none'",

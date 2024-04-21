@@ -2144,6 +2144,7 @@ return [
     'logout'                                              => 'Abmelden',
     'logout_other_sessions'                               => 'Alle anderen Sitzungen abmelden',
     'toggleNavigation'                                    => 'Navigation umschalten',
+    'toggle_dropdown'                                     => 'Toggle dropdown',
     'searchPlaceholder'                                   => 'Suchen...',
     'version'                                             => 'Version',
     'dashboard'                                           => 'Übersicht',

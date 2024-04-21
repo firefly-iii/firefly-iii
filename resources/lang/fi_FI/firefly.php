@@ -2144,6 +2144,7 @@ return [
     'logout'                                              => 'Kirjaudu ulos',
     'logout_other_sessions'                               => 'Kirjaudu ulos kaikista muista istunnoista',
     'toggleNavigation'                                    => 'Vaihda navigointia',
+    'toggle_dropdown'                                     => 'Toggle dropdown',
     'searchPlaceholder'                                   => 'Hae ...',
     'version'                                             => 'Versio',
     'dashboard'                                           => 'Etusivu',

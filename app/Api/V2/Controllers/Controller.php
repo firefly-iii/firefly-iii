@@ -122,7 +122,7 @@ class Controller extends BaseController
                     $obj = null;
                 }
             }
-            if(null !== $date && 'end' === $field) {
+            if (null !== $date && 'end' === $field) {
                 $obj->endOfDay();
             }
             $bag->set($field, $obj);

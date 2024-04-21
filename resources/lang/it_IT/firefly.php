@@ -2144,6 +2144,7 @@ return [
     'logout'                                              => 'Esci',
     'logout_other_sessions'                               => 'Esci da tutte le altre sessioni',
     'toggleNavigation'                                    => 'Attiva / disattiva la navigazione',
+    'toggle_dropdown'                                     => 'Toggle dropdown',
     'searchPlaceholder'                                   => 'Cerca...',
     'version'                                             => 'Versione',
     'dashboard'                                           => 'Cruscotto',

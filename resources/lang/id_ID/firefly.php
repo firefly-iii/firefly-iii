@@ -2144,6 +2144,7 @@ return [
     'logout'                                              => 'Keluar',
     'logout_other_sessions'                               => 'Logout all other sessions',
     'toggleNavigation'                                    => 'Toggle navigation',
+    'toggle_dropdown'                                     => 'Toggle dropdown',
     'searchPlaceholder'                                   => 'Pencarian...',
     'version'                                             => 'Versi',
     'dashboard'                                           => 'Dasbor',

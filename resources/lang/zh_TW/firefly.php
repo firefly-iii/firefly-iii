@@ -2144,6 +2144,7 @@ return [
     'logout'                                              => '登出',
     'logout_other_sessions'                               => 'Logout all other sessions',
     'toggleNavigation'                                    => '切換導覽',
+    'toggle_dropdown'                                     => 'Toggle dropdown',
     'searchPlaceholder'                                   => '搜尋…',
     'version'                                             => '版本',
     'dashboard'                                           => '監控面板',

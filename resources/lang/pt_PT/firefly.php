@@ -2144,6 +2144,7 @@ return [
     'logout'                                              => 'Terminar Sessão',
     'logout_other_sessions'                               => 'Terminar todas as outras sessões',
     'toggleNavigation'                                    => 'Mostrar/esconder navegação',
+    'toggle_dropdown'                                     => 'Toggle dropdown',
     'searchPlaceholder'                                   => 'Pesquisar...',
     'version'                                             => 'Versão',
     'dashboard'                                           => 'Painel de controlo',

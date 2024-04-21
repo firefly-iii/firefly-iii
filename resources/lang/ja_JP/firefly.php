@@ -2144,6 +2144,7 @@ return [
     'logout'                                              => 'ログアウト',
     'logout_other_sessions'                               => 'すべてのセッションからログアウト',
     'toggleNavigation'                                    => 'ナビゲーションを切り替え',
+    'toggle_dropdown'                                     => 'Toggle dropdown',
     'searchPlaceholder'                                   => '検索...',
     'version'                                             => 'バージョン',
     'dashboard'                                           => 'ダッシュボード',

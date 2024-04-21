@@ -1,7 +1,8 @@
 <?php
 
-return [
+declare(strict_types=1);
 
+return [
     /*
      |--------------------------------------------------------------------------
      | Debugbar Settings
@@ -14,8 +15,8 @@ return [
      |
      */
 
-    'enabled' => env('DEBUGBAR_ENABLED', null),
-    'except' => [
+    'enabled'                 => env('DEBUGBAR_ENABLED', null),
+    'except'                  => [
         'telescope*',
         'horizon*',
     ],
@@ -36,7 +37,7 @@ return [
      | Specify a callback if you want to limit based on IP or authentication.
      | Leaving it to null will allow localhost only.
      */
-    'storage' => [
+    'storage'                 => [
         'enabled'    => true,
         'open'       => env('DEBUGBAR_OPEN_STORAGE'), // bool/callback.
         'driver'     => 'file', // redis, file, pdo, socket, custom
@@ -61,7 +62,7 @@ return [
     |
     */
 
-    'editor' => env('DEBUGBAR_EDITOR') ?: env('IGNITION_EDITOR', 'phpstorm'),
+    'editor'                  => env('DEBUGBAR_EDITOR') ?: env('IGNITION_EDITOR', 'phpstorm'),
 
     /*
     |--------------------------------------------------------------------------
@@ -86,8 +87,8 @@ return [
     |
     */
 
-    'remote_sites_path' => env('DEBUGBAR_REMOTE_SITES_PATH'),
-    'local_sites_path' => env('DEBUGBAR_LOCAL_SITES_PATH', env('IGNITION_LOCAL_SITES_PATH')),
+    'remote_sites_path'       => env('DEBUGBAR_REMOTE_SITES_PATH'),
+    'local_sites_path'        => env('DEBUGBAR_LOCAL_SITES_PATH', env('IGNITION_LOCAL_SITES_PATH')),
 
     /*
      |--------------------------------------------------------------------------
@@ -103,7 +104,7 @@ return [
      |
      */
 
-    'include_vendors' => true,
+    'include_vendors'         => true,
 
     /*
      |--------------------------------------------------------------------------
@@ -122,9 +123,9 @@ return [
      | Changing `ajax_handler_auto_show` to false will prevent the Debugbar from reloading.
      */
 
-    'capture_ajax' => true,
-    'add_ajax_timing' => false,
-    'ajax_handler_auto_show' => true,
+    'capture_ajax'            => true,
+    'add_ajax_timing'         => false,
+    'ajax_handler_auto_show'  => true,
     'ajax_handler_enable_tab' => true,
 
     /*
@@ -136,7 +137,7 @@ return [
      | in the Messages tab.
      |
      */
-    'error_handler' => false,
+    'error_handler'           => false,
 
     /*
      |--------------------------------------------------------------------------
@@ -147,7 +148,7 @@ return [
      | Extension, without the server-side code. It uses Debugbar collectors instead.
      |
      */
-    'clockwork' => false,
+    'clockwork'               => false,
 
     /*
      |--------------------------------------------------------------------------
@@ -158,7 +159,7 @@ return [
      |
      */
 
-    'collectors' => [
+    'collectors'              => [
         'phpinfo'         => true,  // Php version
         'messages'        => true,  // Messages
         'time'            => true,  // Time Datalogger
@@ -194,67 +195,67 @@ return [
      |
      */
 
-    'options' => [
-        'time' => [
+    'options'                 => [
+        'time'            => [
             'memory_usage' => false,  // Calculated by subtracting memory start and end, it may be inaccurate
         ],
-        'messages' => [
+        'messages'        => [
             'trace' => true,   // Trace the origin of the debug message
         ],
-        'memory' => [
-            'reset_peak' => false,     // run memory_reset_peak_usage before collecting
+        'memory'          => [
+            'reset_peak'    => false,     // run memory_reset_peak_usage before collecting
             'with_baseline' => false,  // Set boot memory usage as memory peak baseline
-            'precision' => 0,          // Memory rounding precision
+            'precision'     => 0,          // Memory rounding precision
         ],
-        'auth' => [
-            'show_name' => true,   // Also show the users name/email in the debugbar
+        'auth'            => [
+            'show_name'   => true,   // Also show the users name/email in the debugbar
             'show_guards' => true, // Show the guards that are used
         ],
-        'db' => [
-            'with_params'       => true,   // Render SQL with the parameters substituted
-            'backtrace'         => true,   // Use a backtrace to find the origin of the query in your files.
+        'db'              => [
+            'with_params'             => true,   // Render SQL with the parameters substituted
+            'backtrace'               => true,   // Use a backtrace to find the origin of the query in your files.
             'backtrace_exclude_paths' => [],   // Paths to exclude from backtrace. (in addition to defaults)
-            'timeline'          => false,  // Add the queries to the timeline
-            'duration_background'  => true,   // Show shaded background on each query relative to how long it took to execute.
-            'explain' => [                 // Show EXPLAIN output on queries
+            'timeline'                => false,  // Add the queries to the timeline
+            'duration_background'     => true,   // Show shaded background on each query relative to how long it took to execute.
+            'explain'                 => [                 // Show EXPLAIN output on queries
                 'enabled' => false,
-                'types' => ['SELECT'],     // Deprecated setting, is always only SELECT
+                'types'   => ['SELECT'],     // Deprecated setting, is always only SELECT
             ],
-            'hints'             => false,    // Show hints for common mistakes
-            'show_copy'         => false,    // Show copy button next to the query,
-            'slow_threshold'    => false,   // Only track queries that last longer than this time in ms
-            'memory_usage'      => false,   // Show queries memory usage
-            'soft_limit'       => 100,      // After the soft limit, no parameters/backtrace are captured
-            'hard_limit'       => 500,      // After the hard limit, queries are ignored
+            'hints'                   => false,    // Show hints for common mistakes
+            'show_copy'               => false,    // Show copy button next to the query,
+            'slow_threshold'          => false,   // Only track queries that last longer than this time in ms
+            'memory_usage'            => false,   // Show queries memory usage
+            'soft_limit'              => 100,      // After the soft limit, no parameters/backtrace are captured
+            'hard_limit'              => 500,      // After the hard limit, queries are ignored
         ],
-        'mail' => [
-            'timeline' => false,  // Add mails to the timeline
+        'mail'            => [
+            'timeline'  => false,  // Add mails to the timeline
             'show_body' => true,
         ],
-        'views' => [
-            'timeline' => false,    // Add the views to the timeline (Experimental)
-            'data' => false,        //true for all data, 'keys' for only names, false for no parameters.
-            'group' => 50,          // Group duplicate views. Pass value to auto-group, or true/false to force
+        'views'           => [
+            'timeline'      => false,    // Add the views to the timeline (Experimental)
+            'data'          => false,        // true for all data, 'keys' for only names, false for no parameters.
+            'group'         => 50,          // Group duplicate views. Pass value to auto-group, or true/false to force
             'exclude_paths' => [    // Add the paths which you don't want to appear in the views
-                'vendor/filament'   // Exclude Filament components by default
+                'vendor/filament',   // Exclude Filament components by default
             ],
         ],
-        'route' => [
+        'route'           => [
             'label' => true,  // show complete route on bar
         ],
-        'session' => [
+        'session'         => [
             'hiddens' => [], // hides sensitive values using array paths
         ],
         'symfony_request' => [
             'hiddens' => [], // hides sensitive values using array paths, example: request_request.password
         ],
-        'events' => [
+        'events'          => [
             'data' => false, // collect events data, listeners
         ],
-        'logs' => [
+        'logs'            => [
             'file' => null,
         ],
-        'cache' => [
+        'cache'           => [
             'values' => true, // collect cache values
         ],
     ],
@@ -270,7 +271,7 @@ return [
      |
      */
 
-    'inject' => true,
+    'inject'                  => true,
 
     /*
      |--------------------------------------------------------------------------
@@ -282,7 +283,7 @@ return [
      | from trying to overcome bugs like this: http://trac.nginx.org/nginx/ticket/97
      |
      */
-    'route_prefix' => '_debugbar',
+    'route_prefix'            => '_debugbar',
 
     /*
      |--------------------------------------------------------------------------
@@ -291,7 +292,7 @@ return [
      |
      | Additional middleware to run on the Debugbar routes
      */
-    'route_middleware' => [],
+    'route_middleware'        => [],
 
     /*
      |--------------------------------------------------------------------------
@@ -301,7 +302,7 @@ return [
      | By default DebugBar route served from the same domain that request served.
      | To override default domain, specify it as a non-empty value.
      */
-    'route_domain' => null,
+    'route_domain'            => null,
 
     /*
      |--------------------------------------------------------------------------
@@ -311,7 +312,7 @@ return [
      | Switches between light and dark theme. If set to auto it will respect system preferences
      | Possible values: auto, light, dark
      */
-    'theme' => env('DEBUGBAR_THEME', 'auto'),
+    'theme'                   => env('DEBUGBAR_THEME', 'auto'),
 
     /*
      |--------------------------------------------------------------------------
@@ -321,5 +322,5 @@ return [
      | By default, the DebugBar limits the number of frames returned by the 'debug_backtrace()' function.
      | If you need larger stacktraces, you can increase this number. Setting it to 0 will result in no limit.
      */
-    'debug_backtrace_limit' => 50,
+    'debug_backtrace_limit'   => 50,
 ];

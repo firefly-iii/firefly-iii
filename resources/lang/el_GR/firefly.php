@@ -2144,6 +2144,7 @@ return [
     'logout'                                              => 'Αποσύνδεση',
     'logout_other_sessions'                               => 'Αποσυνδέσετε όλες τις άλλες συνεδρίες',
     'toggleNavigation'                                    => 'Εναλλαγή περιήγησης',
+    'toggle_dropdown'                                     => 'Toggle dropdown',
     'searchPlaceholder'                                   => 'Αναζήτηση...',
     'version'                                             => 'Έκδοση',
     'dashboard'                                           => 'Επισκόπηση',

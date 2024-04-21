@@ -2144,6 +2144,7 @@ return [
     'logout'                                              => 'Wyloguj',
     'logout_other_sessions'                               => 'Wyloguj z pozostałych sesji',
     'toggleNavigation'                                    => 'Przełącz nawigację',
+    'toggle_dropdown'                                     => 'Toggle dropdown',
     'searchPlaceholder'                                   => 'Szukaj...',
     'version'                                             => 'Wersja',
     'dashboard'                                           => 'Kokpit',

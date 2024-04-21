@@ -2144,6 +2144,7 @@ return [
     'logout'                                              => 'Изход',
     'logout_other_sessions'                               => 'Изход от всички други сесии',
     'toggleNavigation'                                    => 'Превключване на навигацията',
+    'toggle_dropdown'                                     => 'Toggle dropdown',
     'searchPlaceholder'                                   => 'Търсене...',
     'version'                                             => 'Версия',
     'dashboard'                                           => 'Основно табло',

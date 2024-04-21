@@ -2144,6 +2144,7 @@ return [
     'logout'                                              => 'Odjava',
     'logout_other_sessions'                               => 'Odjavi vse druge seje',
     'toggleNavigation'                                    => 'Preklopi navigacijo',
+    'toggle_dropdown'                                     => 'Toggle dropdown',
     'searchPlaceholder'                                   => 'Iskanje...',
     'version'                                             => 'Različica',
     'dashboard'                                           => 'Nadzorna plošča',

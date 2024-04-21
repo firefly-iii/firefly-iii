@@ -2144,6 +2144,7 @@ return [
     'logout'                                              => 'Kijelentkezés',
     'logout_other_sessions'                               => 'Minden más munkamenet kijelentkeztetése',
     'toggleNavigation'                                    => 'Navigációs mód átkapcsolása',
+    'toggle_dropdown'                                     => 'Toggle dropdown',
     'searchPlaceholder'                                   => 'Keresés...',
     'version'                                             => 'Verzió',
     'dashboard'                                           => 'Műszerfal',

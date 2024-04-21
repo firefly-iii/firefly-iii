@@ -2145,6 +2145,7 @@ return [
     'logout'                                              => 'Logga ut',
     'logout_other_sessions'                               => 'Logga ut alla andra sessioner',
     'toggleNavigation'                                    => 'Växla navigering',
+    'toggle_dropdown'                                     => 'Toggle dropdown',
     'searchPlaceholder'                                   => 'Sök...',
     'version'                                             => 'Version',
     'dashboard'                                           => 'Kontrollpanel',

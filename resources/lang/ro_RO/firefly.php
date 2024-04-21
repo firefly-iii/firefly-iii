@@ -2144,6 +2144,7 @@ return [
     'logout'                                              => 'Ieșire',
     'logout_other_sessions'                               => 'Deconectează toate celelalte sesiuni',
     'toggleNavigation'                                    => 'Navigare',
+    'toggle_dropdown'                                     => 'Toggle dropdown',
     'searchPlaceholder'                                   => 'Cautare...',
     'version'                                             => 'Versiunea',
     'dashboard'                                           => 'Panou de control',

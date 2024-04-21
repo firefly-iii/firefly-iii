@@ -51,8 +51,8 @@ trait ValidatesUserGroupTrait
         }
 
         /** @var User $user */
-        $user    = auth()->user();
-        $groupId = 0;
+        $user        = auth()->user();
+        $groupId     = 0;
         if (!$request->has('user_group_id')) {
             $groupId = $user->user_group_id;
             Log::debug(sprintf('validateUserGroup: no user group submitted, use default group #%d.', $groupId));
@@ -61,8 +61,9 @@ trait ValidatesUserGroupTrait
             $groupId = (int) $request->get('user_group_id');
             Log::debug(sprintf('validateUserGroup: user group submitted, search for memberships in group #%d.', $groupId));
         }
+
         /** @var UserGroupRepositoryInterface $repository */
-        $repository = app(UserGroupRepositoryInterface::class);
+        $repository  = app(UserGroupRepositoryInterface::class);
         $repository->setUser($user);
         $memberships = $repository->getMembershipsFromGroupId($groupId);
 
@@ -73,14 +74,14 @@ trait ValidatesUserGroupTrait
         }
 
         // need to get the group from the membership:
-        $group = $repository->getById($groupId);
+        $group       = $repository->getById($groupId);
         if (null === $group) {
             Log::debug(sprintf('validateUserGroup: group #%d does not exist.', $groupId));
 
             throw new AuthorizationException((string) trans('validation.belongs_user_or_user_group'));
         }
         Log::debug(sprintf('validateUserGroup: validate access of user to group #%d ("%s").', $groupId, $group->title));
-        $roles = property_exists($this, 'acceptedRoles') ? $this->acceptedRoles : [];
+        $roles       = property_exists($this, 'acceptedRoles') ? $this->acceptedRoles : [];
         if (0 === count($roles)) {
             Log::debug('validateUserGroup: no roles defined, so no access.');
 

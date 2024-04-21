@@ -2144,6 +2144,7 @@ return [
     'logout'                                              => '로그아웃',
     'logout_other_sessions'                               => '다른 모든 세션 로그아웃',
     'toggleNavigation'                                    => '토글 내비게이션',
+    'toggle_dropdown'                                     => 'Toggle dropdown',
     'searchPlaceholder'                                   => '검색...',
     'version'                                             => '버전',
     'dashboard'                                           => '대시보드',

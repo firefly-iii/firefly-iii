@@ -2145,6 +2145,7 @@ return [
     'logout'                                              => 'Çıkış Yap',
     'logout_other_sessions'                               => 'Logout all other sessions',
     'toggleNavigation'                                    => 'Navigasyonu aç / kapat',
+    'toggle_dropdown'                                     => 'Toggle dropdown',
     'searchPlaceholder'                                   => 'Aranıyor...',
     'version'                                             => 'Versiyon',
     'dashboard'                                           => 'Gösterge paneli',

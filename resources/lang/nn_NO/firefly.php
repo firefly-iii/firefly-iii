@@ -2144,6 +2144,7 @@ return [
     'logout'                                              => 'Logg ut',
     'logout_other_sessions'                               => 'Logg ut alle andre økter',
     'toggleNavigation'                                    => 'Vis/Skjul navigation',
+    'toggle_dropdown'                                     => 'Toggle dropdown',
     'searchPlaceholder'                                   => 'Søk...',
     'version'                                             => 'Versjon',
     'dashboard'                                           => 'Startskjerm',

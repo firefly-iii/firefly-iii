@@ -2144,6 +2144,7 @@ return [
     'logout'                                              => 'Tanca la sessió',
     'logout_other_sessions'                               => 'Tanca les altres sessions',
     'toggleNavigation'                                    => 'Alternar navegació',
+    'toggle_dropdown'                                     => 'Toggle dropdown',
     'searchPlaceholder'                                   => 'Cerca...',
     'version'                                             => 'Versió',
     'dashboard'                                           => 'Panell de control',

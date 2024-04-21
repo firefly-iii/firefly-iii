@@ -2144,6 +2144,7 @@ return [
     'logout'                                              => 'Đăng xuất',
     'logout_other_sessions'                               => 'Logout all other sessions',
     'toggleNavigation'                                    => 'Chuyển đổi đổigle navigation',
+    'toggle_dropdown'                                     => 'Toggle dropdown',
     'searchPlaceholder'                                   => 'Tìm kiếm...',
     'version'                                             => 'Phiên bản',
     'dashboard'                                           => 'Bảng điều khiển',

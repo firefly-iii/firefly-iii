@@ -73,7 +73,7 @@ class UpdateController extends Controller
         $data             = $request->getAll();
 
         // Fixes 8750.
-        $transactions = $data['transactions'] ?? [];
+        $transactions     = $data['transactions'] ?? [];
         foreach ($transactions as $index => $info) {
             unset($data['transactions'][$index]['type']);
         }

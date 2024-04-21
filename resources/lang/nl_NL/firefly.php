@@ -2144,6 +2144,7 @@ return [
     'logout'                                              => 'Uitloggen',
     'logout_other_sessions'                               => 'Alle andere sessies afmelden',
     'toggleNavigation'                                    => 'Navigatie aan of uit',
+    'toggle_dropdown'                                     => 'Toggle dropdown',
     'searchPlaceholder'                                   => 'Zoeken...',
     'version'                                             => 'Versie',
     'dashboard'                                           => 'Dashboard',

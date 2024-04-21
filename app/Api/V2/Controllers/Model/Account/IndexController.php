@@ -25,7 +25,6 @@ namespace FireflyIII\Api\V2\Controllers\Model\Account;
 
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Model\Account\IndexRequest;
-use FireflyIII\Api\V2\Request\Model\Transaction\InfiniteListRequest;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
 use FireflyIII\Transformers\V2\AccountTransformer;
@@ -77,6 +76,7 @@ class IndexController extends Controller
 
         return response()
             ->json($this->jsonApiList('accounts', $paginator, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
 }

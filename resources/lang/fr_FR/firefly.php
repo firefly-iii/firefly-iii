@@ -2144,6 +2144,7 @@ return [
     'logout'                                              => 'Se déconnecter',
     'logout_other_sessions'                               => 'Déconnecter toutes les autres sessions',
     'toggleNavigation'                                    => 'Activer navigation',
+    'toggle_dropdown'                                     => 'Toggle dropdown',
     'searchPlaceholder'                                   => 'Rechercher...',
     'version'                                             => 'Version',
     'dashboard'                                           => 'Tableau de bord',

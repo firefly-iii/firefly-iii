@@ -2144,6 +2144,7 @@ return [
     'logout'                                              => 'Выход',
     'logout_other_sessions'                               => 'Завершить все другие сессии',
     'toggleNavigation'                                    => 'Переключить навигацию',
+    'toggle_dropdown'                                     => 'Toggle dropdown',
     'searchPlaceholder'                                   => 'Поиск...',
     'version'                                             => 'Версия',
     'dashboard'                                           => 'Сводка',

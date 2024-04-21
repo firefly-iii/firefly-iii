@@ -464,7 +464,7 @@ class Navigation
         $increment     = 'addDay';
         $format        = $this->preferredCarbonFormat($start, $end);
         $displayFormat = (string)trans('config.month_and_day_js', [], $locale);
-        $diff = $start->diffInMonths($end, true);
+        $diff          = $start->diffInMonths($end, true);
         // increment by month (for year)
         if ($diff >= 1.0001) {
             $increment     = 'addMonth';
@@ -495,7 +495,7 @@ class Navigation
     public function preferredCarbonFormat(Carbon $start, Carbon $end): string
     {
         $format = 'Y-m-d';
-        $diff = $start->diffInMonths($end, true);
+        $diff   = $start->diffInMonths($end, true);
         Log::debug(sprintf('preferredCarbonFormat(%s, %s) = %f', $start->format('Y-m-d'), $end->format('Y-m-d'), $diff));
         if ($diff >= 1.001) {
             Log::debug(sprintf('Return Y-m because %s', $diff));

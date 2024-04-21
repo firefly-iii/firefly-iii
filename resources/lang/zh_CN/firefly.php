@@ -2145,6 +2145,7 @@ return [
     'logout'                                              => '退出登录',
     'logout_other_sessions'                               => '退出所有其他已登录设备',
     'toggleNavigation'                                    => '切换导览',
+    'toggle_dropdown'                                     => 'Toggle dropdown',
     'searchPlaceholder'                                   => '搜索…',
     'version'                                             => '版本',
     'dashboard'                                           => '仪表盘',

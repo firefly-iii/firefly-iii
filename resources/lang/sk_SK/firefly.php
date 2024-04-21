@@ -2144,6 +2144,7 @@ return [
     'logout'                                              => 'Odhlásiť sa',
     'logout_other_sessions'                               => 'Odhlásiť všetky ostatné sedenia',
     'toggleNavigation'                                    => 'Vyp/zap. navigáciu',
+    'toggle_dropdown'                                     => 'Toggle dropdown',
     'searchPlaceholder'                                   => 'Vyhľadať...',
     'version'                                             => 'Verzia',
     'dashboard'                                           => 'Prehľad',
