@@ -80,9 +80,9 @@ export default defineConfig({
         // hmr: {
         //     protocol: 'wss',
         // },
-        https: {
-            key: fs.readFileSync(`/sites/vm/tls-certificates/wildcard.sd.internal.key`),
-            cert: fs.readFileSync(`/sites/vm/tls-certificates/wildcard.sd.internal.crt`),
-        },
+        // https: {
+        //     key: fs.readFileSync(`/sites/vm/tls-certificates/wildcard.sd.internal.key`),
+        //     cert: fs.readFileSync(`/sites/vm/tls-certificates/wildcard.sd.internal.crt`),
+        // },
     },
 });
