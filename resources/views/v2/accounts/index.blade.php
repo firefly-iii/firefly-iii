@@ -57,7 +57,7 @@
                                 <thead>
                                 <tr>
                                     <td x-show="tableColumns.drag_and_drop.visible && tableColumns.drag_and_drop.enabled">&nbsp;</td>
-                                    <td x-show="tableColumns.active.visible">
+                                    <td x-show="tableColumns.active.visible && tableColumns.active.enabled">
                                         <a href="#" x-on:click.prevent="sort('active')">Active?</a>
                                         <em x-show="sortingColumn === 'active' && sortDirection === 'asc'" class="fa-solid fa-arrow-down-wide-short"></em>
                                         <em x-show="sortingColumn === 'active' && sortDirection === 'desc'" class="fa-solid fa-arrow-up-wide-short"></em>
