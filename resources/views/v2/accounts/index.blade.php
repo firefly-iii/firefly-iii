@@ -7,7 +7,7 @@
                 <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-xs-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Info</h3>
+                            <h3 class="card-title">Net worth</h3>
                         </div>
                         <div class="card-body">
                             some chart
@@ -17,7 +17,7 @@
                 <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-xs-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Info</h3>
+                            <h3 class="card-title">In + out this period</h3>
                         </div>
                         <div class="card-body">
                             Same
@@ -27,7 +27,7 @@
                 <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-xs-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Info</h3>
+                            <h3 class="card-title">Something else</h3>
                         </div>
                         <div class="card-body">
                             Same
@@ -184,6 +184,48 @@
             <div class="row mb-3">
                 <div class="col">
                     Nav
+                </div>
+            </div>
+
+            <!-- Internal settings modal -->
+            <div class="modal fade" id="internalsModal" tabindex="-1" aria-labelledby="internalsModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="internalsModalLabel">TODO Page settings</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            - Group accounts <br>
+                            - Columns to show<br>
+                            - Show / hide inactive accounts (dropdown: both, active inactive only)<br>
+                            - default sort field<br>
+                            - default sort direction<br>
+                            - show info boxes (once they contain info)<br>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="wizardModal" tabindex="-1" aria-labelledby="wizardModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="wizardModalLabel">TODO Would you like to know more?</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Need to learn what's on this page?<br>
+                    Take me to the help pages (opens in a new window or tab)
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><em class="fa-solid fa-hat-wizard"></em> Show me around</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"> <em class="fa-solid fa-right-from-bracket"></em> Take me to the documentation</button>
                 </div>
             </div>
         </div>

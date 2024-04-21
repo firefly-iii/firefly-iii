@@ -3,13 +3,13 @@
         <i class="fa-solid fa-landmark"></i>
     </a>
 </li>
-<li class="nav-item">
-    <a class="nav-link" href="#">
+<li class="nav-item toggle-page-internals d-none">
+    <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#internalsModal">
         <em class="fa-solid fa-sliders"></em>
     </a>
 </li>
-<li class="nav-item">
-    <a class="nav-link" href="#">
+<li class="nav-item toggle-page-wizard d-none">
+    <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#wizardModal">
         <em class="fa-solid fa-hat-wizard"></em>
     </a>
 </li>

@@ -30,6 +30,9 @@ import '../../css/grid-ff3-theme.css';
 import Get from "../../api/v2/model/account/get.js";
 import Put from "../../api/v2/model/account/put.js";
 import AccountRenderer from "../../support/renderers/AccountRenderer.js";
+import {showInternalsButton} from "../../support/page-settings/show-internals-button.js";
+import {showWizardButton} from "../../support/page-settings/show-wizard-button.js";
+
 
 // set type from URL
 const beforeQuery = window.location.href.split('?');
@@ -46,6 +49,10 @@ const params = new Proxy(new URLSearchParams(window.location.search), {
 sortingColumn = params.column ?? '';
 sortDirection = params.direction ?? '';
 
+
+
+showInternalsButton();
+showWizardButton();
 
 let index = function () {
     return {
