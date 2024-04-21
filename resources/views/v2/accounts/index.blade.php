@@ -56,58 +56,56 @@
                             <table class="table">
                                 <thead>
                                 <tr>
-                                    <td>&nbsp;</td>
-                                    <td>
+                                    <td x-show="tableColumns.drag_and_drop.visible && tableColumns.drag_and_drop.enabled">&nbsp;</td>
+                                    <td x-show="tableColumns.active.visible">
                                         <a href="#" x-on:click.prevent="sort('active')">Active?</a>
                                         <em x-show="sortingColumn === 'active' && sortDirection === 'asc'" class="fa-solid fa-arrow-down-wide-short"></em>
                                         <em x-show="sortingColumn === 'active' && sortDirection === 'desc'" class="fa-solid fa-arrow-up-wide-short"></em>
                                     </td>
-                                    <td>
+                                    <td x-show="tableColumns.name.visible && tableColumns.name.enabled">
                                         <a href="#" x-on:click.prevent="sort('name')">Name</a>
                                             <em x-show="sortingColumn === 'name' && sortDirection === 'asc'" class="fa-solid fa-arrow-down-z-a"></em>
                                             <em x-show="sortingColumn === 'name' && sortDirection === 'desc'" class="fa-solid fa-arrow-up-z-a"></em>
                                     </td>
-                                    <td>Type</td>
-                                    <td>
+                                    <td x-show="tableColumns.type.visible && tableColumns.type.enabled">Type</td>
+                                    <td x-show="tableColumns.liability_type.visible && tableColumns.liability_type.enabled">Liability type</td>
+                                    <td x-show="tableColumns.liability_direction.visible && tableColumns.liability_direction.enabled">Liability direction</td>
+                                    <td x-show="tableColumns.liability_interest.visible && tableColumns.liability_interest.enabled">Liability interest</td>
+                                    <td x-show="tableColumns.number.visible && tableColumns.number.enabled">
                                         <a href="#" x-on:click.prevent="sort('iban')">Account number</a>
                                         <em x-show="sortingColumn === 'iban' && sortDirection === 'asc'" class="fa-solid fa-arrow-down-z-a"></em>
                                         <em x-show="sortingColumn === 'iban' && sortDirection === 'desc'" class="fa-solid fa-arrow-up-z-a"></em>
                                     </td>
-                                    <td>
+                                    <td x-show="tableColumns.current_balance.visible && tableColumns.current_balance.enabled">
                                         <a href="#" x-on:click.prevent="sort('balance')">Current balance</a>
                                         <em x-show="sortingColumn === 'balance' && sortDirection === 'asc'" class="fa-solid fa-arrow-down-wide-short"></em>
                                         <em x-show="sortingColumn === 'balance' && sortDirection === 'desc'" class="fa-solid fa-arrow-up-wide-short"></em>
                                     </td>
-                                    <td>
+                                    <td x-show="tableColumns.amount_due.visible && tableColumns.amount_due.enabled">
+                                        <a href="#" x-on:click.prevent="sort('amount_due')">Current balance</a>
+                                        <em x-show="sortingColumn === 'amount_due' && sortDirection === 'asc'" class="fa-solid fa-arrow-down-wide-short"></em>
+                                        <em x-show="sortingColumn === 'amount_due' && sortDirection === 'desc'" class="fa-solid fa-arrow-up-wide-short"></em>
+                                    </td>
+                                    <td x-show="tableColumns.last_activity.visible && tableColumns.last_activity.enabled">
                                         <a href="#" x-on:click.prevent="sort('last_activity')">Last activity</a>
                                         <em x-show="sortingColumn === 'last_activity' && sortDirection === 'asc'" class="fa-solid fa-arrow-down-wide-short"></em>
                                         <em x-show="sortingColumn === 'last_activity' && sortDirection === 'desc'" class="fa-solid fa-arrow-up-wide-short"></em>
                                     </td>
-                                    <td>
+                                    <td x-show="tableColumns.balance_difference.visible && tableColumns.balance_difference.enabled">
                                         <a href="#" x-on:click.prevent="sort('balance_difference')">Balance difference</a>
                                         <em x-show="sortingColumn === 'balance_difference' && sortDirection === 'asc'" class="fa-solid fa-arrow-down-wide-short"></em>
                                         <em x-show="sortingColumn === 'balance_difference' && sortDirection === 'desc'" class="fa-solid fa-arrow-up-wide-short"></em>
                                     </td>
+                                    <td x-show="tableColumns.menu.visible && tableColumns.menu.enabled">&nbsp;</td>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <template x-for="(account, index) in accounts" :key="index">
                                 <tr>
-                                    <td>
-                                        <!-- Example split danger button -->
-                                        <div class="btn-group btn-group-sm">
-                                            <a :href="'./accounts/edit/' + account.id" class="btn btn-sm btn-light"><em class="fa-solid fa-pencil"></em></a>
-                                            <button type="button" class="btn btn-light dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <span class="visually-hidden">{{ __('firefly.toggle_dropdown') }}</span>
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" :href="'./accounts/show/' + account.id"><em class="fa-solid fa-eye"></em> {{ __('firefly.show') }}</a></li>
-                                                <li><a class="dropdown-item" :href="'./accounts/reconcile/' + account.id"><em class="fa-solid fa-calculator"></em> {{ __('firefly.reconcile_selected')  }}</a></li>
-                                                <li><a class="dropdown-item" :href="'./accounts/delete/' + account.id"><em class="fa-solid fa-trash"></em> {{ __('firefly.delete') }}</a></li>
-                                            </ul>
-                                        </div>
+                                    <td x-show="tableColumns.drag_and_drop.visible && tableColumns.drag_and_drop.enabled">
+                                        <em class="fa-solid fa-bars"></em>
                                     </td>
-                                    <td>
+                                    <td x-show="tableColumns.active.visible && tableColumns.active.enabled">
                                         <template x-if="account.active">
                                             <em class="text-success fa-solid fa-check"></em>
                                         &nbsp;</template>
@@ -115,7 +113,7 @@
                                             <em class="text-danger fa-solid fa-xmark"></em>
                                             &nbsp;</template>
                                     </td>
-                                    <td>
+                                    <td x-show="tableColumns.name.visible && tableColumns.name.enabled">
                                         <!-- render content using a function -->
                                         <span x-html="renderObjectValue('name', account)" x-show="!account.nameEditorVisible"></span>
 
@@ -135,7 +133,7 @@
                                         </div>
                                         </div>
                                     </td>
-                                    <td>
+                                    <td x-show="tableColumns.type.visible && tableColumns.type.enabled">
                                         <template x-if="null === account.role || '' === account.role">
                                             <span><em>{{ __('firefly.no_account_role') }}</em></span>
                                         </template>
@@ -143,7 +141,10 @@
                                             <span x-text="accountRole(account.role)"></span>"
                                         </template>
                                     </td>
-                                    <td>
+                                    <td x-show="tableColumns.liability_type.visible && tableColumns.liability_type.enabled"></td>
+                                    <td x-show="tableColumns.liability_direction.visible && tableColumns.liability_direction.enabled"></td>
+                                    <td x-show="tableColumns.liability_interest.visible && tableColumns.liability_interest.enabled"></td>
+                                    <td x-show="tableColumns.number.visible && tableColumns.number.enabled">
                                         <!-- IBAN and no account nr -->
                                         <template x-if="'' === account.account_number && '' !== account.iban">
                                             <span x-text="account.iban"></span>
@@ -160,16 +161,32 @@
                                             </span>
                                         </template>
                                     </td>
-                                    <td>
+                                    <td x-show="tableColumns.current_balance.visible && tableColumns.current_balance.enabled">
                                         <span x-text="formatMoney(account.current_balance, account.currency_code)"></span>
                                     </td>
-                                    <td>
+                                    <td x-show="tableColumns.amount_due.visible && tableColumns.amount_due.enabled">
+                                        TODO
+                                    </td>
+                                    <td x-show="tableColumns.last_activity.visible && tableColumns.last_activity.enabled">
                                         <span x-text="account.last_activity"></span>
                                     </td>
-                                    <td>
+                                    <td x-show="tableColumns.balance_difference.visible && tableColumns.balance_difference.enabled">
                                         <template x-if="null !== account.balance_difference">
                                             <span x-text="formatMoney(account.balance_difference, account.currency_code)"></span>
                                         </template>
+                                    </td>
+                                    <td x-show="tableColumns.menu.visible && tableColumns.menu.enabled">
+                                        <div class="btn-group btn-group-sm">
+                                            <a :href="'./accounts/edit/' + account.id" class="btn btn-sm btn-light"><em class="fa-solid fa-pencil"></em></a>
+                                            <button type="button" class="btn btn-light dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <span class="visually-hidden">{{ __('firefly.toggle_dropdown') }}</span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" :href="'./accounts/show/' + account.id"><em class="fa-solid fa-eye"></em> {{ __('firefly.show') }}</a></li>
+                                                <li><a class="dropdown-item" :href="'./accounts/reconcile/' + account.id"><em class="fa-solid fa-calculator"></em> {{ __('firefly.reconcile_selected')  }}</a></li>
+                                                <li><a class="dropdown-item" :href="'./accounts/delete/' + account.id"><em class="fa-solid fa-trash"></em> {{ __('firefly.delete') }}</a></li>
+                                            </ul>
+                                        </div>
                                     </td>
                                 </tr>
                                 </template>
@@ -196,6 +213,13 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
+                            <h2>Visible columns</h2>
+                            <template x-for="(column, key) in tableColumns" :key="key">
+                                <div class="form-check" x-show="column.visible">
+                                    <input class="form-check-input" type="checkbox" x-model="column.enabled" @change="saveColumnSettings"> <span x-text="key"></span>
+                                </div>
+                            </template>
+
                             - Group accounts <br>
                             - Columns to show<br>
                             - Show / hide inactive accounts (dropdown: both, active inactive only)<br>

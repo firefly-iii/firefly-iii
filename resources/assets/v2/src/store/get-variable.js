@@ -22,31 +22,27 @@ import Get from "../api/v1/preferences/index.js";
 import Post from "../api/v1/preferences/post.js";
 
 export function getVariable(name, defaultValue = null) {
-
     const validCache = window.store.get('cacheValid');
     // currently unused, window.X can be used by the blade template
     // to make things available quicker than if the store has to grab it through the API.
     // then again, it's not that slow.
     if (validCache && window.hasOwnProperty(name)) {
-        // console.log('Get from window');
         return Promise.resolve(window[name]);
     }
     // load from store2, if it's present.
     const fromStore = window.store.get(name);
     if (validCache && typeof fromStore !== 'undefined') {
-        // console.log('Get "' + name + '" from store');
         return Promise.resolve(fromStore);
     }
     let getter = (new Get);
+
     return getter.getByName(name).then((response) => {
-        // console.log('Get "' + name + '" from API');
         return Promise.resolve(parseResponse(name, response));
-    }).catch(() => {
+    }).catch((error) => {
         // preference does not exist (yet).
         // POST it and then return it anyway.
         let poster = (new Post);
-        poster.post(name, defaultValue).then((response) => {
-
+        return poster.post(name, defaultValue).then((response) => {
             return Promise.resolve(parseResponse(name, response));
         });
     });
@@ -55,7 +51,6 @@ export function getVariable(name, defaultValue = null) {
 export function parseResponse(name, response) {
     let value = response.data.data.attributes.data;
     window.store.set(name, value);
-    // console.log('Store "' + name + '" in localStorage');
     return value;
 }
 

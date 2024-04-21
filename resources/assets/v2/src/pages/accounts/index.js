@@ -32,6 +32,8 @@ import Put from "../../api/v2/model/account/put.js";
 import AccountRenderer from "../../support/renderers/AccountRenderer.js";
 import {showInternalsButton} from "../../support/page-settings/show-internals-button.js";
 import {showWizardButton} from "../../support/page-settings/show-wizard-button.js";
+import {getVariable} from "../../store/get-variable.js";
+import {setVariable} from "../../store/set-variable.js";
 
 
 // set type from URL
@@ -50,7 +52,6 @@ sortingColumn = params.column ?? '';
 sortDirection = params.direction ?? '';
 
 
-
 showInternalsButton();
 showWizardButton();
 
@@ -66,10 +67,64 @@ let index = function () {
                 show: false, text: '',
 
             }
-        }, totalPages: 1, page: 1, // available columns:
+        },
+        totalPages: 1,
+        page: 1,
+
+        // available columns:
+        // visible is hard coded, enabled is user-configurable.
         tableColumns: {
+            drag_and_drop: {
+                visible: true,
+                enabled: true,
+            },
+            active: {
+                visible: true,
+                enabled: true,
+            },
             name: {
-                enabled: true
+                visible: true,
+                enabled: true,
+            },
+            type: {
+                visible: true,
+                enabled: true,
+            },
+            liability_type: {
+                visible: type === 'liabilities',
+                enabled: true,
+            },
+            liability_direction: {
+                visible: type === 'liabilities',
+                enabled: true,
+            },
+            liability_interest: {
+                visible: type === 'liabilities',
+                enabled: true,
+            },
+            number: {
+                visible: true,
+                enabled: true,
+            },
+            current_balance: {
+                visible: type !== 'liabilities',
+                enabled: true,
+            },
+            amount_due: {
+                visible: type === 'liabilities',
+                enabled: true,
+            },
+            last_activity: {
+                visible: true,
+                enabled: true,
+            },
+            balance_difference: {
+                visible: true,
+                enabled: true,
+            },
+            menu: {
+                visible: true,
+                enabled: true,
             },
         },
         editors: {},
@@ -99,11 +154,34 @@ let index = function () {
         format(date) {
             return format(date, i18next.t('config.date_time_fns'));
         },
+        saveColumnSettings() {
+            let newSettings = {};
+            for (let key in this.tableColumns) {
+                if (this.tableColumns.hasOwnProperty(key)) {
+                    newSettings[key] = this.tableColumns[key].enabled;
+                }
+            }
+            console.log('New settings', newSettings);
+            setVariable('accts_columns_' + type, newSettings);
+        },
 
         init() {
             this.notifications.wait.show = true;
             this.notifications.wait.text = i18next.t('firefly.wait_loading_data')
-            this.loadAccounts();
+
+            const key = 'accts_columns_' + type;
+            const defaultValue = {"drag_and_drop": false};
+
+            getVariable(key, defaultValue).then((response) => {
+                for (let k in response) {
+                    if (response.hasOwnProperty(k) && this.tableColumns.hasOwnProperty(k)) {
+                        this.tableColumns[k].enabled = response[k] ?? true;
+                    }
+                }
+            }).then(() => {
+                this.loadAccounts();
+            });
+
         },
         renderObjectValue(field, account) {
             let renderer = new AccountRenderer();
@@ -148,18 +226,32 @@ let index = function () {
         },
         loadAccounts() {
 
+            // sort instructions
+            const sorting = [{column: this.sortingColumn, direction: this.sortDirection}];
+
             // get start and end from the store:
             const start = new Date(window.store.get('start'));
             const end = new Date(window.store.get('end'));
 
+            let params = {
+                sorting: sorting,
+                type: type,
+                page: this.page,
+                start: start,
+                end: end
+            };
+
+            if(!this.tableColumns.balance_difference.enabled){
+                delete params.start;
+                delete params.end;
+            }
+
             this.notifications.wait.show = true;
             this.notifications.wait.text = i18next.t('firefly.wait_loading_data')
             this.accounts = [];
-            // sort instructions
-            // &sorting[0][column]=description&sorting[0][direction]=asc
-            const sorting = [{column: this.sortingColumn, direction: this.sortDirection}];
+
             // one page only.o
-            (new Get()).index({sorting: sorting, type: type, page: this.page, start: start, end: end}).then(response => {
+            (new Get()).index(params).then(response => {
                 for (let i = 0; i < response.data.data.length; i++) {
                     if (response.data.data.hasOwnProperty(i)) {
                         let current = response.data.data[i];

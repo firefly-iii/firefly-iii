@@ -73,6 +73,9 @@ export default defineConfig({
 
     server: {
         usePolling: true,
+        watch: {
+            usePolling: true,
+        },
         host: '10.0.0.15',
         // hmr: {
         //     protocol: 'wss',
