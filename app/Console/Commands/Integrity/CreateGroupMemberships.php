@@ -80,7 +80,7 @@ class CreateGroupMemberships extends Command
         // check if membership exists
         $userGroup  = UserGroup::where('title', $user->email)->first();
         if (null === $userGroup) {
-            $userGroup = UserGroup::create(['title' => $user->email, 'default_administration' => true]);
+            $userGroup = UserGroup::create(['title' => $user->email]);
         }
 
         $userRole   = UserRole::where('title', UserRoleEnum::OWNER->value)->first();

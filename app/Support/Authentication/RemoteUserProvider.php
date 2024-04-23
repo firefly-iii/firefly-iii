@@ -80,9 +80,10 @@ class RemoteUserProvider implements UserProvider
                 $roleObject = Role::where('name', 'owner')->first();
                 $user->roles()->attach($roleObject);
             }
-            // make sure the user gets an administration as well.
-            CreateGroupMemberships::createGroupMembership($user);
         }
+        // make sure the user gets an administration as well.
+        CreateGroupMemberships::createGroupMembership($user);
+
         app('log')->debug(sprintf('Going to return user #%d (%s)', $user->id, $user->email));
 
         return $user;
