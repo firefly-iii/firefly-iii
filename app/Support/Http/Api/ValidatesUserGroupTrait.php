@@ -81,7 +81,7 @@ trait ValidatesUserGroupTrait
             throw new AuthorizationException((string) trans('validation.belongs_user_or_user_group'));
         }
         Log::debug(sprintf('validateUserGroup: validate access of user to group #%d ("%s").', $groupId, $group->title));
-        $roles       = property_exists($this, 'acceptedRoles') ? $this->acceptedRoles : [];
+        $roles       = property_exists($this, 'acceptedRoles') ? $this->acceptedRoles : []; // @phpstan-ignore-line
         if (0 === count($roles)) {
             Log::debug('validateUserGroup: no roles defined, so no access.');
 

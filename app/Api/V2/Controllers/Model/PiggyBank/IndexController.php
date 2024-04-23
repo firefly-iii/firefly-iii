@@ -46,11 +46,7 @@ class IndexController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->repository = app(PiggyBankRepositoryInterface::class);
-
-                $userGroup        = $this->validateUserGroup($request);
-                if (null !== $userGroup) {
-                    $this->repository->setUserGroup($userGroup);
-                }
+                $this->repository->setUserGroup($this->validateUserGroup($request));
 
                 return $next($request);
             }

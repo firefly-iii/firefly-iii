@@ -55,8 +55,7 @@ class AccountController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->repository = app(AccountRepositoryInterface::class);
-                $userGroup        = $this->validateUserGroup($request);
-                $this->repository->setUserGroup($userGroup);
+                $this->repository->setUserGroup($this->validateUserGroup($request));
 
                 return $next($request);
             }

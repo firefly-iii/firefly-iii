@@ -55,11 +55,7 @@ class AccountController extends Controller
             function ($request, $next) {
                 $this->repository      = app(AccountRepositoryInterface::class);
                 $this->adminRepository = app(AdminAccountRepositoryInterface::class);
-
-                $userGroup             = $this->validateUserGroup($request);
-                if (null !== $userGroup) {
-                    $this->adminRepository->setUserGroup($userGroup);
-                }
+                $this->adminRepository->setUserGroup($this->validateUserGroup($request));
 
                 return $next($request);
             }
@@ -85,7 +81,7 @@ class AccountController extends Controller
         $types           = $data['types'];
         $query           = $data['query'];
         $date            = $this->parameters->get('date') ?? today(config('app.timezone'));
-        $result          = $this->adminRepository->searchAccount((string)$query, $types, $data['limit']);
+        $result          = $this->adminRepository->searchAccount((string) $query, $types, $data['limit']);
         $defaultCurrency = app('amount')->getDefaultCurrency();
         $groupedResult   = [];
         $allItems        = [];
@@ -99,19 +95,19 @@ class AccountController extends Controller
                 $balance         = app('steam')->balance($account, $date);
                 $nameWithBalance = sprintf('%s (%s)', $account->name, app('amount')->formatAnything($currency, $balance, false));
             }
-            $type            = (string)trans(sprintf('firefly.%s', $account->accountType->type));
+            $type                 = (string) trans(sprintf('firefly.%s', $account->accountType->type));
             $groupedResult[$type] ??= [
                 'group ' => $type,
                 'items'  => [],
             ];
-            $allItems[]      = [
-                'id'                      => (string)$account->id,
-                'value'                   => (string)$account->id,
+            $allItems[]           = [
+                'id'                      => (string) $account->id,
+                'value'                   => (string) $account->id,
                 'name'                    => $account->name,
                 'name_with_balance'       => $nameWithBalance,
                 'label'                   => $nameWithBalance,
                 'type'                    => $account->accountType->type,
-                'currency_id'             => (string)$currency->id,
+                'currency_id'             => (string) $currency->id,
                 'currency_name'           => $currency->name,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
@@ -123,8 +119,8 @@ class AccountController extends Controller
             $allItems,
             static function (array $left, array $right): int {
                 $order    = [AccountType::ASSET, AccountType::REVENUE, AccountType::EXPENSE];
-                $posLeft  = (int)array_search($left['type'], $order, true);
-                $posRight = (int)array_search($right['type'], $order, true);
+                $posLeft  = (int) array_search($left['type'], $order, true);
+                $posRight = (int) array_search($right['type'], $order, true);
 
                 return $posLeft - $posRight;
             }

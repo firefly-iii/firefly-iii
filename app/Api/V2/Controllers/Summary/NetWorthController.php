@@ -51,11 +51,9 @@ class NetWorthController extends Controller
                 $this->netWorth   = app(NetWorthInterface::class);
                 $this->repository = app(AccountRepositoryInterface::class);
                 // new way of user group validation
-                $userGroup        = $this->validateUserGroup($request);
-                if (null !== $userGroup) {
-                    $this->netWorth->setUserGroup($userGroup);
-                    $this->repository->setUserGroup($userGroup);
-                }
+                $userGroup = $this->validateUserGroup($request);
+                $this->netWorth->setUserGroup($userGroup);
+                $this->repository->setUserGroup($userGroup);
 
                 return $next($request);
             }
@@ -81,7 +79,7 @@ class NetWorthController extends Controller
         );
 
         // skip accounts that should not be in the net worth
-        $result   = $this->netWorth->byAccounts($filtered, $date);
+        $result = $this->netWorth->byAccounts($filtered, $date);
 
         return response()->api($result);
     }

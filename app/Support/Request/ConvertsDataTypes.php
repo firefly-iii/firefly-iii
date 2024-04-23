@@ -159,9 +159,7 @@ trait ConvertsDataTypes
 
         if (method_exists($this, 'validateUserGroup')) { // @phpstan-ignore-line
             $userGroup = $this->validateUserGroup($this);
-            if (null !== $userGroup) {
                 $repository->setUserGroup($userGroup);
-            }
         }
 
         // set administration ID
