@@ -31,58 +31,65 @@ function manualChunks(id) {
     }
 }
 
-export default defineConfig({
-    base: './',
-    build: {
-        rollupOptions: {
-            output: {
-                manualChunks,
-            },
-        }
-    },
-    plugins: [
-        laravel({
-            input: [
-                // css
-                'src/sass/app.scss',
+export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
 
-                // dashboard
-                'src/pages/dashboard/dashboard.js',
+    let https = null;
+    if (command === 'serve') {
+        https = {
+            key: fs.readFileSync(`/sites/vm/tls-certificates/wildcard.sd.internal.key`),
+            cert: fs.readFileSync(`/sites/vm/tls-certificates/wildcard.sd.internal.crt`),
+        };
+    }
 
-                // accounts
-                'src/pages/accounts/index.js',
-
-                // administrations
-                'src/pages/administrations/index.js',
-                'src/pages/administrations/create.js',
-                'src/pages/administrations/edit.js',
-
-                // transactions
-                'src/pages/transactions/create.js',
-                'src/pages/transactions/edit.js',
-                'src/pages/transactions/show.js',
-                'src/pages/transactions/index.js',
-            ],
-            publicDirectory: '../../../public',
-            refresh: true,
-        }),
-        manifestSRI(),
-
-    ],
-
-
-    server: {
-        usePolling: true,
-        watch: {
-            usePolling: true,
+    return {
+        base: './',
+        build: {
+            rollupOptions: {
+                output: {
+                    manualChunks,
+                },
+            }
         },
-        host: '10.0.0.15',
-        // hmr: {
-        //     protocol: 'wss',
-        // },
-        // https: {
-        //     key: fs.readFileSync(`/sites/vm/tls-certificates/wildcard.sd.internal.key`),
-        //     cert: fs.readFileSync(`/sites/vm/tls-certificates/wildcard.sd.internal.crt`),
-        // },
-    },
+        plugins: [
+            laravel({
+                input: [
+                    // css
+                    'src/sass/app.scss',
+
+                    // dashboard
+                    'src/pages/dashboard/dashboard.js',
+
+                    // accounts
+                    'src/pages/accounts/index.js',
+
+                    // administrations
+                    'src/pages/administrations/index.js',
+                    'src/pages/administrations/create.js',
+                    'src/pages/administrations/edit.js',
+
+                    // transactions
+                    'src/pages/transactions/create.js',
+                    'src/pages/transactions/edit.js',
+                    'src/pages/transactions/show.js',
+                    'src/pages/transactions/index.js',
+                ],
+                publicDirectory: '../../../public',
+                refresh: true,
+            }),
+            //manifestSRI(),
+
+        ],
+
+
+        server: {
+            watch: {
+                usePolling: true,
+            },
+            host: '10.0.0.15',
+            // hmr: {
+            //     protocol: 'wss',
+            // },
+            https: https,
+        },
+    }
 });

@@ -70,6 +70,9 @@ let index = function () {
         },
         totalPages: 1,
         page: 1,
+        filters: {
+            active: 'both',
+        },
 
         // available columns:
         // visible is hard coded, enabled is user-configurable.
@@ -87,7 +90,7 @@ let index = function () {
                 enabled: true,
             },
             type: {
-                visible: true,
+                visible: type === 'asset',
                 enabled: true,
             },
             liability_type: {
@@ -291,6 +294,14 @@ function loadPage() {
         let data = comps[comp]();
         Alpine.data(comp, () => data);
     });
+
+
+    Alpine.magic("t", (el) => {
+        return (name, vars) => {
+            return i18next.t(name, vars);
+        };
+    });
+
     Alpine.start();
 }
 
