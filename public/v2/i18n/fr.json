@@ -10,16 +10,16 @@
         "title": "Titre"
     },
     "list": {
-        "drag_and_drop": "Drag and drop",
+        "drag_and_drop": "Glisser-d\u00e9poser",
         "active": "Actif ?",
         "name": "Nom",
         "type": "Type",
-        "number": "Account number",
+        "number": "N\u00b0 de compte",
         "liability_type": "Type de passif",
-        "current_balance": "Current balance",
-        "last_activity": "Last activity",
-        "amount_due": "Amount due",
-        "balance_difference": "Balance difference",
+        "current_balance": "Solde actuel",
+        "last_activity": "Activit\u00e9 r\u00e9cente",
+        "amount_due": "Montant d\u00fb",
+        "balance_difference": "Diff\u00e9rence de solde",
         "menu": "Menu"
     },
     "validation": {

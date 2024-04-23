@@ -7,7 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #8812
+- [Issue 8812](https://github.com/firefly-iii/firefly-iii/issues/8812) (Login with `AUTHENTICATION_GUARD=remote_user_guard` fails due to missing UserGroup) reported by @nebulade
 
 ## 6.1.14 - 2024-04-24
 

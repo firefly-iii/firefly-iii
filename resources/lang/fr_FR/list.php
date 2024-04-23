@@ -67,12 +67,12 @@ return [
     'source'                  => 'Source',
     'next_expected_match'     => 'Prochaine association attendue',
     'automatch'               => 'Correspondance automatique ?',
-    'drag_and_drop'           => 'Drag and drop',
-    'number'                  => 'Account number',
-    'current_balance'         => 'Current balance',
-    'last_activity'           => 'Last activity',
-    'amount_due'              => 'Amount due',
-    'balance_difference'      => 'Balance difference',
+    'drag_and_drop'           => 'Glisser-déposer',
+    'number'                  => 'N° de compte',
+    'current_balance'         => 'Solde actuel',
+    'last_activity'           => 'Activité récente',
+    'amount_due'              => 'Montant dû',
+    'balance_difference'      => 'Différence de solde',
     'menu'                    => 'Menu',
 
     /*
