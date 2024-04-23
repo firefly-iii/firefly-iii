@@ -9,6 +9,19 @@
     "form": {
         "title": "Titlu"
     },
+    "list": {
+        "drag_and_drop": "Drag and drop",
+        "active": "Este activ?",
+        "name": "Nume",
+        "type": "Tip",
+        "number": "Account number",
+        "liability_type": "Tip de provizion",
+        "current_balance": "Current balance",
+        "last_activity": "Last activity",
+        "amount_due": "Amount due",
+        "balance_difference": "Balance difference",
+        "menu": "Menu"
+    },
     "validation": {
         "bad_type_source": "Firefly III nu poate determina tipul de tranzac\u021bie pe baza acestui cont surs\u0103.",
         "bad_type_destination": "Firefly III nu poate determina tipul de tranzac\u021bie bazat pe acest cont de destina\u021bie."

@@ -9,6 +9,19 @@
     "form": {
         "title": "Naslov"
     },
+    "list": {
+        "drag_and_drop": "Drag and drop",
+        "active": "Aktiviran?",
+        "name": "ime",
+        "type": "Vrsta",
+        "number": "Account number",
+        "liability_type": "Vrsta obveznost",
+        "current_balance": "Current balance",
+        "last_activity": "Last activity",
+        "amount_due": "Amount due",
+        "balance_difference": "Balance difference",
+        "menu": "Menu"
+    },
     "validation": {
         "bad_type_source": "Na podlagi tega izvornega ra\u010duna Firefly III ne more dolo\u010diti vrste transakcije.",
         "bad_type_destination": "Na podlagi tega ciljnega ra\u010duna Firefly III ne more dolo\u010diti vrste transakcije."

@@ -9,6 +9,19 @@
     "form": {
         "title": "Titolo"
     },
+    "list": {
+        "drag_and_drop": "Drag and drop",
+        "active": "Attivo",
+        "name": "Nome",
+        "type": "Tipo",
+        "number": "Account number",
+        "liability_type": "Tipo di passivit\u00e0",
+        "current_balance": "Current balance",
+        "last_activity": "Last activity",
+        "amount_due": "Amount due",
+        "balance_difference": "Balance difference",
+        "menu": "Menu"
+    },
     "validation": {
         "bad_type_source": "Firefly III non pu\u00f2 determinare il tipo di transazione in base a questo account sorgente.",
         "bad_type_destination": "Firefly III non pu\u00f2 determinare il tipo di transazione in base a questo account di destinazione."

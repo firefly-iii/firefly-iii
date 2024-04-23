@@ -9,6 +9,19 @@
     "form": {
         "title": "N\u00e1zov"
     },
+    "list": {
+        "drag_and_drop": "Drag and drop",
+        "active": "Akt\u00edvne?",
+        "name": "Meno\/N\u00e1zov",
+        "type": "Typ",
+        "number": "Account number",
+        "liability_type": "Typ z\u00e1v\u00e4zku",
+        "current_balance": "Current balance",
+        "last_activity": "Last activity",
+        "amount_due": "Amount due",
+        "balance_difference": "Balance difference",
+        "menu": "Menu"
+    },
     "validation": {
         "bad_type_source": "Firefly III can't determine the transaction type based on this source account.",
         "bad_type_destination": "Firefly III can't determine the transaction type based on this destination account."

@@ -9,6 +9,19 @@
     "form": {
         "title": "\u6807\u9898"
     },
+    "list": {
+        "drag_and_drop": "Drag and drop",
+        "active": "\u662f\u5426\u542f\u7528\uff1f",
+        "name": "\u540d\u79f0",
+        "type": "\u7c7b\u578b",
+        "number": "Account number",
+        "liability_type": "\u503a\u52a1\u7c7b\u578b",
+        "current_balance": "Current balance",
+        "last_activity": "Last activity",
+        "amount_due": "Amount due",
+        "balance_difference": "Balance difference",
+        "menu": "Menu"
+    },
     "validation": {
         "bad_type_source": "Firefly III \u65e0\u6cd5\u786e\u5b9a\u57fa\u4e8e\u6b64\u6e90\u8d26\u6237\u7684\u4ea4\u6613\u7c7b\u578b\u3002",
         "bad_type_destination": "Firefly III \u65e0\u6cd5\u786e\u5b9a\u57fa\u4e8e\u6b64\u76ee\u6807\u5e10\u6237\u7684\u4ea4\u6613\u7c7b\u578b\u3002"

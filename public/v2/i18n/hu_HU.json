@@ -9,6 +9,19 @@
     "form": {
         "title": "C\u00edm"
     },
+    "list": {
+        "drag_and_drop": "Drag and drop",
+        "active": "Akt\u00edv?",
+        "name": "N\u00e9v",
+        "type": "T\u00edpus",
+        "number": "Account number",
+        "liability_type": "A k\u00f6telezetts\u00e9g t\u00edpusa",
+        "current_balance": "Current balance",
+        "last_activity": "Last activity",
+        "amount_due": "Amount due",
+        "balance_difference": "Balance difference",
+        "menu": "Menu"
+    },
     "validation": {
         "bad_type_source": "A Firefly III nem tudja eld\u00f6nteni a tranzakci\u00f3 t\u00edpus\u00e1t a forr\u00e1ssz\u00e1mla alapj\u00e1n.",
         "bad_type_destination": "A Firefly III nem tudja eld\u00f6nteni a tranzakci\u00f3 t\u00edpus\u00e1t a c\u00e9lsz\u00e1mla alapj\u00e1n."

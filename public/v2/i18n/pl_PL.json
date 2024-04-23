@@ -9,6 +9,19 @@
     "form": {
         "title": "Tytu\u0142"
     },
+    "list": {
+        "drag_and_drop": "Drag and drop",
+        "active": "Jest aktywny?",
+        "name": "Nazwa",
+        "type": "Typ",
+        "number": "Account number",
+        "liability_type": "Rodzaj zobowi\u0105zania",
+        "current_balance": "Current balance",
+        "last_activity": "Last activity",
+        "amount_due": "Amount due",
+        "balance_difference": "Balance difference",
+        "menu": "Menu"
+    },
     "validation": {
         "bad_type_source": "Firefly III can't determine the transaction type based on this source account.",
         "bad_type_destination": "Firefly III can't determine the transaction type based on this destination account."

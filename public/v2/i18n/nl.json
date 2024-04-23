@@ -9,6 +9,19 @@
     "form": {
         "title": "Titel"
     },
+    "list": {
+        "drag_and_drop": "Drag and drop",
+        "active": "Actief?",
+        "name": "Naam",
+        "type": "Type",
+        "number": "Account number",
+        "liability_type": "Type passiva",
+        "current_balance": "Current balance",
+        "last_activity": "Last activity",
+        "amount_due": "Amount due",
+        "balance_difference": "Balance difference",
+        "menu": "Menu"
+    },
     "validation": {
         "bad_type_source": "Firefly III kan het transactietype niet bepalen op basis van deze bronrekening.",
         "bad_type_destination": "Firefly III kan het transactietype niet bepalen op basis van deze doelrekening."

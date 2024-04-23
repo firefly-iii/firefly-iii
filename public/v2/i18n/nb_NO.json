@@ -9,6 +9,19 @@
     "form": {
         "title": "Tittel"
     },
+    "list": {
+        "drag_and_drop": "Drag and drop",
+        "active": "Er aktiv?",
+        "name": "Navn",
+        "type": "Type",
+        "number": "Account number",
+        "liability_type": "Type gjeld",
+        "current_balance": "Current balance",
+        "last_activity": "Last activity",
+        "amount_due": "Amount due",
+        "balance_difference": "Balance difference",
+        "menu": "Menu"
+    },
     "validation": {
         "bad_type_source": "Firefly III can't determine the transaction type based on this source account.",
         "bad_type_destination": "Firefly III can't determine the transaction type based on this destination account."

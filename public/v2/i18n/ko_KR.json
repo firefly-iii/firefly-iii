@@ -9,6 +9,19 @@
     "form": {
         "title": "\uc81c\ubaa9"
     },
+    "list": {
+        "drag_and_drop": "Drag and drop",
+        "active": "\ud65c\uc131 \uc0c1\ud0dc\uc785\ub2c8\uae4c?",
+        "name": "\uc774\ub984",
+        "type": "\uc720\ud615",
+        "number": "Account number",
+        "liability_type": "\ubd80\ucc44 \uc720\ud615",
+        "current_balance": "Current balance",
+        "last_activity": "Last activity",
+        "amount_due": "Amount due",
+        "balance_difference": "Balance difference",
+        "menu": "Menu"
+    },
     "validation": {
         "bad_type_source": "Firefly III can't determine the transaction type based on this source account.",
         "bad_type_destination": "Firefly III can't determine the transaction type based on this destination account."

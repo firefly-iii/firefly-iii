@@ -9,6 +9,19 @@
     "form": {
         "title": "Titel"
     },
+    "list": {
+        "drag_and_drop": "Drag and drop",
+        "active": "\u00c4r aktiv?",
+        "name": "Namn",
+        "type": "Typ",
+        "number": "Account number",
+        "liability_type": "Typ av ansvar",
+        "current_balance": "Current balance",
+        "last_activity": "Last activity",
+        "amount_due": "Amount due",
+        "balance_difference": "Balance difference",
+        "menu": "Menu"
+    },
     "validation": {
         "bad_type_source": "Firefly III kan inte avg\u00f6ra transaktionstypen baserat p\u00e5 detta k\u00e4llkonto.",
         "bad_type_destination": "Firefly III can't determine the transaction type based on this destination account."

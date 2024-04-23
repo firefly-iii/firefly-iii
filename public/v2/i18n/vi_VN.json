@@ -9,6 +9,19 @@
     "form": {
         "title": "Ti\u00eau \u0111\u1ec1"
     },
+    "list": {
+        "drag_and_drop": "Drag and drop",
+        "active": "\u0110ang ho\u1ea1t \u0111\u1ed9ng?",
+        "name": "T\u00ean",
+        "type": "Lo\u1ea1i",
+        "number": "Account number",
+        "liability_type": "Lo\u1ea1i tr\u00e1ch nhi\u1ec7m ph\u00e1p l\u00fd",
+        "current_balance": "Current balance",
+        "last_activity": "Last activity",
+        "amount_due": "Amount due",
+        "balance_difference": "Balance difference",
+        "menu": "Menu"
+    },
     "validation": {
         "bad_type_source": "Firefly III can't determine the transaction type based on this source account.",
         "bad_type_destination": "Firefly III can't determine the transaction type based on this destination account."

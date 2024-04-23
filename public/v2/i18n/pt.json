@@ -9,6 +9,19 @@
     "form": {
         "title": "T\u00edtulo"
     },
+    "list": {
+        "drag_and_drop": "Drag and drop",
+        "active": "Esta ativo?",
+        "name": "Nome",
+        "type": "Tipo",
+        "number": "Account number",
+        "liability_type": "Tipo de responsabilidade",
+        "current_balance": "Current balance",
+        "last_activity": "Last activity",
+        "amount_due": "Amount due",
+        "balance_difference": "Balance difference",
+        "menu": "Menu"
+    },
     "validation": {
         "bad_type_source": "O Firefly III n\u00e3o consegue determinar o tipo de transa\u00e7\u00e3o baseado nesta conta de origem.",
         "bad_type_destination": "O Firefly III n\u00e3o consegue determinar o tipo de transa\u00e7\u00e3o baseado nesta conta de destino."
