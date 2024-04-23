@@ -3,11 +3,27 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-
-## 6.1.14 - 2024-xx-xx
+## 6.1.14 - 2024-04-24
 
 ### Changed
-- You will have to define again which asset accounts you want to see on the dashboard. Sorry about that.
+- You may have to define again which asset accounts you want to see on the dashboard. Sorry about that.
+- Expanded some database models.
+- Limit the number of error messages Firefly III will send (so Mailgun keeps liking me).
+- #8746
+
+### Fixed
+
+- #8748
+- #8750 
+- #8779
+- #8781
+- #8752
+- #8613
+- #8776
+
+### API
+
+- #8804
 
 ## 6.1.13 - 2024-04-01
 
