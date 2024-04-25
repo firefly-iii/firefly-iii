@@ -150,7 +150,7 @@ Please find below all the people who contributed to the Firefly III code. Their 
 - Jens Kat
 - jleeong
 - Simon Hanna
-- richard@xeli.eu
+- richard & xeli.eu
 - Sergey Besedin
 - Enrico Lamperti
 - Welbert Serra
