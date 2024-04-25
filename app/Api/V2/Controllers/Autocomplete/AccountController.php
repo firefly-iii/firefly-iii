@@ -95,12 +95,12 @@ class AccountController extends Controller
                 $balance         = app('steam')->balance($account, $date);
                 $nameWithBalance = sprintf('%s (%s)', $account->name, app('amount')->formatAnything($currency, $balance, false));
             }
-            $type                 = (string) trans(sprintf('firefly.%s', $account->accountType->type));
+            $type            = (string) trans(sprintf('firefly.%s', $account->accountType->type));
             $groupedResult[$type] ??= [
                 'group ' => $type,
                 'items'  => [],
             ];
-            $allItems[]           = [
+            $allItems[]      = [
                 'id'                      => (string) $account->id,
                 'value'                   => (string) $account->id,
                 'name'                    => $account->name,

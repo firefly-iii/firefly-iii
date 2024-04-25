@@ -152,6 +152,7 @@ class HomeController extends Controller
 
         /** @var Carbon $start */
         $start          = session('start', today(config('app.timezone'))->startOfMonth());
+
         /** @var Carbon $end */
         $end            = session('end', today(config('app.timezone'))->endOfMonth());
         $accounts       = $repository->getAccountsById($frontpageArray);

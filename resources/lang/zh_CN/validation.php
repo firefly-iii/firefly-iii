@@ -68,8 +68,8 @@ return [
     'invalid_selection'               => '您的选择无效',
     'belongs_user'                    => '此值关联至一个似乎不存在的对象。',
     'belongs_user_or_user_group'      => '此值关联至当前财务管理中一个似乎不存在的对象。',
-    'no_access_group'                 => 'The user has no access to this user group.',
-    'no_accepted_roles_defined'       => 'No access roles have been defined for this endpoint, access denied.',
+    'no_access_group'                 => '用户没有访问此用户组的权限。',
+    'no_accepted_roles_defined'       => '此端点没有定义访问角色，访问被拒绝。',
     'at_least_one_transaction'        => '至少需要一笔交易',
     'recurring_transaction_id'        => '至少需要一笔交易。',
     'need_id_to_match'                => '您需要提交一个含有ID的条目，API才能匹配。',
@@ -302,7 +302,7 @@ return [
 
     // no access to administration:
     'no_access_user_group'            => '您没有管理员访问权限',
-    'administration_owner_rename'     => 'You can\'t rename your standard administration.',
+    'administration_owner_rename'     => '您不能重命名您的标准管理员',
 ];
 
 /*

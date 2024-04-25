@@ -59,16 +59,17 @@ class UpdateController extends Controller
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
         $data         = $request->getUpdateData();
-        $data['type'] = config('firefly.shortNamesByFullName.' . $account->accountType->type);
+        $data['type'] = config('firefly.shortNamesByFullName.'.$account->accountType->type);
         $account      = $this->repository->update($account, $data);
         $account->refresh();
         app('preferences')->mark();
 
-        $transformer = new AccountTransformer();
+        $transformer  = new AccountTransformer();
         $transformer->setParameters($this->parameters);
 
         return response()
             ->api($this->jsonApiObject('accounts', $account, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
 }

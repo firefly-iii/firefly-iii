@@ -77,7 +77,7 @@ class CategoryController extends Controller
         Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
 
         /** @var Carbon $start */
-        $start = $this->parameters->get('start');
+        $start      = $this->parameters->get('start');
 
         /** @var Carbon $end */
         $end        = $this->parameters->get('end');
@@ -89,21 +89,21 @@ class CategoryController extends Controller
 
         // get journals for entire period:
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector  = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)->withAccountInformation();
         $collector->setXorAccounts($accounts)->withCategoryInformation();
         $collector->setTypes([TransactionType::WITHDRAWAL, TransactionType::RECONCILIATION]);
-        $journals = $collector->getExtractedJournals();
+        $journals   = $collector->getExtractedJournals();
 
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $currencyId              = (int) $journal['currency_id'];
-            $currency                = $currencies[$currencyId] ?? $this->currencyRepos->find($currencyId);
-            $currencies[$currencyId] = $currency;
-            $categoryName            = null === $journal['category_name'] ? (string) trans('firefly.no_category') : $journal['category_name'];
-            $amount                  = app('steam')->positive($journal['amount']);
-            $nativeAmount            = $converter->convert($default, $currency, $journal['date'], $amount);
-            $key                     = sprintf('%s-%s', $categoryName, $currency->code);
+            $currencyId                    = (int) $journal['currency_id'];
+            $currency                      = $currencies[$currencyId] ?? $this->currencyRepos->find($currencyId);
+            $currencies[$currencyId]       = $currency;
+            $categoryName                  = null === $journal['category_name'] ? (string) trans('firefly.no_category') : $journal['category_name'];
+            $amount                        = app('steam')->positive($journal['amount']);
+            $nativeAmount                  = $converter->convert($default, $currency, $journal['date'], $amount);
+            $key                           = sprintf('%s-%s', $categoryName, $currency->code);
             if ((int) $journal['foreign_currency_id'] === $default->id) {
                 $nativeAmount = app('steam')->positive($journal['foreign_amount']);
             }
@@ -131,7 +131,7 @@ class CategoryController extends Controller
             $return[$key]['amount']        = bcadd($return[$key]['amount'], $amount);
             $return[$key]['native_amount'] = bcadd($return[$key]['native_amount'], $nativeAmount);
         }
-        $return = array_values($return);
+        $return     = array_values($return);
 
         // order by native amount
         usort($return, static function (array $a, array $b) {
