@@ -5404,16 +5404,16 @@
         },
         {
             "name": "spatie/laravel-html",
-            "version": "3.8.0",
+            "version": "3.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-html.git",
-                "reference": "f1dcd290b9feebf50ad6b5c8e5627b0bf87b7ebe"
+                "reference": "35802bd9b276ce08e1d9d15584b17fdef965063b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-html/zipball/f1dcd290b9feebf50ad6b5c8e5627b0bf87b7ebe",
-                "reference": "f1dcd290b9feebf50ad6b5c8e5627b0bf87b7ebe",
+                "url": "https://api.github.com/repos/spatie/laravel-html/zipball/35802bd9b276ce08e1d9d15584b17fdef965063b",
+                "reference": "35802bd9b276ce08e1d9d15584b17fdef965063b",
                 "shasum": ""
             },
             "require": {
@@ -5470,7 +5470,7 @@
                 "spatie"
             ],
             "support": {
-                "source": "https://github.com/spatie/laravel-html/tree/3.8.0"
+                "source": "https://github.com/spatie/laravel-html/tree/3.9.0"
             },
             "funding": [
                 {
@@ -5478,7 +5478,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2024-04-24T12:52:13+00:00"
+            "time": "2024-04-25T08:07:39+00:00"
         },
         {
             "name": "spatie/laravel-ignition",
