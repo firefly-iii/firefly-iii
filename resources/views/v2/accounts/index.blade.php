@@ -59,67 +59,102 @@
                                     <td x-show="tableColumns.drag_and_drop.visible && tableColumns.drag_and_drop.enabled">
                                         &nbsp;
                                     </td>
-                                    <td x-show="tableColumns.active.visible && tableColumns.active.enabled">
-                                        <a href="#" x-on:click.prevent="sort('active')">Active?</a>
-                                        <em x-show="sortingColumn === 'active' && sortDirection === 'asc'"
-                                            class="fa-solid fa-arrow-down-wide-short"></em>
-                                        <em x-show="sortingColumn === 'active' && sortDirection === 'desc'"
-                                            class="fa-solid fa-arrow-up-wide-short"></em>
-                                    </td>
+                                    <td x-show="tableColumns.active.visible && tableColumns.active.enabled">&nbsp;</td>
                                     <td x-show="tableColumns.name.visible && tableColumns.name.enabled">
-                                        <a href="#" x-on:click.prevent="sort('name')">Name</a>
-                                        <em x-show="sortingColumn === 'name' && sortDirection === 'asc'"
-                                            class="fa-solid fa-arrow-down-z-a"></em>
-                                        <em x-show="sortingColumn === 'name' && sortDirection === 'desc'"
-                                            class="fa-solid fa-arrow-up-z-a"></em>
+                                        <em>"Filtered"</em>
                                     </td>
-                                    <td x-show="tableColumns.type.visible && tableColumns.type.enabled">Type</td>
+                                    <td x-show="tableColumns.type.visible && tableColumns.type.enabled">&nbsp;</td>
                                     <td x-show="tableColumns.liability_type.visible && tableColumns.liability_type.enabled">
-                                        Liability type
+                                        &nbsp;
                                     </td>
                                     <td x-show="tableColumns.liability_direction.visible && tableColumns.liability_direction.enabled">
-                                        Liability direction
+                                        &nbsp;
                                     </td>
                                     <td x-show="tableColumns.liability_interest.visible && tableColumns.liability_interest.enabled">
-                                        Liability interest
+                                        &nbsp;
                                     </td>
                                     <td x-show="tableColumns.number.visible && tableColumns.number.enabled">
-                                        <a href="#" x-on:click.prevent="sort('iban')">Account number</a>
-                                        <em x-show="sortingColumn === 'iban' && sortDirection === 'asc'"
-                                            class="fa-solid fa-arrow-down-z-a"></em>
-                                        <em x-show="sortingColumn === 'iban' && sortDirection === 'desc'"
-                                            class="fa-solid fa-arrow-up-z-a"></em>
+                                        &nbsp;
                                     </td>
                                     <td x-show="tableColumns.current_balance.visible && tableColumns.current_balance.enabled">
-                                        <a href="#" x-on:click.prevent="sort('balance')">Current balance</a>
-                                        <em x-show="sortingColumn === 'balance' && sortDirection === 'asc'"
-                                            class="fa-solid fa-arrow-down-wide-short"></em>
-                                        <em x-show="sortingColumn === 'balance' && sortDirection === 'desc'"
-                                            class="fa-solid fa-arrow-up-wide-short"></em>
+                                        &nbsp;
                                     </td>
                                     <td x-show="tableColumns.amount_due.visible && tableColumns.amount_due.enabled">
-                                        <a href="#" x-on:click.prevent="sort('amount_due')">Amount due</a>
-                                        <em x-show="sortingColumn === 'amount_due' && sortDirection === 'asc'"
-                                            class="fa-solid fa-arrow-down-wide-short"></em>
-                                        <em x-show="sortingColumn === 'amount_due' && sortDirection === 'desc'"
-                                            class="fa-solid fa-arrow-up-wide-short"></em>
+                                        &nbsp;
                                     </td>
                                     <td x-show="tableColumns.last_activity.visible && tableColumns.last_activity.enabled">
-                                        <a href="#" x-on:click.prevent="sort('last_activity')">Last activity</a>
-                                        <em x-show="sortingColumn === 'last_activity' && sortDirection === 'asc'"
-                                            class="fa-solid fa-arrow-down-wide-short"></em>
-                                        <em x-show="sortingColumn === 'last_activity' && sortDirection === 'desc'"
-                                            class="fa-solid fa-arrow-up-wide-short"></em>
+                                        &nbsp;
                                     </td>
                                     <td x-show="tableColumns.balance_difference.visible && tableColumns.balance_difference.enabled">
-                                        <a href="#" x-on:click.prevent="sort('balance_difference')">Balance
-                                            difference</a>
-                                        <em x-show="sortingColumn === 'balance_difference' && sortDirection === 'asc'"
-                                            class="fa-solid fa-arrow-down-wide-short"></em>
-                                        <em x-show="sortingColumn === 'balance_difference' && sortDirection === 'desc'"
-                                            class="fa-solid fa-arrow-up-wide-short"></em>
+                                        &nbsp;
                                     </td>
                                     <td x-show="tableColumns.menu.visible && tableColumns.menu.enabled">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <th x-show="tableColumns.drag_and_drop.visible && tableColumns.drag_and_drop.enabled">
+                                        &nbsp;
+                                    </th>
+                                    <th x-show="tableColumns.active.visible && tableColumns.active.enabled">
+                                        <a href="#" x-on:click.prevent="sort('active')">Active?</a>
+                                        <em x-show="pageOptions.sortingColumn === 'active' && pageOptions.sortDirection === 'asc'"
+                                            class="fa-solid fa-arrow-down-wide-short"></em>
+                                        <em x-show="pageOptions.sortingColumn === 'active' && pageOptions.sortDirection === 'desc'"
+                                            class="fa-solid fa-arrow-up-wide-short"></em>
+                                    </th>
+                                    <th x-show="tableColumns.name.visible && tableColumns.name.enabled">
+                                        <a href="#" x-on:click.prevent="sort('name')">Name</a>
+                                        <em x-show="pageOptions.sortingColumn === 'name' && pageOptions.sortDirection === 'asc'"
+                                            class="fa-solid fa-arrow-down-a-z"></em>
+                                        <em x-show="pageOptions.sortingColumn === 'name' && pageOptions.sortDirection === 'desc'"
+                                            class="fa-solid fa-arrow-down-z-a"></em>
+                                    </th>
+                                    <th x-show="tableColumns.type.visible && tableColumns.type.enabled">Type</th>
+                                    <th x-show="tableColumns.liability_type.visible && tableColumns.liability_type.enabled">
+                                        Liability type
+                                    </th>
+                                    <th x-show="tableColumns.liability_direction.visible && tableColumns.liability_direction.enabled">
+                                        Liability direction
+                                    </th>
+                                    <th x-show="tableColumns.liability_interest.visible && tableColumns.liability_interest.enabled">
+                                        Liability interest
+                                    </th>
+                                    <th x-show="tableColumns.number.visible && tableColumns.number.enabled">
+                                        <a href="#" x-on:click.prevent="sort('iban')">Account number</a>
+                                        <em x-show="pageOptions.sortingColumn === 'iban' && pageOptions.sortDirection === 'asc'"
+                                            class="fa-solid fa-arrow-down-z-a"></em>
+                                        <em x-show="pageOptions.sortingColumn === 'iban' && pageOptions.sortDirection === 'desc'"
+                                            class="fa-solid fa-arrow-up-z-a"></em>
+                                    </th>
+                                    <th x-show="tableColumns.current_balance.visible && tableColumns.current_balance.enabled">
+                                        <a href="#" x-on:click.prevent="sort('balance')">Current balance</a>
+                                        <em x-show="pageOptions.sortingColumn === 'balance' && pageOptions.sortDirection === 'asc'"
+                                            class="fa-solid fa-arrow-down-wide-short"></em>
+                                        <em x-show="pageOptions.sortingColumn === 'balance' && pageOptions.sortDirection === 'desc'"
+                                            class="fa-solid fa-arrow-up-wide-short"></em>
+                                    </th>
+                                    <th x-show="tableColumns.amount_due.visible && tableColumns.amount_due.enabled">
+                                        <a href="#" x-on:click.prevent="sort('amount_due')">Amount due</a>
+                                        <em x-show="pageOptions.sortingColumn === 'amount_due' && pageOptions.sortDirection === 'asc'"
+                                            class="fa-solid fa-arrow-down-wide-short"></em>
+                                        <em x-show="pageOptions.sortingColumn === 'amount_due' && pageOptions.sortDirection === 'desc'"
+                                            class="fa-solid fa-arrow-up-wide-short"></em>
+                                    </th>
+                                    <th x-show="tableColumns.last_activity.visible && tableColumns.last_activity.enabled">
+                                        <a href="#" x-on:click.prevent="sort('last_activity')">Last activity</a>
+                                        <em x-show="pageOptions.sortingColumn === 'last_activity' && pageOptions.sortDirection === 'asc'"
+                                            class="fa-solid fa-arrow-down-wide-short"></em>
+                                        <em x-show="pageOptions.sortingColumn === 'last_activity' && pageOptions.sortDirection === 'desc'"
+                                            class="fa-solid fa-arrow-up-wide-short"></em>
+                                    </th>
+                                    <th x-show="tableColumns.balance_difference.visible && tableColumns.balance_difference.enabled">
+                                        <a href="#" x-on:click.prevent="sort('balance_difference')">Balance
+                                            difference</a>
+                                        <em x-show="pageOptions.sortingColumn === 'balance_difference' && pageOptions.sortDirection === 'asc'"
+                                            class="fa-solid fa-arrow-down-wide-short"></em>
+                                        <em x-show="pageOptions.sortingColumn === 'balance_difference' && pageOptions.sortDirection === 'desc'"
+                                            class="fa-solid fa-arrow-up-wide-short"></em>
+                                    </th>
+                                    <th x-show="tableColumns.menu.visible && tableColumns.menu.enabled">&nbsp;</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -268,30 +303,63 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <h5>Visible columns</h5>
-                            <div class="mb-2">
-                                <template x-for="(column, key) in tableColumns" :key="key">
-                                    <div class="form-check" x-show="column.visible">
+                            <div class="row mb-3">
+                                <label for="inputEmail3" class="col-sm-4 col-form-label">Visible columns</label>
+                                <div class="col-sm-8">
+                                    <template x-for="(column, key) in tableColumns" :key="key">
+                                        <div class="form-check form-switch form-check-inline" x-show="column.visible">
+                                            <label>
+                                                <input class="form-check-input" type="checkbox" x-model="column.enabled"
+                                                       @change="saveColumnSettings"> <span
+                                                    x-text="$t('list.'+key)"></span>
+                                            </label>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="inputEmail3" class="col-sm-4 col-form-label">Active accounts?</label>
+                                <div class="col-sm-8">
+                                    <select x-model="filters.active" class="form-control">
+                                        <option value="active" label="Active accounts">Active accounts only</option>
+                                        <option value="inactive" label="Inactive accounts">Inactive accounts only
+                                        </option>
+                                        <option value="both" label="Both">All accounts</option>
+                                    </select>
+                                    <div id="emailHelp" class="form-text">TODO Bla bla bla.</div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="inputEmail3" class="col-sm-4 col-form-label">Group accounts</label>
+                                <div class="col-sm-8">
+                                    <div class="form-check form-switch">
                                         <label>
-                                            <input class="form-check-input" type="checkbox" x-model="column.enabled"
-                                                   @change="saveColumnSettings"> <span x-text="$t('list.'+key)"></span>
+                                            <input class="form-check-input" type="checkbox"
+                                                   x-model="pageOptions.groupedAccounts"><span>Group accounts</span>
                                         </label>
                                     </div>
-                                </template>
+                                </div>
                             </div>
-                            <h5>Options</h5>
-                            <div class="mb-2">
-                                <select x-model="filters.active" class="form-control">
-                                    <option value="active" label="Active accounts">Active accounts</option>
-                                    <option value="inactive" label="Inactive accounts">Inactive accounts</option>
-                                    <option value="both" label="Both">Both</option>
-                                </select>
+                            <div class="row mb-3">
+                                <label for="inputEmail3" class="col-sm-4 col-form-label">Show info boxes</label>
+                                <div class="col-sm-8">
+                                    <div class="form-check form-switch form-check-inline">
+                                        <label>
+                                            <input class="form-check-input" type="checkbox"> <span>Box A</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-switch form-check-inline">
+                                        <label>
+                                            <input class="form-check-input" type="checkbox"> <span>Box B</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-switch form-check-inline">
+                                        <label>
+                                            <input class="form-check-input" type="checkbox"> <span>Box C</span>
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
-
-                            - Group accounts <br>
-                            - default sort field<br>
-                            - default sort direction<br>
-                            - show info boxes (once they contain info)<br>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

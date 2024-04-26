@@ -39,6 +39,10 @@ export function getVariable(name, defaultValue = null) {
     return getter.getByName(name).then((response) => {
         return Promise.resolve(parseResponse(name, response));
     }).catch((error) => {
+        if('' === defaultValue) {
+            // do not try to store empty strings.
+            return Promise.resolve(defaultValue);
+        }
         // preference does not exist (yet).
         // POST it and then return it anyway.
         let poster = (new Post);

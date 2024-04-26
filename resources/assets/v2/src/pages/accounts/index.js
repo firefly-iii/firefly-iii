@@ -72,6 +72,12 @@ let index = function () {
         page: 1,
         filters: {
             active: 'both',
+            name: null,
+        },
+        pageOptions: {
+            groupedAccounts: true,
+            sortingColumn: sortingColumn,
+            sortDirection: sortDirection,
         },
 
         // available columns:
@@ -131,8 +137,6 @@ let index = function () {
             },
         },
         editors: {},
-        sortingColumn: sortingColumn,
-        sortDirection: sortDirection,
         accounts: [],
 
         accountRole(roleName) {
@@ -140,11 +144,19 @@ let index = function () {
         },
 
         sort(column) {
-            this.sortingColumn = column;
-            this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
-            const url = './accounts/' + type + '?column=' + column + '&direction=' + this.sortDirection;
+            this.pageOptions.sortingColumn = column;
+            this.pageOptions.sortDirection = this.pageOptions.sortDirection === 'asc' ? 'desc' : 'asc';
+            const url = './accounts/' + type + '?column=' + column + '&direction=' + this.pageOptions.sortDirection;
 
             window.history.pushState({}, "", url);
+
+            // get sort column
+            // TODO variable name in better place
+            const columnKey = 'acc_index_' + type + '_sc';
+            const directionKey = 'acc_index_' + type + '_sd';
+
+            setVariable(columnKey, this.pageOptions.sortingColumn);
+            setVariable(directionKey, this.pageOptions.sortDirection);
 
             this.loadAccounts();
             return false;
@@ -165,15 +177,26 @@ let index = function () {
                 }
             }
             console.log('New settings', newSettings);
-            setVariable('accts_columns_' + type, newSettings);
+            setVariable('acc_index_' + type + '_columns', newSettings);
         },
 
         init() {
             this.notifications.wait.show = true;
-            this.notifications.wait.text = i18next.t('firefly.wait_loading_data')
+            this.notifications.wait.text = i18next.t('firefly.wait_loading_data');
 
-            const key = 'accts_columns_' + type;
+            // get column preference
+            // TODO key in better variable
+            const key = 'acc_index_' + type + '_columns';
             const defaultValue = {"drag_and_drop": false};
+
+            // get sort column
+            const columnKey = 'acc_index_' + type + '_sc';
+            const columnDefault = '';
+
+            // get sort direction
+            const directionKey = 'acc_index_' + type + '_sd';
+            const directionDefault = '';
+
 
             getVariable(key, defaultValue).then((response) => {
                 for (let k in response) {
@@ -181,7 +204,26 @@ let index = function () {
                         this.tableColumns[k].enabled = response[k] ?? true;
                     }
                 }
-            }).then(() => {
+            }).
+                // get sorting preference, and overrule it if is not "" twice
+                then(() => {
+                    return getVariable(columnKey, columnDefault).then((response) => {
+                        console.log('Sorting column is "' + response + '"');
+                        this.pageOptions.sortingColumn = '' === this.pageOptions.sortingColumn ? response : this.pageOptions.sortingColumn;
+                    })
+            })
+                .
+                // get sorting preference, and overrule it if is not "" twice
+                then(() => {
+                    return getVariable(directionKey, directionDefault).then((response) => {
+                        console.log('Sorting direction is "' + response + '"');
+                        this.pageOptions.sortDirection = '' === this.pageOptions.sortDirection ? response : this.pageOptions.sortDirection;
+                    })
+                }).
+
+
+
+            then(() => {
                 this.loadAccounts();
             });
 
@@ -230,7 +272,7 @@ let index = function () {
         loadAccounts() {
 
             // sort instructions
-            const sorting = [{column: this.sortingColumn, direction: this.sortDirection}];
+            const sorting = [{column: this.pageOptions.sortingColumn, direction: this.pageOptions.sortDirection}];
 
             // get start and end from the store:
             const start = new Date(window.store.get('start'));

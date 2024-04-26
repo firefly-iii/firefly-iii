@@ -818,6 +818,7 @@ Route::group(
     static function (): void {
         Route::get('', ['uses' => 'PreferencesController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'PreferencesController@store', 'as' => 'store']);
+        //Route::get('{preferenceList}', ['uses' => 'PreferencesController@showList', 'as' => 'show-list'])->where('preferenceList', ',+');
         Route::get('{preference}', ['uses' => 'PreferencesController@show', 'as' => 'show']);
         Route::put('{preference}', ['uses' => 'PreferencesController@update', 'as' => 'update']);
     }

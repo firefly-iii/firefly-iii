@@ -32,6 +32,7 @@ use FireflyIII\Models\Preference;
 use FireflyIII\Transformers\PreferenceTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
@@ -93,6 +94,32 @@ class PreferencesController extends Controller
         $transformer->setParameters($this->parameters);
 
         $resource    = new Item($preference, $transformer, 'preferences');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
+    }
+
+    /**
+     * TODO This endpoint is not documented.
+     *
+     * Return a single preference by name.
+     */
+    public function showList(Collection $collection): JsonResponse
+    {
+        $manager     = $this->getManager();
+        $count       = $collection->count();
+        $pageSize    = $this->parameters->get('limit');
+        $preferences = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+
+        // make paginator:
+        $paginator   = new LengthAwarePaginator($preferences, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.preferences.show-list').$this->buildParams());
+
+        /** @var PreferenceTransformer $transformer */
+        $transformer = app(PreferenceTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource    = new FractalCollection($preferences, $transformer, self::RESOURCE_KEY);
+        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
