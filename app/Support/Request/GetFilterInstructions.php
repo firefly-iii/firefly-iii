@@ -50,6 +50,8 @@ trait GetFilterInstructions
                 case 'boolean':
                     $filterValue = $this->booleanInstruction($filterValue);
                     break;
+                case 'string':
+                    break;
             }
             $result[$column] = $filterValue;
         }

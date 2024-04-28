@@ -924,7 +924,7 @@ return [
     'filters'                   => [
         'allowed' => [
             'accounts' => [
-                'name'               => '*',
+                'name'               => 'string',
                 'active'             => 'boolean',
                 'iban'               => 'iban',
                 'balance'            => 'numeric',
@@ -938,7 +938,7 @@ return [
     'sorting'                   => [
         'allowed' => [
             'transactions' => ['description', 'amount'],
-            'accounts'     => ['name', 'active', 'iban', 'balance', 'last_activity', 'balance_difference'],
+            'accounts'     => ['name', 'active', 'iban', 'balance', 'last_activity', 'balance_difference','current_debt'],
         ],
     ],
 ];

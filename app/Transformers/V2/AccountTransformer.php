@@ -41,6 +41,7 @@ class AccountTransformer extends AbstractTransformer
 {
     private array               $accountMeta;
     private array               $accountTypes;
+    private array               $fullTypes;
     private array               $balanceDifferences;
     private array               $convertedBalances;
     private array               $currencies;
@@ -55,6 +56,7 @@ class AccountTransformer extends AbstractTransformer
         $this->currencies         = [];
         $this->accountMeta        = [];
         $this->accountTypes       = [];
+        $this->fullTypes          = [];
         $this->lastActivity       = [];
         $this->convertedBalances  = [];
         $this->balanceDifferences = [];
@@ -74,7 +76,7 @@ class AccountTransformer extends AbstractTransformer
         // get last activity:
         $this->getLastActivity($objects);
 
-        // TODO add balance difference
+        // add balance difference
         if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
             $this->getBalanceDifference($objects, $this->parameters->get('start'), $this->parameters->get('end'));
         }
@@ -97,21 +99,28 @@ class AccountTransformer extends AbstractTransformer
      */
     public function transform(Account $account): array
     {
-        $id                = $account->id;
+        $id = $account->id;
 
         // various meta
-        $accountRole       = $this->accountMeta[$id]['account_role'] ?? null;
-        $accountType       = $this->accountTypes[$id];
-        $order             = $account->order;
+        $accountRole = $this->accountMeta[$id]['account_role'] ?? null;
+        $accountType = $this->accountTypes[$id];
+        $order       = $account->order;
+
+        // liability type
+        $liabilityType      = $accountType === 'liabilities' ? $this->fullTypes[$id] : null;
+        $liabilityDirection = $this->accountMeta[$id]['liability_direction'] ?? null;
+        $interest           = $this->accountMeta[$id]['interest'] ?? null;
+        $interestPeriod     = $this->accountMeta[$id]['interest_period'] ?? null;
+        $currentDebt        = $this->accountMeta[$id]['current_debt'] ?? null;
 
         // no currency? use default
-        $currency          = $this->default;
+        $currency = $this->default;
         if (array_key_exists($id, $this->accountMeta) && 0 !== (int) ($this->accountMeta[$id]['currency_id'] ?? 0)) {
             $currency = $this->currencies[(int) $this->accountMeta[$id]['currency_id']];
         }
         // amounts and calculation.
-        $balance           = $this->balances[$id]['balance'] ?? null;
-        $nativeBalance     = $this->convertedBalances[$id]['native_balance'] ?? null;
+        $balance       = $this->balances[$id]['balance'] ?? null;
+        $nativeBalance = $this->convertedBalances[$id]['native_balance'] ?? null;
 
         // no order for some accounts:
         if (!in_array(strtolower($accountType), ['liability', 'liabilities', 'asset'], true)) {
@@ -131,20 +140,20 @@ class AccountTransformer extends AbstractTransformer
         }
 
         return [
-            'id'                             => (string) $account->id,
-            'created_at'                     => $account->created_at->toAtomString(),
-            'updated_at'                     => $account->updated_at->toAtomString(),
-            'active'                         => $account->active,
-            'order'                          => $order,
-            'name'                           => $account->name,
-            'iban'                           => '' === (string) $account->iban ? null : $account->iban,
-            'account_number'                 => $this->accountMeta[$id]['account_number'] ?? null,
-            'type'                           => strtolower($accountType),
-            'account_role'                   => $accountRole,
-            'currency_id'                    => (string) $currency->id,
-            'currency_code'                  => $currency->code,
-            'currency_symbol'                => $currency->symbol,
-            'currency_decimal_places'        => $currency->decimal_places,
+            'id'                      => (string) $account->id,
+            'created_at'              => $account->created_at->toAtomString(),
+            'updated_at'              => $account->updated_at->toAtomString(),
+            'active'                  => $account->active,
+            'order'                   => $order,
+            'name'                    => $account->name,
+            'iban'                    => '' === (string) $account->iban ? null : $account->iban,
+            'account_number'          => $this->accountMeta[$id]['account_number'] ?? null,
+            'type'                    => strtolower($accountType),
+            'account_role'            => $accountRole,
+            'currency_id'             => (string) $currency->id,
+            'currency_code'           => $currency->code,
+            'currency_symbol'         => $currency->symbol,
+            'currency_decimal_places' => $currency->decimal_places,
 
             'native_currency_id'             => (string) $this->default->id,
             'native_currency_code'           => $this->default->code,
@@ -165,19 +174,20 @@ class AccountTransformer extends AbstractTransformer
             // more meta
             'last_activity'                  => array_key_exists($id, $this->lastActivity) ? $this->lastActivity[$id]->toAtomString() : null,
 
+            // liability stuff
+            'liability_type'                 => $liabilityType,
+            'liability_direction'            => $liabilityDirection,
+            'interest'                       => $interest,
+            'interest_period'                => $interestPeriod,
+            'current_debt'                   => $currentDebt,
+
             //            'notes'                   => $this->repository->getNoteText($account),
             //            'monthly_payment_date'    => $monthlyPaymentDate,
             //            'credit_card_type'        => $creditCardType,
-            //            'account_number'          => $this->repository->getMetaValue($account, 'account_number'),
             //            'bic'                     => $this->repository->getMetaValue($account, 'BIC'),
             //            'virtual_balance'         => number_format((float) $account->virtual_balance, $decimalPlaces, '.', ''),
             //            'opening_balance'         => $openingBalance,
             //            'opening_balance_date'    => $openingBalanceDate,
-            //            'liability_type'          => $liabilityType,
-            //            'liability_direction'     => $liabilityDirection,
-            //            'interest'                => $interest,
-            //            'interest_period'         => $interestPeriod,
-            //            'current_debt'            => $this->repository->getMetaValue($account, 'current_debt'),
             //            'include_net_worth'       => $includeNetWorth,
             //            'longitude'               => $longitude,
             //            'latitude'                => $latitude,
@@ -185,7 +195,7 @@ class AccountTransformer extends AbstractTransformer
             'links'                          => [
                 [
                     'rel' => 'self',
-                    'uri' => '/accounts/'.$account->id,
+                    'uri' => '/accounts/' . $account->id,
                 ],
             ],
         ];
@@ -208,14 +218,14 @@ class AccountTransformer extends AbstractTransformer
     private function collectAccountMetaData(Collection $accounts): void
     {
         /** @var CurrencyRepositoryInterface $repository */
-        $repository        = app(CurrencyRepositoryInterface::class);
+        $repository = app(CurrencyRepositoryInterface::class);
 
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
-        $metaFields        = $accountRepository->getMetaValues($accounts, ['currency_id', 'account_role', 'account_number']);
+        $metaFields        = $accountRepository->getMetaValues($accounts, ['currency_id', 'account_role', 'account_number', 'liability_direction', 'interest', 'interest_period', 'current_debt']);
         $currencyIds       = $metaFields->where('name', 'currency_id')->pluck('data')->toArray();
 
-        $currencies        = $repository->getByIds($currencyIds);
+        $currencies = $repository->getByIds($currencyIds);
         foreach ($currencies as $currency) {
             $id                    = $currency->id;
             $this->currencies[$id] = $currency;
@@ -235,6 +245,7 @@ class AccountTransformer extends AbstractTransformer
         /** @var AccountType $row */
         foreach ($accountTypes as $row) {
             $this->accountTypes[$row->id] = (string) config(sprintf('firefly.shortNamesByFullName.%s', $row->type));
+            $this->fullTypes[$row->id]    = $row->type;
         }
     }
 
@@ -274,6 +285,9 @@ class AccountTransformer extends AbstractTransformer
             }
             if ('balance_difference' === $column) {
                 $accounts = $this->sortByBalanceDifference($accounts, $direction);
+            }
+            if ('current_debt' === $column) {
+                $accounts = $this->sortByCurrentDebt($accounts, $direction);
             }
         }
 
@@ -363,6 +377,21 @@ class AccountTransformer extends AbstractTransformer
             }
 
             return $rightBalance <=> $leftBalance;
+        });
+    }
+
+    private function sortByCurrentDebt(Collection $accounts, string $direction): Collection
+    {
+        $amounts = $this->accountMeta;
+
+        return $accounts->sort(function (Account $left, Account $right) use ($amounts, $direction) {
+            $leftCurrent  = (float) ($amounts[$left->id]['current_debt'] ?? 0);
+            $rightCurrent = (float) ($amounts[$right->id]['current_debt'] ?? 0);
+            if ('asc' === $direction) {
+                return $leftCurrent <=> $rightCurrent;
+            }
+
+            return $rightCurrent <=> $leftCurrent;
         });
     }
 }

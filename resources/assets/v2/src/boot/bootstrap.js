@@ -43,6 +43,7 @@ store.addPlugin(observePlugin);
 
 window.bootstrapped = false;
 window.store = store;
+window.bootstrap = bootstrap;
 
 
 

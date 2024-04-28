@@ -32,7 +32,6 @@ import {showWizardButton} from "../../support/page-settings/show-wizard-button.j
 import {setVariable} from "../../store/set-variable.js";
 import {getVariables} from "../../store/get-variables.js";
 import pageNavigation from "../../support/page-navigation.js";
-import {getCacheKey} from "../../support/get-cache-key.js";
 
 
 // set type from URL
@@ -144,9 +143,35 @@ let index = function () {
         },
         editors: {},
         accounts: [],
+        lastClickedFilter: '',
+        lastFilterInput: '',
         goToPage(page) {
             this.page = page;
             this.loadAccounts();
+        },
+        applyFilter() {
+            this.filters[this.lastClickedFilter] = this.lastFilterInput;
+            this.page = 1;
+            setVariable(this.getPreferenceKey('filters'), this.filters);
+
+            // hide modal
+            window.bootstrap.Modal.getInstance(document.getElementById('filterModal')).hide();
+            this.loadAccounts();
+
+        },
+        removeFilter(field) {
+            this.filters[field] = null;
+            this.page = 1;
+            setVariable(this.getPreferenceKey('filters'), this.filters);
+            this.loadAccounts();
+        },
+        hasFilters() {
+            return this.filters.name !== null;
+        },
+        showFilterDialog(field) {
+            this.lastFilterInput = this.filters[field] ?? '';
+            this.lastClickedFilter = field;
+            document.getElementById('filterInput').focus();
         },
         accountRole(roleName) {
             return i18next.t('firefly.account_role_' + roleName);
@@ -159,7 +184,7 @@ let index = function () {
         },
 
         sort(column) {
-            this.page =1;
+            this.page = 1;
             this.pageOptions.sortingColumn = column;
             this.pageOptions.sortDirection = this.pageOptions.sortDirection === 'asc' ? 'desc' : 'asc';
 
@@ -179,7 +204,7 @@ let index = function () {
         },
         generatePageUrl(includePageNr) {
             let url = './accounts/' + type + '?column=' + this.pageOptions.sortingColumn + '&direction=' + this.pageOptions.sortDirection + '&page=';
-            if(includePageNr) {
+            if (includePageNr) {
                 return url + this.page
             }
             return url;
@@ -204,6 +229,15 @@ let index = function () {
         },
 
         init() {
+            // modal filter thing
+            const myModalEl = document.getElementById('filterModal')
+            myModalEl.addEventListener('shown.bs.modal', event => {
+                document.getElementById('filterInput').focus();
+            })
+
+
+
+            // some opts
             this.pageOptions.isLoading = true;
             this.notifications.wait.show = true;
             this.page = page;
@@ -230,7 +264,7 @@ let index = function () {
                 this.pageOptions.sortDirection = '' === this.pageOptions.sortDirection ? res[2] : this.pageOptions.sortDirection;
 
                 // filters
-                for(let k in res[3]) {
+                for (let k in res[3]) {
                     if (res[3].hasOwnProperty(k) && this.filters.hasOwnProperty(k)) {
                         this.filters[k] = res[3][k];
                     }
@@ -241,13 +275,13 @@ let index = function () {
         },
         saveActiveFilter(e) {
             this.page = 1;
-            if('both' === e.currentTarget.value) {
+            if ('both' === e.currentTarget.value) {
                 this.filters.active = null;
             }
-            if('active' === e.currentTarget.value) {
+            if ('active' === e.currentTarget.value) {
                 this.filters.active = true;
             }
-            if('inactive' === e.currentTarget.value) {
+            if ('inactive' === e.currentTarget.value) {
                 this.filters.active = false;
             }
             setVariable(this.getPreferenceKey('filters'), this.filters);
@@ -301,8 +335,8 @@ let index = function () {
 
             // filter instructions
             let filters = [];
-            for(let k in this.filters) {
-                if(this.filters.hasOwnProperty(k) && null !== this.filters[k]) {
+            for (let k in this.filters) {
+                if (this.filters.hasOwnProperty(k) && null !== this.filters[k]) {
                     filters.push({column: k, filter: this.filters[k]});
                 }
             }
@@ -351,7 +385,12 @@ let index = function () {
                             native_currency_code: current.attributes.native_currency_code,
                             last_activity: null === current.attributes.last_activity ? '' : format(new Date(current.attributes.last_activity), i18next.t('config.month_and_day_fns')),
                             balance_difference: current.attributes.balance_difference,
-                            native_balance_difference: current.attributes.native_balance_difference
+                            native_balance_difference: current.attributes.native_balance_difference,
+                            liability_type: current.attributes.liability_type,
+                            liability_direction: current.attributes.liability_direction,
+                            interest: current.attributes.interest,
+                            interest_period: current.attributes.interest_period,
+                            current_debt: current.attributes.current_debt,
                         };
                         this.accounts.push(account);
                     }

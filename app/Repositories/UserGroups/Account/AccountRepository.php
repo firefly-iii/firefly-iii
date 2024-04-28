@@ -251,6 +251,7 @@ class AccountRepository implements AccountRepositoryInterface
 
         // process filters
         // TODO this should be repeatable, it feels like a hack when you do it here.
+        // TODO some fields cannot be filtered using the query, and a second filter must be applied on the collection.
         foreach($filters as $column => $value) {
             // filter on NULL values
             if(null === $value) {
@@ -258,6 +259,9 @@ class AccountRepository implements AccountRepositoryInterface
             }
             if ('active' === $column) {
                 $query->where('accounts.active', $value);
+            }
+            if('name' === $column) {
+                $query->where('accounts.name', 'LIKE', sprintf('%%%s%%', $value));
             }
         }
 
