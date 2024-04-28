@@ -26,6 +26,17 @@
                         <em class="fa-solid fa-magnifying-glass"></em>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        Size:
+                        <span class="d-inline d-sm-none">xs</span>
+                        <span class="d-none d-sm-inline d-md-none">sm</span>
+                        <span class="d-none d-md-inline d-lg-none">md</span>
+                        <span class="d-none d-lg-inline d-xl-none">lg</span>
+                        <span class="d-none d-xl-inline d-xxl-none">xl</span>
+                        <span class="d-none d-xxl-inline">xxl</span>
+                    </a>
+                </li>
                 <!--end::Navbar Search-->
             </ul>
             <!--end::Start Navbar Links-->
