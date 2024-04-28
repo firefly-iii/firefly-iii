@@ -69,6 +69,8 @@ interface AccountRepositoryInterface
      */
     public function getMetaValue(Account $account, string $field): ?string;
 
+    public function getObjectGroups(Collection $accounts) : array;
+
     public function getUserGroup(): UserGroup;
 
     /**

@@ -47,6 +47,7 @@ class AccountTransformer extends AbstractTransformer
     private array               $currencies;
     private TransactionCurrency $default;
     private array               $lastActivity;
+    private array               $objectGroups;
 
     /**
      * This method collects meta-data for one or all accounts in the transformer's collection.
@@ -58,6 +59,7 @@ class AccountTransformer extends AbstractTransformer
         $this->accountTypes       = [];
         $this->fullTypes          = [];
         $this->lastActivity       = [];
+        $this->objectGroups       = [];
         $this->convertedBalances  = [];
         $this->balanceDifferences = [];
 
@@ -80,6 +82,9 @@ class AccountTransformer extends AbstractTransformer
         if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
             $this->getBalanceDifference($objects, $this->parameters->get('start'), $this->parameters->get('end'));
         }
+
+        // get object groups"
+        $this->getObjectGroups($objects);
 
         return $this->sortAccounts($objects);
     }
@@ -126,6 +131,11 @@ class AccountTransformer extends AbstractTransformer
         if (!in_array(strtolower($accountType), ['liability', 'liabilities', 'asset'], true)) {
             $order = null;
         }
+
+        // object group
+        $objectGroupId    = $this->objectGroups[$id]['id'] ?? null;
+        $objectGroupOrder = $this->objectGroups[$id]['order'] ?? null;
+        $objectGroupTitle = $this->objectGroups[$id]['title'] ?? null;
 
         // balance difference
         $diffStart         = null;
@@ -180,6 +190,11 @@ class AccountTransformer extends AbstractTransformer
             'interest'                       => $interest,
             'interest_period'                => $interestPeriod,
             'current_debt'                   => $currentDebt,
+
+            // object group
+            'object_group_id'                => null !== $objectGroupId ? (string) $objectGroupId : null,
+            'object_group_order'             => $objectGroupOrder,
+            'object_group_title'             => $objectGroupTitle,
 
             //            'notes'                   => $this->repository->getNoteText($account),
             //            'monthly_payment_date'    => $monthlyPaymentDate,
@@ -393,5 +408,12 @@ class AccountTransformer extends AbstractTransformer
 
             return $rightCurrent <=> $leftCurrent;
         });
+    }
+
+    private function getObjectGroups(Collection $accounts): void
+    {
+        /** @var AccountRepositoryInterface $accountRepository */
+        $accountRepository  = app(AccountRepositoryInterface::class);
+        $this->objectGroups = $accountRepository->getObjectGroups($accounts);
     }
 }

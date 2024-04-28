@@ -37,16 +37,20 @@
             </div>
             <div class="row mb-3">
                 <div class="col">
-                    <div x-html="pageNavigation()">
+                    <div x-html="pageNavigation">
                 </div>
             </div>
+                <template x-for="(set, rootIndex) in accounts" :key="rootIndex">
             <div class="row mb-3">
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="card mb-3">
                         <div class="card-header">
                             <div class="row">
                                 <div class="col">
-                                    <h3 class="card-title">{{ __('firefly.undefined_accounts') }}</h3>
+                                    <h3 class="card-title">
+                                        <span x-show="null === set.group.id">{{ __('firefly.undefined_accounts') }}</span>
+                                        <span x-show="null !== set.group.id" x-text="set.group.title"></span>
+                                    </h3>
                                 </div>
                                 <div class="col text-end">
                                 </div>
@@ -173,7 +177,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <template x-for="(account, index) in accounts" :key="index">
+                                <template x-for="(account, index) in set.accounts" :key="index">
                                     <tr>
                                         <td x-show="tableColumns.drag_and_drop.visible && tableColumns.drag_and_drop.enabled">
                                             <em class="fa-solid fa-bars"></em>
@@ -312,9 +316,10 @@
 
                 </div>
             </div>
+                </template>
             <div class="row mb-3">
                 <div class="col">
-                    <div x-html="pageNavigation()">
+                    <div x-html="pageNavigation">
                 </div>
             </div>
 
@@ -353,19 +358,17 @@
                                     </select>
                                 </div>
                             </div>
-                            <!--
                             <div class="row mb-3">
                                 <label class="col-sm-4 col-form-label">Group accounts</label>
                                 <div class="col-sm-8">
                                     <div class="form-check form-switch">
                                         <label>
-                                            <input class="form-check-input" type="checkbox"
+                                            <input class="form-check-input" type="checkbox" @change="saveGroupedAccounts"
                                                    x-model="pageOptions.groupedAccounts"><span>Group accounts</span>
                                         </label>
                                     </div>
                                 </div>
                             </div>
-                            -->
                             <!--
                             <div class="row mb-3">
                                 <label for="inputEmail3" class="col-sm-4 col-form-label">Show info boxes</label>
@@ -408,14 +411,14 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="filterInput" class="form-label">Search in column: <span x-text="lastClickedFilter"></span></label>
-                        <input @keyup.enter="applyFilter()" type="text" class="form-control" id="filterInput" placeholder="" x-model="lastFilterInput">
+                        <input @keyup.enter="applyFilter" type="text" class="form-control" id="filterInput" placeholder="" x-model="lastFilterInput">
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><em
                             class="fa-solid fa-right-from-bracket"></em> Cancel
                     </button>
-                    <button @click="applyFilter()" type="button" class="btn btn-primary" data-bs-dismiss="modal"><em
+                    <button @click="applyFilter" type="button" class="btn btn-primary" data-bs-dismiss="modal"><em
                             class="fa-solid fa-magnifying-glass"></em> Search
                     </button>
 

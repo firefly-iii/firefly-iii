@@ -27,6 +27,7 @@ namespace FireflyIII\Repositories\UserGroups\Account;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Services\Internal\Update\AccountUpdateService;
@@ -65,8 +66,7 @@ class AccountRepository implements AccountRepositoryInterface
                     $q1->where('account_meta.name', '=', 'account_number');
                     $q1->where('account_meta.data', '=', $json);
                 }
-            )
-        ;
+            );
 
         if (0 !== count($types)) {
             $dbQuery->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
@@ -92,7 +92,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     public function findByName(string $name, array $types): ?Account
     {
-        $query   = $this->userGroup->accounts();
+        $query = $this->userGroup->accounts();
 
         if (0 !== count($types)) {
             $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
@@ -116,8 +116,8 @@ class AccountRepository implements AccountRepositoryInterface
 
     public function getAccountCurrency(Account $account): ?TransactionCurrency
     {
-        $type       = $account->accountType->type;
-        $list       = config('firefly.valid_currency_account_types');
+        $type = $account->accountType->type;
+        $list = config('firefly.valid_currency_account_types');
 
         // return null if not in this list.
         if (!in_array($type, $list, true)) {
@@ -242,9 +242,9 @@ class AccountRepository implements AccountRepositoryInterface
 
     public function getAccountsByType(array $types, ?array $sort = [], ?array $filters = []): Collection
     {
-        $sortable        = ['name', 'active']; // TODO yes this is a duplicate array.
-        $res             = array_intersect([AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT], $types);
-        $query           = $this->userGroup->accounts();
+        $sortable = ['name', 'active']; // TODO yes this is a duplicate array.
+        $res      = array_intersect([AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT], $types);
+        $query    = $this->userGroup->accounts();
         if (0 !== count($types)) {
             $query->accountTypeIn($types);
         }
@@ -252,15 +252,15 @@ class AccountRepository implements AccountRepositoryInterface
         // process filters
         // TODO this should be repeatable, it feels like a hack when you do it here.
         // TODO some fields cannot be filtered using the query, and a second filter must be applied on the collection.
-        foreach($filters as $column => $value) {
+        foreach ($filters as $column => $value) {
             // filter on NULL values
-            if(null === $value) {
+            if (null === $value) {
                 continue;
             }
             if ('active' === $column) {
                 $query->where('accounts.active', $value);
             }
-            if('name' === $column) {
+            if ('name' === $column) {
                 $query->where('accounts.name', 'LIKE', sprintf('%%%s%%', $value));
             }
         }
@@ -294,12 +294,11 @@ class AccountRepository implements AccountRepositoryInterface
     {
         // search by group, not by user
         $dbQuery = $this->userGroup->accounts()
-            ->where('active', true)
-            ->orderBy('accounts.order', 'ASC')
-            ->orderBy('accounts.account_type_id', 'ASC')
-            ->orderBy('accounts.name', 'ASC')
-            ->with(['accountType'])
-        ;
+                                   ->where('active', true)
+                                   ->orderBy('accounts.order', 'ASC')
+                                   ->orderBy('accounts.account_type_id', 'ASC')
+                                   ->orderBy('accounts.name', 'ASC')
+                                   ->with(['accountType']);
         if ('' !== $query) {
             // split query on spaces just in case:
             $parts = explode(' ', $query);
@@ -340,18 +339,42 @@ class AccountRepository implements AccountRepositoryInterface
     public function getAccountTypes(Collection $accounts): Collection
     {
         return AccountType::leftJoin('accounts', 'accounts.account_type_id', '=', 'account_types.id')
-            ->whereIn('accounts.id', $accounts->pluck('id')->toArray())
-            ->get(['accounts.id', 'account_types.type'])
-        ;
+                          ->whereIn('accounts.id', $accounts->pluck('id')->toArray())
+                          ->get(['accounts.id', 'account_types.type']);
     }
 
     #[\Override]
     public function getLastActivity(Collection $accounts): array
     {
         return Transaction::whereIn('account_id', $accounts->pluck('id')->toArray())
-            ->leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
-            ->groupBy('transactions.account_id')
-            ->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) as date_max')])->toArray() // @phpstan-ignore-line
-        ;
+                          ->leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
+                          ->groupBy('transactions.account_id')
+                          ->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) as date_max')])->toArray() // @phpstan-ignore-line
+            ;
+    }
+
+    #[\Override] public function getObjectGroups(Collection $accounts): array
+    {
+        $groupIds = [];
+        $return   = [];
+        $set      = DB::table('object_groupables')->where('object_groupable_type', Account::class)
+                      ->whereIn('object_groupable_id', $accounts->pluck('id')->toArray())->get();
+        /** @var \stdClass $row */
+        foreach ($set as $row) {
+            $groupIds[] = $row->object_group_id;
+        }
+        $groupIds = array_unique($groupIds);
+        $groups   = ObjectGroup::whereIn('id', $groupIds)->get();
+        /** @var \stdClass $row */
+        foreach ($set as $row) {
+            if (!array_key_exists($row->object_groupable_id, $return)) {
+                /** @var ObjectGroup|null $group */
+                $group = $groups->firstWhere('id', '=', $row->object_group_id);
+                if (null !== $group) {
+                    $return[$row->object_groupable_id] = ['title' => $group->title, 'order' => $group->order, 'id' => $group->id];
+                }
+            }
+        }
+        return $return;
     }
 }

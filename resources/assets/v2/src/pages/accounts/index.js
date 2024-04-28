@@ -157,7 +157,11 @@ let index = function () {
             // hide modal
             window.bootstrap.Modal.getInstance(document.getElementById('filterModal')).hide();
             this.loadAccounts();
-
+        },
+        saveGroupedAccounts() {
+            setVariable(this.getPreferenceKey('grouped'), this.pageOptions.groupedAccounts);
+            this.page = 1;
+            this.loadAccounts();
         },
         removeFilter(field) {
             this.filters[field] = null;
@@ -236,7 +240,6 @@ let index = function () {
             })
 
 
-
             // some opts
             this.pageOptions.isLoading = true;
             this.notifications.wait.show = true;
@@ -249,6 +252,7 @@ let index = function () {
                 {name: this.getPreferenceKey('sc'), default: ''},
                 {name: this.getPreferenceKey('sd'), default: ''},
                 {name: this.getPreferenceKey('filters'), default: this.filters},
+                {name: this.getPreferenceKey('grouped'), default: true},
             ]).then((res) => {
                 // process columns:
                 for (let k in res[0]) {
@@ -269,6 +273,9 @@ let index = function () {
                         this.filters[k] = res[3][k];
                     }
                 }
+
+                // group accounts
+                this.pageOptions.groupedAccounts = res[4];
 
                 this.loadAccounts();
             });
@@ -360,10 +367,8 @@ let index = function () {
                 delete params.start;
                 delete params.end;
             }
-            // check if cache is present:
-
             this.accounts = [];
-
+            let groupedAccounts = {};
             // one page only.o
             (new Get()).index(params).then(response => {
                 this.totalPages = response.meta.pagination.total_pages;
@@ -392,12 +397,38 @@ let index = function () {
                             interest_period: current.attributes.interest_period,
                             current_debt: current.attributes.current_debt,
                         };
-                        this.accounts.push(account);
+
+                        // get group info:
+                        let groupId = current.attributes.object_group_id;
+                        if(!this.pageOptions.groupedAccounts) {
+                            groupId = '0';
+                        }
+                        if (!groupedAccounts.hasOwnProperty(groupId)) {
+                            groupedAccounts[groupId] = {
+                                group: {
+                                    id: '0' === groupId || null === groupId ? null : parseInt(groupId),
+                                    title: current.attributes.object_group_title, // are ignored if group id is null.
+                                    order: current.attributes.object_group_order,
+                                },
+                                accounts: [],
+                            }
+                        }
+                        groupedAccounts[groupId].accounts.push(account);
+
+                        //this.accounts.push(account);
                     }
                 }
+                // order grouped accounts by order.
+                let sortable = [];
+                for (let set in groupedAccounts) {
+                    sortable.push(groupedAccounts[set]);
+                }
+                sortable.sort(function(a, b) {
+                    return a.group.order - b.group.order;
+                });
+                this.accounts = sortable;
                 this.notifications.wait.show = false;
                 this.pageOptions.isLoading = false;
-                // add click trigger thing.
             });
         },
     }
