@@ -37,7 +37,7 @@
             </div>
             <div class="row mb-3">
                 <div class="col">
-                    Nav
+                    <div x-html="pageNavigation()">
                 </div>
             </div>
             <div class="row mb-3">
@@ -97,9 +97,9 @@
                                     <th x-show="tableColumns.active.visible && tableColumns.active.enabled">
                                         <a href="#" x-on:click.prevent="sort('active')">Active?</a>
                                         <em x-show="pageOptions.sortingColumn === 'active' && pageOptions.sortDirection === 'asc'"
-                                            class="fa-solid fa-arrow-down-wide-short"></em>
+                                            class="fa-solid fa-arrow-down-short-wide"></em>
                                         <em x-show="pageOptions.sortingColumn === 'active' && pageOptions.sortDirection === 'desc'"
-                                            class="fa-solid fa-arrow-up-wide-short"></em>
+                                            class="fa-solid fa-arrow-down-wide-short"></em>
                                     </th>
                                     <th x-show="tableColumns.name.visible && tableColumns.name.enabled">
                                         <a href="#" x-on:click.prevent="sort('name')">Name</a>
@@ -121,16 +121,16 @@
                                     <th x-show="tableColumns.number.visible && tableColumns.number.enabled">
                                         <a href="#" x-on:click.prevent="sort('iban')">Account number</a>
                                         <em x-show="pageOptions.sortingColumn === 'iban' && pageOptions.sortDirection === 'asc'"
-                                            class="fa-solid fa-arrow-down-z-a"></em>
+                                            class="fa-solid fa-arrow-down-a-z"></em>
                                         <em x-show="pageOptions.sortingColumn === 'iban' && pageOptions.sortDirection === 'desc'"
-                                            class="fa-solid fa-arrow-up-z-a"></em>
+                                            class="fa-solid fa-arrow-down-z-a"></em>
                                     </th>
                                     <th x-show="tableColumns.current_balance.visible && tableColumns.current_balance.enabled">
                                         <a href="#" x-on:click.prevent="sort('balance')">Current balance</a>
                                         <em x-show="pageOptions.sortingColumn === 'balance' && pageOptions.sortDirection === 'asc'"
-                                            class="fa-solid fa-arrow-down-wide-short"></em>
+                                            class="fa-solid fa-arrow-down-9-1"></em>
                                         <em x-show="pageOptions.sortingColumn === 'balance' && pageOptions.sortDirection === 'desc'"
-                                            class="fa-solid fa-arrow-up-wide-short"></em>
+                                            class="fa-solid fa-arrow-down-1-9"></em>
                                     </th>
                                     <th x-show="tableColumns.amount_due.visible && tableColumns.amount_due.enabled">
                                         <a href="#" x-on:click.prevent="sort('amount_due')">Amount due</a>
@@ -155,6 +155,11 @@
                                             class="fa-solid fa-arrow-up-wide-short"></em>
                                     </th>
                                     <th x-show="tableColumns.menu.visible && tableColumns.menu.enabled">&nbsp;</th>
+                                </tr>
+                                <tr x-show="pageOptions.isLoading">
+                                    <td colspan="13" class="text-center">
+                                        <span class="fa fa-spin fa-spinner"></span>
+                                    </td>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -237,7 +242,7 @@
                                         </td>
                                         <td x-show="tableColumns.current_balance.visible && tableColumns.current_balance.enabled">
                                             <span
-                                                x-text="formatMoney(account.current_balance, account.currency_code)"></span>
+                                                x-text="formatMoney(account.native_current_balance, account.currency_code)"></span>
                                         </td>
                                         <td x-show="tableColumns.amount_due.visible && tableColumns.amount_due.enabled">
                                             TODO
@@ -289,7 +294,7 @@
             </div>
             <div class="row mb-3">
                 <div class="col">
-                    Nav
+                    <div x-html="pageNavigation()">
                 </div>
             </div>
 
@@ -320,11 +325,11 @@
                             <div class="row mb-3">
                                 <label for="inputEmail3" class="col-sm-4 col-form-label">Active accounts?</label>
                                 <div class="col-sm-8">
-                                    <select x-model="filters.active" class="form-control">
-                                        <option value="active" label="Active accounts">Active accounts only</option>
-                                        <option value="inactive" label="Inactive accounts">Inactive accounts only
+                                    <select @change="saveActiveFilter" class="form-control">
+                                        <option value="active" :selected="true === filters.active" label="Active accounts">Active accounts only</option>
+                                        <option value="inactive" :selected="false === filters.active" label="Inactive accounts">Inactive accounts only
                                         </option>
-                                        <option value="both" label="Both">All accounts</option>
+                                        <option value="both" :selected="null === filters.active" label="Both">All accounts</option>
                                     </select>
                                     <div id="emailHelp" class="form-text">TODO Bla bla bla.</div>
                                 </div>

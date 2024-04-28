@@ -240,7 +240,7 @@ class AccountRepository implements AccountRepositoryInterface
         }
     }
 
-    public function getAccountsByType(array $types, ?array $sort = []): Collection
+    public function getAccountsByType(array $types, ?array $sort = [], ?array $filters = []): Collection
     {
         $sortable        = ['name', 'active']; // TODO yes this is a duplicate array.
         $res             = array_intersect([AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT], $types);
@@ -248,6 +248,19 @@ class AccountRepository implements AccountRepositoryInterface
         if (0 !== count($types)) {
             $query->accountTypeIn($types);
         }
+
+        // process filters
+        // TODO this should be repeatable, it feels like a hack when you do it here.
+        foreach($filters as $column => $value) {
+            // filter on NULL values
+            if(null === $value) {
+                continue;
+            }
+            if ('active' === $column) {
+                $query->where('accounts.active', $value);
+            }
+        }
+
 
         // add sort parameters. At this point they're filtered to allowed fields to sort by:
         $hasActiveColumn = array_key_exists('active', $sort);

@@ -28,7 +28,7 @@ import i18next from "i18next";
 
 Chart.register({SankeyController, Flow});
 
-const SANKEY_CACHE_KEY = 'dashboard-sankey-data';
+const SANKEY_CACHE_KEY = 'ds_sankey_data';
 let currencies = [];
 let afterPromises = false;
 let chart = null;
@@ -288,7 +288,7 @@ export default () => ({
     getFreshData() {
         const start = new Date(window.store.get('start'));
         const end = new Date(window.store.get('end'));
-        const cacheKey = getCacheKey(SANKEY_CACHE_KEY, start, end);
+        const cacheKey = getCacheKey(SANKEY_CACHE_KEY, {start: start, end: end});
 
         const cacheValid = window.store.get('cacheValid');
         let cachedData = window.store.get(cacheKey);
@@ -312,7 +312,7 @@ export default () => ({
     downloadTransactions(params) {
         const start = new Date(window.store.get('start'));
         const end = new Date(window.store.get('end'));
-        const cacheKey = getCacheKey(SANKEY_CACHE_KEY, start, end);
+        const cacheKey = getCacheKey(SANKEY_CACHE_KEY, {start: start, end: end});
 
         //console.log('Downloading page ' + params.page + '...');
         const getter = new Get();

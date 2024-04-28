@@ -25,7 +25,7 @@ import i18next from "i18next";
 
 let apiData = {};
 let afterPromises = false;
-const PIGGY_CACHE_KEY = 'dashboard-piggies-data';
+const PIGGY_CACHE_KEY = 'ds_pg_data';
 
 export default () => ({
     loading: false,
@@ -36,7 +36,7 @@ export default () => ({
         const start = new Date(window.store.get('start'));
         const end = new Date(window.store.get('end'));
         // needs user data.
-        const cacheKey = getCacheKey(PIGGY_CACHE_KEY, start, end);
+        const cacheKey = getCacheKey(PIGGY_CACHE_KEY, {start: start, end: end});
 
         const cacheValid = window.store.get('cacheValid');
         let cachedData = window.store.get(cacheKey);
@@ -58,7 +58,7 @@ export default () => ({
     downloadPiggyBanks(params) {
         const start = new Date(window.store.get('start'));
         const end = new Date(window.store.get('end'));
-        const cacheKey = getCacheKey(PIGGY_CACHE_KEY, start, end);
+        const cacheKey = getCacheKey(PIGGY_CACHE_KEY, {start: start, end: end});
         const getter = new Get();
         getter.list(params).then((response) => {
             apiData = [...apiData, ...response.data.data];

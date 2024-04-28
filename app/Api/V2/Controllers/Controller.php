@@ -157,6 +157,9 @@ class Controller extends BaseController
     {
         $manager  = new Manager();
         $baseUrl  = request()->getSchemeAndHttpHost().'/api/v2';
+
+        // TODO add stuff to path?
+
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         $objects  = $paginator->getCollection();

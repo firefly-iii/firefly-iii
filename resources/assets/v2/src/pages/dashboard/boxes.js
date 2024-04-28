@@ -38,7 +38,8 @@ export default () => ({
     getFreshData() {
         const start = new Date(window.store.get('start'));
         const end = new Date(window.store.get('end'));
-        const boxesCacheKey = getCacheKey('dashboard-boxes-data', start, end);
+        // TODO cache key is hard coded, problem?
+        const boxesCacheKey = getCacheKey('ds_boxes_data', {start: start, end: end});
         cleanupCache();
 
         const cacheValid = window.store.get('cacheValid');
@@ -208,6 +209,7 @@ export default () => ({
     // Getter
     init() {
         // console.log('boxes init');
+        // TODO can be replaced by "getVariables"
         Promise.all([getVariable('viewRange'), getVariable('autoConversion', false)]).then((values) => {
             // console.log('boxes after promises');
             afterPromises = true;

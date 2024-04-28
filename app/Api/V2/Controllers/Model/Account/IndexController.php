@@ -33,7 +33,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class IndexController extends Controller
 {
-    public const string RESOURCE_KEY                  = 'accounts';
+    public const string RESOURCE_KEY = 'accounts';
 
     private AccountRepositoryInterface $repository;
     protected array                    $acceptedRoles = [UserRoleEnum::READ_ONLY, UserRoleEnum::MANAGE_TRANSACTIONS];
@@ -48,7 +48,7 @@ class IndexController extends Controller
             function ($request, $next) {
                 $this->repository = app(AccountRepositoryInterface::class);
                 // new way of user group validation
-                $userGroup        = $this->validateUserGroup($request);
+                $userGroup = $this->validateUserGroup($request);
                 $this->repository->setUserGroup($userGroup);
 
                 return $next($request);
@@ -57,26 +57,28 @@ class IndexController extends Controller
     }
 
     /**
+     * TODO the sort instructions need proper repeatable documentation.
      * TODO see autocomplete/account controller for list.
      */
     public function index(IndexRequest $request): JsonResponse
     {
         $this->repository->resetAccountOrder();
-        $types        = $request->getAccountTypes();
-        $instructions = $request->getSortInstructions('accounts');
-        $accounts     = $this->repository->getAccountsByType($types, $instructions);
-        $pageSize     = $this->parameters->get('limit');
-        $count        = $accounts->count();
-        $accounts     = $accounts->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
-        $paginator    = new LengthAwarePaginator($accounts, $count, $pageSize, $this->parameters->get('page'));
-        $transformer  = new AccountTransformer();
+        $types       = $request->getAccountTypes();
+        $sorting     = $request->getSortInstructions('accounts');
+        $filters     = $request->getFilterInstructions('accounts');
+        $accounts    = $this->repository->getAccountsByType($types, $sorting, $filters);
+        $pageSize    = $this->parameters->get('limit');
+        $count       = $accounts->count();
+        $accounts    = $accounts->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $paginator   = new LengthAwarePaginator($accounts, $count, $pageSize, $this->parameters->get('page'));
+        $transformer = new AccountTransformer();
 
-        $this->parameters->set('sort', $instructions);
+        $this->parameters->set('sort', $sorting);
+        $this->parameters->set('filters', $filters);
         $transformer->setParameters($this->parameters); // give params to transformer
 
         return response()
             ->json($this->jsonApiList('accounts', $paginator, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE)
-        ;
+            ->header('Content-Type', self::CONTENT_TYPE);
     }
 }

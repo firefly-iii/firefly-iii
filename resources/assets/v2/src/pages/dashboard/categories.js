@@ -147,7 +147,7 @@ export default () => ({
     getFreshData() {
         const start = new Date(window.store.get('start'));
         const end = new Date(window.store.get('end'));
-        const cacheKey = getCacheKey('dashboard-categories-chart', start, end);
+        const cacheKey = getCacheKey('ds_ct_chart', {start: start, end: end});
 
         const cacheValid = window.store.get('cacheValid');
         let cachedData = window.store.get(cacheKey);

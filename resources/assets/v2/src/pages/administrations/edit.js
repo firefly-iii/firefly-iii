@@ -63,7 +63,6 @@ let administrations = function () {
 
         pageProperties: {},
         submitForm() {
-            console.log('submitForm');
             (new Put()).put({title: this.title}, {id: this.id}).then(response => {
                 if (this.formStates.returnHereButton) {
                     this.notifications.success.show = true;

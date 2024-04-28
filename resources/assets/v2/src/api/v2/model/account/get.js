@@ -20,6 +20,7 @@
 
 import {api} from "../../../../boot/axios";
 import format from "date-fns/format";
+import {getCacheKey} from "../../../../support/get-cache-key.js";
 
 export default class Get {
 
@@ -39,7 +40,24 @@ export default class Get {
      * @returns {Promise<AxiosResponse<any>>}
      */
     index(params) {
-        return api.get('/api/v2/accounts', {params: params});
+        // first, check API in some consistent manner.
+        // then, load if necessary.
+        const cacheKey = getCacheKey('/api/v2/accounts', params);
+        const cacheValid = window.store.get('cacheValid');
+        let cachedData = window.store.get(cacheKey);
+
+        if (cacheValid && typeof cachedData !== 'undefined') {
+            console.log('Cache is valid, return cache.');
+            return Promise.resolve(cachedData);
+        }
+
+        // if not, store in cache and then return res.
+
+        return api.get('/api/v2/accounts', {params: params}).then(response => {
+            console.log('Cache is invalid, return fresh.');
+            window.store.set(cacheKey, response.data);
+            return Promise.resolve({data: response.data.data, meta: response.data.meta});
+        });
     }
 
     /**

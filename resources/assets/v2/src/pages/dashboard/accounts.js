@@ -46,16 +46,18 @@ export default () => ({
         this.autoConversion = !this.autoConversion;
         setVariable('autoConversion', this.autoConversion);
     },
+    localCacheKey(type) {
+        return 'ds_accounts_' + type;
+    },
     getFreshData() {
         const start = new Date(window.store.get('start'));
         const end = new Date(window.store.get('end'));
-        const chartCacheKey = getCacheKey('dashboard-accounts-chart', start, end)
+        const chartCacheKey = getCacheKey(this.localCacheKey('chart'), {start: start, end: end})
 
         const cacheValid = window.store.get('cacheValid');
         let cachedData = window.store.get(chartCacheKey);
 
         if (cacheValid && typeof cachedData !== 'undefined') {
-            console.log(cachedData);
             this.drawChart(this.generateOptions(cachedData));
             this.loading = false;
             return;
@@ -65,7 +67,6 @@ export default () => ({
             this.chartData = response.data;
             // cache generated options:
             window.store.set(chartCacheKey, response.data);
-            console.log(response.data);
             this.drawChart(this.generateOptions(this.chartData));
             this.loading = false;
         });
@@ -168,7 +169,7 @@ export default () => ({
         }
         const start = new Date(window.store.get('start'));
         const end = new Date(window.store.get('end'));
-        const accountCacheKey = getCacheKey('dashboard-accounts-data', start, end);
+        const accountCacheKey = getCacheKey(this.localCacheKey('data'), {start: start, end: end});
 
         const cacheValid = window.store.get('cacheValid');
         let cachedData = window.store.get(accountCacheKey);
@@ -221,7 +222,6 @@ export default () => ({
 
                                     // if transfer and source is this account, multiply again
                                     if('transfer' === currentTransaction.type && parseInt(currentTransaction.source_id) === accountId) { //
-                                        console.log('transfer', parseInt(currentTransaction.source_id), accountId);
                                         nativeAmountRaw = nativeAmountRaw * -1;
                                         amountRaw = amountRaw * -1;
                                     }

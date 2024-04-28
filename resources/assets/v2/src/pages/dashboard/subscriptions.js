@@ -186,7 +186,7 @@ export default () => ({
         let end = new Date(window.store.get('end'));
 
         const cacheValid = window.store.get('cacheValid');
-        let cachedData = window.store.get(getCacheKey('subscriptions-data-dashboard', start, end));
+        let cachedData = window.store.get(getCacheKey('ds_sub_data', {start: start, end: end}));
 
         if (cacheValid && typeof cachedData !== 'undefined' && false) {
             console.error('cannot handle yet');

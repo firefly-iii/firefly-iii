@@ -55,7 +55,7 @@ interface AccountRepositoryInterface
 
     public function getAccountsById(array $accountIds): Collection;
 
-    public function getAccountsByType(array $types, ?array $sort = []): Collection;
+    public function getAccountsByType(array $types, ?array $sort = [], ?array $filters = []): Collection;
 
     /**
      * Used in the infinite accounts list.
