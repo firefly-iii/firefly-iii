@@ -359,12 +359,12 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-sm-4 col-form-label">Group accounts</label>
+                                <label class="col-sm-4 col-form-label">{{ __('firefly.group_accounts') }}</label>
                                 <div class="col-sm-8">
                                     <div class="form-check form-switch">
                                         <label>
                                             <input class="form-check-input" type="checkbox" @change="saveGroupedAccounts"
-                                                   x-model="pageOptions.groupedAccounts"><span>Group accounts</span>
+                                                   x-model="pageOptions.groupedAccounts"><span>{{ __('firefly.group_accounts') }}</span>
                                         </label>
                                     </div>
                                 </div>

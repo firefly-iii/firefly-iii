@@ -2335,6 +2335,7 @@ return [
     'active_accounts_only' => 'Active accounts only',
     'in_active_accounts_only' => 'Inactive accounts only',
     'show_all_accounts' => 'Show all accounts',
+    'group_accounts'=> 'Group accounts',
 
     // piggy banks:
     'event_history'                                       => 'Event history',
