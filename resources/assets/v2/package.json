@@ -29,7 +29,7 @@
         "bootstrap5-tags": "^1.6.15",
         "chart.js": "^4.4.0",
         "chartjs-adapter-date-fns": "^3.0.0",
-        "chartjs-chart-sankey": "^0.12.0",
+        "chartjs-chart-sankey": "^0.12.1",
         "date-fns": "^3.6.0",
         "i18next": "^23.11.2",
         "i18next-chained-backend": "^4.6.2",
