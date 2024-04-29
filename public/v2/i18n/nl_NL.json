@@ -27,6 +27,15 @@
         "bad_type_destination": "Firefly III kan het transactietype niet bepalen op basis van deze doelrekening."
     },
     "firefly": {
+        "liability_direction_debit_short": "Schuldenaar",
+        "liability_direction_credit_short": "Schuldeiser",
+        "interest_calc_yearly": "Per jaar",
+        "interest_calc_": "onbekend",
+        "interest_calc_daily": "Per dag",
+        "interest_calc_monthly": "Per maand",
+        "interest_calc_weekly": "Per week",
+        "interest_calc_half-year": "Per half jaar",
+        "interest_calc_quarterly": "Per kwartaal",
         "spent": "Uitgegeven",
         "administration_owner": "Grootboekeigenaar: {{email}}",
         "administration_you": "Jouw rol: {{role}}",

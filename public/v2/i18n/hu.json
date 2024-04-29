@@ -27,6 +27,15 @@
         "bad_type_destination": "A Firefly III nem tudja eld\u00f6nteni a tranzakci\u00f3 t\u00edpus\u00e1t a c\u00e9lsz\u00e1mla alapj\u00e1n."
     },
     "firefly": {
+        "liability_direction_debit_short": "Owe this debt",
+        "liability_direction_credit_short": "Owed this debt",
+        "interest_calc_yearly": "\u00c9vente",
+        "interest_calc_": "ismeretlen",
+        "interest_calc_daily": "Naponta",
+        "interest_calc_monthly": "Havonta",
+        "interest_calc_weekly": "Per week",
+        "interest_calc_half-year": "Per half year",
+        "interest_calc_quarterly": "Per quarter",
         "spent": "Elk\u00f6lt\u00f6tt",
         "administration_owner": "Administration owner: {{email}}",
         "administration_you": "Your role: {{role}}",

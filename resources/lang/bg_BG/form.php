@@ -37,6 +37,7 @@ return [
     // new user:
     'bank_name'                   => 'Име на банката',
     'bank_balance'                => 'Салдо',
+    'current_balance'             => 'Current balance',
     'savings_balance'             => 'Спестявания',
     'credit_card_limit'           => 'Лимит по кредитна карта',
     'automatch'                   => 'Автоматично съчетаване',

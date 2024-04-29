@@ -33,7 +33,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class IndexController extends Controller
 {
-    public const string RESOURCE_KEY = 'accounts';
+    public const string RESOURCE_KEY                  = 'accounts';
 
     private AccountRepositoryInterface $repository;
     protected array                    $acceptedRoles = [UserRoleEnum::READ_ONLY, UserRoleEnum::MANAGE_TRANSACTIONS];
@@ -48,7 +48,7 @@ class IndexController extends Controller
             function ($request, $next) {
                 $this->repository = app(AccountRepositoryInterface::class);
                 // new way of user group validation
-                $userGroup = $this->validateUserGroup($request);
+                $userGroup        = $this->validateUserGroup($request);
                 $this->repository->setUserGroup($userGroup);
 
                 return $next($request);
@@ -79,6 +79,7 @@ class IndexController extends Controller
 
         return response()
             ->json($this->jsonApiList('accounts', $paginator, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
 }

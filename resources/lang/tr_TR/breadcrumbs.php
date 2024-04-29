@@ -36,10 +36,10 @@ declare(strict_types=1);
 return [
     'home'                   => 'Ana Sayfa',
     'budgets'                => 'Bütçeler',
-    'subscriptions'          => 'Abonelik',
+    'subscriptions'          => 'Abonelikler',
     'transactions'           => 'İşlemler',
-    'title_expenses'         => 'Masraflar',
-    'title_withdrawal'       => 'Masraflar',
+    'title_expenses'         => 'Giderler',
+    'title_withdrawal'       => 'Giderler',
     'title_revenue'          => 'Gelir / kazanç',
     'title_deposit'          => 'Gelir /kazanç',
     'title_transfer'         => 'Aktarmalar',

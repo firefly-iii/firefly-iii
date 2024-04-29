@@ -37,6 +37,7 @@ return [
     // new user:
     'bank_name'                   => '은행명',
     'bank_balance'                => '잔고',
+    'current_balance'             => 'Current balance',
     'savings_balance'             => '저축 잔액',
     'credit_card_limit'           => '신용카드 한도',
     'automatch'                   => '자동으로 일치',

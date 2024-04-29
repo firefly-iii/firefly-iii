@@ -37,6 +37,7 @@ return [
     // new user:
     'bank_name'                   => 'Bank neve',
     'bank_balance'                => 'Egyenleg',
+    'current_balance'             => 'Current balance',
     'savings_balance'             => 'Megtakarítási egyenleg',
     'credit_card_limit'           => 'Hitelkártya limit',
     'automatch'                   => 'Automatikus egyezés',

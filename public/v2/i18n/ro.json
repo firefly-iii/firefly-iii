@@ -27,6 +27,15 @@
         "bad_type_destination": "Firefly III nu poate determina tipul de tranzac\u021bie bazat pe acest cont de destina\u021bie."
     },
     "firefly": {
+        "liability_direction_debit_short": "Creditor",
+        "liability_direction_credit_short": "\u00cendatorat",
+        "interest_calc_yearly": "Pe an",
+        "interest_calc_": "necunoscut",
+        "interest_calc_daily": "Pe zi",
+        "interest_calc_monthly": "Pe lun\u0103",
+        "interest_calc_weekly": "Pe s\u0103pt\u0103m\u00e2n\u0103",
+        "interest_calc_half-year": "Pe jum\u0103tate de an",
+        "interest_calc_quarterly": "Pe trimestru",
         "spent": "Cheltuit",
         "administration_owner": "Administration owner: {{email}}",
         "administration_you": "Your role: {{role}}",

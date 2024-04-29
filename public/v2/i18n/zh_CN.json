@@ -27,6 +27,15 @@
         "bad_type_destination": "Firefly III \u65e0\u6cd5\u786e\u5b9a\u57fa\u4e8e\u6b64\u76ee\u6807\u5e10\u6237\u7684\u4ea4\u6613\u7c7b\u578b\u3002"
     },
     "firefly": {
+        "liability_direction_debit_short": "\u6b20\u6b3e",
+        "liability_direction_credit_short": "\u501f\u6b3e",
+        "interest_calc_yearly": "\u6bcf\u5e74",
+        "interest_calc_": "\u672a\u77e5",
+        "interest_calc_daily": "\u6bcf\u65e5",
+        "interest_calc_monthly": "\u6bcf\u6708",
+        "interest_calc_weekly": "\u6bcf\u5468",
+        "interest_calc_half-year": "\u6bcf\u534a\u5e74",
+        "interest_calc_quarterly": "\u6bcf\u5b63\u5ea6",
         "spent": "\u652f\u51fa",
         "administration_owner": "\u7ba1\u7406\u5458\u5f52\u5c5e: {{email}}",
         "administration_you": "\u4f60\u7684\u89d2\u8272: {{role}}",

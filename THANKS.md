@@ -188,8 +188,6 @@ Please find below all the people who contributed to the Firefly III code. Their 
 ## 2014
 - Stewart Malik
 - Graham Campbell
-- Sander Dorigo
-- James Cole
 
 
 Thank you for all your support!

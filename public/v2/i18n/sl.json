@@ -27,6 +27,15 @@
         "bad_type_destination": "Na podlagi tega ciljnega ra\u010duna Firefly III ne more dolo\u010diti vrste transakcije."
     },
     "firefly": {
+        "liability_direction_debit_short": "Dolgujem",
+        "liability_direction_credit_short": "Ta dolg je bil dolgovan",
+        "interest_calc_yearly": "Na leto",
+        "interest_calc_": "neznano",
+        "interest_calc_daily": "Na dan",
+        "interest_calc_monthly": "Na mesec",
+        "interest_calc_weekly": "Tedensko",
+        "interest_calc_half-year": "Na pol leta",
+        "interest_calc_quarterly": "Na \u010detrtletje",
         "spent": "Porabljeno",
         "administration_owner": "Lastnik administracije: {{email}}",
         "administration_you": "Va\u0161a vloga: {{role}}",

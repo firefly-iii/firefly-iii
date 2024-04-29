@@ -27,6 +27,15 @@
         "bad_type_destination": "Firefly III no pot determinar el tipus de transacci\u00f3 a partir d'aquest compte de dest\u00ed."
     },
     "firefly": {
+        "liability_direction_debit_short": "Ho dec",
+        "liability_direction_credit_short": "Se'm deu",
+        "interest_calc_yearly": "Per any",
+        "interest_calc_": "desconegut",
+        "interest_calc_daily": "Per dia",
+        "interest_calc_monthly": "Per mes",
+        "interest_calc_weekly": "Per setmana",
+        "interest_calc_half-year": "Cada mig any",
+        "interest_calc_quarterly": "Per quadrimestre",
         "spent": "Gastat",
         "administration_owner": "Propietari de l'administraci\u00f3: {{email}}",
         "administration_you": "El teu rol: {{role}}",

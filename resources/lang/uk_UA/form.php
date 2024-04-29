@@ -37,6 +37,7 @@ return [
     // new user:
     'bank_name'                   => 'Назва банку',
     'bank_balance'                => 'Баланс',
+    'current_balance'             => 'Current balance',
     'savings_balance'             => 'Баланс заощаджень',
     'credit_card_limit'           => 'Ліміт кредитної картки',
     'automatch'                   => 'Визначати автоматично',

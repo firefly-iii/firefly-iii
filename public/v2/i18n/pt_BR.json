@@ -27,6 +27,15 @@
         "bad_type_destination": "Firefly III n\u00e3o conseguiu determinar o tipo de transa\u00e7\u00e3o baseado nesta conta destino."
     },
     "firefly": {
+        "liability_direction_debit_short": "Devo essa d\u00edvida",
+        "liability_direction_credit_short": "Devo receber essa d\u00edvida",
+        "interest_calc_yearly": "Por ano",
+        "interest_calc_": "desconhecido",
+        "interest_calc_daily": "Por dia",
+        "interest_calc_monthly": "Por m\u00eas",
+        "interest_calc_weekly": "Por semana",
+        "interest_calc_half-year": "Por semestre",
+        "interest_calc_quarterly": "Por trimestre",
         "spent": "Gasto",
         "administration_owner": "Propriet\u00e1rio da administra\u00e7\u00e3o: {{email}}",
         "administration_you": "Sua fun\u00e7\u00e3o: {{role}}",

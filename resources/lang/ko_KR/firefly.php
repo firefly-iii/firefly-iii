@@ -2399,6 +2399,16 @@ return [
     'no_tags'                                             => '(태그 없음)',
     'nothing_found'                                       => '(nothing found)',
 
+    // page settings and wizard dialogs
+
+    'page_settings_header'                                => 'Page settings',
+    'visible_columns'                                     => 'Visible columns',
+    'accounts_to_show'                                    => 'Accounts to show',
+    'active_accounts_only'                                => 'Active accounts only',
+    'in_active_accounts_only'                             => 'Inactive accounts only',
+    'show_all_accounts'                                   => 'Show all accounts',
+    'group_accounts'                                      => 'Group accounts',
+
     // piggy banks:
     'event_history'                                       => '이벤트 기록',
     'add_money_to_piggy'                                  => '":name" 저금통애 금액 추가',

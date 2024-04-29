@@ -37,6 +37,7 @@ return [
     // new user:
     'bank_name'                   => 'Όνομα τράπεζας',
     'bank_balance'                => 'Υπόλοιπο',
+    'current_balance'             => 'Current balance',
     'savings_balance'             => 'Υπόλοιπο αποταμιεύσεων',
     'credit_card_limit'           => 'Όριο πιστωτικής κάρτας',
     'automatch'                   => 'Αυτόματο ταίριασμα',

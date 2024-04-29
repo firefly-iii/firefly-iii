@@ -37,35 +37,41 @@ trait GetFilterInstructions
             return [];
         }
         foreach ($set as $info) {
-            $column      = $info['column'] ?? 'NOPE';
-            $filterValue = (string) ($info['filter'] ?? self::INVALID_FILTER);
+            $column          = $info['column'] ?? 'NOPE';
+            $filterValue     = (string) ($info['filter'] ?? self::INVALID_FILTER);
             if (false === in_array($column, $allowed, true)) {
                 // skip invalid column
                 continue;
             }
-            $filterType = $config[$column] ?? false;
+            $filterType      = $config[$column] ?? false;
+
             switch ($filterType) {
                 default:
-                    die(sprintf('Do not support filter type "%s"', $filterType));
+                    exit(sprintf('Do not support filter type "%s"', $filterType));
+
                 case 'boolean':
                     $filterValue = $this->booleanInstruction($filterValue);
+
                     break;
+
                 case 'string':
                     break;
             }
             $result[$column] = $filterValue;
         }
+
         return $result;
     }
 
-    public function booleanInstruction(string $filterValue): ?bool {
+    public function booleanInstruction(string $filterValue): ?bool
+    {
         if ('true' === $filterValue) {
             return true;
         }
         if ('false' === $filterValue) {
             return false;
         }
+
         return null;
     }
-
 }

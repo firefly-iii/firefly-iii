@@ -511,13 +511,13 @@ return [
     'search_modifier_category_ends'                       => 'Kategori slutter med ":value"',
     'search_modifier_not_category_ends'                   => 'Kategori slutter ikke med ":value"',
     'search_modifier_category_starts'                     => 'Kategori starter med ":value"',
-    'search_modifier_not_category_starts'                 => 'Category does not start with ":value"',
+    'search_modifier_not_category_starts'                 => 'Kategori begynder ikke med ":value"',
     'search_modifier_budget_contains'                     => 'Budget indeholder ":value"',
-    'search_modifier_not_budget_contains'                 => 'Budget does not contain ":value"',
+    'search_modifier_not_budget_contains'                 => 'Budget indeholder ikke ":value"',
     'search_modifier_budget_ends'                         => 'Budget slutter med ":value"',
-    'search_modifier_not_budget_ends'                     => 'Budget does not end on ":value"',
+    'search_modifier_not_budget_ends'                     => 'Budget slutter ikke med ":value"',
     'search_modifier_budget_starts'                       => 'Budget starter med ":value"',
-    'search_modifier_not_budget_starts'                   => 'Budget does not start with ":value"',
+    'search_modifier_not_budget_starts'                   => 'Budget begynder ikke med ":value"',
     'search_modifier_bill_contains'                       => 'Regningen indeholder ":value"',
     'search_modifier_not_bill_contains'                   => 'Bill does not contain ":value"',
     'search_modifier_bill_ends'                           => 'Bill slutter med ":value"',
@@ -1153,8 +1153,8 @@ return [
     'rule_trigger_not_external_url_contains'              => 'External URL does not contain ":trigger_value"',
     'rule_trigger_not_external_url_ends'                  => 'External URL does not end on ":trigger_value"',
     'rule_trigger_not_external_url_starts'                => 'External URL does not start with ":trigger_value"',
-    'rule_trigger_not_currency_is'                        => 'Currency is not ":trigger_value"',
-    'rule_trigger_not_foreign_currency_is'                => 'Foreign currency is not ":trigger_value"',
+    'rule_trigger_not_currency_is'                        => 'Valuta er ikke ":trigger_value"',
+    'rule_trigger_not_foreign_currency_is'                => 'Fremmed valuta er ikke ":trigger_value"',
     'rule_trigger_not_id'                                 => 'Transaction ID is not ":trigger_value"',
     'rule_trigger_not_journal_id'                         => 'Transaction journal ID is not ":trigger_value"',
     'rule_trigger_not_recurrence_id'                      => 'Recurrence ID is not ":trigger_value"',
@@ -1676,7 +1676,7 @@ return [
     'create_currency'                                     => 'Opret en ny valuta',
     'store_currency'                                      => 'Gem ny valuta',
     'update_currency'                                     => 'Opdater valuta',
-    'new_default_currency'                                => '":name" is now the default currency.',
+    'new_default_currency'                                => '":name" er nu standard valuta.',
     'default_currency_failed'                             => 'Could not make ":name" the default currency. Please check the logs.',
     'cannot_delete_currency'                              => 'Kan ikke slette :name , fordi den stadig er i brug.',
     'cannot_delete_fallback_currency'                     => ':name er systemet fallback valuta og kan ikke slettes.',
@@ -2152,7 +2152,7 @@ return [
     'select_period'                                       => 'Select a period',
 
     // menu and titles, should be recycled as often as possible:
-    'currency'                                            => 'Currency',
+    'currency'                                            => 'Valuta',
     'preferences'                                         => 'Preferences',
     'logout'                                              => 'Logout',
     'logout_other_sessions'                               => 'Logout all other sessions',
@@ -2398,6 +2398,16 @@ return [
     'balanceFor'                                          => 'Saldo for :name',
     'no_tags'                                             => '(ingen mærker)',
     'nothing_found'                                       => '(nothing found)',
+
+    // page settings and wizard dialogs
+
+    'page_settings_header'                                => 'Page settings',
+    'visible_columns'                                     => 'Visible columns',
+    'accounts_to_show'                                    => 'Accounts to show',
+    'active_accounts_only'                                => 'Active accounts only',
+    'in_active_accounts_only'                             => 'Inactive accounts only',
+    'show_all_accounts'                                   => 'Show all accounts',
+    'group_accounts'                                      => 'Group accounts',
 
     // piggy banks:
     'event_history'                                       => 'Event history',
@@ -2710,7 +2720,7 @@ return [
     'create_new_recurrence'                               => 'Create new recurring transaction',
     'help_first_date'                                     => 'Indicate the first expected recurrence. This must be in the future.',
     'help_first_date_no_past'                             => 'Indicate the first expected recurrence. Firefly III will not create transactions in the past.',
-    'no_currency'                                         => '(no currency)',
+    'no_currency'                                         => '(ingen valuta)',
     'mandatory_for_recurring'                             => 'Mandatory recurrence information',
     'mandatory_for_transaction'                           => 'Mandatory transaction information',
     'optional_for_recurring'                              => 'Optional recurrence information',
@@ -2756,10 +2766,10 @@ return [
  */
 
     // new lines for summary controller.
-    'box_balance_in_currency'                             => 'Balance (:currency)',
-    'box_spent_in_currency'                               => 'Spent (:currency)',
+    'box_balance_in_currency'                             => 'Saldo (:currency)',
+    'box_spent_in_currency'                               => 'Forbrug (:currency)',
     'box_earned_in_currency'                              => 'Earned (:currency)',
-    'box_budgeted_in_currency'                            => 'Budgeted (:currency)',
+    'box_budgeted_in_currency'                            => 'Budgetteret (:currency)',
     'box_bill_paid_in_currency'                           => 'Betalte regninger (:currency)',
     'box_bill_unpaid_in_currency'                         => 'Ubetalte regninger (:currency)',
     'box_left_to_spend_in_currency'                       => 'Left to spend (:currency)',
@@ -2817,8 +2827,8 @@ return [
     'ale_action_update_amount'                            => 'Updated amount',
 
     // dashboard
-    'enable_auto_convert'                                 => 'Enable currency conversion',
-    'disable_auto_convert'                                => 'Disable currency conversion',
+    'enable_auto_convert'                                 => 'Aktiver valutakonvertering',
+    'disable_auto_convert'                                => 'Deaktivér valutakonvertering',
 ];
 
 /*

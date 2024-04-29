@@ -104,28 +104,28 @@ class AccountTransformer extends AbstractTransformer
      */
     public function transform(Account $account): array
     {
-        $id = $account->id;
+        $id                 = $account->id;
 
         // various meta
-        $accountRole = $this->accountMeta[$id]['account_role'] ?? null;
-        $accountType = $this->accountTypes[$id];
-        $order       = $account->order;
+        $accountRole        = $this->accountMeta[$id]['account_role'] ?? null;
+        $accountType        = $this->accountTypes[$id];
+        $order              = $account->order;
 
         // liability type
-        $liabilityType      = $accountType === 'liabilities' ? $this->fullTypes[$id] : null;
+        $liabilityType      = 'liabilities' === $accountType ? $this->fullTypes[$id] : null;
         $liabilityDirection = $this->accountMeta[$id]['liability_direction'] ?? null;
         $interest           = $this->accountMeta[$id]['interest'] ?? null;
         $interestPeriod     = $this->accountMeta[$id]['interest_period'] ?? null;
         $currentDebt        = $this->accountMeta[$id]['current_debt'] ?? null;
 
         // no currency? use default
-        $currency = $this->default;
+        $currency           = $this->default;
         if (array_key_exists($id, $this->accountMeta) && 0 !== (int) ($this->accountMeta[$id]['currency_id'] ?? 0)) {
             $currency = $this->currencies[(int) $this->accountMeta[$id]['currency_id']];
         }
         // amounts and calculation.
-        $balance       = $this->balances[$id]['balance'] ?? null;
-        $nativeBalance = $this->convertedBalances[$id]['native_balance'] ?? null;
+        $balance            = $this->balances[$id]['balance'] ?? null;
+        $nativeBalance      = $this->convertedBalances[$id]['native_balance'] ?? null;
 
         // no order for some accounts:
         if (!in_array(strtolower($accountType), ['liability', 'liabilities', 'asset'], true)) {
@@ -133,15 +133,15 @@ class AccountTransformer extends AbstractTransformer
         }
 
         // object group
-        $objectGroupId    = $this->objectGroups[$id]['id'] ?? null;
-        $objectGroupOrder = $this->objectGroups[$id]['order'] ?? null;
-        $objectGroupTitle = $this->objectGroups[$id]['title'] ?? null;
+        $objectGroupId      = $this->objectGroups[$id]['id'] ?? null;
+        $objectGroupOrder   = $this->objectGroups[$id]['order'] ?? null;
+        $objectGroupTitle   = $this->objectGroups[$id]['title'] ?? null;
 
         // balance difference
-        $diffStart         = null;
-        $diffEnd           = null;
-        $balanceDiff       = null;
-        $nativeBalanceDiff = null;
+        $diffStart          = null;
+        $diffEnd            = null;
+        $balanceDiff        = null;
+        $nativeBalanceDiff  = null;
         if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
             $diffStart         = $this->parameters->get('start')->toAtomString();
             $diffEnd           = $this->parameters->get('end')->toAtomString();
@@ -150,20 +150,20 @@ class AccountTransformer extends AbstractTransformer
         }
 
         return [
-            'id'                      => (string) $account->id,
-            'created_at'              => $account->created_at->toAtomString(),
-            'updated_at'              => $account->updated_at->toAtomString(),
-            'active'                  => $account->active,
-            'order'                   => $order,
-            'name'                    => $account->name,
-            'iban'                    => '' === (string) $account->iban ? null : $account->iban,
-            'account_number'          => $this->accountMeta[$id]['account_number'] ?? null,
-            'type'                    => strtolower($accountType),
-            'account_role'            => $accountRole,
-            'currency_id'             => (string) $currency->id,
-            'currency_code'           => $currency->code,
-            'currency_symbol'         => $currency->symbol,
-            'currency_decimal_places' => $currency->decimal_places,
+            'id'                             => (string) $account->id,
+            'created_at'                     => $account->created_at->toAtomString(),
+            'updated_at'                     => $account->updated_at->toAtomString(),
+            'active'                         => $account->active,
+            'order'                          => $order,
+            'name'                           => $account->name,
+            'iban'                           => '' === (string) $account->iban ? null : $account->iban,
+            'account_number'                 => $this->accountMeta[$id]['account_number'] ?? null,
+            'type'                           => strtolower($accountType),
+            'account_role'                   => $accountRole,
+            'currency_id'                    => (string) $currency->id,
+            'currency_code'                  => $currency->code,
+            'currency_symbol'                => $currency->symbol,
+            'currency_decimal_places'        => $currency->decimal_places,
 
             'native_currency_id'             => (string) $this->default->id,
             'native_currency_code'           => $this->default->code,
@@ -210,7 +210,7 @@ class AccountTransformer extends AbstractTransformer
             'links'                          => [
                 [
                     'rel' => 'self',
-                    'uri' => '/accounts/' . $account->id,
+                    'uri' => '/accounts/'.$account->id,
                 ],
             ],
         ];
@@ -233,14 +233,14 @@ class AccountTransformer extends AbstractTransformer
     private function collectAccountMetaData(Collection $accounts): void
     {
         /** @var CurrencyRepositoryInterface $repository */
-        $repository = app(CurrencyRepositoryInterface::class);
+        $repository        = app(CurrencyRepositoryInterface::class);
 
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
         $metaFields        = $accountRepository->getMetaValues($accounts, ['currency_id', 'account_role', 'account_number', 'liability_direction', 'interest', 'interest_period', 'current_debt']);
         $currencyIds       = $metaFields->where('name', 'currency_id')->pluck('data')->toArray();
 
-        $currencies = $repository->getByIds($currencyIds);
+        $currencies        = $repository->getByIds($currencyIds);
         foreach ($currencies as $currency) {
             $id                    = $currency->id;
             $this->currencies[$id] = $currency;

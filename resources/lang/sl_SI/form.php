@@ -37,6 +37,7 @@ return [
     // new user:
     'bank_name'                   => 'Naziv banke',
     'bank_balance'                => 'Stanje',
+    'current_balance'             => 'Current balance',
     'savings_balance'             => 'Stanje prihrankov',
     'credit_card_limit'           => 'Limit kreditne kartice',
     'automatch'                   => 'Samodejno poveži',

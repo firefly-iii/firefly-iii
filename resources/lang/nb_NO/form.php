@@ -37,6 +37,7 @@ return [
     // new user:
     'bank_name'                   => 'Bankens navn',
     'bank_balance'                => 'Saldo',
+    'current_balance'             => 'Current balance',
     'savings_balance'             => 'Sparesaldo',
     'credit_card_limit'           => 'Kredittkortgrense',
     'automatch'                   => 'Finn automatisk',

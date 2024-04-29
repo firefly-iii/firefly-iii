@@ -37,6 +37,7 @@ return [
     // new user:
     'bank_name'                   => 'Názov banky',
     'bank_balance'                => 'Zostatok',
+    'current_balance'             => 'Current balance',
     'savings_balance'             => 'Zostatok úspor',
     'credit_card_limit'           => 'Limit kreditnej karty',
     'automatch'                   => 'Hľadať zhodu automaticky',

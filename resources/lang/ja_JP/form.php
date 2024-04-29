@@ -37,6 +37,7 @@ return [
     // new user:
     'bank_name'                   => '銀行名',
     'bank_balance'                => '残高',
+    'current_balance'             => 'Current balance',
     'savings_balance'             => '貯金残高',
     'credit_card_limit'           => 'クレジットカード上限額',
     'automatch'                   => '自動的に一致',

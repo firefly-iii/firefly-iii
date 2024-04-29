@@ -37,6 +37,7 @@ return [
     // new user:
     'bank_name'                   => 'Numele băncii',
     'bank_balance'                => 'Balanță',
+    'current_balance'             => 'Current balance',
     'savings_balance'             => 'Soldul de economii',
     'credit_card_limit'           => 'Limita cardului de credit',
     'automatch'                   => 'Se potrivește automat',

@@ -27,6 +27,15 @@
         "bad_type_destination": "Firefly III kan ikke bestemme transaktionstypen baseret p\u00e5 denne destinationskonto."
     },
     "firefly": {
+        "liability_direction_debit_short": "Ejer denne g\u00e6ld",
+        "liability_direction_credit_short": "Ejer denne g\u00e6ld",
+        "interest_calc_yearly": "Pr. \u00e5r",
+        "interest_calc_": "ukendt",
+        "interest_calc_daily": "Pr. dag",
+        "interest_calc_monthly": "Pr. m\u00e5ned",
+        "interest_calc_weekly": "Pr. uge",
+        "interest_calc_half-year": "Hvert halve \u00e5r",
+        "interest_calc_quarterly": "Pr. kvartal",
         "spent": "Spent",
         "administration_owner": "Administration owner: {{email}}",
         "administration_you": "Your role: {{role}}",

@@ -27,6 +27,15 @@
         "bad_type_destination": "Firefly III kann die Buchungsart anhand dieses Zielkontos nicht ermitteln."
     },
     "firefly": {
+        "liability_direction_debit_short": "Schuldiger Betrag",
+        "liability_direction_credit_short": "Geschuldeter Betrag",
+        "interest_calc_yearly": "J\u00e4hrlich",
+        "interest_calc_": "Unbekannt",
+        "interest_calc_daily": "T\u00e4glich",
+        "interest_calc_monthly": "Monatlich",
+        "interest_calc_weekly": "Pro Woche",
+        "interest_calc_half-year": "Halbj\u00e4hrlich",
+        "interest_calc_quarterly": "Viertelj\u00e4hrlich",
         "spent": "Ausgegeben",
         "administration_owner": "Administration owner: {{email}}",
         "administration_you": "Ihre Funktion: {{role}}",

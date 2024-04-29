@@ -37,6 +37,7 @@ return [
     // new user:
     'bank_name'                   => 'Tên ngân hàng',
     'bank_balance'                => 'Số dư',
+    'current_balance'             => 'Current balance',
     'savings_balance'             => 'Số dư tiết kiệm',
     'credit_card_limit'           => 'Hạn mức thẻ tín dụng',
     'automatch'                   => 'Tự động khớp',

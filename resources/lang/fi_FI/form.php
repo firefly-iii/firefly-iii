@@ -37,6 +37,7 @@ return [
     // new user:
     'bank_name'                   => 'Pankin nimi',
     'bank_balance'                => 'Saldo',
+    'current_balance'             => 'Current balance',
     'savings_balance'             => 'Säästötilien saldo',
     'credit_card_limit'           => 'Luottoraja',
     'automatch'                   => 'Vertaile automaattisesti',

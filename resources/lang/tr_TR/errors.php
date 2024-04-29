@@ -42,9 +42,9 @@ return [
     'fatal_error'             => 'Ölümcül bir hata vardı. Neler olduğunu görmek için lütfen "storage/ logs" içindeki günlük dosyalarını kontrol edin veya "docker logs -f [container]" kullanın.',
     'maintenance_mode'        => 'Firefly III bakım modunda.',
     'be_right_back'           => 'Hemen dönecek!',
-    'check_back'              => 'Firefly III is down for some necessary maintenance. Please check back in a second. If you happen to see this message on the demo site, just wait a few minutes. The database is reset every few hours.',
+    'check_back'              => 'Firefly III bazı gerekli bakımlar için kapalıdır. Lütfen biraz sonra tekrar kontrol edin. Eğer bu mesajı demo site üzerinde görüyorsanız, sadece birkaç dakika bekleyin. Veritabanı saatte bir sıfırlanmaktadır.',
     'error_occurred'          => 'Hoppala! Bir hata oluştu.',
-    'db_error_occurred'       => 'Whoops! A database error occurred.',
+    'db_error_occurred'       => 'Hoppala! Bir veritabanı hatası oluştu.',
     'error_not_recoverable'   => 'Ne yazık ki, bu hata kurtarılamadı :(. Ateşböceği III kırıldı. Hata şu şekildedir:',
     'error'                   => 'Hata',
     'error_location'          => 'Bu hata dosyada oluştu<span style="font-family: monospace;">:file</span> on line :line with code :code.',
@@ -63,7 +63,7 @@ return [
  */
 
     'collect_info'            => 'Lütfen günlük dosyalarını bulacağınız <code>storage/logs</code> dizininde daha fazla bilgi toplayın. Eğer Docker kullanıyorsanız, <code>docker logs -f [container]</code> komutunu kullanın.',
-    'collect_info_more'       => 'You can read more about collecting error information in <a href="https://docs.firefly-iii.org/how-to/general/debug/">the FAQ</a>.',
+    'collect_info_more'       => '<a href="https://docs.firefly-iii.org/how-to/general/debug/">SSS</a> bölümünden hata bilgilerinin toplanması hakkında daha fazla bilgi edinebilirsiniz.',
     'github_help'             => 'Github\'dan yardım alın',
     'github_instructions'     => 'Yeni bir sayı açmaktan memnuniyet duyarız<strong><a href="https://github.com/firefly-iii/firefly-iii/issues">on GitHub</a></strong>.',
     'use_search'              => 'Aramayı kullan!',

@@ -37,6 +37,7 @@ return [
     // new user:
     'bank_name'                   => 'Nama Bank',
     'bank_balance'                => 'Keseimbangan',
+    'current_balance'             => 'Current balance',
     'savings_balance'             => 'Saldo tabungan',
     'credit_card_limit'           => 'Batas kartu kredit',
     'automatch'                   => 'Cocokkan secara otomatis',

@@ -41,9 +41,8 @@ class IndexRequest extends FormRequest
     use AccountFilter;
     use ChecksLogin;
     use ConvertsDataTypes;
-    use GetSortInstructions;
     use GetFilterInstructions;
-
+    use GetSortInstructions;
 
     public function getAccountTypes(): array
     {

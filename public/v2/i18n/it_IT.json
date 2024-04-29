@@ -27,6 +27,15 @@
         "bad_type_destination": "Firefly III non pu\u00f2 determinare il tipo di transazione in base a questo account di destinazione."
     },
     "firefly": {
+        "liability_direction_debit_short": "Devo questo debito",
+        "liability_direction_credit_short": "Mi devono questo debito",
+        "interest_calc_yearly": "All'anno",
+        "interest_calc_": "sconosciuto",
+        "interest_calc_daily": "Al giorno",
+        "interest_calc_monthly": "Al mese",
+        "interest_calc_weekly": "Settimanale",
+        "interest_calc_half-year": "Semestrale",
+        "interest_calc_quarterly": "Trimestrale",
         "spent": "Speso",
         "administration_owner": "Administration owner: {{email}}",
         "administration_you": "Your role: {{role}}",

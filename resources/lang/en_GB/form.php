@@ -37,6 +37,7 @@ return [
     // new user:
     'bank_name'                   => 'Bank name',
     'bank_balance'                => 'Balance',
+    'current_balance'             => 'Current balance',
     'savings_balance'             => 'Savings balance',
     'credit_card_limit'           => 'Credit card limit',
     'automatch'                   => 'Match automatically',

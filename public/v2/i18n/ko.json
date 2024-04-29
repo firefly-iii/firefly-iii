@@ -27,6 +27,15 @@
         "bad_type_destination": "Firefly III can't determine the transaction type based on this destination account."
     },
     "firefly": {
+        "liability_direction_debit_short": "\uc774 \ube5a\uc744 \uc9c0\uace0 \uc788\uc2b5\ub2c8\ub2e4",
+        "liability_direction_credit_short": "\uc774 \ube5a\uc744 \uc9c0\uace0 \uc788\uc2b5\ub2c8\ub2e4",
+        "interest_calc_yearly": "\uc5f0\uac04",
+        "interest_calc_": "\uc54c \uc218 \uc5c6\uc74c",
+        "interest_calc_daily": "\uc77c\ubcc4",
+        "interest_calc_monthly": "\uc6d4\ubcc4",
+        "interest_calc_weekly": "\uc8fc\ub2f9",
+        "interest_calc_half-year": "\ubc18\uae30\ub2f9",
+        "interest_calc_quarterly": "\ubd84\uae30\ub2f9",
         "spent": "\uc9c0\ucd9c",
         "administration_owner": "Administration owner: {{email}}",
         "administration_you": "Your role: {{role}}",

@@ -27,6 +27,15 @@
         "bad_type_destination": "Firefly III can't determine the transaction type based on this destination account."
     },
     "firefly": {
+        "liability_direction_debit_short": "Skylder denne gjelden",
+        "liability_direction_credit_short": "Jeg skuldet denne gjelden",
+        "interest_calc_yearly": "Per \u00e5r",
+        "interest_calc_": "ukjent",
+        "interest_calc_daily": "Per dag",
+        "interest_calc_monthly": "Per m\u00e5ned",
+        "interest_calc_weekly": "Per uke",
+        "interest_calc_half-year": "Per halv\u00e5r",
+        "interest_calc_quarterly": "Per kvartal",
         "spent": "Brukt",
         "administration_owner": "Administration owner: {{email}}",
         "administration_you": "Your role: {{role}}",
