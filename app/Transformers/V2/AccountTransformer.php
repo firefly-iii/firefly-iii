@@ -63,6 +63,10 @@ class AccountTransformer extends AbstractTransformer
         $this->convertedBalances  = [];
         $this->balanceDifferences = [];
 
+        // first collect all the "heavy" stuff that relies on ALL data to be present.
+        // get last activity:
+        $this->getLastActivity($objects);
+
         // get balances of all accounts
         $this->getMetaBalances($objects);
 
@@ -75,16 +79,20 @@ class AccountTransformer extends AbstractTransformer
         // get account types:
         $this->collectAccountTypes($objects);
 
-        // get last activity:
-        $this->getLastActivity($objects);
-
         // add balance difference
         if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
             $this->getBalanceDifference($objects, $this->parameters->get('start'), $this->parameters->get('end'));
         }
 
-        // get object groups"
+        // get object groups
         $this->getObjectGroups($objects);
+
+        // if pagination is disabled, do it now:
+        if(true === $this->parameters->get('disablePagination')) {
+            $page = (int) $this->parameters->get('page');
+            $size = (int) $this->parameters->get('pageSize');
+            $objects = $objects->slice(($page-1) * $size, $size);
+        }
 
         return $this->sortAccounts($objects);
     }

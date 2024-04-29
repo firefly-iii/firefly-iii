@@ -33,7 +33,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class IndexController extends Controller
 {
-    public const string RESOURCE_KEY                  = 'accounts';
+    public const string RESOURCE_KEY = 'accounts';
 
     private AccountRepositoryInterface $repository;
     protected array                    $acceptedRoles = [UserRoleEnum::READ_ONLY, UserRoleEnum::MANAGE_TRANSACTIONS];
@@ -48,7 +48,7 @@ class IndexController extends Controller
             function ($request, $next) {
                 $this->repository = app(AccountRepositoryInterface::class);
                 // new way of user group validation
-                $userGroup        = $this->validateUserGroup($request);
+                $userGroup = $this->validateUserGroup($request);
                 $this->repository->setUserGroup($userGroup);
 
                 return $next($request);
@@ -63,23 +63,32 @@ class IndexController extends Controller
     public function index(IndexRequest $request): JsonResponse
     {
         $this->repository->resetAccountOrder();
-        $types       = $request->getAccountTypes();
-        $sorting     = $request->getSortInstructions('accounts');
-        $filters     = $request->getFilterInstructions('accounts');
-        $accounts    = $this->repository->getAccountsByType($types, $sorting, $filters);
-        $pageSize    = $this->parameters->get('limit');
-        $count       = $accounts->count();
-        $accounts    = $accounts->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $types    = $request->getAccountTypes();
+        $sorting  = $request->getSortInstructions('accounts');
+        $filters  = $request->getFilterInstructions('accounts');
+        $accounts = $this->repository->getAccountsByType($types, $sorting, $filters);
+        $pageSize = $this->parameters->get('limit');
+        $count    = $accounts->count();
+
+        // depending on the sort parameters, this list must not be split, because the
+        // order is calculated in the account transformer and by that time it's too late.
+        $first = array_key_first($sorting);
+        $disablePagination = in_array($first, ['last_activity', 'balance_difference'], true);
+        if (!$disablePagination) {
+            $accounts = $accounts->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        }
         $paginator   = new LengthAwarePaginator($accounts, $count, $pageSize, $this->parameters->get('page'));
         $transformer = new AccountTransformer();
 
+        $this->parameters->set('disablePagination', $disablePagination);
+        $this->parameters->set('pageSize', $pageSize);
         $this->parameters->set('sort', $sorting);
+
         $this->parameters->set('filters', $filters);
         $transformer->setParameters($this->parameters); // give params to transformer
 
         return response()
             ->json($this->jsonApiList('accounts', $paginator, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE)
-        ;
+            ->header('Content-Type', self::CONTENT_TYPE);
     }
 }
