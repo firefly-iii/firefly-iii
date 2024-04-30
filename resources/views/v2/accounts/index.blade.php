@@ -262,12 +262,18 @@
                                             </template>
                                         </td>
                                         <td x-show="tableColumns.current_balance.visible && tableColumns.current_balance.enabled">
-                                            <span
+
+                                            <span x-show="account.native_current_balance < 0" class="text-danger"
                                                 x-text="formatMoney(account.native_current_balance, account.currency_code)"></span>
+                                            <span x-show="account.native_current_balance == 0" class="text-muted"
+                                                  x-text="formatMoney(account.native_current_balance, account.currency_code)"></span>
+                                            <span x-show="account.native_current_balance > 0" class="text-success"
+                                                  x-text="formatMoney(account.native_current_balance, account.currency_code)"></span>
+
                                         </td>
                                         <td x-show="tableColumns.amount_due.visible && tableColumns.amount_due.enabled">
                                             <template x-if="null !== account.current_debt">
-                                                <span
+                                                <span class="text-info"
                                                     x-text="formatMoney(account.current_debt, account.currency_code)"></span>
                                             </template>
                                         </td>
@@ -276,8 +282,14 @@
                                         </td>
                                         <td x-show="tableColumns.balance_difference.visible && tableColumns.balance_difference.enabled">
                                             <template x-if="null !== account.balance_difference">
-                                                <span
+                                                <span>
+                                                <span x-show="account.balance_difference < 0" class="text-danger"
                                                     x-text="formatMoney(account.balance_difference, account.currency_code)"></span>
+                                                    <span x-show="account.balance_difference > 0" class="text-success"
+                                                        x-text="formatMoney(account.balance_difference, account.currency_code)"></span>
+                                                    <span x-show="account.balance_difference == 0" class="text-muted"
+                                                          x-text="formatMoney(account.balance_difference, account.currency_code)"></span>
+                                                    </span>
                                             </template>
                                         </td>
                                         <td x-show="tableColumns.menu.visible && tableColumns.menu.enabled">
