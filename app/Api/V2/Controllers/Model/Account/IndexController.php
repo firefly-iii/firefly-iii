@@ -73,7 +73,7 @@ class IndexController extends Controller
         // depending on the sort parameters, this list must not be split, because the
         // order is calculated in the account transformer and by that time it's too late.
         $first = array_key_first($sorting);
-        $disablePagination = in_array($first, ['last_activity', 'balance_difference'], true);
+        $disablePagination = in_array($first, ['last_activity','balance', 'balance_difference'], true);
         if (!$disablePagination) {
             $accounts = $accounts->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         }
