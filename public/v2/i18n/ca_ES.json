@@ -10,17 +10,17 @@
         "title": "T\u00edtol"
     },
     "list": {
-        "drag_and_drop": "Drag and drop",
+        "drag_and_drop": "Arrossega i deixa anar",
         "active": "Est\u00e0 actiu?",
         "name": "Nom",
         "type": "Tipus",
-        "number": "Account number",
+        "number": "N\u00famero de compte",
         "liability_type": "Tipus de passiu",
-        "current_balance": "Current balance",
-        "last_activity": "Last activity",
-        "amount_due": "Amount due",
-        "balance_difference": "Balance difference",
-        "menu": "Menu"
+        "current_balance": "Balan\u00e7 actual",
+        "last_activity": "Darrera activitat",
+        "amount_due": "Import pendent",
+        "balance_difference": "Difer\u00e8ncia de saldo",
+        "menu": "Men\u00fa"
     },
     "validation": {
         "bad_type_source": "Firefly III no pot determinar el tipus de transacci\u00f3 a partir d'aquest compte font.",

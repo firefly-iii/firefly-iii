@@ -138,7 +138,7 @@ return [
     'error_ip'                                => '有關該錯誤的IP 地址: :ip',
     'error_url'                               => '連結為 :url',
     'error_user_agent'                        => '使用者代理： :userAgent',
-    'error_stacktrace'                        => 'The full stacktrace is below. If you think this is a bug in Firefly III, you can forward this message to <a href="mailto:james@firefly-iii.org?subject=BUG!">james@firefly-iii.org</a>. This can help fix the bug you just encountered.',
+    'error_stacktrace'                        => 'The full stacktrace is below. If you think this is a bug in Firefly III, you can forward this message to <a href="mailto:james@firefly-iii.org?subject=I%20found%20a%20bug!">james@firefly-iii.org</a>. This can help fix the bug you just encountered.',
     'error_github_html'                       => '你亦可以在<a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a> 建立新的問題 (issue)。',
     'error_github_text'                       => '你亦可以在 https://github.com/firefly-iii/firefly-iii/issues 建立新的問題 (issue)。',
     'error_stacktrace_below'                  => 'The full stacktrace is below:',

@@ -37,7 +37,7 @@ return [
     // new user:
     'bank_name'                   => 'Nom del banc',
     'bank_balance'                => 'Saldo',
-    'current_balance'             => 'Current balance',
+    'current_balance'             => 'Balanç actual',
     'savings_balance'             => 'Saldo d\'estalvis',
     'credit_card_limit'           => 'Límit de la targeta de crèdit',
     'automatch'                   => 'Coincidir automàticament',

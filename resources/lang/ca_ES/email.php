@@ -138,7 +138,7 @@ return [
     'error_ip'                                => 'L\'adreça IP d\'aquest error és: :ip',
     'error_url'                               => 'L\'URL és: :url',
     'error_user_agent'                        => 'Agent d\'usuari: :userAgent',
-    'error_stacktrace'                        => 'La traça completa és a continuació. Si creus que és un error de Firefly III, pots reenviar aquest missatge a <a href="mailto:james@firefly-iii.org?subject=BUG!">james@firefly-iii.org</a>. Podria ajudar a solucionar l\'error que acabes de trobar.',
+    'error_stacktrace'                        => 'The full stacktrace is below. If you think this is a bug in Firefly III, you can forward this message to <a href="mailto:james@firefly-iii.org?subject=I%20found%20a%20bug!">james@firefly-iii.org</a>. This can help fix the bug you just encountered.',
     'error_github_html'                       => 'Si ho prefereixes, també pots obrir un nou issue a <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>.',
     'error_github_text'                       => 'Si ho prefereixes, també pots obrir un nou issue a https://github.com/firefly-iii/firefly-iii/issues.',
     'error_stacktrace_below'                  => 'La traça completa és a continuació:',

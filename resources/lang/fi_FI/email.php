@@ -138,7 +138,7 @@ return [
     'error_ip'                                => 'Tähän virheeseen liittyvä IP-osoite on: :ip',
     'error_url'                               => 'URL on: :url',
     'error_user_agent'                        => 'Käyttäjä-agentti: :userAgent',
-    'error_stacktrace'                        => 'Täydellinen stack trace on alla. Jos tämä on bugi Firefly III:ssa, voit lähettää tämän viestin osoitteeseen <a href="mailto:james@firefly-iii.org?subject=BUG!">james@firefly-ii. rg</a>. Tämä voi auttaa korjaamaan juuri kohtaamasi virheen.',
+    'error_stacktrace'                        => 'The full stacktrace is below. If you think this is a bug in Firefly III, you can forward this message to <a href="mailto:james@firefly-iii.org?subject=I%20found%20a%20bug!">james@firefly-iii.org</a>. This can help fix the bug you just encountered.',
     'error_github_html'                       => 'Jos haluat, voit myös avata uuden tiketin <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHubissa</a>.',
     'error_github_text'                       => 'Jos haluat, voit myös avata uuden tiketin osoitteessa https://github.com/firefly-iii/firefly-iii/issues.',
     'error_stacktrace_below'                  => 'Täydellinen stack trace:',

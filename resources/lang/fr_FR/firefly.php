@@ -2402,11 +2402,11 @@ return [
     // page settings and wizard dialogs
 
     'page_settings_header'                                => 'Page settings',
-    'visible_columns'                                     => 'Visible columns',
-    'accounts_to_show'                                    => 'Accounts to show',
-    'active_accounts_only'                                => 'Active accounts only',
-    'in_active_accounts_only'                             => 'Inactive accounts only',
-    'show_all_accounts'                                   => 'Show all accounts',
+    'visible_columns'                                     => 'Colonnes visibles',
+    'accounts_to_show'                                    => 'Comptes à afficher',
+    'active_accounts_only'                                => 'Comptes actifs uniquement',
+    'in_active_accounts_only'                             => 'Comptes inactifs uniquement',
+    'show_all_accounts'                                   => 'Afficher tous les comptes',
     'group_accounts'                                      => 'Group accounts',
 
     // piggy banks:

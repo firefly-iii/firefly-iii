@@ -138,7 +138,7 @@ return [
     'error_ip'                                => '이 오류와 관련된 IP 주소: :ip',
     'error_url'                               => 'URL: :url',
     'error_user_agent'                        => '유저 에이전트: :userAgent',
-    'error_stacktrace'                        => '전체 스택 추적은 다음과 같습니다. Firefly III의 버그라고 생각되면 이 메시지를 <a href="mailto:james@firefly-iii.org?subject=BUG!">james@firefly-iii.org</a> 으로 전달해 주세요. 방금 발생한 버그를 수정하는 데 도움이 될 수 있습니다.',
+    'error_stacktrace'                        => 'The full stacktrace is below. If you think this is a bug in Firefly III, you can forward this message to <a href="mailto:james@firefly-iii.org?subject=I%20found%20a%20bug!">james@firefly-iii.org</a>. This can help fix the bug you just encountered.',
     'error_github_html'                       => '원한다면 <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>에 새로운 이슈를 오픈할 수 도 있습니다.',
     'error_github_text'                       => '원한다면 https://github.com/firefly-iii/firefly-iii/issues 에 새로운 이슈를 오픈할 수도 있습니다.',
     'error_stacktrace_below'                  => '전체 스택 추적은 다음과 같습니다:',

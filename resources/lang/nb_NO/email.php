@@ -138,7 +138,7 @@ return [
     'error_ip'                                => 'IP-adressen relatert til denne feilen er: :ip',
     'error_url'                               => 'URL er: :url',
     'error_user_agent'                        => 'Brukeragent: :userAgent',
-    'error_stacktrace'                        => 'Hele informasjonen er under. Hvis du tror dette er en feil i Firefly III, kan du videresende denne meldingen til <a href="mailto:james@firefly-iii.org?subject=BUG!">james@firefly-ii. rg</a>. Dette kan hjelpe med å rette opp feilen du nettopp har funnet.',
+    'error_stacktrace'                        => 'The full stacktrace is below. If you think this is a bug in Firefly III, you can forward this message to <a href="mailto:james@firefly-iii.org?subject=I%20found%20a%20bug!">james@firefly-iii.org</a>. This can help fix the bug you just encountered.',
     'error_github_html'                       => 'Hvis du foretrekker, kan du også åpne et nytt problem på <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>.',
     'error_github_text'                       => 'Hvis du foretrekker, kan du også åpne et nytt problem på https://github.com/firefly-ii/firefly-ii/issues.',
     'error_stacktrace_below'                  => 'Hele informasjonen er:',

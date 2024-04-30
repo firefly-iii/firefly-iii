@@ -138,8 +138,7 @@ return [
     'error_ip'                                => 'O endereço de IP associado a este erro é: :ip',
     'error_url'                               => 'O URL é: :url',
     'error_user_agent'                        => 'Agente de utilizador: :userAgent',
-    'error_stacktrace'                        => 'O rastreamento da pilha completo abaixo. Se acha que é um erro no Firefly III, pode reencaminhar este email para <a href="mailto:james@firefly-iii.org?subject=BUG!">james@firefly-iii.org</a>.
-Isto pode ajudar a corrigir o erro que acabou de encontrar.',
+    'error_stacktrace'                        => 'The full stacktrace is below. If you think this is a bug in Firefly III, you can forward this message to <a href="mailto:james@firefly-iii.org?subject=I%20found%20a%20bug!">james@firefly-iii.org</a>. This can help fix the bug you just encountered.',
     'error_github_html'                       => 'Se preferir, pode também abrir uma nova questão no <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>.',
     'error_github_text'                       => 'Se preferir, pode também abrir uma nova questão em https://github.com/firefly-iii/firefly-iii/issues.',
     'error_stacktrace_below'                  => 'O rastreamento da pilha completo é:',

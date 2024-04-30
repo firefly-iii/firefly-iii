@@ -138,7 +138,7 @@ return [
     'error_ip'                                => 'Adresa IP asociată acestei erori este: :ip',
     'error_url'                               => 'URL-ul este: :url',
     'error_user_agent'                        => 'Agent utilizator: :userAgent',
-    'error_stacktrace'                        => 'Lantul erorilor este mai jos. Dacă credeți că acesta este un bug în Firefly III, puteți transmite acest mesaj la <a href="mailto:james@firefly-iii.org?subject=BUG!">james@firefly-iii. rg</a>. Acest lucru poate ajuta la rezolvarea problemei pe care tocmai ați întâlnit-o.',
+    'error_stacktrace'                        => 'The full stacktrace is below. If you think this is a bug in Firefly III, you can forward this message to <a href="mailto:james@firefly-iii.org?subject=I%20found%20a%20bug!">james@firefly-iii.org</a>. This can help fix the bug you just encountered.',
     'error_github_html'                       => 'Dacă preferați, puteți de asemenea deschide o nouă problemă pe <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>.',
     'error_github_text'                       => 'Dacă preferați, puteți de asemenea deschide o nouă problemă pe <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>.',
     'error_stacktrace_below'                  => 'Stacktrack-ul complet este mai jos:',

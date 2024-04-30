@@ -67,12 +67,12 @@ return [
     'source'                  => 'Origem',
     'next_expected_match'     => 'Próxima correspondência esperada',
     'automatch'               => 'Correspondência automática?',
-    'drag_and_drop'           => 'Drag and drop',
-    'number'                  => 'Account number',
-    'current_balance'         => 'Current balance',
-    'last_activity'           => 'Last activity',
-    'amount_due'              => 'Amount due',
-    'balance_difference'      => 'Balance difference',
+    'drag_and_drop'           => 'Arrastar e soltar',
+    'number'                  => 'Número da conta',
+    'current_balance'         => 'Saldo atual',
+    'last_activity'           => 'Última atividade',
+    'amount_due'              => 'Valor devido',
+    'balance_difference'      => 'Diferença de saldo',
     'menu'                    => 'Menu',
 
     /*

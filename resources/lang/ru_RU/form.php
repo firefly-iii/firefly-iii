@@ -37,7 +37,7 @@ return [
     // new user:
     'bank_name'                   => 'Название банка',
     'bank_balance'                => 'Бaлaнc',
-    'current_balance'             => 'Current balance',
+    'current_balance'             => 'Текущий баланс',
     'savings_balance'             => 'Сберегательный баланс',
     'credit_card_limit'           => 'Лимит кредитной карты',
     'automatch'                   => 'Автоматическое сопоставление',

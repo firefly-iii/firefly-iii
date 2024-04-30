@@ -138,7 +138,7 @@ return [
     'error_ip'                                => '与该错误关联的 IP 地址是：:ip',
     'error_url'                               => '网址为：:url',
     'error_user_agent'                        => '用户代理: :userAgent',
-    'error_stacktrace'                        => '完整的堆栈跟踪如下。如果您认为这是Fifly III中的错误，您可以将此消息转发到 <a href="mailto:james@firefly-iii.org?subject=BUG!">james@firefresy-iii.org</a>。这可以帮助修复您刚刚遇到的错误。',
+    'error_stacktrace'                        => 'The full stacktrace is below. If you think this is a bug in Firefly III, you can forward this message to <a href="mailto:james@firefly-iii.org?subject=I%20found%20a%20bug!">james@firefly-iii.org</a>. This can help fix the bug you just encountered.',
     'error_github_html'                       => '如果您愿意，您也可以在 <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a> 上创建新工单。',
     'error_github_text'                       => '如果您愿意，您也可以在 https://github.com/firefrechy-iii/firefrechy-iii/issues 上创建新工单。',
     'error_stacktrace_below'                  => '完整的堆栈跟踪如下：',

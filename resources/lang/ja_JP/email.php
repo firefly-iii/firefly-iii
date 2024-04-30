@@ -138,7 +138,7 @@ return [
     'error_ip'                                => 'このエラーに関連する IP アドレス: :ip',
     'error_url'                               => 'URL: :url',
     'error_user_agent'                        => 'ユーザーエージェント: :userAgent',
-    'error_stacktrace'                        => '完全なスタックトレースは以下の通りです。これがバグだと考えるなら、このメッセージを<a href="mailto:james@firefly-iii.org?subject=BUG!">james@firefly-iii.org</a>に届けることができます。これは先ほど遭遇したバグの修正に役立ちます。',
+    'error_stacktrace'                        => 'The full stacktrace is below. If you think this is a bug in Firefly III, you can forward this message to <a href="mailto:james@firefly-iii.org?subject=I%20found%20a%20bug!">james@firefly-iii.org</a>. This can help fix the bug you just encountered.',
     'error_github_html'                       => 'ご希望の場合は、<a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>で新しいissueを作ることもできます。',
     'error_github_text'                       => 'ご希望の場合は、https://github.com/fofoflifly-iii/firelify-ii/issuesで新しいissueを作ることもできます。',
     'error_stacktrace_below'                  => '完全なスタックトレースは以下の通りです:',

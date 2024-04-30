@@ -138,7 +138,7 @@ return [
     'error_ip'                                => 'Địa chỉ IP liên quan đến lỗi này là: :ip',
     'error_url'                               => 'URL là: :url',
     'error_user_agent'                        => 'Đại lý người dùng: :userAgent',
-    'error_stacktrace'                        => 'Các stacktrace đầy đủ là dưới đây. Nếu bạn nghĩ rằng đây là một lỗi trong Firefly III, bạn có thể chuyển tiếp tin nhắn này tới <a href="mailto:james@firefly-iii.org?subject=BUG!"> james@firefly-iii.org </a>. Điều này có thể giúp khắc phục lỗi bạn vừa gặp phải.',
+    'error_stacktrace'                        => 'The full stacktrace is below. If you think this is a bug in Firefly III, you can forward this message to <a href="mailto:james@firefly-iii.org?subject=I%20found%20a%20bug!">james@firefly-iii.org</a>. This can help fix the bug you just encountered.',
     'error_github_html'                       => 'Nếu bạn thích, bạn cũng có thể mở một vấn đề mới trên <a href="https://github.com/firefly-iii/firefly-iii/issues"> GitHub </a>.',
     'error_github_text'                       => 'Nếu bạn thích, bạn cũng có thể mở một vấn đề mới trên https://github.com/firefly-iii/firefly-iii/issues.',
     'error_stacktrace_below'                  => 'Các stacktrace đầy đủ bên dưới:',

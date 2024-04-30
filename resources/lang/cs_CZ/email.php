@@ -138,7 +138,7 @@ return [
     'error_ip'                                => 'IP adresa související s touto chybou je: :ip',
     'error_url'                               => 'Adresa URL je: :url',
     'error_user_agent'                        => 'User agent: :userAgent',
-    'error_stacktrace'                        => 'Úplný zásobník je uveden níže. Pokud si myslíte, že se jedná o chybu ve Firefly III, můžete tuto zprávu přeposlat na <a href="mailto:james@firefly-iii.org?subject=BUG!">james@firefly-iii. rg</a>. To může pomoci opravit chybu, na kterou jste právě narazili.',
+    'error_stacktrace'                        => 'The full stacktrace is below. If you think this is a bug in Firefly III, you can forward this message to <a href="mailto:james@firefly-iii.org?subject=I%20found%20a%20bug!">james@firefly-iii.org</a>. This can help fix the bug you just encountered.',
     'error_github_html'                       => 'Pokud chcete, můžete vytvořit hlášení problému na <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>.',
     'error_github_text'                       => 'Pokud chcete, můžete vytvořit hlášení problému na https://github.com/firefly-iii/firefly-iii/issues.',
     'error_stacktrace_below'                  => 'Celý zásobník je níže:',

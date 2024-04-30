@@ -2401,13 +2401,13 @@ return [
 
     // page settings and wizard dialogs
 
-    'page_settings_header'                                => 'Page settings',
-    'visible_columns'                                     => 'Visible columns',
-    'accounts_to_show'                                    => 'Accounts to show',
-    'active_accounts_only'                                => 'Active accounts only',
-    'in_active_accounts_only'                             => 'Inactive accounts only',
-    'show_all_accounts'                                   => 'Show all accounts',
-    'group_accounts'                                      => 'Group accounts',
+    'page_settings_header'                                => 'Настройки страницы',
+    'visible_columns'                                     => 'Видимые колонки',
+    'accounts_to_show'                                    => 'Учетные записи для показа',
+    'active_accounts_only'                                => 'Только активные учетные записи',
+    'in_active_accounts_only'                             => 'Только неактивные учетные записи',
+    'show_all_accounts'                                   => 'Показать все учетные записи',
+    'group_accounts'                                      => 'Учетные записи группы',
 
     // piggy banks:
     'event_history'                                       => 'История событий',

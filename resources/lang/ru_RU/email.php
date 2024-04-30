@@ -138,7 +138,7 @@ return [
     'error_ip'                                => 'IP адрес, связанный с этой ошибкой: :ip',
     'error_url'                               => 'URL-адрес: :url',
     'error_user_agent'                        => 'User agent: :userAgent',
-    'error_stacktrace'                        => 'Полный stacktrace находится ниже. Если вы считаете, что это ошибка в Firefly III, вы можете направить это сообщение по адресу: <a href="mailto:james@firefly-iii.org?subject=BUG!">james@firefly-iii. rg</a>. Это может помочь исправить ошибку, с которой вы столкнулись.',
+    'error_stacktrace'                        => 'The full stacktrace is below. If you think this is a bug in Firefly III, you can forward this message to <a href="mailto:james@firefly-iii.org?subject=I%20found%20a%20bug!">james@firefly-iii.org</a>. This can help fix the bug you just encountered.',
     'error_github_html'                       => 'Если вы предпочитаете, вы также можете создать новый тикет на <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>.',
     'error_github_text'                       => 'Если вы предпочитаете, вы также можете открыть новый тикет на https://github.com/firefly-iii/firefly-iii/issues.',
     'error_stacktrace_below'                  => 'Полная трассировка стека:',
