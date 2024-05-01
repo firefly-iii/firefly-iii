@@ -301,7 +301,11 @@
                                     <td class="hidden-sm hidden-xs spent" data-id="{{ budget.id }}" style="text-align:right;">
                                         {% for spentInfo in budget.spent %}
                                             {{ formatAmountBySymbol(spentInfo.spent, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }}
-                                            ({{ formatAmountBySymbol(spentInfo.spent / activeDaysPassed, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }})
+                                            {% if 0 == activeDaysPassed %}
+                                                ({{ formatAmountBySymbol(spentInfo.spent, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }})
+                                            {% else %}
+                                                ({{ formatAmountBySymbol(spentInfo.spent / activeDaysPassed, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }})
+                                            {% endif %}
                                             <br/>
                                         {% endfor %}
                                         {% for budgetLimit in budget.budgeted %}
