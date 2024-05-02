@@ -98,6 +98,7 @@ return [
             'database'    => envNonEmpty('DB_DATABASE', $database),
             'username'    => envNonEmpty('DB_USERNAME', $username),
             'password'    => env('DB_PASSWORD', $password),
+            'unix_socket' => env('DB_SOCKET', ''),
             'charset'     => 'utf8',
             'prefix'      => '',
             'search_path' => envNonEmpty('PGSQL_SCHEMA', 'public'),
