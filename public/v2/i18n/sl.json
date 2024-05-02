@@ -10,17 +10,17 @@
         "title": "Naslov"
     },
     "list": {
-        "drag_and_drop": "Drag and drop",
+        "drag_and_drop": "Povleci in spusti",
         "active": "Aktiviran?",
         "name": "ime",
         "type": "Vrsta",
-        "number": "Account number",
+        "number": "\u0160tevilka ra\u010duna",
         "liability_type": "Vrsta obveznost",
-        "current_balance": "Current balance",
-        "last_activity": "Last activity",
-        "amount_due": "Amount due",
-        "balance_difference": "Balance difference",
-        "menu": "Menu"
+        "current_balance": "Trenutno stanje",
+        "last_activity": "Zadnja aktivnost",
+        "amount_due": "Dolgovani znesek",
+        "balance_difference": "Bilan\u010dna razlika",
+        "menu": "Meni"
     },
     "validation": {
         "bad_type_source": "Na podlagi tega izvornega ra\u010duna Firefly III ne more dolo\u010diti vrste transakcije.",

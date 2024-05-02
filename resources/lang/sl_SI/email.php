@@ -138,7 +138,7 @@ return [
     'error_ip'                                => 'Naslov IP, povezan s to napako, je: :ip',
     'error_url'                               => 'URL je: :url',
     'error_user_agent'                        => 'Uporabniški agent: :userAgent',
-    'error_stacktrace'                        => 'The full stacktrace is below. If you think this is a bug in Firefly III, you can forward this message to <a href="mailto:james@firefly-iii.org?subject=I%20found%20a%20bug!">james@firefly-iii.org</a>. This can help fix the bug you just encountered.',
+    'error_stacktrace'                        => 'Celoten sled sklada je spodaj. Če mislite, da je to hrošč v Firefly III, lahko to sporočilo posredujete na <a href="mailto:james@firefly-iii.org?subject=I%20found%20a%20bug!">james@firefly-iii.org</a>. To lahko pomaga popraviti hrošča, ki ste ga pravkar našli.',
     'error_github_html'                       => 'Če vam je ljubše, lahko odprete tudi novo vprašanje na <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHubu</a>.',
     'error_github_text'                       => 'Če želite, lahko novo številko odprete tudi na spletnem mestu https://github.com/firefly-iii/firefly-iii/issues.',
     'error_stacktrace_below'                  => 'Celotna sled sklada je spodaj:',
