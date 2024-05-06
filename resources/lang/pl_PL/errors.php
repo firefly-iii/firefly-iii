@@ -42,7 +42,7 @@ return [
     'fatal_error'             => 'Wystąpił błąd krytyczny. Sprawdź pliki dziennika w "storage/logs" lub użyj "docker logs -f [container]", aby zobaczyć co się dzieje.',
     'maintenance_mode'        => 'Firefly III jest w trybie konserwacji.',
     'be_right_back'           => 'Zaraz wracam!',
-    'check_back'              => 'Firefly III is down for some necessary maintenance. Please check back in a second. If you happen to see this message on the demo site, just wait a few minutes. The database is reset every few hours.',
+    'check_back'              => 'Firefly III jest wyłączony na czas koniecznej konserwacji. Sprawdź ponownie za sekundę. Jeśli ta wiadomość pojawiła się na stronie demo, poczekaj kilka minut. Baza danych jest resetowana co kilka godzin.',
     'error_occurred'          => 'Ups! Wystąpił błąd.',
     'db_error_occurred'       => 'Ups! Wystąpił błąd bazy danych.',
     'error_not_recoverable'   => 'Niestety, nie mogliśmy się pozbierać po tym błędzie :(. Firefly III się popsuło. Błąd to:',

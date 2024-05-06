@@ -36,7 +36,7 @@ declare(strict_types=1);
 return [
     // common items
     'greeting'                                => 'Cześć,',
-    'closing'                                 => 'Jestę robotę',
+    'closing'                                 => 'Bip bip,',
     'signature'                               => 'Robot pocztowy Firefly III',
     'footer_ps'                               => 'PS: Ta wiadomość została wysłana, ponieważ została wywołana przez żądanie z adresu IP :ipAddress .',
 

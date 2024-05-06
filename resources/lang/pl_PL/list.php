@@ -67,12 +67,12 @@ return [
     'source'                  => 'Źródło',
     'next_expected_match'     => 'Następne oczekiwane dopasowanie',
     'automatch'               => 'Auto dopasowanie?',
-    'drag_and_drop'           => 'Drag and drop',
-    'number'                  => 'Account number',
-    'current_balance'         => 'Current balance',
-    'last_activity'           => 'Last activity',
-    'amount_due'              => 'Amount due',
-    'balance_difference'      => 'Balance difference',
+    'drag_and_drop'           => 'Przeciągnij i upuść',
+    'number'                  => 'Numer konta',
+    'current_balance'         => 'Bieżące saldo',
+    'last_activity'           => 'Ostatnia aktywność',
+    'amount_due'              => 'Do zapłaty',
+    'balance_difference'      => 'Różnica salda',
     'menu'                    => 'Menu',
 
     /*
