@@ -63,6 +63,8 @@ class AccountTransformer extends AbstractTransformer
         $this->convertedBalances  = [];
         $this->balanceDifferences = [];
 
+        Log::debug(sprintf('collectMetaData on %d object(s)', $objects->count()));
+
         // first collect all the "heavy" stuff that relies on ALL data to be present.
         // get last activity:
         $this->getLastActivity($objects);

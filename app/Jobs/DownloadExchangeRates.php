@@ -29,6 +29,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Bus\Queueable;
@@ -100,7 +101,7 @@ class DownloadExchangeRates implements ShouldQueue
 
         try {
             $res = $client->get($url);
-        } catch (RequestException $e) {
+        } catch (RequestException|ConnectException $e) {
             app('log')->warning(sprintf('Trying to grab "%s" resulted in error "%d".', $url, $e->getMessage()));
 
             return;

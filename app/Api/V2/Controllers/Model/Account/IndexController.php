@@ -30,6 +30,7 @@ use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
 use FireflyIII\Transformers\V2\AccountTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Log;
 
 class IndexController extends Controller
 {
@@ -74,6 +75,7 @@ class IndexController extends Controller
         // order is calculated in the account transformer and by that time it's too late.
         $first             = array_key_first($sorting);
         $disablePagination = in_array($first, ['last_activity', 'balance', 'balance_difference'], true);
+        Log::debug(sprintf('Will disable pagination in account index v2? %s', var_export($disablePagination, true)));
         if (!$disablePagination) {
             $accounts = $accounts->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         }
