@@ -284,7 +284,7 @@ class CreateMainTables extends Migration
                         $table->integer('budget_id', false, true);
                         $table->date('startdate');
                         $table->decimal('amount', 32, 12);
-                        $table->string('repeat_freq', 30);
+                        $table->string('repeat_freq', 30)->nullable();
                         $table->boolean('repeats')->default(0);
                         $table->foreign('budget_id')->references('id')->on('budgets')->onDelete('cascade');
                     }
