@@ -37,7 +37,7 @@ return [
     // new user:
     'bank_name'                   => '银行名称',
     'bank_balance'                => '余额',
-    'current_balance'             => 'Current balance',
+    'current_balance'             => '当前余额',
     'savings_balance'             => '储蓄余额',
     'credit_card_limit'           => '信用卡额度',
     'automatch'                   => '自动匹配',
