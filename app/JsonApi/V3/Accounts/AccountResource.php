@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\JsonApi\V3\Accounts;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use LaravelJsonApi\Core\Resources\JsonApiResource;
 
 class AccountResource extends JsonApiResource
@@ -54,11 +55,17 @@ class AccountResource extends JsonApiResource
             'name'            => $this->resource->name,
             'iban'            => '' === $this->resource->iban ? null : $this->resource->iban,
             'active'          => $this->resource->active,
-//            'virtual_balance' => $this->resource->virtual_balance,
             'last_activity'   => $this->resource->last_activity,
-//            'native_balance'  => $this->resource->native_balance,
             'type'            => $this->resource->type,
             'account_role'    => $this->resource->account_role,
+
+
+
+
+
+
+            //            'virtual_balance' => $this->resource->virtual_balance,
+            //            'native_balance'  => $this->resource->native_balance,
             //'user' => $this->resource->user_array,
 //            'balances' => []
 //
@@ -152,9 +159,8 @@ class AccountResource extends JsonApiResource
     public function relationships($request): iterable
     {
         return [
-            $this->relation('user')->withData($this->resource->user_array),
-            $this->relation('balances')->withData([]),
-            //$this->relation('tags')->withData($this->resource->getTags()),
+            $this->relation('user')->withData($this->resource->user),
+            $this->relation('balances')->withData($this->resource->balances),
         ];
     }
 }

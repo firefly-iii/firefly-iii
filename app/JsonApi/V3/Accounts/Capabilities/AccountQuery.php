@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\JsonApi\V3\Accounts\Capabilities;
 
-use FireflyIII\Models\Account;
 use FireflyIII\Support\JsonApi\Concerns\UsergroupAware;
 use FireflyIII\Support\JsonApi\Enrichments\AccountEnrichment;
 use FireflyIII\Support\JsonApi\ExpandsQuery;
@@ -48,6 +47,7 @@ class AccountQuery extends QueryAll implements HasPagination
      */
     #[\Override] public function get(): iterable
     {
+
         $filters    = $this->queryParameters->filter();
         $sort       = $this->queryParameters->sortFields();
         $pagination = $this->filtersPagination($this->queryParameters->page());

@@ -51,6 +51,11 @@ class AccountEnrichment implements EnrichmentInterface
 
         $this->collection->transform(function (Account $account) {
             $account->user_array = ['id' => 1,'bla bla' => 'bla'];
+            $account->balances = collect([
+                                             ['balance_id' => 1,'balance' => 5],
+                                             ['balance_id' => 2,'balance' => 5],
+                                             ['balance_id' => 3,'balance' => 5],
+                                         ]);
             return $account;
         });
 

@@ -41,17 +41,6 @@ class AccountRepository extends AbstractRepository implements QueriesAll
     public function __construct() {}
 
     /**
-     * Get the tags relationship
-     *
-     * @param Account $account
-     * @return iterable
-     */
-    public function getBalances(Account $account): iterable
-    {
-        die('here we are');
-    }
-
-    /**
      * @inheritDoc
      */
     public function find(string $resourceId): ?object

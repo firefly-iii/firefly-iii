@@ -1,6 +1,6 @@
 <?php
 /*
- * AccountPolicy.php
+ * BalancePolicy.php
  * Copyright (c) 2024 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -26,9 +26,8 @@ namespace FireflyIII\Policies;
 use FireflyIII\Models\Account;
 use FireflyIII\User;
 
-class AccountPolicy
+class BalancePolicy
 {
-
     /**
      * TODO needs better authentication.
      *
@@ -50,20 +49,5 @@ class AccountPolicy
     public function viewAny(): bool
     {
         return auth()->check();
-    }
-
-    /**
-     * Everybody can do this, but selection should limit to user.
-     *
-     * @return true
-     */
-    public function viewUser(User $user, Account $account): bool
-    {
-        return $this->view($user, $account);
-    }
-
-    public function viewBalances(User $user, Account $account): bool
-    {
-        return $this->view($user, $account);
     }
 }
