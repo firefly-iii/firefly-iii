@@ -1,6 +1,6 @@
 <?php
 /*
- * AccountPolicy.php
+ * AccountRepository.php
  * Copyright (c) 2024 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,51 +21,40 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Policies;
+namespace FireflyIII\JsonApi\V3\Accounts;
 
 use FireflyIII\Models\Account;
-use FireflyIII\User;
+use FireflyIII\Support\JsonApi\Concerns\UsergroupAware;
+use LaravelJsonApi\Contracts\Store\QueriesAll;
+use LaravelJsonApi\NonEloquent\AbstractRepository;
+use LaravelJsonApi\NonEloquent\Concerns\HasCrudCapability;
 
-class AccountPolicy
+
+class AccountRepository extends AbstractRepository implements QueriesAll
 {
+    use UsergroupAware;
 
     /**
-     * TODO needs better authentication.
+     * SiteRepository constructor.
      *
-     * @param User    $user
-     * @param Account $account
-     *
-     * @return bool
      */
-    public function view(User $user, Account $account): bool
-    {
-        return true;
-        return auth()->check() && $user->id === $account->user_id;
-    }
+    public function __construct() {}
 
     /**
-     * Everybody can do this, but selection should limit to user.
-     *
-     * @return true
+     * @inheritDoc
      */
-    public function viewAny(): bool
+    public function find(string $resourceId): ?object
     {
-        return true;
-        return auth()->check();
+
+        return Account::find((int) $resourceId);
     }
 
-    /**
-     * Everybody can do this, but selection should limit to user.
-     *
-     * @return true
-     */
-    public function viewUser(User $user, Account $account): bool
+    public function queryAll(): Capabilities\AccountQuery
     {
-        return $this->view($user, $account);
+        return Capabilities\AccountQuery::make()
+                                        ->withUserGroup($this->userGroup)
+                                        ->withServer($this->server)
+                                        ->withSchema($this->schema);
     }
 
-    public function viewBalances(User $user, Account $account): bool
-    {
-        return $this->view($user, $account);
-    }
 }

@@ -7,6 +7,7 @@ use LaravelJsonApi\Eloquent\Contracts\Paginator;
 use LaravelJsonApi\Eloquent\Fields\DateTime;
 use LaravelJsonApi\Eloquent\Fields\ID;
 use LaravelJsonApi\Eloquent\Fields\Relations\HasMany;
+use LaravelJsonApi\Eloquent\Fields\Str;
 use LaravelJsonApi\Eloquent\Filters\WhereIdIn;
 use LaravelJsonApi\Eloquent\Pagination\PagePagination;
 use LaravelJsonApi\Eloquent\Schema;
@@ -31,8 +32,9 @@ class UserSchema extends Schema
         return [
             ID::make(),
             DateTime::make('created_at')->sortable()->readOnly(),
-            DateTime::make('created_at')->sortable()->readOnly(),
-            //HasMany::make('accounts'),
+            DateTime::make('updated_at')->sortable()->readOnly(),
+            Str::make('email'),
+            HasMany::make('accounts'),
         ];
     }
 

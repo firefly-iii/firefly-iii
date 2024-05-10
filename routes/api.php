@@ -23,14 +23,18 @@
 declare(strict_types=1);
 
 use LaravelJsonApi\Laravel\Facades\JsonApiRoute;
-use LaravelJsonApi\Laravel\Routing\ResourceRegistrar;
 use LaravelJsonApi\Laravel\Http\Controllers\JsonApiController;
+use LaravelJsonApi\Laravel\Routing\Relationships;
+use LaravelJsonApi\Laravel\Routing\ResourceRegistrar;
 
 
 JsonApiRoute::server('v3')
             ->prefix('v3')
             ->resources(function (ResourceRegistrar $server) {
-                $server->resource('accounts', JsonApiController::class);
+                $server->resource('accounts', JsonApiController::class)->readOnly()->relationships(function (Relationships $relations) {
+                    $relations->hasOne('user')->readOnly();
+                    $relations->hasMany('balances')->readOnly();
+                });
                 $server->resource('users', JsonApiController::class);
             });
 
