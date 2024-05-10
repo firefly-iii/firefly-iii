@@ -22,6 +22,19 @@
 
 declare(strict_types=1);
 
+use LaravelJsonApi\Laravel\Facades\JsonApiRoute;
+use LaravelJsonApi\Laravel\Routing\ResourceRegistrar;
+use LaravelJsonApi\Laravel\Http\Controllers\JsonApiController;
+
+
+JsonApiRoute::server('v3')
+            ->prefix('v3')
+            ->resources(function (ResourceRegistrar $server) {
+                $server->resource('accounts', JsonApiController::class);
+                $server->resource('users', JsonApiController::class);
+            });
+
+
 // V2 API route for Summary boxes
 // BASIC
 Route::group(
