@@ -10185,16 +10185,16 @@
         },
         {
             "name": "larastan/larastan",
-            "version": "v2.9.5",
+            "version": "v2.9.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/larastan/larastan.git",
-                "reference": "101f1a4470f87326f4d3995411d28679d8800abe"
+                "reference": "93d5b95d2e29cdb8203363d44abfdbc0bc7ef57f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/larastan/larastan/zipball/101f1a4470f87326f4d3995411d28679d8800abe",
-                "reference": "101f1a4470f87326f4d3995411d28679d8800abe",
+                "url": "https://api.github.com/repos/larastan/larastan/zipball/93d5b95d2e29cdb8203363d44abfdbc0bc7ef57f",
+                "reference": "93d5b95d2e29cdb8203363d44abfdbc0bc7ef57f",
                 "shasum": ""
             },
             "require": {
@@ -10263,7 +10263,7 @@
             ],
             "support": {
                 "issues": "https://github.com/larastan/larastan/issues",
-                "source": "https://github.com/larastan/larastan/tree/v2.9.5"
+                "source": "https://github.com/larastan/larastan/tree/v2.9.6"
             },
             "funding": [
                 {
@@ -10283,7 +10283,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2024-04-16T19:13:34+00:00"
+            "time": "2024-05-09T11:53:26+00:00"
         },
         {
             "name": "laravel-json-api/testing",

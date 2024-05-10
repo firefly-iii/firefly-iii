@@ -2402,13 +2402,13 @@ return [
 
     // page settings and wizard dialogs
 
-    'page_settings_header'                                => 'Page settings',
-    'visible_columns'                                     => 'Visible columns',
-    'accounts_to_show'                                    => 'Accounts to show',
-    'active_accounts_only'                                => 'Active accounts only',
-    'in_active_accounts_only'                             => 'Inactive accounts only',
-    'show_all_accounts'                                   => 'Show all accounts',
-    'group_accounts'                                      => 'Group accounts',
+    'page_settings_header'                                => '页面设置',
+    'visible_columns'                                     => '可见列',
+    'accounts_to_show'                                    => '显示账户',
+    'active_accounts_only'                                => '仅活动账户',
+    'in_active_accounts_only'                             => '仅非活动账户',
+    'show_all_accounts'                                   => '显示全部账户',
+    'group_accounts'                                      => '群组账户',
 
     // piggy banks:
     'event_history'                                       => '事件历史',
