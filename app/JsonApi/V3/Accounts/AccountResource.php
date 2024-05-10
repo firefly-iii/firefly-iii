@@ -54,18 +54,24 @@ class AccountResource extends JsonApiResource
             'name'            => $this->resource->name,
             'iban'            => '' === $this->resource->iban ? null : $this->resource->iban,
             'active'          => $this->resource->active,
-            'virtual_balance' => $this->resource->virtual_balance,
+//            'virtual_balance' => $this->resource->virtual_balance,
             'last_activity'   => $this->resource->last_activity,
-            'balance'         => $this->resource->balance,
-            'native_balance'  => $this->resource->native_balance,
-            'type'            => $this->resource->name,
+//            'native_balance'  => $this->resource->native_balance,
+            'type'            => $this->resource->type,
+            'account_role'    => $this->resource->account_role,
+            //'user' => $this->resource->user_array,
+//            'balances' => []
+//
+            // currency
+//            'currency_id'             => $this->resource->currency_id,
+//            'currency_code'           => $this->resource->currency_code,
+//            'currency_symbol'         => $this->resource->currency_symbol,
+//            'currency_decimal_places' => $this->resource->currency_decimal_places,
 
-            //            'type'                    => strtolower($accountType),
-            //            'account_role'            => $accountRole,
-            //            'currency_id'             => $currencyId,
-            //            'currency_code'           => $currencyCode,
-            //            'currency_symbol'         => $currencySymbol,
-            //            'currency_decimal_places' => $decimalPlaces,
+            // balance (in currency, on date)
+//            'current_balance'         => $this->resource->current_balance,
+
+
             //            'current_balance'         => app('steam')->bcround(app('steam')->balance($account, $date), $decimalPlaces),
             //            'current_balance_date'    => $date->toAtomString(),
             //            'notes'                   => $this->repository->getNoteText($account),
@@ -84,16 +90,9 @@ class AccountResource extends JsonApiResource
             //            'longitude'               => $longitude,
             //            'latitude'                => $latitude,
             //            'zoom_level'              => $zoomLevel,
-            //             'id'                             => (string) $account->id,
-            //            'created_at'                     => $account->created_at->toAtomString(),
-            //            'updated_at'                     => $account->updated_at->toAtomString(),
-            //            'active'                         => $account->active,
+
             //            'order'                          => $order,
-            //            'name'                           => $account->name,
-            //            'iban'                           => '' === (string) $account->iban ? null : $account->iban,
-            //            'account_number'                 => $this->accountMeta[$id]['account_number'] ?? null,
-            //            'type'                           => strtolower($accountType),
-            //            'account_role'                   => $accountRole,
+
             //            'currency_id'                    => (string) $currency->id,
             //            'currency_code'                  => $currency->code,
             //            'currency_symbol'                => $currency->symbol,
@@ -153,7 +152,8 @@ class AccountResource extends JsonApiResource
     public function relationships($request): iterable
     {
         return [
-            $this->relation('user')->withData($this->resource->user),
+            $this->relation('user')->withData($this->resource->user_array),
+            $this->relation('balances')->withData([]),
             //$this->relation('tags')->withData($this->resource->getTags()),
         ];
     }

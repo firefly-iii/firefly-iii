@@ -30,8 +30,8 @@ class UserSchema extends Schema
     {
         return [
             ID::make(),
-            DateTime::make('createdAt')->sortable()->readOnly(),
-            DateTime::make('updatedAt')->sortable()->readOnly(),
+            DateTime::make('created_at')->sortable()->readOnly(),
+            DateTime::make('created_at')->sortable()->readOnly(),
             HasMany::make('accounts'),
         ];
     }
@@ -57,9 +57,4 @@ class UserSchema extends Schema
     {
         return PagePagination::make();
     }
-    public function authorizable(): bool
-    {
-        return false;
-    }
-
 }

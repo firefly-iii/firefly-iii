@@ -77,8 +77,5 @@ class AccountQuery extends QueryAll implements HasPagination
 
 //        var_dump($filters->value('name'));
 //        exit;
-
-
-        return Account::get();
     }
 }

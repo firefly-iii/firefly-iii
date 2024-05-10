@@ -59,14 +59,43 @@ class AccountSchema extends Schema
             Attribute::make('name')->sortable(),
             Attribute::make('iban'),
             Attribute::make('active'),
-            Attribute::make('virtual_balance'),
 
             Attribute::make('last_activity')->sortable(),
-            Attribute::make('balance')->sortable(),
-            Attribute::make('native_balance')->sortable(),
             Attribute::make('type'),
+            Attribute::make('account_role'),
 
-            // fancy fields:
+            ToOne::make('user'),
+            ToMany::make('balances'),
+
+            // currency
+//            Attribute::make('currency_id'),
+//            Attribute::make('currency_code'),
+//            Attribute::make('currency_symbol'),
+//            Attribute::make('currency_decimal_places'),
+//
+//            // native currency
+//            Attribute::make('native_currency_id'),
+//            Attribute::make('native_currency_code'),
+//            Attribute::make('native_currency_symbol'),
+//            Attribute::make('native_currency_decimal_places'),
+//
+//            // current balance (in currency, on date)
+//            Attribute::make('current_balance')->sortable(),
+//            Attribute::make('current_balance_date'),
+//
+//            // native current balance (in native currency)
+//            Attribute::make('native_current_balance'),
+//
+//            // virtual balance
+//            Attribute::make('virtual_balance'),
+//
+//            // native virtual balance
+//            Attribute::make('native_virtual_balance'),
+
+            // balance difference (if start + end filter present)
+
+            // native balance difference  (if start + end filter present)
+
 
 
 
@@ -153,7 +182,7 @@ class AccountSchema extends Schema
             //            'latitude'                => $latitude,
             //            'zoom_level'              => $zoomLevel,
 
-            ToOne::make('user'),
+//            ToOne::make('user'),
 //            ToMany::make('tags'),
         ];
     }
@@ -174,6 +203,7 @@ class AccountSchema extends Schema
     {
         return [
             Filter::make('name'),
+            Filter::make('type'),
         ];
     }
     public function repository(): AccountRepository

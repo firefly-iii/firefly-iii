@@ -27,6 +27,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Support\JsonApi\Concerns\UsergroupAware;
 use LaravelJsonApi\Contracts\Store\QueriesAll;
 use LaravelJsonApi\NonEloquent\AbstractRepository;
+use LaravelJsonApi\NonEloquent\Concerns\HasCrudCapability;
 
 
 class AccountRepository extends AbstractRepository implements QueriesAll
@@ -38,6 +39,17 @@ class AccountRepository extends AbstractRepository implements QueriesAll
      *
      */
     public function __construct() {}
+
+    /**
+     * Get the tags relationship
+     *
+     * @param Account $account
+     * @return iterable
+     */
+    public function getBalances(Account $account): iterable
+    {
+        die('here we are');
+    }
 
     /**
      * @inheritDoc

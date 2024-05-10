@@ -27,10 +27,14 @@ use LaravelJsonApi\Core\Query\SortFields;
 
 trait ValidateSortParameters
 {
-    function validateParams(string $class, SortFields $params): bool
+    function validateParams(string $class, ?SortFields $params): bool
     {
+        if(null === $params) {
+            return false;
+        }
 
         $config = config(sprintf('firefly.full_data_set.%s', $class)) ?? [];
+
 
         foreach ($params->all() as $field) {
             if (in_array($field->name(), $config, true)) {

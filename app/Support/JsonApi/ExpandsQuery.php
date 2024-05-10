@@ -23,20 +23,26 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\JsonApi;
 
+use FireflyIII\Support\Http\Api\AccountFilter;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use LaravelJsonApi\Core\Query\FilterParameters;
 use LaravelJsonApi\Core\Query\SortFields;
 
 trait ExpandsQuery
 {
+    use AccountFilter;
+
     final protected function addPagination(Builder $query, array $pagination): Builder
     {
         $skip = ($pagination['number'] - 1) * $pagination['size'];
         return $query->skip($skip)->take($pagination['size']);
     }
 
-    final protected function addSortParams(Builder $query, SortFields $sort): Builder
+    final protected function addSortParams(Builder $query, ?SortFields $sort): Builder
     {
+        if (null === $sort) {
+            return $query;
+        }
         foreach ($sort->all() as $sortField) {
             $query->orderBy($sortField->name(), $sortField->isAscending() ? 'ASC' : 'DESC');
         }
@@ -55,12 +61,22 @@ trait ExpandsQuery
         $query->where(function (Builder $q) use ($config, $filters) {
             foreach ($filters->all() as $filter) {
                 if (in_array($filter->key(), $config, true)) {
-                    foreach($filter->value() as $value) {
+                    foreach ($filter->value() as $value) {
                         $q->where($filter->key(), 'LIKE', sprintf('%%%s%%', $value));
                     }
                 }
             }
         });
+
+        // some filters are special, i.e. the account type filter.
+        $typeFilters = $filters->value('type', false);
+        if (false !== $typeFilters && count($typeFilters) > 0) {
+            $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
+            foreach ($typeFilters as $typeFilter) {
+                $types = $this->mapAccountTypes($typeFilter);
+                $query->whereIn('account_types.type', $types);
+            }
+        }
 
         return $query;
     }
