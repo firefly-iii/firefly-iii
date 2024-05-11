@@ -133,7 +133,7 @@ class AccountResource extends JsonApiResource
     {
         return [
             $this->relation('user')->withData($this->resource->user),
-            $this->relation('balances')->withData($this->resource->balances),
+            $this->relation('account_balances')->withData($this->resource->balances),
         ];
     }
 

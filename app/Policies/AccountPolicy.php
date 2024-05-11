@@ -43,6 +43,8 @@ class AccountPolicy
         return auth()->check() && $user->id === $account->user_id;
     }
 
+
+
     /**
      * Everybody can do this, but selection should limit to user.
      *
@@ -64,7 +66,7 @@ class AccountPolicy
         return $this->view($user, $account);
     }
 
-    public function viewBalances(User $user, Account $account): bool
+    public function viewAccountBalances(User $user, Account $account): bool
     {
         return $this->view($user, $account);
     }

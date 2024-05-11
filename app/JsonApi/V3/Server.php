@@ -3,7 +3,7 @@
 namespace FireflyIII\JsonApi\V3;
 
 use FireflyIII\JsonApi\V3\Accounts\AccountSchema;
-use FireflyIII\JsonApi\V3\Balances\BalanceSchema;
+use FireflyIII\JsonApi\V3\AccountBalances\AccountBalanceSchema;
 use FireflyIII\JsonApi\V3\Users\UserSchema;
 use LaravelJsonApi\Core\Server\Server as BaseServer;
 
@@ -37,7 +37,7 @@ class Server extends BaseServer
         return [
             AccountSchema::class,
             UserSchema::class,
-            BalanceSchema::class,
+            AccountBalanceSchema::class,
         ];
     }
 

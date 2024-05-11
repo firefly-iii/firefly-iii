@@ -1,6 +1,6 @@
 <?php
 /*
- * UserPolicy.php
+ * AccountBalance.php
  * Copyright (c) 2024 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,40 +21,29 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Policies;
+namespace FireflyIII\Entities;
 
 use FireflyIII\Models\Account;
-use FireflyIII\User;
 
-class UserPolicy
+class AccountBalance
 {
-    /**
-     * TODO needs better authentication.
-     *
-     * @param User    $user
-     * @param Account $account
-     *
-     * @return bool
-     */
-    public function view(User $user, User $user1): bool
+    public string $id;
+    public string $amount;
+    public string $currencyId;
+
+    public static function fromArray(): self
     {
-        return true;
-        return auth()->check() && $user->id === $account->user_id;
+        $balance             = new self;
+        $balance->id         = (string) random_int(1, 1000);
+        $balance->name = (string) random_int(1, 1000);
+        $balance->amount     = (string) random_int(1, 1000);
+        $balance->currencyId = '1';
+
+        return $balance;
     }
 
-    /**
-     * Everybody can do this, but selection should limit to user.
-     *
-     * @return true
-     */
-    public function viewAny(): bool
-    {
-        return true;
-        return auth()->check();
+    public function getAccount():Account {
+        return Account::inRandomOrder()->first();
     }
-    public function viewAccounts(User $user): bool
-    {
-        return true;
-        return auth()->check();
-    }
+
 }

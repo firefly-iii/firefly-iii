@@ -43,6 +43,7 @@ class AccountSchema extends Schema
             Boolean::make('active'),
             Number::make('order'),
             HasOne::make('user'),
+            HasMany::make('account_balances'),
         ];
     }
 

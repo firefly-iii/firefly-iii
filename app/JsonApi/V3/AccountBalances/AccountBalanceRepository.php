@@ -1,6 +1,6 @@
 <?php
 /*
- * UserPolicy.php
+ * AccountBalanceRepository.php
  * Copyright (c) 2024 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,40 +21,31 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Policies;
+namespace FireflyIII\JsonApi\V3\AccountBalances;
 
-use FireflyIII\Models\Account;
-use FireflyIII\User;
+use FireflyIII\Entities\AccountBalance;
+use LaravelJsonApi\Contracts\Store\QueriesAll;
+use LaravelJsonApi\NonEloquent\AbstractRepository;
 
-class UserPolicy
+class AccountBalanceRepository extends AbstractRepository implements QueriesAll
 {
-    /**
-     * TODO needs better authentication.
-     *
-     * @param User    $user
-     * @param Account $account
-     *
-     * @return bool
-     */
-    public function view(User $user, User $user1): bool
-    {
-        return true;
-        return auth()->check() && $user->id === $account->user_id;
-    }
 
     /**
-     * Everybody can do this, but selection should limit to user.
-     *
-     * @return true
+     * @inheritDoc
      */
-    public function viewAny(): bool
+    #[\Override] public function find(string $resourceId): ?object
     {
-        return true;
-        return auth()->check();
+        return AccountBalance::fromArray();
     }
-    public function viewAccounts(User $user): bool
+
+
+    /**
+     * @inheritDoc
+     */
+    public function queryAll(): Capabilities\AccountBalanceQuery
     {
-        return true;
-        return auth()->check();
+        return Capabilities\AccountBalanceQuery::make()
+                                      ->withServer($this->server)
+                                      ->withSchema($this->schema);
     }
 }

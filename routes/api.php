@@ -22,8 +22,10 @@
 
 declare(strict_types=1);
 
+use FireflyIII\Http\Controllers\Api\V3\Controllers\AccountController;
 use LaravelJsonApi\Laravel\Facades\JsonApiRoute;
 use LaravelJsonApi\Laravel\Http\Controllers\JsonApiController;
+use LaravelJsonApi\Laravel\Routing\ActionRegistrar;
 use LaravelJsonApi\Laravel\Routing\Relationships;
 use LaravelJsonApi\Laravel\Routing\ResourceRegistrar;
 
@@ -31,11 +33,17 @@ use LaravelJsonApi\Laravel\Routing\ResourceRegistrar;
 JsonApiRoute::server('v3')
             ->prefix('v3')
             ->resources(function (ResourceRegistrar $server) {
-                $server->resource('accounts', JsonApiController::class)->readOnly()->relationships(function (Relationships $relations) {
+                $server->resource('accounts', AccountController::class)->readOnly()->relationships(function (Relationships $relations) {
                     $relations->hasOne('user')->readOnly();
-                    $relations->hasMany('balances')->readOnly();
+                    //$relations->hasMany('account_balances')->readOnly();
+                })
+                    ->actions(function (ActionRegistrar $actions) {
+                        $actions->withId()->get('account-balances', 'readAccountBalances'); // non-eloquent pseudo relation
+                    });
+                $server->resource('users', JsonApiController::class)->readOnly()->relationships(function (Relationships $relations) {
+                    $relations->hasMany('accounts')->readOnly();
                 });
-                $server->resource('users', JsonApiController::class);
+                $server->resource('account-balances', JsonApiController::class);
             });
 
 
