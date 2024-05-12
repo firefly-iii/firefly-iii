@@ -24,14 +24,16 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V2\Controllers\Autocomplete;
 
+use Carbon\Carbon;
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Autocomplete\AutocompleteRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountBalance;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface as AdminAccountRepositoryInterface;
-use FireflyIII\Support\Http\Api\AccountFilter;
+use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -39,11 +41,14 @@ use Illuminate\Http\JsonResponse;
  */
 class AccountController extends Controller
 {
-    use AccountFilter;
 
+    //    use AccountFilter;
     private AdminAccountRepositoryInterface $adminRepository;
-    private array                           $balanceTypes;
-    private AccountRepositoryInterface      $repository;
+    private TransactionCurrency             $default;
+    private ExchangeRateConverter           $converter;
+
+//    private array                           $balanceTypes;
+//    private AccountRepositoryInterface      $repository;
 
     /**
      * AccountController constructor.
@@ -53,14 +58,20 @@ class AccountController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                $this->repository      = app(AccountRepositoryInterface::class);
+                // new way of user group validation
+                $userGroup             = $this->validateUserGroup($request);
                 $this->adminRepository = app(AdminAccountRepositoryInterface::class);
-                $this->adminRepository->setUserGroup($this->validateUserGroup($request));
+                $this->adminRepository->setUserGroup($userGroup);
+                $this->default   = app('amount')->getDefaultCurrency();
+                $this->converter = app(ExchangeRateConverter::class);
+
+//                $this->repository      = app(AccountRepositoryInterface::class);
+                //                $this->adminRepository->setUserGroup($this->validateUserGroup($request));
 
                 return $next($request);
             }
         );
-        $this->balanceTypes = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
+//        $this->balanceTypes = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
     }
 
     /**
@@ -73,59 +84,66 @@ class AccountController extends Controller
      * 5. Collector uses user_group_id
      *
      * @throws FireflyException
-     * @throws FireflyException
      */
     public function accounts(AutocompleteRequest $request): JsonResponse
     {
-        $data            = $request->getData();
-        $types           = $data['types'];
-        $query           = $data['query'];
-        $date            = $this->parameters->get('date') ?? today(config('app.timezone'));
-        $result          = $this->adminRepository->searchAccount((string) $query, $types, $data['limit']);
-        $defaultCurrency = app('amount')->getDefaultCurrency();
-        $groupedResult   = [];
-        $allItems        = [];
+        $queryParameters = $request->getParameters();
+        $result          = $this->adminRepository->searchAccount((string) $queryParameters['query'], $queryParameters['account_types'], $queryParameters['size']);
+        $return          = [];
 
         /** @var Account $account */
         foreach ($result as $account) {
-            $nameWithBalance = $account->name;
-            $currency        = $this->repository->getAccountCurrency($account) ?? $defaultCurrency;
-
-            if (in_array($account->accountType->type, $this->balanceTypes, true)) {
-                $balance         = app('steam')->balance($account, $date);
-                $nameWithBalance = sprintf('%s (%s)', $account->name, app('amount')->formatAnything($currency, $balance, false));
-            }
-            $type            = (string) trans(sprintf('firefly.%s', $account->accountType->type));
-            $groupedResult[$type] ??= [
-                'group ' => $type,
-                'items'  => [],
-            ];
-            $allItems[]      = [
-                'id'                      => (string) $account->id,
-                'value'                   => (string) $account->id,
-                'name'                    => $account->name,
-                'name_with_balance'       => $nameWithBalance,
-                'label'                   => $nameWithBalance,
-                'type'                    => $account->accountType->type,
-                'currency_id'             => (string) $currency->id,
-                'currency_name'           => $currency->name,
-                'currency_code'           => $currency->code,
-                'currency_symbol'         => $currency->symbol,
-                'currency_decimal_places' => $currency->decimal_places,
-            ];
+            $return[] = $this->parseAccount($account);
         }
 
-        usort(
-            $allItems,
-            static function (array $left, array $right): int {
-                $order    = [AccountType::ASSET, AccountType::REVENUE, AccountType::EXPENSE];
-                $posLeft  = (int) array_search($left['type'], $order, true);
-                $posRight = (int) array_search($right['type'], $order, true);
+        return response()->json($return);
+    }
 
-                return $posLeft - $posRight;
-            }
-        );
+    private function parseAccount(Account $account): array
+    {
+        return [
+            'id'    => (string) $account->id,
+            'title' => $account->name,
+            'meta'  => [
+                'type'             => $account->accountType->type,
+                'account_balances' => $this->getAccountBalances($account),
+            ],
+        ];
+    }
 
-        return response()->json($allItems);
+    private function getAccountBalances(Account $account): array
+    {
+        $return   = [];
+        $balances = $this->adminRepository->getAccountBalances($account);
+        /** @var AccountBalance $balance */
+        foreach ($balances as $balance) {
+            $return[] = $this->parseAccountBalance($balance);
+        }
+        return $return;
+    }
+
+    /**
+     * @param AccountBalance $balance
+     *
+     * @return array
+     */
+    private function parseAccountBalance(AccountBalance $balance): array
+    {
+        $currency = $balance->transactionCurrency;
+        return [
+            'title'                   => $balance->title,
+            'native_amount'           => $this->converter->convert($currency, $this->default, today(), $balance->balance),
+            'amount'                  => app('steam')->bcround($balance->balance, $currency->decimal_places),
+            'currency_id'             => (string) $currency->id,
+            'currency_code'           => $currency->code,
+            'currency_symbol'         => $currency->symbol,
+            'currency_decimal_places' => $currency->decimal_places,
+            'native_currency_id'      => (string) $this->default->id,
+            'native_currency_code'    => $this->default->code,
+            'native_currency_symbol'  => $this->default->symbol,
+            'native_currency_decimal' => $this->default->decimal_places,
+
+        ];
+
     }
 }

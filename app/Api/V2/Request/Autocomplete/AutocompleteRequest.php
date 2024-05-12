@@ -23,11 +23,16 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V2\Request\Autocomplete;
 
-use FireflyIII\Enums\UserRoleEnum;
+use Carbon\Carbon;
+use FireflyIII\JsonApi\Rules\IsValidFilter;
+use FireflyIII\JsonApi\Rules\IsValidPage;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
+use LaravelJsonApi\Core\Query\QueryParameters;
+use LaravelJsonApi\Validation\Rule as JsonApiRule;
 
 /**
  * Class AutocompleteRequest
@@ -36,11 +41,39 @@ class AutocompleteRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;
+    use AccountFilter;
 
-    protected array $acceptedRoles = [UserRoleEnum::MANAGE_TRANSACTIONS];
+    /**
+     * Loops over all possible query parameters (these are shared over ALL auto complete requests)
+     * and returns a validated array of parameters.
+     *
+     * The advantage is a single class. But you may also submit "account types" to an endpoint that doesn't use these.
+     *
+     * @return array
+     */
+    public function getParameters(): array
+    {
+        $queryParameters = QueryParameters::cast($this->all());
+        $date            = Carbon::createFromFormat('Y-m-d', $queryParameters->filter()->value('date', date('Y-m-d')), config('app.timezone'));
+        $query           = $queryParameters->filter()->value('query', '');
+        $size            = (int) ($queryParameters->page()['size'] ?? 50);
+        $accountTypes    = $this->getAccountTypeParameter($queryParameters->filter()->value('account_types', ''));
+
+
+        return [
+            'date'          => $date,
+            'query'         => $query,
+            'size'          => $size,
+            'account_types' => $accountTypes,
+        ];
+
+    }
 
     public function getData(): array
     {
+
+
+        return [];
         $types = $this->convertString('types');
         $array = [];
         if ('' !== $types) {
@@ -62,8 +95,28 @@ class AutocompleteRequest extends FormRequest
 
     public function rules(): array
     {
+
         return [
-            'limit' => 'min:0|max:1337',
+            'fields'  => JsonApiRule::notSupported(),
+            'filter'  => ['nullable', 'array', new IsValidFilter(['query', 'date', 'account_types']),],
+            'include' => JsonApiRule::notSupported(),
+            'page'    => ['nullable', 'array', new IsValidPage(['size']),],
+            'sort'    => JsonApiRule::notSupported(),
         ];
+    }
+
+    private function getAccountTypeParameter(mixed $types): array
+    {
+        if (is_string($types) && str_contains($types, ',')) {
+            $types = explode(',', $types);
+        }
+        if (!is_iterable($types)) {
+            $types = [$types];
+        }
+        $return = [];
+        foreach ($types as $type) {
+            $return = array_merge($return, $this->mapAccountTypes($type));
+        }
+        return array_unique($return);
     }
 }

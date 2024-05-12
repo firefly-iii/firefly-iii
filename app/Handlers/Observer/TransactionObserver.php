@@ -26,6 +26,7 @@ namespace FireflyIII\Handlers\Observer;
 use DB;
 use FireflyIII\Models\AccountBalance;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Support\Models\AccountBalanceCalculator;
 use stdClass;
 
 /**
@@ -42,16 +43,6 @@ class TransactionObserver
     public function updated(Transaction $transaction): void
     {
         app('log')->debug('Observe "updated" of a transaction.');
-        // refresh account balance:
-        /** @var stdClass $result */
-        $result = Transaction::groupBy(['account_id', 'transaction_currency_id'])->where('account_id', $transaction->account_id)->first(['account_id', 'transaction_currency_id', DB::raw('SUM(amount) as amount_sum')]);
-        if (null !== $result) {
-            $account  = (int) $result->account_id;
-            $currency = (int) $result->transaction_currency_id;
-            $sum      = $result->amount_sum;
-
-            AccountBalance::updateOrCreate(['title' => 'balance', 'account_id' => $account, 'transaction_currency_id' => $currency], ['balance' => $sum]);
-        }
-
+        AccountBalanceCalculator::recalculate($transaction->account);
     }
 }

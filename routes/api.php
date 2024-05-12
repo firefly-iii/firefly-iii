@@ -29,22 +29,44 @@ use LaravelJsonApi\Laravel\Routing\ActionRegistrar;
 use LaravelJsonApi\Laravel\Routing\Relationships;
 use LaravelJsonApi\Laravel\Routing\ResourceRegistrar;
 
+/**
+ * V2 auto complete controller(s)
+ */
+Route::group(
+    [
+        'namespace' => 'FireflyIII\Api\V2\Controllers\Autocomplete',
+        'prefix'    => 'v2/autocomplete',
+        'as'        => 'api.v2.autocomplete.',
+    ],
+    static function (): void {
+        // Auto complete routes
+        Route::get('accounts', ['uses' => 'AccountController@accounts', 'as' => 'accounts']);
+        Route::get('transaction-descriptions', ['uses' => 'TransactionController@transactionDescriptions', 'as' => 'transaction-descriptions']);
+        Route::get('categories', ['uses' => 'CategoryController@categories', 'as' => 'categories']);
+        Route::get('tags', ['uses' => 'TagController@tags', 'as' => 'tags']);
+    }
+);
 
-JsonApiRoute::server('v3')
-            ->prefix('v3')
-            ->resources(function (ResourceRegistrar $server) {
-                $server->resource('accounts', AccountController::class)->readOnly()->relationships(function (Relationships $relations) {
-                    $relations->hasOne('user')->readOnly();
-                    //$relations->hasMany('account_balances')->readOnly();
-                })
-                    ->actions(function (ActionRegistrar $actions) {
-                        $actions->withId()->get('account-balances', 'readAccountBalances'); // non-eloquent pseudo relation
-                    });
-                $server->resource('users', JsonApiController::class)->readOnly()->relationships(function (Relationships $relations) {
-                    $relations->hasMany('accounts')->readOnly();
-                });
-                $server->resource('account-balances', JsonApiController::class);
-            });
+
+
+
+
+//JsonApiRoute::server('v3')
+//            ->prefix('v3')
+//            ->resources(function (ResourceRegistrar $server) {
+//                $server->resource('accounts', AccountController::class)->readOnly()->relationships(function (Relationships $relations) {
+//                    $relations->hasOne('user')->readOnly();
+//                    //$relations->hasMany('account_balances')->readOnly();
+//                })
+//                       ->actions(function (ActionRegistrar $actions) {
+//                           $actions->withId()->get('account-balances', 'readAccountBalances'); // non-eloquent pseudo relation
+//                       });
+//                $server->resource('users', JsonApiController::class)->readOnly()->relationships(function (Relationships $relations) {
+//                    $relations->hasMany('accounts')->readOnly();
+//                });
+//                $server->resource('account-balances', JsonApiController::class);
+//            });
+
 
 
 // V2 API route for Summary boxes
@@ -79,20 +101,7 @@ Route::group(
 );
 
 // V2 API routes for auto complete
-Route::group(
-    [
-        'namespace' => 'FireflyIII\Api\V2\Controllers\Autocomplete',
-        'prefix'    => 'v2/autocomplete',
-        'as'        => 'api.v2.autocomplete.',
-    ],
-    static function (): void {
-        // Auto complete routes
-        Route::get('accounts', ['uses' => 'AccountController@accounts', 'as' => 'accounts']);
-        Route::get('transaction-descriptions', ['uses' => 'TransactionController@transactionDescriptions', 'as' => 'transaction-descriptions']);
-        Route::get('categories', ['uses' => 'CategoryController@categories', 'as' => 'categories']);
-        Route::get('tags', ['uses' => 'TagController@tags', 'as' => 'tags']);
-    }
-);
+
 
 // V2 API route for net worth endpoint(s);
 Route::group(

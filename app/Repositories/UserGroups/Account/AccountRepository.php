@@ -302,6 +302,7 @@ class AccountRepository implements AccountRepositoryInterface
         ;
         if ('' !== $query) {
             // split query on spaces just in case:
+            // TODO this will always fail because it searches for AND.
             $parts = explode(' ', $query);
             foreach ($parts as $part) {
                 $search = sprintf('%%%s%%', $part);
@@ -383,5 +384,10 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         return $return;
+    }
+
+    #[\Override] public function getAccountBalances(Account $account): Collection
+    {
+        return $account->accountBalances;
     }
 }

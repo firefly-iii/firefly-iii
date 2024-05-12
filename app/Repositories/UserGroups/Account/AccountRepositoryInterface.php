@@ -53,6 +53,8 @@ interface AccountRepositoryInterface
 
     public function getAccountCurrency(Account $account): ?TransactionCurrency;
 
+    public function getAccountBalances(Account $account): Collection;
+
     public function getAccountsById(array $accountIds): Collection;
 
     public function getAccountsByType(array $types, ?array $sort = [], ?array $filters = []): Collection;

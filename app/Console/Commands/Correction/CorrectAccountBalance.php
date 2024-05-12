@@ -3,8 +3,10 @@
 namespace FireflyIII\Console\Commands\Correction;
 
 use DB;
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\AccountBalance;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Support\Models\AccountBalanceCalculator;
 use Illuminate\Console\Command;
 use stdClass;
 
@@ -16,6 +18,7 @@ class CorrectAccountBalance extends Command
     protected $description = 'Recalculate all account balance amounts';
 
     protected $signature = 'firefly-iii:correct-account-balance';
+    use ShowsFriendlyMessages;
 
     /**
      * @return int
@@ -30,19 +33,6 @@ class CorrectAccountBalance extends Command
 
     private function correctBalanceAmounts(): void
     {
-        $result = Transaction
-            ::groupBy(['account_id', 'transaction_currency_id'])
-            ->get(['account_id', 'transaction_currency_id', DB::raw('SUM(amount) as amount_sum')]);
-        /** @var stdClass $entry */
-        foreach ($result as $entry) {
-            $account  = (int) $entry->account_id;
-            $currency = (int) $entry->transaction_currency_id;
-            $sum      = $entry->amount_sum;
-
-            AccountBalance::updateOrCreate(
-                ['title' => 'balance', 'account_id' => $account, 'transaction_currency_id' => $currency],
-                ['balance' => $sum]
-            );
-        }
+        AccountBalanceCalculator::recalculate(null);
     }
 }
