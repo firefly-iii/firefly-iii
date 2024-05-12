@@ -50,7 +50,7 @@ class TransactionObserver
             $currency = (int) $result->transaction_currency_id;
             $sum      = $result->amount_sum;
 
-            AccountBalance::updateOrCreate(['account_id' => $account, 'transaction_currency_id' => $currency], ['balance' => $sum]);
+            AccountBalance::updateOrCreate(['title' => 'balance', 'account_id' => $account, 'transaction_currency_id' => $currency], ['balance' => $sum]);
         }
 
     }

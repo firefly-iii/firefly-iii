@@ -15,6 +15,7 @@ return new class extends Migration
             Schema::create('account_balances', function (Blueprint $table) {
                 $table->id();
                 $table->timestamps();
+                $table->string('title',100)->nullable();
                 $table->integer('account_id', false, true);
                 $table->integer('transaction_currency_id', false, true);
                 $table->decimal('balance', 32, 12);

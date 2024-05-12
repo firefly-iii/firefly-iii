@@ -40,7 +40,7 @@ class CorrectAccountBalance extends Command
             $sum      = $entry->amount_sum;
 
             AccountBalance::updateOrCreate(
-                ['account_id' => $account, 'transaction_currency_id' => $currency],
+                ['title' => 'balance', 'account_id' => $account, 'transaction_currency_id' => $currency],
                 ['balance' => $sum]
             );
         }
