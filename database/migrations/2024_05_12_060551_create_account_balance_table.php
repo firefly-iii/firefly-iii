@@ -25,8 +25,7 @@ return new class extends Migration {
                 $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('cascade');
 
 
-
-                $table->unique(['account_id', 'transaction_currency_id', 'title'], 'unique_account_currency');
+                $table->unique(['account_id', 'transaction_currency_id', 'transaction_journal_id','date', 'title'], 'unique_account_currency');
             });
         }
     }

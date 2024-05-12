@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Observer;
 
 use FireflyIII\Models\TransactionJournal;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class TransactionJournalObserver
@@ -48,4 +49,5 @@ class TransactionJournalObserver
         $transactionJournal->destJournalLinks()->delete();
         $transactionJournal->auditLogEntries()->delete();
     }
+
 }

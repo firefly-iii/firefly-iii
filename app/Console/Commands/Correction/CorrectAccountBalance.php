@@ -6,8 +6,10 @@ use DB;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\AccountBalance;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\Models\AccountBalanceCalculator;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use stdClass;
 
 /**
@@ -33,6 +35,12 @@ class CorrectAccountBalance extends Command
 
     private function correctBalanceAmounts(): void
     {
-        AccountBalanceCalculator::recalculate(null);
+        AccountBalanceCalculator::recalculate(null, null);
+        foreach(TransactionJournal::all() as $journal) {
+            Log::debug(sprintf('Recalculating account balances for journal #%d', $journal->id));
+            foreach($journal->transactions as $transaction) {
+                AccountBalanceCalculator::recalculate($transaction->account, $journal);
+            }
+        }
     }
 }
