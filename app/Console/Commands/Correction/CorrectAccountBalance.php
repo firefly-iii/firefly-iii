@@ -10,13 +10,12 @@ use stdClass;
 
 /**
  * Class CorrectionSkeleton
- * TODO DONT FORGET TO ADD THIS TO THE DOCKER BUILD
  */
-class CorrectBalanceAmounts extends Command
+class CorrectAccountBalance extends Command
 {
     protected $description = 'Recalculate all account balance amounts';
 
-    protected $signature = 'firefly-iii:correct-balance-amounts';
+    protected $signature = 'firefly-iii:correct-account-balance';
 
     /**
      * @return int

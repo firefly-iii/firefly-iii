@@ -93,7 +93,7 @@ class DebugController extends Controller
         Artisan::call('view:clear');
 
         // also do some recalculations.
-        Artisan::call('firefly-iii:correct-balance-amounts');
+        Artisan::call('firefly-iii:correct-account-balance');
         Artisan::call('firefly-iii:trigger-credit-recalculation');
 
         try {
