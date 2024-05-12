@@ -193,6 +193,11 @@ class Account extends Model
         return $this->hasMany(AccountMeta::class);
     }
 
+    public function accountBalances(): HasMany
+    {
+        return $this->hasMany(AccountBalance::class);
+    }
+
     public function getEditNameAttribute(): string
     {
         $name = $this->name;
