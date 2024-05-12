@@ -37,9 +37,13 @@ class AccountBalanceCalculator
         // first collect normal amounts (in whatever currency), and set them.
 
         // select account_id, transaction_currency_id, foreign_currency_id, sum(amount), sum(foreign_amount) from transactions group by account_id, transaction_currency_id, foreign_currency_id
-        $result = Transaction
-            ::groupBy(['account_id', 'transaction_currency_id', 'foreign_currency_id'])
-            ->get(['account_id', 'transaction_currency_id', 'foreign_currency_id', DB::raw('SUM(amount) as sum_amount'), DB::raw('SUM(foreign_amount) as sum_foreign_amount')]);
+        $query = Transaction::groupBy(['account_id', 'transaction_currency_id', 'foreign_currency_id']);
+
+        if (null !== $account) {
+            $query->where('account_id', $account->id);
+        }
+
+        $result = $query->get(['account_id', 'transaction_currency_id', 'foreign_currency_id', DB::raw('SUM(amount) as sum_amount'), DB::raw('SUM(foreign_amount) as sum_foreign_amount')]);
 
         // reset account balances:
         self::resetAccountBalances($account);
@@ -60,7 +64,7 @@ class AccountBalanceCalculator
 
             // then do foreign amount, if present:
             if ($foreignCurrency > 0) {
-                $entry = self::getBalance('balance', $account, $foreignCurrency);
+                $entry          = self::getBalance('balance', $account, $foreignCurrency);
                 $entry->balance = bcadd($entry->balance, $sumForeignAmount);
                 $entry->save();
                 Log::debug(sprintf('Set balance entry #%d to amount %s', $entry->id, $entry->balance));
@@ -68,6 +72,7 @@ class AccountBalanceCalculator
         }
         return;
     }
+
     private static function getBalance(string $title, int $account, int $currency): AccountBalance
     {
         $entry = AccountBalance::where('title', $title)->where('account_id', $account)->where('transaction_currency_id', $currency)->first();

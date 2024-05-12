@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V2\Request\Autocomplete;
 
 use Carbon\Carbon;
+use Carbon\Exceptions\InvalidFormatException;
 use FireflyIII\JsonApi\Rules\IsValidFilter;
 use FireflyIII\JsonApi\Rules\IsValidPage;
 use FireflyIII\Models\AccountType;
@@ -33,7 +34,7 @@ use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 use LaravelJsonApi\Core\Query\QueryParameters;
 use LaravelJsonApi\Validation\Rule as JsonApiRule;
-
+use Illuminate\Support\Facades\Log;
 /**
  * Class AutocompleteRequest
  */
@@ -54,10 +55,15 @@ class AutocompleteRequest extends FormRequest
     public function getParameters(): array
     {
         $queryParameters = QueryParameters::cast($this->all());
-        $date            = Carbon::createFromFormat('Y-m-d', $queryParameters->filter()->value('date', date('Y-m-d')), config('app.timezone'));
-        $query           = $queryParameters->filter()->value('query', '');
+        try {
+            $date = Carbon::createFromFormat('Y-m-d', $queryParameters->filter()?->value('date', date('Y-m-d')), config('app.timezone'));
+        } catch(InvalidFormatException $e) {
+            Log::debug(sprintf('Invalid date format in autocomplete request. Using today: %s', $e->getMessage()));
+            $date = today();
+        }
+        $query           = $queryParameters->filter()?->value('query', '') ?? '';
         $size            = (int) ($queryParameters->page()['size'] ?? 50);
-        $accountTypes    = $this->getAccountTypeParameter($queryParameters->filter()->value('account_types', ''));
+        $accountTypes    = $this->getAccountTypeParameter($queryParameters->filter()?->value('account_types', '') ?? '');
 
 
         return [

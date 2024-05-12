@@ -101,11 +101,16 @@ class AccountController extends Controller
 
     private function parseAccount(Account $account): array
     {
+        $currency = $this->adminRepository->getAccountCurrency($account);
         return [
             'id'    => (string) $account->id,
             'title' => $account->name,
             'meta'  => [
                 'type'             => $account->accountType->type,
+                'currency_id'      => null === $currency ? null : (string) $currency->id,
+                'currency_code'    => $currency?->code,
+                'currency_symbol'  => $currency?->symbol,
+                'currency_decimal' => $currency?->decimal_places,
                 'account_balances' => $this->getAccountBalances($account),
             ],
         ];
