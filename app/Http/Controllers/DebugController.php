@@ -86,14 +86,15 @@ class DebugController extends Controller
     {
         app('preferences')->mark();
         $request->session()->forget(['start', 'end', '_previous', 'viewRange', 'range', 'is_custom_range', 'temp-mfa-secret', 'temp-mfa-codes']);
-        app('log')->debug('Call cache:clear...');
 
         Artisan::call('cache:clear');
-        app('log')->debug('Call config:clear...');
         Artisan::call('config:clear');
-        app('log')->debug('Call route:clear...');
         Artisan::call('route:clear');
-        app('log')->debug('Call twig:clean...');
+        Artisan::call('view:clear');
+
+        // also do some recalculations.
+        Artisan::call('firefly-iii:correct-balance-amounts');
+        Artisan::call('firefly-iii:trigger-credit-recalculation');
 
         try {
             Artisan::call('twig:clean');
@@ -101,7 +102,6 @@ class DebugController extends Controller
             throw new FireflyException($e->getMessage(), 0, $e);
         }
 
-        app('log')->debug('Call view:clear...');
         Artisan::call('view:clear');
 
         return redirect(route('index'));
