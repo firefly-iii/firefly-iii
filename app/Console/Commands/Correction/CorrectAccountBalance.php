@@ -30,11 +30,5 @@ class CorrectAccountBalance extends Command
     private function correctBalanceAmounts(): void
     {
         AccountBalanceCalculator::recalculate(null, null);
-        foreach (TransactionJournal::all() as $journal) {
-            Log::debug(sprintf('Recalculating account balances for journal #%d', $journal->id));
-            foreach ($journal->transactions as $transaction) {
-                AccountBalanceCalculator::recalculate($transaction->account, $journal);
-            }
-        }
     }
 }
