@@ -24,26 +24,17 @@ declare(strict_types=1);
 namespace FireflyIII\Policies;
 
 use FireflyIII\Entities\AccountBalance;
-use FireflyIII\Models\Account;
 use FireflyIII\User;
 
 class AccountBalancePolicy
 {
-
     /**
      * TODO needs better authentication.
-     *
-     * @param User    $user
-     * @param Account $account
-     *
-     * @return bool
      */
     public function view(User $user, AccountBalance $accountBalance): bool
     {
         return true;
     }
-
-
 
     /**
      * Everybody can do this, but selection should limit to user.
@@ -54,6 +45,4 @@ class AccountBalancePolicy
     {
         return true;
     }
-
-
 }

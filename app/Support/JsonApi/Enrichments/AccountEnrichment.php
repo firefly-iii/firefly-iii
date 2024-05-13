@@ -34,28 +34,28 @@ use Illuminate\Support\Facades\Log;
 
 class AccountEnrichment implements EnrichmentInterface
 {
-
     private Collection $collection;
     private array      $currencies;
 
-
-    #[\Override] public function enrich(Collection $collection): Collection
+    #[\Override]
+    public function enrich(Collection $collection): Collection
     {
         $this->collection = $collection;
         $this->currencies = [];
         // do everything here:
         $this->getLastActivity();
-        //$this->getMetaBalances();
+        // $this->getMetaBalances();
         $this->collectAccountTypes();
         $this->collectMetaData();
 
         $this->collection->transform(function (Account $account) {
-            $account->user_array = ['id' => 1,'bla bla' => 'bla'];
-            $account->balances = collect([
-                                             ['balance_id' => 1,'balance' => 5],
-                                             ['balance_id' => 2,'balance' => 5],
-                                             ['balance_id' => 3,'balance' => 5],
-                                         ]);
+            $account->user_array = ['id' => 1, 'bla bla' => 'bla'];
+            $account->balances   = collect([
+                ['balance_id' => 1, 'balance' => 5],
+                ['balance_id' => 2, 'balance' => 5],
+                ['balance_id' => 3, 'balance' => 5],
+            ]);
+
             return $account;
         });
 
@@ -64,8 +64,6 @@ class AccountEnrichment implements EnrichmentInterface
 
     /**
      * TODO this method refers to a single-use method inside Steam that could be moved here.
-     *
-     * @return void
      */
     private function getLastActivity(): void
     {
@@ -74,14 +72,11 @@ class AccountEnrichment implements EnrichmentInterface
         $lastActivity      = $accountRepository->getLastActivity($this->collection);
         foreach ($lastActivity as $row) {
             $this->collection->where('id', $row['account_id'])->first()->last_activity = Carbon::parse($row['date_max'], config('app.timezone'));
-
         }
     }
 
     /**
      * TODO this method refers to a single-use method inside Steam that could be moved here.
-     *
-     * @return void
      */
     private function getMetaBalances(): void
     {
@@ -89,6 +84,7 @@ class AccountEnrichment implements EnrichmentInterface
             $array = app('steam')->balancesByAccountsConverted($this->collection, today());
         } catch (FireflyException $e) {
             Log::error(sprintf('Could not load balances: %s', $e->getMessage()));
+
             return;
         }
         foreach ($array as $accountId => $row) {
@@ -99,8 +95,6 @@ class AccountEnrichment implements EnrichmentInterface
 
     /**
      * TODO this method refers to a single-use method inside Steam that could be moved here.
-     *
-     * @return void
      */
     private function collectAccountTypes(): void
     {
@@ -115,6 +109,7 @@ class AccountEnrichment implements EnrichmentInterface
         }
         $this->collection->transform(function (Account $account) use ($types) {
             $account->type = $types[$account->id];
+
             return $account;
         });
     }
@@ -123,18 +118,18 @@ class AccountEnrichment implements EnrichmentInterface
     {
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
+
         /** @var CurrencyRepositoryInterface $repository */
-        $repository = app(CurrencyRepositoryInterface::class);
+        $repository        = app(CurrencyRepositoryInterface::class);
 
-        $metaFields  = $accountRepository->getMetaValues($this->collection, ['currency_id', 'account_role', 'account_number', 'liability_direction', 'interest', 'interest_period', 'current_debt']);
-        $currencyIds = $metaFields->where('name', 'currency_id')->pluck('data')->toArray();
+        $metaFields        = $accountRepository->getMetaValues($this->collection, ['currency_id', 'account_role', 'account_number', 'liability_direction', 'interest', 'interest_period', 'current_debt']);
+        $currencyIds       = $metaFields->where('name', 'currency_id')->pluck('data')->toArray();
 
-        $currencies = [];
+        $currencies        = [];
         foreach ($repository->getByIds($currencyIds) as $currency) {
             $id              = $currency->id;
             $currencies[$id] = $currency;
         }
-
 
         $this->collection->transform(function (Account $account) use ($metaFields, $currencies) {
             $set = $metaFields->where('account_id', $account->id);
@@ -147,6 +142,7 @@ class AccountEnrichment implements EnrichmentInterface
                     $account->currency_decimal_places = $currencies[$id]?->decimal_places;
                 }
             }
+
             return $account;
         });
     }

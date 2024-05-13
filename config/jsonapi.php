@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 use FireflyIII\JsonApi\V3\Server;
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Root Namespace

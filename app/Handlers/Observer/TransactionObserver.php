@@ -23,11 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Observer;
 
-use DB;
-use FireflyIII\Models\AccountBalance;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Support\Models\AccountBalanceCalculator;
-use stdClass;
 
 /**
  * Class TransactionObserver
@@ -44,15 +41,16 @@ class TransactionObserver
     {
         app('log')->debug('Observe "updated" of a transaction.');
         AccountBalanceCalculator::recalculate($transaction->account, null);
-        if((float)$transaction->amount > 0) {
+        if ((float)$transaction->amount > 0) {
             AccountBalanceCalculator::recalculateByJournal($transaction->transactionJournal);
         }
     }
+
     public function created(Transaction $transaction): void
     {
         app('log')->debug('Observe "created" of a transaction.');
         AccountBalanceCalculator::recalculate($transaction->account, null);
-        if((float)$transaction->amount > 0) {
+        if ((float)$transaction->amount > 0) {
             AccountBalanceCalculator::recalculateByJournal($transaction->transactionJournal);
         }
     }

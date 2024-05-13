@@ -1,17 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class () extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
         if (!Schema::hasTable('account_balances')) {
-            Schema::create('account_balances', function (Blueprint $table) {
+            Schema::create('account_balances', function (Blueprint $table): void {
                 $table->id();
                 $table->timestamps();
                 $table->string('title', 100)->nullable();
@@ -24,8 +26,7 @@ return new class extends Migration {
                 $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
                 $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('cascade');
 
-
-                $table->unique(['account_id', 'transaction_currency_id', 'transaction_journal_id','date', 'title'], 'unique_account_currency');
+                $table->unique(['account_id', 'transaction_currency_id', 'transaction_journal_id', 'date', 'title'], 'unique_account_currency');
             });
         }
     }

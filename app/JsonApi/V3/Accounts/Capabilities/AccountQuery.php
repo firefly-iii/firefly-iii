@@ -35,19 +35,16 @@ use LaravelJsonApi\NonEloquent\Concerns\PaginatesEnumerables;
 
 class AccountQuery extends QueryAll implements HasPagination
 {
-    use PaginatesEnumerables;
-    use FiltersPagination;
-    use ValidateSortParameters;
-    use UsergroupAware;
     use ExpandsQuery;
+    use FiltersPagination;
+    use PaginatesEnumerables;
     use SortsCollection;
+    use UsergroupAware;
+    use ValidateSortParameters;
 
-    /**
-     * @inheritDoc
-     */
-    #[\Override] public function get(): iterable
+    #[\Override]
+    public function get(): iterable
     {
-
         $filters    = $this->queryParameters->filter();
         $sort       = $this->queryParameters->sortFields();
         $pagination = $this->filtersPagination($this->queryParameters->page());
@@ -57,8 +54,8 @@ class AccountQuery extends QueryAll implements HasPagination
         if (!$needsAll) {
             $query = $this->addPagination($query, $pagination);
         }
-        $query = $this->addSortParams($query, $sort);
-        $query = $this->addFilterParams('account', $query, $filters);
+        $query      = $this->addSortParams($query, $sort);
+        $query      = $this->addFilterParams('account', $query, $filters);
 
         $collection = $query->get(['accounts.*']);
 
@@ -66,16 +63,11 @@ class AccountQuery extends QueryAll implements HasPagination
         $enrichment = new AccountEnrichment();
         $collection = $enrichment->enrich($collection);
 
-
         // add filters after the query
 
         // add sort after the query
-        $collection = $this->sortCollection($collection, $sort);
-
-
-        return $collection;
-
-//        var_dump($filters->value('name'));
-//        exit;
+        return $this->sortCollection($collection, $sort);
+        //        var_dump($filters->value('name'));
+        //        exit;
     }
 }

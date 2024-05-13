@@ -35,6 +35,7 @@ trait ExpandsQuery
     final protected function addPagination(Builder $query, array $pagination): Builder
     {
         $skip = ($pagination['number'] - 1) * $pagination['size'];
+
         return $query->skip($skip)->take($pagination['size']);
     }
 
@@ -46,6 +47,7 @@ trait ExpandsQuery
         foreach ($sort->all() as $sortField) {
             $query->orderBy($sortField->name(), $sortField->isAscending() ? 'ASC' : 'DESC');
         }
+
         return $query;
     }
 
@@ -54,11 +56,11 @@ trait ExpandsQuery
         if (null === $filters) {
             return $query;
         }
-        $config = config(sprintf('firefly.valid_query_filters.%s', $class)) ?? [];
-        if (count($filters->all()) === 0) {
+        $config      = config(sprintf('firefly.valid_query_filters.%s', $class)) ?? [];
+        if (0 === count($filters->all())) {
             return $query;
         }
-        $query->where(function (Builder $q) use ($config, $filters) {
+        $query->where(function (Builder $q) use ($config, $filters): void {
             foreach ($filters->all() as $filter) {
                 if (in_array($filter->key(), $config, true)) {
                     foreach ($filter->value() as $value) {
@@ -80,5 +82,4 @@ trait ExpandsQuery
 
         return $query;
     }
-
 }

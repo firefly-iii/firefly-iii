@@ -30,11 +30,6 @@ class BalancePolicy
 {
     /**
      * TODO needs better authentication.
-     *
-     * @param User    $user
-     * @param Account $account
-     *
-     * @return bool
      */
     public function view(User $user, Account $account): bool
     {

@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\JsonApi\Rules;
 
-use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
 class IsValidPage implements ValidationRule
@@ -35,10 +34,8 @@ class IsValidPage implements ValidationRule
         $this->allowed = $keys;
     }
 
-    /**
-     * @inheritDoc
-     */
-    #[\Override] public function validate(string $attribute, mixed $value, Closure $fail): void
+    #[\Override]
+    public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
         if ('page' !== $attribute) {
             $fail('validation.bad_api_filter')->translate();

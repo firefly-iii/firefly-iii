@@ -28,16 +28,15 @@ use LaravelJsonApi\Core\Query\SortFields;
 
 trait SortsCollection
 {
-    protected function sortCollection(Collection $collection, ?SortFields $sortFields): Collection {
-
-        if(null === $sortFields) {
+    protected function sortCollection(Collection $collection, ?SortFields $sortFields): Collection
+    {
+        if (null === $sortFields) {
             return $collection;
         }
-        foreach($sortFields->all() as $sortField) {
-            $collection = $sortField->isAscending() ? $collection->sortBy($sortField->name()) :  $collection->sortByDesc($sortField->name());
+        foreach ($sortFields->all() as $sortField) {
+            $collection = $sortField->isAscending() ? $collection->sortBy($sortField->name()) : $collection->sortByDesc($sortField->name());
         }
 
         return $collection;
     }
-
 }

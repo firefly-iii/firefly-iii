@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V2\Controllers\Autocomplete;
 
-use Carbon\Carbon;
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Autocomplete\AutocompleteRequest;
 use FireflyIII\Exceptions\FireflyException;
@@ -41,14 +40,13 @@ use Illuminate\Http\JsonResponse;
  */
 class AccountController extends Controller
 {
-
     //    use AccountFilter;
     private AdminAccountRepositoryInterface $adminRepository;
     private TransactionCurrency             $default;
     private ExchangeRateConverter           $converter;
 
-//    private array                           $balanceTypes;
-//    private AccountRepositoryInterface      $repository;
+    //    private array                           $balanceTypes;
+    //    private AccountRepositoryInterface      $repository;
 
     /**
      * AccountController constructor.
@@ -62,16 +60,16 @@ class AccountController extends Controller
                 $userGroup             = $this->validateUserGroup($request);
                 $this->adminRepository = app(AdminAccountRepositoryInterface::class);
                 $this->adminRepository->setUserGroup($userGroup);
-                $this->default   = app('amount')->getDefaultCurrency();
-                $this->converter = app(ExchangeRateConverter::class);
+                $this->default         = app('amount')->getDefaultCurrency();
+                $this->converter       = app(ExchangeRateConverter::class);
 
-//                $this->repository      = app(AccountRepositoryInterface::class);
+                //                $this->repository      = app(AccountRepositoryInterface::class);
                 //                $this->adminRepository->setUserGroup($this->validateUserGroup($request));
 
                 return $next($request);
             }
         );
-//        $this->balanceTypes = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
+        //        $this->balanceTypes = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
     }
 
     /**
@@ -102,6 +100,7 @@ class AccountController extends Controller
     private function parseAccount(Account $account): array
     {
         $currency = $this->adminRepository->getAccountCurrency($account);
+
         return [
             'id'    => (string) $account->id,
             'title' => $account->name,
@@ -120,21 +119,19 @@ class AccountController extends Controller
     {
         $return   = [];
         $balances = $this->adminRepository->getAccountBalances($account);
+
         /** @var AccountBalance $balance */
         foreach ($balances as $balance) {
             $return[] = $this->parseAccountBalance($balance);
         }
+
         return $return;
     }
 
-    /**
-     * @param AccountBalance $balance
-     *
-     * @return array
-     */
     private function parseAccountBalance(AccountBalance $balance): array
     {
         $currency = $balance->transactionCurrency;
+
         return [
             'title'                   => $balance->title,
             'native_amount'           => $this->converter->convert($currency, $this->default, today(), $balance->balance),
@@ -147,8 +144,6 @@ class AccountController extends Controller
             'native_currency_code'    => $this->default->code,
             'native_currency_symbol'  => $this->default->symbol,
             'native_currency_decimal' => $this->default->decimal_places,
-
         ];
-
     }
 }

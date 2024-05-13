@@ -28,22 +28,15 @@ use FireflyIII\User;
 
 class AccountPolicy
 {
-
     /**
      * TODO needs better authentication.
-     *
-     * @param User    $user
-     * @param Account $account
-     *
-     * @return bool
      */
     public function view(User $user, Account $account): bool
     {
         return true;
+
         return auth()->check() && $user->id === $account->user_id;
     }
-
-
 
     /**
      * Everybody can do this, but selection should limit to user.
@@ -53,6 +46,7 @@ class AccountPolicy
     public function viewAny(): bool
     {
         return true;
+
         return auth()->check();
     }
 

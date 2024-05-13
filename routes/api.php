@@ -29,9 +29,7 @@ use LaravelJsonApi\Laravel\Routing\ActionRegistrar;
 use LaravelJsonApi\Laravel\Routing\Relationships;
 use LaravelJsonApi\Laravel\Routing\ResourceRegistrar;
 
-/**
- * V2 auto complete controller(s)
- */
+// V2 auto complete controller(s)
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V2\Controllers\Autocomplete',
@@ -47,11 +45,7 @@ Route::group(
     }
 );
 
-
-
-
-
-//JsonApiRoute::server('v3')
+// JsonApiRoute::server('v3')
 //            ->prefix('v3')
 //            ->resources(function (ResourceRegistrar $server) {
 //                $server->resource('accounts', AccountController::class)->readOnly()->relationships(function (Relationships $relations) {
@@ -66,8 +60,6 @@ Route::group(
 //                });
 //                $server->resource('account-balances', JsonApiController::class);
 //            });
-
-
 
 // V2 API route for Summary boxes
 // BASIC
@@ -101,7 +93,6 @@ Route::group(
 );
 
 // V2 API routes for auto complete
-
 
 // V2 API route for net worth endpoint(s);
 Route::group(

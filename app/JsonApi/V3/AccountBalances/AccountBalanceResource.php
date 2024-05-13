@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\JsonApi\V3\AccountBalances;
 
 use Illuminate\Http\Request;
@@ -9,8 +11,6 @@ class AccountBalanceResource extends JsonApiResource
 {
     /**
      * Get the resource id.
-     *
-     * @return string
      */
     public function id(): string
     {
@@ -20,9 +20,7 @@ class AccountBalanceResource extends JsonApiResource
     /**
      * Get the resource's attributes.
      *
-     * @param Request|null $request
-     *
-     * @return iterable
+     * @param null|Request $request
      */
     public function attributes($request): iterable
     {
@@ -35,9 +33,7 @@ class AccountBalanceResource extends JsonApiResource
     /**
      * Get the resource's relationships.
      *
-     * @param Request|null $request
-     *
-     * @return iterable
+     * @param null|Request $request
      */
     public function relationships($request): iterable
     {
@@ -45,5 +41,4 @@ class AccountBalanceResource extends JsonApiResource
             $this->relation('account')->withData($this->resource->getAccount()),
         ];
     }
-
 }

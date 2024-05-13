@@ -25,7 +25,6 @@ namespace FireflyIII\Support\JsonApi;
 
 trait FiltersPagination
 {
-
     protected function filtersPagination(?array $pagination): array
     {
         if (null === $pagination) {
@@ -39,8 +38,8 @@ trait FiltersPagination
         $pagination['number'] = min(65536, max($pagination['number'], 1));
 
         // clean up page size
-        $pagination['size'] = (int) ($pagination['size'] ?? $this->getPageSize());
-        $pagination['size'] = min(1337, max($pagination['size'], 1));
+        $pagination['size']   = (int) ($pagination['size'] ?? $this->getPageSize());
+        $pagination['size']   = min(1337, max($pagination['size'], 1));
 
         return $pagination;
     }
@@ -50,6 +49,7 @@ trait FiltersPagination
         if (auth()->check()) {
             return (int) app('preferences')->get('listPageSize', 50)->data;
         }
+
         return 50;
     }
 }

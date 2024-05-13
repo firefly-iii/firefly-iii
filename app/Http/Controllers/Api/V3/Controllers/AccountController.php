@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\Http\Controllers\Api\V3\Controllers;
 
 use FireflyIII\Http\Controllers\Controller;
@@ -13,17 +15,16 @@ use LaravelJsonApi\Laravel\Http\Requests\AnonymousQuery;
 
 class AccountController extends Controller
 {
-
+    use Actions\AttachRelationship;
+    use Actions\Destroy;
+    use Actions\DetachRelationship;
     use Actions\FetchMany;
     use Actions\FetchOne;
-    use Actions\Store;
-    use Actions\Update;
-    use Actions\Destroy;
     use Actions\FetchRelated;
     use Actions\FetchRelationship;
+    use Actions\Store;
+    use Actions\Update;
     use Actions\UpdateRelationship;
-    use Actions\AttachRelationship;
-    use Actions\DetachRelationship;
 
     public function readAccountBalances(AnonymousQuery $query, AccountBalanceSchema $schema, Account $account): Responsable
     {
@@ -34,7 +35,8 @@ class AccountController extends Controller
             ->queryAll()
             ->withRequest($query)
             ->withAccount($account)
-            ->get();
+            ->get()
+        ;
 
         return DataResponse::make($models);
     }

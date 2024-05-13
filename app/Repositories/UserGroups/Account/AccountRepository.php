@@ -386,7 +386,8 @@ class AccountRepository implements AccountRepositoryInterface
         return $return;
     }
 
-    #[\Override] public function getAccountBalances(Account $account): Collection
+    #[\Override]
+    public function getAccountBalances(Account $account): Collection
     {
         return $account->accountBalances;
     }

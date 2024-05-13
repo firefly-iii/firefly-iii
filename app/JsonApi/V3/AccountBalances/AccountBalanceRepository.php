@@ -29,23 +29,17 @@ use LaravelJsonApi\NonEloquent\AbstractRepository;
 
 class AccountBalanceRepository extends AbstractRepository implements QueriesAll
 {
-
-    /**
-     * @inheritDoc
-     */
-    #[\Override] public function find(string $resourceId): ?object
+    #[\Override]
+    public function find(string $resourceId): ?object
     {
         return AccountBalance::fromArray();
     }
 
-
-    /**
-     * @inheritDoc
-     */
     public function queryAll(): Capabilities\AccountBalanceQuery
     {
         return Capabilities\AccountBalanceQuery::make()
-                                      ->withServer($this->server)
-                                      ->withSchema($this->schema);
+            ->withServer($this->server)
+            ->withSchema($this->schema)
+        ;
     }
 }

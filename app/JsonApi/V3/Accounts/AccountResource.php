@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\JsonApi\V3\Accounts;
 
 use FireflyIII\Models\Account;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use LaravelJsonApi\Core\Resources\JsonApiResource;
 
 /**
@@ -12,13 +13,10 @@ use LaravelJsonApi\Core\Resources\JsonApiResource;
  */
 class AccountResource extends JsonApiResource
 {
-
     /**
      * Get the resource's attributes.
      *
-     * @param Request|null $request
-     *
-     * @return iterable
+     * @param null|Request $request
      */
     public function attributes($request): iterable
     {
@@ -32,25 +30,19 @@ class AccountResource extends JsonApiResource
             'type'            => $this->resource->type,
             'account_role'    => $this->resource->account_role,
 
-
-
-
-
-
             //            'virtual_balance' => $this->resource->virtual_balance,
             //            'native_balance'  => $this->resource->native_balance,
-            //'user' => $this->resource->user_array,
-//            'balances' => []
-//
+            // 'user' => $this->resource->user_array,
+            //            'balances' => []
+            //
             // currency
-//            'currency_id'             => $this->resource->currency_id,
-//            'currency_code'           => $this->resource->currency_code,
-//            'currency_symbol'         => $this->resource->currency_symbol,
-//            'currency_decimal_places' => $this->resource->currency_decimal_places,
+            //            'currency_id'             => $this->resource->currency_id,
+            //            'currency_code'           => $this->resource->currency_code,
+            //            'currency_symbol'         => $this->resource->currency_symbol,
+            //            'currency_decimal_places' => $this->resource->currency_decimal_places,
 
             // balance (in currency, on date)
-//            'current_balance'         => $this->resource->current_balance,
-
+            //            'current_balance'         => $this->resource->current_balance,
 
             //            'current_balance'         => app('steam')->bcround(app('steam')->balance($account, $date), $decimalPlaces),
             //            'current_balance_date'    => $date->toAtomString(),
@@ -125,9 +117,7 @@ class AccountResource extends JsonApiResource
     /**
      * Get the resource's relationships.
      *
-     * @param Request|null $request
-     *
-     * @return iterable
+     * @param null|Request $request
      */
     public function relationships($request): iterable
     {
@@ -136,5 +126,4 @@ class AccountResource extends JsonApiResource
             $this->relation('account_balances')->withData($this->resource->balances),
         ];
     }
-
 }

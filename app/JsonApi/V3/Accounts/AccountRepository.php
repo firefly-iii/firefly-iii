@@ -27,8 +27,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Support\JsonApi\Concerns\UsergroupAware;
 use LaravelJsonApi\Contracts\Store\QueriesAll;
 use LaravelJsonApi\NonEloquent\AbstractRepository;
-use LaravelJsonApi\NonEloquent\Concerns\HasCrudCapability;
-
 
 class AccountRepository extends AbstractRepository implements QueriesAll
 {
@@ -36,25 +34,20 @@ class AccountRepository extends AbstractRepository implements QueriesAll
 
     /**
      * SiteRepository constructor.
-     *
      */
     public function __construct() {}
 
-    /**
-     * @inheritDoc
-     */
     public function find(string $resourceId): ?object
     {
-
         return Account::find((int) $resourceId);
     }
 
     public function queryAll(): Capabilities\AccountQuery
     {
         return Capabilities\AccountQuery::make()
-                                        ->withUserGroup($this->userGroup)
-                                        ->withServer($this->server)
-                                        ->withSchema($this->schema);
+            ->withUserGroup($this->userGroup)
+            ->withServer($this->server)
+            ->withSchema($this->schema)
+        ;
     }
-
 }

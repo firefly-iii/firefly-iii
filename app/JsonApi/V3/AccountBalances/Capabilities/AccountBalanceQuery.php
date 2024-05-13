@@ -39,9 +39,6 @@ class AccountBalanceQuery extends QueryAll
         parent::__construct();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function get(): iterable
     {
         return [
@@ -55,7 +52,7 @@ class AccountBalanceQuery extends QueryAll
     public function withAccount(Account $account): self
     {
         $this->account = $account;
+
         return $this;
     }
-
 }

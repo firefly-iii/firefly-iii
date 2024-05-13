@@ -10,16 +10,16 @@
         "title": "T\u00edtulo"
     },
     "list": {
-        "drag_and_drop": "Drag and drop",
+        "drag_and_drop": "Arrastar e soltar",
         "active": "Esta ativo?",
         "name": "Nome",
         "type": "Tipo",
-        "number": "Account number",
+        "number": "N\u00famero de conta",
         "liability_type": "Tipo de responsabilidade",
-        "current_balance": "Current balance",
-        "last_activity": "Last activity",
-        "amount_due": "Amount due",
-        "balance_difference": "Balance difference",
+        "current_balance": "Saldo atual",
+        "last_activity": "\u00daltima atividade",
+        "amount_due": "Valor a pagar",
+        "balance_difference": "Diferen\u00e7a de saldo",
         "menu": "Menu"
     },
     "validation": {

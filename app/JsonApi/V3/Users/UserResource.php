@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\JsonApi\V3\Users;
 
 use FireflyIII\Models\User;
@@ -11,12 +13,10 @@ use LaravelJsonApi\Core\Resources\JsonApiResource;
  */
 class UserResource extends JsonApiResource
 {
-
     /**
      * Get the resource's attributes.
      *
-     * @param Request|null $request
-     * @return iterable
+     * @param null|Request $request
      */
     public function attributes($request): iterable
     {
@@ -30,8 +30,7 @@ class UserResource extends JsonApiResource
     /**
      * Get the resource's relationships.
      *
-     * @param Request|null $request
-     * @return iterable
+     * @param null|Request $request
      */
     public function relationships($request): iterable
     {
@@ -39,5 +38,4 @@ class UserResource extends JsonApiResource
             // @TODO
         ];
     }
-
 }

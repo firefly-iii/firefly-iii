@@ -35,29 +35,29 @@ use Illuminate\Foundation\Http\FormRequest;
 use LaravelJsonApi\Core\Query\QueryParameters;
 use LaravelJsonApi\Validation\Rule as JsonApiRule;
 use Illuminate\Support\Facades\Log;
+
 /**
  * Class AutocompleteRequest
  */
 class AutocompleteRequest extends FormRequest
 {
+    use AccountFilter;
     use ChecksLogin;
     use ConvertsDataTypes;
-    use AccountFilter;
 
     /**
      * Loops over all possible query parameters (these are shared over ALL auto complete requests)
      * and returns a validated array of parameters.
      *
      * The advantage is a single class. But you may also submit "account types" to an endpoint that doesn't use these.
-     *
-     * @return array
      */
     public function getParameters(): array
     {
         $queryParameters = QueryParameters::cast($this->all());
+
         try {
             $date = Carbon::createFromFormat('Y-m-d', $queryParameters->filter()?->value('date', date('Y-m-d')), config('app.timezone'));
-        } catch(InvalidFormatException $e) {
+        } catch (InvalidFormatException $e) {
             Log::debug(sprintf('Invalid date format in autocomplete request. Using today: %s', $e->getMessage()));
             $date = today();
         }
@@ -65,20 +65,16 @@ class AutocompleteRequest extends FormRequest
         $size            = (int) ($queryParameters->page()['size'] ?? 50);
         $accountTypes    = $this->getAccountTypeParameter($queryParameters->filter()?->value('account_types', '') ?? '');
 
-
         return [
             'date'          => $date,
             'query'         => $query,
             'size'          => $size,
             'account_types' => $accountTypes,
         ];
-
     }
 
     public function getData(): array
     {
-
-
         return [];
         $types = $this->convertString('types');
         $array = [];
@@ -101,12 +97,11 @@ class AutocompleteRequest extends FormRequest
 
     public function rules(): array
     {
-
         return [
             'fields'  => JsonApiRule::notSupported(),
-            'filter'  => ['nullable', 'array', new IsValidFilter(['query', 'date', 'account_types']),],
+            'filter'  => ['nullable', 'array', new IsValidFilter(['query', 'date', 'account_types'])],
             'include' => JsonApiRule::notSupported(),
-            'page'    => ['nullable', 'array', new IsValidPage(['size']),],
+            'page'    => ['nullable', 'array', new IsValidPage(['size'])],
             'sort'    => JsonApiRule::notSupported(),
         ];
     }
@@ -123,6 +118,7 @@ class AutocompleteRequest extends FormRequest
         foreach ($types as $type) {
             $return = array_merge($return, $this->mapAccountTypes($type));
         }
+
         return array_unique($return);
     }
 }

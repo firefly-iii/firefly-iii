@@ -28,5 +28,4 @@ use Illuminate\Support\Collection;
 interface EnrichmentInterface
 {
     public function enrich(Collection $collection): Collection;
-
 }

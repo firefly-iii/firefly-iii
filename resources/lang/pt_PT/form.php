@@ -37,7 +37,7 @@ return [
     // new user:
     'bank_name'                   => 'Nome do banco',
     'bank_balance'                => 'Saldo',
-    'current_balance'             => 'Current balance',
+    'current_balance'             => 'Saldo atual',
     'savings_balance'             => 'Saldo nas poupanças',
     'credit_card_limit'           => 'Limite do cartão de crédito',
     'automatch'                   => 'Corresponder automaticamente',

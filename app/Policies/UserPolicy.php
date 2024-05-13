@@ -23,22 +23,17 @@ declare(strict_types=1);
 
 namespace FireflyIII\Policies;
 
-use FireflyIII\Models\Account;
 use FireflyIII\User;
 
 class UserPolicy
 {
     /**
      * TODO needs better authentication.
-     *
-     * @param User    $user
-     * @param Account $account
-     *
-     * @return bool
      */
     public function view(User $user, User $user1): bool
     {
         return true;
+
         return auth()->check() && $user->id === $account->user_id;
     }
 
@@ -50,11 +45,14 @@ class UserPolicy
     public function viewAny(): bool
     {
         return true;
+
         return auth()->check();
     }
+
     public function viewAccounts(User $user): bool
     {
         return true;
+
         return auth()->check();
     }
 }

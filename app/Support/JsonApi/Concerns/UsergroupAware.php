@@ -27,7 +27,6 @@ use FireflyIII\Models\UserGroup;
 
 trait UsergroupAware
 {
-
     protected UserGroup $userGroup;
 
     public function getUserGroup(): UserGroup
@@ -40,9 +39,10 @@ trait UsergroupAware
         $this->userGroup = $userGroup;
     }
 
-    public function withUserGroup(UserGroup $userGroup): self {
+    public function withUserGroup(UserGroup $userGroup): self
+    {
         $this->userGroup = $userGroup;
+
         return $this;
     }
-
 }
