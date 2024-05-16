@@ -31,8 +31,8 @@ use Illuminate\Support\Facades\Log;
 
 class AccountBalanceCalculator
 {
-
-    private function __construct() {
+    private function __construct()
+    {
         // no-op
     }
 
@@ -44,17 +44,17 @@ class AccountBalanceCalculator
      */
     public static function recalculateAll(): void
     {
-        $object = new self;
+        $object = new self();
         $object->recalculateLatest(null);
-        //$object->recalculateJournals(null, null);
+        // $object->recalculateJournals(null, null);
     }
 
     public static function recalculateForJournal(TransactionJournal $transactionJournal): void
     {
-        $object = new self;
+        $object = new self();
         foreach ($transactionJournal->transactions as $transaction) {
             $object->recalculateLatest($transaction->account);
-            //$object->recalculateJournals($transaction->account, $transactionJournal);
+            // $object->recalculateJournals($transaction->account, $transactionJournal);
         }
     }
 
@@ -119,8 +119,8 @@ class AccountBalanceCalculator
             $sumForeignAmount    = $row->sum_foreign_amount;
 
             // first create for normal currency:
-            $entry          = $this->getAccountBalanceByAccount($account, $transactionCurrency);
-            $entry->balance = bcadd($entry->balance, $sumAmount);
+            $entry               = $this->getAccountBalanceByAccount($account, $transactionCurrency);
+            $entry->balance      = bcadd($entry->balance, $sumAmount);
             $entry->save();
 
             // then do foreign amount, if present:
@@ -155,11 +155,6 @@ class AccountBalanceCalculator
      *  1. Dus dan search je eerst naar die SUM, som alle transactions eerder dan (niet inclusief) de journal.
      *  2. En vanaf daar pak je alle journals op of na de journal (dus ook de journal zelf) en begin je door te tellen.
      *  3. Elke voorbij gaande journal entry "balance_after_journal" geef je een update of voeg je toe.
-     *
-     * @param Account|null            $account
-     * @param TransactionJournal|null $transactionJournal
-     *
-     * @return void
      */
     private function recalculateJournals(?Account $account, ?TransactionJournal $transactionJournal): void
     {
@@ -170,7 +165,7 @@ class AccountBalanceCalculator
         if (null !== $account) {
             $query->where('transactions.account_id', $account->id);
         }
-        if(null !== $account && null !== $transactionJournal) {
+        if (null !== $account && null !== $transactionJournal) {
             $query->where('transaction_journals.date', '>=', $transactionJournal->date);
             $amounts = $this->getStartAmounts($account, $transactionJournal);
         }
@@ -212,8 +207,10 @@ class AccountBalanceCalculator
         // order by transaction_journals.date desc
     }
 
-    private function getStartAmounts(Account $account, TransactionJournal $journal): array {
-        die('here we are');
+    private function getStartAmounts(Account $account, TransactionJournal $journal): array
+    {
+        exit('here we are');
+
         return [];
     }
 }
