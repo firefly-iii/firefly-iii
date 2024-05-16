@@ -67,6 +67,15 @@ jobs:
         env:
           FIREFLY_III_ROOT: /github/workspace
           GH_TOKEN: ${{ secrets.CHANGELOG_TOKEN }}
+      - name: "Create THANKS.md"
+        id: thank-you
+        uses: JC5/firefly-iii-dev@main
+        with:
+          action: 'ff3:thank-you'
+          output: ''
+        env:
+          FIREFLY_III_ROOT: /github/workspace
+          GH_TOKEN: ''
       - name: Extract changelog
         id: extract-changelog
         uses: JC5/firefly-iii-dev@main
