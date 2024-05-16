@@ -27,6 +27,6 @@ class CorrectAccountBalance extends Command
 
     private function correctBalanceAmounts(): void
     {
-        AccountBalanceCalculator::recalculate(null, null);
+        AccountBalanceCalculator::recalculateAll();
     }
 }

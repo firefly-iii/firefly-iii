@@ -40,12 +40,12 @@ class TransactionObserver
     public function updated(Transaction $transaction): void
     {
         app('log')->debug('Observe "updated" of a transaction.');
-        AccountBalanceCalculator::recalculateForAccount($transaction->account);
+        AccountBalanceCalculator::recalculateForJournal($transaction->transactionJournal);
     }
 
     public function created(Transaction $transaction): void
     {
         app('log')->debug('Observe "created" of a transaction.');
-        AccountBalanceCalculator::recalculateForAccount($transaction->account);
+        AccountBalanceCalculator::recalculateForJournal($transaction->transactionJournal);
     }
 }

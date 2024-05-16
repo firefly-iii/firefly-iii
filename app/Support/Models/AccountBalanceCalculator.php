@@ -46,7 +46,7 @@ class AccountBalanceCalculator
     {
         $object = new self;
         $object->recalculateLatest(null);
-        $object->recalculateJournals(null, null);
+        //$object->recalculateJournals(null, null);
     }
 
     public static function recalculateForJournal(TransactionJournal $transactionJournal): void
@@ -54,7 +54,7 @@ class AccountBalanceCalculator
         $object = new self;
         foreach ($transactionJournal->transactions as $transaction) {
             $object->recalculateLatest($transaction->account);
-            $object->recalculateJournals($transaction->account, $transactionJournal);
+            //$object->recalculateJournals($transaction->account, $transactionJournal);
         }
     }
 
