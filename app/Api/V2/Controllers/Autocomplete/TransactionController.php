@@ -63,8 +63,8 @@ class TransactionController extends Controller
      */
     public function transactionDescriptions(AutocompleteRequest $request): JsonResponse
     {
-        $data     = $request->getData();
-        $result   = $this->repository->searchJournalDescriptions($data['query'], $data['limit']);
+        $queryParameters = $request->getParameters();
+        $result          = $this->repository->searchJournalDescriptions($queryParameters['query'], $queryParameters['limit']);
 
         // limit and unique
         $filtered = $result->unique('description');
@@ -73,10 +73,13 @@ class TransactionController extends Controller
         /** @var TransactionJournal $journal */
         foreach ($filtered as $journal) {
             $array[] = [
-                'id'                   => (string)$journal->id,
-                'transaction_group_id' => (string)$journal->transaction_group_id,
-                'name'                 => $journal->description,
-                'description'          => $journal->description,
+                'id'    => (string) $journal->id,
+                'title' => $journal->description,
+                'meta'  => [
+                    'description'          => $journal->description,
+                    'transaction_group_id' => (string) $journal->transaction_group_id,
+                    'name'                 => $journal->description,
+                ],
             ];
         }
 
