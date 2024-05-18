@@ -67,8 +67,8 @@ class TransactionController extends Controller
         $result          = $this->repository->searchJournalDescriptions($queryParameters['query'], $queryParameters['size']);
 
         // limit and unique
-        $filtered = $result->unique('description');
-        $array    = [];
+        $filtered        = $result->unique('description');
+        $array           = [];
 
         /** @var TransactionJournal $journal */
         foreach ($filtered as $journal) {

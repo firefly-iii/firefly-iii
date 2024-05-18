@@ -81,7 +81,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     public function findByIbanNull(string $iban, array $types): ?Account
     {
-        $iban = Steam::filterSpaces($iban);
+        $iban  = Steam::filterSpaces($iban);
         $query = $this->userGroup->accounts()->where('iban', '!=', '')->whereNotNull('iban');
 
         if (0 !== count($types)) {

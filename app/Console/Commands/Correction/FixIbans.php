@@ -37,9 +37,9 @@ class FixIbans extends Command
 {
     use ShowsFriendlyMessages;
 
-    protected   $description = 'Removes spaces from IBANs';
-    protected   $signature   = 'firefly-iii:fix-ibans';
-    private int $count       = 0;
+    protected $description = 'Removes spaces from IBANs';
+    protected $signature   = 'firefly-iii:fix-ibans';
+    private int $count     = 0;
 
     /**
      * Execute the console command.
@@ -60,7 +60,7 @@ class FixIbans extends Command
     {
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $iban     = (string) $account->iban;
+            $iban    = (string) $account->iban;
             $newIban = app('steam')->filterSpaces($iban);
             if ('' !== $iban && $iban !== $newIban) {
                 $account->iban = $newIban;
@@ -77,13 +77,13 @@ class FixIbans extends Command
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $userId       = $account->user_id;
+            $userId = $account->user_id;
             $set[$userId] ??= [];
-            $iban         = (string) $account->iban;
+            $iban   = (string) $account->iban;
             if ('' === $iban) {
                 continue;
             }
-            $type = $account->accountType->type;
+            $type   = $account->accountType->type;
             if (in_array($type, [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE], true)) {
                 $type = 'liabilities';
             }

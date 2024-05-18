@@ -73,28 +73,28 @@ class AutocompleteRequest extends FormRequest
         ];
     }
 
-//    public function getData(): array
-//    {
-//
-//        return [];
-//        $types = $this->convertString('types');
-//        $array = [];
-//        if ('' !== $types) {
-//            $array = explode(',', $types);
-//        }
-//        $limit = $this->convertInteger('limit');
-//        $limit = 0 === $limit ? 10 : $limit;
-//
-//        // remove 'initial balance' and another from allowed types. its internal
-//        $array = array_diff($array, [AccountType::INITIAL_BALANCE, AccountType::RECONCILIATION]);
-//
-//        return [
-//            'types' => $array,
-//            'query' => $this->convertString('query'),
-//            'date'  => $this->getCarbonDate('date'),
-//            'limit' => $limit,
-//        ];
-//    }
+    //    public function getData(): array
+    //    {
+    //
+    //        return [];
+    //        $types = $this->convertString('types');
+    //        $array = [];
+    //        if ('' !== $types) {
+    //            $array = explode(',', $types);
+    //        }
+    //        $limit = $this->convertInteger('limit');
+    //        $limit = 0 === $limit ? 10 : $limit;
+    //
+    //        // remove 'initial balance' and another from allowed types. its internal
+    //        $array = array_diff($array, [AccountType::INITIAL_BALANCE, AccountType::RECONCILIATION]);
+    //
+    //        return [
+    //            'types' => $array,
+    //            'query' => $this->convertString('query'),
+    //            'date'  => $this->getCarbonDate('date'),
+    //            'limit' => $limit,
+    //        ];
+    //    }
 
     public function rules(): array
     {

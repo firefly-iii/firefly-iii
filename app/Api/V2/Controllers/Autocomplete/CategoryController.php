@@ -64,13 +64,13 @@ class CategoryController extends Controller
     public function categories(AutocompleteRequest $request): JsonResponse
     {
         $queryParameters = $request->getParameters();
-        $result   = $this->repository->searchCategory($queryParameters['query'], $queryParameters['size']);
-        $filtered = $result->map(
+        $result          = $this->repository->searchCategory($queryParameters['query'], $queryParameters['size']);
+        $filtered        = $result->map(
             static function (Category $item) {
                 return [
-                    'id'   => (string)$item->id,
+                    'id'    => (string)$item->id,
                     'title' => $item->name,
-                    'meta' => [],
+                    'meta'  => [],
                 ];
             }
         );

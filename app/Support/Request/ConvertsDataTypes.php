@@ -140,6 +140,7 @@ trait ConvertsDataTypes
     public function clearIban(?string $string): ?string
     {
         $string = $this->clearString($string);
+
         return Steam::filterSpaces($string);
     }
 

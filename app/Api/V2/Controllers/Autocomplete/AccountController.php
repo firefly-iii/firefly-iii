@@ -55,8 +55,9 @@ class AccountController extends Controller
                 $userGroup        = $this->validateUserGroup($request);
                 $this->repository = app(AccountRepositoryInterface::class);
                 $this->repository->setUserGroup($userGroup);
-                $this->default   = app('amount')->getDefaultCurrency();
-                $this->converter = app(ExchangeRateConverter::class);
+                $this->default    = app('amount')->getDefaultCurrency();
+                $this->converter  = app(ExchangeRateConverter::class);
+
                 return $next($request);
             }
         );

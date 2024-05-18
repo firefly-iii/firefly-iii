@@ -682,7 +682,7 @@ class Steam
             "\u{3000}", // ideographic space
             "\u{FEFF}", // zero width no -break space
             "\x20", // plain old normal space,
-            ' '
+            ' ',
         ];
 
         // clear zalgo text
