@@ -39,9 +39,9 @@ Route::group(
     static function (): void {
         // Auto complete routes
         Route::get('accounts', ['uses' => 'AccountController@accounts', 'as' => 'accounts']);
-        Route::get('transaction-descriptions', ['uses' => 'TransactionController@transactionDescriptions', 'as' => 'transaction-descriptions']);
         Route::get('categories', ['uses' => 'CategoryController@categories', 'as' => 'categories']);
         Route::get('tags', ['uses' => 'TagController@tags', 'as' => 'tags']);
+        Route::get('transaction-descriptions', ['uses' => 'TransactionController@transactionDescriptions', 'as' => 'transaction-descriptions']);
     }
 );
 

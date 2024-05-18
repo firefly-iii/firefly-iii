@@ -470,7 +470,11 @@ let transactions = function () {
                     server: urls.tag,
                     liveServer: true,
                     clearEnd: true,
+                    labelField: 'title',
+                    valueField: 'id',
+                    queryParam: 'filter[query]',
                     allowNew: true,
+                    serverDataKey: 'data',
                     notFoundMessage: i18next.t('firefly.nothing_found'),
                     noCache: true,
                     fetchOptions: {
@@ -491,7 +495,6 @@ let transactions = function () {
                 addAutocomplete({
                     selector: 'input.ac-source',
                     serverUrl: urls.account,
-                    // filters: this.filters.source,
                     onRenderItem: renderAccount,
                     valueField: 'id',
                     labelField: 'title',
@@ -513,7 +516,7 @@ let transactions = function () {
                     selector: 'input.ac-category',
                     serverUrl: urls.category,
                     valueField: 'id',
-                    labelField: 'name',
+                    labelField: 'title',
                     onChange: changeCategory,
                     onSelectItem: changeCategory
                 });
@@ -521,7 +524,7 @@ let transactions = function () {
                     selector: 'input.ac-description',
                     serverUrl: urls.description,
                     valueField: 'id',
-                    labelField: 'description',
+                    labelField: 'title',
                     onChange: changeDescription,
                     onSelectItem: changeDescription,
                 });

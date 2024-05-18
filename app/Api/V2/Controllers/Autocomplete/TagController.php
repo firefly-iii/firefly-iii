@@ -64,15 +64,15 @@ class TagController extends Controller
     public function tags(AutocompleteRequest $request): JsonResponse
     {
         $queryParameters = $request->getParameters();
-        $result   = $this->repository->searchTag($queryParameters['query'], $queryParameters['size']);
-        $filtered = $result->map(
+        $result          = $this->repository->searchTag($queryParameters['query'], $queryParameters['size']);
+        $filtered        = $result->map(
             static function (Tag $item) {
                 return [
-                    'id'    => (string)$item->id,
-                    'name'  => $item->tag,
-                    'title'  => $item->tag,
-                    'value' => (string)$item->id,
+                    'id'    => (string) $item->id,
+                    'title' => $item->tag,
+                    'value' => (string) $item->id,
                     'label' => $item->tag,
+                    'meta'  => [],
                 ];
             }
         );

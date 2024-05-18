@@ -29,24 +29,20 @@ use FireflyIII\Api\V2\Request\Autocomplete\AutocompleteRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountBalance;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface as AdminAccountRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class AccountController
  */
 class AccountController extends Controller
 {
-    //    use AccountFilter;
-    private AdminAccountRepositoryInterface $adminRepository;
-    private TransactionCurrency             $default;
-    private ExchangeRateConverter           $converter;
-
-    //    private array                           $balanceTypes;
-    //    private AccountRepositoryInterface      $repository;
+    private AccountRepositoryInterface $repository;
+    private TransactionCurrency        $default;
+    private ExchangeRateConverter      $converter;
 
     /**
      * AccountController constructor.
@@ -56,20 +52,14 @@ class AccountController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                // new way of user group validation
-                $userGroup             = $this->validateUserGroup($request);
-                $this->adminRepository = app(AdminAccountRepositoryInterface::class);
-                $this->adminRepository->setUserGroup($userGroup);
-                $this->default         = app('amount')->getDefaultCurrency();
-                $this->converter       = app(ExchangeRateConverter::class);
-
-                //                $this->repository      = app(AccountRepositoryInterface::class);
-                //                $this->adminRepository->setUserGroup($this->validateUserGroup($request));
-
+                $userGroup        = $this->validateUserGroup($request);
+                $this->repository = app(AccountRepositoryInterface::class);
+                $this->repository->setUserGroup($userGroup);
+                $this->default   = app('amount')->getDefaultCurrency();
+                $this->converter = app(ExchangeRateConverter::class);
                 return $next($request);
             }
         );
-        //        $this->balanceTypes = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
     }
 
     /**
@@ -80,13 +70,11 @@ class AccountController extends Controller
      * 3. Request includes user_group_id
      * 4. Endpoint is documented.
      * 5. Collector uses user_group_id
-     *
-     * @throws FireflyException
      */
     public function accounts(AutocompleteRequest $request): JsonResponse
     {
         $queryParameters = $request->getParameters();
-        $result          = $this->adminRepository->searchAccount((string) $queryParameters['query'], $queryParameters['account_types'], $queryParameters['size']);
+        $result          = $this->repository->searchAccount((string) $queryParameters['query'], $queryParameters['account_types'], $queryParameters['size']);
         $return          = [];
 
         /** @var Account $account */
@@ -99,7 +87,7 @@ class AccountController extends Controller
 
     private function parseAccount(Account $account): array
     {
-        $currency = $this->adminRepository->getAccountCurrency($account);
+        $currency = $this->repository->getAccountCurrency($account);
 
         return [
             'id'    => (string) $account->id,
@@ -118,16 +106,23 @@ class AccountController extends Controller
     private function getAccountBalances(Account $account): array
     {
         $return   = [];
-        $balances = $this->adminRepository->getAccountBalances($account);
+        $balances = $this->repository->getAccountBalances($account);
 
         /** @var AccountBalance $balance */
         foreach ($balances as $balance) {
-            $return[] = $this->parseAccountBalance($balance);
+            try {
+                $return[] = $this->parseAccountBalance($balance);
+            } catch (FireflyException $e) {
+                Log::error(sprintf('Could not parse convert account balance: %s', $e->getMessage()));
+            }
         }
 
         return $return;
     }
 
+    /**
+     * @throws FireflyException
+     */
     private function parseAccountBalance(AccountBalance $balance): array
     {
         $currency = $balance->transactionCurrency;
