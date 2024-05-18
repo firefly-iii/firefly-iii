@@ -51,7 +51,7 @@ class UpdateRequest extends FormRequest
             'include_net_worth'       => ['include_net_worth', 'boolean'],
             'account_type_name'       => ['type', 'convertString'],
             'virtual_balance'         => ['virtual_balance', 'convertString'],
-            'iban'                    => ['iban', 'convertString'],
+            'iban'                    => ['iban', 'convertIban'],
             'BIC'                     => ['bic', 'convertString'],
             'account_number'          => ['account_number', 'convertString'],
             'account_role'            => ['account_role', 'convertString'],

@@ -681,11 +681,13 @@ class Steam
             "\u{202F}", // narrow no-break space
             "\u{3000}", // ideographic space
             "\u{FEFF}", // zero width no -break space
-            "\x20", // plain old normal space
+            "\x20", // plain old normal space,
+            ' '
         ];
 
         // clear zalgo text
         $string = preg_replace('/(\pM{2})\pM+/u', '\1', $string);
+        $string = preg_replace('/\s+/', '', $string);
 
         return str_replace($search, '', $string);
     }

@@ -31,6 +31,7 @@ use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Services\Internal\Update\AccountUpdateService;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Support\Collection;
@@ -80,6 +81,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     public function findByIbanNull(string $iban, array $types): ?Account
     {
+        $iban = Steam::filterSpaces($iban);
         $query = $this->userGroup->accounts()->where('iban', '!=', '')->whereNotNull('iban');
 
         if (0 !== count($types)) {

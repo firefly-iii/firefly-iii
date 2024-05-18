@@ -63,7 +63,7 @@ class StoreRequest extends FormRequest
             'order'                   => $this->convertInteger('order'),
             'currency_code'           => $this->convertString('currency_code'),
             'virtual_balance'         => $this->convertString('virtual_balance'),
-            'iban'                    => $this->convertString('iban'),
+            'iban'                    => $this->convertIban('iban'),
             'BIC'                     => $this->convertString('bic'),
             'account_number'          => $this->convertString('account_number'),
             'account_role'            => $this->convertString('account_role'),

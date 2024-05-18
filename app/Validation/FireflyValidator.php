@@ -170,6 +170,7 @@ class FireflyValidator extends Validator
             "\u{202F}", // narrow no-break space
             "\u{3000}", // ideographic space
             "\u{FEFF}", // zero width no -break space
+            ' ',
             '-',
             '?',
         ];

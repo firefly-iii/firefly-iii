@@ -25,6 +25,7 @@ namespace FireflyIII\Rules;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Support\Facades\Steam;
 use Illuminate\Contracts\Validation\ValidationRule;
 
 /**
@@ -95,6 +96,10 @@ class UniqueIban implements ValidationRule
         $maxCounts = $this->getMaxOccurrences();
 
         foreach ($maxCounts as $type => $max) {
+
+            // make sure to trim the value of $value so all spaces are removed.
+            $value = Steam::filterSpaces($value);
+
             $count = $this->countHits($type, $value);
             app('log')->debug(sprintf('Count for "%s" and IBAN "%s" is %d', $type, $value, $count));
             if ($count > $max) {

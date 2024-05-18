@@ -103,14 +103,14 @@ class StoreRequest extends FormRequest
                 // source of transaction. If everything is null, assume cash account.
                 'source_id'             => $this->integerFromValue((string)$object['source_id']),
                 'source_name'           => $this->clearString((string)$object['source_name']),
-                'source_iban'           => $this->clearString((string)$object['source_iban']),
+                'source_iban'           => $this->clearIban((string)$object['source_iban']),
                 'source_number'         => $this->clearString((string)$object['source_number']),
                 'source_bic'            => $this->clearString((string)$object['source_bic']),
 
                 // destination of transaction. If everything is null, assume cash account.
                 'destination_id'        => $this->integerFromValue((string)$object['destination_id']),
                 'destination_name'      => $this->clearString((string)$object['destination_name']),
-                'destination_iban'      => $this->clearString((string)$object['destination_iban']),
+                'destination_iban'      => $this->clearIban((string)$object['destination_iban']),
                 'destination_number'    => $this->clearString((string)$object['destination_number']),
                 'destination_bic'       => $this->clearString((string)$object['destination_bic']),
 

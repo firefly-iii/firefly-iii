@@ -27,6 +27,7 @@ use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use Carbon\Exceptions\InvalidFormatException;
 use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Collection;
 
 /**
@@ -114,6 +115,11 @@ trait ConvertsDataTypes
         return (string)$this->clearString((string)$entry);
     }
 
+    public function convertIban(string $field): string
+    {
+        return Steam::filterSpaces($this->convertString($field));
+    }
+
     public function clearString(?string $string): ?string
     {
         $string = $this->clearStringKeepNewlines($string);
@@ -129,6 +135,12 @@ trait ConvertsDataTypes
         $string = str_replace(["\r", "\n", "\t", "\036", "\025"], '', $string);
 
         return trim($string);
+    }
+
+    public function clearIban(?string $string): ?string
+    {
+        $string = $this->clearString($string);
+        return Steam::filterSpaces($string);
     }
 
     public function clearStringKeepNewlines(?string $string): ?string

@@ -57,7 +57,7 @@ class AccountFormRequest extends FormRequest
             'account_type_name'       => $this->convertString('objectType'),
             'currency_id'             => $this->convertInteger('currency_id'),
             'virtual_balance'         => $this->convertString('virtual_balance'),
-            'iban'                    => $this->convertString('iban'),
+            'iban'                    => $this->convertIban('iban'),
             'BIC'                     => $this->convertString('BIC'),
             'account_number'          => $this->convertString('account_number'),
             'account_role'            => $this->convertString('account_role'),
