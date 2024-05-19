@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.1.16 - 2024-05-20
+
+### Added
+
+- Added [THANKS.md] to give credit to all developers who help with the development of Firefly III.
+
+### Changed
+
+- New data model for "account balance" makes it easier to calculate and use multi-currency accounts. Not yet in use.
+
+### Fixed
+
+- #8840
+- #8863
+- #8867 
+- #8858
+
+### API
+
+- New filters for the v2 autocomplete endpoints.
+- Various attempts to make a better v2 accounts endpoint.
+
 ## 6.1.15 - 2024-04-24
 
 ### Fixed
