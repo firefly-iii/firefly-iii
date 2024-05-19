@@ -36,12 +36,12 @@ class CategoryRepository implements CategoryRepositoryInterface
         $search = $this->userGroup->categories();
         if (count($query) > 0) {
             // split query on spaces just in case:
-            $search->where(function (EloquentBuilder $q) use ($query) {
-                foreach($query as $line) {
+            $search->where(function (EloquentBuilder $q) use ($query): void {
+                foreach ($query as $line) {
                     $parts = explode(' ', $line);
-                    foreach($parts as $part) {
+                    foreach ($parts as $part) {
                         $search = sprintf('%%%s%%', $part);
-                        $q->orWhere('name', 'LIKE',$search);
+                        $q->orWhere('name', 'LIKE', $search);
                     }
                 }
             });

@@ -34,6 +34,7 @@
 declare(strict_types=1);
 
 return [
+    'bad_api_filter'                  => 'This API endpoint does not support ":filter" as a filter.',
     'bad_type_source'                 => 'Το Firefly III δεν μπορεί να καθορίσει τον τύπο συναλλαγής με βάση αυτό το λογαριασμό προέλευσης.',
     'bad_type_destination'            => 'Το Firefly III δεν μπορεί να καθορίσει τον τύπο συναλλαγής με βάση αυτό το λογαριασμό προορισμού.',
     'missing_where'                   => 'Από τον πίνακα λείπει η ρήτρα "where"',

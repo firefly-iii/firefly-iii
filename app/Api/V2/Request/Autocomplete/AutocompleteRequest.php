@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V2\Request\Autocomplete;
 
-use Carbon\Carbon;
-use Carbon\Exceptions\InvalidFormatException;
 use FireflyIII\JsonApi\Rules\IsValidFilter;
 use FireflyIII\JsonApi\Rules\IsValidPage;
 use FireflyIII\Support\Http\Api\AccountFilter;
@@ -32,7 +30,6 @@ use FireflyIII\Support\Http\Api\ParsesQueryFilters;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Log;
 use LaravelJsonApi\Core\Query\QueryParameters;
 use LaravelJsonApi\Validation\Rule as JsonApiRule;
 
@@ -55,14 +52,14 @@ class AutocompleteRequest extends FormRequest
     public function getParameters(): array
     {
         $queryParameters = QueryParameters::cast($this->all());
+
         return [
             'date'          => $this->dateOrToday($queryParameters, 'date'),
             'query'         => $this->arrayOfStrings($queryParameters, 'query'),
-            'size'          => $this->integerFromQueryParams($queryParameters,'size', 50),
+            'size'          => $this->integerFromQueryParams($queryParameters, 'size', 50),
             'account_types' => $this->getAccountTypeParameter($this->arrayOfStrings($queryParameters, 'account_types')),
         ];
     }
-
 
     public function rules(): array
     {

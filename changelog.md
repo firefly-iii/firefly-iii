@@ -15,10 +15,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #8840
-- #8863
-- #8867 
-- #8858
+- [Issue 8840](https://github.com/firefly-iii/firefly-iii/issues/8840) (Budget page crash) reported by @JcMinarro
+- [Issue 8863](https://github.com/firefly-iii/firefly-iii/issues/8863) (Empty webhooks page) reported by @mrahmadt
+- [Issue 8867](https://github.com/firefly-iii/firefly-iii/issues/8867) (SQL Integrity constraint violation when inserting into budget_limits) reported by @HedgehogRidingAnOwl 
+- [Issue 8858](https://github.com/firefly-iii/firefly-iii/issues/8858) (A single Account constantly loses its Account NUmber / IBAN ) reported by @ypsilonkah
 
 ### API
 

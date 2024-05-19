@@ -34,6 +34,7 @@
 declare(strict_types=1);
 
 return [
+    'bad_api_filter'                  => 'This API endpoint does not support ":filter" as a filter.',
     'bad_type_source'                 => 'Firefly III nu poate determina tipul de tranzacție pe baza acestui cont sursă.',
     'bad_type_destination'            => 'Firefly III nu poate determina tipul de tranzacție bazat pe acest cont de destinație.',
     'missing_where'                   => 'Array lipseşte "unde clauza',

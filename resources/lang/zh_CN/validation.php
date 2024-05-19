@@ -34,6 +34,7 @@
 declare(strict_types=1);
 
 return [
+    'bad_api_filter'                  => 'This API endpoint does not support ":filter" as a filter.',
     'bad_type_source'                 => 'Firefly III 无法确定基于此源账户的交易类型。',
     'bad_type_destination'            => 'Firefly III 无法确定基于此目标帐户的交易类型。',
     'missing_where'                   => '数组中缺少"where"条目',

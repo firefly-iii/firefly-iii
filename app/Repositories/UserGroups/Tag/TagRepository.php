@@ -39,7 +39,7 @@ class TagRepository implements TagRepositoryInterface
         $search = $this->userGroup->tags();
         if (count($query) > 0) {
             // split query on spaces just in case:
-            $search->where(function (EloquentBuilder $q) use ($query) {
+            $search->where(function (EloquentBuilder $q) use ($query): void {
                 foreach ($query as $line) {
                     $parts = explode(' ', $line);
                     foreach ($parts as $part) {

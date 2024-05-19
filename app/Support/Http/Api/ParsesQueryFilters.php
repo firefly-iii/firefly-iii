@@ -30,22 +30,23 @@ use LaravelJsonApi\Core\Query\QueryParameters;
 
 trait ParsesQueryFilters
 {
-
     private function dateOrToday(QueryParameters $parameters, string $field): Carbon
     {
         $date = today();
+
         try {
             $date = Carbon::createFromFormat('Y-m-d', $parameters->filter()?->value($field, date('Y-m-d')), config('app.timezone'));
         } catch (InvalidFormatException $e) {
             Log::debug(sprintf('Invalid date format in request. Using today: %s', $e->getMessage()));
         }
-        return $date;
 
+        return $date;
     }
 
     private function arrayOfStrings(QueryParameters $parameters, string $field): array
     {
         $array = $parameters->filter()?->value($field, []) ?? [];
+
         return is_string($array) ? [$array] : $array;
     }
 
@@ -53,5 +54,4 @@ trait ParsesQueryFilters
     {
         return (int) ($parameters->page()[$field] ?? $default);
     }
-
 }

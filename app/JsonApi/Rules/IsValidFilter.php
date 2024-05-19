@@ -31,7 +31,7 @@ class IsValidFilter implements ValidationRule
 
     public function __construct(array $keys)
     {
-        $this->allowed = $keys;
+        $this->allowed   = $keys;
         $this->allowed[] = 'user_group_id';
     }
 

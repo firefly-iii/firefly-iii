@@ -34,6 +34,7 @@
 declare(strict_types=1);
 
 return [
+    'bad_api_filter'                  => 'This API endpoint does not support ":filter" as a filter.',
     'bad_type_source'                 => 'Firefly III kan het transactietype niet bepalen op basis van deze bronrekening.',
     'bad_type_destination'            => 'Firefly III kan het transactietype niet bepalen op basis van deze doelrekening.',
     'missing_where'                   => 'Array mist "where"-clausule',

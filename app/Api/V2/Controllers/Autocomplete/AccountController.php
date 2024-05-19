@@ -55,8 +55,8 @@ class AccountController extends Controller
                 $userGroup        = $this->validateUserGroup($request);
                 $this->repository = app(AccountRepositoryInterface::class);
                 $this->repository->setUserGroup($userGroup);
-                $this->default   = app('amount')->getDefaultCurrency();
-                $this->converter = app(ExchangeRateConverter::class);
+                $this->default    = app('amount')->getDefaultCurrency();
+                $this->converter  = app(ExchangeRateConverter::class);
 
                 return $next($request);
             }
@@ -65,9 +65,6 @@ class AccountController extends Controller
 
     /**
      * Documentation: https://api-docs.firefly-iii.org/?urls.primaryName=2.1.0%20(v2)#/autocomplete/getAccountsAC
-     * @param AutocompleteRequest $request
-     *
-     * @return JsonResponse
      */
     public function accounts(AutocompleteRequest $request): JsonResponse
     {

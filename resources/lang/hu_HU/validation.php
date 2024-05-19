@@ -34,6 +34,7 @@
 declare(strict_types=1);
 
 return [
+    'bad_api_filter'                  => 'This API endpoint does not support ":filter" as a filter.',
     'bad_type_source'                 => 'A Firefly III nem tudja eldönteni a tranzakció típusát a forrásszámla alapján.',
     'bad_type_destination'            => 'A Firefly III nem tudja eldönteni a tranzakció típusát a célszámla alapján.',
     'missing_where'                   => 'Array is missing "where"-clause',

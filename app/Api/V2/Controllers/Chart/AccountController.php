@@ -72,7 +72,6 @@ class AccountController extends Controller
      * TODO validate and set user_group_id from request
      *
      * @throws FireflyException
-     *
      */
     public function dashboard(DashboardChartRequest $request): JsonResponse
     {

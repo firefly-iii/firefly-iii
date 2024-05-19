@@ -25,7 +25,6 @@ namespace FireflyIII\Api\V2\Request\Chart;
 
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\JsonApi\Rules\IsValidFilter;
-use FireflyIII\JsonApi\Rules\IsValidPage;
 use FireflyIII\Support\Http\Api\ParsesQueryFilters;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\Support\Request\ChecksLogin;
@@ -43,31 +42,32 @@ class ChartRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;
-    use ValidatesUserGroupTrait;
     use ParsesQueryFilters;
+    use ValidatesUserGroupTrait;
 
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
     public function getParameters(): array
     {
         $queryParameters = QueryParameters::cast($this->all());
+
         return [
             'start'          => $this->dateOrToday($queryParameters, 'start'),
-            'end'          => $this->dateOrToday($queryParameters, 'end'),
+            'end'            => $this->dateOrToday($queryParameters, 'end'),
 
             // preselected heeft maar een paar toegestane waardes.
 
-//            'query'         => $this->arrayOfStrings($queryParameters, 'query'),
-//            'size'          => $this->integerFromQueryParams($queryParameters,'size', 50),
-//            'account_types' => $this->getAccountTypeParameter($this->arrayOfStrings($queryParameters, 'account_types')),
+            //            'query'         => $this->arrayOfStrings($queryParameters, 'query'),
+            //            'size'          => $this->integerFromQueryParams($queryParameters,'size', 50),
+            //            'account_types' => $this->getAccountTypeParameter($this->arrayOfStrings($queryParameters, 'account_types')),
         ];
     }
 
-//        return [
-//            'accounts'    => $this->getAccountList(),
-//            'preselected' => $this->convertString('preselected'),
-//        ];
-//    }
+    //        return [
+    //            'accounts'    => $this->getAccountList(),
+    //            'preselected' => $this->convertString('preselected'),
+    //        ];
+    //    }
 
     /**
      * The rules that the incoming request must be matched against.
@@ -76,18 +76,18 @@ class ChartRequest extends FormRequest
     {
         return [
             'fields'  => JsonApiRule::notSupported(),
-            'filter'  => ['nullable', 'array', new IsValidFilter(['start', 'end', 'preselected','accounts'])],
+            'filter'  => ['nullable', 'array', new IsValidFilter(['start', 'end', 'preselected', 'accounts'])],
             'include' => JsonApiRule::notSupported(),
             'page'    => JsonApiRule::notSupported(),
             'sort'    => JsonApiRule::notSupported(),
         ];
 
-//        return [
-//            'start'       => 'required|date|after:1900-01-01|before:2099-12-31',
-//            'end'         => 'required|date|after_or_equal:start|before:2099-12-31|after:1900-01-01',
-//            'preselected' => sprintf('in:%s', implode(',', config('firefly.preselected_accounts'))),
-//            'accounts.*'  => 'exists:accounts,id',
-//        ];
+        //        return [
+        //            'start'       => 'required|date|after:1900-01-01|before:2099-12-31',
+        //            'end'         => 'required|date|after_or_equal:start|before:2099-12-31|after:1900-01-01',
+        //            'preselected' => sprintf('in:%s', implode(',', config('firefly.preselected_accounts'))),
+        //            'accounts.*'  => 'exists:accounts,id',
+        //        ];
     }
 
     public function withValidator(Validator $validator): void

@@ -54,9 +54,6 @@ class TagController extends Controller
 
     /**
      * Documentation: https://api-docs.firefly-iii.org/?urls.primaryName=2.1.0%20(v2)#/autocomplete/getTagsAC
-     * @param AutocompleteRequest $request
-     *
-     * @return JsonResponse
      */
     public function tags(AutocompleteRequest $request): JsonResponse
     {

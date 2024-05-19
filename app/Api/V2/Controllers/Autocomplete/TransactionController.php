@@ -54,9 +54,6 @@ class TransactionController extends Controller
 
     /**
      * Documentation: https://api-docs.firefly-iii.org/?urls.primaryName=2.1.0%20(v2)#/autocomplete/getTransactionsAC
-     * @param AutocompleteRequest $request
-     *
-     * @return JsonResponse
      */
     public function transactionDescriptions(AutocompleteRequest $request): JsonResponse
     {

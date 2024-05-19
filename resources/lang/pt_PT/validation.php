@@ -34,6 +34,7 @@
 declare(strict_types=1);
 
 return [
+    'bad_api_filter'                  => 'This API endpoint does not support ":filter" as a filter.',
     'bad_type_source'                 => 'O Firefly III não consegue determinar o tipo de transação baseado nesta conta de origem.',
     'bad_type_destination'            => 'O Firefly III não consegue determinar o tipo de transação baseado nesta conta de destino.',
     'missing_where'                   => 'A matriz tem em falta a cláusula-"onde"',
