@@ -24,17 +24,27 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\UserGroups\Category;
 
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Support\Collection;
 
 class CategoryRepository implements CategoryRepositoryInterface
 {
     use UserGroupTrait;
 
-    public function searchCategory(string $query, int $limit): Collection
+    public function searchCategory(array $query, int $limit): Collection
     {
         $search = $this->userGroup->categories();
-        if ('' !== $query) {
-            $search->where('name', 'LIKE', sprintf('%%%s%%', $query));
+        if (count($query) > 0) {
+            // split query on spaces just in case:
+            $search->where(function (EloquentBuilder $q) use ($query) {
+                foreach($query as $line) {
+                    $parts = explode(' ', $line);
+                    foreach($parts as $part) {
+                        $search = sprintf('%%%s%%', $part);
+                        $q->orWhere('name', 'LIKE',$search);
+                    }
+                }
+            });
         }
 
         return $search->take($limit)->get();

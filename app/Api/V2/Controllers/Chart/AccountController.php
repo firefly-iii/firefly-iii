@@ -27,7 +27,6 @@ namespace FireflyIII\Api\V2\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Chart\DashboardChartRequest;
-use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -47,7 +46,6 @@ class AccountController extends Controller
     use ValidatesUserGroupTrait;
 
     private AccountRepositoryInterface $repository;
-    protected array                    $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
     public function __construct()
     {
@@ -75,7 +73,6 @@ class AccountController extends Controller
      *
      * @throws FireflyException
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function dashboard(DashboardChartRequest $request): JsonResponse
     {

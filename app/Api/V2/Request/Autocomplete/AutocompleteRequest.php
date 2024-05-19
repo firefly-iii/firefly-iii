@@ -27,14 +27,13 @@ use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
 use FireflyIII\JsonApi\Rules\IsValidFilter;
 use FireflyIII\JsonApi\Rules\IsValidPage;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
 use LaravelJsonApi\Core\Query\QueryParameters;
 use LaravelJsonApi\Validation\Rule as JsonApiRule;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class AutocompleteRequest
@@ -61,9 +60,12 @@ class AutocompleteRequest extends FormRequest
             Log::debug(sprintf('Invalid date format in autocomplete request. Using today: %s', $e->getMessage()));
             $date = today();
         }
-        $query           = $queryParameters->filter()?->value('query', '') ?? '';
-        $size            = (int) ($queryParameters->page()['size'] ?? 50);
-        $accountTypes    = $this->getAccountTypeParameter($queryParameters->filter()?->value('account_types', '') ?? '');
+        $query        = $queryParameters->filter()?->value('query', []) ?? [];
+        $query        = is_string($query) ? [$query] : $query;
+        $size         = (int) ($queryParameters->page()['size'] ?? 50);
+        $accountTypeRequest = $queryParameters->filter()?->value('account_types', []) ?? [];
+        $accountTypeRequest = is_string($accountTypeRequest) ? [$accountTypeRequest] : $accountTypeRequest;
+        $accountTypes = $this->getAccountTypeParameter($accountTypeRequest);
 
         return [
             'date'          => $date,
@@ -73,28 +75,6 @@ class AutocompleteRequest extends FormRequest
         ];
     }
 
-    //    public function getData(): array
-    //    {
-    //
-    //        return [];
-    //        $types = $this->convertString('types');
-    //        $array = [];
-    //        if ('' !== $types) {
-    //            $array = explode(',', $types);
-    //        }
-    //        $limit = $this->convertInteger('limit');
-    //        $limit = 0 === $limit ? 10 : $limit;
-    //
-    //        // remove 'initial balance' and another from allowed types. its internal
-    //        $array = array_diff($array, [AccountType::INITIAL_BALANCE, AccountType::RECONCILIATION]);
-    //
-    //        return [
-    //            'types' => $array,
-    //            'query' => $this->convertString('query'),
-    //            'date'  => $this->getCarbonDate('date'),
-    //            'limit' => $limit,
-    //        ];
-    //    }
 
     public function rules(): array
     {

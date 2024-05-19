@@ -292,7 +292,7 @@ class AccountRepository implements AccountRepositoryInterface
         return $query->get(['accounts.*']);
     }
 
-    public function searchAccount(string $query, array $types, int $limit): Collection
+    public function searchAccount(array $query, array $types, int $limit): Collection
     {
         // search by group, not by user
         $dbQuery = $this->userGroup->accounts()
@@ -302,14 +302,17 @@ class AccountRepository implements AccountRepositoryInterface
             ->orderBy('accounts.name', 'ASC')
             ->with(['accountType'])
         ;
-        if ('' !== $query) {
+        if (count($query) > 0) {
             // split query on spaces just in case:
-            // TODO this will always fail because it searches for AND.
-            $parts = explode(' ', $query);
-            foreach ($parts as $part) {
-                $search = sprintf('%%%s%%', $part);
-                $dbQuery->where('name', 'LIKE', $search);
-            }
+            $dbQuery->where(function (EloquentBuilder $q) use ($query) {
+                foreach($query as $line) {
+                    $parts = explode(' ', $line);
+                    foreach($parts as $part) {
+                        $search = sprintf('%%%s%%', $part);
+                        $q->orWhere('name', 'LIKE',$search);
+                    }
+                }
+            });
         }
         if (0 !== count($types)) {
             $dbQuery->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');

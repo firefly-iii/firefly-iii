@@ -53,13 +53,10 @@ class TagController extends Controller
     }
 
     /**
-     *  Documentation for this endpoint:
-     *  TODO list of checks
-     *  1. use dates from ParameterBag
-     *  2. Request validates dates
-     *  3. Request includes user_group_id
-     *  4. Endpoint is documented.
-     *  5. Collector uses user_group_id
+     * Documentation: https://api-docs.firefly-iii.org/?urls.primaryName=2.1.0%20(v2)#/autocomplete/getTagsAC
+     * @param AutocompleteRequest $request
+     *
+     * @return JsonResponse
      */
     public function tags(AutocompleteRequest $request): JsonResponse
     {

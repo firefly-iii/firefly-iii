@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\UserGroups\Journal;
 
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Support\Collection;
 
 /**
@@ -33,15 +34,24 @@ class JournalRepository implements JournalRepositoryInterface
 {
     use UserGroupTrait;
 
-    public function searchJournalDescriptions(string $search, int $limit): Collection
+    public function searchJournalDescriptions(array $query, int $limit): Collection
     {
-        $query = $this->userGroup->transactionJournals()
+        $search = $this->userGroup->transactionJournals()
             ->orderBy('date', 'DESC')
         ;
-        if ('' !== $search) {
-            $query->where('description', 'LIKE', sprintf('%%%s%%', $search));
+        if (count($query) > 0) {
+            // split query on spaces just in case:
+            $search->where(function (EloquentBuilder $q) use ($query) {
+                foreach ($query as $line) {
+                    $parts = explode(' ', $line);
+                    foreach ($parts as $part) {
+                        $search = sprintf('%%%s%%', $part);
+                        $q->orWhere('description', 'LIKE', $search);
+                    }
+                }
+            });
         }
 
-        return $query->take($limit)->get();
+        return $search->take($limit)->get();
     }
 }

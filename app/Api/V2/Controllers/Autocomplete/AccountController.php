@@ -55,8 +55,8 @@ class AccountController extends Controller
                 $userGroup        = $this->validateUserGroup($request);
                 $this->repository = app(AccountRepositoryInterface::class);
                 $this->repository->setUserGroup($userGroup);
-                $this->default    = app('amount')->getDefaultCurrency();
-                $this->converter  = app(ExchangeRateConverter::class);
+                $this->default   = app('amount')->getDefaultCurrency();
+                $this->converter = app(ExchangeRateConverter::class);
 
                 return $next($request);
             }
@@ -64,18 +64,15 @@ class AccountController extends Controller
     }
 
     /**
-     * Documentation for this endpoint:
-     * TODO list of checks
-     * 1. use dates from ParameterBag
-     * 2. Request validates dates
-     * 3. Request includes user_group_id
-     * 4. Endpoint is documented.
-     * 5. Collector uses user_group_id
+     * Documentation: https://api-docs.firefly-iii.org/?urls.primaryName=2.1.0%20(v2)#/autocomplete/getAccountsAC
+     * @param AutocompleteRequest $request
+     *
+     * @return JsonResponse
      */
     public function accounts(AutocompleteRequest $request): JsonResponse
     {
         $queryParameters = $request->getParameters();
-        $result          = $this->repository->searchAccount((string) $queryParameters['query'], $queryParameters['account_types'], $queryParameters['size']);
+        $result          = $this->repository->searchAccount($queryParameters['query'], $queryParameters['account_types'], $queryParameters['size']);
         $return          = [];
 
         /** @var Account $account */
@@ -94,12 +91,12 @@ class AccountController extends Controller
             'id'    => (string) $account->id,
             'title' => $account->name,
             'meta'  => [
-                'type'             => $account->accountType->type,
-                'currency_id'      => null === $currency ? null : (string) $currency->id,
-                'currency_code'    => $currency?->code,
-                'currency_symbol'  => $currency?->symbol,
-                'currency_decimal' => $currency?->decimal_places,
-                'account_balances' => $this->getAccountBalances($account),
+                'type'                    => $account->accountType->type,
+                'currency_id'             => null === $currency ? null : (string) $currency->id,
+                'currency_code'           => $currency?->code,
+                'currency_symbol'         => $currency?->symbol,
+                'currency_decimal_places' => $currency?->decimal_places,
+                'account_balances'        => $this->getAccountBalances($account),
             ],
         ];
     }
@@ -129,17 +126,17 @@ class AccountController extends Controller
         $currency = $balance->transactionCurrency;
 
         return [
-            'title'                   => $balance->title,
-            'native_amount'           => $this->converter->convert($currency, $this->default, today(), $balance->balance),
-            'amount'                  => app('steam')->bcround($balance->balance, $currency->decimal_places),
-            'currency_id'             => (string) $currency->id,
-            'currency_code'           => $currency->code,
-            'currency_symbol'         => $currency->symbol,
-            'currency_decimal_places' => $currency->decimal_places,
-            'native_currency_id'      => (string) $this->default->id,
-            'native_currency_code'    => $this->default->code,
-            'native_currency_symbol'  => $this->default->symbol,
-            'native_currency_decimal' => $this->default->decimal_places,
+            'title'                          => $balance->title,
+            'native_amount'                  => $this->converter->convert($currency, $this->default, today(), $balance->balance),
+            'amount'                         => app('steam')->bcround($balance->balance, $currency->decimal_places),
+            'currency_id'                    => (string) $currency->id,
+            'currency_code'                  => $currency->code,
+            'currency_symbol'                => $currency->symbol,
+            'currency_decimal_places'        => $currency->decimal_places,
+            'native_currency_id'             => (string) $this->default->id,
+            'native_currency_code'           => $this->default->code,
+            'native_currency_symbol'         => $this->default->symbol,
+            'native_currency_decimal_places' => $this->default->decimal_places,
         ];
     }
 }

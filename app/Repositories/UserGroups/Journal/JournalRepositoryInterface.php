@@ -34,7 +34,7 @@ interface JournalRepositoryInterface
     /**
      * Search in journal descriptions.
      */
-    public function searchJournalDescriptions(string $search, int $limit): Collection;
+    public function searchJournalDescriptions(array $query, int $limit): Collection;
 
     public function setUser(User $user): void;
 }
