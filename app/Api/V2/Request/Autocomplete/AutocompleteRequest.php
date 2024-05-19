@@ -28,6 +28,7 @@ use Carbon\Exceptions\InvalidFormatException;
 use FireflyIII\JsonApi\Rules\IsValidFilter;
 use FireflyIII\JsonApi\Rules\IsValidPage;
 use FireflyIII\Support\Http\Api\AccountFilter;
+use FireflyIII\Support\Http\Api\ParsesQueryFilters;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
@@ -43,6 +44,7 @@ class AutocompleteRequest extends FormRequest
     use AccountFilter;
     use ChecksLogin;
     use ConvertsDataTypes;
+    use ParsesQueryFilters;
 
     /**
      * Loops over all possible query parameters (these are shared over ALL auto complete requests)
@@ -53,25 +55,11 @@ class AutocompleteRequest extends FormRequest
     public function getParameters(): array
     {
         $queryParameters = QueryParameters::cast($this->all());
-
-        try {
-            $date = Carbon::createFromFormat('Y-m-d', $queryParameters->filter()?->value('date', date('Y-m-d')), config('app.timezone'));
-        } catch (InvalidFormatException $e) {
-            Log::debug(sprintf('Invalid date format in autocomplete request. Using today: %s', $e->getMessage()));
-            $date = today();
-        }
-        $query        = $queryParameters->filter()?->value('query', []) ?? [];
-        $query        = is_string($query) ? [$query] : $query;
-        $size         = (int) ($queryParameters->page()['size'] ?? 50);
-        $accountTypeRequest = $queryParameters->filter()?->value('account_types', []) ?? [];
-        $accountTypeRequest = is_string($accountTypeRequest) ? [$accountTypeRequest] : $accountTypeRequest;
-        $accountTypes = $this->getAccountTypeParameter($accountTypeRequest);
-
         return [
-            'date'          => $date,
-            'query'         => $query,
-            'size'          => $size,
-            'account_types' => $accountTypes,
+            'date'          => $this->dateOrToday($queryParameters, 'date'),
+            'query'         => $this->arrayOfStrings($queryParameters, 'query'),
+            'size'          => $this->integerFromQueryParams($queryParameters,'size', 50),
+            'account_types' => $this->getAccountTypeParameter($this->arrayOfStrings($queryParameters, 'account_types')),
         ];
     }
 

@@ -32,6 +32,7 @@ class IsValidFilter implements ValidationRule
     public function __construct(array $keys)
     {
         $this->allowed = $keys;
+        $this->allowed[] = 'user_group_id';
     }
 
     #[\Override]
@@ -45,7 +46,7 @@ class IsValidFilter implements ValidationRule
         }
         foreach ($value as $key => $val) {
             if (!in_array($key, $this->allowed, true)) {
-                $fail('validation.bad_api_filter')->translate();
+                $fail('validation.bad_api_filter')->translate(['filter' => $key]);
             }
         }
     }

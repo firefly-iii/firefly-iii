@@ -38,6 +38,11 @@ use Illuminate\Support\Facades\Log;
 trait ValidatesUserGroupTrait
 {
     /**
+     * An "undocumented" filter
+     *
+     *
+     * TODO add this filter to the API docs.
+     *
      * @throws AuthorizationException
      * @throws AuthenticationException
      */
@@ -49,6 +54,11 @@ trait ValidatesUserGroupTrait
 
             throw new AuthenticationException();
         }
+
+
+
+
+
 
         /** @var User $user */
         $user        = auth()->user();
