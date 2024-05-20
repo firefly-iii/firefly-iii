@@ -24,14 +24,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V2\Controllers\Chart;
 
-use Carbon\Carbon;
 use FireflyIII\Api\V2\Controllers\Controller;
-use FireflyIII\Api\V2\Request\Chart\DashboardChartRequest;
+use FireflyIII\Api\V2\Request\Chart\ChartRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Chart\ChartData;
 use FireflyIII\Support\Http\Api\CleansChartData;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use Illuminate\Http\JsonResponse;
@@ -46,6 +46,8 @@ class AccountController extends Controller
     use ValidatesUserGroupTrait;
 
     private AccountRepositoryInterface $repository;
+    private ChartData $chartData;
+    private TransactionCurrency $default;
 
     public function __construct()
     {
@@ -54,6 +56,8 @@ class AccountController extends Controller
             function ($request, $next) {
                 $this->repository = app(AccountRepositoryInterface::class);
                 $this->repository->setUserGroup($this->validateUserGroup($request));
+                $this->chartData = new ChartData();
+                $this->default = app('amount')->getDefaultCurrency();
 
                 return $next($request);
             }
@@ -61,37 +65,49 @@ class AccountController extends Controller
     }
 
     /**
-     * This endpoint is documented at
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v2)#/charts/getChartAccountOverview
-     *
-     * The native currency is the preferred currency on the page /currencies.
-     *
-     * If a transaction has foreign currency = native currency, the foreign amount will be used, no conversion
-     * will take place.
-     *
-     * TODO validate and set user_group_id from request
-     *
+     * TODO fix documentation
      * @throws FireflyException
      */
-    public function dashboard(DashboardChartRequest $request): JsonResponse
+    public function dashboard(ChartRequest $request): JsonResponse
     {
-        /** @var Carbon $start */
-        $start     = $this->parameters->get('start');
+        $queryParameters = $request->getParameters();
+        $accounts        = $this->getAccountList($queryParameters);
 
-        /** @var Carbon $end */
-        $end       = $this->parameters->get('end');
-        $end->endOfDay();
+        // move date to end of day
+        $queryParameters['start']->startOfDay();
+        $queryParameters['end']->endOfDay();
 
-        /** @var TransactionCurrency $default */
-        $default   = app('amount')->getDefaultCurrency();
-        $params    = $request->getAll();
+        // loop each account, and collect info:
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $this->renderAccountData($queryParameters, $account);
+        }
 
-        /** @var Collection $accounts */
-        $accounts  = $params['accounts'];
-        $chartData = [];
+        return response()->json($this->chartData->render());
+    }
 
-        // user's preferences
-        if (0 === $accounts->count()) {
+    /**
+     * TODO Duplicate function but I think it belongs here or in a separate trait
+     *
+     */
+    private function getAccountList(array $queryParameters): Collection
+    {
+        $collection = new Collection();
+
+        // always collect from the query parameter, even when it's empty.
+        foreach ($queryParameters['accounts'] as $accountId) {
+            $account = $this->repository->find((int) $accountId);
+            if (null !== $account) {
+                $collection->push($account);
+            }
+        }
+
+        // if no "preselected", and found accounts
+        if ('empty' === $queryParameters['preselected'] && $collection->count() > 0) {
+            return $collection;
+        }
+        // if no preselected, but no accounts:
+        if ('empty' === $queryParameters['preselected'] && 0 === $collection->count()) {
             $defaultSet = $this->repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT])->pluck('id')->toArray();
             $frontpage  = app('preferences')->get('frontpageAccounts', $defaultSet);
 
@@ -100,66 +116,69 @@ class AccountController extends Controller
                 $frontpage->save();
             }
 
-            $accounts   = $this->repository->getAccountsById($frontpage->data);
+            return $this->repository->getAccountsById($frontpage->data);
         }
 
         // both options are overruled by "preselected"
-        if ('all' === $params['preselected']) {
-            $accounts = $this->repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
+        if ('all' === $queryParameters['preselected']) {
+            return $this->repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
         }
-        if ('assets' === $params['preselected']) {
-            $accounts = $this->repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
+        if ('assets' === $queryParameters['preselected']) {
+            return $this->repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
         }
-        if ('liabilities' === $params['preselected']) {
-            $accounts = $this->repository->getAccountsByType([AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
-        }
-
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $currency          = $this->repository->getAccountCurrency($account);
-            if (null === $currency) {
-                $currency = $default;
-            }
-            $currentSet        = [
-                'label'                          => $account->name,
-                // the currency that belongs to the account.
-                'currency_id'                    => (string)$currency->id,
-                'currency_code'                  => $currency->code,
-                'currency_symbol'                => $currency->symbol,
-                'currency_decimal_places'        => $currency->decimal_places,
-
-                // the default currency of the user (could be the same!)
-                'native_currency_id'             => (string)$default->id,
-                'native_currency_code'           => $default->code,
-                'native_currency_symbol'         => $default->symbol,
-                'native_currency_decimal_places' => $default->decimal_places,
-                'start'                          => $start->toAtomString(),
-                'end'                            => $end->toAtomString(),
-                'period'                         => '1D',
-                'entries'                        => [],
-                'native_entries'                 => [],
-            ];
-            $currentStart      = clone $start;
-            $range             = app('steam')->balanceInRange($account, $start, clone $end, $currency);
-            $rangeConverted    = app('steam')->balanceInRangeConverted($account, $start, clone $end, $default);
-
-            $previous          = array_values($range)[0];
-            $previousConverted = array_values($rangeConverted)[0];
-            while ($currentStart <= $end) {
-                $format                               = $currentStart->format('Y-m-d');
-                $label                                = $currentStart->toAtomString();
-                $balance                              = array_key_exists($format, $range) ? $range[$format] : $previous;
-                $balanceConverted                     = array_key_exists($format, $rangeConverted) ? $rangeConverted[$format] : $previousConverted;
-                $previous                             = $balance;
-                $previousConverted                    = $balanceConverted;
-
-                $currentStart->addDay();
-                $currentSet['entries'][$label]        = $balance;
-                $currentSet['native_entries'][$label] = $balanceConverted;
-            }
-            $chartData[]       = $currentSet;
+        if ('liabilities' === $queryParameters['preselected']) {
+            return $this->repository->getAccountsByType([AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
         }
 
-        return response()->json($this->clean($chartData));
+        return $collection;
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    private function renderAccountData(array $params, Account $account): void {
+        $currency = $this->repository->getAccountCurrency($account);
+        if (null === $currency) {
+            $currency = $this->default;
+        }
+        $currentSet     = [
+            'label'                          => $account->name,
+
+            // the currency that belongs to the account.
+            'currency_id'                    => (string) $currency->id,
+            'currency_code'                  => $currency->code,
+            'currency_symbol'                => $currency->symbol,
+            'currency_decimal_places'        => $currency->decimal_places,
+
+            // the default currency of the user (could be the same!)
+            'native_currency_id'             => (string) $this->default->id,
+            'native_currency_code'           => $this->default->code,
+            'native_currency_symbol'         => $this->default->symbol,
+            'native_currency_decimal_places' => $this->default->decimal_places,
+            'start'                          => $params['start']->toAtomString(),
+            'end'                            => $params['end']->toAtomString(),
+            'period'                         => '1D',
+            'entries'                        => [],
+            'native_entries'                 => [],
+        ];
+        $currentStart   = clone $params['start'];
+        $range          = app('steam')->balanceInRange($account, $params['start'], clone $params['end'], $currency);
+        $rangeConverted = app('steam')->balanceInRangeConverted($account, $params['start'], clone $params['end'], $this->default);
+
+        $previous          = array_values($range)[0];
+        $previousConverted = array_values($rangeConverted)[0];
+        while ($currentStart <= $params['end']) {
+            $format            = $currentStart->format('Y-m-d');
+            $label             = $currentStart->toAtomString();
+            $balance           = array_key_exists($format, $range) ? $range[$format] : $previous;
+            $balanceConverted  = array_key_exists($format, $rangeConverted) ? $rangeConverted[$format] : $previousConverted;
+            $previous          = $balance;
+            $previousConverted = $balanceConverted;
+
+            $currentStart->addDay();
+            $currentSet['entries'][$label]        = $balance;
+            $currentSet['native_entries'][$label] = $balanceConverted;
+        }
+        $this->chartData->add($currentSet);
     }
 }
