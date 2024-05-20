@@ -34,7 +34,7 @@
 declare(strict_types=1);
 
 return [
-    'bad_api_filter'                  => 'This API endpoint does not support ":filter" as a filter.',
+    'bad_api_filter'                  => 'Ce point de terminaison d\'API ne supporte pas «:filter» comme filtre.',
     'bad_type_source'                 => 'Firefly III ne peut pas déterminer le type de transaction basé sur ce compte source.',
     'bad_type_destination'            => 'Firefly III ne peut pas déterminer le type de transaction basé sur ce compte de destination.',
     'missing_where'                   => 'La requête ne contient pas de clause "where"',

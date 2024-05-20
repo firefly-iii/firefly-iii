@@ -34,7 +34,7 @@
 declare(strict_types=1);
 
 return [
-    'bad_api_filter'                  => 'This API endpoint does not support ":filter" as a filter.',
+    'bad_api_filter'                  => 'Ta API končna točka ne podpira ":filter" kot filtra.',
     'bad_type_source'                 => 'Na podlagi tega izvornega računa Firefly III ne more določiti vrste transakcije.',
     'bad_type_destination'            => 'Na podlagi tega ciljnega računa Firefly III ne more določiti vrste transakcije.',
     'missing_where'                   => 'Matriki manjka člen "kjer"',
