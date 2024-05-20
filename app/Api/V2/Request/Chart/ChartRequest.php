@@ -55,6 +55,7 @@ class ChartRequest extends FormRequest
             'start'       => $this->dateOrToday($queryParameters, 'start'),
             'end'         => $this->dateOrToday($queryParameters, 'end'),
             'preselected' => $this->stringFromQueryParams($queryParameters, 'preselected', 'empty'),
+            'period' => $this->stringFromQueryParams($queryParameters, 'period', '1M'),
             'accounts'    => $this->arrayOfStrings($queryParameters, 'accounts'),
             // preselected heeft maar een paar toegestane waardes, dat moet ook goed gaan.
             //            'query'         => $this->arrayOfStrings($queryParameters, 'query'),

@@ -45,6 +45,24 @@ Route::group(
     }
 );
 
+// V2 API routes for charts
+Route::group(
+    [
+        'namespace' => 'FireflyIII\Api\V2\Controllers\Chart',
+        'prefix'    => 'v2/chart',
+        'as'        => 'api.v1.chart.',
+    ],
+    static function (): void {
+        Route::get('account/dashboard', ['uses' => 'AccountController@dashboard', 'as' => 'account.dashboard']);
+//        Route::get('budget/dashboard', ['uses' => 'BudgetController@dashboard', 'as' => 'budget.dashboard']);
+//        Route::get('category/dashboard', ['uses' => 'CategoryController@dashboard', 'as' => 'category.dashboard']);
+        Route::get('balance/balance', ['uses' => 'BalanceController@balance', 'as' => 'balance.balance']);
+    }
+);
+
+
+
+
 // JsonApiRoute::server('v3')
 //            ->prefix('v3')
 //            ->resources(function (ResourceRegistrar $server) {
@@ -106,20 +124,7 @@ Route::group(
     }
 );
 
-// V2 API routes for charts
-Route::group(
-    [
-        'namespace' => 'FireflyIII\Api\V2\Controllers\Chart',
-        'prefix'    => 'v2/chart',
-        'as'        => 'api.v1.chart.',
-    ],
-    static function (): void {
-        Route::get('account/dashboard', ['uses' => 'AccountController@dashboard', 'as' => 'account.dashboard']);
-        Route::get('budget/dashboard', ['uses' => 'BudgetController@dashboard', 'as' => 'budget.dashboard']);
-        Route::get('category/dashboard', ['uses' => 'CategoryController@dashboard', 'as' => 'category.dashboard']);
-        Route::get('balance/balance', ['uses' => 'BalanceController@balance', 'as' => 'balance.balance']);
-    }
-);
+
 
 // V2 API route for accounts.
 Route::group(

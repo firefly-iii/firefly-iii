@@ -28,14 +28,13 @@ use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Chart\ChartRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Chart\ChartData;
 use FireflyIII\Support\Http\Api\CleansChartData;
+use FireflyIII\Support\Http\Api\CollectsAccountsFromFilter;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Collection;
 
 /**
  * Class AccountController
@@ -44,10 +43,11 @@ class AccountController extends Controller
 {
     use CleansChartData;
     use ValidatesUserGroupTrait;
+    use CollectsAccountsFromFilter;
 
     private AccountRepositoryInterface $repository;
-    private ChartData $chartData;
-    private TransactionCurrency $default;
+    private ChartData                  $chartData;
+    private TransactionCurrency        $default;
 
     public function __construct()
     {
@@ -57,7 +57,7 @@ class AccountController extends Controller
                 $this->repository = app(AccountRepositoryInterface::class);
                 $this->repository->setUserGroup($this->validateUserGroup($request));
                 $this->chartData = new ChartData();
-                $this->default = app('amount')->getDefaultCurrency();
+                $this->default   = app('amount')->getDefaultCurrency();
 
                 return $next($request);
             }
@@ -66,6 +66,7 @@ class AccountController extends Controller
 
     /**
      * TODO fix documentation
+     *
      * @throws FireflyException
      */
     public function dashboard(ChartRequest $request): JsonResponse
@@ -87,56 +88,10 @@ class AccountController extends Controller
     }
 
     /**
-     * TODO Duplicate function but I think it belongs here or in a separate trait
-     *
-     */
-    private function getAccountList(array $queryParameters): Collection
-    {
-        $collection = new Collection();
-
-        // always collect from the query parameter, even when it's empty.
-        foreach ($queryParameters['accounts'] as $accountId) {
-            $account = $this->repository->find((int) $accountId);
-            if (null !== $account) {
-                $collection->push($account);
-            }
-        }
-
-        // if no "preselected", and found accounts
-        if ('empty' === $queryParameters['preselected'] && $collection->count() > 0) {
-            return $collection;
-        }
-        // if no preselected, but no accounts:
-        if ('empty' === $queryParameters['preselected'] && 0 === $collection->count()) {
-            $defaultSet = $this->repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT])->pluck('id')->toArray();
-            $frontpage  = app('preferences')->get('frontpageAccounts', $defaultSet);
-
-            if (!(is_array($frontpage->data) && count($frontpage->data) > 0)) {
-                $frontpage->data = $defaultSet;
-                $frontpage->save();
-            }
-
-            return $this->repository->getAccountsById($frontpage->data);
-        }
-
-        // both options are overruled by "preselected"
-        if ('all' === $queryParameters['preselected']) {
-            return $this->repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
-        }
-        if ('assets' === $queryParameters['preselected']) {
-            return $this->repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
-        }
-        if ('liabilities' === $queryParameters['preselected']) {
-            return $this->repository->getAccountsByType([AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
-        }
-
-        return $collection;
-    }
-
-    /**
      * @throws FireflyException
      */
-    private function renderAccountData(array $params, Account $account): void {
+    private function renderAccountData(array $params, Account $account): void
+    {
         $currency = $this->repository->getAccountCurrency($account);
         if (null === $currency) {
             $currency = $this->default;
@@ -155,6 +110,7 @@ class AccountController extends Controller
             'native_currency_code'           => $this->default->code,
             'native_currency_symbol'         => $this->default->symbol,
             'native_currency_decimal_places' => $this->default->decimal_places,
+            'date'                           => $params['start']->toAtomString(),
             'start'                          => $params['start']->toAtomString(),
             'end'                            => $params['end']->toAtomString(),
             'period'                         => '1D',
