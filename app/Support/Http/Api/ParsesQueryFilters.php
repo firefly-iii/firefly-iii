@@ -34,8 +34,14 @@ trait ParsesQueryFilters
     {
         $date = today();
 
+        $value = $parameters->filter()?->value($field, date('Y-m-d'));
+        if(is_array($value)) {
+            Log::error(sprintf('Multiple values for date field "%s". Using first value.', $field));
+            $value = $value[0];
+        }
+
         try {
-            $date = Carbon::createFromFormat('Y-m-d', $parameters->filter()?->value($field, date('Y-m-d')), config('app.timezone'));
+            $date = Carbon::createFromFormat('Y-m-d', $value, config('app.timezone'));
         } catch (InvalidFormatException $e) {
             Log::debug(sprintf('Invalid date format in request. Using today: %s', $e->getMessage()));
         }
