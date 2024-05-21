@@ -142,7 +142,7 @@ class HomeController extends Controller
     {
         $types          = config('firefly.accountTypesByIdentifier.asset');
         $count          = $repository->count($types);
-        $subTitle       = (string)trans('firefly.welcome_back');
+        $subTitle       = (string)trans('firefly.title');
         $transactions   = [];
         $frontpage      = app('preferences')->getFresh('frontpageAccounts', $repository->getAccountsByType([AccountType::ASSET])->pluck('id')->toArray());
         $frontpageArray = $frontpage->data;
@@ -182,7 +182,7 @@ class HomeController extends Controller
 
     private function indexV2(): mixed
     {
-        $subTitle = (string)trans('firefly.welcome_back');
+        $subTitle = (string)trans('firefly.title');
 
         $start    = session('start', today(config('app.timezone'))->startOfMonth());
         $end      = session('end', today(config('app.timezone'))->endOfMonth());

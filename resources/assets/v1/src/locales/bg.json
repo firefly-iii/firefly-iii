@@ -1,5 +1,6 @@
 {
     "firefly": {
+        "title": "Firefly III",
         "welcome_back": "\u041a\u0430\u043a\u0432\u043e \u0441\u0435 \u0441\u043b\u0443\u0447\u0432\u0430?",
         "flash_error": "\u0413\u0440\u0435\u0448\u043a\u0430!",
         "flash_warning": "\u0412\u043d\u0438\u043c\u0430\u043d\u0438\u0435!",

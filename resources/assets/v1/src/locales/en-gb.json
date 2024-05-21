@@ -1,5 +1,6 @@
 {
     "firefly": {
+        "title": "Firefly III",
         "welcome_back": "What's playing?",
         "flash_error": "Error!",
         "flash_warning": "Warning!",

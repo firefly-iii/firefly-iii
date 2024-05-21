@@ -133,6 +133,7 @@ return [
         ],
         'v1' => [
             'firefly' => [
+                'title',
                 'welcome_back',
                 'flash_error',
                 'flash_warning',
