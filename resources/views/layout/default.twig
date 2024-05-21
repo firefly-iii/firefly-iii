@@ -14,7 +14,10 @@
     <meta name="color-scheme" content="light dark">
 
     <title>
-        {% if subTitle %}
+        {% if pageTitle %}
+            {{ pageTitle }} »
+        {% endif %}
+        {% if subTitle and not pageTitle %}
             {{ subTitle }} »
         {% endif %}
         {% if title != "Firefly III" %}
