@@ -66,6 +66,7 @@ jobs:
               'label-actions.yml',
               'lock.yml',
               'new-issue.yml',
+              'new-pr.yml',
               'release.yml',
               'sonarcloud.yml',
               'stale.yml'
