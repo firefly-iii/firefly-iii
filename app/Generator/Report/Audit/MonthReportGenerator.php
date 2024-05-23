@@ -88,6 +88,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
             'due_date',
             'payment_date',
             'invoice_date',
+            'notes',
         ];
 
         try {
@@ -160,6 +161,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
             $journals[$index]['due_date']       = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'due_date');
             $journals[$index]['payment_date']   = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'payment_date');
             $journals[$index]['invoice_date']   = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'invoice_date');
+            $journals[$index]['notes']          = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'notes');
         }
         $locale            = app('steam')->getLocale();
 

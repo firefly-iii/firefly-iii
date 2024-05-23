@@ -29,6 +29,7 @@
         <th class="hide-due_date">{{ trans('list.due_date') }}</th>
         <th class="hide-payment_date">{{ trans('list.payment_date') }}</th>
         <th class="hide-invoice_date">{{ trans('list.invoice_date') }}</th>
+        <th class="hide-notes">{{ trans('list.notes') }}</th>
 
     </tr>
     </thead>
@@ -174,6 +175,11 @@
             <td class="hide-invoice_date">
                 {% if null != journal.invoice_date %}
                     {{ journal.invoice_date.isoFormat(monthAndDayFormat) }}
+                {% endif %}
+            </td>
+            <td class="hide-notes">
+                {% if null != journal.notes %}
+                    {{ journal.notes }}
                 {% endif %}
             </td>
         </tr>
