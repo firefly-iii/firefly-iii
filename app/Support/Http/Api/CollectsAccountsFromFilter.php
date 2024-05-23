@@ -30,7 +30,6 @@ trait CollectsAccountsFromFilter
 {
     /**
      * TODO Duplicate function but I think it belongs here or in a separate trait
-     *
      */
     private function getAccountList(array $queryParameters): Collection
     {

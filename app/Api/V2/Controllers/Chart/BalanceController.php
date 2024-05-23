@@ -56,12 +56,12 @@ class BalanceController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->repository = app(AccountRepositoryInterface::class);
-                $this->collector = app(GroupCollectorInterface::class);
+                $this->collector  = app(GroupCollectorInterface::class);
                 $userGroup        = $this->validateUserGroup($request);
                 $this->repository->setUserGroup($userGroup);
                 $this->collector->setUserGroup($userGroup);
-                $this->chartData = new ChartData();
-                $this->default   = app('amount')->getDefaultCurrency();
+                $this->chartData  = new ChartData();
+                $this->default    = app('amount')->getDefaultCurrency();
 
                 return $next($request);
             }
@@ -90,17 +90,18 @@ class BalanceController extends Controller
 
         // prepare for currency conversion and data collection:
         /** @var TransactionCurrency $default */
-        $default = app('amount')->getDefaultCurrency();
+        $default         = app('amount')->getDefaultCurrency();
 
         // get journals for entire period:
 
         $this->collector->setRange($queryParameters['start'], $queryParameters['end'])
-                        ->withAccountInformation()
-                        ->setXorAccounts($accounts)
-                        ->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::RECONCILIATION, TransactionType::TRANSFER]);
-        $journals = $this->collector->getExtractedJournals();
+            ->withAccountInformation()
+            ->setXorAccounts($accounts)
+            ->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::RECONCILIATION, TransactionType::TRANSFER])
+        ;
+        $journals        = $this->collector->getExtractedJournals();
 
-        $object = new AccountBalanceGrouped();
+        $object          = new AccountBalanceGrouped();
         $object->setPreferredRange($queryParameters['period']);
         $object->setDefault($default);
         $object->setAccounts($accounts);
@@ -108,8 +109,8 @@ class BalanceController extends Controller
         $object->setStart($queryParameters['start']);
         $object->setEnd($queryParameters['end']);
         $object->groupByCurrencyAndPeriod();
-        $data = $object->convertToChartData();
-        foreach($data as $entry) {
+        $data            = $object->convertToChartData();
+        foreach ($data as $entry) {
             $this->chartData->add($entry);
         }
 

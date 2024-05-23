@@ -41,7 +41,7 @@
         "attachments": "Priloge",
         "notes": "Opombe",
         "external_url": "Zunanji URL",
-        "update_transaction": "Posodobi transakcije",
+        "update_transaction": "Posodobi transakcijo",
         "after_update_create_another": "Po posodobitvi se vrnite sem za nadaljevanje urejanja.",
         "store_as_new": "Shranite kot novo transakcijo namesto posodabljanja.",
         "split_title_help": "\u010ce ustvarite razdeljeno transakcijo, mora obstajati globalni opis za vse dele transakcije.",

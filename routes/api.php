@@ -54,14 +54,11 @@ Route::group(
     ],
     static function (): void {
         Route::get('account/dashboard', ['uses' => 'AccountController@dashboard', 'as' => 'account.dashboard']);
-//        Route::get('budget/dashboard', ['uses' => 'BudgetController@dashboard', 'as' => 'budget.dashboard']);
-//        Route::get('category/dashboard', ['uses' => 'CategoryController@dashboard', 'as' => 'category.dashboard']);
+        //        Route::get('budget/dashboard', ['uses' => 'BudgetController@dashboard', 'as' => 'budget.dashboard']);
+        //        Route::get('category/dashboard', ['uses' => 'CategoryController@dashboard', 'as' => 'category.dashboard']);
         Route::get('balance/balance', ['uses' => 'BalanceController@balance', 'as' => 'balance.balance']);
     }
 );
-
-
-
 
 // JsonApiRoute::server('v3')
 //            ->prefix('v3')
@@ -123,8 +120,6 @@ Route::group(
         Route::get('', ['uses' => 'NetWorthController@get', 'as' => 'index']);
     }
 );
-
-
 
 // V2 API route for accounts.
 Route::group(

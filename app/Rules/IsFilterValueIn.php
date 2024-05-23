@@ -29,30 +29,32 @@ class IsFilterValueIn implements ValidationRule
 {
     private string $key;
     private array $values;
-    public function __construct(string $key, array $values) {
-        $this->key = $key;
+
+    public function __construct(string $key, array $values)
+    {
+        $this->key    = $key;
         $this->values = $values;
     }
+
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
-        if(!is_array($value)) {
+        if (!is_array($value)) {
             return;
         }
-        if(!array_key_exists($this->key, $value)) {
+        if (!array_key_exists($this->key, $value)) {
             return;
         }
         $value = $value[$this->key] ?? null;
 
-        if(!is_string($value) && !is_null($value)) {
+        if (!is_string($value) && null !== $value) {
             $fail('validation.filter_not_string')->translate(['filter' => $this->key]);
         }
-        if(!in_array($value, $this->values)) {
-            $fail('validation.filter_must_be_in')->translate(['filter' => $this->key,'values' => join(', ',$this->values)]);
+        if (!in_array($value, $this->values, true)) {
+            $fail('validation.filter_must_be_in')->translate(['filter' => $this->key, 'values' => implode(', ', $this->values)]);
         }
-        //$fail('validation.filter_not_string')->translate(['filter' => $this->key]);
+        // $fail('validation.filter_not_string')->translate(['filter' => $this->key]);
     }
-
 }

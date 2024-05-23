@@ -51,11 +51,12 @@ class ChartRequest extends FormRequest
     public function getParameters(): array
     {
         $queryParameters = QueryParameters::cast($this->all());
+
         return [
             'start'       => $this->dateOrToday($queryParameters, 'start'),
             'end'         => $this->dateOrToday($queryParameters, 'end'),
             'preselected' => $this->stringFromQueryParams($queryParameters, 'preselected', 'empty'),
-            'period' => $this->stringFromQueryParams($queryParameters, 'period', '1M'),
+            'period'      => $this->stringFromQueryParams($queryParameters, 'period', '1M'),
             'accounts'    => $this->arrayOfStrings($queryParameters, 'accounts'),
             // preselected heeft maar een paar toegestane waardes, dat moet ook goed gaan.
             //            'query'         => $this->arrayOfStrings($queryParameters, 'query'),
@@ -63,8 +64,6 @@ class ChartRequest extends FormRequest
             //            'account_types' => $this->getAccountTypeParameter($this->arrayOfStrings($queryParameters, 'account_types')),
         ];
         // collect accounts based on this list?
-
-
     }
 
     //        return [
@@ -81,10 +80,8 @@ class ChartRequest extends FormRequest
         return [
             'fields'  => JsonApiRule::notSupported(),
             'filter'  => ['nullable', 'array',
-                          new IsValidFilter(['start', 'end', 'preselected', 'accounts']),
-                          new IsFilterValueIn('preselected', config('firefly.preselected_accounts')),
-
-
+                new IsValidFilter(['start', 'end', 'preselected', 'accounts']),
+                new IsFilterValueIn('preselected', config('firefly.preselected_accounts')),
             ],
             'include' => JsonApiRule::notSupported(),
             'page'    => JsonApiRule::notSupported(),

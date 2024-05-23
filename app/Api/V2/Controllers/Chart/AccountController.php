@@ -42,8 +42,8 @@ use Illuminate\Http\JsonResponse;
 class AccountController extends Controller
 {
     use CleansChartData;
-    use ValidatesUserGroupTrait;
     use CollectsAccountsFromFilter;
+    use ValidatesUserGroupTrait;
 
     private AccountRepositoryInterface $repository;
     private ChartData                  $chartData;
@@ -56,8 +56,8 @@ class AccountController extends Controller
             function ($request, $next) {
                 $this->repository = app(AccountRepositoryInterface::class);
                 $this->repository->setUserGroup($this->validateUserGroup($request));
-                $this->chartData = new ChartData();
-                $this->default   = app('amount')->getDefaultCurrency();
+                $this->chartData  = new ChartData();
+                $this->default    = app('amount')->getDefaultCurrency();
 
                 return $next($request);
             }
@@ -92,11 +92,11 @@ class AccountController extends Controller
      */
     private function renderAccountData(array $params, Account $account): void
     {
-        $currency = $this->repository->getAccountCurrency($account);
+        $currency          = $this->repository->getAccountCurrency($account);
         if (null === $currency) {
             $currency = $this->default;
         }
-        $currentSet     = [
+        $currentSet        = [
             'label'                          => $account->name,
 
             // the currency that belongs to the account.
@@ -117,19 +117,19 @@ class AccountController extends Controller
             'entries'                        => [],
             'native_entries'                 => [],
         ];
-        $currentStart   = clone $params['start'];
-        $range          = app('steam')->balanceInRange($account, $params['start'], clone $params['end'], $currency);
-        $rangeConverted = app('steam')->balanceInRangeConverted($account, $params['start'], clone $params['end'], $this->default);
+        $currentStart      = clone $params['start'];
+        $range             = app('steam')->balanceInRange($account, $params['start'], clone $params['end'], $currency);
+        $rangeConverted    = app('steam')->balanceInRangeConverted($account, $params['start'], clone $params['end'], $this->default);
 
         $previous          = array_values($range)[0];
         $previousConverted = array_values($rangeConverted)[0];
         while ($currentStart <= $params['end']) {
-            $format            = $currentStart->format('Y-m-d');
-            $label             = $currentStart->toAtomString();
-            $balance           = array_key_exists($format, $range) ? $range[$format] : $previous;
-            $balanceConverted  = array_key_exists($format, $rangeConverted) ? $rangeConverted[$format] : $previousConverted;
-            $previous          = $balance;
-            $previousConverted = $balanceConverted;
+            $format                               = $currentStart->format('Y-m-d');
+            $label                                = $currentStart->toAtomString();
+            $balance                              = array_key_exists($format, $range) ? $range[$format] : $previous;
+            $balanceConverted                     = array_key_exists($format, $rangeConverted) ? $rangeConverted[$format] : $previousConverted;
+            $previous                             = $balance;
+            $previousConverted                    = $balanceConverted;
 
             $currentStart->addDay();
             $currentSet['entries'][$label]        = $balance;
