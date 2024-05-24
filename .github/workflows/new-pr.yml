@@ -1,0 +1,23 @@
+name: "PRs - Post to Gitter"
+on:
+  pull_request:
+    types:
+      - opened
+jobs:
+  post-to-gitter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send PR to Gitter
+        id: issue-gitter
+        uses: JC5/firefly-iii-dev@main
+        with:
+          action: 'ff3:post-to-gitter pr'
+          output: ''
+        env:
+          FIREFLY_III_ROOT: /github/workspace
+          GH_TOKEN: ""
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_USER: ${{ github.event.pull_request.user.login }}
+          REPOSITORY: "firefly-iii/firefly-iii"
+          GITTER_TOKEN: ${{ secrets.GITTER_TOKEN }}
