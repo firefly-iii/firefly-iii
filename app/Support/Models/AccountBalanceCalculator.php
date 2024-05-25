@@ -120,13 +120,13 @@ class AccountBalanceCalculator
 
             // first create for normal currency:
             $entry               = $this->getAccountBalanceByAccount($account, $transactionCurrency);
-            $entry->balance      = bcadd($entry->balance, $sumAmount);
+            $entry->balance      = bcadd((string) $entry->balance, $sumAmount);
             $entry->save();
 
             // then do foreign amount, if present:
             if ($foreignCurrency > 0) {
                 $entry          = $this->getAccountBalanceByAccount($account, $foreignCurrency);
-                $entry->balance = bcadd($entry->balance, $sumForeignAmount);
+                $entry->balance = bcadd((string) $entry->balance, $sumForeignAmount);
                 $entry->save();
             }
         }
