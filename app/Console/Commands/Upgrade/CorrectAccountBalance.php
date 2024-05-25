@@ -34,9 +34,9 @@ class CorrectAccountBalance extends Command
 {
     use ShowsFriendlyMessages;
     public const string CONFIG_NAME = '620_correct_balances';
-    protected $description = 'Recalculate all account balance amounts';
+    protected $description          = 'Recalculate all account balance amounts';
 
-    protected $signature   = 'firefly-iii:correct-account-balance {--F|force : Force the execution of this command.}';
+    protected $signature            = 'firefly-iii:correct-account-balance {--F|force : Force the execution of this command.}';
 
     public function handle(): int
     {
@@ -55,6 +55,7 @@ class CorrectAccountBalance extends Command
     {
         AccountBalanceCalculator::recalculateAll();
     }
+
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
