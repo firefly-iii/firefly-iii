@@ -33,7 +33,7 @@ use Illuminate\Console\Command;
 class CorrectAccountBalance extends Command
 {
     use ShowsFriendlyMessages;
-    public const string CONFIG_NAME = '620_correct_balances';
+    public const string CONFIG_NAME = '610_correct_balances';
     protected $description = 'Recalculate all account balance amounts';
 
     protected $signature   = 'firefly-iii:correct-account-balance {--F|force : Force the execution of this command.}';

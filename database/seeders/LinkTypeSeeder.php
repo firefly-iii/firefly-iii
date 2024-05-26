@@ -60,10 +60,12 @@ class LinkTypeSeeder extends Seeder
             ],
         ];
         foreach ($types as $type) {
-            try {
-                LinkType::create($type);
-            } catch (\PDOException $e) {
-                // @ignoreException
+            if (null === LinkType::where('name', $type['name'])->first()) {
+                try {
+                    LinkType::create($type);
+                } catch (\PDOException $e) {
+                    // @ignoreException
+                }
             }
         }
     }

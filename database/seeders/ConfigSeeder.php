@@ -44,11 +44,10 @@ class ConfigSeeder extends Seeder
                     'data' => 1,
                 ]
             );
+            return;
         }
-        if (null !== $entry) {
-            $version     = (int)config('firefly.db_version');
-            $entry->data = $version;
-            $entry->save();
-        }
+        $version     = (int) config('firefly.db_version');
+        $entry->data = $version;
+        $entry->save();
     }
 }
