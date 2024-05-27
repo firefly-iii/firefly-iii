@@ -53,7 +53,6 @@ class PermissionSeeder extends Seeder
                     // @ignoreException
                 }
             }
-
         }
     }
 }

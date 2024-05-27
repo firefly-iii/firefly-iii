@@ -44,7 +44,7 @@ class TransactionTypeSeeder extends Seeder
         ];
 
         foreach ($types as $type) {
-            if(null === TransactionType::where('type', $type)->first()) {
+            if (null === TransactionType::where('type', $type)->first()) {
                 try {
                     TransactionType::create(['type' => $type]);
                 } catch (\PDOException $e) {

@@ -36,7 +36,7 @@ class ConfigSeeder extends Seeder
      */
     public function run(): void
     {
-        $entry = Configuration::where('name', 'db_version')->first();
+        $entry       = Configuration::where('name', 'db_version')->first();
         if (null === $entry) {
             Configuration::create(
                 [
@@ -44,6 +44,7 @@ class ConfigSeeder extends Seeder
                     'data' => 1,
                 ]
             );
+
             return;
         }
         $version     = (int) config('firefly.db_version');

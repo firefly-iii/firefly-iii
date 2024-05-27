@@ -49,7 +49,7 @@ class AccountTypeSeeder extends Seeder
             AccountType::LIABILITY_CREDIT,
         ];
         foreach ($types as $type) {
-            if(null === AccountType::where('type', $type)->first()) {
+            if (null === AccountType::where('type', $type)->first()) {
                 try {
                     AccountType::create(['type' => $type]);
                 } catch (\PDOException $e) {

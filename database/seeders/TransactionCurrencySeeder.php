@@ -71,7 +71,7 @@ class TransactionCurrencySeeder extends Seeder
         $currencies[] = ['code' => 'HRK', 'name' => 'Croatian kuna', 'symbol' => 'kn', 'decimal_places' => 2];
 
         foreach ($currencies as $currency) {
-            if(null === TransactionCurrency::where('code', $currency['code'])->first()) {
+            if (null === TransactionCurrency::where('code', $currency['code'])->first()) {
                 try {
                     TransactionCurrency::create($currency);
                 } catch (\PDOException $e) {
