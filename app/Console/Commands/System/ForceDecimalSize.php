@@ -307,7 +307,7 @@ class ForceDecimalSize extends Command
             /** @var string $field */
             foreach ($fields as $field) {
                 $value   = $item->{$field};
-                if (null === $value) {
+                if (null === $value || '' === $value) {
                     continue;
                 }
                 // fix $field by rounding it down correctly.
