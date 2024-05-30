@@ -125,9 +125,9 @@ jobs:
       - name: Build JS
         run: |
           npm install
-          npm update
           npm run prod  --workspace=v1
           npm run build --workspace=v2
+          npm update
       - name: Run CI
         run: |
           rm -rf vendor composer.lock
