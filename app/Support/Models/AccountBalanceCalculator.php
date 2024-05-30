@@ -120,13 +120,13 @@ class AccountBalanceCalculator
 
             // first create for normal currency:
             $entry               = $this->getAccountBalanceByAccount($account, $transactionCurrency);
-            $entry->balance      = bcadd((string) $entry->balance, $sumAmount);
+            $entry->balance      = bcadd((string) $entry->balance, (string) $sumAmount);
             $entry->save();
 
             // then do foreign amount, if present:
             if ($foreignCurrency > 0) {
                 $entry          = $this->getAccountBalanceByAccount($account, $foreignCurrency);
-                $entry->balance = bcadd((string) $entry->balance, $sumForeignAmount);
+                $entry->balance = bcadd((string) $entry->balance, (string) $sumForeignAmount);
                 $entry->save();
             }
         }
@@ -185,8 +185,8 @@ class AccountBalanceCalculator
             $sumForeignAmount                        = '' === $sumForeignAmount ? '0' : $sumForeignAmount;
 
             // new amounts:
-            $amounts[$account][$transactionCurrency] = bcadd($amounts[$account][$transactionCurrency] ?? '0', $sumAmount);
-            $amounts[$account][$foreignCurrency]     = bcadd($amounts[$account][$foreignCurrency] ?? '0', $sumForeignAmount);
+            $amounts[$account][$transactionCurrency] = bcadd((string) $amounts[$account][$transactionCurrency] ?? '0', (string) $sumAmount ?? '0');
+            $amounts[$account][$foreignCurrency]     = bcadd((string) $amounts[$account][$foreignCurrency] ?? '0', (string) $sumForeignAmount ?? '0');
 
             // first create for normal currency:
             $entry                                   = self::getAccountBalanceByJournal('balance_after_journal', $account, $journalId, $transactionCurrency);
