@@ -120,7 +120,7 @@ class PreferencesController extends Controller
         // list of locales also has "equal" which makes it equal to whatever the language is.
 
         try {
-            $locales = json_decode((string)file_get_contents(resource_path(sprintf('lang/%s/locales.json', $language))), true, 512, JSON_THROW_ON_ERROR);
+            $locales = json_decode((string)file_get_contents(resource_path(sprintf('locales/%s/locales.json', $language))), true, 512, JSON_THROW_ON_ERROR);
         } catch (\JsonException $e) {
             app('log')->error($e->getMessage());
             $locales = [];
