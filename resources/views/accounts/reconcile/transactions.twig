@@ -63,6 +63,8 @@
                 <div class="btn-group btn-group-xs">
                     <a href="{{ route('transactions.edit', [journal.transaction_group_id]) }}" class="btn btn-xs btn-default"><span
                                 class="fa fa-fw fa-pencil"></span></a>
+                    <a href="{{ route('transactions.delete', [journal.transaction_group_id]) }}" class="btn btn-danger"><span
+                                class="fa fa-trash"></span></a>
                 </div>
 
             </td>
