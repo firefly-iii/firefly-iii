@@ -186,7 +186,7 @@ class General extends AbstractExtension
                 $converter = new GithubFlavoredMarkdownConverter(
                     [
                         'allow_unsafe_links' => false,
-                        'max_nesting_level'  => 3,
+                        'max_nesting_level'  => 5,
                         'html_input'         => 'escape',
                     ]
                 );
