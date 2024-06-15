@@ -802,28 +802,28 @@
         },
         {
             "name": "react/dns",
-            "version": "v1.12.0",
+            "version": "v1.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/reactphp/dns.git",
-                "reference": "c134600642fa615b46b41237ef243daa65bb64ec"
+                "reference": "eb8ae001b5a455665c89c1df97f6fb682f8fb0f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/reactphp/dns/zipball/c134600642fa615b46b41237ef243daa65bb64ec",
-                "reference": "c134600642fa615b46b41237ef243daa65bb64ec",
+                "url": "https://api.github.com/repos/reactphp/dns/zipball/eb8ae001b5a455665c89c1df97f6fb682f8fb0f5",
+                "reference": "eb8ae001b5a455665c89c1df97f6fb682f8fb0f5",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0",
                 "react/cache": "^1.0 || ^0.6 || ^0.5",
                 "react/event-loop": "^1.2",
-                "react/promise": "^3.0 || ^2.7 || ^1.2.1"
+                "react/promise": "^3.2 || ^2.7 || ^1.2.1"
             },
             "require-dev": {
                 "phpunit/phpunit": "^9.6 || ^5.7 || ^4.8.36",
-                "react/async": "^4 || ^3 || ^2",
-                "react/promise-timer": "^1.9"
+                "react/async": "^4.3 || ^3 || ^2",
+                "react/promise-timer": "^1.11"
             },
             "type": "library",
             "autoload": {
@@ -866,7 +866,7 @@
             ],
             "support": {
                 "issues": "https://github.com/reactphp/dns/issues",
-                "source": "https://github.com/reactphp/dns/tree/v1.12.0"
+                "source": "https://github.com/reactphp/dns/tree/v1.13.0"
             },
             "funding": [
                 {
@@ -874,7 +874,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2023-11-29T12:41:06+00:00"
+            "time": "2024-06-13T14:18:03+00:00"
         },
         {
             "name": "react/event-loop",

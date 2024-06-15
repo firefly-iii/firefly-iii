@@ -15,16 +15,16 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #8907
-- #8911
-- #8929
-- #8930
-- #8951
-- #8957
-- #8958
-- #8893
-- #8954
-- #8927
+- [Issue 8907](https://github.com/firefly-iii/firefly-iii/issues/8907) (Error when adding initial balance: bcadd(): Argument #2 ($num2) must be of type string, int given) reported by @wnklmnn
+- [Issue 8911](https://github.com/firefly-iii/firefly-iii/issues/8911) (Docker container startup very slow) reported by @daften
+- [PR 8929](https://github.com/firefly-iii/firefly-iii/pull/8929) (icon title chgd from Deposit to Transfer) reported by @stevewasiura
+- [PR 8930](https://github.com/firefly-iii/firefly-iii/pull/8930) (icon title chgd from Deposit to Transfer) reported by @stevewasiura
+- [PR 8951](https://github.com/firefly-iii/firefly-iii/pull/8951) (add icon for delete action) reported by @stevewasiura
+- [PR 8957](https://github.com/firefly-iii/firefly-iii/pull/8957) (Remove nesting level for markdown) reported by @JeroenED
+- [Issue 8958](https://github.com/firefly-iii/firefly-iii/issues/8958) (Weird line appears above the UI when clicking on matching transactions for a rule) reported by @avee87
+- [Issue 8893](https://github.com/firefly-iii/firefly-iii/issues/8893) (API: `reconciled: false` does not have precedence) reported by @dreautall
+- [Issue 8954](https://github.com/firefly-iii/firefly-iii/issues/8954) (Wrong calculation of transaction without category) reported by @anarion80
+- [Issue 8927](https://github.com/firefly-iii/firefly-iii/issues/8927) (Converting deposit to transfer can set incorrect transaction currency) reported by @avee87
 - Various issues in release train.
 - There is a confirmation again before you delete data using the page in your profile
 

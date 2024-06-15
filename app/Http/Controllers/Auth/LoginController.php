@@ -233,7 +233,7 @@ class LoginController extends Controller
         $storeInCookie     = config('google2fa.store_in_cookie', false);
         if (false !== $storeInCookie) {
             $cookieName = config('google2fa.cookie_name', 'google2fa_token');
-            Cookie::queue(Cookie::make($cookieName, 'invalid-'.time()));
+            \Cookie::queue(\Cookie::make($cookieName, 'invalid-'.time()));
         }
         $usernameField     = $this->username();
 

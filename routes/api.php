@@ -617,7 +617,7 @@ Route::group(
         Route::get('{recurrence}/transactions', ['uses' => 'ListController@transactions', 'as' => 'transactions']);
 
         // controller does not exist:
-        //Route::post('trigger', ['uses' => 'RecurrenceController@trigger', 'as' => 'trigger']);
+        // Route::post('trigger', ['uses' => 'RecurrenceController@trigger', 'as' => 'trigger']);
     }
 );
 
