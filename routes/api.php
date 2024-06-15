@@ -615,7 +615,9 @@ Route::group(
         Route::delete('{recurrence}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
 
         Route::get('{recurrence}/transactions', ['uses' => 'ListController@transactions', 'as' => 'transactions']);
-        Route::post('trigger', ['uses' => 'RecurrenceController@trigger', 'as' => 'trigger']);
+
+        // controller does not exist:
+        //Route::post('trigger', ['uses' => 'RecurrenceController@trigger', 'as' => 'trigger']);
     }
 );
 
