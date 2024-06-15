@@ -8,7 +8,7 @@ on:
         required: true
         default: 'develop'
   schedule:
-    - cron: '0 3 * * MON,THU'
+    - cron: '0 3 * * MON'
 
 jobs:
   build:
