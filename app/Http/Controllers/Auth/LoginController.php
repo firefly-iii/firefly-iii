@@ -121,7 +121,7 @@ class LoginController extends Controller
 
         // Copied directly from AuthenticatesUsers, but with logging added:
         // If the login attempt was unsuccessful we will increment the number of attempts
-        // to login and redirect the user back to the login form. Of course, when this
+        // to log in and redirect the user back to the login form. Of course, when this
         // user surpasses their maximum number of attempts they will get locked out.
         $this->incrementLoginAttempts($request);
         Log::channel('audit')->warning(sprintf('Login failed. Attempt for user "%s" failed.', $request->get($this->username())));
@@ -233,7 +233,7 @@ class LoginController extends Controller
         $storeInCookie     = config('google2fa.store_in_cookie', false);
         if (false !== $storeInCookie) {
             $cookieName = config('google2fa.cookie_name', 'google2fa_token');
-            request()->cookies->set($cookieName, 'invalid');
+            Cookie::queue(Cookie::make($cookieName, 'invalid-'.time()));
         }
         $usernameField     = $this->username();
 
