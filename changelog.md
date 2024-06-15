@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.1.17 - 2024-06-16
+
+### Added
+
+- New routine that calculates account balances, first start could take a while.
+
+### Removed
+
+- Removed auto-generated language files.
+
+### Fixed
+
+- #8907
+- #8911
+- #8929
+- #8930
+- #8951
+- #8957
+- #8958
+- #8893
+- #8954
+- #8927
+- Various issues in release train.
+- There is a confirmation again before you delete data using the page in your profile
+
+### Security
+
+- Two (undisclosed) MFA bypass errors, reported by @Skelmis. Disclosure will follow in a few weeks.
+
+### API
+
+- Expand v2 chart API
+
 ## 6.1.16 - 2024-05-20
 
 ### Added
