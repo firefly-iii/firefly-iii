@@ -24,18 +24,18 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V2\Controllers\Chart;
 
-use Carbon\Carbon;
 use FireflyIII\Api\V2\Controllers\Controller;
-use FireflyIII\Api\V2\Request\Chart\BalanceChartRequest;
-use FireflyIII\Enums\UserRoleEnum;
+use FireflyIII\Api\V2\Request\Chart\ChartRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Chart\ChartData;
 use FireflyIII\Support\Http\Api\AccountBalanceGrouped;
 use FireflyIII\Support\Http\Api\CleansChartData;
+use FireflyIII\Support\Http\Api\CollectsAccountsFromFilter;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Collection;
 
 /**
  * Class BalanceController
@@ -43,7 +43,30 @@ use Illuminate\Support\Collection;
 class BalanceController extends Controller
 {
     use CleansChartData;
-    protected array                    $acceptedRoles = [UserRoleEnum::READ_ONLY];
+    use CollectsAccountsFromFilter;
+
+    private AccountRepositoryInterface $repository;
+    private GroupCollectorInterface    $collector;
+    private ChartData                  $chartData;
+    private TransactionCurrency        $default;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->middleware(
+            function ($request, $next) {
+                $this->repository = app(AccountRepositoryInterface::class);
+                $this->collector  = app(GroupCollectorInterface::class);
+                $userGroup        = $this->validateUserGroup($request);
+                $this->repository->setUserGroup($userGroup);
+                $this->collector->setUserGroup($userGroup);
+                $this->chartData  = new ChartData();
+                $this->default    = app('amount')->getDefaultCurrency();
+
+                return $next($request);
+            }
+        );
+    }
 
     /**
      * The code is practically a duplicate of ReportController::operations.
@@ -54,50 +77,43 @@ class BalanceController extends Controller
      * If the transaction being processed is already in native currency OR if the
      * foreign amount is in the native currency, the amount will not be converted.
      *
-     * TODO validate and set user_group_id
-     * TODO collector set group, not user
-     *
      * @throws FireflyException
      */
-    public function balance(BalanceChartRequest $request): JsonResponse
+    public function balance(ChartRequest $request): JsonResponse
     {
-        $params         = $request->getAll();
+        $queryParameters = $request->getParameters();
+        $accounts        = $this->getAccountList($queryParameters);
 
-        /** @var Carbon $start */
-        $start          = $this->parameters->get('start');
-
-        /** @var Carbon $end */
-        $end            = $this->parameters->get('end');
-        $end->endOfDay();
-
-        /** @var Collection $accounts */
-        $accounts       = $params['accounts'];
-
-        /** @var string $preferredRange */
-        $preferredRange = $params['period'];
+        // move date to end of day
+        $queryParameters['start']->startOfDay();
+        $queryParameters['end']->endOfDay();
 
         // prepare for currency conversion and data collection:
         /** @var TransactionCurrency $default */
-        $default        = app('amount')->getDefaultCurrency();
+        $default         = app('amount')->getDefaultCurrency();
 
         // get journals for entire period:
-        /** @var GroupCollectorInterface $collector */
-        $collector      = app(GroupCollectorInterface::class);
-        $collector->setRange($start, $end)->withAccountInformation();
-        $collector->setXorAccounts($accounts);
-        $collector->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::RECONCILIATION, TransactionType::TRANSFER]);
-        $journals       = $collector->getExtractedJournals();
 
-        $object         = new AccountBalanceGrouped();
-        $object->setPreferredRange($preferredRange);
+        $this->collector->setRange($queryParameters['start'], $queryParameters['end'])
+            ->withAccountInformation()
+            ->setXorAccounts($accounts)
+            ->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::RECONCILIATION, TransactionType::TRANSFER])
+        ;
+        $journals        = $this->collector->getExtractedJournals();
+
+        $object          = new AccountBalanceGrouped();
+        $object->setPreferredRange($queryParameters['period']);
         $object->setDefault($default);
         $object->setAccounts($accounts);
         $object->setJournals($journals);
-        $object->setStart($start);
-        $object->setEnd($end);
+        $object->setStart($queryParameters['start']);
+        $object->setEnd($queryParameters['end']);
         $object->groupByCurrencyAndPeriod();
-        $chartData      = $object->convertToChartData();
+        $data            = $object->convertToChartData();
+        foreach ($data as $entry) {
+            $this->chartData->add($entry);
+        }
 
-        return response()->json($this->clean($chartData));
+        return response()->json($this->chartData->render());
     }
 }

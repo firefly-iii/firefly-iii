@@ -150,7 +150,6 @@ class RuleRepository implements RuleRepositoryInterface
                 $params[] = sprintf('%s:true', OperatorQuerySearch::getRootOperator($trigger->trigger_type));
             }
             if (true === $needsContext) {
-                var_dump('x');
                 $params[] = sprintf('%s:"%s"', OperatorQuerySearch::getRootOperator($trigger->trigger_type), $trigger->trigger_value);
             }
         }

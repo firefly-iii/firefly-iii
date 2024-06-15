@@ -35,15 +35,22 @@ use Illuminate\Support\Facades\Log;
  */
 class AccountBalanceGrouped
 {
-    private array               $accountIds;
-    private string              $carbonFormat;
-    private array               $currencies = [];
-    private array               $data       = [];
-    private TransactionCurrency $default;
-    private Carbon              $end;
-    private array               $journals   = [];
-    private string              $preferredRange;
-    private Carbon              $start;
+    private array                 $accountIds;
+    private string                $carbonFormat;
+    private array                 $currencies = [];
+    private array                 $data       = [];
+    private TransactionCurrency   $default;
+    private Carbon                $end;
+    private array                 $journals   = [];
+    private string                $preferredRange;
+    private Carbon                $start;
+    private ExchangeRateConverter $converter;
+
+    public function __construct()
+    {
+        $this->accountIds = [];
+        $this->converter  = app(ExchangeRateConverter::class);
+    }
 
     /**
      * Convert the given input to a chart compatible array.
@@ -58,14 +65,15 @@ class AccountBalanceGrouped
             // income and expense array prepped:
             $income       = [
                 'label'                          => 'earned',
-                'currency_id'                    => (string)$currency['currency_id'],
+                'currency_id'                    => (string) $currency['currency_id'],
                 'currency_symbol'                => $currency['currency_symbol'],
                 'currency_code'                  => $currency['currency_code'],
                 'currency_decimal_places'        => $currency['currency_decimal_places'],
-                'native_currency_id'             => (string)$currency['native_currency_id'],
+                'native_currency_id'             => (string) $currency['native_currency_id'],
                 'native_currency_symbol'         => $currency['native_currency_symbol'],
                 'native_currency_code'           => $currency['native_currency_code'],
                 'native_currency_decimal_places' => $currency['native_currency_decimal_places'],
+                'date'                           => $this->start->toAtomString(),
                 'start'                          => $this->start->toAtomString(),
                 'end'                            => $this->end->toAtomString(),
                 'period'                         => $this->preferredRange,
@@ -74,14 +82,15 @@ class AccountBalanceGrouped
             ];
             $expense      = [
                 'label'                          => 'spent',
-                'currency_id'                    => (string)$currency['currency_id'],
+                'currency_id'                    => (string) $currency['currency_id'],
                 'currency_symbol'                => $currency['currency_symbol'],
                 'currency_code'                  => $currency['currency_code'],
                 'currency_decimal_places'        => $currency['currency_decimal_places'],
-                'native_currency_id'             => (string)$currency['native_currency_id'],
+                'native_currency_id'             => (string) $currency['native_currency_id'],
                 'native_currency_symbol'         => $currency['native_currency_symbol'],
                 'native_currency_code'           => $currency['native_currency_code'],
                 'native_currency_decimal_places' => $currency['native_currency_decimal_places'],
+                'date'                           => $this->start->toAtomString(),
                 'start'                          => $this->start->toAtomString(),
                 'end'                            => $this->end->toAtomString(),
                 'period'                         => $this->preferredRange,
@@ -124,76 +133,7 @@ class AccountBalanceGrouped
         // loop. group by currency and by period.
         /** @var array $journal */
         foreach ($this->journals as $journal) {
-            // format the date according to the period
-            $period                                          = $journal['date']->format($this->carbonFormat);
-            $currencyId                                      = (int)$journal['currency_id'];
-            $currency                                        = $this->currencies[$currencyId] ?? TransactionCurrency::find($currencyId);
-            $this->currencies[$currencyId]                   = $currency; // may just re-assign itself, don't mind.
-
-            // set the array with monetary info, if it does not exist.
-            $this->data[$currencyId]          ??= [
-                'currency_id'                    => (string)$currencyId,
-                'currency_symbol'                => $journal['currency_symbol'],
-                'currency_code'                  => $journal['currency_code'],
-                'currency_name'                  => $journal['currency_name'],
-                'currency_decimal_places'        => $journal['currency_decimal_places'],
-                // native currency info (could be the same)
-                'native_currency_id'             => (string)$this->default->id,
-                'native_currency_code'           => $this->default->code,
-                'native_currency_symbol'         => $this->default->symbol,
-                'native_currency_decimal_places' => $this->default->decimal_places,
-            ];
-
-            // set the array (in monetary info) with spent/earned in this $period, if it does not exist.
-            $this->data[$currencyId][$period] ??= [
-                'period'        => $period,
-                'spent'         => '0',
-                'earned'        => '0',
-                'native_spent'  => '0',
-                'native_earned' => '0',
-            ];
-            // is this journal's amount in- our outgoing?
-            $key                                             = 'spent';
-            $amount                                          = app('steam')->negative($journal['amount']);
-            // deposit = incoming
-            // transfer or reconcile or opening balance, and these accounts are the destination.
-            if (
-                TransactionType::DEPOSIT === $journal['transaction_type_type']
-
-                || (
-                    (
-                        TransactionType::TRANSFER === $journal['transaction_type_type']
-                        || TransactionType::RECONCILIATION === $journal['transaction_type_type']
-                        || TransactionType::OPENING_BALANCE === $journal['transaction_type_type']
-                    )
-                    && in_array($journal['destination_account_id'], $this->accountIds, true)
-                )
-            ) {
-                $key    = 'earned';
-                $amount = app('steam')->positive($journal['amount']);
-            }
-
-            // get conversion rate
-            try {
-                $rate = $converter->getCurrencyRate($currency, $this->default, $journal['date']);
-            } catch (FireflyException $e) {
-                app('log')->error($e->getMessage());
-                $rate = '1';
-            }
-            $amountConverted                                 = bcmul($amount, $rate);
-
-            // perhaps transaction already has the foreign amount in the native currency.
-            if ((int)$journal['foreign_currency_id'] === $this->default->id) {
-                $amountConverted = $journal['foreign_amount'] ?? '0';
-                $amountConverted = 'earned' === $key ? app('steam')->positive($amountConverted) : app('steam')->negative($amountConverted);
-            }
-
-            // add normal entry
-            $this->data[$currencyId][$period][$key]          = bcadd($this->data[$currencyId][$period][$key], $amount);
-
-            // add converted entry
-            $convertedKey                                    = sprintf('native_%s', $key);
-            $this->data[$currencyId][$period][$convertedKey] = bcadd($this->data[$currencyId][$period][$convertedKey], $amountConverted);
+            $this->processJournal($journal);
         }
         $converter->summarize();
     }
@@ -209,12 +149,12 @@ class AccountBalanceGrouped
         $defaultCurrencyId              = $default->id;
         $this->currencies               = [$default->id => $default]; // currency cache
         $this->data[$defaultCurrencyId] = [
-            'currency_id'                    => (string)$defaultCurrencyId,
+            'currency_id'                    => (string) $defaultCurrencyId,
             'currency_symbol'                => $default->symbol,
             'currency_code'                  => $default->code,
             'currency_name'                  => $default->name,
             'currency_decimal_places'        => $default->decimal_places,
-            'native_currency_id'             => (string)$defaultCurrencyId,
+            'native_currency_id'             => (string) $defaultCurrencyId,
             'native_currency_symbol'         => $default->symbol,
             'native_currency_code'           => $default->code,
             'native_currency_name'           => $default->name,
@@ -241,5 +181,114 @@ class AccountBalanceGrouped
     public function setStart(Carbon $start): void
     {
         $this->start = $start;
+    }
+
+    private function processJournal(array $journal): void
+    {
+        // format the date according to the period
+        $period                                          = $journal['date']->format($this->carbonFormat);
+        $currencyId                                      = (int) $journal['currency_id'];
+        $currency                                        = $this->findCurrency($currencyId);
+
+        // set the array with monetary info, if it does not exist.
+        $this->createDefaultDataEntry($journal);
+        // set the array (in monetary info) with spent/earned in this $period, if it does not exist.
+        $this->createDefaultPeriodEntry($journal);
+
+        // is this journal's amount in- our outgoing?
+        $key                                             = $this->getDataKey($journal);
+        $amount                                          = 'spent' === $key ? app('steam')->negative($journal['amount']) : app('steam')->positive($journal['amount']);
+
+        // get conversion rate
+        $rate                                            = $this->getRate($currency, $journal['date']);
+        $amountConverted                                 = bcmul($amount, $rate);
+
+        // perhaps transaction already has the foreign amount in the native currency.
+        if ((int) $journal['foreign_currency_id'] === $this->default->id) {
+            $amountConverted = $journal['foreign_amount'] ?? '0';
+            $amountConverted = 'earned' === $key ? app('steam')->positive($amountConverted) : app('steam')->negative($amountConverted);
+        }
+
+        // add normal entry
+        $this->data[$currencyId][$period][$key]          = bcadd($this->data[$currencyId][$period][$key], $amount);
+
+        // add converted entry
+        $convertedKey                                    = sprintf('native_%s', $key);
+        $this->data[$currencyId][$period][$convertedKey] = bcadd($this->data[$currencyId][$period][$convertedKey], $amountConverted);
+    }
+
+    private function findCurrency(int $currencyId): TransactionCurrency
+    {
+        if (array_key_exists($currencyId, $this->currencies)) {
+            return $this->currencies[$currencyId];
+        }
+        $this->currencies[$currencyId] = TransactionCurrency::find($currencyId);
+
+        return $this->currencies[$currencyId];
+    }
+
+    private function createDefaultDataEntry(array $journal): void
+    {
+        $currencyId = (int) $journal['currency_id'];
+        $this->data[$currencyId] ??= [
+            'currency_id'                    => (string) $currencyId,
+            'currency_symbol'                => $journal['currency_symbol'],
+            'currency_code'                  => $journal['currency_code'],
+            'currency_name'                  => $journal['currency_name'],
+            'currency_decimal_places'        => $journal['currency_decimal_places'],
+            // native currency info (could be the same)
+            'native_currency_id'             => (string) $this->default->id,
+            'native_currency_code'           => $this->default->code,
+            'native_currency_symbol'         => $this->default->symbol,
+            'native_currency_decimal_places' => $this->default->decimal_places,
+        ];
+    }
+
+    private function createDefaultPeriodEntry(array $journal): void
+    {
+        $currencyId = (int) $journal['currency_id'];
+        $period     = $journal['date']->format($this->carbonFormat);
+        $this->data[$currencyId][$period] ??= [
+            'period'        => $period,
+            'spent'         => '0',
+            'earned'        => '0',
+            'native_spent'  => '0',
+            'native_earned' => '0',
+        ];
+    }
+
+    private function getDataKey(array $journal): string
+    {
+        $key = 'spent';
+        // deposit = incoming
+        // transfer or reconcile or opening balance, and these accounts are the destination.
+        if (
+            TransactionType::DEPOSIT === $journal['transaction_type_type']
+
+            || (
+                (
+                    TransactionType::TRANSFER === $journal['transaction_type_type']
+                    || TransactionType::RECONCILIATION === $journal['transaction_type_type']
+                    || TransactionType::OPENING_BALANCE === $journal['transaction_type_type']
+                )
+                && in_array($journal['destination_account_id'], $this->accountIds, true)
+            )
+        ) {
+            $key = 'earned';
+        }
+
+        return $key;
+    }
+
+    private function getRate(TransactionCurrency $currency, Carbon $date): string
+    {
+        try {
+            $rate = $this->converter->getCurrencyRate($currency, $this->default, $date);
+        } catch (FireflyException $e) {
+            app('log')->error($e->getMessage());
+            $rate = '1';
+        }
+
+        return $rate;
     }
 }

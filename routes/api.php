@@ -45,6 +45,21 @@ Route::group(
     }
 );
 
+// V2 API routes for charts
+Route::group(
+    [
+        'namespace' => 'FireflyIII\Api\V2\Controllers\Chart',
+        'prefix'    => 'v2/chart',
+        'as'        => 'api.v1.chart.',
+    ],
+    static function (): void {
+        Route::get('account/dashboard', ['uses' => 'AccountController@dashboard', 'as' => 'account.dashboard']);
+        //        Route::get('budget/dashboard', ['uses' => 'BudgetController@dashboard', 'as' => 'budget.dashboard']);
+        //        Route::get('category/dashboard', ['uses' => 'CategoryController@dashboard', 'as' => 'category.dashboard']);
+        Route::get('balance/balance', ['uses' => 'BalanceController@balance', 'as' => 'balance.balance']);
+    }
+);
+
 // JsonApiRoute::server('v3')
 //            ->prefix('v3')
 //            ->resources(function (ResourceRegistrar $server) {
@@ -103,21 +118,6 @@ Route::group(
     ],
     static function (): void {
         Route::get('', ['uses' => 'NetWorthController@get', 'as' => 'index']);
-    }
-);
-
-// V2 API routes for charts
-Route::group(
-    [
-        'namespace' => 'FireflyIII\Api\V2\Controllers\Chart',
-        'prefix'    => 'v2/chart',
-        'as'        => 'api.v1.chart.',
-    ],
-    static function (): void {
-        Route::get('account/dashboard', ['uses' => 'AccountController@dashboard', 'as' => 'account.dashboard']);
-        Route::get('budget/dashboard', ['uses' => 'BudgetController@dashboard', 'as' => 'budget.dashboard']);
-        Route::get('category/dashboard', ['uses' => 'CategoryController@dashboard', 'as' => 'category.dashboard']);
-        Route::get('balance/balance', ['uses' => 'BalanceController@balance', 'as' => 'balance.balance']);
     }
 );
 
@@ -615,7 +615,9 @@ Route::group(
         Route::delete('{recurrence}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
 
         Route::get('{recurrence}/transactions', ['uses' => 'ListController@transactions', 'as' => 'transactions']);
-        Route::post('trigger', ['uses' => 'RecurrenceController@trigger', 'as' => 'trigger']);
+
+        // controller does not exist:
+        //Route::post('trigger', ['uses' => 'RecurrenceController@trigger', 'as' => 'trigger']);
     }
 );
 

@@ -42,6 +42,7 @@ return [
     'year_to_date'                                        => 'Year to date',
     'YTD'                                                 => 'YTD',
     'welcome_back'                                        => 'What\'s playing?',
+    'main_dashboard_page_title'                           => 'Home',
     'everything'                                          => 'Everything',
     'today'                                               => 'today',
     'customRange'                                         => 'Custom range',

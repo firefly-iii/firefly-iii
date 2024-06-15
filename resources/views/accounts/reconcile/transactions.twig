@@ -63,6 +63,8 @@
                 <div class="btn-group btn-group-xs">
                     <a href="{{ route('transactions.edit', [journal.transaction_group_id]) }}" class="btn btn-xs btn-default"><span
                                 class="fa fa-fw fa-pencil"></span></a>
+                    <a href="{{ route('transactions.delete', [journal.transaction_group_id]) }}" class="btn btn-danger"><span
+                                class="fa fa-trash"></span></a>
                 </div>
 
             </td>
@@ -78,7 +80,7 @@
                 {% endif %}
 
                 {% if journal.transaction_type_type == 'Transfer' %}
-                    <span class="fa fa-exchange fa-fw" title="{{ trans('firefly.Deposit') }}"></span>
+                    <span class="fa fa-exchange fa-fw" title="{{ trans('firefly.Transfer') }}"></span>
                 {% endif %}
 
                 {% if journal.transaction_type_type == 'Reconciliation' %}

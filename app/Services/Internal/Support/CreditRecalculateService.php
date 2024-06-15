@@ -216,7 +216,6 @@ class CreditRecalculateService
             app('log')->debug(sprintf('Destination amount "%s" is now "%s"', $dest->amount, app('steam')->negative($dest->amount)));
             $source->amount = app('steam')->positive($source->amount);
             $dest->amount   = app('steam')->negative($source->amount);
-            var_dump($source->foreign_amount);
             if (null !== $source->foreign_amount && '' !== $source->foreign_amount) {
                 $source->foreign_amount = app('steam')->positive($source->foreign_amount);
                 app('log')->debug(sprintf('Source foreign amount "%s" is now "%s"', $source->foreign_amount, app('steam')->positive($source->foreign_amount)));

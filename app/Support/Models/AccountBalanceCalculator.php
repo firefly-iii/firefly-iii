@@ -115,18 +115,18 @@ class AccountBalanceCalculator
             $account             = (int) $row->account_id;
             $transactionCurrency = (int) $row->transaction_currency_id;
             $foreignCurrency     = (int) $row->foreign_currency_id;
-            $sumAmount           = $row->sum_amount;
-            $sumForeignAmount    = $row->sum_foreign_amount;
+            $sumAmount           = (string) $row->sum_amount;
+            $sumForeignAmount    = (string) $row->sum_foreign_amount;
 
             // first create for normal currency:
             $entry               = $this->getAccountBalanceByAccount($account, $transactionCurrency);
-            $entry->balance      = bcadd($entry->balance, $sumAmount);
+            $entry->balance      = bcadd((string) $entry->balance, $sumAmount);
             $entry->save();
 
             // then do foreign amount, if present:
             if ($foreignCurrency > 0) {
                 $entry          = $this->getAccountBalanceByAccount($account, $foreignCurrency);
-                $entry->balance = bcadd($entry->balance, $sumForeignAmount);
+                $entry->balance = bcadd((string) $entry->balance, $sumForeignAmount);
                 $entry->save();
             }
         }
@@ -146,8 +146,8 @@ class AccountBalanceCalculator
     }
 
     /**
-     * Als je alles opnieuw doet, verzamel je alle transactions en het bedrag en zet je dat neer als "balance after journal".
-     * Dat betekent, netjes op volgorde van datum en doorrekenen.
+     * Als je alles opnieuw doet, verzamel je alle transactions en het bedrag en zet je dat neer als "balance after
+     * journal". Dat betekent, netjes op volgorde van datum en doorrekenen.
      *
      * Zodra je een transaction journal verplaatst (datum) moet je dat journal en alle latere journals opnieuw doen.
      * Maar dan moet je van de account wel een beginnetje hebben, namelijk de balance tot en met dat moment.
@@ -176,13 +176,17 @@ class AccountBalanceCalculator
             $account                                 = (int) $row->account_id;
             $transactionCurrency                     = (int) $row->transaction_currency_id;
             $foreignCurrency                         = (int) $row->foreign_currency_id;
-            $sumAmount                               = $row->sum_amount;
-            $sumForeignAmount                        = $row->sum_foreign_amount;
+            $sumAmount                               = (string) $row->sum_amount;
+            $sumForeignAmount                        = (string) $row->sum_foreign_amount;
             $journalId                               = (int) $row->id;
 
+            // check for empty strings
+            $sumAmount                               = '' === $sumAmount ? '0' : $sumAmount;
+            $sumForeignAmount                        = '' === $sumForeignAmount ? '0' : $sumForeignAmount;
+
             // new amounts:
-            $amounts[$account][$transactionCurrency] = bcadd($amounts[$account][$transactionCurrency] ?? '0', $sumAmount ?? '0');
-            $amounts[$account][$foreignCurrency]     = bcadd($amounts[$account][$foreignCurrency] ?? '0', $sumForeignAmount ?? '0');
+            $amounts[$account][$transactionCurrency] = bcadd($amounts[$account][$transactionCurrency] ?? '0', $sumAmount);
+            $amounts[$account][$foreignCurrency]     = bcadd($amounts[$account][$foreignCurrency] ?? '0', $sumForeignAmount);
 
             // first create for normal currency:
             $entry                                   = self::getAccountBalanceByJournal('balance_after_journal', $account, $journalId, $transactionCurrency);

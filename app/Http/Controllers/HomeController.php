@@ -65,7 +65,7 @@ class HomeController extends Controller
         $stringEnd     = '';
 
         try {
-            $stringStart = e((string)$request->get('start'));
+            $stringStart = e((string) $request->get('start'));
             $start       = Carbon::createFromFormat('Y-m-d', $stringStart);
         } catch (InvalidFormatException $e) {
             app('log')->error(sprintf('Start: could not parse date string "%s" so ignore it.', $stringStart));
@@ -73,7 +73,7 @@ class HomeController extends Controller
         }
 
         try {
-            $stringEnd = e((string)$request->get('end'));
+            $stringEnd = e((string) $request->get('end'));
             $end       = Carbon::createFromFormat('Y-m-d', $stringEnd);
         } catch (InvalidFormatException $e) {
             app('log')->error(sprintf('End could not parse date string "%s" so ignore it.', $stringEnd));
@@ -92,7 +92,7 @@ class HomeController extends Controller
         app('log')->debug('dateRange: Received dateRange', ['start' => $stringStart, 'end' => $stringEnd, 'label' => $request->get('label')]);
         // check if the label is "everything" or "Custom range" which will betray
         // a possible problem with the budgets.
-        if ($label === (string)trans('firefly.everything') || $label === (string)trans('firefly.customRange')) {
+        if ($label === (string) trans('firefly.everything') || $label === (string) trans('firefly.customRange')) {
             $isCustomRange = true;
             app('log')->debug('Range is now marked as "custom".');
         }
@@ -100,7 +100,7 @@ class HomeController extends Controller
         $diff          = $start->diffInDays($end, true) + 1;
 
         if ($diff > 366) {
-            $request->session()->flash('warning', (string)trans('firefly.warning_much_data', ['days' => (int)$diff]));
+            $request->session()->flash('warning', (string) trans('firefly.warning_much_data', ['days' => (int) $diff]));
         }
 
         $request->session()->put('is_custom_range', $isCustomRange);
@@ -128,10 +128,10 @@ class HomeController extends Controller
             return redirect(route('new-user.index'));
         }
 
-        if ('v1' === (string)config('view.layout')) {
+        if ('v1' === (string) config('view.layout')) {
             return $this->indexV1($repository);
         }
-        if ('v2' === (string)config('view.layout')) {
+        if ('v2' === (string) config('view.layout')) {
             return $this->indexV2();
         }
 
@@ -141,8 +141,9 @@ class HomeController extends Controller
     private function indexV1(AccountRepositoryInterface $repository): mixed
     {
         $types          = config('firefly.accountTypesByIdentifier.asset');
+        $pageTitle      = (string) trans('firefly.main_dashboard_page_title');
         $count          = $repository->count($types);
-        $subTitle       = (string)trans('firefly.welcome_back');
+        $subTitle       = (string) trans('firefly.welcome_back');
         $transactions   = [];
         $frontpage      = app('preferences')->getFresh('frontpageAccounts', $repository->getAccountsByType([AccountType::ASSET])->pluck('id')->toArray());
         $frontpageArray = $frontpage->data;
@@ -177,20 +178,21 @@ class HomeController extends Controller
         $user           = auth()->user();
         event(new RequestedVersionCheckStatus($user));
 
-        return view('index', compact('count', 'subTitle', 'transactions', 'billCount', 'start', 'end', 'today'));
+        return view('index', compact('count', 'subTitle', 'transactions', 'billCount', 'start', 'end', 'today', 'pageTitle'));
     }
 
     private function indexV2(): mixed
     {
-        $subTitle = (string)trans('firefly.welcome_back');
+        $subTitle  = (string) trans('firefly.welcome_back');
+        $pageTitle = (string) trans('firefly.main_dashboard_page_title');
 
-        $start    = session('start', today(config('app.timezone'))->startOfMonth());
-        $end      = session('end', today(config('app.timezone'))->endOfMonth());
+        $start     = session('start', today(config('app.timezone'))->startOfMonth());
+        $end       = session('end', today(config('app.timezone'))->endOfMonth());
 
         /** @var User $user */
-        $user     = auth()->user();
+        $user      = auth()->user();
         event(new RequestedVersionCheckStatus($user));
 
-        return view('index', compact('subTitle', 'start', 'end'));
+        return view('index', compact('subTitle', 'start', 'end', 'pageTitle'));
     }
 }

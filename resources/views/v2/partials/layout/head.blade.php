@@ -56,8 +56,11 @@
     </script>
 
     <title>
-        @if($subTitle)
+        @if($subTitle && null === ($pageTitle ?? null))
             {{ $subTitle }} »
+        @endif
+        @if(null !== ($pageTitle ?? null))
+            {{ $pageTitle }} »
         @endif
 
         @if($title !== 'Firefly III')

@@ -46,10 +46,12 @@ class PermissionSeeder extends Seeder
             ],
         ];
         foreach ($roles as $role) {
-            try {
-                Role::create($role);
-            } catch (\PDOException $e) {
-                // @ignoreException
+            if (null === Role::where('name', $role['name'])->first()) {
+                try {
+                    Role::create($role);
+                } catch (\PDOException $e) {
+                    // @ignoreException
+                }
             }
         }
     }

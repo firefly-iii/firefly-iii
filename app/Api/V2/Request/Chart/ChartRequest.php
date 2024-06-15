@@ -25,6 +25,7 @@ namespace FireflyIII\Api\V2\Request\Chart;
 
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\JsonApi\Rules\IsValidFilter;
+use FireflyIII\Rules\IsFilterValueIn;
 use FireflyIII\Support\Http\Api\ParsesQueryFilters;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\Support\Request\ChecksLogin;
@@ -52,15 +53,17 @@ class ChartRequest extends FormRequest
         $queryParameters = QueryParameters::cast($this->all());
 
         return [
-            'start'          => $this->dateOrToday($queryParameters, 'start'),
-            'end'            => $this->dateOrToday($queryParameters, 'end'),
-
-            // preselected heeft maar een paar toegestane waardes.
-
+            'start'       => $this->dateOrToday($queryParameters, 'start'),
+            'end'         => $this->dateOrToday($queryParameters, 'end'),
+            'preselected' => $this->stringFromQueryParams($queryParameters, 'preselected', 'empty'),
+            'period'      => $this->stringFromQueryParams($queryParameters, 'period', '1M'),
+            'accounts'    => $this->arrayOfStrings($queryParameters, 'accounts'),
+            // preselected heeft maar een paar toegestane waardes, dat moet ook goed gaan.
             //            'query'         => $this->arrayOfStrings($queryParameters, 'query'),
             //            'size'          => $this->integerFromQueryParams($queryParameters,'size', 50),
             //            'account_types' => $this->getAccountTypeParameter($this->arrayOfStrings($queryParameters, 'account_types')),
         ];
+        // collect accounts based on this list?
     }
 
     //        return [
@@ -76,7 +79,10 @@ class ChartRequest extends FormRequest
     {
         return [
             'fields'  => JsonApiRule::notSupported(),
-            'filter'  => ['nullable', 'array', new IsValidFilter(['start', 'end', 'preselected', 'accounts'])],
+            'filter'  => ['nullable', 'array',
+                new IsValidFilter(['start', 'end', 'preselected', 'accounts']),
+                new IsFilterValueIn('preselected', config('firefly.preselected_accounts')),
+            ],
             'include' => JsonApiRule::notSupported(),
             'page'    => JsonApiRule::notSupported(),
             'sort'    => JsonApiRule::notSupported(),

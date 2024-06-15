@@ -185,7 +185,7 @@ class BudgetLimitController extends Controller
             $array['amount_formatted']       = app('amount')->formatAnything($limit->transactionCurrency, $limit['amount']);
             $array['days_left']              = (string)$this->activeDaysLeft($start, $end);
             // left per day:
-            $array['left_per_day']           = bcdiv(bcadd($array['spent'], $array['amount']), $array['days_left']);
+            $array['left_per_day']           = 0 === bccomp('0', $array['days_left']) ? bcadd($array['spent'], $array['amount']) : bcdiv(bcadd($array['spent'], $array['amount']), $array['days_left']);
 
             // left per day formatted.
             $array['left_per_day_formatted'] = app('amount')->formatAnything($limit->transactionCurrency, $array['left_per_day']);

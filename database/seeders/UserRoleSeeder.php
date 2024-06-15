@@ -45,10 +45,12 @@ class UserRoleSeeder extends Seeder
 
         /** @var string $role */
         foreach ($roles as $role) {
-            try {
-                UserRole::create(['title' => $role]);
-            } catch (\PDOException $e) {
-                // @ignoreException
+            if (null === UserRole::where('title', $role)->first()) {
+                try {
+                    UserRole::create(['title' => $role]);
+                } catch (\PDOException $e) {
+                    // @ignoreException
+                }
             }
         }
     }

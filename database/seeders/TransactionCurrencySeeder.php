@@ -42,6 +42,7 @@ class TransactionCurrencySeeder extends Seeder
         $currencies[] = ['code' => 'PLN', 'name' => 'Polish złoty', 'symbol' => 'zł', 'decimal_places' => 2];
         $currencies[] = ['code' => 'TRY', 'name' => 'Turkish lira', 'symbol' => '₺', 'decimal_places' => 2];
         $currencies[] = ['code' => 'DKK', 'name' => 'Dansk krone', 'symbol' => 'kr.', 'decimal_places' => 2];
+        $currencies[] = ['code' => 'RON', 'name' => 'Romanian leu', 'symbol' => 'lei', 'decimal_places' => 2];
 
         // american currencies
         $currencies[] = ['code' => 'USD', 'name' => 'US Dollar', 'symbol' => '$', 'decimal_places' => 2];
@@ -71,10 +72,12 @@ class TransactionCurrencySeeder extends Seeder
         $currencies[] = ['code' => 'HRK', 'name' => 'Croatian kuna', 'symbol' => 'kn', 'decimal_places' => 2];
 
         foreach ($currencies as $currency) {
-            try {
-                TransactionCurrency::create($currency);
-            } catch (\PDOException $e) {
-                // @ignoreException
+            if (null === TransactionCurrency::where('code', $currency['code'])->first()) {
+                try {
+                    TransactionCurrency::create($currency);
+                } catch (\PDOException $e) {
+                    // @ignoreException
+                }
             }
         }
     }
