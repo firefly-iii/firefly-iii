@@ -146,7 +146,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         // should be validated already:
         if (array_key_exists('attachable_type', $data) && array_key_exists('attachable_id', $data)) {
             $attachment->attachable_id   = (int)$data['attachable_id'];
-            $attachment->attachable_type = sprintf('FireflyIII\\Models\\%s', $data['attachable_type']);
+            $attachment->attachable_type = sprintf('FireflyIII\Models\%s', $data['attachable_type']);
         }
 
         $attachment->save();

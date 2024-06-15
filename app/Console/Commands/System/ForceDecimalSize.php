@@ -111,7 +111,7 @@ class ForceDecimalSize extends Command
     {
         // switch stuff based on database connection:
         $this->operator          = 'REGEXP';
-        $this->regularExpression = '\'\\\\.[\\\\d]{%d}[1-9]+\'';
+        $this->regularExpression = '\'\\\.[\\\d]{%d}[1-9]+\'';
         $this->cast              = 'CHAR';
         if ('pgsql' === config('database.default')) {
             $this->operator          = 'SIMILAR TO';
@@ -119,7 +119,7 @@ class ForceDecimalSize extends Command
             $this->cast              = 'TEXT';
         }
         if ('sqlite' === config('database.default')) {
-            $this->regularExpression = '"\\.[\d]{%d}[1-9]+"';
+            $this->regularExpression = '"\.[\d]{%d}[1-9]+"';
         }
     }
 
