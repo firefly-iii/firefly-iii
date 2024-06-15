@@ -106,7 +106,13 @@ trait GroupValidation
             'source_id', 'source_name', 'source_number', 'source_iban',
             'destination_id', 'destination_name', 'destination_number', 'destination_iban',
         ];
+
+        // stop protesting when reconciliation is set to FALSE.
+
         foreach ($data['transactions'] as $index => $row) {
+            if (false === ($row['reconciled'] ?? false)) {
+                continue;
+            }
             foreach ($forbidden as $key) {
                 if (array_key_exists($key, $row)) {
                     $validator->errors()->add(
