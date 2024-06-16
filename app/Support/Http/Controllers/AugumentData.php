@@ -171,6 +171,8 @@ trait AugumentData
 
         /** @var BudgetLimitRepositoryInterface $blRepository */
         $blRepository     = app(BudgetLimitRepositoryInterface::class);
+
+        $end->endOfMonth();
         // properties for cache
         $cache            = new CacheProperties();
         $cache->addProperty($start);
