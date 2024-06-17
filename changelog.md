@@ -7,8 +7,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #8978
-- #8977
+- [Issue 8978](https://github.com/firefly-iii/firefly-iii/issues/8978) (Error! Internal Firefly III Exception: bcadd(): Argument #2 ($num2) is not well-formed) reported by @el-rhazi
+- [Issue 8977](https://github.com/firefly-iii/firefly-iii/issues/8977) (Data Importer: "500 Server Error" with Firefly III v6.1.17) reported by @qtdzz
 
 ### Security
 
