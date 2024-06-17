@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.1.18 - 2024-06-19
+
+### Fixed
+
+- #8978
+- #8977
+
+### Security
+
+- [CVE-2024-37893](https://www.cve.org/CVERecord?id=CVE-2024-37893)
+
 ## 6.1.17 - 2024-06-16
 
 ### Added
