@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Models;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountBalance;
 use FireflyIII\Models\Transaction;
@@ -122,13 +123,25 @@ class AccountBalanceCalculator
 
             // first create for normal currency:
             $entry               = $this->getAccountBalanceByAccount($account, $transactionCurrency);
-            $entry->balance      = bcadd((string) $entry->balance, $sumAmount);
+            try {
+                $entry->balance = bcadd((string) $entry->balance, $sumAmount);
+            } catch(\ValueError $e) {
+                $message = sprintf('[a] Could not add "%s" to "%s": %s', $entry->balance, $sumAmount, $e->getMessage());
+                Log::error($message);
+                throw new FireflyException($message, 0, $e);
+            }
             $entry->save();
 
             // then do foreign amount, if present:
             if ($foreignCurrency > 0) {
                 $entry          = $this->getAccountBalanceByAccount($account, $foreignCurrency);
+                try {
                 $entry->balance = bcadd((string) $entry->balance, $sumForeignAmount);
+                } catch(\ValueError $e) {
+                    $message = sprintf('[b] Could not add "%s" to "%s": %s', $entry->balance, $sumForeignAmount, $e->getMessage());
+                    Log::error($message);
+                    throw new FireflyException($message, 0, $e);
+                }
                 $entry->save();
             }
         }
