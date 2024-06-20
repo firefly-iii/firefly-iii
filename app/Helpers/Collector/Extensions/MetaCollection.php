@@ -717,7 +717,7 @@ trait MetaCollection
 
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'internal_reference');
-        $this->query->where('journal_meta.data', 'LIKE', sprintf('%%%s%%', $internalReference));
+        $this->query->where('journal_meta.data', '=', $internalReference);
 
         return $this;
     }
