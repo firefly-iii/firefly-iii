@@ -48,6 +48,9 @@ class ExchangeRateConverter
      */
     public function convert(TransactionCurrency $from, TransactionCurrency $to, Carbon $date, string $amount): string
     {
+        if(false === config('cer.enabled')) {
+            return $amount;
+        }
         Log::debug('convert()');
         $rate = $this->getCurrencyRate($from, $to, $date);
 
@@ -59,6 +62,9 @@ class ExchangeRateConverter
      */
     public function getCurrencyRate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): string
     {
+        if(false === config('cer.enabled')) {
+            return '1';
+        }
         Log::debug('getCurrencyRate()');
         $rate = $this->getRate($from, $to, $date);
 
@@ -233,6 +239,9 @@ class ExchangeRateConverter
      */
     public function prepare(TransactionCurrency $from, TransactionCurrency $to, Carbon $start, Carbon $end): void
     {
+        if(false === config('cer.enabled')) {
+            return;
+        }
         Log::debug('prepare()');
         $start->startOfDay();
         $end->endOfDay();
@@ -305,6 +314,9 @@ class ExchangeRateConverter
 
     public function summarize(): void
     {
+        if(false === config('cer.enabled')) {
+            return;
+        }
         Log::debug(sprintf('ExchangeRateConverter ran %d queries.', $this->queryCount));
     }
 }
