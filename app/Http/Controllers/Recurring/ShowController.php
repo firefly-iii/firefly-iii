@@ -84,6 +84,8 @@ class ShowController extends Controller
         $transformer->setParameters(new ParameterBag());
 
         $array                 = $transformer->transform($recurrence);
+
+
         $groups                = $this->recurring->getTransactions($recurrence);
         $today                 = today(config('app.timezone'));
         $array['repeat_until'] = null !== $array['repeat_until'] ? new Carbon($array['repeat_until']) : null;

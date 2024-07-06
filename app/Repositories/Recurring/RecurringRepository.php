@@ -408,10 +408,15 @@ class RecurringRepository implements RecurringRepositoryInterface
 
     private function filterMaxDate(?Carbon $max, array $occurrences): array
     {
-        if (null === $max) {
-            return $occurrences;
-        }
         $filtered = [];
+        if (null === $max) {
+            foreach ($occurrences as $date) {
+                if ($date->gt(today())) {
+                    $filtered[] = $date;
+                }
+            }
+            return $filtered;
+        }
         foreach ($occurrences as $date) {
             if ($date->lte($max) && $date->gt(today())) {
                 $filtered[] = $date;

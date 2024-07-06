@@ -128,7 +128,8 @@ class RecurrenceTransformer extends AbstractTransformer
             ];
 
             // get the (future) occurrences for this specific type of repetition:
-            $occurrences     = $this->repository->getXOccurrencesSince($repetition, $fromDate, new Carbon(), 5);
+            $amount = 'daily' === $repetition->repetition_type ? 9 : 5;
+            $occurrences     = $this->repository->getXOccurrencesSince($repetition, $fromDate, now(), $amount);
 
             /** @var Carbon $carbon */
             foreach ($occurrences as $carbon) {
