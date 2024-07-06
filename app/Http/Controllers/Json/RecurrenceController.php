@@ -81,7 +81,12 @@ class RecurrenceController extends Controller
         $skip                          = $skip < 0 || $skip > 31 ? 0 : $skip;
         $weekend                       = $weekend < 1 || $weekend > 4 ? 1 : $weekend;
 
-        if (null === $start || null === $end || null === $firstDate || null === $endDate) {
+        if(null === $endDate) {
+            // safety catch:
+            $endDate = now()->addYear();
+        }
+
+        if (null === $start || null === $end || null === $firstDate) {
             return response()->json();
         }
 
