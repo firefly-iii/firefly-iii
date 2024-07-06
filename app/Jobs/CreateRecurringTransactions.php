@@ -361,11 +361,17 @@ class CreateRecurringTransactions implements ShouldQueue
         // create transaction array and send to factory.
         $groupTitle              = null;
         $count                   = $recurrence->recurrenceTransactions->count();
-        if ($count > 1) {
+        // #8844, if there is one recurrence transaction, use the first title as the title.
+        if (1 === $count) {
             /** @var RecurrenceTransaction $first */
             $first      = $recurrence->recurrenceTransactions()->first();
             $groupTitle = $first->description;
         }
+        // #8844, if there are more, use the recurrence transaction itself.
+        if ($count > 1) {
+            $groupTitle = $recurrence->title;
+        }
+
         if (0 === $count) {
             app('log')->error('No transactions to be created in this recurrence. Cannot continue.');
 
@@ -411,12 +417,12 @@ class CreateRecurringTransactions implements ShouldQueue
         /** @var RecurrenceTransaction $transaction */
         foreach ($transactions as $index => $transaction) {
             $single   = [
-                'type'                  => null === $first->transactionType ? strtolower($recurrence->transactionType->type) : strtolower($first->transactionType->type),
+                'type'                  => null === $transaction?->transactionType?->type ? strtolower($recurrence->transactionType->type) : strtolower($transaction->transactionType->type),
                 'date'                  => $date,
                 'user'                  => $recurrence->user_id,
                 'currency_id'           => $transaction->transaction_currency_id,
                 'currency_code'         => null,
-                'description'           => $first->description,
+                'description'           => $transaction->description,
                 'amount'                => $transaction->amount,
                 'budget_id'             => $this->repository->getBudget($transaction),
                 'budget_name'           => null,
