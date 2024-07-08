@@ -415,6 +415,7 @@ class RecurringRepository implements RecurringRepositoryInterface
                     $filtered[] = $date;
                 }
             }
+
             return $filtered;
         }
         foreach ($occurrences as $date) {
