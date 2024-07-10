@@ -750,6 +750,8 @@ class Navigation
             $function = $functionMap[$range];
             $end->{$function}(); // @phpstan-ignore-line
 
+            Log::debug(sprintf('updateEndDate returns "%s"', $end->format('Y-m-d')));
+
             return $end;
         }
         if ('6M' === $range) {
@@ -806,6 +808,7 @@ class Navigation
         if (array_key_exists($range, $functionMap)) {
             $function = $functionMap[$range];
             $start->{$function}(); // @phpstan-ignore-line
+            Log::debug(sprintf('updateStartDate returns "%s"', $start->format('Y-m-d')));
 
             return $start;
         }

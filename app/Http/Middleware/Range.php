@@ -27,6 +27,7 @@ use Carbon\Carbon;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\RequestInformation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class SessionFilter.
@@ -63,6 +64,7 @@ class Range
     {
         // ignore preference. set the range to be the current month:
         if (!app('session')->has('start') && !app('session')->has('end')) {
+            Log::debug('setRange: Session has no start or end.');
             $viewRange = app('preferences')->get('viewRange', '1M')->data;
             if (is_array($viewRange)) {
                 $viewRange = '1M';
@@ -76,6 +78,7 @@ class Range
             app('session')->put('end', $end);
         }
         if (!app('session')->has('first')) {
+            Log::debug('setRange: Session has no "first".');
             /** @var JournalRepositoryInterface $repository */
             $repository = app(JournalRepositoryInterface::class);
             $journal    = $repository->firstNull();
