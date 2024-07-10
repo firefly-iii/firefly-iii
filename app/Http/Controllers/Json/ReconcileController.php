@@ -81,6 +81,8 @@ class ReconcileController extends Controller
         if ($end->lt($start)) {
             [$start, $end] = [$end, $start];
         }
+        $end->endOfDay();
+        $start->startOfDay();
 
         $route           = route('accounts.reconcile.submit', [$account->id, $start->format('Ymd'), $end->format('Ymd')]);
         $selectedIds     = $request->get('journals') ?? [];
