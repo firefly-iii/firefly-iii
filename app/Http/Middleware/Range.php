@@ -79,6 +79,7 @@ class Range
         }
         if (!app('session')->has('first')) {
             Log::debug('setRange: Session has no "first".');
+
             /** @var JournalRepositoryInterface $repository */
             $repository = app(JournalRepositoryInterface::class);
             $journal    = $repository->firstNull();
