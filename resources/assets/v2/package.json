@@ -16,7 +16,7 @@
         "vite-plugin-manifest-sri": "^0.2.0"
     },
     "dependencies": {
-        "@ag-grid-community/client-side-row-model": "^32.0.0",
+        "@ag-grid-community/client-side-row-model": "^32.0.2",
         "@ag-grid-community/core": "^32.0.0",
         "@ag-grid-community/infinite-row-model": "^32.0.0",
         "@ag-grid-community/styles": "^32.0.0",
