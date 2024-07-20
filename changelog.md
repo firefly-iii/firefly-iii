@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.1.19 - 2024-07-20
+
+### Fixed
+
+- #8844
+- #8981
+- #8986
+- #9009
+- #9021
+- #9022
+- Improved currency exchange rate downloader
+
 ## 6.1.18 - 2024-06-19
 
 ### Fixed
