@@ -7,12 +7,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #8844
-- #8981
-- #8986
-- #9009
-- #9021
-- #9022
+- [Issue 8844](https://github.com/firefly-iii/firefly-iii/issues/8844) (Split recurring transaction gets wrong (split) titles) reported by @dreautall
+- [Issue 8981](https://github.com/firefly-iii/firefly-iii/issues/8981) (bcadd() error during Docker container startup) reported by @NoiTheCat
+- [Issue 8986](https://github.com/firefly-iii/firefly-iii/issues/8986) (Search with "internal_reference_is" finds all transactions with full word of search string) reported by @baflo
+- [Issue 9009](https://github.com/firefly-iii/firefly-iii/issues/9009) (Incorrect Amount Calculation in Reconciliation for Bank Account A) reported by @realzsan3
+- [Issue 9021](https://github.com/firefly-iii/firefly-iii/issues/9021) (Incorrect "Expected Withdrawals" for Daily Recurring Transactions) reported by @xMarcii
+- [Issue 9022](https://github.com/firefly-iii/firefly-iii/issues/9022) (Calendar Not Showing Green Fields for Recurring Transactions) reported by @xMarcii
 - Improved currency exchange rate downloader
 
 ## 6.1.18 - 2024-06-19
