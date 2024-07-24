@@ -836,6 +836,7 @@ class Steam
         if (!str_contains($value, 'E')) {
             return $value;
         }
+        Log::debug(sprintf('Floatalizing %s', $value));
 
         $number = substr($value, 0, (int)strpos($value, 'E'));
         if (str_contains($number, '.')) {
