@@ -32,32 +32,43 @@ use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Class AccountEnrichment
+ *
+ * This class "enriches" accounts and adds data from other tables and models to each account model.
+ */
 class AccountEnrichment implements EnrichmentInterface
 {
     private Collection $collection;
     private array      $currencies;
 
     #[\Override]
+    /**
+     * Do the actual enrichment.
+     */
     public function enrich(Collection $collection): Collection
     {
+        Log::debug(sprintf('Now doing account enrichment for %d account(s)', $collection->count()));
+        // prep local fields
         $this->collection = $collection;
         $this->currencies = [];
+
         // do everything here:
         $this->getLastActivity();
         // $this->getMetaBalances();
         $this->collectAccountTypes();
         $this->collectMetaData();
 
-        $this->collection->transform(function (Account $account) {
-            $account->user_array = ['id' => 1, 'bla bla' => 'bla'];
-            $account->balances   = collect([
-                ['balance_id' => 1, 'balance' => 5],
-                ['balance_id' => 2, 'balance' => 5],
-                ['balance_id' => 3, 'balance' => 5],
-            ]);
-
-            return $account;
-        });
+//        $this->collection->transform(function (Account $account) {
+//            $account->user_array = ['id' => 1, 'bla bla' => 'bla'];
+//            $account->balances   = collect([
+//                ['balance_id' => 1, 'balance' => 5],
+//                ['balance_id' => 2, 'balance' => 5],
+//                ['balance_id' => 3, 'balance' => 5],
+//            ]);
+//
+//            return $account;
+//        });
 
         return $this->collection;
     }

@@ -28,6 +28,16 @@ use FireflyIII\Support\JsonApi\Concerns\UsergroupAware;
 use LaravelJsonApi\Contracts\Store\QueriesAll;
 use LaravelJsonApi\NonEloquent\AbstractRepository;
 
+/**
+ * Class AccountRepository
+ *
+ * The repository collects a single or many (account) objects from the database and returns them to the
+ * account resource. The account resource links all account properties to the JSON properties.
+ *
+ * For the queryAll thing, a separate query is constructed that does the actual querying of the database.
+ * This is necessary because the user can't just query all accounts (it would return other user's data)
+ * and because we also need to collect all kinds of metadata, like the currency and user info.
+ */
 class AccountRepository extends AbstractRepository implements QueriesAll
 {
     use UsergroupAware;
@@ -39,11 +49,13 @@ class AccountRepository extends AbstractRepository implements QueriesAll
 
     public function find(string $resourceId): ?object
     {
+        die('query single?');
         return Account::find((int) $resourceId);
     }
 
     public function queryAll(): Capabilities\AccountQuery
     {
+        die('query all?');
         return Capabilities\AccountQuery::make()
             ->withUserGroup($this->userGroup)
             ->withServer($this->server)

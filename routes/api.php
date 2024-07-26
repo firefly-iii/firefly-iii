@@ -22,7 +22,7 @@
 
 declare(strict_types=1);
 
-use FireflyIII\Http\Controllers\Api\V2\Controllers\AccountController;
+use FireflyIII\Api\V2\Controllers\JsonApi\AccountController;
 use LaravelJsonApi\Laravel\Facades\JsonApiRoute;
 use LaravelJsonApi\Laravel\Http\Controllers\JsonApiController;
 use LaravelJsonApi\Laravel\Routing\Relationships;

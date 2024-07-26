@@ -10,6 +10,11 @@ use LaravelJsonApi\Core\Resources\JsonApiResource;
 
 /**
  * @property Account $resource
+ *
+ * This class collects the resources attributes, the account in this case.
+ * Generally speaking, each property here is directly related to a property on the account object itself.
+ * However, many properties are collected from other sources, like the user or the currency.
+ * As a result, the account repository is where it's at, which is where the collection takes place and is optimised.
  */
 class AccountResource extends JsonApiResource
 {
@@ -21,14 +26,14 @@ class AccountResource extends JsonApiResource
     public function attributes($request): iterable
     {
         return [
-            'created_at'      => $this->resource->created_at,
-            'updated_at'      => $this->resource->updated_at,
-            'name'            => $this->resource->name,
-            'iban'            => '' === $this->resource->iban ? null : $this->resource->iban,
-            'active'          => $this->resource->active,
-            'last_activity'   => $this->resource->last_activity,
-            'type'            => $this->resource->type,
-            'account_role'    => $this->resource->account_role,
+            'created_at'    => $this->resource->created_at,
+            'updated_at'    => $this->resource->updated_at,
+            'name'          => $this->resource->name,
+//            'iban'          => '' === $this->resource->iban ? null : $this->resource->iban,
+//            'active'        => $this->resource->active,
+//            'last_activity' => $this->resource->last_activity,
+//            'type'          => $this->resource->type,
+//            'account_role'  => $this->resource->account_role,
 
             //            'virtual_balance' => $this->resource->virtual_balance,
             //            'native_balance'  => $this->resource->native_balance,

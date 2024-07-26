@@ -26,6 +26,7 @@ namespace FireflyIII\Models;
 use Carbon\Carbon;
 use Eloquent;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
@@ -96,6 +97,7 @@ class Transaction extends Model
     use HasFactory;
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
+    use Cachable;
 
     protected $casts
                       = [

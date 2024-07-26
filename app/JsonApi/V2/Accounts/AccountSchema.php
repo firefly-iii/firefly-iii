@@ -17,6 +17,13 @@ use LaravelJsonApi\Eloquent\Filters\WhereIdIn;
 use LaravelJsonApi\Eloquent\Pagination\PagePagination;
 use LaravelJsonApi\Eloquent\Schema;
 
+/**
+ * Class AccountSchema
+ *
+ * This is the schema of all fields that an account exposes to the world.
+ * Fields do not have to have a relation to the actual model.
+ * Fields mentioned here still need to be filled in by the AccountResource.
+ */
 class AccountSchema extends Schema
 {
     /**
@@ -34,18 +41,19 @@ class AccountSchema extends Schema
             DateTime::make('created_at')->sortable()->readOnly(),
             DateTime::make('updated_at')->sortable()->readOnly(),
             Str::make('name')->sortable(),
-            Str::make('account_type'),
-            Str::make('virtual_balance'),
-            Str::make('iban'),
-            Boolean::make('active'),
-            Number::make('order'),
-            HasOne::make('user'),
-            HasMany::make('account_balances'),
+//            Str::make('account_type'),
+//            Str::make('virtual_balance'),
+//            Str::make('iban'),
+//            Boolean::make('active'),
+//            Number::make('order'),
+            HasOne::make('user')->readOnly(),
+            //HasMany::make('account_balances'),
         ];
     }
 
     /**
-     * Get the resource filters.
+     * Filters mentioned here can be used to filter the results.
+     * TODO write down exactly how this works.
      */
     public function filters(): array
     {

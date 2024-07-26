@@ -33,7 +33,7 @@ use LaravelJsonApi\Contracts\Store\HasPagination;
 use LaravelJsonApi\NonEloquent\Capabilities\QueryAll;
 use LaravelJsonApi\NonEloquent\Concerns\PaginatesEnumerables;
 
-class AccountQuery extends QueryAll implements HasPagination
+class AccountQuery implements HasPagination
 {
     use ExpandsQuery;
     use FiltersPagination;
@@ -42,32 +42,44 @@ class AccountQuery extends QueryAll implements HasPagination
     use UsergroupAware;
     use ValidateSortParameters;
 
-    #[\Override]
-    public function get(): iterable
+    /**
+     * This method returns all accounts, given a bunch of filters and sort fields, together with pagination.
+     */
+    public function queryAll(): iterable
     {
+        // collect filters
         $filters    = $this->queryParameters->filter();
+        // collect sort options
         $sort       = $this->queryParameters->sortFields();
+        // collect pagination based on the page
         $pagination = $this->filtersPagination($this->queryParameters->page());
+        // check if we need all accounts, regardless of pagination
+        // This is necessary when the user wants to sort on specific params.
         $needsAll   = $this->validateParams('account', $sort);
+
+        // start the query
         $query      = $this->userGroup->accounts();
 
+        // add pagination to the query, limiting the results.
         if (!$needsAll) {
             $query = $this->addPagination($query, $pagination);
         }
+
+        // add sort and filter parameters to the query.
         $query      = $this->addSortParams($query, $sort);
         $query      = $this->addFilterParams('account', $query, $filters);
 
+        // collect the result.
         $collection = $query->get(['accounts.*']);
 
-        // enrich data
+        // enrich the collected data
         $enrichment = new AccountEnrichment();
         $collection = $enrichment->enrich($collection);
 
-        // add filters after the query
+        // TODO add filters after the query, if there are filters that cannot be applied to the database but only
+        // to the enriched results.
 
-        // add sort after the query
+        // sort the data after the query, and return it right away.
         return $this->sortCollection($collection, $sort);
-        //        var_dump($filters->value('name'));
-        //        exit;
     }
 }

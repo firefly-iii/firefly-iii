@@ -9,6 +9,11 @@ use FireflyIII\JsonApi\V2\AccountBalances\AccountBalanceSchema;
 use FireflyIII\JsonApi\V2\Users\UserSchema;
 use LaravelJsonApi\Core\Server\Server as BaseServer;
 
+/**
+ * Class Server
+ *
+ * This class serves as a generic class for the v2 API "server".
+ */
 class Server extends BaseServer
 {
     /**
@@ -32,7 +37,7 @@ class Server extends BaseServer
         return [
             AccountSchema::class,
             UserSchema::class,
-            AccountBalanceSchema::class,
+            //AccountBalanceSchema::class,
         ];
     }
 }
