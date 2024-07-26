@@ -98,6 +98,7 @@
                             <!-- {{ trans('firefly.bill_expected_date', {date: entry.next_expected_match_diff }) }} -->
                         </td>
                         <td class="expected_in_period hidden-sm hidden-xs">
+
                             {% for date in entry.pay_dates %}
                                 {{ formatDate(date, monthAndDayFormat) }}<br>
                             {% endfor %}
@@ -111,6 +112,7 @@
                     #}
                     {% if entry.paid_dates|length > 0 and entry.active %}
                         <td class="paid_in_period text-success">
+
                             {% for currentPaid in entry.paid_dates %}
                                 <a href="{{ route('transactions.show',currentPaid.transaction_group_id) }}">
                                     {{ formatDate(currentPaid.date, monthAndDayFormat) }}
@@ -120,7 +122,9 @@
                         </td>
                         <td class="expected_in_period hidden-sm hidden-xs">
                             {% if entry.next_expected_match %}
-                                {{ formatDate(entry.next_expected_match, monthAndDayFormat) }}
+                                    {{ formatDate(entry.next_expected_match, monthAndDayFormat) }}
+                                {% else %}
+                                    <span class="text-muted">{{ entry.next_expected_match_diff }}</span>
                             {% endif %}
                         </td>
                     {% endif %}
