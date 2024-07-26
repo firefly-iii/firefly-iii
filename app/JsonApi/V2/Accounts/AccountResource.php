@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\JsonApi\V3\Accounts;
+namespace FireflyIII\JsonApi\V2\Accounts;
 
 use FireflyIII\Models\Account;
 use Illuminate\Http\Request;
@@ -123,7 +123,8 @@ class AccountResource extends JsonApiResource
     {
         return [
             $this->relation('user')->withData($this->resource->user),
-            $this->relation('account_balances')->withData($this->resource->balances),
+            $this->relation('currency')->withData($this->resource->transactionCurrency),
+            //$this->relation('account_balances')->withData($this->resource->balances),
         ];
     }
 }

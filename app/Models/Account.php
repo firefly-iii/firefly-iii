@@ -28,6 +28,7 @@ use Eloquent;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
@@ -95,22 +96,22 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Account         withTrashed()
  * @method static Builder|Account         withoutTrashed()
  *
- * @property Carbon   $lastActivityDate
- * @property string   $startBalance
- * @property string   $endBalance
- * @property string   $difference
- * @property string   $interest
- * @property string   $interestPeriod
- * @property string   $accountTypeString
- * @property Location $location
- * @property string   $liability_direction
- * @property string   $current_debt
- * @property int      $user_group_id
+ * @property Carbon                   $lastActivityDate
+ * @property string                   $startBalance
+ * @property string                   $endBalance
+ * @property string                   $difference
+ * @property string                   $interest
+ * @property string                   $interestPeriod
+ * @property string                   $accountTypeString
+ * @property Location                 $location
+ * @property string                   $liability_direction
+ * @property string                   $current_debt
+ * @property int                      $user_group_id
  *
  * @method static EloquentBuilder|Account whereUserGroupId($value)
  *
- * @property null|UserGroup $userGroup
- * @property mixed          $account_id
+ * @property null|UserGroup           $userGroup
+ * @property mixed                    $account_id
  *
  * @mixin Eloquent
  */
@@ -120,9 +121,10 @@ class Account extends Model
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
+    use Cachable;
 
     protected $casts
-                                     = [
+        = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'user_id'    => 'integer',
@@ -131,9 +133,9 @@ class Account extends Model
             'encrypted'  => 'boolean',
         ];
 
-    protected $fillable              = ['user_id', 'user_group_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban'];
+    protected $fillable = ['user_id', 'user_group_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban'];
 
-    protected $hidden                = ['encrypted'];
+    protected    $hidden             = ['encrypted'];
     private bool $joinedAccountTypes = false;
 
     /**
@@ -144,13 +146,13 @@ class Account extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $accountId = (int)$value;
+            $accountId = (int) $value;
 
             /** @var User $user */
-            $user      = auth()->user();
+            $user = auth()->user();
 
             /** @var null|Account $account */
-            $account   = $user->accounts()->with(['accountType'])->find($accountId);
+            $account = $user->accounts()->with(['accountType'])->find($accountId);
             if (null !== $account) {
                 return $account;
             }
@@ -181,9 +183,8 @@ class Account extends Model
     {
         /** @var null|AccountMeta $metaValue */
         $metaValue = $this->accountMeta()
-            ->where('name', 'account_number')
-            ->first()
-        ;
+                          ->where('name', 'account_number')
+                          ->first();
 
         return null !== $metaValue ? $metaValue->data : '';
     }
@@ -246,7 +247,7 @@ class Account extends Model
 
     public function setVirtualBalanceAttribute(mixed $value): void
     {
-        $value                               = (string)$value;
+        $value = (string) $value;
         if ('' === $value) {
             $value = null;
         }
@@ -266,7 +267,7 @@ class Account extends Model
     protected function accountId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn($value) => (int) $value,
         );
     }
 
@@ -276,21 +277,21 @@ class Account extends Model
     protected function accountTypeId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn($value) => (int) $value,
         );
     }
 
     protected function iban(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => null === $value ? null : trim(str_replace(' ', '', (string)$value)),
+            get: static fn($value) => null === $value ? null : trim(str_replace(' ', '', (string) $value)),
         );
     }
 
     protected function order(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn($value) => (int) $value,
         );
     }
 
@@ -300,7 +301,7 @@ class Account extends Model
     protected function virtualBalance(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string)$value,
+            get: static fn($value) => (string) $value,
         );
     }
 }

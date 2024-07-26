@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\JsonApi\V3\Accounts\Capabilities;
+namespace FireflyIII\JsonApi\V2\Accounts\Capabilities;
 
 use FireflyIII\Support\JsonApi\Concerns\UsergroupAware;
 use FireflyIII\Support\JsonApi\Enrichments\AccountEnrichment;

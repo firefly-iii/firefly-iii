@@ -22,14 +22,27 @@
 
 declare(strict_types=1);
 
-use FireflyIII\Http\Controllers\Api\V3\Controllers\AccountController;
+use FireflyIII\Http\Controllers\Api\V2\Controllers\AccountController;
 use LaravelJsonApi\Laravel\Facades\JsonApiRoute;
 use LaravelJsonApi\Laravel\Http\Controllers\JsonApiController;
-use LaravelJsonApi\Laravel\Routing\ActionRegistrar;
 use LaravelJsonApi\Laravel\Routing\Relationships;
 use LaravelJsonApi\Laravel\Routing\ResourceRegistrar;
 
-// V2 auto complete controller(s)
+/*
+ *
+ * ____    ____  ___      .______        ______    __    __  .___________. _______     _______.
+ * \   \  /   / |__ \     |   _  \      /  __  \  |  |  |  | |           ||   ____|   /       |
+ *  \   \/   /     ) |    |  |_)  |    |  |  |  | |  |  |  | `---|  |----`|  |__     |   (----`
+ *   \      /     / /     |      /     |  |  |  | |  |  |  |     |  |     |   __|     \   \
+ *    \    /     / /_     |  |\  \----.|  `--'  | |  `--'  |     |  |     |  |____.----)   |
+ *     \__/     |____|    | _| `._____| \______/   \______/      |__|     |_______|_______/
+ */
+
+
+
+/**
+ * AUTOCOMPLETE ROUTES
+ */
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V2\Controllers\Autocomplete',
@@ -37,7 +50,6 @@ Route::group(
         'as'        => 'api.v2.autocomplete.',
     ],
     static function (): void {
-        // Auto complete routes
         Route::get('accounts', ['uses' => 'AccountController@accounts', 'as' => 'accounts']);
         Route::get('categories', ['uses' => 'CategoryController@categories', 'as' => 'categories']);
         Route::get('tags', ['uses' => 'TagController@tags', 'as' => 'tags']);
@@ -45,7 +57,9 @@ Route::group(
     }
 );
 
-// V2 API routes for charts
+/**
+ * CHART ROUTES
+ */
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V2\Controllers\Chart',
@@ -54,27 +68,13 @@ Route::group(
     ],
     static function (): void {
         Route::get('account/dashboard', ['uses' => 'AccountController@dashboard', 'as' => 'account.dashboard']);
-        //        Route::get('budget/dashboard', ['uses' => 'BudgetController@dashboard', 'as' => 'budget.dashboard']);
-        //        Route::get('category/dashboard', ['uses' => 'CategoryController@dashboard', 'as' => 'category.dashboard']);
+         Route::get('budget/dashboard', ['uses' => 'BudgetController@dashboard', 'as' => 'budget.dashboard']);
+         Route::get('category/dashboard', ['uses' => 'CategoryController@dashboard', 'as' => 'category.dashboard']);
         Route::get('balance/balance', ['uses' => 'BalanceController@balance', 'as' => 'balance.balance']);
     }
 );
 
-// JsonApiRoute::server('v3')
-//            ->prefix('v3')
-//            ->resources(function (ResourceRegistrar $server) {
-//                $server->resource('accounts', AccountController::class)->readOnly()->relationships(function (Relationships $relations) {
-//                    $relations->hasOne('user')->readOnly();
-//                    //$relations->hasMany('account_balances')->readOnly();
-//                })
-//                       ->actions(function (ActionRegistrar $actions) {
-//                           $actions->withId()->get('account-balances', 'readAccountBalances'); // non-eloquent pseudo relation
-//                       });
-//                $server->resource('users', JsonApiController::class)->readOnly()->relationships(function (Relationships $relations) {
-//                    $relations->hasMany('accounts')->readOnly();
-//                });
-//                $server->resource('account-balances', JsonApiController::class);
-//            });
+
 
 // V2 API route for Summary boxes
 // BASIC
@@ -121,19 +121,19 @@ Route::group(
     }
 );
 
-// V2 API route for accounts.
-Route::group(
-    [
-        'namespace' => 'FireflyIII\Api\V2\Controllers\Model\Account',
-        'prefix'    => 'v2/accounts',
-        'as'        => 'api.v2.accounts.',
-    ],
-    static function (): void {
-        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
-        Route::get('{account}', ['uses' => 'ShowController@show', 'as' => 'show']);
-        Route::put('{account}', ['uses' => 'UpdateController@update', 'as' => 'update']);
-    }
-);
+//// V2 API route for accounts.
+//Route::group(
+//    [
+//        'namespace' => 'FireflyIII\Api\V2\Controllers\Model\Account',
+//        'prefix'    => 'v2/accounts',
+//        'as'        => 'api.v2.accounts.',
+//    ],
+//    static function (): void {
+//        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
+//        Route::get('{account}', ['uses' => 'ShowController@show', 'as' => 'show']);
+//        Route::put('{account}', ['uses' => 'UpdateController@update', 'as' => 'update']);
+//    }
+//);
 
 // V2 API route for subscriptions.
 Route::group(
@@ -247,7 +247,34 @@ Route::group(
     }
 );
 
-// down here is v1
+/**
+ * V2 JSON API ROUTES
+ */
+JsonApiRoute::server('v2')->prefix('v2')
+            ->resources(function (ResourceRegistrar $server) {
+                /**
+                 * ACCOUNTS
+                 */
+                $server->resource('accounts', AccountController::class)->readOnly()->relationships(function (Relationships $relations) {
+                    $relations->hasOne('user')->readOnly();
+                });
+
+                /**
+                 * USERS
+                 */
+                $server->resource('users', JsonApiController::class)->readOnly()->relationships(function (Relationships $relations) {
+                    $relations->hasMany('accounts')->readOnly();
+                });
+            });
+
+/*
+ * ____    ____  __     .______        ______    __    __  .___________. _______     _______.
+ * \   \  /   / /_ |    |   _  \      /  __  \  |  |  |  | |           ||   ____|   /       |
+ *  \   \/   /   | |    |  |_)  |    |  |  |  | |  |  |  | `---|  |----`|  |__     |   (----`
+ *   \      /    | |    |      /     |  |  |  | |  |  |  |     |  |     |   __|     \   \
+ *    \    /     | |    |  |\  \----.|  `--'  | |  `--'  |     |  |     |  |____.----)   |
+ *     \__/      |_|    | _| `._____| \______/   \______/      |__|     |_______|_______/
+ */
 
 // Autocomplete controllers
 Route::group(
@@ -278,7 +305,7 @@ Route::group(
 );
 
 // CHART ROUTES.
-// Accounts
+// Chart accounts
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Chart',

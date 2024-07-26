@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\JsonApi\V3\AccountBalances;
+namespace FireflyIII\JsonApi\V2\AccountBalances;
 
 use FireflyIII\Entities\AccountBalance;
 use LaravelJsonApi\Core\Schema\Schema;

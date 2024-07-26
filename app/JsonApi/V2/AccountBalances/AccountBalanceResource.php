@@ -2,17 +2,21 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\JsonApi\V3\Users;
+namespace FireflyIII\JsonApi\V2\AccountBalances;
 
-use FireflyIII\Models\User;
 use Illuminate\Http\Request;
 use LaravelJsonApi\Core\Resources\JsonApiResource;
 
-/**
- * @property User $resource
- */
-class UserResource extends JsonApiResource
+class AccountBalanceResource extends JsonApiResource
 {
+    /**
+     * Get the resource id.
+     */
+    public function id(): string
+    {
+        return $this->resource->id;
+    }
+
     /**
      * Get the resource's attributes.
      *
@@ -21,9 +25,8 @@ class UserResource extends JsonApiResource
     public function attributes($request): iterable
     {
         return [
-            'created_at' => $this->resource->created_at,
-            'updated_at' => $this->resource->updated_at,
-            'email'      => $this->resource->email,
+            'name'   => $this->resource->amount,
+            'amount' => $this->resource->amount,
         ];
     }
 
@@ -35,7 +38,7 @@ class UserResource extends JsonApiResource
     public function relationships($request): iterable
     {
         return [
-            // @TODO
+            $this->relation('account')->withData($this->resource->getAccount()),
         ];
     }
 }

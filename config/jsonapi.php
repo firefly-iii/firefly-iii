@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use FireflyIII\JsonApi\V3\Server;
+use FireflyIII\JsonApi\V2\Server;
 
 return [
     /*
@@ -30,6 +30,6 @@ return [
     | class name of the server class.
     */
     'servers'   => [
-        'v3' => Server::class,
+        'v2' => Server::class,
     ],
 ];

@@ -1,6 +1,6 @@
 <?php
 /*
- * AccountRepository.php
+ * AccountBalanceQuery.php
  * Copyright (c) 2024 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,33 +21,38 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\JsonApi\V3\Accounts;
+namespace FireflyIII\JsonApi\V2\AccountBalances\Capabilities;
 
+use FireflyIII\Entities\AccountBalance;
 use FireflyIII\Models\Account;
-use FireflyIII\Support\JsonApi\Concerns\UsergroupAware;
-use LaravelJsonApi\Contracts\Store\QueriesAll;
-use LaravelJsonApi\NonEloquent\AbstractRepository;
+use LaravelJsonApi\NonEloquent\Capabilities\QueryAll;
 
-class AccountRepository extends AbstractRepository implements QueriesAll
+class AccountBalanceQuery extends QueryAll
 {
-    use UsergroupAware;
+    private Account $account;
 
     /**
-     * SiteRepository constructor.
+     * QuerySites constructor.
      */
-    public function __construct() {}
-
-    public function find(string $resourceId): ?object
+    public function __construct()
     {
-        return Account::find((int) $resourceId);
+        parent::__construct();
     }
 
-    public function queryAll(): Capabilities\AccountQuery
+    public function get(): iterable
     {
-        return Capabilities\AccountQuery::make()
-            ->withUserGroup($this->userGroup)
-            ->withServer($this->server)
-            ->withSchema($this->schema)
-        ;
+        return [
+            AccountBalance::fromArray(),
+            AccountBalance::fromArray(),
+            AccountBalance::fromArray(),
+            AccountBalance::fromArray(),
+        ];
+    }
+
+    public function withAccount(Account $account): self
+    {
+        $this->account = $account;
+
+        return $this;
     }
 }
