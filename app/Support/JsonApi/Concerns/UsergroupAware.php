@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\JsonApi\Concerns;
 
 use FireflyIII\Models\UserGroup;
+use FireflyIII\User;
 
 trait UsergroupAware
 {
@@ -45,4 +46,5 @@ trait UsergroupAware
 
         return $this;
     }
+
 }

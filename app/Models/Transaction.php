@@ -97,7 +97,7 @@ class Transaction extends Model
     use HasFactory;
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
-    use Cachable;
+    //use Cachable;
 
     protected $casts
                       = [

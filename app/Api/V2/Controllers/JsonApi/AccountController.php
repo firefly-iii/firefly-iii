@@ -24,14 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V2\Controllers\JsonApi;
 
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\JsonApi\V2\Accounts\Capabilities\AccountQuery;
-use Illuminate\Contracts\Support\Responsable;
-use Illuminate\Http\Response;
-use LaravelJsonApi\Contracts\Routing\Route;
-use LaravelJsonApi\Contracts\Store\Store as StoreContract;
-use LaravelJsonApi\Core\Responses\DataResponse;
 use LaravelJsonApi\Laravel\Http\Controllers\Actions;
-use LaravelJsonApi\Laravel\Http\Requests\ResourceQuery;
 
 /**
  * Class AccountController
@@ -45,7 +38,7 @@ class AccountController extends Controller
     use Actions\AttachRelationship;
     use Actions\Destroy;
     use Actions\DetachRelationship;
-    //use Actions\FetchMany;
+    use Actions\FetchMany;
     use Actions\FetchOne;
     use Actions\FetchRelated;
     use Actions\FetchRelationship;
@@ -53,47 +46,6 @@ class AccountController extends Controller
     use Actions\Update;
     use Actions\UpdateRelationship;
 
-    /**
-     * Fetch zero to many JSON API resources.
-     *
-     * @param Route $route
-     * @param StoreContract $store
-     * @return Responsable|Response
-     */
-    public function index(Route $route, AccountQuery $store)
-    {
-        /**
-         * TODO Op het moment dat je een custom repositroy wil gebruiken kan je de index overrulen zoals ik hier
-         * doe. Maar je moet toch ook wel de relatie, de store kunnen overrulen? Waarom gebruikt-ie daar zijn eigen?
-         *
-         * TODO dat zit hier: https://laraveljsonapi.io/docs/3.0/resources/
-         *
-         */
-        $request = ResourceQuery::queryMany(
-            $resourceType = $route->resourceType()
-        );
-
-        $response = null;
-
-        if (method_exists($this, 'searching')) {
-            $response = $this->searching($request);
-        }
-
-        if ($response) {
-            return $response;
-        }
-
-        $data = $store
-            ->queryAll($resourceType)
-            ->withRequest($request)
-            ->firstOrPaginate($request->page());
-
-        if (method_exists($this, 'searched')) {
-            $response = $this->searched($data, $request);
-        }
-
-        return $response ?: DataResponse::make($data)->withQueryParameters($request);
-    }
 
 //    public function readAccountBalances(AnonymousQuery $query, AccountBalanceSchema $schema, Account $account): Responsable
 //    {

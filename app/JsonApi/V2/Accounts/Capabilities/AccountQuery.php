@@ -33,7 +33,7 @@ use LaravelJsonApi\Contracts\Store\HasPagination;
 use LaravelJsonApi\NonEloquent\Capabilities\QueryAll;
 use LaravelJsonApi\NonEloquent\Concerns\PaginatesEnumerables;
 
-class AccountQuery implements HasPagination
+class AccountQuery extends QueryAll implements HasPagination
 {
     use ExpandsQuery;
     use FiltersPagination;
@@ -42,10 +42,11 @@ class AccountQuery implements HasPagination
     use UsergroupAware;
     use ValidateSortParameters;
 
+    #[\Override]
     /**
      * This method returns all accounts, given a bunch of filters and sort fields, together with pagination.
      */
-    public function queryAll(): iterable
+    public function get(): iterable
     {
         // collect filters
         $filters    = $this->queryParameters->filter();
@@ -55,7 +56,7 @@ class AccountQuery implements HasPagination
         $pagination = $this->filtersPagination($this->queryParameters->page());
         // check if we need all accounts, regardless of pagination
         // This is necessary when the user wants to sort on specific params.
-        $needsAll   = $this->validateParams('account', $sort);
+        $needsAll   = $this->needsFullDataset('account', $sort);
 
         // start the query
         $query      = $this->userGroup->accounts();

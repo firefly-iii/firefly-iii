@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace FireflyIII\JsonApi\V2;
 
 use FireflyIII\JsonApi\V2\Accounts\AccountSchema;
-use FireflyIII\JsonApi\V2\AccountBalances\AccountBalanceSchema;
 use FireflyIII\JsonApi\V2\Users\UserSchema;
+use FireflyIII\Support\JsonApi\Concerns\UsergroupAware;
+use FireflyIII\Support\JsonApi\Concerns\UserGroupDetectable;
 use LaravelJsonApi\Core\Server\Server as BaseServer;
 
 /**
@@ -16,17 +17,21 @@ use LaravelJsonApi\Core\Server\Server as BaseServer;
  */
 class Server extends BaseServer
 {
+    use UsergroupAware;
+    use UserGroupDetectable;
+
     /**
      * The base URI namespace for this server.
      */
-    protected string $baseUri = '/api/v3';
+    protected string $baseUri = '/api/v2';
 
     /**
      * Bootstrap the server when it is handling an HTTP request.
      */
     public function serving(): void
     {
-        // no-op
+        $res = $this->detectUserGroup();
+        $this->setUserGroup($res);
     }
 
     /**

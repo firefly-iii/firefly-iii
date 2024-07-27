@@ -1,72 +1,61 @@
 <?php
 
-declare(strict_types=1);
-
 namespace FireflyIII\JsonApi\V2\Accounts;
 
 use FireflyIII\Models\Account;
-use LaravelJsonApi\Eloquent\Contracts\Paginator;
-use LaravelJsonApi\Eloquent\Fields\Boolean;
-use LaravelJsonApi\Eloquent\Fields\DateTime;
-use LaravelJsonApi\Eloquent\Fields\ID;
-use LaravelJsonApi\Eloquent\Fields\Number;
-use LaravelJsonApi\Eloquent\Fields\Relations\HasMany;
+use FireflyIII\Support\JsonApi\Concerns\UsergroupAware;
+use LaravelJsonApi\Core\Schema\Schema;
 use LaravelJsonApi\Eloquent\Fields\Relations\HasOne;
-use LaravelJsonApi\Eloquent\Fields\Str;
-use LaravelJsonApi\Eloquent\Filters\WhereIdIn;
-use LaravelJsonApi\Eloquent\Pagination\PagePagination;
-use LaravelJsonApi\Eloquent\Schema;
+use LaravelJsonApi\NonEloquent\Fields\Attribute;
+use LaravelJsonApi\NonEloquent\Fields\ID;
+use LaravelJsonApi\NonEloquent\Fields\Relation;
 
-/**
- * Class AccountSchema
- *
- * This is the schema of all fields that an account exposes to the world.
- * Fields do not have to have a relation to the actual model.
- * Fields mentioned here still need to be filled in by the AccountResource.
- */
+
 class AccountSchema extends Schema
 {
+    use UsergroupAware;
+
     /**
      * The model the schema corresponds to.
+     *
+     * @var string
      */
     public static string $model = Account::class;
 
+
     /**
      * Get the resource fields.
+     *
+     * @return array
      */
     public function fields(): array
     {
         return [
             ID::make(),
-            DateTime::make('created_at')->sortable()->readOnly(),
-            DateTime::make('updated_at')->sortable()->readOnly(),
-            Str::make('name')->sortable(),
-//            Str::make('account_type'),
-//            Str::make('virtual_balance'),
-//            Str::make('iban'),
-//            Boolean::make('active'),
-//            Number::make('order'),
+            Attribute::make('name'),
             HasOne::make('user')->readOnly(),
-            //HasMany::make('account_balances'),
         ];
     }
 
     /**
-     * Filters mentioned here can be used to filter the results.
-     * TODO write down exactly how this works.
+     * Get the resource filters.
+     *
+     * @return array
      */
     public function filters(): array
     {
         return [
-            WhereIdIn::make($this),
+            // Filter::make('id'),
         ];
     }
 
-    /**
-     * Get the resource paginator.
-     */
-    public function pagination(): ?Paginator
+    public function repository(): AccountRepository
     {
-        return PagePagination::make();
+        $this->setUserGroup($this->server->getUsergroup());
+        return AccountRepository::make()
+                                ->withServer($this->server)
+                                ->withSchema($this)
+                                ->withUserGroup($this->userGroup);
     }
+
 }

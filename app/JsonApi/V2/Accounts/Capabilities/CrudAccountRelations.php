@@ -1,6 +1,6 @@
 <?php
 /*
- * ValidateSortParameters.php
+ * CrudAccountRelations.php
  * Copyright (c) 2024 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,26 +21,11 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Support\JsonApi;
+namespace FireflyIII\JsonApi\V2\Accounts\Capabilities;
 
-use LaravelJsonApi\Core\Query\SortFields;
+use LaravelJsonApi\NonEloquent\Capabilities\CrudRelations;
 
-trait ValidateSortParameters
+class CrudAccountRelations extends CrudRelations
 {
-    public function needsFullDataset(string $class, ?SortFields $params): bool
-    {
-        if (null === $params) {
-            return false;
-        }
 
-        $config = config(sprintf('firefly.full_data_set.%s', $class)) ?? [];
-
-        foreach ($params->all() as $field) {
-            if (in_array($field->name(), $config, true)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 }

@@ -258,6 +258,7 @@ JsonApiRoute::server('v2')->prefix('v2')
                 $server->resource('accounts', AccountController::class)->readOnly()->relationships(function (Relationships $relations) {
                     $relations->hasOne('user')->readOnly();
                 });
+//                $server->resource('accounts', AccountController::class)->readOnly();
 
                 /**
                  * USERS

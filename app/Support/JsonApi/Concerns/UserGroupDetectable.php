@@ -1,7 +1,7 @@
 <?php
 /*
- * ChecksLogin.php
- * Copyright (c) 2021 james@firefly-iii.org
+ * UserGroupDetectable.php
+ * Copyright (c) 2024 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -16,76 +16,35 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
 declare(strict_types=1);
 
-namespace FireflyIII\Support\Request;
+namespace FireflyIII\Support\JsonApi\Concerns;
 
-use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 
-/**
- * Trait ChecksLogin
- */
-trait ChecksLogin
+trait UserGroupDetectable
 {
-    /**
-     * Verify the request.
-     */
-    public function authorize(): bool
-    {
-        app('log')->debug(sprintf('Now in %s', __METHOD__));
-        // Only allow logged-in users
-        $check     = auth()->check();
-        if (!$check) {
-            return false;
-        }
-        if (!property_exists($this, 'acceptedRoles')) { // @phpstan-ignore-line
-            app('log')->debug('Request class has no acceptedRoles array');
-
-            return true; // check for false already took place.
-        }
-
-        /** @var User $user */
-        $user      = auth()->user();
-        $userGroup = $this->getUserGroup();
-        if (null === $userGroup) {
-            app('log')->error('User has no valid user group submitted or otherwise.');
-
-            return false;
-        }
-
-        /** @var UserRoleEnum $role */
-        foreach ($this->acceptedRoles as $role) {
-            // system owner cannot overrule this, MUST be member of the group.
-            $access = $user->hasRoleInGroupOrOwner($userGroup, $role);
-            if ($access) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 
     /**
      * Return the user group or NULL if none is set.
      * Will throw exception if invalid.
-     * TODO duplicated in JSONAPI code.
+     * TODO Duplicate from API v2 code.
      */
-    public function getUserGroup(): ?UserGroup
+    public function detectUserGroup(): ?UserGroup
     {
         /** @var User $user */
         $user      = auth()->user();
-        app('log')->debug('Now in getUserGroup()');
+        app('log')->debug('Now in detectUserGroup()');
 
         /** @var null|UserGroup $userGroup */
-        $userGroup = $this->route()?->parameter('userGroup');
+        $userGroup = request()->route()?->parameter('userGroup');
         if (null === $userGroup) {
             app('log')->debug('Request class has no userGroup parameter, but perhaps there is a parameter.');
-            $userGroupId = (int)$this->get('user_group_id');
+            $userGroupId = (int)request()->get('user_group_id');
             if (0 === $userGroupId) {
                 app('log')->debug(sprintf('Request class has no user_group_id parameter, grab default from user (group #%d).', $user->user_group_id));
                 $userGroupId = (int)$user->user_group_id;
