@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6cd802a45a1a3e8c69b988e2e1506f54",
+    "content-hash": "49c6cd315f6cba880b9fa088236e8088",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -7252,16 +7252,16 @@
         },
         {
             "name": "symfony/http-client",
-            "version": "v7.1.2",
+            "version": "v7.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-client.git",
-                "reference": "90ace27d17ccc9afc6f7ec0081e8529fb0e29425"
+                "reference": "b79858aa7a051ea791b0d50269a234a0b50cb231"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-client/zipball/90ace27d17ccc9afc6f7ec0081e8529fb0e29425",
-                "reference": "90ace27d17ccc9afc6f7ec0081e8529fb0e29425",
+                "url": "https://api.github.com/repos/symfony/http-client/zipball/b79858aa7a051ea791b0d50269a234a0b50cb231",
+                "reference": "b79858aa7a051ea791b0d50269a234a0b50cb231",
                 "shasum": ""
             },
             "require": {
@@ -7326,7 +7326,7 @@
                 "http"
             ],
             "support": {
-                "source": "https://github.com/symfony/http-client/tree/v7.1.2"
+                "source": "https://github.com/symfony/http-client/tree/v7.1.3"
             },
             "funding": [
                 {
@@ -7342,7 +7342,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-06-28T08:00:31+00:00"
+            "time": "2024-07-17T06:10:24+00:00"
         },
         {
             "name": "symfony/http-client-contracts",
