@@ -145,7 +145,7 @@
 .fc-time-grid .fc-event .fc-time {
   white-space: normal !important; }
 
-/* hide the the time that is normally displayed... */
+/* hide the time that is normally displayed... */
 .fc-time-grid .fc-event .fc-time span {
   display: none; }
 
