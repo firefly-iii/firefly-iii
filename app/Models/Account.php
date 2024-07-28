@@ -51,6 +51,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property null|Carbon              $deleted_at
  * @property int                      $user_id
  * @property int                      $account_type_id
+ * @property string $account_type_string
  * @property string                   $name
  * @property string                   $virtual_balance
  * @property null|string              $iban
@@ -75,6 +76,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Collection|Transaction[] $transactions
  * @property null|int                 $transactions_count
  * @property User                     $user
+ * @property string $last_activity
  *
  * @method static EloquentBuilder|Account accountTypeIn($types)
  * @method static EloquentBuilder|Account newModelQuery()

@@ -35,6 +35,9 @@ class AccountSchema extends Schema
         return [
             ID::make(),
             Attribute::make('name'),
+            Attribute::make('active'),
+            Attribute::make('order'),
+            Attribute::make('last_activity'),
             HasOne::make('user')->readOnly(),
         ];
     }

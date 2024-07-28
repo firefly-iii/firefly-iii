@@ -42,6 +42,15 @@ class AccountEnrichment implements EnrichmentInterface
     private Collection $collection;
     private array      $currencies;
 
+    private AccountRepositoryInterface  $repository;
+    private CurrencyRepositoryInterface $currencyRepository;
+
+    public function __construct()
+    {
+        $this->repository         = app(AccountRepositoryInterface::class);
+        $this->currencyRepository = app(CurrencyRepositoryInterface::class);
+    }
+
     #[\Override]
     /**
      * Do the actual enrichment.
@@ -55,9 +64,9 @@ class AccountEnrichment implements EnrichmentInterface
 
         // do everything here:
         $this->getLastActivity();
-        // $this->getMetaBalances();
         $this->collectAccountTypes();
         $this->collectMetaData();
+        // $this->getMetaBalances();
 
 //        $this->collection->transform(function (Account $account) {
 //            $account->user_array = ['id' => 1, 'bla bla' => 'bla'];
@@ -78,9 +87,7 @@ class AccountEnrichment implements EnrichmentInterface
      */
     private function getLastActivity(): void
     {
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app(AccountRepositoryInterface::class);
-        $lastActivity      = $accountRepository->getLastActivity($this->collection);
+        $lastActivity = $this->repository->getLastActivity($this->collection);
         foreach ($lastActivity as $row) {
             $this->collection->where('id', $row['account_id'])->first()->last_activity = Carbon::parse($row['date_max'], config('app.timezone'));
         }
@@ -109,17 +116,15 @@ class AccountEnrichment implements EnrichmentInterface
      */
     private function collectAccountTypes(): void
     {
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app(AccountRepositoryInterface::class);
-        $accountTypes      = $accountRepository->getAccountTypes($this->collection);
-        $types             = [];
+        $accountTypes = $this->repository->getAccountTypes($this->collection);
+        $types        = [];
 
         /** @var AccountType $row */
         foreach ($accountTypes as $row) {
             $types[$row->id] = $row->type;
         }
         $this->collection->transform(function (Account $account) use ($types) {
-            $account->type = $types[$account->id];
+            $account->account_type_string = $types[$account->id];
 
             return $account;
         });
@@ -127,17 +132,11 @@ class AccountEnrichment implements EnrichmentInterface
 
     private function collectMetaData(): void
     {
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app(AccountRepositoryInterface::class);
+        $metaFields  = $this->repository->getMetaValues($this->collection, ['currency_id', 'account_role', 'account_number', 'liability_direction', 'interest', 'interest_period', 'current_debt']);
+        $currencyIds = $metaFields->where('name', 'currency_id')->pluck('data')->toArray();
 
-        /** @var CurrencyRepositoryInterface $repository */
-        $repository        = app(CurrencyRepositoryInterface::class);
-
-        $metaFields        = $accountRepository->getMetaValues($this->collection, ['currency_id', 'account_role', 'account_number', 'liability_direction', 'interest', 'interest_period', 'current_debt']);
-        $currencyIds       = $metaFields->where('name', 'currency_id')->pluck('data')->toArray();
-
-        $currencies        = [];
-        foreach ($repository->getByIds($currencyIds) as $currency) {
+        $currencies = [];
+        foreach ($this->currencyRepository->getByIds($currencyIds) as $currency) {
             $id              = $currency->id;
             $currencies[$id] = $currency;
         }
@@ -148,6 +147,7 @@ class AccountEnrichment implements EnrichmentInterface
                 $account->{$entry->name} = $entry->data;
                 if ('currency_id' === $entry->name) {
                     $id                               = (int) $entry->data;
+                    $account->currency_name           = $currencies[$id]?->name;
                     $account->currency_code           = $currencies[$id]?->code;
                     $account->currency_symbol         = $currencies[$id]?->symbol;
                     $account->currency_decimal_places = $currencies[$id]?->decimal_places;
