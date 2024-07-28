@@ -1,6 +1,6 @@
 <?php
 /*
- * EnricherInterface.php
+ * CrudAccount.php
  * Copyright (c) 2024 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,14 +21,26 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Support\JsonApi\Enrichments;
+namespace FireflyIII\JsonApi\V2\Accounts\Capabilities;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
+use FireflyIII\Models\Account;
+use FireflyIII\Support\JsonApi\Enrichments\AccountEnrichment;
+use LaravelJsonApi\NonEloquent\Capabilities\CrudResource;
 
-interface EnrichmentInterface
+class CrudAccount extends CrudResource
 {
-    public function enrich(Collection $collection): Collection;
+    /**
+     * Read the supplied site.
+     *
+     * @param Account $account
+     *
+     * @return Account|null
+     */
+    public function read(Account $account): ?Account
+    {
+        // enrich the collected data
+        $enrichment = new AccountEnrichment();
+        return $enrichment->enrichSingle($account);
+    }
 
-    public function enrichSingle(Model $model): Model;
 }

@@ -25,9 +25,12 @@ namespace FireflyIII\JsonApi\V2\Accounts;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Support\JsonApi\Concerns\UsergroupAware;
+use FireflyIII\Support\JsonApi\Enrichments\AccountEnrichment;
+use Illuminate\Support\Facades\Log;
 use LaravelJsonApi\Contracts\Store\QueriesAll;
 use LaravelJsonApi\NonEloquent\AbstractRepository;
 use LaravelJsonApi\NonEloquent\Capabilities\CrudRelations;
+use LaravelJsonApi\NonEloquent\Concerns\HasCrudCapability;
 use LaravelJsonApi\NonEloquent\Concerns\HasRelationsCapability;
 
 /**
@@ -44,23 +47,49 @@ class AccountRepository extends AbstractRepository implements QueriesAll
 {
     use UsergroupAware;
     use HasRelationsCapability;
+    use HasCrudCapability;
     /**
      * SiteRepository constructor.
      */
     public function __construct() {}
 
+    public function exists(string $resourceId): bool
+    {
+        Log::debug(__METHOD__);
+        return null !== Account::find((int) $resourceId);
+    }
+
     public function find(string $resourceId): ?object
     {
-        return Account::find((int) $resourceId);
+        Log::debug(__METHOD__);
+//        throw new \RuntimeException('trace me');
+        $account = Account::find((int) $resourceId);
+        if(null === $account) {
+            return null;
+        }
+        // enrich the collected data
+        $enrichment = new AccountEnrichment();
+        return $enrichment->enrichSingle($account);
     }
+
+
 
     public function queryAll(): Capabilities\AccountQuery
     {
+        Log::debug(__METHOD__);
         return Capabilities\AccountQuery::make()
             ->withUserGroup($this->userGroup)
             ->withServer($this->server)
             ->withSchema($this->schema)
         ;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function crud(): Capabilities\CrudAccount
+    {
+        return Capabilities\CrudAccount::make();
     }
 
     /**

@@ -26,7 +26,10 @@ namespace FireflyIII\Api\V2\Controllers\JsonApi;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\JsonApi\V2\Accounts\AccountCollectionQuery;
 use FireflyIII\JsonApi\V2\Accounts\AccountSchema;
-use FireflyIII\JsonApi\V2\Accounts\Capabilities\AccountQuery;
+use FireflyIII\JsonApi\V2\Accounts\AccountSingleQuery;
+use FireflyIII\Models\Account;
+use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use LaravelJsonApi\Core\Responses\DataResponse;
 use LaravelJsonApi\Laravel\Http\Controllers\Actions;
@@ -45,7 +48,7 @@ class AccountController extends Controller
     use Actions\DetachRelationship;
 
 //    use Actions\FetchMany;
-    use Actions\FetchOne;
+    //use Actions\FetchOne;
     use Actions\FetchRelated;
     use Actions\FetchRelationship;
     use Actions\Store;
@@ -56,9 +59,9 @@ class AccountController extends Controller
      * Fetch zero to many JSON API resources.
      *
      * @param AccountSchema $schema
-     * @param AccountQuery  $request
+     * @param AccountCollectionQuery  $request
      *
-     * @return \Illuminate\Contracts\Support\Responsable|\Illuminate\Http\Response
+     * @return Responsable|Response
      */
     public function index(AccountSchema $schema, AccountCollectionQuery $request)
     {
@@ -72,6 +75,28 @@ class AccountController extends Controller
         // do something custom...
 
         return new DataResponse($models);
+    }
+
+    /**
+     * Fetch zero to one JSON API resource by id.
+     *
+     * @param AccountSchema $schema
+     * @param AccountSingleQuery $request
+     * @param Account $account
+     *
+     * @return Responsable|Response
+     */
+    public function show(AccountSchema $schema, AccountSingleQuery $request, Account $account)
+    {
+        $model = $schema
+            ->repository()
+            ->queryOne($account)
+            ->withRequest($request)
+            ->first();
+
+        // do something custom...
+
+        return new DataResponse($model);
     }
 
 

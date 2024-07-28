@@ -9,7 +9,7 @@ use LaravelJsonApi\Core\Schema\Schema;
 use LaravelJsonApi\Eloquent\Fields\Relations\HasOne;
 use LaravelJsonApi\NonEloquent\Fields\Attribute;
 use LaravelJsonApi\NonEloquent\Fields\ID;
-use LaravelJsonApi\NonEloquent\Fields\Relation;
+use LaravelJsonApi\NonEloquent\Filters\Filter;
 
 
 class AccountSchema extends Schema
@@ -34,10 +34,34 @@ class AccountSchema extends Schema
         Log::debug(__METHOD__);;
         return [
             ID::make(),
+            Attribute::make('created_at'),
+            Attribute::make('updated_at'),
+
+            // basic info and meta data
             Attribute::make('name'),
             Attribute::make('active'),
             Attribute::make('order'),
+            Attribute::make('type'),
+            Attribute::make('account_role'),
+            Attribute::make('account_number'),
+
+            // currency
+            Attribute::make('currency_id'),
+            Attribute::make('currency_name'),
+            Attribute::make('currency_code'),
+            Attribute::make('currency_symbol'),
+            Attribute::make('currency_decimal_places'),
+
+            // liability things
+            Attribute::make('liability_direction'),
+            Attribute::make('interest'),
+            Attribute::make('interest_period'),
+            Attribute::make('current_debt'),
+
+            // dynamic data
             Attribute::make('last_activity'),
+
+
             HasOne::make('user')->readOnly(),
         ];
     }
@@ -51,16 +75,13 @@ class AccountSchema extends Schema
     {
         Log::debug(__METHOD__);;
         return [
-            // Filter::make('id'),
+             Filter::make('id'),
         ];
     }
 
     public function repository(): AccountRepository
     {
-        Log::debug(__METHOD__);;
-        // to access the repository, you need to have the necessary rights.
-
-
+        Log::debug(__METHOD__);
         $this->setUserGroup($this->server->getUsergroup());
         return AccountRepository::make()
                                 ->withServer($this->server)

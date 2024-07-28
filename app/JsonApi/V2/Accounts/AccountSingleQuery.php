@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Log;
 use LaravelJsonApi\Laravel\Http\Requests\ResourceQuery;
 use LaravelJsonApi\Validation\Rule as JsonApiRule;
 
-class AccountQuery extends ResourceQuery
+class AccountSingleQuery extends ResourceQuery
 {
 
     /**

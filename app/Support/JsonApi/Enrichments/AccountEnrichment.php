@@ -29,6 +29,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
@@ -156,5 +157,13 @@ class AccountEnrichment implements EnrichmentInterface
 
             return $account;
         });
+    }
+
+    #[\Override] public function enrichSingle(Model $model): Model
+    {
+        Log::debug(__METHOD__);
+        $collection = new Collection([$model]);
+        $collection = $this->enrich($collection);
+        return $collection->first();
     }
 }

@@ -8,6 +8,7 @@ use FireflyIII\JsonApi\V2\Accounts\AccountSchema;
 use FireflyIII\JsonApi\V2\Users\UserSchema;
 use FireflyIII\Support\JsonApi\Concerns\UsergroupAware;
 use FireflyIII\Support\JsonApi\Concerns\UserGroupDetectable;
+use Illuminate\Support\Facades\Log;
 use LaravelJsonApi\Core\Server\Server as BaseServer;
 
 /**
@@ -30,6 +31,7 @@ class Server extends BaseServer
      */
     public function serving(): void
     {
+        Log::debug(__METHOD__);
         // at this point the user may not actually have access to this user group.
         $res = $this->detectUserGroup();
         $this->setUserGroup($res);
@@ -40,6 +42,7 @@ class Server extends BaseServer
      */
     protected function allSchemas(): array
     {
+        Log::debug(__METHOD__);
         return [
             AccountSchema::class,
             UserSchema::class,
