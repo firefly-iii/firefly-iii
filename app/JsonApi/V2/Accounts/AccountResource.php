@@ -4,6 +4,7 @@ namespace FireflyIII\JsonApi\V2\Accounts;
 
 use FireflyIII\Models\Account;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use LaravelJsonApi\Core\Resources\JsonApiResource;
 
 /**
@@ -31,6 +32,7 @@ class AccountResource extends JsonApiResource
      */
     public function attributes($request): iterable
     {
+        Log::debug(__METHOD__);
         return [
             'created_at' => $this->resource->created_at,
             'updated_at' => $this->resource->updated_at,

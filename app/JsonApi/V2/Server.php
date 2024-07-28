@@ -30,6 +30,7 @@ class Server extends BaseServer
      */
     public function serving(): void
     {
+        // at this point the user may not actually have access to this user group.
         $res = $this->detectUserGroup();
         $this->setUserGroup($res);
     }

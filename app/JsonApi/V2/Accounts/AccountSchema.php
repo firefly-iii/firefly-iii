@@ -4,6 +4,7 @@ namespace FireflyIII\JsonApi\V2\Accounts;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Support\JsonApi\Concerns\UsergroupAware;
+use Illuminate\Support\Facades\Log;
 use LaravelJsonApi\Core\Schema\Schema;
 use LaravelJsonApi\Eloquent\Fields\Relations\HasOne;
 use LaravelJsonApi\NonEloquent\Fields\Attribute;
@@ -30,6 +31,7 @@ class AccountSchema extends Schema
      */
     public function fields(): array
     {
+        Log::debug(__METHOD__);;
         return [
             ID::make(),
             Attribute::make('name'),
@@ -44,6 +46,7 @@ class AccountSchema extends Schema
      */
     public function filters(): array
     {
+        Log::debug(__METHOD__);;
         return [
             // Filter::make('id'),
         ];
@@ -51,6 +54,10 @@ class AccountSchema extends Schema
 
     public function repository(): AccountRepository
     {
+        Log::debug(__METHOD__);;
+        // to access the repository, you need to have the necessary rights.
+
+
         $this->setUserGroup($this->server->getUsergroup());
         return AccountRepository::make()
                                 ->withServer($this->server)

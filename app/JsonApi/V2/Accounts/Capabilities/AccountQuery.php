@@ -29,6 +29,7 @@ use FireflyIII\Support\JsonApi\ExpandsQuery;
 use FireflyIII\Support\JsonApi\FiltersPagination;
 use FireflyIII\Support\JsonApi\SortsCollection;
 use FireflyIII\Support\JsonApi\ValidateSortParameters;
+use Illuminate\Support\Facades\Log;
 use LaravelJsonApi\Contracts\Store\HasPagination;
 use LaravelJsonApi\NonEloquent\Capabilities\QueryAll;
 use LaravelJsonApi\NonEloquent\Concerns\PaginatesEnumerables;
@@ -48,6 +49,7 @@ class AccountQuery extends QueryAll implements HasPagination
      */
     public function get(): iterable
     {
+        Log::debug(__METHOD__);
         // collect filters
         $filters    = $this->queryParameters->filter();
         // collect sort options

@@ -24,6 +24,11 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V2\Controllers\JsonApi;
 
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\JsonApi\V2\Accounts\AccountCollectionQuery;
+use FireflyIII\JsonApi\V2\Accounts\AccountSchema;
+use FireflyIII\JsonApi\V2\Accounts\Capabilities\AccountQuery;
+use Illuminate\Support\Facades\Log;
+use LaravelJsonApi\Core\Responses\DataResponse;
 use LaravelJsonApi\Laravel\Http\Controllers\Actions;
 
 /**
@@ -38,13 +43,36 @@ class AccountController extends Controller
     use Actions\AttachRelationship;
     use Actions\Destroy;
     use Actions\DetachRelationship;
-    use Actions\FetchMany;
+
+//    use Actions\FetchMany;
     use Actions\FetchOne;
     use Actions\FetchRelated;
     use Actions\FetchRelationship;
     use Actions\Store;
     use Actions\Update;
     use Actions\UpdateRelationship;
+
+    /**
+     * Fetch zero to many JSON API resources.
+     *
+     * @param AccountSchema $schema
+     * @param AccountQuery  $request
+     *
+     * @return \Illuminate\Contracts\Support\Responsable|\Illuminate\Http\Response
+     */
+    public function index(AccountSchema $schema, AccountCollectionQuery $request)
+    {
+        Log::debug(__METHOD__);
+        $models = $schema
+            ->repository()
+            ->queryAll()
+            ->withRequest($request)
+            ->get();
+
+        // do something custom...
+
+        return new DataResponse($models);
+    }
 
 
 //    public function readAccountBalances(AnonymousQuery $query, AccountBalanceSchema $schema, Account $account): Responsable
