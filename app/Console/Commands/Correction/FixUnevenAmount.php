@@ -44,16 +44,75 @@ class FixUnevenAmount extends Command
      */
     public function handle(): int
     {
+        $this->fixUnevenAmounts();
+        $this->matchCurrencies();
+        return 0;
+    }
+
+    private function fixJournal(int $param): void
+    {
+        // one of the transactions is bad.
+        $journal = TransactionJournal::find($param);
+        if (null === $journal) {
+            return;
+        }
+
+        /** @var null|Transaction $source */
+        $source = $journal->transactions()->where('amount', '<', 0)->first();
+
+        if (null === $source) {
+            $this->friendlyError(
+                sprintf(
+                    'Journal #%d ("%s") has no source transaction. It will be deleted to maintain database consistency.',
+                    $journal->id ?? 0,
+                    $journal->description ?? ''
+                )
+            );
+            Transaction::where('transaction_journal_id', $journal->id ?? 0)->forceDelete();
+            TransactionJournal::where('id', $journal->id ?? 0)->forceDelete();
+
+            return;
+        }
+
+        $amount = bcmul('-1', $source->amount);
+
+        // fix amount of destination:
+        /** @var null|Transaction $destination */
+        $destination = $journal->transactions()->where('amount', '>', 0)->first();
+
+        if (null === $destination) {
+            $this->friendlyError(
+                sprintf(
+                    'Journal #%d ("%s") has no destination transaction. It will be deleted to maintain database consistency.',
+                    $journal->id ?? 0,
+                    $journal->description ?? ''
+                )
+            );
+
+            Transaction::where('transaction_journal_id', $journal->id ?? 0)->forceDelete();
+            TransactionJournal::where('id', $journal->id ?? 0)->forceDelete();
+
+            return;
+        }
+
+        $destination->amount = $amount;
+        $destination->save();
+
+        $message = sprintf('Corrected amount in transaction journal #%d', $param);
+        $this->friendlyInfo($message);
+    }
+
+    private function fixUnevenAmounts(): void
+    {
         $count    = 0;
         $journals = \DB::table('transactions')
-            ->groupBy('transaction_journal_id')
-            ->whereNull('deleted_at')
-            ->get(['transaction_journal_id', \DB::raw('SUM(amount) AS the_sum')])
-        ;
+                       ->groupBy('transaction_journal_id')
+                       ->whereNull('deleted_at')
+                       ->get(['transaction_journal_id', \DB::raw('SUM(amount) AS the_sum')]);
 
         /** @var \stdClass $entry */
         foreach ($journals as $entry) {
-            $sum = (string)$entry->the_sum;
+            $sum = (string) $entry->the_sum;
             if (!is_numeric($sum)
                 || '' === $sum // @phpstan-ignore-line
                 || str_contains($sum, 'e')
@@ -93,60 +152,23 @@ class FixUnevenAmount extends Command
         if (0 === $count) {
             $this->friendlyPositive('Database amount integrity is OK');
         }
-
-        return 0;
     }
 
-    private function fixJournal(int $param): void
+    private function matchCurrencies(): void
     {
-        // one of the transactions is bad.
-        $journal             = TransactionJournal::find($param);
-        if (null === $journal) {
+        $journals = TransactionJournal
+            ::leftJoin('transactions', 'transaction_journals.id',  'transactions.transaction_journal_id')
+            ->where('transactions.transaction_currency_id', '!=', \DB::raw('transaction_journals.transaction_currency_id'))
+            ->get(['transaction_journals.*']);
+        if (0 === $journals->count()) {
+            $this->friendlyPositive('Journal currency integrity is OK');
             return;
         }
-
-        /** @var null|Transaction $source */
-        $source              = $journal->transactions()->where('amount', '<', 0)->first();
-
-        if (null === $source) {
-            $this->friendlyError(
-                sprintf(
-                    'Journal #%d ("%s") has no source transaction. It will be deleted to maintain database consistency.',
-                    $journal->id ?? 0,
-                    $journal->description ?? ''
-                )
-            );
-            Transaction::where('transaction_journal_id', $journal->id ?? 0)->forceDelete();
-            TransactionJournal::where('id', $journal->id ?? 0)->forceDelete();
-
-            return;
+        /** @var TransactionJournal $journal */
+        foreach($journals as $journal) {
+            Transaction::where('transaction_journal_id', $journal->id)->update(['transaction_currency_id' => $journal->transaction_currency_id]);
         }
+        $this->friendlyPositive(sprintf('Fixed %d journal(s) with mismatched currencies.', $journals->count()));
 
-        $amount              = bcmul('-1', $source->amount);
-
-        // fix amount of destination:
-        /** @var null|Transaction $destination */
-        $destination         = $journal->transactions()->where('amount', '>', 0)->first();
-
-        if (null === $destination) {
-            $this->friendlyError(
-                sprintf(
-                    'Journal #%d ("%s") has no destination transaction. It will be deleted to maintain database consistency.',
-                    $journal->id ?? 0,
-                    $journal->description ?? ''
-                )
-            );
-
-            Transaction::where('transaction_journal_id', $journal->id ?? 0)->forceDelete();
-            TransactionJournal::where('id', $journal->id ?? 0)->forceDelete();
-
-            return;
-        }
-
-        $destination->amount = $amount;
-        $destination->save();
-
-        $message             = sprintf('Corrected amount in transaction journal #%d', $param);
-        $this->friendlyInfo($message);
     }
 }
