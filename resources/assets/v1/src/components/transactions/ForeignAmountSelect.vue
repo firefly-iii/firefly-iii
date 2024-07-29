@@ -132,7 +132,7 @@ export default {
         // console.log('Length of currencies is ' + this.currencies.length);
         // console.log(this.currencies);
         this.liability = true;
-        // lock dropdown list on on currencyID of destination.
+        // lock dropdown list on currencyID of destination.
         for (const key in this.currencies) {
           if (this.currencies.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
             // console.log('this.currencies[key].id = ' + this.currencies[key].id);
