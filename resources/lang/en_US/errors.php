@@ -38,7 +38,7 @@ return [
     'db_error_occurred'       => 'Whoops! A database error occurred.',
     'error_not_recoverable'   => 'Unfortunately, this error was not recoverable :(. Firefly III broke. The error is:',
     'error'                   => 'Error',
-    'error_location'          => 'This error occured in file <span style="font-family: monospace;">:file</span> on line :line with code :code.',
+    'error_location'          => 'This error occurred in file <span style="font-family: monospace;">:file</span> on line :line with code :code.',
     'stacktrace'              => 'Stack trace',
     'more_info'               => 'More information',
 
