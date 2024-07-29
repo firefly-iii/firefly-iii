@@ -23,19 +23,16 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
-use Closure;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\UserGroup\UserGroupRepositoryInterface;
 use FireflyIII\User;
-use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Log;
 
 class IsAllowedGroupAction implements ValidationRule
 {
-
     private string $className;
     private string $methodName;
 
@@ -44,47 +41,51 @@ class IsAllowedGroupAction implements ValidationRule
 
     public function __construct(string $className, string $methodName)
     {
-        $this->className = $className;
-        $this->methodName = $methodName;
+        $this->className     = $className;
+        $this->methodName    = $methodName;
         // you need these roles to do anything with any endpoint.
         $this->acceptedRoles = [UserRoleEnum::OWNER, UserRoleEnum::FULL];
-        $this->repository = app(UserGroupRepositoryInterface::class);
+        $this->repository    = app(UserGroupRepositoryInterface::class);
     }
 
     /**
-     * @inheritDoc
      * @throws AuthorizationException
      */
-    #[\Override] public function validate(string $attribute, mixed $value, Closure $fail): void
+    #[\Override]
+    public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
-        if('GET' === $this->methodName) {
+        if ('GET' === $this->methodName) {
             // need at least "read only rights".
             $this->acceptedRoles[] = UserRoleEnum::READ_ONLY;
         }
-        if('GET' !== $this->methodName) {
+        if ('GET' !== $this->methodName) {
             // either post, put or delete or something else.. you need more access rights.
             switch ($this->className) {
                 default:
                     throw new AuthorizationException(sprintf('Cannot handle class "%s"', $this->className));
+
                 case Account::class:
                     $this->acceptedRoles[] = UserRoleEnum::MANAGE_TRANSACTIONS;
+
                     break;
             }
         }
         $this->validateUserGroup((int)$value, $fail);
     }
 
-    private function validateUserGroup(int $userGroupId, Closure $fail): void {
+    private function validateUserGroup(int $userGroupId, \Closure $fail): void
+    {
         Log::debug(sprintf('validateUserGroup: %s', static::class));
         if (!auth()->check()) {
             Log::debug('validateUserGroup: user is not logged in, return NULL.');
             $fail('validation.no_auth_user_group')->translate();
+
             return;
         }
 
         /** @var User $user */
         $user        = auth()->user();
-        if(0 !== $userGroupId) {
+        if (0 !== $userGroupId) {
             Log::debug(sprintf('validateUserGroup: user group submitted, search for memberships in group #%d.', $userGroupId));
         }
         if (0 === $userGroupId) {
@@ -98,14 +99,16 @@ class IsAllowedGroupAction implements ValidationRule
         if (0 === $memberships->count()) {
             Log::debug(sprintf('validateUserGroup: user has no access to group #%d.', $userGroupId));
             $fail('validation.no_access_user_group')->translate();
+
             return;
         }
 
         // need to get the group from the membership:
-        $userGroup       = $this->repository->getById($userGroupId);
+        $userGroup   = $this->repository->getById($userGroupId);
         if (null === $userGroup) {
             Log::debug(sprintf('validateUserGroup: group #%d does not exist.', $userGroupId));
             $fail('validation.belongs_user_or_user_group')->translate();
+
             return;
         }
         Log::debug(sprintf('validateUserGroup: validate access of user to group #%d ("%s").', $userGroupId, $userGroup->title));

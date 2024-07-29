@@ -122,8 +122,8 @@ class AccountBalanceCalculator
             $sumForeignAmount    = '' === $sumForeignAmount ? '0' : $sumForeignAmount;
 
             // at this point SQLite may return scientific notation because why not. Terrible.
-            $sumAmount = app('steam')->floatalize($sumAmount);
-            $sumForeignAmount = app('steam')->floatalize($sumForeignAmount);
+            $sumAmount           = app('steam')->floatalize($sumAmount);
+            $sumForeignAmount    = app('steam')->floatalize($sumForeignAmount);
 
             // first create for normal currency:
             $entry               = $this->getAccountBalanceByAccount($account, $transactionCurrency);

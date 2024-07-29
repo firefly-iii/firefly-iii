@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\JsonApi\V2\Accounts;
 
 use FireflyIII\Models\Account;
@@ -10,17 +12,15 @@ use LaravelJsonApi\Validation\Rule as JsonApiRule;
 
 class AccountCollectionQuery extends ResourceQuery
 {
-
     /**
      * Get the validation rules that apply to the request query parameters.
-     *
-     * @return array
      */
     public function rules(): array
     {
         Log::debug(__METHOD__);
+
         return [
-            'fields' => [
+            'fields'        => [
                 'nullable',
                 'array',
                 JsonApiRule::fieldSets(),
@@ -30,27 +30,27 @@ class AccountCollectionQuery extends ResourceQuery
                 'integer',
                 new IsAllowedGroupAction(Account::class, request()->method()),
             ],
-            'filter' => [
+            'filter'        => [
                 'nullable',
                 'array',
                 JsonApiRule::filter(),
             ],
-            'include' => [
+            'include'       => [
                 'nullable',
                 'string',
                 JsonApiRule::includePaths(),
             ],
-            'page' => [
+            'page'          => [
                 'nullable',
                 'array',
                 JsonApiRule::page(),
             ],
-            'sort' => [
+            'sort'          => [
                 'nullable',
                 'string',
                 JsonApiRule::sort(),
             ],
-            'withCount' => [
+            'withCount'     => [
                 'nullable',
                 'string',
                 JsonApiRule::countable(),

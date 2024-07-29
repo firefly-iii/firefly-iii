@@ -38,11 +38,7 @@ use LaravelJsonApi\Laravel\Routing\ResourceRegistrar;
  *     \__/     |____|    | _| `._____| \______/   \______/      |__|     |_______|_______/
  */
 
-
-
-/**
- * AUTOCOMPLETE ROUTES
- */
+// AUTOCOMPLETE ROUTES
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V2\Controllers\Autocomplete',
@@ -57,9 +53,7 @@ Route::group(
     }
 );
 
-/**
- * CHART ROUTES
- */
+// CHART ROUTES
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V2\Controllers\Chart',
@@ -68,13 +62,11 @@ Route::group(
     ],
     static function (): void {
         Route::get('account/dashboard', ['uses' => 'AccountController@dashboard', 'as' => 'account.dashboard']);
-         Route::get('budget/dashboard', ['uses' => 'BudgetController@dashboard', 'as' => 'budget.dashboard']);
-         Route::get('category/dashboard', ['uses' => 'CategoryController@dashboard', 'as' => 'category.dashboard']);
+        Route::get('budget/dashboard', ['uses' => 'BudgetController@dashboard', 'as' => 'budget.dashboard']);
+        Route::get('category/dashboard', ['uses' => 'CategoryController@dashboard', 'as' => 'category.dashboard']);
         Route::get('balance/balance', ['uses' => 'BalanceController@balance', 'as' => 'balance.balance']);
     }
 );
-
-
 
 // V2 API route for Summary boxes
 // BASIC
@@ -121,8 +113,8 @@ Route::group(
     }
 );
 
-//// V2 API route for accounts.
-//Route::group(
+// // V2 API route for accounts.
+// Route::group(
 //    [
 //        'namespace' => 'FireflyIII\Api\V2\Controllers\Model\Account',
 //        'prefix'    => 'v2/accounts',
@@ -133,7 +125,7 @@ Route::group(
 //        Route::get('{account}', ['uses' => 'ShowController@show', 'as' => 'show']);
 //        Route::put('{account}', ['uses' => 'UpdateController@update', 'as' => 'update']);
 //    }
-//);
+// );
 
 // V2 API route for subscriptions.
 Route::group(
@@ -247,26 +239,21 @@ Route::group(
     }
 );
 
-/**
- * V2 JSON API ROUTES
- */
+// V2 JSON API ROUTES
 JsonApiRoute::server('v2')->prefix('v2')
-            ->resources(function (ResourceRegistrar $server) {
-                /**
-                 * ACCOUNTS
-                 */
-                $server->resource('accounts', AccountController::class)->readOnly()->relationships(function (Relationships $relations) {
-                    $relations->hasOne('user')->readOnly();
-                });
-//                $server->resource('accounts', AccountController::class)->readOnly();
+    ->resources(function (ResourceRegistrar $server): void {
+        // ACCOUNTS
+        $server->resource('accounts', AccountController::class)->readOnly()->relationships(function (Relationships $relations): void {
+            $relations->hasOne('user')->readOnly();
+        });
+        //                $server->resource('accounts', AccountController::class)->readOnly();
 
-                /**
-                 * USERS
-                 */
-                $server->resource('users', JsonApiController::class)->readOnly()->relationships(function (Relationships $relations) {
-                    $relations->hasMany('accounts')->readOnly();
-                });
-            });
+        // USERS
+        $server->resource('users', JsonApiController::class)->readOnly()->relationships(function (Relationships $relations): void {
+            $relations->hasMany('accounts')->readOnly();
+        });
+    })
+;
 
 /*
  * ____    ____  __     .______        ______    __    __  .___________. _______     _______.

@@ -43,10 +43,11 @@ class Server extends BaseServer
     protected function allSchemas(): array
     {
         Log::debug(__METHOD__);
+
         return [
             AccountSchema::class,
             UserSchema::class,
-            //AccountBalanceSchema::class,
+            // AccountBalanceSchema::class,
         ];
     }
 }

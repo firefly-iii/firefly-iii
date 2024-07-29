@@ -109,7 +109,7 @@ class AccountResourceOld extends JsonApiResource
         return [
             $this->relation('user')->withData($this->resource->user),
             $this->relation('currency')->withData($this->resource->transactionCurrency),
-            //$this->relation('account_balances')->withData($this->resource->balances),
+            // $this->relation('account_balances')->withData($this->resource->balances),
         ];
     }
 }

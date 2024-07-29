@@ -94,10 +94,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Transaction extends Model
 {
+    use Cachable;
     use HasFactory;
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
-    use Cachable;
 
     protected $casts
                       = [

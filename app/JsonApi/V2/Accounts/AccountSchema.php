@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\JsonApi\V2\Accounts;
 
 use FireflyIII\Models\Account;
@@ -11,27 +13,22 @@ use LaravelJsonApi\NonEloquent\Fields\Attribute;
 use LaravelJsonApi\NonEloquent\Fields\ID;
 use LaravelJsonApi\NonEloquent\Filters\Filter;
 
-
 class AccountSchema extends Schema
 {
     use UsergroupAware;
 
     /**
      * The model the schema corresponds to.
-     *
-     * @var string
      */
     public static string $model = Account::class;
 
-
     /**
      * Get the resource fields.
-     *
-     * @return array
      */
     public function fields(): array
     {
-        Log::debug(__METHOD__);;
+        Log::debug(__METHOD__);
+
         return [
             ID::make(),
             Attribute::make('created_at'),
@@ -61,21 +58,19 @@ class AccountSchema extends Schema
             // dynamic data
             Attribute::make('last_activity'),
 
-
             HasOne::make('user')->readOnly(),
         ];
     }
 
     /**
      * Get the resource filters.
-     *
-     * @return array
      */
     public function filters(): array
     {
-        Log::debug(__METHOD__);;
+        Log::debug(__METHOD__);
+
         return [
-             Filter::make('id'),
+            Filter::make('id'),
         ];
     }
 
@@ -83,10 +78,11 @@ class AccountSchema extends Schema
     {
         Log::debug(__METHOD__);
         $this->setUserGroup($this->server->getUsergroup());
-        return AccountRepository::make()
-                                ->withServer($this->server)
-                                ->withSchema($this)
-                                ->withUserGroup($this->userGroup);
-    }
 
+        return AccountRepository::make()
+            ->withServer($this->server)
+            ->withSchema($this)
+            ->withUserGroup($this->userGroup)
+        ;
+    }
 }

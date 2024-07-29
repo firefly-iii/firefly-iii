@@ -45,9 +45,10 @@ use LaravelJsonApi\NonEloquent\Concerns\HasRelationsCapability;
  */
 class AccountRepository extends AbstractRepository implements QueriesAll
 {
-    use UsergroupAware;
-    use HasRelationsCapability;
     use HasCrudCapability;
+    use HasRelationsCapability;
+    use UsergroupAware;
+
     /**
      * SiteRepository constructor.
      */
@@ -56,27 +57,28 @@ class AccountRepository extends AbstractRepository implements QueriesAll
     public function exists(string $resourceId): bool
     {
         Log::debug(__METHOD__);
+
         return null !== Account::find((int) $resourceId);
     }
 
     public function find(string $resourceId): ?object
     {
         Log::debug(__METHOD__);
-//        throw new \RuntimeException('trace me');
-        $account = Account::find((int) $resourceId);
-        if(null === $account) {
+        //        throw new \RuntimeException('trace me');
+        $account    = Account::find((int) $resourceId);
+        if (null === $account) {
             return null;
         }
         // enrich the collected data
         $enrichment = new AccountEnrichment();
+
         return $enrichment->enrichSingle($account);
     }
-
-
 
     public function queryAll(): Capabilities\AccountQuery
     {
         Log::debug(__METHOD__);
+
         return Capabilities\AccountQuery::make()
             ->withUserGroup($this->userGroup)
             ->withServer($this->server)
@@ -84,17 +86,11 @@ class AccountRepository extends AbstractRepository implements QueriesAll
         ;
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function crud(): Capabilities\CrudAccount
     {
         return Capabilities\CrudAccount::make();
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function relations(): CrudRelations
     {
         return Capabilities\CrudAccountRelations::make();

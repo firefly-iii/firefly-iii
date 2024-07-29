@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\JsonApi\V2\Accounts;
 
 use FireflyIII\Models\Account;
@@ -14,26 +16,23 @@ class AccountResource extends JsonApiResource
 {
     /**
      * Get the resource id.
-     *
-     * @return string
      */
     public function id(): string
     {
         Log::debug(__METHOD__);
+
         return (string) $this->resource->id;
     }
-
 
     /**
      * Get the resource's attributes.
      *
-     * @param Request|null $request
-     *
-     * @return iterable
+     * @param null|Request $request
      */
     public function attributes($request): iterable
     {
         Log::debug(__METHOD__);
+
         return [
             'created_at'              => $this->resource->created_at,
             'updated_at'              => $this->resource->updated_at,
@@ -57,17 +56,14 @@ class AccountResource extends JsonApiResource
             'interest_period'         => $this->resource->interest_period,
             'current_debt'            => $this->resource->current_debt,
 
-
-            'last_activity' => $this->resource->last_activity,
+            'last_activity'           => $this->resource->last_activity,
         ];
     }
 
     /**
      * Get the resource's relationships.
      *
-     * @param Request|null $request
-     *
-     * @return iterable
+     * @param null|Request $request
      */
     public function relationships($request): iterable
     {
@@ -75,5 +71,4 @@ class AccountResource extends JsonApiResource
             $this->relation('user')->withData($this->resource->user),
         ];
     }
-
 }

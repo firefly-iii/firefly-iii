@@ -39,7 +39,6 @@ use LaravelJsonApi\Laravel\Http\Controllers\Actions;
  *
  * This class handles api/v2 requests for accounts.
  * Most stuff is default stuff.
- *
  */
 class AccountController extends Controller
 {
@@ -47,8 +46,8 @@ class AccountController extends Controller
     use Actions\Destroy;
     use Actions\DetachRelationship;
 
-//    use Actions\FetchMany;
-    //use Actions\FetchOne;
+    //    use Actions\FetchMany;
+    // use Actions\FetchOne;
     use Actions\FetchRelated;
     use Actions\FetchRelationship;
     use Actions\Store;
@@ -57,9 +56,6 @@ class AccountController extends Controller
 
     /**
      * Fetch zero to many JSON API resources.
-     *
-     * @param AccountSchema $schema
-     * @param AccountCollectionQuery  $request
      *
      * @return Responsable|Response
      */
@@ -70,7 +66,8 @@ class AccountController extends Controller
             ->repository()
             ->queryAll()
             ->withRequest($request)
-            ->get();
+            ->get()
+        ;
 
         // do something custom...
 
@@ -80,10 +77,6 @@ class AccountController extends Controller
     /**
      * Fetch zero to one JSON API resource by id.
      *
-     * @param AccountSchema $schema
-     * @param AccountSingleQuery $request
-     * @param Account $account
-     *
      * @return Responsable|Response
      */
     public function show(AccountSchema $schema, AccountSingleQuery $request, Account $account)
@@ -92,26 +85,26 @@ class AccountController extends Controller
             ->repository()
             ->queryOne($account)
             ->withRequest($request)
-            ->first();
+            ->first()
+        ;
 
         // do something custom...
 
         return new DataResponse($model);
     }
 
-
-//    public function readAccountBalances(AnonymousQuery $query, AccountBalanceSchema $schema, Account $account): Responsable
-//    {
-//        $schema = JsonApi::server()->schemas()->schemaFor('account-balances');
-//
-//        $models = $schema
-//            ->repository()
-//            ->queryAll()
-//            ->withRequest($query)
-//            ->withAccount($account)
-//            ->get()
-//        ;
-//
-//        return DataResponse::make($models);
-//    }
+    //    public function readAccountBalances(AnonymousQuery $query, AccountBalanceSchema $schema, Account $account): Responsable
+    //    {
+    //        $schema = JsonApi::server()->schemas()->schemaFor('account-balances');
+    //
+    //        $models = $schema
+    //            ->repository()
+    //            ->queryAll()
+    //            ->withRequest($query)
+    //            ->withAccount($account)
+    //            ->get()
+    //        ;
+    //
+    //        return DataResponse::make($models);
+    //    }
 }

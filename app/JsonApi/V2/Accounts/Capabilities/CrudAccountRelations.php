@@ -25,7 +25,4 @@ namespace FireflyIII\JsonApi\V2\Accounts\Capabilities;
 
 use LaravelJsonApi\NonEloquent\Capabilities\CrudRelations;
 
-class CrudAccountRelations extends CrudRelations
-{
-
-}
+class CrudAccountRelations extends CrudRelations {}
