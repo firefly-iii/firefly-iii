@@ -108,6 +108,7 @@ class Transaction extends Model
             'encrypted'           => 'boolean', // model does not have these fields though
             'bill_name_encrypted' => 'boolean',
             'reconciled'          => 'boolean',
+            'balance_dirty' => 'boolean',
             'date'                => 'datetime',
         ];
 
@@ -230,6 +231,13 @@ class Transaction extends Model
     {
         return Attribute::make(
             get: static fn ($value) => (int)$value,
+        );
+    }
+
+    protected function balanceDirty(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int)$value === 1,
         );
     }
 

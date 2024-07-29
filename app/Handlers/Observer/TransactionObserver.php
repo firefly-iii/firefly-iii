@@ -25,6 +25,7 @@ namespace FireflyIII\Handlers\Observer;
 
 use FireflyIII\Models\Transaction;
 use FireflyIII\Support\Models\AccountBalanceCalculator;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class TransactionObserver
@@ -39,13 +40,19 @@ class TransactionObserver
 
     public function updated(Transaction $transaction): void
     {
-        app('log')->debug('Observe "updated" of a transaction.');
-        AccountBalanceCalculator::recalculateForJournal($transaction->transactionJournal);
+        Log::debug('Observe "updated" of a transaction.');
+        if (1 === bccomp($transaction->amount, '0')) {
+            Log::debug('Trigger recalculateForJournal');
+            AccountBalanceCalculator::recalculateForJournal($transaction->transactionJournal);
+        }
     }
 
     public function created(Transaction $transaction): void
     {
-        app('log')->debug('Observe "created" of a transaction.');
-        AccountBalanceCalculator::recalculateForJournal($transaction->transactionJournal);
+        Log::debug('Observe "created" of a transaction.');
+        if (1 === bccomp($transaction->amount, '0')) {
+            Log::debug('Trigger recalculateForJournal');
+            AccountBalanceCalculator::recalculateForJournal($transaction->transactionJournal);
+        }
     }
 }
