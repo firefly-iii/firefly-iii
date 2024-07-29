@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'cache-prefix'        => '',
     'enabled'             => env('MODEL_CACHE_ENABLED', true),

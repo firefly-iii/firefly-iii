@@ -28,7 +28,6 @@ use FireflyIII\User;
 
 trait UserGroupDetectable
 {
-
     /**
      * Return the user group or NULL if none is set.
      * Will throw exception if invalid.

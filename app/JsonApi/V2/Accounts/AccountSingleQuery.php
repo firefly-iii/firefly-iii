@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\JsonApi\V2\Accounts;
 
 use Illuminate\Support\Facades\Log;
@@ -8,33 +10,31 @@ use LaravelJsonApi\Validation\Rule as JsonApiRule;
 
 class AccountSingleQuery extends ResourceQuery
 {
-
     /**
      * Get the validation rules that apply to the request query parameters.
-     *
-     * @return array
      */
     public function rules(): array
     {
-        Log::debug(__METHOD__);;
+        Log::debug(__METHOD__);
+
         return [
-            'fields' => [
+            'fields'    => [
                 'nullable',
                 'array',
                 JsonApiRule::fieldSets(),
             ],
-            'filter' => [
+            'filter'    => [
                 'nullable',
                 'array',
                 JsonApiRule::filter()->forget('id'),
             ],
-            'include' => [
+            'include'   => [
                 'nullable',
                 'string',
                 JsonApiRule::includePaths(),
             ],
-            'page' => JsonApiRule::notSupported(),
-            'sort' => JsonApiRule::notSupported(),
+            'page'      => JsonApiRule::notSupported(),
+            'sort'      => JsonApiRule::notSupported(),
             'withCount' => [
                 'nullable',
                 'string',

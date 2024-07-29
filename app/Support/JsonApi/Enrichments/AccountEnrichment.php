@@ -69,16 +69,16 @@ class AccountEnrichment implements EnrichmentInterface
         $this->collectMetaData();
         // $this->getMetaBalances();
 
-//        $this->collection->transform(function (Account $account) {
-//            $account->user_array = ['id' => 1, 'bla bla' => 'bla'];
-//            $account->balances   = collect([
-//                ['balance_id' => 1, 'balance' => 5],
-//                ['balance_id' => 2, 'balance' => 5],
-//                ['balance_id' => 3, 'balance' => 5],
-//            ]);
-//
-//            return $account;
-//        });
+        //        $this->collection->transform(function (Account $account) {
+        //            $account->user_array = ['id' => 1, 'bla bla' => 'bla'];
+        //            $account->balances   = collect([
+        //                ['balance_id' => 1, 'balance' => 5],
+        //                ['balance_id' => 2, 'balance' => 5],
+        //                ['balance_id' => 3, 'balance' => 5],
+        //            ]);
+        //
+        //            return $account;
+        //        });
 
         return $this->collection;
     }
@@ -136,7 +136,7 @@ class AccountEnrichment implements EnrichmentInterface
         $metaFields  = $this->repository->getMetaValues($this->collection, ['currency_id', 'account_role', 'account_number', 'liability_direction', 'interest', 'interest_period', 'current_debt']);
         $currencyIds = $metaFields->where('name', 'currency_id')->pluck('data')->toArray();
 
-        $currencies = [];
+        $currencies  = [];
         foreach ($this->currencyRepository->getByIds($currencyIds) as $currency) {
             $id              = $currency->id;
             $currencies[$id] = $currency;
@@ -159,11 +159,13 @@ class AccountEnrichment implements EnrichmentInterface
         });
     }
 
-    #[\Override] public function enrichSingle(Model $model): Model
+    #[\Override]
+    public function enrichSingle(Model $model): Model
     {
         Log::debug(__METHOD__);
         $collection = new Collection([$model]);
         $collection = $this->enrich($collection);
+
         return $collection->first();
     }
 }

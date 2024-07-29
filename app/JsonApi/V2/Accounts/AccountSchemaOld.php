@@ -41,13 +41,13 @@ class AccountSchemaOld extends Schema
             DateTime::make('created_at')->sortable()->readOnly(),
             DateTime::make('updated_at')->sortable()->readOnly(),
             Str::make('name')->sortable(),
-//            Str::make('account_type'),
-//            Str::make('virtual_balance'),
-//            Str::make('iban'),
-//            Boolean::make('active'),
-//            Number::make('order'),
+            //            Str::make('account_type'),
+            //            Str::make('virtual_balance'),
+            //            Str::make('iban'),
+            //            Boolean::make('active'),
+            //            Number::make('order'),
             HasOne::make('user')->readOnly(),
-            //HasMany::make('account_balances'),
+            // HasMany::make('account_balances'),
         ];
     }
 

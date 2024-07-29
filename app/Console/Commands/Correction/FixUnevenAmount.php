@@ -46,19 +46,20 @@ class FixUnevenAmount extends Command
     {
         $this->fixUnevenAmounts();
         $this->matchCurrencies();
+
         return 0;
     }
 
     private function fixJournal(int $param): void
     {
         // one of the transactions is bad.
-        $journal = TransactionJournal::find($param);
+        $journal             = TransactionJournal::find($param);
         if (null === $journal) {
             return;
         }
 
         /** @var null|Transaction $source */
-        $source = $journal->transactions()->where('amount', '<', 0)->first();
+        $source              = $journal->transactions()->where('amount', '<', 0)->first();
 
         if (null === $source) {
             $this->friendlyError(
@@ -74,11 +75,11 @@ class FixUnevenAmount extends Command
             return;
         }
 
-        $amount = bcmul('-1', $source->amount);
+        $amount              = bcmul('-1', $source->amount);
 
         // fix amount of destination:
         /** @var null|Transaction $destination */
-        $destination = $journal->transactions()->where('amount', '>', 0)->first();
+        $destination         = $journal->transactions()->where('amount', '>', 0)->first();
 
         if (null === $destination) {
             $this->friendlyError(
@@ -98,7 +99,7 @@ class FixUnevenAmount extends Command
         $destination->amount = $amount;
         $destination->save();
 
-        $message = sprintf('Corrected amount in transaction journal #%d', $param);
+        $message             = sprintf('Corrected amount in transaction journal #%d', $param);
         $this->friendlyInfo($message);
     }
 
@@ -106,9 +107,10 @@ class FixUnevenAmount extends Command
     {
         $count    = 0;
         $journals = \DB::table('transactions')
-                       ->groupBy('transaction_journal_id')
-                       ->whereNull('deleted_at')
-                       ->get(['transaction_journal_id', \DB::raw('SUM(amount) AS the_sum')]);
+            ->groupBy('transaction_journal_id')
+            ->whereNull('deleted_at')
+            ->get(['transaction_journal_id', \DB::raw('SUM(amount) AS the_sum')])
+        ;
 
         /** @var \stdClass $entry */
         foreach ($journals as $entry) {
@@ -156,19 +158,20 @@ class FixUnevenAmount extends Command
 
     private function matchCurrencies(): void
     {
-        $journals = TransactionJournal
-            ::leftJoin('transactions', 'transaction_journals.id',  'transactions.transaction_journal_id')
+        $journals = TransactionJournal::leftJoin('transactions', 'transaction_journals.id', 'transactions.transaction_journal_id')
             ->where('transactions.transaction_currency_id', '!=', \DB::raw('transaction_journals.transaction_currency_id'))
-            ->get(['transaction_journals.*']);
+            ->get(['transaction_journals.*'])
+        ;
         if (0 === $journals->count()) {
             $this->friendlyPositive('Journal currency integrity is OK');
+
             return;
         }
+
         /** @var TransactionJournal $journal */
-        foreach($journals as $journal) {
+        foreach ($journals as $journal) {
             Transaction::where('transaction_journal_id', $journal->id)->update(['transaction_currency_id' => $journal->transaction_currency_id]);
         }
         $this->friendlyPositive(sprintf('Fixed %d journal(s) with mismatched currencies.', $journals->count()));
-
     }
 }

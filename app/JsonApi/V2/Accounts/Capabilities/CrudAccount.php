@@ -31,16 +31,12 @@ class CrudAccount extends CrudResource
 {
     /**
      * Read the supplied site.
-     *
-     * @param Account $account
-     *
-     * @return Account|null
      */
     public function read(Account $account): ?Account
     {
         // enrich the collected data
         $enrichment = new AccountEnrichment();
+
         return $enrichment->enrichSingle($account);
     }
-
 }
