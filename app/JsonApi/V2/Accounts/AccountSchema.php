@@ -27,7 +27,7 @@ class AccountSchema extends Schema
      */
     public function fields(): array
     {
-        Log::debug(__METHOD__);
+        // Log::debug(__METHOD__);
 
         return [
             ID::make(),
@@ -67,7 +67,7 @@ class AccountSchema extends Schema
      */
     public function filters(): array
     {
-        Log::debug(__METHOD__);
+//        Log::debug(__METHOD__);
 
         return [
             Filter::make('id'),
