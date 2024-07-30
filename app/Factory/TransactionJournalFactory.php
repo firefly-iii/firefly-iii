@@ -47,6 +47,7 @@ use FireflyIII\Support\NullArrayObject;
 use FireflyIII\User;
 use FireflyIII\Validation\AccountValidator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class TransactionJournalFactory
@@ -261,8 +262,24 @@ class TransactionJournalFactory
         $transactionFactory->setForeignCurrency($foreignCurrency);
         $transactionFactory->setReconciled($row['reconciled'] ?? false);
 
+        // if the foreign currency is set and is different, and the transaction type is a transfer,
+        // Firefly III will save the foreign currency information in such a way that both
+        // asset accounts can look at the "amount" and "transaction_currency_id" column and
+        // see the currency they expect to see.
+        $amount =  (string)$row['amount'];
+        $foreignAmount = (string)$row['foreign_amount'];
+        if(null !== $foreignCurrency && $foreignCurrency->id !== $currency->id &&
+        TransactionType::TRANSFER === $type->type
+        ) {
+            $transactionFactory->setCurrency($foreignCurrency);
+            $transactionFactory->setForeignCurrency($currency);
+            $amount =  (string)$row['foreign_amount'];
+            $foreignAmount = (string)$row['amount'];
+            Log::debug('Swap native/foreign amounts in transfer for new save method.');
+    }
+
         try {
-            $transactionFactory->createPositive((string)$row['amount'], (string)$row['foreign_amount']);
+            $transactionFactory->createPositive($amount, $foreignAmount);
         } catch (FireflyException $e) {
             app('log')->error(sprintf('Exception creating positive transaction: %s', $e->getMessage()));
             $this->forceTrDelete($negative);
