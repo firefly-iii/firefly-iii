@@ -48,6 +48,16 @@ class AccountBalanceCalculator
     /**
      * Recalculate all balances.
      */
+    public static function forceRecalculateAll(): void
+    {
+        Transaction::whereNull('deleted_at')->update(['balance_dirty' => true]);
+        $object = new self();
+        $object->optimizedCalculation(new Collection());
+    }
+
+    /**
+     * Recalculate all balances.
+     */
     public static function recalculateAll(): void
     {
         $object = new self();

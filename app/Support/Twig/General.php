@@ -64,8 +64,14 @@ class General extends AbstractExtension
 
                 /** @var Carbon $date */
                 $date = session('end', today(config('app.timezone'))->endOfMonth());
+                $info = app('steam')->balanceByTransactions($account, $date, null);
 
-                return app('steam')->balance($account, $date);
+                $strings = [];
+                foreach($info as $currencyId => $balance) {
+                    $strings[] =  app('amount')->formatByCurrencyId($currencyId, $balance, false);
+                }
+                return implode(', ', $strings);
+                //return app('steam')->balance($account, $date);
             }
         );
     }

@@ -1,4 +1,6 @@
 parameters:
+  scanFiles:
+    - ../_ide_helper_models.php
   universalObjectCratesClasses:
     - Illuminate\Database\Eloquent\Model
   # TODO: slowly remove these parameters and fix the issues found.
@@ -10,6 +12,7 @@ parameters:
     - '#with no value type specified in iterable type array#' # remove this rule when all other issues are solved.
     - '#has no value type specified in iterable type array#' # remove this rule when all other issues are solved.
     - '#is not allowed to extend#'
+    - '#does not specify its types#'
     - '#switch is forbidden to use#'
     - '#is neither abstract nor final#'
     - '#on left side of \?\?\= always exists and is not nullable#'

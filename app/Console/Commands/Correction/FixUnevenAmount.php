@@ -51,7 +51,7 @@ class FixUnevenAmount extends Command
         $this->convertOldStyleTransfers();
         $this->fixUnevenAmounts();
         $this->matchCurrencies();
-        AccountBalanceCalculator::recalculateAll();
+        AccountBalanceCalculator::forceRecalculateAll();
 
         return 0;
     }
