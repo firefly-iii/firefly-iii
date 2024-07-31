@@ -67,7 +67,7 @@ class AccountSchema extends Schema
      */
     public function filters(): array
     {
-//        Log::debug(__METHOD__);
+        //        Log::debug(__METHOD__);
 
         return [
             Filter::make('id'),

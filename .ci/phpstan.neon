@@ -3,7 +3,6 @@ parameters:
     - Illuminate\Database\Eloquent\Model
   # TODO: slowly remove these parameters and fix the issues found.
   reportUnmatchedIgnoredErrors: false
-  checkGenericClassInNonGenericObjectType: false  # remove this rule when all other issues are solved.
   ignoreErrors:
   # TODO: slowly remove these exceptions and fix the issues found.
     - '#Dynamic call to static method#' # all the Laravel ORM things depend on this.

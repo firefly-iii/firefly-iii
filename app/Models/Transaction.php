@@ -24,12 +24,10 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Carbon\Carbon;
-use Eloquent;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -55,7 +53,7 @@ class Transaction extends Model
             'encrypted'           => 'boolean', // model does not have these fields though
             'bill_name_encrypted' => 'boolean',
             'reconciled'          => 'boolean',
-            'balance_dirty' => 'boolean',
+            'balance_dirty'       => 'boolean',
             'date'                => 'datetime',
         ];
 
@@ -184,7 +182,7 @@ class Transaction extends Model
     protected function balanceDirty(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value === 1,
+            get: static fn ($value) => 1 === (int)$value,
         );
     }
 
