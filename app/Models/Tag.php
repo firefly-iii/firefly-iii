@@ -37,54 +37,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-/**
- * FireflyIII\Models\Tag
- *
- * @property int                             $id
- * @property null|Carbon                     $created_at
- * @property null|Carbon                     $updated_at
- * @property null|Carbon                     $deleted_at
- * @property int                             $user_id
- * @property string                          $tag
- * @property string                          $tagMode
- * @property null|Carbon                     $date
- * @property null|string                     $description
- * @property null|float                      $latitude
- * @property null|float                      $longitude
- * @property null|int                        $zoomLevel
- * @property Attachment[]|Collection         $attachments
- * @property null|int                        $attachments_count
- * @property Collection|Location[]           $locations
- * @property null|int                        $locations_count
- * @property Collection|TransactionJournal[] $transactionJournals
- * @property null|int                        $transaction_journals_count
- * @property User                            $user
- *
- * @method static \Illuminate\Database\Eloquent\Builder|Tag newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Tag newQuery()
- * @method static Builder|Tag                               onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|Tag query()
- * @method static \Illuminate\Database\Eloquent\Builder|Tag whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Tag whereDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Tag whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Tag whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Tag whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Tag whereLatitude($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Tag whereLongitude($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Tag whereTag($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Tag whereTagMode($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Tag whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Tag whereUserId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Tag whereZoomLevel($value)
- * @method static Builder|Tag                               withTrashed()
- * @method static Builder|Tag                               withoutTrashed()
- *
- * @property int $user_group_id
- *
- * @method static \Illuminate\Database\Eloquent\Builder|Tag whereUserGroupId($value)
- *
- * @mixin Eloquent
- */
 class Tag extends Model
 {
     use ReturnsIntegerIdTrait;

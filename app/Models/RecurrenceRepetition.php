@@ -32,38 +32,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 
-/**
- * FireflyIII\Models\RecurrenceRepetition
- *
- * @property int         $id
- * @property null|Carbon $created_at
- * @property null|Carbon $updated_at
- * @property null|Carbon $deleted_at
- * @property int         $recurrence_id
- * @property string      $repetition_type
- * @property string      $repetition_moment
- * @property int         $repetition_skip
- * @property int         $weekend
- * @property Recurrence  $recurrence
- *
- * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition newQuery()
- * @method static Builder|RecurrenceRepetition                               onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition query()
- * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition whereRecurrenceId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition whereRepetitionMoment($value)
- * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition whereRepetitionSkip($value)
- * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition whereRepetitionType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition whereWeekend($value)
- * @method static Builder|RecurrenceRepetition                               withTrashed()
- * @method static Builder|RecurrenceRepetition                               withoutTrashed()
- *
- * @mixin Eloquent
- */
 class RecurrenceRepetition extends Model
 {
     use ReturnsIntegerIdTrait;

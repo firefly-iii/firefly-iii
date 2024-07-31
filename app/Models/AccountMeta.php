@@ -30,29 +30,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-/**
- * Class AccountMeta
- *
- * @property int         $id
- * @property null|Carbon $created_at
- * @property null|Carbon $updated_at
- * @property int         $account_id
- * @property string      $name
- * @property mixed       $data
- * @property Account     $account
- *
- * @method static Builder|AccountMeta newModelQuery()
- * @method static Builder|AccountMeta newQuery()
- * @method static Builder|AccountMeta query()
- * @method static Builder|AccountMeta whereAccountId($value)
- * @method static Builder|AccountMeta whereCreatedAt($value)
- * @method static Builder|AccountMeta whereData($value)
- * @method static Builder|AccountMeta whereId($value)
- * @method static Builder|AccountMeta whereName($value)
- * @method static Builder|AccountMeta whereUpdatedAt($value)
- *
- * @mixin Eloquent
- */
+
 class AccountMeta extends Model
 {
     use ReturnsIntegerIdTrait;

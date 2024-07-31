@@ -34,33 +34,6 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-/**
- * Class GroupMembership
- *
- * @property int         $id
- * @property null|Carbon $created_at
- * @property null|Carbon $updated_at
- * @property null|string $deleted_at
- * @property int         $user_id
- * @property int         $user_group_id
- * @property int         $user_role_id
- * @property User        $user
- * @property UserGroup   $userGroup
- * @property UserRole    $userRole
- *
- * @method static Builder|GroupMembership newModelQuery()
- * @method static Builder|GroupMembership newQuery()
- * @method static Builder|GroupMembership query()
- * @method static Builder|GroupMembership whereCreatedAt($value)
- * @method static Builder|GroupMembership whereDeletedAt($value)
- * @method static Builder|GroupMembership whereId($value)
- * @method static Builder|GroupMembership whereUpdatedAt($value)
- * @method static Builder|GroupMembership whereUserGroupId($value)
- * @method static Builder|GroupMembership whereUserId($value)
- * @method static Builder|GroupMembership whereUserRoleId($value)
- *
- * @mixin Eloquent
- */
 class GroupMembership extends Model
 {
     use ReturnsIntegerIdTrait;

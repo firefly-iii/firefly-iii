@@ -35,43 +35,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-/**
- * FireflyIII\Models\AvailableBudget
- *
- * @property int                 $id
- * @property null|Carbon         $created_at
- * @property null|Carbon         $updated_at
- * @property null|Carbon         $deleted_at
- * @property int                 $user_id
- * @property int                 $transaction_currency_id
- * @property string              $amount
- * @property Carbon              $start_date
- * @property Carbon              $end_date
- * @property TransactionCurrency $transactionCurrency
- * @property User                $user
- *
- * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget newQuery()
- * @method static Builder|AvailableBudget                               onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget query()
- * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereAmount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereEndDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereStartDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereTransactionCurrencyId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereUserId($value)
- * @method static Builder|AvailableBudget                               withTrashed()
- * @method static Builder|AvailableBudget                               withoutTrashed()
- *
- * @property int $user_group_id
- *
- * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereUserGroupId($value)
- *
- * @mixin Eloquent
- */
+
 class AvailableBudget extends Model
 {
     use ReturnsIntegerIdTrait;

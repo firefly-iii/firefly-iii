@@ -37,41 +37,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-/**
- * FireflyIII\Models\ObjectGroup
- *
- * @property int                    $id
- * @property int                    $user_id
- * @property null|Carbon            $created_at
- * @property null|Carbon            $updated_at
- * @property null|Carbon            $deleted_at
- * @property string                 $title
- * @property int                    $order
- * @property Account[]|Collection   $accounts
- * @property null|int               $accounts_count
- * @property Bill[]|Collection      $bills
- * @property null|int               $bills_count
- * @property Collection|PiggyBank[] $piggyBanks
- * @property null|int               $piggy_banks_count
- * @property User                   $user
- *
- * @method static Builder|ObjectGroup newModelQuery()
- * @method static Builder|ObjectGroup newQuery()
- * @method static Builder|ObjectGroup query()
- * @method static Builder|ObjectGroup whereCreatedAt($value)
- * @method static Builder|ObjectGroup whereDeletedAt($value)
- * @method static Builder|ObjectGroup whereId($value)
- * @method static Builder|ObjectGroup whereOrder($value)
- * @method static Builder|ObjectGroup whereTitle($value)
- * @method static Builder|ObjectGroup whereUpdatedAt($value)
- * @method static Builder|ObjectGroup whereUserId($value)
- *
- * @property int $user_group_id
- *
- * @method static Builder|ObjectGroup whereUserGroupId($value)
- *
- * @mixin Eloquent
- */
+
 class ObjectGroup extends Model
 {
     use ReturnsIntegerIdTrait;

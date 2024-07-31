@@ -37,47 +37,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-/**
- * FireflyIII\Models\Category
- *
- * @property int                             $id
- * @property null|Carbon                     $created_at
- * @property null|Carbon                     $updated_at
- * @property null|Carbon                     $deleted_at
- * @property int                             $user_id
- * @property string                          $name
- * @property Carbon                          $lastActivity
- * @property bool                            $encrypted
- * @property Attachment[]|Collection         $attachments
- * @property null|int                        $attachments_count
- * @property Collection|Note[]               $notes
- * @property null|int                        $notes_count
- * @property Collection|TransactionJournal[] $transactionJournals
- * @property null|int                        $transaction_journals_count
- * @property Collection|Transaction[]        $transactions
- * @property null|int                        $transactions_count
- * @property User                            $user
- *
- * @method static \Illuminate\Database\Eloquent\Builder|Category newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Category newQuery()
- * @method static Builder|Category                               onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|Category query()
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereEncrypted($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereUserId($value)
- * @method static Builder|Category                               withTrashed()
- * @method static Builder|Category                               withoutTrashed()
- *
- * @property int $user_group_id
- *
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereUserGroupId($value)
- *
- * @mixin Eloquent
- */
+
 class Category extends Model
 {
     use ReturnsIntegerIdTrait;

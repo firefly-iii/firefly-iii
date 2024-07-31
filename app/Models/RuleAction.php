@@ -34,35 +34,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\ExpressionLanguage\SyntaxError;
 
-/**
- * FireflyIII\Models\RuleAction
- *
- * @property int         $id
- * @property null|Carbon $created_at
- * @property null|Carbon $updated_at
- * @property int         $rule_id
- * @property null|string $action_type
- * @property null|string $action_value
- * @property int         $order
- * @property bool        $active
- * @property bool        $stop_processing
- * @property Rule        $rule
- *
- * @method static Builder|RuleAction newModelQuery()
- * @method static Builder|RuleAction newQuery()
- * @method static Builder|RuleAction query()
- * @method static Builder|RuleAction whereActionType($value)
- * @method static Builder|RuleAction whereActionValue($value)
- * @method static Builder|RuleAction whereActive($value)
- * @method static Builder|RuleAction whereCreatedAt($value)
- * @method static Builder|RuleAction whereId($value)
- * @method static Builder|RuleAction whereOrder($value)
- * @method static Builder|RuleAction whereRuleId($value)
- * @method static Builder|RuleAction whereStopProcessing($value)
- * @method static Builder|RuleAction whereUpdatedAt($value)
- *
- * @mixin Eloquent
- */
+
 class RuleAction extends Model
 {
     use ReturnsIntegerIdTrait;

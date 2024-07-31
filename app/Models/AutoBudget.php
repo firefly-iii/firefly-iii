@@ -33,39 +33,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 
-/**
- * FireflyIII\Models\AutoBudget
- *
- * @property int                 $id
- * @property null|Carbon         $created_at
- * @property null|Carbon         $updated_at
- * @property null|Carbon         $deleted_at
- * @property int                 $budget_id
- * @property int                 $transaction_currency_id
- * @property int|string          $auto_budget_type
- * @property string              $amount
- * @property string              $period
- * @property Budget              $budget
- * @property TransactionCurrency $transactionCurrency
- *
- * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget newQuery()
- * @method static Builder|AutoBudget                               onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget query()
- * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget whereAmount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget whereAutoBudgetType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget whereBudgetId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget wherePeriod($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget whereTransactionCurrencyId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget whereUpdatedAt($value)
- * @method static Builder|AutoBudget                               withTrashed()
- * @method static Builder|AutoBudget                               withoutTrashed()
- *
- * @mixin Eloquent
- */
 class AutoBudget extends Model
 {
     use ReturnsIntegerIdTrait;

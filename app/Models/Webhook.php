@@ -39,52 +39,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-/**
- * FireflyIII\Models\Webhook
- *
- * @property int                         $id
- * @property null|Carbon                 $created_at
- * @property null|Carbon                 $updated_at
- * @property null|Carbon                 $deleted_at
- * @property int                         $user_id
- * @property bool                        $active
- * @property int                         $trigger
- * @property int                         $response
- * @property int                         $delivery
- * @property string                      $url
- * @property User                        $user
- * @property Collection|WebhookMessage[] $webhookMessages
- * @property null|int                    $webhook_messages_count
- *
- * @method static Builder|Webhook                            newModelQuery()
- * @method static Builder|Webhook                            newQuery()
- * @method static \Illuminate\Database\Query\Builder|Webhook onlyTrashed()
- * @method static Builder|Webhook                            query()
- * @method static Builder|Webhook                            whereActive($value)
- * @method static Builder|Webhook                            whereCreatedAt($value)
- * @method static Builder|Webhook                            whereDeletedAt($value)
- * @method static Builder|Webhook                            whereDelivery($value)
- * @method static Builder|Webhook                            whereId($value)
- * @method static Builder|Webhook                            whereResponse($value)
- * @method static Builder|Webhook                            whereTrigger($value)
- * @method static Builder|Webhook                            whereUpdatedAt($value)
- * @method static Builder|Webhook                            whereUrl($value)
- * @method static Builder|Webhook                            whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|Webhook withTrashed()
- * @method static \Illuminate\Database\Query\Builder|Webhook withoutTrashed()
- *
- * @property string $title
- * @property string $secret
- *
- * @method static Builder|Webhook whereSecret($value)
- * @method static Builder|Webhook whereTitle($value)
- *
- * @property int $user_group_id
- *
- * @method static Builder|Webhook whereUserGroupId($value)
- *
- * @mixin Eloquent
- */
+
 class Webhook extends Model
 {
     use ReturnsIntegerIdTrait;

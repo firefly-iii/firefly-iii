@@ -34,40 +34,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
-/**
- * FireflyIII\Models\Location
- *
- * @property int                  $id
- * @property null|Carbon          $created_at
- * @property null|Carbon          $updated_at
- * @property null|Carbon          $deleted_at
- * @property int                  $locatable_id
- * @property string               $locatable_type
- * @property null|float           $latitude
- * @property null|float           $longitude
- * @property null|int             $zoom_level
- * @property Account[]|Collection $accounts
- * @property null|int             $accounts_count
- * @property \Eloquent|Model      $locatable
- *
- * @method static Builder|Location newModelQuery()
- * @method static Builder|Location newQuery()
- * @method static Builder|Location query()
- * @method static Builder|Location whereCreatedAt($value)
- * @method static Builder|Location whereDeletedAt($value)
- * @method static Builder|Location whereId($value)
- * @method static Builder|Location whereLatitude($value)
- * @method static Builder|Location whereLocatableId($value)
- * @method static Builder|Location whereLocatableType($value)
- * @method static Builder|Location whereLongitude($value)
- * @method static Builder|Location whereUpdatedAt($value)
- * @method static Builder|Location whereZoomLevel($value)
- *
- * @property Collection<int, TransactionJournal> $transactionJournals
- * @property null|int                            $transaction_journals_count
- *
- * @mixin Eloquent
- */
+
 class Location extends Model
 {
     use ReturnsIntegerIdTrait;

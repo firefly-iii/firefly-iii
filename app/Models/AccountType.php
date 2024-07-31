@@ -31,26 +31,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-/**
- * FireflyIII\Models\AccountType
- *
- * @property int                  $id
- * @property null|Carbon          $created_at
- * @property null|Carbon          $updated_at
- * @property string               $type
- * @property Account[]|Collection $accounts
- * @property null|int             $accounts_count
- *
- * @method static Builder|AccountType newModelQuery()
- * @method static Builder|AccountType newQuery()
- * @method static Builder|AccountType query()
- * @method static Builder|AccountType whereCreatedAt($value)
- * @method static Builder|AccountType whereId($value)
- * @method static Builder|AccountType whereType($value)
- * @method static Builder|AccountType whereUpdatedAt($value)
- *
- * @mixin Eloquent
- */
+
 class AccountType extends Model
 {
     use ReturnsIntegerIdTrait;

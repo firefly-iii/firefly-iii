@@ -32,28 +32,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-/**
- * Class UserRole
- *
- * @property int                          $id
- * @property null|Carbon                  $created_at
- * @property null|Carbon                  $updated_at
- * @property null|string                  $deleted_at
- * @property string                       $title
- * @property Collection|GroupMembership[] $groupMemberships
- * @property null|int                     $group_memberships_count
- *
- * @method static Builder|UserRole newModelQuery()
- * @method static Builder|UserRole newQuery()
- * @method static Builder|UserRole query()
- * @method static Builder|UserRole whereCreatedAt($value)
- * @method static Builder|UserRole whereDeletedAt($value)
- * @method static Builder|UserRole whereId($value)
- * @method static Builder|UserRole whereTitle($value)
- * @method static Builder|UserRole whereUpdatedAt($value)
- *
- * @mixin Eloquent
- */
+
 class UserRole extends Model
 {
     use ReturnsIntegerIdTrait;

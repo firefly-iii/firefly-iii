@@ -34,37 +34,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-/**
- * FireflyIII\Models\TransactionJournalLink
- *
- * @property int                $id
- * @property null|Carbon        $created_at
- * @property null|Carbon        $updated_at
- * @property int                $link_type_id
- * @property int                $source_id
- * @property int                $destination_id
- * @property null|string        $comment
- * @property TransactionJournal $destination
- * @property LinkType           $linkType
- * @property Collection|Note[]  $notes
- * @property null|int           $notes_count
- * @property TransactionJournal $source
- * @property string             $inward
- * @property string             $outward
- *
- * @method static Builder|TransactionJournalLink newModelQuery()
- * @method static Builder|TransactionJournalLink newQuery()
- * @method static Builder|TransactionJournalLink query()
- * @method static Builder|TransactionJournalLink whereComment($value)
- * @method static Builder|TransactionJournalLink whereCreatedAt($value)
- * @method static Builder|TransactionJournalLink whereDestinationId($value)
- * @method static Builder|TransactionJournalLink whereId($value)
- * @method static Builder|TransactionJournalLink whereLinkTypeId($value)
- * @method static Builder|TransactionJournalLink whereSourceId($value)
- * @method static Builder|TransactionJournalLink whereUpdatedAt($value)
- *
- * @mixin Eloquent
- */
+
 class TransactionJournalLink extends Model
 {
     use ReturnsIntegerIdTrait;

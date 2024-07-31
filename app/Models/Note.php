@@ -32,36 +32,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 
-/**
- * FireflyIII\Models\Note
- *
- * @property int             $id
- * @property null|Carbon     $created_at
- * @property null|Carbon     $updated_at
- * @property null|Carbon     $deleted_at
- * @property int             $noteable_id
- * @property string          $noteable_type
- * @property null|string     $title
- * @property null|string     $text
- * @property \Eloquent|Model $noteable
- *
- * @method static \Illuminate\Database\Eloquent\Builder|Note newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Note newQuery()
- * @method static Builder|Note                               onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|Note query()
- * @method static \Illuminate\Database\Eloquent\Builder|Note whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Note whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Note whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Note whereNoteableId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Note whereNoteableType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Note whereText($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Note whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Note whereUpdatedAt($value)
- * @method static Builder|Note                               withTrashed()
- * @method static Builder|Note                               withoutTrashed()
- *
- * @mixin Eloquent
- */
+
 class Note extends Model
 {
     use ReturnsIntegerIdTrait;

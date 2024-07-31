@@ -37,56 +37,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-/**
- * FireflyIII\Models\Rule
- *
- * @property int                      $id
- * @property null|Carbon              $created_at
- * @property null|Carbon              $updated_at
- * @property null|Carbon              $deleted_at
- * @property int                      $user_id
- * @property int                      $rule_group_id
- * @property string                   $title
- * @property null|string              $description
- * @property int                      $order
- * @property bool                     $active
- * @property bool                     $stop_processing
- * @property bool                     $strict
- * @property string                   $action_value
- * @property Collection|RuleAction[]  $ruleActions
- * @property null|int                 $rule_actions_count
- * @property RuleGroup                $ruleGroup
- * @property Collection|RuleTrigger[] $ruleTriggers
- * @property null|int                 $rule_triggers_count
- * @property User                     $user
- *
- * @method static \Illuminate\Database\Eloquent\Builder|Rule newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Rule newQuery()
- * @method static Builder|Rule                               onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|Rule query()
- * @method static \Illuminate\Database\Eloquent\Builder|Rule whereActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Rule whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Rule whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Rule whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Rule whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Rule whereOrder($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Rule whereRuleGroupId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Rule whereStopProcessing($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Rule whereStrict($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Rule whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Rule whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Rule whereUserId($value)
- * @method static Builder|Rule                               withTrashed()
- * @method static Builder|Rule                               withoutTrashed()
- *
- * @property int $user_group_id
- *
- * @method static \Illuminate\Database\Eloquent\Builder|Rule whereUserGroupId($value)
- *
- * @property null|UserGroup $userGroup
- *
- * @mixin Eloquent
- */
+
 class Rule extends Model
 {
     use ReturnsIntegerIdTrait;

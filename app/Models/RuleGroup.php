@@ -37,46 +37,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-/**
- * FireflyIII\Models\RuleGroup
- *
- * @property int               $id
- * @property null|Carbon       $created_at
- * @property null|Carbon       $updated_at
- * @property null|Carbon       $deleted_at
- * @property int               $user_id
- * @property null|string       $title
- * @property null|string       $description
- * @property int               $order
- * @property bool              $active
- * @property bool              $stop_processing
- * @property Collection|Rule[] $rules
- * @property null|int          $rules_count
- * @property User              $user
- *
- * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup newQuery()
- * @method static Builder|RuleGroup                               onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup query()
- * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereOrder($value)
- * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereStopProcessing($value)
- * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereUserId($value)
- * @method static Builder|RuleGroup                               withTrashed()
- * @method static Builder|RuleGroup                               withoutTrashed()
- *
- * @property int $user_group_id
- *
- * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereUserGroupId($value)
- *
- * @mixin Eloquent
- */
+
 class RuleGroup extends Model
 {
     use ReturnsIntegerIdTrait;

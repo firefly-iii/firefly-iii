@@ -34,36 +34,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-/**
- * Class WebhookAttempt
- *
- * @property int            $id
- * @property null|Carbon    $created_at
- * @property null|Carbon    $updated_at
- * @property null|string    $deleted_at
- * @property int            $webhook_message_id
- * @property int|string     $status_code
- * @property null|string    $logs
- * @property null|string    $response
- * @property WebhookMessage $webhookMessage
- *
- * @method static \Illuminate\Database\Eloquent\Builder|WebhookAttempt newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|WebhookAttempt newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|WebhookAttempt query()
- * @method static \Illuminate\Database\Eloquent\Builder|WebhookAttempt whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|WebhookAttempt whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|WebhookAttempt whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|WebhookAttempt whereLogs($value)
- * @method static \Illuminate\Database\Eloquent\Builder|WebhookAttempt whereResponse($value)
- * @method static \Illuminate\Database\Eloquent\Builder|WebhookAttempt whereStatusCode($value)
- * @method static \Illuminate\Database\Eloquent\Builder|WebhookAttempt whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|WebhookAttempt whereWebhookMessageId($value)
- * @method static Builder|WebhookAttempt                               onlyTrashed()
- * @method static Builder|WebhookAttempt                               withTrashed()
- * @method static Builder|WebhookAttempt                               withoutTrashed()
- *
- * @mixin Eloquent
- */
+
 class WebhookAttempt extends Model
 {
     use ReturnsIntegerIdTrait;
