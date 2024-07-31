@@ -35,6 +35,9 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
+/**
+ * @mixin IdeHelperTransactionJournalLink
+ */
 class TransactionJournalLink extends Model
 {
     use ReturnsIntegerIdTrait;

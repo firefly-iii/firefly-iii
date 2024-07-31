@@ -37,6 +37,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @mixin IdeHelperTag
+ */
 class Tag extends Model
 {
     use ReturnsIntegerIdTrait;

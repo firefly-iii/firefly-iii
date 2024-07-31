@@ -33,6 +33,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 
 
+/**
+ * @mixin IdeHelperTransactionJournalMeta
+ */
 class TransactionJournalMeta extends Model
 {
     use ReturnsIntegerIdTrait;

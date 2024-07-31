@@ -35,6 +35,9 @@ use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
+/**
+ * @mixin IdeHelperWebhookAttempt
+ */
 class WebhookAttempt extends Model
 {
     use ReturnsIntegerIdTrait;

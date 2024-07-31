@@ -34,6 +34,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 
+/**
+ * @mixin IdeHelperRecurrenceTransaction
+ */
 class RecurrenceTransaction extends Model
 {
     use ReturnsIntegerIdTrait;

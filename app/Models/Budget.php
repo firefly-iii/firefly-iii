@@ -40,6 +40,9 @@ use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
+/**
+ * @mixin IdeHelperBudget
+ */
 class Budget extends Model
 {
     use ReturnsIntegerIdTrait;

@@ -34,6 +34,9 @@ use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
+/**
+ * @mixin IdeHelperTransactionType
+ */
 class TransactionType extends Model
 {
     use ReturnsIntegerIdTrait;

@@ -33,6 +33,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 
+/**
+ * @mixin IdeHelperUserRole
+ */
 class UserRole extends Model
 {
     use ReturnsIntegerIdTrait;

@@ -39,6 +39,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @mixin IdeHelperBill
+ */
 class Bill extends Model
 {
     use ReturnsIntegerIdTrait;

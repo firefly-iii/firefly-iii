@@ -30,6 +30,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 
+/**
+ * @mixin IdeHelperConfiguration
+ */
 class Configuration extends Model
 {
     use ReturnsIntegerIdTrait;

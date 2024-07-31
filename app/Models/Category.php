@@ -38,6 +38,9 @@ use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
+/**
+ * @mixin IdeHelperCategory
+ */
 class Category extends Model
 {
     use ReturnsIntegerIdTrait;

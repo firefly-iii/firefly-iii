@@ -38,6 +38,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @mixin IdeHelperAttachment
+ */
 class Attachment extends Model
 {
     use ReturnsIntegerIdTrait;

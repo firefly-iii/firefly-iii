@@ -36,6 +36,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
+/**
+ * @mixin IdeHelperBudgetLimit
+ */
 class BudgetLimit extends Model
 {
     use ReturnsIntegerIdTrait;

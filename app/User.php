@@ -73,6 +73,9 @@ use Laravel\Passport\HasApiTokens;
 use Laravel\Passport\Token;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @mixin IdeHelperUser
+ */
 class User extends Authenticatable
 {
     use HasApiTokens;

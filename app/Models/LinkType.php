@@ -33,6 +33,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @mixin IdeHelperLinkType
+ */
 class LinkType extends Model
 {
     use ReturnsIntegerIdTrait;

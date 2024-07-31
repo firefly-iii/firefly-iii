@@ -41,6 +41,9 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @mixin IdeHelperTransactionJournal
+ */
 class TransactionJournal extends Model
 {
     use HasFactory;
