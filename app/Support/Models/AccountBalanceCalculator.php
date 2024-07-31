@@ -108,7 +108,8 @@ class AccountBalanceCalculator
         $balances = [];
         $count    = 0;
         $query    = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-
+            ->whereNull('transactions.deleted_at')
+            ->whereNull('transaction_journals.deleted_at')
             // this order is the same as GroupCollector, but in the exact reverse.
             ->orderBy('transaction_journals.date', 'asc')
             ->orderBy('transaction_journals.order', 'desc')
@@ -116,7 +117,7 @@ class AccountBalanceCalculator
             ->orderBy('transaction_journals.description', 'asc')
             ->orderBy('transactions.amount', 'asc')
         ;
-        if (count($accounts) > 0) {
+        if ($accounts->count() > 0) {
             $query->whereIn('transactions.account_id', $accounts->pluck('id')->toArray());
         }
 
@@ -131,7 +132,7 @@ class AccountBalanceCalculator
             // before and after are easy:
             $before                                                        = $balances[$entry->account_id][$entry->transaction_currency_id];
             $after                                                         = bcadd($before, $entry->amount);
-            if (true === $entry->balance_dirty) {
+            if (true === $entry->balance_dirty || $accounts->count() > 0) {
                 // update the transaction:
                 $entry->balance_before = $before;
                 $entry->balance_after  = $after;

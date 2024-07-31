@@ -39,8 +39,12 @@ use Illuminate\Support\Facades\Log;
  */
 class Steam
 {
+    /**
+     * @deprecated
+     */
     public function balanceIgnoreVirtual(Account $account, Carbon $date): string
     {
+        Log::warning(sprintf('Deprecated method %s, do not use.', __METHOD__));
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser($account->user);
@@ -89,6 +93,7 @@ class Steam
      */
     public function balanceInRange(Account $account, Carbon $start, Carbon $end, ?TransactionCurrency $currency = null): array
     {
+        Log::warning(sprintf('Deprecated method %s, do not use.', __METHOD__));
         $cache = new CacheProperties();
         $cache->addProperty($account->id);
         $cache->addProperty('balance-in-range');
@@ -209,8 +214,7 @@ class Steam
      */
     public function balance(Account $account, Carbon $date, ?TransactionCurrency $currency = null): string
     {
-        //throw new FireflyException('This method is obsolete.');
-        Log::warning('This method is obsolete.');
+        Log::warning(sprintf('Deprecated method %s, do not use.', __METHOD__));
         // abuse chart properties:
         $cache = new CacheProperties();
         $cache->addProperty($account->id);
@@ -257,6 +261,7 @@ class Steam
      */
     public function balanceInRangeConverted(Account $account, Carbon $start, Carbon $end, TransactionCurrency $native): array
     {
+        Log::warning(sprintf('Deprecated method %s, do not use.', __METHOD__));
         $cache = new CacheProperties();
         $cache->addProperty($account->id);
         $cache->addProperty('balance-in-range-converted');
@@ -381,6 +386,7 @@ class Steam
      */
     public function balanceConverted(Account $account, Carbon $date, TransactionCurrency $native): string
     {
+        Log::warning(sprintf('Deprecated method %s, do not use.', __METHOD__));
         Log::debug(sprintf('Now in balanceConverted (%s) for account #%d, converting to %s', $date->format('Y-m-d'), $account->id, $native->code));
         $cache = new CacheProperties();
         $cache->addProperty($account->id);
@@ -390,7 +396,7 @@ class Steam
         if ($cache->has()) {
             Log::debug('Cached!');
 
-            // return $cache->get();
+             return $cache->get();
         }
 
         /** @var AccountRepositoryInterface $repository */
@@ -520,6 +526,7 @@ class Steam
      */
     public function balancesByAccounts(Collection $accounts, Carbon $date): array
     {
+        Log::warning(sprintf('Deprecated method %s, do not use.', __METHOD__));
         $ids = $accounts->pluck('id')->toArray();
         // cache this property.
         $cache = new CacheProperties();
@@ -550,6 +557,7 @@ class Steam
      */
     public function balancesByAccountsConverted(Collection $accounts, Carbon $date): array
     {
+        Log::warning(sprintf('Deprecated method %s, do not use.', __METHOD__));
         $ids = $accounts->pluck('id')->toArray();
         // cache this property.
         $cache = new CacheProperties();
@@ -557,7 +565,7 @@ class Steam
         $cache->addProperty('balances-converted');
         $cache->addProperty($date);
         if ($cache->has()) {
-            // return $cache->get();
+             return $cache->get();
         }
 
         // need to do this per account.
@@ -583,6 +591,7 @@ class Steam
      */
     public function balancesPerCurrencyByAccounts(Collection $accounts, Carbon $date): array
     {
+        Log::warning(sprintf('Deprecated method %s, do not use.', __METHOD__));
         $ids = $accounts->pluck('id')->toArray();
         // cache this property.
         $cache = new CacheProperties();
@@ -608,6 +617,7 @@ class Steam
 
     public function balancePerCurrency(Account $account, Carbon $date): array
     {
+        Log::warning(sprintf('Deprecated method %s, do not use.', __METHOD__));
         // abuse chart properties:
         $cache = new CacheProperties();
         $cache->addProperty($account->id);

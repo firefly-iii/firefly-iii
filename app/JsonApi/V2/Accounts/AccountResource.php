@@ -39,24 +39,46 @@ class AccountResource extends JsonApiResource
             'name'                    => $this->resource->name,
             'active'                  => $this->resource->active,
             'order'                   => $this->resource->order,
+            'iban'                   => $this->resource->iban,
             'type'                    => $this->resource->account_type_string,
             'account_role'            => $this->resource->account_role,
             'account_number'          => '' === $this->resource->account_number ? null : $this->resource->account_number,
 
-            // currency
+            // currency (if the account has a currency setting, otherwise NULL).
             'currency_id'             => $this->resource->currency_id,
             'currency_name'           => $this->resource->currency_name,
             'currency_code'           => $this->resource->currency_code,
             'currency_symbol'         => $this->resource->currency_symbol,
             'currency_decimal_places' => $this->resource->currency_decimal_places,
+            'is_multi_currency'       => '1' === $this->resource->is_multi_currency,
+
+            // balances
+            'balance'                 => $this->resource->balance,
+            'native_balance'          => $this->resource->native_balance,
 
             // liability things
             'liability_direction'     => $this->resource->liability_direction,
             'interest'                => $this->resource->interest,
             'interest_period'         => $this->resource->interest_period,
-            'current_debt'            => $this->resource->current_debt,
+            'current_debt'            => $this->resource->current_debt, // TODO may be removed in the future.
 
-            'last_activity'           => $this->resource->last_activity,
+
+            // other things
+            'last_activity' => $this->resource->last_activity,
+
+
+            // still to do
+
+            // balance difference
+//            'balance_difference'             => $balanceDiff,
+//            'native_balance_difference'      => $nativeBalanceDiff,
+//            'balance_difference_start'       => $diffStart,
+//            'balance_difference_end'         => $diffEnd,
+
+            // object group
+//            'object_group_id'                => null !== $objectGroupId ? (string) $objectGroupId : null,
+//            'object_group_order'             => $objectGroupOrder,
+//            'object_group_title'             => $objectGroupTitle,
         ];
     }
 

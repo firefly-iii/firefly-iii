@@ -6,6 +6,8 @@ namespace FireflyIII\JsonApi\V2\Accounts;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Rules\IsAllowedGroupAction;
+use FireflyIII\Rules\IsDateOrTime;
+use FireflyIII\Rules\IsValidDateRange;
 use Illuminate\Support\Facades\Log;
 use LaravelJsonApi\Laravel\Http\Requests\ResourceQuery;
 use LaravelJsonApi\Validation\Rule as JsonApiRule;
@@ -25,10 +27,22 @@ class AccountCollectionQuery extends ResourceQuery
                 'array',
                 JsonApiRule::fieldSets(),
             ],
-            'user_group_id' => [
+            'userGroupId' => [
                 'nullable',
                 'integer',
                 new IsAllowedGroupAction(Account::class, request()->method()),
+            ],
+            'startPeriod' => [
+                'nullable',
+                'date',
+                new IsDateOrTime(),
+                new isValidDateRange(),
+            ],
+            'endPeriod' => [
+                'nullable',
+                'date',
+                new IsDateOrTime(),
+                new isValidDateRange(),
             ],
             'filter'        => [
                 'nullable',
@@ -44,6 +58,15 @@ class AccountCollectionQuery extends ResourceQuery
                 'nullable',
                 'array',
                 JsonApiRule::page(),
+            ],
+            'page.number' => [
+                'integer',
+                'min:1',
+            ],
+
+            'page.size' => [
+                'integer',
+                'min:1',
             ],
             'sort'          => [
                 'nullable',
