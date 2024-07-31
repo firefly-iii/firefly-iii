@@ -31,6 +31,14 @@ use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
+
+/**
+ * Class AccountBalanceCalculator
+ *
+ * This class started as a piece of code to create and calculate "account balance" objects, but they
+ * are at the moment unused. Instead, each transaction gets a before/after balance and an indicator if this
+ * balance is up-to-date. This class now contains some methods to recalculate those amounts.
+ */
 class AccountBalanceCalculator
 {
     private function __construct()
@@ -39,36 +47,25 @@ class AccountBalanceCalculator
     }
 
     /**
-     * Recalculate all balances for a given account.
-     *
-     * Je moet toch altijd wel alles doen want je weet niet waar een transaction journal invloed op heeft.
-     * Dus dit aantikken per transaction journal is zinloos, beide accounts moeten gedaan worden.
+     * Recalculate all balances.
      */
     public static function recalculateAll(): void
     {
         $object = new self();
-        //$object->recalculateLatest(null);
         $object->optimizedCalculation(new Collection());
-        // $object->recalculateJournals(null, null);
     }
 
     public static function recalculateForJournal(TransactionJournal $transactionJournal): void
     {
+        Log::debug(__METHOD__);
         $object = new self();
 
-        // new optimized code, currently UNUSED:
-        // recalculate everything ON or AFTER the moment of this transaction.
-//        Transaction
-//            ::leftjoin('transaction_journals','transaction_journals.id','=','transactions.transaction_journal_id')
-//            ->where('transaction_journals.user_id', $transactionJournal->user_id)
-//            ->where('transaction_journals.date', '>=', $transactionJournal->date)
-//            ->update(['transactions.balance_dirty' => true]);
-//        $object->optimizedCalculation(new Collection());
-
-        foreach ($transactionJournal->transactions as $transaction) {
-            $object->recalculateLatest($transaction->account);
-             //$object->recalculateJournals($transaction->account, $transactionJournal);
+        // recalculate the involved accounts:
+        $accounts = new Collection;
+        foreach($transactionJournal->transactions as $transaction) {
+            $accounts->push($transaction->account);
         }
+        $object->optimizedCalculation($accounts);
     }
 
     private function getAccountBalanceByAccount(int $account, int $currency): AccountBalance

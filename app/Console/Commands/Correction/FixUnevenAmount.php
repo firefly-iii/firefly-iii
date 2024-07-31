@@ -27,6 +27,7 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Support\Models\AccountBalanceCalculator;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -50,6 +51,7 @@ class FixUnevenAmount extends Command
         $this->convertOldStyleTransfers();
         $this->fixUnevenAmounts();
         $this->matchCurrencies();
+        AccountBalanceCalculator::recalculateAll();
 
         return 0;
     }
