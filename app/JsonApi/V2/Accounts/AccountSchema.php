@@ -76,13 +76,12 @@ class AccountSchema extends Schema
 
     public function repository(): AccountRepository
     {
-        Log::debug(__METHOD__);
         $this->setUserGroup($this->server->getUsergroup());
-
-        return AccountRepository::make()
-            ->withServer($this->server)
-            ->withSchema($this)
-            ->withUserGroup($this->userGroup)
-        ;
+        $repository = AccountRepository::make()
+                                       ->withServer($this->server)
+                                       ->withSchema($this)
+                                       ->withUserGroup($this->userGroup);
+        Log::debug(sprintf('%s: %s', __METHOD__, get_class($repository)));
+        return $repository;
     }
 }

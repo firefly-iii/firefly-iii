@@ -48,6 +48,8 @@ class AccountQuery extends QueryAll implements HasPagination
     #[\Override]
     /**
      * This method returns all accounts, given a bunch of filters and sort fields, together with pagination.
+     *
+     * It is only used on the index, and nowhere else.
      */
     public function get(): iterable
     {
@@ -76,6 +78,7 @@ class AccountQuery extends QueryAll implements HasPagination
         // add sort and filter parameters to the query.
         $query = $this->addSortParams($query, $sort);
         $query = $this->addFilterParams('account', $query, $filters);
+
 
         // collect the result.
         $collection = $query->get(['accounts.*']);

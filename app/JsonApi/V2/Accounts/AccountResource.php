@@ -19,9 +19,10 @@ class AccountResource extends JsonApiResource
      */
     public function id(): string
     {
-        Log::debug(__METHOD__);
+        $id = (string) $this->resource->id;
+        Log::debug(sprintf('%s: "%s"', __METHOD__, $id));
 
-        return (string) $this->resource->id;
+        return $id;
     }
 
     /**
@@ -39,7 +40,7 @@ class AccountResource extends JsonApiResource
             'name'                    => $this->resource->name,
             'active'                  => $this->resource->active,
             'order'                   => $this->resource->order,
-            'iban'                   => $this->resource->iban,
+            'iban'                    => $this->resource->iban,
             'type'                    => $this->resource->account_type_string,
             'account_role'            => $this->resource->account_role,
             'account_number'          => '' === $this->resource->account_number ? null : $this->resource->account_number,
@@ -62,23 +63,14 @@ class AccountResource extends JsonApiResource
             'interest_period'         => $this->resource->interest_period,
             'current_debt'            => $this->resource->current_debt, // TODO may be removed in the future.
 
-
             // other things
-            'last_activity' => $this->resource->last_activity,
+            'last_activity'           => $this->resource->last_activity,
 
-
-            // still to do
-
-            // balance difference
-//            'balance_difference'             => $balanceDiff,
-//            'native_balance_difference'      => $nativeBalanceDiff,
-//            'balance_difference_start'       => $diffStart,
-//            'balance_difference_end'         => $diffEnd,
 
             // object group
-//            'object_group_id'                => null !== $objectGroupId ? (string) $objectGroupId : null,
-//            'object_group_order'             => $objectGroupOrder,
-//            'object_group_title'             => $objectGroupTitle,
+            'object_group_id'         => $this->resource->object_group_id,
+            'object_group_title'      => $this->resource->object_group_title,
+            'object_group_order'      => $this->resource->object_group_order,
         ];
     }
 

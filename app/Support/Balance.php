@@ -27,6 +27,7 @@ use Carbon\Carbon;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 class Balance
 {
@@ -41,6 +42,7 @@ class Balance
      */
     public function getAccountBalances(Collection $accounts, Carbon $date): array
     {
+        Log::debug(sprintf('getAccountBalances(<collection>, "%s")', $date->format('Y-m-d')));
         $return     = [];
         $currencies = [];
         $cache      = new CacheProperties();
@@ -48,7 +50,7 @@ class Balance
         $cache->addProperty('getAccountBalances');
         $cache->addProperty($date);
         if ($cache->has()) {
-             return $cache->get();
+            return $cache->get();
         }
 
         $query = Transaction::
@@ -57,7 +59,8 @@ class Balance
                             ->orderBy('transaction_journals.date', 'desc')
                             ->orderBy('transaction_journals.order', 'asc')
                             ->orderBy('transaction_journals.description', 'desc')
-                            ->orderBy('transactions.amount', 'desc');
+                            ->orderBy('transactions.amount', 'desc')
+                            ->where('transaction_journals.date', '<=', $date);
 
         $result = $query->get(['transactions.account_id', 'transactions.transaction_currency_id', 'transactions.balance_after']);
         foreach ($result as $entry) {

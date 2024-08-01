@@ -26,6 +26,7 @@ namespace FireflyIII\Support\JsonApi\Enrichments;
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
@@ -44,6 +45,8 @@ class AccountEnrichment implements EnrichmentInterface
 {
     private Collection          $collection;
     private array               $currencies;
+    private array               $objectGroups;
+    private array               $grouped;
     private array               $balances;
     private TransactionCurrency $default;
     private ?Carbon             $start;
@@ -68,16 +71,19 @@ class AccountEnrichment implements EnrichmentInterface
     {
         Log::debug(sprintf('Now doing account enrichment for %d account(s)', $collection->count()));
         // prep local fields
-        $this->collection = $collection;
-        $this->default    = app('amount')->getDefaultCurrency();
-        $this->currencies = [];
-        $this->balances   = [];
+        $this->collection   = $collection;
+        $this->default      = app('amount')->getDefaultCurrency();
+        $this->currencies   = [];
+        $this->balances     = [];
+        $this->objectGroups = [];
+        $this->grouped      = [];
 
         // do everything here:
         $this->getLastActivity();
         $this->collectAccountTypes();
         $this->collectMetaData();
         $this->getMetaBalances();
+        $this->getObjectGroups();
 
         //        $this->collection->transform(function (Account $account) {
         //            $account->user_array = ['id' => 1, 'bla bla' => 'bla'];
@@ -112,16 +118,15 @@ class AccountEnrichment implements EnrichmentInterface
 
         // get start and end, so the balance difference can be generated.
         $start = null;
-        $end = null;
-        if(null !== $this->start) {
+        $end   = null;
+        if (null !== $this->start) {
             $start = Balance::getAccountBalances($this->collection, $this->start);
         }
-        if(null !== $this->end) {
+        if (null !== $this->end) {
             $end = Balance::getAccountBalances($this->collection, $this->end);
         }
 
-
-        $this->collection->transform(function (Account $account) use ($balances, $default) {
+        $this->collection->transform(function (Account $account) use ($balances, $default, $start, $end) {
             $converter = new ExchangeRateConverter();
             $native    = [
                 'currency_id'             => $this->default->id,
@@ -130,39 +135,50 @@ class AccountEnrichment implements EnrichmentInterface
                 'currency_symbol'         => $this->default->symbol,
                 'currency_decimal_places' => $this->default->decimal_places,
                 'balance'                 => '0',
+                'period_start_balance'    => null,
+                'period_end_balance'      => null,
+                'balance_difference'      => null,
             ];
             if (array_key_exists($account->id, $balances)) {
                 $set = [];
-                foreach ($balances[$account->id] as $entry) {
-                    $set[]             = [
+                foreach ($balances[$account->id] as $currencyId => $entry) {
+                    $left  = $start[$account->id][$currencyId]['balance'] ?? null;
+                    $right = $end[$account->id][$currencyId]['balance'] ?? null;
+                    $diff  = null;
+                    if (null !== $left && null !== $right) {
+                        $diff = bcsub($right, $left);
+                    }
+
+                    $item  = [
                         'currency_id'             => $entry['currency']->id,
                         'currency_name'           => $entry['currency']->name,
                         'currency_code'           => $entry['currency']->code,
                         'currency_symbol'         => $entry['currency']->symbol,
                         'currency_decimal_places' => $entry['currency']->decimal_places,
                         'balance'                 => $entry['balance'],
+                        'period_start_balance'    => $left,
+                        'period_end_balance'      => $right,
+                        'balance_difference'      => $diff,
                     ];
-                    $native['balance'] = bcadd($native['balance'], $converter->convert($entry['currency'], $default, today(), $entry['balance']));
+                    $set[] = $item;
+                    if ($converter->enabled()) {
+                        $native['balance'] = bcadd($native['balance'], $converter->convert($entry['currency'], $default, today(), $entry['balance']));
+                        if (null !== $diff) {
+                            $native['period_start_balance'] = $converter->convert($entry['currency'], $default, today(), $item['period_start_balance']);
+                            $native['period_end_balance']   = $converter->convert($entry['currency'], $default, today(), $item['period_end_balance']);
+                            $native['balance_difference']   = bcsub($native['period_end_balance'], $native['period_start_balance']);
+                        }
+                    }
                 }
-                $account->balance        = $set;
-                $account->native_balance = $native;
+                $account->balance = $set;
+                if ($converter->enabled()) {
+                    $account->native_balance = $native;
+                }
             }
 
 
             return $account;
         });
-
-//        try {
-//            $array = app('steam')->balancesByAccountsConverted($this->collection, today());
-//        } catch (FireflyException $e) {
-//            Log::error(sprintf('Could not load balances: %s', $e->getMessage()));
-//
-//            return;
-//        }
-//        foreach ($array as $accountId => $row) {
-//            //$this->collection->where('id', $accountId)->first()->balance        = $row['balance'];
-//            //$this->collection->where('id', $accountId)->first()->native_balance = $row['native_balance'];
-//        }
     }
 
     /**
@@ -213,7 +229,7 @@ class AccountEnrichment implements EnrichmentInterface
     }
 
     #[\Override]
-    public function enrichSingle(Model $model): Model
+    public function enrichSingle(Model $model): Account
     {
         Log::debug(__METHOD__);
         $collection = new Collection([$model]);
@@ -230,6 +246,34 @@ class AccountEnrichment implements EnrichmentInterface
     public function setEnd(?Carbon $end): void
     {
         $this->end = $end;
+    }
+
+    private function getObjectGroups(): void
+    {
+        $set = \DB::table('object_groupables')
+                  ->where('object_groupable_type', Account::class)
+                  ->whereIn('object_groupable_id', $this->collection->pluck('id')->toArray())
+                  ->distinct()
+                  ->get(['object_groupables.object_groupable_id', 'object_groupables.object_group_id']);
+        // get the groups:
+        $groupIds = $set->pluck('object_group_id')->toArray();
+        $groups   = ObjectGroup::whereIn('id', $groupIds)->get();
+        /** @var ObjectGroup $group */
+        foreach ($groups as $group) {
+            $this->objectGroups[$group->id] = $group;
+        }
+        /** @var \stdClass $entry */
+        foreach ($set as $entry) {
+            $this->grouped[(int) $entry->object_groupable_id] = (int) $entry->object_group_id;
+        }
+        $this->collection->transform(function (Account $account)  {
+            $account->object_group_id = $this->grouped[$account->id] ?? null;
+            if(null !== $account->object_group_id) {
+                $account->object_group_title = $this->objectGroups[$account->object_group_id]->title;
+                $account->object_group_order = $this->objectGroups[$account->object_group_id]->order;
+            }
+            return $account;
+        });
     }
 
 
