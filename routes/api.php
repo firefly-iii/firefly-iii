@@ -243,7 +243,7 @@ Route::group(
 JsonApiRoute::server('v2')->prefix('v2')
     ->resources(function (ResourceRegistrar $server): void {
         // ACCOUNTS
-        $server->resource('accounts', AccountController::class)->readOnly()->relationships(function (Relationships $relations): void {
+        $server->resource('accounts', AccountController::class)->relationships(function (Relationships $relations): void {
             $relations->hasOne('user')->readOnly();
         });
         //                $server->resource('accounts', AccountController::class)->readOnly();

@@ -27,6 +27,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Support\JsonApi\Concerns\UsergroupAware;
 use FireflyIII\Support\JsonApi\Enrichments\AccountEnrichment;
 use Illuminate\Support\Facades\Log;
+use LaravelJsonApi\Contracts\Store\CreatesResources;
 use LaravelJsonApi\Contracts\Store\QueriesAll;
 use LaravelJsonApi\NonEloquent\AbstractRepository;
 use LaravelJsonApi\NonEloquent\Capabilities\CrudRelations;
@@ -43,11 +44,13 @@ use LaravelJsonApi\NonEloquent\Concerns\HasRelationsCapability;
  * This is necessary because the user can't just query all accounts (it would return other user's data)
  * and because we also need to collect all kinds of metadata, like the currency and user info.
  */
-class AccountRepository extends AbstractRepository implements QueriesAll
+class AccountRepository extends AbstractRepository implements QueriesAll, CreatesResources
 {
     use HasCrudCapability;
     use HasRelationsCapability;
     use UsergroupAware;
+
+
 
     /**
      * SiteRepository constructor.

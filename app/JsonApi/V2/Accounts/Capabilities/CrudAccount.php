@@ -39,4 +39,8 @@ class CrudAccount extends CrudResource
 
         return $enrichment->enrichSingle($account);
     }
+
+    public function create(array $validatedData): Account {
+        die('here we are');
+    }
 }
