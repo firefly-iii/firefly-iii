@@ -48,7 +48,7 @@ class BalanceController extends Controller
     private AccountRepositoryInterface $repository;
     private GroupCollectorInterface    $collector;
     private ChartData                  $chartData;
-    private TransactionCurrency        $default;
+    // private TransactionCurrency        $default;
 
     public function __construct()
     {
@@ -61,7 +61,7 @@ class BalanceController extends Controller
                 $this->repository->setUserGroup($userGroup);
                 $this->collector->setUserGroup($userGroup);
                 $this->chartData  = new ChartData();
-                $this->default    = app('amount')->getDefaultCurrency();
+                // $this->default    = app('amount')->getDefaultCurrency();
 
                 return $next($request);
             }

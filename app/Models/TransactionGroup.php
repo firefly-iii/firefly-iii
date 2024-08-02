@@ -23,52 +23,17 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use Carbon\Carbon;
-use Eloquent;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * FireflyIII\Models\TransactionGroup
- *
- * @property int                             $id
- * @property null|Carbon                     $created_at
- * @property null|Carbon                     $updated_at
- * @property null|Carbon                     $deleted_at
- * @property int                             $user_id
- * @property null|string                     $title
- * @property Collection|TransactionJournal[] $transactionJournals
- * @property null|int                        $transaction_journals_count
- * @property User                            $user
- *
- * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup newQuery()
- * @method static Builder|TransactionGroup                               onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup query()
- * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup whereUserId($value)
- * @method static Builder|TransactionGroup                               withTrashed()
- * @method static Builder|TransactionGroup                               withoutTrashed()
- *
- * @property int $user_group_id
- *
- * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup whereUserGroupId($value)
- *
- * @property null|UserGroup $userGroup
- *
- * @mixin Eloquent
+ * @mixin IdeHelperTransactionGroup
  */
 class TransactionGroup extends Model
 {

@@ -84,6 +84,14 @@ class CurrencyRepository implements CurrencyRepositoryInterface
             return 'account_meta';
         }
 
+        // second search using integer check.
+        $meta             = AccountMeta::where('name', 'currency_id')->where('data', json_encode((int)$currency->id))->count();
+        if ($meta > 0) {
+            app('log')->info(sprintf('Used in %d accounts as currency_id, return true. ', $meta));
+
+            return 'account_meta';
+        }
+
         // is being used in bills:
         $bills            = Bill::where('transaction_currency_id', $currency->id)->count();
         if ($bills > 0) {

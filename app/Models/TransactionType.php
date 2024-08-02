@@ -23,40 +23,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use Carbon\Carbon;
-use Eloquent;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * FireflyIII\Models\TransactionType
- *
- * @property int                             $id
- * @property null|Carbon                     $created_at
- * @property null|Carbon                     $updated_at
- * @property null|Carbon                     $deleted_at
- * @property string                          $type
- * @property Collection|TransactionJournal[] $transactionJournals
- * @property null|int                        $transaction_journals_count
- *
- * @method static \Illuminate\Database\Eloquent\Builder|TransactionType newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|TransactionType newQuery()
- * @method static Builder|TransactionType                               onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|TransactionType query()
- * @method static \Illuminate\Database\Eloquent\Builder|TransactionType whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|TransactionType whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|TransactionType whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|TransactionType whereType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|TransactionType whereUpdatedAt($value)
- * @method static Builder|TransactionType                               withTrashed()
- * @method static Builder|TransactionType                               withoutTrashed()
- *
- * @mixin Eloquent
+ * @mixin IdeHelperTransactionType
  */
 class TransactionType extends Model
 {

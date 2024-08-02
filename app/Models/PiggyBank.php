@@ -23,67 +23,18 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use Carbon\Carbon;
-use Eloquent;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * FireflyIII\Models\PiggyBank
- *
- * @property int                              $id
- * @property null|Carbon                      $created_at
- * @property null|Carbon                      $updated_at
- * @property null|Carbon                      $deleted_at
- * @property int                              $account_id
- * @property string                           $name
- * @property string                           $targetamount
- * @property null|Carbon                      $startdate
- * @property null|Carbon                      $targetdate
- * @property int                              $order
- * @property bool                             $active
- * @property bool                             $encrypted
- * @property Account                          $account
- * @property Attachment[]|Collection          $attachments
- * @property null|int                         $attachments_count
- * @property Collection|Note[]                $notes
- * @property null|int                         $notes_count
- * @property Collection|ObjectGroup[]         $objectGroups
- * @property null|int                         $object_groups_count
- * @property Collection|PiggyBankEvent[]      $piggyBankEvents
- * @property null|int                         $piggy_bank_events_count
- * @property Collection|PiggyBankRepetition[] $piggyBankRepetitions
- * @property null|int                         $piggy_bank_repetitions_count
- *
- * @method static \Illuminate\Database\Eloquent\Builder|PiggyBank newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|PiggyBank newQuery()
- * @method static Builder|PiggyBank                               onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|PiggyBank query()
- * @method static \Illuminate\Database\Eloquent\Builder|PiggyBank whereAccountId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PiggyBank whereActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PiggyBank whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PiggyBank whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PiggyBank whereEncrypted($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PiggyBank whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PiggyBank whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PiggyBank whereOrder($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PiggyBank whereStartdate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PiggyBank whereTargetamount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PiggyBank whereTargetdate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PiggyBank whereUpdatedAt($value)
- * @method static Builder|PiggyBank                               withTrashed()
- * @method static Builder|PiggyBank                               withoutTrashed()
- *
- * @mixin Eloquent
+ * @mixin IdeHelperPiggyBank
  */
 class PiggyBank extends Model
 {

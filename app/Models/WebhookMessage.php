@@ -23,53 +23,16 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use Carbon\Carbon;
-use Eloquent;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\User;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * FireflyIII\Models\WebhookMessage
- *
- * @property int         $id
- * @property null|Carbon $created_at
- * @property null|Carbon $updated_at
- * @property null|string $deleted_at
- * @property int         $webhook_id
- * @property bool        $sent
- * @property bool        $errored
- * @property int         $attempts
- * @property string      $uuid
- * @property array       $message
- * @property null|array  $logs
- * @property Webhook     $webhook
- *
- * @method static Builder|WebhookMessage newModelQuery()
- * @method static Builder|WebhookMessage newQuery()
- * @method static Builder|WebhookMessage query()
- * @method static Builder|WebhookMessage whereAttempts($value)
- * @method static Builder|WebhookMessage whereCreatedAt($value)
- * @method static Builder|WebhookMessage whereDeletedAt($value)
- * @method static Builder|WebhookMessage whereErrored($value)
- * @method static Builder|WebhookMessage whereId($value)
- * @method static Builder|WebhookMessage whereLogs($value)
- * @method static Builder|WebhookMessage whereMessage($value)
- * @method static Builder|WebhookMessage whereSent($value)
- * @method static Builder|WebhookMessage whereUpdatedAt($value)
- * @method static Builder|WebhookMessage whereUuid($value)
- * @method static Builder|WebhookMessage whereWebhookId($value)
- *
- * @property Collection|WebhookAttempt[] $webhookAttempts
- * @property null|int                    $webhook_attempts_count
- *
- * @mixin Eloquent
+ * @mixin IdeHelperWebhookMessage
  */
 class WebhookMessage extends Model
 {

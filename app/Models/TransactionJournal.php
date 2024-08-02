@@ -24,14 +24,12 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Carbon\Carbon;
-use Eloquent;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -42,92 +40,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * FireflyIII\Models\TransactionJournal
- *
- * @property int                                 $id
- * @property null|Carbon                         $created_at
- * @property null|Carbon                         $updated_at
- * @property null|Carbon                         $deleted_at
- * @property int                                 $user_id
- * @property int                                 $transaction_type_id
- * @property null|int|string                     $transaction_group_id
- * @property null|int|string                     $bill_id
- * @property null|int|string                     $transaction_currency_id
- * @property null|string                         $description
- * @property Carbon                              $date
- * @property null|Carbon                         $interest_date
- * @property null|Carbon                         $book_date
- * @property null|Carbon                         $process_date
- * @property int                                 $order
- * @property int                                 $tag_count
- * @property string                              $transaction_type_type
- * @property bool                                $encrypted
- * @property bool                                $completed
- * @property Attachment[]|Collection             $attachments
- * @property null|int                            $attachments_count
- * @property null|Bill                           $bill
- * @property Budget[]|Collection                 $budgets
- * @property null|int                            $budgets_count
- * @property Category[]|Collection               $categories
- * @property null|int                            $categories_count
- * @property Collection|TransactionJournalLink[] $destJournalLinks
- * @property null|int                            $dest_journal_links_count
- * @property Collection|Note[]                   $notes
- * @property null|int                            $notes_count
- * @property Collection|PiggyBankEvent[]         $piggyBankEvents
- * @property null|int                            $piggy_bank_events_count
- * @property Collection|TransactionJournalLink[] $sourceJournalLinks
- * @property null|int                            $source_journal_links_count
- * @property Collection|Tag[]                    $tags
- * @property null|int                            $tags_count
- * @property null|TransactionCurrency            $transactionCurrency
- * @property null|TransactionGroup               $transactionGroup
- * @property Collection|TransactionJournalMeta[] $transactionJournalMeta
- * @property null|int                            $transaction_journal_meta_count
- * @property TransactionType                     $transactionType
- * @property Collection|Transaction[]            $transactions
- * @property null|int                            $transactions_count
- * @property User                                $user
- *
- * @method static EloquentBuilder|TransactionJournal                    after(Carbon $date)
- * @method static EloquentBuilder|TransactionJournal                    before(Carbon $date)
- * @method static EloquentBuilder|TransactionJournal                    newModelQuery()
- * @method static EloquentBuilder|TransactionJournal                    newQuery()
- * @method static \Illuminate\Database\Query\Builder|TransactionJournal onlyTrashed()
- * @method static EloquentBuilder|TransactionJournal                    query()
- * @method static EloquentBuilder|TransactionJournal                    transactionTypes($types)
- * @method static EloquentBuilder|TransactionJournal                    whereBillId($value)
- * @method static EloquentBuilder|TransactionJournal                    whereBookDate($value)
- * @method static EloquentBuilder|TransactionJournal                    whereCompleted($value)
- * @method static EloquentBuilder|TransactionJournal                    whereCreatedAt($value)
- * @method static EloquentBuilder|TransactionJournal                    whereDate($value)
- * @method static EloquentBuilder|TransactionJournal                    whereDeletedAt($value)
- * @method static EloquentBuilder|TransactionJournal                    whereDescription($value)
- * @method static EloquentBuilder|TransactionJournal                    whereEncrypted($value)
- * @method static EloquentBuilder|TransactionJournal                    whereId($value)
- * @method static EloquentBuilder|TransactionJournal                    whereInterestDate($value)
- * @method static EloquentBuilder|TransactionJournal                    whereOrder($value)
- * @method static EloquentBuilder|TransactionJournal                    whereProcessDate($value)
- * @method static EloquentBuilder|TransactionJournal                    whereTagCount($value)
- * @method static EloquentBuilder|TransactionJournal                    whereTransactionCurrencyId($value)
- * @method static EloquentBuilder|TransactionJournal                    whereTransactionGroupId($value)
- * @method static EloquentBuilder|TransactionJournal                    whereTransactionTypeId($value)
- * @method static EloquentBuilder|TransactionJournal                    whereUpdatedAt($value)
- * @method static EloquentBuilder|TransactionJournal                    whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|TransactionJournal withTrashed()
- * @method static \Illuminate\Database\Query\Builder|TransactionJournal withoutTrashed()
- *
- * @property Collection|Location[] $locations
- * @property null|int              $locations_count
- * @property int|string            $the_count
- * @property int                   $user_group_id
- *
- * @method static EloquentBuilder|TransactionJournal whereUserGroupId($value)
- *
- * @property Collection<int, AuditLogEntry> $auditLogEntries
- * @property null|int                       $audit_log_entries_count
- *
- * @mixin Eloquent
+ * @mixin IdeHelperTransactionJournal
  */
 class TransactionJournal extends Model
 {

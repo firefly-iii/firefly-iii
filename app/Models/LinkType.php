@@ -23,47 +23,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use Carbon\Carbon;
-use Eloquent;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * FireflyIII\Models\LinkType
- *
- * @property int                                 $id
- * @property null|Carbon                         $created_at
- * @property null|Carbon                         $updated_at
- * @property null|Carbon                         $deleted_at
- * @property string                              $name
- * @property string                              $outward
- * @property string                              $inward
- * @property int                                 $journalCount
- * @property bool                                $editable
- * @property Collection|TransactionJournalLink[] $transactionJournalLinks
- * @property null|int                            $transaction_journal_links_count
- *
- * @method static \Illuminate\Database\Eloquent\Builder|LinkType newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|LinkType newQuery()
- * @method static Builder|LinkType                               onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|LinkType query()
- * @method static \Illuminate\Database\Eloquent\Builder|LinkType whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|LinkType whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|LinkType whereEditable($value)
- * @method static \Illuminate\Database\Eloquent\Builder|LinkType whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|LinkType whereInward($value)
- * @method static \Illuminate\Database\Eloquent\Builder|LinkType whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|LinkType whereOutward($value)
- * @method static \Illuminate\Database\Eloquent\Builder|LinkType whereUpdatedAt($value)
- * @method static Builder|LinkType                               withTrashed()
- * @method static Builder|LinkType                               withoutTrashed()
- *
- * @mixin Eloquent
+ * @mixin IdeHelperLinkType
  */
 class LinkType extends Model
 {

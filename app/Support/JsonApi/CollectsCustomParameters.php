@@ -1,8 +1,7 @@
 <?php
-
 /*
- * UserRole.php
- * Copyright (c) 2021 james@firefly-iii.org
+ * CollectsCustomParameters.php
+ * Copyright (c) 2024 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -17,28 +16,28 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
 declare(strict_types=1);
 
-namespace FireflyIII\Models;
+namespace FireflyIII\Support\JsonApi;
 
-use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Carbon\Carbon;
 
-/**
- * @mixin IdeHelperUserRole
- */
-class UserRole extends Model
+trait CollectsCustomParameters
 {
-    use ReturnsIntegerIdTrait;
 
-    protected $fillable = ['title'];
-
-    public function groupMemberships(): HasMany
+    protected function getOtherParams(array $params): array
     {
-        return $this->hasMany(GroupMembership::class);
+        $return = [];
+        if (array_key_exists('startPeriod', $params)) {
+            $return['start'] = Carbon::parse($params['startPeriod']);
+        }
+        if (array_key_exists('endPeriod', $params)) {
+            $return['end'] = Carbon::parse($params['endPeriod']);
+        }
+
+        return $return;
     }
 }

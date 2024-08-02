@@ -1,9 +1,10 @@
 parameters:
+  scanFiles:
+    - ../_ide_helper_models.php
   universalObjectCratesClasses:
     - Illuminate\Database\Eloquent\Model
   # TODO: slowly remove these parameters and fix the issues found.
   reportUnmatchedIgnoredErrors: false
-  checkGenericClassInNonGenericObjectType: false  # remove this rule when all other issues are solved.
   ignoreErrors:
   # TODO: slowly remove these exceptions and fix the issues found.
     - '#Dynamic call to static method#' # all the Laravel ORM things depend on this.
@@ -11,6 +12,7 @@ parameters:
     - '#with no value type specified in iterable type array#' # remove this rule when all other issues are solved.
     - '#has no value type specified in iterable type array#' # remove this rule when all other issues are solved.
     - '#is not allowed to extend#'
+    - '#does not specify its types#'
     - '#switch is forbidden to use#'
     - '#is neither abstract nor final#'
     - '#on left side of \?\?\= always exists and is not nullable#'

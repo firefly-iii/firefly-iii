@@ -1,8 +1,7 @@
 <?php
-
 /*
- * UserRole.php
- * Copyright (c) 2021 james@firefly-iii.org
+ * Balance.php
+ * Copyright (c) 2024 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -17,28 +16,22 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
 declare(strict_types=1);
 
-namespace FireflyIII\Models;
+namespace FireflyIII\Support\Facades;
 
-use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Facade;
 
-/**
- * @mixin IdeHelperUserRole
- */
-class UserRole extends Model
+class Balance extends Facade
 {
-    use ReturnsIntegerIdTrait;
-
-    protected $fillable = ['title'];
-
-    public function groupMemberships(): HasMany
+    /**
+     * Get the registered name of the component.
+     */
+    protected static function getFacadeAccessor(): string
     {
-        return $this->hasMany(GroupMembership::class);
+        return 'balance';
     }
 }

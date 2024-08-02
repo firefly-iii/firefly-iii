@@ -23,50 +23,17 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use Carbon\Carbon;
-use Eloquent;
 use FireflyIII\Events\Model\BudgetLimit\Created;
 use FireflyIII\Events\Model\BudgetLimit\Deleted;
 use FireflyIII\Events\Model\BudgetLimit\Updated;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * FireflyIII\Models\BudgetLimit
- *
- * @property int                      $id
- * @property null|Carbon              $created_at
- * @property null|Carbon              $updated_at
- * @property int                      $budget_id
- * @property int                      $transaction_currency_id
- * @property Carbon                   $start_date
- * @property null|Carbon              $end_date
- * @property string                   $amount
- * @property string                   $spent
- * @property null|string              $period
- * @property int|string               $generated
- * @property Budget                   $budget
- * @property null|TransactionCurrency $transactionCurrency
- *
- * @method static Builder|BudgetLimit newModelQuery()
- * @method static Builder|BudgetLimit newQuery()
- * @method static Builder|BudgetLimit query()
- * @method static Builder|BudgetLimit whereAmount($value)
- * @method static Builder|BudgetLimit whereBudgetId($value)
- * @method static Builder|BudgetLimit whereCreatedAt($value)
- * @method static Builder|BudgetLimit whereEndDate($value)
- * @method static Builder|BudgetLimit whereGenerated($value)
- * @method static Builder|BudgetLimit whereId($value)
- * @method static Builder|BudgetLimit wherePeriod($value)
- * @method static Builder|BudgetLimit whereStartDate($value)
- * @method static Builder|BudgetLimit whereTransactionCurrencyId($value)
- * @method static Builder|BudgetLimit whereUpdatedAt($value)
- *
- * @mixin Eloquent
+ * @mixin IdeHelperBudgetLimit
  */
 class BudgetLimit extends Model
 {

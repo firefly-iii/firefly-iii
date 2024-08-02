@@ -23,38 +23,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use Carbon\Carbon;
-use Eloquent;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\User;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
- * FireflyIII\Models\Role
- *
- * @property int               $id
- * @property null|Carbon       $created_at
- * @property null|Carbon       $updated_at
- * @property string            $name
- * @property null|string       $display_name
- * @property null|string       $description
- * @property Collection|User[] $users
- * @property null|int          $users_count
- *
- * @method static Builder|Role newModelQuery()
- * @method static Builder|Role newQuery()
- * @method static Builder|Role query()
- * @method static Builder|Role whereCreatedAt($value)
- * @method static Builder|Role whereDescription($value)
- * @method static Builder|Role whereDisplayName($value)
- * @method static Builder|Role whereId($value)
- * @method static Builder|Role whereName($value)
- * @method static Builder|Role whereUpdatedAt($value)
- *
- * @mixin Eloquent
+ * @mixin IdeHelperRole
  */
 class Role extends Model
 {

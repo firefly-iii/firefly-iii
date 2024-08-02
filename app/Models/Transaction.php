@@ -24,12 +24,10 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Carbon\Carbon;
-use Eloquent;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -37,60 +35,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * FireflyIII\Models\Transaction
- *
- * @property int                      $id
- * @property null|Carbon              $created_at
- * @property null|Carbon              $updated_at
- * @property null|Carbon              $deleted_at
- * @property bool                     $reconciled
- * @property int                      $account_id
- * @property int                      $transaction_journal_id
- * @property null|string              $description
- * @property null|int                 $transaction_currency_id
- * @property null|int|string          $modified
- * @property null|int|string          $modified_foreign
- * @property string                   $date
- * @property string                   $max_date
- * @property string                   $amount
- * @property null|string              $foreign_amount
- * @property null|int                 $foreign_currency_id
- * @property int                      $identifier
- * @property Account                  $account
- * @property Budget[]|Collection      $budgets
- * @property null|int                 $budgets_count
- * @property Category[]|Collection    $categories
- * @property null|int                 $categories_count
- * @property null|TransactionCurrency $foreignCurrency
- * @property null|TransactionCurrency $transactionCurrency
- * @property TransactionJournal       $transactionJournal
- *
- * @method static Builder|Transaction                            after(Carbon $date)
- * @method static Builder|Transaction                            before(Carbon $date)
- * @method static Builder|Transaction                            newModelQuery()
- * @method static Builder|Transaction                            newQuery()
- * @method static \Illuminate\Database\Query\Builder|Transaction onlyTrashed()
- * @method static Builder|Transaction                            query()
- * @method static Builder|Transaction                            transactionTypes($types)
- * @method static Builder|Transaction                            whereAccountId($value)
- * @method static Builder|Transaction                            whereAmount($value)
- * @method static Builder|Transaction                            whereCreatedAt($value)
- * @method static Builder|Transaction                            whereDeletedAt($value)
- * @method static Builder|Transaction                            whereDescription($value)
- * @method static Builder|Transaction                            whereForeignAmount($value)
- * @method static Builder|Transaction                            whereForeignCurrencyId($value)
- * @method static Builder|Transaction                            whereId($value)
- * @method static Builder|Transaction                            whereIdentifier($value)
- * @method static Builder|Transaction                            whereReconciled($value)
- * @method static Builder|Transaction                            whereTransactionCurrencyId($value)
- * @method static Builder|Transaction                            whereTransactionJournalId($value)
- * @method static Builder|Transaction                            whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|Transaction withTrashed()
- * @method static \Illuminate\Database\Query\Builder|Transaction withoutTrashed()
- *
- * @property int|string $the_count
- *
- * @mixin Eloquent
+ * @mixin IdeHelperTransaction
  */
 class Transaction extends Model
 {
@@ -108,7 +53,7 @@ class Transaction extends Model
             'encrypted'           => 'boolean', // model does not have these fields though
             'bill_name_encrypted' => 'boolean',
             'reconciled'          => 'boolean',
-            'balance_dirty' => 'boolean',
+            'balance_dirty'       => 'boolean',
             'date'                => 'datetime',
         ];
 
@@ -237,7 +182,7 @@ class Transaction extends Model
     protected function balanceDirty(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value === 1,
+            get: static fn ($value) => 1 === (int)$value,
         );
     }
 

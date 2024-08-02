@@ -23,39 +23,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use Carbon\Carbon;
-use Eloquent;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * FireflyIII\Models\PiggyBankEvent
- *
- * @property int                     $id
- * @property null|Carbon             $created_at
- * @property null|Carbon             $updated_at
- * @property int                     $piggy_bank_id
- * @property null|int                $transaction_journal_id
- * @property Carbon                  $date
- * @property string                  $amount
- * @property PiggyBank               $piggyBank
- * @property null|TransactionJournal $transactionJournal
- *
- * @method static Builder|PiggyBankEvent newModelQuery()
- * @method static Builder|PiggyBankEvent newQuery()
- * @method static Builder|PiggyBankEvent query()
- * @method static Builder|PiggyBankEvent whereAmount($value)
- * @method static Builder|PiggyBankEvent whereCreatedAt($value)
- * @method static Builder|PiggyBankEvent whereDate($value)
- * @method static Builder|PiggyBankEvent whereId($value)
- * @method static Builder|PiggyBankEvent wherePiggyBankId($value)
- * @method static Builder|PiggyBankEvent whereTransactionJournalId($value)
- * @method static Builder|PiggyBankEvent whereUpdatedAt($value)
- *
- * @mixin Eloquent
+ * @mixin IdeHelperPiggyBankEvent
  */
 class PiggyBankEvent extends Model
 {

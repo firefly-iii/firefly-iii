@@ -30,6 +30,7 @@ use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
+use FireflyIII\Support\Models\AccountBalanceCalculator;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
@@ -94,6 +95,7 @@ class DebugController extends Controller
 
         // also do some recalculations.
         Artisan::call('firefly-iii:trigger-credit-recalculation');
+        AccountBalanceCalculator::forceRecalculateAll();
 
         try {
             Artisan::call('twig:clean');

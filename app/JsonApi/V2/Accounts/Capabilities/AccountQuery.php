@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\JsonApi\V2\Accounts\Capabilities;
 
+use FireflyIII\Support\JsonApi\CollectsCustomParameters;
 use FireflyIII\Support\JsonApi\Concerns\UsergroupAware;
 use FireflyIII\Support\JsonApi\Enrichments\AccountEnrichment;
 use FireflyIII\Support\JsonApi\ExpandsQuery;
@@ -42,26 +43,32 @@ class AccountQuery extends QueryAll implements HasPagination
     use SortsCollection;
     use UsergroupAware;
     use ValidateSortParameters;
+    use CollectsCustomParameters;
 
     #[\Override]
     /**
      * This method returns all accounts, given a bunch of filters and sort fields, together with pagination.
+     *
+     * It is only used on the index, and nowhere else.
      */
     public function get(): iterable
     {
         Log::debug(__METHOD__);
         // collect filters
-        $filters    = $this->queryParameters->filter();
+        $filters = $this->queryParameters->filter();
         // collect sort options
-        $sort       = $this->queryParameters->sortFields();
+        $sort = $this->queryParameters->sortFields();
         // collect pagination based on the page
         $pagination = $this->filtersPagination($this->queryParameters->page());
         // check if we need all accounts, regardless of pagination
         // This is necessary when the user wants to sort on specific params.
-        $needsAll   = $this->needsFullDataset('account', $sort);
+        $needsAll = $this->needsFullDataset('account', $sort);
+
+        // params that were not recognised, may be my own custom stuff.
+        $otherParams = $this->getOtherParams($this->queryParameters->unrecognisedParameters());
 
         // start the query
-        $query      = $this->userGroup->accounts();
+        $query = $this->userGroup->accounts();
 
         // add pagination to the query, limiting the results.
         if (!$needsAll) {
@@ -69,14 +76,17 @@ class AccountQuery extends QueryAll implements HasPagination
         }
 
         // add sort and filter parameters to the query.
-        $query      = $this->addSortParams($query, $sort);
-        $query      = $this->addFilterParams('account', $query, $filters);
+        $query = $this->addSortParams($query, $sort);
+        $query = $this->addFilterParams('account', $query, $filters);
+
 
         // collect the result.
         $collection = $query->get(['accounts.*']);
 
         // enrich the collected data
         $enrichment = new AccountEnrichment();
+        $enrichment->setStart($otherParams['start'] ?? null);
+        $enrichment->setEnd($otherParams['end'] ?? null);
         $collection = $enrichment->enrich($collection);
 
         // TODO add filters after the query, if there are filters that cannot be applied to the database but only

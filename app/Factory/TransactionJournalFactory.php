@@ -266,17 +266,17 @@ class TransactionJournalFactory
         // Firefly III will save the foreign currency information in such a way that both
         // asset accounts can look at the "amount" and "transaction_currency_id" column and
         // see the currency they expect to see.
-        $amount =  (string)$row['amount'];
-        $foreignAmount = (string)$row['foreign_amount'];
-        if(null !== $foreignCurrency && $foreignCurrency->id !== $currency->id &&
-        TransactionType::TRANSFER === $type->type
+        $amount                = (string)$row['amount'];
+        $foreignAmount         = (string)$row['foreign_amount'];
+        if (null !== $foreignCurrency && $foreignCurrency->id !== $currency->id
+        && TransactionType::TRANSFER === $type->type
         ) {
             $transactionFactory->setCurrency($foreignCurrency);
             $transactionFactory->setForeignCurrency($currency);
-            $amount =  (string)$row['foreign_amount'];
+            $amount        = (string)$row['foreign_amount'];
             $foreignAmount = (string)$row['amount'];
             Log::debug('Swap native/foreign amounts in transfer for new save method.');
-    }
+        }
 
         try {
             $transactionFactory->createPositive($amount, $foreignAmount);

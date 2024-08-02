@@ -45,6 +45,11 @@ class Amount
         return $this->formatFlat($format->symbol, $format->decimal_places, $amount, $coloured);
     }
 
+    public function formatByCurrencyId(int $currencyId, string $amount, ?bool $coloured = null): string {
+        $format = TransactionCurrency::find($currencyId);
+        return $this->formatFlat($format->symbol, $format->decimal_places, $amount, $coloured);
+    }
+
     /**
      * This method will properly format the given number, in color or "black and white",
      * as a currency, given two things: the currency required and the current locale.

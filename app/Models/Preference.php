@@ -23,40 +23,15 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use Carbon\Carbon;
-use Eloquent;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * FireflyIII\Models\Preference
- *
- * @property int                        $id
- * @property null|Carbon                $created_at
- * @property null|Carbon                $updated_at
- * @property int                        $user_id
- * @property string                     $name
- * @property null|array|bool|int|string $data
- * @property User                       $user
- *
- * @method static Builder|Preference newModelQuery()
- * @method static Builder|Preference newQuery()
- * @method static Builder|Preference query()
- * @method static Builder|Preference whereCreatedAt($value)
- * @method static Builder|Preference whereData($value)
- * @method static Builder|Preference whereId($value)
- * @method static Builder|Preference whereName($value)
- * @method static Builder|Preference whereUpdatedAt($value)
- * @method static Builder|Preference whereUserId($value)
- *
- * @property mixed $user_group_id
- *
- * @mixin Eloquent
+ * @mixin IdeHelperPreference
  */
 class Preference extends Model
 {

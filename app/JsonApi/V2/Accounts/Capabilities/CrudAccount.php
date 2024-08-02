@@ -24,18 +24,30 @@ declare(strict_types=1);
 namespace FireflyIII\JsonApi\V2\Accounts\Capabilities;
 
 use FireflyIII\Models\Account;
+use FireflyIII\Support\JsonApi\CollectsCustomParameters;
 use FireflyIII\Support\JsonApi\Enrichments\AccountEnrichment;
+use Illuminate\Support\Facades\Log;
 use LaravelJsonApi\NonEloquent\Capabilities\CrudResource;
 
 class CrudAccount extends CrudResource
 {
+    use CollectsCustomParameters;
+
     /**
      * Read the supplied site.
      */
     public function read(Account $account): ?Account
     {
+        $otherParams = $this->getOtherParams($this->request->query->all());
+
+        Log::debug(__METHOD__);
         // enrich the collected data
         $enrichment = new AccountEnrichment();
+
+        // set start and date, if present.
+        $enrichment->setStart($otherParams['start'] ?? null);
+        $enrichment->setEnd($otherParams['end'] ?? null);
+
 
         return $enrichment->enrichSingle($account);
     }

@@ -24,8 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII;
 
-use Carbon\Carbon;
-use Eloquent;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Exceptions\FireflyException;
@@ -56,129 +54,21 @@ use FireflyIII\Notifications\Admin\TestNotification;
 use FireflyIII\Notifications\Admin\UserInvitation;
 use FireflyIII\Notifications\Admin\UserRegistration;
 use FireflyIII\Notifications\Admin\VersionCheckResult;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\DatabaseNotification;
-use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Laravel\Passport\Client;
 use Laravel\Passport\HasApiTokens;
 use Laravel\Passport\Token;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class User.
- *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- *
- * @property int|string                                                      $id
- * @property string                                                          $email
- * @property bool                                                            $isAdmin
- * @property bool                                                            $has2FA
- * @property array                                                           $prefs
- * @property string                                                          $password
- * @property string                                                          $mfa_secret
- * @property Collection                                                      $roles
- * @property string                                                          $blocked_code
- * @property bool                                                            $blocked
- * @property null|Carbon                                                     $created_at
- * @property null|Carbon                                                     $updated_at
- * @property null|string                                                     $remember_token
- * @property null|string                                                     $reset
- * @property Account[]|\Illuminate\Database\Eloquent\Collection              $accounts
- * @property Attachment[]|\Illuminate\Database\Eloquent\Collection           $attachments
- * @property AvailableBudget[]|\Illuminate\Database\Eloquent\Collection      $availableBudgets
- * @property Bill[]|\Illuminate\Database\Eloquent\Collection                 $bills
- * @property Budget[]|\Illuminate\Database\Eloquent\Collection               $budgets
- * @property Category[]|\Illuminate\Database\Eloquent\Collection             $categories
- * @property Client[]|\Illuminate\Database\Eloquent\Collection               $clients
- * @property CurrencyExchangeRate[]|\Illuminate\Database\Eloquent\Collection $currencyExchangeRates
- * @property DatabaseNotification[]|DatabaseNotificationCollection           $notifications
- * @property \Illuminate\Database\Eloquent\Collection|PiggyBank[]            $piggyBanks
- * @property \Illuminate\Database\Eloquent\Collection|Preference[]           $preferences
- * @property \Illuminate\Database\Eloquent\Collection|Recurrence[]           $recurrences
- * @property \Illuminate\Database\Eloquent\Collection|RuleGroup[]            $ruleGroups
- * @property \Illuminate\Database\Eloquent\Collection|Rule[]                 $rules
- * @property \Illuminate\Database\Eloquent\Collection|Tag[]                  $tags
- * @property \Illuminate\Database\Eloquent\Collection|Token[]                $tokens
- * @property \Illuminate\Database\Eloquent\Collection|TransactionGroup[]     $transactionGroups
- * @property \Illuminate\Database\Eloquent\Collection|TransactionJournal[]   $transactionJournals
- * @property \Illuminate\Database\Eloquent\Collection|Transaction[]          $transactions
- *
- * @method static Builder|User newModelQuery()
- * @method static Builder|User newQuery()
- * @method static Builder|User query()
- * @method static Builder|User whereBlocked($value)
- * @method static Builder|User whereBlockedCode($value)
- * @method static Builder|User whereCreatedAt($value)
- * @method static Builder|User whereEmail($value)
- * @method static Builder|User whereId($value)
- * @method static Builder|User wherePassword($value)
- * @method static Builder|User whereRememberToken($value)
- * @method static Builder|User whereReset($value)
- * @method static Builder|User whereUpdatedAt($value)
- *
- * @property null|string $objectguid
- * @property null|int    $accounts_count
- * @property null|int    $attachments_count
- * @property null|int    $available_budgets_count
- * @property null|int    $bills_count
- * @property null|int    $budgets_count
- * @property null|int    $categories_count
- * @property null|int    $clients_count
- * @property null|int    $currency_exchange_rates_count
- * @property null|int    $notifications_count
- * @property null|int    $piggy_banks_count
- * @property null|int    $preferences_count
- * @property null|int    $recurrences_count
- * @property null|int    $roles_count
- * @property null|int    $rule_groups_count
- * @property null|int    $rules_count
- * @property null|int    $tags_count
- * @property null|int    $tokens_count
- * @property null|int    $transaction_groups_count
- * @property null|int    $transaction_journals_count
- * @property null|int    $transactions_count
- *
- * @method static Builder|User whereMfaSecret($value)
- * @method static Builder|User whereObjectguid($value)
- *
- * @property null|string $provider
- *
- * @method static Builder|User whereProvider($value)
- *
- * @property \Illuminate\Database\Eloquent\Collection|ObjectGroup[] $objectGroups
- * @property null|int                                               $object_groups_count
- * @property \Illuminate\Database\Eloquent\Collection|Webhook[]     $webhooks
- * @property null|int                                               $webhooks_count
- * @property null|string                                            $two_factor_secret
- * @property null|string                                            $two_factor_recovery_codes
- * @property null|string                                            $guid
- * @property null|string                                            $domain
- *
- * @method static Builder|User whereDomain($value)
- * @method static Builder|User whereGuid($value)
- * @method static Builder|User whereTwoFactorRecoveryCodes($value)
- * @method static Builder|User whereTwoFactorSecret($value)
- *
- * @property null|int                                                   $user_group_id
- * @property GroupMembership[]|\Illuminate\Database\Eloquent\Collection $groupMemberships
- * @property null|int                                                   $group_memberships_count
- * @property null|UserGroup                                             $userGroup
- *
- * @method static Builder|User whereUserGroupId($value)
- *
- * @property \Illuminate\Database\Eloquent\Collection<int, TransactionCurrency> $currencies
- * @property null|int                                                           $currencies_count
- *
- * @mixin Eloquent
+ * @mixin IdeHelperUser
  */
 class User extends Authenticatable
 {

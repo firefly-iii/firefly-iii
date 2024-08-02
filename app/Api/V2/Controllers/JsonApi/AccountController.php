@@ -81,12 +81,13 @@ class AccountController extends Controller
      */
     public function show(AccountSchema $schema, AccountSingleQuery $request, Account $account)
     {
-        $model = $schema
-            ->repository()
+        Log::debug(__METHOD__);
+        $model = $schema->repository()
             ->queryOne($account)
             ->withRequest($request)
             ->first()
         ;
+        Log::debug(sprintf('%s again!', __METHOD__));
 
         // do something custom...
 

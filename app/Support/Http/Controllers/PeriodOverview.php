@@ -441,7 +441,7 @@ trait PeriodOverview
         $cache->addProperty('tag-period-entries');
         $cache->addProperty($tag->id);
         if ($cache->has()) {
-            // return $cache->get();
+             return $cache->get();
         }
 
         /** @var array $dates */

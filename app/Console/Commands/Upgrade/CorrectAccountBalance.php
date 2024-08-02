@@ -44,9 +44,10 @@ class CorrectAccountBalance extends Command
 
             return 0;
         }
-        $this->correctBalanceAmounts();
+        $this->friendlyWarning('This command has been disabled.');
         $this->markAsExecuted();
 
+        //        $this->correctBalanceAmounts();
         return 0;
     }
 
