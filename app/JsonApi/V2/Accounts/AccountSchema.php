@@ -38,6 +38,7 @@ class AccountSchema extends Schema
             Attribute::make('name'),
             Attribute::make('active'),
             Attribute::make('order'),
+            Attribute::make('iban'),
             Attribute::make('type'),
             Attribute::make('account_role'),
             Attribute::make('account_number'),
@@ -48,6 +49,11 @@ class AccountSchema extends Schema
             Attribute::make('currency_code'),
             Attribute::make('currency_symbol'),
             Attribute::make('currency_decimal_places'),
+            Attribute::make('is_multi_currency'),
+
+            // balance
+            Attribute::make('balance'),
+            Attribute::make('native_balance'),
 
             // liability things
             Attribute::make('liability_direction'),
@@ -58,6 +64,12 @@ class AccountSchema extends Schema
             // dynamic data
             Attribute::make('last_activity'),
 
+            // group
+            Attribute::make('object_group_id'),
+            Attribute::make('object_group_title'),
+            Attribute::make('object_group_order'),
+
+            // relations.
             HasOne::make('user')->readOnly(),
         ];
     }
