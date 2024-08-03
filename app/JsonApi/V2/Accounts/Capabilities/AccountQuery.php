@@ -32,7 +32,9 @@ use FireflyIII\Support\JsonApi\ExpandsQuery;
 use FireflyIII\Support\JsonApi\FiltersPagination;
 use FireflyIII\Support\JsonApi\SortsCollection;
 use FireflyIII\Support\JsonApi\ValidateSortParameters;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Log;
+use LaravelJsonApi\Contracts\Pagination\Page;
 use LaravelJsonApi\Contracts\Store\HasPagination;
 use LaravelJsonApi\NonEloquent\Capabilities\QueryAll;
 use LaravelJsonApi\NonEloquent\Concerns\PaginatesEnumerables;
@@ -41,12 +43,12 @@ class AccountQuery extends QueryAll implements HasPagination
 {
     use ExpandsQuery;
     use FiltersPagination;
-    use PaginatesEnumerables;
     use SortsCollection;
     use UsergroupAware;
     use ValidateSortParameters;
     use CollectsCustomParameters;
     use AccountFilter;
+    //use PaginatesEnumerables;
 
     #[\Override]
     /**
@@ -75,11 +77,10 @@ class AccountQuery extends QueryAll implements HasPagination
         // start the query
         $query = $this->userGroup->accounts();
 
-        // add pagination to the query, limiting the results.
-        if (!$needsAll) {
-            Log::debug('Need full dataset');
-            $query = $this->addPagination($query, $pagination);
-        }
+//        if (!$needsAll) {
+//            Log::debug('Does not need full dataset, will paginate.');
+//            $query = $this->addPagination($query, $pagination);
+//        }
 
         // add sort and filter parameters to the query.
         $query = $this->addSortParams(Account::class, $query, $sort);
@@ -87,17 +88,40 @@ class AccountQuery extends QueryAll implements HasPagination
 
         // collect the result.
         $collection = $query->get(['accounts.*']);
+        // sort the data after the query, and return it right away.
+        $sorted = $this->sortCollection(Account::class, $collection, $sort);
 
-        // enrich the collected data
+        // take from the collection the filtered page + page number:
+        $currentPage = $sorted->skip($pagination['number'] - 1 * $pagination['size'])->take($pagination['size']);
+
+        // enrich the current page.
         $enrichment = new AccountEnrichment();
         $enrichment->setStart($otherParams['start'] ?? null);
         $enrichment->setEnd($otherParams['end'] ?? null);
-        $collection = $enrichment->enrich($collection);
+        $currentPage = $enrichment->enrich($currentPage);
 
         // TODO add filters after the query, if there are filters that cannot be applied to the database
         // TODO same for sort things.
 
-        // sort the data after the query, and return it right away.
-        return $this->sortCollection(Account::class, $collection, $sort);
+
+        return new LengthAwarePaginator($currentPage,$sorted->count(),$pagination['size'],$pagination['number']);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    #[\Override] public function paginate(array $page): Page
+    {
+        die('here weare');
+        // TODO: Implement paginate() method.
+    }
+
+    /**
+     * @inheritDoc
+     */
+    #[\Override] public function getOrPaginate(?array $page): iterable
+    {
+        die('here weare');
+        // TODO: Implement getOrPaginate() method.
     }
 }

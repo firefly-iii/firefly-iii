@@ -12,6 +12,7 @@ use LaravelJsonApi\Eloquent\Fields\Relations\HasOne;
 use LaravelJsonApi\NonEloquent\Fields\Attribute;
 use LaravelJsonApi\NonEloquent\Fields\ID;
 use LaravelJsonApi\NonEloquent\Filters\Filter;
+use LaravelJsonApi\NonEloquent\Pagination\EnumerablePagination;
 
 class AccountSchema extends Schema
 {
@@ -27,7 +28,7 @@ class AccountSchema extends Schema
      */
     public function fields(): array
     {
-        // Log::debug(__METHOD__);
+         Log::debug(__METHOD__);
 
         return [
             ID::make(),
@@ -91,12 +92,20 @@ class AccountSchema extends Schema
 
     public function repository(): AccountRepository
     {
+        Log::debug(__METHOD__);
         $this->setUserGroup($this->server->getUsergroup());
-        $repository = AccountRepository::make()
+        return AccountRepository::make()
                                        ->withServer($this->server)
                                        ->withSchema($this)
                                        ->withUserGroup($this->userGroup);
-        Log::debug(sprintf('%s: %s', __METHOD__, get_class($repository)));
-        return $repository;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function pagination(): EnumerablePagination
+    {
+        Log::debug(__METHOD__);
+        return EnumerablePagination::make();
     }
 }

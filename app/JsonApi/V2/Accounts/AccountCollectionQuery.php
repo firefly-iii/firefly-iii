@@ -62,15 +62,6 @@ class AccountCollectionQuery extends ResourceQuery
                 'array',
                 JsonApiRule::page(),
             ],
-            'page.number' => [
-                'integer',
-                'min:1',
-            ],
-
-            'page.size' => [
-                'integer',
-                'min:1',
-            ],
             'sort'          => [
                 'nullable',
                 'string',

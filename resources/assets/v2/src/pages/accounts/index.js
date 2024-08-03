@@ -337,8 +337,12 @@ let index = function () {
         },
         loadAccounts() {
             this.pageOptions.isLoading = true;
-            // sort instructions
-            const sorting = [{column: this.pageOptions.sortingColumn, direction: this.pageOptions.sortDirection}];
+            // sort instructions (only one column)
+            let sorting = this.pageOptions.sortingColumn;
+            if('ASC' === this.pageOptions.sortDirection) {
+                sorting = '-' + sorting;
+            }
+            //const sorting = [{column: this.pageOptions.sortingColumn, direction: this.pageOptions.sortDirection}];
 
             // filter instructions
             let filters = [];
@@ -356,11 +360,11 @@ let index = function () {
             let params = {
                 sorting: sorting,
                 filters: filters,
-                today: today,
-                type: type,
-                page: this.page,
-                start: start,
-                end: end
+                // today: today,
+                // type: type,
+                page: {number: this.page},
+                startPeriod: start,
+                endPeriod: end
             };
 
             if (!this.tableColumns.balance_difference.enabled) {
@@ -371,7 +375,8 @@ let index = function () {
             let groupedAccounts = {};
             // one page only.o
             (new Get()).index(params).then(response => {
-                this.totalPages = response.meta.pagination.total_pages;
+                console.log(response);
+                this.totalPages = response.meta.lastPage;
                 for (let i = 0; i < response.data.length; i++) {
                     if (response.data.hasOwnProperty(i)) {
                         let current = response.data[i];

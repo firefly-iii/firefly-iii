@@ -19,10 +19,7 @@ class AccountResource extends JsonApiResource
      */
     public function id(): string
     {
-        $id = (string) $this->resource->id;
-        Log::debug(sprintf('%s: "%s"', __METHOD__, $id));
-
-        return $id;
+        return (string) $this->resource->id;
     }
 
     /**
@@ -32,7 +29,7 @@ class AccountResource extends JsonApiResource
      */
     public function attributes($request): iterable
     {
-        Log::debug(__METHOD__);
+        //Log::debug(__METHOD__);
 
         return [
             'created_at'              => $this->resource->created_at,
