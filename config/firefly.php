@@ -920,31 +920,4 @@ return [
     // preselected account lists possibilities:
     'preselected_accounts'         => ['all', 'assets', 'liabilities'],
 
-    // allowed filters (search) for APIs
-    'filters'                      => [
-        'allowed' => [
-            'accounts' => [
-                'name'               => 'string',
-                'active'             => 'boolean',
-                'iban'               => 'iban',
-                'balance'            => 'numeric',
-                'last_activity'      => 'date',
-                'balance_difference' => 'numeric',
-            ],
-        ],
-    ],
-
-    // allowed sort columns for APIs
-    'sorting'                      => [
-        'allowed' => [
-            'transactions' => ['description', 'amount'],
-            'accounts'     => ['name', 'active', 'iban', 'balance', 'last_activity', 'balance_difference', 'current_debt'],
-        ],
-    ],
-    'full_data_set'                => [
-        'account' => ['last_activity', 'balance_difference', 'current_balance', 'current_debt'],
-    ],
-    'valid_query_filters'          => [
-        'account' => ['name', 'iban', 'active'],
-    ],
 ];

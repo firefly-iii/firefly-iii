@@ -23,8 +23,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\JsonApi;
 
+use FireflyIII\Models\Account;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Log;
 use LaravelJsonApi\Core\Query\FilterParameters;
 use LaravelJsonApi\Core\Query\SortFields;
 
@@ -51,34 +53,79 @@ trait ExpandsQuery
         return $query;
     }
 
+    private function parseAccountTypeFilter(array $value): array
+    {
+        $return = [];
+        foreach ($value as $entry) {
+            $return = array_merge($return, $this->mapAccountTypes($entry));
+        }
+        return array_unique($return);
+    }
+
+    private function parseAllFilters(string $class, FilterParameters $filters): array
+    {
+        $config = config('api.valid_api_filters')[$class];
+        $parsed = [];
+        foreach ($filters->all() as $filter) {
+            $key = $filter->key();
+            if (!in_array($key, $config, true)) {
+                continue;
+            }
+            // make array if not array:
+            $value = $filter->value();
+            if (null === $value) {
+                continue;
+            }
+            if (!is_array($value)) {
+                $value = [$value];
+            }
+
+            switch ($filter->key()) {
+                case 'name':
+                    $parsed['name'] = $value;
+                    break;
+                case 'type':
+                    $parsed['type'] = $this->parseAccountTypeFilter($value);
+                    break;
+            }
+        }
+        return $parsed;
+    }
+
     final protected function addFilterParams(string $class, Builder $query, ?FilterParameters $filters): Builder
     {
+        Log::debug(__METHOD__);
         if (null === $filters) {
             return $query;
         }
-        $config      = config(sprintf('firefly.valid_query_filters.%s', $class)) ?? [];
         if (0 === count($filters->all())) {
             return $query;
         }
-        $query->where(function (Builder $q) use ($config, $filters): void {
-            foreach ($filters->all() as $filter) {
-                if (in_array($filter->key(), $config, true)) {
-                    foreach ($filter->value() as $value) {
-                        $q->where($filter->key(), 'LIKE', sprintf('%%%s%%', $value));
+        // parse filters valid for this class.
+        $parsed = $this->parseAllFilters($class, $filters);
+
+        // expand query for each query filter
+        $config = config('api.valid_query_filters')[$class];
+        $query->where(function (Builder $q) use ($config, $parsed): void {
+            foreach ($parsed as $key => $filter) {
+                if (in_array($key, $config, true)) {
+                    Log::debug(sprintf('Add query filter "%s"', $key));
+                    // add type to query:
+                    foreach ($filter as $value) {
+                        $q->where($key, 'LIKE', sprintf('%%%s%%', $value));
                     }
                 }
             }
         });
 
-        // some filters are special, i.e. the account type filter.
-        $typeFilters = $filters->value('type', false);
-        if (false !== $typeFilters && count($typeFilters) > 0) {
-            $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
-            foreach ($typeFilters as $typeFilter) {
-                $types = $this->mapAccountTypes($typeFilter);
-                $query->whereIn('account_types.type', $types);
+        // TODO this is special treatment, but alas, unavoidable right now.
+        if ($class === Account::class && array_key_exists('type', $parsed)) {
+            if (count($parsed['type']) > 0) {
+                $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
+                $query->whereIn('account_types.type', $parsed['type']);
             }
         }
+
 
         return $query;
     }

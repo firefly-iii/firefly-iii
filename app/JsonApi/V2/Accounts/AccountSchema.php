@@ -79,11 +79,13 @@ class AccountSchema extends Schema
      */
     public function filters(): array
     {
-        //        Log::debug(__METHOD__);
-
-        return [
-            Filter::make('id'),
-        ];
+        Log::debug(__METHOD__);
+        $array  = [];
+        $config = config('api.valid_api_filters')[Account::class];
+        foreach ($config as $entry) {
+            $array[] = Filter::make($entry);
+        }
+        return $array;
     }
 
     public function repository(): AccountRepository

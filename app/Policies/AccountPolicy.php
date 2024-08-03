@@ -25,6 +25,7 @@ namespace FireflyIII\Policies;
 
 use FireflyIII\Models\Account;
 use FireflyIII\User;
+use Illuminate\Support\Facades\Log;
 
 class AccountPolicy
 {
@@ -33,7 +34,7 @@ class AccountPolicy
      */
     public function view(User $user, Account $account): bool
     {
-        die('OK');
+        die('OK1');
         return true;
 
         return auth()->check() && $user->id === $account->user_id;
@@ -46,9 +47,7 @@ class AccountPolicy
      */
     public function viewAny(): bool
     {
-        die('OK');
-        return true;
-
+        Log::debug(__METHOD__);
         return auth()->check();
     }
 

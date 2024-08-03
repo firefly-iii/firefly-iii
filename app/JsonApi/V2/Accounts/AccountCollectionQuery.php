@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FireflyIII\JsonApi\V2\Accounts;
 
 use FireflyIII\Models\Account;
+use FireflyIII\Rules\Account\IsValidAccountType;
 use FireflyIII\Rules\IsAllowedGroupAction;
 use FireflyIII\Rules\IsDateOrTime;
 use FireflyIII\Rules\IsValidDateRange;
@@ -20,6 +21,7 @@ class AccountCollectionQuery extends ResourceQuery
     public function rules(): array
     {
         Log::debug(__METHOD__);
+        $validFilters = config('api.valid_api_filters')[Account::class];
 
         return [
             'fields'        => [
@@ -47,7 +49,8 @@ class AccountCollectionQuery extends ResourceQuery
             'filter'        => [
                 'nullable',
                 'array',
-                JsonApiRule::filter(),
+                JsonApiRule::filter($validFilters),
+                new IsValidAccountType()
             ],
             'include'       => [
                 'nullable',

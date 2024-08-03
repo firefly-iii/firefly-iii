@@ -33,7 +33,7 @@ trait ValidateSortParameters
             return false;
         }
 
-        $config = config(sprintf('firefly.full_data_set.%s', $class)) ?? [];
+        $config = config(sprintf('api.full_data_set.%s', $class)) ?? [];
 
         foreach ($params->all() as $field) {
             if (in_array($field->name(), $config, true)) {

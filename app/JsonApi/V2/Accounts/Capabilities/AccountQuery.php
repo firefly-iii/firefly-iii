@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\JsonApi\V2\Accounts\Capabilities;
 
+use FireflyIII\Models\Account;
+use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Support\JsonApi\CollectsCustomParameters;
 use FireflyIII\Support\JsonApi\Concerns\UsergroupAware;
 use FireflyIII\Support\JsonApi\Enrichments\AccountEnrichment;
@@ -44,6 +46,7 @@ class AccountQuery extends QueryAll implements HasPagination
     use UsergroupAware;
     use ValidateSortParameters;
     use CollectsCustomParameters;
+    use AccountFilter;
 
     #[\Override]
     /**
@@ -56,6 +59,7 @@ class AccountQuery extends QueryAll implements HasPagination
         Log::debug(__METHOD__);
         // collect filters
         $filters = $this->queryParameters->filter();
+
         // collect sort options
         $sort = $this->queryParameters->sortFields();
         // collect pagination based on the page
@@ -77,7 +81,7 @@ class AccountQuery extends QueryAll implements HasPagination
 
         // add sort and filter parameters to the query.
         $query = $this->addSortParams($query, $sort);
-        $query = $this->addFilterParams('account', $query, $filters);
+        $query = $this->addFilterParams(Account::class, $query, $filters);
 
 
         // collect the result.
