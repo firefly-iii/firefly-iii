@@ -21,5 +21,5 @@
 
 export function showInternalsButton() {
     console.log('showInternalsButton');
-    document.querySelector('.toggle-page-internals').classList.remove('d-none')
+    document.querySelector('.toggle-page-internals').classList.remove('d-none');
 }

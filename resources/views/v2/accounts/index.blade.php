@@ -343,7 +343,7 @@
                     <div x-html="pageNavigation">
                 </div>
             </div>
-
+                <!-- TODO repeated thing -->
             <!-- Internal settings modal -->
             <div class="modal fade" id="internalsModal" tabindex="-1" aria-labelledby="internalsModalLabel"
                  aria-hidden="true">
@@ -422,7 +422,7 @@
         </div>
     </div>
 
-            <!-- TODO this is a repeated piece of code -->
+    <!-- TODO this is a repeated piece of code -->
     <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
@@ -449,7 +449,7 @@
         </div>
     </div>
 
-            <!-- TODO this is a repeated piece of code -->
+    <!-- TODO this is a repeated piece of code -->
     <div class="modal fade" id="wizardModal" tabindex="-1" aria-labelledby="wizardModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">

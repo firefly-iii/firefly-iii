@@ -47,33 +47,30 @@
                     </div>
                 </div>
             </div>
-
         </div>
 
-    </div>
-
-    <!-- TODO this is a repeated piece of code -->
-    <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="filterModalLabel">TODO Options dialog</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Bla bla bla
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><em
-                            class="fa-solid fa-right-from-bracket"></em> Cancel
-                    </button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><em
-                            class="fa-solid fa-magnifying-glass"></em> Search
-                    </button>
+        <div class="modal fade" id="internalsModal" tabindex="-1" aria-labelledby="internalsModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="internalsModalLabel">{{ __('firefly.page_settings_header') }}</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            Body
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('firefly.close') }}</button>
+                    </div>
                 </div>
             </div>
         </div>
+
     </div>
+
 
 
 @endsection
