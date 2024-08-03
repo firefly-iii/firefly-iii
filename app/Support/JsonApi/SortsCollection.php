@@ -24,17 +24,23 @@ declare(strict_types=1);
 namespace FireflyIII\Support\JsonApi;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use LaravelJsonApi\Core\Query\SortFields;
 
 trait SortsCollection
 {
-    protected function sortCollection(Collection $collection, ?SortFields $sortFields): Collection
+    protected function sortCollection(string $class, Collection $collection, ?SortFields $sortFields): Collection
     {
+        Log::debug(__METHOD__);
+        $config = config('api.valid_api_sort')[$class] ?? [];
         if (null === $sortFields) {
             return $collection;
         }
         foreach ($sortFields->all() as $sortField) {
-            $collection = $sortField->isAscending() ? $collection->sortBy($sortField->name()) : $collection->sortByDesc($sortField->name());
+            if (in_array($sortField->name(), $config, true)) {
+                Log::debug(sprintf('Sort collection by "%s"', $sortField->name()));
+                $collection = $sortField->isAscending() ? $collection->sortBy($sortField->name()) : $collection->sortByDesc($sortField->name());
+            }
         }
 
         return $collection;

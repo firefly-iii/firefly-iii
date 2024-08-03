@@ -35,13 +35,13 @@ class AccountSchema extends Schema
             Attribute::make('updated_at'),
 
             // basic info and meta data
-            Attribute::make('name'),
-            Attribute::make('active'),
-            Attribute::make('order'),
-            Attribute::make('iban'),
+            Attribute::make('name')->sortable(),
+            Attribute::make('active')->sortable(),
+            Attribute::make('order')->sortable(),
+            Attribute::make('iban')->sortable(),
             Attribute::make('type'),
             Attribute::make('account_role'),
-            Attribute::make('account_number'),
+            Attribute::make('account_number')->sortable(),
 
             // currency
             Attribute::make('currency_id'),
@@ -52,17 +52,18 @@ class AccountSchema extends Schema
             Attribute::make('is_multi_currency'),
 
             // balance
-            Attribute::make('balance'),
-            Attribute::make('native_balance'),
+            Attribute::make('balance')->sortable(),
+            Attribute::make('native_balance')->sortable(),
 
             // liability things
             Attribute::make('liability_direction'),
             Attribute::make('interest'),
             Attribute::make('interest_period'),
-            Attribute::make('current_debt'),
+            Attribute::make('current_debt')->sortable(),
 
             // dynamic data
             Attribute::make('last_activity'),
+            Attribute::make('balance_difference')->sortable(), // only used for sort.
 
             // group
             Attribute::make('object_group_id'),

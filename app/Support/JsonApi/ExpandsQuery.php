@@ -41,13 +41,16 @@ trait ExpandsQuery
         return $query->skip($skip)->take($pagination['size']);
     }
 
-    final protected function addSortParams(Builder $query, ?SortFields $sort): Builder
+    final protected function addSortParams(string $class, Builder $query, ?SortFields $sort): Builder
     {
+        $config = config('api.valid_query_sort')[$class] ?? [];
         if (null === $sort) {
             return $query;
         }
         foreach ($sort->all() as $sortField) {
-            $query->orderBy($sortField->name(), $sortField->isAscending() ? 'ASC' : 'DESC');
+            if (in_array($sortField->name(), $config, true)) {
+                $query->orderBy($sortField->name(), $sortField->isAscending() ? 'ASC' : 'DESC');
+            }
         }
 
         return $query;

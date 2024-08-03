@@ -62,6 +62,7 @@ class AccountQuery extends QueryAll implements HasPagination
 
         // collect sort options
         $sort = $this->queryParameters->sortFields();
+
         // collect pagination based on the page
         $pagination = $this->filtersPagination($this->queryParameters->page());
         // check if we need all accounts, regardless of pagination
@@ -76,13 +77,13 @@ class AccountQuery extends QueryAll implements HasPagination
 
         // add pagination to the query, limiting the results.
         if (!$needsAll) {
+            Log::debug('Need full dataset');
             $query = $this->addPagination($query, $pagination);
         }
 
         // add sort and filter parameters to the query.
-        $query = $this->addSortParams($query, $sort);
+        $query = $this->addSortParams(Account::class, $query, $sort);
         $query = $this->addFilterParams(Account::class, $query, $filters);
-
 
         // collect the result.
         $collection = $query->get(['accounts.*']);
@@ -93,10 +94,10 @@ class AccountQuery extends QueryAll implements HasPagination
         $enrichment->setEnd($otherParams['end'] ?? null);
         $collection = $enrichment->enrich($collection);
 
-        // TODO add filters after the query, if there are filters that cannot be applied to the database but only
-        // to the enriched results.
+        // TODO add filters after the query, if there are filters that cannot be applied to the database
+        // TODO same for sort things.
 
         // sort the data after the query, and return it right away.
-        return $this->sortCollection($collection, $sort);
+        return $this->sortCollection(Account::class, $collection, $sort);
     }
 }
