@@ -243,10 +243,8 @@ export default () => ({
                                 name: parent.attributes.name,
                                 order: parent.attributes.order,
                                 id: parent.id,
-                                balance_raw: parseFloat(parent.attributes.current_balance),
-                                balance: formatMoney(parent.attributes.current_balance, parent.attributes.currency_code),
-                                native_balance_raw: parseFloat(parent.attributes.native_current_balance),
-                                native_balance: formatMoney(parent.attributes.native_current_balance, parent.attributes.native_currency_code),
+                                balance: parent.attributes.balance,
+                                native_balance: parent.attributes.native_balance,
                                 groups: groups,
                             });
                             // console.log(parent.attributes);

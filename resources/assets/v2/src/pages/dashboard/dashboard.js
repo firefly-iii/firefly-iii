@@ -45,6 +45,8 @@ import {
     Tooltip
 } from "chart.js";
 import 'chartjs-adapter-date-fns';
+import {showInternalsButton} from "../../support/page-settings/show-internals-button.js";
+import {showWizardButton} from "../../support/page-settings/show-wizard-button.js";
 
 // register things
 Chart.register({
@@ -74,6 +76,8 @@ const comps = {
     subscriptions,
     piggies
 };
+
+showInternalsButton();
 
 //let i18n;
 

@@ -345,7 +345,7 @@ let index = function () {
             this.pageOptions.isLoading = true;
             // sort instructions (only one column)
             let sorting = this.pageOptions.sortingColumn;
-            if('asc' === this.pageOptions.sortDirection) {
+            if('asc' === this.pageOptions.sortDirection && '' !== sorting) {
                 sorting = '-' + sorting;
             }
             //const sorting = [{column: this.pageOptions.sortingColumn, direction: this.pageOptions.sortDirection}];

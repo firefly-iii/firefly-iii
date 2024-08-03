@@ -13,7 +13,12 @@
                            x-text="account.name"></a>
 
                         <span class="small">
-                                                @include('partials.elements.amount', ['autoConversion' => true,'type' => 'null','amount' => 'account.balance','native' => 'account.native_balance'])
+                            <template x-for="balance in account.balance">
+                                <span>x</span>
+                            </template>
+                            <template x-for="balance in account.native_balance">
+                                <span>Y</span>
+                            </template>
                                             </span>
                     </h3>
                 </div>

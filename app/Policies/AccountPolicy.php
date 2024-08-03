@@ -30,13 +30,10 @@ use Illuminate\Support\Facades\Log;
 class AccountPolicy
 {
     /**
-     * TODO needs better authentication.
+     * TODO needs better authentication, also for group.
      */
     public function view(User $user, Account $account): bool
     {
-        die('OK1');
-        return true;
-
         return auth()->check() && $user->id === $account->user_id;
     }
 
