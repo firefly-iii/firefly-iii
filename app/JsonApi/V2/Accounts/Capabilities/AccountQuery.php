@@ -31,13 +31,13 @@ use FireflyIII\Support\JsonApi\Enrichments\AccountEnrichment;
 use FireflyIII\Support\JsonApi\ExpandsQuery;
 use FireflyIII\Support\JsonApi\FiltersPagination;
 use FireflyIII\Support\JsonApi\SortsCollection;
+use FireflyIII\Support\JsonApi\SortsQueryResults;
 use FireflyIII\Support\JsonApi\ValidateSortParameters;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Log;
 use LaravelJsonApi\Contracts\Pagination\Page;
 use LaravelJsonApi\Contracts\Store\HasPagination;
 use LaravelJsonApi\NonEloquent\Capabilities\QueryAll;
-use LaravelJsonApi\NonEloquent\Concerns\PaginatesEnumerables;
 
 class AccountQuery extends QueryAll implements HasPagination
 {
@@ -48,6 +48,8 @@ class AccountQuery extends QueryAll implements HasPagination
     use ValidateSortParameters;
     use CollectsCustomParameters;
     use AccountFilter;
+    use SortsQueryResults;
+
     //use PaginatesEnumerables;
 
     #[\Override]
@@ -59,17 +61,15 @@ class AccountQuery extends QueryAll implements HasPagination
     public function get(): iterable
     {
         Log::debug(__METHOD__);
-        // collect filters
-        $filters = $this->queryParameters->filter();
-
         // collect sort options
         $sort = $this->queryParameters->sortFields();
 
         // collect pagination based on the page
         $pagination = $this->filtersPagination($this->queryParameters->page());
+
         // check if we need all accounts, regardless of pagination
         // This is necessary when the user wants to sort on specific params.
-        $needsAll = $this->needsFullDataset('account', $sort);
+        $needsAll = $this->needsFullDataset(Account::class, $sort);
 
         // params that were not recognised, may be my own custom stuff.
         $otherParams = $this->getOtherParams($this->queryParameters->unrecognisedParameters());
@@ -77,34 +77,56 @@ class AccountQuery extends QueryAll implements HasPagination
         // start the query
         $query = $this->userGroup->accounts();
 
-//        if (!$needsAll) {
-//            Log::debug('Does not need full dataset, will paginate.');
-//            $query = $this->addPagination($query, $pagination);
-//        }
-
         // add sort and filter parameters to the query.
         $query = $this->addSortParams(Account::class, $query, $sort);
-        $query = $this->addFilterParams(Account::class, $query, $filters);
+        $query = $this->addFilterParams(Account::class, $query, $this->queryParameters->filter());
+
 
         // collect the result.
         $collection = $query->get(['accounts.*']);
         // sort the data after the query, and return it right away.
-        $sorted = $this->sortCollection(Account::class, $collection, $sort);
+        $collection = $this->sortCollection(Account::class, $collection, $sort);
 
-        // take from the collection the filtered page + page number:
-        $currentPage = $sorted->skip($pagination['number'] - 1 * $pagination['size'])->take($pagination['size']);
+        // if the entire collection needs to be enriched and sorted, do so now:
+        $totalCount = $collection->count();
+        Log::debug(sprintf('Total is %d', $totalCount));
+        if ($needsAll) {
+            Log::debug('Needs the entire collection');
+            // enrich the entire collection
+            $enrichment = new AccountEnrichment();
+            $enrichment->setStart($otherParams['start'] ?? null);
+            $enrichment->setEnd($otherParams['end'] ?? null);
+            $collection = $enrichment->enrich($collection);
 
-        // enrich the current page.
-        $enrichment = new AccountEnrichment();
-        $enrichment->setStart($otherParams['start'] ?? null);
-        $enrichment->setEnd($otherParams['end'] ?? null);
-        $currentPage = $enrichment->enrich($currentPage);
+            // TODO sort the set based on post-query sort options:
+            $collection = $this->postQuerySort(Account::class, $collection, $sort);
+
+            // take the current page from the enriched set.
+            $currentPage = $collection->skip(($pagination['number'] - 1) * $pagination['size'])->take($pagination['size']);
+
+
+        }
+        if (!$needsAll) {
+            Log::debug('Needs only partial collection');
+            // take from the collection the filtered page + page number:
+            $currentPage = $collection->skip(($pagination['number'] - 1) * $pagination['size'])->take($pagination['size']);
+
+            // enrich only the current page.
+            $enrichment = new AccountEnrichment();
+            $enrichment->setStart($otherParams['start'] ?? null);
+            $enrichment->setEnd($otherParams['end'] ?? null);
+            $currentPage = $enrichment->enrich($currentPage);
+        }
+        // get current page?
+        Log::debug(sprintf('Skip %d, take %d', ($pagination['number'] - 1) * $pagination['size'], $pagination['size']));
+        //$currentPage = $collection->skip(($pagination['number'] - 1) * $pagination['size'])->take($pagination['size']);
+        Log::debug(sprintf('New collection size: %d', $currentPage->count()));
+
 
         // TODO add filters after the query, if there are filters that cannot be applied to the database
         // TODO same for sort things.
 
-
-        return new LengthAwarePaginator($currentPage,$sorted->count(),$pagination['size'],$pagination['number']);
+        return new LengthAwarePaginator($currentPage, $totalCount, $pagination['size'], $pagination['number']);
     }
 
     /**

@@ -46,15 +46,16 @@ return [
             'accounts'     => ['name', 'active', 'iban', 'order', 'account_number', 'balance', 'last_activity', 'balance_difference', 'current_debt'],
         ],
     ],
-    // valid query columns for sorting:
+    // valid query columns for sorting the query
     'valid_query_sort'    => [
-        Account::class => ['id','name', 'active', 'iban', 'order'],
+        Account::class => ['id', 'name', 'active', 'iban', 'order'],
     ],
-    'valid_api_sort'    => [
-        Account::class => [],
+    // valid query columns for sorting the query results
+    'valid_api_sort'      => [
+        Account::class => ['account_number'],
     ],
     'full_data_set'       => [
-        'account' => ['last_activity', 'balance_difference', 'current_balance', 'current_debt'],
+        Account::class => ['last_activity', 'balance', 'balance_difference', 'current_debt', 'account_number'],
     ],
     'valid_query_filters' => [
         Account::class => ['id', 'name', 'iban', 'active'],

@@ -37,12 +37,14 @@ class IsValidAccountType implements ValidationRule
     #[\Override] public function validate(string $attribute, mixed $value, Closure $fail): void
     {
 
-        if (!is_array($value)) {
-            $value = [$value];
-        }
         // only check the type.
         if (array_key_exists('type', $value)) {
             $value    = $value['type'];
+            if (!is_array($value)) {
+                $value = [$value];
+            }
+
+
             $filtered = [];
             $keys     = array_keys($this->types);
             /** @var mixed $entry */

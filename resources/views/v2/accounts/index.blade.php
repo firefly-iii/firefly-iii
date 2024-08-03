@@ -125,12 +125,12 @@
                                         {{ __('list.interest') }}
                                     </th>
                                     <th x-show="tableColumns.number.visible && tableColumns.number.enabled">
-                                        <a href="#" x-on:click.prevent="sort('iban')">
+                                        <a href="#" x-on:click.prevent="sort('account_number')">
                                             {{ __('list.account_number') }}
                                         </a>
-                                        <em x-show="pageOptions.sortingColumn === 'iban' && pageOptions.sortDirection === 'asc'"
+                                        <em x-show="pageOptions.sortingColumn === 'account_number' && pageOptions.sortDirection === 'asc'"
                                             class="fa-solid fa-arrow-down-a-z"></em>
-                                        <em x-show="pageOptions.sortingColumn === 'iban' && pageOptions.sortDirection === 'desc'"
+                                        <em x-show="pageOptions.sortingColumn === 'account_number' && pageOptions.sortDirection === 'desc'"
                                             class="fa-solid fa-arrow-down-z-a"></em>
                                     </th>
                                     <th x-show="tableColumns.current_balance.visible && tableColumns.current_balance.enabled">
@@ -262,13 +262,17 @@
                                             </template>
                                         </td>
                                         <td x-show="tableColumns.current_balance.visible && tableColumns.current_balance.enabled">
+                                            <template x-if="null !== account.balance">
                                             <template x-for="balance in account.balance">
-                                                <span x-show="balance.balance < 0" class="text-danger"
+                                                <span>
+                                                <span x-show="parseFloat(balance.balance) < 0.0" class="text-danger"
                                                       x-text="formatMoney(balance.balance, balance.currency_code)"></span>
-                                                <span x-show="balance.balance == 0" class="text-muted"
+                                                <span x-show="parseFloat(balance.balance) === 0.0" class="text-muted"
                                                       x-text="formatMoney(balance.balance, balance.currency_code)"></span>
-                                                <span x-show="balance.balance > 0" class="text-success"
+                                                <span x-show="parseFloat(balance.balance) > 0.0" class="text-success"
                                                       x-text="formatMoney(balance.balance, balance.currency_code)"></span>
+                                                    </span>
+                                            </template>
                                             </template>
                                         </td>
                                         <td x-show="tableColumns.amount_due.visible && tableColumns.amount_due.enabled">
@@ -284,14 +288,17 @@
                                             <span x-text="account.last_activity"></span>
                                         </td>
                                         <td x-show="tableColumns.balance_difference.visible && tableColumns.balance_difference.enabled">
-
+                                            <template x-if="null !== account.balance">
                                             <template x-for="balance in account.balance">
+                                                <span>
                                                 <span x-show="null != balance.balance_difference && balance.balance_difference < 0" class="text-danger"
                                                       x-text="formatMoney(balance.balance_difference, balance.currency_code)"></span>
                                                 <span x-show="null != balance.balance_difference && balance.balance_difference == 0" class="text-muted"
                                                       x-text="formatMoney(balance.balance_difference, balance.currency_code)"></span>
                                                 <span x-show="null != balance.balance_difference && balance.balance_difference > 0" class="text-success"
                                                       x-text="formatMoney(balance.balance_difference, balance.currency_code)"></span>
+                                                </span>
+                                            </template>
                                             </template>
                                         </td>
                                         <td x-show="tableColumns.menu.visible && tableColumns.menu.enabled">

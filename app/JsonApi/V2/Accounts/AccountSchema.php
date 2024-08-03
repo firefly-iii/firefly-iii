@@ -63,7 +63,7 @@ class AccountSchema extends Schema
             Attribute::make('current_debt')->sortable(),
 
             // dynamic data
-            Attribute::make('last_activity'),
+            Attribute::make('last_activity')->sortable(),
             Attribute::make('balance_difference')->sortable(), // only used for sort.
 
             // group

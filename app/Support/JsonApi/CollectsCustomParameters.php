@@ -37,6 +37,9 @@ trait CollectsCustomParameters
         if (array_key_exists('endPeriod', $params)) {
             $return['end'] = Carbon::parse($params['endPeriod']);
         }
+        if(array_key_exists('currentMoment', $params)) {
+            $return['today'] = Carbon::parse($params['currentMoment']);
+        }
 
         return $return;
     }

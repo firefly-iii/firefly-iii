@@ -48,7 +48,12 @@ const params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
 });
 sortingColumn = params.column ?? '';
-sortDirection = params.direction ?? '';
+sortDirection = 'asc';
+if(sortingColumn[0] === '-') {
+    sortingColumn = sortingColumn.substring(1);
+    sortDirection = 'desc';
+}
+
 page = parseInt(params.page ?? 1);
 
 
@@ -77,6 +82,7 @@ let index = function () {
         filters: {
             active: null,
             name: null,
+            type: type,
         },
         pageOptions: {
             isLoading: true,
@@ -345,10 +351,11 @@ let index = function () {
             //const sorting = [{column: this.pageOptions.sortingColumn, direction: this.pageOptions.sortDirection}];
 
             // filter instructions
-            let filters = [];
+            let filters = {};
             for (let k in this.filters) {
                 if (this.filters.hasOwnProperty(k) && null !== this.filters[k]) {
-                    filters.push({column: k, filter: this.filters[k]});
+                    filters[k] = this.filters[k];
+                    //filters.push({column: k, filter: this.filters[k]});
                 }
             }
 
@@ -358,9 +365,9 @@ let index = function () {
             const today = new Date();
 
             let params = {
-                sorting: sorting,
-                filters: filters,
-                // today: today,
+                sort: sorting,
+                filter: filters,
+                currentMoment: today,
                 // type: type,
                 page: {number: this.page},
                 startPeriod: start,
@@ -368,8 +375,8 @@ let index = function () {
             };
 
             if (!this.tableColumns.balance_difference.enabled) {
-                delete params.start;
-                delete params.end;
+                delete params.startPeriod;
+                delete params.enPeriod;
             }
             this.accounts = [];
             let groupedAccounts = {};
@@ -404,7 +411,6 @@ let index = function () {
                             balance: current.attributes.balance,
                             native_balance: current.attributes.native_balance,
                         };
-
                         // get group info:
                         let groupId = current.attributes.object_group_id;
                         if(!this.pageOptions.groupedAccounts) {

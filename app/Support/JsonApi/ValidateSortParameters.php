@@ -34,9 +34,7 @@ trait ValidateSortParameters
         if (null === $params) {
             return false;
         }
-
-        $config = config(sprintf('api.full_data_set.%s', $class)) ?? [];
-
+        $config = config('api.full_data_set')[$class] ?? [];
         foreach ($params->all() as $field) {
             if (in_array($field->name(), $config, true)) {
                 Log::debug('TRUE');
