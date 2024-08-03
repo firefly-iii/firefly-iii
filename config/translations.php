@@ -54,8 +54,10 @@ return [
             'firefly'    => [
                 'liability_direction_debit_short',
                 'liability_direction_credit_short',
+                'liability_direction_null_short',
                 'interest_calc_yearly',
                 'interest_calc_',
+                'interest_calc_null',
                 'interest_calc_daily',
                 'interest_calc_monthly',
                 'interest_calc_weekly',
@@ -105,6 +107,7 @@ return [
                 'expense_account',
                 'revenue_account',
                 'budget',
+                'account_type_undefined',
                 'account_type_Asset account',
                 'account_type_Expense account',
                 'account_type_Revenue account',

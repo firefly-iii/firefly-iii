@@ -339,7 +339,7 @@ let index = function () {
             this.pageOptions.isLoading = true;
             // sort instructions (only one column)
             let sorting = this.pageOptions.sortingColumn;
-            if('ASC' === this.pageOptions.sortDirection) {
+            if('asc' === this.pageOptions.sortDirection) {
                 sorting = '-' + sorting;
             }
             //const sorting = [{column: this.pageOptions.sortingColumn, direction: this.pageOptions.sortDirection}];
@@ -391,16 +391,18 @@ let index = function () {
                             account_number: null === current.attributes.account_number ? '' : current.attributes.account_number,
                             current_balance: current.attributes.current_balance,
                             currency_code: current.attributes.currency_code,
-                            native_current_balance: current.attributes.native_current_balance,
-                            native_currency_code: current.attributes.native_currency_code,
+                            //native_current_balance: current.attributes.native_current_balance,
+                            //native_currency_code: current.attributes.native_currency_code,
                             last_activity: null === current.attributes.last_activity ? '' : format(new Date(current.attributes.last_activity), i18next.t('config.month_and_day_fns')),
-                            balance_difference: current.attributes.balance_difference,
-                            native_balance_difference: current.attributes.native_balance_difference,
+                            //balance_difference: current.attributes.balance_difference,
+                            //native_balance_difference: current.attributes.native_balance_difference,
                             liability_type: current.attributes.liability_type,
                             liability_direction: current.attributes.liability_direction,
                             interest: current.attributes.interest,
                             interest_period: current.attributes.interest_period,
-                            current_debt: current.attributes.current_debt,
+                            //current_debt: current.attributes.current_debt,
+                            balance: current.attributes.balance,
+                            native_balance: current.attributes.native_balance,
                         };
 
                         // get group info:
