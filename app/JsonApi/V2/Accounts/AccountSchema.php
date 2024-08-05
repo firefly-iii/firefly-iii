@@ -28,7 +28,7 @@ class AccountSchema extends Schema
      */
     public function fields(): array
     {
-         Log::debug(__METHOD__);
+        Log::debug(__METHOD__);
 
         return [
             ID::make(),
@@ -87,6 +87,7 @@ class AccountSchema extends Schema
         foreach ($config as $entry) {
             $array[] = Filter::make($entry);
         }
+
         return $array;
     }
 
@@ -94,18 +95,18 @@ class AccountSchema extends Schema
     {
         Log::debug(__METHOD__);
         $this->setUserGroup($this->server->getUsergroup());
+
         return AccountRepository::make()
-                                       ->withServer($this->server)
-                                       ->withSchema($this)
-                                       ->withUserGroup($this->userGroup);
+            ->withServer($this->server)
+            ->withSchema($this)
+            ->withUserGroup($this->userGroup)
+        ;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function pagination(): EnumerablePagination
     {
         Log::debug(__METHOD__);
+
         return EnumerablePagination::make();
     }
 }

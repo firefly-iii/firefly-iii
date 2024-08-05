@@ -81,6 +81,7 @@ trait AccountFilter
         'creditcard'                 => [AccountType::CREDITCARD],
         'cc'                         => [AccountType::CREDITCARD],
     ];
+
     /**
      * All the available types.
      */

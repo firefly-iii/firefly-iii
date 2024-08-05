@@ -27,7 +27,6 @@ use Carbon\Carbon;
 
 trait CollectsCustomParameters
 {
-
     protected function getOtherParams(array $params): array
     {
         $return = [];
@@ -37,7 +36,7 @@ trait CollectsCustomParameters
         if (array_key_exists('endPeriod', $params)) {
             $return['end'] = Carbon::parse($params['endPeriod']);
         }
-        if(array_key_exists('currentMoment', $params)) {
+        if (array_key_exists('currentMoment', $params)) {
             $return['today'] = Carbon::parse($params['currentMoment']);
         }
 

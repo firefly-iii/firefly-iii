@@ -42,17 +42,17 @@ class CrudAccount extends CrudResource
 
         Log::debug(__METHOD__);
         // enrich the collected data
-        $enrichment = new AccountEnrichment();
+        $enrichment  = new AccountEnrichment();
 
         // set start and date, if present.
         $enrichment->setStart($otherParams['start'] ?? null);
         $enrichment->setEnd($otherParams['end'] ?? null);
 
-
         return $enrichment->enrichSingle($account);
     }
 
-    public function create(array $validatedData): Account {
-        die('here we are');
+    public function create(array $validatedData): Account
+    {
+        exit('here we are');
     }
 }

@@ -24,7 +24,6 @@ declare(strict_types=1);
 use FireflyIII\Models\Account;
 
 return [
-
     // allowed filters (search) for APIs
     'filters'             => [
         'allowed' => [

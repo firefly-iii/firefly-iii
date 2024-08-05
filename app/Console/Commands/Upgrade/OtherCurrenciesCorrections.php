@@ -43,8 +43,8 @@ class OtherCurrenciesCorrections extends Command
     use ShowsFriendlyMessages;
 
     public const string CONFIG_NAME = '480_other_currencies';
-    protected                             $description = 'Update all journal currency information.';
-    protected                             $signature   = 'firefly-iii:other-currencies {--F|force : Force the execution of this command.}';
+    protected $description          = 'Update all journal currency information.';
+    protected $signature            = 'firefly-iii:other-currencies {--F|force : Force the execution of this command.}';
     private array                         $accountCurrencies;
     private AccountRepositoryInterface    $accountRepos;
     private JournalCLIRepositoryInterface $cliRepos;
@@ -220,14 +220,14 @@ class OtherCurrenciesCorrections extends Command
 
     private function getCurrency(Account $account): ?TransactionCurrency
     {
-        $accountId = $account->id;
+        $accountId                           = $account->id;
         if (array_key_exists($accountId, $this->accountCurrencies) && 0 === $this->accountCurrencies[$accountId]) {
             return null;
         }
         if (array_key_exists($accountId, $this->accountCurrencies) && $this->accountCurrencies[$accountId] instanceof TransactionCurrency) {
             return $this->accountCurrencies[$accountId];
         }
-        $currency = $this->accountRepos->getAccountCurrency($account);
+        $currency                            = $this->accountRepos->getAccountCurrency($account);
         if (null === $currency) {
             $this->accountCurrencies[$accountId] = 0;
 
@@ -249,6 +249,7 @@ class OtherCurrenciesCorrections extends Command
         if (false === $value || null === $value) {
             return false;
         }
+
         return '1' === $value;
     }
 }

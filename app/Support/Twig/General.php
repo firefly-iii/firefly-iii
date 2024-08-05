@@ -63,15 +63,16 @@ class General extends AbstractExtension
                 }
 
                 /** @var Carbon $date */
-                $date = session('end', today(config('app.timezone'))->endOfMonth());
-                $info = app('steam')->balanceByTransactions($account, $date, null);
+                $date    = session('end', today(config('app.timezone'))->endOfMonth());
+                $info    = app('steam')->balanceByTransactions($account, $date, null);
 
                 $strings = [];
-                foreach($info as $currencyId => $balance) {
-                    $strings[] =  app('amount')->formatByCurrencyId($currencyId, $balance, false);
+                foreach ($info as $currencyId => $balance) {
+                    $strings[] = app('amount')->formatByCurrencyId($currencyId, $balance, false);
                 }
+
                 return implode(', ', $strings);
-                //return app('steam')->balance($account, $date);
+                // return app('steam')->balance($account, $date);
             }
         );
     }

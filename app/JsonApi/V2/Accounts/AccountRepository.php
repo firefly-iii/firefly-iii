@@ -29,10 +29,8 @@ use FireflyIII\Support\JsonApi\Enrichments\AccountEnrichment;
 use Illuminate\Support\Facades\Log;
 use LaravelJsonApi\Contracts\Store\CreatesResources;
 use LaravelJsonApi\Contracts\Store\QueriesAll;
-use LaravelJsonApi\Contracts\Store\QueryOneBuilder;
 use LaravelJsonApi\NonEloquent\AbstractRepository;
 use LaravelJsonApi\NonEloquent\Capabilities\CrudRelations;
-use LaravelJsonApi\NonEloquent\Capabilities\CrudResource;
 use LaravelJsonApi\NonEloquent\Concerns\HasCrudCapability;
 use LaravelJsonApi\NonEloquent\Concerns\HasRelationsCapability;
 
@@ -52,26 +50,25 @@ class AccountRepository extends AbstractRepository implements QueriesAll, Create
     use HasRelationsCapability;
     use UsergroupAware;
 
-
-
     /**
      * SiteRepository constructor.
      */
-    public function __construct() {
+    public function __construct()
+    {
         Log::debug(__METHOD__);
     }
 
     public function exists(string $resourceId): bool
     {
         $result = null !== Account::find((int) $resourceId);
-        Log::debug(sprintf('%s: %s',__METHOD__, var_export($result, true)));
+        Log::debug(sprintf('%s: %s', __METHOD__, var_export($result, true)));
 
         return $result;
     }
 
     public function find(string $resourceId): ?object
     {
-        die(__METHOD__);
+        exit(__METHOD__);
         Log::debug(__METHOD__);
         //        throw new \RuntimeException('trace me');
         $account    = Account::find((int) $resourceId);
@@ -98,12 +95,14 @@ class AccountRepository extends AbstractRepository implements QueriesAll, Create
     protected function crud(): Capabilities\CrudAccount
     {
         Log::debug(__METHOD__);
+
         return Capabilities\CrudAccount::make();
     }
 
     protected function relations(): CrudRelations
     {
         Log::debug(__METHOD__);
+
         return Capabilities\CrudAccountRelations::make();
     }
 }

@@ -45,6 +45,7 @@ class AccountPolicy
     public function viewAny(): bool
     {
         Log::debug(__METHOD__);
+
         return auth()->check();
     }
 
