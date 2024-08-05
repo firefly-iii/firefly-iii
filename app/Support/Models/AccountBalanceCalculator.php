@@ -306,7 +306,7 @@ class AccountBalanceCalculator
 
     private function getStartAmounts(Account $account, TransactionJournal $journal): array
     {
-        exit('here we are');
+        exit('here we are 1');
 
         return [];
     }

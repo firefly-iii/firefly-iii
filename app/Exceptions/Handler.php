@@ -37,6 +37,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException as LaravelValidationException;
 use Laravel\Passport\Exceptions\OAuthServerException as LaravelOAuthException;
 use LaravelJsonApi\Core\Exceptions\JsonApiException;
+use LaravelJsonApi\Exceptions\ExceptionParser;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
 use Symfony\Component\HttpFoundation\Response;
@@ -67,6 +68,19 @@ class Handler extends ExceptionHandler
             JsonApiException::class,
         ];
 
+
+    /**
+     * Register the exception handling callbacks for the application.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->renderable(
+            ExceptionParser::make()->renderable()
+        );
+    }
+
     /**
      * Render an exception into an HTTP response. It's complex but lucky for us, we never use it because
      * Firefly III never crashes.
@@ -81,15 +95,21 @@ class Handler extends ExceptionHandler
     public function render($request, \Throwable $e): Response
     {
         $expectsJson = $request->expectsJson();
-        // if the user requests anything /api/, assume the user wants to see JSON.
-        if (str_starts_with($request->getRequestUri(), '/api/')) {
-            app('log')->debug('API endpoint, always assume user wants JSON.');
-            $expectsJson = true;
-        }
 
         app('log')->debug('Now in Handler::render()');
+
+        if($e instanceof JsonApiException) {
+            // ignore it: controller will handle it.
+
+            app('log')->debug(sprintf('Return to parent to handle JsonApiException(%d)', $e->getCode()
+                              ));
+
+            return parent::render($request, $e);
+        }
+
         if ($e instanceof LaravelValidationException && $expectsJson) {
             // ignore it: controller will handle it.
+
             app('log')->debug(sprintf('Return to parent to handle LaravelValidationException(%d)', $e->status));
 
             return parent::render($request, $e);

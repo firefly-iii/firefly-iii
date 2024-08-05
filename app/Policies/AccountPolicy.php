@@ -37,6 +37,10 @@ class AccountPolicy
         return auth()->check() && $user->id === $account->user_id;
     }
 
+    public function create(): bool {
+        return auth()->check();
+    }
+
     /**
      * Everybody can do this, but selection should limit to user.
      *

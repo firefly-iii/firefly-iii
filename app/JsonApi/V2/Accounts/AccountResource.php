@@ -6,7 +6,6 @@ namespace FireflyIII\JsonApi\V2\Accounts;
 
 use FireflyIII\Models\Account;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use LaravelJsonApi\Core\Resources\JsonApiResource;
 
 /**
@@ -38,7 +37,7 @@ class AccountResource extends JsonApiResource
             'active'                  => $this->resource->active,
             'order'                   => $this->resource->order,
             'iban'                    => $this->resource->iban,
-            'type'                    => $this->resource->account_type_string,
+            'account_type'            => $this->resource->account_type_string,
             'account_role'            => $this->resource->account_role,
             'account_number'          => '' === $this->resource->account_number ? null : $this->resource->account_number,
 
