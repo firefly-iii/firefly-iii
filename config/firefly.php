@@ -117,7 +117,7 @@ return [
         'expression_engine' => true,
         // see cer.php for exchange rates feature flag.
     ],
-    'version'                      => 'develop/2024-07-29',
+    'version'                      => 'develop/2024-08-05',
     'api_version'                  => '2.1.0',
     'db_version'                   => 24,
 
@@ -919,5 +919,4 @@ return [
 
     // preselected account lists possibilities:
     'preselected_accounts'         => ['all', 'assets', 'liabilities'],
-
 ];

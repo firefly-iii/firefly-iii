@@ -31,24 +31,18 @@ use LaravelJsonApi\Core\Query\SortFields;
 
 trait SortsQueryResults
 {
-
     final protected function postQuerySort(string $class, Collection $collection, SortFields $parameters): Collection
     {
         Log::debug(__METHOD__);
         foreach ($parameters->all() as $field) {
             $collection = $this->sortQueryCollection($class, $collection, $field);
         }
+
         return $collection;
     }
 
     /**
      * TODO improve this.
-     *
-     * @param string     $class
-     * @param Collection $collection
-     * @param SortField  $field
-     *
-     * @return Collection
      */
     private function sortQueryCollection(string $class, Collection $collection, SortField $field): Collection
     {
@@ -59,6 +53,7 @@ trait SortsQueryResults
             $collection = $collection->sort(function (Account $left, Account $right) use ($ascending): int {
                 $leftSum  = $this->sumBalance($left->balance);
                 $rightSum = $this->sumBalance($right->balance);
+
                 return $ascending ? bccomp($leftSum, $rightSum) : bccomp($rightSum, $leftSum);
             });
         }
@@ -67,6 +62,7 @@ trait SortsQueryResults
             $collection = $collection->sort(function (Account $left, Account $right) use ($ascending): int {
                 $leftSum  = $this->sumBalanceDifference($left->balance);
                 $rightSum = $this->sumBalanceDifference($right->balance);
+
                 return $ascending ? bccomp($leftSum, $rightSum) : bccomp($rightSum, $leftSum);
             });
         }
@@ -76,6 +72,7 @@ trait SortsQueryResults
             $collection = $collection->sort(function (Account $left, Account $right) use ($ascending): int {
                 $leftNr  = sprintf('%s%s', $left->iban, $left->account_number);
                 $rightNr = sprintf('%s%s', $right->iban, $right->account_number);
+
                 return $ascending ? strcmp($leftNr, $rightNr) : strcmp($rightNr, $leftNr);
             });
         }
@@ -86,16 +83,16 @@ trait SortsQueryResults
             $collection = $collection->sort(function (Account $left, Account $right) use ($ascending): int {
                 $leftNr  = (int)$left->last_activity?->format('U');
                 $rightNr = (int)$right->last_activity?->format('U');
-                if($ascending){
+                if ($ascending) {
                     return $leftNr <=> $rightNr;
                 }
+
                 return $rightNr <=> $leftNr;
-                //return (int) ($ascending ? $rightNr < $leftNr : $leftNr < $rightNr );
+                // return (int) ($ascending ? $rightNr < $leftNr : $leftNr < $rightNr );
             });
         }
 
         // sort by balance difference.
-
 
         return $collection;
     }
@@ -112,6 +109,7 @@ trait SortsQueryResults
         foreach ($balance as $entry) {
             $sum = bcadd($sum, $entry['balance']);
         }
+
         return $sum;
     }
 
@@ -127,7 +125,7 @@ trait SortsQueryResults
         foreach ($balance as $entry) {
             $sum = bcadd($sum, $entry['balance_difference']);
         }
+
         return $sum;
     }
-
 }

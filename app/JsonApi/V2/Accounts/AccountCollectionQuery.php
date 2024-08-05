@@ -29,28 +29,28 @@ class AccountCollectionQuery extends ResourceQuery
                 'array',
                 JsonApiRule::fieldSets(),
             ],
-            'userGroupId' => [
+            'userGroupId'   => [
                 'nullable',
                 'integer',
                 new IsAllowedGroupAction(Account::class, request()->method()),
             ],
-            'startPeriod' => [
+            'startPeriod'   => [
                 'nullable',
                 'date',
                 new IsDateOrTime(),
-                new isValidDateRange(),
+                new IsValidDateRange(),
             ],
-            'endPeriod' => [
+            'endPeriod'     => [
                 'nullable',
                 'date',
                 new IsDateOrTime(),
-                new isValidDateRange(),
+                new IsValidDateRange(),
             ],
             'filter'        => [
                 'nullable',
                 'array',
                 JsonApiRule::filter($validFilters),
-                new IsValidAccountType()
+                new IsValidAccountType(),
             ],
             'include'       => [
                 'nullable',

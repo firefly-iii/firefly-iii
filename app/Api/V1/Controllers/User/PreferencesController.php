@@ -102,6 +102,7 @@ class PreferencesController extends Controller
      * TODO This endpoint is not documented.
      *
      * Return a single preference by name.
+     *
      * @param Collection<int, Preference> $collection
      */
     public function showList(Collection $collection): JsonResponse

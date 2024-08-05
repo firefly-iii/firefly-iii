@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules\Account;
 
-use Closure;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use Illuminate\Contracts\Validation\ValidationRule;
 
@@ -31,12 +30,9 @@ class IsValidAccountType implements ValidationRule
 {
     use AccountFilter;
 
-    /**
-     * @inheritDoc
-     */
-    #[\Override] public function validate(string $attribute, mixed $value, Closure $fail): void
+    #[\Override]
+    public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
-
         // only check the type.
         if (array_key_exists('type', $value)) {
             $value    = $value['type'];
@@ -44,13 +40,13 @@ class IsValidAccountType implements ValidationRule
                 $value = [$value];
             }
 
-
             $filtered = [];
             $keys     = array_keys($this->types);
+
             /** @var mixed $entry */
             foreach ($value as $entry) {
                 $entry = (string) $entry;
-                if (!in_array($entry, $keys)) {
+                if (!in_array($entry, $keys, true)) {
                     $fail('something');
                 }
             }

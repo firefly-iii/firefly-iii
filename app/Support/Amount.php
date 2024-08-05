@@ -45,8 +45,10 @@ class Amount
         return $this->formatFlat($format->symbol, $format->decimal_places, $amount, $coloured);
     }
 
-    public function formatByCurrencyId(int $currencyId, string $amount, ?bool $coloured = null): string {
+    public function formatByCurrencyId(int $currencyId, string $amount, ?bool $coloured = null): string
+    {
         $format = TransactionCurrency::find($currencyId);
+
         return $this->formatFlat($format->symbol, $format->decimal_places, $amount, $coloured);
     }
 

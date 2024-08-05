@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\JsonApi\V2\Accounts;
 
 use FireflyIII\Rules\Account\IsUniqueAccount;
@@ -13,11 +15,8 @@ use LaravelJsonApi\Laravel\Http\Requests\ResourceRequest;
 
 class AccountRequest extends ResourceRequest
 {
-    use ConvertsDataTypes;
     /**
      * Get the validation rules for the resource.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -52,7 +51,7 @@ class AccountRequest extends ResourceRequest
 //            'interest'             => 'min:0|max:100|numeric',
 //            'interest_period'      => sprintf('nullable|in:%s', implode(',', config('firefly.interest_periods'))),
 //            'notes'                => 'min:0|max:32768',
+
         ];
     }
-
 }

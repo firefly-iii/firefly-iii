@@ -38,6 +38,7 @@ trait ValidateSortParameters
         foreach ($params->all() as $field) {
             if (in_array($field->name(), $config, true)) {
                 Log::debug('TRUE');
+
                 return true;
             }
         }

@@ -28,7 +28,7 @@ class AccountResource extends JsonApiResource
      */
     public function attributes($request): iterable
     {
-        //Log::debug(__METHOD__);
+        // Log::debug(__METHOD__);
 
         return [
             'created_at'              => $this->resource->created_at,
@@ -61,7 +61,6 @@ class AccountResource extends JsonApiResource
 
             // other things
             'last_activity'           => $this->resource->last_activity,
-
 
             // object group
             'object_group_id'         => $this->resource->object_group_id,

@@ -62,6 +62,7 @@ trait ExpandsQuery
         foreach ($value as $entry) {
             $return = array_merge($return, $this->mapAccountTypes($entry));
         }
+
         return array_unique($return);
     }
 
@@ -70,7 +71,7 @@ trait ExpandsQuery
         $config = config('api.valid_api_filters')[$class];
         $parsed = [];
         foreach ($filters->all() as $filter) {
-            $key = $filter->key();
+            $key   = $filter->key();
             if (!in_array($key, $config, true)) {
                 continue;
             }
@@ -86,12 +87,16 @@ trait ExpandsQuery
             switch ($filter->key()) {
                 case 'name':
                     $parsed['name'] = $value;
+
                     break;
+
                 case 'type':
                     $parsed['type'] = $this->parseAccountTypeFilter($value);
+
                     break;
             }
         }
+
         return $parsed;
     }
 
@@ -122,13 +127,12 @@ trait ExpandsQuery
         });
 
         // TODO this is special treatment, but alas, unavoidable right now.
-        if ($class === Account::class && array_key_exists('type', $parsed)) {
+        if (Account::class === $class && array_key_exists('type', $parsed)) {
             if (count($parsed['type']) > 0) {
                 $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
                 $query->whereIn('account_types.type', $parsed['type']);
             }
         }
-
 
         return $query;
     }
