@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules\Account;
 
-use Closure;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\User;
@@ -35,20 +34,19 @@ use Illuminate\Contracts\Validation\ValidationRule;
  */
 class IsUniqueAccount implements ValidationRule, DataAwareRule
 {
-    protected Closure $fail;
+    protected \Closure $fail;
     protected array   $data = [];
 
-    /**
-     * @inheritDoc
-     */
-    #[\Override] public function validate(string $attribute, mixed $value, Closure $fail): void
+    #[\Override]
+    public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
         return;
-        $this->fail = $fail;
+        $this->fail  = $fail;
         // because a user does not have to be logged in (tests and what-not).
         if (!auth()->check()) {
             app('log')->debug('validateUniqueAccountForUser::anon');
             $fail('validation.nog_logged_in')->translate();
+
             return;
         }
         if (array_key_exists('type', $this->data)) {
@@ -77,22 +75,15 @@ class IsUniqueAccount implements ValidationRule, DataAwareRule
         app('log')->debug('validateUniqueAccountForUser::accountName');
 
         $this->validateByAccountName($value);
-
     }
 
     /**
      * TODO duplicate from old validation class.
-     *
-     * @param string $value
-     * @param array  $parameters
-     * @param string $type
-     *
-     * @return bool
      */
     private function validateByAccountTypeString(string $value, array $parameters, string $type): bool
     {
         /** @var null|array $search */
-        $search = config('firefly.accountTypeByIdentifier.%s', $type);
+        $search         = config('firefly.accountTypeByIdentifier.%s', $type);
 
         if (null === $search) {
             return false;
@@ -103,17 +94,16 @@ class IsUniqueAccount implements ValidationRule, DataAwareRule
         $accountTypeIds = $accountTypes->pluck('id')->toArray();
 
         /** @var null|Account $result */
-        $result = auth()->user()->accounts()->whereIn('account_type_id', $accountTypeIds)->where('id', '!=', $ignore)
-                        ->where('name', $value)
-                        ->first();
+        $result         = auth()->user()->accounts()->whereIn('account_type_id', $accountTypeIds)->where('id', '!=', $ignore)
+            ->where('name', $value)
+            ->first()
+        ;
 
         return null === $result;
     }
 
     /**
      * TODO duplicate from old validation class.
-     *
-     * @return void
      */
     private function validateAccountAnonymously(): void
     {
@@ -122,9 +112,9 @@ class IsUniqueAccount implements ValidationRule, DataAwareRule
         }
 
         /** @var User $user */
-        $user  = User::find($this->data['user_id']);
-        $type  = AccountType::find($this->data['account_type_id'])->first();
-        $value = $this->data['name'];
+        $user   = User::find($this->data['user_id']);
+        $type   = AccountType::find($this->data['account_type_id'])->first();
+        $value  = $this->data['name'];
 
         /** @var null|Account $result */
         $result = $user->accounts()->where('account_type_id', $type->id)->where('name', $value)->first();
@@ -145,8 +135,9 @@ class IsUniqueAccount implements ValidationRule, DataAwareRule
 
         /** @var null|Account $result */
         $result = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)
-                        ->where('name', $value)
-                        ->first();
+            ->where('name', $value)
+            ->first()
+        ;
 
         return null === $result;
     }
@@ -161,12 +152,13 @@ class IsUniqueAccount implements ValidationRule, DataAwareRule
         /** @var Account $existingAccount */
         $existingAccount = Account::find($accountId);
 
-        $type   = $existingAccount->accountType;
-        $ignore = $existingAccount->id;
+        $type            = $existingAccount->accountType;
+        $ignore          = $existingAccount->id;
 
-        $entry = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)
-                       ->where('name', $value)
-                       ->first();
+        $entry           = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)
+            ->where('name', $value)
+            ->first()
+        ;
 
         return null === $entry;
     }
@@ -181,12 +173,13 @@ class IsUniqueAccount implements ValidationRule, DataAwareRule
         /** @var Account $existingAccount */
         $existingAccount = Account::find($this->data['id']);
 
-        $type   = $existingAccount->accountType;
-        $ignore = $existingAccount->id;
+        $type            = $existingAccount->accountType;
+        $ignore          = $existingAccount->id;
 
-        $entry = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)
-                       ->where('name', $value)
-                       ->first();
+        $entry           = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)
+            ->where('name', $value)
+            ->first()
+        ;
 
         return null === $entry;
     }
@@ -194,20 +187,14 @@ class IsUniqueAccount implements ValidationRule, DataAwareRule
     /**
      * TODO is duplicate
      * TODO does not take group into account. Must be made group aware.
-     *
-     * @param string $value
-     *
-     * @return bool
      */
     private function validateByAccountName(string $value): bool
     {
         return 0 === auth()->user()->accounts()->where('name', $value)->count();
     }
 
-    /**
-     * @inheritDoc
-     */
-    #[\Override] public function setData(array $data): void
+    #[\Override]
+    public function setData(array $data): void
     {
         $this->data = $data;
     }

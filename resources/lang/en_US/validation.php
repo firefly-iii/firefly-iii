@@ -28,7 +28,7 @@ return [
     'filter_must_be_in'               => 'Filter ":filter" must be one of: :values',
     'filter_not_string'               => 'Filter ":filter" is expected to be a string of text',
     'bad_api_filter'                  => 'This API endpoint does not support ":filter" as a filter.',
-    'nog_logged_in' => 'You are not logged in.',
+    'nog_logged_in'                   => 'You are not logged in.',
     'bad_type_source'                 => 'Firefly III can\'t determine the transaction type based on this source account.',
     'bad_type_destination'            => 'Firefly III can\'t determine the transaction type based on this destination account.',
     'missing_where'                   => 'Array is missing "where"-clause',

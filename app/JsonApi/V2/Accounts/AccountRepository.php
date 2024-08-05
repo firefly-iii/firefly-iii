@@ -102,8 +102,6 @@ class AccountRepository extends AbstractRepository implements QueriesAll, Create
     /**
      * TODO piggy banks
      * TODO transactions
-     *
-     * @return CrudRelations
      */
     protected function relations(): CrudRelations
     {

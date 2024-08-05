@@ -68,13 +68,10 @@ class Handler extends ExceptionHandler
             JsonApiException::class,
         ];
 
-
     /**
      * Register the exception handling callbacks for the application.
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->renderable(
             ExceptionParser::make()->renderable()
@@ -98,11 +95,13 @@ class Handler extends ExceptionHandler
 
         app('log')->debug('Now in Handler::render()');
 
-        if($e instanceof JsonApiException) {
+        if ($e instanceof JsonApiException) {
             // ignore it: controller will handle it.
 
-            app('log')->debug(sprintf('Return to parent to handle JsonApiException(%d)', $e->getCode()
-                              ));
+            app('log')->debug(sprintf(
+                'Return to parent to handle JsonApiException(%d)',
+                $e->getCode()
+            ));
 
             return parent::render($request, $e);
         }

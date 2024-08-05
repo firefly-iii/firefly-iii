@@ -37,7 +37,8 @@ class AccountPolicy
         return auth()->check() && $user->id === $account->user_id;
     }
 
-    public function create(): bool {
+    public function create(): bool
+    {
         return auth()->check();
     }
 

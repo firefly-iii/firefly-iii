@@ -60,7 +60,7 @@ class AccountSchema extends Schema
             Attribute::make('liability_direction'),
             Attribute::make('interest'),
             Attribute::make('interest_period'),
-            //Attribute::make('current_debt')->sortable(),
+            // Attribute::make('current_debt')->sortable(),
 
             // TODO credit card fields.
 
