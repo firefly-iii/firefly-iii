@@ -269,7 +269,7 @@ class Steam
      */
     public function balanceInRangeConverted(Account $account, Carbon $start, Carbon $end, TransactionCurrency $native): array
     {
-//        Log::warning(sprintf('Deprecated method %s, do not use.', __METHOD__));
+        //        Log::warning(sprintf('Deprecated method %s, do not use.', __METHOD__));
         $cache                = new CacheProperties();
         $cache->addProperty($account->id);
         $cache->addProperty('balance-in-range-converted');
@@ -541,7 +541,7 @@ class Steam
      */
     public function balancesByAccounts(Collection $accounts, Carbon $date): array
     {
-//        Log::warning(sprintf('Deprecated method %s, do not use.', __METHOD__));
+        //        Log::warning(sprintf('Deprecated method %s, do not use.', __METHOD__));
         $ids    = $accounts->pluck('id')->toArray();
         // cache this property.
         $cache  = new CacheProperties();
@@ -572,7 +572,7 @@ class Steam
      */
     public function balancesByAccountsConverted(Collection $accounts, Carbon $date): array
     {
-//        Log::warning(sprintf('Deprecated method %s, do not use.', __METHOD__));
+        //        Log::warning(sprintf('Deprecated method %s, do not use.', __METHOD__));
         $ids    = $accounts->pluck('id')->toArray();
         // cache this property.
         $cache  = new CacheProperties();
@@ -606,7 +606,7 @@ class Steam
      */
     public function balancesPerCurrencyByAccounts(Collection $accounts, Carbon $date): array
     {
-//        Log::warning(sprintf('Deprecated method %s, do not use.', __METHOD__));
+        //        Log::warning(sprintf('Deprecated method %s, do not use.', __METHOD__));
         $ids    = $accounts->pluck('id')->toArray();
         // cache this property.
         $cache  = new CacheProperties();
