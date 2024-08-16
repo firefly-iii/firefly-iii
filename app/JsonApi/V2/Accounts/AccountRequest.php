@@ -9,11 +9,13 @@ use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Rules\UniqueAccountNumber;
 use FireflyIII\Rules\UniqueIban;
+use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Support\Facades\Log;
 use LaravelJsonApi\Laravel\Http\Requests\ResourceRequest;
 
 class AccountRequest extends ResourceRequest
 {
+    use ConvertsDataTypes;
     /**
      * Get the validation rules for the resource.
      */

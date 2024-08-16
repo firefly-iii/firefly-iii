@@ -41,9 +41,8 @@ trait DateCalculation
     {
         $difference = (int)($start->diffInDays($end, true) + 1);
         $today      = today(config('app.timezone'))->startOfDay();
-
         if ($start->lte($today) && $end->gte($today)) {
-            $difference = $today->diffInDays($end);
+            $difference = $today->diffInDays($end) + 1;
         }
 
         return (int)(0 === $difference ? 1 : $difference);
