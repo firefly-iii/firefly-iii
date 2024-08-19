@@ -540,6 +540,7 @@ export default {
             // }
         },
         convertData: function () {
+            console.log('start of convertData');
             let data = {
                 'apply_rules': this.applyRules,
                 'fire_webhooks': this.fireWebhooks,
@@ -585,7 +586,7 @@ export default {
                 }
             }
             //console.log(data);
-
+            console.log('end of convertData');
             return data;
         },
         convertDataRow(row, index, transactionType, currencyId) {
@@ -741,8 +742,8 @@ export default {
             return currentArray;
         },
         submit: function (e) {
-
-            let button = $('#submitButton');
+            console.log('Submit!');
+            let button = $(e.currentTarget);
             button.prop("disabled", true);
 
             const page = window.location.href.split('/');
@@ -750,23 +751,26 @@ export default {
             let uri = './api/v1/transactions/' + groupId + '?_token=' + document.head.querySelector('meta[name="csrf-token"]').content;
             let method = 'PUT';
             if (this.storeAsNew) {
+                console.log('storeAsNew');
                 // other links.
                 uri = './api/v1/transactions?_token=' + document.head.querySelector('meta[name="csrf-token"]').content;
                 method = 'POST';
             }
             const data = this.convertData();
-
-            //axios.put(uri, data)
+            console.log('POST!');
             axios({
                 method: method,
                 url: uri,
                 data: data,
             }).then(response => {
+                console.log('Response!');
                 if (0 === this.collectAttachmentData(response)) {
                     const title = response.data.data.attributes.group_title ?? response.data.data.attributes.transactions[0].description;
                     this.redirectUser(response.data.data.id, title);
                 }
+                button.removeAttr('disabled');
             }).catch(error => {
+                console.log('Error :(');
                 // give user errors things back.
                 // something something render errors.
                 this.parseErrors(error.response.data);
@@ -775,10 +779,11 @@ export default {
             if (e) {
                 e.preventDefault();
             }
-            button.removeAttr('disabled');
+            console.log('DONE with method.');
         },
 
         redirectUser(groupId, title) {
+            console.log('Now in redirectUser');
             if (this.returnAfter) {
                 this.setDefaultErrors();
                 // do message if update or new:
@@ -796,10 +801,11 @@ export default {
                     window.location.href = window.previousUrl + '?transaction_group_id=' + groupId + '&message=updated';
                 }
             }
+            console.log('End of redirectUser');
         },
 
         collectAttachmentData(response) {
-            // console.log('Now incollectAttachmentData()');
+            console.log('Now incollectAttachmentData()');
             let groupId = response.data.data.id;
 
             // array of all files to be uploaded:
@@ -831,7 +837,7 @@ export default {
                 }
             }
             let count = toBeUploaded.length;
-            // console.log('Found ' + toBeUploaded.length + ' attachments.');
+            console.log('Found ' + toBeUploaded.length + ' attachments.');
 
             // loop all uploads.
             for (const key in toBeUploaded) {
@@ -857,6 +863,7 @@ export default {
                     })(toBeUploaded[key], key, this);
                 }
             }
+            console.log('Done with collectAttachmentData()');
             return count;
         },
 
