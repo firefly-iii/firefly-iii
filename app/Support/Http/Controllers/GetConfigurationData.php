@@ -131,7 +131,6 @@ trait GetConfigurationData
         /** @var Carbon $todayEnd */
         $todayEnd       = app('navigation')->endOfPeriod($todayStart, $viewRange);
 
-
         if ($todayStart->ne($start) || $todayEnd->ne($end)) {
             $ranges[ucfirst((string)trans('firefly.today'))] = [$todayStart, $todayEnd];
         }

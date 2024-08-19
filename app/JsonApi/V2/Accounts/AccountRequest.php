@@ -16,6 +16,7 @@ use LaravelJsonApi\Laravel\Http\Requests\ResourceRequest;
 class AccountRequest extends ResourceRequest
 {
     use ConvertsDataTypes;
+
     /**
      * Get the validation rules for the resource.
      */
