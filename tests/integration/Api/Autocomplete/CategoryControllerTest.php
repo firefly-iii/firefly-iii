@@ -70,10 +70,9 @@ final class CategoryControllerTest extends TestCase {
     public function testGivenAuthenticatedRequestWhenCallingTheCategoriesEndpointThenReturns200HttpCode(): void
     {
         // act as a user
-         $user = $this->createAuthenticatedUser();
+        $user = $this->createAuthenticatedUser();
+        $this->actingAs($user);
 
-        // Act as the created user
-        $this->actingAs($user, 'api');
         $response = $this->get(route('api.v1.autocomplete.categories'), ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');
@@ -82,11 +81,9 @@ final class CategoryControllerTest extends TestCase {
 
     public function testGivenAuthenticatedRequestWhenCallingTheCategoriesEndpointThenReturnsCategories(): void
     {
-        // act as a user
         $user = $this->createAuthenticatedUser();
+        $this->actingAs($user);
 
-        // Act as the created user
-        $this->actingAs($user, 'api');
         $this->createTestCategories(5, $user);
         $response = $this->get(route('api.v1.autocomplete.categories'), ['Accept' => 'application/json']);
         $response->assertStatus(200);
@@ -103,11 +100,9 @@ final class CategoryControllerTest extends TestCase {
 
     public function testGivenAuthenticatedRequestWhenCallingTheCategoriesEndpointWithQueryThenReturnsCategoriesWithLimit(): void
     {
-        // act as a user
         $user = $this->createAuthenticatedUser();
+        $this->actingAs($user);
 
-        // Act as the created user
-        $this->actingAs($user, 'api');
         $this->createTestCategories(5, $user);
         $response = $this->get(route('api.v1.autocomplete.categories', [
             'query' => 'Category',
@@ -121,11 +116,9 @@ final class CategoryControllerTest extends TestCase {
 
     public function testGivenAuthenticatedRequestWhenCallingTheCategoriesEndpointWithQueryThenReturnsCategoriesThatMatchQuery(): void
     {
-        // act as a user
         $user = $this->createAuthenticatedUser();
+        $this->actingAs($user);
 
-        // Act as the created user
-        $this->actingAs($user, 'api');
         $this->createTestCategories(20, $user);
         $response = $this->get(route('api.v1.autocomplete.categories', [
             'query' => 'Category 1',
@@ -139,5 +132,4 @@ final class CategoryControllerTest extends TestCase {
         $response->assertJsonMissing(['name' => 'Category 2']);
     }
     
-
 }
