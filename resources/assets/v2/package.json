@@ -8,7 +8,7 @@
         "postinstall": "patch-package --error-on-fail"
     },
     "devDependencies": {
-        "axios": "^1.6.8",
+        "axios": "^1.7.4",
         "laravel-vite-plugin": "^1.0.5",
         "patch-package": "^8.0.0",
         "sass": "^1.77.8",
