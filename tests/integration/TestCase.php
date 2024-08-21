@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tests\integration;
 
+use FireflyIII\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Tests\integration\Traits\CollectsValues;
 
@@ -47,5 +48,13 @@ abstract class TestCase extends BaseTestCase
             'one year'     => ['1Y'],
             'custom range' => ['custom'],
         ];
+    }
+
+    protected function createAuthenticatedUser(): User
+    {
+        return User::create([
+            'email' => 'test@email.com',
+            'password' => 'password',
+        ]);
     }
 }
