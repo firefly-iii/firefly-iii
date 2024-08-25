@@ -1,7 +1,7 @@
 <?php
 /*
- * AccountControllerTest.php
- * Copyright (c) 2021 james@firefly-iii.org
+ * CategoryControllerTest.php
+ * Copyright (c) 2024 tasnim0tantawi
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
