@@ -70,9 +70,10 @@ final class NavigationEndOfPeriodTest extends TestCase
             'last30'                        => ['frequency' => 'last30', 'from' => Carbon::now(), 'expected' => Carbon::now()->addDays(30)->endOfDay()],
             'last90'                        => ['frequency' => 'last90', 'from' => Carbon::now(), 'expected' => Carbon::now()->addDays(90)->endOfDay()],
             'last365'                       => ['frequency' => 'last365', 'from' => Carbon::now(), 'expected' => Carbon::now()->addDays(365)->endOfDay()],
-            'MTD'                           => ['frequency' => 'MTD', 'from' => Carbon::now(), 'expected' => Carbon::now()->startOfMonth()->startOfDay()],
+            'MTD'                           => ['frequency' => 'MTD', 'from' => Carbon::now(),
+            'expected' => Carbon::now()->isSameMonth(Carbon::now()) ? Carbon::now()->endOfDay(): Carbon::now()->endOfMonth()],
             'QTD'                           => ['frequency' => 'QTD', 'from' => Carbon::now(), 'expected' => Carbon::now()->firstOfQuarter()->startOfDay()],
-            'YTD'                           => ['frequency' => 'YTD', 'from' => Carbon::now(), 'expected' => Carbon::now()->startOfYear()->startOfDay()],
+            'YTD'                           => ['frequency' => 'YTD', 'from' => Carbon::now(), 'expected' => Carbon::now()->firstOfYear()->startOfDay()],
             'week 2023-08-05 to 2023-08-11' => ['frequency' => '1W', 'from' => Carbon::parse('2023-08-05'), 'expected' => Carbon::parse('2023-08-11')->endOfDay()],
         ];
     }

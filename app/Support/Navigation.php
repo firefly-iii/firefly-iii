@@ -283,10 +283,13 @@ class Navigation
             return $currentEnd;
         }
         if ('MTD' === $repeatFreq) {
-            return $end->startOfMonth()->startOfDay();
-        }
-        
+            $today = today();
+            if ($today->isSameMonth($end)) {
+                return $today->endOfDay();
+            }
 
+            return $end->endOfMonth();
+        }
 
         $result      = match ($repeatFreq) {
             'last7'   => $currentEnd->addDays(7)->startOfDay(),
