@@ -36,46 +36,49 @@ use FireflyIII\User;
  *
  * @coversNothing
  */
-final class BudgetControllerTest extends TestCase {
+final class BudgetControllerTest extends TestCase
+{
     /**
      * @covers \FireflyIII\Api\V1\Controllers\Autocomplete\BudgetController
      */
     use RefreshDatabase;
 
-    private function createAuthenticatedUser(): User {
+    private function createAuthenticatedUser(): User
+    {
         $userGroup = UserGroup::create(['title' => 'Test Group']);
 
         return User::create([
-            'email' => 'test@email.com',
-            'password' => 'password',
+            'email'         => 'test@email.com',
+            'password'      => 'password',
             'user_group_id' => $userGroup->id,
-            ]);
-        }
+        ]);
+    }
 
-    private function createTestBudgets(int $count, User $user): void {
-        for ($i = 1; $i <= $count; $i++) {
+    private function createTestBudgets(int $count, User $user): void
+    {
+        for ($i = 1; $i <= $count; ++$i) {
             $budget = Budget::create([
-                'user_id' => $user->id,
-                'name' => 'Budget ' . $i,
+                'user_id'       => $user->id,
+                'name'          => 'Budget '.$i,
                 'user_group_id' => $user->user_group_id,
-                'active' => 1,
+                'active'        => 1,
             ]);
         }
     }
-    
 
-    public function testGivenAnUnauthenticatedRequestWhenCallingTheBudgetsEndpointThenReturns401HttpCode(): void {
+    public function testGivenAnUnauthenticatedRequestWhenCallingTheBudgetsEndpointThenReturns401HttpCode(): void
+    {
         // test API
         $response = $this->get(route('api.v1.autocomplete.budgets'), ['Accept' => 'application/json']);
         $response->assertStatus(401);
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertContent('{"message":"Unauthenticated","exception":"AuthenticationException"}');
     }
-    
+
     public function testGivenAuthenticatedRequestWhenCallingTheBudgetsEndpointThenReturns200HttpCode(): void
     {
         // act as a user
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $response = $this->get(route('api.v1.autocomplete.budgets'), ['Accept' => 'application/json']);
@@ -86,7 +89,7 @@ final class BudgetControllerTest extends TestCase {
 
     public function testGivenAuthenticatedRequestWhenCallingTheBudgetsEndpointThenReturnsBudgets(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestBudgets(5, $user);
@@ -95,7 +98,7 @@ final class BudgetControllerTest extends TestCase {
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertJsonCount(5);
         $response->assertJsonFragment(['name' => 'Budget 1']);
-          $response->assertJsonStructure([
+        $response->assertJsonStructure([
             '*' => [
                 'id',
                 'name',
@@ -105,13 +108,13 @@ final class BudgetControllerTest extends TestCase {
 
     public function testGivenAuthenticatedRequestWhenCallingTheBudgetsEndpointWithQueryThenReturnsBudgetsWithLimit(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestBudgets(5, $user);
         $response = $this->get(route('api.v1.autocomplete.budgets', [
             'query' => 'Budget',
-            'limit' => 3
+            'limit' => 3,
         ]), ['Accept' => 'application/json']);
 
         $response->assertStatus(200);
@@ -121,7 +124,7 @@ final class BudgetControllerTest extends TestCase {
 
     public function testGivenAuthenticatedRequestWhenCallingTheBudgetsEndpointWithQueryThenReturnsBudgetsThatMatchQuery(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestBudgets(20, $user);
@@ -136,5 +139,4 @@ final class BudgetControllerTest extends TestCase {
         $response->assertJsonCount(11);
         $response->assertJsonMissing(['name' => 'Budget 2']);
     }
-    
 }

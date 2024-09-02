@@ -35,42 +35,45 @@ use FireflyIII\User;
  *
  * @coversNothing
  */
-final class CategoryControllerTest extends TestCase {
+final class CategoryControllerTest extends TestCase
+{
     /**
      * @covers \FireflyIII\Api\V1\Controllers\Autocomplete\CategoryController
      */
     use RefreshDatabase;
 
-    private function createAuthenticatedUser(): User {
+    private function createAuthenticatedUser(): User
+    {
         return User::create([
-            'email' => 'test@email.com',
+            'email'    => 'test@email.com',
             'password' => 'password',
-            ]);
-        }
+        ]);
+    }
 
-    private function createTestCategories(int $count, User $user): void {
-        for ($i = 1; $i <= $count; $i++) {
+    private function createTestCategories(int $count, User $user): void
+    {
+        for ($i = 1; $i <= $count; ++$i) {
             $category = Category::create([
-                'user_id' => $user->id,
-                'name' => 'Category ' . $i,
+                'user_id'       => $user->id,
+                'name'          => 'Category '.$i,
                 'user_group_id' => $user->user_group_id,
             ]);
         }
     }
-    
 
-    public function testGivenAnUnauthenticatedRequestWhenCallingTheCategoriesEndpointThenReturns401HttpCode(): void {
+    public function testGivenAnUnauthenticatedRequestWhenCallingTheCategoriesEndpointThenReturns401HttpCode(): void
+    {
         // test API
         $response = $this->get(route('api.v1.autocomplete.categories'), ['Accept' => 'application/json']);
         $response->assertStatus(401);
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertContent('{"message":"Unauthenticated","exception":"AuthenticationException"}');
     }
-    
+
     public function testGivenAuthenticatedRequestWhenCallingTheCategoriesEndpointThenReturns200HttpCode(): void
     {
         // act as a user
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $response = $this->get(route('api.v1.autocomplete.categories'), ['Accept' => 'application/json']);
@@ -81,7 +84,7 @@ final class CategoryControllerTest extends TestCase {
 
     public function testGivenAuthenticatedRequestWhenCallingTheCategoriesEndpointThenReturnsCategories(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestCategories(5, $user);
@@ -90,7 +93,7 @@ final class CategoryControllerTest extends TestCase {
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertJsonCount(5);
         $response->assertJsonFragment(['name' => 'Category 1']);
-          $response->assertJsonStructure([
+        $response->assertJsonStructure([
             '*' => [
                 'id',
                 'name',
@@ -100,13 +103,13 @@ final class CategoryControllerTest extends TestCase {
 
     public function testGivenAuthenticatedRequestWhenCallingTheCategoriesEndpointWithQueryThenReturnsCategoriesWithLimit(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestCategories(5, $user);
         $response = $this->get(route('api.v1.autocomplete.categories', [
             'query' => 'Category',
-            'limit' => 3
+            'limit' => 3,
         ]), ['Accept' => 'application/json']);
 
         $response->assertStatus(200);
@@ -116,7 +119,7 @@ final class CategoryControllerTest extends TestCase {
 
     public function testGivenAuthenticatedRequestWhenCallingTheCategoriesEndpointWithQueryThenReturnsCategoriesThatMatchQuery(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestCategories(20, $user);
@@ -131,5 +134,4 @@ final class CategoryControllerTest extends TestCase {
         $response->assertJsonCount(11);
         $response->assertJsonMissing(['name' => 'Category 2']);
     }
-    
 }
