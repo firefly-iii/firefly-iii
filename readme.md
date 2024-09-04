@@ -173,6 +173,8 @@ Over time, [many people have contributed to Firefly III](https://github.com/fire
 
 The Firefly III logo is made by the excellent Cherie Woo.
 
+<a href="https://hellogithub.com/repository/a8c64f04cb3643c2a4423c4ad924dec9" target="_blank"><img src="https://abroad.hellogithub.com/v1/widgets/recommend.svg?rid=a8c64f04cb3643c2a4423c4ad924dec9&claim_uid=1bPi7O2rTGREZXN&theme=small" alt="Featured｜HelloGitHub" /></a>
+
 [packagist-shield]: https://img.shields.io/packagist/v/grumpydictator/firefly-iii.svg?style=flat-square
 [packagist-url]: https://packagist.org/packages/grumpydictator/firefly-iii
 [license-shield]: https://img.shields.io/github/license/firefly-iii/firefly-iii.svg?style=flat-square
