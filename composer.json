@@ -93,7 +93,7 @@
         "laravel/framework": "^11",
         "laravel/passport": "^12",
         "laravel/sanctum": "^4",
-        "laravel/slack-notification-channel": "^3.0",
+        "laravel/slack-notification-channel": "^3.3",
         "laravel/ui": "^4.2",
         "league/commonmark": "2.*",
         "league/csv": "^9.10",
