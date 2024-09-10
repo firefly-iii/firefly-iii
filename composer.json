@@ -120,7 +120,7 @@
         "larastan/larastan": "^2",
         "laravel-json-api/testing": "^3.0",
         "mockery/mockery": "1.*",
-        "phpstan/extension-installer": "^1.3",
+        "phpstan/extension-installer": "^1.4",
         "phpstan/phpstan": "^1.10",
         "phpstan/phpstan-deprecation-rules": "^1.1",
         "phpstan/phpstan-strict-rules": "^1.4",
