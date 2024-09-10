@@ -22,7 +22,7 @@
         "font-awesome": "^4.7.0",
         "jquery": "^3",
         "laravel-mix": "^6.0",
-        "postcss": ">=8.4.31",
+        "postcss": ">=8.4.45",
         "uiv": "^1.4",
         "vue": "^2.7",
         "vue-i18n": "^8",
