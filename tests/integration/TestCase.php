@@ -53,7 +53,7 @@ abstract class TestCase extends BaseTestCase
     protected function createAuthenticatedUser(): User
     {
         return User::create([
-            'email' => 'test@email.com',
+            'email'    => 'test@email.com',
             'password' => 'password',
         ]);
     }

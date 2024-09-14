@@ -39,12 +39,13 @@ final class AboutControllerTest extends TestCase
     use RefreshDatabase;
     private $user;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
-        if (!isset($this->user))
+        if (!isset($this->user)) {
             $this->user = $this->createAuthenticatedUser();
+        }
         $this->actingAs($this->user);
     }
 
@@ -59,7 +60,7 @@ final class AboutControllerTest extends TestCase
                 'api_version',
                 'php_version',
                 'os',
-                'driver'
+                'driver',
             ],
         ]);
     }
@@ -69,8 +70,8 @@ final class AboutControllerTest extends TestCase
         $response = $this->getJson(route('api.v1.about.user'));
 
         $response->assertOk();
-        $response->assertJson(fn(AssertableJson $json) =>
-            $json
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
                 ->where('data.attributes.email', $this->user->email)
                 ->where('data.attributes.role', $this->user->role)
         );
