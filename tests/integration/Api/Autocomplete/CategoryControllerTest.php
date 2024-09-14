@@ -42,7 +42,7 @@ final class CategoryControllerTest extends TestCase
      */
     use RefreshDatabase;
 
-    private function createAuthenticatedUser(): User
+    protected function createAuthenticatedUser(): User
     {
         return User::create([
             'email'    => 'test@email.com',

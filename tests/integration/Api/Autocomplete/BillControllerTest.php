@@ -43,7 +43,7 @@ final class BillControllerTest extends TestCase
      */
     use RefreshDatabase;
 
-    private function createAuthenticatedUser(): User
+    protected function createAuthenticatedUser(): User
     {
         $userGroup = UserGroup::create(['title' => 'Test Group']);
 
