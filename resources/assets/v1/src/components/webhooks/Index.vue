@@ -122,7 +122,7 @@ export default {
       webhook.show_secret = !webhook.show_secret;
     },
     downloadWebhooks: function (page) {
-      axios.get("/api/v1/webhooks?page=" + page).then((response) => {
+      axios.get("./api/v1/webhooks?page=" + page).then((response) => {
         for (let i in response.data.data) {
           if (response.data.data.hasOwnProperty(i)) {
             let current = response.data.data[i];
