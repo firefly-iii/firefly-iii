@@ -28,8 +28,6 @@ class AccountSchema extends Schema
      */
     public function fields(): array
     {
-        Log::debug(__METHOD__);
-
         return [
             ID::make(),
             Attribute::make('created_at'),
