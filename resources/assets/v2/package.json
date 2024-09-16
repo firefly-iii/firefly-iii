@@ -30,7 +30,7 @@
         "chart.js": "^4.4.0",
         "chartjs-adapter-date-fns": "^3.0.0",
         "chartjs-chart-sankey": "^0.12.1",
-        "date-fns": "^3.6.0",
+        "date-fns": "^4.0.0",
         "i18next": "^23.11.2",
         "i18next-chained-backend": "^4.6.2",
         "i18next-http-backend": "^2.4.2",
