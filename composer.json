@@ -123,7 +123,7 @@
         "phpstan/extension-installer": "^1.4",
         "phpstan/phpstan": "^1.10",
         "phpstan/phpstan-deprecation-rules": "^1.1",
-        "phpstan/phpstan-strict-rules": "^1.4",
+        "phpstan/phpstan-strict-rules": "^1.6",
         "phpunit/phpunit": "^10",
         "thecodingmachine/phpstan-strict-rules": "^1.0"
     },
