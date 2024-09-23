@@ -112,7 +112,7 @@
         "symfony/mailgun-mailer": "^7.1"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.9",
+        "barryvdh/laravel-debugbar": "^3.14",
         "barryvdh/laravel-ide-helper": "3.*",
         "ergebnis/phpstan-rules": "^2.1",
         "fakerphp/faker": "1.*",
