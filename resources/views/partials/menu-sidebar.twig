@@ -85,12 +85,12 @@
                 </a>
             </li>
             {% if true == featuringWebhooks %}
-            <li class="{{ activeRoutePartial('webhooks') }}">
-                <a href="{{ route('webhooks.index') }}">
-                    <span class="fa fa-angle-right fa-fw"></span>
-                    <span>{{ 'webhooks'|_ }}</span>
-                </a>
-            </li>
+                <li class="{{ activeRoutePartial('webhooks') }}">
+                    <a href="{{ route('webhooks.index') }}">
+                        <span class="fa fa-angle-right fa-fw"></span>
+                        <span>{{ 'webhooks'|_ }}</span>
+                    </a>
+                </li>
             {% else %}
                 <li class="">
                     <a href="#">
@@ -230,10 +230,18 @@
         </ul>
     </li>
 
-
-    {% if 'remote_user_guard' != authGuard or '' != logoutUri %}
+    {% if 'web' == authGuard %}
         <li>
             <a href="{{ route('logout') }}" class="logout-link">
+                <em class="fa fa-sign-out fa-fw"></em>
+                <span>{{ 'logout'|_ }}
+                </span>
+            </a>
+        </li>
+    {% endif %}
+    {% if 'remote_user_guard' == authGuard and '' != logoutUrl %}
+        <li>
+            <a href="{{ logoutUrl }}">
                 <em class="fa fa-sign-out fa-fw"></em>
                 <span>{{ 'logout'|_ }}</span>
             </a>
