@@ -74,7 +74,16 @@ class General extends AbstractExtension
 
                 $strings = [];
                 foreach ($info as $currencyId => $balance) {
-                    $strings[] = app('amount')->formatByCurrencyId($currencyId, $balance, false);
+                    if(0 === $currencyId) {
+                        // not good code but OK
+                        /** @var AccountRepositoryInterface $accountRepos */
+                        $accountRepos = app(AccountRepositoryInterface::class);
+                        $currency     = $accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
+                        $strings[] = app('amount')->formatAnything($currency, $balance, false);
+                    }
+                    if(0 !== $currencyId) {
+                        $strings[] = app('amount')->formatByCurrencyId($currencyId, $balance, false);
+                    }
                 }
 
                 return implode(', ', $strings);
