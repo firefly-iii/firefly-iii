@@ -9,25 +9,25 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Enabled the expression engine built by @michaelhthomas. Read more about it in [the documentation](https://docs.firefly-iii.org/references/firefly-iii/rule-expressions/).
 - Add running balance data, see if it can be used in the layout in the future.
-- #9160
-- #9178
-- #9171
+- [PR 9160](https://github.com/firefly-iii/firefly-iii/pull/9160) (add test cases for api/v1/autocomplete/CategoryController) reported by @tasnim0tantawi
+- [PR 9178](https://github.com/firefly-iii/firefly-iii/pull/9178) (Add  test cases for Api\V1\Controllers\Autocomplete\BillController & BudgetController) reported by @tasnim0tantawi
+- [PR 9171](https://github.com/firefly-iii/firefly-iii/pull/9171) (Add about test) reported by @mzhubail
 
 ### Changed
 
-- #9096
+- [PR 9096](https://github.com/firefly-iii/firefly-iii/pull/9096) (chore: fix some comments) reported by @withbest
 
 ### Fixed
 
-- #9078
-- #9080
-- #9084
-- #9103
-- #9140
-- #9179
-- #9239
-- #9168
-- #9155
+- [Issue 9078](https://github.com/firefly-iii/firefly-iii/issues/9078) (bcadd exception while using POST transactions) reported by @dbtdsilva
+- [Discussion 9080](https://github.com/orgs/firefly-iii/discussions/9080) (Incorrect sorting on expense accounts) started by @pc-zookeeper
+- [Issue 9084](https://github.com/firefly-iii/firefly-iii/issues/9084) (API Call for bills/nextExpectedMatch does not update) reported by @marcelweikum
+- [Issue 9103](https://github.com/firefly-iii/firefly-iii/issues/9103) (Default Currency does not apply to Accounts.) reported by @chrisgriff1512
+- [Issue 9140](https://github.com/firefly-iii/firefly-iii/issues/9140) (Dashboard 'Today' option chooses 1st of month (not current date)) reported by @PAS-BC
+- [PR 9179](https://github.com/firefly-iii/firefly-iii/pull/9179) (fix Navigation.php MTD logic to make tests pass.) reported by @tasnim0tantawi
+- [PR 9239](https://github.com/firefly-iii/firefly-iii/pull/9239) (Fix webhook index page when Firefly is not served at root) reported by @jfpedroza
+- [Issue 9168](https://github.com/firefly-iii/firefly-iii/issues/9168) (Custom logout URL doesn't work.) reported by @JC5
+- [Issue 9155](https://github.com/firefly-iii/firefly-iii/issues/9155) (internal_reference_is does not correctly match numeric internal references) reported by @Lrns123
 
 ### API
 
