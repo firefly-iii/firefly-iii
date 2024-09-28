@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.1.20 - 2024-09-29
+
+### Added
+
+- Enabled the expression engine built by @michaelhthomas. Read more about it in [the documentation](https://docs.firefly-iii.org/references/firefly-iii/rule-expressions/).
+- Add running balance data, see if it can be used in the layout in the future.
+- #9160
+- #9178
+- #9171
+
+### Changed
+
+- #9096
+
+### Fixed
+
+- #9078
+- #9080
+- #9084
+- #9103
+- #9140
+- #9179
+- #9239
+- #9168
+- #9155
+
+### API
+
+- Expand v2 API
+
 ## 6.1.19 - 2024-07-20
 
 ### Fixed
