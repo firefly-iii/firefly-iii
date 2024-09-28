@@ -29,7 +29,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Search\OperatorQuerySearch;
 use League\CommonMark\GithubFlavoredMarkdownConverter;
-use Route;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -63,8 +62,15 @@ class General extends AbstractExtension
                 }
 
                 /** @var Carbon $date */
-                $date    = session('end', today(config('app.timezone'))->endOfMonth());
-                $info    = app('steam')->balanceByTransactions($account, $date, null);
+                $date           = session('end', today(config('app.timezone'))->endOfMonth());
+                $runningBalance = config('firefly.feature_flags.running_balance_column');
+                $info           = [];
+                if (true === $runningBalance) {
+                    $info = app('steam')->balanceByTransactions($account, $date, null);
+                }
+                if (false === $runningBalance) {
+                    $info[] = app('steam')->balance($account, $date);
+                }
 
                 $strings = [];
                 foreach ($info as $currencyId => $balance) {
@@ -87,15 +93,15 @@ class General extends AbstractExtension
             static function (int $size): string {
                 // less than one GB, more than one MB
                 if ($size < (1024 * 1024 * 2014) && $size >= (1024 * 1024)) {
-                    return round($size / (1024 * 1024), 2).' MB';
+                    return round($size / (1024 * 1024), 2) . ' MB';
                 }
 
                 // less than one MB
                 if ($size < (1024 * 1024)) {
-                    return round($size / 1024, 2).' KB';
+                    return round($size / 1024, 2) . ' KB';
                 }
 
-                return $size.' bytes';
+                return $size . ' bytes';
             }
         );
     }
@@ -117,7 +123,7 @@ class General extends AbstractExtension
                     case 'application/pdf':
                         return 'fa-file-pdf-o';
 
-                        // image
+                    // image
                     case 'image/png':
                     case 'image/jpeg':
                     case 'image/svg+xml':
@@ -126,7 +132,7 @@ class General extends AbstractExtension
                     case 'application/vnd.oasis.opendocument.image':
                         return 'fa-file-image-o';
 
-                        // MS word
+                    // MS word
                     case 'application/msword':
                     case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
                     case 'application/vnd.openxmlformats-officedocument.wordprocessingml.template':
@@ -142,7 +148,7 @@ class General extends AbstractExtension
                     case 'application/vnd.oasis.opendocument.text-master':
                         return 'fa-file-word-o';
 
-                        // MS excel
+                    // MS excel
                     case 'application/vnd.ms-excel':
                     case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
                     case 'application/vnd.openxmlformats-officedocument.spreadsheetml.template':
@@ -153,7 +159,7 @@ class General extends AbstractExtension
                     case 'application/vnd.oasis.opendocument.spreadsheet-template':
                         return 'fa-file-excel-o';
 
-                        // MS powerpoint
+                    // MS powerpoint
                     case 'application/vnd.ms-powerpoint':
                     case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
                     case 'application/vnd.openxmlformats-officedocument.presentationml.template':
@@ -165,7 +171,7 @@ class General extends AbstractExtension
                     case 'application/vnd.oasis.opendocument.presentation-template':
                         return 'fa-file-powerpoint-o';
 
-                        // calc
+                    // calc
                     case 'application/vnd.sun.xml.draw':
                     case 'application/vnd.sun.xml.draw.template':
                     case 'application/vnd.stardivision.draw':
@@ -198,7 +204,7 @@ class General extends AbstractExtension
                     ]
                 );
 
-                return (string)$converter->convert($text);
+                return (string) $converter->convert($text);
             },
             ['is_safe' => ['html']]
         );
@@ -212,8 +218,8 @@ class General extends AbstractExtension
         return new TwigFilter(
             'phphost',
             static function (string $string): string {
-                $proto = (string)parse_url($string, PHP_URL_SCHEME);
-                $host  = (string)parse_url($string, PHP_URL_HOST);
+                $proto = (string) parse_url($string, PHP_URL_SCHEME);
+                $host  = (string) parse_url($string, PHP_URL_HOST);
 
                 return e(sprintf('%s://%s', $proto, $host));
             }
@@ -301,7 +307,7 @@ class General extends AbstractExtension
             'activeRoutePartialObjectType',
             static function ($context): string {
                 [, $route, $objectType] = func_get_args();
-                $activeObjectType       = $context['objectType'] ?? false;
+                $activeObjectType = $context['objectType'] ?? false;
 
                 if ($objectType === $activeObjectType
                     && false !== stripos(
