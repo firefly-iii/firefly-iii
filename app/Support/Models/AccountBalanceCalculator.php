@@ -99,7 +99,7 @@ class AccountBalanceCalculator
         return $entry;
     }
 
-    private function optimizedCalculation(Collection $accounts, Carbon $notBefore = null): void
+    private function optimizedCalculation(Collection $accounts, ?Carbon $notBefore = null): void
     {
         Log::debug('start of optimizedCalculation');
         if ($accounts->count() > 0) {
@@ -121,7 +121,7 @@ class AccountBalanceCalculator
         if ($accounts->count() > 0) {
             $query->whereIn('transactions.account_id', $accounts->pluck('id')->toArray());
         }
-        if(null !== $notBefore) {
+        if (null !== $notBefore) {
             $notBefore->startOfDay();
             $query->where('transaction_journals.date', '>=', $notBefore);
         }
