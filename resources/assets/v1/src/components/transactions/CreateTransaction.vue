@@ -887,6 +887,7 @@ export default {
 
         deleteTransaction: function (index, event) {
             event.preventDefault();
+            console.log('Remove transaction.');
             this.transactions.splice(index, 1);
         },
         limitSourceType: function (type) {

@@ -73,6 +73,7 @@ function formatLabel(str, maxwidth) {
 }
 
 var defaultChartOptions = {
+
     elements: {
         line: {
             cubicInterpolationMode: 'monotone'
