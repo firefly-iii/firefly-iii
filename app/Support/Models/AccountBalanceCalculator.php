@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Models;
 
+use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountBalance;
@@ -74,7 +75,7 @@ class AccountBalanceCalculator
         foreach ($transactionJournal->transactions as $transaction) {
             $accounts->push($transaction->account);
         }
-        $object->optimizedCalculation($accounts);
+        $object->optimizedCalculation($accounts, $transactionJournal->date);
     }
 
     private function getAccountBalanceByAccount(int $account, int $currency): AccountBalance
@@ -98,7 +99,7 @@ class AccountBalanceCalculator
         return $entry;
     }
 
-    private function optimizedCalculation(Collection $accounts): void
+    private function optimizedCalculation(Collection $accounts, Carbon $notBefore = null): void
     {
         Log::debug('start of optimizedCalculation');
         if ($accounts->count() > 0) {
@@ -119,6 +120,10 @@ class AccountBalanceCalculator
         ;
         if ($accounts->count() > 0) {
             $query->whereIn('transactions.account_id', $accounts->pluck('id')->toArray());
+        }
+        if(null !== $notBefore) {
+            $notBefore->startOfDay();
+            $query->where('transaction_journals.date', '>=', $notBefore);
         }
 
         $set      = $query->get(['transactions.id', 'transactions.balance_dirty', 'transactions.transaction_currency_id', 'transaction_journals.date', 'transactions.account_id', 'transactions.amount']);
