@@ -7,8 +7,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #9275
-- #9278
+- [Issue 9275](https://github.com/firefly-iii/firefly-iii/issues/9275) (Long wait when editing a transaction) reported by @JC5
+- [Issue 9278](https://github.com/firefly-iii/firefly-iii/issues/9278) (Update to v6.1.20 changed Balance of Account) reported by @JeuJeus
 
 ## 6.1.20 - 2024-09-29
 
