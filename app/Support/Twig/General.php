@@ -74,7 +74,7 @@ class General extends AbstractExtension
 
                 $strings        = [];
                 foreach ($info as $currencyId => $balance) {
-                    $balance= (string) $balance;
+                    $balance = (string) $balance;
                     if (0 === $currencyId) {
                         // not good code but OK
                         /** @var AccountRepositoryInterface $accountRepos */
