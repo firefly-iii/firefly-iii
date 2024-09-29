@@ -61,7 +61,7 @@
                 <td class="hidden-xs">
                     {% if budget_limit.spent != 0 %}
                         <span class="fa fa-fw text-muted fa-info-circle firefly-info-button"
-                           data-location="budget-spent-amount" data-currency-id="{{ budget_limit.currency_id }}" data-budget-id="{{ budget.budget_id }}"></span>
+                           data-location="budget-spent-amount" data-currency-id="{{ budget_limit.currency_id }}" data-budget-id="{% if '' == budget.budget_id %}0{% else %}{{ budget.budget_id }}{% endif %}"></span>
                     {% endif %}
                 </td>
 

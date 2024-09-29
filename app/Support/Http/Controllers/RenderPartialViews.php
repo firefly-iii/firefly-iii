@@ -115,6 +115,7 @@ trait RenderPartialViews
 
         $budget           = $budgetRepository->find((int)$attributes['budgetId']);
         if (null === $budget) {
+            // transactions without a budget.
             $budget = new Budget();
         }
         $journals         = $popupHelper->byBudget($budget, $attributes);
