@@ -30,7 +30,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 9155](https://github.com/firefly-iii/firefly-iii/issues/9155) (internal_reference_is does not correctly match numeric internal references) reported by @Lrns123
 - [Issue 9275](https://github.com/firefly-iii/firefly-iii/issues/9275) (Long wait when editing a transaction) reported by @JC5
 - [Issue 9278](https://github.com/firefly-iii/firefly-iii/issues/9278) (Update to v6.1.20 changed Balance of Account) reported by @JeuJeus
-- #9281
+- [Issue 9281](https://github.com/firefly-iii/firefly-iii/issues/9281) (Update to v6.1.20 leads to a type error) reported by @krakonos1602
 
 ### API
 
