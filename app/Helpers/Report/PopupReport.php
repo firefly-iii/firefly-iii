@@ -100,6 +100,7 @@ class PopupReport implements PopupReportInterface
             $repos    = app(CurrencyRepositoryInterface::class);
             $currency = $repos->find((int)$currencyId);
         }
+
         /** @var GroupCollectorInterface $collector */
         $collector  = app(GroupCollectorInterface::class);
         $collector
@@ -119,6 +120,7 @@ class PopupReport implements PopupReportInterface
         if (null !== $budget->id && 0 !== $budget->id) {
             $collector->setBudget($budget);
         }
+
         return $collector->getExtractedJournals();
     }
 
