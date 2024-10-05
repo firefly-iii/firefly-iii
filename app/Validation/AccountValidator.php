@@ -86,7 +86,7 @@ class AccountValidator
             app('log')->debug('AccountValidator source is set to NULL');
         }
         if (null !== $account) {
-            app('log')->debug(sprintf('AccountValidator source is set to #%d: "%s" (%s)', $account->id, $account->name, $account->accountType->type));
+            app('log')->debug(sprintf('AccountValidator source is set to #%d: "%s" (%s)', $account->id, $account->name, $account->accountType?->type));
         }
         $this->source = $account;
     }
