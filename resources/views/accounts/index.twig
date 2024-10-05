@@ -67,6 +67,18 @@
     {% endif %}
     {% if accounts.count() == 0 and page == 1 %}
         {% include 'partials.empty' with {objectType: objectType, type: 'accounts',route: route('accounts.create', [objectType])} %}
+
+        {% if inactiveCount > 0 %}
+            <p class="text-center"><small>
+                    <em>
+                        <a href="{{ route('accounts.inactive.index', objectType) }}" class="text-muted">
+                            {{ trans_choice('firefly.inactive_account_link', inactiveCount) }}
+                        </a>
+                    </em>
+                </small>
+            </p>
+        {% endif %}
+
     {% endif %}
 {% endblock %}
 
