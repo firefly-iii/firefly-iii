@@ -35,6 +35,7 @@ trait ParsesQueryFilters
         $date  = today();
 
         $value = $parameters->filter()?->value($field, date('Y-m-d'));
+
         if (is_array($value)) {
             Log::error(sprintf('Multiple values for date field "%s". Using first value.', $field));
             $value = $value[0];
@@ -64,5 +65,9 @@ trait ParsesQueryFilters
     private function stringFromQueryParams(QueryParameters $parameters, string $field, string $default): string
     {
         return (string) ($parameters->page()[$field] ?? $default);
+    }
+    private function stringFromFilterParams(QueryParameters $parameters, string $field, string $default): string
+    {
+        return (string)$parameters->filter()?->value($field, $default) ?? $default;
     }
 }

@@ -84,10 +84,6 @@ class BalanceController extends Controller
         $queryParameters = $request->getParameters();
         $accounts        = $this->getAccountList($queryParameters);
 
-        // move date to end of day
-        $queryParameters['start']->startOfDay();
-        $queryParameters['end']->endOfDay();
-
         // prepare for currency conversion and data collection:
         /** @var TransactionCurrency $default */
         $default         = app('amount')->getDefaultCurrency();
