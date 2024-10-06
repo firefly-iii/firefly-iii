@@ -45,7 +45,9 @@ return [
             'timeout'     => null,
             'verify_peer' => null !== env('MAIL_ENCRYPTION'),
         ],
-
+        'mailersend' => [
+            'transport' => 'mailersend',
+        ],
         'ses'      => [
             'transport' => 'ses',
         ],

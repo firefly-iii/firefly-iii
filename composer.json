@@ -98,6 +98,7 @@
         "league/commonmark": "2.*",
         "league/csv": "^9.10",
         "league/fractal": "0.*",
+        "mailersend/laravel-driver": "^2.7",
         "nunomaduro/collision": "^8",
         "pragmarx/google2fa": "^8.0",
         "predis/predis": "^2.2",
@@ -194,7 +195,8 @@
         "optimize-autoloader": true,
         "allow-plugins": {
             "composer/package-versions-deprecated": true,
-            "phpstan/extension-installer": true
+            "phpstan/extension-installer": true,
+            "php-http/discovery": true
         }
     }
 }
