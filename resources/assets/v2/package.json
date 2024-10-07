@@ -33,7 +33,7 @@
         "date-fns": "^4.0.0",
         "i18next": "^23.11.2",
         "i18next-chained-backend": "^4.6.2",
-        "i18next-http-backend": "^2.4.2",
+        "i18next-http-backend": "^2.6.2",
         "i18next-localstorage-backend": "^4.2.0",
         "leaflet": "^1.9.4",
         "store": "^2.0.12"
