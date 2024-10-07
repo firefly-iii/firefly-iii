@@ -363,7 +363,7 @@ class CreateRecurringTransactions implements ShouldQueue
         $count                   = $recurrence->recurrenceTransactions->count();
         // #8844, if there is one recurrence transaction, use the first title as the title.
         // #9305, if there is one recurrence transaction, group title must be NULL.
-        $groupTitle = null;
+        $groupTitle              = null;
 
         // #8844, if there are more, use the recurrence transaction itself.
         if ($count > 1) {

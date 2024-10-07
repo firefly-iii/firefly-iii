@@ -66,6 +66,7 @@ trait ParsesQueryFilters
     {
         return (string) ($parameters->page()[$field] ?? $default);
     }
+
     private function stringFromFilterParams(QueryParameters $parameters, string $field, string $default): string
     {
         return (string)$parameters->filter()?->value($field, $default) ?? $default;

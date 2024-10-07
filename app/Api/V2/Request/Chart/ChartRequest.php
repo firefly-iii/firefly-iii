@@ -80,14 +80,14 @@ class ChartRequest extends FormRequest
         return [
             'fields'  => JsonApiRule::notSupported(),
             'filter'  => ['nullable', 'array',
-                          new IsValidFilter(['start', 'end', 'preselected', 'accounts', 'period']),
-                          new IsFilterValueIn('preselected', config('firefly.preselected_accounts')),
+                new IsValidFilter(['start', 'end', 'preselected', 'accounts', 'period']),
+                new IsFilterValueIn('preselected', config('firefly.preselected_accounts')),
             ],
             'include' => JsonApiRule::notSupported(),
             'page'    => JsonApiRule::notSupported(),
             'sort'    => JsonApiRule::notSupported(),
-            //'start'   => 'required|date|after:1900-01-01|before:2099-12-31',
-            //'end'     => 'required|date|after_or_equal:start|before:2099-12-31|after:1900-01-01',
+            // 'start'   => 'required|date|after:1900-01-01|before:2099-12-31',
+            // 'end'     => 'required|date|after_or_equal:start|before:2099-12-31|after:1900-01-01',
         ];
 
         //        return [

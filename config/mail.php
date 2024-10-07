@@ -35,7 +35,7 @@ return [
     'default'  => envNonEmpty('MAIL_MAILER', 'log'),
 
     'mailers'  => [
-        'smtp'     => [
+        'smtp'       => [
             'transport'   => 'smtp',
             'host'        => envNonEmpty('MAIL_HOST', 'smtp.mailtrap.io'),
             'port'        => (int)env('MAIL_PORT', 2525),
@@ -48,38 +48,38 @@ return [
         'mailersend' => [
             'transport' => 'mailersend',
         ],
-        'ses'      => [
+        'ses'        => [
             'transport' => 'ses',
         ],
 
-        'mailgun'  => [
+        'mailgun'    => [
             'transport' => 'mailgun',
         ],
 
-        'mandrill' => [
+        'mandrill'   => [
             'transport' => 'mandrill',
         ],
 
-        'postmark' => [
+        'postmark'   => [
             'transport' => 'postmark',
         ],
 
-        'sendmail' => [
+        'sendmail'   => [
             'transport' => 'sendmail',
             'path'      => envNonEmpty('MAIL_SENDMAIL_COMMAND', '/usr/sbin/sendmail -bs'),
         ],
-        'log'      => [
+        'log'        => [
             'transport' => 'log',
             'channel'   => env('MAIL_LOG_CHANNEL', 'stack'),
             'level'     => 'info',
         ],
-        'null'     => [
+        'null'       => [
             'transport' => 'log',
             'channel'   => env('MAIL_LOG_CHANNEL', 'stack'),
             'level'     => 'notice',
         ],
 
-        'array'    => [
+        'array'      => [
             'transport' => 'array',
         ],
     ],
