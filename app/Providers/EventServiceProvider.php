@@ -44,6 +44,7 @@ use FireflyIII\Events\Security\DisabledMFA;
 use FireflyIII\Events\Security\EnabledMFA;
 use FireflyIII\Events\Security\MFABackupFewLeft;
 use FireflyIII\Events\Security\MFABackupNoLeft;
+use FireflyIII\Events\Security\MFAManyFailedAttempts;
 use FireflyIII\Events\Security\MFANewBackupCodes;
 use FireflyIII\Events\Security\MFAUsedBackupCode;
 use FireflyIII\Events\StoredAccount;
@@ -230,6 +231,9 @@ class EventServiceProvider extends ServiceProvider
             ],
             MFABackupNoLeft::class                  => [
                 'FireflyIII\Handlers\Events\Security\MFAHandler@sendBackupNoLeftMail',
+            ],
+            MFAManyFailedAttempts::class => [
+                'FireflyIII\Handlers\Events\Security\MFAHandler@sendMFAFailedAttemptsMail',
             ],
         ];
 

@@ -169,5 +169,11 @@ return [
     'no_backup_codes_intro' => 'You (:email) have used ALL of your backup codes. Please generate new ones as soon as possible.',
     'no_backup_codes_warning' => 'Without backup codes, you cannot recover your MFA login if you lose access to your code generator.',
 
+    // many failed MFA attempts
+    'mfa_many_failed_subject' => 'You have tried and failed to use multi-factor authentication :count times now!',
+    'mfa_many_failed_slack' => 'You (:email) have tried and failed to use multi-factor authentication :count times now. Is this not correct? Check your settings!',
+    'mfa_many_failed_attempts_intro' => 'You (:email) have tried :count times to use a multi-factor authentication code, but these login attempts have failed. Are you sure you are using the right MFA code? Are you sure the time on the server is correct?',
+    'mfa_many_failed_attempts_warning' => 'If you did not do this, please contact your administrator immediately or check out the Firefly III documentation.',
+
 ];
 // Ignore this comment

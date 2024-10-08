@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Controllers\Auth;
 
 use FireflyIII\Events\Security\MFABackupFewLeft;
 use FireflyIII\Events\Security\MFABackupNoLeft;
+use FireflyIII\Events\Security\MFAManyFailedAttempts;
 use FireflyIII\Events\Security\MFAUsedBackupCode;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\User;
@@ -76,9 +77,25 @@ class TwoFactorController extends Controller
         /** @var Authenticator $authenticator */
         $authenticator = app(Authenticator::class)->boot($request);
 
+        // if not OK, save error.
+        if (!$authenticator->isAuthenticated()) {
+            $user = auth()->user();
+            $this->addToMFAFailureCounter();
+            $counter = $this->getMFAFailureCounter();
+            if (3 === $counter || 10 === $counter) {
+                // do not reset MFA failure counter, but DO send a warning to the user.
+                Log::channel('audit')->info(sprintf('User "%s" has had %d failed MFA attempts.', $user->email, $counter));
+                event(new MFAManyFailedAttempts($user, $counter));
+            }
+            unset($user);
+        }
+
         if ($authenticator->isAuthenticated()) {
             // save MFA in preferences
             $this->addToMFAHistory($mfaCode);
+
+            // reset failure count
+            $this->resetMFAFailureCounter();
 
             // otp auth success!
             return redirect(route('home'));
@@ -88,6 +105,9 @@ class TwoFactorController extends Controller
         if ($this->isBackupCode($mfaCode)) {
             $this->removeFromBackupCodes($mfaCode);
             $authenticator->login();
+
+            // reset failure count
+            $this->resetMFAFailureCounter();
 
             session()->flash('info', trans('firefly.mfa_backup_code'));
             // send user notification.
@@ -185,18 +205,39 @@ class TwoFactorController extends Controller
         $newList = array_values(array_diff($list, [$mfaCode]));
 
         // if the list is 3 or less, send a notification.
-        if(count($newList) <= 3 && count($newList) > 0) {
+        if (count($newList) <= 3 && count($newList) > 0) {
             $user = auth()->user();
             Log::channel('audit')->info(sprintf('User "%s" has used a backup code. They have %d backup codes left.', $user->email, count($newList)));
             event(new MFABackupFewLeft($user, count($newList)));
         }
         // if the list is empty, send notification
-        if(0 === count($newList)) {
+        if (0 === count($newList)) {
             $user = auth()->user();
             Log::channel('audit')->info(sprintf('User "%s" has used their last backup code.', $user->email));
             event(new MFABackupNoLeft($user));
         }
 
         app('preferences')->set('mfa_recovery', $newList);
+    }
+
+    private function addToMFAFailureCounter(): void
+    {
+        $preference = (int) app('preferences')->get('mfa_failure_count', 0)->data;
+        $preference++;
+        Log::channel('audit')->info(sprintf('MFA failure count is set to %d.', $preference));
+        app('preferences')->set('mfa_failure_count', $preference);
+    }
+
+    private function getMFAFailureCounter(): int
+    {
+        $value = (int) app('preferences')->get('mfa_failure_count', 0)->data;
+        Log::channel('audit')->info(sprintf('MFA failure count is %d.', $value));
+        return $value;
+    }
+
+    private function resetMFAFailureCounter(): void
+    {
+        app('preferences')->set('mfa_failure_count', 0);
+        Log::channel('audit')->info('MFA failure count is set to zero.');
     }
 }

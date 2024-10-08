@@ -27,12 +27,14 @@ use FireflyIII\Events\Security\DisabledMFA;
 use FireflyIII\Events\Security\EnabledMFA;
 use FireflyIII\Events\Security\MFABackupFewLeft;
 use FireflyIII\Events\Security\MFABackupNoLeft;
+use FireflyIII\Events\Security\MFAManyFailedAttempts;
 use FireflyIII\Events\Security\MFANewBackupCodes;
 use FireflyIII\Events\Security\MFAUsedBackupCode;
 use FireflyIII\Notifications\Security\DisabledMFANotification;
 use FireflyIII\Notifications\Security\EnabledMFANotification;
 use FireflyIII\Notifications\Security\MFABackupFewLeftNotification;
 use FireflyIII\Notifications\Security\MFABackupNoLeftNotification;
+use FireflyIII\Notifications\Security\MFAManyFailedAttemptsNotification;
 use FireflyIII\Notifications\Security\MFAUsedBackupCodeNotification;
 use FireflyIII\Notifications\Security\NewBackupCodesNotification;
 use Illuminate\Support\Facades\Notification;
@@ -98,6 +100,32 @@ class MFAHandler
 
         try {
             Notification::send($user, new MFABackupFewLeftNotification($user, $count));
+        } catch (\Exception $e) { // @phpstan-ignore-line
+            $message = $e->getMessage();
+            if (str_contains($message, 'Bcc')) {
+                app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+
+                return;
+            }
+            if (str_contains($message, 'RFC 2822')) {
+                app('log')->warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+
+                return;
+            }
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
+        }
+    }
+
+    public function sendMFAFailedAttemptsMail(MFAManyFailedAttempts $event): void
+    {
+        app('log')->debug(sprintf('Now in %s', __METHOD__));
+
+        $user = $event->user;
+        $count = $event->count;
+
+        try {
+            Notification::send($user, new MFAManyFailedAttemptsNotification($user, $count));
         } catch (\Exception $e) { // @phpstan-ignore-line
             $message = $e->getMessage();
             if (str_contains($message, 'Bcc')) {
