@@ -29,9 +29,9 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 
 /**
- * Class TokenFormRequest.
+ * Class ExistingTokenFormRequest.
  */
-class TokenFormRequest extends FormRequest
+class ExistingTokenFormRequest extends FormRequest
 {
     use ChecksLogin;
 
@@ -43,7 +43,7 @@ class TokenFormRequest extends FormRequest
         // fixed
         return [
             'password' => 'required|currentPassword',
-            'code' => 'required|2faCode',
+            'code' => 'required|existingMfaCode',
         ];
     }
 

@@ -23,6 +23,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Auth;
 
+use FireflyIII\Events\Security\MFABackupFewLeft;
+use FireflyIII\Events\Security\MFABackupNoLeft;
+use FireflyIII\Events\Security\MFAUsedBackupCode;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
@@ -30,6 +33,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Log;
 use PragmaRX\Google2FALaravel\Support\Authenticator;
 
 /**
@@ -47,7 +51,7 @@ class TwoFactorController extends Controller
         /** @var User $user */
         $user      = auth()->user();
         $siteOwner = config('firefly.site_owner');
-        $title     = (string)trans('firefly.two_factor_forgot_title');
+        $title     = (string) trans('firefly.two_factor_forgot_title');
 
         return view('auth.lost-two-factor', compact('user', 'siteOwner', 'title'));
     }
@@ -58,8 +62,8 @@ class TwoFactorController extends Controller
     public function submitMFA(Request $request)
     {
         /** @var array $mfaHistory */
-        $mfaHistory    = app('preferences')->get('mfa_history', [])->data;
-        $mfaCode       = (string)$request->get('one_time_password');
+        $mfaHistory = app('preferences')->get('mfa_history', [])->data;
+        $mfaCode    = (string) $request->get('one_time_password');
 
         // is in history? then refuse to use it.
         if ($this->inMFAHistory($mfaCode, $mfaHistory)) {
@@ -86,6 +90,10 @@ class TwoFactorController extends Controller
             $authenticator->login();
 
             session()->flash('info', trans('firefly.mfa_backup_code'));
+            // send user notification.
+            $user = auth()->user();
+            Log::channel('audit')->info(sprintf('User "%s" has used a backup code.', $user->email));
+            event(new MFAUsedBackupCode($user));
 
             return redirect(route('home'));
         }
@@ -170,11 +178,25 @@ class TwoFactorController extends Controller
      */
     private function removeFromBackupCodes(string $mfaCode): void
     {
-        $list    = app('preferences')->get('mfa_recovery', [])->data;
+        $list = app('preferences')->get('mfa_recovery', [])->data;
         if (!is_array($list)) {
             $list = [];
         }
         $newList = array_values(array_diff($list, [$mfaCode]));
+
+        // if the list is 3 or less, send a notification.
+        if(count($newList) <= 3 && count($newList) > 0) {
+            $user = auth()->user();
+            Log::channel('audit')->info(sprintf('User "%s" has used a backup code. They have %d backup codes left.', $user->email, count($newList)));
+            event(new MFABackupFewLeft($user, count($newList)));
+        }
+        // if the list is empty, send notification
+        if(0 === count($newList)) {
+            $user = auth()->user();
+            Log::channel('audit')->info(sprintf('User "%s" has used their last backup code.', $user->email));
+            event(new MFABackupNoLeft($user));
+        }
+
         app('preferences')->set('mfa_recovery', $newList);
     }
 }

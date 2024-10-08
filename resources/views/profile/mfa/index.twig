@@ -1,0 +1,48 @@
+{% extends './layout/default' %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">
+                        {{ 'mfa_index_title'|_ }}
+                    </h3>
+                </div>
+                <div class="box-body">
+                    <p>
+                        {% if enabledMFA == true %}
+                            {{ 'mfa_index_enabled'|_ }}
+                        {% endif %}
+                        {% if enabledMFA == false %}
+                            {{ 'mfa_index_disabled'|_ }}
+                        {% endif %}
+
+                    </p>
+                    <p>
+                        {{ 'mfa_index_intro'|_ }}
+                    </p>
+                    <p>
+                        {{ 'mfa_index_owner'|_ }}
+                    </p>
+                    {% if enabledMFA == true %}
+                        <div class="btn-group">
+                            <a href="{{ route('profile.mfa.disableMFA') }}" class="btn btn-danger"><em class="fa fa-unlock-alt"></em> {{ 'pref_two_factor_auth_disable_2fa'|_ }}</a>
+                            <a href="{{ route('profile.mfa.backup-codes') }}" class="btn btn-default"><em class="fa fa-calculator"></em> {{ 'pref_two_factor_new_backup_codes'|_ }}</a>
+                        </div>
+                    {% endif %}
+                    {% if enabledMFA == false %}
+                        <p>
+                            <a class="btn btn-info" href="{{ route('profile.mfa.enableMFA') }}"><em class="fa fa-calculator"></em> {{ 'pref_enable_two_factor_auth'|_ }}</a>
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

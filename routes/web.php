@@ -825,15 +825,35 @@ Route::group(
         Route::get('logout-others', ['uses' => 'ProfileController@logoutOtherSessions', 'as' => 'logout-others']);
         Route::post('logout-others', ['uses' => 'ProfileController@postLogoutOtherSessions', 'as' => 'logout-others.post']);
 
-        // new 2FA routes
-        Route::post('enable2FA', ['uses' => 'ProfileController@enable2FA', 'as' => 'enable2FA']);
-        Route::get('2fa/code', ['uses' => 'ProfileController@code', 'as' => 'code']);
-        Route::post('2fa/code', ['uses' => 'ProfileController@postCode', 'as' => 'code.store']);
-        Route::post('/delete-code', ['uses' => 'ProfileController@deleteCode', 'as' => 'delete-code']);
-        Route::post('2fa/new-codes', ['uses' => 'ProfileController@newBackupCodes', 'as' => 'new-backup-codes']);
+
     }
 );
 
+// MFA controller
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'mfa', 'as' => 'profile.mfa.'],
+    static function (): void {
+        Route::get('index', ['uses' => 'Profile\MfaController@index', 'as' => 'index']);
+
+        // enable MFA (goes to code page)
+        Route::get('enableMFA',  ['uses' => 'Profile\MfaController@enableMFA', 'as' => 'enableMFA']);
+        Route::post('enableMFA', ['uses' => 'Profile\MfaController@enableMFAPost', 'as' => 'enableMFA.post']);
+
+        // show backup codes
+        Route::get('backup-codes',  ['uses' => 'Profile\MfaController@backupCodes', 'as' => 'backup-codes']);
+        Route::post('backup-codes', ['uses' => 'Profile\MfaController@backupCodesPost', 'as' => 'backup-codes.post']);
+
+        // enable MFA
+//        Route::get('2fa/code', ['uses' => 'Profile\MfaController@code', 'as' => 'code']);
+
+        // disable MFA
+        Route::get('/disableMFA', ['uses' => 'Profile\MfaController@disableMFA', 'as' => 'disableMFA']);
+        Route::post('/disableMFA', ['uses' => 'Profile\MfaController@disableMFAPost', 'as' => 'disableMFA.post']);
+
+
+
+    }
+    );
 // Recurring Transactions Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'recurring', 'as' => 'recurring.'],

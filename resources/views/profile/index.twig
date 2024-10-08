@@ -22,12 +22,14 @@
                 <li role="presentation">
                     <a href="#oauth" aria-controls="messages" role="tab" data-toggle="tab">{{ 'oauth'|_ }}</a>
                 </li>
+                {#
                 {% if true == isInternalAuth %}
                     <li role="presentation">
                         <a href="#mfa" aria-controls="settings" role="tab"
                            data-toggle="tab">{{ 'pref_two_factor_auth'|_ }}</a>
                     </li>
                 {% endif %}
+                #}
                 <li role="presentation">
                     <a href="#delete" aria-controls="settings" role="tab"
                        data-toggle="tab">{{ 'delete_stuff_header'|_ }}</a>
@@ -52,6 +54,16 @@
                                             <li>
                                                 <a href="{{ route('profile.change-password') }}">{{ 'change_your_password'|_ }}</a>
                                             </li>
+                                        {% if enabled2FA == true %}
+                                            <li>
+                                                <a href="{{ route('profile.mfa.index') }}">{{ 'manage_mfa_settings'|_ }}</a>
+                                            </li>
+                                            {% endif %}
+                                            {% if enabled2FA == false %}
+                                                <li>
+                                                    <a href="{{ route('profile.mfa.index') }}">{{ 'enable_mfa'|_ }}</a>
+                                                </li>
+                                            {% endif %}
                                         {% endif %}
 
                                         <li><a href="{{ route('logout') }}" class="logout-link">{{ 'logout'|_ }}</a>
@@ -103,6 +115,7 @@
                     <div id="passport_clients"></div>
                 </div>
 
+                {#
                 {% if true == isInternalAuth %}
                     <!-- MFA -->
                     <div role="tabpanel" class="tab-pane" id="mfa">
@@ -141,6 +154,7 @@
                         </div>
                     </div>
                 {% endif %}
+                #}
 
                 <!-- purge stuff -->
                 <div role="tabpanel" class="tab-pane" id="delete">

@@ -40,6 +40,12 @@ use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Events\RequestedReportOnJournals;
 use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Events\RequestedVersionCheckStatus;
+use FireflyIII\Events\Security\DisabledMFA;
+use FireflyIII\Events\Security\EnabledMFA;
+use FireflyIII\Events\Security\MFABackupFewLeft;
+use FireflyIII\Events\Security\MFABackupNoLeft;
+use FireflyIII\Events\Security\MFANewBackupCodes;
+use FireflyIII\Events\Security\MFAUsedBackupCode;
 use FireflyIII\Events\StoredAccount;
 use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Events\TriggeredAuditLog;
@@ -204,6 +210,26 @@ class EventServiceProvider extends ServiceProvider
             ],
             RuleActionFailedOnObject::class     => [
                 'FireflyIII\Handlers\Events\Model\RuleHandler@ruleActionFailedOnObject',
+            ],
+
+            // security related
+            EnabledMFA::class                   => [
+                'FireflyIII\Handlers\Events\Security\MFAHandler@sendMFAEnabledMail',
+            ],
+            DisabledMFA::class                   => [
+                'FireflyIII\Handlers\Events\Security\MFAHandler@sendMFADisabledMail',
+            ],
+            MFANewBackupCodes::class                   => [
+                'FireflyIII\Handlers\Events\Security\MFAHandler@sendNewMFABackupCodesMail',
+            ],
+            MFAUsedBackupCode::class                   => [
+                'FireflyIII\Handlers\Events\Security\MFAHandler@sendUsedBackupCodeMail',
+            ],
+            MFABackupFewLeft::class                  => [
+                'FireflyIII\Handlers\Events\Security\MFAHandler@sendBackupFewLeftMail',
+            ],
+            MFABackupNoLeft::class                  => [
+                'FireflyIII\Handlers\Events\Security\MFAHandler@sendBackupNoLeftMail',
             ],
         ];
 

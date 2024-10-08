@@ -80,4 +80,10 @@ return [
     'revenue_accounts'       => 'Revenue accounts',
     'liabilities_accounts'   => 'Liabilities',
     'placeholder'            => '[Placeholder]',
+
+    // mfa
+    'profile_mfa' => 'Multi-factor authentication',
+    'mfa_enableMFA' => 'Enable multi-factor authentication',
+    'mfa_backup_codes' => 'Backup codes',
+    'mfa_disableMFA'    => 'Disable multi-factor authentication',
 ];

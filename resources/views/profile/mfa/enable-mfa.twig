@@ -1,0 +1,59 @@
+{% extends './layout/default' %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
+{% endblock %}
+
+{% block content %}
+    <form method="POST" action="{{ route('profile.mfa.enableMFA.post') }}" accept-charset="UTF-8" class="form-horizontal" id="preferences_code">
+        <input name="_token" type="hidden" value="{{ csrf_token() }}">
+        <div class="row">
+            <div class="col-lg-6 col-lg-offset-3 col-md-12 col-sm-12 col-xs-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'pref_two_factor_auth_code'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <p class="hidden-print">
+                            {{ 'pref_two_factor_auth_code_help'|_ }}
+                        </p>
+                        <div class="form group">
+                            <div class="col-sm-8 col-md-offset-4 hidden-print">
+                                {{ image|raw }}
+                            </div>
+                            <p class="hidden-print">
+                                {{ trans('firefly.2fa_use_secret_instead', {secret: secret|escape})|raw }}
+                            </p>
+                            <p class="hidden-print text-danger">
+                                {{ 'mfa_warning_code_changes'|_ }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-lg-offset-3 col-md-12 col-sm-12 col-xs-12">
+                <div class="box">
+                    <div class="box-body">
+                        {{ ExpandedForm.password('password', {helpText: 'current_password_confirm_mfa'|_}) }}
+                        {{ ExpandedForm.text('code', code) }}
+                    </div>
+                    <div class="box-footer">
+                        <button type="submit" class="btn btn-success btn-lg">{{ 'pref_save_settings'|_ }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
+        $(function () {
+            "use strict";
+
+            // Focus first visible form element.
+            $("form#preferences_code input:enabled:visible:first").first().select();
+        });
+    </script>
+{% endblock %}

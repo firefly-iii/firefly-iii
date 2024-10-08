@@ -134,5 +134,40 @@ return [
     'bill_warning_end_date_zero'              => 'Your bill **":name"** is due to end on :date. This moment will pass **TODAY!**',
     'bill_warning_extension_date_zero'        => 'Your bill **":name"** is due to be extended or cancelled on :date. This moment will pass **TODAY!**',
     'bill_warning_please_action'              => 'Please take the appropriate action.',
+
+    // user has enabled MFA
+    'enabled_mfa_subject'                     => 'You have enabled multi-factor authentication',
+    'enabled_mfa_slack'                       => 'You (:email) have enabled multi-factor authentication. Is this not correct? Check your settings!',
+    'have_enabled_mfa'                        => 'You have enabled multi-factor authentication on your Firefly III account ":email". This means that you will need to use an authenticator app to log in from now on.',
+    'enabled_mfa_warning'                     => 'If you did not enable this, please contact your administrator immediately or check out the Firefly III documentation.',
+
+    'disabled_mfa_subject'                     => 'You have disabled multi-factor authentication!',
+    'disabled_mfa_slack'                       => 'You (:email) have disabled multi-factor authentication. Is this not correct? Check your settings!',
+    'have_disabled_mfa'                        => 'You have disabled multi-factor authentication on your Firefly III account ":email".',
+    'disabled_mfa_warning'                     => 'If you did not disable this, please contact your administrator immediately or check out the Firefly III documentation.',
+
+    'new_backup_codes_subject' => 'You have generated new back-up codes',
+    'new_backup_codes_slack' => 'You (:email) have generated new back-up codes. These can be used to login to Firefly III. Is this not correct? Check your settings!',
+    'new_backup_codes_intro' => 'You (:email) have generated new back-up codes. These can be used to login to Firefly III if you lose access to your authenticator app.',
+    'new_backup_codes_warning' => 'Please store these codes in a safe place. If you lose them, you will not be able to log in to Firefly III. If you did not do this, please contact your administrator immediately or check out the Firefly III documentation.',
+
+    'used_backup_code_subject' => 'You have used a back-up code to login',
+    'used_backup_code_slack' => 'You (:email) have used a back-up code to login',
+
+    'used_backup_code_intro' => 'You (:email) have used a back-up code to login to Firefly III. You now have one less back-up code to login with. Please remove it from your list.',
+    'used_backup_code_warning' => 'If you did not do this, please contact your administrator immediately or check out the Firefly III documentation.',
+
+    // few left:
+    'mfa_few_backups_left_subject' => 'You have only :count backup code(s) left!',
+    'mfa_few_backups_left_slack' => 'You (:email) have only :count backup code(s) left!',
+    'few_backup_codes_intro' => 'You (:email) have used most of your backup codes, and now have only :count left. Please generate new ones as soon as possible.',
+    'few_backup_codes_warning' => 'Without backup codes, you cannot recover your MFA login if you lose access to your code generator.',
+
+    // NO left:
+    'mfa_no_backups_left_subject' => 'You have NO backup codes left!',
+    'mfa_no_backups_left_slack' => 'You (:email) NO backup codes left!',
+    'no_backup_codes_intro' => 'You (:email) have used ALL of your backup codes. Please generate new ones as soon as possible.',
+    'no_backup_codes_warning' => 'Without backup codes, you cannot recover your MFA login if you lose access to your code generator.',
+
 ];
 // Ignore this comment

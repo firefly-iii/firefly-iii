@@ -84,65 +84,6 @@ class ProfileController extends Controller
     }
 
     /**
-     * View that generates a 2FA code for the user.
-     *
-     * @throws IncompatibleWithGoogleAuthenticatorException
-     * @throws InvalidCharactersException
-     * @throws SecretKeyTooShortException
-     */
-    public function code(Request $request): Factory|RedirectResponse|View
-    {
-        if (!$this->internalAuth) {
-            $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
-
-            return redirect(route('profile.index'));
-        }
-        $domain           = $this->getDomain();
-        $secretPreference = app('preferences')->get('temp-mfa-secret');
-        $codesPreference  = app('preferences')->get('temp-mfa-codes');
-
-        // generate secret if not in session
-        if (null === $secretPreference) {
-            // generate secret + store + flash
-            $secret = \Google2FA::generateSecretKey();
-            app('preferences')->set('temp-mfa-secret', $secret);
-        }
-
-        // re-use secret if in session
-        if (null !== $secretPreference) {
-            // get secret from session and flash
-            $secret = $secretPreference->data;
-        }
-        if (is_array($secret)) {
-            $secret = '';
-        }
-
-        // generate recovery codes if not in session:
-        $recoveryCodes    = '';
-
-        if (null === $codesPreference) {
-            // generate codes + store + flash:
-            $recovery      = app(Recovery::class);
-            $recoveryCodes = $recovery->lowercase()->setCount(8)->setBlocks(2)->setChars(6)->toArray();
-            app('preferences')->set('temp-mfa-codes', $recoveryCodes);
-        }
-
-        // get codes from session if present already:
-        if (null !== $codesPreference) {
-            $recoveryCodes = $codesPreference->data;
-        }
-        if (!is_array($recoveryCodes)) {
-            $recoveryCodes = [];
-        }
-
-        $codes            = implode("\r\n", $recoveryCodes);
-
-        $image            = \Google2FA::getQRCodeInline($domain, auth()->user()->email, (string)$secret);
-
-        return view('profile.code', compact('image', 'secret', 'codes'));
-    }
-
-    /**
      * Screen to confirm email change.
      *
      * @throws FireflyException
@@ -194,61 +135,6 @@ class ProfileController extends Controller
     }
 
     /**
-     * Delete 2FA routine.
-     */
-    public function deleteCode(Request $request): Redirector|RedirectResponse
-    {
-        if (!$this->internalAuth) {
-            $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
-
-            return redirect(route('profile.index'));
-        }
-
-        /** @var UserRepositoryInterface $repository */
-        $repository = app(UserRepositoryInterface::class);
-
-        /** @var User $user */
-        $user       = auth()->user();
-
-        app('preferences')->delete('temp-mfa-secret');
-        app('preferences')->delete('temp-mfa-codes');
-        $repository->setMFACode($user, null);
-        app('preferences')->mark();
-
-        session()->flash('success', (string)trans('firefly.pref_two_factor_auth_disabled'));
-        session()->flash('info', (string)trans('firefly.pref_two_factor_auth_remove_it'));
-
-        return redirect(route('profile.index'));
-    }
-
-    /**
-     * Enable 2FA screen.
-     */
-    public function enable2FA(Request $request): Redirector|RedirectResponse
-    {
-        if (!$this->internalAuth) {
-            $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
-
-            return redirect(route('profile.index'));
-        }
-
-        /** @var User $user */
-        $user       = auth()->user();
-        $enabledMFA = null !== $user->mfa_secret;
-
-        // if we don't have a valid secret yet, redirect to the code page to get one.
-        if (!$enabledMFA) {
-            return redirect(route('profile.code'));
-        }
-
-        // If FF3 already has a secret, just set the two factor auth enabled to 1,
-        // and let the user continue with the existing secret.
-        session()->flash('info', (string)trans('firefly.2fa_already_enabled'));
-
-        return redirect(route('profile.index'));
-    }
-
-    /**
      * Index for profile.
      *
      * @throws FireflyException
@@ -296,33 +182,6 @@ class ProfileController extends Controller
         }
 
         return view('profile.logout-other-sessions');
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    public function newBackupCodes(Request $request): Factory|RedirectResponse|View
-    {
-        if (!$this->internalAuth) {
-            $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
-
-            return redirect(route('profile.index'));
-        }
-
-        // generate recovery codes:
-        $recovery      = app(Recovery::class);
-        $recoveryCodes = $recovery->lowercase()
-            ->setCount(8)     // Generate 8 codes
-            ->setBlocks(2)    // Every code must have 7 blocks
-            ->setChars(6)     // Each block must have 16 chars
-            ->toArray()
-        ;
-        $codes         = implode("\r\n", $recoveryCodes);
-
-        app('preferences')->set('mfa_recovery', $recoveryCodes);
-        app('preferences')->mark();
-
-        return view('profile.new-backup-codes', compact('codes'));
     }
 
     /**
@@ -440,99 +299,6 @@ class ProfileController extends Controller
         $subTitleIcon = 'fa-key';
 
         return view('profile.change-password', compact('title', 'subTitle', 'subTitleIcon'));
-    }
-
-    /**
-     * Submit 2FA for the first time.
-     *
-     * @return Redirector|RedirectResponse
-     *
-     * @throws FireflyException
-     */
-    public function postCode(TokenFormRequest $request)
-    {
-        if (!$this->internalAuth) {
-            $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
-
-            return redirect(route('profile.index'));
-        }
-
-        /** @var User $user */
-        $user       = auth()->user();
-
-        /** @var UserRepositoryInterface $repository */
-        $repository = app(UserRepositoryInterface::class);
-        $secret     = app('preferences')->get('temp-mfa-secret')?->data;
-        if (is_array($secret)) {
-            $secret = null;
-        }
-        $secret     = (string)$secret;
-
-        $repository->setMFACode($user, $secret);
-
-        app('preferences')->delete('temp-mfa-secret');
-        app('preferences')->delete('temp-mfa-codes');
-
-        session()->flash('success', (string)trans('firefly.saved_preferences'));
-        app('preferences')->mark();
-
-        // also save the code so replay attack is prevented.
-        $mfaCode    = $request->get('code');
-        $this->addToMFAHistory($mfaCode);
-
-        // save backup codes in preferences:
-        app('preferences')->set('mfa_recovery', session()->get('temp-mfa-codes'));
-
-        // make sure MFA is logged out.
-        if ('testing' !== config('app.env')) {
-            \Google2FA::logout();
-        }
-
-        // drop all info from session:
-        session()->forget(['temp-mfa-secret', 'two-factor-secret', 'temp-mfa-codes', 'two-factor-codes']);
-
-        return redirect(route('profile.index'));
-    }
-
-    /**
-     * TODO duplicate code.
-     *
-     * @throws FireflyException
-     */
-    private function addToMFAHistory(string $mfaCode): void
-    {
-        /** @var array $mfaHistory */
-        $mfaHistory   = app('preferences')->get('mfa_history', [])->data;
-        $entry        = [
-            'time' => time(),
-            'code' => $mfaCode,
-        ];
-        $mfaHistory[] = $entry;
-
-        app('preferences')->set('mfa_history', $mfaHistory);
-        $this->filterMFAHistory();
-    }
-
-    /**
-     * Remove old entries from the preferences array.
-     */
-    private function filterMFAHistory(): void
-    {
-        /** @var array $mfaHistory */
-        $mfaHistory = app('preferences')->get('mfa_history', [])->data;
-        $newHistory = [];
-        $now        = time();
-        foreach ($mfaHistory as $entry) {
-            $time = $entry['time'];
-            $code = $entry['code'];
-            if ($now - $time <= 300) {
-                $newHistory[] = [
-                    'time' => $time,
-                    'code' => $code,
-                ];
-            }
-        }
-        app('preferences')->set('mfa_history', $newHistory);
     }
 
     /**
@@ -664,7 +430,7 @@ class ProfileController extends Controller
         $repository->changeEmail($user, $match);
         $repository->unblockUser($user);
 
-        // return to login.
+        // return to login page.
         session()->flash('success', (string)trans('firefly.login_with_old_email'));
 
         return redirect(route('login'));

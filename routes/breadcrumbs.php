@@ -687,13 +687,7 @@ Breadcrumbs::for(
     }
 );
 
-Breadcrumbs::for(
-    'profile.code',
-    static function (Generator $breadcrumbs): void {
-        $breadcrumbs->parent('home');
-        $breadcrumbs->push(trans('breadcrumbs.profile'), route('profile.index'));
-    }
-);
+
 
 Breadcrumbs::for(
     'profile.new-backup-codes',
@@ -710,6 +704,47 @@ Breadcrumbs::for(
         $breadcrumbs->push(trans('breadcrumbs.logout_others'), route('profile.logout-others'));
     }
 );
+
+// Profile MFA
+Breadcrumbs::for(
+    'profile.mfa.index',
+    static function (Generator $breadcrumbs): void {
+        $breadcrumbs->parent('profile.index');
+        $breadcrumbs->push(trans('breadcrumbs.profile_mfa'), route('profile.mfa.index'));
+    }
+);
+Breadcrumbs::for(
+    'profile.mfa.enableMFA',
+    static function (Generator $breadcrumbs): void {
+        $breadcrumbs->parent('profile.mfa.index');
+        $breadcrumbs->push(trans('breadcrumbs.mfa_enableMFA'), route('profile.mfa.enableMFA'));
+    }
+);
+
+Breadcrumbs::for(
+    'profile.mfa.disableMFA',
+    static function (Generator $breadcrumbs): void {
+        $breadcrumbs->parent('profile.mfa.index');
+        $breadcrumbs->push(trans('breadcrumbs.mfa_disableMFA'), route('profile.mfa.disableMFA'));
+    }
+);
+
+Breadcrumbs::for(
+    'profile.mfa.backup-codes',
+    static function (Generator $breadcrumbs): void {
+        $breadcrumbs->parent('profile.mfa.index');
+        $breadcrumbs->push(trans('breadcrumbs.mfa_backup_codes'), route('profile.mfa.backup-codes'));
+    }
+);
+Breadcrumbs::for(
+    'profile.mfa.backup-codes.post',
+    static function (Generator $breadcrumbs): void {
+        $breadcrumbs->parent('profile.mfa.index');
+        $breadcrumbs->push(trans('breadcrumbs.mfa_backup_codes'), route('profile.mfa.backup-codes'));
+    }
+);
+
+
 
 // PROFILE
 Breadcrumbs::for(
