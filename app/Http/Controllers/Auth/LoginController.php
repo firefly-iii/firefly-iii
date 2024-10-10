@@ -77,12 +77,16 @@ class LoginController extends Controller
      */
     public function login(Request $request): JsonResponse|RedirectResponse
     {
-        Log::channel('audit')->info(sprintf('User is trying to login using "%s"', $request->get($this->username())));
+        $username = $request->get($this->username());
+        Log::channel('audit')->info(sprintf('User is trying to login using "%s"', $username));
         app('log')->debug('User is trying to login.');
 
         try {
             $this->validateLogin($request);
         } catch (ValidationException $e) {
+            // basic validation exception.
+            // report the failed login to the user if the count is 2 or 5.
+            // TODO here be warning.
             return redirect(route('login'))
                 ->withErrors(
                     [
