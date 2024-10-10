@@ -200,7 +200,7 @@ trait MetaCollection
 
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'internal_reference');
-        $this->query->where('journal_meta.data', 'NOT LIKE', sprintf('%%%s%%', $internalReference));
+        $this->query->whereNotLike('journal_meta.data',  sprintf('%%%s%%', $internalReference));
 
         return $this;
     }
@@ -233,7 +233,7 @@ trait MetaCollection
 
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'external_id');
-        $this->query->where('journal_meta.data', 'NOT LIKE', sprintf('%%%s%%', $externalId));
+        $this->query->whereNotLike('journal_meta.data',  sprintf('%%%s%%', $externalId));
 
         return $this;
     }
@@ -245,7 +245,7 @@ trait MetaCollection
 
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'external_id');
-        $this->query->where('journal_meta.data', 'NOT LIKE', sprintf('%%%s"', $externalId));
+        $this->query->whereNotLike('journal_meta.data',  sprintf('%%%s"', $externalId));
 
         return $this;
     }
@@ -303,7 +303,7 @@ trait MetaCollection
         $url = (string)json_encode($url);
         $url = str_replace('\\', '\\\\', trim($url, '"'));
         $this->query->where('journal_meta.name', '=', 'external_url');
-        $this->query->where('journal_meta.data', 'NOT LIKE', sprintf('%%%s%%', $url));
+        $this->query->whereNotLike('journal_meta.data',  sprintf('%%%s%%', $url));
 
         return $this;
     }
@@ -314,7 +314,7 @@ trait MetaCollection
         $url = (string)json_encode($url);
         $url = str_replace('\\', '\\\\', ltrim($url, '"'));
         $this->query->where('journal_meta.name', '=', 'external_url');
-        $this->query->where('journal_meta.data', 'NOT LIKE', sprintf('%%%s', $url));
+        $this->query->whereNotLike('journal_meta.data',  sprintf('%%%s', $url));
 
         return $this;
     }
@@ -327,7 +327,7 @@ trait MetaCollection
         // var_dump($url);
 
         $this->query->where('journal_meta.name', '=', 'external_url');
-        $this->query->where('journal_meta.data', 'NOT LIKE', sprintf('%s%%', $url));
+        $this->query->whereNotLike('journal_meta.data',  sprintf('%s%%', $url));
 
         return $this;
     }
@@ -416,7 +416,7 @@ trait MetaCollection
 
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'internal_reference');
-        $this->query->where('journal_meta.data', 'NOT LIKE', sprintf('%%%s%%', $internalReference));
+        $this->query->whereNotLike('journal_meta.data',  sprintf('%%%s%%', $internalReference));
 
         return $this;
     }
@@ -428,7 +428,7 @@ trait MetaCollection
 
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'internal_reference');
-        $this->query->where('journal_meta.data', 'NOT LIKE', sprintf('%%%s"', $internalReference));
+        $this->query->whereNotLike('journal_meta.data',  sprintf('%%%s"', $internalReference));
 
         return $this;
     }
@@ -502,7 +502,7 @@ trait MetaCollection
         $this->withNotes();
         $this->query->where(static function (Builder $q) use ($value): void { // @phpstan-ignore-line
             $q->whereNull('notes.text');
-            $q->orWhere('notes.text', 'NOT LIKE', sprintf('%%%s%%', $value));
+            $q->orWhereNotLike('notes.text',  sprintf('%%%s%%', $value));
         });
 
         return $this;
@@ -513,7 +513,7 @@ trait MetaCollection
         $this->withNotes();
         $this->query->where(static function (Builder $q) use ($value): void { // @phpstan-ignore-line
             $q->whereNull('notes.text');
-            $q->orWhere('notes.text', 'NOT LIKE', sprintf('%%%s', $value));
+            $q->orWhereNotLike('notes.text',  sprintf('%%%s', $value));
         });
 
         return $this;
@@ -524,7 +524,7 @@ trait MetaCollection
         $this->withNotes();
         $this->query->where(static function (Builder $q) use ($value): void { // @phpstan-ignore-line
             $q->whereNull('notes.text');
-            $q->orWhere('notes.text', 'NOT LIKE', sprintf('%s%%', $value));
+            $q->orWhereNotLike('notes.text',  sprintf('%s%%', $value));
         });
 
         return $this;
