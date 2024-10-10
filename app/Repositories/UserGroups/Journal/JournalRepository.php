@@ -46,7 +46,7 @@ class JournalRepository implements JournalRepositoryInterface
                     $parts = explode(' ', $line);
                     foreach ($parts as $part) {
                         $search = sprintf('%%%s%%', $part);
-                        $q->orWhere('description', 'LIKE', $search);
+                        $q->orWhereLike('description', $search);
                     }
                 }
             });

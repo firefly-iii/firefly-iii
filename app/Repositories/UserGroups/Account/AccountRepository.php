@@ -270,7 +270,7 @@ class AccountRepository implements AccountRepositoryInterface
                 $query->where('accounts.active', $value);
             }
             if ('name' === $column) {
-                $query->where('accounts.name', 'LIKE', sprintf('%%%s%%', $value));
+                $query->whereLike('accounts.name', sprintf('%%%s%%', $value));
             }
         }
 
@@ -315,7 +315,7 @@ class AccountRepository implements AccountRepositoryInterface
                     $parts = explode(' ', $line);
                     foreach ($parts as $part) {
                         $search = sprintf('%%%s%%', $part);
-                        $q->orWhere('name', 'LIKE', $search);
+                        $q->orWhereLike('name', $search);
                     }
                 }
             });

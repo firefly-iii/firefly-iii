@@ -371,7 +371,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     {
         $search = $this->user->ruleGroups();
         if ('' !== $query) {
-            $search->where('rule_groups.title', 'LIKE', sprintf('%%%s%%', $query));
+            $search->whereLike('rule_groups.title', sprintf('%%%s%%', $query));
         }
         $search->orderBy('rule_groups.order', 'ASC')
             ->orderBy('rule_groups.title', 'ASC')

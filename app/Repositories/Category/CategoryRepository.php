@@ -49,7 +49,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         $search = $this->user->categories();
         if ('' !== $query) {
-            $search->where('name', 'LIKE', sprintf('%%%s', $query));
+            $search->whereLike('name', sprintf('%%%s', $query));
         }
 
         return $search->take($limit)->get();
@@ -59,7 +59,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         $search = $this->user->categories();
         if ('' !== $query) {
-            $search->where('name', 'LIKE', sprintf('%s%%', $query));
+            $search->whereLike('name', sprintf('%s%%', $query));
         }
 
         return $search->take($limit)->get();
@@ -344,7 +344,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         $search = $this->user->categories();
         if ('' !== $query) {
-            $search->where('name', 'LIKE', sprintf('%%%s%%', $query));
+            $search->whereLike('name', sprintf('%%%s%%', $query));
         }
 
         return $search->take($limit)->get();

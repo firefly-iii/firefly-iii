@@ -57,7 +57,7 @@ class BillRepository implements BillRepositoryInterface
     {
         $search = $this->user->bills();
         if ('' !== $query) {
-            $search->where('name', 'LIKE', sprintf('%%%s', $query));
+            $search->whereLike('name', sprintf('%%%s', $query));
         }
         $search->orderBy('name', 'ASC')
             ->where('active', true)
@@ -70,7 +70,7 @@ class BillRepository implements BillRepositoryInterface
     {
         $search = $this->user->bills();
         if ('' !== $query) {
-            $search->where('name', 'LIKE', sprintf('%s%%', $query));
+            $search->whereLike('name',  sprintf('%s%%', $query));
         }
         $search->orderBy('name', 'ASC')
             ->where('active', true)
@@ -485,7 +485,7 @@ class BillRepository implements BillRepositoryInterface
     {
         $query = sprintf('%%%s%%', $query);
 
-        return $this->user->bills()->where('name', 'LIKE', $query)->take($limit)->get();
+        return $this->user->bills()->whereLike('name', $query)->take($limit)->get();
     }
 
     public function setObjectGroup(Bill $bill, string $objectGroupTitle): Bill

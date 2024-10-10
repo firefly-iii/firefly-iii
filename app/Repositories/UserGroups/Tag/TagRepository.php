@@ -44,7 +44,7 @@ class TagRepository implements TagRepositoryInterface
                     $parts = explode(' ', $line);
                     foreach ($parts as $part) {
                         $search = sprintf('%%%s%%', $part);
-                        $q->orWhere('tag', 'LIKE', $search);
+                        $q->orWhereLike('tag', $search);
                     }
                 }
             });

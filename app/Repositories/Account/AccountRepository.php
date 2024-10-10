@@ -576,7 +576,7 @@ class AccountRepository implements AccountRepositoryInterface
             $parts = explode(' ', $query);
             foreach ($parts as $part) {
                 $search = sprintf('%%%s%%', $part);
-                $dbQuery->where('name', 'LIKE', $search);
+                $dbQuery->whereLike('name', $search);
             }
         }
         if (0 !== count($types)) {
@@ -604,11 +604,11 @@ class AccountRepository implements AccountRepositoryInterface
                 $search = sprintf('%%%s%%', $part);
                 $dbQuery->where(
                     static function (EloquentBuilder $q1) use ($search): void { // @phpstan-ignore-line
-                        $q1->where('accounts.iban', 'LIKE', $search);
+                        $q1->whereLike('accounts.iban',  $search);
                         $q1->orWhere(
                             static function (EloquentBuilder $q2) use ($search): void {
                                 $q2->where('account_meta.name', '=', 'account_number');
-                                $q2->where('account_meta.data', 'LIKE', $search);
+                                $q2->whereLike('account_meta.data', $search);
                             }
                         );
                     }

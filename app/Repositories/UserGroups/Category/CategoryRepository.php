@@ -41,7 +41,7 @@ class CategoryRepository implements CategoryRepositoryInterface
                     $parts = explode(' ', $line);
                     foreach ($parts as $part) {
                         $search = sprintf('%%%s%%', $part);
-                        $q->orWhere('name', 'LIKE', $search);
+                        $q->orWhereLike('name', $search);
                     }
                 }
             });

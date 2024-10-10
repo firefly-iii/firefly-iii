@@ -213,7 +213,7 @@ class RuleRepository implements RuleRepositoryInterface
     {
         $search = $this->user->rules();
         if ('' !== $query) {
-            $search->where('rules.title', 'LIKE', sprintf('%%%s%%', $query));
+            $search->whereLike('rules.title', sprintf('%%%s%%', $query));
         }
         $search->orderBy('rules.order', 'ASC')
             ->orderBy('rules.title', 'ASC')

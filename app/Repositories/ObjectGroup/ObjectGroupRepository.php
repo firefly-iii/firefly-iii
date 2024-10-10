@@ -120,7 +120,7 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
             $parts = explode(' ', $query);
             foreach ($parts as $part) {
                 $search = sprintf('%%%s%%', $part);
-                $dbQuery->where('title', 'LIKE', $search);
+                $dbQuery->whereLike('title', $search);
             }
         }
 

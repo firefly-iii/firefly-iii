@@ -205,7 +205,7 @@ class TagRepository implements TagRepositoryInterface
     {
         $search = sprintf('%%%s%%', $query);
 
-        return $this->user->tags()->where('tag', 'LIKE', $search)->get(['tags.*']);
+        return $this->user->tags()->whereLike('tag', $search)->get(['tags.*']);
     }
 
     /**
@@ -217,7 +217,7 @@ class TagRepository implements TagRepositoryInterface
         $tags = $this->user->tags()->orderBy('tag', 'ASC');
         if ('' !== $query) {
             $search = sprintf('%%%s%%', $query);
-            $tags->where('tag', 'LIKE', $search);
+            $tags->whereLike('tag', $search);
         }
 
         return $tags->take($limit)->get('tags.*');
@@ -309,14 +309,14 @@ class TagRepository implements TagRepositoryInterface
     {
         $search = sprintf('%%%s', $query);
 
-        return $this->user->tags()->where('tag', 'LIKE', $search)->get(['tags.*']);
+        return $this->user->tags()->whereLike('tag', $search)->get(['tags.*']);
     }
 
     public function tagStartsWith(string $query): Collection
     {
         $search = sprintf('%s%%', $query);
 
-        return $this->user->tags()->where('tag', 'LIKE', $search)->get(['tags.*']);
+        return $this->user->tags()->whereLike('tag', $search)->get(['tags.*']);
     }
 
     public function transferredInPeriod(Tag $tag, Carbon $start, Carbon $end): array

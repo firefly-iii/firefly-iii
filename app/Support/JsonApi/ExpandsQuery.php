@@ -120,7 +120,7 @@ trait ExpandsQuery
                     Log::debug(sprintf('Add query filter "%s"', $key));
                     // add type to query:
                     foreach ($filter as $value) {
-                        $q->where($key, 'LIKE', sprintf('%%%s%%', $value));
+                        $q->whereLike($key, sprintf('%%%s%%', $value));
                     }
                 }
             }
