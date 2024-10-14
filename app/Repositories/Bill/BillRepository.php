@@ -70,7 +70,7 @@ class BillRepository implements BillRepositoryInterface
     {
         $search = $this->user->bills();
         if ('' !== $query) {
-            $search->whereLike('name',  sprintf('%s%%', $query));
+            $search->whereLike('name', sprintf('%s%%', $query));
         }
         $search->orderBy('name', 'ASC')
             ->where('active', true)

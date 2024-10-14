@@ -152,6 +152,7 @@ class Preferences
     public function beginsWith(User $user, string $search): Collection
     {
         $value = sprintf('%s%%', $search);
+
         return Preference::where('user_id', $user->id)->whereLike('name', $value)->get();
     }
 

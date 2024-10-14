@@ -183,7 +183,7 @@ class GroupCollector implements GroupCollectorInterface
                     static function (EloquentBuilder $q1) use ($array): void {
                         foreach ($array as $word) {
                             $keyword = sprintf('%s%%', $word);
-                            $q1->whereNotLike('transaction_journals.description',  $keyword);
+                            $q1->whereNotLike('transaction_journals.description', $keyword);
                         }
                     }
                 );
@@ -265,7 +265,7 @@ class GroupCollector implements GroupCollectorInterface
                     static function (EloquentBuilder $q1) use ($array): void {
                         foreach ($array as $word) {
                             $keyword = sprintf('%s%%', $word);
-                            $q1->whereLike('transaction_journals.description',  $keyword);
+                            $q1->whereLike('transaction_journals.description', $keyword);
                         }
                     }
                 );
@@ -379,7 +379,7 @@ class GroupCollector implements GroupCollectorInterface
                     static function (EloquentBuilder $q1) use ($array): void {
                         foreach ($array as $word) {
                             $keyword = sprintf('%%%s%%', $word);
-                            $q1->whereNotLike('transaction_journals.description',  $keyword);
+                            $q1->whereNotLike('transaction_journals.description', $keyword);
                         }
                     }
                 );
@@ -387,7 +387,7 @@ class GroupCollector implements GroupCollectorInterface
                     static function (EloquentBuilder $q2) use ($array): void {
                         foreach ($array as $word) {
                             $keyword = sprintf('%%%s%%', $word);
-                            $q2->whereNotLike('transaction_groups.title',  $keyword);
+                            $q2->whereNotLike('transaction_groups.title', $keyword);
                             $q2->orWhereNull('transaction_groups.title');
                         }
                     }
@@ -944,7 +944,7 @@ class GroupCollector implements GroupCollectorInterface
                     static function (EloquentBuilder $q1) use ($array): void {
                         foreach ($array as $word) {
                             $keyword = sprintf('%%%s%%', $word);
-                            $q1->whereLike('transaction_journals.description',  $keyword);
+                            $q1->whereLike('transaction_journals.description', $keyword);
                         }
                     }
                 );

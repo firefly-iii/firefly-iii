@@ -83,7 +83,7 @@ class AccountSearch implements GenericSearchInterface
                     static function (Builder $q) use ($originalQuery): void { // @phpstan-ignore-line
                         $json = json_encode($originalQuery, JSON_THROW_ON_ERROR);
                         $q->where('account_meta.name', '=', 'account_number');
-                        $q->whereLike('account_meta.data',  $json);
+                        $q->whereLike('account_meta.data', $json);
                     }
                 );
 
@@ -95,7 +95,7 @@ class AccountSearch implements GenericSearchInterface
                 break;
 
             case self::SEARCH_NAME:
-                $searchQuery->whereLike('accounts.name',  $like);
+                $searchQuery->whereLike('accounts.name', $like);
 
                 break;
 

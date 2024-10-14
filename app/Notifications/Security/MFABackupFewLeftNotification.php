@@ -42,7 +42,7 @@ class MFABackupFewLeftNotification extends Notification
      */
     public function __construct(User $user, int $count)
     {
-        $this->user = $user;
+        $this->user  = $user;
         $this->count = $count;
     }
 
