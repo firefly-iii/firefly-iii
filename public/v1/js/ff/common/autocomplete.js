@@ -131,7 +131,7 @@ function initRevenueACField(fieldName) {
                                              }
                                          });
         sourceNames.initialize();
-        $('input[name="' + fieldName + '"]').typeahead({hint: true, highlight: true,}, {source: sourceNames, displayKey: 'name', autoSelect: false});
+        $('input[name="' + fieldName + '"]').typeahead({hint: true, highlight: true,}, {source: sourceNames, displayKey: 'name', autoselect: true});
     }
 }
 
@@ -161,5 +161,5 @@ function initCategoryAC() {
                                         }
                                     });
     categories.initialize();
-    $('input[name="category"]').typeahead({hint: true, highlight: true,}, {source: categories, displayKey: 'name', autoSelect: false});
+    $('input[name="category"]').typeahead({hint: true, highlight: true,}, {source: categories, displayKey: 'name', autoselect: true});
 }

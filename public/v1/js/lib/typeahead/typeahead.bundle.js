@@ -1,7 +1,7 @@
 /*!
- * typeahead.js 1.3.1
+ * typeahead.js 1.3.3
  * https://github.com/corejavascript/typeahead.js
- * Copyright 2013-2020 Twitter, Inc. and other contributors; Licensed MIT
+ * Copyright 2013-2024 Twitter, Inc. and other contributors; Licensed MIT
  */
 
 
@@ -159,7 +159,7 @@
             noop: function() {}
         };
     }();
-    var VERSION = "1.3.1";
+    var VERSION = "1.3.3";
     var tokenizers = function() {
         "use strict";
         return {
@@ -1446,6 +1446,7 @@
             });
             this.$input.attr({
                 "aria-owns": id + "_listbox",
+                "aria-controls": id + "_listbox",
                 role: "combobox",
                 "aria-autocomplete": "list",
                 "aria-expanded": false
