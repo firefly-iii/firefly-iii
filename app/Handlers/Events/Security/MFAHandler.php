@@ -95,7 +95,7 @@ class MFAHandler
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
 
-        $user = $event->user;
+        $user  = $event->user;
         $count = $event->count;
 
         try {
@@ -121,7 +121,7 @@ class MFAHandler
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
 
-        $user = $event->user;
+        $user  = $event->user;
         $count = $event->count;
 
         try {
@@ -142,7 +142,6 @@ class MFAHandler
             app('log')->error($e->getTraceAsString());
         }
     }
-
 
     public function sendBackupNoLeftMail(MFABackupNoLeft $event): void
     {

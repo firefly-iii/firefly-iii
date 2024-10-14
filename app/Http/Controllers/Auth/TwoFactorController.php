@@ -63,8 +63,8 @@ class TwoFactorController extends Controller
     public function submitMFA(Request $request)
     {
         /** @var array $mfaHistory */
-        $mfaHistory = app('preferences')->get('mfa_history', [])->data;
-        $mfaCode    = (string) $request->get('one_time_password');
+        $mfaHistory    = app('preferences')->get('mfa_history', [])->data;
+        $mfaCode       = (string) $request->get('one_time_password');
 
         // is in history? then refuse to use it.
         if ($this->inMFAHistory($mfaCode, $mfaHistory)) {
@@ -79,7 +79,7 @@ class TwoFactorController extends Controller
 
         // if not OK, save error.
         if (!$authenticator->isAuthenticated()) {
-            $user = auth()->user();
+            $user    = auth()->user();
             $this->addToMFAFailureCounter();
             $counter = $this->getMFAFailureCounter();
             if (3 === $counter || 10 === $counter) {
@@ -198,7 +198,7 @@ class TwoFactorController extends Controller
      */
     private function removeFromBackupCodes(string $mfaCode): void
     {
-        $list = app('preferences')->get('mfa_recovery', [])->data;
+        $list    = app('preferences')->get('mfa_recovery', [])->data;
         if (!is_array($list)) {
             $list = [];
         }
@@ -223,7 +223,7 @@ class TwoFactorController extends Controller
     private function addToMFAFailureCounter(): void
     {
         $preference = (int) app('preferences')->get('mfa_failure_count', 0)->data;
-        $preference++;
+        ++$preference;
         Log::channel('audit')->info(sprintf('MFA failure count is set to %d.', $preference));
         app('preferences')->set('mfa_failure_count', $preference);
     }
@@ -232,6 +232,7 @@ class TwoFactorController extends Controller
     {
         $value = (int) app('preferences')->get('mfa_failure_count', 0)->data;
         Log::channel('audit')->info(sprintf('MFA failure count is %d.', $value));
+
         return $value;
     }
 

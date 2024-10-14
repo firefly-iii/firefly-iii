@@ -43,7 +43,7 @@ class ExistingTokenFormRequest extends FormRequest
         // fixed
         return [
             'password' => 'required|currentPassword',
-            'code' => 'required|existingMfaCode',
+            'code'     => 'required|existingMfaCode',
         ];
     }
 

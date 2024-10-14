@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Notifications\Security;
 
-use FireflyIII\Models\Bill;
 use FireflyIII\Support\Notifications\UrlValidator;
 use FireflyIII\User;
 use Illuminate\Bus\Queueable;

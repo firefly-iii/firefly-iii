@@ -604,7 +604,7 @@ class AccountRepository implements AccountRepositoryInterface
                 $search = sprintf('%%%s%%', $part);
                 $dbQuery->where(
                     static function (EloquentBuilder $q1) use ($search): void { // @phpstan-ignore-line
-                        $q1->whereLike('accounts.iban',  $search);
+                        $q1->whereLike('accounts.iban', $search);
                         $q1->orWhere(
                             static function (EloquentBuilder $q2) use ($search): void {
                                 $q2->where('account_meta.name', '=', 'account_number');

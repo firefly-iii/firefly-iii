@@ -200,7 +200,7 @@ trait MetaCollection
 
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'internal_reference');
-        $this->query->whereNotLike('journal_meta.data',  sprintf('%%%s%%', $internalReference));
+        $this->query->whereNotLike('journal_meta.data', sprintf('%%%s%%', $internalReference));
 
         return $this;
     }
@@ -233,7 +233,7 @@ trait MetaCollection
 
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'external_id');
-        $this->query->whereNotLike('journal_meta.data',  sprintf('%%%s%%', $externalId));
+        $this->query->whereNotLike('journal_meta.data', sprintf('%%%s%%', $externalId));
 
         return $this;
     }
@@ -245,7 +245,7 @@ trait MetaCollection
 
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'external_id');
-        $this->query->whereNotLike('journal_meta.data',  sprintf('%%%s"', $externalId));
+        $this->query->whereNotLike('journal_meta.data', sprintf('%%%s"', $externalId));
 
         return $this;
     }
@@ -292,7 +292,7 @@ trait MetaCollection
         $url = (string)json_encode($url);
         $url = str_replace('\\', '\\\\', trim($url, '"'));
         $this->query->where('journal_meta.name', '=', 'external_url');
-        $this->query->whereLike('journal_meta.data',  sprintf('%%%s%%', $url));
+        $this->query->whereLike('journal_meta.data', sprintf('%%%s%%', $url));
 
         return $this;
     }
@@ -303,7 +303,7 @@ trait MetaCollection
         $url = (string)json_encode($url);
         $url = str_replace('\\', '\\\\', trim($url, '"'));
         $this->query->where('journal_meta.name', '=', 'external_url');
-        $this->query->whereNotLike('journal_meta.data',  sprintf('%%%s%%', $url));
+        $this->query->whereNotLike('journal_meta.data', sprintf('%%%s%%', $url));
 
         return $this;
     }
@@ -314,7 +314,7 @@ trait MetaCollection
         $url = (string)json_encode($url);
         $url = str_replace('\\', '\\\\', ltrim($url, '"'));
         $this->query->where('journal_meta.name', '=', 'external_url');
-        $this->query->whereNotLike('journal_meta.data',  sprintf('%%%s', $url));
+        $this->query->whereNotLike('journal_meta.data', sprintf('%%%s', $url));
 
         return $this;
     }
@@ -327,7 +327,7 @@ trait MetaCollection
         // var_dump($url);
 
         $this->query->where('journal_meta.name', '=', 'external_url');
-        $this->query->whereNotLike('journal_meta.data',  sprintf('%s%%', $url));
+        $this->query->whereNotLike('journal_meta.data', sprintf('%s%%', $url));
 
         return $this;
     }
@@ -351,7 +351,7 @@ trait MetaCollection
         // var_dump($url);
 
         $this->query->where('journal_meta.name', '=', 'external_url');
-        $this->query->whereLike('journal_meta.data',  sprintf('%s%%', $url));
+        $this->query->whereLike('journal_meta.data', sprintf('%s%%', $url));
 
         return $this;
     }
@@ -404,7 +404,7 @@ trait MetaCollection
 
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'internal_reference');
-        $this->query->whereLike('journal_meta.data',  sprintf('%%%s%%', $internalReference));
+        $this->query->whereLike('journal_meta.data', sprintf('%%%s%%', $internalReference));
 
         return $this;
     }
@@ -416,7 +416,7 @@ trait MetaCollection
 
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'internal_reference');
-        $this->query->whereNotLike('journal_meta.data',  sprintf('%%%s%%', $internalReference));
+        $this->query->whereNotLike('journal_meta.data', sprintf('%%%s%%', $internalReference));
 
         return $this;
     }
@@ -428,7 +428,7 @@ trait MetaCollection
 
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'internal_reference');
-        $this->query->whereNotLike('journal_meta.data',  sprintf('%%%s"', $internalReference));
+        $this->query->whereNotLike('journal_meta.data', sprintf('%%%s"', $internalReference));
 
         return $this;
     }
@@ -440,7 +440,7 @@ trait MetaCollection
 
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'internal_reference');
-        $this->query->whereLike('journal_meta.data',  sprintf('"%s%%', $internalReference));
+        $this->query->whereLike('journal_meta.data', sprintf('"%s%%', $internalReference));
 
         return $this;
     }
@@ -452,7 +452,7 @@ trait MetaCollection
 
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'internal_reference');
-        $this->query->whereLike('journal_meta.data',  sprintf('%%%s"', $internalReference));
+        $this->query->whereLike('journal_meta.data', sprintf('%%%s"', $internalReference));
 
         return $this;
     }
@@ -464,7 +464,7 @@ trait MetaCollection
 
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'internal_reference');
-        $this->query->whereLike('journal_meta.data',  sprintf('"%s%%', $internalReference));
+        $this->query->whereLike('journal_meta.data', sprintf('"%s%%', $internalReference));
 
         return $this;
     }
@@ -472,7 +472,7 @@ trait MetaCollection
     public function notesContain(string $value): GroupCollectorInterface
     {
         $this->withNotes();
-        $this->query->whereLike('notes.text',  sprintf('%%%s%%', $value));
+        $this->query->whereLike('notes.text', sprintf('%%%s%%', $value));
 
         return $this;
     }
@@ -502,7 +502,7 @@ trait MetaCollection
         $this->withNotes();
         $this->query->where(static function (Builder $q) use ($value): void { // @phpstan-ignore-line
             $q->whereNull('notes.text');
-            $q->orWhereNotLike('notes.text',  sprintf('%%%s%%', $value));
+            $q->orWhereNotLike('notes.text', sprintf('%%%s%%', $value));
         });
 
         return $this;
@@ -513,7 +513,7 @@ trait MetaCollection
         $this->withNotes();
         $this->query->where(static function (Builder $q) use ($value): void { // @phpstan-ignore-line
             $q->whereNull('notes.text');
-            $q->orWhereNotLike('notes.text',  sprintf('%%%s', $value));
+            $q->orWhereNotLike('notes.text', sprintf('%%%s', $value));
         });
 
         return $this;
@@ -524,7 +524,7 @@ trait MetaCollection
         $this->withNotes();
         $this->query->where(static function (Builder $q) use ($value): void { // @phpstan-ignore-line
             $q->whereNull('notes.text');
-            $q->orWhereNotLike('notes.text',  sprintf('%s%%', $value));
+            $q->orWhereNotLike('notes.text', sprintf('%s%%', $value));
         });
 
         return $this;
@@ -533,7 +533,7 @@ trait MetaCollection
     public function notesEndWith(string $value): GroupCollectorInterface
     {
         $this->withNotes();
-        $this->query->whereLike('notes.text',  sprintf('%%%s', $value));
+        $this->query->whereLike('notes.text', sprintf('%%%s', $value));
 
         return $this;
     }
@@ -560,7 +560,7 @@ trait MetaCollection
     public function notesStartWith(string $value): GroupCollectorInterface
     {
         $this->withNotes();
-        $this->query->whereLike('notes.text',  sprintf('%s%%', $value));
+        $this->query->whereLike('notes.text', sprintf('%s%%', $value));
 
         return $this;
     }

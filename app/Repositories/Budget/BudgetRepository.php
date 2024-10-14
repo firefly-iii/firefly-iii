@@ -70,7 +70,7 @@ class BudgetRepository implements BudgetRepositoryInterface
     {
         $search = $this->user->budgets();
         if ('' !== $query) {
-            $search->whereLike('name',  sprintf('%s%%', $query));
+            $search->whereLike('name', sprintf('%s%%', $query));
         }
         $search->orderBy('order', 'ASC')
             ->orderBy('name', 'ASC')->where('active', true)
@@ -512,7 +512,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         }
         $query = sprintf('%%%s%%', $name);
 
-        return $this->user->budgets()->whereLike('name',  $query)->first();
+        return $this->user->budgets()->whereLike('name', $query)->first();
     }
 
     /**

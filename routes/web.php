@@ -836,15 +836,15 @@ Route::group(
         Route::get('index', ['uses' => 'Profile\MfaController@index', 'as' => 'index']);
 
         // enable MFA (goes to code page)
-        Route::get('enableMFA',  ['uses' => 'Profile\MfaController@enableMFA', 'as' => 'enableMFA']);
+        Route::get('enableMFA', ['uses' => 'Profile\MfaController@enableMFA', 'as' => 'enableMFA']);
         Route::post('enableMFA', ['uses' => 'Profile\MfaController@enableMFAPost', 'as' => 'enableMFA.post']);
 
         // show backup codes
-        Route::get('backup-codes',  ['uses' => 'Profile\MfaController@backupCodes', 'as' => 'backup-codes']);
+        Route::get('backup-codes', ['uses' => 'Profile\MfaController@backupCodes', 'as' => 'backup-codes']);
         Route::post('backup-codes', ['uses' => 'Profile\MfaController@backupCodesPost', 'as' => 'backup-codes.post']);
 
         // enable MFA
-//        Route::get('2fa/code', ['uses' => 'Profile\MfaController@code', 'as' => 'code']);
+        //        Route::get('2fa/code', ['uses' => 'Profile\MfaController@code', 'as' => 'code']);
 
         // disable MFA
         Route::get('/disableMFA', ['uses' => 'Profile\MfaController@disableMFA', 'as' => 'disableMFA']);
@@ -853,7 +853,7 @@ Route::group(
 
 
     }
-    );
+);
 // Recurring Transactions Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'recurring', 'as' => 'recurring.'],

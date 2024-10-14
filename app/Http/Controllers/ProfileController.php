@@ -30,7 +30,6 @@ use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Http\Requests\DeleteAccountFormRequest;
 use FireflyIII\Http\Requests\EmailFormRequest;
 use FireflyIII\Http\Requests\ProfileFormRequest;
-use FireflyIII\Http\Requests\TokenFormRequest;
 use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\CreateStuff;
@@ -45,10 +44,6 @@ use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Laravel\Passport\ClientRepository;
-use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
-use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;
-use PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException;
-use PragmaRX\Recovery\Recovery;
 
 /**
  * Class ProfileController.
