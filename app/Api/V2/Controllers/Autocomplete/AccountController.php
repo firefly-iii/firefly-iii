@@ -68,8 +68,8 @@ class AccountController extends Controller
      */
     public function accounts(AutocompleteRequest $request): JsonResponse
     {
-        $queryParameters = $request->getParameters();
-        $result          = $this->repository->searchAccount($queryParameters['query'], $queryParameters['account_types'], $queryParameters['size']);
+        $params = $request->getParameters();
+        $result          = $this->repository->searchAccount($params['query'], $params['account_types'], $params['page'], $params['size']);
         $return          = [];
 
         /** @var Account $account */
@@ -89,6 +89,7 @@ class AccountController extends Controller
             'title' => $account->name,
             'meta'  => [
                 'type'                    => $account->accountType->type,
+                // TODO is multi currency property.
                 'currency_id'             => null === $currency ? null : (string) $currency->id,
                 'currency_code'           => $currency?->code,
                 'currency_symbol'         => $currency?->symbol,

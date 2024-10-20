@@ -95,7 +95,7 @@ class DebugController extends Controller
 
         // also do some recalculations.
         Artisan::call('firefly-iii:trigger-credit-recalculation');
-        AccountBalanceCalculator::forceRecalculateAll();
+        AccountBalanceCalculator::recalculateAll(true);
 
         try {
             Artisan::call('twig:clean');

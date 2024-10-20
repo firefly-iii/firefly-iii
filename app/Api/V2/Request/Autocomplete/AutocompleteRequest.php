@@ -23,15 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V2\Request\Autocomplete;
 
-use FireflyIII\JsonApi\Rules\IsValidFilter;
-use FireflyIII\JsonApi\Rules\IsValidPage;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Support\Http\Api\ParsesQueryFilters;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
-use LaravelJsonApi\Core\Query\QueryParameters;
-use LaravelJsonApi\Validation\Rule as JsonApiRule;
 
 /**
  * Class AutocompleteRequest
@@ -51,35 +48,44 @@ class AutocompleteRequest extends FormRequest
      */
     public function getParameters(): array
     {
-        $queryParameters = QueryParameters::cast($this->all());
-
-        return [
-            'date'          => $this->dateOrToday($queryParameters, 'date'),
-            'query'         => $this->arrayOfStrings($queryParameters, 'query'),
-            'size'          => $this->integerFromQueryParams($queryParameters, 'size', 50),
-            'account_types' => $this->getAccountTypeParameter($this->arrayOfStrings($queryParameters, 'account_types')),
+        $array = [
+            'date'              => $this->date('date'),
+            'query'             => $this->clearString((string) $this->get('query')),
+            'size'              => $this->integerFromValue('size'),
+            'page'              => $this->integerFromValue('page'),
+            'account_types'     => $this->arrayFromValue($this->get('account_types')),
+            'transaction_types' => $this->arrayFromValue($this->get('transaction_types')),
         ];
+        $array['size'] = $array['size'] < 1 || $array['size'] > 100 ? 15 : $array['size'];
+        $array['page'] = max($array['page'], 1);
+        if (null === $array['account_types']) {
+            $array['account_types'] = [];
+        }
+        if (null === $array['transaction_types']) {
+            $array['transaction_types'] = [];
+        }
+
+        // remove 'initial balance' from allowed types. its internal
+        $array['account_types'] = array_diff($array['account_types'], [AccountType::INITIAL_BALANCE, AccountType::RECONCILIATION, AccountType::CREDITCARD]);
+        $array['account_types'] = $this->getAccountTypeParameter($array['account_types']);
+        return $array;
     }
 
     public function rules(): array
     {
+        $valid = array_keys($this->types);
         return [
-            'fields'  => JsonApiRule::notSupported(),
-            'filter'  => ['nullable', 'array', new IsValidFilter(['query', 'date', 'account_types'])],
-            'include' => JsonApiRule::notSupported(),
-            'page'    => ['nullable', 'array', new IsValidPage(['size'])],
-            'sort'    => JsonApiRule::notSupported(),
+            'date'              => 'nullable|date|after:1900-01-01|before:2100-01-01',
+            'query'             => 'nullable|string',
+            'size'              => 'nullable|integer|min:1|max:100',
+            'page'              => 'nullable|integer|min:1',
+            'account_types'     => sprintf('nullable|in:%s', join(',', $valid)),
+            'transaction_types' => 'nullable|in:todo',
         ];
     }
 
-    private function getAccountTypeParameter(mixed $types): array
+    private function getAccountTypeParameter(array $types): array
     {
-        if (is_string($types) && str_contains($types, ',')) {
-            $types = explode(',', $types);
-        }
-        if (!is_iterable($types)) {
-            $types = [$types];
-        }
         $return = [];
         foreach ($types as $type) {
             $return = array_merge($return, $this->mapAccountTypes($type));
