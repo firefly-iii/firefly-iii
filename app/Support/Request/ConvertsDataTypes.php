@@ -105,11 +105,11 @@ trait ConvertsDataTypes
     /**
      * Return string value.
      */
-    public function convertString(string $field): string
+    public function convertString(string $field, string $default = ''): string
     {
         $entry = $this->get($field);
         if (!is_scalar($entry)) {
-            return '';
+            return $default;
         }
 
         return (string)$this->clearString((string)$entry);

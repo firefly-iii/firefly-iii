@@ -49,7 +49,7 @@ class AutocompleteRequest extends FormRequest
     public function getParameters(): array
     {
         $array = [
-            'date'              => $this->date('date'),
+            'date'              => $this->convertDateTime('date'),
             'query'             => $this->clearString((string) $this->get('query')),
             'size'              => $this->integerFromValue('size'),
             'page'              => $this->integerFromValue('page'),

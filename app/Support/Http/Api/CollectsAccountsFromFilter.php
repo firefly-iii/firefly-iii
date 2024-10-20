@@ -36,10 +36,12 @@ trait CollectsAccountsFromFilter
         $collection = new Collection();
 
         // always collect from the query parameter, even when it's empty.
-        foreach ($queryParameters['accounts'] as $accountId) {
-            $account = $this->repository->find((int) $accountId);
-            if (null !== $account) {
-                $collection->push($account);
+        if (null !== $queryParameters['accounts']) {
+            foreach ($queryParameters['accounts'] as $accountId) {
+                $account = $this->repository->find((int) $accountId);
+                if (null !== $account) {
+                    $collection->push($account);
+                }
             }
         }
 
