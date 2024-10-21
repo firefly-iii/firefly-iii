@@ -54,6 +54,7 @@ class MigrateRuleActions extends Command
         }
         $this->replaceEqualSign();
         $this->replaceObsoleteActions();
+        $this->markAsExecuted();
 
         return 0;
     }
@@ -178,5 +179,9 @@ class MigrateRuleActions extends Command
                     break;
             }
         }
+    }
+    private function markAsExecuted(): void
+    {
+        app('fireflyconfig')->set(self::CONFIG_NAME, true);
     }
 }
