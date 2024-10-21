@@ -35,4 +35,5 @@ jobs:
             Thank you for your contributions.
           days-before-stale: 14
           days-before-close: 7
-          exempt-issue-labels: 'enhancement,feature,bug,announcement,epic,triage'
+          exempt-all-milestones: true
+          exempt-issue-labels: 'triage'
