@@ -67,7 +67,8 @@ class AccountRepository implements AccountRepositoryInterface
                     $q1->where('account_meta.name', '=', 'account_number');
                     $q1->where('account_meta.data', '=', $json);
                 }
-            );
+            )
+        ;
 
         if (0 !== count($types)) {
             $dbQuery->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
@@ -94,7 +95,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     public function findByName(string $name, array $types): ?Account
     {
-        $query = $this->userGroup->accounts();
+        $query   = $this->userGroup->accounts();
 
         if (0 !== count($types)) {
             $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
@@ -118,8 +119,8 @@ class AccountRepository implements AccountRepositoryInterface
 
     public function getAccountCurrency(Account $account): ?TransactionCurrency
     {
-        $type = $account->accountType->type;
-        $list = config('firefly.valid_currency_account_types');
+        $type       = $account->accountType->type;
+        $list       = config('firefly.valid_currency_account_types');
 
         // return null if not in this list.
         if (!in_array($type, $list, true)) {
@@ -241,17 +242,18 @@ class AccountRepository implements AccountRepositoryInterface
             }
         }
         // reset the rest to zero.
-        $all = [AccountType::DEFAULT, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::CREDITCARD, AccountType::MORTGAGE];
+        $all  = [AccountType::DEFAULT, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::CREDITCARD, AccountType::MORTGAGE];
         $this->user->accounts()->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                   ->whereNotIn('account_types.type', $all)
-                   ->update(['order' => 0]);
+            ->whereNotIn('account_types.type', $all)
+            ->update(['order' => 0])
+        ;
     }
 
     public function getAccountsByType(array $types, ?array $sort = [], ?array $filters = []): Collection
     {
-        $sortable = ['name', 'active']; // TODO yes this is a duplicate array.
-        $res      = array_intersect([AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT], $types);
-        $query    = $this->userGroup->accounts();
+        $sortable        = ['name', 'active']; // TODO yes this is a duplicate array.
+        $res             = array_intersect([AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT], $types);
+        $query           = $this->userGroup->accounts();
         if (0 !== count($types)) {
             $query->accountTypeIn($types);
         }
@@ -300,15 +302,16 @@ class AccountRepository implements AccountRepositoryInterface
     {
         // search by group, not by user
         $dbQuery = $this->userGroup->accounts()
-                                   ->where('active', true)
+            ->where('active', true)
             ->orderBy('accounts.updated_at', 'ASC')
-                                   ->orderBy('accounts.order', 'ASC')
-                                   ->orderBy('accounts.account_type_id', 'ASC')
-                                   ->orderBy('accounts.name', 'ASC')
-                                   ->with(['accountType']);
+            ->orderBy('accounts.order', 'ASC')
+            ->orderBy('accounts.account_type_id', 'ASC')
+            ->orderBy('accounts.name', 'ASC')
+            ->with(['accountType'])
+        ;
 
         // split query on spaces just in case:
-        if('' !== trim($query)) {
+        if ('' !== trim($query)) {
             $dbQuery->where(function (EloquentBuilder $q) use ($query): void {
                 $parts = explode(' ', $query);
                 foreach ($parts as $part) {
@@ -323,7 +326,8 @@ class AccountRepository implements AccountRepositoryInterface
             $dbQuery->whereIn('account_types.type', $types);
         }
 
-        $dbQuery->skip(($page-1) * $limit)->take($limit);
+        $dbQuery->skip(($page - 1) * $limit)->take($limit);
+
         return $dbQuery->get(['accounts.*']);
 
     }
@@ -352,18 +356,19 @@ class AccountRepository implements AccountRepositoryInterface
     public function getAccountTypes(Collection $accounts): Collection
     {
         return AccountType::leftJoin('accounts', 'accounts.account_type_id', '=', 'account_types.id')
-                          ->whereIn('accounts.id', $accounts->pluck('id')->toArray())
-                          ->get(['accounts.id', 'account_types.type']);
+            ->whereIn('accounts.id', $accounts->pluck('id')->toArray())
+            ->get(['accounts.id', 'account_types.type'])
+        ;
     }
 
     #[\Override]
     public function getLastActivity(Collection $accounts): array
     {
         return Transaction::whereIn('account_id', $accounts->pluck('id')->toArray())
-                          ->leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
-                          ->groupBy('transactions.account_id')
-                          ->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) as date_max')])->toArray() // @phpstan-ignore-line
-            ;
+            ->leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
+            ->groupBy('transactions.account_id')
+            ->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) as date_max')])->toArray() // @phpstan-ignore-line
+        ;
     }
 
     #[\Override]
@@ -372,7 +377,8 @@ class AccountRepository implements AccountRepositoryInterface
         $groupIds = [];
         $return   = [];
         $set      = DB::table('object_groupables')->where('object_groupable_type', Account::class)
-                      ->whereIn('object_groupable_id', $accounts->pluck('id')->toArray())->get();
+            ->whereIn('object_groupable_id', $accounts->pluck('id')->toArray())->get()
+        ;
 
         /** @var \stdClass $row */
         foreach ($set as $row) {

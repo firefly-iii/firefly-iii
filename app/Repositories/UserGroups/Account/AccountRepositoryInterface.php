@@ -80,7 +80,7 @@ interface AccountRepositoryInterface
      */
     public function resetAccountOrder(): void;
 
-    public function searchAccount(string $query, array $types,int $page, int $limit): Collection;
+    public function searchAccount(string $query, array $types, int $page, int $limit): Collection;
 
     public function setUser(User $user): void;
 

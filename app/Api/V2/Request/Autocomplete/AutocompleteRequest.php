@@ -48,7 +48,7 @@ class AutocompleteRequest extends FormRequest
      */
     public function getParameters(): array
     {
-        $array = [
+        $array                  = [
             'date'              => $this->convertDateTime('date'),
             'query'             => $this->clearString((string) $this->get('query')),
             'size'              => $this->integerFromValue('size'),
@@ -56,8 +56,8 @@ class AutocompleteRequest extends FormRequest
             'account_types'     => $this->arrayFromValue($this->get('account_types')),
             'transaction_types' => $this->arrayFromValue($this->get('transaction_types')),
         ];
-        $array['size'] = $array['size'] < 1 || $array['size'] > 100 ? 15 : $array['size'];
-        $array['page'] = max($array['page'], 1);
+        $array['size']          = $array['size'] < 1 || $array['size'] > 100 ? 15 : $array['size'];
+        $array['page']          = max($array['page'], 1);
         if (null === $array['account_types']) {
             $array['account_types'] = [];
         }
@@ -68,18 +68,20 @@ class AutocompleteRequest extends FormRequest
         // remove 'initial balance' from allowed types. its internal
         $array['account_types'] = array_diff($array['account_types'], [AccountType::INITIAL_BALANCE, AccountType::RECONCILIATION, AccountType::CREDITCARD]);
         $array['account_types'] = $this->getAccountTypeParameter($array['account_types']);
+
         return $array;
     }
 
     public function rules(): array
     {
         $valid = array_keys($this->types);
+
         return [
             'date'              => 'nullable|date|after:1900-01-01|before:2100-01-01',
             'query'             => 'nullable|string',
             'size'              => 'nullable|integer|min:1|max:100',
             'page'              => 'nullable|integer|min:1',
-            'account_types'     => sprintf('nullable|in:%s', join(',', $valid)),
+            'account_types'     => sprintf('nullable|in:%s', implode(',', $valid)),
             'transaction_types' => 'nullable|in:todo',
         ];
     }

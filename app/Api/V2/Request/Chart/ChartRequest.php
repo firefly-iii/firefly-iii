@@ -46,7 +46,7 @@ class ChartRequest extends FormRequest
 
     public function getParameters(): array
     {
-        //$queryParameters = QueryParameters::cast($this->all());
+        // $queryParameters = QueryParameters::cast($this->all());
         return [
             'start'       => $this->convertDateTime('start')?->startOfDay(),
             'end'         => $this->convertDateTime('end')?->endOfDay(),

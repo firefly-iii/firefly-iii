@@ -47,9 +47,9 @@ Route::group(
     ],
     static function (): void {
         Route::get('accounts', ['uses' => 'AccountController@accounts', 'as' => 'accounts']);
-        //Route::get('categories', ['uses' => 'CategoryController@categories', 'as' => 'categories']);
-        //Route::get('tags', ['uses' => 'TagController@tags', 'as' => 'tags']);
-        //Route::get('transaction-descriptions', ['uses' => 'TransactionController@transactionDescriptions', 'as' => 'transaction-descriptions']);
+        // Route::get('categories', ['uses' => 'CategoryController@categories', 'as' => 'categories']);
+        // Route::get('tags', ['uses' => 'TagController@tags', 'as' => 'tags']);
+        // Route::get('transaction-descriptions', ['uses' => 'TransactionController@transactionDescriptions', 'as' => 'transaction-descriptions']);
     }
 );
 
@@ -61,9 +61,9 @@ Route::group(
         'as'        => 'api.v2.chart.',
     ],
     static function (): void {
-        //Route::get('account/dashboard', ['uses' => 'AccountController@dashboard', 'as' => 'account.dashboard']);
-        //Route::get('budget/dashboard', ['uses' => 'BudgetController@dashboard', 'as' => 'budget.dashboard']);
-        //Route::get('category/dashboard', ['uses' => 'CategoryController@dashboard', 'as' => 'category.dashboard']);
+        // Route::get('account/dashboard', ['uses' => 'AccountController@dashboard', 'as' => 'account.dashboard']);
+        // Route::get('budget/dashboard', ['uses' => 'BudgetController@dashboard', 'as' => 'budget.dashboard']);
+        // Route::get('category/dashboard', ['uses' => 'CategoryController@dashboard', 'as' => 'category.dashboard']);
         Route::get('balance/balance', ['uses' => 'BalanceController@balance', 'as' => 'balance.balance']);
     }
 );
@@ -77,7 +77,7 @@ Route::group(
         'as'        => 'api.v2.summary.',
     ],
     static function (): void {
-        //Route::get('basic', ['uses' => 'BasicController@basic', 'as' => 'basic']);
+        // Route::get('basic', ['uses' => 'BasicController@basic', 'as' => 'basic']);
     }
 );
 // V2 API route for all kinds of Transaction lists.
@@ -91,11 +91,11 @@ Route::group(
     ],
     static function (): void {
         // basic list
-        //Route::get('transactions', ['uses' => 'TransactionController@list', 'as' => 'transactions.list']);
+        // Route::get('transactions', ['uses' => 'TransactionController@list', 'as' => 'transactions.list']);
 
         // list by parent or related object.
         // note how the check is done on the user group, not the user itself.
-        //Route::get('accounts/{userGroupAccount}/transactions', ['uses' => 'AccountController@list', 'as' => 'accounts.transactions']);
+        // Route::get('accounts/{userGroupAccount}/transactions', ['uses' => 'AccountController@list', 'as' => 'accounts.transactions']);
     }
 );
 
@@ -109,7 +109,7 @@ Route::group(
         'as'        => 'api.v2.net-worth.',
     ],
     static function (): void {
-        //Route::get('', ['uses' => 'NetWorthController@get', 'as' => 'index']);
+        // Route::get('', ['uses' => 'NetWorthController@get', 'as' => 'index']);
     }
 );
 
@@ -135,10 +135,10 @@ Route::group(
         'as'        => 'api.v2.subscriptions.',
     ],
     static function (): void {
-//        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
-//        Route::get('{userGroupBill}', ['uses' => 'ShowController@show', 'as' => 'show']);
-//        Route::get('sum/paid', ['uses' => 'SumController@paid', 'as' => 'sum.paid']);
-//        Route::get('sum/unpaid', ['uses' => 'SumController@unpaid', 'as' => 'sum.unpaid']);
+        //        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
+        //        Route::get('{userGroupBill}', ['uses' => 'ShowController@show', 'as' => 'show']);
+        //        Route::get('sum/paid', ['uses' => 'SumController@paid', 'as' => 'sum.paid']);
+        //        Route::get('sum/unpaid', ['uses' => 'SumController@unpaid', 'as' => 'sum.unpaid']);
     }
 );
 
@@ -150,7 +150,7 @@ Route::group(
         'as'        => 'api.v2.piggy-banks.',
     ],
     static function (): void {
-//        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
+        //        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
     }
 );
 
@@ -162,7 +162,7 @@ Route::group(
         'as'        => 'api.v2.currencies.',
     ],
     static function (): void {
-//        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
+        //        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
     }
 );
 
@@ -174,9 +174,9 @@ Route::group(
         'as'        => 'api.v2.transactions.',
     ],
     static function (): void {
-//        Route::post('', ['uses' => 'StoreController@post', 'as' => 'store']);
-//        Route::get('{userGroupTransaction}', ['uses' => 'ShowController@show', 'as' => 'show']);
-//        Route::put('{userGroupTransaction}', ['uses' => 'UpdateController@update', 'as' => 'update']);
+        //        Route::post('', ['uses' => 'StoreController@post', 'as' => 'store']);
+        //        Route::get('{userGroupTransaction}', ['uses' => 'ShowController@show', 'as' => 'show']);
+        //        Route::put('{userGroupTransaction}', ['uses' => 'UpdateController@update', 'as' => 'update']);
     }
 );
 // infinite (transactions) list:
@@ -187,7 +187,7 @@ Route::group(
         'as'        => 'api.v2.infinite.transactions.',
     ],
     static function (): void {
-//        Route::get('', ['uses' => 'TransactionController@infiniteList', 'as' => 'list']);
+        //        Route::get('', ['uses' => 'TransactionController@infiniteList', 'as' => 'list']);
     }
 );
 
@@ -199,11 +199,11 @@ Route::group(
         'as'        => 'api.v2.budgets',
     ],
     static function (): void {
-//        Route::get('', ['uses' => 'Budget\IndexController@index', 'as' => 'index']);
-//        Route::get('{budget}', ['uses' => 'Budget\ShowController@show', 'as' => 'show']);
-//        Route::get('{budget}/limits', ['uses' => 'BudgetLimit\IndexController@index', 'as' => 'budget-limits.index']);
-//        Route::get('sum/budgeted', ['uses' => 'Budget\SumController@budgeted', 'as' => 'sum.budgeted']);
-//        Route::get('sum/spent', ['uses' => 'Budget\SumController@spent', 'as' => 'sum.spent']);
+        //        Route::get('', ['uses' => 'Budget\IndexController@index', 'as' => 'index']);
+        //        Route::get('{budget}', ['uses' => 'Budget\ShowController@show', 'as' => 'show']);
+        //        Route::get('{budget}/limits', ['uses' => 'BudgetLimit\IndexController@index', 'as' => 'budget-limits.index']);
+        //        Route::get('sum/budgeted', ['uses' => 'Budget\SumController@budgeted', 'as' => 'sum.budgeted']);
+        //        Route::get('sum/spent', ['uses' => 'Budget\SumController@spent', 'as' => 'sum.spent']);
         // Route::get('{budget}/budgeted', ['uses' => 'Budget\ShowController@budgeted', 'as' => 'budget.budgeted']);
         // Route::get('{budget}/spent', ['uses' => 'Budget\ShowController@spent', 'as' => 'budget.spent']);
     }
@@ -217,7 +217,7 @@ Route::group(
         'as'        => 'api.v2.system.',
     ],
     static function (): void {
-//        Route::get('preferences/{preference}', ['uses' => 'PreferencesController@get', 'as' => 'preferences.get']);
+        //        Route::get('preferences/{preference}', ['uses' => 'PreferencesController@get', 'as' => 'preferences.get']);
     }
 );
 
@@ -229,18 +229,18 @@ Route::group(
         'as'        => 'api.v2.user-groups.',
     ],
     static function (): void {
-//        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
-//        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
-//        Route::get('{userGroup}', ['uses' => 'ShowController@show', 'as' => 'show']);
-//        Route::put('{userGroup}', ['uses' => 'UpdateController@update', 'as' => 'update']);
-//        Route::post('{userGroup}/use', ['uses' => 'UpdateController@useUserGroup', 'as' => 'use']);
-//        Route::put('{userGroup}/update-membership', ['uses' => 'UpdateController@updateMembership', 'as' => 'updateMembership']);
-//        Route::delete('{userGroup}', ['uses' => 'DestroyController@destroy', 'as' => 'destroy']);
+        //        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
+        //        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
+        //        Route::get('{userGroup}', ['uses' => 'ShowController@show', 'as' => 'show']);
+        //        Route::put('{userGroup}', ['uses' => 'UpdateController@update', 'as' => 'update']);
+        //        Route::post('{userGroup}/use', ['uses' => 'UpdateController@useUserGroup', 'as' => 'use']);
+        //        Route::put('{userGroup}/update-membership', ['uses' => 'UpdateController@updateMembership', 'as' => 'updateMembership']);
+        //        Route::delete('{userGroup}', ['uses' => 'DestroyController@destroy', 'as' => 'destroy']);
     }
 );
 
 // V2 JSON API ROUTES
-//JsonApiRoute::server('v2')->prefix('v2')
+// JsonApiRoute::server('v2')->prefix('v2')
 //    ->resources(function (ResourceRegistrar $server): void {
 //        // ACCOUNTS
 //        $server->resource('accounts', AccountController::class)
@@ -254,7 +254,7 @@ Route::group(
 //            $relations->hasMany('accounts')->readOnly();
 //        });
 //    })
-//;
+// ;
 
 /*
  * ____    ____  __     .______        ______    __    __  .___________. _______     _______.

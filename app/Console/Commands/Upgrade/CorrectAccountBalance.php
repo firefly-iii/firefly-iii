@@ -35,8 +35,8 @@ class CorrectAccountBalance extends Command
     use ShowsFriendlyMessages;
 
     public const string CONFIG_NAME = '610_correct_balances';
-    protected $description = 'Recalculate all account balance amounts';
-    protected $signature   = 'firefly-iii:correct-account-balance {--F|force : Force the execution of this command.}';
+    protected $description          = 'Recalculate all account balance amounts';
+    protected $signature            = 'firefly-iii:correct-account-balance {--F|force : Force the execution of this command.}';
 
     public function handle(): int
     {
@@ -45,11 +45,12 @@ class CorrectAccountBalance extends Command
 
             return 0;
         }
-        if(config('firefly.feature_flags.running_balance_column')) {
+        if (config('firefly.feature_flags.running_balance_column')) {
             $this->friendlyInfo('Will recalculate account balances. This may take a LONG time. Please be patient.');
             $this->markAsExecuted();
             $this->correctBalanceAmounts();
             $this->friendlyInfo('Done recalculating account balances.');
+
             return 0;
         }
         $this->friendlyWarning('This command has been disabled.');
