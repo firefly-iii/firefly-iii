@@ -180,6 +180,7 @@ class MigrateRuleActions extends Command
             }
         }
     }
+
     private function markAsExecuted(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);
