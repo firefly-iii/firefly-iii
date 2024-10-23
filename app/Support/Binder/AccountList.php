@@ -39,35 +39,59 @@ class AccountList implements BinderInterface
     public static function routeBinder(string $value, Route $route): Collection
     {
         if (auth()->check()) {
+            // Initialize an empty collection
             $collection = new Collection();
+
+            // Check if value is for all asset accounts
             if ('allAssetAccounts' === $value) {
-                /** @var Collection $collection */
-                $collection = auth()->user()->accounts()
-                    ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                    ->whereIn('account_types.type', [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE])
-                    ->orderBy('accounts.name', 'ASC')
-                    ->get(['accounts.*'])
-                ;
-            }
-            if ('allAssetAccounts' !== $value) {
-                $incoming   = array_map('\intval', explode(',', $value));
-                $list       = array_merge(array_unique($incoming), [0]);
-
-                /** @var Collection $collection */
-                $collection = auth()->user()->accounts()
-                    ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                    ->whereIn('accounts.id', $list)
-                    ->orderBy('accounts.name', 'ASC')
-                    ->get(['accounts.*'])
-                ;
+                $collection = self::getAllAssetAccounts();
+            } else {
+                $collection = self::getSpecificAccounts($value);
             }
 
-            if ($collection->count() > 0) {
+            // Return the collection if it has results
+            if ($collection->isNotEmpty()) {
                 return $collection;
             }
         }
+
+        // Log error if user is not authenticated or no accounts found
         app('log')->error(sprintf('Trying to show account list (%s), but user is not logged in or list is empty.', $route->uri));
 
         throw new NotFoundHttpException();
+    }
+
+    /**
+     * Get all asset accounts for the authenticated user.
+     */
+    private static function getAllAssetAccounts(): Collection
+    {
+        return auth()->user()->accounts()
+            ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+            ->whereIn('account_types.type', [
+                AccountType::ASSET, 
+                AccountType::LOAN, 
+                AccountType::DEBT, 
+                AccountType::MORTGAGE
+            ])
+            ->orderBy('accounts.name', 'ASC')
+            ->distinct('accounts.id') // Ensure uniqueness
+            ->get(['accounts.*']);
+    }
+
+    /**
+     * Get specific accounts based on the provided value.
+     */
+    private static function getSpecificAccounts(string $value): Collection
+    {
+        $incoming = array_map('intval', explode(',', $value));
+        $list = array_merge(array_unique($incoming), [0]);
+
+        return auth()->user()->accounts()
+            ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+            ->whereIn('accounts.id', $list)
+            ->orderBy('accounts.name', 'ASC')
+            ->distinct('accounts.id') // Ensure uniqueness
+            ->get(['accounts.*']);
     }
 }

@@ -17,15 +17,20 @@ return new class () extends Migration {
                 $table->id();
                 $table->timestamps();
                 $table->string('title', 100)->nullable();
-                $table->integer('account_id', false, true);
-                $table->integer('transaction_currency_id', false, true);
+                $table->unsignedBigInteger('account_id'); // Make sure to use unsigned
+                $table->unsignedBigInteger('transaction_currency_id'); // Make sure to use unsigned
                 $table->date('date')->nullable();
-                $table->integer('transaction_journal_id', false, true)->nullable();
-                $table->decimal('balance', 32, 12);
+                $table->unsignedBigInteger('transaction_journal_id')->nullable(); // Make sure to use unsigned
+
+                // Adjust balance precision based on your requirements
+                $table->decimal('balance', 15, 2);
+
+                // Foreign key constraints
                 $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
-                $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
+                $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade')->nullable(); // Ensure reference allows null
                 $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('cascade');
 
+                // Unique constraint
                 $table->unique(['account_id', 'transaction_currency_id', 'transaction_journal_id', 'date', 'title'], 'unique_account_currency');
             });
         }

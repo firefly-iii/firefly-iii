@@ -29,7 +29,7 @@ use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class BudgetList.
+ * Class BudgetList
  */
 class BudgetList implements BinderInterface
 {
@@ -38,41 +38,43 @@ class BudgetList implements BinderInterface
      */
     public static function routeBinder(string $value, Route $route): Collection
     {
-        if (auth()->check()) {
-            if ('allBudgets' === $value) {
-                return auth()->user()->budgets()->where('active', true)
-                    ->orderBy('order', 'ASC')
-                    ->orderBy('name', 'ASC')
-                    ->get()
-                ;
-            }
-
-            $list       = array_unique(array_map('\intval', explode(',', $value)));
-
-            if (0 === count($list)) { // @phpstan-ignore-line
-                app('log')->warning('Budget list count is zero, return 404.');
-
-                throw new NotFoundHttpException();
-            }
-
-            /** @var Collection $collection */
-            $collection = auth()->user()->budgets()
-                ->where('active', true)
-                ->whereIn('id', $list)
-                ->get()
-            ;
-
-            // add empty budget if applicable.
-            if (in_array(0, $list, true)) {
-                $collection->push(new Budget());
-            }
-
-            if ($collection->count() > 0) {
-                return $collection;
-            }
+        if (!auth()->check()) {
+            app('log')->warning('User not authenticated when accessing budget list.');
+            throw new NotFoundHttpException();
         }
-        app('log')->warning('BudgetList fallback to 404.');
 
+        if ('allBudgets' === $value) {
+            return auth()->user()->budgets()
+                ->where('active', true)
+                ->orderBy('order', 'ASC')
+                ->orderBy('name', 'ASC')
+                ->get();
+        }
+
+        // Convert and filter the input list
+        $list = array_unique(array_map('intval', explode(',', $value)));
+
+        if (empty($list)) { // No valid budgets to process
+            app('log')->warning('Budget list count is zero, returning 404.');
+            throw new NotFoundHttpException();
+        }
+
+        /** @var Collection $collection */
+        $collection = auth()->user()->budgets()
+            ->where('active', true)
+            ->whereIn('id', $list)
+            ->get();
+
+        // Add an empty budget if applicable.
+        if (in_array(0, $list, true)) {
+            $collection->push(new Budget());
+        }
+
+        if ($collection->isNotEmpty()) {
+            return $collection;
+        }
+
+        app('log')->warning('No budgets found, falling back to 404.');
         throw new NotFoundHttpException();
     }
 }

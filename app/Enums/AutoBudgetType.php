@@ -20,16 +20,32 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+ <?php
 
-namespace FireflyIII\Enums;
-
-/**
- * Enum AutoBudgetType
- */
-enum AutoBudgetType: int
-{
-    case AUTO_BUDGET_RESET    = 1;
-    case AUTO_BUDGET_ROLLOVER = 2;
-    case AUTO_BUDGET_ADJUSTED = 3;
-}
+ declare(strict_types=1);
+ 
+ namespace FireflyIII\Enums;
+ 
+ /**
+  * Enum AutoBudgetType
+  * 
+  * This enum represents different types of automatic budgeting operations.
+  */
+ enum AutoBudgetType: int
+ {
+     /** 
+      * Represents the action of resetting the budget. 
+      */
+     case AUTO_BUDGET_RESET = 1;
+ 
+     /** 
+      * Represents the action of rolling over the budget from the previous period. 
+      */
+     case AUTO_BUDGET_ROLLOVER = 2;
+ 
+     /** 
+      * Represents the action of adjusting the budget based on certain criteria. 
+      */
+     case AUTO_BUDGET_ADJUSTED = 3;
+ }
+ 
