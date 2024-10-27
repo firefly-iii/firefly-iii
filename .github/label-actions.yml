@@ -4,6 +4,7 @@
 feature:
   issues:
     # Post a comment, `{issue-author}` is an optional placeholder
+    unlabel: feature
     comment: |
       Hi there! 
 
@@ -32,6 +33,7 @@ epic:
       Thank you for your contributions.
 
 enhancement:
+  unlabel: enhancement
   issues:
     # Post a comment, `{issue-author}` is an optional placeholder
     comment: |
