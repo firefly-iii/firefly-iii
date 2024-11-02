@@ -37,6 +37,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -167,12 +168,14 @@ class TransactionJournal extends Model
 
     public function scopeAfter(EloquentBuilder $query, Carbon $date): EloquentBuilder
     {
-        return $query->where('transaction_journals.date', '>=', $date->format('Y-m-d 00:00:00'));
+        Log::debug(sprintf('scopeAfter("%s")', $date->format('Y-m-d H:i:s')));
+        return $query->where('transaction_journals.date', '>=', $date->format('Y-m-d H:i:s'));
     }
 
     public function scopeBefore(EloquentBuilder $query, Carbon $date): EloquentBuilder
     {
-        return $query->where('transaction_journals.date', '<=', $date->format('Y-m-d 00:00:00'));
+        Log::debug(sprintf('scopeBefore("%s")', $date->format('Y-m-d H:i:s')));
+        return $query->where('transaction_journals.date', '<=', $date->format('Y-m-d H:i:s'));
     }
 
     public function scopeTransactionTypes(EloquentBuilder $query, array $types): void

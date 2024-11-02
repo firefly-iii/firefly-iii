@@ -306,6 +306,8 @@ class BillRepository implements BillRepositoryInterface
     {
         // app('log')->debug('Now in getPaidDatesInRange()');
 
+        Log::debug(sprintf('Search for linked journals between %s and %s', $start->toW3cString(), $end->toW3cString()));
+
         return $bill->transactionJournals()
             ->before($end)->after($start)->get(
                 [

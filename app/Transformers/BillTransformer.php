@@ -194,11 +194,19 @@ class BillTransformer extends AbstractTransformer
         $searchStart  = clone $start;
         $start->subDay();
 
-        app('log')->debug(sprintf('Parameters are start: %s end: %s', $start->format('Y-m-d'), $this->parameters->get('end')->format('Y-m-d')));
+        /** @var Carbon $end */
+        $end = clone $this->parameters->get('end');
+        $searchEnd = clone $end;
+
+        // move the search dates to the start of the day.
+        $searchStart->startOfDay();
+        $searchEnd->endOfDay();
+
+        app('log')->debug(sprintf('Parameters are start: %s end: %s', $start->format('Y-m-d'), $end->format('Y-m-d')));
         app('log')->debug(sprintf('Search parameters are: start: %s', $searchStart->format('Y-m-d')));
 
         // Get from database when bill was paid.
-        $set          = $this->repository->getPaidDatesInRange($bill, $searchStart, $this->parameters->get('end'));
+        $set          = $this->repository->getPaidDatesInRange($bill, $searchStart, $searchEnd);
         app('log')->debug(sprintf('Count %d entries in getPaidDatesInRange()', $set->count()));
 
         // Grab from array the most recent payment. If none exist, fall back to the start date and pretend *that* was the last paid date.
