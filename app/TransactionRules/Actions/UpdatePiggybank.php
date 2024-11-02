@@ -81,7 +81,7 @@ class UpdatePiggybank implements ActionInterface
 
         if ($source->account_id === $piggyBank->account_id) {
             app('log')->debug('Piggy bank account is linked to source, so remove amount from piggy bank.');
-            $this->removeAmount($piggyBank, $journalObj, $destination->amount);
+            $this->removeAmount($piggyBank, $journal, $journalObj, $destination->amount);
 
             event(
                 new TriggeredAuditLog(
@@ -102,7 +102,7 @@ class UpdatePiggybank implements ActionInterface
         }
         if ($destination->account_id === $piggyBank->account_id) {
             app('log')->debug('Piggy bank account is linked to source, so add amount to piggy bank.');
-            $this->addAmount($piggyBank, $journalObj, $destination->amount);
+            $this->addAmount($piggyBank,$journal, $journalObj, $destination->amount);
 
             event(
                 new TriggeredAuditLog(
@@ -115,6 +115,7 @@ class UpdatePiggybank implements ActionInterface
                         'decimal_places'  => $journalObj->transactionCurrency->decimal_places,
                         'amount'          => $destination->amount,
                         'piggy'           => $piggyBank->name,
+                        'piggy_id'           => $piggyBank->id,
                     ]
                 )
             );
@@ -138,7 +139,7 @@ class UpdatePiggybank implements ActionInterface
         return $user->piggyBanks()->where('piggy_banks.name', $name)->first();
     }
 
-    private function removeAmount(PiggyBank $piggyBank, TransactionJournal $journal, string $amount): void
+    private function removeAmount(PiggyBank $piggyBank, array $array, TransactionJournal $journal, string $amount): void
     {
         $repository = app(PiggyBankRepositoryInterface::class);
         $repository->setUser($journal->user);
@@ -154,6 +155,7 @@ class UpdatePiggybank implements ActionInterface
         // if amount is zero, stop.
         if (0 === bccomp('0', $amount)) {
             app('log')->warning('Amount left is zero, stop.');
+            event(new RuleActionFailedOnArray($this->action, $array, trans('rules.cannot_remove_zero_piggy', ['name' => $piggyBank->name])));
 
             return;
         }
@@ -161,6 +163,7 @@ class UpdatePiggybank implements ActionInterface
         // make sure we can remove amount:
         if (false === $repository->canRemoveAmount($piggyBank, $amount)) {
             app('log')->warning(sprintf('Cannot remove %s from piggy bank.', $amount));
+            event(new RuleActionFailedOnArray($this->action, $array, trans('rules.cannot_remove_from_piggy', ['amount' => $amount,'name' => $piggyBank->name])));
 
             return;
         }
@@ -169,7 +172,7 @@ class UpdatePiggybank implements ActionInterface
         $repository->removeAmount($piggyBank, $amount, $journal);
     }
 
-    private function addAmount(PiggyBank $piggyBank, TransactionJournal $journal, string $amount): void
+    private function addAmount(PiggyBank $piggyBank, array $array, TransactionJournal $journal, string $amount): void
     {
         $repository = app(PiggyBankRepositoryInterface::class);
         $repository->setUser($journal->user);
@@ -190,13 +193,14 @@ class UpdatePiggybank implements ActionInterface
         // if amount is zero, stop.
         if (0 === bccomp('0', $amount)) {
             app('log')->warning('Amount left is zero, stop.');
-
+            event(new RuleActionFailedOnArray($this->action, $array, trans('rules.cannot_add_zero_piggy', ['name' => $piggyBank->name])));
             return;
         }
 
         // make sure we can add amount:
         if (false === $repository->canAddAmount($piggyBank, $amount)) {
             app('log')->warning(sprintf('Cannot add %s to piggy bank.', $amount));
+            event(new RuleActionFailedOnArray($this->action, $array, trans('rules.cannot_add_to_piggy', ['amount' => $amount,'name' => $piggyBank->name])));
 
             return;
         }

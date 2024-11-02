@@ -93,10 +93,10 @@
                     <code>{{ logEntry.after }}</code>
                 {% endif %}
                 {% if 'add_to_piggy' == logEntry.action %}
-                    {{ trans('firefly.ale_action_log_add', {amount: formatAmountBySymbol(logEntry.after.amount, logEntry.after.currency_symbol, logEntry.after.decimal_places, true), name: logEntry.after.name})|raw }}
+                    {{ trans('firefly.ale_action_log_add', {amount: formatAmountBySymbol(logEntry.after.amount, logEntry.after.currency_symbol, logEntry.after.decimal_places, true), name: logEntry.after.piggy})|raw }}
                 {% endif %}
                 {% if 'remove_from_piggy' == logEntry.action %}
-                    {{ trans('firefly.ale_action_log_remove', {amount: formatAmountBySymbol(logEntry.after.amount, logEntry.after.currency_symbol, logEntry.after.decimal_places, true), name: logEntry.after.name})|raw }}
+                    {{ trans('firefly.ale_action_log_remove', {amount: formatAmountBySymbol(logEntry.after.amount, logEntry.after.currency_symbol, logEntry.after.decimal_places, true), name: logEntry.after.piggy})|raw }}
                 {% endif %}
             </td>
 

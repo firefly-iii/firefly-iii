@@ -71,4 +71,8 @@ return [
     'cannot_find_category'                        => 'Firefly III can\'t find category ":name"',
     'cannot_set_budget'                           => 'Firefly III can\'t set budget ":name" to a transaction of type ":type"',
     'journal_invalid_amount'                      => 'Firefly III can\'t set amount ":amount" because it is not a valid number.',
+    'cannot_remove_zero_piggy'                    => 'Cannot remove zero amount from piggy bank ":name"',
+    'cannot_remove_from_piggy'                    => 'Cannot remove ":amount" from piggy bank ":name"',
+    'cannot_add_zero_piggy'                       => 'Cannot add zero amount to piggy bank ":name"',
+    'cannot_add_to_piggy'                         => 'Cannot add ":amount" to piggy bank ":name"',
 ];
