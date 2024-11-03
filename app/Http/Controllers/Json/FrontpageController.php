@@ -65,6 +65,16 @@ class FrontpageController extends Controller
                 $info[] = $entry;
             }
         }
+
+        // sort by current percentage (lowest at the top)
+        uasort(
+            $info,
+            static function (array $a, array $b) {
+                return $a['percentage'] <=> $b['percentage'];
+            }
+        );
+
+
         $html = '';
         if (0 !== count($info)) {
             try {
