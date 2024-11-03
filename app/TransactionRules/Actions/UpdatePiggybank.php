@@ -102,7 +102,7 @@ class UpdatePiggybank implements ActionInterface
         }
         if ($destination->account_id === $piggyBank->account_id) {
             app('log')->debug('Piggy bank account is linked to source, so add amount to piggy bank.');
-            $this->addAmount($piggyBank,$journal, $journalObj, $destination->amount);
+            $this->addAmount($piggyBank, $journal, $journalObj, $destination->amount);
 
             event(
                 new TriggeredAuditLog(
@@ -111,10 +111,10 @@ class UpdatePiggybank implements ActionInterface
                     'add_to_piggy',
                     null,
                     [
-                        'currency_symbol' => $journalObj->transactionCurrency->symbol,
-                        'decimal_places'  => $journalObj->transactionCurrency->decimal_places,
-                        'amount'          => $destination->amount,
-                        'piggy'           => $piggyBank->name,
+                        'currency_symbol'    => $journalObj->transactionCurrency->symbol,
+                        'decimal_places'     => $journalObj->transactionCurrency->decimal_places,
+                        'amount'             => $destination->amount,
+                        'piggy'              => $piggyBank->name,
                         'piggy_id'           => $piggyBank->id,
                     ]
                 )
@@ -163,7 +163,7 @@ class UpdatePiggybank implements ActionInterface
         // make sure we can remove amount:
         if (false === $repository->canRemoveAmount($piggyBank, $amount)) {
             app('log')->warning(sprintf('Cannot remove %s from piggy bank.', $amount));
-            event(new RuleActionFailedOnArray($this->action, $array, trans('rules.cannot_remove_from_piggy', ['amount' => $amount,'name' => $piggyBank->name])));
+            event(new RuleActionFailedOnArray($this->action, $array, trans('rules.cannot_remove_from_piggy', ['amount' => $amount, 'name' => $piggyBank->name])));
 
             return;
         }
@@ -194,13 +194,14 @@ class UpdatePiggybank implements ActionInterface
         if (0 === bccomp('0', $amount)) {
             app('log')->warning('Amount left is zero, stop.');
             event(new RuleActionFailedOnArray($this->action, $array, trans('rules.cannot_add_zero_piggy', ['name' => $piggyBank->name])));
+
             return;
         }
 
         // make sure we can add amount:
         if (false === $repository->canAddAmount($piggyBank, $amount)) {
             app('log')->warning(sprintf('Cannot add %s to piggy bank.', $amount));
-            event(new RuleActionFailedOnArray($this->action, $array, trans('rules.cannot_add_to_piggy', ['amount' => $amount,'name' => $piggyBank->name])));
+            event(new RuleActionFailedOnArray($this->action, $array, trans('rules.cannot_add_to_piggy', ['amount' => $amount, 'name' => $piggyBank->name])));
 
             return;
         }

@@ -220,6 +220,7 @@ trait RecurringTransactionTrait
         if (null === $budget) {
             // remove budget from recurring transaction:
             $transaction->recurrenceTransactionMeta()->where('name', 'budget_id')->delete();
+
             return;
         }
 
@@ -241,6 +242,7 @@ trait RecurringTransactionTrait
         if (null === $bill) {
             // remove bill from recurring transaction:
             $transaction->recurrenceTransactionMeta()->where('name', 'bill_id')->delete();
+
             return;
         }
 

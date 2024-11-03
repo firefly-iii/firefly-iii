@@ -195,8 +195,8 @@ class BillTransformer extends AbstractTransformer
         $start->subDay();
 
         /** @var Carbon $end */
-        $end = clone $this->parameters->get('end');
-        $searchEnd = clone $end;
+        $end          = clone $this->parameters->get('end');
+        $searchEnd    = clone $end;
 
         // move the search dates to the start of the day.
         $searchStart->startOfDay();

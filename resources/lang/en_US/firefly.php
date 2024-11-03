@@ -2627,7 +2627,7 @@ return [
     'no_bills_create_default'                                     => 'Create a bill',
 
     // recurring transactions
-    'recurrence_max_count' => 'This recurring transactions will be created at most :max time(s), and has been created :count time(s) already.',
+    'recurrence_max_count'                                        => 'This recurring transactions will be created at most :max time(s), and has been created :count time(s) already.',
     'create_right_now'                                            => 'Create right now',
     'no_new_transaction_in_recurrence'                            => 'No new transaction was created. Perhaps it was already fired for this date?',
     'recurrences'                                                 => 'Recurring transactions',

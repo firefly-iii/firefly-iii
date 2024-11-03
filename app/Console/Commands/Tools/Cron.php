@@ -76,7 +76,7 @@ class Cron extends Command
         }
 
         // Fire recurring transaction cron job.
-        if($doAll || $this->option('create-recurring')) {
+        if ($doAll || $this->option('create-recurring')) {
             try {
                 $this->recurringCronJob($force, $date);
             } catch (FireflyException $e) {
@@ -87,7 +87,7 @@ class Cron extends Command
         }
 
         // Fire auto-budget cron job:
-        if($doAll || $this->option('create-auto-budgets')) {
+        if ($doAll || $this->option('create-auto-budgets')) {
             try {
                 $this->autoBudgetCronJob($force, $date);
             } catch (FireflyException $e) {
@@ -98,7 +98,7 @@ class Cron extends Command
         }
 
         // Fire bill warning cron job
-        if($doAll || $this->option('send-bill-warnings')) {
+        if ($doAll || $this->option('send-bill-warnings')) {
             try {
                 $this->billWarningCronJob($force, $date);
             } catch (FireflyException $e) {
