@@ -755,7 +755,7 @@ return [
     'instructions_rule_from_journal'                              => 'Create a rule based on one of your transactions. Complement or submit the form below.',
     'rule_is_strict'                                              => 'strict rule',
     'rule_is_not_strict'                                          => 'non-strict rule',
-    'rule_help_stop_processing'                                   => 'When you check this box, later rules in this group will not be executed.',
+    'rule_help_stop_processing'                                   => 'When you check this box, later rules in this group will not be executed if this particular rule is executed.',
     'rule_help_strict'                                            => 'In strict rules ALL triggers must fire for the action(s) to be executed. In non-strict rules, ANY trigger is enough for the action(s) to be executed.',
     'rule_help_active'                                            => 'Inactive rules will never fire.',
     'stored_new_rule'                                             => 'Stored new rule with title ":title"',

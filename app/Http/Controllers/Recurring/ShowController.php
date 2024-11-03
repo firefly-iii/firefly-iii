@@ -115,6 +115,15 @@ class ShowController extends Controller
             $array['attachments'][] = $item;
         }
 
+        if(null !== $array['nr_of_repetitions']) {
+            $left = $array['nr_of_repetitions'] - $array['journal_count'];
+            $left = max(0, $left);
+            // limit each repetition to X occurrences:
+            foreach($array['repetitions'] as $index => $repetition) {
+                $array['repetitions'][$index]['occurrences'] = array_slice($repetition['occurrences'], 0, $left);
+            }
+        }
+
         $subTitle               = (string)trans('firefly.overview_for_recurrence', ['title' => $recurrence->title]);
 
         return view('recurring.show', compact('recurrence', 'subTitle', 'array', 'groups', 'today'));
