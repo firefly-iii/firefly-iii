@@ -40,6 +40,7 @@ use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Validation\AccountValidator;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait RecurringTransactionTrait
@@ -212,10 +213,13 @@ trait RecurringTransactionTrait
 
     private function setBudget(RecurrenceTransaction $transaction, int $budgetId): void
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         $budgetFactory = app(BudgetFactory::class);
         $budgetFactory->setUser($transaction->recurrence->user);
         $budget        = $budgetFactory->find($budgetId, null);
         if (null === $budget) {
+            // remove budget from recurring transaction:
+            $transaction->recurrenceTransactionMeta()->where('name', 'budget_id')->delete();
             return;
         }
 
@@ -235,6 +239,8 @@ trait RecurringTransactionTrait
         $billFactory->setUser($transaction->recurrence->user);
         $bill        = $billFactory->find($billId, null);
         if (null === $bill) {
+            // remove bill from recurring transaction:
+            $transaction->recurrenceTransactionMeta()->where('name', 'bill_id')->delete();
             return;
         }
 
