@@ -88,6 +88,7 @@ class ShowController extends Controller
         $groups                = $this->recurring->getTransactions($recurrence);
         $today                 = today(config('app.timezone'));
         $array['repeat_until'] = null !== $array['repeat_until'] ? new Carbon($array['repeat_until']) : null;
+        $array['journal_count'] = $this->recurring->getJournalCount($recurrence);
 
         // transform dates back to Carbon objects and expand information
         foreach ($array['repetitions'] as $index => $repetition) {

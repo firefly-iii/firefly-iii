@@ -46,10 +46,15 @@ class Cron extends Command
     protected $signature   = 'firefly-iii:cron
         {--F|force : Force the cron job(s) to execute.}
         {--date= : Set the date in YYYY-MM-DD to make Firefly III think that\'s the current date.}
+        {--download-cer : Download exchange rates. Other tasks will be skipped unless also requested.}
+        {--create-recurring : Create recurring transactions. Other tasks will be skipped unless also requested.}
+        {--create-auto-budgets : Create auto budgets. Other tasks will be skipped unless also requested.}
+        {--send-bill-warnings : Send bill warnings. Other tasks will be skipped unless also requested.}
         ';
 
     public function handle(): int
     {
+        $doAll = !$this->option('download-cer') && !$this->option('create-recurring') && !$this->option('create-auto-budgets') && !$this->option('send-bill-warnings');
         $date  = null;
 
         try {
@@ -60,7 +65,7 @@ class Cron extends Command
         $force = (bool)$this->option('force'); // @phpstan-ignore-line
 
         // Fire exchange rates cron job.
-        if (true === config('cer.download_enabled')) {
+        if (true === config('cer.download_enabled') && ($doAll || $this->option('download-cer'))) {
             try {
                 $this->exchangeRatesCronJob($force, $date);
             } catch (FireflyException $e) {
@@ -71,30 +76,36 @@ class Cron extends Command
         }
 
         // Fire recurring transaction cron job.
-        try {
-            $this->recurringCronJob($force, $date);
-        } catch (FireflyException $e) {
-            app('log')->error($e->getMessage());
-            app('log')->error($e->getTraceAsString());
-            $this->friendlyError($e->getMessage());
+        if($doAll || $this->option('create-recurring')) {
+            try {
+                $this->recurringCronJob($force, $date);
+            } catch (FireflyException $e) {
+                app('log')->error($e->getMessage());
+                app('log')->error($e->getTraceAsString());
+                $this->friendlyError($e->getMessage());
+            }
         }
 
         // Fire auto-budget cron job:
-        try {
-            $this->autoBudgetCronJob($force, $date);
-        } catch (FireflyException $e) {
-            app('log')->error($e->getMessage());
-            app('log')->error($e->getTraceAsString());
-            $this->friendlyError($e->getMessage());
+        if($doAll || $this->option('create-auto-budgets')) {
+            try {
+                $this->autoBudgetCronJob($force, $date);
+            } catch (FireflyException $e) {
+                app('log')->error($e->getMessage());
+                app('log')->error($e->getTraceAsString());
+                $this->friendlyError($e->getMessage());
+            }
         }
 
         // Fire bill warning cron job
-        try {
-            $this->billWarningCronJob($force, $date);
-        } catch (FireflyException $e) {
-            app('log')->error($e->getMessage());
-            app('log')->error($e->getTraceAsString());
-            $this->friendlyError($e->getMessage());
+        if($doAll || $this->option('send-bill-warnings')) {
+            try {
+                $this->billWarningCronJob($force, $date);
+            } catch (FireflyException $e) {
+                app('log')->error($e->getMessage());
+                app('log')->error($e->getTraceAsString());
+                $this->friendlyError($e->getMessage());
+            }
         }
 
         $this->friendlyInfo('More feedback on the cron jobs can be found in the log files.');

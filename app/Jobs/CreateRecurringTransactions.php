@@ -177,10 +177,11 @@ class CreateRecurringTransactions implements ShouldQueue
         // has repeated X times.
         $journalCount = $this->repository->getJournalCount($recurrence);
         if (0 !== $recurrence->repetitions && $journalCount >= $recurrence->repetitions && false === $this->force) {
-            app('log')->info(sprintf('Recurrence #%d has run %d times, so will run no longer.', $recurrence->id, $recurrence->repetitions));
+            app('log')->info(sprintf('Recurrence #%d has run %d times, so will run no longer.', $recurrence->id, $journalCount));
 
             return false;
         }
+        app('log')->debug(sprintf('Recurrence #%d has run %d times, max is %d times.', $recurrence->id, $journalCount, $recurrence->repetitions));
 
         // is no longer running
         if ($this->repeatUntilHasPassed($recurrence)) {
@@ -202,8 +203,8 @@ class CreateRecurringTransactions implements ShouldQueue
                 sprintf(
                     'Recurrence #%d is set to run on %s, and today\'s date is %s. Skipped.',
                     $recurrence->id,
-                    $recurrence->first_date->format('Y-m-d'),
-                    $this->date->format('Y-m-d')
+                    $recurrence->first_date->format('Y-m-d H:i:s'),
+                    $this->date->format('Y-m-d H:i:s')
                 )
             );
 
@@ -244,9 +245,10 @@ class CreateRecurringTransactions implements ShouldQueue
     private function hasNotStartedYet(Recurrence $recurrence): bool
     {
         $startDate = $this->getStartDate($recurrence);
-        app('log')->debug(sprintf('Start date is %s', $startDate->format('Y-m-d')));
+        app('log')->debug(sprintf('Start date is %s', $startDate->format('Y-m-d H:i:s')));
+        app('log')->debug(sprintf('Ask   date is %s', $this->date->format('Y-m-d H:i:s')));
 
-        return $startDate->gt($this->date);
+        return $startDate->gte($this->date);
     }
 
     /**

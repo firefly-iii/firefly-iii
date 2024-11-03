@@ -77,9 +77,7 @@ class RecurringCronjob extends AbstractCronjob
     {
         app('log')->info(sprintf('Will now fire recurring cron job task for date "%s".', $this->date->format('Y-m-d H:i:s')));
 
-        /** @var CreateRecurringTransactions $job */
-        $job                = app(CreateRecurringTransactions::class);
-        $job->setDate($this->date);
+        $job                = new CreateRecurringTransactions($this->date);
         $job->setForce($this->force);
         $job->handle();
 

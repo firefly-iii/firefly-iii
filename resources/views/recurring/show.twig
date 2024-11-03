@@ -22,6 +22,17 @@
             </div>
             <div class="box-body">
                 <h4>{{ 'transaction_journal_meta'|_ }}</h4>
+                {% if array.nr_of_repetitions > 0 %}
+                <p>
+                    {% if array.journal_count >= array.nr_of_repetitions %}
+                        <span class="text-danger">{{ trans('firefly.recurrence_max_count', {count: array.journal_count, max: array.nr_of_repetitions}) }}</span>
+                    {% endif %}
+                    {% if array.journal_count < array.nr_of_repetitions %}
+                        {{ trans('firefly.recurrence_max_count', {count: array.journal_count, max: array.nr_of_repetitions}) }}
+                    {% endif %}
+                </p>
+                {% endif %}
+
                 <p>{{ 'description'|_ }}: <em>{{ array.description }}</em></p>
 
                 {% if array.active == false %}
