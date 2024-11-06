@@ -151,6 +151,7 @@ class CategoryController extends Controller
      */
     private function reportPeriodChart(Collection $accounts, Carbon $start, Carbon $end, ?Category $category): array
     {
+
         $income     = [];
         $expenses   = [];
         $categoryId = 0;
@@ -169,8 +170,8 @@ class CategoryController extends Controller
             $categoryId    = $category->id;
             // this gives us all currencies
             $collection    = new Collection([$category]);
-            $expenses      = $opsRepository->listExpenses($start, $end, null, $collection);
-            $income        = $opsRepository->listIncome($start, $end, null, $collection);
+            $expenses      = $opsRepository->listExpenses($start, $end, $accounts, $collection);
+            $income        = $opsRepository->listIncome($start, $end, $accounts, $collection);
         }
         $currencies = array_unique(array_merge(array_keys($income), array_keys($expenses)));
         $periods    = app('navigation')->listOfPeriods($start, $end);
