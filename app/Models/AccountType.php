@@ -80,7 +80,7 @@ class AccountType extends Model
     protected function casts(): array
     {
         return [
-            'type' => AccountTypeEnum::class,
+            //'type' => AccountTypeEnum::class,
         ];
     }
 }

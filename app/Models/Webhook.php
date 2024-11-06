@@ -56,9 +56,9 @@ class Webhook extends Model
     protected function casts(): array
     {
         return [
-            'delivery' => WebhookDelivery::class,
-            'response' => WebhookResponse::class,
-            'trigger'  => WebhookTrigger::class,
+//            'delivery' => WebhookDelivery::class,
+//            'response' => WebhookResponse::class,
+//            'trigger'  => WebhookTrigger::class,
         ];
     }
 
