@@ -117,6 +117,7 @@ class GroupCollector implements GroupCollectorInterface
             'transaction_journals.transaction_type_id',
             'transaction_journals.description',
             'transaction_journals.date',
+            'transaction_journals.date_tz',
             'transaction_journals.order',
 
             // types
