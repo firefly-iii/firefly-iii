@@ -45,7 +45,7 @@ class PiggyBankRepetition extends Model
             'targetdate' => 'date',
         ];
 
-    protected $fillable = ['piggy_bank_id', 'startdate', 'targetdate', 'currentamount'];
+    protected $fillable = ['piggy_bank_id', 'startdate','startdate_tz', 'targetdate','targetdate_tz', 'currentamount'];
 
     public function piggyBank(): BelongsTo
     {
