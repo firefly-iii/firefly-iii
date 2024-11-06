@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -52,6 +53,15 @@ class TransactionType extends Model
             'deleted_at' => 'datetime',
         ];
     protected $fillable                  = ['type'];
+
+
+    protected function casts(): array
+    {
+        return [
+            'type' => TransactionTypeEnum::class,
+        ];
+    }
+
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).

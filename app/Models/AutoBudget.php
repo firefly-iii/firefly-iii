@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use FireflyIII\Enums\AccountTypeEnum;
+use FireflyIII\Enums\AutoBudgetType;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -51,6 +53,13 @@ class AutoBudget extends Model
     public function transactionCurrency(): BelongsTo
     {
         return $this->belongsTo(TransactionCurrency::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'auto_budget_type' => AutoBudgetType::class,
+        ];
     }
 
     protected function amount(): Attribute

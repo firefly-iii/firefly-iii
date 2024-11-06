@@ -53,6 +53,15 @@ class Webhook extends Model
         ];
     protected $fillable = ['active', 'trigger', 'response', 'delivery', 'user_id', 'user_group_id', 'url', 'title', 'secret'];
 
+    protected function casts(): array
+    {
+        return [
+            'delivery' => WebhookDelivery::class,
+            'response' => WebhookResponse::class,
+            'trigger'  => WebhookTrigger::class,
+        ];
+    }
+
     public static function getDeliveries(): array
     {
         $array = [];
@@ -130,13 +139,13 @@ class Webhook extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $webhookId = (int)$value;
+            $webhookId = (int) $value;
 
             /** @var User $user */
-            $user      = auth()->user();
+            $user = auth()->user();
 
             /** @var null|Webhook $webhook */
-            $webhook   = $user->webhooks()->find($webhookId);
+            $webhook = $user->webhooks()->find($webhookId);
             if (null !== $webhook) {
                 return $webhook;
             }
