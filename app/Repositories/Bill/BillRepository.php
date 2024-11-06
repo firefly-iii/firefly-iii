@@ -437,15 +437,17 @@ class BillRepository implements BillRepositoryInterface
         }
         // find the most recent date for this bill NOT in the future. Cache this date:
         $start        = clone $bill->date;
+        $start->startOfDay();
         app('log')->debug('nextExpectedMatch: Start is '.$start->format('Y-m-d'));
 
         while ($start < $date) {
-            app('log')->debug(sprintf('$start (%s) < $date (%s)', $start->format('Y-m-d'), $date->format('Y-m-d')));
+            app('log')->debug(sprintf('$start (%s) < $date (%s)', $start->format('Y-m-d H:i:s'), $date->format('Y-m-d H:i:s')));
             $start = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
-            app('log')->debug('Start is now '.$start->format('Y-m-d'));
+            app('log')->debug('Start is now '.$start->format('Y-m-d H:i:s'));
         }
 
         $end          = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
+        $end->endOfDay();
 
         // see if the bill was paid in this period.
         $journalCount = $bill->transactionJournals()->before($end)->after($start)->count();

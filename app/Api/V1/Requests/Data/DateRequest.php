@@ -46,6 +46,8 @@ class DateRequest extends FormRequest
     {
         $start = $this->getCarbonDate('start');
         $end   = $this->getCarbonDate('end');
+        $start->startOfDay();
+        $end->endOfDay();
         if ($start->diffInYears($end, true) > 5) {
             throw new FireflyException('Date range out of range.');
         }
