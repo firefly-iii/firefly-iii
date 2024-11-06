@@ -147,7 +147,7 @@ class StoreRequest extends FormRequest
                 // all custom fields:
                 'internal_reference'    => $this->clearString((string)$object['internal_reference']),
                 'external_id'           => $this->clearString((string)$object['external_id']),
-                'original_source'       => sprintf('ff3-v%s|api-v%s', config('firefly.version'), config('firefly.api_version')),
+                'original_source'       => sprintf('ff3-v%s', config('firefly.version')),
                 'recurrence_id'         => $this->integerFromValue($object['recurrence_id']),
                 'bunq_payment_id'       => $this->clearString((string)$object['bunq_payment_id']),
                 'external_url'          => $this->clearString((string)$object['external_url']),

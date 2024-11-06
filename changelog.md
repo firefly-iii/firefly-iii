@@ -9,19 +9,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - #8092
 - #9183
-- Initial release.
-
-### Changed
-
-- Initial release.
-
-### Deprecated
-
-- Initial release.
-
-### Removed
-
-- Initial release.
 
 ### Fixed
 
@@ -41,15 +28,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - #9294
 - #9427
 
-### Security
-
-- Initial release.
-
 ### API
 
+- API version is no longer distinguished from Firefly III version. API jumps from v2.1.0 to v6.1.22
+- API v2 is cleaned up and misses a few previously available endpoints. They will be added in the future.
 - #9271
-
-- Initial release.
 
 ## 6.1.21 - 2024-09-30
 

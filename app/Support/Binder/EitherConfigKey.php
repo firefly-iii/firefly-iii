@@ -39,7 +39,6 @@ class EitherConfigKey
 
             // firefly iii settings
             'firefly.version',
-            'firefly.api_version',
             'firefly.default_location',
             'firefly.account_to_transaction',
             'firefly.allowed_opposing_types',
