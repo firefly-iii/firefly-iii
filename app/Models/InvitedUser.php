@@ -44,7 +44,7 @@ class InvitedUser extends Model
             'expires'  => 'datetime',
             'redeemed' => 'boolean',
         ];
-    protected $fillable = ['user_id', 'email', 'invite_code', 'expires','expires_tz', 'redeemed'];
+    protected $fillable = ['user_id', 'email', 'invite_code', 'expires', 'expires_tz', 'redeemed'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).

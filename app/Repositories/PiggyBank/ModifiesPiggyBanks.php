@@ -178,12 +178,12 @@ trait ModifiesPiggyBanks
      */
     public function store(array $data): PiggyBank
     {
-        $order            = $this->getMaxOrder() + 1;
+        $order                      = $this->getMaxOrder() + 1;
         if (array_key_exists('order', $data)) {
             $order = $data['order'];
         }
-        $data['order']    = 31337; // very high when creating.
-        $piggyData        = $data;
+        $data['order']              = 31337; // very high when creating.
+        $piggyData                  = $data;
         // unset fields just in case.
         unset($piggyData['object_group_title'], $piggyData['object_group_id'], $piggyData['notes'], $piggyData['current_amount']);
 
@@ -192,7 +192,7 @@ trait ModifiesPiggyBanks
             $piggyData['targetamount'] = '0';
         }
 
-        $piggyData['startdate_tz'] = $piggyData['startdate']?->format('e');
+        $piggyData['startdate_tz']  = $piggyData['startdate']?->format('e');
         $piggyData['targetdate_tz'] = $piggyData['targetdate']?->format('e');
 
         try {
@@ -211,13 +211,13 @@ trait ModifiesPiggyBanks
         $this->updateNote($piggyBank, $data['notes']);
 
         // repetition is auto created.
-        $repetition       = $this->getRepetition($piggyBank);
+        $repetition                 = $this->getRepetition($piggyBank);
         if (null !== $repetition && array_key_exists('current_amount', $data) && '' !== $data['current_amount']) {
             $repetition->currentamount = $data['current_amount'];
             $repetition->save();
         }
 
-        $objectGroupTitle = $data['object_group_title'] ?? '';
+        $objectGroupTitle           = $data['object_group_title'] ?? '';
         if ('' !== $objectGroupTitle) {
             $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
             if (null !== $objectGroup) {
@@ -226,7 +226,7 @@ trait ModifiesPiggyBanks
             }
         }
         // try also with ID
-        $objectGroupId    = (int)($data['object_group_id'] ?? 0);
+        $objectGroupId              = (int)($data['object_group_id'] ?? 0);
         if (0 !== $objectGroupId) {
             $objectGroup = $this->findObjectGroupById($objectGroupId);
             if (null !== $objectGroup) {
@@ -376,11 +376,11 @@ trait ModifiesPiggyBanks
             $piggyBank->targetamount = '0';
         }
         if (array_key_exists('targetdate', $data) && '' !== $data['targetdate']) {
-            $piggyBank->targetdate = $data['targetdate'];
+            $piggyBank->targetdate    = $data['targetdate'];
             $piggyBank->targetdate_tz = $data['targetdate']->format('e');
         }
         if (array_key_exists('startdate', $data)) {
-            $piggyBank->startdate = $data['startdate'];
+            $piggyBank->startdate    = $data['startdate'];
             $piggyBank->startdate_tz = $data['targetdate']->format('e');
         }
         $piggyBank->save();

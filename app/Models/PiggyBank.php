@@ -53,7 +53,7 @@ class PiggyBank extends Model
             'encrypted'  => 'boolean',
         ];
 
-    protected $fillable = ['name', 'account_id', 'order', 'targetamount', 'startdate','startdate_tz', 'targetdate', 'targetdate_tz', 'active'];
+    protected $fillable = ['name', 'account_id', 'order', 'targetamount', 'startdate', 'startdate_tz', 'targetdate', 'targetdate_tz', 'active'];
 
     protected $hidden   = ['targetamount_encrypted', 'encrypted'];
 
