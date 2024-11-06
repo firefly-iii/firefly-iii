@@ -3,6 +3,54 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.1.22 - 2024-11-07
+
+### Added
+
+- #8092
+- #9183
+- Initial release.
+
+### Changed
+
+- Initial release.
+
+### Deprecated
+
+- Initial release.
+
+### Removed
+
+- Initial release.
+
+### Fixed
+
+- #9282 
+- #9147
+- #9175
+- #9225
+- #9236
+- #9305
+- #9106
+- #9324
+- #9360
+- #9303
+- #9416
+- #9389
+- #9234
+- #9294
+- #9427
+
+### Security
+
+- Initial release.
+
+### API
+
+- #9271
+
+- Initial release.
+
 ## 6.1.21 - 2024-09-30
 
 ### Added
