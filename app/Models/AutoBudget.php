@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\AutoBudgetType;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;

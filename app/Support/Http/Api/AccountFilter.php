@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Http\Api;
 
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\AccountType;
 
 /**
@@ -32,7 +33,7 @@ trait AccountFilter
 {
     protected array $types = [
         'all'                        => [
-            AccountType::DEFAULT,
+            AccountTypeEnum::DEFAULT->value,
             AccountType::CASH,
             AccountType::ASSET,
             AccountType::EXPENSE,

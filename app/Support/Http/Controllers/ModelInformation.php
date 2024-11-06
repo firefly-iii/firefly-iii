@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Http\Controllers;
 
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Bill;
@@ -84,9 +85,9 @@ trait ModelInformation
         /** @var AccountType $mortgage */
         $mortgage       = $repository->getAccountTypeByType(AccountType::MORTGAGE);
         $liabilityTypes = [
-            $debt->id     => (string)trans(sprintf('firefly.account_type_%s', AccountType::DEBT)),
-            $loan->id     => (string)trans(sprintf('firefly.account_type_%s', AccountType::LOAN)),
-            $mortgage->id => (string)trans(sprintf('firefly.account_type_%s', AccountType::MORTGAGE)),
+            $debt->id     => (string)trans(sprintf('firefly.account_type_%s', AccountTypeEnum::DEBT->value)),
+            $loan->id     => (string)trans(sprintf('firefly.account_type_%s', AccountTypeEnum::LOAN->value)),
+            $mortgage->id => (string)trans(sprintf('firefly.account_type_%s', AccountTypeEnum::MORTGAGE->value)),
         ];
         asort($liabilityTypes);
 

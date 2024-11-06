@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * AddTimezonesToDates.php
  * Copyright (c) 2024 james@firefly-iii.org.
@@ -48,7 +50,7 @@ class AddTimezonesToDates extends Command
      *
      * @var string
      */
-    protected $signature = 'firefly-iii:add-timezones-to-dates';
+    protected $signature   = 'firefly-iii:add-timezones-to-dates';
 
     /**
      * The console command description.
@@ -60,7 +62,7 @@ class AddTimezonesToDates extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         $models = [
             AccountBalance::class       => ['date'], // done
@@ -90,17 +92,19 @@ class AddTimezonesToDates extends Command
 
     private function addTimezoneToModelField(string $model, string $field): void
     {
-        $shortModel = str_replace('FireflyIII\\Models\\','', $model);
+        $shortModel    = str_replace('FireflyIII\Models\\', '', $model);
         $timezoneField = sprintf('%s_tz', $field);
         $items         = new Collection();
+
         try {
             $items = $model::whereNull($timezoneField)->get();
         } catch (QueryException $e) {
             $this->friendlyError(sprintf('Cannot add timezone to field "%s" of model "%s". Field does not exist.', $field, $shortModel));
             Log::error($e->getMessage());
         }
-        if(0 === $items->count()) {
+        if (0 === $items->count()) {
             $this->friendlyPositive(sprintf('Timezone is present in field "%s" of model "%s".', $field, $shortModel));
+
             return;
         }
         $this->friendlyInfo(sprintf('Adding timezone to field "%s" of model "%s".', $field, $shortModel));

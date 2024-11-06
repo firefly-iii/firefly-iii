@@ -54,14 +54,12 @@ class TransactionType extends Model
         ];
     protected $fillable                  = ['type'];
 
-
     protected function casts(): array
     {
         return [
             'type' => TransactionTypeEnum::class,
         ];
     }
-
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
