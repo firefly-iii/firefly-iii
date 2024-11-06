@@ -57,7 +57,7 @@ class AutoBudget extends Model
     protected function casts(): array
     {
         return [
-            //'auto_budget_type' => AutoBudgetType::class,
+            // 'auto_budget_type' => AutoBudgetType::class,
         ];
     }
 

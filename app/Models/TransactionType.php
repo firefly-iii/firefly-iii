@@ -57,7 +57,7 @@ class TransactionType extends Model
     protected function casts(): array
     {
         return [
-            //'type' => TransactionTypeEnum::class,
+            // 'type' => TransactionTypeEnum::class,
         ];
     }
 

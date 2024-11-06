@@ -62,7 +62,7 @@ class RecurrenceRepetition extends Model
     protected function casts(): array
     {
         return [
-            //'weekend' => RecurrenceRepetitionWeekend::class,
+            // 'weekend' => RecurrenceRepetitionWeekend::class,
         ];
     }
 

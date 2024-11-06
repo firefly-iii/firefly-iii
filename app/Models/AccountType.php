@@ -37,30 +37,43 @@ class AccountType extends Model
 
     /** @deprecated */
     public const string ASSET            = 'Asset account';
+
     /** @deprecated */
     public const string BENEFICIARY      = 'Beneficiary account';
+
     /** @deprecated */
     public const string CASH             = 'Cash account';
+
     /** @deprecated */
     public const string CREDITCARD       = 'Credit card';
+
     /** @deprecated */
     public const string DEBT             = 'Debt';
+
     /** @deprecated */
     public const string DEFAULT          = 'Default account';
+
     /** @deprecated */
     public const string EXPENSE          = 'Expense account';
+
     /** @deprecated */
     public const string IMPORT           = 'Import account';
+
     /** @deprecated */
     public const string INITIAL_BALANCE  = 'Initial balance account';
+
     /** @deprecated */
     public const string LIABILITY_CREDIT = 'Liability credit account';
+
     /** @deprecated */
     public const string LOAN             = 'Loan';
+
     /** @deprecated */
     public const string MORTGAGE         = 'Mortgage';
+
     /** @deprecated */
     public const string RECONCILIATION   = 'Reconciliation account';
+
     /** @deprecated */
     public const string REVENUE          = 'Revenue account';
 
@@ -80,7 +93,7 @@ class AccountType extends Model
     protected function casts(): array
     {
         return [
-            //'type' => AccountTypeEnum::class,
+            // 'type' => AccountTypeEnum::class,
         ];
     }
 }
