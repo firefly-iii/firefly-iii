@@ -135,7 +135,9 @@ class BudgetLimitHandler
                             'user_group_id'           => $budgetLimit->budget->user->user_group_id,
                             'transaction_currency_id' => $budgetLimit->transaction_currency_id,
                             'start_date'              => $current,
+                            'start_date_tz'              => $current->format('e'),
                             'end_date'                => $currentEnd,
+                            'end_date_tz'                => $currentEnd->format('e'),
                             'amount'                  => $amount,
                         ]
                     );

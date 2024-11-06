@@ -51,7 +51,7 @@ class TransactionJournal extends Model
     use SoftDeletes;
 
     protected $casts
-                      = [
+        = [
             'created_at'    => 'datetime',
             'updated_at'    => 'datetime',
             'deleted_at'    => 'datetime',
@@ -66,7 +66,7 @@ class TransactionJournal extends Model
         ];
 
     protected $fillable
-                      = [
+        = [
             'user_id',
             'user_group_id',
             'transaction_type_id',
@@ -77,6 +77,7 @@ class TransactionJournal extends Model
             'completed',
             'order',
             'date',
+            'date_tz',
         ];
 
     protected $hidden = ['encrypted'];
@@ -89,13 +90,13 @@ class TransactionJournal extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $journalId = (int)$value;
+            $journalId = (int) $value;
 
             /** @var User $user */
-            $user      = auth()->user();
+            $user = auth()->user();
 
             /** @var null|TransactionJournal $journal */
-            $journal   = $user->transactionJournals()->where('transaction_journals.id', $journalId)->first(['transaction_journals.*']);
+            $journal = $user->transactionJournals()->where('transaction_journals.id', $journalId)->first(['transaction_journals.*']);
             if (null !== $journal) {
                 return $journal;
             }
@@ -243,14 +244,14 @@ class TransactionJournal extends Model
     protected function order(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn($value) => (int) $value,
         );
     }
 
     protected function transactionTypeId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn($value) => (int) $value,
         );
     }
 }

@@ -122,6 +122,7 @@ class CategoryReportController extends Controller
 
     public function categoryIncome(Collection $accounts, Collection $categories, Carbon $start, Carbon $end): JsonResponse
     {
+
         $result = [];
         $earned = $this->opsRepository->listIncome($start, $end, $accounts, $categories);
 
