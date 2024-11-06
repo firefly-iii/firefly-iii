@@ -67,6 +67,7 @@ class UpgradeDatabase extends Command
             'firefly-iii:restore-oauth-keys',
             'firefly-iii:correct-account-balance',
             // also just in case, some integrity commands:
+            'firefly-iii:add-timezones-to-dates',
             'firefly-iii:create-group-memberships',
             'firefly-iii:upgrade-group-information',
             'firefly-iii:upgrade-currency-preferences',
