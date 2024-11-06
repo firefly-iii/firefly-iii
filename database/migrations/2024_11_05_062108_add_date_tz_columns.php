@@ -1,25 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 
-return new class extends Migration {
+return new class () extends Migration {
     private array $tables;
 
     public function __construct()
     {
         $this->tables = [
-            'account_balances'        => ['date'],
-            'available_budgets'       => ['start_date', 'end_date'],
-            'bills'             => ['date','end_date', 'extension_date'],
-            'budget_limits'           => ['start_date', 'end_date'],
-            'currency_exchange_rates' => ['date'],
+            'account_balances'        => ['date'], // done
+            'available_budgets'       => ['start_date', 'end_date'], // done
+            'bills'                   => ['date', 'end_date', 'extension_date'], // done
+            'budget_limits'           => ['start_date', 'end_date'], // done
+            'currency_exchange_rates' => ['date'], // done
             'invited_users'           => ['expires'],
-            'limit_repetitions'       => ['startdate', 'enddate'],
             'piggy_bank_events'       => ['date'],
             'piggy_bank_repetitions'  => ['startdate', 'targetdate'],
-            'piggy_banks'             => ['startdate', 'targetdate'],
+            'piggy_banks'             => ['startdate', 'targetdate'], // done
             'recurrences'             => ['first_date', 'repeat_until', 'latest_date'],
             'tags'                    => ['date'],
             'transaction_journals'    => ['date'],
@@ -29,7 +30,6 @@ return new class extends Migration {
     /**
      * Run the migrations.
      * TODO journal_meta, all date fields?
-     *
      */
     public function up(): void
     {
@@ -56,8 +56,5 @@ return new class extends Migration {
     /**
      * Reverse the migrations.
      */
-    public function down(): void
-    {
-        //
-    }
+    public function down(): void {}
 };

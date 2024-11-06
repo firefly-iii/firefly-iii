@@ -69,6 +69,7 @@ class TriggerController extends Controller
             }
         }
         $recurrence->latest_date = $backupDate;
+        $recurrence->latest_date_tz = $backupDate?->format('e');
         $recurrence->save();
         app('preferences')->mark();
 

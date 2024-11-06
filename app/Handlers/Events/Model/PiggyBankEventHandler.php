@@ -58,6 +58,7 @@ class PiggyBankEventHandler
                 'piggy_bank_id'          => $event->piggyBank->id,
                 'transaction_journal_id' => $journal?->id,
                 'date'                   => $date->format('Y-m-d'),
+                'date_tz'             => $date->format('e'),
                 'amount'                 => $event->amount,
             ]
         );

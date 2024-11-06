@@ -395,6 +395,7 @@ class CreateRecurringTransactions implements ShouldQueue
 
         // update recurring thing:
         $recurrence->latest_date = $date;
+        $recurrence->latest_date_tz = $date?->format('e');
         $recurrence->save();
 
         return $group;

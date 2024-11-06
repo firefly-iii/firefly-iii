@@ -65,9 +65,11 @@ class RecurrenceUpdateService
             }
             if (array_key_exists('first_date', $info)) {
                 $recurrence->first_date = $info['first_date'];
+                $recurrence->first_date_tz = $info['first_date']?->format('e');
             }
             if (array_key_exists('repeat_until', $info)) {
                 $recurrence->repeat_until = $info['repeat_until'];
+                $recurrence->repeat_until_tz = $info['repeat_until']?->format('e');
                 $recurrence->repetitions  = 0;
             }
             if (array_key_exists('nr_of_repetitions', $info)) {

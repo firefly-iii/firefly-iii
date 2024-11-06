@@ -276,6 +276,7 @@ class UserRepository implements UserRepositoryInterface
         $invitee->email       = $email;
         $invitee->redeemed    = false;
         $invitee->expires     = $now;
+        $invitee->expires_tz     = $now->format('e');
         $invitee->save();
 
         return $invitee;

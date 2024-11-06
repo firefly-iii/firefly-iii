@@ -89,11 +89,12 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     {
         return CurrencyExchangeRate::create(
             [
-                'user_id'          => $this->user->id,
-                'from_currency_id' => $fromCurrency->id,
-                'to_currency_id'   => $toCurrency->id,
-                'date'             => $date,
-                'rate'             => $rate,
+                'user_id'             => $this->user->id,
+                'from_currency_id'    => $fromCurrency->id,
+                'to_currency_id'      => $toCurrency->id,
+                'date'                => $date,
+                'date_tz'             => $date->format('e'),
+                'rate'                => $rate,
             ]
         );
     }

@@ -232,16 +232,16 @@ class AccountBalanceCalculator
                 /** @var AccountBalance $object */
                 $object          = $account->accountBalances()->firstOrCreate(
                     [
-                        'title' => 'running_balance',
-                        'balance' => '0',
+                        'title'                   => 'running_balance',
+                        'balance'                 => '0',
                         'transaction_currency_id' => $currencyId,
-                        'date' => $balance[1],
-                        'date_tz' => $balance[1]->format('e'),
+                        'date'                    => $balance[1],
+                        'date_tz'                 => $balance[1]->format('e'),
                     ]
                 );
                 $object->balance = $balance[0];
                 $object->date    = $balance[1];
-                $object->date_tz    = $balance[1]->format('e');
+                $object->date_tz = $balance[1]->format('e');
                 $object->save();
             }
         }

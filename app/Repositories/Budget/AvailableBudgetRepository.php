@@ -198,12 +198,12 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
             ->where('end_date', $end->format('Y-m-d'))->first()
         ;
         if (null === $availableBudget) {
-            $availableBudget             = new AvailableBudget();
+            $availableBudget                = new AvailableBudget();
             $availableBudget->user()->associate($this->user);
             $availableBudget->transactionCurrency()->associate($currency);
-            $availableBudget->start_date = $start->startOfDay()->format('Y-m-d'); // @phpstan-ignore-line
+            $availableBudget->start_date    = $start->startOfDay()->format('Y-m-d'); // @phpstan-ignore-line
             $availableBudget->start_date_tz = $start->format('e');
-            $availableBudget->end_date   = $end->endOfDay()->format('Y-m-d');     // @phpstan-ignore-line
+            $availableBudget->end_date      = $end->endOfDay()->format('Y-m-d');     // @phpstan-ignore-line
             $availableBudget->end_date_tz   = $end->format('e');
         }
         $availableBudget->amount = $amount;
@@ -237,9 +237,9 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
                 'transaction_currency_id' => $data['currency_id'],
                 'amount'                  => $data['amount'],
                 'start_date'              => $start->format('Y-m-d'),
-                'start_date_tz' => $start->format('e'),
+                'start_date_tz'           => $start->format('e'),
                 'end_date'                => $end->format('Y-m-d'),
-                'end_date_tz' => $end->format('e'),
+                'end_date_tz'             => $end->format('e'),
             ]
         );
     }
@@ -259,8 +259,8 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
         if (array_key_exists('start', $data)) {
             $start = $data['start'];
             if ($start instanceof Carbon) {
-                $start                       = $data['start']->startOfDay();
-                $availableBudget->start_date = $start->format('Y-m-d');
+                $start                          = $data['start']->startOfDay();
+                $availableBudget->start_date    = $start->format('Y-m-d');
                 $availableBudget->start_date_tz = $start->format('e');
                 $availableBudget->save();
             }
@@ -269,8 +269,8 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
         if (array_key_exists('end', $data)) {
             $end = $data['end'];
             if ($end instanceof Carbon) {
-                $end                       = $data['end']->endOfDay();
-                $availableBudget->end_date = $end->format('Y-m-d');
+                $end                          = $data['end']->endOfDay();
+                $availableBudget->end_date    = $end->format('Y-m-d');
                 $availableBudget->end_date_tz = $end->format('e');
                 $availableBudget->save();
             }

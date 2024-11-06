@@ -192,6 +192,9 @@ trait ModifiesPiggyBanks
             $piggyData['targetamount'] = '0';
         }
 
+        $piggyData['startdate_tz'] = $piggyData['startdate']?->format('e');
+        $piggyData['targetdate_tz'] = $piggyData['targetdate']?->format('e');
+
         try {
             /** @var PiggyBank $piggyBank */
             $piggyBank = PiggyBank::create($piggyData);
@@ -374,9 +377,11 @@ trait ModifiesPiggyBanks
         }
         if (array_key_exists('targetdate', $data) && '' !== $data['targetdate']) {
             $piggyBank->targetdate = $data['targetdate'];
+            $piggyBank->targetdate_tz = $data['targetdate']->format('e');
         }
         if (array_key_exists('startdate', $data)) {
             $piggyBank->startdate = $data['startdate'];
+            $piggyBank->startdate_tz = $data['targetdate']->format('e');
         }
         $piggyBank->save();
 

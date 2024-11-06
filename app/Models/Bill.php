@@ -68,6 +68,7 @@ class Bill extends Model
             'user_group_id',
             'amount_max',
             'date',
+            'date_tz',
             'repeat_freq',
             'skip',
             'automatch',
@@ -75,6 +76,8 @@ class Bill extends Model
             'transaction_currency_id',
             'end_date',
             'extension_date',
+            'end_date_tz',
+            'extension_date_tz',
         ];
 
     protected $hidden = ['amount_min_encrypted', 'amount_max_encrypted', 'name_encrypted', 'match_encrypted'];
