@@ -99,15 +99,15 @@ class AddTimezonesToDates extends Command
         try {
             $items = $model::whereNull($timezoneField)->get();
         } catch (QueryException $e) {
-            $this->friendlyError(sprintf('Cannot add timezone to field "%s" of model "%s". Field does not exist.', $field, $shortModel));
+            $this->friendlyError(sprintf('Cannot add timezone information to field "%s" of model "%s". Field does not exist.', $field, $shortModel));
             Log::error($e->getMessage());
         }
         if (0 === $items->count()) {
-            $this->friendlyPositive(sprintf('Timezone is present in field "%s" of model "%s".', $field, $shortModel));
+            $this->friendlyPositive(sprintf('Timezone information is present in field "%s" of model "%s".', $field, $shortModel));
 
             return;
         }
-        $this->friendlyInfo(sprintf('Adding timezone to field "%s" of model "%s".', $field, $shortModel));
+        $this->friendlyInfo(sprintf('Adding timezone information to field "%s" of model "%s".', $field, $shortModel));
 
         foreach ($items as $item) {
             $item->{$timezoneField} = config('app.timezone');
