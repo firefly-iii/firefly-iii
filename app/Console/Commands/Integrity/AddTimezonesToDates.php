@@ -94,24 +94,21 @@ class AddTimezonesToDates extends Command
     {
         $shortModel    = str_replace('FireflyIII\Models\\', '', $model);
         $timezoneField = sprintf('%s_tz', $field);
-        $items         = new Collection();
+        $count         = 0;
 
         try {
-            $items = $model::whereNull($timezoneField)->get();
+            $count = $model::whereNull($timezoneField)->count();
         } catch (QueryException $e) {
             $this->friendlyError(sprintf('Cannot add timezone information to field "%s" of model "%s". Field does not exist.', $field, $shortModel));
             Log::error($e->getMessage());
         }
-        if (0 === $items->count()) {
+        if (0 === $count) {
             $this->friendlyPositive(sprintf('Timezone information is present in field "%s" of model "%s".', $field, $shortModel));
 
             return;
         }
         $this->friendlyInfo(sprintf('Adding timezone information to field "%s" of model "%s".', $field, $shortModel));
 
-        foreach ($items as $item) {
-            $item->{$timezoneField} = config('app.timezone');
-            $item->saveQuietly();
-        }
+        $model::whereNull($timezoneField)->update([$timezoneField => config('app.timezone')]);
     }
 }
