@@ -39,8 +39,11 @@ class AutoBudget extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
+    /** @deprecated */
     public const int AUTO_BUDGET_ADJUSTED = 3;
+    /** @deprecated */
     public const int AUTO_BUDGET_RESET    = 1;
+    /** @deprecated */
     public const int AUTO_BUDGET_ROLLOVER = 2;
     protected $fillable                   = ['budget_id', 'amount', 'period'];
 
