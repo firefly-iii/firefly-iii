@@ -615,7 +615,7 @@ class JournalUpdateService
                 $set = [
                     'journal' => $this->transactionJournal,
                     'name'    => sprintf('%s_tz', $field),
-                    'data'    => $value->format('e'),
+                    'data'    => $value?->format('e'),
                 ];
                 $factory->updateOrCreate($set);
             }
