@@ -38,7 +38,6 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
 class AddTimezonesToDates extends Command

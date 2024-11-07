@@ -40,16 +40,22 @@ class TransactionType extends Model
 
     /** @deprecated */
     public const string DEPOSIT          = 'Deposit';
+
     /** @deprecated */
     public const string INVALID          = 'Invalid';
+
     /** @deprecated */
     public const string LIABILITY_CREDIT = 'Liability credit';
+
     /** @deprecated */
     public const string OPENING_BALANCE  = 'Opening balance';
+
     /** @deprecated */
     public const string RECONCILIATION   = 'Reconciliation';
+
     /** @deprecated */
     public const string TRANSFER         = 'Transfer';
+
     /** @deprecated */
     public const string WITHDRAWAL       = 'Withdrawal';
 

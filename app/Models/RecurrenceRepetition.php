@@ -40,10 +40,13 @@ class RecurrenceRepetition extends Model
 
     /** @deprecated */
     public const int WEEKEND_DO_NOTHING    = 1;
+
     /** @deprecated */
     public const int WEEKEND_SKIP_CREATION = 2;
+
     /** @deprecated */
     public const int WEEKEND_TO_FRIDAY     = 3;
+
     /** @deprecated */
     public const int WEEKEND_TO_MONDAY     = 4;
 
