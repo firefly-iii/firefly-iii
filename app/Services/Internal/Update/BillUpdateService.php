@@ -159,11 +159,11 @@ class BillUpdateService
         }
         if (array_key_exists('end_date', $data)) {
             $bill->end_date    = $data['end_date'];
-            $bill->end_date_tz = $data['end_date']->format('e');
+            $bill->end_date_tz = $data['end_date']?->format('e');
         }
         if (array_key_exists('extension_date', $data)) {
             $bill->extension_date    = $data['extension_date'];
-            $bill->extension_date_tz = $data['extension_date']->format('e');
+            $bill->extension_date_tz = $data['extension_date']?->format('e');
         }
 
         $bill->match     = 'EMPTY';
