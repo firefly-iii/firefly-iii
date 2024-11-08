@@ -86,7 +86,7 @@ trait RenderPartialViews
     {
         /** @var BudgetRepositoryInterface $repository */
         $repository = app(BudgetRepositoryInterface::class);
-        $budgets    = $repository->getBudgets();
+        $budgets    = $repository->getActiveBudgets();
 
         try {
             $result = view('reports.options.budget', compact('budgets'))->render();
