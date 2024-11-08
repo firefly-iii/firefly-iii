@@ -33,7 +33,7 @@
         <th class="hidden-xs">&nbsp;</th>
         <th>{{ trans('list.description') }}</th>
         <th>{{ trans('list.amount') }}</th>
-        <th class="hidden-xs">{{ trans('list.date') }}</th>
+        <th>{{ trans('list.date') }}</th>
         <th>{{ trans('list.source_account') }}</th>
         <th>{{ trans('list.destination_account') }}</th>
         {% if showCategory %}
@@ -210,7 +210,7 @@
                         {% endif %}
                     {% endif %}
                 </td>
-                <td style=" {{ style|raw }}" class="hidden-xs">
+                <td style=" {{ style|raw }}">
                     {{ transaction.date.isoFormat(monthAndDayFormat) }}
                 </td>
                 <td style=" {{ style|raw }}">

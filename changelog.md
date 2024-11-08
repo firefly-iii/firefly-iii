@@ -29,6 +29,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 9294](https://github.com/firefly-iii/firefly-iii/issues/9294) (Repetition counts ignored for recurring transactions) reported by @Syncena
 - [Issue 9427](https://github.com/firefly-iii/firefly-iii/issues/9427) (The standard financial report does not show all transactions for the income categories) reported by @Neroxeles
 - #9443
+- #9444 
 
 ### API
 
