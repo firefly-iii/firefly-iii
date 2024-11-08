@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - [Discussion 8092](https://github.com/orgs/firefly-iii/discussions/8092) (Fresh Install - Register -> 403 Error - Forbidden) started by @pheonix-devapps
 - [Issue 9183](https://github.com/firefly-iii/firefly-iii/issues/9183) (2FA security improvements) reported by @JC5
+- Firefly III stores timezone data in a separate field, preparing for a switch to UTC (in the database).
 
 ### Fixed
 
