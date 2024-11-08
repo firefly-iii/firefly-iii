@@ -377,11 +377,11 @@ trait ModifiesPiggyBanks
         }
         if (array_key_exists('targetdate', $data) && '' !== $data['targetdate']) {
             $piggyBank->targetdate    = $data['targetdate'];
-            $piggyBank->targetdate_tz = $data['targetdate']->format('e');
+            $piggyBank->targetdate_tz = $data['targetdate']?->format('e');
         }
         if (array_key_exists('startdate', $data)) {
             $piggyBank->startdate    = $data['startdate'];
-            $piggyBank->startdate_tz = $data['targetdate']->format('e');
+            $piggyBank->startdate_tz = $data['targetdate']?->format('e');
         }
         $piggyBank->save();
 
