@@ -27,6 +27,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Discussion 9234](https://github.com/orgs/firefly-iii/discussions/9234) (Unsupported cipher or incorrect key length ( first run )) started by @spectroman
 - [Issue 9294](https://github.com/firefly-iii/firefly-iii/issues/9294) (Repetition counts ignored for recurring transactions) reported by @Syncena
 - [Issue 9427](https://github.com/firefly-iii/firefly-iii/issues/9427) (The standard financial report does not show all transactions for the income categories) reported by @Neroxeles
+- #9443
 
 ### API
 
