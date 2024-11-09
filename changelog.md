@@ -30,7 +30,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 9427](https://github.com/firefly-iii/firefly-iii/issues/9427) (The standard financial report does not show all transactions for the income categories) reported by @Neroxeles
 - [Issue 9443](https://github.com/firefly-iii/firefly-iii/issues/9443) (Budget report on inactive budget gives a 404) reported by @adyanth
 - [Issue 9444](https://github.com/firefly-iii/firefly-iii/issues/9444) (Printing a page does not include dates) reported by @cachho 
-- #9447
+- [Issue 9447](https://github.com/firefly-iii/firefly-iii/issues/9447) (Transaction doesn't show up when attaching HTML file) reported by @Marc928132
 
 ### API
 

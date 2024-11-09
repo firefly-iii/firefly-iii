@@ -113,7 +113,7 @@ class StoreController extends Controller
             return response()->json([], 422);
         }
         $result = $helper->saveAttachmentFromApi($attachment, $body);
-        if(false === $result) {
+        if (false === $result) {
             app('log')->error('Could not save attachment from API.');
 
             return response()->json([], 422);
