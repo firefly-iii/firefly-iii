@@ -26,6 +26,7 @@ declare(strict_types=1);
 
 return [
     // general stuff:
+    'stored_as_tz' => 'stored as ":timezone"',
     'close'                                                       => 'Close',
     'actions'                                                     => 'Actions',
     'edit'                                                        => 'Edit',

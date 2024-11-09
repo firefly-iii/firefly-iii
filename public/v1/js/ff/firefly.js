@@ -26,6 +26,16 @@ $.ajaxSetup({
     }
 });
 
+function parseToLocalDates() {
+    "use strict";
+    $('span.date-time').each(function () {
+        var date = $(this).data('date');
+        var obj = moment.utc(date).local();
+        var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        $(this).text(obj.format(date_time_js) + ' ('+ timeZone +')');
+    });
+}
+
 $(function () {
     "use strict";
 
@@ -95,6 +105,9 @@ $(function () {
 
     // trigger list thing
     listLengthInitial();
+
+    // update dates:
+    parseToLocalDates();
 
 });
 
