@@ -255,6 +255,7 @@ return [
     'allowedMimes'                 => [
         // plain files
         'text/plain',
+        'text/html',
 
         // images
         'image/jpeg',
