@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use FireflyIII\Casts\SeparateTimezoneCaster;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
@@ -47,7 +48,7 @@ class CurrencyExchangeRate extends Model
             'user_id'          => 'int',
             'from_currency_id' => 'int',
             'to_currency_id'   => 'int',
-            'date'             => 'datetime',
+            'date'             => SeparateTimezoneCaster::class,
         ];
     protected $fillable = ['user_id', 'from_currency_id', 'to_currency_id', 'date', 'date_tz', 'rate'];
 

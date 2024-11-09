@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use FireflyIII\Casts\SeparateTimezoneCaster;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
@@ -51,9 +52,9 @@ class Recurrence extends Model
             'title'        => 'string',
             'id'           => 'int',
             'description'  => 'string',
-            'first_date'   => 'date',
-            'repeat_until' => 'date',
-            'latest_date'  => 'date',
+            'first_date'   => SeparateTimezoneCaster::class,
+            'repeat_until' => SeparateTimezoneCaster::class,
+            'latest_date'  => SeparateTimezoneCaster::class,
             'repetitions'  => 'int',
             'active'       => 'bool',
             'apply_rules'  => 'bool',

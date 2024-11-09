@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use FireflyIII\Casts\SeparateTimezoneCaster;
 use FireflyIII\Events\Model\BudgetLimit\Created;
 use FireflyIII\Events\Model\BudgetLimit\Deleted;
 use FireflyIII\Events\Model\BudgetLimit\Updated;
@@ -43,8 +44,8 @@ class BudgetLimit extends Model
                         = [
             'created_at'  => 'datetime',
             'updated_at'  => 'datetime',
-            'start_date'  => 'date',
-            'end_date'    => 'date',
+            'start_date'  => SeparateTimezoneCaster::class,
+            'end_date'    => SeparateTimezoneCaster::class,
             'auto_budget' => 'boolean',
         ];
     protected $dispatchesEvents

@@ -58,26 +58,27 @@ class AddTimezonesToDates extends Command
      */
     protected $description = 'Make sure all dates have a timezone.';
 
+    public static array $models =  [
+        AccountBalance::class       => ['date'], // done
+        AvailableBudget::class      => ['start_date', 'end_date'], // done
+        Bill::class                 => ['date', 'end_date', 'extension_date'], // done
+        BudgetLimit::class          => ['start_date', 'end_date'], // done
+        CurrencyExchangeRate::class => ['date'], // done
+        InvitedUser::class          => ['expires'],
+        PiggyBankEvent::class       => ['date'],
+        PiggyBankRepetition::class  => ['startdate', 'targetdate'],
+        PiggyBank::class            => ['startdate', 'targetdate'], // done
+        Recurrence::class           => ['first_date', 'repeat_until', 'latest_date'],
+        Tag::class                  => ['date'],
+        TransactionJournal::class   => ['date'],
+    ];
+
     /**
      * Execute the console command.
      */
     public function handle(): void
     {
-        $models = [
-            AccountBalance::class       => ['date'], // done
-            AvailableBudget::class      => ['start_date', 'end_date'], // done
-            Bill::class                 => ['date', 'end_date', 'extension_date'], // done
-            BudgetLimit::class          => ['start_date', 'end_date'], // done
-            CurrencyExchangeRate::class => ['date'], // done
-            InvitedUser::class          => ['expires'],
-            PiggyBankEvent::class       => ['date'],
-            PiggyBankRepetition::class  => ['startdate', 'targetdate'],
-            PiggyBank::class            => ['startdate', 'targetdate'], // done
-            Recurrence::class           => ['first_date', 'repeat_until', 'latest_date'],
-            Tag::class                  => ['date'],
-            TransactionJournal::class   => ['date'],
-        ];
-        foreach ($models as $model => $fields) {
+        foreach (self::$models as $model => $fields) {
             $this->addTimezoneToModel($model, $fields);
         }
     }

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use FireflyIII\Casts\SeparateTimezoneCaster;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
@@ -49,9 +50,9 @@ class Bill extends Model
             'created_at'      => 'datetime',
             'updated_at'      => 'datetime',
             'deleted_at'      => 'datetime',
-            'date'            => 'date',
-            'end_date'        => 'date',
-            'extension_date'  => 'date',
+            'date'          => SeparateTimezoneCaster::class,
+            'end_date'        => SeparateTimezoneCaster::class,
+            'extension_date'  => SeparateTimezoneCaster::class,
             'skip'            => 'int',
             'automatch'       => 'boolean',
             'active'          => 'boolean',

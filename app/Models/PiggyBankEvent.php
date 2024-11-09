@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use FireflyIII\Casts\SeparateTimezoneCaster;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -39,7 +40,7 @@ class PiggyBankEvent extends Model
                         = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
-            'date'       => 'date',
+            'date'       => SeparateTimezoneCaster::class,
         ];
 
     protected $fillable = ['piggy_bank_id', 'transaction_journal_id', 'date', 'date_tz', 'amount'];

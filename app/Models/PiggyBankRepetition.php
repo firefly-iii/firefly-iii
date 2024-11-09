@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Carbon\Carbon;
+use FireflyIII\Casts\SeparateTimezoneCaster;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -41,8 +42,8 @@ class PiggyBankRepetition extends Model
                         = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
-            'startdate'  => 'date',
-            'targetdate' => 'date',
+            'startdate'  => SeparateTimezoneCaster::class,
+            'targetdate' => SeparateTimezoneCaster::class,
         ];
 
     protected $fillable = ['piggy_bank_id', 'startdate', 'startdate_tz', 'targetdate', 'targetdate_tz', 'currentamount'];

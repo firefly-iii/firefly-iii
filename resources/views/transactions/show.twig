@@ -75,6 +75,9 @@
                             <td style="width:30%;">{{ trans('list.date') }}</td>
                             <td>
                                 {{ first.date.isoFormat(dateTimeFormat) }}
+                                {% if(first.date_tz != '') %}
+                                    ({{ first.date_tz }})
+                                {% endif %}
                             </td>
                         </tr>
                         </tbody>
