@@ -26,7 +26,8 @@ declare(strict_types=1);
 
 return [
     // general stuff:
-    'stored_as_tz' => 'stored as ":timezone"',
+    'stored_in_tz' => 'stored in ":timezone"',
+    'displayed_in_tz' => 'displayed in ":timezone"',
     'close'                                                       => 'Close',
     'actions'                                                     => 'Actions',
     'edit'                                                        => 'Edit',
@@ -881,8 +882,8 @@ return [
     'rule_trigger_currency_is'                                    => 'Transaction currency is ":trigger_value"',
     'rule_trigger_foreign_currency_is_choice'                     => 'Transaction foreign currency is..',
     'rule_trigger_foreign_currency_is'                            => 'Transaction foreign currency is ":trigger_value"',
-    'rule_trigger_has_attachments_choice'                         => 'Has at least this many attachments',
-    'rule_trigger_has_attachments'                                => 'Has at least :trigger_value attachment(s)',
+    'rule_trigger_has_attachments_choice'                         => 'Has any attachments',
+    'rule_trigger_has_attachments'                                => 'Has any attachment(s)',
     'rule_trigger_has_no_category_choice'                         => 'Has no category',
     'rule_trigger_has_no_category'                                => 'Transaction has no category',
     'rule_trigger_has_any_category_choice'                        => 'Has a (any) category',
