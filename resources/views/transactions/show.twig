@@ -74,7 +74,7 @@
                         <tr>
                             <td style="width:30%;">{{ trans('list.date') }}</td>
                             <td>
-                                <span class="date-time" data-date="{{ first.date.toIso8601ZuluString() }}">
+                                <span class="date-time" data-date="{{ first.date.toIso8601ZuluString() }}" title="{{ first.date.isoFormat(dateTimeFormat) }}{% if(first.date_tz != '') %} ({{ trans('firefly.stored_in_tz', {timezone: first.date_tz }) }}, {{ trans('firefly.displayed_in_tz', {timezone: config('app.timezone') }) }}){% endif %}">
                                 {{ first.date.isoFormat(dateTimeFormat) }}
                                 {% if(first.date_tz != '') %}
                                     ({{ trans('firefly.stored_in_tz', {timezone: first.date_tz }) }})

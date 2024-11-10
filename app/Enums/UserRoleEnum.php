@@ -30,6 +30,7 @@ namespace FireflyIII\Enums;
 enum UserRoleEnum: string
 {
     // most basic rights, cannot see other members, can see everything else.
+    // includes reading of metadata
     case READ_ONLY            = 'ro';
 
     // required to even USE the group properly (in this order)
@@ -37,6 +38,15 @@ enum UserRoleEnum: string
 
     // required to edit, add or change categories/tags/object-groups
     case MANAGE_META          = 'mng_meta';
+
+    // read other objects and things.
+    case READ_BUDGETS       = 'read_budgets';
+    case READ_PIGGY_BANKS   = 'read_piggies';
+    case READ_SUBSCRIPTIONS = 'read_subscriptions';
+    case READ_RULES         = 'read_rules';
+    case READ_RECURRING     = 'read_recurring';
+    case READ_WEBHOOKS      = 'read_webhooks';
+    case READ_CURRENCIES    = 'read_currencies';
 
     // manage other financial objects:
     case MANAGE_BUDGETS       = 'mng_budgets';

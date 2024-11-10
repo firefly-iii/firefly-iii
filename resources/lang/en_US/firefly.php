@@ -1409,7 +1409,7 @@ return [
     'administration_role_mng_piggies'                             => 'Manage piggy banks',
     'administration_role_mng_subscriptions'                       => 'Manage subscriptions',
     'administration_role_mng_rules'                               => 'Manage rules',
-    'administration_role_mng_recurring'                           => 'Manage recurring transactions ',
+    'administration_role_mng_recurring'                           => 'Manage recurring transactions',
     'administration_role_mng_webhooks'                            => 'Manage webhooks',
     'administration_role_mng_currencies'                          => 'Manage currencies',
     'administration_role_view_reports'                            => 'View reports',
