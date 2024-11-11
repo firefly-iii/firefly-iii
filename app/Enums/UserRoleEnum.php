@@ -40,13 +40,13 @@ enum UserRoleEnum: string
     case MANAGE_META          = 'mng_meta';
 
     // read other objects and things.
-    case READ_BUDGETS       = 'read_budgets';
-    case READ_PIGGY_BANKS   = 'read_piggies';
-    case READ_SUBSCRIPTIONS = 'read_subscriptions';
-    case READ_RULES         = 'read_rules';
-    case READ_RECURRING     = 'read_recurring';
-    case READ_WEBHOOKS      = 'read_webhooks';
-    case READ_CURRENCIES    = 'read_currencies';
+    case READ_BUDGETS         = 'read_budgets';
+    case READ_PIGGY_BANKS     = 'read_piggies';
+    case READ_SUBSCRIPTIONS   = 'read_subscriptions';
+    case READ_RULES           = 'read_rules';
+    case READ_RECURRING       = 'read_recurring';
+    case READ_WEBHOOKS        = 'read_webhooks';
+    case READ_CURRENCIES      = 'read_currencies';
 
     // manage other financial objects:
     case MANAGE_BUDGETS       = 'mng_budgets';

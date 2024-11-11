@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\Casts;
 
 use Carbon\Carbon;
@@ -26,6 +28,7 @@ class SeparateTimezoneCaster implements CastsAttributes
             return null;
         }
         $timeZone = $attributes[sprintf('%s_tz', $key)] ?? config('app.timezone');
+
         return Carbon::parse($value, $timeZone)->setTimezone(config('app.timezone'));
     }
 

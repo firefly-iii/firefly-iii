@@ -50,7 +50,7 @@ class Bill extends Model
             'created_at'      => 'datetime',
             'updated_at'      => 'datetime',
             'deleted_at'      => 'datetime',
-            'date'          => SeparateTimezoneCaster::class,
+            'date'            => SeparateTimezoneCaster::class,
             'end_date'        => SeparateTimezoneCaster::class,
             'extension_date'  => SeparateTimezoneCaster::class,
             'skip'            => 'int',

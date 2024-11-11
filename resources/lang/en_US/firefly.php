@@ -26,8 +26,8 @@ declare(strict_types=1);
 
 return [
     // general stuff:
-    'stored_in_tz' => 'stored in ":timezone"',
-    'displayed_in_tz' => 'displayed in ":timezone"',
+    'stored_in_tz'                                                => 'stored in ":timezone"',
+    'displayed_in_tz'                                             => 'displayed in ":timezone"',
     'close'                                                       => 'Close',
     'actions'                                                     => 'Actions',
     'edit'                                                        => 'Edit',

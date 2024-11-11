@@ -49,16 +49,16 @@ class AddTimezonesToDates extends Command
      *
      * @var string
      */
-    protected $signature   = 'firefly-iii:add-timezones-to-dates';
+    protected $signature        = 'firefly-iii:add-timezones-to-dates';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Make sure all dates have a timezone.';
+    protected $description      = 'Make sure all dates have a timezone.';
 
-    public static array $models =  [
+    public static array $models = [
         AccountBalance::class       => ['date'], // done
         AvailableBudget::class      => ['start_date', 'end_date'], // done
         Bill::class                 => ['date', 'end_date', 'extension_date'], // done

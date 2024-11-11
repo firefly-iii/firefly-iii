@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * ConvertDatesToUTC.php
  * Copyright (c) 2024 james@firefly-iii.org.
@@ -31,12 +33,13 @@ use Illuminate\Support\Facades\Log;
 class ConvertDatesToUTC extends Command
 {
     use ShowsFriendlyMessages;
+
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'firefly-iii:convert-dates-to-utc';
+    protected $signature   = 'firefly-iii:convert-dates-to-utc';
 
     /**
      * The console command description.
@@ -69,12 +72,13 @@ class ConvertDatesToUTC extends Command
         }
     }
 
-    private function convertFieldtoUTC(string $model, string $field): void {
+    private function convertFieldtoUTC(string $model, string $field): void
+    {
         $this->info(sprintf('Converting %s.%s to UTC', $model, $field));
         $shortModel    = str_replace('FireflyIII\Models\\', '', $model);
         $timezoneField = sprintf('%s_tz', $field);
-        $items = new Collection();
-        $timeZone = config('app.timezone');
+        $items         = new Collection();
+        $timeZone      = config('app.timezone');
 
         try {
             $items = $model::where($timezoneField, $timeZone)->get();
@@ -89,12 +93,12 @@ class ConvertDatesToUTC extends Command
         }
         $this->friendlyInfo(sprintf('Converting field "%s" of model "%s" to UTC.', $field, $shortModel));
         $items->each(
-            function ($item) use ($field, $timezoneField, $timeZone) {
+            function ($item) use ($field, $timezoneField): void {
                 /** @var Carbon $date */
-                $date = Carbon::parse($item->$field, $item->$timezoneField);
+                $date                   = Carbon::parse($item->{$field}, $item->{$timezoneField});
                 $date->setTimezone('UTC');
-                $item->$field = $date->format('Y-m-d H:i:s');
-                $item->$timezoneField = 'UTC';
+                $item->{$field}         = $date->format('Y-m-d H:i:s');
+                $item->{$timezoneField} = 'UTC';
                 $item->save();
             }
         );
