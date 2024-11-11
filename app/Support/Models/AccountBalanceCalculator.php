@@ -95,7 +95,7 @@ class AccountBalanceCalculator
         $query->where('transaction_journals.date', '<', $notBefore);
 
         $first   = $query->first(['transactions.id', 'transactions.balance_dirty', 'transactions.transaction_currency_id', 'transaction_journals.date', 'transactions.account_id', 'transactions.amount', 'transactions.balance_after']);
-        $balance = $first->balance_after ?? '0';
+        $balance = (string) ($first->balance_after ?? '0');
         Log::debug(sprintf('getLatestBalance: found balance: %s in transaction #%d', $balance, $first->id ?? 0));
 
         return $balance;
