@@ -42,6 +42,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class CreateRecurringTransactions.
@@ -88,7 +89,7 @@ class CreateRecurringTransactions implements ShouldQueue
         $this->recurrences       = new Collection();
         $this->groups            = new Collection();
 
-        app('log')->debug(sprintf('Created new CreateRecurringTransactions("%s")', $this->date->format('Y-m-d')));
+        Log::debug(sprintf('Created new CreateRecurringTransactions("%s")', $this->date->format('Y-m-d')));
     }
 
     public function getGroups(): Collection
@@ -101,25 +102,25 @@ class CreateRecurringTransactions implements ShouldQueue
      */
     public function handle(): void
     {
-        app('log')->debug(sprintf('Now at start of CreateRecurringTransactions() job for %s.', $this->date->format('D d M Y')));
+        Log::debug(sprintf('Now at start of CreateRecurringTransactions() job for %s.', $this->date->format('D d M Y')));
 
         // only use recurrences from database if there is no collection submitted.
         if (0 !== count($this->recurrences)) {
-            app('log')->debug('Using predetermined set of recurrences.');
+            Log::debug('Using predetermined set of recurrences.');
         }
         if (0 === count($this->recurrences)) {
-            app('log')->debug('Grab all recurrences from the database.');
+            Log::debug('Grab all recurrences from the database.');
             $this->recurrences = $this->repository->getAll();
         }
 
         $result          = [];
         $count           = $this->recurrences->count();
         $this->submitted = $count;
-        app('log')->debug(sprintf('Count of collection is %d', $count));
+        Log::debug(sprintf('Count of collection is %d', $count));
 
         // filter recurrences:
         $filtered        = $this->filterRecurrences($this->recurrences);
-        app('log')->debug(sprintf('Left after filtering is %d', $filtered->count()));
+        Log::debug(sprintf('Left after filtering is %d', $filtered->count()));
 
         /** @var Recurrence $recurrence */
         foreach ($filtered as $recurrence) {
@@ -133,20 +134,20 @@ class CreateRecurringTransactions implements ShouldQueue
             // clear cache for user
             app('preferences')->setForUser($recurrence->user, 'lastActivity', microtime());
 
-            app('log')->debug(sprintf('Now at recurrence #%d of user #%d', $recurrence->id, $recurrence->user_id));
+            Log::debug(sprintf('Now at recurrence #%d of user #%d', $recurrence->id, $recurrence->user_id));
             $createdReps                  = $this->handleRepetitions($recurrence);
-            app('log')->debug(sprintf('Done with recurrence #%d', $recurrence->id));
+            Log::debug(sprintf('Done with recurrence #%d', $recurrence->id));
             $result[$recurrence->user_id] = $result[$recurrence->user_id]->merge($createdReps);
             ++$this->executed;
         }
 
-        app('log')->debug('Now running report thing.');
+        Log::debug('Now running report thing.');
         // will now send email to users.
         foreach ($result as $userId => $journals) {
             event(new RequestedReportOnJournals($userId, $journals));
         }
 
-        app('log')->debug('Done with handle()');
+        Log::debug('Done with handle()');
 
         // clear cache:
         app('preferences')->mark();
@@ -166,10 +167,10 @@ class CreateRecurringTransactions implements ShouldQueue
      */
     private function validRecurrence(Recurrence $recurrence): bool
     {
-        app('log')->debug(sprintf('Now filtering recurrence #%d, owned by user #%d', $recurrence->id, $recurrence->user_id));
+        Log::debug(sprintf('Now filtering recurrence #%d, owned by user #%d', $recurrence->id, $recurrence->user_id));
         // is not active.
         if (!$this->active($recurrence)) {
-            app('log')->info(sprintf('Recurrence #%d is not active. Skipped.', $recurrence->id));
+            Log::info(sprintf('Recurrence #%d is not active. Skipped.', $recurrence->id));
 
             return false;
         }
@@ -177,15 +178,15 @@ class CreateRecurringTransactions implements ShouldQueue
         // has repeated X times.
         $journalCount = $this->repository->getJournalCount($recurrence);
         if (0 !== $recurrence->repetitions && $journalCount >= $recurrence->repetitions && false === $this->force) {
-            app('log')->info(sprintf('Recurrence #%d has run %d times, so will run no longer.', $recurrence->id, $journalCount));
+            Log::info(sprintf('Recurrence #%d has run %d times, so will run no longer.', $recurrence->id, $journalCount));
 
             return false;
         }
-        app('log')->debug(sprintf('Recurrence #%d has run %d times, max is %d times.', $recurrence->id, $journalCount, $recurrence->repetitions));
+        Log::debug(sprintf('Recurrence #%d has run %d times, max is %d times.', $recurrence->id, $journalCount, $recurrence->repetitions));
 
         // is no longer running
         if ($this->repeatUntilHasPassed($recurrence)) {
-            app('log')->info(
+            Log::info(
                 sprintf(
                     'Recurrence #%d was set to run until %s, and today\'s date is %s. Skipped.',
                     $recurrence->id,
@@ -199,7 +200,7 @@ class CreateRecurringTransactions implements ShouldQueue
 
         // first_date is in the future
         if ($this->hasNotStartedYet($recurrence)) {
-            app('log')->info(
+            Log::info(
                 sprintf(
                     'Recurrence #%d is set to run on %s, and today\'s date is %s. Skipped.',
                     $recurrence->id,
@@ -213,11 +214,11 @@ class CreateRecurringTransactions implements ShouldQueue
 
         // already fired today (with success):
         if (false === $this->force && $this->hasFiredToday($recurrence)) {
-            app('log')->info(sprintf('Recurrence #%d has already fired today. Skipped.', $recurrence->id));
+            Log::info(sprintf('Recurrence #%d has already fired today. Skipped.', $recurrence->id));
 
             return false;
         }
-        app('log')->debug('Will be included.');
+        Log::debug('Will be included.');
 
         return true;
     }
@@ -245,10 +246,10 @@ class CreateRecurringTransactions implements ShouldQueue
     private function hasNotStartedYet(Recurrence $recurrence): bool
     {
         $startDate = $this->getStartDate($recurrence);
-        app('log')->debug(sprintf('Start date is %s', $startDate->format('Y-m-d H:i:s')));
-        app('log')->debug(sprintf('Ask   date is %s', $this->date->format('Y-m-d H:i:s')));
+        Log::debug(sprintf('Start date is %s', $startDate->toW3cString()));
+        Log::debug(sprintf('Ask   date is %s', $this->date->toW3cString()));
 
-        return $startDate->gte($this->date);
+        return $startDate->gt($this->date);
     }
 
     /**
@@ -285,7 +286,7 @@ class CreateRecurringTransactions implements ShouldQueue
 
         /** @var RecurrenceRepetition $repetition */
         foreach ($recurrence->recurrenceRepetitions as $repetition) {
-            app('log')->debug(
+            Log::debug(
                 sprintf(
                     'Now repeating %s with value "%s", skips every %d time(s)',
                     $repetition->repetition_type,
@@ -340,24 +341,24 @@ class CreateRecurringTransactions implements ShouldQueue
         if ($date->ne($this->date)) {
             return null;
         }
-        app('log')->debug(sprintf('%s IS today (%s)', $date->format('Y-m-d'), $this->date->format('Y-m-d')));
+        Log::debug(sprintf('%s IS today (%s)', $date->format('Y-m-d'), $this->date->format('Y-m-d')));
 
         // count created journals on THIS day.
         $journalCount               = $this->repository->getJournalCount($recurrence, $date, $date);
         if ($journalCount > 0 && false === $this->force) {
-            app('log')->info(sprintf('Already created %d journal(s) for date %s', $journalCount, $date->format('Y-m-d')));
+            Log::info(sprintf('Already created %d journal(s) for date %s', $journalCount, $date->format('Y-m-d')));
 
             return null;
         }
 
         if ($this->repository->createdPreviously($recurrence, $date) && false === $this->force) {
-            app('log')->info('There is a transaction already made for this date, so will not be created now');
+            Log::info('There is a transaction already made for this date, so will not be created now');
 
             return null;
         }
 
         if ($journalCount > 0 && true === $this->force) {
-            app('log')->warning(sprintf('Already created %d groups for date %s but FORCED to continue.', $journalCount, $date->format('Y-m-d')));
+            Log::warning(sprintf('Already created %d groups for date %s but FORCED to continue.', $journalCount, $date->format('Y-m-d')));
         }
 
         // create transaction array and send to factory.
@@ -373,7 +374,7 @@ class CreateRecurringTransactions implements ShouldQueue
         }
 
         if (0 === $count) {
-            app('log')->error('No transactions to be created in this recurrence. Cannot continue.');
+            Log::error('No transactions to be created in this recurrence. Cannot continue.');
 
             return null;
         }
@@ -387,7 +388,7 @@ class CreateRecurringTransactions implements ShouldQueue
         /** @var TransactionGroup $group */
         $group                      = $this->groupRepository->store($array);
         ++$this->created;
-        app('log')->info(sprintf('Created new transaction group #%d', $group->id));
+        Log::info(sprintf('Created new transaction group #%d', $group->id));
 
         // trigger event:
         event(new StoredTransactionGroup($group, $recurrence->apply_rules, true));
@@ -460,6 +461,7 @@ class CreateRecurringTransactions implements ShouldQueue
     {
         $newDate    = clone $date;
         $newDate->startOfDay();
+        Log::debug(sprintf('Overruled date to "%s', $newDate->format('Y-m-d H:i:s')));
         $this->date = $newDate;
     }
 
