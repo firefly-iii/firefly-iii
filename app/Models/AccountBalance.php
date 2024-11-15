@@ -21,6 +21,7 @@ class AccountBalance extends Model
     {
         return [
             'date' => SeparateTimezoneCaster::class,
+            'balance' => 'string',
         ];
     }
 

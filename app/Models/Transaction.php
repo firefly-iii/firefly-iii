@@ -57,6 +57,8 @@ class Transaction extends Model
             'balance_before'      => 'string',
             'balance_after'       => 'string',
             'date'                => 'datetime',
+            'amount' => 'string',
+            'foreign_amount' => 'string',
         ];
 
     protected $fillable

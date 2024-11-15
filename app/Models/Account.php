@@ -57,6 +57,7 @@ class Account extends Model
             'deleted_at' => 'datetime',
             'active'     => 'boolean',
             'encrypted'  => 'boolean',
+            'virtual_balance' => 'string',
         ];
 
     protected $fillable              = ['user_id', 'user_group_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban'];

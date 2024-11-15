@@ -44,6 +44,7 @@ class PiggyBankRepetition extends Model
             'updated_at' => 'datetime',
             'startdate'  => SeparateTimezoneCaster::class,
             'targetdate' => SeparateTimezoneCaster::class,
+            'virtual_balance' => 'string',
         ];
 
     protected $fillable = ['piggy_bank_id', 'startdate', 'startdate_tz', 'targetdate', 'targetdate_tz', 'currentamount'];

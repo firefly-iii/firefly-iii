@@ -58,6 +58,8 @@ class Bill extends Model
             'active'          => 'boolean',
             'name_encrypted'  => 'boolean',
             'match_encrypted' => 'boolean',
+            'amount_min' => 'string',
+            'amount_max' => 'string',
         ];
 
     protected $fillable

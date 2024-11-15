@@ -51,6 +51,7 @@ class PiggyBank extends Model
             'order'      => 'int',
             'active'     => 'boolean',
             'encrypted'  => 'boolean',
+            'targetamount' => 'string',
         ];
 
     protected $fillable = ['name', 'account_id', 'order', 'targetamount', 'startdate', 'startdate_tz', 'targetdate', 'targetdate_tz', 'active'];
