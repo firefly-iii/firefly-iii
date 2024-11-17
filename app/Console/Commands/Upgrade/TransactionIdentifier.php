@@ -154,7 +154,7 @@ class TransactionIdentifier extends Command
             app('log')->error($e->getMessage());
             $this->friendlyError('Firefly III could not find the "identifier" field in the "transactions" table.');
             $this->friendlyError(sprintf('This field is required for Firefly III version %s to run.', config('firefly.version')));
-            $this->friendlyError('Please run "php artisan migrate" to add this field to the table.');
+            $this->friendlyError('Please run "php artisan migrate --force" to add this field to the table.');
             $this->friendlyError('Then, run "php artisan firefly:upgrade-database" to try again.');
 
             return null;
