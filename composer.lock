@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "eb0a48bb5142f68837c2ca1f9b82aa0d",
+    "content-hash": "705ed85f711163877731c2a2c0c27a91",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -10930,38 +10930,38 @@
         },
         {
             "name": "ergebnis/phpstan-rules",
-            "version": "2.2.0",
+            "version": "2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ergebnis/phpstan-rules.git",
-                "reference": "2e9946491d39ea1eb043738309895e08f025a7a0"
+                "reference": "74ea27c11d5f0b7effc80a42368f8aa57a7b35b1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ergebnis/phpstan-rules/zipball/2e9946491d39ea1eb043738309895e08f025a7a0",
-                "reference": "2e9946491d39ea1eb043738309895e08f025a7a0",
+                "url": "https://api.github.com/repos/ergebnis/phpstan-rules/zipball/74ea27c11d5f0b7effc80a42368f8aa57a7b35b1",
+                "reference": "74ea27c11d5f0b7effc80a42368f8aa57a7b35b1",
                 "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
                 "nikic/php-parser": "^4.2.3 || ^5.0.0",
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
+                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
                 "phpstan/phpstan": "^1.10.21"
             },
             "require-dev": {
-                "doctrine/orm": "^3.0.0",
-                "ergebnis/composer-normalize": "^2.42.0",
-                "ergebnis/license": "^2.4.0",
-                "ergebnis/php-cs-fixer-config": "^6.22.0",
-                "ergebnis/phpunit-slow-test-detector": "^2.10.0",
-                "nette/di": "^3.2.0",
-                "phpstan/phpstan-deprecation-rules": "^1.1.4",
-                "phpstan/phpstan-strict-rules": "^1.5.2",
-                "phpunit/phpunit": "^10.5.10",
-                "psalm/plugin-phpunit": "~0.18.4",
+                "doctrine/orm": "^3.3.0",
+                "ergebnis/composer-normalize": "^2.44.0",
+                "ergebnis/license": "^2.5.0",
+                "ergebnis/php-cs-fixer-config": "^6.37.0",
+                "ergebnis/phpunit-slow-test-detector": "^2.16.1",
+                "nette/di": "^3.2.3",
+                "phpstan/phpstan-deprecation-rules": "^1.2.1",
+                "phpstan/phpstan-strict-rules": "^1.6.1",
+                "phpunit/phpunit": "^10.5.26",
+                "psalm/plugin-phpunit": "~0.19.0",
                 "psr/container": "^2.0.2",
-                "rector/rector": "^1.0.0",
-                "vimeo/psalm": "^5.21.1"
+                "rector/rector": "^1.2.10",
+                "vimeo/psalm": "^5.26.1"
             },
             "type": "phpstan-extension",
             "extra": {
@@ -10998,7 +10998,7 @@
                 "security": "https://github.com/ergebnis/phpstan-rules/blob/main/.github/SECURITY.md",
                 "source": "https://github.com/ergebnis/phpstan-rules"
             },
-            "time": "2024-02-07T17:49:28+00:00"
+            "time": "2024-11-16T20:38:05+00:00"
         },
         {
             "name": "fakerphp/faker",
@@ -11964,16 +11964,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.12.9",
+            "version": "1.12.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "ceb937fb39a92deabc02d20709cf14b2c452502c"
+                "reference": "0d1fc20a962a91be578bcfe7cf939e6e1a2ff733"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/ceb937fb39a92deabc02d20709cf14b2c452502c",
-                "reference": "ceb937fb39a92deabc02d20709cf14b2c452502c",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/0d1fc20a962a91be578bcfe7cf939e6e1a2ff733",
+                "reference": "0d1fc20a962a91be578bcfe7cf939e6e1a2ff733",
                 "shasum": ""
             },
             "require": {
@@ -12018,7 +12018,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-11-10T17:10:04+00:00"
+            "time": "2024-11-17T14:08:01+00:00"
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",
