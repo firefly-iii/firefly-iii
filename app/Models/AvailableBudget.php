@@ -49,7 +49,7 @@ class AvailableBudget extends Model
             'start_date'              => 'date',
             'end_date'                => 'date',
             'transaction_currency_id' => 'int',
-            'amount' => 'string',
+            'amount'                  => 'string',
         ];
 
     protected $fillable = ['user_id', 'user_group_id', 'transaction_currency_id', 'amount', 'start_date', 'end_date', 'start_date_tz', 'end_date_tz'];

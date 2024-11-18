@@ -40,10 +40,10 @@ class PiggyBankRepetition extends Model
 
     protected $casts
                         = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'startdate'  => SeparateTimezoneCaster::class,
-            'targetdate' => SeparateTimezoneCaster::class,
+            'created_at'      => 'datetime',
+            'updated_at'      => 'datetime',
+            'startdate'       => SeparateTimezoneCaster::class,
+            'targetdate'      => SeparateTimezoneCaster::class,
             'virtual_balance' => 'string',
         ];
 

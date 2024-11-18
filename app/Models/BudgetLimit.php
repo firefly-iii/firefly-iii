@@ -47,7 +47,7 @@ class BudgetLimit extends Model
             'start_date'  => SeparateTimezoneCaster::class,
             'end_date'    => SeparateTimezoneCaster::class,
             'auto_budget' => 'boolean',
-            'amount' => 'string',
+            'amount'      => 'string',
         ];
     protected $dispatchesEvents
                         = [

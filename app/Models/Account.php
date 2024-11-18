@@ -51,12 +51,12 @@ class Account extends Model
 
     protected $casts
                                      = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'user_id'    => 'integer',
-            'deleted_at' => 'datetime',
-            'active'     => 'boolean',
-            'encrypted'  => 'boolean',
+            'created_at'      => 'datetime',
+            'updated_at'      => 'datetime',
+            'user_id'         => 'integer',
+            'deleted_at'      => 'datetime',
+            'active'          => 'boolean',
+            'encrypted'       => 'boolean',
             'virtual_balance' => 'string',
         ];
 

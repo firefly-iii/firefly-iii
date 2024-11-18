@@ -20,7 +20,7 @@ class AccountBalance extends Model
     protected function casts(): array
     {
         return [
-            'date' => SeparateTimezoneCaster::class,
+            'date'    => SeparateTimezoneCaster::class,
             'balance' => 'string',
         ];
     }
