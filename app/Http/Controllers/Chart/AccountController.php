@@ -40,6 +40,7 @@ use FireflyIII\Support\Http\Controllers\ChartGeneration;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class AccountController.
@@ -300,13 +301,13 @@ class AccountController extends Controller
         $start          = clone session('start', today(config('app.timezone'))->startOfMonth());
         $end            = clone session('end', today(config('app.timezone'))->endOfMonth());
         $defaultSet     = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray();
-        app('log')->debug('Default set is ', $defaultSet);
+        Log::debug('Default set is ', $defaultSet);
         $frontpage      = app('preferences')->get('frontpageAccounts', $defaultSet);
         $frontpageArray = !is_array($frontpage->data) ? [] : $frontpage->data;
-        app('log')->debug('Frontpage preference set is ', $frontpageArray);
+        Log::debug('Frontpage preference set is ', $frontpageArray);
         if (0 === count($frontpageArray)) {
             app('preferences')->set('frontpageAccounts', $defaultSet);
-            app('log')->debug('frontpage set is empty!');
+            Log::debug('frontpage set is empty!');
         }
         $accounts       = $repository->getAccountsById($frontpageArray);
 
@@ -414,7 +415,7 @@ class AccountController extends Controller
      */
     private function periodByCurrency(Carbon $start, Carbon $end, Account $account, TransactionCurrency $currency): array
     {
-        app('log')->debug(sprintf('Now in periodByCurrency("%s", "%s", %s, "%s")', $start->format('Y-m-d'), $end->format('Y-m-d'), $account->id, $currency->code));
+        Log::debug(sprintf('Now in periodByCurrency("%s", "%s", %s, "%s")', $start->format('Y-m-d'), $end->format('Y-m-d'), $account->id, $currency->code));
         $locale            = app('steam')->getLocale();
         $step              = $this->calculateStep($start, $end);
         $result            = [
@@ -424,13 +425,13 @@ class AccountController extends Controller
         ];
         $entries           = [];
         $current           = clone $start;
-        app('log')->debug(sprintf('Step is %s', $step));
+        Log::debug(sprintf('Step is %s', $step));
 
         // fix for issue https://github.com/firefly-iii/firefly-iii/issues/8041
         // have to make sure this chart is always based on the balance at the END of the period.
         // This period depends on the size of the chart
         $current           = app('navigation')->endOfX($current, $step, null);
-        app('log')->debug(sprintf('$current date is %s', $current->format('Y-m-d')));
+        Log::debug(sprintf('$current date is %s', $current->format('Y-m-d')));
         if ('1D' === $step) {
             // per day the entire period, balance for every day.
             $format   = (string)trans('config.month_and_day_js', [], $locale);
@@ -447,7 +448,7 @@ class AccountController extends Controller
         }
         if ('1W' === $step || '1M' === $step || '1Y' === $step) {
             while ($end >= $current) {
-                app('log')->debug(sprintf('Current is: %s', $current->format('Y-m-d')));
+                Log::debug(sprintf('Current is: %s', $current->format('Y-m-d')));
                 $balance         = (float)app('steam')->balance($account, $current, $currency);
                 $label           = app('navigation')->periodShow($current, $step);
                 $entries[$label] = $balance;

@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Report\NetWorthInterface;
@@ -36,6 +37,7 @@ use FireflyIII\Support\Http\Controllers\BasicDataSupport;
 use FireflyIII\Support\Http\Controllers\ChartGeneration;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class ReportController.
@@ -88,7 +90,7 @@ class ReportController extends Controller
                 $includeNetWorth = $accountRepository->getMetaValue($account, 'include_net_worth');
                 $result          = null === $includeNetWorth ? true : '1' === $includeNetWorth;
                 if (false === $result) {
-                    app('log')->debug(sprintf('Will not include "%s" in net worth charts.', $account->name));
+                    Log::debug(sprintf('Will not include "%s" in net worth charts.', $account->name));
                 }
 
                 return $result;
@@ -136,6 +138,7 @@ class ReportController extends Controller
      */
     public function operations(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
+        $end->endOfDay();
         // chart properties for cache:
         $cache          = new CacheProperties();
         $cache->addProperty('chart.report.operations');
@@ -146,7 +149,8 @@ class ReportController extends Controller
             // return response()->json($cache->get());
         }
 
-        app('log')->debug('Going to do operations for accounts ', $accounts->pluck('id')->toArray());
+        Log::debug('Going to do operations for accounts ', $accounts->pluck('id')->toArray());
+        Log::debug(sprintf('Period: %s to %s', $start->toW3cString(), $end->toW3cString()));
         $format         = app('navigation')->preferredCarbonFormat($start, $end);
         $titleFormat    = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
         $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
@@ -158,7 +162,13 @@ class ReportController extends Controller
         $collector      = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)->withAccountInformation();
         $collector->setXorAccounts($accounts);
-        $collector->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::RECONCILIATION, TransactionType::TRANSFER]);
+        $collector->setTypes(
+            [
+                TransactionTypeEnum::WITHDRAWAL,
+                TransactionTypeEnum::DEPOSIT,
+                TransactionTypeEnum::RECONCILIATION,
+                TransactionTypeEnum::TRANSFER
+            ]);
         $journals       = $collector->getExtractedJournals();
 
         // loop. group by currency and by period.
@@ -184,15 +194,23 @@ class ReportController extends Controller
 
             // deposit = incoming
             // transfer or reconcile or opening balance, and these accounts are the destination.
-            if (TransactionType::DEPOSIT === $journal['transaction_type_type'] || ((TransactionType::TRANSFER === $journal['transaction_type_type'] || TransactionType::RECONCILIATION === $journal['transaction_type_type'] || TransactionType::OPENING_BALANCE === $journal['transaction_type_type']) && in_array($journal['destination_account_id'], $ids, true))) {
+            if (
+                TransactionTypeEnum::DEPOSIT->value === $journal['transaction_type_type'] ||
+                ((
+                    TransactionTypeEnum::TRANSFER->value === $journal['transaction_type_type'] ||
+                    TransactionTypeEnum::RECONCILIATION->value === $journal['transaction_type_type'] ||
+                    TransactionTypeEnum::OPENING_BALANCE->value === $journal['transaction_type_type']) &&
+                    in_array($journal['destination_account_id'], $ids, true))) {
                 $key = 'earned';
             }
             $data[$currencyId][$period][$key] = bcadd($data[$currencyId][$period][$key], $amount);
         }
 
         // loop this data, make chart bars for each currency:
+        Log::debug('Looping data');
         /** @var array $currency */
         foreach ($data as $currency) {
+            Log::debug(sprintf('Now processing currency "%s"', $currency['currency_name']));
             $income       = [
                 'label'           => (string)trans('firefly.box_earned_in_currency', ['currency' => $currency['currency_name']]),
                 'type'            => 'bar',
@@ -214,12 +232,15 @@ class ReportController extends Controller
             // loop all possible periods between $start and $end
             $currentStart = clone $start;
             $currentEnd   = clone $end;
+            Log::debug(sprintf('START current start and end: %s and %s', $currentStart->toW3cString(), $currentEnd->toW3cString()));
 
             // #8374. Sloppy fix for yearly charts. Not really interested in a better fix with v2 layout and all.
             if ('1Y' === $preferredRange) {
                 $currentEnd = app('navigation')->endOfPeriod($currentEnd, $preferredRange);
             }
+            Log::debug('Start of sub-loop');
             while ($currentStart <= $currentEnd) {
+                Log::debug(sprintf('Current start: %s', $currentStart->toW3cString()));
                 $key          = $currentStart->format($format);
                 $title        = $currentStart->isoFormat($titleFormat);
                 // #8663 make sure the period exists in the data previously collected.
@@ -227,12 +248,20 @@ class ReportController extends Controller
                     $income['entries'][$title]  = app('steam')->bcround($currency[$key]['earned'] ?? '0', $currency['currency_decimal_places']);
                     $expense['entries'][$title] = app('steam')->bcround($currency[$key]['spent'] ?? '0', $currency['currency_decimal_places']);
                 }
+                // #9477 if the period is not in the data, add it with zero values.
+                if (!array_key_exists($key, $currency)) {
+                    $income['entries'][$title]  = '0';
+                    $expense['entries'][$title] = '0';
+
+                }
                 $currentStart = app('navigation')->addPeriod($currentStart, $preferredRange, 0);
             }
+            Log::debug('End of sub-loop');
 
             $chartData[]  = $income;
             $chartData[]  = $expense;
         }
+        Log::debug('End of loop');
 
         $data           = $this->generator->multiSet($chartData);
         $cache->store($data);
