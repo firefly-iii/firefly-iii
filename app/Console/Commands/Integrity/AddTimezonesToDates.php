@@ -36,6 +36,7 @@ use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
@@ -81,6 +82,8 @@ class AddTimezonesToDates extends Command
         foreach (self::$models as $model => $fields) {
             $this->addTimezoneToModel($model, $fields);
         }
+        // not yet in UTC mode
+        FireflyConfig::set('utc', false);
     }
 
     private function addTimezoneToModel(string $model, array $fields): void

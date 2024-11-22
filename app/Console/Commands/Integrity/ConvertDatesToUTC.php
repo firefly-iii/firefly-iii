@@ -25,6 +25,7 @@ namespace FireflyIII\Console\Commands\Integrity;
 
 use Carbon\Carbon;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
@@ -39,7 +40,7 @@ class ConvertDatesToUTC extends Command
      *
      * @var string
      */
-    protected $signature   = 'firefly-iii:convert-dates-to-utc';
+    protected $signature   = 'firefly-iii:migrate-to-utc';
 
     /**
      * The console command description.
@@ -60,6 +61,8 @@ class ConvertDatesToUTC extends Command
         foreach (AddTimezonesToDates::$models as $model => $fields) {
             $this->ConvertModeltoUTC($model, $fields);
         }
+        // tell the system we are now in UTC mode.
+        FireflyConfig::set('utc', true);
 
         return Command::SUCCESS;
     }

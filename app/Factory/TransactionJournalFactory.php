@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Factory;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
@@ -43,6 +44,7 @@ use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use FireflyIII\Services\Internal\Support\JournalServiceTrait;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\NullArrayObject;
 use FireflyIII\User;
 use FireflyIII\Validation\AccountValidator;
@@ -157,7 +159,7 @@ class TransactionJournalFactory
 
         $this->errorIfDuplicate($row['import_hash_v2']);
 
-        /** Some basic fields */
+        // Some basic fields
         $type                  = $this->typeRepository->findTransactionType(null, $row['type']);
         $carbon                = $row['date'] ?? today(config('app.timezone'));
         $order                 = $row['order'] ?? 0;
@@ -169,6 +171,12 @@ class TransactionJournalFactory
 
         // Manipulate basic fields
         $carbon->setTimezone(config('app.timezone'));
+
+        // 2024-11-19, overrule timezone with UTC and store it as UTC.
+        if(FireflyConfig::get('utc', false)) {
+            $carbon->setTimezone('UTC');
+        }
+        // $carbon->setTimezone('UTC');
 
         try {
             // validate source and destination using a new Validator.
@@ -205,7 +213,7 @@ class TransactionJournalFactory
         app('log')->debug('Done with getAccount(2x)');
 
         // this is the moment for a reconciliation sanity check (again).
-        if (TransactionType::RECONCILIATION === $type->type) {
+        if (TransactionTypeEnum::RECONCILIATION->value === $type->type) {
             [$sourceAccount, $destinationAccount] = $this->reconciliationSanityCheck($sourceAccount, $destinationAccount);
         }
 
