@@ -481,13 +481,16 @@ class JournalUpdateService
             $value                                  = $this->data[$fieldName];
 
             if ('date' === $fieldName) {
-                if ($value instanceof Carbon) {
-                    // update timezone.
-                    $value->setTimezone(config('app.timezone'));
-                }
                 if (!$value instanceof Carbon) {
                     $value = new Carbon($value);
                 }
+
+                $value->setTimezone(config('app.timezone'));
+                // 2024-11-22, overrule timezone with UTC and store it as UTC.
+                if(FireflyConfig::get('utc', false)) {
+                    $value->setTimezone('UTC');
+                }
+
                 // do some parsing.
                 app('log')->debug(sprintf('Create date value from string "%s".', $value));
                 $this->transactionJournal->date_tz = $value->format('e');
