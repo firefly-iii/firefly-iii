@@ -724,6 +724,8 @@ class JournalUpdateService
                 Log::debug('Switch amounts, store in amount and not foreign_amount');
                 $dest->transaction_currency_id = $foreignCurrency->id;
                 $dest->amount                  = app('steam')->positive($foreignAmount);
+                $dest->foreign_amount          = app('steam')->positive($source->amount);
+                $dest->foreign_currency_id     = $source->transaction_currency_id;
             }
             if (TransactionType::TRANSFER !== $this->transactionJournal->transactionType->type) {
                 $dest->foreign_currency_id = $foreignCurrency->id;
