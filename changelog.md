@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.1.24 - 2024-11-24
+
+### Fixed
+
+- #9491
+
 ## 6.1.23 - 2024-11-23
 
 ### Added
@@ -15,8 +21,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 9477](https://github.com/firefly-iii/firefly-iii/issues/9477) (Default Financial report: Income vs Expense has missing months when multiple currencies are used) reported by @thomase1234
 - [PR 9488](https://github.com/firefly-iii/firefly-iii/pull/9488) (fix: set dest foreign_amount and foreign_currency_id for foreign transfers) reported by @antoniomrfranco
 - [PR 9483](https://github.com/firefly-iii/firefly-iii/pull/9483) (fix: include foreign_amount in transaction sum calculation) reported by @antoniomrfranco
-- 
-
 - Broken links in readme.
 
 ## 6.1.22 - 2024-11-07
