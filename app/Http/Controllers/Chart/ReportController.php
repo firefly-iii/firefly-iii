@@ -30,7 +30,6 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Report\NetWorthInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Http\Controllers\BasicDataSupport;
@@ -167,8 +166,9 @@ class ReportController extends Controller
                 TransactionTypeEnum::WITHDRAWAL,
                 TransactionTypeEnum::DEPOSIT,
                 TransactionTypeEnum::RECONCILIATION,
-                TransactionTypeEnum::TRANSFER
-            ]);
+                TransactionTypeEnum::TRANSFER,
+            ]
+        );
         $journals       = $collector->getExtractedJournals();
 
         // loop. group by currency and by period.
@@ -195,12 +195,13 @@ class ReportController extends Controller
             // deposit = incoming
             // transfer or reconcile or opening balance, and these accounts are the destination.
             if (
-                TransactionTypeEnum::DEPOSIT->value === $journal['transaction_type_type'] ||
-                ((
-                    TransactionTypeEnum::TRANSFER->value === $journal['transaction_type_type'] ||
-                    TransactionTypeEnum::RECONCILIATION->value === $journal['transaction_type_type'] ||
-                    TransactionTypeEnum::OPENING_BALANCE->value === $journal['transaction_type_type']) &&
-                    in_array($journal['destination_account_id'], $ids, true))) {
+                TransactionTypeEnum::DEPOSIT->value === $journal['transaction_type_type']
+                || ((
+                    TransactionTypeEnum::TRANSFER->value === $journal['transaction_type_type']
+                    || TransactionTypeEnum::RECONCILIATION->value === $journal['transaction_type_type']
+                    || TransactionTypeEnum::OPENING_BALANCE->value === $journal['transaction_type_type']
+                )
+                    && in_array($journal['destination_account_id'], $ids, true))) {
                 $key = 'earned';
             }
             $data[$currencyId][$period][$key] = bcadd($data[$currencyId][$period][$key], $amount);
@@ -208,6 +209,7 @@ class ReportController extends Controller
 
         // loop this data, make chart bars for each currency:
         Log::debug('Looping data');
+
         /** @var array $currency */
         foreach ($data as $currency) {
             Log::debug(sprintf('Now processing currency "%s"', $currency['currency_name']));

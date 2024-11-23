@@ -489,7 +489,7 @@ class JournalUpdateService
 
                 $value->setTimezone(config('app.timezone'));
                 // 2024-11-22, overrule timezone with UTC and store it as UTC.
-                if(FireflyConfig::get('utc', false)) {
+                if (FireflyConfig::get('utc', false)) {
                     $value->setTimezone('UTC');
                 }
 
@@ -721,7 +721,7 @@ class JournalUpdateService
             // if the transaction is a TRANSFER, and the foreign amount and currency are set (like they seem to be)
             // the correct fields to update in the destination transaction are NOT the foreign amount and currency
             // but rather the normal amount and currency. This is new behavior.
-            $isTransfer = TransactionTypeEnum::TRANSFER->value === $this->transactionJournal->transactionType->type;
+            $isTransfer                  = TransactionTypeEnum::TRANSFER->value === $this->transactionJournal->transactionType->type;
             if ($isTransfer) {
                 Log::debug('Switch amounts, store in amount and not foreign_amount');
                 $dest->transaction_currency_id = $foreignCurrency->id;

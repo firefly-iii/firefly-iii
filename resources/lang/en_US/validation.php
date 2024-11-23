@@ -262,7 +262,7 @@ return [
     'gte.file'                        => 'The :attribute must be greater than or equal to :value kilobytes.',
     'gte.string'                      => 'The :attribute must be greater than or equal to :value characters.',
     'gte.array'                       => 'The :attribute must have :value items or more.',
-    'missing_with' => 'The :attribute cannot be combined with another field.',
+    'missing_with'                    => 'The :attribute cannot be combined with another field.',
 
     'amount_required_for_auto_budget' => 'The amount is required.',
     'auto_budget_amount_positive'     => 'The amount must be more than zero.',
