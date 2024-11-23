@@ -158,8 +158,9 @@ class Installer
         // version compare thing.
         $configVersion = (string)config('firefly.version');
         $dbVersion     = (string)app('fireflyconfig')->getFresh('ff3_version', '1.0')->data;
-        if(str_starts_with($configVersion, 'develop')) {
+        if (str_starts_with($configVersion, 'develop')) {
             Log::debug('Skipping version check for develop version.');
+
             return false;
         }
         if (1 === version_compare($configVersion, $dbVersion)) {
