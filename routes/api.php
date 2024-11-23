@@ -53,6 +53,24 @@ Route::group(
     }
 );
 
+// USER GROUP ROUTES
+Route::group(
+    [
+        'namespace' => 'FireflyIII\Api\V2\Controllers\UserGroup',
+        'prefix'    => 'v2/user-groups',
+        'as'        => 'api.v2.user-groups.',
+    ],
+    static function (): void {
+                Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
+                Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
+                Route::get('{userGroup}', ['uses' => 'ShowController@show', 'as' => 'show']);
+        //        Route::put('{userGroup}', ['uses' => 'UpdateController@update', 'as' => 'update']);
+        //        Route::post('{userGroup}/use', ['uses' => 'UpdateController@useUserGroup', 'as' => 'use']);
+        //        Route::put('{userGroup}/update-membership', ['uses' => 'UpdateController@updateMembership', 'as' => 'updateMembership']);
+        //        Route::delete('{userGroup}', ['uses' => 'DestroyController@destroy', 'as' => 'destroy']);
+    }
+);
+
 // CHART ROUTES
 Route::group(
     [
@@ -221,23 +239,7 @@ Route::group(
     }
 );
 
-// V2 API route for user groups (administrations).
-Route::group(
-    [
-        'namespace' => 'FireflyIII\Api\V2\Controllers\UserGroup',
-        'prefix'    => 'v2/user-groups',
-        'as'        => 'api.v2.user-groups.',
-    ],
-    static function (): void {
-        //        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
-        //        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
-        //        Route::get('{userGroup}', ['uses' => 'ShowController@show', 'as' => 'show']);
-        //        Route::put('{userGroup}', ['uses' => 'UpdateController@update', 'as' => 'update']);
-        //        Route::post('{userGroup}/use', ['uses' => 'UpdateController@useUserGroup', 'as' => 'use']);
-        //        Route::put('{userGroup}/update-membership', ['uses' => 'UpdateController@updateMembership', 'as' => 'updateMembership']);
-        //        Route::delete('{userGroup}', ['uses' => 'DestroyController@destroy', 'as' => 'destroy']);
-    }
-);
+
 
 // V2 JSON API ROUTES
 // JsonApiRoute::server('v2')->prefix('v2')

@@ -26,6 +26,7 @@ namespace FireflyIII\Services\Internal\Update;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use Carbon\Exceptions\InvalidFormatException;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TagFactory;
@@ -720,15 +721,15 @@ class JournalUpdateService
             // if the transaction is a TRANSFER, and the foreign amount and currency are set (like they seem to be)
             // the correct fields to update in the destination transaction are NOT the foreign amount and currency
             // but rather the normal amount and currency. This is new behavior.
-
-            if (TransactionType::TRANSFER === $this->transactionJournal->transactionType->type) {
+            $isTransfer = TransactionTypeEnum::TRANSFER->value === $this->transactionJournal->transactionType->type;
+            if ($isTransfer) {
                 Log::debug('Switch amounts, store in amount and not foreign_amount');
                 $dest->transaction_currency_id = $foreignCurrency->id;
                 $dest->amount                  = app('steam')->positive($foreignAmount);
                 $dest->foreign_amount          = app('steam')->positive($source->amount);
                 $dest->foreign_currency_id     = $source->transaction_currency_id;
             }
-            if (TransactionType::TRANSFER !== $this->transactionJournal->transactionType->type) {
+            if (!$isTransfer) {
                 $dest->foreign_currency_id = $foreignCurrency->id;
                 $dest->foreign_amount      = app('steam')->positive($foreignAmount);
             }

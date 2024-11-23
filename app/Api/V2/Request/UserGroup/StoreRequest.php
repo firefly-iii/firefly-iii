@@ -48,8 +48,19 @@ class StoreRequest extends FormRequest
 
     public function rules(): array
     {
+        $roles = [];
+        foreach(UserRoleEnum::cases() as $role) {
+            $roles[] = $role->value;
+        }
+        $string = implode(',', $roles);
+
         return [
-            'title' => 'unique:user_groups,title|required|min:1|max:255',
+            'title'                => 'unique:user_groups,title|required|min:1|max:255',
+            'members'              => 'required|min:1',
+            'members.*.user_email' => 'email|missing_with:members.*.user_id',
+            'members.*.user_id' => 'integer|exists:users,id|missing_with:members.*.user_email',
+            'members.*.roles'   => 'required|array|min:1',
+            'members.*.roles.*' => sprintf('required|in:%s',$string),
         ];
     }
 }

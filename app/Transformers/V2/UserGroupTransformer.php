@@ -65,7 +65,7 @@ class UserGroupTransformer extends AbstractTransformer
                     /** @var GroupMembership $groupMembership */
                     foreach ($groupMemberships as $groupMembership) {
                         $this->memberships[$userGroupId][] = [
-                            'user_id'    => (string)$groupMembership->user_id,
+                            'user_id'    => (string) $groupMembership->user_id,
                             'user_email' => $groupMembership->user->email,
                             'role'       => $groupMembership->userRole->title,
                             'you'        => $groupMembership->user_id === $user->id,
@@ -73,6 +73,7 @@ class UserGroupTransformer extends AbstractTransformer
                     }
                 }
             }
+            $this->mergeMemberships();
         }
 
         return $objects;
@@ -90,8 +91,28 @@ class UserGroupTransformer extends AbstractTransformer
             'in_use'          => $this->inUse[$userGroup->id] ?? false,
             'title'           => $userGroup->title,
             'can_see_members' => $this->membershipsVisible[$userGroup->id] ?? false,
-            'members'         => $this->memberships[$userGroup->id] ?? [],
+            'members'         => array_values($this->memberships[$userGroup->id] ?? []),
         ];
         // if the user has a specific role in this group, then collect the memberships.
+    }
+
+    private function mergeMemberships(): void
+    {
+        $new = [];
+        foreach ($this->memberships as $groupId => $members) {
+            $new[$groupId] ??= [];
+
+            foreach ($members as $member) {
+                $mail                            = $member['user_email'];
+                $new[$groupId][$mail]            ??= [
+                    'user_id'    => $member['user_id'],
+                    'user_email' => $member['user_email'],
+                    'you'        => $member['you'],
+                    'roles'      => [],
+                ];
+                $new[$groupId][$mail]['roles'][] = $member['role'];
+            }
+        }
+        $this->memberships = $new;
     }
 }
