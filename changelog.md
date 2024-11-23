@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.1.23 - 2024-11-23
+
+### Added
+
+- Expand (future) timezone support.
+- #9451
+- #9458
+- #9466
+- #9468
+- #9477
+- #9488
+- #9483
+- 
+
+- Broken links in readme.
+
 ## 6.1.22 - 2024-11-07
 
 ### Added
