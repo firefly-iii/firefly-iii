@@ -58,7 +58,7 @@ class ReportSum extends Command
 
         /** @var User $user */
         foreach ($userRepository->all() as $user) {
-            $sum = (string)$user->transactions()->sum('amount');
+            $sum = (string)$user->transactions()->selectRaw('SUM(amount) + SUM(foreign_amount) as total')->value('total');
             if (!is_numeric($sum)) {
                 $message = sprintf('Error: Transactions for user #%d (%s) have an invalid sum ("%s").', $user->id, $user->email, $sum);
                 $this->friendlyError($message);
