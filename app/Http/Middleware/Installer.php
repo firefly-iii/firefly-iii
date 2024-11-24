@@ -29,6 +29,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\System\OAuthKeys;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class Installer
@@ -46,7 +47,7 @@ class Installer
      */
     public function handle($request, \Closure $next)
     {
-        // app('log')->debug(sprintf('Installer middleware for URL %s', $request->url()));
+        // Log::debug(sprintf('Installer middleware for URL %s', $request->url()));
         // ignore installer in test environment.
         if ('testing' === config('app.env')) {
             return $next($request);
@@ -55,7 +56,7 @@ class Installer
         $url    = $request->url();
         $strpos = stripos($url, '/install');
         if (false !== $strpos) {
-            // app('log')->debug(sprintf('URL is %s, will NOT run installer middleware', $url));
+            // Log::debug(sprintf('URL is %s, will NOT run installer middleware', $url));
 
             return $next($request);
         }
@@ -80,13 +81,13 @@ class Installer
      */
     private function hasNoTables(): bool
     {
-        // app('log')->debug('Now in routine hasNoTables()');
+        // Log::debug('Now in routine hasNoTables()');
 
         try {
             \DB::table('users')->count();
         } catch (QueryException $e) {
             $message = $e->getMessage();
-            app('log')->error(sprintf('Error message trying to access users-table: %s', $message));
+            Log::error(sprintf('Error message trying to access users-table: %s', $message));
             if ($this->isAccessDenied($message)) {
                 throw new FireflyException(
                     'It seems your database configuration is not correct. Please verify the username and password in your .env file.',
@@ -96,7 +97,7 @@ class Installer
             }
             if ($this->noTablesExist($message)) {
                 // redirect to UpdateController
-                app('log')->warning('There are no Firefly III tables present. Redirect to migrate routine.');
+                Log::warning('There are no Firefly III tables present. Redirect to migrate routine.');
 
                 return true;
             }
@@ -104,7 +105,7 @@ class Installer
             throw new FireflyException(sprintf('Could not access the database: %s', $message), 0, $e);
         }
 
-        // app('log')->debug('Everything seems OK with the tables.');
+        // Log::debug('Everything seems OK with the tables.');
 
         return false;
     }
@@ -134,7 +135,7 @@ class Installer
         $configVersion = (int)config('firefly.db_version');
         $dbVersion     = (int)app('fireflyconfig')->getFresh('db_version', 1)->data;
         if ($configVersion > $dbVersion) {
-            app('log')->warning(
+            Log::warning(
                 sprintf(
                     'The current configured version (%d) is older than the required version (%d). Redirect to migrate routine.',
                     $dbVersion,
@@ -145,7 +146,7 @@ class Installer
             return true;
         }
 
-        // app('log')->info(sprintf('Configured DB version (%d) equals expected DB version (%d)', $dbVersion, $configVersion));
+        // Log::info(sprintf('Configured DB version (%d) equals expected DB version (%d)', $dbVersion, $configVersion));
 
         return false;
     }
@@ -164,7 +165,7 @@ class Installer
             return false;
         }
         if (1 === version_compare($configVersion, $dbVersion)) {
-            app('log')->warning(
+            Log::warning(
                 sprintf(
                     'The current configured Firefly III version (%s) is older than the required version (%s). Redirect to migrate routine.',
                     $dbVersion,
@@ -175,7 +176,7 @@ class Installer
             return true;
         }
 
-        // app('log')->info(sprintf('Installed Firefly III version (%s) equals expected Firefly III version (%s)', $dbVersion, $configVersion));
+        // Log::info(sprintf('Installed Firefly III version (%s) equals expected Firefly III version (%s)', $dbVersion, $configVersion));
 
         return false;
     }
