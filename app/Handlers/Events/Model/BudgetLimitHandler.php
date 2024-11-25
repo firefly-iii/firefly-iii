@@ -75,6 +75,7 @@ class BudgetLimitHandler
             return;
         }
 
+
         // based on the view range of the user (month week quarter etc) the budget limit could
         // either overlap multiple available budget periods or be contained in a single one.
         // all have to be created or updated.
@@ -131,8 +132,8 @@ class BudgetLimitHandler
                     app('log')->debug(sprintf('Will create AB for period %s to %s', $current->format('Y-m-d'), $currentEnd->format('Y-m-d')));
                     $availableBudget = new AvailableBudget(
                         [
-                            'user_id'                    => $budgetLimit->budget->user->id,
-                            'user_group_id'              => $budgetLimit->budget->user->user_group_id,
+                            'user_id'                    => $user->id,
+                            'user_group_id'              => $user->user_group_id,
                             'transaction_currency_id'    => $budgetLimit->transaction_currency_id,
                             'start_date'                 => $current,
                             'start_date_tz'              => $current->format('e'),
