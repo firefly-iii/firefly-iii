@@ -1,4 +1,5 @@
 <?php
+
 /*
  * UserGroupDetectable.php
  * Copyright (c) 2024 james@firefly-iii.org.

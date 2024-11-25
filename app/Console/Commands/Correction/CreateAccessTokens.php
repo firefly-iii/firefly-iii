@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CreateAccessTokens.php
  * Copyright (c) 2020 james@firefly-iii.org

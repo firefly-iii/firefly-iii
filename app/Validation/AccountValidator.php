@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AccountValidator.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -25,7 +26,6 @@ namespace FireflyIII\Validation;
 
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;

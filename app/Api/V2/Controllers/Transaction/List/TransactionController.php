@@ -1,4 +1,5 @@
 <?php
+
 /*
  * TransactionController.php
  * Copyright (c) 2023 james@firefly-iii.org

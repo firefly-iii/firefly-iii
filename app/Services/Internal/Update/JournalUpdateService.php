@@ -1,4 +1,5 @@
 <?php
+
 /**
  * JournalUpdateService.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -176,6 +177,7 @@ class JournalUpdateService
     private function hasValidAccounts(): bool
     {
         Log::debug('Now in hasValidAccounts().');
+
         return $this->hasValidSourceAccount() && $this->hasValidDestinationAccount();
     }
 

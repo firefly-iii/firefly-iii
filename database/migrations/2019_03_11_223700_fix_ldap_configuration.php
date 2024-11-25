@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 2019_03_11_223700_fix_ldap_configuration.php
  * Copyright (c) 2019 james@firefly-iii.org.
