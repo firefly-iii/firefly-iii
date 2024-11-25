@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Controllers\Insight\Expense;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Insight\GenericRequest;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Http\JsonResponse;
@@ -48,7 +49,7 @@ class PeriodController extends Controller
 
         // collect all expenses in this period (regardless of type)
         $collector  = app(GroupCollectorInterface::class);
-        $collector->setTypes([TransactionType::WITHDRAWAL])->setRange($start, $end)->setSourceAccounts($accounts);
+        $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->setRange($start, $end)->setSourceAccounts($accounts);
         $genericSet = $collector->getExtractedJournals();
         foreach ($genericSet as $journal) {
             $currencyId        = (int)$journal['currency_id'];

@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V2\Controllers\Chart;
 
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Chart\ChartRequest;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionCurrency;
@@ -93,7 +94,7 @@ class BalanceController extends Controller
         $this->collector->setRange($queryParameters['start'], $queryParameters['end'])
             ->withAccountInformation()
             ->setXorAccounts($accounts)
-            ->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::RECONCILIATION, TransactionType::TRANSFER])
+            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::RECONCILIATION->value, TransactionTypeEnum::TRANSFER->value])
         ;
         $journals        = $this->collector->getExtractedJournals();
 

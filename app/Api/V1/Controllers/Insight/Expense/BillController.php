@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Controllers\Insight\Expense;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Insight\GenericRequest;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -76,7 +77,7 @@ class BillController extends Controller
 
         // collect all expenses in this period (regardless of type) by the given bills and accounts.
         $collector  = app(GroupCollectorInterface::class);
-        $collector->setTypes([TransactionType::WITHDRAWAL])->setRange($start, $end)->setSourceAccounts($accounts);
+        $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->setRange($start, $end)->setSourceAccounts($accounts);
         $collector->setBills($bills);
 
         $genericSet = $collector->getExtractedJournals();
@@ -129,7 +130,7 @@ class BillController extends Controller
 
         // collect all expenses in this period (regardless of type) by the given bills and accounts.
         $collector  = app(GroupCollectorInterface::class);
-        $collector->setTypes([TransactionType::WITHDRAWAL])->setRange($start, $end)->setSourceAccounts($accounts);
+        $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->setRange($start, $end)->setSourceAccounts($accounts);
         $collector->withoutBill();
 
         $genericSet = $collector->getExtractedJournals();

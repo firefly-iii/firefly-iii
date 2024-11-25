@@ -27,6 +27,7 @@ namespace FireflyIII\Api\V2\Controllers\Summary;
 use Carbon\Carbon;
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Generic\DateRequest;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Report\NetWorthInterface;
@@ -134,7 +135,7 @@ class BasicController extends Controller
             // set page to retrieve
             ->setPage($this->parameters->get('page'))
             // set types of transactions to return.
-            ->setTypes([TransactionType::DEPOSIT])
+            ->setTypes([TransactionTypeEnum::DEPOSIT->value])
             ->setRange($start, $end)
         ;
 
@@ -150,7 +151,7 @@ class BasicController extends Controller
             // set page to retrieve
             ->setPage($this->parameters->get('page'))
             // set types of transactions to return.
-            ->setTypes([TransactionType::WITHDRAWAL])
+            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value])
             ->setRange($start, $end)
         ;
         $set       = $collector->getExtractedJournals();

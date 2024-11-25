@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Controllers\Insight\Income;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Insight\GenericRequest;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
@@ -70,7 +71,7 @@ class TagController extends Controller
 
         // collect all expenses in this period (regardless of type) by the given bills and accounts.
         $collector  = app(GroupCollectorInterface::class);
-        $collector->setTypes([TransactionType::DEPOSIT])->setRange($start, $end)->setDestinationAccounts($accounts);
+        $collector->setTypes([TransactionTypeEnum::DEPOSIT->value])->setRange($start, $end)->setDestinationAccounts($accounts);
         $collector->withoutTags();
 
         $genericSet = $collector->getExtractedJournals();
@@ -128,7 +129,7 @@ class TagController extends Controller
 
         // collect all expenses in this period (regardless of type) by the given bills and accounts.
         $collector  = app(GroupCollectorInterface::class);
-        $collector->setTypes([TransactionType::DEPOSIT])->setRange($start, $end)->setDestinationAccounts($accounts);
+        $collector->setTypes([TransactionTypeEnum::DEPOSIT->value])->setRange($start, $end)->setDestinationAccounts($accounts);
         $collector->setTags($tags);
         $genericSet = $collector->getExtractedJournals();
 
