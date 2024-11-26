@@ -38,25 +38,25 @@ class TransactionType extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    /** @deprecated */
+    #[\Deprecated]
     public const string DEPOSIT          = 'Deposit';
 
-    /** @deprecated */
+    #[\Deprecated]
     public const string INVALID          = 'Invalid';
 
-    /** @deprecated */
+    #[\Deprecated]
     public const string LIABILITY_CREDIT = 'Liability credit';
 
-    /** @deprecated */
+    #[\Deprecated]
     public const string OPENING_BALANCE  = 'Opening balance';
 
-    /** @deprecated */
+    #[\Deprecated]
     public const string RECONCILIATION   = 'Reconciliation';
 
-    /** @deprecated */
+    #[\Deprecated]
     public const string TRANSFER         = 'Transfer';
 
-    /** @deprecated */
+    #[\Deprecated]
     public const string WITHDRAWAL       = 'Withdrawal';
 
     protected $casts

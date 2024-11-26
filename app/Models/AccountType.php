@@ -35,46 +35,46 @@ class AccountType extends Model
 {
     use ReturnsIntegerIdTrait;
 
-    /** @deprecated */
+    #[\Deprecated]
     public const string ASSET            = 'Asset account';
 
-    /** @deprecated */
+    #[\Deprecated]
     public const string BENEFICIARY      = 'Beneficiary account';
 
-    /** @deprecated */
+    #[\Deprecated]
     public const string CASH             = 'Cash account';
 
-    /** @deprecated */
+    #[\Deprecated]
     public const string CREDITCARD       = 'Credit card';
 
-    /** @deprecated */
+    #[\Deprecated]
     public const string DEBT             = 'Debt';
 
-    /** @deprecated */
+    #[\Deprecated]
     public const string DEFAULT          = 'Default account';
 
-    /** @deprecated */
+    #[\Deprecated]
     public const string EXPENSE          = 'Expense account';
 
-    /** @deprecated */
+    #[\Deprecated]
     public const string IMPORT           = 'Import account';
 
-    /** @deprecated */
+    #[\Deprecated]
     public const string INITIAL_BALANCE  = 'Initial balance account';
 
-    /** @deprecated */
+    #[\Deprecated]
     public const string LIABILITY_CREDIT = 'Liability credit account';
 
-    /** @deprecated */
+    #[\Deprecated]
     public const string LOAN             = 'Loan';
 
-    /** @deprecated */
+    #[\Deprecated]
     public const string MORTGAGE         = 'Mortgage';
 
-    /** @deprecated */
+    #[\Deprecated]
     public const string RECONCILIATION   = 'Reconciliation account';
 
-    /** @deprecated */
+    #[\Deprecated]
     public const string REVENUE          = 'Revenue account';
 
     protected $casts

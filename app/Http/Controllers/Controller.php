@@ -44,6 +44,9 @@ abstract class Controller extends BaseController
     use UserNavigation;
     use ValidatesRequests;
 
+    // fails on PHP < 8.4
+    public protected(set) string $name;
+
     protected string $dateTimeFormat;
     protected string $monthAndDayFormat;
     protected string $monthFormat;
