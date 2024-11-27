@@ -22,9 +22,9 @@
 
 declare(strict_types=1);
 
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\Bill;
@@ -226,14 +226,14 @@ return [
 
     // account types that may have or set a currency
     'valid_currency_account_types' => [
-        AccountType::ASSET,
-        AccountType::LOAN,
-        AccountType::DEBT,
-        AccountType::MORTGAGE,
-        AccountType::CASH,
-        AccountType::INITIAL_BALANCE,
-        AccountType::LIABILITY_CREDIT,
-        AccountType::RECONCILIATION,
+        AccountTypeEnum::ASSET->value,
+        AccountTypeEnum::LOAN->value,
+        AccountTypeEnum::DEBT->value,
+        AccountTypeEnum::MORTGAGE->value,
+        AccountTypeEnum::CASH->value,
+        AccountTypeEnum::INITIAL_BALANCE->value,
+        AccountTypeEnum::LIABILITY_CREDIT->value,
+        AccountTypeEnum::RECONCILIATION->value,
     ],
 
     // "value must be in this list" values
@@ -324,7 +324,7 @@ return [
         'application/json',
     ],
     'accountRoles'                 => ['defaultAsset', 'sharedAsset', 'savingAsset', 'ccAsset', 'cashWalletAsset'],
-    'valid_liabilities'            => [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE],
+    'valid_liabilities'            => [AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value],
     'ccTypes'                      => ['monthlyFull' => 'Full payment every month'],
     'credit_card_types'            => ['monthlyFull'],
 
@@ -351,60 +351,60 @@ return [
         'liability'   => 'Liabilities',
     ],
     'subIconsByIdentifier'         => [
-        'asset'                  => 'fa-money',
-        AccountType::ASSET       => 'fa-money',
-        AccountType::DEFAULT     => 'fa-money',
-        AccountType::CASH        => 'fa-money',
-        'expense'                => 'fa-shopping-cart',
-        AccountType::EXPENSE     => 'fa-shopping-cart',
-        AccountType::BENEFICIARY => 'fa-shopping-cart',
-        'revenue'                => 'fa-download',
-        AccountType::REVENUE     => 'fa-download',
-        'import'                 => 'fa-download',
-        AccountType::IMPORT      => 'fa-download',
-        'liabilities'            => 'fa-ticket',
+        'asset'                             => 'fa-money',
+        AccountTypeEnum::ASSET->value       => 'fa-money',
+        AccountTypeEnum::DEFAULT->value     => 'fa-money',
+        AccountTypeEnum::CASH->value        => 'fa-money',
+        'expense'                           => 'fa-shopping-cart',
+        AccountTypeEnum::EXPENSE->value     => 'fa-shopping-cart',
+        AccountTypeEnum::BENEFICIARY->value => 'fa-shopping-cart',
+        'revenue'                           => 'fa-download',
+        AccountTypeEnum::REVENUE->value     => 'fa-download',
+        'import'                            => 'fa-download',
+        AccountTypeEnum::IMPORT->value      => 'fa-download',
+        'liabilities'                       => 'fa-ticket',
     ],
     'accountTypesByIdentifier'     => [
-        'asset'       => [AccountType::DEFAULT, AccountType::ASSET],
-        'expense'     => [AccountType::EXPENSE, AccountType::BENEFICIARY],
-        'revenue'     => [AccountType::REVENUE],
-        'import'      => [AccountType::IMPORT],
-        'liabilities' => [AccountType::LOAN, AccountType::DEBT, AccountType::CREDITCARD, AccountType::MORTGAGE],
+        'asset'       => [AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value],
+        'expense'     => [AccountTypeEnum::EXPENSE->value, AccountTypeEnum::BENEFICIARY->value],
+        'revenue'     => [AccountTypeEnum::REVENUE->value],
+        'import'      => [AccountTypeEnum::IMPORT->value],
+        'liabilities' => [AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::CREDITCARD->value, AccountTypeEnum::MORTGAGE->value],
     ],
     'accountTypeByIdentifier'      => [
-        'asset'       => [AccountType::ASSET],
-        'expense'     => [AccountType::EXPENSE],
-        'revenue'     => [AccountType::REVENUE],
-        'opening'     => [AccountType::INITIAL_BALANCE],
-        'initial'     => [AccountType::INITIAL_BALANCE],
-        'import'      => [AccountType::IMPORT],
-        'reconcile'   => [AccountType::RECONCILIATION],
-        'loan'        => [AccountType::LOAN],
-        'debt'        => [AccountType::DEBT],
-        'mortgage'    => [AccountType::MORTGAGE],
-        'liabilities' => [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE, AccountType::CREDITCARD],
-        'liability'   => [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE, AccountType::CREDITCARD],
+        'asset'       => [AccountTypeEnum::ASSET->value],
+        'expense'     => [AccountTypeEnum::EXPENSE->value],
+        'revenue'     => [AccountTypeEnum::REVENUE->value],
+        'opening'     => [AccountTypeEnum::INITIAL_BALANCE->value],
+        'initial'     => [AccountTypeEnum::INITIAL_BALANCE->value],
+        'import'      => [AccountTypeEnum::IMPORT->value],
+        'reconcile'   => [AccountTypeEnum::RECONCILIATION->value],
+        'loan'        => [AccountTypeEnum::LOAN->value],
+        'debt'        => [AccountTypeEnum::DEBT->value],
+        'mortgage'    => [AccountTypeEnum::MORTGAGE->value],
+        'liabilities' => [AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::CREDITCARD->value],
+        'liability'   => [AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::CREDITCARD->value],
     ],
     'shortNamesByFullName'         => [
-        AccountType::DEFAULT         => 'asset',
-        AccountType::ASSET           => 'asset',
-        AccountType::IMPORT          => 'import',
-        AccountType::EXPENSE         => 'expense',
-        AccountType::BENEFICIARY     => 'expense',
-        AccountType::REVENUE         => 'revenue',
-        AccountType::CASH            => 'cash',
-        AccountType::INITIAL_BALANCE => 'initial-balance',
-        AccountType::RECONCILIATION  => 'reconciliation',
-        AccountType::CREDITCARD      => 'liabilities',
-        AccountType::LOAN            => 'liabilities',
-        AccountType::DEBT            => 'liabilities',
-        AccountType::MORTGAGE        => 'liabilities',
+        AccountTypeEnum::DEFAULT->value         => 'asset',
+        AccountTypeEnum::ASSET->value           => 'asset',
+        AccountTypeEnum::IMPORT->value          => 'import',
+        AccountTypeEnum::EXPENSE->value         => 'expense',
+        AccountTypeEnum::BENEFICIARY->value     => 'expense',
+        AccountTypeEnum::REVENUE->value         => 'revenue',
+        AccountTypeEnum::CASH->value            => 'cash',
+        AccountTypeEnum::INITIAL_BALANCE->value => 'initial-balance',
+        AccountTypeEnum::RECONCILIATION->value  => 'reconciliation',
+        AccountTypeEnum::CREDITCARD->value      => 'liabilities',
+        AccountTypeEnum::LOAN->value            => 'liabilities',
+        AccountTypeEnum::DEBT->value            => 'liabilities',
+        AccountTypeEnum::MORTGAGE->value        => 'liabilities',
     ],
     'shortLiabilityNameByFullName' => [
-        AccountType::CREDITCARD => 'creditcard',
-        AccountType::LOAN       => AccountType::LOAN,
-        AccountType::DEBT       => AccountType::DEBT,
-        AccountType::MORTGAGE   => AccountType::MORTGAGE,
+        AccountTypeEnum::CREDITCARD->value => 'creditcard',
+        AccountTypeEnum::LOAN->value       => AccountTypeEnum::LOAN->value,
+        AccountTypeEnum::DEBT->value       => AccountTypeEnum::DEBT->value,
+        AccountTypeEnum::MORTGAGE->value   => AccountTypeEnum::MORTGAGE->value,
     ],
     'transactionTypesByType'       => [
         'expenses'   => ['Withdrawal'],
@@ -430,7 +430,7 @@ return [
         'transfers'  => 'fa-exchange',
     ],
 
-    'bindables'                    => [
+    'bindables'            => [
         // models
         'account'              => Account::class,
         'attachment'           => Attachment::class,
@@ -488,7 +488,7 @@ return [
         'userGroupBill'        => UserGroupBill::class,
         'userGroup'            => UserGroup::class,
     ],
-    'rule-actions'                 => [
+    'rule-actions'         => [
         'set_category'            => SetCategory::class,
         'clear_category'          => ClearCategory::class,
         'set_budget'              => SetBudget::class,
@@ -522,7 +522,7 @@ return [
         // 'set_foreign_amount' => SetForeignAmount::class,
         // 'set_foreign_currency' => SetForeignCurrency::class,
     ],
-    'context-rule-actions'         => [
+    'context-rule-actions' => [
         'set_category',
         'set_budget',
         'add_tag',
@@ -541,321 +541,321 @@ return [
         'convert_transfer',
     ],
 
-    'test-triggers'                => [
+    'test-triggers'             => [
         'limit' => 10,
         'range' => 200,
     ],
 
     // expected source types for each transaction type, in order of preference.
-    'expected_source_types'        => [
+    'expected_source_types'     => [
         'source'      => [
-            TransactionTypeModel::WITHDRAWAL       => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
-            TransactionTypeEnum::DEPOSIT->value    => [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE, AccountType::REVENUE, AccountType::CASH],
-            TransactionTypeModel::TRANSFER         => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
-            TransactionTypeModel::OPENING_BALANCE  => [
-                AccountType::INITIAL_BALANCE,
-                AccountType::ASSET,
-                AccountType::LOAN,
-                AccountType::DEBT,
-                AccountType::MORTGAGE,
+            TransactionTypeEnum::WITHDRAWAL->value       => [AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value],
+            TransactionTypeEnum::DEPOSIT->value    => [AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::REVENUE->value, AccountTypeEnum::CASH->value],
+            TransactionTypeEnum::TRANSFER->value         => [AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value],
+            TransactionTypeEnum::OPENING_BALANCE->value  => [
+                AccountTypeEnum::INITIAL_BALANCE->value,
+                AccountTypeEnum::ASSET->value,
+                AccountTypeEnum::LOAN->value,
+                AccountTypeEnum::DEBT->value,
+                AccountTypeEnum::MORTGAGE->value,
             ],
-            TransactionTypeModel::RECONCILIATION   => [AccountType::RECONCILIATION, AccountType::ASSET],
-            TransactionTypeModel::LIABILITY_CREDIT => [AccountType::LIABILITY_CREDIT, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
+            TransactionTypeEnum::RECONCILIATION->value   => [AccountTypeEnum::RECONCILIATION->value, AccountTypeEnum::ASSET->value],
+            TransactionTypeEnum::LIABILITY_CREDIT->value => [AccountTypeEnum::LIABILITY_CREDIT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value],
             // in case no transaction type is known yet, it could be anything.
             'none'                                 => [
-                AccountType::ASSET,
-                AccountType::EXPENSE,
-                AccountType::REVENUE,
-                AccountType::LOAN,
-                AccountType::DEBT,
-                AccountType::MORTGAGE,
+                AccountTypeEnum::ASSET->value,
+                AccountTypeEnum::EXPENSE->value,
+                AccountTypeEnum::REVENUE->value,
+                AccountTypeEnum::LOAN->value,
+                AccountTypeEnum::DEBT->value,
+                AccountTypeEnum::MORTGAGE->value,
             ],
         ],
         'destination' => [
-            TransactionTypeModel::WITHDRAWAL       => [
-                AccountType::LOAN,
-                AccountType::DEBT,
-                AccountType::MORTGAGE,
-                AccountType::EXPENSE,
-                AccountType::CASH,
+            TransactionTypeEnum::WITHDRAWAL->value       => [
+                AccountTypeEnum::LOAN->value,
+                AccountTypeEnum::DEBT->value,
+                AccountTypeEnum::MORTGAGE->value,
+                AccountTypeEnum::EXPENSE->value,
+                AccountTypeEnum::CASH->value,
             ],
-            TransactionTypeEnum::DEPOSIT->value    => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
-            TransactionTypeModel::TRANSFER         => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
-            TransactionTypeModel::OPENING_BALANCE  => [
-                AccountType::INITIAL_BALANCE,
-                AccountType::ASSET,
-                AccountType::LOAN,
-                AccountType::DEBT,
-                AccountType::MORTGAGE,
+            TransactionTypeEnum::DEPOSIT->value    => [AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value],
+            TransactionTypeEnum::TRANSFER->value         => [AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value],
+            TransactionTypeEnum::OPENING_BALANCE->value  => [
+                AccountTypeEnum::INITIAL_BALANCE->value,
+                AccountTypeEnum::ASSET->value,
+                AccountTypeEnum::LOAN->value,
+                AccountTypeEnum::DEBT->value,
+                AccountTypeEnum::MORTGAGE->value,
             ],
-            TransactionTypeModel::RECONCILIATION   => [AccountType::RECONCILIATION, AccountType::ASSET],
-            TransactionTypeModel::LIABILITY_CREDIT => [AccountType::LIABILITY_CREDIT, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
+            TransactionTypeEnum::RECONCILIATION->value   => [AccountTypeEnum::RECONCILIATION->value, AccountTypeEnum::ASSET->value],
+            TransactionTypeEnum::LIABILITY_CREDIT->value => [AccountTypeEnum::LIABILITY_CREDIT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value],
         ],
     ],
-    'allowed_opposing_types'       => [
+    'allowed_opposing_types'    => [
         'source'      => [
-            AccountType::ASSET            => [
-                AccountType::ASSET,
-                AccountType::CASH,
-                AccountType::DEBT,
-                AccountType::EXPENSE,
-                AccountType::INITIAL_BALANCE,
-                AccountType::LOAN,
-                AccountType::RECONCILIATION,
-                AccountType::MORTGAGE,
+            AccountTypeEnum::ASSET->value            => [
+                AccountTypeEnum::ASSET->value,
+                AccountTypeEnum::CASH->value,
+                AccountTypeEnum::DEBT->value,
+                AccountTypeEnum::EXPENSE->value,
+                AccountTypeEnum::INITIAL_BALANCE->value,
+                AccountTypeEnum::LOAN->value,
+                AccountTypeEnum::RECONCILIATION->value,
+                AccountTypeEnum::MORTGAGE->value,
             ],
-            AccountType::CASH             => [AccountType::ASSET],
-            AccountType::DEBT             => [
-                AccountType::ASSET,
-                AccountType::DEBT,
-                AccountType::EXPENSE,
-                AccountType::INITIAL_BALANCE,
-                AccountType::LOAN,
-                AccountType::MORTGAGE,
-                AccountType::LIABILITY_CREDIT,
+            AccountTypeEnum::CASH->value             => [AccountTypeEnum::ASSET->value],
+            AccountTypeEnum::DEBT->value             => [
+                AccountTypeEnum::ASSET->value,
+                AccountTypeEnum::DEBT->value,
+                AccountTypeEnum::EXPENSE->value,
+                AccountTypeEnum::INITIAL_BALANCE->value,
+                AccountTypeEnum::LOAN->value,
+                AccountTypeEnum::MORTGAGE->value,
+                AccountTypeEnum::LIABILITY_CREDIT->value,
             ],
-            AccountType::EXPENSE          => [], // is not allowed as a source.
-            AccountType::INITIAL_BALANCE  => [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE],
-            AccountType::LOAN             => [
-                AccountType::ASSET,
-                AccountType::DEBT,
-                AccountType::EXPENSE,
-                AccountType::INITIAL_BALANCE,
-                AccountType::LOAN,
-                AccountType::MORTGAGE,
-                AccountType::LIABILITY_CREDIT,
+            AccountTypeEnum::EXPENSE->value          => [], // is not allowed as a source.
+            AccountTypeEnum::INITIAL_BALANCE->value  => [AccountTypeEnum::ASSET->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value],
+            AccountTypeEnum::LOAN->value             => [
+                AccountTypeEnum::ASSET->value,
+                AccountTypeEnum::DEBT->value,
+                AccountTypeEnum::EXPENSE->value,
+                AccountTypeEnum::INITIAL_BALANCE->value,
+                AccountTypeEnum::LOAN->value,
+                AccountTypeEnum::MORTGAGE->value,
+                AccountTypeEnum::LIABILITY_CREDIT->value,
             ],
-            AccountType::MORTGAGE         => [
-                AccountType::ASSET,
-                AccountType::DEBT,
-                AccountType::EXPENSE,
-                AccountType::INITIAL_BALANCE,
-                AccountType::LOAN,
-                AccountType::MORTGAGE,
-                AccountType::LIABILITY_CREDIT,
+            AccountTypeEnum::MORTGAGE->value         => [
+                AccountTypeEnum::ASSET->value,
+                AccountTypeEnum::DEBT->value,
+                AccountTypeEnum::EXPENSE->value,
+                AccountTypeEnum::INITIAL_BALANCE->value,
+                AccountTypeEnum::LOAN->value,
+                AccountTypeEnum::MORTGAGE->value,
+                AccountTypeEnum::LIABILITY_CREDIT->value,
             ],
-            AccountType::RECONCILIATION   => [AccountType::ASSET],
-            AccountType::REVENUE          => [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE],
-            AccountType::LIABILITY_CREDIT => [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE],
+            AccountTypeEnum::RECONCILIATION->value   => [AccountTypeEnum::ASSET->value],
+            AccountTypeEnum::REVENUE->value          => [AccountTypeEnum::ASSET->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value],
+            AccountTypeEnum::LIABILITY_CREDIT->value => [AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value],
         ],
         'destination' => [
-            AccountType::ASSET            => [
-                AccountType::ASSET,
-                AccountType::CASH,
-                AccountType::DEBT,
-                AccountType::INITIAL_BALANCE,
-                AccountType::LOAN,
-                AccountType::MORTGAGE,
-                AccountType::RECONCILIATION,
-                AccountType::REVENUE,
+            AccountTypeEnum::ASSET->value            => [
+                AccountTypeEnum::ASSET->value,
+                AccountTypeEnum::CASH->value,
+                AccountTypeEnum::DEBT->value,
+                AccountTypeEnum::INITIAL_BALANCE->value,
+                AccountTypeEnum::LOAN->value,
+                AccountTypeEnum::MORTGAGE->value,
+                AccountTypeEnum::RECONCILIATION->value,
+                AccountTypeEnum::REVENUE->value,
             ],
-            AccountType::CASH             => [AccountType::ASSET],
-            AccountType::DEBT             => [
-                AccountType::ASSET,
-                AccountType::DEBT,
-                AccountType::INITIAL_BALANCE,
-                AccountType::LOAN,
-                AccountType::MORTGAGE,
-                AccountType::REVENUE,
+            AccountTypeEnum::CASH->value             => [AccountTypeEnum::ASSET->value],
+            AccountTypeEnum::DEBT->value             => [
+                AccountTypeEnum::ASSET->value,
+                AccountTypeEnum::DEBT->value,
+                AccountTypeEnum::INITIAL_BALANCE->value,
+                AccountTypeEnum::LOAN->value,
+                AccountTypeEnum::MORTGAGE->value,
+                AccountTypeEnum::REVENUE->value,
             ],
-            AccountType::EXPENSE          => [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE],
-            AccountType::INITIAL_BALANCE  => [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE],
-            AccountType::LOAN             => [
-                AccountType::ASSET,
-                AccountType::DEBT,
-                AccountType::INITIAL_BALANCE,
-                AccountType::LOAN,
-                AccountType::MORTGAGE,
-                AccountType::REVENUE,
+            AccountTypeEnum::EXPENSE->value          => [AccountTypeEnum::ASSET->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value],
+            AccountTypeEnum::INITIAL_BALANCE->value  => [AccountTypeEnum::ASSET->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value],
+            AccountTypeEnum::LOAN->value             => [
+                AccountTypeEnum::ASSET->value,
+                AccountTypeEnum::DEBT->value,
+                AccountTypeEnum::INITIAL_BALANCE->value,
+                AccountTypeEnum::LOAN->value,
+                AccountTypeEnum::MORTGAGE->value,
+                AccountTypeEnum::REVENUE->value,
             ],
-            AccountType::MORTGAGE         => [
-                AccountType::ASSET,
-                AccountType::DEBT,
-                AccountType::INITIAL_BALANCE,
-                AccountType::LOAN,
-                AccountType::MORTGAGE,
-                AccountType::REVENUE,
+            AccountTypeEnum::MORTGAGE->value         => [
+                AccountTypeEnum::ASSET->value,
+                AccountTypeEnum::DEBT->value,
+                AccountTypeEnum::INITIAL_BALANCE->value,
+                AccountTypeEnum::LOAN->value,
+                AccountTypeEnum::MORTGAGE->value,
+                AccountTypeEnum::REVENUE->value,
             ],
-            AccountType::RECONCILIATION   => [AccountType::ASSET],
-            AccountType::REVENUE          => [], // is not allowed as a destination
-            AccountType::LIABILITY_CREDIT => [], // is not allowed as a destination
+            AccountTypeEnum::RECONCILIATION->value   => [AccountTypeEnum::ASSET->value],
+            AccountTypeEnum::REVENUE->value          => [], // is not allowed as a destination
+            AccountTypeEnum::LIABILITY_CREDIT->value => [], // is not allowed as a destination
         ],
     ],
     // depending on the account type, return the allowed transaction types:
-    'allowed_transaction_types'    => [
+    'allowed_transaction_types' => [
         'source'      => [
-            AccountType::ASSET            => [
-                TransactionTypeModel::WITHDRAWAL,
-                TransactionTypeModel::TRANSFER,
-                TransactionTypeModel::OPENING_BALANCE,
-                TransactionTypeModel::RECONCILIATION,
+            AccountTypeEnum::ASSET->value            => [
+                TransactionTypeEnum::WITHDRAWAL->value,
+                TransactionTypeEnum::TRANSFER->value,
+                TransactionTypeEnum::OPENING_BALANCE->value,
+                TransactionTypeEnum::RECONCILIATION->value,
             ],
-            AccountType::EXPENSE          => [], // is not allowed as a source.
-            AccountType::REVENUE          => [TransactionTypeEnum::DEPOSIT->value],
-            AccountType::LOAN             => [
-                TransactionTypeModel::WITHDRAWAL,
+            AccountTypeEnum::EXPENSE->value          => [], // is not allowed as a source.
+            AccountTypeEnum::REVENUE->value          => [TransactionTypeEnum::DEPOSIT->value],
+            AccountTypeEnum::LOAN->value             => [
+                TransactionTypeEnum::WITHDRAWAL->value,
                 TransactionTypeEnum::DEPOSIT->value,
-                TransactionTypeModel::TRANSFER,
-                TransactionTypeModel::OPENING_BALANCE,
-                TransactionTypeModel::LIABILITY_CREDIT,
+                TransactionTypeEnum::TRANSFER->value,
+                TransactionTypeEnum::OPENING_BALANCE->value,
+                TransactionTypeEnum::LIABILITY_CREDIT->value,
             ],
-            AccountType::DEBT             => [
-                TransactionTypeModel::WITHDRAWAL,
+            AccountTypeEnum::DEBT->value             => [
+                TransactionTypeEnum::WITHDRAWAL->value,
                 TransactionTypeEnum::DEPOSIT->value,
-                TransactionTypeModel::TRANSFER,
-                TransactionTypeModel::OPENING_BALANCE,
-                TransactionTypeModel::LIABILITY_CREDIT,
+                TransactionTypeEnum::TRANSFER->value,
+                TransactionTypeEnum::OPENING_BALANCE->value,
+                TransactionTypeEnum::LIABILITY_CREDIT->value,
             ],
-            AccountType::MORTGAGE         => [
-                TransactionTypeModel::WITHDRAWAL,
+            AccountTypeEnum::MORTGAGE->value         => [
+                TransactionTypeEnum::WITHDRAWAL->value,
                 TransactionTypeEnum::DEPOSIT->value,
-                TransactionTypeModel::TRANSFER,
-                TransactionTypeModel::OPENING_BALANCE,
-                TransactionTypeModel::LIABILITY_CREDIT,
+                TransactionTypeEnum::TRANSFER->value,
+                TransactionTypeEnum::OPENING_BALANCE->value,
+                TransactionTypeEnum::LIABILITY_CREDIT->value,
             ],
-            AccountType::INITIAL_BALANCE  => [TransactionTypeModel::OPENING_BALANCE],
-            AccountType::RECONCILIATION   => [TransactionTypeModel::RECONCILIATION],
-            AccountType::LIABILITY_CREDIT => [TransactionTypeModel::LIABILITY_CREDIT],
+            AccountTypeEnum::INITIAL_BALANCE->value  => [TransactionTypeEnum::OPENING_BALANCE->value],
+            AccountTypeEnum::RECONCILIATION->value   => [TransactionTypeEnum::RECONCILIATION->value],
+            AccountTypeEnum::LIABILITY_CREDIT->value => [TransactionTypeEnum::LIABILITY_CREDIT->value],
         ],
         'destination' => [
-            AccountType::ASSET            => [
+            AccountTypeEnum::ASSET->value            => [
                 TransactionTypeEnum::DEPOSIT->value,
-                TransactionTypeModel::TRANSFER,
-                TransactionTypeModel::OPENING_BALANCE,
-                TransactionTypeModel::RECONCILIATION,
+                TransactionTypeEnum::TRANSFER->value,
+                TransactionTypeEnum::OPENING_BALANCE->value,
+                TransactionTypeEnum::RECONCILIATION->value,
             ],
-            AccountType::EXPENSE          => [TransactionTypeModel::WITHDRAWAL],
-            AccountType::REVENUE          => [], // is not allowed as destination.
-            AccountType::LOAN             => [
-                TransactionTypeModel::WITHDRAWAL,
+            AccountTypeEnum::EXPENSE->value          => [TransactionTypeEnum::WITHDRAWAL->value],
+            AccountTypeEnum::REVENUE->value          => [], // is not allowed as destination.
+            AccountTypeEnum::LOAN->value             => [
+                TransactionTypeEnum::WITHDRAWAL->value,
                 TransactionTypeEnum::DEPOSIT->value,
-                TransactionTypeModel::TRANSFER,
-                TransactionTypeModel::OPENING_BALANCE,
+                TransactionTypeEnum::TRANSFER->value,
+                TransactionTypeEnum::OPENING_BALANCE->value,
             ],
-            AccountType::DEBT             => [
-                TransactionTypeModel::WITHDRAWAL,
+            AccountTypeEnum::DEBT->value             => [
+                TransactionTypeEnum::WITHDRAWAL->value,
                 TransactionTypeEnum::DEPOSIT->value,
-                TransactionTypeModel::TRANSFER,
-                TransactionTypeModel::OPENING_BALANCE,
+                TransactionTypeEnum::TRANSFER->value,
+                TransactionTypeEnum::OPENING_BALANCE->value,
             ],
-            AccountType::MORTGAGE         => [
-                TransactionTypeModel::WITHDRAWAL,
+            AccountTypeEnum::MORTGAGE->value         => [
+                TransactionTypeEnum::WITHDRAWAL->value,
                 TransactionTypeEnum::DEPOSIT->value,
-                TransactionTypeModel::TRANSFER,
-                TransactionTypeModel::OPENING_BALANCE,
+                TransactionTypeEnum::TRANSFER->value,
+                TransactionTypeEnum::OPENING_BALANCE->value,
             ],
-            AccountType::INITIAL_BALANCE  => [TransactionTypeModel::OPENING_BALANCE],
-            AccountType::RECONCILIATION   => [TransactionTypeModel::RECONCILIATION],
-            AccountType::LIABILITY_CREDIT => [], // is not allowed as a destination
+            AccountTypeEnum::INITIAL_BALANCE->value  => [TransactionTypeEnum::OPENING_BALANCE->value],
+            AccountTypeEnum::RECONCILIATION->value   => [TransactionTypeEnum::RECONCILIATION->value],
+            AccountTypeEnum::LIABILITY_CREDIT->value => [], // is not allowed as a destination
         ],
     ],
 
     // having the source + dest will tell you the transaction type.
-    'account_to_transaction'       => [
-        AccountType::ASSET            => [
-            AccountType::ASSET           => TransactionTypeModel::TRANSFER,
-            AccountType::CASH            => TransactionTypeModel::WITHDRAWAL,
-            AccountType::DEBT            => TransactionTypeModel::WITHDRAWAL,
-            AccountType::EXPENSE         => TransactionTypeModel::WITHDRAWAL,
-            AccountType::INITIAL_BALANCE => TransactionTypeModel::OPENING_BALANCE,
-            AccountType::LOAN            => TransactionTypeModel::WITHDRAWAL,
-            AccountType::MORTGAGE        => TransactionTypeModel::WITHDRAWAL,
-            AccountType::RECONCILIATION  => TransactionTypeModel::RECONCILIATION,
+    'account_to_transaction'    => [
+        AccountTypeEnum::ASSET->value            => [
+            AccountTypeEnum::ASSET->value           => TransactionTypeEnum::TRANSFER->value,
+            AccountTypeEnum::CASH->value            => TransactionTypeEnum::WITHDRAWAL->value,
+            AccountTypeEnum::DEBT->value            => TransactionTypeEnum::WITHDRAWAL->value,
+            AccountTypeEnum::EXPENSE->value         => TransactionTypeEnum::WITHDRAWAL->value,
+            AccountTypeEnum::INITIAL_BALANCE->value => TransactionTypeEnum::OPENING_BALANCE->value,
+            AccountTypeEnum::LOAN->value            => TransactionTypeEnum::WITHDRAWAL->value,
+            AccountTypeEnum::MORTGAGE->value        => TransactionTypeEnum::WITHDRAWAL->value,
+            AccountTypeEnum::RECONCILIATION->value  => TransactionTypeEnum::RECONCILIATION->value,
         ],
-        AccountType::CASH             => [
-            AccountType::ASSET    => TransactionTypeModel::DEPOSIT,
-            AccountType::LOAN     => TransactionTypeModel::DEPOSIT,
-            AccountType::DEBT     => TransactionTypeModel::DEPOSIT,
-            AccountType::MORTGAGE => TransactionTypeModel::DEPOSIT,
+        AccountTypeEnum::CASH->value             => [
+            AccountTypeEnum::ASSET->value    => TransactionTypeEnum::DEPOSIT->value,
+            AccountTypeEnum::LOAN->value     => TransactionTypeEnum::DEPOSIT->value,
+            AccountTypeEnum::DEBT->value     => TransactionTypeEnum::DEPOSIT->value,
+            AccountTypeEnum::MORTGAGE->value => TransactionTypeEnum::DEPOSIT->value,
         ],
-        AccountType::DEBT             => [
-            AccountType::ASSET           => TransactionTypeEnum::DEPOSIT->value,
-            AccountType::DEBT            => TransactionTypeModel::TRANSFER,
-            AccountType::EXPENSE         => TransactionTypeModel::WITHDRAWAL,
-            AccountType::INITIAL_BALANCE => TransactionTypeModel::OPENING_BALANCE,
-            AccountType::LOAN            => TransactionTypeModel::TRANSFER,
-            AccountType::MORTGAGE        => TransactionTypeModel::TRANSFER,
+        AccountTypeEnum::DEBT->value             => [
+            AccountTypeEnum::ASSET->value           => TransactionTypeEnum::DEPOSIT->value,
+            AccountTypeEnum::DEBT->value            => TransactionTypeEnum::TRANSFER->value,
+            AccountTypeEnum::EXPENSE->value         => TransactionTypeEnum::WITHDRAWAL->value,
+            AccountTypeEnum::INITIAL_BALANCE->value => TransactionTypeEnum::OPENING_BALANCE->value,
+            AccountTypeEnum::LOAN->value            => TransactionTypeEnum::TRANSFER->value,
+            AccountTypeEnum::MORTGAGE->value        => TransactionTypeEnum::TRANSFER->value,
         ],
-        AccountType::INITIAL_BALANCE  => [
-            AccountType::ASSET    => TransactionTypeModel::OPENING_BALANCE,
-            AccountType::DEBT     => TransactionTypeModel::OPENING_BALANCE,
-            AccountType::LOAN     => TransactionTypeModel::OPENING_BALANCE,
-            AccountType::MORTGAGE => TransactionTypeModel::OPENING_BALANCE,
+        AccountTypeEnum::INITIAL_BALANCE->value  => [
+            AccountTypeEnum::ASSET->value    => TransactionTypeEnum::OPENING_BALANCE->value,
+            AccountTypeEnum::DEBT->value     => TransactionTypeEnum::OPENING_BALANCE->value,
+            AccountTypeEnum::LOAN->value     => TransactionTypeEnum::OPENING_BALANCE->value,
+            AccountTypeEnum::MORTGAGE->value => TransactionTypeEnum::OPENING_BALANCE->value,
         ],
-        AccountType::LOAN             => [
-            AccountType::ASSET           => TransactionTypeEnum::DEPOSIT->value,
-            AccountType::DEBT            => TransactionTypeModel::TRANSFER,
-            AccountType::EXPENSE         => TransactionTypeModel::WITHDRAWAL,
-            AccountType::INITIAL_BALANCE => TransactionTypeModel::OPENING_BALANCE,
-            AccountType::LOAN            => TransactionTypeModel::TRANSFER,
-            AccountType::MORTGAGE        => TransactionTypeModel::TRANSFER,
+        AccountTypeEnum::LOAN->value             => [
+            AccountTypeEnum::ASSET->value           => TransactionTypeEnum::DEPOSIT->value,
+            AccountTypeEnum::DEBT->value            => TransactionTypeEnum::TRANSFER->value,
+            AccountTypeEnum::EXPENSE->value         => TransactionTypeEnum::WITHDRAWAL->value,
+            AccountTypeEnum::INITIAL_BALANCE->value => TransactionTypeEnum::OPENING_BALANCE->value,
+            AccountTypeEnum::LOAN->value            => TransactionTypeEnum::TRANSFER->value,
+            AccountTypeEnum::MORTGAGE->value        => TransactionTypeEnum::TRANSFER->value,
         ],
-        AccountType::MORTGAGE         => [
-            AccountType::ASSET           => TransactionTypeEnum::DEPOSIT->value,
-            AccountType::DEBT            => TransactionTypeModel::TRANSFER,
-            AccountType::EXPENSE         => TransactionTypeModel::WITHDRAWAL,
-            AccountType::INITIAL_BALANCE => TransactionTypeModel::OPENING_BALANCE,
-            AccountType::LOAN            => TransactionTypeModel::TRANSFER,
-            AccountType::MORTGAGE        => TransactionTypeModel::TRANSFER,
+        AccountTypeEnum::MORTGAGE->value         => [
+            AccountTypeEnum::ASSET->value           => TransactionTypeEnum::DEPOSIT->value,
+            AccountTypeEnum::DEBT->value            => TransactionTypeEnum::TRANSFER->value,
+            AccountTypeEnum::EXPENSE->value         => TransactionTypeEnum::WITHDRAWAL->value,
+            AccountTypeEnum::INITIAL_BALANCE->value => TransactionTypeEnum::OPENING_BALANCE->value,
+            AccountTypeEnum::LOAN->value            => TransactionTypeEnum::TRANSFER->value,
+            AccountTypeEnum::MORTGAGE->value        => TransactionTypeEnum::TRANSFER->value,
         ],
-        AccountType::RECONCILIATION   => [
-            AccountType::ASSET => TransactionTypeModel::RECONCILIATION,
+        AccountTypeEnum::RECONCILIATION->value   => [
+            AccountTypeEnum::ASSET->value => TransactionTypeEnum::RECONCILIATION->value,
         ],
-        AccountType::REVENUE          => [
-            AccountType::ASSET    => TransactionTypeEnum::DEPOSIT->value,
-            AccountType::DEBT     => TransactionTypeEnum::DEPOSIT->value,
-            AccountType::LOAN     => TransactionTypeEnum::DEPOSIT->value,
-            AccountType::MORTGAGE => TransactionTypeEnum::DEPOSIT->value,
+        AccountTypeEnum::REVENUE->value          => [
+            AccountTypeEnum::ASSET->value    => TransactionTypeEnum::DEPOSIT->value,
+            AccountTypeEnum::DEBT->value     => TransactionTypeEnum::DEPOSIT->value,
+            AccountTypeEnum::LOAN->value     => TransactionTypeEnum::DEPOSIT->value,
+            AccountTypeEnum::MORTGAGE->value => TransactionTypeEnum::DEPOSIT->value,
         ],
-        AccountType::LIABILITY_CREDIT => [
-            AccountType::DEBT     => TransactionTypeModel::LIABILITY_CREDIT,
-            AccountType::LOAN     => TransactionTypeModel::LIABILITY_CREDIT,
-            AccountType::MORTGAGE => TransactionTypeModel::LIABILITY_CREDIT,
+        AccountTypeEnum::LIABILITY_CREDIT->value => [
+            AccountTypeEnum::DEBT->value     => TransactionTypeEnum::LIABILITY_CREDIT->value,
+            AccountTypeEnum::LOAN->value     => TransactionTypeEnum::LIABILITY_CREDIT->value,
+            AccountTypeEnum::MORTGAGE->value => TransactionTypeEnum::LIABILITY_CREDIT->value,
         ],
-        // AccountType::EXPENSE unlisted because it cant be a source
+        // AccountTypeEnum::EXPENSE->value unlisted because it cant be a source
     ],
 
     // allowed source -> destination accounts.
-    'source_dests'                 => [
-        TransactionTypeModel::WITHDRAWAL       => [
-            AccountType::ASSET    => [AccountType::EXPENSE, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE, AccountType::CASH],
-            AccountType::LOAN     => [AccountType::EXPENSE, AccountType::CASH],
-            AccountType::DEBT     => [AccountType::EXPENSE, AccountType::CASH],
-            AccountType::MORTGAGE => [AccountType::EXPENSE, AccountType::CASH],
+    'source_dests'              => [
+        TransactionTypeEnum::WITHDRAWAL->value       => [
+            AccountTypeEnum::ASSET->value    => [AccountTypeEnum::EXPENSE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::CASH->value],
+            AccountTypeEnum::LOAN->value     => [AccountTypeEnum::EXPENSE->value, AccountTypeEnum::CASH->value],
+            AccountTypeEnum::DEBT->value     => [AccountTypeEnum::EXPENSE->value, AccountTypeEnum::CASH->value],
+            AccountTypeEnum::MORTGAGE->value => [AccountTypeEnum::EXPENSE->value, AccountTypeEnum::CASH->value],
         ],
         TransactionTypeEnum::DEPOSIT->value    => [
-            AccountType::REVENUE  => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
-            AccountType::CASH     => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
-            AccountType::LOAN     => [AccountType::ASSET],
-            AccountType::DEBT     => [AccountType::ASSET],
-            AccountType::MORTGAGE => [AccountType::ASSET],
+            AccountTypeEnum::REVENUE->value  => [AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value],
+            AccountTypeEnum::CASH->value     => [AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value],
+            AccountTypeEnum::LOAN->value     => [AccountTypeEnum::ASSET->value],
+            AccountTypeEnum::DEBT->value     => [AccountTypeEnum::ASSET->value],
+            AccountTypeEnum::MORTGAGE->value => [AccountTypeEnum::ASSET->value],
         ],
-        TransactionTypeModel::TRANSFER         => [
-            AccountType::ASSET    => [AccountType::ASSET],
-            AccountType::LOAN     => [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
-            AccountType::DEBT     => [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
-            AccountType::MORTGAGE => [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
+        TransactionTypeEnum::TRANSFER->value         => [
+            AccountTypeEnum::ASSET->value    => [AccountTypeEnum::ASSET->value],
+            AccountTypeEnum::LOAN->value     => [AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value],
+            AccountTypeEnum::DEBT->value     => [AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value],
+            AccountTypeEnum::MORTGAGE->value => [AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value],
         ],
-        TransactionTypeModel::OPENING_BALANCE  => [
-            AccountType::ASSET           => [AccountType::INITIAL_BALANCE],
-            AccountType::LOAN            => [AccountType::INITIAL_BALANCE],
-            AccountType::DEBT            => [AccountType::INITIAL_BALANCE],
-            AccountType::MORTGAGE        => [AccountType::INITIAL_BALANCE],
-            AccountType::INITIAL_BALANCE => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
+        TransactionTypeEnum::OPENING_BALANCE->value  => [
+            AccountTypeEnum::ASSET->value           => [AccountTypeEnum::INITIAL_BALANCE->value],
+            AccountTypeEnum::LOAN->value            => [AccountTypeEnum::INITIAL_BALANCE->value],
+            AccountTypeEnum::DEBT->value            => [AccountTypeEnum::INITIAL_BALANCE->value],
+            AccountTypeEnum::MORTGAGE->value        => [AccountTypeEnum::INITIAL_BALANCE->value],
+            AccountTypeEnum::INITIAL_BALANCE->value => [AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value],
         ],
-        TransactionTypeModel::RECONCILIATION   => [
-            AccountType::RECONCILIATION => [AccountType::ASSET],
-            AccountType::ASSET          => [AccountType::RECONCILIATION],
+        TransactionTypeEnum::RECONCILIATION->value   => [
+            AccountTypeEnum::RECONCILIATION->value => [AccountTypeEnum::ASSET->value],
+            AccountTypeEnum::ASSET->value          => [AccountTypeEnum::RECONCILIATION->value],
         ],
-        TransactionTypeModel::LIABILITY_CREDIT => [
-            AccountType::LOAN             => [AccountType::LIABILITY_CREDIT],
-            AccountType::DEBT             => [AccountType::LIABILITY_CREDIT],
-            AccountType::MORTGAGE         => [AccountType::LIABILITY_CREDIT],
-            AccountType::LIABILITY_CREDIT => [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
+        TransactionTypeEnum::LIABILITY_CREDIT->value => [
+            AccountTypeEnum::LOAN->value             => [AccountTypeEnum::LIABILITY_CREDIT->value],
+            AccountTypeEnum::DEBT->value             => [AccountTypeEnum::LIABILITY_CREDIT->value],
+            AccountTypeEnum::MORTGAGE->value         => [AccountTypeEnum::LIABILITY_CREDIT->value],
+            AccountTypeEnum::LIABILITY_CREDIT->value => [AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value],
         ],
     ],
     // if you add fields to this array, don't forget to update the export routine (ExportDataGenerator).
-    'journal_meta_fields'          => [
+    'journal_meta_fields'       => [
         // sepa
         'sepa_cc',
         'sepa_ct_op',
@@ -889,28 +889,28 @@ return [
         'recurrence_count',
         'recurrence_date',
     ],
-    'webhooks'                     => [
+    'webhooks'                  => [
         'max_attempts' => env('WEBHOOK_MAX_ATTEMPTS', 3),
     ],
-    'can_have_virtual_amounts'     => [AccountType::ASSET],
-    'can_have_opening_balance'     => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
-    'dynamic_creation_allowed'     => [
-        AccountType::EXPENSE,
-        AccountType::REVENUE,
-        AccountType::INITIAL_BALANCE,
-        AccountType::RECONCILIATION,
-        AccountType::LIABILITY_CREDIT,
+    'can_have_virtual_amounts'  => [AccountTypeEnum::ASSET->value],
+    'can_have_opening_balance'  => [AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value],
+    'dynamic_creation_allowed'  => [
+        AccountTypeEnum::EXPENSE->value,
+        AccountTypeEnum::REVENUE->value,
+        AccountTypeEnum::INITIAL_BALANCE->value,
+        AccountTypeEnum::RECONCILIATION->value,
+        AccountTypeEnum::LIABILITY_CREDIT->value,
     ],
-    'valid_asset_fields'           => ['account_role', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
-    'valid_cc_fields'              => ['account_role', 'cc_monthly_payment_date', 'cc_type', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
-    'valid_account_fields'         => ['account_number', 'currency_id', 'BIC', 'interest', 'interest_period', 'include_net_worth', 'liability_direction'],
+    'valid_asset_fields'        => ['account_role', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
+    'valid_cc_fields'           => ['account_role', 'cc_monthly_payment_date', 'cc_type', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
+    'valid_account_fields'      => ['account_number', 'currency_id', 'BIC', 'interest', 'interest_period', 'include_net_worth', 'liability_direction'],
 
     // dynamic date ranges are as follows:
-    'dynamic_date_ranges'          => ['last7', 'last30', 'last90', 'last365', 'MTD', 'QTD', 'YTD'],
+    'dynamic_date_ranges'       => ['last7', 'last30', 'last90', 'last365', 'MTD', 'QTD', 'YTD'],
 
     // only used in v1
-    'allowed_sort_parameters'      => ['order', 'name', 'iban'],
+    'allowed_sort_parameters'   => ['order', 'name', 'iban'],
 
     // preselected account lists possibilities:
-    'preselected_accounts'         => ['all', 'assets', 'liabilities'],
+    'preselected_accounts'      => ['all', 'assets', 'liabilities'],
 ];

@@ -44,7 +44,7 @@ class AccountType extends Model
     #[\Deprecated]
     public const string CASH             = 'Cash account';
 
-    #[\Deprecated]
+    #[\Deprecated] /** @deprecated  */
     public const string CREDITCARD       = 'Credit card';
 
     #[\Deprecated]
