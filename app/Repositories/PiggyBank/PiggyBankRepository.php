@@ -120,7 +120,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
             return '0';
         }
 
-        return $rep->currentamount;
+        return $rep->current_amount;
     }
 
     public function getRepetition(PiggyBank $piggyBank): ?PiggyBankRepetition
@@ -200,10 +200,10 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         }
 
         app('log')->debug(sprintf('The currency is %s and the amount is %s', $currency->code, $amount));
-        $room              = bcsub($piggyBank->targetamount, $repetition->currentamount);
-        $compare           = bcmul($repetition->currentamount, '-1');
+        $room              = bcsub($piggyBank->target_amount, $repetition->current_amount);
+        $compare           = bcmul($repetition->current_amount, '-1');
 
-        if (0 === bccomp($piggyBank->targetamount, '0')) {
+        if (0 === bccomp($piggyBank->target_amount, '0')) {
             // amount is zero? then the "room" is positive amount of we wish to add or remove.
             $room = app('steam')->positive($amount);
             app('log')->debug(sprintf('Room is now %s', $room));
@@ -223,7 +223,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
         // amount is negative and $currentamount is smaller than $amount
         if (-1 === bccomp($amount, '0') && 1 === bccomp($compare, $amount)) {
-            app('log')->debug(sprintf('Max amount to remove is %f', $repetition->currentamount));
+            app('log')->debug(sprintf('Max amount to remove is %f', $repetition->current_amount));
             app('log')->debug(sprintf('Cannot remove %f from piggy bank #%d ("%s")', $amount, $piggyBank->id, $piggyBank->name));
             app('log')->debug(sprintf('New amount is %f', $compare));
 
@@ -267,7 +267,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
         /** @var PiggyBank $piggy */
         foreach ($set as $piggy) {
-            $currentAmount = $this->getRepetition($piggy)->currentamount ?? '0';
+            $currentAmount = $this->getRepetition($piggy)->current_amount ?? '0';
             $piggy->name   = $piggy->name.' ('.app('amount')->formatAnything($currency, $currentAmount, false).')';
         }
 
@@ -298,11 +298,11 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         if (null === $repetition) {
             return $savePerMonth;
         }
-        if (null !== $piggyBank->targetdate && $repetition->currentamount < $piggyBank->targetamount) {
+        if (null !== $piggyBank->target_date && $repetition->current_amount < $piggyBank->target_amount) {
             $now             = today(config('app.timezone'));
-            $startDate       = null !== $piggyBank->startdate && $piggyBank->startdate->gte($now) ? $piggyBank->startdate : $now;
-            $diffInMonths    = (int)$startDate->diffInMonths($piggyBank->targetdate);
-            $remainingAmount = bcsub($piggyBank->targetamount, $repetition->currentamount);
+            $startDate       = null !== $piggyBank->start_date && $piggyBank->start_date->gte($now) ? $piggyBank->start_date : $now;
+            $diffInMonths    = (int)$startDate->diffInMonths($piggyBank->target_date);
+            $remainingAmount = bcsub($piggyBank->target_amount, $repetition->current_amount);
 
             // more than 1 month to go and still need money to save:
             if ($diffInMonths > 0 && 1 === bccomp($remainingAmount, '0')) {
@@ -332,7 +332,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         foreach ($piggies as $current) {
             $repetition = $this->getRepetition($current);
             if (null !== $repetition) {
-                $balance = bcsub($balance, $repetition->currentamount);
+                $balance = bcsub($balance, $repetition->current_amount);
             }
         }
 

@@ -114,7 +114,7 @@ class PiggyBankController extends Controller
                     '%s (%s / %s)',
                     $piggy->name,
                     app('amount')->formatAnything($currency, $currentAmount, false),
-                    app('amount')->formatAnything($currency, $piggy->targetamount, false),
+                    app('amount')->formatAnything($currency, $piggy->target_amount, false),
                 ),
                 'currency_id'             => (string)$currency->id,
                 'currency_name'           => $currency->name,

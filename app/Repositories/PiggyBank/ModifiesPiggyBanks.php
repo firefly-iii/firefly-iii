@@ -59,7 +59,7 @@ trait ModifiesPiggyBanks
         if (null === $repetition) {
             return false;
         }
-        $repetition->currentamount = bcsub($repetition->currentamount, $amount);
+        $repetition->current_amount = bcsub($repetition->current_amount, $amount);
         $repetition->save();
 
         app('log')->debug('addAmount [a]: Trigger change for negative amount.');
@@ -74,8 +74,8 @@ trait ModifiesPiggyBanks
         if (null === $repetition) {
             return false;
         }
-        $currentAmount             = $repetition->currentamount ?? '0';
-        $repetition->currentamount = bcadd($currentAmount, $amount);
+        $currentAmount             = $repetition->current_amount ?? '0';
+        $repetition->current_amount = bcadd($currentAmount, $amount);
         $repetition->save();
 
         app('log')->debug('addAmount [b]: Trigger change for positive amount.');
@@ -88,11 +88,11 @@ trait ModifiesPiggyBanks
     {
         $today         = today(config('app.timezone'));
         $leftOnAccount = $this->leftOnAccount($piggyBank, $today);
-        $savedSoFar    = $this->getRepetition($piggyBank)->currentamount;
+        $savedSoFar    = $this->getRepetition($piggyBank)->current_amount;
         $maxAmount     = $leftOnAccount;
         $leftToSave    = null;
-        if (0 !== bccomp($piggyBank->targetamount, '0')) {
-            $leftToSave = bcsub($piggyBank->targetamount, $savedSoFar);
+        if (0 !== bccomp($piggyBank->target_amount, '0')) {
+            $leftToSave = bcsub($piggyBank->target_amount, $savedSoFar);
             $maxAmount  = 1 === bccomp($leftOnAccount, $leftToSave) ? $leftToSave : $leftOnAccount;
         }
 
@@ -114,7 +114,7 @@ trait ModifiesPiggyBanks
         if (null === $repetition) {
             return false;
         }
-        $savedSoFar = $repetition->currentamount;
+        $savedSoFar = $repetition->current_amount;
 
         return bccomp($amount, $savedSoFar) <= 0;
     }
@@ -143,12 +143,12 @@ trait ModifiesPiggyBanks
         if (null === $repetition) {
             return $piggyBank;
         }
-        $max                       = $piggyBank->targetamount;
-        if (1 === bccomp($amount, $max) && 0 !== bccomp($piggyBank->targetamount, '0')) {
+        $max                       = $piggyBank->target_amount;
+        if (1 === bccomp($amount, $max) && 0 !== bccomp($piggyBank->target_amount, '0')) {
             $amount = $max;
         }
-        $difference                = bcsub($amount, $repetition->currentamount);
-        $repetition->currentamount = $amount;
+        $difference                = bcsub($amount, $repetition->current_amount);
+        $repetition->current_amount = $amount;
         $repetition->save();
 
         if (-1 === bccomp($difference, '0')) {
@@ -213,7 +213,7 @@ trait ModifiesPiggyBanks
         // repetition is auto created.
         $repetition                 = $this->getRepetition($piggyBank);
         if (null !== $repetition && array_key_exists('current_amount', $data) && '' !== $data['current_amount']) {
-            $repetition->currentamount = $data['current_amount'];
+            $repetition->current_amount = $data['current_amount'];
             $repetition->save();
         }
 
@@ -318,13 +318,13 @@ trait ModifiesPiggyBanks
         // if the piggy bank is now smaller than the current relevant rep,
         // remove money from the rep.
         $repetition = $this->getRepetition($piggyBank);
-        if (null !== $repetition && $repetition->currentamount > $piggyBank->targetamount && 0 !== bccomp($piggyBank->targetamount, '0')) {
-            $difference                = bcsub($piggyBank->targetamount, $repetition->currentamount);
+        if (null !== $repetition && $repetition->current_amount > $piggyBank->target_amount && 0 !== bccomp($piggyBank->target_amount, '0')) {
+            $difference                = bcsub($piggyBank->target_amount, $repetition->current_amount);
 
             // an amount will be removed, create "negative" event:
             event(new ChangedAmount($piggyBank, $difference, null, null));
 
-            $repetition->currentamount = $piggyBank->targetamount;
+            $repetition->current_amount = $piggyBank->target_amount;
             $repetition->save();
         }
 
@@ -370,18 +370,18 @@ trait ModifiesPiggyBanks
             $piggyBank->account_id = (int)$data['account_id'];
         }
         if (array_key_exists('targetamount', $data) && '' !== $data['targetamount']) {
-            $piggyBank->targetamount = $data['targetamount'];
+            $piggyBank->target_amount = $data['targetamount'];
         }
         if (array_key_exists('targetamount', $data) && '' === $data['targetamount']) {
-            $piggyBank->targetamount = '0';
+            $piggyBank->target_amount = '0';
         }
         if (array_key_exists('targetdate', $data) && '' !== $data['targetdate']) {
-            $piggyBank->targetdate    = $data['targetdate'];
-            $piggyBank->targetdate_tz = $data['targetdate']?->format('e');
+            $piggyBank->target_date    = $data['targetdate'];
+            $piggyBank->target_date_tz = $data['targetdate']?->format('e');
         }
         if (array_key_exists('startdate', $data)) {
-            $piggyBank->startdate    = $data['startdate'];
-            $piggyBank->startdate_tz = $data['targetdate']?->format('e');
+            $piggyBank->start_date    = $data['startdate'];
+            $piggyBank->start_date_tz = $data['targetdate']?->format('e');
         }
         $piggyBank->save();
 

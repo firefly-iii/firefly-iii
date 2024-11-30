@@ -77,8 +77,8 @@ class EditController extends Controller
         $subTitleIcon = 'fa-pencil';
         $note         = $piggyBank->notes()->first();
         // Flash some data to fill the form.
-        $targetDate   = $piggyBank->targetdate?->format('Y-m-d');
-        $startDate    = $piggyBank->startdate?->format('Y-m-d');
+        $targetDate   = $piggyBank->target_date?->format('Y-m-d');
+        $startDate    = $piggyBank->start_date?->format('Y-m-d');
         $currency     = $this->accountRepository->getAccountCurrency($piggyBank->account);
         if (null === $currency) {
             $currency = app('amount')->getDefaultCurrency();
@@ -87,13 +87,13 @@ class EditController extends Controller
         $preFilled    = [
             'name'         => $piggyBank->name,
             'account_id'   => $piggyBank->account_id,
-            'targetamount' => app('steam')->bcround($piggyBank->targetamount, $currency->decimal_places),
+            'targetamount' => app('steam')->bcround($piggyBank->target_amount, $currency->decimal_places),
             'targetdate'   => $targetDate,
             'startdate'    => $startDate,
             'object_group' => null !== $piggyBank->objectGroups->first() ? $piggyBank->objectGroups->first()->title : '',
             'notes'        => null === $note ? '' : $note->text,
         ];
-        if (0 === bccomp($piggyBank->targetamount, '0')) {
+        if (0 === bccomp($piggyBank->target_amount, '0')) {
             $preFilled['targetamount'] = '';
         }
         session()->flash('preFilled', $preFilled);

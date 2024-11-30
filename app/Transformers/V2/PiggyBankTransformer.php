@@ -119,7 +119,7 @@ class PiggyBankTransformer extends AbstractTransformer
         /** @var PiggyBankRepetition $repetition */
         foreach ($repetitions as $repetition) {
             $this->repetitions[$repetition->piggy_bank_id] = [
-                'amount' => $repetition->currentamount,
+                'amount' => $repetition->current_amount,
             ];
         }
 
@@ -178,14 +178,14 @@ class PiggyBankTransformer extends AbstractTransformer
         $nativeLeftToSave    = null;
         $savePerMonth        = null;
         $nativeSavePerMonth  = null;
-        $startDate           = $piggyBank->startdate?->format('Y-m-d');
-        $targetDate          = $piggyBank->targetdate?->format('Y-m-d');
+        $startDate           = $piggyBank->start_date?->format('Y-m-d');
+        $targetDate          = $piggyBank->target_date?->format('Y-m-d');
         $accountId           = $piggyBank->account_id;
         $accountName         = $this->accounts[$accountId]['name'] ?? null;
         $currency            = $this->currencies[$accountId] ?? $this->default;
         $currentAmount       = app('steam')->bcround($this->repetitions[$piggyBank->id]['amount'] ?? '0', $currency->decimal_places);
         $nativeCurrentAmount = $this->converter->convert($this->default, $currency, today(), $currentAmount);
-        $targetAmount        = $piggyBank->targetamount;
+        $targetAmount        = $piggyBank->target_amount;
         $nativeTargetAmount  = $this->converter->convert($this->default, $currency, today(), $targetAmount);
         $note                = $this->notes[$piggyBank->id] ?? null;
         $group               = $this->groups[$piggyBank->id] ?? null;
@@ -194,7 +194,7 @@ class PiggyBankTransformer extends AbstractTransformer
             $leftToSave         = bcsub($targetAmount, $currentAmount);
             $nativeLeftToSave   = $this->converter->convert($this->default, $currency, today(), $leftToSave);
             $percentage         = (int)bcmul(bcdiv($currentAmount, $targetAmount), '100');
-            $savePerMonth       = $this->getSuggestedMonthlyAmount($currentAmount, $targetAmount, $piggyBank->startdate, $piggyBank->targetdate);
+            $savePerMonth       = $this->getSuggestedMonthlyAmount($currentAmount, $targetAmount, $piggyBank->start_date, $piggyBank->target_date);
             $nativeSavePerMonth = $this->converter->convert($this->default, $currency, today(), $savePerMonth);
         }
         $this->converter->summarize();

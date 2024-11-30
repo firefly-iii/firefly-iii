@@ -178,15 +178,15 @@ class UpdatePiggybank implements ActionInterface
         $repository->setUser($journal->user);
 
         // how much can we add to the piggy bank?
-        if (0 !== bccomp($piggyBank->targetamount, '0')) {
-            $toAdd  = bcsub($piggyBank->targetamount, $repository->getCurrentAmount($piggyBank));
+        if (0 !== bccomp($piggyBank->target_amount, '0')) {
+            $toAdd  = bcsub($piggyBank->target_amount, $repository->getCurrentAmount($piggyBank));
             app('log')->debug(sprintf('Max amount to add to piggy bank is %s, amount is %s', $toAdd, $amount));
 
             // update amount to fit:
             $amount = -1 === bccomp($amount, $toAdd) ? $amount : $toAdd;
             app('log')->debug(sprintf('Amount is now %s', $amount));
         }
-        if (0 === bccomp($piggyBank->targetamount, '0')) {
+        if (0 === bccomp($piggyBank->target_amount, '0')) {
             app('log')->debug('Target amount is zero, can add anything.');
         }
 
