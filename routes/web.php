@@ -304,10 +304,10 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'budget-limits', 'as' => 'budget-limits.'],
     static function (): void {
-        Route::get('create/{budget}/{start_date}/{end_date}', ['uses' => 'Budget\BudgetLimitController@create', 'as' => 'create'])
-            ->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+        Route::get('create/{budget}/{start_date}/{end_date}', ['uses' => 'Budget\BudgetLimitController@create', 'as' => 'create'])->where(['start_date' => DATEFORMAT])->where(['end_date' => DATEFORMAT]);
+        Route::get('edit/{budgetLimit}', ['uses' => 'Budget\BudgetLimitController@edit', 'as' => 'edit']);
+        Route::get('show/{budgetLimit}', ['uses' => 'Budget\BudgetLimitController@show', 'as' => 'show']);
+
         Route::post('store', ['uses' => 'Budget\BudgetLimitController@store', 'as' => 'store']);
 
         Route::post('delete/{budgetLimit}', ['uses' => 'Budget\BudgetLimitController@delete', 'as' => 'delete']);

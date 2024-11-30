@@ -25,6 +25,10 @@
                 <div class="form-group">
                     <input step="any" class="form-control" id="amount" value="" autocomplete="off" name="amount" type="number"/>
                 </div>
+                <div class="form-group">
+                    <textarea name="notes" class="form-control" rows="3" placeholder="{{ 'notes'|_ }}"></textarea>
+                    <span class="help-block">{{ trans('firefly.field_supports_markdown')|raw }}</span>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'close'|_ }}</button>
