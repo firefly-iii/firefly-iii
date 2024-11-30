@@ -173,7 +173,7 @@ class CorrectAmounts extends Command
 
         /** @var PiggyBankRepetition $item */
         foreach ($set as $item) {
-            $item->currentamount = app('steam')->positive($item->currentamount);
+            $item->currentamount = app('steam')->positive($item->current_amount);
             $item->save();
         }
         $this->friendlyInfo(sprintf('Corrected %d piggy bank repetition amount(s).', $count));
@@ -191,7 +191,7 @@ class CorrectAmounts extends Command
 
         /** @var PiggyBank $item */
         foreach ($set as $item) {
-            $item->targetamount = app('steam')->positive($item->targetamount);
+            $item->targetamount = app('steam')->positive($item->target_amount);
             $item->save();
         }
         $this->friendlyInfo(sprintf('Corrected %d piggy bank amount(s).', $count));

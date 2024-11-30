@@ -27,6 +27,7 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
@@ -46,17 +47,15 @@ class PiggyBank extends Model
             'created_at'   => 'datetime',
             'updated_at'   => 'datetime',
             'deleted_at'   => 'datetime',
-            'startdate'    => 'date',
-            'targetdate'   => 'date',
+            'start_date'    => 'date',
+            'target_date'   => 'date',
             'order'        => 'int',
             'active'       => 'boolean',
             'encrypted'    => 'boolean',
-            'targetamount' => 'string',
+            'target_amount' => 'string',
         ];
 
-    protected $fillable = ['name', 'account_id', 'order', 'targetamount', 'startdate', 'startdate_tz', 'targetdate', 'targetdate_tz', 'active'];
-
-    protected $hidden   = ['targetamount_encrypted', 'encrypted'];
+    protected $fillable = ['name', 'account_id', 'order', 'target_amount', 'start_date', 'start_date_tz', 'target_date', 'target_date_tz', 'active'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
@@ -110,6 +109,11 @@ class PiggyBank extends Model
         return $this->hasMany(PiggyBankEvent::class);
     }
 
+    public function accounts(): BelongsToMany
+    {
+        return $this->belongsToMany(Account::class);
+    }
+
     public function piggyBankRepetitions(): HasMany
     {
         return $this->hasMany(PiggyBankRepetition::class);
@@ -118,9 +122,9 @@ class PiggyBank extends Model
     /**
      * @param mixed $value
      */
-    public function setTargetamountAttribute($value): void
+    public function setTargetAmountAttribute($value): void
     {
-        $this->attributes['targetamount'] = (string)$value;
+        $this->attributes['target_amount'] = (string)$value;
     }
 
     protected function accountId(): Attribute
@@ -140,7 +144,7 @@ class PiggyBank extends Model
     /**
      * Get the max amount
      */
-    protected function targetamount(): Attribute
+    protected function targetAmount(): Attribute
     {
         return Attribute::make(
             get: static fn ($value) => (string)$value,

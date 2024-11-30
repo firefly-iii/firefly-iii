@@ -47,7 +47,7 @@ class PiggyBankRepetition extends Model
             'virtual_balance' => 'string',
         ];
 
-    protected $fillable = ['piggy_bank_id', 'startdate', 'startdate_tz', 'targetdate', 'targetdate_tz', 'currentamount'];
+    protected $fillable = ['piggy_bank_id', 'start_date', 'start_date_tz', 'target_date', 'target_date_tz', 'current_amount'];
 
     public function piggyBank(): BelongsTo
     {
