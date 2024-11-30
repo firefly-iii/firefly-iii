@@ -48,6 +48,7 @@ class StoreRequest extends FormRequest
             'amount'        => $this->convertString('amount'),
             'currency_id'   => $this->convertInteger('currency_id'),
             'currency_code' => $this->convertString('currency_code'),
+            'notes'         => $this->stringWithNewlines('notes'),
         ];
     }
 
@@ -62,6 +63,7 @@ class StoreRequest extends FormRequest
             'amount'        => ['required', new IsValidPositiveAmount()],
             'currency_id'   => 'numeric|exists:transaction_currencies,id',
             'currency_code' => 'min:3|max:51|exists:transaction_currencies,code',
+            'notes'         => 'nullable|min:0|max:32768',
         ];
     }
 }
