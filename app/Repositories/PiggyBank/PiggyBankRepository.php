@@ -94,7 +94,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
     public function getAttachments(PiggyBank $piggyBank): Collection
     {
-        $set  = $piggyBank->attachments()->get();
+        $set = $piggyBank->attachments()->get();
 
         /** @var \Storage $disk */
         $disk = \Storage::disk('upload');
@@ -115,16 +115,18 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function getCurrentAmount(PiggyBank $piggyBank): string
     {
-        $rep = $this->getRepetition($piggyBank);
-        if (null === $rep) {
-            return '0';
+        $sum = '0';
+        foreach ($piggyBank->accounts as $account) {
+            $amount = (string) $account->pivot->current_amount;
+            $amount = '' === $amount ? '0' : $amount;
+            $sum    = bcadd($sum, $amount);
         }
-
-        return $rep->current_amount;
+        return $sum;
     }
 
     public function getRepetition(PiggyBank $piggyBank): ?PiggyBankRepetition
     {
+        throw new FireflyException('[b] Piggy bank repetitions are EOL.');
         return $piggyBank->piggyBankRepetitions()->first();
     }
 
@@ -140,17 +142,18 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function getExactAmount(PiggyBank $piggyBank, PiggyBankRepetition $repetition, TransactionJournal $journal): string
     {
+        throw new FireflyException('[c] Piggy bank repetitions are EOL.');
         app('log')->debug(sprintf('Now in getExactAmount(%d, %d, %d)', $piggyBank->id, $repetition->id, $journal->id));
 
-        $operator          = null;
-        $currency          = null;
+        $operator = null;
+        $currency = null;
 
         /** @var JournalRepositoryInterface $journalRepost */
-        $journalRepost     = app(JournalRepositoryInterface::class);
+        $journalRepost = app(JournalRepositoryInterface::class);
         $journalRepost->setUser($this->user);
 
         /** @var AccountRepositoryInterface $accountRepos */
-        $accountRepos      = app(AccountRepositoryInterface::class);
+        $accountRepos = app(AccountRepositoryInterface::class);
         $accountRepos->setUser($this->user);
 
         $defaultCurrency   = app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
@@ -159,10 +162,10 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         app('log')->debug(sprintf('Piggy bank #%d currency is %s', $piggyBank->id, $piggyBankCurrency->code));
 
         /** @var Transaction $source */
-        $source            = $journal->transactions()->with(['account'])->where('amount', '<', 0)->first();
+        $source = $journal->transactions()->with(['account'])->where('amount', '<', 0)->first();
 
         /** @var Transaction $destination */
-        $destination       = $journal->transactions()->with(['account'])->where('amount', '>', 0)->first();
+        $destination = $journal->transactions()->with(['account'])->where('amount', '>', 0)->first();
 
         // matches source, which means amount will be removed from piggy:
         if ($source->account_id === $piggyBank->account_id) {
@@ -184,12 +187,12 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         }
         // currency of the account + the piggy bank currency are almost the same.
         // which amount from the transaction matches?
-        $amount            = null;
-        if ((int)$source->transaction_currency_id === $currency->id) {
+        $amount = null;
+        if ((int) $source->transaction_currency_id === $currency->id) {
             app('log')->debug('Use normal amount');
             $amount = app('steam')->{$operator}($source->amount); // @phpstan-ignore-line
         }
-        if ((int)$source->foreign_currency_id === $currency->id) {
+        if ((int) $source->foreign_currency_id === $currency->id) {
             app('log')->debug('Use foreign amount');
             $amount = app('steam')->{$operator}($source->foreign_amount); // @phpstan-ignore-line
         }
@@ -200,8 +203,8 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         }
 
         app('log')->debug(sprintf('The currency is %s and the amount is %s', $currency->code, $amount));
-        $room              = bcsub($piggyBank->target_amount, $repetition->current_amount);
-        $compare           = bcmul($repetition->current_amount, '-1');
+        $room    = bcsub($piggyBank->target_amount, $repetition->current_amount);
+        $compare = bcmul($repetition->current_amount, '-1');
 
         if (0 === bccomp($piggyBank->target_amount, '0')) {
             // amount is zero? then the "room" is positive amount of we wish to add or remove.
@@ -230,10 +233,10 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
             return $compare;
         }
 
-        return (string)$amount;
+        return (string) $amount;
     }
 
-    public function setUser(null|Authenticatable|User $user): void
+    public function setUser(null | Authenticatable | User $user): void
     {
         if ($user instanceof User) {
             $this->user = $user;
@@ -249,7 +252,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         /** @var null|Note $note */
         $note = $piggyBank->notes()->first();
 
-        return (string)$note?->text;
+        return (string) $note?->text;
     }
 
     /**
@@ -259,12 +262,12 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     {
         $currency = app('amount')->getDefaultCurrency();
 
-        $set      = $this->getPiggyBanks();
+        $set = $this->getPiggyBanks();
 
         /** @var PiggyBank $piggy */
         foreach ($set as $piggy) {
             $currentAmount = $this->getRepetition($piggy)->current_amount ?? '0';
-            $piggy->name   = $piggy->name.' ('.app('amount')->formatAnything($currency, $currentAmount, false).')';
+            $piggy->name   = $piggy->name . ' (' . app('amount')->formatAnything($currency, $currentAmount, false) . ')';
         }
 
         return $set;
@@ -272,16 +275,17 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
     public function getPiggyBanks(): Collection
     {
-        return $this->user  // @phpstan-ignore-line (phpstan does not recognize objectGroups)
-            ->piggyBanks()
+        return PiggyBank
+            ::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
+            ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
+            ->where('accounts.user_id', auth()->user()->id)
             ->with(
                 [
                     'account',
                     'objectGroups',
                 ]
             )
-            ->orderBy('order', 'ASC')->get()
-        ;
+            ->orderBy('piggy_banks.order', 'ASC')->get();
     }
 
     /**
@@ -289,20 +293,17 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function getSuggestedMonthlyAmount(PiggyBank $piggyBank): string
     {
-        $savePerMonth = '0';
-        $repetition   = $this->getRepetition($piggyBank);
-        if (null === $repetition) {
-            return $savePerMonth;
-        }
-        if (null !== $piggyBank->target_date && $repetition->current_amount < $piggyBank->target_amount) {
+        $savePerMonth  = '0';
+        $currentAmount = $this->getCurrentAmount($piggyBank);
+        if (null !== $piggyBank->target_date && $currentAmount < $piggyBank->target_amount) {
             $now             = today(config('app.timezone'));
             $startDate       = null !== $piggyBank->start_date && $piggyBank->start_date->gte($now) ? $piggyBank->start_date : $now;
-            $diffInMonths    = (int)$startDate->diffInMonths($piggyBank->target_date);
-            $remainingAmount = bcsub($piggyBank->target_amount, $repetition->current_amount);
+            $diffInMonths    = (int) $startDate->diffInMonths($piggyBank->target_date);
+            $remainingAmount = bcsub($piggyBank->target_amount, $currentAmount);
 
             // more than 1 month to go and still need money to save:
             if ($diffInMonths > 0 && 1 === bccomp($remainingAmount, '0')) {
-                $savePerMonth = bcdiv($remainingAmount, (string)$diffInMonths);
+                $savePerMonth = bcdiv($remainingAmount, (string) $diffInMonths);
             }
 
             // less than 1 month to go but still need money to save:
@@ -342,8 +343,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
             $search->whereLike('piggy_banks.name', sprintf('%%%s%%', $query));
         }
         $search->orderBy('piggy_banks.order', 'ASC')
-            ->orderBy('piggy_banks.name', 'ASC')
-        ;
+               ->orderBy('piggy_banks.name', 'ASC');
 
         return $search->take($limit)->get();
     }

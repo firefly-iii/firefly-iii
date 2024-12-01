@@ -67,8 +67,8 @@ class AddTimezonesToDates extends Command
         CurrencyExchangeRate::class => ['date'], // done
         InvitedUser::class          => ['expires'],
         PiggyBankEvent::class       => ['date'],
-        PiggyBankRepetition::class  => ['startdate', 'targetdate'],
-        PiggyBank::class            => ['startdate', 'targetdate'], // done
+        PiggyBankRepetition::class  => ['start_date', 'target_date'],
+        PiggyBank::class            => ['start_date', 'target_date'], // done
         Recurrence::class           => ['first_date', 'repeat_until', 'latest_date'],
         Tag::class                  => ['date'],
         TransactionJournal::class   => ['date'],

@@ -78,6 +78,11 @@ class PiggyBank extends Model
         throw new NotFoundHttpException();
     }
 
+    public function transactionCurrency(): BelongsTo
+    {
+        return $this->belongsTo(TransactionCurrency::class);
+    }
+
     public function account(): BelongsTo
     {
         return $this->belongsTo(Account::class);

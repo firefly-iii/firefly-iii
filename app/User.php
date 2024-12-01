@@ -333,14 +333,6 @@ class User extends Authenticatable
     }
 
     /**
-     * Link to piggy banks.
-     */
-    public function piggyBanks(): HasManyThrough
-    {
-        return $this->hasManyThrough(PiggyBank::class, Account::class);
-    }
-
-    /**
      * Link to preferences.
      */
     public function preferences(): HasMany

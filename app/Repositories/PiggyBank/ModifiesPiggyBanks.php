@@ -45,6 +45,7 @@ trait ModifiesPiggyBanks
 
     public function addAmountToRepetition(PiggyBankRepetition $repetition, string $amount, TransactionJournal $journal): void
     {
+        throw new FireflyException('[a] Piggy bank repetitions are EOL.');
         app('log')->debug(sprintf('addAmountToRepetition: %s', $amount));
         if (-1 === bccomp($amount, '0')) {
             app('log')->debug('Remove amount.');

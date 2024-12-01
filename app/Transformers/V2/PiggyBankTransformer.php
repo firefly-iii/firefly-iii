@@ -115,6 +115,7 @@ class PiggyBankTransformer extends AbstractTransformer
 
         // grab repetitions (for current amount):
         $repetitions         = PiggyBankRepetition::whereIn('piggy_bank_id', $piggyBanks)->get();
+        throw new FireflyException('[d] Piggy bank repetitions are EOL.');
 
         /** @var PiggyBankRepetition $repetition */
         foreach ($repetitions as $repetition) {
