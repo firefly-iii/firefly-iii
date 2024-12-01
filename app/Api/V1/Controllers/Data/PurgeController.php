@@ -36,6 +36,7 @@ use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
@@ -63,14 +64,17 @@ class PurgeController extends Controller
         Bill::whereUserId($user->id)->onlyTrashed()->forceDelete();
 
         // piggies
-        $set  = PiggyBank::leftJoin('accounts', 'accounts.id', 'piggy_banks.account_id')
-            ->where('accounts.user_id', $user->id)->onlyTrashed()->get(['piggy_banks.*'])
-        ;
-
-        /** @var PiggyBank $piggy */
-        foreach ($set as $piggy) {
-            $piggy->forceDelete();
-        }
+        $repository = app(PiggyBankRepositoryInterface::class);
+        $repository->setUser($user);
+        $repository->purgeAll();
+//        $set  = PiggyBank::leftJoin('accounts', 'accounts.id', 'piggy_banks.account_id')
+//            ->where('accounts.user_id', $user->id)->onlyTrashed()->get(['piggy_banks.*'])
+//        ;
+//
+//        /** @var PiggyBank $piggy */
+//        foreach ($set as $piggy) {
+//            $piggy->forceDelete();
+//        }
 
         // rule group
         RuleGroup::whereUserId($user->id)->onlyTrashed()->forceDelete();

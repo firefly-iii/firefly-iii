@@ -42,6 +42,8 @@ interface CurrencyRepositoryInterface
      */
     public function findByCode(string $currencyCode): ?TransactionCurrency;
 
+    public function find(int $currencyId): ?TransactionCurrency;
+
     /**
      * Returns the complete set of transactions but needs
      * no user object.

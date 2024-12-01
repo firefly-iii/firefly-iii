@@ -52,6 +52,8 @@ interface PiggyBankRepositoryInterface
 
     public function destroyAll(): void;
 
+    public function purgeAll(): void;
+
     public function find(int $piggyBankId): ?PiggyBank;
 
     /**
@@ -78,10 +80,7 @@ interface PiggyBankRepositoryInterface
      */
     public function getExactAmount(PiggyBank $piggyBank, PiggyBankRepetition $repetition, TransactionJournal $journal): string;
 
-    /**
-     * Highest order of all piggy banks.
-     */
-    public function getMaxOrder(): int;
+    public function updateNote(PiggyBank $piggyBank, string $note): void;
 
     /**
      * Return note for piggy bank.
@@ -114,10 +113,10 @@ interface PiggyBankRepositoryInterface
 
     public function removeObjectGroup(PiggyBank $piggyBank): PiggyBank;
 
-    /**
-     * Correct order of piggies in case of issues.
-     */
-    public function resetOrder(): void;
+//    /**
+//     * Correct order of piggies in case of issues.
+//     */
+//    public function resetOrder(): void;
 
     /**
      * Search for piggy banks.
@@ -133,7 +132,7 @@ interface PiggyBankRepositoryInterface
      */
     public function setOrder(PiggyBank $piggyBank, int $newOrder): bool;
 
-    public function setUser(null|Authenticatable|User $user): void;
+    public function setUser(null | Authenticatable | User $user): void;
 
     /**
      * Store new piggy bank.

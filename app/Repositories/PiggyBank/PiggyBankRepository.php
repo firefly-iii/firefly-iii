@@ -240,10 +240,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         }
     }
 
-    public function getMaxOrder(): int
-    {
-        return (int)$this->user->piggyBanks()->max('piggy_banks.order');
-    }
 
     /**
      * Return note for piggy bank.
@@ -350,5 +346,10 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         ;
 
         return $search->take($limit)->get();
+    }
+
+    #[\Override] public function purgeAll(): void
+    {
+        throw new FireflyException('TODO Not implemented');
     }
 }

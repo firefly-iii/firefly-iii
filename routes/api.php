@@ -615,6 +615,7 @@ Route::group(
 
         Route::get('{piggyBank}/events', ['uses' => 'ListController@piggyBankEvents', 'as' => 'events']);
         Route::get('{piggyBank}/attachments', ['uses' => 'ListController@attachments', 'as' => 'attachments']);
+        Route::get('{piggyBank}/accounts', ['uses' => 'ListController@accounts', 'as' => 'accounts']);
     }
 );
 

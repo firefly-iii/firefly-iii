@@ -913,4 +913,7 @@ return [
 
     // preselected account lists possibilities:
     'preselected_accounts'      => ['all', 'assets', 'liabilities'],
+
+    // allowed to store a piggy bank in:
+    'piggy_bank_account_types' => [AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value],
 ];

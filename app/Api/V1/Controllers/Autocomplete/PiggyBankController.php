@@ -68,12 +68,11 @@ class PiggyBankController extends Controller
     {
         $data            = $request->getData();
         $piggies         = $this->piggyRepository->searchPiggyBank($data['query'], $this->parameters->get('limit'));
-        $defaultCurrency = app('amount')->getDefaultCurrency();
         $response        = [];
 
         /** @var PiggyBank $piggy */
         foreach ($piggies as $piggy) {
-            $currency    = $this->accountRepository->getAccountCurrency($piggy->account) ?? $defaultCurrency;
+            $currency    = $piggy->transactionCurrency;
             $objectGroup = $piggy->objectGroups()->first();
             $response[]  = [
                 'id'                      => (string)$piggy->id,
@@ -99,12 +98,11 @@ class PiggyBankController extends Controller
     {
         $data            = $request->getData();
         $piggies         = $this->piggyRepository->searchPiggyBank($data['query'], $this->parameters->get('limit'));
-        $defaultCurrency = app('amount')->getDefaultCurrency();
         $response        = [];
 
         /** @var PiggyBank $piggy */
         foreach ($piggies as $piggy) {
-            $currency      = $this->accountRepository->getAccountCurrency($piggy->account) ?? $defaultCurrency;
+            $currency      = $piggy->transactionCurrency;
             $currentAmount = $this->piggyRepository->getRepetition($piggy)->current_amount ?? '0';
             $objectGroup   = $piggy->objectGroups()->first();
             $response[]    = [

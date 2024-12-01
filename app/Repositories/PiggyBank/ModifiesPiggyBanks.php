@@ -26,11 +26,14 @@ namespace FireflyIII\Repositories\PiggyBank;
 
 use FireflyIII\Events\Model\PiggyBank\ChangedAmount;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Factory\PiggyBankFactory;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
+use FireflyIII\Support\Facades\Amount;
 use Illuminate\Database\QueryException;
 
 /**
@@ -178,82 +181,11 @@ trait ModifiesPiggyBanks
      */
     public function store(array $data): PiggyBank
     {
-        $order                      = $this->getMaxOrder() + 1;
-        if (array_key_exists('order', $data)) {
-            $order = $data['order'];
-        }
-        $data['order']              = 31337; // very high when creating.
-        $piggyData                  = $data;
-        // unset fields just in case.
-        unset($piggyData['object_group_title'], $piggyData['object_group_id'], $piggyData['notes'], $piggyData['current_amount']);
-
-        // validate amount:
-        if (array_key_exists('targetamount', $piggyData) && '' === (string)$piggyData['targetamount']) {
-            $piggyData['targetamount'] = '0';
-        }
-
-        $piggyData['startdate_tz']  = $piggyData['startdate']?->format('e');
-        $piggyData['targetdate_tz'] = $piggyData['targetdate']?->format('e');
-
-        try {
-            /** @var PiggyBank $piggyBank */
-            $piggyBank = PiggyBank::create($piggyData);
-        } catch (QueryException $e) {
-            app('log')->error(sprintf('Could not store piggy bank: %s', $e->getMessage()), $piggyData);
-
-            throw new FireflyException('400005: Could not store new piggy bank.', 0, $e);
-        }
-
-        // reset order then set order:
-        $this->resetOrder();
-        $this->setOrder($piggyBank, $order);
-
-        $this->updateNote($piggyBank, $data['notes']);
-
-        // repetition is auto created.
-        $repetition                 = $this->getRepetition($piggyBank);
-        if (null !== $repetition && array_key_exists('current_amount', $data) && '' !== $data['current_amount']) {
-            $repetition->current_amount = $data['current_amount'];
-            $repetition->save();
-        }
-
-        $objectGroupTitle           = $data['object_group_title'] ?? '';
-        if ('' !== $objectGroupTitle) {
-            $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
-            if (null !== $objectGroup) {
-                $piggyBank->objectGroups()->sync([$objectGroup->id]);
-                $piggyBank->save();
-            }
-        }
-        // try also with ID
-        $objectGroupId              = (int)($data['object_group_id'] ?? 0);
-        if (0 !== $objectGroupId) {
-            $objectGroup = $this->findObjectGroupById($objectGroupId);
-            if (null !== $objectGroup) {
-                $piggyBank->objectGroups()->sync([$objectGroup->id]);
-                $piggyBank->save();
-            }
-        }
-
-        return $piggyBank;
+        $factory = new PiggyBankFactory();
+        $factory->setUser($this->user);
+        return $factory->store($data);
     }
 
-    /**
-     * Correct order of piggies in case of issues.
-     */
-    public function resetOrder(): void
-    {
-        $set     = $this->user->piggyBanks()->orderBy('piggy_banks.order', 'ASC')->get(['piggy_banks.*']);
-        $current = 1;
-        foreach ($set as $piggyBank) {
-            if ($piggyBank->order !== $current) {
-                app('log')->debug(sprintf('Piggy bank #%d ("%s") was at place %d but should be on %d', $piggyBank->id, $piggyBank->name, $piggyBank->order, $current));
-                $piggyBank->order = $current;
-                $piggyBank->save();
-            }
-            ++$current;
-        }
-    }
 
     public function setOrder(PiggyBank $piggyBank, int $newOrder): bool
     {
@@ -282,13 +214,12 @@ trait ModifiesPiggyBanks
         return true;
     }
 
-    private function updateNote(PiggyBank $piggyBank, string $note): bool
+    public function updateNote(PiggyBank $piggyBank, string $note): void
     {
         if ('' === $note) {
             $dbNote = $piggyBank->notes()->first();
             $dbNote?->delete();
-
-            return true;
+            return ;
         }
         $dbNote       = $piggyBank->notes()->first();
         if (null === $dbNote) {
@@ -297,8 +228,6 @@ trait ModifiesPiggyBanks
         }
         $dbNote->text = trim($note);
         $dbNote->save();
-
-        return true;
     }
 
     public function update(PiggyBank $piggyBank, array $data): PiggyBank

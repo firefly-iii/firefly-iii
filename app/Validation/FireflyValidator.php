@@ -27,6 +27,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -812,15 +813,15 @@ class FireflyValidator extends Validator
     public function validateUniquePiggyBankForUser($attribute, $value, $parameters): bool
     {
         $exclude = $parameters[0] ?? null;
-        $query   = \DB::table('piggy_banks')->whereNull('piggy_banks.deleted_at')
-            ->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')->where('accounts.user_id', auth()->user()->id)
-        ;
+        $query   = PiggyBank
+            ::leftJoin('account_piggy_bank','account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
+            ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
+            ->where('accounts.user_id', auth()->user()->id);
         if (null !== $exclude) {
             $query->where('piggy_banks.id', '!=', (int) $exclude);
         }
         $query->where('piggy_banks.name', $value);
-
-        return null === $query->first(['piggy_banks.*']);
+        return 0 === $query->get(['piggy_banks.*'])->count();
     }
 
     /**

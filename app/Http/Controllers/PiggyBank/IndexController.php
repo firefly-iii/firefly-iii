@@ -79,7 +79,7 @@ class IndexController extends Controller
     public function index()
     {
         $this->cleanupObjectGroups();
-        $this->piggyRepos->resetOrder();
+        //$this->piggyRepos->resetOrder();
         $collection         = $this->piggyRepos->getPiggyBanks();
         $accounts           = [];
 
