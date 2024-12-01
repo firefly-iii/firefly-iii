@@ -163,7 +163,7 @@ class CorrectAmounts extends Command
 
     private function fixRepetitions(): void
     {
-        $set   = PiggyBankRepetition::where('currentamount', '<', 0)->get();
+        $set   = PiggyBankRepetition::where('current_amount', '<', 0)->get();
         $count = $set->count();
         if (0 === $count) {
             $this->friendlyPositive('All piggy bank repetition amounts are positive.');
@@ -181,7 +181,7 @@ class CorrectAmounts extends Command
 
     private function fixPiggyBanks(): void
     {
-        $set   = PiggyBank::where('targetamount', '<', 0)->get();
+        $set   = PiggyBank::where('target_amount', '<', 0)->get();
         $count = $set->count();
         if (0 === $count) {
             $this->friendlyPositive('All piggy bank amounts are positive.');

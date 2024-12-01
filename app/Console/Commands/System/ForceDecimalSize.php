@@ -83,8 +83,8 @@ class ForceDecimalSize extends Command
             'currency_exchange_rates'  => ['rate', 'user_rate'],
             'limit_repetitions'        => ['amount'],
             'piggy_bank_events'        => ['amount'],
-            'piggy_bank_repetitions'   => ['currentamount'],
-            'piggy_banks'              => ['targetamount'],
+            'piggy_bank_repetitions'   => ['current_amount'],
+            'piggy_banks'              => ['target_amount'],
             'recurrences_transactions' => ['amount', 'foreign_amount'],
             'transactions'             => ['amount', 'foreign_amount'],
         ];

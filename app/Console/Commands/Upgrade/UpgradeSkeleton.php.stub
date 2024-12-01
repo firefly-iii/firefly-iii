@@ -6,7 +6,6 @@ use Illuminate\Console\Command;
 
 /**
  * Class UpgradeSkeleton.
- * TODO DONT FORGET TO ADD THIS TO THE DOCKER BUILD
  */
 class UpgradeSkeleton extends Command
 {
