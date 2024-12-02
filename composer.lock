@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "eb0a48bb5142f68837c2ca1f9b82aa0d",
+    "content-hash": "0022d91fa553233dbd10f00845a672cb",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1936,20 +1936,21 @@
         },
         {
             "name": "laravel-json-api/core",
-            "version": "v4.3.2",
+            "version": "v5.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel-json-api/core.git",
-                "reference": "9227259244ddc61cffd85e33102a91a5b25d7d70"
+                "reference": "e2f6696580166f7b6384318e28168252c2bd20f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel-json-api/core/zipball/9227259244ddc61cffd85e33102a91a5b25d7d70",
-                "reference": "9227259244ddc61cffd85e33102a91a5b25d7d70",
+                "url": "https://api.github.com/repos/laravel-json-api/core/zipball/e2f6696580166f7b6384318e28168252c2bd20f4",
+                "reference": "e2f6696580166f7b6384318e28168252c2bd20f4",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
+                "illuminate/auth": "^11.0",
                 "illuminate/contracts": "^11.0",
                 "illuminate/http": "^11.0",
                 "illuminate/support": "^11.0",
@@ -1961,7 +1962,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-4.x": "4.x-dev"
+                    "dev-develop": "5.x-dev"
                 }
             },
             "autoload": {
@@ -1994,9 +1995,9 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel-json-api/core/issues",
-                "source": "https://github.com/laravel-json-api/core/tree/v4.3.2"
+                "source": "https://github.com/laravel-json-api/core/tree/v5.0.1"
             },
-            "time": "2024-11-30T16:23:18+00:00"
+            "time": "2024-11-30T16:31:42+00:00"
         },
         {
             "name": "laravel-json-api/eloquent",
@@ -2199,21 +2200,21 @@
         },
         {
             "name": "laravel-json-api/laravel",
-            "version": "v4.1.1",
+            "version": "v5.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel-json-api/laravel.git",
-                "reference": "5ef2e8588dd1310e644ff527cf82fb1150cdfc8d"
+                "reference": "f21276a6f72dbf925468b19ad898690cde49adce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel-json-api/laravel/zipball/5ef2e8588dd1310e644ff527cf82fb1150cdfc8d",
-                "reference": "5ef2e8588dd1310e644ff527cf82fb1150cdfc8d",
+                "url": "https://api.github.com/repos/laravel-json-api/laravel/zipball/f21276a6f72dbf925468b19ad898690cde49adce",
+                "reference": "f21276a6f72dbf925468b19ad898690cde49adce",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "laravel-json-api/core": "^4.3.2",
+                "laravel-json-api/core": "^5.0.1",
                 "laravel-json-api/eloquent": "^4.4",
                 "laravel-json-api/encoder-neomerx": "^4.1",
                 "laravel-json-api/exceptions": "^3.1",
@@ -2239,7 +2240,7 @@
                     ]
                 },
                 "branch-alias": {
-                    "dev-develop": "4.x-dev"
+                    "dev-develop": "5.x-dev"
                 }
             },
             "autoload": {
@@ -2271,9 +2272,9 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel-json-api/laravel/issues",
-                "source": "https://github.com/laravel-json-api/laravel/tree/v4.1.1"
+                "source": "https://github.com/laravel-json-api/laravel/tree/v5.0.0"
             },
-            "time": "2024-11-30T17:59:00+00:00"
+            "time": "2024-12-01T19:49:02+00:00"
         },
         {
             "name": "laravel-json-api/neomerx-json-api",
@@ -13556,7 +13557,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
@@ -13577,6 +13578,6 @@
         "ext-xml": "*",
         "ext-xmlwriter": "*"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }
