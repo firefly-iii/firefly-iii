@@ -113,10 +113,7 @@ interface PiggyBankRepositoryInterface
 
     public function removeObjectGroup(PiggyBank $piggyBank): PiggyBank;
 
-//    /**
-//     * Correct order of piggies in case of issues.
-//     */
-//    public function resetOrder(): void;
+    public function resetOrder(): void;
 
     /**
      * Search for piggy banks.

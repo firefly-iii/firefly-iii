@@ -169,9 +169,20 @@ class PiggyBankFactory
 
     }
 
-    private function resetOrder(): void
+    public function resetOrder(): void
     {
-        $set     = $this->user->piggyBanks()->orderBy('piggy_banks.order', 'ASC')->get(['piggy_banks.*']);
+        // TODO duplicate code
+        $set = PiggyBank
+            ::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
+            ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
+            ->where('accounts.user_id', $this->user->id)
+            ->with(
+                [
+                    'account',
+                    'objectGroups',
+                ]
+            )
+            ->orderBy('piggy_banks.order', 'ASC')->get(['piggy_banks.*']);
         $current = 1;
         foreach ($set as $piggyBank) {
             if ($piggyBank->order !== $current) {

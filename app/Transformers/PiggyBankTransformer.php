@@ -132,10 +132,11 @@ class PiggyBankTransformer extends AbstractTransformer
     private function renderAccounts(PiggyBank $piggyBank): array
     {
         $return = [];
-        foreach ($piggyBank->accounts as $account) {
+        foreach ($piggyBank->accounts()->get() as $account) {
             $return[] = [
                 'id'   => $account->id,
                 'name' => $account->name,
+                'current_amount' => $account->pivot->current_amount,
                 // TODO add balance, add left to save.
             ];
         }

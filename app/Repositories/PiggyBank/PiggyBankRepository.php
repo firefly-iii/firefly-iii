@@ -25,6 +25,7 @@ namespace FireflyIII\Repositories\PiggyBank;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Factory\PiggyBankFactory;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\PiggyBank;
@@ -285,7 +286,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
                     'objectGroups',
                 ]
             )
-            ->orderBy('piggy_banks.order', 'ASC')->get();
+            ->orderBy('piggy_banks.order', 'ASC')->get(['piggy_banks.*']);
     }
 
     /**
@@ -351,5 +352,12 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     #[\Override] public function purgeAll(): void
     {
         throw new FireflyException('TODO Not implemented');
+    }
+
+    #[\Override] public function resetOrder(): void
+    {
+        $factory = new PiggyBankFactory();
+        $factory->setUser($this->user);
+        $factory->resetOrder();
     }
 }
