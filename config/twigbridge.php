@@ -197,6 +197,7 @@ return [
                     'assetAccountCheckList',
                     'assetAccountList',
                     'longAccountList',
+                    'assetLiabilityMultiAccountList',
                 ],
             ],
             'CurrencyForm'  => [

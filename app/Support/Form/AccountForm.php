@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Form;
 
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -141,10 +142,23 @@ class AccountForm
      */
     public function assetAccountList(string $name, $value = null, ?array $options = null): string
     {
-        $types   = [AccountType::ASSET, AccountType::DEFAULT];
+        $types   = [AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value];
         $grouped = $this->getAccountsGrouped($types);
 
         return $this->select($name, $grouped, $value, $options);
+    }
+
+    /**
+     * Basic list of asset accounts.
+     *
+     * @param mixed $value
+     */
+    public function assetLiabilityMultiAccountList(string $name, $value = null, ?array $options = null): string
+    {
+        $types   = [AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::DEBT->value,AccountTypeEnum::LOAN->value];
+        $grouped = $this->getAccountsGrouped($types);
+
+        return $this->multiSelect($name, $grouped, $value, $options);
     }
 
     /**
@@ -154,7 +168,7 @@ class AccountForm
      */
     public function longAccountList(string $name, $value = null, ?array $options = null): string
     {
-        $types   = [AccountType::ASSET, AccountType::DEFAULT, AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN];
+        $types   = [AccountType::ASSET, AccountType::DEFAULT, AccountType::MORTGAGE, AccountType::DEBT, AccountType::LOAN];
         $grouped = $this->getAccountsGrouped($types);
 
         return $this->select($name, $grouped, $value, $options);

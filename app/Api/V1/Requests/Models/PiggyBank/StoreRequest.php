@@ -24,8 +24,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\PiggyBank;
 
+use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Rules\IsValidPositiveAmount;
+use FireflyIII\Rules\IsValidZeroOrMoreAmount;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
@@ -73,27 +76,30 @@ class StoreRequest extends FormRequest
             'accounts'                  => 'required',
             'accounts.*'                => 'array|required',
             'accounts.*.account_id'     => 'required|numeric|belongsToUser:accounts,id',
-            'accounts.*.current_amount' => ['numeric', new IsValidPositiveAmount()],
+            'accounts.*.current_amount' => ['numeric', new IsValidZeroOrMoreAmount()],
             'object_group_id'           => 'numeric|belongsToUser:object_groups,id',
             'object_group_title'        => ['min:1', 'max:255'],
-            'target_amount'             => ['required', new IsValidPositiveAmount()],
+            'target_amount'             => ['required', new IsValidZeroOrMoreAmount()],
             'start_date'                => 'date|nullable',
-            'transaction_currency_id'   => 'exists:transaction_currencies,id',
-            'transaction_currency_code' => 'exists:transaction_currencies,code',
+            'transaction_currency_id'   => 'exists:transaction_currencies,id|required_without:transaction_currency_code',
+            'transaction_currency_code' => 'exists:transaction_currencies,code|required_without:transaction_currency_id',
             'target_date'               => 'date|nullable|after:start_date',
             'notes'                     => 'max:65000',
         ];
     }
 
     /**
-     * Can only store money on liabilities and asset accouns.
+     * Can only store money on liabilities and asset accounts.
      */
     public function withValidator(Validator $validator): void
     {
         $validator->after(
             function (Validator $validator): void {
                 // validate start before end only if both are there.
-                $data = $validator->getData();
+                $data         = $validator->getData();
+                $currency     = $this->getCurrencyFromData($data);
+                $targetAmount = (string) ($data['target_amount'] ?? '0');
+                $currentAmount = '0';
                 if (array_key_exists('accounts', $data) && is_array($data['accounts'])) {
                     $repository = app(AccountRepositoryInterface::class);
                     $types      = config('firefly.piggy_bank_account_types');
@@ -101,12 +107,22 @@ class StoreRequest extends FormRequest
                         $accountId = (int) ($array['account_id'] ?? 0);
                         $account   = $repository->find($accountId);
                         if (null !== $account) {
+                            // check currency here.
+                            $accountCurrency = $repository->getAccountCurrency($account);
+                            $isMultiCurrency = $repository->getMetaValue($account, 'is_multi_currency');
+                            $currentAmount = bcadd($currentAmount, (string)($array['current_amount'] ?? '0'));
+                            if ($accountCurrency->id !== $currency->id && 'true' !== $isMultiCurrency) {
+                                $validator->errors()->add(sprintf('accounts.%d', $index), trans('validation.invalid_account_currency'));
+                            }
                             $type = $account->accountType->type;
                             if (!in_array($type, $types, true)) {
                                 $validator->errors()->add(sprintf('accounts.%d', $index), trans('validation.invalid_account_type'));
                             }
                         }
                     }
+                }
+                if(bccomp($targetAmount, $currentAmount) === -1 && bccomp($targetAmount, '0') === 1) {
+                    $validator->errors()->add('target_amount', trans('validation.current_amount_too_much'));
                 }
             }
         );
@@ -126,10 +142,27 @@ class StoreRequest extends FormRequest
                 continue;
             }
             $return[] = [
-                'account_id'     => $this->integerFromValue((string)($entry['account_id'] ?? '0')),
-                'current_amount' => $this->clearString($entry['current_amount'] ?? '0'),
+                'account_id'     => $this->integerFromValue((string) ($entry['account_id'] ?? '0')),
+                'current_amount' => $this->clearString((string) ($entry['current_amount'] ?? '0')),
             ];
         }
         return $return;
+    }
+
+    private function getCurrencyFromData(array $data): TransactionCurrency
+    {
+        if (array_key_exists('transaction_currency_code', $data) && '' !== (string) $data['transaction_currency_code']) {
+            $currency = TransactionCurrency::whereCode($data['transaction_currency_code'])->first();
+            if (null !== $currency) {
+                return $currency;
+            }
+        }
+        if (array_key_exists('transaction_currency_id', $data) && '' !== (string) $data['transaction_currency_id']) {
+            $currency = TransactionCurrency::find((int) $data['transaction_currency_id']);
+            if (null !== $currency) {
+                return $currency;
+            }
+        }
+        throw new FireflyException('Unexpected empty currency.');
     }
 }

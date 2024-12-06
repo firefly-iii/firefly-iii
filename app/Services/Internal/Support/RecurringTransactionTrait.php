@@ -283,9 +283,9 @@ trait RecurringTransactionTrait
     protected function updatePiggyBank(RecurrenceTransaction $transaction, int $piggyId): void
     {
         /** @var PiggyBankFactory $factory */
-        $factory   = app(PiggyBankFactory::class);
-        $factory->setUser($transaction->recurrence->user);
-        $piggyBank = $factory->find($piggyId, null);
+        $factory       = app(PiggyBankFactory::class);
+        $factory->user = $transaction->recurrence->user;
+        $piggyBank     = $factory->find($piggyId, null);
         if (null !== $piggyBank) {
             /** @var null|RecurrenceMeta $entry */
             $entry        = $transaction->recurrenceTransactionMeta()->where('name', 'piggy_bank_id')->first();

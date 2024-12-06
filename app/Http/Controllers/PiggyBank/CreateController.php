@@ -92,10 +92,11 @@ class CreateController extends Controller
     public function store(PiggyBankStoreRequest $request)
     {
         $data      = $request->getPiggyBankData();
-        if (null === $data['startdate']) {
-            $data['startdate'] = today(config('app.timezone'));
+        if (null === $data['start_date']) {
+            $data['start_date'] = today(config('app.timezone'));
         }
         $piggyBank = $this->piggyRepos->store($data);
+        var_dump($data);exit;
 
         session()->flash('success', (string)trans('firefly.stored_piggy_bank', ['name' => $piggyBank->name]));
         app('preferences')->mark();

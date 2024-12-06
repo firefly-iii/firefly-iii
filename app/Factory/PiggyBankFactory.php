@@ -37,7 +37,11 @@ use Illuminate\Database\QueryException;
  */
 class PiggyBankFactory
 {
-    private User $user;
+    public User                         $user {
+        set(User $value) {
+            $this->user = $value;
+        }
+    }
     private CurrencyRepositoryInterface $currencyRepository;
     private AccountRepositoryInterface $accountRepository;
     private PiggyBankRepositoryInterface $piggyBankRepository;
@@ -138,11 +142,6 @@ class PiggyBankFactory
         return $this->user->piggyBanks()->where('piggy_banks.name', $name)->first();
     }
 
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-    }
-
     private function getCurrency(array $data): TransactionCurrency {
         // currency:
         $defaultCurrency = app('amount')->getDefaultCurrency();
@@ -197,7 +196,8 @@ class PiggyBankFactory
 
     private function getMaxOrder(): int
     {
-        return (int)$this->user->piggyBanks()->max('piggy_banks.order');
+        return (int) $this->piggyBankRepository->getPiggyBanks()->max('order');
+
     }
 
     private function linkToAccountIds(PiggyBank $piggyBank, array $accounts): void {
@@ -207,7 +207,7 @@ class PiggyBankFactory
             if(null === $account) {
                 continue;
             }
-            $piggyBank->accounts()->syncWithoutDetaching([$account->id, ['current_amount' => $info['current_amount'] ?? '0']]);
+            $piggyBank->accounts()->syncWithoutDetaching([$account->id => ['current_amount' => $info['current_amount'] ?? '0']]);
         }
     }
 }

@@ -43,15 +43,21 @@ class PiggyBankStoreRequest extends FormRequest
      */
     public function getPiggyBankData(): array
     {
-        return [
+        $data = [
             'name'               => $this->convertString('name'),
-            'startdate'          => $this->getCarbonDate('startdate'),
-            'account_id'         => $this->convertInteger('account_id'),
-            'targetamount'       => $this->convertString('targetamount'),
-            'targetdate'         => $this->getCarbonDate('targetdate'),
+            'start_date'          => $this->getCarbonDate('start_date'),
+            //'account_id'         => $this->convertInteger('account_id'),
+            'accounts' => $this->get('accounts'),
+            'target_amount'       => $this->convertString('target_amount'),
+            'target_date'         => $this->getCarbonDate('target_date'),
             'notes'              => $this->stringWithNewlines('notes'),
             'object_group_title' => $this->convertString('object_group'),
         ];
+        if(!is_array($data['accounts'])) {
+            $data['accounts'] = [];
+        }
+
+        return $data;
     }
 
     /**
@@ -61,10 +67,11 @@ class PiggyBankStoreRequest extends FormRequest
     {
         return [
             'name'         => 'required|min:1|max:255|uniquePiggyBankForUser',
-            'account_id'   => 'required|belongsToUser:accounts',
-            'targetamount' => ['nullable', new IsValidPositiveAmount()],
-            'startdate'    => 'date',
-            'targetdate'   => 'date|nullable',
+            'accounts'   => 'required|array',
+            'accounts.*'   => 'required|belongsToUser:accounts',
+            'target_amount' => ['nullable', new IsValidPositiveAmount()],
+            'start_date'    => 'date',
+            'target_date'   => 'date|nullable',
             'order'        => 'integer|min:1',
             'object_group' => 'min:0|max:255',
             'notes'        => 'min:1|max:32768|nullable',
@@ -73,6 +80,10 @@ class PiggyBankStoreRequest extends FormRequest
 
     public function withValidator(Validator $validator): void
     {
+        // need to have more than one account.
+        // accounts need to have the same currency or be multi-currency(?).
+
+
         if ($validator->fails()) {
             Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
         }

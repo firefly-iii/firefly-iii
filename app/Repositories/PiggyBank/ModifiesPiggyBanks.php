@@ -182,8 +182,8 @@ trait ModifiesPiggyBanks
      */
     public function store(array $data): PiggyBank
     {
-        $factory = new PiggyBankFactory();
-        $factory->setUser($this->user);
+        $factory       = new PiggyBankFactory();
+        $factory->user = $this->user;
         return $factory->store($data);
     }
 

@@ -356,8 +356,8 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
     #[\Override] public function resetOrder(): void
     {
-        $factory = new PiggyBankFactory();
-        $factory->setUser($this->user);
+        $factory       = new PiggyBankFactory();
+        $factory->user = $this->user;
         $factory->resetOrder();
     }
 }

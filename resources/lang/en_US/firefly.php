@@ -2197,6 +2197,7 @@ return [
     'amount'                                                      => 'Amount',
     'overview'                                                    => 'Overview',
     'saveOnAccount'                                               => 'Save on account',
+    'saveOnAccounts'                                               => 'Save on account(s)',
     'unknown'                                                     => 'Unknown',
     'monthly'                                                     => 'Monthly',
     'profile'                                                     => 'Profile',

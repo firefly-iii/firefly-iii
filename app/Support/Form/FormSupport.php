@@ -56,6 +56,25 @@ trait FormSupport
         return $html;
     }
 
+    public function multiSelect(string $name, ?array $list = null, $selected = null, ?array $options = null): string
+    {
+        $list ??= [];
+        $label    = $this->label($name, $options);
+        $options  = $this->expandOptionArray($name, $label, $options);
+        $classes  = $this->getHolderClasses($name);
+        $selected = $this->fillFieldValue($name, $selected);
+        unset($options['autocomplete'], $options['placeholder']);
+
+        try {
+            $html = view('form.multi-select', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
+        } catch (\Throwable $e) {
+            app('log')->debug(sprintf('Could not render multi-select(): %s', $e->getMessage()));
+            $html = 'Could not render multi-select.';
+        }
+
+        return $html;
+    }
+
     protected function label(string $name, ?array $options = null): string
     {
         $options ??= [];
