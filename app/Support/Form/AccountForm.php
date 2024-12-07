@@ -157,7 +157,6 @@ class AccountForm
     {
         $types   = [AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::DEBT->value,AccountTypeEnum::LOAN->value];
         $grouped = $this->getAccountsGrouped($types);
-
         return $this->multiSelect($name, $grouped, $value, $options);
     }
 

@@ -28,6 +28,7 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Database\QueryException;
@@ -37,6 +38,7 @@ use Illuminate\Database\QueryException;
  */
 class PiggyBankFactory
 {
+    use CreatesObjectGroups;
     public User                         $user {
         set(User $value) {
             $this->user = $value;

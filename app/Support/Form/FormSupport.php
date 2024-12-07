@@ -63,6 +63,7 @@ trait FormSupport
         $options  = $this->expandOptionArray($name, $label, $options);
         $classes  = $this->getHolderClasses($name);
         $selected = $this->fillFieldValue($name, $selected);
+
         unset($options['autocomplete'], $options['placeholder']);
 
         try {
