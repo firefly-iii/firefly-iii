@@ -1,0 +1,68 @@
+{% extends './layout/default' %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render }}
+{% endblock %}
+{% block content %}
+    <div class="row" xmlns="http://www.w3.org/1999/html">
+        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+            <form action="{{ route('admin.notification.post') }}" method="post">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <div class="box box-default">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'notification_settings'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        {{ ExpandedForm.text('slackUrl', slackUrl, {'label' : 'slack_url_label'|_}) }}
+                        {{ ExpandedForm.text('discordUrl', discordUrl, {'label' : 'discord_url_label'|_}) }}
+                    </div>
+                    <div class="box-footer">
+                        <button type="submit" class="btn btn-success">
+                            <span class="fa fa-check-circle"></span> {{ ('save_notification_settings')|_ }}
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <form action="{{ route('admin.notification.test') }}" method="post">
+            <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <div class="box box-default">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'available_channels_title'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <p>
+                            {{ 'available_channels_expl'|_ }}
+                        </p>
+                        <ul>
+                            {% for name,info in channels %}
+                                <li>
+                                    {% if info.enabled %}
+                                        ☑️ {{ trans('firefly.notification_channel_name_'~name) }}
+                                        {% if 0 == info.ui_configurable %}({{ 'configure_channel_in_env'|_ }}) {% endif %}
+                                    {% endif %}
+                                    {% if not info.enabled %}
+                                        ⚠️ {{ trans('firefly.notification_channel_name_'~name) }} ({{ 'channel_not_available'|_ }})
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="box-footer">
+                        <div class="btn-group">
+                            {% for name,info in channels %}
+                                {% if info.enabled %}
+                                    <button type="submit" name="test_submit" value="{{ name }}" class="btn btn-default">
+                                        {{ trans('firefly.test_notification_channel_name_'~name) }}
+                                    </button>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}

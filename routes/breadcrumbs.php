@@ -180,6 +180,15 @@ Breadcrumbs::for(
 );
 
 Breadcrumbs::for(
+    'admin.notification.index',
+    static function (Generator $breadcrumbs): void {
+        $breadcrumbs->parent('home');
+        $breadcrumbs->push(trans('firefly.administration'), route('admin.index'));
+        $breadcrumbs->push(trans('breadcrumbs.notification_index'), route('admin.notification.index'));
+    }
+);
+
+Breadcrumbs::for(
     'admin.users',
     static function (Generator $breadcrumbs): void {
         $breadcrumbs->parent('admin.index');

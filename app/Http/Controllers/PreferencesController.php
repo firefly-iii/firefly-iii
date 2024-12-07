@@ -111,6 +111,7 @@ class PreferencesController extends Controller
 
         // notification preferences (single value for each):
         $notifications         = [];
+        die('fix the reference to the available notifications.');
         foreach (config('firefly.available_notifications') as $notification) {
             $notifications[$notification] = app('preferences')->get(sprintf('notification_%s', $notification), true)->data;
         }
@@ -165,6 +166,7 @@ class PreferencesController extends Controller
 
         // extract notifications:
         $all               = $request->all();
+        die('fix the reference to the available notifications.');
         foreach (config('firefly.available_notifications') as $option) {
             $key = sprintf('notification_%s', $option);
             if (array_key_exists($key, $all)) {

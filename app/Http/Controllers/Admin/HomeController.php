@@ -67,22 +67,24 @@ class HomeController extends Controller
 
         // admin notification settings:
         $notifications = [];
-        foreach (config('firefly.admin_notifications') as $item) {
-            $notifications[$item] = app('fireflyconfig')->get(sprintf('notification_%s', $item), true)->data;
+        foreach (config('notifications.notifications.owner') as $key => $info) {
+            if($info['enabled']) {
+                $notifications[$key] = app('fireflyconfig')->get(sprintf('notification_%s', $key), true)->data;
+            }
         }
-        $slackUrl      = app('fireflyconfig')->get('slack_webhook_url', '')->data;
+        //
 
-        return view('admin.index', compact('title', 'mainTitleIcon', 'email', 'notifications', 'slackUrl'));
+        return view('admin.index', compact('title', 'mainTitleIcon', 'email', 'notifications'));
     }
 
     public function notifications(Request $request): RedirectResponse
     {
-        foreach (config('firefly.admin_notifications') as $item) {
+        foreach (config('notifications.notifications.owner') as $key => $info) {
             $value = false;
-            if ($request->has(sprintf('notification_%s', $item))) {
+            if ($request->has(sprintf('notification_%s', $key))) {
                 $value = true;
             }
-            app('fireflyconfig')->set(sprintf('notification_%s', $item), $value);
+            app('fireflyconfig')->set(sprintf('notification_%s', $key), $value);
         }
         $url = (string)$request->get('slackUrl');
         if ('' === $url) {

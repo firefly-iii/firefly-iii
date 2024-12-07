@@ -2,7 +2,7 @@
     <label for="{{ options.id }}" class="col-sm-4 control-label">{{ label }}</label>
 
     <div class="col-sm-8">
-        {{ Html.select(name~"[]", list, selected).id(options.id).class('form-control').attribute('multiple').attribute('autocomplete','off').attribute('spellcheck','false').attribute('placeholder', options.placeholder) }}
+        {{ Html.multiselect(name~"[]", list, selected).id(options.id).class('form-control').attribute('autocomplete','off').attribute('spellcheck','false').attribute('placeholder', options.placeholder) }}
         {% include 'form.help' %}
         {% include 'form.feedback' %}
 

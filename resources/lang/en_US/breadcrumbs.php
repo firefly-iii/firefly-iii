@@ -86,4 +86,7 @@ return [
     'mfa_enableMFA'          => 'Enable multi-factor authentication',
     'mfa_backup_codes'       => 'Backup codes',
     'mfa_disableMFA'         => 'Disable multi-factor authentication',
+
+    // notifications
+    'notification_index' => 'Owner notifications',
 ];

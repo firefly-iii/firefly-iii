@@ -1398,6 +1398,11 @@ Route::group(
         // FF configuration:
         Route::get('configuration', ['uses' => 'ConfigurationController@index', 'as' => 'configuration.index']);
         Route::post('configuration', ['uses' => 'ConfigurationController@postIndex', 'as' => 'configuration.index.post']);
+
+        // routes for notifications settings.
+        Route::get('notifications', ['uses' => 'NotificationController@index', 'as' => 'notification.index']);
+        Route::post('notifications', ['uses' => 'NotificationController@postIndex', 'as' => 'notification.post']);
+        Route::post('notifications/test', ['uses' => 'NotificationController@testNotification', 'as' => 'notification.test']);
     }
 );
 
