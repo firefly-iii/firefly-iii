@@ -24,6 +24,8 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Admin;
 
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Http\Requests\NotificationRequest;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log;
 
 class NotificationController extends Controller
@@ -39,6 +41,27 @@ class NotificationController extends Controller
         $discordUrl      = app('fireflyconfig')->get('discord_webhook_url', '')->data;
         $channels      = config('notifications.channels');
 
-        return view('admin.notifications.index', compact('title', 'subTitle', 'mainTitleIcon', 'subTitleIcon', 'channels', 'slackUrl','discordUrl'));
+
+        // admin notification settings:
+        $notifications = [];
+        foreach (config('notifications.notifications.owner') as $key => $info) {
+            if($info['enabled']) {
+                $notifications[$key] = app('fireflyconfig')->get(sprintf('notification_%s', $key), true)->data;
+            }
+        }
+
+
+        return view('admin.notifications.index', compact('title', 'subTitle', 'mainTitleIcon', 'subTitleIcon', 'channels', 'slackUrl','discordUrl','notifications'));
+    }
+
+    public function postIndex(NotificationRequest $request): RedirectResponse {
+
+        var_dump($request->getAll());
+        exit;
+        // app('fireflyconfig')->set(sprintf('notification_%s', $key), $value);;
+
+        session()->flash('success', (string)trans('firefly.notification_settings_saved'));
+
+        return redirect(route('admin.index'));
     }
 }

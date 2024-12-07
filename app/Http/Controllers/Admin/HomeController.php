@@ -65,38 +65,7 @@ class HomeController extends Controller
             $email = $pref->data;
         }
 
-        // admin notification settings:
-        $notifications = [];
-        foreach (config('notifications.notifications.owner') as $key => $info) {
-            if($info['enabled']) {
-                $notifications[$key] = app('fireflyconfig')->get(sprintf('notification_%s', $key), true)->data;
-            }
-        }
-        //
-
-        return view('admin.index', compact('title', 'mainTitleIcon', 'email', 'notifications'));
-    }
-
-    public function notifications(Request $request): RedirectResponse
-    {
-        foreach (config('notifications.notifications.owner') as $key => $info) {
-            $value = false;
-            if ($request->has(sprintf('notification_%s', $key))) {
-                $value = true;
-            }
-            app('fireflyconfig')->set(sprintf('notification_%s', $key), $value);
-        }
-        $url = (string)$request->get('slackUrl');
-        if ('' === $url) {
-            app('fireflyconfig')->delete('slack_webhook_url');
-        }
-        if (UrlValidator::isValidWebhookURL($url)) {
-            app('fireflyconfig')->set('slack_webhook_url', $url);
-        }
-
-        session()->flash('success', (string)trans('firefly.notification_settings_saved'));
-
-        return redirect(route('admin.index'));
+        return view('admin.index', compact('title', 'mainTitleIcon', 'email'));
     }
 
     /**
@@ -106,6 +75,7 @@ class HomeController extends Controller
      */
     public function testMessage()
     {
+        die('disabled.');
         Log::channel('audit')->info('User sends test message.');
 
         /** @var User $user */

@@ -4,7 +4,7 @@
     {{ Breadcrumbs.render }}
 {% endblock %}
 {% block content %}
-    <div class="row" xmlns="http://www.w3.org/1999/html">
+    <div class="row">
         <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
             <form action="{{ route('admin.notification.post') }}" method="post">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -13,6 +13,17 @@
                         <h3 class="box-title">{{ 'notification_settings'|_ }}</h3>
                     </div>
                     <div class="box-body">
+                        <p>
+                            {{ trans('firefly.owner_notifications_expl') }}
+                        </p>
+                        {% for notification, value in notifications %}
+                            <div class="checkbox">
+                                <label>
+                                    <input value="1" {% if true == value %}checked{% endif %} type="checkbox" name="notification_{{ notification }}"> {{ trans('firefly.owner_notification_check_'~notification) }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                        <p style="margin-top:2em;">{{ 'channel_settings'|_ }}</p>
                         {{ ExpandedForm.text('slackUrl', slackUrl, {'label' : 'slack_url_label'|_}) }}
                         {{ ExpandedForm.text('discordUrl', discordUrl, {'label' : 'discord_url_label'|_}) }}
                     </div>
