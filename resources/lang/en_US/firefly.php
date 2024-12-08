@@ -2483,6 +2483,8 @@ return [
     'owner_notifications'                      => 'Admin notifications',
     'owner_notifications_expl'                 => 'The following notifications can be enabled or disabled by the administrator. It will be sent over ALL configured channels. Some channels are configured in your environment variables, others can be set here.',
     'channel_settings' => 'Settings for notification channels',
+    'notification_test_failed' => 'Notification test for channel ":channel" failed. The logs will have more details.',
+    'notification_test_executed' => 'Notification test for channel ":channel" executed. Check your logs for details.',
     'settings_notifications'                   => 'Settings for notifications',
     'title_owner_notifications'                => 'Owner notifications',
     'owner_notification_check_user_new_reg'    => 'User gets post-registration welcome message',

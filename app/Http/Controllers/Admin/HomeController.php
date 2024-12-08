@@ -67,23 +67,4 @@ class HomeController extends Controller
 
         return view('admin.index', compact('title', 'mainTitleIcon', 'email'));
     }
-
-    /**
-     * Send a test message to the admin.
-     *
-     * @return Redirector|RedirectResponse
-     */
-    public function testMessage()
-    {
-        die('disabled.');
-        Log::channel('audit')->info('User sends test message.');
-
-        /** @var User $user */
-        $user = auth()->user();
-        app('log')->debug('Now in testMessage() controller.');
-        event(new AdminRequestedTestMessage($user));
-        session()->flash('info', (string)trans('firefly.send_test_triggered'));
-
-        return redirect(route('admin.index'));
-    }
 }

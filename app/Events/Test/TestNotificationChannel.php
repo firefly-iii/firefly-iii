@@ -1,8 +1,7 @@
 <?php
-
-/**
- * AdminRequestedTestMessage.php
- * Copyright (c) 2019 james@firefly-iii.org
+/*
+ * TestEmailChannel.php
+ * Copyright (c) 2024 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -17,31 +16,30 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
 declare(strict_types=1);
 
-namespace FireflyIII\Events;
+namespace FireflyIII\Events\Test;
 
 use FireflyIII\User;
 use Illuminate\Queue\SerializesModels;
 
-/**
- * Class AdminRequestedTestMessage.
- */
-class AdminRequestedTestMessage extends Event
+class TestNotificationChannel
 {
     use SerializesModels;
 
-    public User $user;
+    public User   $user;
+    public string $channel;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(User $user)
+    public function __construct(string $channel, User $user)
     {
-        app('log')->debug(sprintf('Triggered AdminRequestedTestMessage for user #%d (%s)', $user->id, $user->email));
-        $this->user = $user;
+        app('log')->debug(sprintf('Triggered TestNotificationChannel("%s") for user #%d (%s)', $channel, $user->id, $user->email));
+        $this->user    = $user;
+        $this->channel = $channel;
     }
 }

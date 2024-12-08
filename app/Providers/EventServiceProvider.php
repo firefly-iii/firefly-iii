@@ -49,6 +49,7 @@ use FireflyIII\Events\Security\MFANewBackupCodes;
 use FireflyIII\Events\Security\MFAUsedBackupCode;
 use FireflyIII\Events\StoredAccount;
 use FireflyIII\Events\StoredTransactionGroup;
+use FireflyIII\Events\Test\TestNotificationChannel;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Events\UpdatedAccount;
 use FireflyIII\Events\UpdatedTransactionGroup;
@@ -135,8 +136,8 @@ class EventServiceProvider extends ServiceProvider
                 'FireflyIII\Handlers\Events\UserEventHandler@sendEmailChangeUndoMail',
             ],
             // admin related
-            AdminRequestedTestMessage::class           => [
-                'FireflyIII\Handlers\Events\AdminEventHandler@sendTestMessage',
+            TestNotificationChannel::class           => [
+                'FireflyIII\Handlers\Events\AdminEventHandler@sendTestNotification',
             ],
             NewVersionAvailable::class                 => [
                 'FireflyIII\Handlers\Events\AdminEventHandler@sendNewVersion',

@@ -23,9 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Admin;
 
+use FireflyIII\Events\Test\TestNotificationChannel;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\NotificationRequest;
+use FireflyIII\User;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class NotificationController extends Controller
@@ -38,30 +41,69 @@ class NotificationController extends Controller
         $subTitle      = (string) trans('firefly.title_owner_notifications');
         $subTitleIcon  = 'envelope-o';
         $slackUrl      = app('fireflyconfig')->get('slack_webhook_url', '')->data;
-        $discordUrl      = app('fireflyconfig')->get('discord_webhook_url', '')->data;
+        $discordUrl    = app('fireflyconfig')->get('discord_webhook_url', '')->data;
         $channels      = config('notifications.channels');
 
 
         // admin notification settings:
         $notifications = [];
         foreach (config('notifications.notifications.owner') as $key => $info) {
-            if($info['enabled']) {
+            if ($info['enabled']) {
                 $notifications[$key] = app('fireflyconfig')->get(sprintf('notification_%s', $key), true)->data;
             }
         }
 
 
-        return view('admin.notifications.index', compact('title', 'subTitle', 'mainTitleIcon', 'subTitleIcon', 'channels', 'slackUrl','discordUrl','notifications'));
+        return view('admin.notifications.index', compact('title', 'subTitle', 'mainTitleIcon', 'subTitleIcon', 'channels', 'slackUrl', 'discordUrl', 'notifications'));
     }
 
-    public function postIndex(NotificationRequest $request): RedirectResponse {
+    public function postIndex(NotificationRequest $request): RedirectResponse
+    {
+        $all = $request->getAll();
 
-        var_dump($request->getAll());
-        exit;
-        // app('fireflyconfig')->set(sprintf('notification_%s', $key), $value);;
+        foreach (config('notifications.notifications.owner') as $key => $info) {
+            if (array_key_exists($key, $all)) {
+                app('fireflyconfig')->set(sprintf('notification_%s', $key), $all[$key]);
+            }
+        }
+        if ('' === $all['slack_url']) {
+            app('fireflyconfig')->delete('slack_webhook_url');
+        }
+        if ('' === $all['discord_url']) {
+            app('fireflyconfig')->delete('discord_webhook_url');
+        }
+        if ('' !== $all['slack_url']) {
+            app('fireflyconfig')->set('slack_webhook_url', $all['slack_url']);
+        }
+        if ('' !== $all['discord_url']) {
+            app('fireflyconfig')->set('discord_webhook_url', $all['discord_url']);
+        }
 
-        session()->flash('success', (string)trans('firefly.notification_settings_saved'));
+        session()->flash('success', (string) trans('firefly.notification_settings_saved'));
 
-        return redirect(route('admin.index'));
+        return redirect(route('admin.notification.index'));
+    }
+
+    public function testNotification(Request $request): RedirectResponse
+    {
+
+        $all     = $request->all();
+        $channel = $all['test_submit'] ?? '';
+
+        switch ($channel) {
+            default:
+                session()->flash('error', (string) trans('firefly.notification_test_failed', ['channel' => $channel]));
+                break;
+            case 'email':
+            case 'discord':
+            case 'slack':
+                /** @var User $user */
+                $user = auth()->user();
+                app('log')->debug(sprintf('Now in testNotification("%s") controller.', $channel));
+                event(new TestNotificationChannel($channel, $user));
+                session()->flash('success', (string) trans('firefly.notification_test_executed', ['channel' => $channel]));
+        }
+
+        return redirect(route('admin.notification.index'));
     }
 }

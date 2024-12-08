@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use FireflyIII\Rules\Admin\IsValidDiscordUrl;
+use FireflyIII\Rules\Admin\IsValidSlackUrl;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
@@ -42,18 +44,9 @@ class NotificationRequest extends FormRequest
             }
             $return[$key] = $value;
         }
-        $return['discord_url'] = $this->convertString('discordUrl');
-        $return['slack_url']   = $this->convertString('slackUrl');
+        $return['discord_url'] = $this->convertString('discord_url');
+        $return['slack_url']   = $this->convertString('slack_url');
         return $return;
-//            if (UrlValidator::isValidWebhookURL($url)) {
-//                app('fireflyconfig')->set('slack_webhook_url', $url);
-//            }
-//        }
-//
-//
-//        var_dump($this->all());
-//        exit;
-//        return [];
     }
 
     /**
@@ -61,10 +54,14 @@ class NotificationRequest extends FormRequest
      */
     public function rules(): array
     {
-        // fixed
-        return [
-            //'password' => 'required',
+        $rules = [
+            'discord_url' => ['nullable', 'url', 'min:1', new IsValidDiscordUrl()],
+            'slack_url'   => ['nullable', 'url', 'min:1', new IsValidSlackUrl()],
         ];
+        foreach (config('notifications.notifications.owner') as $key => $info) {
+            $rules[sprintf('notification_%s', $key)] = 'in:0,1';
+        }
+        return $rules;
     }
 
 }

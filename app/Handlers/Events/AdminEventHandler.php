@@ -26,10 +26,15 @@ namespace FireflyIII\Handlers\Events;
 use FireflyIII\Events\Admin\InvitationCreated;
 use FireflyIII\Events\AdminRequestedTestMessage;
 use FireflyIII\Events\NewVersionAvailable;
+use FireflyIII\Events\Test\TestNotificationChannel;
 use FireflyIII\Notifications\Admin\TestNotification;
 use FireflyIII\Notifications\Admin\UserInvitation;
 use FireflyIII\Notifications\Admin\VersionCheckResult;
+use FireflyIII\Notifications\Test\TestNotificationDiscord;
+use FireflyIII\Notifications\Test\TestNotificationEmail;
+use FireflyIII\Notifications\Test\TestNotificationSlack;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
 /**
@@ -39,7 +44,7 @@ class AdminEventHandler
 {
     public function sendInvitationNotification(InvitationCreated $event): void
     {
-        $sendMail   = app('fireflyconfig')->get('notification_invite_created', true)->data;
+        $sendMail = app('fireflyconfig')->get('notification_invite_created', true)->data;
         if (false === $sendMail) {
             return;
         }
@@ -75,7 +80,7 @@ class AdminEventHandler
      */
     public function sendNewVersion(NewVersionAvailable $event): void
     {
-        $sendMail   = app('fireflyconfig')->get('notification_new_version', true)->data;
+        $sendMail = app('fireflyconfig')->get('notification_new_version', true)->data;
         if (false === $sendMail) {
             return;
         }
@@ -109,17 +114,34 @@ class AdminEventHandler
     /**
      * Sends a test message to an administrator.
      */
-    public function sendTestMessage(AdminRequestedTestMessage $event): void
+    public function sendTestNotification(TestNotificationChannel $event): void
     {
+        Log::debug(sprintf('Now in sendTestNotification(#%d, "%s")', $event->user->id, $event->channel));
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
 
         if (!$repository->hasRole($event->user, 'owner')) {
+            Log::error(sprintf('User #%d is not an owner.', $event->user->id));
             return;
         }
+        switch($event->channel) {
+            case 'email':
+                $class = TestNotificationEmail::class;
+                break;
+            case 'slack':
+                $class = TestNotificationSlack::class;
+                break;
+            case 'discord':
+                $class = TestNotificationDiscord::class;
+                break;
+            default:
+                app('log')->error(sprintf('Unknown channel "%s" in sendTestNotification method.', $event->channel));
+                return;
+        }
+        Log::debug(sprintf('Will send %s as a notification.', $class));
 
         try {
-            Notification::send($event->user, new TestNotification($event->user->email));
+            Notification::send($event->user, new $class($event->user->email));
         } catch (\Exception $e) { // @phpstan-ignore-line
             $message = $e->getMessage();
             if (str_contains($message, 'Bcc')) {
@@ -135,5 +157,6 @@ class AdminEventHandler
             app('log')->error($e->getMessage());
             app('log')->error($e->getTraceAsString());
         }
+        Log::debug(sprintf('If you see no errors above this line, test notification was sent over channel "%s"', $event->channel));
     }
 }

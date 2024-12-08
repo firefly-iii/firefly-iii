@@ -54,6 +54,8 @@ use FireflyIII\Notifications\Admin\TestNotification;
 use FireflyIII\Notifications\Admin\UserInvitation;
 use FireflyIII\Notifications\Admin\UserRegistration;
 use FireflyIII\Notifications\Admin\VersionCheckResult;
+use FireflyIII\Notifications\Test\TestNotificationDiscord;
+use FireflyIII\Notifications\Test\TestNotificationSlack;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -399,7 +401,7 @@ class User extends Authenticatable
     /**
      * Route notifications for the Slack channel.
      */
-    public function routeNotificationForSlack(Notification $notification): string
+    public function routeNotificationForSlack(Notification $notification): ?string
     {
         // this check does not validate if the user is owner, Should be done by notification itself.
         $res  = app('fireflyconfig')->get('slack_webhook_url', '')->data;
@@ -407,8 +409,18 @@ class User extends Authenticatable
             $res = '';
         }
         $res  = (string)$res;
-        if ($notification instanceof TestNotification) {
+
+        // not the best way to do this, but alas.
+
+        if ($notification instanceof TestNotificationSlack) {
             return $res;
+        }
+        if ($notification instanceof TestNotificationDiscord) {
+            $res  = app('fireflyconfig')->get('discord_webhook_url', '')->data;
+            if (is_array($res)) {
+                $res = '';
+            }
+            return (string)$res;
         }
         if ($notification instanceof UserInvitation) {
             return $res;
