@@ -41,7 +41,6 @@ class NotificationController extends Controller
         $subTitle      = (string) trans('firefly.title_owner_notifications');
         $subTitleIcon  = 'envelope-o';
         $slackUrl      = app('fireflyconfig')->get('slack_webhook_url', '')->data;
-        $discordUrl    = app('fireflyconfig')->get('discord_webhook_url', '')->data;
         $channels      = config('notifications.channels');
 
 
@@ -54,7 +53,7 @@ class NotificationController extends Controller
         }
 
 
-        return view('admin.notifications.index', compact('title', 'subTitle', 'mainTitleIcon', 'subTitleIcon', 'channels', 'slackUrl', 'discordUrl', 'notifications'));
+        return view('admin.notifications.index', compact('title', 'subTitle', 'mainTitleIcon', 'subTitleIcon', 'channels', 'slackUrl', 'notifications'));
     }
 
     public function postIndex(NotificationRequest $request): RedirectResponse
@@ -69,14 +68,8 @@ class NotificationController extends Controller
         if ('' === $all['slack_url']) {
             app('fireflyconfig')->delete('slack_webhook_url');
         }
-        if ('' === $all['discord_url']) {
-            app('fireflyconfig')->delete('discord_webhook_url');
-        }
         if ('' !== $all['slack_url']) {
             app('fireflyconfig')->set('slack_webhook_url', $all['slack_url']);
-        }
-        if ('' !== $all['discord_url']) {
-            app('fireflyconfig')->set('discord_webhook_url', $all['discord_url']);
         }
 
         session()->flash('success', (string) trans('firefly.notification_settings_saved'));
@@ -95,7 +88,6 @@ class NotificationController extends Controller
                 session()->flash('error', (string) trans('firefly.notification_test_failed', ['channel' => $channel]));
                 break;
             case 'email':
-            case 'discord':
             case 'slack':
                 /** @var User $user */
                 $user = auth()->user();

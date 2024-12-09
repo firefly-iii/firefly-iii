@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Events;
 
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class NewVersionAvailable
@@ -40,6 +41,7 @@ class NewVersionAvailable extends Event
      */
     public function __construct(string $message)
     {
+        Log::debug(__METHOD__);
         $this->message = $message;
     }
 }

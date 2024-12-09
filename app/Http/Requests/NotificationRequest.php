@@ -44,7 +44,6 @@ class NotificationRequest extends FormRequest
             }
             $return[$key] = $value;
         }
-        $return['discord_url'] = $this->convertString('discord_url');
         $return['slack_url']   = $this->convertString('slack_url');
         return $return;
     }
@@ -55,7 +54,6 @@ class NotificationRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'discord_url' => ['nullable', 'url', 'min:1', new IsValidDiscordUrl()],
             'slack_url'   => ['nullable', 'url', 'min:1', new IsValidSlackUrl()],
         ];
         foreach (config('notifications.notifications.owner') as $key => $info) {
