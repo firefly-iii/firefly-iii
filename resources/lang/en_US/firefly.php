@@ -2509,6 +2509,9 @@ return [
     'test_notification_channel_name_email' => 'Test email',
     'test_notification_channel_name_slack' => 'Test Slack',
     'test_notification_channel_name_ntfy' => 'Test Ntfy.sh',
+    'test_notification_channel_name_pushover' => 'Test Pushover',
+    'test_notification_channel_name_gotify' => 'Test Gotify',
+    'test_notification_channel_name_pushbullet' => 'Test Pushbullet',
 
     'split_transaction_title'               => 'Description of the split transaction',
     'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',

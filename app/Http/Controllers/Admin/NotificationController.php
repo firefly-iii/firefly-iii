@@ -65,6 +65,12 @@ class NotificationController extends Controller
             $forcedAvailability['ntfy'] = false;
         }
 
+        // validate pushover
+        if('' === (string)config('services.pushover.token') || '' === (string)config('services.pushover.user_token')) {
+            Log::warning('No Pushover token, channel is disabled.');
+            $forcedAvailability['pushover'] = false;
+        }
+
         return view('admin.notifications.index', compact('title', 'subTitle', 'forcedAvailability', 'mainTitleIcon', 'subTitleIcon', 'channels', 'slackUrl', 'notifications'));
     }
 
@@ -101,6 +107,7 @@ class NotificationController extends Controller
                 break;
             case 'email':
             case 'slack':
+            case 'pushover':
             case 'ntfy':
                 /** @var User $user */
                 $user = auth()->user();

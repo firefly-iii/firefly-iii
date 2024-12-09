@@ -90,6 +90,7 @@
         "jc5/recovery": "^2",
         "laravel-json-api/laravel": "^4.0",
         "laravel-json-api/non-eloquent": "^4.0",
+        "laravel-notification-channels/pushover": "^4.0",
         "laravel/framework": "^11",
         "laravel/passport": "^12",
         "laravel/sanctum": "^4",

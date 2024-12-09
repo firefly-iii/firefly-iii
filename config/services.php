@@ -61,4 +61,8 @@ return [
     'mandrill'  => [
         'secret' => env('MANDRILL_SECRET'),
     ],
+    'pushover' => [
+        'token' => env('PUSHOVER_APP_TOKEN', ''),
+        'user_token' => env('PUSHOVER_USER_TOKEN', ''),
+    ],
 ];

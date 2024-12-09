@@ -66,6 +66,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Laravel\Passport\HasApiTokens;
 use Laravel\Passport\Token;
+use NotificationChannels\Pushover\PushoverReceiver;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -100,6 +101,12 @@ class User extends Authenticatable
         }
 
         throw new NotFoundHttpException();
+    }
+    public function routeNotificationForPushover()
+    {
+        return PushoverReceiver::withUserKey((string) config('services.pushover.user_token'))
+                               ->withApplicationToken((string) config('services.pushover.token'));
+        //return (string) config('services.pushover.token');
     }
 
     /**

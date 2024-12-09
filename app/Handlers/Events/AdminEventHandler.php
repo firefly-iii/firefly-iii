@@ -32,6 +32,7 @@ use FireflyIII\Notifications\Admin\VersionCheckResult;
 use FireflyIII\Notifications\Test\TestNotificationDiscord;
 use FireflyIII\Notifications\Test\TestNotificationEmail;
 use FireflyIII\Notifications\Test\TestNotificationNtfy;
+use FireflyIII\Notifications\Test\TestNotificationPushover;
 use FireflyIII\Notifications\Test\TestNotificationSlack;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Facades\Log;
@@ -133,6 +134,9 @@ class AdminEventHandler
                 break;
             case 'ntfy':
                 $class = TestNotificationNtfy::class;
+                break;
+            case 'pushover':
+                $class = TestNotificationPushover::class;
                 break;
             default:
                 app('log')->error(sprintf('Unknown channel "%s" in sendTestNotification method.', $event->channel));
