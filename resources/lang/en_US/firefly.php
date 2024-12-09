@@ -2500,8 +2500,7 @@ return [
     'available_channels_expl'                  => 'These channels are available to send notifications over. To test your confiuration, use the buttons below. Please note that the buttons have no spam control.',
     'notification_channel_name_email'          => 'Email',
     'notification_channel_name_slack'          => 'Slack',
-    'notification_channel_name_discord'          => 'Discord',
-    'notification_channel_name_nfty'           => 'Nfty',
+    'notification_channel_name_ntfy'           => 'Ntfy.sh',
     'notification_channel_name_pushover'       => 'Pushover',
     'notification_channel_name_gotify'         => 'Gotify',
     'notification_channel_name_pushbullet'     => 'Pushbullet',
@@ -2509,7 +2508,7 @@ return [
     'configure_channel_in_env'                 => 'needs environment variables',
     'test_notification_channel_name_email' => 'Test email',
     'test_notification_channel_name_slack' => 'Test Slack',
-    'test_notification_channel_name_discord' => 'Test Discord',
+    'test_notification_channel_name_ntfy' => 'Test Ntfy.sh',
 
     'split_transaction_title'               => 'Description of the split transaction',
     'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',

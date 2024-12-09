@@ -42,6 +42,8 @@ class NotificationController extends Controller
         $subTitleIcon  = 'envelope-o';
         $slackUrl      = app('fireflyconfig')->get('slack_webhook_url', '')->data;
         $channels      = config('notifications.channels');
+        $forcedAvailability = [];
+
 
 
         // admin notification settings:
@@ -52,8 +54,18 @@ class NotificationController extends Controller
             }
         }
 
+        // loop all channels
+        foreach ($channels as $channel => $info) {
+            $forcedAvailability[$channel] = true;
+        }
 
-        return view('admin.notifications.index', compact('title', 'subTitle', 'mainTitleIcon', 'subTitleIcon', 'channels', 'slackUrl', 'notifications'));
+        // validate presence of of Ntfy settings.
+        if('' === (string)config('ntfy-notification-channel.topic')) {
+            Log::warning('No topic name for Ntfy, channel is disabled.');
+            $forcedAvailability['ntfy'] = false;
+        }
+
+        return view('admin.notifications.index', compact('title', 'subTitle', 'forcedAvailability', 'mainTitleIcon', 'subTitleIcon', 'channels', 'slackUrl', 'notifications'));
     }
 
     public function postIndex(NotificationRequest $request): RedirectResponse
@@ -89,6 +101,7 @@ class NotificationController extends Controller
                 break;
             case 'email':
             case 'slack':
+            case 'ntfy':
                 /** @var User $user */
                 $user = auth()->user();
                 app('log')->debug(sprintf('Now in testNotification("%s") controller.', $channel));

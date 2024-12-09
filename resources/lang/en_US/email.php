@@ -34,6 +34,7 @@ return [
     // admin test
     'admin_test_subject'                       => 'A test message from your Firefly III installation',
     'admin_test_body'                          => 'This is a test message from your Firefly III instance. It was sent to :email.',
+    'admin_test_message'                          => 'This is a test message from your Firefly III instance over channel ":channel".',
 
     // Ignore this comment
 

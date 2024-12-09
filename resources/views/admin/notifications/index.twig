@@ -48,11 +48,11 @@
                         <ul>
                             {% for name,info in channels %}
                                 <li>
-                                    {% if info.enabled %}
+                                    {% if true == info.enabled and true == forcedAvailability[name] %}
                                         ☑️ {{ trans('firefly.notification_channel_name_'~name) }}
                                         {% if 0 == info.ui_configurable %}({{ 'configure_channel_in_env'|_ }}) {% endif %}
                                     {% endif %}
-                                    {% if not info.enabled %}
+                                    {% if false == info.enabled or false == forcedAvailability[name] %}
                                         ⚠️ {{ trans('firefly.notification_channel_name_'~name) }} ({{ 'channel_not_available'|_ }})
                                     {% endif %}
                                 </li>
@@ -62,7 +62,7 @@
                     <div class="box-footer">
                         <div class="btn-group">
                             {% for name,info in channels %}
-                                {% if info.enabled %}
+                                {% if true == info.enabled and true == forcedAvailability[name] %}
                                     <button type="submit" name="test_submit" value="{{ name }}" class="btn btn-default">
                                         {{ trans('firefly.test_notification_channel_name_'~name) }}
                                     </button>

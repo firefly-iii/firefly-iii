@@ -27,11 +27,11 @@ use FireflyIII\Events\Admin\InvitationCreated;
 use FireflyIII\Events\AdminRequestedTestMessage;
 use FireflyIII\Events\NewVersionAvailable;
 use FireflyIII\Events\Test\TestNotificationChannel;
-use FireflyIII\Notifications\Admin\TestNotification;
 use FireflyIII\Notifications\Admin\UserInvitation;
 use FireflyIII\Notifications\Admin\VersionCheckResult;
 use FireflyIII\Notifications\Test\TestNotificationDiscord;
 use FireflyIII\Notifications\Test\TestNotificationEmail;
+use FireflyIII\Notifications\Test\TestNotificationNtfy;
 use FireflyIII\Notifications\Test\TestNotificationSlack;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Facades\Log;
@@ -131,8 +131,8 @@ class AdminEventHandler
             case 'slack':
                 $class = TestNotificationSlack::class;
                 break;
-            case 'discord':
-                $class = TestNotificationDiscord::class;
+            case 'ntfy':
+                $class = TestNotificationNtfy::class;
                 break;
             default:
                 app('log')->error(sprintf('Unknown channel "%s" in sendTestNotification method.', $event->channel));

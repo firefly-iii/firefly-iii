@@ -22,18 +22,21 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Notifications\Admin;
+namespace FireflyIII\Notifications\Test;
 
-use FireflyIII\Support\Notifications\UrlValidator;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
+use Ntfy\Message;
+use Wijourdil\NtfyNotificationChannel\Channels\NtfyChannel;
+
+//use Illuminate\Notifications\Slack\SlackMessage;
 
 /**
  * Class TestNotification
  */
-class TestNotification extends Notification
+class TestNotificationNtfy extends Notification
 {
     use Queueable;
 
@@ -62,6 +65,18 @@ class TestNotification extends Notification
         ];
     }
 
+
+    public function toNtfy(mixed $notifiable): Message
+    {
+        $message = new Message();
+        $message->topic(config('ntfy-notification-channel.topic'));
+        $message->title((string)trans('email.admin_test_subject'));
+        $message->body((string)trans('email.admin_test_message', ['channel' => 'ntfy']));
+        $message->tags(['white_check_mark', 'ok_hand']);
+
+        return $message;
+    }
+
     /**
      * Get the mail representation of the notification.
      *
@@ -73,10 +88,6 @@ class TestNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage())
-            ->markdown('emails.admin-test', ['email' => $this->address])
-            ->subject((string)trans('email.admin_test_subject'))
-        ;
     }
 
     /**
@@ -86,11 +97,8 @@ class TestNotification extends Notification
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
-     * @return SlackMessage
      */
-    public function toSlack($notifiable)
-    {
-        return (new SlackMessage())->content((string)trans('email.admin_test_subject'));
+    public function toSlack($notifiable) {
     }
 
     /**
@@ -104,11 +112,6 @@ class TestNotification extends Notification
      */
     public function via($notifiable)
     {
-        $slackUrl = app('fireflyconfig')->get('slack_webhook_url', '')->data;
-        if (UrlValidator::isValidWebhookURL($slackUrl)) {
-            return ['mail', 'slack'];
-        }
-
-        return ['mail'];
+        return [NtfyChannel::class];
     }
 }

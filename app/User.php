@@ -50,7 +50,6 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Models\UserRole;
 use FireflyIII\Models\Webhook;
-use FireflyIII\Notifications\Admin\TestNotification;
 use FireflyIII\Notifications\Admin\UserInvitation;
 use FireflyIII\Notifications\Admin\UserRegistration;
 use FireflyIII\Notifications\Admin\VersionCheckResult;
