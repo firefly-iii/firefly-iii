@@ -264,5 +264,12 @@ return [
     'webhook_delivery'            => 'Delivery',
     'webhook_response'            => 'Response',
     'webhook_trigger'             => 'Trigger',
+    'pushover_app_token' => 'Pushover app token',
+    'pushover_user_token' => 'Pushover user token',
+    'ntfy_server' => 'Ntfy server',
+    'ntfy_topic' => 'Ntfy topic',
+    'ntfy_auth' => 'Ntfy authentication enabled',
+    'ntfy_user' => 'Ntfy username',
+    'ntfy_pass' => 'Ntfy password',
 ];
 // Ignore this comment

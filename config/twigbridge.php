@@ -183,6 +183,7 @@ return [
                     'file',
                     'staticText',
                     'password',
+                    'passwordWithValue',
                     'nonSelectableAmount',
                     'number',
                     'amountNoCurrency',

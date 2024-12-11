@@ -107,6 +107,9 @@ class UserInvitation extends Notification
      */
     public function via($notifiable)
     {
+
+
+
         $slackUrl = app('fireflyconfig')->get('slack_webhook_url', '')->data;
         if (UrlValidator::isValidWebhookURL($slackUrl)) {
             return ['mail', 'slack'];

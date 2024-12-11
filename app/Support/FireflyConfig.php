@@ -25,7 +25,10 @@ namespace FireflyIII\Support;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Configuration;
+use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Contracts\Encryption\EncryptException;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class FireflyConfig.
@@ -34,7 +37,7 @@ class FireflyConfig
 {
     public function delete(string $name): void
     {
-        $fullName = 'ff-config-'.$name;
+        $fullName = 'ff-config-' . $name;
         if (\Cache::has($fullName)) {
             \Cache::forget($fullName);
         }
@@ -46,6 +49,25 @@ class FireflyConfig
         return 1 === Configuration::where('name', $name)->count();
     }
 
+    public function getEncrypted(string $name, $default = null): ?Configuration
+    {
+        $result = $this->get($name, $default);
+        if (null === $result) {
+            return null;
+        }
+        if ('' === $result->data) {
+            Log::warning(sprintf('Empty encrypted preference found: "%s"', $name));
+            return $result;
+        }
+        try {
+            $result->data = decrypt($result->data);
+        } catch (DecryptException $e) {
+            Log::error(sprintf('Could not decrypt preference "%s": %s', $name, $e->getMessage()));
+            return $result;
+        }
+        return $result;
+    }
+
     /**
      * @param null|bool|int|string $default
      *
@@ -53,7 +75,7 @@ class FireflyConfig
      */
     public function get(string $name, $default = null): ?Configuration
     {
-        $fullName = 'ff-config-'.$name;
+        $fullName = 'ff-config-' . $name;
         if (\Cache::has($fullName)) {
             return \Cache::get($fullName);
         }
@@ -61,7 +83,7 @@ class FireflyConfig
         try {
             /** @var null|Configuration $config */
             $config = Configuration::where('name', $name)->first(['id', 'name', 'data']);
-        } catch (\Exception|QueryException $e) {
+        } catch (\Exception | QueryException $e) {
             throw new FireflyException(sprintf('Could not poll the database: %s', $e->getMessage()), 0, $e);
         }
 
@@ -78,10 +100,18 @@ class FireflyConfig
         return $this->set($name, $default);
     }
 
-    /**
-     * @param mixed $value
-     */
-    public function set(string $name, $value): Configuration
+    public function setEncrypted(string $name, mixed $value): Configuration
+    {
+        try {
+            $encrypted = encrypt($value);
+        } catch (EncryptException $e) {
+            Log::error(sprintf('Could not encrypt preference "%s": %s', $name, $e->getMessage()));
+            throw new FireflyException(sprintf('Could not encrypt preference "%s". Cowardly refuse to continue.', $name));
+        }
+        return $this->set($name, $encrypted);
+    }
+
+    public function set(string $name, mixed $value): Configuration
     {
         try {
             $config = Configuration::whereName($name)->whereNull('deleted_at')->first();
@@ -99,13 +129,13 @@ class FireflyConfig
             $item->name = $name;
             $item->data = $value;
             $item->save();
-            \Cache::forget('ff-config-'.$name);
+            \Cache::forget('ff-config-' . $name);
 
             return $item;
         }
         $config->data = $value;
         $config->save();
-        \Cache::forget('ff-config-'.$name);
+        \Cache::forget('ff-config-' . $name);
 
         return $config;
     }

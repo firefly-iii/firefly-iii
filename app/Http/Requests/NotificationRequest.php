@@ -23,8 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
-use FireflyIII\Rules\Admin\IsValidDiscordUrl;
-use FireflyIII\Rules\Admin\IsValidSlackUrl;
+use FireflyIII\Rules\Admin\IsValidSlackOrDiscordUrl;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
@@ -44,7 +43,16 @@ class NotificationRequest extends FormRequest
             }
             $return[$key] = $value;
         }
-        $return['slack_url']   = $this->convertString('slack_url');
+        $return['slack_webhook_url'] = $this->convertString('slack_webhook_url');
+
+        $return['pushover_app_token']  = $this->convertString('pushover_app_token');
+        $return['pushover_user_token'] = $this->convertString('pushover_user_token');
+
+        $return['ntfy_server'] = $this->convertString('ntfy_server');
+        $return['ntfy_topic']  = $this->convertString('ntfy_topic');
+        $return['ntfy_auth']   = $this->convertBoolean($this->get('ntfy_auth'));
+        $return['ntfy_user']   = $this->convertString('ntfy_user');
+        $return['ntfy_pass']   = $this->convertString('ntfy_pass');
         return $return;
     }
 
@@ -54,7 +62,10 @@ class NotificationRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'slack_url'   => ['nullable', 'url', 'min:1', new IsValidSlackUrl()],
+            'slack_webhook_url'   => ['nullable', 'url', 'min:1', new IsValidSlackOrDiscordUrl()],
+            'ntfy_server' => ['nullable', 'url', 'min:1'],
+            'ntfy_user' => ['required_with:ntfy_pass,ntfy_auth', 'nullable', 'string', 'min:1'],
+            'ntfy_pass' => ['required_with:ntfy_user,ntfy_auth', 'nullable', 'string', 'min:1'],
         ];
         foreach (config('notifications.notifications.owner') as $key => $info) {
             $rules[sprintf('notification_%s', $key)] = 'in:0,1';

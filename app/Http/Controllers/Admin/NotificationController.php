@@ -26,6 +26,7 @@ namespace FireflyIII\Http\Controllers\Admin;
 use FireflyIII\Events\Test\TestNotificationChannel;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\NotificationRequest;
+use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -40,11 +41,20 @@ class NotificationController extends Controller
         $mainTitleIcon = 'fa-hand-spock-o';
         $subTitle      = (string) trans('firefly.title_owner_notifications');
         $subTitleIcon  = 'envelope-o';
-        $slackUrl      = app('fireflyconfig')->get('slack_webhook_url', '')->data;
-        $channels      = config('notifications.channels');
+
+        // notification settings:
+        $slackUrl          = app('fireflyconfig')->getEncrypted('slack_webhook_url', '')->data;
+        $pushoverAppToken  = app('fireflyconfig')->getEncrypted('pushover_app_token', '')->data;
+        $pushoverUserToken = app('fireflyconfig')->getEncrypted('pushover_user_token', '')->data;
+
+        $ntfyServer = app('fireflyconfig')->getEncrypted('ntfy_server', 'https://ntfy.sh')->data;
+        $ntfyTopic  = app('fireflyconfig')->getEncrypted('ntfy_topic', '')->data;
+        $ntfyAuth   = app('fireflyconfig')->get('ntfy_auth', false)->data;
+        $ntfyUser   = app('fireflyconfig')->getEncrypted('ntfy_user', '')->data;
+        $ntfyPass   = app('fireflyconfig')->getEncrypted('ntfy_pass', '')->data;
+
+        $channels           = config('notifications.channels');
         $forcedAvailability = [];
-
-
 
         // admin notification settings:
         $notifications = [];
@@ -60,18 +70,24 @@ class NotificationController extends Controller
         }
 
         // validate presence of of Ntfy settings.
-        if('' === (string)config('ntfy-notification-channel.topic')) {
+        if ('' === $ntfyTopic) {
             Log::warning('No topic name for Ntfy, channel is disabled.');
             $forcedAvailability['ntfy'] = false;
         }
 
         // validate pushover
-        if('' === (string)config('services.pushover.token') || '' === (string)config('services.pushover.user_token')) {
+        if ('' === $pushoverAppToken || '' === $pushoverUserToken) {
             Log::warning('No Pushover token, channel is disabled.');
             $forcedAvailability['pushover'] = false;
         }
 
-        return view('admin.notifications.index', compact('title', 'subTitle', 'forcedAvailability', 'mainTitleIcon', 'subTitleIcon', 'channels', 'slackUrl', 'notifications'));
+        return view('admin.notifications.index',
+                    compact(
+                        'title', 'subTitle', 'forcedAvailability', 'mainTitleIcon', 'subTitleIcon', 'channels',
+                        'slackUrl', 'notifications',
+                        'pushoverAppToken', 'pushoverUserToken',
+                        'ntfyServer', 'ntfyTopic', 'ntfyAuth', 'ntfyUser', 'ntfyPass'
+                    ));
     }
 
     public function postIndex(NotificationRequest $request): RedirectResponse
@@ -83,12 +99,17 @@ class NotificationController extends Controller
                 app('fireflyconfig')->set(sprintf('notification_%s', $key), $all[$key]);
             }
         }
-        if ('' === $all['slack_url']) {
-            app('fireflyconfig')->delete('slack_webhook_url');
+        $variables = ['slack_webhook_url', 'pushover_app_token', 'pushover_user_token', 'ntfy_server', 'ntfy_topic', 'ntfy_user', 'ntfy_pass'];
+        foreach ($variables as $variable) {
+            if ('' === $all[$variable]) {
+                app('fireflyconfig')->delete($variable);
+            }
+            if ('' !== $all[$variable]) {
+                app('fireflyconfig')->setEncrypted($variable, $all[$variable]);
+            }
         }
-        if ('' !== $all['slack_url']) {
-            app('fireflyconfig')->set('slack_webhook_url', $all['slack_url']);
-        }
+        app('fireflyconfig')->set('ntfy_auth', $all['ntfy_auth'] ?? false);
+
 
         session()->flash('success', (string) trans('firefly.notification_settings_saved'));
 
@@ -109,10 +130,9 @@ class NotificationController extends Controller
             case 'slack':
             case 'pushover':
             case 'ntfy':
-                /** @var User $user */
-                $user = auth()->user();
+                $owner = new OwnerNotifiable();
                 app('log')->debug(sprintf('Now in testNotification("%s") controller.', $channel));
-                event(new TestNotificationChannel($channel, $user));
+                event(new TestNotificationChannel($channel, $owner));
                 session()->flash('success', (string) trans('firefly.notification_test_executed', ['channel' => $channel]));
         }
 

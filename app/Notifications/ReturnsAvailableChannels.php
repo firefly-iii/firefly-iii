@@ -1,6 +1,6 @@
 <?php
 /*
- * TestEmailChannel.php
+ * ReturnsAvailableChannels.php
  * Copyright (c) 2024 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,25 +21,26 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Events\Test;
+namespace FireflyIII\Notifications;
 
-use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
-use Illuminate\Queue\SerializesModels;
+use FireflyIII\Support\Notifications\UrlValidator;
 
-class TestNotificationChannel
+class ReturnsAvailableChannels
 {
-    use SerializesModels;
+    public static function returnChannels(string $type): array {
+        $channels = ['mail'];
 
-    public OwnerNotifiable $owner;
-    public string          $channel;
+        if('owner' === $type) {
+            $slackUrl = app('fireflyconfig')->get('slack_webhook_url', '')->data;
+            if (UrlValidator::isValidWebhookURL($slackUrl)) {
+                $channels[] = 'slack';
+            }
+            // only the owner can get notifications over
+        }
 
-    /**
-     * Create a new event instance.
-     */
-    public function __construct(string $channel, OwnerNotifiable $owner)
-    {
-        app('log')->debug(sprintf('Triggered TestNotificationChannel("%s")', $channel));
-        $this->owner   = $owner;
-        $this->channel = $channel;
+
+
+        return $channels;
     }
+
 }

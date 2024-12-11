@@ -117,14 +117,8 @@ class AdminEventHandler
      */
     public function sendTestNotification(TestNotificationChannel $event): void
     {
-        Log::debug(sprintf('Now in sendTestNotification(#%d, "%s")', $event->user->id, $event->channel));
-        /** @var UserRepositoryInterface $repository */
-        $repository = app(UserRepositoryInterface::class);
+        Log::debug(sprintf('Now in sendTestNotification("%s")', $event->channel));
 
-        if (!$repository->hasRole($event->user, 'owner')) {
-            Log::error(sprintf('User #%d is not an owner.', $event->user->id));
-            return;
-        }
         switch($event->channel) {
             case 'email':
                 $class = TestNotificationEmail::class;
@@ -145,7 +139,7 @@ class AdminEventHandler
         Log::debug(sprintf('Will send %s as a notification.', $class));
 
         try {
-            Notification::send($event->user, new $class($event->user->email));
+            Notification::send($event->owner, new $class($event->owner));
         } catch (\Exception $e) { // @phpstan-ignore-line
             $message = $e->getMessage();
             if (str_contains($message, 'Bcc')) {

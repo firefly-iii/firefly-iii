@@ -24,7 +24,16 @@
                             </div>
                         {% endfor %}
                         <p style="margin-top:2em;">{{ 'channel_settings'|_ }}</p>
-                        {{ ExpandedForm.text('slack_url', slackUrl, {'label' : 'slack_url_label'|_}) }}
+                        {{ ExpandedForm.text('slack_webhook_url', slackUrl, {'label' : 'slack_url_label'|_, helpText: trans('firefly.slack_discord_double')}) }}
+
+                        {{ ExpandedForm.text('pushover_app_token', pushoverAppToken, {}) }}
+                        {{ ExpandedForm.text('pushover_user_token', pushoverUserToken, {}) }}
+
+                        {{ ExpandedForm.text('ntfy_server', ntfyServer, {}) }}
+                        {{ ExpandedForm.text('ntfy_topic', ntfyTopic, {}) }}
+                        {{ ExpandedForm.checkbox('ntfy_auth','1', ntfyAuth, {}) }}
+                        {{ ExpandedForm.text('ntfy_user', ntfyUser, {}) }}
+                        {{ ExpandedForm.passwordWithValue('ntfy_pass', ntfyPass, {}) }}
                     </div>
                     <div class="box-footer">
                         <button type="submit" class="btn btn-success">

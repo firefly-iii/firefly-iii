@@ -8,7 +8,7 @@ use FireflyIII\Support\Validation\ValidatesAmountsTrait;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Log;
 
-class IsValidSlackUrl implements ValidationRule
+class IsValidSlackOrDiscordUrl implements ValidationRule
 {
     use ValidatesAmountsTrait;
 
@@ -22,9 +22,9 @@ class IsValidSlackUrl implements ValidationRule
             return;
         }
 
-        if(!str_starts_with($value, 'https://hooks.slack.com/services/')) {
+        if(!str_starts_with($value, 'https://hooks.slack.com/services/') && !str_starts_with($value, 'https://discord.com/api/webhooks/')) {
             $fail('validation.active_url')->translate();
-            $message = sprintf('IsValidSlackUrl: "%s" is not a slack URL.', substr($value, 0, 255));
+            $message = sprintf('IsValidSlackUrl: "%s" is not a discord or slack URL.', substr($value, 0, 255));
             Log::debug($message);
             Log::channel('audit')->info($message);
         }

@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Notifications\Test;
 
+use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
+use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
@@ -42,73 +44,45 @@ class TestNotificationPushover extends Notification
 {
     use Queueable;
 
-    private string $address;
+    private OwnerNotifiable $owner;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(string $address)
+    public function __construct(OwnerNotifiable $owner)
     {
-        $this->address = $address;
+        $this->owner = $owner;
     }
 
     /**
      * Get the array representation of the notification.
      *
-     * @param mixed $notifiable
+     * @param OwnerNotifiable $notifiable
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return array
      */
-    public function toArray($notifiable)
+    public function toArray(OwnerNotifiable $notifiable)
     {
         return [
         ];
     }
 
 
-    public function toPushover(mixed $notifiable): PushoverMessage
+    public function toPushover(OwnerNotifiable $notifiable): PushoverMessage
     {
         Log::debug('Now in toPushover()');
+
         return PushoverMessage::create((string)trans('email.admin_test_message', ['channel' => 'Pushover']))
                               ->title((string)trans('email.admin_test_subject'));
     }
 
-    /**
-     * Get the mail representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
-     * @return MailMessage
-     */
-    public function toMail($notifiable)
-    {
-    }
 
     /**
-     * Get the Slack representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
      */
-    public function toSlack($notifiable) {
-    }
-
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
-     * @param mixed $notifiable
-     *
-     * @return array
-     */
-    public function via($notifiable)
+    public function via(OwnerNotifiable $notifiable)
     {
         return [PushoverChannel::class];
     }

@@ -289,6 +289,26 @@ class ExpandedForm
 
         return $html;
     }
+    /**
+     * @throws FireflyException
+     */
+    public function passwordWithValue(string $name, string $value, ?array $options = null): string
+    {
+        $label   = $this->label($name, $options);
+        $options = $this->expandOptionArray($name, $label, $options);
+        $classes = $this->getHolderClasses($name);
+
+        try {
+            $html = view('form.password', compact('classes', 'value','name', 'label', 'options'))->render();
+        } catch (\Throwable $e) {
+            app('log')->debug(sprintf('Could not render passwordWithValue(): %s', $e->getMessage()));
+            $html = 'Could not render passwordWithValue.';
+
+            throw new FireflyException($html, 0, $e);
+        }
+
+        return $html;
+    }
 
     /**
      * Function to render a percentage.

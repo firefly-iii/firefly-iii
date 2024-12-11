@@ -24,11 +24,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Notifications\Test;
 
+use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
+use FireflyIII\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 //use Illuminate\Notifications\Slack\SlackMessage;
+use Illuminate\Support\Facades\Log;
+
+use Illuminate\Notifications\Messages\SlackMessage;
 
 /**
  * Class TestNotification
@@ -37,64 +40,49 @@ class TestNotificationSlack extends Notification
 {
     use Queueable;
 
-    private string $address;
+    private OwnerNotifiable $owner;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(string $address)
+    public function __construct(OwnerNotifiable $owner)
     {
-        $this->address = $address;
+        $this->owner =$owner;
     }
 
     /**
      * Get the array representation of the notification.
      *
-     * @param mixed $notifiable
+     * @param OwnerNotifiable $notifiable
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return array
      */
-    public function toArray($notifiable)
+    public function toArray(OwnerNotifiable $notifiable)
     {
         return [
         ];
     }
 
     /**
-     * Get the mail representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
-     * @return MailMessage
-     */
-    public function toMail($notifiable)
-    {
-    }
-
-    /**
      * Get the Slack representation of the notification.
      *
-     * @param mixed $notifiable
+     * @param OwnerNotifiable $notifiable
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      */
-    public function toSlack($notifiable) {
-
+    public function toSlack(OwnerNotifiable $notifiable)
+    {
         // since it's an admin notification, grab the URL from fireflyconfig
-        $url = app('fireflyconfig')->get('slack_webhook_url', '')->data;
+        $url = app('fireflyconfig')->getEncrypted('slack_webhook_url', '')->data;
+        if ('' !== $url) {
+            return new SlackMessage()->content((string)trans('email.admin_test_subject'))->to($url);
+            //return new SlackMessage()->text((string) trans('email.admin_test_subject'))->to($url);
 
-//        return (new SlackMessage)
-//            ->text((string)trans('email.admin_test_subject'))
-//            ->to($url);
-        return (new SlackMessage())
-            ->content((string)trans('email.admin_test_subject'))
-            ->to($url);
-
+        }
+        Log::error('Empty slack URL, cannot send notification.');
     }
 
     /**
@@ -102,11 +90,11 @@ class TestNotificationSlack extends Notification
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
-     * @param mixed $notifiable
+     * @param OwnerNotifiable $notifiable
      *
      * @return array
      */
-    public function via($notifiable)
+    public function via(OwnerNotifiable $notifiable)
     {
         return ['slack'];
     }
