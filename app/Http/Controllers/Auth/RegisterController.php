@@ -26,6 +26,7 @@ namespace FireflyIII\Http\Controllers\Auth;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\CreateStuff;
 use FireflyIII\User;
@@ -94,7 +95,8 @@ class RegisterController extends Controller
         $this->validator($request->all())->validate();
         $user              = $this->createUser($request->all());
         app('log')->info(sprintf('Registered new user %s', $user->email));
-        event(new RegisteredUser($user));
+        $owner = new OwnerNotifiable();
+        event(new RegisteredUser($owner, $user));
 
         $this->guard()->login($user);
 

@@ -82,8 +82,8 @@ class UserEventHandler
         $repository = app(UserRepositoryInterface::class);
 
         /** @var User $user */
-        $user       = $event->user;
-        $count      = $repository->count();
+        $user  = $event->user;
+        $count = $repository->count();
 
         // only act when there is 1 user in the system and he has no admin rights.
         if (1 === $count && !$repository->hasRole($user, 'owner')) {
@@ -115,13 +115,13 @@ class UserEventHandler
      */
     public function createGroupMembership(RegisteredUser $event): void
     {
-        $user                = $event->user;
-        $groupExists         = true;
-        $groupTitle          = $user->email;
-        $index               = 1;
+        $user        = $event->user;
+        $groupExists = true;
+        $groupTitle  = $user->email;
+        $index       = 1;
 
         /** @var UserGroup $group */
-        $group               = null;
+        $group = null;
 
         // create a new group.
         while (true === $groupExists) { // @phpstan-ignore-line
@@ -131,7 +131,7 @@ class UserEventHandler
 
                 break;
             }
-            $groupTitle  = sprintf('%s-%d', $user->email, $index);
+            $groupTitle = sprintf('%s-%d', $user->email, $index);
             ++$index;
             if ($index > 99) {
                 throw new FireflyException('Email address can no longer be used for registrations.');
@@ -139,7 +139,7 @@ class UserEventHandler
         }
 
         /** @var null|UserRole $role */
-        $role                = UserRole::where('title', UserRoleEnum::OWNER->value)->first();
+        $role = UserRole::where('title', UserRoleEnum::OWNER->value)->first();
         if (null === $role) {
             throw new FireflyException('The user role is unexpectedly empty. Did you run all migrations?');
         }
@@ -165,7 +165,7 @@ class UserEventHandler
         $repository = app(UserRepositoryInterface::class);
 
         /** @var User $user */
-        $user       = $event->user;
+        $user = $event->user;
         if ($repository->hasRole($user, 'demo')) {
             // set user back to English.
             app('preferences')->setForUser($user, 'language', 'en_US');
@@ -186,7 +186,7 @@ class UserEventHandler
             return; // do not email demo user.
         }
 
-        $list      = app('preferences')->getForUser($user, 'login_ip_history', [])->data;
+        $list = app('preferences')->getForUser($user, 'login_ip_history', [])->data;
         if (!is_array($list)) {
             $list = [];
         }
@@ -220,31 +220,25 @@ class UserEventHandler
 
     public function sendAdminRegistrationNotification(RegisteredUser $event): void
     {
-        $sendMail = (bool)app('fireflyconfig')->get('notification_admin_new_reg', true)->data;
+        $sendMail = (bool) app('fireflyconfig')->get('notification_admin_new_reg', true)->data;
         if ($sendMail) {
-            /** @var UserRepositoryInterface $repository */
-            $repository = app(UserRepositoryInterface::class);
-            $all        = $repository->all();
-            foreach ($all as $user) {
-                if ($repository->hasRole($user, 'owner')) {
-                    try {
-                        Notification::send($user, new AdminRegistrationNotification($event->user));
-                    } catch (\Exception $e) { // @phpstan-ignore-line
-                        $message = $e->getMessage();
-                        if (str_contains($message, 'Bcc')) {
-                            app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+            $owner = $event->owner;
+            try {
+                Notification::send($owner, new AdminRegistrationNotification($event->owner, $event->user));
+            } catch (\Exception $e) { // @phpstan-ignore-line
+                $message = $e->getMessage();
+                if (str_contains($message, 'Bcc')) {
+                    app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
 
-                            return;
-                        }
-                        if (str_contains($message, 'RFC 2822')) {
-                            app('log')->warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                            return;
-                        }
-                        app('log')->error($e->getMessage());
-                        app('log')->error($e->getTraceAsString());
-                    }
+                    return;
                 }
+                if (str_contains($message, 'RFC 2822')) {
+                    app('log')->warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+
+                    return;
+                }
+                app('log')->error($e->getMessage());
+                app('log')->error($e->getTraceAsString());
             }
         }
     }
@@ -285,7 +279,7 @@ class UserEventHandler
         $oldEmail = $event->oldEmail;
         $user     = $event->user;
         $token    = app('preferences')->getForUser($user, 'email_change_undo_token', 'invalid');
-        $hashed   = hash('sha256', sprintf('%s%s', (string)config('app.key'), $oldEmail));
+        $hashed   = hash('sha256', sprintf('%s%s', (string) config('app.key'), $oldEmail));
         $url      = route('profile.undo-email-change', [$token->data, $hashed]);
 
         try {
@@ -347,7 +341,7 @@ class UserEventHandler
      */
     public function sendRegistrationMail(RegisteredUser $event): void
     {
-        $sendMail = (bool)app('fireflyconfig')->get('notification_user_new_reg', true)->data;
+        $sendMail = (bool) app('fireflyconfig')->get('notification_user_new_reg', true)->data;
         if ($sendMail) {
             try {
                 Notification::send($event->user, new UserRegistrationNotification());
@@ -375,7 +369,7 @@ class UserEventHandler
     public function storeUserIPAddress(ActuallyLoggedIn $event): void
     {
         app('log')->debug('Now in storeUserIPAddress');
-        $user       = $event->user;
+        $user = $event->user;
 
         if ($user->hasRole('demo')) {
             app('log')->debug('Do not log demo user logins');
@@ -392,8 +386,8 @@ class UserEventHandler
 
             return;
         }
-        $inArray    = false;
-        $ip         = request()->ip();
+        $inArray = false;
+        $ip      = request()->ip();
         app('log')->debug(sprintf('User logging in from IP address %s', $ip));
 
         // update array if in array
@@ -421,7 +415,7 @@ class UserEventHandler
         $preference = array_values($preference);
 
         /** @var bool $send */
-        $send       = app('preferences')->getForUser($user, 'notification_user_login', true)->data;
+        $send = app('preferences')->getForUser($user, 'notification_user_login', true)->data;
         app('preferences')->setForUser($user, 'login_ip_history', $preference);
 
         if (false === $inArray && true === $send) {

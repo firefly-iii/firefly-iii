@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Notifications\Notifiables;
 
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use NotificationChannels\Pushover\PushoverReceiver;
 
@@ -41,6 +42,7 @@ class OwnerNotifiable
 
     public function routeNotificationForPushover()
     {
+        Log::debug('Return settings for routeNotificationForPushover');
         $pushoverAppToken  = (string) app('fireflyconfig')->getEncrypted('pushover_app_token', '')->data;
         $pushoverUserToken = (string) app('fireflyconfig')->getEncrypted('pushover_user_token', '')->data;
         return PushoverReceiver::withUserKey($pushoverUserToken)
@@ -59,8 +61,10 @@ class OwnerNotifiable
     {
         $method = 'routeNotificationFor' . Str::studly($driver);
         if (method_exists($this, $method)) {
+            Log::debug(sprintf('Redirect for settings to "%s".', $method));
             return $this->{$method}($notification); // @phpstan-ignore-line
         }
+        Log::debug(sprintf('No method "%s" found, return generic settings.', $method));
 
         return match ($driver) {
             'mail'  => (string) config('firefly.site_owner'),

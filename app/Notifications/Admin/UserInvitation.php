@@ -25,11 +25,16 @@ declare(strict_types=1);
 namespace FireflyIII\Notifications\Admin;
 
 use FireflyIII\Models\InvitedUser;
-use FireflyIII\Support\Notifications\UrlValidator;
+use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
+use FireflyIII\Notifications\ReturnsAvailableChannels;
+use FireflyIII\Notifications\ReturnsSettings;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Log;
+use NotificationChannels\Pushover\PushoverMessage;
+use Ntfy\Message;
 
 /**
  * Class UserInvitation
@@ -38,14 +43,16 @@ class UserInvitation extends Notification
 {
     use Queueable;
 
-    private InvitedUser $invitee;
+    private InvitedUser     $invitee;
+    private OwnerNotifiable $owner;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(InvitedUser $invitee)
+    public function __construct(OwnerNotifiable $owner, InvitedUser $invitee)
     {
         $this->invitee = $invitee;
+        $this->owner   = $owner;
     }
 
     /**
@@ -57,7 +64,7 @@ class UserInvitation extends Notification
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function toArray($notifiable)
+    public function toArray(OwnerNotifiable $notifiable)
     {
         return [
         ];
@@ -72,12 +79,11 @@ class UserInvitation extends Notification
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function toMail($notifiable)
+    public function toMail(OwnerNotifiable $notifiable)
     {
         return (new MailMessage())
             ->markdown('emails.invitation-created', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email])
-            ->subject((string)trans('email.invitation_created_subject'))
-        ;
+            ->subject((string) trans('email.invitation_created_subject'));
     }
 
     /**
@@ -89,11 +95,43 @@ class UserInvitation extends Notification
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function toSlack($notifiable)
+    public function toSlack(OwnerNotifiable $notifiable)
     {
         return (new SlackMessage())->content(
-            (string)trans('email.invitation_created_body', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email])
+            (string) trans('email.invitation_created_body', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email])
         );
+    }
+
+    public function toPushover(OwnerNotifiable $notifiable): PushoverMessage
+    {
+        Log::debug('Now in toPushover() for UserInvitation');
+
+        return PushoverMessage::create((string) trans('email.invitation_created_body', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email]))
+                              ->title((string) trans('email.invitation_created_subject'));
+    }
+
+    public function toNtfy(OwnerNotifiable $notifiable): Message
+    {
+        Log::debug('Now in toNtfy() for UserInvitation');
+        $settings = ReturnsSettings::getSettings('ntfy', 'owner', null);
+
+        // overrule config.
+        config(['ntfy-notification-channel.server' => $settings['ntfy_server']]);
+        config(['ntfy-notification-channel.topic' => $settings['ntfy_topic']]);
+
+        if ($settings['ntfy_auth']) {
+            // overrule auth as well.
+            config(['ntfy-notification-channel.authentication.enabled' => true]);
+            config(['ntfy-notification-channel.authentication.username' => $settings['ntfy_user']]);
+            config(['ntfy-notification-channel.authentication.password' => $settings['ntfy_pass']]);
+        }
+
+        $message = new Message();
+        $message->topic($settings['ntfy_topic']);
+        $message->title((string) trans('email.invitation_created_subject'));
+        $message->body((string) trans('email.invitation_created_body', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email]));
+
+        return $message;
     }
 
     /**
@@ -105,16 +143,8 @@ class UserInvitation extends Notification
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function via($notifiable)
+    public function via(OwnerNotifiable $notifiable)
     {
-
-
-
-        $slackUrl = app('fireflyconfig')->get('slack_webhook_url', '')->data;
-        if (UrlValidator::isValidWebhookURL($slackUrl)) {
-            return ['mail', 'slack'];
-        }
-
-        return ['mail'];
+        return ReturnsAvailableChannels::returnChannels('owner');
     }
 }

@@ -77,7 +77,7 @@ class NotificationController extends Controller
 
         // validate pushover
         if ('' === $pushoverAppToken || '' === $pushoverUserToken) {
-            Log::warning('No Pushover token, channel is disabled.');
+            Log::warning('[a] No Pushover token, channel is disabled.');
             $forcedAvailability['pushover'] = false;
         }
 

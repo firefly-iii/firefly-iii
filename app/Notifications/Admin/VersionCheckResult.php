@@ -24,11 +24,17 @@ declare(strict_types=1);
 
 namespace FireflyIII\Notifications\Admin;
 
+use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
+use FireflyIII\Notifications\ReturnsAvailableChannels;
+use FireflyIII\Notifications\ReturnsSettings;
 use FireflyIII\Support\Notifications\UrlValidator;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Log;
+use NotificationChannels\Pushover\PushoverMessage;
+use Ntfy\Message;
 
 /**
  * Class VersionCheckResult
@@ -56,7 +62,7 @@ class VersionCheckResult extends Notification
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function toArray($notifiable)
+    public function toArray(OwnerNotifiable $notifiable)
     {
         return [
         ];
@@ -71,7 +77,7 @@ class VersionCheckResult extends Notification
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function toMail($notifiable)
+    public function toMail(OwnerNotifiable $notifiable)
     {
         return (new MailMessage())
             ->markdown('emails.new-version', ['message' => $this->message])
@@ -88,13 +94,45 @@ class VersionCheckResult extends Notification
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function toSlack($notifiable)
+    public function toSlack(OwnerNotifiable $notifiable)
     {
         return (new SlackMessage())->content($this->message)
             ->attachment(static function ($attachment): void {
                 $attachment->title('Firefly III @ GitHub', 'https://github.com/firefly-iii/firefly-iii/releases');
             })
         ;
+    }
+
+    public function toPushover(OwnerNotifiable $notifiable): PushoverMessage
+    {
+        Log::debug('Now in toPushover() for VersionCheckResult');
+
+        return PushoverMessage::create($this->message)
+                              ->title((string) trans('email.new_version_email_subject'));
+    }
+
+    public function toNtfy(OwnerNotifiable $notifiable): Message
+    {
+        Log::debug('Now in toNtfy() for VersionCheckResult');
+        $settings = ReturnsSettings::getSettings('ntfy', 'owner', null);
+
+        // overrule config.
+        config(['ntfy-notification-channel.server' => $settings['ntfy_server']]);
+        config(['ntfy-notification-channel.topic' => $settings['ntfy_topic']]);
+
+        if ($settings['ntfy_auth']) {
+            // overrule auth as well.
+            config(['ntfy-notification-channel.authentication.enabled' => true]);
+            config(['ntfy-notification-channel.authentication.username' => $settings['ntfy_user']]);
+            config(['ntfy-notification-channel.authentication.password' => $settings['ntfy_pass']]);
+        }
+
+        $message = new Message();
+        $message->topic($settings['ntfy_topic']);
+        $message->title((string) trans('email.new_version_email_subject'));
+        $message->body($this->message);
+
+        return $message;
     }
 
     /**
@@ -106,13 +144,8 @@ class VersionCheckResult extends Notification
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function via($notifiable)
+    public function via(OwnerNotifiable $notifiable)
     {
-        $slackUrl = app('fireflyconfig')->get('slack_webhook_url', '')->data;
-        if (UrlValidator::isValidWebhookURL($slackUrl)) {
-            return ['mail', 'slack'];
-        }
-
-        return ['mail'];
+        return ReturnsAvailableChannels::returnChannels('owner');
     }
 }

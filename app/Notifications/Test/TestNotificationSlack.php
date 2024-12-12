@@ -25,13 +25,11 @@ declare(strict_types=1);
 namespace FireflyIII\Notifications\Test;
 
 use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
-use FireflyIII\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
-//use Illuminate\Notifications\Slack\SlackMessage;
-use Illuminate\Support\Facades\Log;
-
 use Illuminate\Notifications\Messages\SlackMessage;
+use Illuminate\Notifications\Notification;
+
+//use Illuminate\Notifications\Slack\SlackMessage;
 
 /**
  * Class TestNotification
@@ -47,7 +45,7 @@ class TestNotificationSlack extends Notification
      */
     public function __construct(OwnerNotifiable $owner)
     {
-        $this->owner =$owner;
+        $this->owner = $owner;
     }
 
     /**
@@ -75,14 +73,8 @@ class TestNotificationSlack extends Notification
      */
     public function toSlack(OwnerNotifiable $notifiable)
     {
-        // since it's an admin notification, grab the URL from fireflyconfig
-        $url = app('fireflyconfig')->getEncrypted('slack_webhook_url', '')->data;
-        if ('' !== $url) {
-            return new SlackMessage()->content((string)trans('email.admin_test_subject'))->to($url);
-            //return new SlackMessage()->text((string) trans('email.admin_test_subject'))->to($url);
-
-        }
-        Log::error('Empty slack URL, cannot send notification.');
+        return new SlackMessage()->content((string) trans('email.admin_test_subject'));
+        //return new SlackMessage()->text((string) trans('email.admin_test_subject'))->to($url);
     }
 
     /**

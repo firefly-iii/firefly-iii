@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
+use FireflyIII\Events\NewVersionAvailable;
 use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;

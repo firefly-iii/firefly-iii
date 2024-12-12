@@ -429,10 +429,7 @@ class User extends Authenticatable
         }
 
         // not the best way to do this, but alas.
-        if ($notification instanceof UserInvitation) {
-            return $res;
-        }
-        if ($notification instanceof UserRegistration) {
+            if ($notification instanceof UserRegistration) {
             return $res;
         }
         if ($notification instanceof VersionCheckResult) {

@@ -62,7 +62,7 @@ return [
         'secret' => env('MANDRILL_SECRET'),
     ],
     'pushover' => [
-        'token' => env('PUSHOVER_APP_TOKEN', ''),
-        'user_token' => env('PUSHOVER_USER_TOKEN', ''),
+        'token' => 'fake_token',
+        'user_token' => 'fake_token',
     ],
 ];
