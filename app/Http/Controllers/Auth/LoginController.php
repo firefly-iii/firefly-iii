@@ -25,9 +25,12 @@ namespace FireflyIII\Http\Controllers\Auth;
 
 use Cookie;
 use FireflyIII\Events\ActuallyLoggedIn;
+use FireflyIII\Events\Security\UnknownUserAttemptedLogin;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\Providers\RouteServiceProvider;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -57,6 +60,7 @@ class LoginController extends Controller
      * Where to redirect users after login.
      */
     protected string $redirectTo = RouteServiceProvider::HOME;
+    private UserRepositoryInterface $repository;
 
     private string $username;
 
@@ -68,6 +72,7 @@ class LoginController extends Controller
         parent::__construct();
         $this->username = 'email';
         $this->middleware('guest')->except('logout');
+        $this->repository = app(UserRepositoryInterface::class);
     }
 
     /**
@@ -122,6 +127,11 @@ class LoginController extends Controller
             return $this->sendLoginResponse($request);
         }
         app('log')->warning('Login attempt failed.');
+        $username = (string) $request->get($this->username());
+        if(null === $this->repository->findByEmail($username)) {
+            // send event to owner.
+            event(new UnknownUserAttemptedLogin($username));
+        }
 
         // Copied directly from AuthenticatesUsers, but with logging added:
         // If the login attempt was unsuccessful we will increment the number of attempts

@@ -25,7 +25,9 @@ namespace FireflyIII\Handlers\Events;
 
 use FireflyIII\Events\Admin\InvitationCreated;
 use FireflyIII\Events\NewVersionAvailable;
+use FireflyIII\Events\Security\UnknownUserAttemptedLogin;
 use FireflyIII\Events\Test\TestNotificationChannel;
+use FireflyIII\Notifications\Admin\UnknownUserLoginAttempt;
 use FireflyIII\Notifications\Admin\UserInvitation;
 use FireflyIII\Notifications\Admin\VersionCheckResult;
 use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
@@ -41,6 +43,28 @@ use Illuminate\Support\Facades\Notification;
  */
 class AdminEventHandler
 {
+    public function sendLoginAttemptNotification(UnknownUserAttemptedLogin $event): void {
+        try {
+            $owner = new OwnerNotifiable();
+            Notification::send($owner, new UnknownUserLoginAttempt($event->address));
+        } catch (\Exception $e) { // @phpstan-ignore-line
+            $message = $e->getMessage();
+            if (str_contains($message, 'Bcc')) {
+                app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+
+                return;
+            }
+            if (str_contains($message, 'RFC 2822')) {
+                app('log')->warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+
+                return;
+            }
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
+        }
+    }
+
+
     public function sendInvitationNotification(InvitationCreated $event): void
     {
         $sendMail = app('fireflyconfig')->get('notification_invite_created', true)->data;

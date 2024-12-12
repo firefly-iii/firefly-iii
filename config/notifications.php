@@ -31,11 +31,18 @@ return [
     ],
     'notifications' => [
         'user'  => [
-            'some_notification' => [
-                'enabled' => true,
-                'email'   => '',
-                'slack'   => '',
-            ],
+            'bill_reminder'        => ['enabled' => true, 'configurable' => true],
+            'new_access_token'     => ['enabled' => true, 'configurable' => true],
+            'transaction_creation' => ['enabled' => true, 'configurable' => true],
+            'user_login'           => ['enabled' => true, 'configurable' => true],
+            'rule_action_failures' => ['enabled' => true, 'configurable' => true],
+            'new_password'         => ['enabled' => true, 'configurable' => false],
+            'enabled_mfa'          => ['enabled' => true, 'configurable' => false],
+            'disabled_mfa'         => ['enabled' => true, 'configurable' => false],
+            'few_left_mfa'         => ['enabled' => true, 'configurable' => false],
+            'no_left_mfa'          => ['enabled' => true, 'configurable' => false],
+            'many_failed_mfa'      => ['enabled' => true, 'configurable' => false],
+            'new_backup_codes'     => ['enabled' => true, 'configurable' => false],
         ],
         'owner' => [
             //'invitation_created' => ['enabled' => true],
@@ -45,6 +52,7 @@ return [
             'new_version'     => ['enabled' => true],
             'invite_created'  => ['enabled' => true],
             'invite_redeemed' => ['enabled' => true],
+            'unknown_user_attempt' => ['enabled' => true],
         ],
     ],
     // // notifications

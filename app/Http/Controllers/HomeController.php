@@ -25,7 +25,6 @@ namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
-use FireflyIII\Events\NewVersionAvailable;
 use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
@@ -63,8 +62,8 @@ class HomeController extends Controller
      */
     public function dateRange(Request $request): JsonResponse
     {
-        $stringStart   = '';
-        $stringEnd     = '';
+        $stringStart = '';
+        $stringEnd   = '';
 
         try {
             $stringStart = e((string) $request->get('start'));
@@ -99,7 +98,7 @@ class HomeController extends Controller
             app('log')->debug('Range is now marked as "custom".');
         }
 
-        $diff          = $start->diffInDays($end, true) + 1;
+        $diff = $start->diffInDays($end, true) + 1;
 
         if ($diff > 366) {
             $request->session()->flash('warning', (string) trans('firefly.warning_much_data', ['days' => (int) $diff]));
@@ -154,13 +153,13 @@ class HomeController extends Controller
         }
 
         /** @var Carbon $start */
-        $start          = session('start', today(config('app.timezone'))->startOfMonth());
+        $start = session('start', today(config('app.timezone'))->startOfMonth());
 
         /** @var Carbon $end */
-        $end            = session('end', today(config('app.timezone'))->endOfMonth());
-        $accounts       = $repository->getAccountsById($frontpageArray);
-        $today          = today(config('app.timezone'));
-        $accounts       = $accounts->sortBy('order'); // sort frontpage accounts by order
+        $end      = session('end', today(config('app.timezone'))->endOfMonth());
+        $accounts = $repository->getAccountsById($frontpageArray);
+        $today    = today(config('app.timezone'));
+        $accounts = $accounts->sortBy('order'); // sort frontpage accounts by order
 
         app('log')->debug('Frontpage accounts are ', $frontpageArray);
 
@@ -170,14 +169,14 @@ class HomeController extends Controller
         // collect groups for each transaction.
         foreach ($accounts as $account) {
             /** @var GroupCollectorInterface $collector */
-            $collector      = app(GroupCollectorInterface::class);
+            $collector = app(GroupCollectorInterface::class);
             $collector->setAccounts(new Collection([$account]))->withAccountInformation()->setRange($start, $end)->setLimit(10)->setPage(1);
             $set            = $collector->getExtractedJournals();
             $transactions[] = ['transactions' => $set, 'account' => $account];
         }
 
         /** @var User $user */
-        $user           = auth()->user();
+        $user = auth()->user();
         event(new RequestedVersionCheckStatus($user));
 
         return view('index', compact('count', 'subTitle', 'transactions', 'billCount', 'start', 'end', 'today', 'pageTitle'));
@@ -188,11 +187,11 @@ class HomeController extends Controller
         $subTitle  = (string) trans('firefly.welcome_back');
         $pageTitle = (string) trans('firefly.main_dashboard_page_title');
 
-        $start     = session('start', today(config('app.timezone'))->startOfMonth());
-        $end       = session('end', today(config('app.timezone'))->endOfMonth());
+        $start = session('start', today(config('app.timezone'))->startOfMonth());
+        $end   = session('end', today(config('app.timezone'))->endOfMonth());
 
         /** @var User $user */
-        $user      = auth()->user();
+        $user = auth()->user();
         event(new RequestedVersionCheckStatus($user));
 
         return view('index', compact('subTitle', 'start', 'end', 'pageTitle'));

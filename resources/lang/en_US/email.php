@@ -61,6 +61,11 @@ return [
     'access_token_created_explanation'         => 'With this token, they can access **all** of your financial records through the Firefly III API.',
     'access_token_created_revoke'              => 'If this wasn\'t you, please revoke this token as soon as possible at :url',
 
+    // unknown user login attempt
+    'unknown_user_subject' => 'An unknown user tried to log in',
+    'unknown_user_body' => 'An unknown user tried to log in to Firefly III. The email address they used was ":address".',
+    'unknown_user_message' => 'The email address they used was ":address".',
+
     // registered
     'registered_subject'                       => 'Welcome to Firefly III!',
     'registered_subject_admin'                 => 'A new user has registered',

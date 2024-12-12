@@ -47,6 +47,7 @@ use FireflyIII\Events\Security\MFABackupNoLeft;
 use FireflyIII\Events\Security\MFAManyFailedAttempts;
 use FireflyIII\Events\Security\MFANewBackupCodes;
 use FireflyIII\Events\Security\MFAUsedBackupCode;
+use FireflyIII\Events\Security\UnknownUserAttemptedLogin;
 use FireflyIII\Events\StoredAccount;
 use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Events\Test\TestNotificationChannel;
@@ -145,6 +146,9 @@ class EventServiceProvider extends ServiceProvider
             InvitationCreated::class                   => [
                 'FireflyIII\Handlers\Events\AdminEventHandler@sendInvitationNotification',
                 'FireflyIII\Handlers\Events\UserEventHandler@sendRegistrationInvite',
+            ],
+            UnknownUserAttemptedLogin::class => [
+                'FireflyIII\Handlers\Events\AdminEventHandler@sendLoginAttemptNotification',
             ],
 
             // is a Transaction Journal related event.
