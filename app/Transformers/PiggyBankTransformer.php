@@ -78,7 +78,7 @@ class PiggyBankTransformer extends AbstractTransformer
 
         // get currently saved amount:
         $currency         = $piggyBank->transactionCurrency;
-        $currentAmount    = app('steam')->bcround($this->piggyRepos->getCurrentAmount($piggyBank), $currency->decimal_places);
+        $currentAmount = $this->piggyRepos->getCurrentAmount($piggyBank);
 
         // Amounts, depending on 0.0 state of target amount
         $percentage       = null;

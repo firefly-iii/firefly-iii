@@ -93,7 +93,7 @@ class UpgradeMultiPiggyBanks extends Command
     {
         $this->repository->setUser($piggyBank->account->user);
         $this->accountRepository->setUser($piggyBank->account->user);
-        $repetition                         = $this->repository->getRepetition($piggyBank);
+        $repetition                         = $this->repository->getRepetition($piggyBank, true);
         $currency                           = $this->accountRepository->getAccountCurrency($piggyBank->account) ?? app('amount')->getDefaultCurrencyByUserGroup($piggyBank->account->user->userGroup);
 
         // update piggy bank to have a currency.

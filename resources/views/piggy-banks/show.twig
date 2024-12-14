@@ -33,8 +33,12 @@
                 <div class="box-body no-padding">
                     <table class="table table-responsive table-hover" id="piggyDetails">
                         <tr>
-                            <td style="width:40%;">{{ 'account'|_ }}</td>
-                            <td><a href="{{ route('accounts.show', piggyBank.account_id) }}">{{ piggyBank.account.name }}</a></td>
+                            <td style="width:40%;">{{ 'saveOnAccounts'|_ }}</td>
+                            <td>
+                                {% for account in piggy.accounts %}
+                                    <a href="{{ route('accounts.show', account.id) }}">{{ account.name }}</a><br>
+                                {% endfor %}
+                            </td>
                         </tr>
                         {% if piggy.object_group_title %}
                             <tr>

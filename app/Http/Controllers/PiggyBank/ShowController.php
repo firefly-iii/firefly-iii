@@ -83,6 +83,7 @@ class ShowController extends Controller
         $subTitle    = $piggyBank->name;
         $attachments = $this->piggyRepos->getAttachments($piggyBank);
 
+
         return view('piggy-banks.show', compact('piggyBank', 'events', 'subTitle', 'piggy', 'attachments'));
     }
 }

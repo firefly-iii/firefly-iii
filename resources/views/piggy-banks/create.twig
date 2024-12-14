@@ -17,7 +17,7 @@
                     <div class="box-body">
                         {{ ExpandedForm.text('name') }}
                         {{ ExpandedForm.amountNoCurrency('target_amount') }}
-                        {{ CurrencyForm.currencyList('transaction_  currency_id', null, {helpText:'piggy_default_currency'|_}) }}
+                        {{ CurrencyForm.currencyList('transaction_currency_id', null, {helpText:'piggy_default_currency'|_}) }}
                         {{ AccountForm.assetLiabilityMultiAccountList('accounts', preFilled.accounts, {label: 'saveOnAccounts'|_, helpText: 'piggy_account_currency_match'|_   }) }}
 
                     </div>

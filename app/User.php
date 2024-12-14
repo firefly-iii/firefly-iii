@@ -106,6 +106,10 @@ class User extends Authenticatable
         return $this->hasMany(Account::class);
     }
 
+    public function piggyBanks() {
+        throw new FireflyException('Method no longer supported.');
+    }
+
     /**
      * Link to attachments
      */

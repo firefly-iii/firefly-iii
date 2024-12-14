@@ -79,22 +79,21 @@ class EditController extends Controller
         // Flash some data to fill the form.
         $targetDate   = $piggyBank->target_date?->format('Y-m-d');
         $startDate    = $piggyBank->start_date?->format('Y-m-d');
-        $currency     = $this->accountRepository->getAccountCurrency($piggyBank->account);
-        if (null === $currency) {
-            $currency = app('amount')->getDefaultCurrency();
-        }
 
         $preFilled    = [
             'name'         => $piggyBank->name,
-            'account_id'   => $piggyBank->account_id,
-            'targetamount' => app('steam')->bcround($piggyBank->target_amount, $currency->decimal_places),
-            'targetdate'   => $targetDate,
-            'startdate'    => $startDate,
+            'target_amount' => app('steam')->bcround($piggyBank->target_amount, $piggyBank->transactionCurrency->decimal_places),
+            'target_date'   => $targetDate,
+            'start_date'    => $startDate,
+            'accounts' => [],
             'object_group' => null !== $piggyBank->objectGroups->first() ? $piggyBank->objectGroups->first()->title : '',
             'notes'        => null === $note ? '' : $note->text,
         ];
+        foreach($piggyBank->accounts as $account) {
+            $preFilled['accounts'][] = $account->id;
+        }
         if (0 === bccomp($piggyBank->target_amount, '0')) {
-            $preFilled['targetamount'] = '';
+            $preFilled['target_amount'] = '';
         }
         session()->flash('preFilled', $preFilled);
 

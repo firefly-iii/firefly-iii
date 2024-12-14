@@ -25,9 +25,9 @@
             <td style="text-align: right;">
 
                 {% if event.amount < 0 %}
-                    <span class="text-danger money-negative">{{ trans('firefly.removed_amount', {amount: formatAmountByAccount(event.piggyBank.account, event.amount, false)})|raw }}</span>
+                    <span class="text-danger money-negative">{{ trans('firefly.removed_amount', {amount: formatAmountBySymbol(event.amount,event.piggyBank.transactionCurrency.symbol, false)})|raw }}</span>
                 {% else %}
-                    <span class="text-success money-positive">{{ trans('firefly.added_amount', {amount: formatAmountByAccount(event.piggyBank.account, event.amount, false)})|raw }}</span>
+                     <span class="text-success money-positive">{{ trans('firefly.added_amount', {amount: formatAmountBySymbol(event.amount, event.piggyBank.transactionCurrency.symbol, false)})|raw }}</span>
                 {% endif %}
             </td>
         </tr>

@@ -42,11 +42,21 @@ class PiggyBankFactory
     public User                         $user {
         set(User $value) {
             $this->user = $value;
+            $this->currencyRepository->setUser($value);
+            $this->accountRepository->setUser($value);
+            $this->piggyBankRepository->setUser($value);
         }
     }
     private CurrencyRepositoryInterface $currencyRepository;
     private AccountRepositoryInterface $accountRepository;
     private PiggyBankRepositoryInterface $piggyBankRepository;
+
+    public function __construct()
+    {
+        $this->currencyRepository = app(CurrencyRepositoryInterface::class);
+        $this->accountRepository  = app(AccountRepositoryInterface::class);
+        $this->piggyBankRepository = app(PiggyBankRepositoryInterface::class);
+    }
 
     /**
      * Store a piggy bank or come back with an exception.
@@ -56,12 +66,7 @@ class PiggyBankFactory
      * @return PiggyBank
      */
     public function store(array $data): PiggyBank {
-        $this->currencyRepository = app(CurrencyRepositoryInterface::class);
-        $this->accountRepository  = app(AccountRepositoryInterface::class);
-        $this->piggyBankRepository = app(PiggyBankRepositoryInterface::class);
-        $this->currencyRepository->setUser($this->user);
-        $this->accountRepository->setUser($this->user);
-        $this->piggyBankRepository->setUser($this->user);
+
         $piggyBankData                  =$data;
 
         // unset some fields
@@ -202,14 +207,23 @@ class PiggyBankFactory
 
     }
 
-    private function linkToAccountIds(PiggyBank $piggyBank, array $accounts): void {
+    public function linkToAccountIds(PiggyBank $piggyBank, array $accounts): void {
+        $toBeLinked = [];
         /** @var array $info */
         foreach($accounts as $info) {
             $account = $this->accountRepository->find((int)($info['account_id'] ?? 0));
             if(null === $account) {
                 continue;
             }
-            $piggyBank->accounts()->syncWithoutDetaching([$account->id => ['current_amount' => $info['current_amount'] ?? '0']]);
+            if(array_key_exists('current_amount',$info)) {
+                $toBeLinked[$account->id] = ['current_amount' => $info['current_amount']];
+                //$piggyBank->accounts()->syncWithoutDetaching([$account->id => ['current_amount' => $info['current_amount'] ?? '0']]);
+            }
+            if(!array_key_exists('current_amount', $info)) {
+                $toBeLinked[$account->id] = [];
+                //$piggyBank->accounts()->syncWithoutDetaching([$account->id]);
+            }
         }
+        $piggyBank->accounts()->sync($toBeLinked);
     }
 }

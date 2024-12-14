@@ -25,6 +25,7 @@ namespace FireflyIII\Repositories\PiggyBank;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Models\TransactionJournal;
@@ -37,13 +38,13 @@ use Illuminate\Support\Collection;
  */
 interface PiggyBankRepositoryInterface
 {
-    public function addAmount(PiggyBank $piggyBank, string $amount, ?TransactionJournal $journal = null): bool;
+    public function addAmount(PiggyBank $piggyBank, Account $account, string $amount, ?TransactionJournal $journal = null): bool;
 
     public function addAmountToRepetition(PiggyBankRepetition $repetition, string $amount, TransactionJournal $journal): void;
 
-    public function canAddAmount(PiggyBank $piggyBank, string $amount): bool;
+    public function canAddAmount(PiggyBank $piggyBank, Account $account, string $amount): bool;
 
-    public function canRemoveAmount(PiggyBank $piggyBank, string $amount): bool;
+    public function canRemoveAmount(PiggyBank $piggyBank, Account $account, string $amount): bool;
 
     /**
      * Destroy piggy bank.
@@ -68,7 +69,10 @@ interface PiggyBankRepositoryInterface
     /**
      * Get current amount saved in piggy bank.
      */
-    public function getCurrentAmount(PiggyBank $piggyBank): string;
+    public function getCurrentAmount(PiggyBank $piggyBank, ?Account $account = null): string;
+    /**
+     * Get current amount saved in piggy bank.
+     */
 
     /**
      * Get all events.
@@ -97,7 +101,7 @@ interface PiggyBankRepositoryInterface
      */
     public function getPiggyBanksWithAmount(): Collection;
 
-    public function getRepetition(PiggyBank $piggyBank): ?PiggyBankRepetition;
+    public function getRepetition(PiggyBank $piggyBank, bool $overrule = false): ?PiggyBankRepetition;
 
     /**
      * Returns the suggested amount the user should save per month, or "".
@@ -107,9 +111,10 @@ interface PiggyBankRepositoryInterface
     /**
      * Get for piggy account what is left to put in piggies.
      */
-    public function leftOnAccount(PiggyBank $piggyBank, Carbon $date): string;
+    public function leftOnAccount(PiggyBank $piggyBank,Account $account, Carbon $date): string;
 
-    public function removeAmount(PiggyBank $piggyBank, string $amount, ?TransactionJournal $journal = null): bool;
+    public function removeAmount(PiggyBank $piggyBank, Account $account, string $amount, ?TransactionJournal $journal = null): bool;
+    public function removeAmountFromAll(PiggyBank $piggyBank, string $amount): void;
 
     public function removeObjectGroup(PiggyBank $piggyBank): PiggyBank;
 

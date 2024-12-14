@@ -72,6 +72,7 @@ class UpgradeDatabase extends Command
             'firefly-iii:create-group-memberships',
             'firefly-iii:upgrade-group-information',
             'firefly-iii:upgrade-currency-preferences',
+            'firefly-iii:upgrade-multi-piggies',
             'firefly-iii:correct-database',
         ];
         $args     = [];
