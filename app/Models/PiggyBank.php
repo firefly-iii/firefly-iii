@@ -87,7 +87,7 @@ class PiggyBank extends Model
 
     public function account(): BelongsTo
     {
-        throw new FireflyException('This method is not available on PiggyBank.');
+        return $this->belongsTo(Account::class);
     }
 
     public function attachments(): MorphMany

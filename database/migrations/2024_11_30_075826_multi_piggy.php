@@ -23,7 +23,6 @@ return new class () extends Migration {
         });
         Schema::table('piggy_banks', static function (Blueprint $table): void {
             // 3. add currency
-
             $table->integer('transaction_currency_id', false, true)->after('account_id')->nullable();
             $table->foreign('transaction_currency_id', 'unique_currency')->references('id')->on('transaction_currencies')->onDelete('cascade');
         });
