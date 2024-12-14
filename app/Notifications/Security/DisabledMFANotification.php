@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Notifications\Security;
 
+use FireflyIII\Notifications\ReturnsAvailableChannels;
 use FireflyIII\Support\Notifications\UrlValidator;
 use FireflyIII\User;
 use Illuminate\Bus\Queueable;
@@ -35,7 +36,7 @@ class DisabledMFANotification extends Notification
 {
     use Queueable;
 
-    private User   $user;
+    private User $user;
 
     /**
      * Create a new notification instance.
@@ -48,13 +49,13 @@ class DisabledMFANotification extends Notification
     /**
      * Get the array representation of the notification.
      *
-     * @param mixed $notifiable
+     * @param User $notifiable
      *
      * @return array
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function toArray($notifiable)
+    public function toArray(User $notifiable)
     {
         return [
         ];
@@ -63,15 +64,15 @@ class DisabledMFANotification extends Notification
     /**
      * Get the mail representation of the notification.
      *
-     * @param mixed $notifiable
+     * @param User $notifiable
      *
      * @return MailMessage
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function toMail($notifiable)
+    public function toMail(User $notifiable)
     {
-        $subject = (string)trans('email.disabled_mfa_subject');
+        $subject = (string) trans('email.disabled_mfa_subject');
 
         return (new MailMessage())->markdown('emails.security.disabled-mfa', ['user' => $this->user])->subject($subject);
     }
@@ -79,15 +80,15 @@ class DisabledMFANotification extends Notification
     /**
      * Get the Slack representation of the notification.
      *
-     * @param mixed $notifiable
+     * @param User $notifiable
      *
      * @return SlackMessage
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function toSlack($notifiable)
+    public function toSlack(User $notifiable)
     {
-        $message = (string)trans('email.disabled_mfa_slack', ['email' => $this->user->email]);
+        $message = (string) trans('email.disabled_mfa_slack', ['email' => $this->user->email]);
 
         return (new SlackMessage())->content($message);
     }
@@ -95,24 +96,14 @@ class DisabledMFANotification extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @param mixed $notifiable
+     * @param User $notifiable
      *
      * @return array
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function via($notifiable)
+    public function via(User $notifiable)
     {
-        /** @var null|User $user */
-        $user     = auth()->user();
-        $slackUrl = null === $user ? '' : app('preferences')->getForUser(auth()->user(), 'slack_webhook_url', '')->data;
-        if (is_array($slackUrl)) {
-            $slackUrl = '';
-        }
-        if (UrlValidator::isValidWebhookURL((string)$slackUrl)) {
-            return ['mail', 'slack'];
-        }
-
-        return ['mail'];
+        return ReturnsAvailableChannels::returnChannels('user', $notifiable);
     }
 }

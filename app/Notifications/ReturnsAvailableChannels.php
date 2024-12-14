@@ -25,19 +25,22 @@ declare(strict_types=1);
 namespace FireflyIII\Notifications;
 
 use FireflyIII\Support\Notifications\UrlValidator;
+use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
 use NotificationChannels\Pushover\PushoverChannel;
 use Wijourdil\NtfyNotificationChannel\Channels\NtfyChannel;
 
 class ReturnsAvailableChannels
 {
-    public static function returnChannels(string $type): array
+    public static function returnChannels(string $type, ?User $user = null): array
     {
         $channels = ['mail'];
 
-
         if ('owner' === $type) {
             return self::returnOwnerChannels();
+        }
+        if('user' === $type && null !== $user) {
+            return self::returnUserChannels($user);
         }
 
 
@@ -74,6 +77,38 @@ class ReturnsAvailableChannels
         }
 
         Log::debug(sprintf('Final channel set in ReturnsAvailableChannels: %s ', implode(', ', $channels)));
+
+        return $channels;
+    }
+
+    private static function returnUserChannels(User $user): array {
+        $channels          = ['mail'];
+        $slackUrl          = app('preferences')->getEncryptedForUser($user, 'slack_webhook_url', '')->data;
+        if (UrlValidator::isValidWebhookURL($slackUrl)) {
+            $channels[] = 'slack';
+        }
+
+        // validate presence of of Ntfy settings.
+        if ('' !== (string) app('preferences')->getEncryptedForUser($user,'ntfy_topic', '')->data) {
+            Log::debug('Enabled ntfy.');
+            $channels[] = NtfyChannel::class;
+        }
+        if ('' === (string) app('preferences')->getEncryptedForUser($user,'ntfy_topic', '')->data) {
+            Log::warning('No topic name for Ntfy, channel is disabled.');
+        }
+
+        // pushover
+        $pushoverAppToken  = (string) app('preferences')->getEncryptedForUser($user, 'pushover_app_token', '')->data;
+        $pushoverUserToken = (string) app('preferences')->getEncryptedForUser($user, 'pushover_user_token', '')->data;
+        if ('' === $pushoverAppToken || '' === $pushoverUserToken) {
+            Log::warning('[b] No Pushover token, channel is disabled.');
+        }
+        if ('' !== $pushoverAppToken && '' !== $pushoverUserToken) {
+            Log::debug('Enabled pushover.');
+            $channels[] = PushoverChannel::class;
+        }
+
+        Log::debug(sprintf('Final channel set in ReturnsAvailableChannels (user): %s ', implode(', ', $channels)));
 
         // only the owner can get notifications over
         return $channels;
