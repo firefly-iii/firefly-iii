@@ -7,6 +7,10 @@ on:
         description: 'Release "v1.2.3" or "develop" or "branch-abc"'
         required: true
         default: 'develop'
+      phpversion:
+        description: 'PHP version'
+        required: true
+        default: '8.3'
   schedule:
     - cron: '0 3 * * MON'
 
@@ -36,13 +40,12 @@ jobs:
             git checkout main
             git merge develop
           fi
-          exit 1
         env:
           version: ${{ github.event_name == 'schedule' && 'develop' || github.event.inputs.version }}
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.4'
+          php-version: ${{ github.event.inputs.phpversion }}
           extensions: mbstring, intl, zip, bcmath
       - name: crowdin action
         uses: crowdin/github-action@v2
@@ -172,6 +175,16 @@ jobs:
             tarName=FireflyIII-develop.tar.gz
           fi
 
+          # if this is a branch build, also slightly different variable names.
+          if [[ "$version" == branch* ]]; then
+            [[ -z $(git status --untracked-files=normal --porcelain) ]] && echo "this branch is clean, no need to push..." && exit 0;
+            # branch builds overrule develop
+            releaseName=develop-$(date +'%Y%m%d')
+            originalName=$releaseName
+            zipName=FireflyIII-develop.zip
+            tarName=FireflyIII-develop.tar.gz
+          fi
+
           # in both cases, if the release or tag already exists, add ".1" until it no longer exists.
           tagFound=true
           tagCount=1
@@ -214,7 +227,7 @@ jobs:
           gpg --armor --detach-sign $tarName
 
           # create a development (nightly) release:
-          if [[ "develop" == "$version" ]]; then
+          if [[ "develop" == "$version" ]] || [[ "$version" == branch* ]]; then
             echo 'Develop release.'
             # add text to output.txt (instructions)
             rm output.txt
