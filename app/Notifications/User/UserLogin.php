@@ -26,11 +26,14 @@ namespace FireflyIII\Notifications\User;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Notifications\ReturnsAvailableChannels;
+use FireflyIII\Notifications\ReturnsSettings;
 use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
+use NotificationChannels\Pushover\PushoverMessage;
+use Ntfy\Message;
 
 /**
  * Class UserLogin
@@ -60,21 +63,30 @@ class UserLogin extends Notification
     public function toMail(User $notifiable)
     {
         $time = now(config('app.timezone'))->isoFormat((string) trans('config.date_time_js'));
-        $host = '';
-
-        try {
-            $hostName = app('steam')->getHostName($this->ip);
-        } catch (FireflyException $e) {
-            app('log')->error($e->getMessage());
-            $hostName = $this->ip;
-        }
-        if ($hostName !== $this->ip) {
-            $host = $hostName;
-        }
 
         return (new MailMessage())
-            ->markdown('emails.new-ip', ['time' => $time, 'ipAddress' => $this->ip, 'host' => $host])
+            ->markdown('emails.new-ip', ['time' => $time, 'ipAddress' => $this->ip, 'host' => $this->getHost()])
             ->subject((string) trans('email.login_from_new_ip'));
+    }
+
+    public function toNtfy(User $notifiable): Message
+    {
+        $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
+        $message  = new Message();
+        $message->topic($settings['ntfy_topic']);
+        $message->title((string) trans('email.login_from_new_ip'));
+        $message->body((string) trans('email.slack_login_from_new_ip', ['host' => $this->getHost(), 'ip' => $this->ip]));
+
+        return $message;
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toPushover(User $notifiable): PushoverMessage
+    {
+        return PushoverMessage::create((string) trans('email.slack_login_from_new_ip', ['host' => $this->getHost(), 'ip' => $this->ip]))
+                              ->title((string) trans('email.login_from_new_ip'));
     }
 
     /**
@@ -82,19 +94,7 @@ class UserLogin extends Notification
      */
     public function toSlack(User $notifiable)
     {
-        $host = '';
-
-        try {
-            $hostName = app('steam')->getHostName($this->ip);
-        } catch (FireflyException $e) {
-            app('log')->error($e->getMessage());
-            $hostName = $this->ip;
-        }
-        if ($hostName !== $this->ip) {
-            $host = $hostName;
-        }
-
-        return new SlackMessage()->content((string) trans('email.slack_login_from_new_ip', ['host' => $host, 'ip' => $this->ip]));
+        return new SlackMessage()->content((string) trans('email.slack_login_from_new_ip', ['host' => $this->getHost(), 'ip' => $this->ip]));
     }
 
     /**
@@ -103,5 +103,20 @@ class UserLogin extends Notification
     public function via(User $notifiable)
     {
         return ReturnsAvailableChannels::returnChannels('user', $notifiable);
+    }
+
+    private function getHost(): string {
+        $host = '';
+
+        try {
+            $hostName = app('steam')->getHostName($this->ip);
+        } catch (FireflyException $e) {
+            app('log')->error($e->getMessage());
+            $hostName = $this->ip;
+        }
+        if ($hostName !== $this->ip) {
+            $host = $hostName;
+        }
+        return $host;
     }
 }

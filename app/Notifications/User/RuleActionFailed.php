@@ -25,10 +25,13 @@ declare(strict_types=1);
 namespace FireflyIII\Notifications\User;
 
 use FireflyIII\Notifications\ReturnsAvailableChannels;
+use FireflyIII\Notifications\ReturnsSettings;
 use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
+use NotificationChannels\Pushover\PushoverMessage;
+use Ntfy\Message;
 
 /**
  * Class RuleActionFailed
@@ -81,12 +84,33 @@ class RuleActionFailed extends Notification
     }
 
 
+    public function toNtfy(User $notifiable): Message
+    {
+        $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
+        $message  = new Message();
+        $message->topic($settings['ntfy_topic']);
+        $message->body($this->message);
+
+        return $message;
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toPushover(User $notifiable): PushoverMessage
+    {
+        return PushoverMessage::create($this->message);
+    }
+
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function via(User $notifiable)
     {
-        // todo disable mail channel
-        return ReturnsAvailableChannels::returnChannels('user', $notifiable);
+        $channels = ReturnsAvailableChannels::returnChannels('user', $notifiable);
+        if (($key = array_search('mail', $channels)) !== false) {
+            unset($channels[$key]);
+        }
+        return $channels;
     }
 }

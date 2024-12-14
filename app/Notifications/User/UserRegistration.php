@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Notifications\User;
 
-use FireflyIII\Notifications\ReturnsAvailableChannels;
 use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -64,6 +63,7 @@ class UserRegistration extends Notification
      */
     public function via(User $notifiable)
     {
-        return ReturnsAvailableChannels::returnChannels('user', $notifiable);
+        // other settings will not be available at this point anyway.
+        return ['mail'];
     }
 }

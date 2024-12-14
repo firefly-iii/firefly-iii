@@ -26,11 +26,14 @@ namespace FireflyIII\Notifications\User;
 
 use FireflyIII\Models\Bill;
 use FireflyIII\Notifications\ReturnsAvailableChannels;
+use FireflyIII\Notifications\ReturnsSettings;
 use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
+use NotificationChannels\Pushover\PushoverMessage;
+use Ntfy\Message;
 
 /**
  * Class BillReminder
@@ -66,14 +69,9 @@ class BillReminder extends Notification
      */
     public function toMail(User $notifiable)
     {
-        $subject = (string) trans(sprintf('email.bill_warning_subject_%s', $this->field), ['diff' => $this->diff, 'name' => $this->bill->name]);
-        if (0 === $this->diff) {
-            $subject = (string) trans(sprintf('email.bill_warning_subject_now_%s', $this->field), ['diff' => $this->diff, 'name' => $this->bill->name]);
-        }
-
         return (new MailMessage())
             ->markdown('emails.bill-warning', ['field' => $this->field, 'diff' => $this->diff, 'bill' => $this->bill])
-            ->subject($subject);
+            ->subject($this->getSubject());
     }
 
     /**
@@ -81,10 +79,6 @@ class BillReminder extends Notification
      */
     public function toSlack(User $notifiable)
     {
-        $message = (string) trans(sprintf('email.bill_warning_subject_%s', $this->field), ['diff' => $this->diff, 'name' => $this->bill->name]);
-        if (0 === $this->diff) {
-            $message = (string) trans(sprintf('email.bill_warning_subject_now_%s', $this->field), ['diff' => $this->diff, 'name' => $this->bill->name]);
-        }
         $bill = $this->bill;
         $url  = route('bills.show', [$bill->id]);
 
@@ -93,7 +87,36 @@ class BillReminder extends Notification
             ->attachment(static function ($attachment) use ($bill, $url): void {
                 $attachment->title((string) trans('firefly.visit_bill', ['name' => $bill->name]), $url);
             })
-            ->content($message);
+            ->content($this->getSubject());
+    }
+
+    public function toNtfy(User $notifiable): Message
+    {
+        $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
+        $message  = new Message();
+        $message->topic($settings['ntfy_topic']);
+        $message->title($this->getSubject());
+        $message->body((string) trans('email.bill_warning_please_action'));
+
+        return $message;
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toPushover(User $notifiable): PushoverMessage
+    {
+        return PushoverMessage::create((string) trans('email.bill_warning_please_action'))
+                              ->title($this->getSubject());
+    }
+
+    private function getSubject(): string
+    {
+        $message = (string) trans(sprintf('email.bill_warning_subject_%s', $this->field), ['diff' => $this->diff, 'name' => $this->bill->name]);
+        if (0 === $this->diff) {
+            $message = (string) trans(sprintf('email.bill_warning_subject_now_%s', $this->field), ['diff' => $this->diff, 'name' => $this->bill->name]);
+        }
+        return $message;
     }
 
     /**

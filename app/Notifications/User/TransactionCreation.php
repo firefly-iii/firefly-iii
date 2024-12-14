@@ -71,7 +71,6 @@ class TransactionCreation extends Notification
      */
     public function via(User $notifiable)
     {
-        // todo only over email?
-        return ReturnsAvailableChannels::returnChannels('user', $notifiable);
+        return ['mail'];
     }
 }

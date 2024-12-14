@@ -25,10 +25,14 @@ declare(strict_types=1);
 namespace FireflyIII\Notifications\User;
 
 use FireflyIII\Notifications\ReturnsAvailableChannels;
+use FireflyIII\Notifications\ReturnsSettings;
 use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
+use NotificationChannels\Pushover\PushoverMessage;
+use Ntfy\Message;
 
 /**
  * Class UserNewPassword
@@ -67,6 +71,29 @@ class UserNewPassword extends Notification
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
+    public function toSlack(User $notifiable)
+    {
+        return new SlackMessage()->content((string) trans('email.reset_pw_message'));
+    }
+
+    public function toNtfy(User $notifiable): Message
+    {
+        $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
+        $message  = new Message();
+        $message->topic($settings['ntfy_topic']);
+        $message->body((string) trans('email.reset_pw_message'));
+
+        return $message;
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toPushover(User $notifiable): PushoverMessage
+    {
+        return PushoverMessage::create((string) trans('email.reset_pw_message'));
+    }
+
     public function via(User $notifiable)
     {
         return ReturnsAvailableChannels::returnChannels('user', $notifiable);

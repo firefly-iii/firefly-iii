@@ -109,6 +109,7 @@ return [
 
     // reset password
     'reset_pw_subject'                            => 'Your password reset request',
+    'reset_pw_message' => 'You have received password reset instructions in your email. If this was you, please follow the instructions.',
     'reset_pw_instructions'                       => 'Somebody tried to reset your password. If it was you, please follow the link below to do so.',
     'reset_pw_warning'                            => '**PLEASE** verify that the link actually goes to the Firefly III you expect it to go!',
 
