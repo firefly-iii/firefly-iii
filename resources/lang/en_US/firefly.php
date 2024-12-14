@@ -1372,6 +1372,7 @@ return [
     'optional_field_attachments'                => 'Attachments',
     'optional_field_meta_data'                  => 'Optional meta data',
     'external_url'                              => 'External URL',
+    'pref_notification_login_failure'           => 'Login failure',
     'pref_notification_bill_reminder'           => 'Reminder about expiring bills',
     'pref_notification_new_access_token'        => 'Alert when a new API access token is created',
     'pref_notification_transaction_creation'    => 'Alert when a transaction is created automatically',
@@ -1386,8 +1387,8 @@ return [
     'pref_notification_new_backup_codes'    => 'New backup codes have been generated',
     'pref_notifications'                        => 'Notifications',
     'pref_notifications_help'                   => 'Indicate if these are notifications you would like to get. Some notifications may contain sensitive financial information.',
-    'slack_webhook_url'                         => 'Slack Webhook URL',
-    'slack_webhook_url_help'                    => 'If you want Firefly III to notify you using Slack, enter the webhook URL here. Otherwise leave the field blank. If you are an admin, you need to set this URL in the administration as well.',
+    'pref_notifications_settings'                         => 'Notifications settings',
+    'pref_notifications_settings_help'                    => 'Use these settings to configure your notification channels. Please note that notifications will be sent to ALL channels.',
     'slack_url_label'                           => 'Slack "incoming webhook" URL',
     'discord_url_label' => 'Discord webhook URL',
 

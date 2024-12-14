@@ -56,13 +56,13 @@ class FireflyConfig
             return null;
         }
         if ('' === $result->data) {
-            Log::warning(sprintf('Empty encrypted preference found: "%s"', $name));
+            Log::warning(sprintf('Empty encrypted configuration value found: "%s"', $name));
             return $result;
         }
         try {
             $result->data = decrypt($result->data);
         } catch (DecryptException $e) {
-            Log::error(sprintf('Could not decrypt preference "%s": %s', $name, $e->getMessage()));
+            Log::error(sprintf('Could not decrypt configuration value "%s": %s', $name, $e->getMessage()));
             return $result;
         }
         return $result;
@@ -105,8 +105,8 @@ class FireflyConfig
         try {
             $encrypted = encrypt($value);
         } catch (EncryptException $e) {
-            Log::error(sprintf('Could not encrypt preference "%s": %s', $name, $e->getMessage()));
-            throw new FireflyException(sprintf('Could not encrypt preference "%s". Cowardly refuse to continue.', $name));
+            Log::error(sprintf('Could not encrypt configuration value "%s": %s', $name, $e->getMessage()));
+            throw new FireflyException(sprintf('Could not encrypt configuration value "%s". Cowardly refuse to continue.', $name));
         }
         return $this->set($name, $encrypted);
     }

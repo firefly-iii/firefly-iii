@@ -26,9 +26,12 @@ namespace FireflyIII\Support;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Preference;
 use FireflyIII\User;
+use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Contracts\Encryption\EncryptException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
 /**
@@ -52,6 +55,37 @@ class Preferences
             ->get()
         ;
     }
+
+    public function getEncrypted(string $name, $default = null): ?Preference
+    {
+        $result = $this->get($name, $default);
+        if (null === $result) {
+            return null;
+        }
+        if ('' === $result->data) {
+            Log::warning(sprintf('Empty encrypted preference found: "%s"', $name));
+            return $result;
+        }
+        try {
+            $result->data = decrypt($result->data);
+        } catch (DecryptException $e) {
+            Log::error(sprintf('Could not decrypt preference "%s": %s', $name, $e->getMessage()));
+            return $result;
+        }
+        return $result;
+    }
+
+    public function setEncrypted(string $name, mixed $value): Preference
+    {
+        try {
+            $encrypted = encrypt($value);
+        } catch (EncryptException $e) {
+            Log::error(sprintf('Could not encrypt preference "%s": %s', $name, $e->getMessage()));
+            throw new FireflyException(sprintf('Could not encrypt preference "%s". Cowardly refuse to continue.', $name));
+        }
+        return $this->set($name, $encrypted);
+    }
+
 
     public function get(string $name, null|array|bool|int|string $default = null): ?Preference
     {

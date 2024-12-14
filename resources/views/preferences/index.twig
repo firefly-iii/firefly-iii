@@ -308,14 +308,13 @@
                                     <div class="preferences-box">
                                         <h3>{{ 'pref_notifications'|_ }}</h3>
                                         <p class="text-info">{{ 'pref_notifications_help'|_ }}</p>
-                                        {% for id, enabled in notifications %}
+                                        {% for id, info in notifications %}
                                             <div class="form-group">
                                                 <div class="col-sm-10">
                                                     <div class="checkbox">
                                                         <label>
-                                                            <input type="checkbox" name="notification_{{ id }}" {{ enabled == true ? 'checked' : '' }} value="1">
+                                                            <input {% if not info.configurable %}disabled{% endif %} type="checkbox" name="notification_{{ id }}" {{ info.enabled == true ? 'checked' : '' }} value="1">
                                                             {{ trans('firefly.pref_notification_' ~ id) }}
-
                                                         </label>
                                                     </div>
                                                 </div>
@@ -325,9 +324,19 @@
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                     <div class="preferences-box">
-                                        <h3>{{ 'slack_webhook_url'|_ }}</h3>
-                                        <p class="text-info">{{ 'slack_webhook_url_help'|_ }}</p>
-                                        {{ ExpandedForm.text('slackUrl',slackUrl,{'label' : 'slack_url_label'|_}) }}
+                                        <h3>{{ 'pref_notifications_settings'|_ }}</h3>
+                                        <p class="text-info">{{ 'pref_notifications_settings_help'|_ }}</p>
+                                        {{ ExpandedForm.text('slackUrl',slackUrl,{'label' : 'slack_url_label'|_, helpText: 'slack_discord_double'|_}) }}
+
+                                        {{ ExpandedForm.text('pushover_app_token', pushoverAppToken, {}) }}
+                                        {{ ExpandedForm.text('pushover_user_token', pushoverUserToken, {}) }}
+
+                                        {{ ExpandedForm.text('ntfy_server', ntfyServer, {}) }}
+                                        {{ ExpandedForm.text('ntfy_topic', ntfyTopic, {}) }}
+                                        {{ ExpandedForm.checkbox('ntfy_auth','1', ntfyAuth, {}) }}
+                                        {{ ExpandedForm.text('ntfy_user', ntfyUser, {}) }}
+                                        {{ ExpandedForm.passwordWithValue('ntfy_pass', ntfyPass, {}) }}
+
                                     </div>
                                 </div>
                             </div>

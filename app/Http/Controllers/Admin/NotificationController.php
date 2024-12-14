@@ -46,13 +46,11 @@ class NotificationController extends Controller
         $slackUrl          = app('fireflyconfig')->getEncrypted('slack_webhook_url', '')->data;
         $pushoverAppToken  = app('fireflyconfig')->getEncrypted('pushover_app_token', '')->data;
         $pushoverUserToken = app('fireflyconfig')->getEncrypted('pushover_user_token', '')->data;
-
         $ntfyServer = app('fireflyconfig')->getEncrypted('ntfy_server', 'https://ntfy.sh')->data;
         $ntfyTopic  = app('fireflyconfig')->getEncrypted('ntfy_topic', '')->data;
         $ntfyAuth   = app('fireflyconfig')->get('ntfy_auth', false)->data;
         $ntfyUser   = app('fireflyconfig')->getEncrypted('ntfy_user', '')->data;
         $ntfyPass   = app('fireflyconfig')->getEncrypted('ntfy_pass', '')->data;
-
         $channels           = config('notifications.channels');
         $forcedAvailability = [];
 

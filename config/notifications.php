@@ -31,11 +31,15 @@ return [
     ],
     'notifications' => [
         'user'  => [
+            // normal reminders
             'bill_reminder'        => ['enabled' => true, 'configurable' => true],
-            'new_access_token'     => ['enabled' => true, 'configurable' => true],
             'transaction_creation' => ['enabled' => true, 'configurable' => true],
-            'user_login'           => ['enabled' => true, 'configurable' => true],
             'rule_action_failures' => ['enabled' => true, 'configurable' => true],
+
+            // security reminders
+            'new_access_token'     => ['enabled' => true, 'configurable' => true],
+            'user_login'           => ['enabled' => true, 'configurable' => true],
+            'login_failure'        => ['enabled' => true, 'configurable' => true],
             'new_password'         => ['enabled' => true, 'configurable' => false],
             'enabled_mfa'          => ['enabled' => true, 'configurable' => false],
             'disabled_mfa'         => ['enabled' => true, 'configurable' => false],
