@@ -25,12 +25,16 @@ declare(strict_types=1);
 namespace FireflyIII\Notifications\Security;
 
 use FireflyIII\Notifications\ReturnsAvailableChannels;
+use FireflyIII\Notifications\ReturnsSettings;
 use FireflyIII\Support\Notifications\UrlValidator;
 use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Log;
+use NotificationChannels\Pushover\PushoverMessage;
+use Ntfy\Message;
 
 class DisabledMFANotification extends Notification
 {
@@ -91,6 +95,24 @@ class DisabledMFANotification extends Notification
         $message = (string) trans('email.disabled_mfa_slack', ['email' => $this->user->email]);
 
         return (new SlackMessage())->content($message);
+    }
+
+    public function toPushover(User $notifiable): PushoverMessage
+    {
+        Log::debug('Now in (user) toPushover()');
+
+        return PushoverMessage::create((string) trans('email.disabled_mfa_slack', ['email' => $this->user->email]))
+                              ->title((string)trans('email.disabled_mfa_subject'));
+    }
+    public function toNtfy(User $user): Message
+    {
+        $settings = ReturnsSettings::getSettings('ntfy', 'user', $user);
+        $message = new Message();
+        $message->topic($settings['ntfy_topic']);
+        $message->title((string)trans('email.disabled_mfa_subject'));
+        $message->body((string) trans('email.disabled_mfa_slack', ['email' => $this->user->email]));
+
+        return $message;
     }
 
     /**

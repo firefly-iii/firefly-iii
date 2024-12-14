@@ -110,18 +110,6 @@ class UserRegistration extends Notification
     {
         Log::debug('Now in toNtfy() for (Admin) UserRegistration');
         $settings = ReturnsSettings::getSettings('ntfy', 'owner', null);
-
-        // overrule config.
-        config(['ntfy-notification-channel.server' => $settings['ntfy_server']]);
-        config(['ntfy-notification-channel.topic' => $settings['ntfy_topic']]);
-
-        if ($settings['ntfy_auth']) {
-            // overrule auth as well.
-            config(['ntfy-notification-channel.authentication.enabled' => true]);
-            config(['ntfy-notification-channel.authentication.username' => $settings['ntfy_user']]);
-            config(['ntfy-notification-channel.authentication.password' => $settings['ntfy_pass']]);
-        }
-
         $message  = new Message();
         $message->topic($settings['ntfy_topic']);
         $message->title((string) trans('email.registered_subject_admin'));
