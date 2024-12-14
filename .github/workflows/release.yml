@@ -25,6 +25,7 @@ jobs:
             git pull
           elif [[ "$version" == branch* ]]; then
             PULLBRANCH=${branch:7}
+            echo "The branch is '$PULLBRANCH' ($version)"
             git checkout --track origin/$PULLBRANCH
             git pull
           else
@@ -41,7 +42,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
+          php-version: '8.4'
           extensions: mbstring, intl, zip, bcmath
       - name: crowdin action
         uses: crowdin/github-action@v2
