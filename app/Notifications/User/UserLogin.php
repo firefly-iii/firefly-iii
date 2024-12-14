@@ -94,7 +94,7 @@ class UserLogin extends Notification
             $host = $hostName;
         }
 
-        return (new SlackMessage())->content((string) trans('email.slack_login_from_new_ip', ['host' => $host, 'ip' => $this->ip]));
+        return new SlackMessage()->content((string) trans('email.slack_login_from_new_ip', ['host' => $host, 'ip' => $this->ip]));
     }
 
     /**

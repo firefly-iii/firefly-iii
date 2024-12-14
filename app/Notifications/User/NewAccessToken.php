@@ -63,7 +63,7 @@ class NewAccessToken extends Notification
      */
     public function toSlack(User $notifiable)
     {
-        return (new SlackMessage())->content((string) trans('email.access_token_created_body'));
+        return new SlackMessage()->content((string) trans('email.access_token_created_body'));
     }
 
     /**

@@ -25,11 +25,14 @@ declare(strict_types=1);
 namespace FireflyIII\Notifications\Security;
 
 use FireflyIII\Notifications\ReturnsAvailableChannels;
+use FireflyIII\Notifications\ReturnsSettings;
 use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
+use NotificationChannels\Pushover\PushoverMessage;
+use Ntfy\Message;
 
 class MFABackupFewLeftNotification extends Notification
 {
@@ -70,7 +73,27 @@ class MFABackupFewLeftNotification extends Notification
     {
         $message = (string) trans('email.mfa_few_backups_left_slack', ['email' => $this->user->email, 'count' => $this->count]);
 
-        return (new SlackMessage())->content($message);
+        return new SlackMessage()->content($message);
+    }
+
+    public function toNtfy(User $notifiable): Message
+    {
+        $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
+        $message  = new Message();
+        $message->topic($settings['ntfy_topic']);
+        $message->title((string) trans('email.mfa_few_backups_left_subject'));
+        $message->body((string) trans('email.mfa_few_backups_left_slack', ['email' => $this->user->email, 'count' => $this->count]));
+
+        return $message;
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toPushover(User $notifiable): PushoverMessage
+    {
+        return PushoverMessage::create((string) trans('email.mfa_few_backups_left_slack', ['email' => $this->user->email, 'count' => $this->count]))
+                              ->title((string) trans('email.mfa_few_backups_left_subject'));
     }
 
 

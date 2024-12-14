@@ -100,7 +100,7 @@ class VersionCheckResult extends Notification
      */
     public function toSlack(OwnerNotifiable $notifiable)
     {
-        return (new SlackMessage())->content($this->message)
+        return new SlackMessage()->content($this->message)
                                    ->attachment(static function ($attachment): void {
                                        $attachment->title('Firefly III @ GitHub', 'https://github.com/firefly-iii/firefly-iii/releases');
                                    });

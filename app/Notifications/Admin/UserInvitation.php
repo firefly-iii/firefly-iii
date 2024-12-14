@@ -103,7 +103,7 @@ class UserInvitation extends Notification
      */
     public function toSlack(OwnerNotifiable $notifiable)
     {
-        return (new SlackMessage())->content(
+        return new SlackMessage()->content(
             (string) trans('email.invitation_created_body', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email])
         );
     }

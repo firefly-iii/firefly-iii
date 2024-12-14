@@ -24,11 +24,14 @@ declare(strict_types=1);
 namespace FireflyIII\Notifications\Security;
 
 use FireflyIII\Notifications\ReturnsAvailableChannels;
+use FireflyIII\Notifications\ReturnsSettings;
 use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
+use NotificationChannels\Pushover\PushoverMessage;
+use Ntfy\Message;
 
 class UserFailedLoginAttempt extends Notification
 {
@@ -54,9 +57,9 @@ class UserFailedLoginAttempt extends Notification
      */
     public function toMail(User $notifiable)
     {
-        $subject = (string) trans('email.new_backup_codes_subject');
+        $subject = (string) trans('email.failed_login_subject');
 
-        return (new MailMessage())->markdown('emails.security.new-backup-codes', ['user' => $this->user])->subject($subject);
+        return (new MailMessage())->markdown('emails.security.failed-login', ['user' => $this->user])->subject($subject);
     }
 
     /**
@@ -64,9 +67,29 @@ class UserFailedLoginAttempt extends Notification
      */
     public function toSlack(User $notifiable)
     {
-        $message = (string) trans('email.new_backup_codes_slack', ['email' => $this->user->email]);
+        $message = (string) trans('email.failed_login_message', ['email' => $this->user->email]);
 
-        return (new SlackMessage())->content($message);
+        return new SlackMessage()->content($message);
+    }
+
+    public function toNtfy(User $notifiable): Message
+    {
+        $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
+        $message  = new Message();
+        $message->topic($settings['ntfy_topic']);
+        $message->title((string) trans('email.failed_login_subject'));
+        $message->body((string) trans('email.failed_login_message', ['email' => $this->user->email]));
+
+        return $message;
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toPushover(User $notifiable): PushoverMessage
+    {
+        return PushoverMessage::create((string) trans('email.failed_login_message', ['email' => $this->user->email]))
+                              ->title((string) trans('email.failed_login_subject'));
     }
 
     /**

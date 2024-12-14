@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Events\Security;
 
 use FireflyIII\Events\Event;
+use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Queue\SerializesModels;
 

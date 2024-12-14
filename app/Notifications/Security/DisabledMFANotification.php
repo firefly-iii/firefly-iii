@@ -65,12 +65,9 @@ class DisabledMFANotification extends Notification
         return (new MailMessage())->markdown('emails.security.disabled-mfa', ['user' => $this->user])->subject($subject);
     }
 
-    /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function toNtfy(User $user): Message
+    public function toNtfy(User $notifiable): Message
     {
-        $settings = ReturnsSettings::getSettings('ntfy', 'user', $user);
+        $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
         $message  = new Message();
         $message->topic($settings['ntfy_topic']);
         $message->title((string) trans('email.disabled_mfa_subject'));
@@ -84,8 +81,6 @@ class DisabledMFANotification extends Notification
      */
     public function toPushover(User $notifiable): PushoverMessage
     {
-        Log::debug('Now in (user) toPushover()');
-
         return PushoverMessage::create((string) trans('email.disabled_mfa_slack', ['email' => $this->user->email]))
                               ->title((string) trans('email.disabled_mfa_subject'));
     }
@@ -97,7 +92,7 @@ class DisabledMFANotification extends Notification
     {
         $message = (string) trans('email.disabled_mfa_slack', ['email' => $this->user->email]);
 
-        return (new SlackMessage())->content($message);
+        return new SlackMessage()->content($message);
     }
 
     /**

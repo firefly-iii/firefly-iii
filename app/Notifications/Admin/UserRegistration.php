@@ -103,7 +103,7 @@ class UserRegistration extends Notification
      */
     public function toSlack(OwnerNotifiable $notifiable)
     {
-        return (new SlackMessage())->content((string) trans('email.admin_new_user_registered', ['email' => $this->user->email, 'id' => $this->user->id]));
+        return new SlackMessage()->content((string) trans('email.admin_new_user_registered', ['email' => $this->user->email, 'id' => $this->user->id]));
     }
 
     /**

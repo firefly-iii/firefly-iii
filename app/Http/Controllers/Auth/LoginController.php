@@ -26,6 +26,7 @@ namespace FireflyIII\Http\Controllers\Auth;
 use Cookie;
 use FireflyIII\Events\ActuallyLoggedIn;
 use FireflyIII\Events\Security\UnknownUserAttemptedLogin;
+use FireflyIII\Events\Security\UserAttemptedLogin;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Providers\RouteServiceProvider;

@@ -43,6 +43,7 @@ use FireflyIII\Models\GroupMembership;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Models\UserRole;
 use FireflyIII\Notifications\Admin\UserRegistration as AdminRegistrationNotification;
+use FireflyIII\Notifications\Security\UserFailedLoginAttempt;
 use FireflyIII\Notifications\Test\OwnerTestNotificationEmail;
 use FireflyIII\Notifications\Test\OwnerTestNotificationNtfy;
 use FireflyIII\Notifications\Test\OwnerTestNotificationPushover;
