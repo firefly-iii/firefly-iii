@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Release "v1.2.3" or "develop"'
+        description: 'Release "v1.2.3" or "develop" or "branch-abc"'
         required: true
         default: 'develop'
   schedule:
@@ -23,6 +23,10 @@ jobs:
           if [[ "develop" == "$version" ]]; then
             git checkout --track origin/develop
             git pull
+          elif [[ "$version" == branch* ]]; then
+            PULLBRANCH=${branch:7}
+            git checkout --track origin/$PULLBRANCH
+            git pull
           else
             git config user.name github-actions
             git config user.email 41898282+github-actions[bot]@users.noreply.github.com
@@ -31,6 +35,7 @@ jobs:
             git checkout main
             git merge develop
           fi
+          exit 1
         env:
           version: ${{ github.event_name == 'schedule' && 'develop' || github.event.inputs.version }}
       - name: Setup PHP
