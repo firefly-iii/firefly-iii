@@ -27,7 +27,6 @@ use FireflyIII\Events\Test\TestNotificationChannel;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\NotificationRequest;
 use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
-use FireflyIII\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -43,14 +42,14 @@ class NotificationController extends Controller
         $subTitleIcon  = 'envelope-o';
 
         // notification settings:
-        $slackUrl          = app('fireflyconfig')->getEncrypted('slack_webhook_url', '')->data;
-        $pushoverAppToken  = app('fireflyconfig')->getEncrypted('pushover_app_token', '')->data;
-        $pushoverUserToken = app('fireflyconfig')->getEncrypted('pushover_user_token', '')->data;
-        $ntfyServer = app('fireflyconfig')->getEncrypted('ntfy_server', 'https://ntfy.sh')->data;
-        $ntfyTopic  = app('fireflyconfig')->getEncrypted('ntfy_topic', '')->data;
-        $ntfyAuth   = app('fireflyconfig')->get('ntfy_auth', false)->data;
-        $ntfyUser   = app('fireflyconfig')->getEncrypted('ntfy_user', '')->data;
-        $ntfyPass   = app('fireflyconfig')->getEncrypted('ntfy_pass', '')->data;
+        $slackUrl           = app('fireflyconfig')->getEncrypted('slack_webhook_url', '')->data;
+        $pushoverAppToken   = app('fireflyconfig')->getEncrypted('pushover_app_token', '')->data;
+        $pushoverUserToken  = app('fireflyconfig')->getEncrypted('pushover_user_token', '')->data;
+        $ntfyServer         = app('fireflyconfig')->getEncrypted('ntfy_server', 'https://ntfy.sh')->data;
+        $ntfyTopic          = app('fireflyconfig')->getEncrypted('ntfy_topic', '')->data;
+        $ntfyAuth           = app('fireflyconfig')->get('ntfy_auth', false)->data;
+        $ntfyUser           = app('fireflyconfig')->getEncrypted('ntfy_user', '')->data;
+        $ntfyPass           = app('fireflyconfig')->getEncrypted('ntfy_pass', '')->data;
         $channels           = config('notifications.channels');
         $forcedAvailability = [];
 
@@ -62,22 +61,12 @@ class NotificationController extends Controller
             }
         }
 
-        // loop all channels
+        // loop all channels to see if they are available.
         foreach ($channels as $channel => $info) {
             $forcedAvailability[$channel] = true;
         }
-
-        // validate presence of of Ntfy settings.
-        if ('' === $ntfyTopic) {
-            Log::warning('No topic name for Ntfy, channel is disabled.');
-            $forcedAvailability['ntfy'] = false;
-        }
-
-        // validate pushover
-        if ('' === $pushoverAppToken || '' === $pushoverUserToken) {
-            Log::warning('[a] No Pushover token, channel is disabled.');
-            $forcedAvailability['pushover'] = false;
-        }
+        $forcedAvailability['ntfy']     = '' !== $ntfyTopic;
+        $forcedAvailability['pushover'] = '' !== $pushoverAppToken && '' !== $pushoverUserToken;
 
         return view('admin.notifications.index',
                     compact(
