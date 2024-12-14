@@ -105,6 +105,26 @@ class Preferences
 
         return $this->getForUser($user, $name, $default);
     }
+    public function getEncryptedForUser(User $user, string $name, null|array|bool|int|string $default = null): ?Preference
+    {
+        $result = $this->getForUser($user, $name, $default);
+        if ('' === $result->data) {
+            Log::warning(sprintf('Empty encrypted preference found: "%s"', $name));
+
+            return $result;
+        }
+
+        try {
+            $result->data = decrypt($result->data);
+        } catch (DecryptException $e) {
+            Log::error(sprintf('Could not decrypt preference "%s": %s', $name, $e->getMessage()));
+
+            return $result;
+        }
+
+
+        return $result;
+    }
 
     public function getForUser(User $user, string $name, null|array|bool|int|string $default = null): ?Preference
     {

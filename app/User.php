@@ -258,38 +258,38 @@ class User extends Authenticatable
         app('log')->debug(sprintf('in hasAnyRoleInGroup(%s)', implode(', ', $roles)));
 
         /** @var Collection $dbRoles */
-        $dbRoles          = UserRole::whereIn('title', $roles)->get();
+        $dbRoles = UserRole::whereIn('title', $roles)->get();
         if (0 === $dbRoles->count()) {
             app('log')->error(sprintf('Could not find role(s): %s. Probably migration mishap.', implode(', ', $roles)));
 
             return false;
         }
-        $dbRolesIds       = $dbRoles->pluck('id')->toArray();
-        $dbRolesTitles    = $dbRoles->pluck('title')->toArray();
+        $dbRolesIds    = $dbRoles->pluck('id')->toArray();
+        $dbRolesTitles = $dbRoles->pluck('title')->toArray();
 
         /** @var Collection $groupMemberships */
         $groupMemberships = $this->groupMemberships()->whereIn('user_role_id', $dbRolesIds)->where('user_group_id', $userGroup->id)->get();
         if (0 === $groupMemberships->count()) {
             app('log')->error(sprintf(
-                'User #%d "%s" does not have roles %s in user group #%d "%s"',
-                $this->id,
-                $this->email,
-                implode(', ', $roles),
-                $userGroup->id,
-                $userGroup->title
-            ));
+                                  'User #%d "%s" does not have roles %s in user group #%d "%s"',
+                                  $this->id,
+                                  $this->email,
+                                  implode(', ', $roles),
+                                  $userGroup->id,
+                                  $userGroup->title
+                              ));
 
             return false;
         }
         foreach ($groupMemberships as $membership) {
             app('log')->debug(sprintf(
-                'User #%d "%s" has role "%s" in user group #%d "%s"',
-                $this->id,
-                $this->email,
-                $membership->userRole->title,
-                $userGroup->id,
-                $userGroup->title
-            ));
+                                  'User #%d "%s" has role "%s" in user group #%d "%s"',
+                                  $this->id,
+                                  $this->email,
+                                  $membership->userRole->title,
+                                  $userGroup->id,
+                                  $userGroup->title
+                              ));
             if (in_array($membership->userRole->title, $dbRolesTitles, true)) {
                 app('log')->debug(sprintf('Return true, found role "%s"', $membership->userRole->title));
 
@@ -297,13 +297,13 @@ class User extends Authenticatable
             }
         }
         app('log')->error(sprintf(
-            'User #%d "%s" does not have roles %s in user group #%d "%s"',
-            $this->id,
-            $this->email,
-            implode(', ', $roles),
-            $userGroup->id,
-            $userGroup->title
-        ));
+                              'User #%d "%s" does not have roles %s in user group #%d "%s"',
+                              $this->id,
+                              $this->email,
+                              implode(', ', $roles),
+                              $userGroup->id,
+                              $userGroup->title
+                          ));
 
         return false;
     }
@@ -355,13 +355,13 @@ class User extends Authenticatable
      */
     public function routeNotificationFor($driver, $notification = null)
     {
-        $method = 'routeNotificationFor'.Str::studly($driver);
+        $method = 'routeNotificationFor' . Str::studly($driver);
         if (method_exists($this, $method)) {
             return $this->{$method}($notification); // @phpstan-ignore-line
         }
-        $email  = $this->email;
+        $email = $this->email;
         // see if user has alternative email address:
-        $pref   = app('preferences')->getForUser($this, 'remote_guard_alt_email');
+        $pref = app('preferences')->getForUser($this, 'remote_guard_alt_email');
         if (null !== $pref) {
             $email = $pref->data;
         }
@@ -371,8 +371,8 @@ class User extends Authenticatable
         }
 
         return match ($driver) {
-            'mail'     => $email,
-            default    => null,
+            'mail'  => $email,
+            default => null,
         };
     }
 
@@ -392,22 +392,12 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class);
     }
 
-    public function routeNotificationForPushover(Notification $notification)
+    public function routeNotificationForPushover()
     {
-        // this check does not validate if the user is owner, Should be done by notification itself.
-        $appToken  = (string) app('fireflyconfig')->getEncrypted('pushover_app_token', '')->data;
-        $userToken = (string) app('fireflyconfig')->getEncrypted('pushover_user_token', '')->data;
+        $appToken  = (string) app('preferences')->getEncrypted('pushover_app_token', '')->data;
+        $userToken = (string) app('preferences')->getEncrypted('pushover_user_token', '')->data;
 
-        if (property_exists($notification, 'type') && 'owner' === $notification->type) {
-            return PushoverReceiver::withUserKey($userToken)
-                ->withApplicationToken($appToken)
-            ;
-        }
-
-        throw new FireflyException('No pushover token found.');
-        //        return PushoverReceiver::withUserKey((string) config('services.pushover.user_token'))
-        //                               ->withApplicationToken((string) config('services.pushover.token'));
-        // return (string) config('services.pushover.token');
+        return PushoverReceiver::withUserKey($userToken)->withApplicationToken($appToken);
     }
 
     /**
@@ -416,11 +406,11 @@ class User extends Authenticatable
     public function routeNotificationForSlack(Notification $notification): ?string
     {
         // this check does not validate if the user is owner, Should be done by notification itself.
-        $res  = app('fireflyconfig')->getEncrypted('slack_webhook_url', '')->data;
+        $res = app('fireflyconfig')->getEncrypted('slack_webhook_url', '')->data;
         if (is_array($res)) {
             $res = '';
         }
-        $res  = (string) $res;
+        $res = (string) $res;
 
         if (property_exists($notification, 'type') && 'owner' === $notification->type) {
             return $res;

@@ -1290,6 +1290,7 @@ return [
     'create_recurring_from_transaction'                   => 'Create recurring transaction based on transaction',
 
     // preferences
+    'test_notifications_buttons' => 'To test your configuration, use the buttons below. Please note that the buttons have no spam control.',
     'dark_mode_option_browser'                            => 'Let your browser decide',
     'dark_mode_option_light'                              => 'Always light',
     'dark_mode_option_dark'                               => 'Always dark',
@@ -1388,7 +1389,7 @@ return [
     'pref_notifications'                                  => 'Notifications',
     'pref_notifications_help'                             => 'Indicate if these are notifications you would like to get. Some notifications may contain sensitive financial information.',
     'pref_notifications_settings'                         => 'Notifications settings',
-    'pref_notifications_settings_help'                    => 'Use these settings to configure your notification channels. Please note that notifications will be sent to ALL channels.',
+    'pref_notifications_settings_help'                    => 'Use these settings to configure your notification channels. Please note that notifications will be sent to ALL channels. Please save your settings FIRST.',
     'slack_url_label'                                     => 'Slack "incoming webhook" URL',
     'discord_url_label'                                   => 'Discord webhook URL',
 
@@ -2481,7 +2482,7 @@ return [
     'delete_user'                                         => 'Delete user :email',
     'user_deleted'                                        => 'The user has been deleted',
     'send_test_email'                                     => 'Send test email message',
-    'send_test_email_text'                                => 'To see if your installation is capable of sending email or posting Slack messages, please press this button. You will not see an error here (if any), <strong>the log files will reflect any errors</strong>. You can press this button as many times as you like. There is no spam control. The message will be sent to <code>:email</code> and should arrive shortly.',
+    'send_test_email_text'                                => 'To see if your installation is capable of sending a notification, please press this button. You will not see an error here (if any), <strong>the log files will reflect any errors</strong>. You can press this button as many times as you like. There is no spam control. The message will be sent to <code>:email</code> and should arrive shortly.',
     'send_message'                                        => 'Send message',
     'send_test_triggered'                                 => 'Test was triggered. Check your inbox and the log files.',
     'give_admin_careful'                                  => 'Users who are given admin rights can take away yours. Be careful.',
@@ -2514,7 +2515,7 @@ return [
     'notification_channel_name_pushover'                  => 'Pushover',
     'notification_channel_name_gotify'                    => 'Gotify',
     'notification_channel_name_pushbullet'                => 'Pushbullet',
-    'channel_not_available'                               => 'not available yet',
+    'channel_not_available'                               => 'not available',
     'configure_channel_in_env'                            => 'needs environment variables',
     'test_notification_channel_name_email'                => 'Test email',
     'test_notification_channel_name_slack'                => 'Test Slack',

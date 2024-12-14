@@ -24,59 +24,76 @@ declare(strict_types=1);
 
 namespace FireflyIII\Notifications\Test;
 
-use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
+use FireflyIII\Notifications\ReturnsSettings;
+use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\Log;
-use NotificationChannels\Pushover\PushoverChannel;
-use NotificationChannels\Pushover\PushoverMessage;
+use Ntfy\Message;
+use Wijourdil\NtfyNotificationChannel\Channels\NtfyChannel;
 
 // use Illuminate\Notifications\Slack\SlackMessage;
 
 /**
  * Class TestNotification
  */
-class TestNotificationPushover extends Notification
+class UserTestNotificationNtfy extends Notification
 {
     use Queueable;
 
-    private OwnerNotifiable $owner;
+    public User $user;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(OwnerNotifiable $owner)
+    public function __construct(User $user)
     {
-        $this->owner = $owner;
+        $this->user = $user;
     }
 
     /**
      * Get the array representation of the notification.
      *
+     * @param User $notifiable
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return array
      */
-    public function toArray(OwnerNotifiable $notifiable)
+    public function toArray(User $notifiable)
     {
         return [
         ];
     }
 
-    public function toPushover(OwnerNotifiable $notifiable): PushoverMessage
+    public function toNtfy(User $user): Message
     {
-        Log::debug('Now in toPushover()');
+        $settings = ReturnsSettings::getSettings('ntfy', 'user', $user);
 
-        return PushoverMessage::create((string)trans('email.admin_test_message', ['channel' => 'Pushover']))
-            ->title((string)trans('email.admin_test_subject'))
-        ;
+        // overrule config.
+        config(['ntfy-notification-channel.server' => $settings['ntfy_server']]);
+        config(['ntfy-notification-channel.topic' => $settings['ntfy_topic']]);
+
+        if ($settings['ntfy_auth']) {
+            // overrule auth as well.
+            config(['ntfy-notification-channel.authentication.enabled' => true]);
+            config(['ntfy-notification-channel.authentication.username' => $settings['ntfy_user']]);
+            config(['ntfy-notification-channel.authentication.password' => $settings['ntfy_pass']]);
+        }
+
+        $message = new Message();
+        $message->topic($settings['ntfy_topic']);
+        $message->title((string) trans('email.admin_test_subject'));
+        $message->body((string) trans('email.admin_test_message', ['channel' => 'ntfy']));
+        $message->tags(['white_check_mark']);
+
+        return $message;
     }
 
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function via(OwnerNotifiable $notifiable)
+    public function via(User $user)
     {
-        return [PushoverChannel::class];
+        return [NtfyChannel::class];
     }
 }

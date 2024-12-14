@@ -26,6 +26,7 @@ namespace FireflyIII\Notifications;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 
 class ReturnsSettings
@@ -49,6 +50,13 @@ class ReturnsSettings
             'ntfy_pass'   => '',
 
         ];
+        if('user' === $type && null !== $user) {
+            $settings['ntfy_server'] = Preferences::getEncryptedForUser($user, 'ntfy_server', 'https://ntfy.sh')->data;
+            $settings['ntfy_topic']  = Preferences::getEncryptedForUser($user, 'ntfy_topic', '')->data;
+            $settings['ntfy_auth']   = Preferences::getForUser($user, 'ntfy_auth', false)->data;
+            $settings['ntfy_user']   = Preferences::getEncryptedForUser($user, 'ntfy_user', '')->data;
+            $settings['ntfy_pass']   = Preferences::getEncryptedForUser($user, 'ntfy_pass', '')->data;
+        }
         if ('owner' === $type) {
             $settings['ntfy_server'] = FireflyConfig::getEncrypted('ntfy_server', 'https://ntfy.sh')->data;
             $settings['ntfy_topic']  = FireflyConfig::getEncrypted('ntfy_topic', '')->data;

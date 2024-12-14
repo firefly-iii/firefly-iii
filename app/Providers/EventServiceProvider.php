@@ -49,7 +49,8 @@ use FireflyIII\Events\Security\MFAUsedBackupCode;
 use FireflyIII\Events\Security\UnknownUserAttemptedLogin;
 use FireflyIII\Events\StoredAccount;
 use FireflyIII\Events\StoredTransactionGroup;
-use FireflyIII\Events\Test\TestNotificationChannel;
+use FireflyIII\Events\Test\OwnerTestNotificationChannel;
+use FireflyIII\Events\Test\UserTestNotificationChannel;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Events\UpdatedAccount;
 use FireflyIII\Events\UpdatedTransactionGroup;
@@ -130,13 +131,16 @@ class EventServiceProvider extends ServiceProvider
             RequestedNewPassword::class                => [
                 'FireflyIII\Handlers\Events\UserEventHandler@sendNewPassword',
             ],
+            UserTestNotificationChannel::class             => [
+                'FireflyIII\Handlers\Events\UserEventHandler@sendTestNotification',
+            ],
             // is a User related event.
             UserChangedEmail::class                    => [
                 'FireflyIII\Handlers\Events\UserEventHandler@sendEmailChangeConfirmMail',
                 'FireflyIII\Handlers\Events\UserEventHandler@sendEmailChangeUndoMail',
             ],
             // admin related
-            TestNotificationChannel::class             => [
+            OwnerTestNotificationChannel::class             => [
                 'FireflyIII\Handlers\Events\AdminEventHandler@sendTestNotification',
             ],
             NewVersionAvailable::class                 => [

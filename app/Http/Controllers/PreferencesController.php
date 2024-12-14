@@ -23,12 +23,15 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use FireflyIII\Events\Test\UserTestNotificationChannel;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Http\Requests\PreferencesRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Notifications\UrlValidator;
+use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -110,13 +113,13 @@ class PreferencesController extends Controller
 
         // notifications settings
         $slackUrl              = app('preferences')->getEncrypted('slack_webhook_url', '')->data;
-        $pushoverAppToken      = app('preferences')->getEncrypted('pushover_app_token', '')->data;
-        $pushoverUserToken     = app('preferences')->getEncrypted('pushover_user_token', '')->data;
+        $pushoverAppToken      = (string) app('preferences')->getEncrypted('pushover_app_token', '')->data;
+        $pushoverUserToken     = (string) app('preferences')->getEncrypted('pushover_user_token', '')->data;
         $ntfyServer            = app('preferences')->getEncrypted('ntfy_server', 'https://ntfy.sh')->data;
-        $ntfyTopic             = app('preferences')->getEncrypted('ntfy_topic', '')->data;
+        $ntfyTopic             = (string) app('preferences')->getEncrypted('ntfy_topic', '')->data;
         $ntfyAuth              = app('preferences')->get('ntfy_auth', false)->data;
         $ntfyUser              = app('preferences')->getEncrypted('ntfy_user', '')->data;
-        $ntfyPass              = app('preferences')->getEncrypted('ntfy_pass', '')->data;
+        $ntfyPass              = (string) app('preferences')->getEncrypted('ntfy_pass', '')->data;
         $channels                       = config('notifications.channels');
         $forcedAvailability             = [];
 
@@ -175,6 +178,7 @@ class PreferencesController extends Controller
             'ntfyServer',
             'ntfyTopic',
             'ntfyAuth',
+            'channels',
             'ntfyUser',
             'forcedAvailability',
             'ntfyPass',
@@ -206,7 +210,7 @@ class PreferencesController extends Controller
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    public function postIndex(Request $request)
+    public function postIndex(PreferencesRequest $request)
     {
         // front page accounts
         $frontpageAccounts = [];
@@ -219,10 +223,8 @@ class PreferencesController extends Controller
 
         // extract notifications:
         $all               = $request->all();
-
-        exit('fix the reference to the available notifications.');
-        foreach (config('firefly.available_notifications') as $option) {
-            $key = sprintf('notification_%s', $option);
+        foreach (config('notifications.notifications.user') as $key => $info) {
+            $key = sprintf('notification_%s', $key);
             if (array_key_exists($key, $all)) {
                 app('preferences')->set($key, true);
             }
@@ -238,15 +240,19 @@ class PreferencesController extends Controller
         session()->forget('end');
         session()->forget('range');
 
-        // slack URL:
+        // notification settings, cannot be set by the demo user.
         if (!auth()->user()->hasRole('demo')) {
-            $url = (string) $request->get('slackUrl');
-            if (UrlValidator::isValidWebhookURL($url)) {
-                app('preferences')->set('slack_webhook_url', $url);
+
+            $variables = ['slack_webhook_url', 'pushover_app_token', 'pushover_user_token', 'ntfy_server', 'ntfy_topic', 'ntfy_user', 'ntfy_pass'];
+            foreach ($variables as $variable) {
+                if ('' === $all[$variable]) {
+                    app('preferences')->delete($variable);
+                }
+                if ('' !== $all[$variable]) {
+                    app('preferences')->setEncrypted($variable, $all[$variable]);
+                }
             }
-            if ('' === $url) {
-                app('preferences')->delete('slack_webhook_url');
-            }
+            app('preferences')->set('ntfy_auth', $all['ntfy_auth'] ?? false);
         }
 
         // custom fiscal year
@@ -312,5 +318,30 @@ class PreferencesController extends Controller
         app('preferences')->mark();
 
         return redirect(route('preferences.index'));
+    }
+
+    public function testNotification(Request $request): mixed
+    {
+
+        $all     = $request->all();
+        $channel = $all['channel'] ?? '';
+
+        switch ($channel) {
+            default:
+                session()->flash('error', (string) trans('firefly.notification_test_failed', ['channel' => $channel]));
+
+                break;
+
+            case 'email':
+            case 'slack':
+            case 'pushover':
+            case 'ntfy':
+                /** @var User $user */
+                $user = auth()->user();
+                app('log')->debug(sprintf('Now in testNotification("%s") controller.', $channel));
+                event(new UserTestNotificationChannel($channel, $user));
+                session()->flash('success', (string) trans('firefly.notification_test_executed', ['channel' => $channel]));
+        }
+        return '';
     }
 }

@@ -806,6 +806,7 @@ Route::group(
     static function (): void {
         Route::get('', ['uses' => 'PreferencesController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'PreferencesController@postIndex', 'as' => 'update']);
+        Route::post('test-notification', ['uses' => 'PreferencesController@testNotification', 'as' => 'test-notification']);
     }
 );
 

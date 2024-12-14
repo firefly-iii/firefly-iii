@@ -25,20 +25,22 @@ declare(strict_types=1);
 namespace FireflyIII\Notifications\Test;
 
 use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
+use FireflyIII\Notifications\ReturnsSettings;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
+use Ntfy\Message;
+use Wijourdil\NtfyNotificationChannel\Channels\NtfyChannel;
 
 // use Illuminate\Notifications\Slack\SlackMessage;
 
 /**
  * Class TestNotification
  */
-class TestNotificationSlack extends Notification
+class OwnerTestNotificationNtfy extends Notification
 {
     use Queueable;
 
-    private OwnerNotifiable $owner;
+    public OwnerNotifiable $owner;
 
     /**
      * Create a new notification instance.
@@ -51,36 +53,47 @@ class TestNotificationSlack extends Notification
     /**
      * Get the array representation of the notification.
      *
+     * @param mixed $notifiable
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return array
      */
-    public function toArray(OwnerNotifiable $notifiable)
+    public function toArray($notifiable)
     {
         return [
         ];
     }
 
-    /**
-     * Get the Slack representation of the notification.
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function toSlack(OwnerNotifiable $notifiable)
+    public function toNtfy(OwnerNotifiable $notifiable): Message
     {
-        return new SlackMessage()->content((string) trans('email.admin_test_subject'));
-        // return new SlackMessage()->text((string) trans('email.admin_test_subject'))->to($url);
+        $settings = ReturnsSettings::getSettings('ntfy', 'owner', null);
+
+        // overrule config.
+        config(['ntfy-notification-channel.server' => $settings['ntfy_server']]);
+        config(['ntfy-notification-channel.topic' => $settings['ntfy_topic']]);
+
+        if ($settings['ntfy_auth']) {
+            // overrule auth as well.
+            config(['ntfy-notification-channel.authentication.enabled' => true]);
+            config(['ntfy-notification-channel.authentication.username' => $settings['ntfy_user']]);
+            config(['ntfy-notification-channel.authentication.password' => $settings['ntfy_pass']]);
+        }
+
+        $message  = new Message();
+        $message->topic($settings['ntfy_topic']);
+        $message->title((string) trans('email.admin_test_subject'));
+        $message->body((string) trans('email.admin_test_message', ['channel' => 'ntfy']));
+        $message->tags(['white_check_mark']);
+
+        return $message;
     }
 
     /**
-     * Get the notification's delivery channels.
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
-     * @return array
      */
     public function via(OwnerNotifiable $notifiable)
     {
-        return ['slack'];
+        return [NtfyChannel::class];
     }
 }

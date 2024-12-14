@@ -24,23 +24,23 @@ declare(strict_types=1);
 
 namespace FireflyIII\Events\Test;
 
-use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
+use FireflyIII\User;
 use Illuminate\Queue\SerializesModels;
 
-class TestNotificationChannel
+class UserTestNotificationChannel
 {
     use SerializesModels;
 
-    public OwnerNotifiable $owner;
-    public string          $channel;
+    public User   $user;
+    public string $channel;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(string $channel, OwnerNotifiable $owner)
+    public function __construct(string $channel, User $user)
     {
-        app('log')->debug(sprintf('Triggered TestNotificationChannel("%s")', $channel));
-        $this->owner   = $owner;
+        app('log')->debug(sprintf('Triggered UserTestNotificationChannel("%s")', $channel));
+        $this->user    = $user;
         $this->channel = $channel;
     }
 }

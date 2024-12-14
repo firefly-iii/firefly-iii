@@ -26,15 +26,15 @@ namespace FireflyIII\Handlers\Events;
 use FireflyIII\Events\Admin\InvitationCreated;
 use FireflyIII\Events\NewVersionAvailable;
 use FireflyIII\Events\Security\UnknownUserAttemptedLogin;
-use FireflyIII\Events\Test\TestNotificationChannel;
+use FireflyIII\Events\Test\OwnerTestNotificationChannel;
 use FireflyIII\Notifications\Admin\UnknownUserLoginAttempt;
 use FireflyIII\Notifications\Admin\UserInvitation;
 use FireflyIII\Notifications\Admin\VersionCheckResult;
 use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
-use FireflyIII\Notifications\Test\TestNotificationEmail;
-use FireflyIII\Notifications\Test\TestNotificationNtfy;
-use FireflyIII\Notifications\Test\TestNotificationPushover;
-use FireflyIII\Notifications\Test\TestNotificationSlack;
+use FireflyIII\Notifications\Test\OwnerTestNotificationEmail;
+use FireflyIII\Notifications\Test\OwnerTestNotificationNtfy;
+use FireflyIII\Notifications\Test\OwnerTestNotificationPushover;
+use FireflyIII\Notifications\Test\OwnerTestNotificationSlack;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
@@ -125,28 +125,28 @@ class AdminEventHandler
     /**
      * Sends a test message to an administrator.
      */
-    public function sendTestNotification(TestNotificationChannel $event): void
+    public function sendTestNotification(OwnerTestNotificationChannel $event): void
     {
         Log::debug(sprintf('Now in sendTestNotification("%s")', $event->channel));
 
         switch ($event->channel) {
             case 'email':
-                $class = TestNotificationEmail::class;
+                $class = OwnerTestNotificationEmail::class;
 
                 break;
 
             case 'slack':
-                $class = TestNotificationSlack::class;
+                $class = OwnerTestNotificationSlack::class;
 
                 break;
 
             case 'ntfy':
-                $class = TestNotificationNtfy::class;
+                $class = OwnerTestNotificationNtfy::class;
 
                 break;
 
             case 'pushover':
-                $class = TestNotificationPushover::class;
+                $class = OwnerTestNotificationPushover::class;
 
                 break;
 

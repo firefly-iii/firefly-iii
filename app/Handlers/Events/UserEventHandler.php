@@ -31,6 +31,8 @@ use FireflyIII\Events\Admin\InvitationCreated;
 use FireflyIII\Events\DetectedNewIPAddress;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
+use FireflyIII\Events\Test\OwnerTestNotificationChannel;
+use FireflyIII\Events\Test\UserTestNotificationChannel;
 use FireflyIII\Events\UserChangedEmail;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Mail\ConfirmEmailChangeMail;
@@ -40,12 +42,21 @@ use FireflyIII\Models\GroupMembership;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Models\UserRole;
 use FireflyIII\Notifications\Admin\UserRegistration as AdminRegistrationNotification;
+use FireflyIII\Notifications\Test\OwnerTestNotificationEmail;
+use FireflyIII\Notifications\Test\OwnerTestNotificationNtfy;
+use FireflyIII\Notifications\Test\OwnerTestNotificationPushover;
+use FireflyIII\Notifications\Test\OwnerTestNotificationSlack;
+use FireflyIII\Notifications\Test\UserTestNotificationEmail;
+use FireflyIII\Notifications\Test\UserTestNotificationNtfy;
+use FireflyIII\Notifications\Test\UserTestNotificationPushover;
+use FireflyIII\Notifications\Test\UserTestNotificationSlack;
 use FireflyIII\Notifications\User\UserLogin;
 use FireflyIII\Notifications\User\UserNewPassword;
 use FireflyIII\Notifications\User\UserRegistration as UserRegistrationNotification;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Auth\Events\Login;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Mail;
 
@@ -422,5 +433,60 @@ class UserEventHandler
         if (false === $inArray && true === $send) {
             event(new DetectedNewIPAddress($user, $ip));
         }
+    }
+
+    /**
+     * Sends a test message to an administrator.
+     */
+    public function sendTestNotification(UserTestNotificationChannel $event): void
+    {
+        Log::debug(sprintf('Now in (user) sendTestNotification("%s")', $event->channel));
+
+        switch ($event->channel) {
+            case 'email':
+                $class = UserTestNotificationEmail::class;
+
+                break;
+
+            case 'slack':
+                $class = UserTestNotificationSlack::class;
+
+                break;
+
+            case 'ntfy':
+                $class = UserTestNotificationNtfy::class;
+
+                break;
+
+            case 'pushover':
+                $class = UserTestNotificationPushover::class;
+
+                break;
+
+            default:
+                app('log')->error(sprintf('Unknown channel "%s" in (user) sendTestNotification method.', $event->channel));
+
+                return;
+        }
+        Log::debug(sprintf('Will send %s as a notification.', $class));
+
+        try {
+            Notification::send($event->user, new $class($event->user));
+        } catch (\Exception $e) { // @phpstan-ignore-line
+            $message = $e->getMessage();
+            if (str_contains($message, 'Bcc')) {
+                app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+
+                return;
+            }
+            if (str_contains($message, 'RFC 2822')) {
+                app('log')->warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+
+                return;
+            }
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
+        }
+        Log::debug(sprintf('If you see no errors above this line, test notification was sent over channel "%s"', $event->channel));
     }
 }

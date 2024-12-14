@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Admin;
 
-use FireflyIII\Events\Test\TestNotificationChannel;
+use FireflyIII\Events\Test\OwnerTestNotificationChannel;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\NotificationRequest;
 use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
@@ -135,7 +135,7 @@ class NotificationController extends Controller
             case 'ntfy':
                 $owner = new OwnerNotifiable();
                 app('log')->debug(sprintf('Now in testNotification("%s") controller.', $channel));
-                event(new TestNotificationChannel($channel, $owner));
+                event(new OwnerTestNotificationChannel($channel, $owner));
                 session()->flash('success', (string) trans('firefly.notification_test_executed', ['channel' => $channel]));
         }
 
