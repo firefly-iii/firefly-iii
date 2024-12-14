@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
