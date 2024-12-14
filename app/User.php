@@ -36,6 +36,7 @@ use FireflyIII\Models\Category;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\GroupMembership;
 use FireflyIII\Models\ObjectGroup;
+use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\Role;

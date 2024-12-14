@@ -120,6 +120,7 @@ class HomeController extends Controller
      */
     public function index(AccountRepositoryInterface $repository): mixed
     {
+
         $types = config('firefly.accountTypesByIdentifier.asset');
         $count = $repository->count($types);
         Log::channel('audit')->info('User visits homepage.');

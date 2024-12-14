@@ -204,21 +204,26 @@ trait ModifiesPiggyBanks
         $oldOrder         = $piggyBank->order;
         // app('log')->debug(sprintf('Will move piggy bank #%d ("%s") from %d to %d', $piggyBank->id, $piggyBank->name, $oldOrder, $newOrder));
         if ($newOrder > $oldOrder) {
-            $this->user->piggyBanks()->where('piggy_banks.order', '<=', $newOrder)->where('piggy_banks.order', '>', $oldOrder)
-                ->where('piggy_banks.id', '!=', $piggyBank->id)
-                ->decrement('piggy_banks.order')
-            ;
+            PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
+                     ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
+                     ->where('accounts.user_id', $this->user->id)
+                ->where('piggy_banks.order', '<=', $newOrder)->where('piggy_banks.order', '>', $oldOrder)
+                     ->where('piggy_banks.id', '!=', $piggyBank->id)
+                     ->distinct()->decrement('piggy_banks.order');
+
             $piggyBank->order = $newOrder;
             app('log')->debug(sprintf('[1] Order of piggy #%d ("%s") from %d to %d', $piggyBank->id, $piggyBank->name, $oldOrder, $newOrder));
             $piggyBank->save();
 
             return true;
         }
-
-        $this->user->piggyBanks()->where('piggy_banks.order', '>=', $newOrder)->where('piggy_banks.order', '<', $oldOrder)
+        PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
+                 ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
+                 ->where('accounts.user_id', $this->user->id)
+            ->where('piggy_banks.order', '>=', $newOrder)->where('piggy_banks.order', '<', $oldOrder)
             ->where('piggy_banks.id', '!=', $piggyBank->id)
-            ->increment('piggy_banks.order')
-        ;
+            ->distinct()->increment('piggy_banks.order');
+
         $piggyBank->order = $newOrder;
         app('log')->debug(sprintf('[2] Order of piggy #%d ("%s") from %d to %d', $piggyBank->id, $piggyBank->name, $oldOrder, $newOrder));
         $piggyBank->save();

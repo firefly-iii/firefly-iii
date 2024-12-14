@@ -29,7 +29,9 @@ use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use FireflyIII\Support\Models\AccountBalanceCalculator;
 use FireflyIII\User;
@@ -291,7 +293,10 @@ class DebugController extends Controller
         }
 
         // has piggies
-        if ($user->piggyBanks()->count() > 0) {
+        $repository = app(PiggyBankRepositoryInterface::class);
+        $repository->setUser($user);
+
+        if ($repository->getPiggyBanks()->count() > 0) {
             $flags[] = '<span title="Has piggy banks">:pig:</span>';
         }
 

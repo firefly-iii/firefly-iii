@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -55,7 +56,7 @@ class PiggyBank extends Model
             'target_amount' => 'string',
         ];
 
-    protected $fillable = ['name', 'account_id', 'order', 'target_amount', 'start_date', 'start_date_tz', 'target_date', 'target_date_tz', 'active', 'transaction_currency_id'];
+    protected $fillable = ['name', 'order', 'target_amount', 'start_date', 'start_date_tz', 'target_date', 'target_date_tz', 'active', 'transaction_currency_id'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
@@ -83,10 +84,9 @@ class PiggyBank extends Model
     {
         return $this->belongsTo(TransactionCurrency::class);
     }
-
     public function account(): BelongsTo
     {
-        return $this->belongsTo(Account::class);
+        throw new FireflyException('This method is not available on PiggyBank.');
     }
 
     public function attachments(): MorphMany

@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Observer;
 
 use FireflyIII\Models\Account;
+use FireflyIII\Models\PiggyBank;
 
 /**
  * Class AccountObserver
@@ -38,8 +39,9 @@ class AccountObserver
     {
         app('log')->debug('Observe "deleting" of an account.');
         $account->accountMeta()->delete();
+        /** @var PiggyBank $piggy */
         foreach ($account->piggyBanks()->get() as $piggy) {
-            $piggy->delete();
+            $piggy->accounts()->detach($account);
         }
         foreach ($account->attachments()->get() as $attachment) {
             $attachment->delete();

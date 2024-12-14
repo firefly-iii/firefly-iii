@@ -289,7 +289,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
                         ->where('accounts.user_id', auth()->user()->id)
                         ->with(
                             [
-                                'account',
                                 'objectGroups',
                             ]
                         )
