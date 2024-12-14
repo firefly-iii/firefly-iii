@@ -41,38 +41,20 @@ class UserLogin extends Notification
 
     private string $ip;
 
-    /**
-     * Create a new notification instance.
-     */
+
     public function __construct(string $ip)
     {
         $this->ip = $ip;
     }
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return array
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
+
     public function toArray($notifiable)
     {
         return [
         ];
     }
 
-    /**
-     * Get the mail representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return MailMessage
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
+
     public function toMail($notifiable)
     {
         $time = now(config('app.timezone'))->isoFormat((string)trans('config.date_time_js'));
@@ -94,15 +76,7 @@ class UserLogin extends Notification
         ;
     }
 
-    /**
-     * Get the Slack representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return SlackMessage
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
+
     public function toSlack($notifiable)
     {
         $host = '';
@@ -120,15 +94,7 @@ class UserLogin extends Notification
         return (new SlackMessage())->content((string)trans('email.slack_login_from_new_ip', ['host' => $host, 'ip' => $this->ip]));
     }
 
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @param mixed $notifiable
-     *
-     * @return array
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
+
     public function via($notifiable)
     {
         /** @var null|User $user */

@@ -42,9 +42,7 @@ class OwnerTestNotificationNtfy extends Notification
 
     public OwnerNotifiable $owner;
 
-    /**
-     * Create a new notification instance.
-     */
+
     public function __construct(OwnerNotifiable $owner)
     {
         $this->owner = $owner;

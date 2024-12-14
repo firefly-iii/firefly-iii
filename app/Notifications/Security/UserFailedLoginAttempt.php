@@ -1,8 +1,7 @@
 <?php
-
 /*
- * NewAccessToken.php
- * Copyright (c) 2022 james@firefly-iii.org
+ * UserFailedLoginAttempt.php
+ * Copyright (c) 2024 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -17,29 +16,30 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
 declare(strict_types=1);
 
-namespace FireflyIII\Notifications\User;
+namespace FireflyIII\Notifications\Security;
 
 use FireflyIII\Support\Notifications\UrlValidator;
-use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 
-/**
- * Class NewAccessToken
- */
-class NewAccessToken extends Notification
+class UserFailedLoginAttempt extends Notification
 {
     use Queueable;
 
+    private User   $user;
 
-    public function __construct() {}
+
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
 
 
     public function toArray($notifiable)
@@ -51,16 +51,17 @@ class NewAccessToken extends Notification
 
     public function toMail($notifiable)
     {
-        return (new MailMessage())
-            ->markdown('emails.token-created')
-            ->subject((string)trans('email.access_token_created_subject'))
-        ;
+        $subject = (string)trans('email.new_backup_codes_subject');
+
+        return (new MailMessage())->markdown('emails.security.new-backup-codes', ['user' => $this->user])->subject($subject);
     }
 
 
     public function toSlack($notifiable)
     {
-        return (new SlackMessage())->content((string)trans('email.access_token_created_body'));
+        $message = (string)trans('email.new_backup_codes_slack', ['email' => $this->user->email]);
+
+        return (new SlackMessage())->content($message);
     }
 
 

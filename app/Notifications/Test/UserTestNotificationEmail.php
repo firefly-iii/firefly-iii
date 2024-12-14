@@ -39,9 +39,7 @@ class UserTestNotificationEmail extends Notification
 
     private User $user;
 
-    /**
-     * Create a new notification instance.
-     */
+
     public function __construct(User $user)
     {
         $this->user = $user;

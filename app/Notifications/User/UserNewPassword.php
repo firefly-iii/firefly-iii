@@ -37,38 +37,20 @@ class UserNewPassword extends Notification
 
     private string $url;
 
-    /**
-     * Create a new notification instance.
-     */
+
     public function __construct(string $url)
     {
         $this->url = $url;
     }
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return array
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
+
     public function toArray($notifiable)
     {
         return [
         ];
     }
 
-    /**
-     * Get the mail representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return MailMessage
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
+
     public function toMail($notifiable)
     {
         return (new MailMessage())
@@ -77,15 +59,7 @@ class UserNewPassword extends Notification
         ;
     }
 
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @param mixed $notifiable
-     *
-     * @return array
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
+
     public function via($notifiable)
     {
         return ['mail'];

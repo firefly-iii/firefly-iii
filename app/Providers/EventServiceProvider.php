@@ -47,6 +47,7 @@ use FireflyIII\Events\Security\MFAManyFailedAttempts;
 use FireflyIII\Events\Security\MFANewBackupCodes;
 use FireflyIII\Events\Security\MFAUsedBackupCode;
 use FireflyIII\Events\Security\UnknownUserAttemptedLogin;
+use FireflyIII\Events\Security\UserAttemptedLogin;
 use FireflyIII\Events\StoredAccount;
 use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Events\Test\OwnerTestNotificationChannel;
@@ -108,6 +109,9 @@ class EventServiceProvider extends ServiceProvider
                 'FireflyIII\Handlers\Events\UserEventHandler@attachUserRole',
                 'FireflyIII\Handlers\Events\UserEventHandler@createGroupMembership',
                 'FireflyIII\Handlers\Events\UserEventHandler@createExchangeRates',
+            ],
+            UserAttemptedLogin::class                 => [
+                'FireflyIII\Handlers\Events\UserEventHandler@sendLoginAttemptNotification',
             ],
             // is a User related event.
             Login::class                               => [

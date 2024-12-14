@@ -43,9 +43,7 @@ class RuleActionFailed extends Notification
     private string $ruleLink;
     private string $ruleTitle;
 
-    /**
-     * Create a new notification instance.
-     */
+
     public function __construct(array $params)
     {
         [$mainMessage, $groupTitle, $groupLink, $ruleTitle, $ruleLink] = $params;
@@ -56,30 +54,14 @@ class RuleActionFailed extends Notification
         $this->ruleLink                                                = $ruleLink;
     }
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return array
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
+
     public function toArray($notifiable)
     {
         return [
         ];
     }
 
-    /**
-     * Get the Slack representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return SlackMessage
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
+
     public function toSlack($notifiable)
     {
         $groupTitle = $this->groupTitle;
@@ -94,15 +76,7 @@ class RuleActionFailed extends Notification
         });
     }
 
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @param mixed $notifiable
-     *
-     * @return array
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
+
     public function via($notifiable)
     {
         /** @var null|User $user */

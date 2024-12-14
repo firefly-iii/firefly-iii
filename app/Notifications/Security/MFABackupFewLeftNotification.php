@@ -38,39 +38,21 @@ class MFABackupFewLeftNotification extends Notification
     private User   $user;
     private int $count;
 
-    /**
-     * Create a new notification instance.
-     */
+
     public function __construct(User $user, int $count)
     {
         $this->user  = $user;
         $this->count = $count;
     }
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return array
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
+
     public function toArray($notifiable)
     {
         return [
         ];
     }
 
-    /**
-     * Get the mail representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return MailMessage
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
+
     public function toMail($notifiable)
     {
         $subject = (string)trans('email.mfa_few_backups_left_subject', ['count' => $this->count]);
@@ -78,15 +60,7 @@ class MFABackupFewLeftNotification extends Notification
         return (new MailMessage())->markdown('emails.security.few-backup-codes', ['user' => $this->user, 'count' => $this->count])->subject($subject);
     }
 
-    /**
-     * Get the Slack representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return SlackMessage
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
+
     public function toSlack($notifiable)
     {
         $message = (string)trans('email.mfa_few_backups_left_slack', ['email' => $this->user->email, 'count' => $this->count]);
@@ -94,15 +68,7 @@ class MFABackupFewLeftNotification extends Notification
         return (new SlackMessage())->content($message);
     }
 
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @param mixed $notifiable
-     *
-     * @return array
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
+
     public function via($notifiable)
     {
         /** @var null|User $user */

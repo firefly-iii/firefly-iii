@@ -38,9 +38,7 @@ class OwnerTestNotificationEmail extends Notification
 
     private OwnerNotifiable $owner;
 
-    /**
-     * Create a new notification instance.
-     */
+
     public function __construct(OwnerNotifiable $owner)
     {
         $this->owner = $owner;

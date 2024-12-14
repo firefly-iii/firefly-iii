@@ -43,9 +43,7 @@ class BillReminder extends Notification
     private int    $diff;
     private string $field;
 
-    /**
-     * Create a new notification instance.
-     */
+
     public function __construct(Bill $bill, string $field, int $diff)
     {
         $this->bill  = $bill;
@@ -53,30 +51,14 @@ class BillReminder extends Notification
         $this->diff  = $diff;
     }
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return array
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
+
     public function toArray($notifiable)
     {
         return [
         ];
     }
 
-    /**
-     * Get the mail representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return MailMessage
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
+
     public function toMail($notifiable)
     {
         $subject = (string)trans(sprintf('email.bill_warning_subject_%s', $this->field), ['diff' => $this->diff, 'name' => $this->bill->name]);
@@ -90,15 +72,7 @@ class BillReminder extends Notification
         ;
     }
 
-    /**
-     * Get the Slack representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return SlackMessage
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
+
     public function toSlack($notifiable)
     {
         $message = (string)trans(sprintf('email.bill_warning_subject_%s', $this->field), ['diff' => $this->diff, 'name' => $this->bill->name]);
@@ -117,15 +91,7 @@ class BillReminder extends Notification
         ;
     }
 
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @param mixed $notifiable
-     *
-     * @return array
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
+
     public function via($notifiable)
     {
         /** @var null|User $user */

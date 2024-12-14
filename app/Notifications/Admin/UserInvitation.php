@@ -46,9 +46,7 @@ class UserInvitation extends Notification
     private InvitedUser     $invitee;
     private OwnerNotifiable $owner;
 
-    /**
-     * Create a new notification instance.
-     */
+
     public function __construct(OwnerNotifiable $owner, InvitedUser $invitee)
     {
         $this->invitee = $invitee;
@@ -56,12 +54,6 @@ class UserInvitation extends Notification
     }
 
     /**
-     * Get the array representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return array
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toArray(OwnerNotifiable $notifiable)
@@ -71,12 +63,6 @@ class UserInvitation extends Notification
     }
 
     /**
-     * Get the mail representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return MailMessage
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toMail(OwnerNotifiable $notifiable)
@@ -88,12 +74,6 @@ class UserInvitation extends Notification
     }
 
     /**
-     * Get the Slack representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return SlackMessage
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toSlack(OwnerNotifiable $notifiable)
@@ -102,7 +82,9 @@ class UserInvitation extends Notification
             (string) trans('email.invitation_created_body', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email])
         );
     }
-
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function toPushover(OwnerNotifiable $notifiable): PushoverMessage
     {
         Log::debug('Now in toPushover() for UserInvitation');
@@ -111,7 +93,9 @@ class UserInvitation extends Notification
             ->title((string) trans('email.invitation_created_subject'))
         ;
     }
-
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function toNtfy(OwnerNotifiable $notifiable): Message
     {
         Log::debug('Now in toNtfy() for UserInvitation');
@@ -125,12 +109,6 @@ class UserInvitation extends Notification
     }
 
     /**
-     * Get the notification's delivery channels.
-     *
-     * @param mixed $notifiable
-     *
-     * @return array
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function via(OwnerNotifiable $notifiable)

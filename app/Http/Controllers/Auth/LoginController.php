@@ -127,9 +127,13 @@ class LoginController extends Controller
         }
         app('log')->warning('Login attempt failed.');
         $username = (string) $request->get($this->username());
-        if (null === $this->repository->findByEmail($username)) {
+        $user = $this->repository->findByEmail($username);
+        if (null === $user) {
             // send event to owner.
             event(new UnknownUserAttemptedLogin($username));
+        }
+        if(null !== $user) {
+            event(new UserAttemptedLogin($user));
         }
 
         // Copied directly from AuthenticatesUsers, but with logging added:

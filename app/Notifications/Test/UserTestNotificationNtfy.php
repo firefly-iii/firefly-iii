@@ -42,9 +42,7 @@ class UserTestNotificationNtfy extends Notification
 
     public User $user;
 
-    /**
-     * Create a new notification instance.
-     */
+
     public function __construct(User $user)
     {
         $this->user = $user;

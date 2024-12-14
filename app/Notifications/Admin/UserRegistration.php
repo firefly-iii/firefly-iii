@@ -46,9 +46,7 @@ class UserRegistration extends Notification
     private OwnerNotifiable $owner;
     private User            $user;
 
-    /**
-     * Create a new notification instance.
-     */
+
     public function __construct(OwnerNotifiable $owner, User $user)
     {
         $this->user  = $user;
@@ -56,8 +54,6 @@ class UserRegistration extends Notification
     }
 
     /**
-     * Get the array representation of the notification.
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toArray(OwnerNotifiable $notifiable)
@@ -67,12 +63,6 @@ class UserRegistration extends Notification
     }
 
     /**
-     * Get the mail representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return MailMessage
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toMail(OwnerNotifiable $notifiable)
@@ -84,19 +74,15 @@ class UserRegistration extends Notification
     }
 
     /**
-     * Get the Slack representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return SlackMessage
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toSlack(OwnerNotifiable $notifiable)
     {
         return (new SlackMessage())->content((string) trans('email.admin_new_user_registered', ['email' => $this->user->email, 'id' => $this->user->id]));
     }
-
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function toPushover(OwnerNotifiable $notifiable): PushoverMessage
     {
         Log::debug('Now in toPushover() for UserRegistration');
@@ -105,7 +91,9 @@ class UserRegistration extends Notification
             ->title((string) trans('email.registered_subject_admin'))
         ;
     }
-
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function toNtfy(OwnerNotifiable $notifiable): Message
     {
         Log::debug('Now in toNtfy() for (Admin) UserRegistration');
@@ -119,12 +107,6 @@ class UserRegistration extends Notification
     }
 
     /**
-     * Get the notification's delivery channels.
-     *
-     * @param mixed $notifiable
-     *
-     * @return array
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function via(OwnerNotifiable $notifiable)

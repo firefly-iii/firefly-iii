@@ -39,21 +39,12 @@ class UnknownUserLoginAttempt extends Notification
     use Queueable;
     private string $address;
 
-    /**
-     * Create a new notification instance.
-     */
     public function __construct(string $address)
     {
         $this->address = $address;
     }
 
     /**
-     * Get the array representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return array
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toArray(OwnerNotifiable $notifiable)
@@ -63,8 +54,6 @@ class UnknownUserLoginAttempt extends Notification
     }
 
     /**
-     * Get the mail representation of the notification.
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toMail(OwnerNotifiable $notifiable): MailMessage
@@ -76,8 +65,6 @@ class UnknownUserLoginAttempt extends Notification
     }
 
     /**
-     * Get the Slack representation of the notification.
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toSlack(OwnerNotifiable $notifiable): SlackMessage
@@ -87,6 +74,9 @@ class UnknownUserLoginAttempt extends Notification
         );
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function toPushover(OwnerNotifiable $notifiable): PushoverMessage
     {
         return PushoverMessage::create((string) trans('email.unknown_user_message', ['address' => $this->address]))
@@ -94,6 +84,9 @@ class UnknownUserLoginAttempt extends Notification
         ;
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function toNtfy(OwnerNotifiable $notifiable): Message
     {
         $settings = ReturnsSettings::getSettings('ntfy', 'owner', null);
@@ -106,8 +99,6 @@ class UnknownUserLoginAttempt extends Notification
     }
 
     /**
-     * Get the notification's delivery channels.
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function via(OwnerNotifiable $notifiable)

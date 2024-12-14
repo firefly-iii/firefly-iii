@@ -42,21 +42,11 @@ class DisabledMFANotification extends Notification
 
     private User $user;
 
-    /**
-     * Create a new notification instance.
-     */
     public function __construct(User $user)
     {
         $this->user = $user;
     }
-
     /**
-     * Get the array representation of the notification.
-     *
-     * @param User $notifiable
-     *
-     * @return array
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toArray(User $notifiable)
@@ -66,12 +56,6 @@ class DisabledMFANotification extends Notification
     }
 
     /**
-     * Get the mail representation of the notification.
-     *
-     * @param User $notifiable
-     *
-     * @return MailMessage
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toMail(User $notifiable)
@@ -80,14 +64,7 @@ class DisabledMFANotification extends Notification
 
         return (new MailMessage())->markdown('emails.security.disabled-mfa', ['user' => $this->user])->subject($subject);
     }
-
     /**
-     * Get the Slack representation of the notification.
-     *
-     * @param User $notifiable
-     *
-     * @return SlackMessage
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toSlack(User $notifiable)
@@ -96,7 +73,9 @@ class DisabledMFANotification extends Notification
 
         return (new SlackMessage())->content($message);
     }
-
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function toPushover(User $notifiable): PushoverMessage
     {
         Log::debug('Now in (user) toPushover()');
@@ -104,6 +83,9 @@ class DisabledMFANotification extends Notification
         return PushoverMessage::create((string) trans('email.disabled_mfa_slack', ['email' => $this->user->email]))
                               ->title((string)trans('email.disabled_mfa_subject'));
     }
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function toNtfy(User $user): Message
     {
         $settings = ReturnsSettings::getSettings('ntfy', 'user', $user);
@@ -116,12 +98,6 @@ class DisabledMFANotification extends Notification
     }
 
     /**
-     * Get the notification's delivery channels.
-     *
-     * @param User $notifiable
-     *
-     * @return array
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function via(User $notifiable)

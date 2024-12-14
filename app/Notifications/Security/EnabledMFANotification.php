@@ -37,38 +37,20 @@ class EnabledMFANotification extends Notification
 
     private User   $user;
 
-    /**
-     * Create a new notification instance.
-     */
+
     public function __construct(User $user)
     {
         $this->user = $user;
     }
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return array
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
+
     public function toArray($notifiable)
     {
         return [
         ];
     }
 
-    /**
-     * Get the mail representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return MailMessage
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
+
     public function toMail($notifiable)
     {
         $subject = (string)trans('email.enabled_mfa_subject');
@@ -76,15 +58,7 @@ class EnabledMFANotification extends Notification
         return (new MailMessage())->markdown('emails.security.enabled-mfa', ['user' => $this->user])->subject($subject);
     }
 
-    /**
-     * Get the Slack representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return SlackMessage
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
+
     public function toSlack($notifiable)
     {
         $message = (string)trans('email.enabled_mfa_slack', ['email' => $this->user->email]);
@@ -92,15 +66,7 @@ class EnabledMFANotification extends Notification
         return (new SlackMessage())->content($message);
     }
 
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @param mixed $notifiable
-     *
-     * @return array
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
+
     public function via($notifiable)
     {
         /** @var null|User $user */

@@ -31,6 +31,7 @@ use FireflyIII\Events\Admin\InvitationCreated;
 use FireflyIII\Events\DetectedNewIPAddress;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
+use FireflyIII\Events\Security\UserAttemptedLogin;
 use FireflyIII\Events\Test\OwnerTestNotificationChannel;
 use FireflyIII\Events\Test\UserTestNotificationChannel;
 use FireflyIII\Events\UserChangedEmail;
@@ -432,6 +433,26 @@ class UserEventHandler
 
         if (false === $inArray && true === $send) {
             event(new DetectedNewIPAddress($user, $ip));
+        }
+    }
+
+    public function sendLoginAttemptNotification(UserAttemptedLogin $event): void {
+        try {
+            Notification::send($event->user, new UserFailedLoginAttempt($event->user));
+        } catch (\Exception $e) { // @phpstan-ignore-line
+            $message = $e->getMessage();
+            if (str_contains($message, 'Bcc')) {
+                app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+
+                return;
+            }
+            if (str_contains($message, 'RFC 2822')) {
+                app('log')->warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+
+                return;
+            }
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
         }
     }
 
