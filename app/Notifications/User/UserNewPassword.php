@@ -43,7 +43,6 @@ class UserNewPassword extends Notification
 
     private string $url;
 
-
     public function __construct(string $url)
     {
         $this->url = $url;
@@ -65,7 +64,8 @@ class UserNewPassword extends Notification
     {
         return (new MailMessage())
             ->markdown('emails.password', ['url' => $this->url])
-            ->subject((string) trans('email.reset_pw_subject'));
+            ->subject((string) trans('email.reset_pw_subject'))
+        ;
     }
 
     /**

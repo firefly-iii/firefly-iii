@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Notifications\User;
 
-use FireflyIII\Notifications\ReturnsAvailableChannels;
 use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -38,7 +37,6 @@ class TransactionCreation extends Notification
     use Queueable;
 
     private array $collection;
-
 
     public function __construct(array $collection)
     {
@@ -57,14 +55,13 @@ class TransactionCreation extends Notification
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-
     public function toMail(User $notifiable)
     {
         return (new MailMessage())
             ->markdown('emails.report-new-journals', ['transformed' => $this->collection])
-            ->subject(trans_choice('email.new_journals_subject', count($this->collection)));
+            ->subject(trans_choice('email.new_journals_subject', count($this->collection)))
+        ;
     }
-
 
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

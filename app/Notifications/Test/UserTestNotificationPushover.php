@@ -42,7 +42,6 @@ class UserTestNotificationPushover extends Notification
 
     private User $user;
 
-
     public function __construct(User $user)
     {
         $this->user = $user;
@@ -65,7 +64,8 @@ class UserTestNotificationPushover extends Notification
         Log::debug('Now in (user) toPushover()');
 
         return PushoverMessage::create((string) trans('email.admin_test_message', ['channel' => 'Pushover']))
-                              ->title((string) trans('email.admin_test_subject'));
+            ->title((string) trans('email.admin_test_subject'))
+        ;
     }
 
     /**

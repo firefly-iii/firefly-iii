@@ -31,7 +31,6 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\Log;
 use NotificationChannels\Pushover\PushoverMessage;
 use Ntfy\Message;
 
@@ -82,7 +81,8 @@ class DisabledMFANotification extends Notification
     public function toPushover(User $notifiable): PushoverMessage
     {
         return PushoverMessage::create((string) trans('email.disabled_mfa_slack', ['email' => $this->user->email]))
-                              ->title((string) trans('email.disabled_mfa_subject'));
+            ->title((string) trans('email.disabled_mfa_subject'))
+        ;
     }
 
     /**

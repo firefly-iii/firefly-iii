@@ -46,14 +46,12 @@ class BillReminder extends Notification
     private int    $diff;
     private string $field;
 
-
     public function __construct(Bill $bill, string $field, int $diff)
     {
         $this->bill  = $bill;
         $this->field = $field;
         $this->diff  = $diff;
     }
-
 
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -71,7 +69,8 @@ class BillReminder extends Notification
     {
         return (new MailMessage())
             ->markdown('emails.bill-warning', ['field' => $this->field, 'diff' => $this->diff, 'bill' => $this->bill])
-            ->subject($this->getSubject());
+            ->subject($this->getSubject())
+        ;
     }
 
     /**
@@ -87,7 +86,8 @@ class BillReminder extends Notification
             ->attachment(static function ($attachment) use ($bill, $url): void {
                 $attachment->title((string) trans('firefly.visit_bill', ['name' => $bill->name]), $url);
             })
-            ->content($this->getSubject());
+            ->content($this->getSubject())
+        ;
     }
 
     public function toNtfy(User $notifiable): Message
@@ -107,7 +107,8 @@ class BillReminder extends Notification
     public function toPushover(User $notifiable): PushoverMessage
     {
         return PushoverMessage::create((string) trans('email.bill_warning_please_action'))
-                              ->title($this->getSubject());
+            ->title($this->getSubject())
+        ;
     }
 
     private function getSubject(): string
@@ -116,6 +117,7 @@ class BillReminder extends Notification
         if (0 === $this->diff) {
             $message = (string) trans(sprintf('email.bill_warning_subject_now_%s', $this->field), ['diff' => $this->diff, 'name' => $this->bill->name]);
         }
+
         return $message;
     }
 

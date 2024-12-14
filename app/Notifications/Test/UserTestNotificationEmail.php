@@ -38,7 +38,6 @@ class UserTestNotificationEmail extends Notification
 
     private User $user;
 
-
     public function __construct(User $user)
     {
         $this->user = $user;
@@ -53,14 +52,14 @@ class UserTestNotificationEmail extends Notification
         ];
     }
 
-
     public function toMail(User $notifiable)
     {
         $address = (string) $notifiable->email;
 
         return (new MailMessage())
             ->markdown('emails.admin-test', ['email' => $address])
-            ->subject((string) trans('email.admin_test_subject'));
+            ->subject((string) trans('email.admin_test_subject'))
+        ;
     }
 
     /**

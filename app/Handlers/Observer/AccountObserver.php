@@ -39,6 +39,7 @@ class AccountObserver
     {
         app('log')->debug('Observe "deleting" of an account.');
         $account->accountMeta()->delete();
+
         /** @var PiggyBank $piggy */
         foreach ($account->piggyBanks()->get() as $piggy) {
             $piggy->accounts()->detach($account);

@@ -46,7 +46,6 @@ class UserInvitation extends Notification
     private InvitedUser     $invitee;
     private OwnerNotifiable $owner;
 
-
     public function __construct(OwnerNotifiable $owner, InvitedUser $invitee)
     {
         $this->invitee = $invitee;
@@ -69,7 +68,8 @@ class UserInvitation extends Notification
     {
         return (new MailMessage())
             ->markdown('emails.invitation-created', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email])
-            ->subject((string) trans('email.invitation_created_subject'));
+            ->subject((string) trans('email.invitation_created_subject'))
+        ;
     }
 
     /**
@@ -95,7 +95,8 @@ class UserInvitation extends Notification
         Log::debug('Now in toPushover() for UserInvitation');
 
         return PushoverMessage::create((string) trans('email.invitation_created_body', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email]))
-                              ->title((string) trans('email.invitation_created_subject'));
+            ->title((string) trans('email.invitation_created_subject'))
+        ;
     }
 
     /**

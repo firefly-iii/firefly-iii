@@ -29,7 +29,6 @@ use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
@@ -282,10 +281,10 @@ class DebugController extends Controller
 
     private function getUserFlags(): string
     {
-        $flags = [];
+        $flags      = [];
 
         /** @var User $user */
-        $user  = auth()->user();
+        $user       = auth()->user();
 
         // has liabilities
         if ($user->accounts()->accountTypeIn([AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE])->count() > 0) {
@@ -301,7 +300,7 @@ class DebugController extends Controller
         }
 
         // has stored reconciliations
-        $type  = TransactionType::whereType(TransactionType::RECONCILIATION)->first();
+        $type       = TransactionType::whereType(TransactionType::RECONCILIATION)->first();
         if ($user->transactionJournals()->where('transaction_type_id', $type->id)->count() > 0) {
             $flags[] = '<span title="Has reconciled">:ledger:</span>';
         }

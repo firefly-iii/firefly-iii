@@ -82,6 +82,7 @@ class UpdatePiggybank implements ActionInterface
 
         if ($source->account_id === $piggyBank->account_id) {
             app('log')->debug('Piggy bank account is linked to source, so remove amount from piggy bank.');
+
             throw new FireflyException('Reference the correct account here.');
             $this->removeAmount($piggyBank, $journal, $journalObj, $destination->amount);
 

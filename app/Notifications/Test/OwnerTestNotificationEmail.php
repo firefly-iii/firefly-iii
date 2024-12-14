@@ -38,7 +38,6 @@ class OwnerTestNotificationEmail extends Notification
 
     private OwnerNotifiable $owner;
 
-
     public function __construct(OwnerNotifiable $owner)
     {
         $this->owner = $owner;
@@ -62,7 +61,8 @@ class OwnerTestNotificationEmail extends Notification
 
         return (new MailMessage())
             ->markdown('emails.admin-test', ['email' => $address])
-            ->subject((string) trans('email.admin_test_subject'));
+            ->subject((string) trans('email.admin_test_subject'))
+        ;
     }
 
     /**

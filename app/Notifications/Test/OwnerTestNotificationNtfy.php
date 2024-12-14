@@ -42,7 +42,6 @@ class OwnerTestNotificationNtfy extends Notification
 
     public OwnerNotifiable $owner;
 
-
     public function __construct(OwnerNotifiable $owner)
     {
         $this->owner = $owner;
@@ -50,6 +49,8 @@ class OwnerTestNotificationNtfy extends Notification
 
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
+     * @param mixed $notifiable
      */
     public function toArray($notifiable)
     {

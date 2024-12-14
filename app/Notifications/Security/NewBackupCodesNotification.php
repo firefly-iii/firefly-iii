@@ -40,7 +40,6 @@ class NewBackupCodesNotification extends Notification
 
     private User $user;
 
-
     public function __construct(User $user)
     {
         $this->user = $user;
@@ -92,7 +91,8 @@ class NewBackupCodesNotification extends Notification
     public function toPushover(User $notifiable): PushoverMessage
     {
         return PushoverMessage::create((string) trans('email.new_backup_codes_slack', ['email' => $this->user->email]))
-                              ->title((string) trans('email.new_backup_codes_subject'));
+            ->title((string) trans('email.new_backup_codes_subject'))
+        ;
     }
 
     /**

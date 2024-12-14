@@ -41,9 +41,7 @@ class NewAccessToken extends Notification
 {
     use Queueable;
 
-
     public function __construct() {}
-
 
     public function toArray(User $notifiable)
     {
@@ -58,7 +56,8 @@ class NewAccessToken extends Notification
     {
         return (new MailMessage())
             ->markdown('emails.token-created')
-            ->subject((string) trans('email.access_token_created_subject'));
+            ->subject((string) trans('email.access_token_created_subject'))
+        ;
     }
 
     /**
@@ -86,7 +85,8 @@ class NewAccessToken extends Notification
     public function toPushover(User $notifiable): PushoverMessage
     {
         return PushoverMessage::create((string) trans('email.access_token_created_body'))
-                              ->title((string) trans('email.access_token_created_subject'));
+            ->title((string) trans('email.access_token_created_subject'))
+        ;
     }
 
     /**

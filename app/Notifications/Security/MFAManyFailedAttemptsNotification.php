@@ -47,7 +47,6 @@ class MFAManyFailedAttemptsNotification extends Notification
         $this->count = $count;
     }
 
-
     public function toArray(User $notifiable)
     {
         return [
@@ -91,9 +90,9 @@ class MFAManyFailedAttemptsNotification extends Notification
     public function toPushover(User $notifiable): PushoverMessage
     {
         return PushoverMessage::create((string) trans('email.mfa_many_failed_slack', ['email' => $this->user->email, 'count' => $this->count]))
-                              ->title((string) trans('email.mfa_many_failed_subject'));
+            ->title((string) trans('email.mfa_many_failed_subject'))
+        ;
     }
-
 
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

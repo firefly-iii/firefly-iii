@@ -50,8 +50,8 @@ class ReturnsAvailableChannels
     private static function returnOwnerChannels(): array
     {
 
-        $channels = ['mail'];
-        $slackUrl = app('fireflyconfig')->getEncrypted('slack_webhook_url', '')->data;
+        $channels          = ['mail'];
+        $slackUrl          = app('fireflyconfig')->getEncrypted('slack_webhook_url', '')->data;
         if (UrlValidator::isValidWebhookURL($slackUrl)) {
             $channels[] = 'slack';
         }
@@ -83,8 +83,8 @@ class ReturnsAvailableChannels
 
     private static function returnUserChannels(User $user): array
     {
-        $channels = ['mail'];
-        $slackUrl = app('preferences')->getEncryptedForUser($user, 'slack_webhook_url', '')->data;
+        $channels          = ['mail'];
+        $slackUrl          = app('preferences')->getEncryptedForUser($user, 'slack_webhook_url', '')->data;
         if (UrlValidator::isValidWebhookURL($slackUrl)) {
             $channels[] = 'slack';
         }

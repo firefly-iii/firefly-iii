@@ -44,12 +44,10 @@ class UserLogin extends Notification
 
     private string $ip;
 
-
     public function __construct(string $ip)
     {
         $this->ip = $ip;
     }
-
 
     public function toArray(User $notifiable)
     {
@@ -66,7 +64,8 @@ class UserLogin extends Notification
 
         return (new MailMessage())
             ->markdown('emails.new-ip', ['time' => $time, 'ipAddress' => $this->ip, 'host' => $this->getHost()])
-            ->subject((string) trans('email.login_from_new_ip'));
+            ->subject((string) trans('email.login_from_new_ip'))
+        ;
     }
 
     public function toNtfy(User $notifiable): Message
@@ -86,7 +85,8 @@ class UserLogin extends Notification
     public function toPushover(User $notifiable): PushoverMessage
     {
         return PushoverMessage::create((string) trans('email.slack_login_from_new_ip', ['host' => $this->getHost(), 'ip' => $this->ip]))
-                              ->title((string) trans('email.login_from_new_ip'));
+            ->title((string) trans('email.login_from_new_ip'))
+        ;
     }
 
     /**
@@ -105,7 +105,8 @@ class UserLogin extends Notification
         return ReturnsAvailableChannels::returnChannels('user', $notifiable);
     }
 
-    private function getHost(): string {
+    private function getHost(): string
+    {
         $host = '';
 
         try {
@@ -117,6 +118,7 @@ class UserLogin extends Notification
         if ($hostName !== $this->ip) {
             $host = $hostName;
         }
+
         return $host;
     }
 }

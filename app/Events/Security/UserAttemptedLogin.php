@@ -1,4 +1,5 @@
 <?php
+
 /*
  * UserAttemptedLogin.php
  * Copyright (c) 2024 james@firefly-iii.org.
@@ -34,7 +35,7 @@ class UserAttemptedLogin extends Event
 
     public User $user;
 
-    public function __construct(null | Authenticatable | User $user)
+    public function __construct(null|Authenticatable|User $user)
     {
         if ($user instanceof User) {
             $this->user = $user;

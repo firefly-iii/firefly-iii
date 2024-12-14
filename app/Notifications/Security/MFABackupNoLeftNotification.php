@@ -40,7 +40,6 @@ class MFABackupNoLeftNotification extends Notification
 
     private User $user;
 
-
     public function __construct(User $user)
     {
         $this->user = $user;
@@ -92,9 +91,9 @@ class MFABackupNoLeftNotification extends Notification
     public function toPushover(User $notifiable): PushoverMessage
     {
         return PushoverMessage::create((string) trans('email.mfa_few_backups_left_slack', ['email' => $this->user->email]))
-                              ->title((string) trans('email.mfa_no_backups_left_slack'));
+            ->title((string) trans('email.mfa_no_backups_left_slack'))
+        ;
     }
-
 
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

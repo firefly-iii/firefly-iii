@@ -1,4 +1,5 @@
 <?php
+
 /*
  * UserFailedLoginAttempt.php
  * Copyright (c) 2024 james@firefly-iii.org.
@@ -39,12 +40,10 @@ class UserFailedLoginAttempt extends Notification
 
     private User $user;
 
-
     public function __construct(User $user)
     {
         $this->user = $user;
     }
-
 
     public function toArray(User $notifiable)
     {
@@ -89,7 +88,8 @@ class UserFailedLoginAttempt extends Notification
     public function toPushover(User $notifiable): PushoverMessage
     {
         return PushoverMessage::create((string) trans('email.failed_login_message', ['email' => $this->user->email]))
-                              ->title((string) trans('email.failed_login_subject'));
+            ->title((string) trans('email.failed_login_subject'))
+        ;
     }
 
     /**

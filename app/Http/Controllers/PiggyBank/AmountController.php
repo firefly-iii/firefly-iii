@@ -88,7 +88,7 @@ class AmountController extends Controller
             ];
             $total         = bcadd($total, $leftOnAccount);
         }
-        $total = (float) $total; // intentional float.
+        $total      = (float) $total; // intentional float.
 
         return view('piggy-banks.add', compact('piggyBank', 'accounts', 'total'));
     }
@@ -130,9 +130,10 @@ class AmountController extends Controller
         $amounts = $data['amount'] ?? [];
         $total   = '0';
         Log::debug('Start with loop.');
+
         /** @var Account $account */
         foreach ($piggyBank->accounts as $account) {
-            $amount = (string) ($amounts[$account->id] ?? '0');
+            $amount        = (string) ($amounts[$account->id] ?? '0');
             if ('' === $amount || 0 === bccomp($amount, '0')) {
                 continue;
             }
@@ -148,7 +149,7 @@ class AmountController extends Controller
                 $amount = $leftToSave;
             }
 
-            $canAddAmount = $this->piggyRepos->canAddAmount($piggyBank, $account, $amount);
+            $canAddAmount  = $this->piggyRepos->canAddAmount($piggyBank, $account, $amount);
             if ($canAddAmount) {
                 $this->piggyRepos->addAmount($piggyBank, $account, $amount);
                 $total = bcadd($total, $amount);
@@ -182,7 +183,8 @@ class AmountController extends Controller
         if (!is_array($amounts)) {
             $amounts = [];
         }
-        $total = '0';
+        $total   = '0';
+
         /** @var Account $account */
         foreach ($piggyBank->accounts as $account) {
             $amount = (string) ($amounts[$account->id] ?? '0');
@@ -235,6 +237,7 @@ class AmountController extends Controller
                 'saved_so_far' => $this->piggyRepos->getCurrentAmount($piggyBank, $account),
             ];
         }
+
         return view('piggy-banks.remove', compact('piggyBank', 'accounts'));
     }
 

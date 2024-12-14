@@ -40,7 +40,6 @@ class EnabledMFANotification extends Notification
 
     private User $user;
 
-
     public function __construct(User $user)
     {
         $this->user = $user;
@@ -82,7 +81,8 @@ class EnabledMFANotification extends Notification
     public function toPushover(User $notifiable): PushoverMessage
     {
         return PushoverMessage::create((string) trans('email.enabled_mfa_slack', ['email' => $this->user->email]))
-                              ->title((string) trans('email.enabled_mfa_subject'));
+            ->title((string) trans('email.enabled_mfa_subject'))
+        ;
     }
 
     /**
@@ -94,7 +94,6 @@ class EnabledMFANotification extends Notification
 
         return new SlackMessage()->content($message);
     }
-
 
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

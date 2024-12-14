@@ -105,6 +105,7 @@ class Preferences
 
         return $this->getForUser($user, $name, $default);
     }
+
     public function getEncryptedForUser(User $user, string $name, null|array|bool|int|string $default = null): ?Preference
     {
         $result = $this->getForUser($user, $name, $default);

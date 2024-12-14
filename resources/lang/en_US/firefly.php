@@ -1290,7 +1290,7 @@ return [
     'create_recurring_from_transaction'                   => 'Create recurring transaction based on transaction',
 
     // preferences
-    'test_notifications_buttons' => 'To test your configuration, use the buttons below. Please note that the buttons have no spam control.',
+    'test_notifications_buttons'                          => 'To test your configuration, use the buttons below. Please note that the buttons have no spam control.',
     'dark_mode_option_browser'                            => 'Let your browser decide',
     'dark_mode_option_light'                              => 'Always light',
     'dark_mode_option_dark'                               => 'Always dark',

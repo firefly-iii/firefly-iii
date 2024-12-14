@@ -40,7 +40,6 @@ class OwnerTestNotificationSlack extends Notification
 
     private OwnerNotifiable $owner;
 
-
     public function __construct(OwnerNotifiable $owner)
     {
         $this->owner = $owner;

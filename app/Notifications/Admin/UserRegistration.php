@@ -46,7 +46,6 @@ class UserRegistration extends Notification
     private OwnerNotifiable $owner;
     private User            $user;
 
-
     public function __construct(OwnerNotifiable $owner, User $user)
     {
         $this->user  = $user;
@@ -69,7 +68,8 @@ class UserRegistration extends Notification
     {
         return (new MailMessage())
             ->markdown('emails.registered-admin', ['email' => $this->user->email, 'id' => $this->user->id])
-            ->subject((string) trans('email.registered_subject_admin'));
+            ->subject((string) trans('email.registered_subject_admin'))
+        ;
     }
 
     /**
@@ -95,7 +95,8 @@ class UserRegistration extends Notification
         Log::debug('Now in toPushover() for UserRegistration');
 
         return PushoverMessage::create((string) trans('email.admin_new_user_registered', ['email' => $this->user->email, 'invitee' => $this->user->email]))
-                              ->title((string) trans('email.registered_subject_admin'));
+            ->title((string) trans('email.registered_subject_admin'))
+        ;
     }
 
     /**

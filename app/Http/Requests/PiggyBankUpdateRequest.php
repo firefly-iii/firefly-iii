@@ -61,6 +61,7 @@ class PiggyBankUpdateRequest extends FormRequest
         foreach ($accounts as $item) {
             $data['accounts'][] = ['account_id' => (int) $item];
         }
+
         return $data;
     }
 
@@ -106,7 +107,7 @@ class PiggyBankUpdateRequest extends FormRequest
                             if ($accountCurrency->id !== $currency->id && 'true' !== $isMultiCurrency) {
                                 $validator->errors()->add('accounts', trans('validation.invalid_account_currency'));
                             }
-                            $type = $account->accountType->type;
+                            $type            = $account->accountType->type;
                             if (!in_array($type, $types, true)) {
                                 $validator->errors()->add('accounts', trans('validation.invalid_account_type'));
                             }
@@ -121,6 +122,7 @@ class PiggyBankUpdateRequest extends FormRequest
             Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
         }
     }
+
     private function getCurrencyFromData(array $data): TransactionCurrency
     {
         $currencyId = (int) ($data['transaction_currency_id'] ?? 0);

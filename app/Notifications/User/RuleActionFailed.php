@@ -46,15 +46,14 @@ class RuleActionFailed extends Notification
     private string $ruleLink;
     private string $ruleTitle;
 
-
     public function __construct(array $params)
     {
         [$mainMessage, $groupTitle, $groupLink, $ruleTitle, $ruleLink] = $params;
-        $this->message    = $mainMessage;
-        $this->groupTitle = $groupTitle;
-        $this->groupLink  = $groupLink;
-        $this->ruleTitle  = $ruleTitle;
-        $this->ruleLink   = $ruleLink;
+        $this->message                                                 = $mainMessage;
+        $this->groupTitle                                              = $groupTitle;
+        $this->groupLink                                               = $groupLink;
+        $this->ruleTitle                                               = $ruleTitle;
+        $this->ruleLink                                                = $ruleLink;
     }
 
     /**
@@ -83,7 +82,6 @@ class RuleActionFailed extends Notification
         });
     }
 
-
     public function toNtfy(User $notifiable): Message
     {
         $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
@@ -108,9 +106,10 @@ class RuleActionFailed extends Notification
     public function via(User $notifiable)
     {
         $channels = ReturnsAvailableChannels::returnChannels('user', $notifiable);
-        if (($key = array_search('mail', $channels)) !== false) {
+        if (($key = array_search('mail', $channels, true)) !== false) {
             unset($channels[$key]);
         }
+
         return $channels;
     }
 }

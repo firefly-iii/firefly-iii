@@ -84,6 +84,7 @@ class PiggyBank extends Model
     {
         return $this->belongsTo(TransactionCurrency::class);
     }
+
     public function account(): BelongsTo
     {
         throw new FireflyException('This method is not available on PiggyBank.');

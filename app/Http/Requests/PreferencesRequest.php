@@ -1,4 +1,5 @@
 <?php
+
 /*
  * PreferencesRequest.php
  * Copyright (c) 2024 james@firefly-iii.org.
@@ -30,7 +31,6 @@ use Illuminate\Foundation\Http\FormRequest;
 class PreferencesRequest extends FormRequest
 {
     use ChecksLogin;
-
 
     /**
      * Rules for this request.

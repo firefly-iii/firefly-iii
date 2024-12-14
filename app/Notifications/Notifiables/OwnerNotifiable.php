@@ -41,7 +41,7 @@ class OwnerNotifiable
      */
     public function routeNotificationFor($driver, $notification = null)
     {
-        $method = 'routeNotificationFor' . Str::studly($driver);
+        $method = 'routeNotificationFor'.Str::studly($driver);
         if (method_exists($this, $method)) {
             Log::debug(sprintf('Redirect for settings to "%s".', $method));
 
@@ -62,7 +62,8 @@ class OwnerNotifiable
         $pushoverUserToken = (string) app('fireflyconfig')->getEncrypted('pushover_user_token', '')->data;
 
         return PushoverReceiver::withUserKey($pushoverUserToken)
-                               ->withApplicationToken($pushoverAppToken);
+            ->withApplicationToken($pushoverAppToken)
+        ;
     }
 
     public function routeNotificationForSlack(): string

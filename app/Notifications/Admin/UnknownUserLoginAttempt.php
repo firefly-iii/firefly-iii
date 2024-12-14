@@ -61,7 +61,8 @@ class UnknownUserLoginAttempt extends Notification
     {
         return new MailMessage()
             ->markdown('emails.owner.unknown-user', ['address' => $this->address])
-            ->subject((string) trans('email.unknown_user_subject'));
+            ->subject((string) trans('email.unknown_user_subject'))
+        ;
     }
 
     /**
@@ -84,7 +85,8 @@ class UnknownUserLoginAttempt extends Notification
     public function toPushover(OwnerNotifiable $notifiable): PushoverMessage
     {
         return PushoverMessage::create((string) trans('email.unknown_user_message', ['address' => $this->address]))
-                              ->title((string) trans('email.unknown_user_subject'));
+            ->title((string) trans('email.unknown_user_subject'))
+        ;
     }
 
     /**

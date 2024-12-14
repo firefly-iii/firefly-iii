@@ -42,7 +42,6 @@ class OwnerTestNotificationPushover extends Notification
 
     private OwnerNotifiable $owner;
 
-
     public function __construct(OwnerNotifiable $owner)
     {
         $this->owner = $owner;
@@ -65,7 +64,8 @@ class OwnerTestNotificationPushover extends Notification
         Log::debug('Now in toPushover()');
 
         return PushoverMessage::create((string) trans('email.admin_test_message', ['channel' => 'Pushover']))
-                              ->title((string) trans('email.admin_test_subject'));
+            ->title((string) trans('email.admin_test_subject'))
+        ;
     }
 
     /**

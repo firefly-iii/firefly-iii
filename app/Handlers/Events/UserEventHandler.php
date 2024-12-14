@@ -32,7 +32,6 @@ use FireflyIII\Events\DetectedNewIPAddress;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Events\Security\UserAttemptedLogin;
-use FireflyIII\Events\Test\OwnerTestNotificationChannel;
 use FireflyIII\Events\Test\UserTestNotificationChannel;
 use FireflyIII\Events\UserChangedEmail;
 use FireflyIII\Exceptions\FireflyException;
@@ -44,10 +43,6 @@ use FireflyIII\Models\UserGroup;
 use FireflyIII\Models\UserRole;
 use FireflyIII\Notifications\Admin\UserRegistration as AdminRegistrationNotification;
 use FireflyIII\Notifications\Security\UserFailedLoginAttempt;
-use FireflyIII\Notifications\Test\OwnerTestNotificationEmail;
-use FireflyIII\Notifications\Test\OwnerTestNotificationNtfy;
-use FireflyIII\Notifications\Test\OwnerTestNotificationPushover;
-use FireflyIII\Notifications\Test\OwnerTestNotificationSlack;
 use FireflyIII\Notifications\Test\UserTestNotificationEmail;
 use FireflyIII\Notifications\Test\UserTestNotificationNtfy;
 use FireflyIII\Notifications\Test\UserTestNotificationPushover;
@@ -437,7 +432,8 @@ class UserEventHandler
         }
     }
 
-    public function sendLoginAttemptNotification(UserAttemptedLogin $event): void {
+    public function sendLoginAttemptNotification(UserAttemptedLogin $event): void
+    {
         try {
             Notification::send($event->user, new UserFailedLoginAttempt($event->user));
         } catch (\Exception $e) { // @phpstan-ignore-line

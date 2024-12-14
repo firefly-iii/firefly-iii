@@ -111,9 +111,10 @@ interface PiggyBankRepositoryInterface
     /**
      * Get for piggy account what is left to put in piggies.
      */
-    public function leftOnAccount(PiggyBank $piggyBank,Account $account, Carbon $date): string;
+    public function leftOnAccount(PiggyBank $piggyBank, Account $account, Carbon $date): string;
 
     public function removeAmount(PiggyBank $piggyBank, Account $account, string $amount, ?TransactionJournal $journal = null): bool;
+
     public function removeAmountFromAll(PiggyBank $piggyBank, string $amount): void;
 
     public function removeObjectGroup(PiggyBank $piggyBank): PiggyBank;
