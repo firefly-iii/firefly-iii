@@ -59,18 +59,22 @@ class ReportSum extends Command
 
         /** @var User $user */
         foreach ($userRepository->all() as $user) {
-            $sum = (string)$user->transactions()->selectRaw('SUM(amount) + SUM(foreign_amount) as total')->value('total');
-            if (!is_numeric($sum)) {
-                $message = sprintf('Error: Transactions for user #%d (%s) have an invalid sum ("%s").', $user->id, $user->email, $sum);
+            $sum     = (string) $user->transactions()->selectRaw('SUM(amount) as total')->value('total');
+            $foreign = (string) $user->transactions()->selectRaw('SUM(foreign_amount) as total')->value('total');
+            $sum     = '' === $sum ? '0' : $sum;
+            $foreign = '' === $foreign ? '0' : $foreign;
+            $total   = bcadd($sum, $foreign);
+            if (!is_numeric($total)) {
+                $message = sprintf('Error: Transactions for user #%d (%s) have an invalid sum ("%s").', $user->id, $user->email, $total);
                 $this->friendlyError($message);
 
                 continue;
             }
-            if (0 !== bccomp($sum, '0')) {
-                $message = sprintf('Error: Transactions for user #%d (%s) are off by %s!', $user->id, $user->email, $sum);
+            if (0 !== bccomp($total, '0')) {
+                $message = sprintf('Error: Transactions for user #%d (%s) are off by %s!', $user->id, $user->email, $total);
                 $this->friendlyError($message);
             }
-            if (0 === bccomp($sum, '0')) {
+            if (0 === bccomp($total, '0')) {
                 $this->friendlyPositive(sprintf('Amount integrity OK for user #%d', $user->id));
             }
         }
