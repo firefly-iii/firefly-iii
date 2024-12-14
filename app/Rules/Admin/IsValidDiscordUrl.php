@@ -18,11 +18,11 @@ class IsValidDiscordUrl implements ValidationRule
     public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
         $value = (string)$value;
-        if('' === $value) {
+        if ('' === $value) {
             return;
         }
 
-        if(!str_starts_with($value, 'https://discord.com/api/webhooks/')) {
+        if (!str_starts_with($value, 'https://discord.com/api/webhooks/')) {
             $fail('validation.active_url')->translate();
             $message = sprintf('IsValidDiscordUrl: "%s" is not a discord URL.', substr($value, 0, 255));
             Log::debug($message);

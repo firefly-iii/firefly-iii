@@ -43,7 +43,8 @@ use Illuminate\Support\Facades\Notification;
  */
 class AdminEventHandler
 {
-    public function sendLoginAttemptNotification(UnknownUserAttemptedLogin $event): void {
+    public function sendLoginAttemptNotification(UnknownUserAttemptedLogin $event): void
+    {
         try {
             $owner = new OwnerNotifiable();
             Notification::send($owner, new UnknownUserLoginAttempt($event->address));
@@ -64,13 +65,13 @@ class AdminEventHandler
         }
     }
 
-
     public function sendInvitationNotification(InvitationCreated $event): void
     {
         $sendMail = app('fireflyconfig')->get('notification_invite_created', true)->data;
         if (false === $sendMail) {
             return;
         }
+
         try {
             $owner = new OwnerNotifiable();
             Notification::send($owner, new UserInvitation($owner, $event->invitee));
@@ -131,18 +132,27 @@ class AdminEventHandler
         switch ($event->channel) {
             case 'email':
                 $class = TestNotificationEmail::class;
+
                 break;
+
             case 'slack':
                 $class = TestNotificationSlack::class;
+
                 break;
+
             case 'ntfy':
                 $class = TestNotificationNtfy::class;
+
                 break;
+
             case 'pushover':
                 $class = TestNotificationPushover::class;
+
                 break;
+
             default:
                 app('log')->error(sprintf('Unknown channel "%s" in sendTestNotification method.', $event->channel));
+
                 return;
         }
         Log::debug(sprintf('Will send %s as a notification.', $class));

@@ -88,5 +88,5 @@ return [
     'mfa_disableMFA'         => 'Disable multi-factor authentication',
 
     // notifications
-    'notification_index' => 'Owner notifications',
+    'notification_index'     => 'Owner notifications',
 ];

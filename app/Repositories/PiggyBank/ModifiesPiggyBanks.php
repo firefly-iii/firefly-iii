@@ -30,11 +30,9 @@ use FireflyIII\Factory\PiggyBankFactory;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use FireflyIII\Support\Facades\Amount;
-use Illuminate\Database\QueryException;
 
 /**
  * Trait ModifiesPiggyBanks
@@ -59,7 +57,7 @@ trait ModifiesPiggyBanks
 
     public function removeAmount(PiggyBank $piggyBank, string $amount, ?TransactionJournal $journal = null): bool
     {
-        $repetition                = $this->getRepetition($piggyBank);
+        $repetition                 = $this->getRepetition($piggyBank);
         if (null === $repetition) {
             return false;
         }
@@ -74,11 +72,11 @@ trait ModifiesPiggyBanks
 
     public function addAmount(PiggyBank $piggyBank, string $amount, ?TransactionJournal $journal = null): bool
     {
-        $repetition                = $this->getRepetition($piggyBank);
+        $repetition                 = $this->getRepetition($piggyBank);
         if (null === $repetition) {
             return false;
         }
-        $currentAmount             = $repetition->current_amount ?? '0';
+        $currentAmount              = $repetition->current_amount ?? '0';
         $repetition->current_amount = bcadd($currentAmount, $amount);
         $repetition->save();
 
@@ -143,15 +141,15 @@ trait ModifiesPiggyBanks
 
     public function setCurrentAmount(PiggyBank $piggyBank, string $amount): PiggyBank
     {
-        $repetition                = $this->getRepetition($piggyBank);
+        $repetition                 = $this->getRepetition($piggyBank);
         if (null === $repetition) {
             return $piggyBank;
         }
-        $max                       = $piggyBank->target_amount;
+        $max                        = $piggyBank->target_amount;
         if (1 === bccomp($amount, $max) && 0 !== bccomp($piggyBank->target_amount, '0')) {
             $amount = $max;
         }
-        $difference                = bcsub($amount, $repetition->current_amount);
+        $difference                 = bcsub($amount, $repetition->current_amount);
         $repetition->current_amount = $amount;
         $repetition->save();
 
@@ -184,9 +182,9 @@ trait ModifiesPiggyBanks
     {
         $factory       = new PiggyBankFactory();
         $factory->user = $this->user;
+
         return $factory->store($data);
     }
-
 
     public function setOrder(PiggyBank $piggyBank, int $newOrder): bool
     {
@@ -220,7 +218,8 @@ trait ModifiesPiggyBanks
         if ('' === $note) {
             $dbNote = $piggyBank->notes()->first();
             $dbNote?->delete();
-            return ;
+
+            return;
         }
         $dbNote       = $piggyBank->notes()->first();
         if (null === $dbNote) {
@@ -249,7 +248,7 @@ trait ModifiesPiggyBanks
         // remove money from the rep.
         $repetition = $this->getRepetition($piggyBank);
         if (null !== $repetition && $repetition->current_amount > $piggyBank->target_amount && 0 !== bccomp($piggyBank->target_amount, '0')) {
-            $difference                = bcsub($piggyBank->target_amount, $repetition->current_amount);
+            $difference                 = bcsub($piggyBank->target_amount, $repetition->current_amount);
 
             // an amount will be removed, create "negative" event:
             event(new ChangedAmount($piggyBank, $difference, null, null));

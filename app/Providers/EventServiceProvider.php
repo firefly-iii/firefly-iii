@@ -25,7 +25,6 @@ namespace FireflyIII\Providers;
 
 use FireflyIII\Events\ActuallyLoggedIn;
 use FireflyIII\Events\Admin\InvitationCreated;
-use FireflyIII\Events\AdminRequestedTestMessage;
 use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Events\DetectedNewIPAddress;
 use FireflyIII\Events\Model\BudgetLimit\Created;
@@ -137,7 +136,7 @@ class EventServiceProvider extends ServiceProvider
                 'FireflyIII\Handlers\Events\UserEventHandler@sendEmailChangeUndoMail',
             ],
             // admin related
-            TestNotificationChannel::class           => [
+            TestNotificationChannel::class             => [
                 'FireflyIII\Handlers\Events\AdminEventHandler@sendTestNotification',
             ],
             NewVersionAvailable::class                 => [
@@ -147,7 +146,7 @@ class EventServiceProvider extends ServiceProvider
                 'FireflyIII\Handlers\Events\AdminEventHandler@sendInvitationNotification',
                 'FireflyIII\Handlers\Events\UserEventHandler@sendRegistrationInvite',
             ],
-            UnknownUserAttemptedLogin::class => [
+            UnknownUserAttemptedLogin::class           => [
                 'FireflyIII\Handlers\Events\AdminEventHandler@sendLoginAttemptNotification',
             ],
 

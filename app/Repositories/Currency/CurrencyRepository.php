@@ -106,7 +106,8 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         }
     }
 
-    #[\Override] public function find(int $currencyId): ?TransactionCurrency
+    #[\Override]
+    public function find(int $currencyId): ?TransactionCurrency
     {
         return TransactionCurrency::find($currencyId);
     }

@@ -813,14 +813,15 @@ class FireflyValidator extends Validator
     public function validateUniquePiggyBankForUser($attribute, $value, $parameters): bool
     {
         $exclude = $parameters[0] ?? null;
-        $query   = PiggyBank
-            ::leftJoin('account_piggy_bank','account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
+        $query   = PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
             ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
-            ->where('accounts.user_id', auth()->user()->id);
+            ->where('accounts.user_id', auth()->user()->id)
+        ;
         if (null !== $exclude) {
             $query->where('piggy_banks.id', '!=', (int) $exclude);
         }
         $query->where('piggy_banks.name', $value);
+
         return 0 === $query->get(['piggy_banks.*'])->count();
     }
 

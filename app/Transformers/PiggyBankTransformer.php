@@ -54,22 +54,22 @@ class PiggyBankTransformer extends AbstractTransformer
      */
     public function transform(PiggyBank $piggyBank): array
     {
-        $user = $piggyBank->accounts()->first()->user;
+        $user             = $piggyBank->accounts()->first()->user;
 
         // set up repositories
         $this->accountRepos->setUser($user);
         $this->piggyRepos->setUser($user);
 
         // note
-        $notes = $this->piggyRepos->getNoteText($piggyBank);
-        $notes = '' === $notes ? null : $notes;
+        $notes            = $this->piggyRepos->getNoteText($piggyBank);
+        $notes            = '' === $notes ? null : $notes;
 
         $objectGroupId    = null;
         $objectGroupOrder = null;
         $objectGroupTitle = null;
 
         /** @var null|ObjectGroup $objectGroup */
-        $objectGroup = $piggyBank->objectGroups->first();
+        $objectGroup      = $piggyBank->objectGroups->first();
         if (null !== $objectGroup) {
             $objectGroupId    = $objectGroup->id;
             $objectGroupOrder = $objectGroup->order;
@@ -77,14 +77,14 @@ class PiggyBankTransformer extends AbstractTransformer
         }
 
         // get currently saved amount:
-        $currency      = $piggyBank->transactionCurrency;
-        $currentAmount = app('steam')->bcround($this->piggyRepos->getCurrentAmount($piggyBank), $currency->decimal_places);
+        $currency         = $piggyBank->transactionCurrency;
+        $currentAmount    = app('steam')->bcround($this->piggyRepos->getCurrentAmount($piggyBank), $currency->decimal_places);
 
         // Amounts, depending on 0.0 state of target amount
-        $percentage   = null;
-        $targetAmount = $piggyBank->target_amount;
-        $leftToSave   = null;
-        $savePerMonth = null;
+        $percentage       = null;
+        $targetAmount     = $piggyBank->target_amount;
+        $leftToSave       = null;
+        $savePerMonth     = null;
         if (0 !== bccomp($targetAmount, '0')) { // target amount is not 0.00
             $leftToSave   = bcsub($piggyBank->target_amount, $currentAmount);
             $percentage   = (int) bcmul(bcdiv($currentAmount, $targetAmount), '100');
@@ -92,16 +92,16 @@ class PiggyBankTransformer extends AbstractTransformer
             $leftToSave   = app('steam')->bcround($leftToSave, $currency->decimal_places);
             $savePerMonth = app('steam')->bcround($this->piggyRepos->getSuggestedMonthlyAmount($piggyBank), $currency->decimal_places);
         }
-        $startDate  = $piggyBank->start_date?->format('Y-m-d');
-        $targetDate = $piggyBank->target_date?->format('Y-m-d');
+        $startDate        = $piggyBank->start_date?->format('Y-m-d');
+        $targetDate       = $piggyBank->target_date?->format('Y-m-d');
 
         return [
             'id'                      => (string) $piggyBank->id,
             'created_at'              => $piggyBank->created_at->toAtomString(),
             'updated_at'              => $piggyBank->updated_at->toAtomString(),
             'accounts'                => $this->renderAccounts($piggyBank),
-            //'account_id'              => (string)$piggyBank->account_id,
-            //'account_name'            => $piggyBank->account->name,
+            // 'account_id'              => (string)$piggyBank->account_id,
+            // 'account_name'            => $piggyBank->account->name,
             'name'                    => $piggyBank->name,
             'currency_id'             => (string) $currency->id,
             'currency_code'           => $currency->code,
@@ -123,7 +123,7 @@ class PiggyBankTransformer extends AbstractTransformer
             'links'                   => [
                 [
                     'rel' => 'self',
-                    'uri' => '/piggy_banks/' . $piggyBank->id,
+                    'uri' => '/piggy_banks/'.$piggyBank->id,
                 ],
             ],
         ];
@@ -134,12 +134,13 @@ class PiggyBankTransformer extends AbstractTransformer
         $return = [];
         foreach ($piggyBank->accounts()->get() as $account) {
             $return[] = [
-                'id'   => $account->id,
-                'name' => $account->name,
+                'id'             => $account->id,
+                'name'           => $account->name,
                 'current_amount' => $account->pivot->current_amount,
                 // TODO add balance, add left to save.
             ];
         }
+
         return $return;
     }
 }

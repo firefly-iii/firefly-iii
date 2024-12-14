@@ -33,7 +33,6 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Report\NetWorthInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Bill\BillRepositoryInterface;

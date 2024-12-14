@@ -28,7 +28,6 @@ use FireflyIII\Events\ActuallyLoggedIn;
 use FireflyIII\Events\Security\UnknownUserAttemptedLogin;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\Providers\RouteServiceProvider;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Contracts\Foundation\Application;
@@ -70,7 +69,7 @@ class LoginController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->username = 'email';
+        $this->username   = 'email';
         $this->middleware('guest')->except('logout');
         $this->repository = app(UserRepositoryInterface::class);
     }
@@ -128,7 +127,7 @@ class LoginController extends Controller
         }
         app('log')->warning('Login attempt failed.');
         $username = (string) $request->get($this->username());
-        if(null === $this->repository->findByEmail($username)) {
+        if (null === $this->repository->findByEmail($username)) {
             // send event to owner.
             event(new UnknownUserAttemptedLogin($username));
         }

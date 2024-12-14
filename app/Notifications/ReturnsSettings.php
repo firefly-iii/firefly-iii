@@ -1,4 +1,5 @@
 <?php
+
 /*
  * ReturnsSettings.php
  * Copyright (c) 2024 james@firefly-iii.org.
@@ -34,6 +35,7 @@ class ReturnsSettings
         if ('ntfy' === $channel) {
             return self::getNtfySettings($type, $user);
         }
+
         throw new FireflyException(sprintf('Cannot handle channel "%s"', $channel));
     }
 
@@ -54,7 +56,7 @@ class ReturnsSettings
             $settings['ntfy_user']   = FireflyConfig::getEncrypted('ntfy_user', '')->data;
             $settings['ntfy_pass']   = FireflyConfig::getEncrypted('ntfy_pass', '')->data;
         }
+
         return $settings;
     }
-
 }

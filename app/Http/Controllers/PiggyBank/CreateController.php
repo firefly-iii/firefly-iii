@@ -94,7 +94,7 @@ class CreateController extends Controller
      */
     public function store(PiggyBankStoreRequest $request)
     {
-        $data = $request->getPiggyBankData();
+        $data      = $request->getPiggyBankData();
 
         if (null === $data['start_date']) {
             $data['start_date'] = today(config('app.timezone'));
@@ -107,7 +107,7 @@ class CreateController extends Controller
 
         // store attachment(s):
         /** @var null|array $files */
-        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $files     = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($piggyBank, $files);
         }
@@ -119,7 +119,7 @@ class CreateController extends Controller
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments'));
         }
-        $redirect = redirect($this->getPreviousUrl('piggy-banks.create.url'));
+        $redirect  = redirect($this->getPreviousUrl('piggy-banks.create.url'));
 
         if (1 === (int) $request->get('create_another')) {
             session()->put('piggy-banks.create.fromStore', true);

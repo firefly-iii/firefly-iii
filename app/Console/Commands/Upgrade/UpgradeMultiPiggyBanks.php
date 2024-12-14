@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * UpgradeMultiPiggyBanks.php
  * Copyright (c) 2024 james@firefly-iii.org.
@@ -34,17 +36,15 @@ class UpgradeMultiPiggyBanks extends Command
 
     public const string CONFIG_NAME = '620_make_multi_piggies';
 
-    protected $description = 'Upgrade piggybanks so they can use multiple accounts.';
+    protected $description          = 'Upgrade piggybanks so they can use multiple accounts.';
 
-    protected $signature = 'firefly-iii:upgrade-multi-piggies {--F|force : Force the execution of this command.}';
+    protected $signature            = 'firefly-iii:upgrade-multi-piggies {--F|force : Force the execution of this command.}';
 
     private PiggyBankRepositoryInterface $repository;
     private AccountRepositoryInterface   $accountRepository;
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle(): int
     {
@@ -61,9 +61,6 @@ class UpgradeMultiPiggyBanks extends Command
         return 0;
     }
 
-    /**
-     * @return bool
-     */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
@@ -74,10 +71,6 @@ class UpgradeMultiPiggyBanks extends Command
         return false;
     }
 
-
-    /**
-     *
-     */
     private function markAsExecuted(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);
@@ -89,6 +82,7 @@ class UpgradeMultiPiggyBanks extends Command
         $this->accountRepository = app(AccountRepositoryInterface::class);
         $set                     = PiggyBank::whereNotNull('account_id')->get();
         Log::debug(sprintf('Will update %d piggy banks(s).', $set->count()));
+
         /** @var PiggyBank $piggyBank */
         foreach ($set as $piggyBank) {
             $this->upgradePiggyBank($piggyBank);
@@ -99,8 +93,8 @@ class UpgradeMultiPiggyBanks extends Command
     {
         $this->repository->setUser($piggyBank->account->user);
         $this->accountRepository->setUser($piggyBank->account->user);
-        $repetition = $this->repository->getRepetition($piggyBank);
-        $currency   = $this->accountRepository->getAccountCurrency($piggyBank->account) ?? app('amount')->getDefaultCurrencyByUserGroup($piggyBank->account->user->userGroup);
+        $repetition                         = $this->repository->getRepetition($piggyBank);
+        $currency                           = $this->accountRepository->getAccountCurrency($piggyBank->account) ?? app('amount')->getDefaultCurrencyByUserGroup($piggyBank->account->user->userGroup);
 
         // update piggy bank to have a currency.
         $piggyBank->transaction_currency_id = $currency->id;
@@ -108,7 +102,7 @@ class UpgradeMultiPiggyBanks extends Command
 
         // store current amount in account association.
         $piggyBank->accounts()->sync([$piggyBank->account->id => ['current_amount' => $repetition->current_amount]]);
-        $piggyBank->account_id = null;
+        $piggyBank->account_id              = null;
         $piggyBank->save();
 
         // remove all repetitions (no longer used)

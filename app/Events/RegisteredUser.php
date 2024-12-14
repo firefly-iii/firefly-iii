@@ -43,7 +43,7 @@ class RegisteredUser extends Event
      */
     public function __construct(OwnerNotifiable $owner, User $user)
     {
-        $this->user = $user;
+        $this->user  = $user;
         $this->owner = $owner;
     }
 }

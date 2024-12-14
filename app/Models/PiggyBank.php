@@ -44,18 +44,18 @@ class PiggyBank extends Model
 
     protected $casts
                         = [
-            'created_at'   => 'datetime',
-            'updated_at'   => 'datetime',
-            'deleted_at'   => 'datetime',
+            'created_at'    => 'datetime',
+            'updated_at'    => 'datetime',
+            'deleted_at'    => 'datetime',
             'start_date'    => 'date',
             'target_date'   => 'date',
-            'order'        => 'int',
-            'active'       => 'boolean',
-            'encrypted'    => 'boolean',
+            'order'         => 'int',
+            'active'        => 'boolean',
+            'encrypted'     => 'boolean',
             'target_amount' => 'string',
         ];
 
-    protected $fillable = ['name', 'account_id', 'order', 'target_amount', 'start_date', 'start_date_tz', 'target_date', 'target_date_tz', 'active','transaction_currency_id'];
+    protected $fillable = ['name', 'account_id', 'order', 'target_amount', 'start_date', 'start_date_tz', 'target_date', 'target_date_tz', 'active', 'transaction_currency_id'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
@@ -67,9 +67,10 @@ class PiggyBank extends Model
         if (auth()->check()) {
             $piggyBankId = (int)$value;
             $piggyBank   = self::where('piggy_banks.id', $piggyBankId)
-                ->leftJoin('account_piggy_bank','account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
+                ->leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
                 ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
-                ->where('accounts.user_id', auth()->user()->id)->first(['piggy_banks.*']);
+                ->where('accounts.user_id', auth()->user()->id)->first(['piggy_banks.*'])
+            ;
             if (null !== $piggyBank) {
                 return $piggyBank;
             }

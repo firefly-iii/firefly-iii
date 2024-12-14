@@ -213,7 +213,7 @@ class IndexController extends Controller
                 $array['budgeted'][] = [
                     'id'                      => $limit->id,
                     'amount'                  => $amount,
-                    'notes' => $this->blRepository->getNoteText($limit),
+                    'notes'                   => $this->blRepository->getNoteText($limit),
                     'start_date'              => $limit->start_date->isoFormat($this->monthAndDayFormat),
                     'end_date'                => $limit->end_date->isoFormat($this->monthAndDayFormat),
                     'in_range'                => $limit->start_date->isSameDay($start) && $limit->end_date->isSameDay($end),

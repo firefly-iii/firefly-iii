@@ -66,14 +66,14 @@ class PreferencesController extends Controller
      */
     public function index(AccountRepositoryInterface $repository)
     {
-        $accounts        = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
-        $isDocker        = env('IS_DOCKER', false);
-        $groupedAccounts = [];
+        $accounts              = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
+        $isDocker              = env('IS_DOCKER', false);
+        $groupedAccounts       = [];
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $type = $account->accountType->type;
-            $role = sprintf('opt_group_%s', $repository->getMetaValue($account, 'account_role'));
+            $type                                                                        = $account->accountType->type;
+            $role                                                                        = sprintf('opt_group_%s', $repository->getMetaValue($account, 'account_role'));
 
             if (in_array($type, [AccountType::MORTGAGE, AccountType::DEBT, AccountType::LOAN], true)) {
                 $role = sprintf('opt_group_l_%s', $type);
@@ -94,42 +94,49 @@ class PreferencesController extends Controller
         if (!is_array($frontpageAccounts)) {
             $frontpageAccounts = $accountIds;
         }
-        $language           = app('steam')->getLanguage();
-        $languages          = config('firefly.languages');
-        $locale             = app('preferences')->get('locale', config('firefly.default_locale', 'equal'))->data;
-        $listPageSize       = app('preferences')->get('listPageSize', 50)->data;
-        $darkMode           = app('preferences')->get('darkMode', 'browser')->data;
-        $customFiscalYear   = app('preferences')->get('customFiscalYear', 0)->data;
-        $fiscalYearStartStr = app('preferences')->get('fiscalYearStart', '01-01')->data;
+        $language              = app('steam')->getLanguage();
+        $languages             = config('firefly.languages');
+        $locale                = app('preferences')->get('locale', config('firefly.default_locale', 'equal'))->data;
+        $listPageSize          = app('preferences')->get('listPageSize', 50)->data;
+        $darkMode              = app('preferences')->get('darkMode', 'browser')->data;
+        $customFiscalYear      = app('preferences')->get('customFiscalYear', 0)->data;
+        $fiscalYearStartStr    = app('preferences')->get('fiscalYearStart', '01-01')->data;
         if (is_array($fiscalYearStartStr)) {
             $fiscalYearStartStr = '01-01';
         }
-        $fiscalYearStart    = sprintf('%s-%s', date('Y'), (string) $fiscalYearStartStr);
-        $tjOptionalFields   = app('preferences')->get('transaction_journal_optional_fields', [])->data;
-        $availableDarkModes = config('firefly.available_dark_modes');
+        $fiscalYearStart       = sprintf('%s-%s', date('Y'), (string) $fiscalYearStartStr);
+        $tjOptionalFields      = app('preferences')->get('transaction_journal_optional_fields', [])->data;
+        $availableDarkModes    = config('firefly.available_dark_modes');
 
         // notifications settings
-        $slackUrl          = app('preferences')->getEncrypted('slack_webhook_url', '')->data;
-        $pushoverAppToken  = app('preferences')->getEncrypted('pushover_app_token', '')->data;
-        $pushoverUserToken = app('preferences')->getEncrypted('pushover_user_token', '')->data;
-        $ntfyServer        = app('preferences')->getEncrypted('ntfy_server', 'https://ntfy.sh')->data;
-        $ntfyTopic         = app('preferences')->getEncrypted('ntfy_topic', '')->data;
-        $ntfyAuth          = app('preferences')->get('ntfy_auth', false)->data;
-        $ntfyUser          = app('preferences')->getEncrypted('ntfy_user', '')->data;
-        $ntfyPass          = app('preferences')->getEncrypted('ntfy_pass', '')->data;
+        $slackUrl              = app('preferences')->getEncrypted('slack_webhook_url', '')->data;
+        $pushoverAppToken      = app('preferences')->getEncrypted('pushover_app_token', '')->data;
+        $pushoverUserToken     = app('preferences')->getEncrypted('pushover_user_token', '')->data;
+        $ntfyServer            = app('preferences')->getEncrypted('ntfy_server', 'https://ntfy.sh')->data;
+        $ntfyTopic             = app('preferences')->getEncrypted('ntfy_topic', '')->data;
+        $ntfyAuth              = app('preferences')->get('ntfy_auth', false)->data;
+        $ntfyUser              = app('preferences')->getEncrypted('ntfy_user', '')->data;
+        $ntfyPass              = app('preferences')->getEncrypted('ntfy_pass', '')->data;
+        $channels                       = config('notifications.channels');
+        $forcedAvailability             = [];
 
-
-        // notification preferences (single value for each):
-        $notifications = [];
+        // notification preferences
+        $notifications         = [];
         foreach (config('notifications.notifications.user') as $key => $info) {
             if ($info['enabled']) {
                 $notifications[$key]
                     = [
-                    'enabled'      => app('preferences')->get(sprintf('notification_%s', $key), true)->data,
-                    'configurable' => $info['configurable'],
-                ];
+                        'enabled'      => app('preferences')->get(sprintf('notification_%s', $key), true)->data,
+                        'configurable' => $info['configurable'],
+                    ];
             }
         }
+        // loop all channels to see if they are available.
+        foreach ($channels as $channel => $info) {
+            $forcedAvailability[$channel] = true;
+        }
+        $forcedAvailability['ntfy']     = '' !== $ntfyTopic;
+        $forcedAvailability['pushover'] = '' !== $pushoverAppToken && '' !== $pushoverUserToken;
 
         ksort($languages);
 
@@ -141,7 +148,7 @@ class PreferencesController extends Controller
             app('log')->error($e->getMessage());
             $locales = [];
         }
-        $locales = ['equal' => (string) trans('firefly.equal_to_language')] + $locales;
+        $locales               = ['equal' => (string) trans('firefly.equal_to_language')] + $locales;
         // an important fallback is that the frontPageAccount array gets refilled automatically
         // when it turns up empty.
         if (0 === count($frontpageAccounts)) {
@@ -151,7 +158,7 @@ class PreferencesController extends Controller
         // for the demo user, the notification settings are automatically emptied.
         // this isn't really secure, but it means that the demo site has semi-secret notification settings.
         if (auth()->user()->hasRole('demo')) {
-            $slackUrl = '';
+            $slackUrl          = '';
             $pushoverAppToken  = '';
             $pushoverUserToken = '';
             $ntfyServer        = '';
@@ -161,9 +168,32 @@ class PreferencesController extends Controller
             $ntfyPass          = '';
         }
 
-        return view('preferences.index', compact('language', 'pushoverAppToken', 'pushoverUserToken',
-                                                 'ntfyServer', 'ntfyTopic', 'ntfyAuth', 'ntfyUser', 'ntfyPass',
-                                                 'groupedAccounts', 'isDocker', 'frontpageAccounts', 'languages', 'darkMode', 'availableDarkModes', 'notifications', 'slackUrl', 'locales', 'locale', 'tjOptionalFields', 'viewRange', 'customFiscalYear', 'listPageSize', 'fiscalYearStart'));
+        return view('preferences.index', compact(
+            'language',
+            'pushoverAppToken',
+            'pushoverUserToken',
+            'ntfyServer',
+            'ntfyTopic',
+            'ntfyAuth',
+            'ntfyUser',
+            'forcedAvailability',
+            'ntfyPass',
+            'groupedAccounts',
+            'isDocker',
+            'frontpageAccounts',
+            'languages',
+            'darkMode',
+            'availableDarkModes',
+            'notifications',
+            'slackUrl',
+            'locales',
+            'locale',
+            'tjOptionalFields',
+            'viewRange',
+            'customFiscalYear',
+            'listPageSize',
+            'fiscalYearStart'
+        ));
     }
 
     /**
@@ -188,8 +218,9 @@ class PreferencesController extends Controller
         }
 
         // extract notifications:
-        $all = $request->all();
-        die('fix the reference to the available notifications.');
+        $all               = $request->all();
+
+        exit('fix the reference to the available notifications.');
         foreach (config('firefly.available_notifications') as $option) {
             $key = sprintf('notification_%s', $option);
             if (array_key_exists($key, $all)) {
@@ -219,8 +250,8 @@ class PreferencesController extends Controller
         }
 
         // custom fiscal year
-        $customFiscalYear = 1 === (int) $request->get('customFiscalYear');
-        $string           = strtotime((string) $request->get('fiscalYearStart'));
+        $customFiscalYear  = 1 === (int) $request->get('customFiscalYear');
+        $string            = strtotime((string) $request->get('fiscalYearStart'));
         if (false !== $string) {
             $fiscalYearStart = date('m-d', $string);
             app('preferences')->set('customFiscalYear', $customFiscalYear);
@@ -229,15 +260,15 @@ class PreferencesController extends Controller
 
         // save page size:
         app('preferences')->set('listPageSize', 50);
-        $listPageSize = (int) $request->get('listPageSize');
+        $listPageSize      = (int) $request->get('listPageSize');
         if ($listPageSize > 0 && $listPageSize < 1337) {
             app('preferences')->set('listPageSize', $listPageSize);
         }
 
         // language:
         /** @var Preference $currentLang */
-        $currentLang = app('preferences')->get('language', 'en_US');
-        $lang        = $request->get('language');
+        $currentLang       = app('preferences')->get('language', 'en_US');
+        $lang              = $request->get('language');
         if (array_key_exists($lang, config('firefly.languages'))) {
             app('preferences')->set('language', $lang);
         }
@@ -254,8 +285,8 @@ class PreferencesController extends Controller
         }
 
         // optional fields for transactions:
-        $setOptions = $request->get('tj') ?? [];
-        $optionalTj = [
+        $setOptions        = $request->get('tj') ?? [];
+        $optionalTj        = [
             'interest_date'      => array_key_exists('interest_date', $setOptions),
             'book_date'          => array_key_exists('book_date', $setOptions),
             'process_date'       => array_key_exists('process_date', $setOptions),
@@ -272,7 +303,7 @@ class PreferencesController extends Controller
         app('preferences')->set('transaction_journal_optional_fields', $optionalTj);
 
         // dark mode
-        $darkMode = $request->get('darkMode') ?? 'browser';
+        $darkMode          = $request->get('darkMode') ?? 'browser';
         if (in_array($darkMode, config('firefly.available_dark_modes'), true)) {
             app('preferences')->set('darkMode', $darkMode);
         }

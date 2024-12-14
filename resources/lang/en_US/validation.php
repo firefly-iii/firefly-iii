@@ -25,9 +25,9 @@
 declare(strict_types=1);
 
 return [
-    'invalid_account_type' => 'A piggy bank can only be linked to asset accounts and liabilities',
-    'invalid_account_currency' => 'This account does not use the currency you have selected',
-    'current_amount_too_much' => 'The combined amount in "current_amount" cannot exceed the "target_amount".',
+    'invalid_account_type'            => 'A piggy bank can only be linked to asset accounts and liabilities',
+    'invalid_account_currency'        => 'This account does not use the currency you have selected',
+    'current_amount_too_much'         => 'The combined amount in "current_amount" cannot exceed the "target_amount".',
     'filter_must_be_in'               => 'Filter ":filter" must be one of: :values',
     'filter_not_string'               => 'Filter ":filter" is expected to be a string of text',
     'bad_api_filter'                  => 'This API endpoint does not support ":filter" as a filter.',

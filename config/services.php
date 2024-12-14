@@ -61,8 +61,8 @@ return [
     'mandrill'  => [
         'secret' => env('MANDRILL_SECRET'),
     ],
-    'pushover' => [
-        'token' => 'fake_token',
+    'pushover'  => [
+        'token'      => 'fake_token',
         'user_token' => 'fake_token',
     ],
 ];

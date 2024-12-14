@@ -23,15 +23,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Admin;
 
-use FireflyIII\Events\AdminRequestedTestMessage;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
-use FireflyIII\Support\Notifications\UrlValidator;
-use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 

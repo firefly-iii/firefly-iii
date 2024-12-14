@@ -1,4 +1,5 @@
 <?php
+
 /*
  * AdminNotifiable.php
  * Copyright (c) 2024 james@firefly-iii.org.
@@ -30,13 +31,13 @@ use NotificationChannels\Pushover\PushoverReceiver;
 
 class OwnerNotifiable
 {
-
     public function routeNotificationForSlack(): string
     {
         $res = app('fireflyconfig')->getEncrypted('slack_webhook_url', '')->data;
         if (is_array($res)) {
             $res = '';
         }
+
         return (string) $res;
     }
 
@@ -45,8 +46,10 @@ class OwnerNotifiable
         Log::debug('Return settings for routeNotificationForPushover');
         $pushoverAppToken  = (string) app('fireflyconfig')->getEncrypted('pushover_app_token', '')->data;
         $pushoverUserToken = (string) app('fireflyconfig')->getEncrypted('pushover_user_token', '')->data;
+
         return PushoverReceiver::withUserKey($pushoverUserToken)
-                               ->withApplicationToken($pushoverAppToken);
+            ->withApplicationToken($pushoverAppToken)
+        ;
     }
 
     /**
@@ -59,9 +62,10 @@ class OwnerNotifiable
      */
     public function routeNotificationFor($driver, $notification = null)
     {
-        $method = 'routeNotificationFor' . Str::studly($driver);
+        $method = 'routeNotificationFor'.Str::studly($driver);
         if (method_exists($this, $method)) {
             Log::debug(sprintf('Redirect for settings to "%s".', $method));
+
             return $this->{$method}($notification); // @phpstan-ignore-line
         }
         Log::debug(sprintf('No method "%s" found, return generic settings.', $method));

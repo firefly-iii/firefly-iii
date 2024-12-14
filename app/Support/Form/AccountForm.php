@@ -155,8 +155,9 @@ class AccountForm
      */
     public function assetLiabilityMultiAccountList(string $name, $value = null, ?array $options = null): string
     {
-        $types   = [AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::DEBT->value,AccountTypeEnum::LOAN->value];
+        $types   = [AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value];
         $grouped = $this->getAccountsGrouped($types);
+
         return $this->multiSelect($name, $grouped, $value, $options);
     }
 

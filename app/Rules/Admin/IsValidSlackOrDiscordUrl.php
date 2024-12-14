@@ -18,11 +18,11 @@ class IsValidSlackOrDiscordUrl implements ValidationRule
     public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
         $value = (string)$value;
-        if('' === $value) {
+        if ('' === $value) {
             return;
         }
 
-        if(!str_starts_with($value, 'https://hooks.slack.com/services/') && !str_starts_with($value, 'https://discord.com/api/webhooks/')) {
+        if (!str_starts_with($value, 'https://hooks.slack.com/services/') && !str_starts_with($value, 'https://discord.com/api/webhooks/')) {
             $fail('validation.active_url')->translate();
             $message = sprintf('IsValidSlackUrl: "%s" is not a discord or slack URL.', substr($value, 0, 255));
             Log::debug($message);

@@ -64,14 +64,18 @@ class Preferences
         }
         if ('' === $result->data) {
             Log::warning(sprintf('Empty encrypted preference found: "%s"', $name));
+
             return $result;
         }
+
         try {
             $result->data = decrypt($result->data);
         } catch (DecryptException $e) {
             Log::error(sprintf('Could not decrypt preference "%s": %s', $name, $e->getMessage()));
+
             return $result;
         }
+
         return $result;
     }
 
@@ -81,11 +85,12 @@ class Preferences
             $encrypted = encrypt($value);
         } catch (EncryptException $e) {
             Log::error(sprintf('Could not encrypt preference "%s": %s', $name, $e->getMessage()));
+
             throw new FireflyException(sprintf('Could not encrypt preference "%s". Cowardly refuse to continue.', $name));
         }
+
         return $this->set($name, $encrypted);
     }
-
 
     public function get(string $name, null|array|bool|int|string $default = null): ?Preference
     {

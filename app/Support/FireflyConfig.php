@@ -37,7 +37,7 @@ class FireflyConfig
 {
     public function delete(string $name): void
     {
-        $fullName = 'ff-config-' . $name;
+        $fullName = 'ff-config-'.$name;
         if (\Cache::has($fullName)) {
             \Cache::forget($fullName);
         }
@@ -57,14 +57,18 @@ class FireflyConfig
         }
         if ('' === $result->data) {
             Log::warning(sprintf('Empty encrypted configuration value found: "%s"', $name));
+
             return $result;
         }
+
         try {
             $result->data = decrypt($result->data);
         } catch (DecryptException $e) {
             Log::error(sprintf('Could not decrypt configuration value "%s": %s', $name, $e->getMessage()));
+
             return $result;
         }
+
         return $result;
     }
 
@@ -75,7 +79,7 @@ class FireflyConfig
      */
     public function get(string $name, $default = null): ?Configuration
     {
-        $fullName = 'ff-config-' . $name;
+        $fullName = 'ff-config-'.$name;
         if (\Cache::has($fullName)) {
             return \Cache::get($fullName);
         }
@@ -83,7 +87,7 @@ class FireflyConfig
         try {
             /** @var null|Configuration $config */
             $config = Configuration::where('name', $name)->first(['id', 'name', 'data']);
-        } catch (\Exception | QueryException $e) {
+        } catch (\Exception|QueryException $e) {
             throw new FireflyException(sprintf('Could not poll the database: %s', $e->getMessage()), 0, $e);
         }
 
@@ -106,8 +110,10 @@ class FireflyConfig
             $encrypted = encrypt($value);
         } catch (EncryptException $e) {
             Log::error(sprintf('Could not encrypt configuration value "%s": %s', $name, $e->getMessage()));
+
             throw new FireflyException(sprintf('Could not encrypt configuration value "%s". Cowardly refuse to continue.', $name));
         }
+
         return $this->set($name, $encrypted);
     }
 
@@ -129,13 +135,13 @@ class FireflyConfig
             $item->name = $name;
             $item->data = $value;
             $item->save();
-            \Cache::forget('ff-config-' . $name);
+            \Cache::forget('ff-config-'.$name);
 
             return $item;
         }
         $config->data = $value;
         $config->save();
-        \Cache::forget('ff-config-' . $name);
+        \Cache::forget('ff-config-'.$name);
 
         return $config;
     }

@@ -66,9 +66,9 @@ class PiggyBankController extends Controller
      */
     public function piggyBanks(AutocompleteRequest $request): JsonResponse
     {
-        $data            = $request->getData();
-        $piggies         = $this->piggyRepository->searchPiggyBank($data['query'], $this->parameters->get('limit'));
-        $response        = [];
+        $data     = $request->getData();
+        $piggies  = $this->piggyRepository->searchPiggyBank($data['query'], $this->parameters->get('limit'));
+        $response = [];
 
         /** @var PiggyBank $piggy */
         foreach ($piggies as $piggy) {
@@ -96,9 +96,9 @@ class PiggyBankController extends Controller
      */
     public function piggyBanksWithBalance(AutocompleteRequest $request): JsonResponse
     {
-        $data            = $request->getData();
-        $piggies         = $this->piggyRepository->searchPiggyBank($data['query'], $this->parameters->get('limit'));
-        $response        = [];
+        $data     = $request->getData();
+        $piggies  = $this->piggyRepository->searchPiggyBank($data['query'], $this->parameters->get('limit'));
+        $response = [];
 
         /** @var PiggyBank $piggy */
         foreach ($piggies as $piggy) {

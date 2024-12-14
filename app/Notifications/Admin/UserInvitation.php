@@ -83,7 +83,8 @@ class UserInvitation extends Notification
     {
         return (new MailMessage())
             ->markdown('emails.invitation-created', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email])
-            ->subject((string) trans('email.invitation_created_subject'));
+            ->subject((string) trans('email.invitation_created_subject'))
+        ;
     }
 
     /**
@@ -107,7 +108,8 @@ class UserInvitation extends Notification
         Log::debug('Now in toPushover() for UserInvitation');
 
         return PushoverMessage::create((string) trans('email.invitation_created_body', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email]))
-                              ->title((string) trans('email.invitation_created_subject'));
+            ->title((string) trans('email.invitation_created_subject'))
+        ;
     }
 
     public function toNtfy(OwnerNotifiable $notifiable): Message
@@ -126,7 +128,7 @@ class UserInvitation extends Notification
             config(['ntfy-notification-channel.authentication.password' => $settings['ntfy_pass']]);
         }
 
-        $message = new Message();
+        $message  = new Message();
         $message->topic($settings['ntfy_topic']);
         $message->title((string) trans('email.invitation_created_subject'));
         $message->body((string) trans('email.invitation_created_body', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email]));

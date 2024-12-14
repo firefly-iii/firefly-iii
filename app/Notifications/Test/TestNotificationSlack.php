@@ -29,7 +29,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 
-//use Illuminate\Notifications\Slack\SlackMessage;
+// use Illuminate\Notifications\Slack\SlackMessage;
 
 /**
  * Class TestNotification
@@ -51,8 +51,6 @@ class TestNotificationSlack extends Notification
     /**
      * Get the array representation of the notification.
      *
-     * @param OwnerNotifiable $notifiable
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return array
@@ -66,23 +64,18 @@ class TestNotificationSlack extends Notification
     /**
      * Get the Slack representation of the notification.
      *
-     * @param OwnerNotifiable $notifiable
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
      */
     public function toSlack(OwnerNotifiable $notifiable)
     {
         return new SlackMessage()->content((string) trans('email.admin_test_subject'));
-        //return new SlackMessage()->text((string) trans('email.admin_test_subject'))->to($url);
+        // return new SlackMessage()->text((string) trans('email.admin_test_subject'))->to($url);
     }
 
     /**
      * Get the notification's delivery channels.
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
-     * @param OwnerNotifiable $notifiable
      *
      * @return array
      */

@@ -289,6 +289,7 @@ class ExpandedForm
 
         return $html;
     }
+
     /**
      * @throws FireflyException
      */
@@ -299,7 +300,7 @@ class ExpandedForm
         $classes = $this->getHolderClasses($name);
 
         try {
-            $html = view('form.password', compact('classes', 'value','name', 'label', 'options'))->render();
+            $html = view('form.password', compact('classes', 'value', 'name', 'label', 'options'))->render();
         } catch (\Throwable $e) {
             app('log')->debug(sprintf('Could not render passwordWithValue(): %s', $e->getMessage()));
             $html = 'Could not render passwordWithValue.';

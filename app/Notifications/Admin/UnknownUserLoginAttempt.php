@@ -1,4 +1,5 @@
 <?php
+
 /*
  * UnknownUserLoginAttempt.php
  * Copyright (c) 2024 james@firefly-iii.org.
@@ -64,15 +65,14 @@ class UnknownUserLoginAttempt extends Notification
     /**
      * Get the mail representation of the notification.
      *
-     * @return MailMessage
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toMail(OwnerNotifiable $notifiable): MailMessage
     {
         return new MailMessage()
             ->markdown('emails.owner.unknown-user', ['address' => $this->address])
-            ->subject((string) trans('email.unknown_user_subject'));
+            ->subject((string) trans('email.unknown_user_subject'))
+        ;
     }
 
     /**
@@ -90,7 +90,8 @@ class UnknownUserLoginAttempt extends Notification
     public function toPushover(OwnerNotifiable $notifiable): PushoverMessage
     {
         return PushoverMessage::create((string) trans('email.unknown_user_message', ['address' => $this->address]))
-                              ->title((string) trans('email.unknown_user_subject'));
+            ->title((string) trans('email.unknown_user_subject'))
+        ;
     }
 
     public function toNtfy(OwnerNotifiable $notifiable): Message
@@ -108,7 +109,7 @@ class UnknownUserLoginAttempt extends Notification
             config(['ntfy-notification-channel.authentication.password' => $settings['ntfy_pass']]);
         }
 
-        $message = new Message();
+        $message  = new Message();
         $message->topic($settings['ntfy_topic']);
         $message->title((string) trans('email.unknown_user_subject'));
         $message->body((string) trans('email.unknown_user_message', ['address' => $this->address]));

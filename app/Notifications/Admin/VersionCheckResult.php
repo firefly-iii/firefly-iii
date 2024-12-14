@@ -27,7 +27,6 @@ namespace FireflyIII\Notifications\Admin;
 use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\Notifications\ReturnsAvailableChannels;
 use FireflyIII\Notifications\ReturnsSettings;
-use FireflyIII\Support\Notifications\UrlValidator;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
@@ -108,7 +107,8 @@ class VersionCheckResult extends Notification
         Log::debug('Now in toPushover() for VersionCheckResult');
 
         return PushoverMessage::create($this->message)
-                              ->title((string) trans('email.new_version_email_subject'));
+            ->title((string) trans('email.new_version_email_subject'))
+        ;
     }
 
     public function toNtfy(OwnerNotifiable $notifiable): Message
@@ -127,7 +127,7 @@ class VersionCheckResult extends Notification
             config(['ntfy-notification-channel.authentication.password' => $settings['ntfy_pass']]);
         }
 
-        $message = new Message();
+        $message  = new Message();
         $message->topic($settings['ntfy_topic']);
         $message->title((string) trans('email.new_version_email_subject'));
         $message->body($this->message);

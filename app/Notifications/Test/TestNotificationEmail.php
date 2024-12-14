@@ -49,8 +49,6 @@ class TestNotificationEmail extends Notification
     /**
      * Get the array representation of the notification.
      *
-     * @param OwnerNotifiable $notifiable
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return array
@@ -73,9 +71,11 @@ class TestNotificationEmail extends Notification
     public function toMail(OwnerNotifiable $notifiable)
     {
         $address = (string) config('firefly.site_owner');
+
         return (new MailMessage())
             ->markdown('emails.admin-test', ['email' => $address])
-            ->subject((string) trans('email.admin_test_subject'));
+            ->subject((string) trans('email.admin_test_subject'))
+        ;
     }
 
     /**

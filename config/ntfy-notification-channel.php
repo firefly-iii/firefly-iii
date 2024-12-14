@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 // config for Wijourdil/NtfyNotificationChannel
 return [
 
-    'server' =>  'https://ntfy.sh',
-    'topic' => '',
+    'server'         => 'https://ntfy.sh',
+    'topic'          => '',
     'authentication' => [
-        'enabled' => false,
+        'enabled'  => false,
         'username' => '',
         'password' => '',
     ],

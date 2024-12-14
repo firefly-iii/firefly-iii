@@ -1,4 +1,5 @@
 <?php
+
 /*
  * ReturnsAvailableChannels.php
  * Copyright (c) 2024 james@firefly-iii.org.
@@ -46,8 +47,8 @@ class ReturnsAvailableChannels
     private static function returnOwnerChannels(): array
     {
 
-        $channels = ['mail'];
-        $slackUrl = app('fireflyconfig')->getEncrypted('slack_webhook_url', '')->data;
+        $channels          = ['mail'];
+        $slackUrl          = app('fireflyconfig')->getEncrypted('slack_webhook_url', '')->data;
         if (UrlValidator::isValidWebhookURL($slackUrl)) {
             $channels[] = 'slack';
         }
@@ -73,8 +74,8 @@ class ReturnsAvailableChannels
         }
 
         Log::debug(sprintf('Final channel set in ReturnsAvailableChannels: %s ', implode(', ', $channels)));
+
         // only the owner can get notifications over
         return $channels;
     }
-
 }

@@ -51,7 +51,7 @@ class UserRegistration extends Notification
      */
     public function __construct(OwnerNotifiable $owner, User $user)
     {
-        $this->user = $user;
+        $this->user  = $user;
         $this->owner = $owner;
     }
 
@@ -79,7 +79,8 @@ class UserRegistration extends Notification
     {
         return (new MailMessage())
             ->markdown('emails.registered-admin', ['email' => $this->user->email, 'id' => $this->user->id])
-            ->subject((string) trans('email.registered_subject_admin'));
+            ->subject((string) trans('email.registered_subject_admin'))
+        ;
     }
 
     /**
@@ -101,7 +102,8 @@ class UserRegistration extends Notification
         Log::debug('Now in toPushover() for UserRegistration');
 
         return PushoverMessage::create((string) trans('email.admin_new_user_registered', ['email' => $this->user->email, 'invitee' => $this->user->email]))
-                              ->title((string) trans('email.registered_subject_admin'));
+            ->title((string) trans('email.registered_subject_admin'))
+        ;
     }
 
     public function toNtfy(OwnerNotifiable $notifiable): Message
@@ -120,10 +122,10 @@ class UserRegistration extends Notification
             config(['ntfy-notification-channel.authentication.password' => $settings['ntfy_pass']]);
         }
 
-        $message = new Message();
+        $message  = new Message();
         $message->topic($settings['ntfy_topic']);
         $message->title((string) trans('email.registered_subject_admin'));
-        $message->body((string) trans('email.admin_new_user_registered', ['email' => $this->user->email, 'invitee' => $this->user->email]) );
+        $message->body((string) trans('email.admin_new_user_registered', ['email' => $this->user->email, 'invitee' => $this->user->email]));
 
         return $message;
     }

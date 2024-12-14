@@ -1,4 +1,5 @@
 <?php
+
 /*
  * UnknownUserAttemptedLogin.php
  * Copyright (c) 2024 james@firefly-iii.org.
@@ -24,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Events\Security;
 
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 
 class UnknownUserAttemptedLogin
 {

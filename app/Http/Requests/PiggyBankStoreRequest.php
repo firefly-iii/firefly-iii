@@ -59,7 +59,7 @@ class PiggyBankStoreRequest extends FormRequest
             $accounts = [];
         }
         foreach ($accounts as $item) {
-            $data['accounts'][] = ['account_id' => (int) ($item)];
+            $data['accounts'][] = ['account_id' => (int) $item];
         }
 
         return $data;
@@ -105,7 +105,7 @@ class PiggyBankStoreRequest extends FormRequest
                             if ($accountCurrency->id !== $currency->id && 'true' !== $isMultiCurrency) {
                                 $validator->errors()->add('accounts', trans('validation.invalid_account_currency'));
                             }
-                            $type = $account->accountType->type;
+                            $type            = $account->accountType->type;
                             if (!in_array($type, $types, true)) {
                                 $validator->errors()->add('accounts', trans('validation.invalid_account_type'));
                             }
@@ -127,6 +127,7 @@ class PiggyBankStoreRequest extends FormRequest
         if (null === $currency) {
             return app('amount')->getDefaultCurrency();
         }
+
         return $currency;
     }
 }

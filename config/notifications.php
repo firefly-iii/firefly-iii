@@ -1,4 +1,5 @@
 <?php
+
 /*
  * notifications.php
  * Copyright (c) 2024 james@firefly-iii.org.
@@ -20,14 +21,15 @@
  */
 
 declare(strict_types=1);
+
 return [
     'channels'      => [
-        'email'      => ['enabled' => true, 'ui_configurable' => 0,],
-        'slack'      => ['enabled' => true, 'ui_configurable' => 1,],
-        'ntfy'       => ['enabled' => true, 'ui_configurable' => 1,],
-        'pushover'   => ['enabled' => true, 'ui_configurable' => 1,],
-        'gotify'     => ['enabled' => false, 'ui_configurable' => 0,],
-        'pushbullet' => ['enabled' => false, 'ui_configurable' => 0,],
+        'email'      => ['enabled' => true, 'ui_configurable' => 0],
+        'slack'      => ['enabled' => true, 'ui_configurable' => 1],
+        'ntfy'       => ['enabled' => true, 'ui_configurable' => 1],
+        'pushover'   => ['enabled' => true, 'ui_configurable' => 1],
+        'gotify'     => ['enabled' => false, 'ui_configurable' => 0],
+        'pushbullet' => ['enabled' => false, 'ui_configurable' => 0],
     ],
     'notifications' => [
         'user'  => [
@@ -49,13 +51,13 @@ return [
             'new_backup_codes'     => ['enabled' => true, 'configurable' => false],
         ],
         'owner' => [
-            //'invitation_created' => ['enabled' => true],
+            // 'invitation_created' => ['enabled' => true],
             // 'some_notification'  => ['enabled' => true],
-            'admin_new_reg'   => ['enabled' => true],
-            'user_new_reg'    => ['enabled' => true],
-            'new_version'     => ['enabled' => true],
-            'invite_created'  => ['enabled' => true],
-            'invite_redeemed' => ['enabled' => true],
+            'admin_new_reg'        => ['enabled' => true],
+            'user_new_reg'         => ['enabled' => true],
+            'new_version'          => ['enabled' => true],
+            'invite_created'       => ['enabled' => true],
+            'invite_redeemed'      => ['enabled' => true],
             'unknown_user_attempt' => ['enabled' => true],
         ],
     ],

@@ -53,10 +53,11 @@ class UpdateRequest extends FormRequest
             'currency_code' => ['currency_code', 'convertString'],
             'notes'         => ['notes', 'stringWithNewlines'],
         ];
-        if(false === $this->has('notes')) {
+        if (false === $this->has('notes')) {
             // ignore notes, not submitted.
             unset($fields['notes']);
         }
+
         return $this->getAllData($fields);
     }
 

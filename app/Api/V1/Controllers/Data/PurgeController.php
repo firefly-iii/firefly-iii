@@ -53,7 +53,7 @@ class PurgeController extends Controller
     public function purge(): JsonResponse
     {
         /** @var User $user */
-        $user = auth()->user();
+        $user       = auth()->user();
 
         // some manual code, too lazy to call all repositories.
 
@@ -67,14 +67,14 @@ class PurgeController extends Controller
         $repository = app(PiggyBankRepositoryInterface::class);
         $repository->setUser($user);
         $repository->purgeAll();
-//        $set  = PiggyBank::leftJoin('accounts', 'accounts.id', 'piggy_banks.account_id')
-//            ->where('accounts.user_id', $user->id)->onlyTrashed()->get(['piggy_banks.*'])
-//        ;
-//
-//        /** @var PiggyBank $piggy */
-//        foreach ($set as $piggy) {
-//            $piggy->forceDelete();
-//        }
+        //        $set  = PiggyBank::leftJoin('accounts', 'accounts.id', 'piggy_banks.account_id')
+        //            ->where('accounts.user_id', $user->id)->onlyTrashed()->get(['piggy_banks.*'])
+        //        ;
+        //
+        //        /** @var PiggyBank $piggy */
+        //        foreach ($set as $piggy) {
+        //            $piggy->forceDelete();
+        //        }
 
         // rule group
         RuleGroup::whereUserId($user->id)->onlyTrashed()->forceDelete();

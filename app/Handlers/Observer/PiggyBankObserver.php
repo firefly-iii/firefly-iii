@@ -36,14 +36,14 @@ class PiggyBankObserver
     {
         app('log')->debug('Observe "created" of a piggy bank. DO NOTHING.');
 
-//        $repetition                = new PiggyBankRepetition();
-//        $repetition->piggyBank()->associate($piggyBank);
-//        $repetition->start_date     = $piggyBank->start_date;
-//        $repetition->start_date_tz  = $piggyBank->start_date->format('e');
-//        $repetition->target_date    = $piggyBank->target_date;
-//        $repetition->target_date_tz = $piggyBank->target_date?->format('e');
-//        $repetition->current_amount = '0';
-//        $repetition->save();
+        //        $repetition                = new PiggyBankRepetition();
+        //        $repetition->piggyBank()->associate($piggyBank);
+        //        $repetition->start_date     = $piggyBank->start_date;
+        //        $repetition->start_date_tz  = $piggyBank->start_date->format('e');
+        //        $repetition->target_date    = $piggyBank->target_date;
+        //        $repetition->target_date_tz = $piggyBank->target_date?->format('e');
+        //        $repetition->current_amount = '0';
+        //        $repetition->save();
     }
 
     /**
