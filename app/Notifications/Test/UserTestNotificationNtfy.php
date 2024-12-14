@@ -49,13 +49,7 @@ class UserTestNotificationNtfy extends Notification
     }
 
     /**
-     * Get the array representation of the notification.
-     *
-     * @param User $notifiable
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
-     * @return array
      */
     public function toArray(User $notifiable)
     {
@@ -63,10 +57,13 @@ class UserTestNotificationNtfy extends Notification
         ];
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function toNtfy(User $user): Message
     {
         $settings = ReturnsSettings::getSettings('ntfy', 'user', $user);
-        $message = new Message();
+        $message  = new Message();
         $message->topic($settings['ntfy_topic']);
         $message->title((string) trans('email.admin_test_subject'));
         $message->body((string) trans('email.admin_test_message', ['channel' => 'ntfy']));

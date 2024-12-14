@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Notifications\User;
 
+use FireflyIII\Notifications\ReturnsAvailableChannels;
+use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
@@ -38,25 +40,30 @@ class UserRegistration extends Notification
 
     public function __construct() {}
 
-
-    public function toArray($notifiable)
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toArray(User $notifiable)
     {
         return [
         ];
     }
 
-
-    public function toMail($notifiable)
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toMail(User $notifiable)
     {
         return (new MailMessage())
             ->markdown('emails.registered', ['address' => route('index')])
-            ->subject((string)trans('email.registered_subject'))
-        ;
+            ->subject((string) trans('email.registered_subject'));
     }
 
-
-    public function via($notifiable)
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function via(User $notifiable)
     {
-        return ['mail'];
+        return ReturnsAvailableChannels::returnChannels('user', $notifiable);
     }
 }

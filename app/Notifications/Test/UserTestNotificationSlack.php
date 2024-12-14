@@ -40,18 +40,16 @@ class UserTestNotificationSlack extends Notification
 
     private OwnerNotifiable $owner;
 
-
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function __construct(OwnerNotifiable $owner)
     {
         $this->owner = $owner;
     }
 
     /**
-     * Get the array representation of the notification.
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
-     * @return array
      */
     public function toArray(OwnerNotifiable $notifiable)
     {
@@ -60,8 +58,6 @@ class UserTestNotificationSlack extends Notification
     }
 
     /**
-     * Get the Slack representation of the notification.
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toSlack(OwnerNotifiable $notifiable)
@@ -71,11 +67,7 @@ class UserTestNotificationSlack extends Notification
     }
 
     /**
-     * Get the notification's delivery channels.
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
-     * @return array
      */
     public function via(OwnerNotifiable $notifiable)
     {

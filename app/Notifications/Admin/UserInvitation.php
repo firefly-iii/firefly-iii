@@ -69,30 +69,9 @@ class UserInvitation extends Notification
     {
         return (new MailMessage())
             ->markdown('emails.invitation-created', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email])
-            ->subject((string) trans('email.invitation_created_subject'))
-        ;
+            ->subject((string) trans('email.invitation_created_subject'));
     }
 
-    /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function toSlack(OwnerNotifiable $notifiable)
-    {
-        return (new SlackMessage())->content(
-            (string) trans('email.invitation_created_body', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email])
-        );
-    }
-    /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function toPushover(OwnerNotifiable $notifiable): PushoverMessage
-    {
-        Log::debug('Now in toPushover() for UserInvitation');
-
-        return PushoverMessage::create((string) trans('email.invitation_created_body', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email]))
-            ->title((string) trans('email.invitation_created_subject'))
-        ;
-    }
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -106,6 +85,27 @@ class UserInvitation extends Notification
         $message->body((string) trans('email.invitation_created_body', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email]));
 
         return $message;
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toPushover(OwnerNotifiable $notifiable): PushoverMessage
+    {
+        Log::debug('Now in toPushover() for UserInvitation');
+
+        return PushoverMessage::create((string) trans('email.invitation_created_body', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email]))
+                              ->title((string) trans('email.invitation_created_subject'));
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toSlack(OwnerNotifiable $notifiable)
+    {
+        return (new SlackMessage())->content(
+            (string) trans('email.invitation_created_body', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email])
+        );
     }
 
     /**

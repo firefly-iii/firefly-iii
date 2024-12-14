@@ -37,6 +37,7 @@ use Ntfy\Message;
 class UnknownUserLoginAttempt extends Notification
 {
     use Queueable;
+
     private string $address;
 
     public function __construct(string $address)
@@ -60,28 +61,7 @@ class UnknownUserLoginAttempt extends Notification
     {
         return new MailMessage()
             ->markdown('emails.owner.unknown-user', ['address' => $this->address])
-            ->subject((string) trans('email.unknown_user_subject'))
-        ;
-    }
-
-    /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function toSlack(OwnerNotifiable $notifiable): SlackMessage
-    {
-        return new SlackMessage()->content(
-            (string) trans('email.unknown_user_body', ['address' => $this->address])
-        );
-    }
-
-    /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function toPushover(OwnerNotifiable $notifiable): PushoverMessage
-    {
-        return PushoverMessage::create((string) trans('email.unknown_user_message', ['address' => $this->address]))
-            ->title((string) trans('email.unknown_user_subject'))
-        ;
+            ->subject((string) trans('email.unknown_user_subject'));
     }
 
     /**
@@ -96,6 +76,25 @@ class UnknownUserLoginAttempt extends Notification
         $message->body((string) trans('email.unknown_user_message', ['address' => $this->address]));
 
         return $message;
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toPushover(OwnerNotifiable $notifiable): PushoverMessage
+    {
+        return PushoverMessage::create((string) trans('email.unknown_user_message', ['address' => $this->address]))
+                              ->title((string) trans('email.unknown_user_subject'));
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toSlack(OwnerNotifiable $notifiable): SlackMessage
+    {
+        return new SlackMessage()->content(
+            (string) trans('email.unknown_user_body', ['address' => $this->address])
+        );
     }
 
     /**

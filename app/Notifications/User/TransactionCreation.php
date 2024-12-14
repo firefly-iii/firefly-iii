@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Notifications\User;
 
+use FireflyIII\Notifications\ReturnsAvailableChannels;
+use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
@@ -43,25 +45,33 @@ class TransactionCreation extends Notification
         $this->collection = $collection;
     }
 
-
-    public function toArray($notifiable)
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toArray(User $notifiable)
     {
         return [
         ];
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
 
-    public function toMail($notifiable)
+    public function toMail(User $notifiable)
     {
         return (new MailMessage())
             ->markdown('emails.report-new-journals', ['transformed' => $this->collection])
-            ->subject(trans_choice('email.new_journals_subject', count($this->collection)))
-        ;
+            ->subject(trans_choice('email.new_journals_subject', count($this->collection)));
     }
 
 
-    public function via($notifiable)
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function via(User $notifiable)
     {
-        return ['mail'];
+        // todo only over email?
+        return ReturnsAvailableChannels::returnChannels('user', $notifiable);
     }
 }

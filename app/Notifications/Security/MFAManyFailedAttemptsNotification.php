@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Notifications\Security;
 
-use FireflyIII\Support\Notifications\UrlValidator;
+use FireflyIII\Notifications\ReturnsAvailableChannels;
 use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -35,9 +35,8 @@ class MFAManyFailedAttemptsNotification extends Notification
 {
     use Queueable;
 
-    private User   $user;
-    private int $count;
-
+    private int  $count;
+    private User $user;
 
     public function __construct(User $user, int $count)
     {
@@ -46,41 +45,38 @@ class MFAManyFailedAttemptsNotification extends Notification
     }
 
 
-    public function toArray($notifiable)
+    public function toArray(User $notifiable)
     {
         return [
         ];
     }
 
-
-    public function toMail($notifiable)
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toMail(User $notifiable)
     {
-        $subject = (string)trans('email.mfa_many_failed_subject', ['count' => $this->count]);
+        $subject = (string) trans('email.mfa_many_failed_subject', ['count' => $this->count]);
 
         return (new MailMessage())->markdown('emails.security.many-failed-attempts', ['user' => $this->user, 'count' => $this->count])->subject($subject);
     }
 
-
-    public function toSlack($notifiable)
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toSlack(User $notifiable)
     {
-        $message = (string)trans('email.mfa_many_failed_slack', ['email' => $this->user->email, 'count' => $this->count]);
+        $message = (string) trans('email.mfa_many_failed_slack', ['email' => $this->user->email, 'count' => $this->count]);
 
         return (new SlackMessage())->content($message);
     }
 
 
-    public function via($notifiable)
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function via(User $notifiable)
     {
-        /** @var null|User $user */
-        $user     = auth()->user();
-        $slackUrl = null === $user ? '' : app('preferences')->getForUser(auth()->user(), 'slack_webhook_url', '')->data;
-        if (is_array($slackUrl)) {
-            $slackUrl = '';
-        }
-        if (UrlValidator::isValidWebhookURL((string)$slackUrl)) {
-            return ['mail', 'slack'];
-        }
-
-        return ['mail'];
+        return ReturnsAvailableChannels::returnChannels('user', $notifiable);
     }
 }

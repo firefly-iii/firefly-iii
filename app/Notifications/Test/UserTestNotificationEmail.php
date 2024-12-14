@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Notifications\Test;
 
-use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -46,11 +45,7 @@ class UserTestNotificationEmail extends Notification
     }
 
     /**
-     * Get the array representation of the notification.
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
-     * @return array
      */
     public function toArray(User $notifiable)
     {
@@ -58,33 +53,18 @@ class UserTestNotificationEmail extends Notification
         ];
     }
 
-    /**
-     * Get the mail representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
-     * @return MailMessage
-     */
+
     public function toMail(User $notifiable)
     {
         $address = (string) $notifiable->email;
 
         return (new MailMessage())
             ->markdown('emails.admin-test', ['email' => $address])
-            ->subject((string) trans('email.admin_test_subject'))
-        ;
+            ->subject((string) trans('email.admin_test_subject'));
     }
 
     /**
-     * Get the notification's delivery channels.
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
-     * @param User $notifiable
-     *
-     * @return array
      */
     public function via(User $notifiable)
     {

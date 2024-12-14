@@ -49,13 +49,7 @@ class OwnerTestNotificationNtfy extends Notification
     }
 
     /**
-     * Get the array representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
-     * @return array
      */
     public function toArray($notifiable)
     {
@@ -63,6 +57,9 @@ class OwnerTestNotificationNtfy extends Notification
         ];
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function toNtfy(OwnerNotifiable $notifiable): Message
     {
         $settings = ReturnsSettings::getSettings('ntfy', 'owner', null);

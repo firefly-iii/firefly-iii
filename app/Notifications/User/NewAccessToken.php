@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Notifications\User;
 
-use FireflyIII\Support\Notifications\UrlValidator;
+use FireflyIII\Notifications\ReturnsAvailableChannels;
 use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -42,40 +42,35 @@ class NewAccessToken extends Notification
     public function __construct() {}
 
 
-    public function toArray($notifiable)
+    public function toArray(User $notifiable)
     {
         return [
         ];
     }
 
-
-    public function toMail($notifiable)
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toMail(User $notifiable)
     {
         return (new MailMessage())
             ->markdown('emails.token-created')
-            ->subject((string)trans('email.access_token_created_subject'))
-        ;
+            ->subject((string) trans('email.access_token_created_subject'));
     }
 
-
-    public function toSlack($notifiable)
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toSlack(User $notifiable)
     {
-        return (new SlackMessage())->content((string)trans('email.access_token_created_body'));
+        return (new SlackMessage())->content((string) trans('email.access_token_created_body'));
     }
 
-
-    public function via($notifiable)
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function via(User $notifiable)
     {
-        /** @var null|User $user */
-        $user     = auth()->user();
-        $slackUrl = null === $user ? '' : app('preferences')->getForUser(auth()->user(), 'slack_webhook_url', '')->data;
-        if (is_array($slackUrl)) {
-            $slackUrl = '';
-        }
-        if (UrlValidator::isValidWebhookURL((string)$slackUrl)) {
-            return ['mail', 'slack'];
-        }
-
-        return ['mail'];
+        return ReturnsAvailableChannels::returnChannels('user', $notifiable);
     }
 }

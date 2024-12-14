@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Notifications\User;
 
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Support\Notifications\UrlValidator;
+use FireflyIII\Notifications\ReturnsAvailableChannels;
 use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -48,16 +48,18 @@ class UserLogin extends Notification
     }
 
 
-    public function toArray($notifiable)
+    public function toArray(User $notifiable)
     {
         return [
         ];
     }
 
-
-    public function toMail($notifiable)
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toMail(User $notifiable)
     {
-        $time = now(config('app.timezone'))->isoFormat((string)trans('config.date_time_js'));
+        $time = now(config('app.timezone'))->isoFormat((string) trans('config.date_time_js'));
         $host = '';
 
         try {
@@ -72,12 +74,13 @@ class UserLogin extends Notification
 
         return (new MailMessage())
             ->markdown('emails.new-ip', ['time' => $time, 'ipAddress' => $this->ip, 'host' => $host])
-            ->subject((string)trans('email.login_from_new_ip'))
-        ;
+            ->subject((string) trans('email.login_from_new_ip'));
     }
 
-
-    public function toSlack($notifiable)
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toSlack(User $notifiable)
     {
         $host = '';
 
@@ -91,22 +94,14 @@ class UserLogin extends Notification
             $host = $hostName;
         }
 
-        return (new SlackMessage())->content((string)trans('email.slack_login_from_new_ip', ['host' => $host, 'ip' => $this->ip]));
+        return (new SlackMessage())->content((string) trans('email.slack_login_from_new_ip', ['host' => $host, 'ip' => $this->ip]));
     }
 
-
-    public function via($notifiable)
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function via(User $notifiable)
     {
-        /** @var null|User $user */
-        $user     = auth()->user();
-        $slackUrl = null === $user ? '' : app('preferences')->getForUser(auth()->user(), 'slack_webhook_url', '')->data;
-        if (is_array($slackUrl)) {
-            $slackUrl = '';
-        }
-        if (UrlValidator::isValidWebhookURL((string)$slackUrl)) {
-            return ['mail', 'slack'];
-        }
-
-        return ['mail'];
+        return ReturnsAvailableChannels::returnChannels('user', $notifiable);
     }
 }

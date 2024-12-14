@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Notifications\Test;
 
-use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
@@ -50,11 +49,7 @@ class UserTestNotificationPushover extends Notification
     }
 
     /**
-     * Get the array representation of the notification.
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
-     * @return array
      */
     public function toArray(User $notifiable)
     {
@@ -62,13 +57,15 @@ class UserTestNotificationPushover extends Notification
         ];
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function toPushover(User $notifiable): PushoverMessage
     {
         Log::debug('Now in (user) toPushover()');
 
-        return PushoverMessage::create((string)trans('email.admin_test_message', ['channel' => 'Pushover']))
-            ->title((string)trans('email.admin_test_subject'))
-        ;
+        return PushoverMessage::create((string) trans('email.admin_test_message', ['channel' => 'Pushover']))
+                              ->title((string) trans('email.admin_test_subject'));
     }
 
     /**

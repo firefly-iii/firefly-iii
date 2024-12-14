@@ -66,32 +66,9 @@ class VersionCheckResult extends Notification
     {
         return (new MailMessage())
             ->markdown('emails.new-version', ['message' => $this->message])
-            ->subject((string)trans('email.new_version_email_subject'))
-        ;
+            ->subject((string) trans('email.new_version_email_subject'));
     }
 
-    /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function toSlack(OwnerNotifiable $notifiable)
-    {
-        return (new SlackMessage())->content($this->message)
-            ->attachment(static function ($attachment): void {
-                $attachment->title('Firefly III @ GitHub', 'https://github.com/firefly-iii/firefly-iii/releases');
-            })
-        ;
-    }
-    /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function toPushover(OwnerNotifiable $notifiable): PushoverMessage
-    {
-        Log::debug('Now in toPushover() for VersionCheckResult');
-
-        return PushoverMessage::create($this->message)
-            ->title((string) trans('email.new_version_email_subject'))
-        ;
-    }
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -105,6 +82,28 @@ class VersionCheckResult extends Notification
         $message->body($this->message);
 
         return $message;
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toPushover(OwnerNotifiable $notifiable): PushoverMessage
+    {
+        Log::debug('Now in toPushover() for VersionCheckResult');
+
+        return PushoverMessage::create($this->message)
+                              ->title((string) trans('email.new_version_email_subject'));
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toSlack(OwnerNotifiable $notifiable)
+    {
+        return (new SlackMessage())->content($this->message)
+                                   ->attachment(static function ($attachment): void {
+                                       $attachment->title('Firefly III @ GitHub', 'https://github.com/firefly-iii/firefly-iii/releases');
+                                   });
     }
 
     /**

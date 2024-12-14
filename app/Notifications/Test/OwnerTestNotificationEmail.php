@@ -45,11 +45,7 @@ class OwnerTestNotificationEmail extends Notification
     }
 
     /**
-     * Get the array representation of the notification.
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
-     * @return array
      */
     public function toArray(OwnerNotifiable $notifiable)
     {
@@ -58,13 +54,7 @@ class OwnerTestNotificationEmail extends Notification
     }
 
     /**
-     * Get the mail representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
-     * @return MailMessage
      */
     public function toMail(OwnerNotifiable $notifiable)
     {
@@ -72,18 +62,11 @@ class OwnerTestNotificationEmail extends Notification
 
         return (new MailMessage())
             ->markdown('emails.admin-test', ['email' => $address])
-            ->subject((string) trans('email.admin_test_subject'))
-        ;
+            ->subject((string) trans('email.admin_test_subject'));
     }
 
     /**
-     * Get the notification's delivery channels.
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
-     * @param mixed $notifiable
-     *
-     * @return array
      */
     public function via(OwnerNotifiable $notifiable)
     {

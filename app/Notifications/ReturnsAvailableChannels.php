@@ -39,7 +39,7 @@ class ReturnsAvailableChannels
         if ('owner' === $type) {
             return self::returnOwnerChannels();
         }
-        if('user' === $type && null !== $user) {
+        if ('user' === $type && null !== $user) {
             return self::returnUserChannels($user);
         }
 
@@ -50,8 +50,8 @@ class ReturnsAvailableChannels
     private static function returnOwnerChannels(): array
     {
 
-        $channels          = ['mail'];
-        $slackUrl          = app('fireflyconfig')->getEncrypted('slack_webhook_url', '')->data;
+        $channels = ['mail'];
+        $slackUrl = app('fireflyconfig')->getEncrypted('slack_webhook_url', '')->data;
         if (UrlValidator::isValidWebhookURL($slackUrl)) {
             $channels[] = 'slack';
         }
@@ -81,19 +81,20 @@ class ReturnsAvailableChannels
         return $channels;
     }
 
-    private static function returnUserChannels(User $user): array {
-        $channels          = ['mail'];
-        $slackUrl          = app('preferences')->getEncryptedForUser($user, 'slack_webhook_url', '')->data;
+    private static function returnUserChannels(User $user): array
+    {
+        $channels = ['mail'];
+        $slackUrl = app('preferences')->getEncryptedForUser($user, 'slack_webhook_url', '')->data;
         if (UrlValidator::isValidWebhookURL($slackUrl)) {
             $channels[] = 'slack';
         }
 
         // validate presence of of Ntfy settings.
-        if ('' !== (string) app('preferences')->getEncryptedForUser($user,'ntfy_topic', '')->data) {
+        if ('' !== (string) app('preferences')->getEncryptedForUser($user, 'ntfy_topic', '')->data) {
             Log::debug('Enabled ntfy.');
             $channels[] = NtfyChannel::class;
         }
-        if ('' === (string) app('preferences')->getEncryptedForUser($user,'ntfy_topic', '')->data) {
+        if ('' === (string) app('preferences')->getEncryptedForUser($user, 'ntfy_topic', '')->data) {
             Log::warning('No topic name for Ntfy, channel is disabled.');
         }
 

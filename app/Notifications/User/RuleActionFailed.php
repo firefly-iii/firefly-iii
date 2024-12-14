@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Notifications\User;
 
-use FireflyIII\Support\Notifications\UrlValidator;
+use FireflyIII\Notifications\ReturnsAvailableChannels;
 use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\SlackMessage;
@@ -47,22 +47,26 @@ class RuleActionFailed extends Notification
     public function __construct(array $params)
     {
         [$mainMessage, $groupTitle, $groupLink, $ruleTitle, $ruleLink] = $params;
-        $this->message                                                 = $mainMessage;
-        $this->groupTitle                                              = $groupTitle;
-        $this->groupLink                                               = $groupLink;
-        $this->ruleTitle                                               = $ruleTitle;
-        $this->ruleLink                                                = $ruleLink;
+        $this->message    = $mainMessage;
+        $this->groupTitle = $groupTitle;
+        $this->groupLink  = $groupLink;
+        $this->ruleTitle  = $ruleTitle;
+        $this->ruleLink   = $ruleLink;
     }
 
-
-    public function toArray($notifiable)
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toArray(User $notifiable)
     {
         return [
         ];
     }
 
-
-    public function toSlack($notifiable)
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toSlack(User $notifiable)
     {
         $groupTitle = $this->groupTitle;
         $groupLink  = $this->groupLink;
@@ -70,28 +74,19 @@ class RuleActionFailed extends Notification
         $ruleLink   = $this->ruleLink;
 
         return (new SlackMessage())->content($this->message)->attachment(static function ($attachment) use ($groupTitle, $groupLink): void {
-            $attachment->title((string)trans('rules.inspect_transaction', ['title' => $groupTitle]), $groupLink);
+            $attachment->title((string) trans('rules.inspect_transaction', ['title' => $groupTitle]), $groupLink);
         })->attachment(static function ($attachment) use ($ruleTitle, $ruleLink): void {
-            $attachment->title((string)trans('rules.inspect_rule', ['title' => $ruleTitle]), $ruleLink);
+            $attachment->title((string) trans('rules.inspect_rule', ['title' => $ruleTitle]), $ruleLink);
         });
     }
 
 
-    public function via($notifiable)
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function via(User $notifiable)
     {
-        /** @var null|User $user */
-        $user     = auth()->user();
-        $slackUrl = null === $user ? '' : app('preferences')->getForUser(auth()->user(), 'slack_webhook_url', '')->data;
-        if (is_array($slackUrl)) {
-            $slackUrl = '';
-        }
-        if (UrlValidator::isValidWebhookURL((string)$slackUrl)) {
-            app('log')->debug('Will send ruleActionFailed through Slack or Discord!');
-
-            return ['slack'];
-        }
-        app('log')->debug('Will NOT send ruleActionFailed through Slack or Discord');
-
-        return [];
+        // todo disable mail channel
+        return ReturnsAvailableChannels::returnChannels('user', $notifiable);
     }
 }

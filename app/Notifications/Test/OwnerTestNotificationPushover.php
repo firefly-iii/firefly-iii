@@ -49,11 +49,7 @@ class OwnerTestNotificationPushover extends Notification
     }
 
     /**
-     * Get the array representation of the notification.
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
-     * @return array
      */
     public function toArray(OwnerNotifiable $notifiable)
     {
@@ -61,13 +57,15 @@ class OwnerTestNotificationPushover extends Notification
         ];
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function toPushover(OwnerNotifiable $notifiable): PushoverMessage
     {
         Log::debug('Now in toPushover()');
 
-        return PushoverMessage::create((string)trans('email.admin_test_message', ['channel' => 'Pushover']))
-            ->title((string)trans('email.admin_test_subject'))
-        ;
+        return PushoverMessage::create((string) trans('email.admin_test_message', ['channel' => 'Pushover']))
+                              ->title((string) trans('email.admin_test_subject'));
     }
 
     /**
