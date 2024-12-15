@@ -179,10 +179,10 @@ jobs:
           if [[ "$version" == branch* ]]; then
             [[ -z $(git status --untracked-files=normal --porcelain) ]] && echo "this branch is clean, no need to push..." && exit 0;
             # branch builds overrule develop
-            releaseName=develop-$(date +'%Y%m%d')
+            releaseName=$version-$(date +'%Y%m%d')
             originalName=$releaseName
-            zipName=FireflyIII-develop.zip
-            tarName=FireflyIII-develop.tar.gz
+            zipName=FireflyIII-$version.zip
+            tarName=FireflyIII-$version.tar.gz
           fi
 
           # in both cases, if the release or tag already exists, add ".1" until it no longer exists.
@@ -226,12 +226,13 @@ jobs:
           gpg --armor --detach-sign $zipName
           gpg --armor --detach-sign $tarName
 
-          # create a development (nightly) release:
-          if [[ "develop" == "$version" ]] || [[ "$version" == branch* ]]; then
+          # describe the development release.
+          if [[ "develop" == "$version" ]]; then
             echo 'Develop release.'
-            # add text to output.txt (instructions)
             rm output.txt
-            echo "Bi-weekly development release of Firefly III with the latest fixes, translations and features. Docker users can find this release under the \`develop\` tag." >> output.txt
+            touch output.txt
+            sudo chown -R runner:docker output.txt
+            echo "Weekly development release of Firefly III with the latest fixes, translations and features. Docker users can find this release under the \`develop\` tag." >> output.txt
             echo "" >> output.txt
             echo "This release was created on **$(date +'%Y-%m-%d')** and may contain unexpected bugs. Data loss is rare but is not impossible. The releases are signed, and you can verify them using the [Firefly III releases PGP key](https://docs.firefly-iii.org/explanation/more-information/signatures/)." >> output.txt
             echo "" >> output.txt
@@ -239,10 +240,41 @@ jobs:
             echo "* Or read the upgrade instructions for [Docker](https://docs.firefly-iii.org/how-to/firefly-iii/upgrade/docker/), [Kubernetes](https://docs.firefly-iii.org/how-to/firefly-iii/upgrade/kubernetes/) or [self-managed servers](https://docs.firefly-iii.org/how-to/firefly-iii/upgrade/self-managed/)" >> output.txt
             echo "" >> output.txt
             echo ":warning: Please be careful with this pre-release, as it may not work as expected." >> output.txt
+          fi
+          # describe a branch release
+          if [[ "$version" == branch* ]]; then
+            echo 'Branch release.'
+            rm output.txt
+            touch output.txt
+            sudo chown -R runner:docker output.txt
+            echo "Irregular BRANCH release of Firefly III. This release contains specific features or changes. Docker users can find this release under the \`$version\` tag." >> output.txt
+            echo "" >> output.txt
+            echo "This release was created on **$(date +'%Y-%m-%d')** and may contain unexpected bugs. Data loss is rare but is not impossible. The releases are signed, and you can verify them using the [Firefly III releases PGP key](https://docs.firefly-iii.org/explanation/more-information/signatures/)." >> output.txt
+            echo "" >> output.txt
+            echo "* Please read the installation instructions for [Docker](https://docs.firefly-iii.org/how-to/firefly-iii/installation/docker/), [Portainer](https://docs.firefly-iii.org/how-to/firefly-iii/installation/portainer/), [Kubernetes](https://docs.firefly-iii.org/how-to/firefly-iii/installation/kubernetes/) or [self-managed servers](https://docs.firefly-iii.org/how-to/firefly-iii/installation/self-managed/)" >> output.txt
+            echo "* Or read the upgrade instructions for [Docker](https://docs.firefly-iii.org/how-to/firefly-iii/upgrade/docker/), [Kubernetes](https://docs.firefly-iii.org/how-to/firefly-iii/upgrade/kubernetes/) or [self-managed servers](https://docs.firefly-iii.org/how-to/firefly-iii/upgrade/self-managed/)" >> output.txt
+            echo "" >> output.txt
+            echo ":warning: Please be careful with this branch pre-release, as it may not work as expected." >> output.txt
+          fi
+          # describe the main release
+          if [[ "develop" != "$version" ]] && [[ "$version" != branch* ]]; then
+            sudo chown -R runner:docker output.txt
+            echo 'Main release.'
+            echo '' >> output.txt
+            echo '### Instructions' >> output.txt
+            echo '' >> output.txt
+            echo "* Installation instructions for [Docker](https://docs.firefly-iii.org/how-to/firefly-iii/installation/docker/), [Portainer](https://docs.firefly-iii.org/how-to/firefly-iii/installation/portainer/), [Kubernetes](https://docs.firefly-iii.org/how-to/firefly-iii/installation/kubernetes/) or [self-managed servers](https://docs.firefly-iii.org/how-to/firefly-iii/installation/self-managed/)" >> output.txt
+            echo "* Or read the upgrade instructions for [Docker](https://docs.firefly-iii.org/how-to/firefly-iii/upgrade/docker/), [Kubernetes](https://docs.firefly-iii.org/how-to/firefly-iii/upgrade/kubernetes/) or [self-managed servers](https://docs.firefly-iii.org/how-to/firefly-iii/upgrade/self-managed/)" >> output.txt
+            echo "* The releases are signed, and you can verify them using the [Firefly III releases PGP key](https://docs.firefly-iii.org/explanation/more-information/signatures/)." >> output.txt
+
+          fi
+
+          # create a development (nightly) release:
+          if [[ "develop" == "$version" ]] || [[ "$version" == branch* ]]; then
 
             # create the release:
-            echo "Create nightly release."
-            git tag -a $releaseName -m "Nightly development release '$version' on $(date +'%Y-%m-%d')"
+            echo "Create nightly or branch release."
+            git tag -a $releaseName -m "Development release '$version' on $(date +'%Y-%m-%d')"
             git push origin $releaseName
             gh release create $releaseName -p --verify-tag \
               -t "Development release for $(date +'%Y-%m-%d')" \
@@ -266,16 +298,6 @@ jobs:
             gh release upload $releaseName HEAD.txt
           else
             echo 'MAIN (real) release'
-            sudo chown -R runner:docker output.txt
-            # add text to output.txt (more instructions)
-            echo '' >> output.txt
-            echo '### Instructions' >> output.txt
-            echo '' >> output.txt
-            echo "* Installation instructions for [Docker](https://docs.firefly-iii.org/how-to/firefly-iii/installation/docker/), [Portainer](https://docs.firefly-iii.org/how-to/firefly-iii/installation/portainer/), [Kubernetes](https://docs.firefly-iii.org/how-to/firefly-iii/installation/kubernetes/) or [self-managed servers](https://docs.firefly-iii.org/how-to/firefly-iii/installation/self-managed/)" >> output.txt
-            echo "* Or read the upgrade instructions for [Docker](https://docs.firefly-iii.org/how-to/firefly-iii/upgrade/docker/), [Kubernetes](https://docs.firefly-iii.org/how-to/firefly-iii/upgrade/kubernetes/) or [self-managed servers](https://docs.firefly-iii.org/how-to/firefly-iii/upgrade/self-managed/)" >> output.txt
-            echo "* The releases are signed, and you can verify them using the [Firefly III releases PGP key](https://docs.firefly-iii.org/explanation/more-information/signatures/)." >> output.txt
-
-            echo "Create default release."
             git tag -a $releaseName -m "Here be changelog"
             git push origin $releaseName
             gh release create $releaseName -F output.txt -t "$releaseName" --verify-tag
