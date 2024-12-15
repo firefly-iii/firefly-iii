@@ -103,7 +103,7 @@ class PiggyBankController extends Controller
         /** @var PiggyBank $piggy */
         foreach ($piggies as $piggy) {
             $currency      = $piggy->transactionCurrency;
-            $currentAmount = $this->piggyRepository->getRepetition($piggy)->current_amount ?? '0';
+            $currentAmount = $this->piggyRepository->getCurrentAmount($piggy);
             $objectGroup   = $piggy->objectGroups()->first();
             $response[]    = [
                 'id'                      => (string)$piggy->id,

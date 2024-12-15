@@ -32,6 +32,7 @@ use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class PiggyBankFactory
@@ -221,7 +222,22 @@ class PiggyBankFactory
 
     public function linkToAccountIds(PiggyBank $piggyBank, array $accounts): void
     {
+        Log::debug(sprintf('Linking piggy bank #%d to %d accounts.', $piggyBank->id, count($accounts)), $accounts);
+        // collect current current_amount so the sync does not remove them.
+        // TODO this is a tedious check. Feels like a hack.
         $toBeLinked = [];
+        foreach($piggyBank->accounts as $account) {
+            foreach($accounts as $info) {
+                if($account->id === $info['account_id']) {
+                    if(array_key_exists($account->id, $accounts)) {
+                        $toBeLinked[$account->id] = ['current_amount' => $account->pivot->current_amount];
+                        Log::debug(sprintf('Prefilled for account #%d with amount %s', $account->id, $account->pivot->current_amount));
+                    }
+                }
+            }
+        }
+
+
         /** @var array $info */
         foreach ($accounts as $info) {
             $account = $this->accountRepository->find((int) ($info['account_id'] ?? 0));
@@ -230,13 +246,14 @@ class PiggyBankFactory
             }
             if (array_key_exists('current_amount', $info)) {
                 $toBeLinked[$account->id] = ['current_amount' => $info['current_amount']];
-                //$piggyBank->accounts()->syncWithoutDetaching([$account->id => ['current_amount' => $info['current_amount'] ?? '0']]);
+                Log::debug(sprintf('Will link account #%d with amount %s', $account->id, $account->pivot->current_amount));
             }
             if (!array_key_exists('current_amount', $info)) {
-                $toBeLinked[$account->id] = [];
-                //$piggyBank->accounts()->syncWithoutDetaching([$account->id]);
+                $toBeLinked[$account->id] ??= [];
+                Log::debug(sprintf('Will link account #%d with info: ', $account->id), $toBeLinked[$account->id]);
             }
         }
+        Log::debug(sprintf('Link information: %s', json_encode($toBeLinked)));
         $piggyBank->accounts()->sync($toBeLinked);
     }
 }

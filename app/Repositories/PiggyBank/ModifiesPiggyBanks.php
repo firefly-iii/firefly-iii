@@ -46,13 +46,13 @@ trait ModifiesPiggyBanks
     public function addAmountToRepetition(PiggyBankRepetition $repetition, string $amount, TransactionJournal $journal): void
     {
         throw new FireflyException('[a] Piggy bank repetitions are EOL.');
-        app('log')->debug(sprintf('addAmountToRepetition: %s', $amount));
+        Log::debug(sprintf('addAmountToRepetition: %s', $amount));
         if (-1 === bccomp($amount, '0')) {
-            app('log')->debug('Remove amount.');
+            Log::debug('Remove amount.');
             $this->removeAmount($repetition->piggyBank, bcmul($amount, '-1'), $journal);
         }
         if (1 === bccomp($amount, '0')) {
-            app('log')->debug('Add amount.');
+            Log::debug('Add amount.');
             $this->addAmount($repetition->piggyBank, $amount, $journal);
         }
     }
@@ -64,7 +64,7 @@ trait ModifiesPiggyBanks
         $pivot->current_amount = bcsub($currentAmount, $amount);
         $pivot->save();
 
-        app('log')->debug('removeAmount [a]: Trigger change for negative amount.');
+        Log::debug('ChangedAmount: removeAmount [a]: Trigger change for negative amount.');
         event(new ChangedAmount($piggyBank, bcmul($amount, '-1'), $journal, null));
 
         return true;
@@ -95,7 +95,7 @@ trait ModifiesPiggyBanks
         $pivot->current_amount = bcadd($currentAmount, $amount);
         $pivot->save();
 
-        app('log')->debug('addAmount [b]: Trigger change for positive amount.');
+        Log::debug('ChangedAmount: addAmount [b]: Trigger change for positive amount.');
         event(new ChangedAmount($piggyBank, $amount, $journal, null));
 
         return true;
@@ -109,21 +109,21 @@ trait ModifiesPiggyBanks
         $savedSoFar    = $this->getCurrentAmount($piggyBank);
         $maxAmount     = $leftOnAccount;
 
-        app('log')->debug(sprintf('Left on account: %s on %s', $leftOnAccount, $today->format('Y-m-d H:i:s')));
-        app('log')->debug(sprintf('Saved so far: %s', $savedSoFar));
+        Log::debug(sprintf('Left on account: %s on %s', $leftOnAccount, $today->format('Y-m-d H:i:s')));
+        Log::debug(sprintf('Saved so far: %s', $savedSoFar));
 
 
         if (0 !== bccomp($piggyBank->target_amount, '0')) {
             $leftToSave = bcsub($piggyBank->target_amount, $savedSoFar);
             $maxAmount  = 1 === bccomp($leftOnAccount, $leftToSave) ? $leftToSave : $leftOnAccount;
-            app('log')->debug(sprintf('Left to save: %s', $leftToSave));
-            app('log')->debug(sprintf('Maximum amount: %s', $maxAmount));
+            Log::debug(sprintf('Left to save: %s', $leftToSave));
+            Log::debug(sprintf('Maximum amount: %s', $maxAmount));
         }
 
         $compare       = bccomp($amount, $maxAmount);
         $result        = $compare <= 0;
 
-        app('log')->debug(sprintf('Compare <= 0? %d, so canAddAmount is %s', $compare, var_export($result, true)));
+        Log::debug(sprintf('Compare <= 0? %d, so canAddAmount is %s', $compare, var_export($result, true)));
 
         return $result;
     }
@@ -168,11 +168,11 @@ trait ModifiesPiggyBanks
         $repetition->save();
 
         if (-1 === bccomp($difference, '0')) {
-            app('log')->debug('addAmount [c]: Trigger change for negative amount.');
+            Log::debug('ChangedAmount: addAmount [c]: Trigger change for negative amount.');
             event(new ChangedAmount($piggyBank, $difference, null, null));
         }
         if (1 === bccomp($difference, '0')) {
-            app('log')->debug('addAmount [d]: Trigger change for positive amount.');
+            Log::debug('ChangedAmount: addAmount [d]: Trigger change for positive amount.');
             event(new ChangedAmount($piggyBank, $difference, null, null));
         }
 
@@ -203,7 +203,7 @@ trait ModifiesPiggyBanks
     public function setOrder(PiggyBank $piggyBank, int $newOrder): bool
     {
         $oldOrder         = $piggyBank->order;
-        // app('log')->debug(sprintf('Will move piggy bank #%d ("%s") from %d to %d', $piggyBank->id, $piggyBank->name, $oldOrder, $newOrder));
+        // Log::debug(sprintf('Will move piggy bank #%d ("%s") from %d to %d', $piggyBank->id, $piggyBank->name, $oldOrder, $newOrder));
         if ($newOrder > $oldOrder) {
             PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
                 ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
@@ -214,7 +214,7 @@ trait ModifiesPiggyBanks
             ;
 
             $piggyBank->order = $newOrder;
-            app('log')->debug(sprintf('[1] Order of piggy #%d ("%s") from %d to %d', $piggyBank->id, $piggyBank->name, $oldOrder, $newOrder));
+            Log::debug(sprintf('[1] Order of piggy #%d ("%s") from %d to %d', $piggyBank->id, $piggyBank->name, $oldOrder, $newOrder));
             $piggyBank->save();
 
             return true;
@@ -228,7 +228,7 @@ trait ModifiesPiggyBanks
         ;
 
         $piggyBank->order = $newOrder;
-        app('log')->debug(sprintf('[2] Order of piggy #%d ("%s") from %d to %d', $piggyBank->id, $piggyBank->name, $oldOrder, $newOrder));
+        Log::debug(sprintf('[2] Order of piggy #%d ("%s") from %d to %d', $piggyBank->id, $piggyBank->name, $oldOrder, $newOrder));
         $piggyBank->save();
 
         return true;
@@ -271,13 +271,15 @@ trait ModifiesPiggyBanks
         $factory->linkToAccountIds($piggyBank, $data['accounts']);
 
 
-        // if the piggy bank is now smaller than the current relevant rep,
-        // remove money from the rep.
+        // if the piggy bank is now smaller than the sum of the money saved,
+        // remove money from all accounts until the piggy bank is the right amount.
         $currentAmount = $this->getCurrentAmount($piggyBank);
-        if (1 === bccomp($currentAmount, '100') && 0 !== bccomp($piggyBank->target_amount, '0')) {
+        if (1 === bccomp($currentAmount, $piggyBank->target_amount) && 0 !== bccomp($piggyBank->target_amount, '0')) {
+            Log::debug(sprintf('Current amount is %s, target amount is %s', $currentAmount, $piggyBank->target_amount));
             $difference = bcsub($piggyBank->target_amount, $currentAmount);
 
             // an amount will be removed, create "negative" event:
+            Log::debug(sprintf('ChangedAmount: is triggered with difference "%s"', $difference));
             event(new ChangedAmount($piggyBank, $difference, null, null));
 
             // question is, from which account(s) to remove the difference?
