@@ -484,6 +484,9 @@ class RuleRepository implements RuleRepositoryInterface
         if (array_key_exists('trigger', $data) && 'update-journal' === $data['trigger']) {
             $this->setRuleTrigger('update-journal', $rule);
         }
+        if (array_key_exists('trigger', $data) && 'manual-activation' === $data['trigger']) {
+            $this->setRuleTrigger('manual-activation', $rule);
+        }
         if (array_key_exists('trigger', $data) && 'store-journal' === $data['trigger']) {
             $this->setRuleTrigger('store-journal', $rule);
         }

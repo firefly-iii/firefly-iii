@@ -96,10 +96,9 @@
                                         </td>
                                         <td>
                                             <div class="btn-group btn-group-xs test_buttons">
+                                                {# show which transactions would match #}
+                                                <a href="{{ route('rules.search',rule.id) }}" class="btn btn-default {% if false == rule.strict %}test_rule_triggers{% endif %}" data-id="{{ rule.id }}" title="{{ 'test_rule_triggers'|_ }}"><span data-id="{{ rule.id }}" class="fa fa-fw fa-flask"></span></a>
                                                 {% if rule.active %}
-                                                    {# show which transactions would match #}
-                                                    <a href="{{ route('rules.search',rule.id) }}" class="btn btn-default {% if false == rule.strict %}test_rule_triggers{% endif %}" data-id="{{ rule.id }}" title="{{ 'test_rule_triggers'|_ }}"><span data-id="{{ rule.id }}" class="fa fa-fw fa-flask"></span></a>
-
                                                     {# actually execute rule #}
                                                     <a href="{{ route('rules.select-transactions',rule.id) }}" class="btn btn-default" title=" {{ trans('firefly.apply_rule_selection', {title: rule.title}) }}"><span class="fa fa-fw fa-power-off "></span></a>
                                                 {% endif %}
