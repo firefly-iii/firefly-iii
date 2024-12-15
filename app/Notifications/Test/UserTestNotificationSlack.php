@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Notifications\Test;
 
 use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
+use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
@@ -38,20 +39,17 @@ class UserTestNotificationSlack extends Notification
 {
     use Queueable;
 
-    private OwnerNotifiable $owner;
+    private User $user;
 
-    /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function __construct(OwnerNotifiable $owner)
+    public function __construct(User $user)
     {
-        $this->owner = $owner;
+        $this->user = $user;
     }
 
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function toArray(OwnerNotifiable $notifiable)
+    public function toArray(User $user)
     {
         return [
         ];
@@ -60,7 +58,7 @@ class UserTestNotificationSlack extends Notification
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function toSlack(OwnerNotifiable $notifiable)
+    public function toSlack(User $user)
     {
         return new SlackMessage()->content((string) trans('email.admin_test_subject'));
         // return new SlackMessage()->text((string) trans('email.admin_test_subject'))->to($url);
@@ -69,7 +67,7 @@ class UserTestNotificationSlack extends Notification
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function via(OwnerNotifiable $notifiable)
+    public function via(User $user)
     {
         return ['slack'];
     }
