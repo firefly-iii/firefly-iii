@@ -349,15 +349,16 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
     public function searchPiggyBank(string $query, int $limit): Collection
     {
-        $search =  PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
-                            ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
-                            ->where('accounts.user_id', auth()->user()->id)
-                            ->with(
-                                [
-                                    'objectGroups',
-                                ]
-                            )
-                            ->orderBy('piggy_banks.order', 'ASC')->distinct();
+        $search = PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
+            ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
+            ->where('accounts.user_id', auth()->user()->id)
+            ->with(
+                [
+                    'objectGroups',
+                ]
+            )
+            ->orderBy('piggy_banks.order', 'ASC')->distinct()
+        ;
         if ('' !== $query) {
             $search->whereLike('piggy_banks.name', sprintf('%%%s%%', $query));
         }

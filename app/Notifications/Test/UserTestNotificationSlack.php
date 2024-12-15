@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Notifications\Test;
 
-use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\SlackMessage;
