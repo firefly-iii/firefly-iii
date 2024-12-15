@@ -269,17 +269,33 @@ jobs:
 
           fi
 
-          # create a development (nightly) release:
-          if [[ "develop" == "$version" ]] || [[ "$version" == branch* ]]; then
-
+          # create a development release:
+          if [[ "develop" == "$version" ]]; then
             # create the release:
-            echo "Create nightly or branch release."
+            echo "Create develop release."
             git tag -a $releaseName -m "Development release '$version' on $(date +'%Y-%m-%d')"
+
             git push origin $releaseName
             gh release create $releaseName -p --verify-tag \
               -t "Development release for $(date +'%Y-%m-%d')" \
               -F output.txt
+          fi
 
+          # create a branch release:
+          if [[ "$version" == branch* ]]; then
+
+            # create the release:
+            echo "Create branch release."
+            git tag -a $releaseName -m "Branch release '$version' on $(date +'%Y-%m-%d')"
+
+            git push origin $releaseName
+            gh release create $releaseName -p --verify-tag \
+              -t "Branch release for $(date +'%Y-%m-%d')" \
+              -F output.txt
+          fi
+
+          # create a development (nightly) release:
+          if [[ "develop" == "$version" ]] || [[ "$version" == branch* ]]; then
             # add zip file to release.
             gh release upload $releaseName $zipName
             gh release upload $releaseName $tarName
