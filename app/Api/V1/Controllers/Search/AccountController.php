@@ -62,7 +62,6 @@ class AccountController extends Controller
      */
     public function search(Request $request): JsonResponse|Response
     {
-        app('log')->debug('Now in account search()');
         $manager     = $this->getManager();
         $query       = trim((string)$request->get('query'));
         $field       = trim((string)$request->get('field'));
@@ -70,6 +69,7 @@ class AccountController extends Controller
         if ('' === $query || !in_array($field, $this->validFields, true)) {
             return response(null, 422);
         }
+        app('log')->debug(sprintf('Now in account search("%s", "%s")', $field, $query));
         $types       = $this->mapAccountTypes($type);
 
         /** @var AccountSearch $search */

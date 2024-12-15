@@ -284,19 +284,13 @@ Route::group(
         Route::get('show/{budget}', ['uses' => 'Budget\ShowController@show', 'as' => 'show']);
         Route::get('show/{budget}/{budgetLimit}', ['uses' => 'Budget\ShowController@showByBudgetLimit', 'as' => 'show.limit']);
         Route::get('list/no-budget/all', ['uses' => 'Budget\ShowController@noBudgetAll', 'as' => 'no-budget-all']);
-        Route::get('list/no-budget/{start_date?}/{end_date?}', ['uses' => 'Budget\ShowController@noBudget', 'as' => 'no-budget'])
-            ->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+        Route::get('list/no-budget/{start_date?}/{end_date?}', ['uses' => 'Budget\ShowController@noBudget', 'as' => 'no-budget']);
 
         // reorder budgets
         Route::post('reorder', ['uses' => 'Budget\IndexController@reorder', 'as' => 'reorder']);
 
         // index
-        Route::get('{start_date?}/{end_date?}', ['uses' => 'Budget\IndexController@index', 'as' => 'index'])
-            ->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+        Route::get('{start_date?}/{end_date?}', ['uses' => 'Budget\IndexController@index', 'as' => 'index']);
     }
 );
 
