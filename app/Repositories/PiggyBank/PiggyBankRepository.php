@@ -270,7 +270,8 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function getPiggyBanksWithAmount(): Collection
     {
-        $set      = $this->getPiggyBanks();
+        $set = $this->getPiggyBanks();
+
         /** @var PiggyBank $piggy */
         foreach ($set as $piggy) {
             $currentAmount = $this->getCurrentAmount($piggy);
