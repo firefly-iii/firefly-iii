@@ -274,7 +274,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         /** @var PiggyBank $piggy */
         foreach ($set as $piggy) {
             $currentAmount = $this->getCurrentAmount($piggy);
-            $piggy->name   = $piggy->name.' ('.app('amount')->formatAnything($piggy->transactionCurrency, $currentAmount, false).')';
+            $piggy->name   = sprintf('%s (%s)',$piggy->name,app('amount')->formatAnything($piggy->transactionCurrency, $currentAmount, false));
         }
 
         return $set;
