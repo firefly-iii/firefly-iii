@@ -129,7 +129,7 @@
         "logs": "\u041b\u043e\u0433\u0438",
         "response": "\u041e\u0442\u0432\u0435\u0442",
         "visit_webhook_url": "\u041f\u043e\u0441\u0435\u0442\u0438\u0442\u044c URL \u0432\u0435\u0431\u0445\u0443\u043a\u0430",
-        "reset_webhook_secret": "\u0421\u0431\u0440\u043e\u0441\u0438\u0442\u044c \u0441\u0435\u043a\u0440\u0435\u0442 webhook"
+        "reset_webhook_secret": ""
     },
     "form": {
         "url": "\u0421\u0441\u044b\u043b\u043a\u0430",

@@ -6535,16 +6535,16 @@
             },
             "type": "library",
             "extra": {
-                "branch-alias": {
-                    "dev-master": "0.14-dev"
-                },
                 "laravel": {
-                    "providers": [
-                        "TwigBridge\\ServiceProvider"
-                    ],
                     "aliases": {
                         "Twig": "TwigBridge\\Facade\\Twig"
-                    }
+                    },
+                    "providers": [
+                        "TwigBridge\\ServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-master": "0.14-dev"
                 }
             },
             "autoload": {
