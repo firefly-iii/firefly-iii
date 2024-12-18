@@ -57,8 +57,6 @@ class CorrectAmounts extends Command
         $this->fixBudgetLimits();
         // currency_exchange_rates must be positive
         $this->fixExchangeRates();
-        // piggy_bank_repetitions must be positive
-        $this->fixRepetitions();
         // piggy_banks must be positive
         $this->fixPiggyBanks();
         // recurrences_transactions amount must be positive
