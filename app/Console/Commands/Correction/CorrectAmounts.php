@@ -31,7 +31,6 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\PiggyBank;
-use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\RuleTrigger;
 use Illuminate\Console\Command;

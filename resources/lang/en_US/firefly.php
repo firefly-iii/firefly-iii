@@ -793,7 +793,7 @@ return [
     // actions and triggers
     'rule_trigger_store_journal'                          => 'When a transaction is created',
     'rule_trigger_update_journal'                         => 'When a transaction is updated',
-    'rule_trigger_manual'  => 'Only when user-activated',
+    'rule_trigger_manual'                                 => 'Only when user-activated',
     'rule_trigger_user_action'                            => 'User action is ":trigger_value"',
 
     // OLD values (remove non-doubles later):
