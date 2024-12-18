@@ -161,24 +161,6 @@ class CorrectAmounts extends Command
         $this->friendlyInfo(sprintf('Corrected %d currency exchange rate(s).', $count));
     }
 
-    private function fixRepetitions(): void
-    {
-        $set   = PiggyBankRepetition::where('current_amount', '<', 0)->get();
-        $count = $set->count();
-        if (0 === $count) {
-            $this->friendlyPositive('All piggy bank repetition amounts are positive.');
-
-            return;
-        }
-
-        /** @var PiggyBankRepetition $item */
-        foreach ($set as $item) {
-            $item->current_amount = app('steam')->positive($item->current_amount);
-            $item->save();
-        }
-        $this->friendlyInfo(sprintf('Corrected %d piggy bank repetition amount(s).', $count));
-    }
-
     private function fixPiggyBanks(): void
     {
         $set   = PiggyBank::where('target_amount', '<', 0)->get();

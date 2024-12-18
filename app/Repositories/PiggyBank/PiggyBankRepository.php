@@ -370,7 +370,17 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     #[\Override]
     public function purgeAll(): void
     {
-        throw new FireflyException('TODO Not implemented');
+        PiggyBank::withTrashed()
+            ->whereNotNull('piggy_banks.deleted_at')
+        ->leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
+                        ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
+                        ->where('accounts.user_id', auth()->user()->id)
+                        ->with(
+                            [
+                                'objectGroups',
+                            ]
+                        )
+                        ->delete();
     }
 
     #[\Override]
