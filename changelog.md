@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.1.25 - 2024-12-19
+
+### Fixed
+
+- [Issue 9492](https://github.com/firefly-iii/firefly-iii/issues/9492) (API: `PUT /api/v1/transactions/ID` does not work with only `source_name`) reported by @dreautall
+- [Issue 9497](https://github.com/firefly-iii/firefly-iii/issues/9497) ('Attempt to read property "user" on null' error when running `php artisan firefly-iii:upgrade-database` on updating to v6.1.24) reported by @ChrisCarini
+- [Discussion 9546](https://github.com/orgs/firefly-iii/discussions/9546) (Using the Data Importer to import data is very slowly？) started by @shangyuok
+
 ## 6.1.24 - 2024-11-24
 
 ### Fixed

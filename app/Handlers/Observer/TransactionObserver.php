@@ -41,18 +41,22 @@ class TransactionObserver
     public function updated(Transaction $transaction): void
     {
         Log::debug('Observe "updated" of a transaction.');
-        if (1 === bccomp($transaction->amount, '0')) {
-            Log::debug('Trigger recalculateForJournal');
-            AccountBalanceCalculator::recalculateForJournal($transaction->transactionJournal);
+        if (config('firefly.feature_flags.running_balance_column')) {
+            if (1 === bccomp($transaction->amount, '0')) {
+                Log::debug('Trigger recalculateForJournal');
+                AccountBalanceCalculator::recalculateForJournal($transaction->transactionJournal);
+            }
         }
     }
 
     public function created(Transaction $transaction): void
     {
         Log::debug('Observe "created" of a transaction.');
-        if (1 === bccomp($transaction->amount, '0')) {
-            Log::debug('Trigger recalculateForJournal');
-            AccountBalanceCalculator::recalculateForJournal($transaction->transactionJournal);
+        if (config('firefly.feature_flags.running_balance_column')) {
+            if (1 === bccomp($transaction->amount, '0')) {
+                Log::debug('Trigger recalculateForJournal');
+                AccountBalanceCalculator::recalculateForJournal($transaction->transactionJournal);
+            }
         }
     }
 }
