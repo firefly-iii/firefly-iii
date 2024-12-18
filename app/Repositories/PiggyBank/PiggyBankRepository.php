@@ -82,8 +82,10 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
     public function find(int $piggyBankId): ?PiggyBank
     {
-        // phpstan doesn't get the Model.
-        return $this->user->piggyBanks()->find($piggyBankId); // @phpstan-ignore-line
+        return PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
+                        ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
+                        ->where('accounts.user_id', $this->user->id)
+                        ->where('piggy_banks.id', $piggyBankId)->first(['piggy_banks.*']);
     }
 
     /**
@@ -91,12 +93,15 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function findByName(string $name): ?PiggyBank
     {
-        return $this->user->piggyBanks()->where('piggy_banks.name', $name)->first(['piggy_banks.*']);
+        return PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
+                        ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
+                        ->where('accounts.user_id', $this->user->id)
+                        ->where('piggy_banks.name', $name)->first(['piggy_banks.*']);
     }
 
     public function getAttachments(PiggyBank $piggyBank): Collection
     {
-        $set  = $piggyBank->attachments()->get();
+        $set = $piggyBank->attachments()->get();
 
         /** @var \Storage $disk */
         $disk = \Storage::disk('upload');
@@ -156,15 +161,15 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         throw new FireflyException('[c] Piggy bank repetitions are EOL.');
         app('log')->debug(sprintf('Now in getExactAmount(%d, %d, %d)', $piggyBank->id, $repetition->id, $journal->id));
 
-        $operator          = null;
-        $currency          = null;
+        $operator = null;
+        $currency = null;
 
         /** @var JournalRepositoryInterface $journalRepost */
-        $journalRepost     = app(JournalRepositoryInterface::class);
+        $journalRepost = app(JournalRepositoryInterface::class);
         $journalRepost->setUser($this->user);
 
         /** @var AccountRepositoryInterface $accountRepos */
-        $accountRepos      = app(AccountRepositoryInterface::class);
+        $accountRepos = app(AccountRepositoryInterface::class);
         $accountRepos->setUser($this->user);
 
         $defaultCurrency   = app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
@@ -173,10 +178,10 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         app('log')->debug(sprintf('Piggy bank #%d currency is %s', $piggyBank->id, $piggyBankCurrency->code));
 
         /** @var Transaction $source */
-        $source            = $journal->transactions()->with(['account'])->where('amount', '<', 0)->first();
+        $source = $journal->transactions()->with(['account'])->where('amount', '<', 0)->first();
 
         /** @var Transaction $destination */
-        $destination       = $journal->transactions()->with(['account'])->where('amount', '>', 0)->first();
+        $destination = $journal->transactions()->with(['account'])->where('amount', '>', 0)->first();
 
         // matches source, which means amount will be removed from piggy:
         if ($source->account_id === $piggyBank->account_id) {
@@ -198,7 +203,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         }
         // currency of the account + the piggy bank currency are almost the same.
         // which amount from the transaction matches?
-        $amount            = null;
+        $amount = null;
         if ((int) $source->transaction_currency_id === $currency->id) {
             app('log')->debug('Use normal amount');
             $amount = app('steam')->{$operator}($source->amount); // @phpstan-ignore-line
@@ -214,8 +219,8 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         }
 
         app('log')->debug(sprintf('The currency is %s and the amount is %s', $currency->code, $amount));
-        $room              = bcsub($piggyBank->target_amount, $repetition->current_amount);
-        $compare           = bcmul($repetition->current_amount, '-1');
+        $room    = bcsub($piggyBank->target_amount, $repetition->current_amount);
+        $compare = bcmul($repetition->current_amount, '-1');
 
         if (0 === bccomp($piggyBank->target_amount, '0')) {
             // amount is zero? then the "room" is positive amount of we wish to add or remove.
@@ -247,7 +252,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         return (string) $amount;
     }
 
-    public function setUser(null|Authenticatable|User $user): void
+    public function setUser(null | Authenticatable | User $user): void
     {
         if ($user instanceof User) {
             $this->user = $user;
@@ -275,7 +280,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         /** @var PiggyBank $piggy */
         foreach ($set as $piggy) {
             $currentAmount = $this->getCurrentAmount($piggy);
-            $piggy->name   = sprintf('%s (%s)',$piggy->name,app('amount')->formatAnything($piggy->transactionCurrency, $currentAmount, false));
+            $piggy->name   = sprintf('%s (%s)', $piggy->name, app('amount')->formatAnything($piggy->transactionCurrency, $currentAmount, false));
         }
 
         return $set;
@@ -284,15 +289,14 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     public function getPiggyBanks(): Collection
     {
         return PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
-            ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
-            ->where('accounts.user_id', auth()->user()->id)
-            ->with(
-                [
-                    'objectGroups',
-                ]
-            )
-            ->orderBy('piggy_banks.order', 'ASC')->distinct()->get(['piggy_banks.*'])
-        ;
+                        ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
+                        ->where('accounts.user_id', $this->user->id)
+                        ->with(
+                            [
+                                'objectGroups',
+                            ]
+                        )
+                        ->orderBy('piggy_banks.order', 'ASC')->distinct()->get(['piggy_banks.*']);
     }
 
     /**
@@ -348,21 +352,19 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     public function searchPiggyBank(string $query, int $limit): Collection
     {
         $search = PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
-            ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
-            ->where('accounts.user_id', auth()->user()->id)
-            ->with(
-                [
-                    'objectGroups',
-                ]
-            )
-            ->orderBy('piggy_banks.order', 'ASC')->distinct()
-        ;
+                           ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
+                           ->where('accounts.user_id', $this->user->id)
+                           ->with(
+                               [
+                                   'objectGroups',
+                               ]
+                           )
+                           ->orderBy('piggy_banks.order', 'ASC')->distinct();
         if ('' !== $query) {
             $search->whereLike('piggy_banks.name', sprintf('%%%s%%', $query));
         }
         $search->orderBy('piggy_banks.order', 'ASC')
-            ->orderBy('piggy_banks.name', 'ASC')
-        ;
+               ->orderBy('piggy_banks.name', 'ASC');
 
         return $search->take($limit)->get(['piggy_banks.*']);
     }
@@ -371,16 +373,16 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     public function purgeAll(): void
     {
         PiggyBank::withTrashed()
-            ->whereNotNull('piggy_banks.deleted_at')
-        ->leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
-                        ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
-                        ->where('accounts.user_id', auth()->user()->id)
-                        ->with(
-                            [
-                                'objectGroups',
-                            ]
-                        )
-                        ->delete();
+                 ->whereNotNull('piggy_banks.deleted_at')
+                 ->leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
+                 ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
+                 ->where('accounts.user_id', $this->user->id)
+                 ->with(
+                     [
+                         'objectGroups',
+                     ]
+                 )
+                 ->delete();
     }
 
     #[\Override]
