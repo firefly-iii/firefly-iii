@@ -12,12 +12,13 @@ return new class extends Migration {
         'available_budgets' => ['native_amount'], // works
         'bills' => ['native_amount_min', 'native_amount_max'], // works
         'budget_limits' => ['native_amount'], // works
-        'piggy_bank_events' => ['native_amount'],
-        'piggy_banks' => ['native_target_amount'],
-        'transactions' => ['native_amount', 'native_foreign_amount'],
+        'piggy_bank_events' => ['native_amount'], // works
+        'piggy_banks' => ['native_target_amount'], // works
+        'transactions' => ['native_amount', 'native_foreign_amount'], // works
 
         // TODO native currency changes, reset everything.
-        // button to recalculate all native amounts on selected pages?
+        // TODO button to recalculate all native amounts on selected pages?
+        // TODO check if you use the correct date for the excange rate
 
     ];
 

@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Observer;
 
 use FireflyIII\Models\Transaction;
+use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\Models\AccountBalanceCalculator;
 use Illuminate\Support\Facades\Log;
 
@@ -47,6 +48,7 @@ class TransactionObserver
                 AccountBalanceCalculator::recalculateForJournal($transaction->transactionJournal);
             }
         }
+        $this->updateNativeAmount($transaction);
     }
 
     public function created(Transaction $transaction): void
@@ -58,5 +60,27 @@ class TransactionObserver
                 AccountBalanceCalculator::recalculateForJournal($transaction->transactionJournal);
             }
         }
+        $this->updateNativeAmount($transaction);
+    }
+
+    private function updateNativeAmount(Transaction $transaction): void {
+        $userCurrency = app('amount')->getDefaultCurrencyByUserGroup($transaction->transactionJournal->user->userGroup);
+        $transaction->native_amount = null;
+        $transaction->native_foreign_amount = null;
+        // first normal amount
+        if ($transaction->transactionCurrency->id !== $userCurrency->id) {
+            $converter = new ExchangeRateConverter();
+            $converter->setIgnoreSettings(true);
+            $transaction->native_amount = $converter->convert($transaction->transactionCurrency, $userCurrency, $transaction->transactionJournal->date, $transaction->amount);
+        }
+        // then foreign amount
+        if ($transaction->foreignCurrency?->id !== $userCurrency->id && null !== $transaction->foreign_amount) {
+            $converter = new ExchangeRateConverter();
+            $converter->setIgnoreSettings(true);
+            $transaction->native_foreign_amount = $converter->convert($transaction->foreignCurrency, $userCurrency, $transaction->transactionJournal->date, $transaction->foreign_amount);
+        }
+
+        $transaction->saveQuietly();
+        Log::debug('Transaction native amounts are updated.');
     }
 }

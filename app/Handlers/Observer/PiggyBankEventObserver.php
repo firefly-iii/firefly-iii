@@ -1,6 +1,6 @@
 <?php
 /*
- * BudgetLimitObserver.php
+ * AutoBudgetObserver.php
  * Copyright (c) 2024 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -23,34 +23,37 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Observer;
 
-use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Models\AvailableBudget;
+use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Support\Facades\Log;
 
-class BudgetLimitObserver
+class PiggyBankEventObserver
 {
-    public function updated(BudgetLimit $budgetLimit): void
+    public function updated(PiggyBankEvent $event): void
     {
-        Log::debug('Observe "updated" of a budget limit.');
-        $this->updateNativeAmount($budgetLimit);
+        Log::debug('Observe "updated" of a piggy bank event.');
+        $this->updateNativeAmount($event);
     }
 
-    public function created(BudgetLimit $budgetLimit): void
+    public function created(PiggyBankEvent $event): void
     {
-        Log::debug('Observe "created" of a budget limit.');
-        $this->updateNativeAmount($budgetLimit);
+        Log::debug('Observe "created" of a piggy bank event.');
+        $this->updateNativeAmount($event);
     }
 
-    private function updateNativeAmount(BudgetLimit $budgetLimit): void
+    private function updateNativeAmount(PiggyBankEvent $event): void
     {
-        $userCurrency = app('amount')->getDefaultCurrencyByUserGroup($budgetLimit->budget->user->userGroup);
-        $budgetLimit->native_amount = null;
-        if ($budgetLimit->transactionCurrency->id !== $userCurrency->id) {
+        $userCurrency = app('amount')->getDefaultCurrencyByUserGroup($event->piggyBank->accounts()->first()->user->userGroup);
+        $event->native_amount = null;
+        if ($event->piggyBank->transactionCurrency->id !== $userCurrency->id) {
             $converter = new ExchangeRateConverter();
             $converter->setIgnoreSettings(true);
-            $budgetLimit->native_amount = $converter->convert($budgetLimit->transactionCurrency, $userCurrency, today(), $budgetLimit->amount);
+            $event->native_amount = $converter->convert($event->piggyBank->transactionCurrency, $userCurrency, today(), $event->amount);
         }
-        $budgetLimit->saveQuietly();
-        Log::debug('Budget limit native amounts are updated.');
+        $event->saveQuietly();
+        Log::debug('Piggy bank event native amount is updated.');
     }
+
+
 }

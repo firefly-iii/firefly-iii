@@ -26,24 +26,37 @@ namespace FireflyIII\Handlers\Observer;
 
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
+use FireflyIII\Support\Http\Api\ExchangeRateConverter;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class PiggyBankObserver
  */
 class PiggyBankObserver
 {
+    public function updated(PiggyBank $piggyBank): void
+    {
+        Log::debug('Observe "updated" of a piggy bank.');
+        $this->updateNativeAmount($piggyBank);
+    }
+
     public function created(PiggyBank $piggyBank): void
     {
-        app('log')->debug('Observe "created" of a piggy bank. DO NOTHING.');
+        Log::debug('Observe "created" of a piggy bank.');
+        $this->updateNativeAmount($piggyBank);
+    }
 
-        //        $repetition                = new PiggyBankRepetition();
-        //        $repetition->piggyBank()->associate($piggyBank);
-        //        $repetition->start_date     = $piggyBank->start_date;
-        //        $repetition->start_date_tz  = $piggyBank->start_date->format('e');
-        //        $repetition->target_date    = $piggyBank->target_date;
-        //        $repetition->target_date_tz = $piggyBank->target_date?->format('e');
-        //        $repetition->current_amount = '0';
-        //        $repetition->save();
+    private function updateNativeAmount(PiggyBank $piggyBank): void
+    {
+        $userCurrency = app('amount')->getDefaultCurrencyByUserGroup($piggyBank->accounts()->first()->user->userGroup);
+        $piggyBank->native_target_amount = null;
+        if ($piggyBank->transactionCurrency->id !== $userCurrency->id) {
+            $converter = new ExchangeRateConverter();
+            $converter->setIgnoreSettings(true);
+            $piggyBank->native_target_amount = $converter->convert($piggyBank->transactionCurrency, $userCurrency, today(), $piggyBank->target_amount);
+        }
+        $piggyBank->saveQuietly();
+        Log::debug('Piggy bank native target amount is updated.');
     }
 
     /**
