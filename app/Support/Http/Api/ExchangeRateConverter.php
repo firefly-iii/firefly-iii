@@ -43,10 +43,16 @@ class ExchangeRateConverter
     private bool  $noPreparedRates = false;
     private array $prepared        = [];
     private int   $queryCount      = 0;
+    private bool $ignoreSettings = false;
+
+    public function setIgnoreSettings(bool $ignoreSettings): void
+    {
+        $this->ignoreSettings = $ignoreSettings;
+    }
 
     public function enabled(): bool
     {
-        return false !== config('cer.enabled');
+        return false !== config('cer.enabled') || true === $this->ignoreSettings;
     }
 
     /**

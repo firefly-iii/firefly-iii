@@ -6,15 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
     private array $tables = [
-        'accounts' => ['native_virtual_balance'],
-        'account_piggy_bank' => ['native_current_amount'],
-        'auto_budgets' => ['native_amount'],
-        'available_budgets' => ['native_amount'],
-        'bills' => ['native_amount_min', 'native_amount_max'],
-        'budget_limits' => ['native_amount'],
+        'accounts' => ['native_virtual_balance'], // works.
+        'account_piggy_bank' => ['native_current_amount'], // works
+        'auto_budgets' => ['native_amount'], // works
+        'available_budgets' => ['native_amount'], // works
+        'bills' => ['native_amount_min', 'native_amount_max'], // works
+        'budget_limits' => ['native_amount'], // works
         'piggy_bank_events' => ['native_amount'],
         'piggy_banks' => ['native_target_amount'],
-        'transactions' => ['native_amount'],
+        'transactions' => ['native_amount', 'native_foreign_amount'],
+
+        // TODO native currency changes, reset everything.
+        // button to recalculate all native amounts on selected pages?
 
     ];
 
