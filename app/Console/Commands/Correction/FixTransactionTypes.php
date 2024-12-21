@@ -32,6 +32,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class FixTransactionTypes
@@ -50,7 +51,7 @@ class FixTransactionTypes extends Command
     {
         $count    = 0;
         $journals = $this->collectJournals();
-
+        Log::debug(sprintf('In FixTransactionTypes, found %d journals.', $journals->count()));
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             $fixed = $this->fixJournal($journal);

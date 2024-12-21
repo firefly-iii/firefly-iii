@@ -54,7 +54,7 @@ class FixUnevenAmount extends Command
         $this->matchCurrencies();
         if (config('firefly.feature_flags.running_balance_column')) {
             $this->friendlyInfo('Will recalculate transaction running balance columns. This may take a LONG time. Please be patient.');
-            AccountBalanceCalculator::recalculateAll(true);
+            AccountBalanceCalculator::recalculateAll(false);
             $this->friendlyInfo('Done recalculating transaction running balance columns.');
         }
 
