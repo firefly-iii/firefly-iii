@@ -33,6 +33,7 @@ use Illuminate\Support\Facades\Log;
  */
 class TransactionObserver
 {
+    public static bool $recalculate = true;
     public function deleting(?Transaction $transaction): void
     {
         app('log')->debug('Observe "deleting" of a transaction.');
@@ -42,7 +43,7 @@ class TransactionObserver
     public function updated(Transaction $transaction): void
     {
         Log::debug('Observe "updated" of a transaction.');
-        if (config('firefly.feature_flags.running_balance_column')) {
+        if (config('firefly.feature_flags.running_balance_column') && self::$recalculate) {
             if (1 === bccomp($transaction->amount, '0')) {
                 Log::debug('Trigger recalculateForJournal');
                 AccountBalanceCalculator::recalculateForJournal($transaction->transactionJournal);
@@ -55,7 +56,7 @@ class TransactionObserver
     {
         Log::debug('Observe "created" of a transaction.');
         if (config('firefly.feature_flags.running_balance_column')) {
-            if (1 === bccomp($transaction->amount, '0')) {
+            if (1 === bccomp($transaction->amount, '0') && self::$recalculate) {
                 Log::debug('Trigger recalculateForJournal');
                 AccountBalanceCalculator::recalculateForJournal($transaction->transactionJournal);
             }

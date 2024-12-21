@@ -117,7 +117,7 @@ class PreferencesEventHandler
     private function resetTransactions(UserGroup $userGroup): void
     {
         // custom query because of the potential size of this update.
-        DB::table('transactions')
+        $success = DB::table('transactions')
           ->join('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
           ->where('transaction_journals.user_group_id', $userGroup->id)
           ->where(static function (Builder $q) {
@@ -125,5 +125,6 @@ class PreferencesEventHandler
                 ->orWhereNotNull('native_foreign_amount');
           })
           ->update(['native_amount' => null, 'native_foreign_amount' => null]);
+        Log::debug(sprintf('Updated %d transactions.', $success));
     }
 }

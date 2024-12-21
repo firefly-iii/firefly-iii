@@ -22,6 +22,7 @@
 namespace FireflyIII\Console\Commands\Correction;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
+use FireflyIII\Handlers\Observer\TransactionObserver;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AutoBudget;
 use FireflyIII\Models\AvailableBudget;
@@ -35,6 +36,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\UserGroup\UserGroupRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\PiggyBank\PiggyBankRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
@@ -57,11 +59,6 @@ class RecalculateNativeAmounts extends Command
      */
     public function handle(): int
     {
-        // // !!! this array is also in PreferencesEventHandler + RecalculateNativeAmountsCommand
-// // !!! this array is also in PreferencesEventHandler + RecalculateNativeAmountsCommand
-//        'transactions' => ['native_amount', 'native_foreign_amount'], // works
-
-
         Log::debug('Will update all native amounts. This may take some time.');
         $this->friendlyWarning('Recalculating native amounts for all objects. This may take some time!');
         /** @var UserGroupRepositoryInterface $repository */
@@ -70,8 +67,7 @@ class RecalculateNativeAmounts extends Command
         foreach ($repository->getAll() as $userGroup) {
             $this->recalculateForGroup($userGroup);
         }
-
-
+        $this->friendlyInfo('Recalculated all native amounts.');
         return 0;
     }
 
@@ -81,6 +77,7 @@ class RecalculateNativeAmounts extends Command
         $this->recalculateAccounts($userGroup);
 
         // do a check with the group's currency so we can skip some stuff.
+        Preferences::mark();
         $currency = app('amount')->getDefaultCurrencyByUserGroup($userGroup);
 
         $this->recalculatePiggyBanks($userGroup, $currency);
@@ -209,11 +206,13 @@ class RecalculateNativeAmounts extends Command
                        ->orWhereNot('transactions.foreign_currency_id', $currency->id);
                  })
                  ->get(['transactions.id']);
+        TransactionObserver::$recalculate = false;
         foreach ($set as $item) {
             // here we are.
             $transaction = Transaction::find($item->id);
             $transaction->touch();
         }
+        TransactionObserver::$recalculate = true;
         Log::debug(sprintf('Recalculated %d transactions.', $set->count()));
     }
 }
