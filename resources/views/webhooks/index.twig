@@ -1,7 +1,7 @@
 {% set VUE_SCRIPT_NAME = 'webhooks/index' %}
 {% extends './layout/default' %}
 {% block breadcrumbs %}
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, objectType) }}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
 {% endblock %}
 
 {% block content %}

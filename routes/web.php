@@ -365,6 +365,7 @@ Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\ExchangeRates', 'prefix' => 'exchange-rates', 'as' => 'exchange-rates.'],
     static function (): void {
         Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
+        Route::get('{fromCurrencyCode}/{toCurrencyCode}', ['uses' => 'IndexController@rates', 'as' => 'rates']);
 //        Route::get('create', ['uses' => 'CreateController@create', 'as' => 'create']);
 //        Route::get('edit/{currency}', ['uses' => 'EditController@edit', 'as' => 'edit']);
 //        Route::get('delete/{currency}', ['uses' => 'DeleteController@delete', 'as' => 'delete']);

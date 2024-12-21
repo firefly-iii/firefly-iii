@@ -762,6 +762,13 @@ Breadcrumbs::for(
     }
 );
 
+Breadcrumbs::for(
+    'exchange-rates.rates',
+    static function (Generator $breadcrumbs, TransactionCurrency $from, TransactionCurrency $to): void {
+        $breadcrumbs->parent('exchange-rates.index');
+        $breadcrumbs->push(trans('breadcrumbs.exchange_rates_rates', ['from' => $from->name, 'to' => $to->name]), route('exchange-rates.rates', [$from->code, $to->code]));
+    }
+);
 
 
 // PROFILE

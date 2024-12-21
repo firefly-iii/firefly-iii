@@ -24,6 +24,9 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\ExchangeRates;
 
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Models\TransactionCurrency;
+use Illuminate\View\Factory;
+use Illuminate\View\View;
 
 class IndexController extends Controller
 {
@@ -44,9 +47,14 @@ class IndexController extends Controller
         );
     }
 
-    public function index()
+    public function index(): View
     {
         return view('exchange-rates.index');
+    }
+
+    public function rates(TransactionCurrency $from, TransactionCurrency $to): View
+    {
+        return view('exchange-rates.rates', compact('from', 'to'));
     }
 
 }

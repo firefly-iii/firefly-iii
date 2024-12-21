@@ -49,3 +49,4 @@ mix.js('src/webhooks/show.js', 'build/webhooks').vue({version: 2}).copy('build',
 
 // exchange rates
 mix.js('src/exchange-rates/index.js', 'build/exchange-rates').vue({version: 2});
+mix.js('src/exchange-rates/rates.js', 'build/exchange-rates').vue({version: 2});
