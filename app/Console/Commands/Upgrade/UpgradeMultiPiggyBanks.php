@@ -98,12 +98,12 @@ class UpgradeMultiPiggyBanks extends Command
 
         // update piggy bank to have a currency.
         $piggyBank->transaction_currency_id = $currency->id;
-        $piggyBank->save();
+        $piggyBank->saveQuietly();
 
         // store current amount in account association.
         $piggyBank->accounts()->sync([$piggyBank->account->id => ['current_amount' => $repetition->current_amount]]);
         $piggyBank->account_id              = null;
-        $piggyBank->save();
+        $piggyBank->saveQuietly();
 
         // remove all repetitions (no longer used)
         $piggyBank->piggyBankRepetitions()->delete();

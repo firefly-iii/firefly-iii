@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\UserGroups\PiggyBank;
 
+use FireflyIII\Models\PiggyBank;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
 
@@ -36,14 +37,15 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
     public function getPiggyBanks(): Collection
     {
-        return $this->userGroup->piggyBanks()
-            ->with(
-                [
-                    'account',
-                    'objectGroups',
-                ]
-            )
-            ->orderBy('order', 'ASC')->get()
-        ;
+        return PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
+                        ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
+                        ->where('accounts.user_group_id', $this->userGroup->id)
+                        ->with(
+                            [
+                                'objectGroups',
+                            ]
+                        )
+                        ->orderBy('piggy_banks.order', 'ASC')->distinct()->get(['piggy_banks.*'])
+            ;
     }
 }

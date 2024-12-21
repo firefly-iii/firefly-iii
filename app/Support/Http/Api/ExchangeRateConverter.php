@@ -167,7 +167,7 @@ class ExchangeRateConverter
 
         /** @var null|CurrencyExchangeRate $result */
         $result       = auth()->user()
-            ->currencyExchangeRates()
+            ?->currencyExchangeRates()
             ->where('from_currency_id', $from)
             ->where('to_currency_id', $to)
             ->where('date', '<=', $date)

@@ -117,7 +117,7 @@ class PiggyBank extends Model
 
     public function accounts(): BelongsToMany
     {
-        return $this->belongsToMany(Account::class)->withPivot('current_amount');
+        return $this->belongsToMany(Account::class)->withPivot(['current_amount','native_current_amount']);
     }
 
     public function piggyBankRepetitions(): HasMany

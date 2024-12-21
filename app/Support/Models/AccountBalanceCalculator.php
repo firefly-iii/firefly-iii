@@ -243,7 +243,7 @@ class AccountBalanceCalculator
                 $object->balance = $balance[0];
                 $object->date    = $balance[1];
                 $object->date_tz = $balance[1]?->format('e');
-                $object->save();
+                $object->saveQuietly();
             }
         }
     }

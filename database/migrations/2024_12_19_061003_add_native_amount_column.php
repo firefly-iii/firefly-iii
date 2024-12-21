@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
     private array $tables = [
+        // !!! this array is also in PreferencesEventHandler
         'accounts' => ['native_virtual_balance'], // works.
         'account_piggy_bank' => ['native_current_amount'], // works
         'auto_budgets' => ['native_amount'], // works
@@ -16,9 +17,7 @@ return new class extends Migration {
         'piggy_banks' => ['native_target_amount'], // works
         'transactions' => ['native_amount', 'native_foreign_amount'], // works
 
-        // TODO native currency changes, reset everything.
         // TODO button to recalculate all native amounts on selected pages?
-        // TODO check if you use the correct date for the excange rate
 
     ];
 

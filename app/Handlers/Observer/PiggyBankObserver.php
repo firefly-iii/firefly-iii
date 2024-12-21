@@ -48,7 +48,10 @@ class PiggyBankObserver
 
     private function updateNativeAmount(PiggyBank $piggyBank): void
     {
-        $userCurrency = app('amount')->getDefaultCurrencyByUserGroup($piggyBank->accounts()->first()->user->userGroup);
+        $userCurrency = app('amount')->getDefaultCurrencyByUserGroup($piggyBank->accounts()->first()?->user->userGroup);
+        if(null === $userCurrency) {
+            return;
+        }
         $piggyBank->native_target_amount = null;
         if ($piggyBank->transactionCurrency->id !== $userCurrency->id) {
             $converter = new ExchangeRateConverter();

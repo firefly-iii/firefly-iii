@@ -1,8 +1,7 @@
 <?php
-
 /*
- * BudgetRepositoryInterface.php
- * Copyright (c) 2023 james@firefly-iii.org
+ * UserGroupChangedDefaultCurrency.php
+ * Copyright (c) 2024 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -17,26 +16,27 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
 declare(strict_types=1);
 
-namespace FireflyIII\Repositories\UserGroups\Budget;
+namespace FireflyIII\Events\Preferences;
 
+use FireflyIII\Events\Event;
 use FireflyIII\Models\UserGroup;
-use FireflyIII\User;
-use Illuminate\Support\Collection;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
-/**
- * Interface BudgetRepositoryInterface
- */
-interface BudgetRepositoryInterface
+class UserGroupChangedDefaultCurrency extends Event
 {
-    public function getActiveBudgets(): Collection;
-    public function getBudgets(): Collection;
+    use SerializesModels;
 
-    public function setUser(User $user): void;
+    public UserGroup $userGroup;
 
-    public function setUserGroup(UserGroup $userGroup): void;
+    public function __construct(UserGroup $userGroup)
+    {
+        Log::debug('User group changed default currency.');
+        $this->userGroup = $userGroup;
+    }
 }

@@ -70,10 +70,8 @@ class IndexController extends Controller
         $page       = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
         $pageSize   = (int)app('preferences')->get('listPageSize', 50)->data;
         $collection = $this->repository->getAll();
-        $total      = $collection->count();
-        $collection = $collection->slice(($page - 1) * $pageSize, $pageSize);
 
-        // order so default is on top:
+        // order so default and enabled are on top:
         $collection = $collection->sortBy(
             static function (TransactionCurrency $currency) {
                 $default = true === $currency->userGroupDefault ? 0 : 1;
@@ -82,6 +80,8 @@ class IndexController extends Controller
                 return sprintf('%s-%s-%s', $default, $enabled, $currency->code);
             }
         );
+        $total      = $collection->count();
+        $collection = $collection->slice(($page - 1) * $pageSize, $pageSize);
 
         $currencies = new LengthAwarePaginator($collection, $total, $pageSize, $page);
         $currencies->setPath(route('currencies.index'));
