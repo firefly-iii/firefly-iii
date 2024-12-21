@@ -1398,6 +1398,7 @@ return [
     'menu_exchange_rates_index' => 'Exchange rates',
     'header_exchange_rates' => 'Exchange rates',
     'exchange_rates_intro' =>'Firefly III supports downloading and using exchange rates. Read more about this in <a href="https://docs.firefly-iii.org/LOL_NOT_FINISHED_YET_TODO">the documentation</a>.',
+    'exchange_rates_from_to' => 'Between {from} and {to}',
 
     // Financial administrations
     'administration_index'                                => 'Financial administration',

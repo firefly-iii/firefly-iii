@@ -270,6 +270,9 @@ return [
                 'response',
                 'visit_webhook_url',
                 'reset_webhook_secret',
+                'header_exchange_rates',
+                'exchange_rates_intro',
+                'exchange_rates_from_to'
             ],
             'form'    => [
                 'url',

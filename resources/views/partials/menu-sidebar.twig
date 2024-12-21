@@ -219,13 +219,13 @@
                     <span>{{ 'currencies'|_ }}</span>
                 </a>
             </li>
+            <li class="{{ activeRoutePartial('exchange-rates') }}">
+                <a class="{{ activeRoutePartial('exchange-rates') }}" href="{{ route('exchange-rates.index') }}">
+                    <span class="fa fa-angle-right fa-fw"></span>
+                    <span>{{ 'menu_exchange_rates_index'|_ }}</span>
+                </a>
+            </li>
             {% if hasRole('owner') %}
-                <li class="{{ activeRoutePartial('exchange-rates') }}">
-                    <a class="{{ activeRoutePartial('exchange-rates') }}" href="{{ route('exchange-rates.index') }}">
-                        <span class="fa fa-angle-right fa-fw"></span>
-                        <span>{{ 'menu_exchange_rates_index'|_ }}</span>
-                    </a>
-                </li>
                 <li class="{{ activeRoutePartial('admin') }}">
                     <a class="{{ activeRoutePartial('admin') }}" href="{{ route('admin.index') }}">
                         <span class="fa fa-angle-right fa-fw"></span>
