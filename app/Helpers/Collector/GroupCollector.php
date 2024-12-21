@@ -463,7 +463,6 @@ class GroupCollector implements GroupCollectorInterface
             $this->query->orWhereIn('transaction_journals.transaction_group_id', $groupIds);
         }
         $result      = $this->query->get($this->fields);
-
         // now to parse this into an array.
         $collection  = $this->parseArray($result);
 
@@ -1049,6 +1048,7 @@ class GroupCollector implements GroupCollectorInterface
             ->whereNull('transaction_groups.deleted_at')
             ->whereNull('transaction_journals.deleted_at')
             ->whereNull('source.deleted_at')
+            ->whereNotNull('transaction_groups.id')
             ->whereNull('destination.deleted_at')
             ->orderBy('transaction_journals.date', 'DESC')
             ->orderBy('transaction_journals.order', 'ASC')
