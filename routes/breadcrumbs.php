@@ -753,6 +753,15 @@ Breadcrumbs::for(
     }
 );
 
+// exchange rates
+Breadcrumbs::for(
+    'exchange-rates.index',
+    static function (Generator $breadcrumbs): void {
+        $breadcrumbs->parent('home');
+        $breadcrumbs->push(trans('breadcrumbs.exchange_rates_index'), route('exchange-rates.index'));
+    }
+);
+
 
 
 // PROFILE

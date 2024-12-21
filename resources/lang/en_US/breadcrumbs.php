@@ -89,4 +89,7 @@ return [
 
     // notifications
     'notification_index'     => 'Owner notifications',
+
+    // exchange rates
+    'exchange_rates_index' => 'Exchange rates',
 ];

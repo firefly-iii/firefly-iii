@@ -242,7 +242,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
             return $room;
         }
 
-        // amount is negative and $currentamount is smaller than $amount
+        // amount is negative and $currentAmount is smaller than $amount
         if (-1 === bccomp($amount, '0') && 1 === bccomp($compare, $amount)) {
             app('log')->debug(sprintf('Max amount to remove is %f', $repetition->current_amount));
             app('log')->debug(sprintf('Cannot remove %f from piggy bank #%d ("%s")', $amount, $piggyBank->id, $piggyBank->name));

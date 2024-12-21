@@ -1,0 +1,51 @@
+{% extends './layout/default' %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12 col-xs-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'header_exchange_rates'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <p>
+                        {{ 'exchange_rates_intro'|_ }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12 col-xs-12">
+            {% for currency in currencies %}
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ currency.name }}</h3>
+                </div>
+                <div class="box-body">
+                    {% if currencies.count > 0 %}
+                    <ul>
+                        {% for sub in currencies %}
+                            {% if sub.id != currency.id %}
+                                <li>From {{ currency.name }} to {{ sub.name }}</li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block styles %}
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

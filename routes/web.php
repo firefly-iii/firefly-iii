@@ -360,6 +360,20 @@ Route::group(
     }
 );
 
+// exchange rates controller
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\ExchangeRates', 'prefix' => 'exchange-rates', 'as' => 'exchange-rates.'],
+    static function (): void {
+        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
+//        Route::get('create', ['uses' => 'CreateController@create', 'as' => 'create']);
+//        Route::get('edit/{currency}', ['uses' => 'EditController@edit', 'as' => 'edit']);
+//        Route::get('delete/{currency}', ['uses' => 'DeleteController@delete', 'as' => 'delete']);
+//        Route::post('store', ['uses' => 'CreateController@store', 'as' => 'store']);
+//        Route::post('update/{currency}', ['uses' => 'EditController@update', 'as' => 'update']);
+//        Route::post('destroy/{currency}', ['uses' => 'DeleteController@destroy', 'as' => 'destroy']);
+    }
+);
+
 // Chart\Account Controller (default report).
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Chart', 'prefix' => 'chart/account', 'as' => 'chart.account.'],
