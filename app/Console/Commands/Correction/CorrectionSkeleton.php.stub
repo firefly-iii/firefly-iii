@@ -10,6 +10,7 @@ use Illuminate\Console\Command;
  */
 class CorrectionSkeleton extends Command
 {
+    use ShowsFriendlyMessages;
     protected $description = 'DESCRIPTION HERE';
 
     protected $signature = 'firefly-iii:CORR_COMMAND';

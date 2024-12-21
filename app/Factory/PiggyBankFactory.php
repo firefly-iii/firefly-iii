@@ -88,7 +88,7 @@ class PiggyBankFactory
 
         try {
             /** @var PiggyBank $piggyBank */
-            $piggyBank = PiggyBank::create($piggyBankData);
+            $piggyBank = PiggyBank::createQuietly($piggyBankData);
         } catch (QueryException $e) {
             app('log')->error(sprintf('Could not store piggy bank: %s', $e->getMessage()), $piggyBankData);
 
@@ -103,7 +103,6 @@ class PiggyBankFactory
             $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
             if (null !== $objectGroup) {
                 $piggyBank->objectGroups()->sync([$objectGroup->id]);
-                $piggyBank->save();
             }
         }
         // try also with ID
@@ -112,10 +111,12 @@ class PiggyBankFactory
             $objectGroup = $this->findObjectGroupById($objectGroupId);
             if (null !== $objectGroup) {
                 $piggyBank->objectGroups()->sync([$objectGroup->id]);
-                $piggyBank->save();
             }
         }
-
+        Log::debug('Touch piggy bank');
+        $piggyBank->encrypted = false;
+        $piggyBank->save();
+        $piggyBank->touch();
         return $piggyBank;
     }
 
@@ -184,7 +185,7 @@ class PiggyBankFactory
             $order = $data['order'];
         }
         $piggyBank->order = $order;
-        $piggyBank->save();
+        $piggyBank->saveQuietly();
         return $piggyBank;
 
     }

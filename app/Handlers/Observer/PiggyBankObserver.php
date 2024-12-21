@@ -48,7 +48,12 @@ class PiggyBankObserver
 
     private function updateNativeAmount(PiggyBank $piggyBank): void
     {
-        $userCurrency = app('amount')->getDefaultCurrencyByUserGroup($piggyBank->accounts()->first()?->user->userGroup);
+        $group =$piggyBank->accounts()->first()?->user->userGroup;
+        if(null === $group) {
+            Log::debug(sprintf('No account(s) yet for piggy bank #%d.', $piggyBank->id));
+            return;
+        }
+        $userCurrency = app('amount')->getDefaultCurrencyByUserGroup($group);
         if(null === $userCurrency) {
             return;
         }
