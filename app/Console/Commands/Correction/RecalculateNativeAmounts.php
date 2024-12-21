@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * RecalculateNativeAmounts.php
  * Copyright (c) 2024 james@firefly-iii.org.
@@ -50,24 +52,25 @@ class RecalculateNativeAmounts extends Command
 
     protected $description = 'Recalculate native amounts for all objects.';
 
-    protected $signature = 'firefly-iii:recalculate-native-amounts';
+    protected $signature   = 'firefly-iii:recalculate-native-amounts';
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle(): int
     {
         Log::debug('Will update all native amounts. This may take some time.');
         $this->friendlyWarning('Recalculating native amounts for all objects. This may take some time!');
+
         /** @var UserGroupRepositoryInterface $repository */
         $repository = app(UserGroupRepositoryInterface::class);
+
         /** @var UserGroup $userGroup */
         foreach ($repository->getAll() as $userGroup) {
             $this->recalculateForGroup($userGroup);
         }
         $this->friendlyInfo('Recalculated all native amounts.');
+
         return 0;
     }
 
@@ -90,10 +93,11 @@ class RecalculateNativeAmounts extends Command
 
     private function recalculateAccounts(UserGroup $userGroup): void
     {
-        $set = $userGroup->accounts()->where(function (EloquentBuilder $q) {
+        $set = $userGroup->accounts()->where(function (EloquentBuilder $q): void {
             $q->whereNotNull('virtual_balance');
             $q->orWhere('virtual_balance', '!=', '');
         })->get();
+
         /** @var Account $account */
         foreach ($set as $account) {
             $account->touch();
@@ -103,12 +107,12 @@ class RecalculateNativeAmounts extends Command
 
     private function recalculatePiggyBanks(UserGroup $userGroup, TransactionCurrency $currency): void
     {
-        $converter = new ExchangeRateConverter();
+        $converter  = new ExchangeRateConverter();
         $converter->setIgnoreSettings(true);
         $repository = app(PiggyBankRepositoryInterface::class);
         $repository->setUserGroup($userGroup);
-        $set = $repository->getPiggyBanks();
-        $set = $set->filter(
+        $set        = $repository->getPiggyBanks();
+        $set        = $set->filter(
             static function (PiggyBank $piggyBank) use ($currency) {
                 return $currency->id !== $piggyBank->transaction_currency_id;
             }
@@ -134,7 +138,7 @@ class RecalculateNativeAmounts extends Command
     {
         $set = $piggyBank->piggyBankEvents()->get();
         $set->each(
-            static function (PiggyBankEvent $event) {
+            static function (PiggyBankEvent $event): void {
                 $event->touch();
             }
         );
@@ -144,6 +148,7 @@ class RecalculateNativeAmounts extends Command
     private function recalculateBudgets(UserGroup $userGroup, TransactionCurrency $currency): void
     {
         $set = $userGroup->budgets()->get();
+
         /** @var Budget $budget */
         foreach ($set as $budget) {
             $this->recalculateBudgetLimits($budget, $currency);
@@ -155,6 +160,7 @@ class RecalculateNativeAmounts extends Command
     private function recalculateBudgetLimits(Budget $budget, TransactionCurrency $currency): void
     {
         $set = $budget->budgetlimits()->where('transaction_currency_id', '!=', $currency->id)->get();
+
         /** @var BudgetLimit $limit */
         foreach ($set as $limit) {
             Log::debug(sprintf('Will now touch BL #%d', $limit->id));
@@ -167,6 +173,7 @@ class RecalculateNativeAmounts extends Command
     private function recalculateAutoBudgets(Budget $budget, TransactionCurrency $currency): void
     {
         $set = $budget->autoBudgets()->where('transaction_currency_id', '!=', $currency->id)->get();
+
         /** @var AutoBudget $autoBudget */
         foreach ($set as $autoBudget) {
             $autoBudget->touch();
@@ -177,6 +184,7 @@ class RecalculateNativeAmounts extends Command
     private function recalculateBills(UserGroup $userGroup, TransactionCurrency $currency): void
     {
         $set = $userGroup->bills()->where('transaction_currency_id', '!=', $currency->id)->get();
+
         /** @var Bill $bill */
         foreach ($set as $bill) {
             $bill->touch();
@@ -188,6 +196,7 @@ class RecalculateNativeAmounts extends Command
     {
         Log::debug('Start with available budgets.');
         $set = $userGroup->availableBudgets()->where('transaction_currency_id', '!=', $currency->id)->get();
+
         /** @var AvailableBudget $budget */
         foreach ($set as $budget) {
             $budget->touch();
@@ -198,14 +207,16 @@ class RecalculateNativeAmounts extends Command
     private function calculateTransactions(UserGroup $userGroup, TransactionCurrency $currency): void
     {
         // custom query because of the potential size of this update.
-        $set = DB::table('transactions')
-                 ->join('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                 ->where('transaction_journals.user_group_id', $userGroup->id)
-                 ->where(static function (DatabaseBuilder $q) use ($currency) {
-                     $q->whereNot('transactions.transaction_currency_id', $currency->id)
-                       ->orWhereNot('transactions.foreign_currency_id', $currency->id);
-                 })
-                 ->get(['transactions.id']);
+        $set                              = DB::table('transactions')
+            ->join('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->where('transaction_journals.user_group_id', $userGroup->id)
+            ->where(static function (DatabaseBuilder $q) use ($currency): void {
+                $q->whereNot('transactions.transaction_currency_id', $currency->id)
+                    ->orWhereNot('transactions.foreign_currency_id', $currency->id)
+                ;
+            })
+            ->get(['transactions.id'])
+        ;
         TransactionObserver::$recalculate = false;
         foreach ($set as $item) {
             // here we are.

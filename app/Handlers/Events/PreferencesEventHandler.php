@@ -1,4 +1,5 @@
 <?php
+
 /*
  * PreferencesEventHandler.php
  * Copyright (c) 2024 james@firefly-iii.org.
@@ -45,7 +46,7 @@ class PreferencesEventHandler
             'accounts'          => ['native_virtual_balance'],
             'available_budgets' => ['native_amount'],
             'bills'             => ['native_amount_min', 'native_amount_max'],
-            //'transactions' => ['native_amount', 'native_foreign_amount']
+            // 'transactions' => ['native_amount', 'native_foreign_amount']
         ];
         foreach ($tables as $table => $columns) {
             foreach ($columns as $column) {
@@ -63,6 +64,7 @@ class PreferencesEventHandler
         $repository = app(PiggyBankRepositoryInterface::class);
         $repository->setUserGroup($userGroup);
         $piggyBanks = $repository->getPiggyBanks();
+
         /** @var PiggyBank $piggyBank */
         foreach ($piggyBanks as $piggyBank) {
             if (null !== $piggyBank->native_target_amount) {
@@ -91,7 +93,8 @@ class PreferencesEventHandler
     {
         $repository = app(BudgetRepositoryInterface::class);
         $repository->setUserGroup($userGroup);
-        $set = $repository->getBudgets();
+        $set        = $repository->getBudgets();
+
         /** @var Budget $budget */
         foreach ($set as $budget) {
             foreach ($budget->autoBudgets as $autoBudget) {
@@ -118,13 +121,15 @@ class PreferencesEventHandler
     {
         // custom query because of the potential size of this update.
         $success = DB::table('transactions')
-          ->join('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-          ->where('transaction_journals.user_group_id', $userGroup->id)
-          ->where(static function (Builder $q) {
-              $q->whereNotNull('native_amount')
-                ->orWhereNotNull('native_foreign_amount');
-          })
-          ->update(['native_amount' => null, 'native_foreign_amount' => null]);
+            ->join('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->where('transaction_journals.user_group_id', $userGroup->id)
+            ->where(static function (Builder $q): void {
+                $q->whereNotNull('native_amount')
+                    ->orWhereNotNull('native_foreign_amount')
+                ;
+            })
+            ->update(['native_amount' => null, 'native_foreign_amount' => null])
+        ;
         Log::debug(sprintf('Updated %d transactions.', $success));
     }
 }

@@ -161,7 +161,7 @@ class Navigation
     public function startOfPeriod(Carbon $theDate, string $repeatFreq): Carbon
     {
         $date         = clone $theDate;
-        //Log::debug(sprintf('Now in startOfPeriod("%s", "%s")', $date->toIso8601String(), $repeatFreq));
+        // Log::debug(sprintf('Now in startOfPeriod("%s", "%s")', $date->toIso8601String(), $repeatFreq));
         $functionMap  = [
             '1D'        => 'startOfDay',
             'daily'     => 'startOfDay',
@@ -186,25 +186,25 @@ class Navigation
 
         if (array_key_exists($repeatFreq, $functionMap)) {
             $function = $functionMap[$repeatFreq];
-//            Log::debug(sprintf('Function is ->%s()', $function));
+            //            Log::debug(sprintf('Function is ->%s()', $function));
             if (array_key_exists($function, $parameterMap)) {
-//                Log::debug(sprintf('Parameter map, function becomes ->%s(%s)', $function, implode(', ', $parameterMap[$function])));
+                //                Log::debug(sprintf('Parameter map, function becomes ->%s(%s)', $function, implode(', ', $parameterMap[$function])));
                 $date->{$function}($parameterMap[$function][0]); // @phpstan-ignore-line
-//                Log::debug(sprintf('Result is "%s"', $date->toIso8601String()));
+                //                Log::debug(sprintf('Result is "%s"', $date->toIso8601String()));
 
                 return $date;
             }
 
             $date->{$function}(); // @phpstan-ignore-line
-//            Log::debug(sprintf('Result is "%s"', $date->toIso8601String()));
+            //            Log::debug(sprintf('Result is "%s"', $date->toIso8601String()));
 
             return $date;
         }
         if ('half-year' === $repeatFreq || '6M' === $repeatFreq) {
             $skipTo = $date->month > 7 ? 6 : 0;
             $date->startOfYear()->addMonths($skipTo);
-//            Log::debug(sprintf('Custom call for "%s": addMonths(%d)', $repeatFreq, $skipTo));
-//            Log::debug(sprintf('Result is "%s"', $date->toIso8601String()));
+            //            Log::debug(sprintf('Custom call for "%s": addMonths(%d)', $repeatFreq, $skipTo));
+            //            Log::debug(sprintf('Result is "%s"', $date->toIso8601String()));
 
             return $date;
         }
@@ -220,13 +220,13 @@ class Navigation
             default   => null,
         };
         if (null !== $result) {
-//            Log::debug(sprintf('Result is "%s"', $date->toIso8601String()));
+            //            Log::debug(sprintf('Result is "%s"', $date->toIso8601String()));
 
             return $result;
         }
 
         if ('custom' === $repeatFreq) {
-//            Log::debug(sprintf('Custom, result is "%s"', $date->toIso8601String()));
+            //            Log::debug(sprintf('Custom, result is "%s"', $date->toIso8601String()));
 
             return $date; // the date is already at the start.
         }
@@ -238,7 +238,7 @@ class Navigation
     public function endOfPeriod(Carbon $end, string $repeatFreq): Carbon
     {
         $currentEnd  = clone $end;
-        //Log::debug(sprintf('Now in endOfPeriod("%s", "%s").', $currentEnd->toIso8601String(), $repeatFreq));
+        // Log::debug(sprintf('Now in endOfPeriod("%s", "%s").', $currentEnd->toIso8601String(), $repeatFreq));
 
         $functionMap = [
             '1D'        => 'endOfDay',
@@ -327,7 +327,7 @@ class Navigation
         if (in_array($repeatFreq, $subDay, true)) {
             $currentEnd->subDay();
         }
-//        Log::debug(sprintf('Final result: %s', $currentEnd->toIso8601String()));
+        //        Log::debug(sprintf('Final result: %s', $currentEnd->toIso8601String()));
 
         return $currentEnd;
     }

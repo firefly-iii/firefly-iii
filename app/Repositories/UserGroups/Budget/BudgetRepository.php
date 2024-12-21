@@ -42,12 +42,13 @@ class BudgetRepository implements BudgetRepositoryInterface
             ->get()
         ;
     }
+
     public function getBudgets(): Collection
     {
         return $this->userGroup->budgets()
-                               ->orderBy('order', 'ASC')
-                               ->orderBy('name', 'ASC')
-                               ->get()
-            ;
+            ->orderBy('order', 'ASC')
+            ->orderBy('name', 'ASC')
+            ->get()
+        ;
     }
 }

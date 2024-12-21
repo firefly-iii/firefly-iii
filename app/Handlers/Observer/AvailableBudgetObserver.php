@@ -1,4 +1,5 @@
 <?php
+
 /*
  * AutoBudgetObserver.php
  * Copyright (c) 2024 james@firefly-iii.org.
@@ -23,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Observer;
 
-use FireflyIII\Models\AutoBudget;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Support\Facades\Log;
@@ -44,16 +44,14 @@ class AvailableBudgetObserver
 
     private function updateNativeAmount(AvailableBudget $availableBudget): void
     {
-        $userCurrency = app('amount')->getDefaultCurrencyByUserGroup($availableBudget->user->userGroup);
+        $userCurrency                   = app('amount')->getDefaultCurrencyByUserGroup($availableBudget->user->userGroup);
         $availableBudget->native_amount = null;
         if ($availableBudget->transactionCurrency->id !== $userCurrency->id) {
-            $converter = new ExchangeRateConverter();
+            $converter                      = new ExchangeRateConverter();
             $converter->setIgnoreSettings(true);
             $availableBudget->native_amount = $converter->convert($availableBudget->transactionCurrency, $userCurrency, today(), $availableBudget->amount);
         }
         $availableBudget->saveQuietly();
         Log::debug('Available budget native amount is updated.');
     }
-
-
 }

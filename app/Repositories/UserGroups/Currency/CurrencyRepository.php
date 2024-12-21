@@ -64,7 +64,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     public function currencyInUseAt(TransactionCurrency $currency): ?string
     {
         app('log')->debug(sprintf('Now in currencyInUse() for #%d ("%s")', $currency->id, $currency->code));
-        $countJournals = $this->countJournals($currency);
+        $countJournals    = $this->countJournals($currency);
         if ($countJournals > 0) {
             app('log')->info(sprintf('Count journals is %d, return true.', $countJournals));
 
@@ -79,7 +79,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         }
 
         // is being used in accounts:
-        $meta = AccountMeta::where('name', 'currency_id')->where('data', json_encode((string) $currency->id))->count();
+        $meta             = AccountMeta::where('name', 'currency_id')->where('data', json_encode((string) $currency->id))->count();
         if ($meta > 0) {
             app('log')->info(sprintf('Used in %d accounts as currency_id, return true. ', $meta));
 
@@ -87,7 +87,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         }
 
         // second search using integer check.
-        $meta = AccountMeta::where('name', 'currency_id')->where('data', json_encode((int) $currency->id))->count();
+        $meta             = AccountMeta::where('name', 'currency_id')->where('data', json_encode((int) $currency->id))->count();
         if ($meta > 0) {
             app('log')->info(sprintf('Used in %d accounts as currency_id, return true. ', $meta));
 
@@ -95,7 +95,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         }
 
         // is being used in bills:
-        $bills = Bill::where('transaction_currency_id', $currency->id)->count();
+        $bills            = Bill::where('transaction_currency_id', $currency->id)->count();
         if ($bills > 0) {
             app('log')->info(sprintf('Used in %d bills as currency, return true. ', $bills));
 
@@ -113,9 +113,10 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         }
 
         // is being used in accounts (as integer)
-        $meta = AccountMeta::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
-                           ->whereNull('accounts.deleted_at')
-                           ->where('account_meta.name', 'currency_id')->where('account_meta.data', json_encode($currency->id))->count();
+        $meta             = AccountMeta::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
+            ->whereNull('accounts.deleted_at')
+            ->where('account_meta.name', 'currency_id')->where('account_meta.data', json_encode($currency->id))->count()
+        ;
         if ($meta > 0) {
             app('log')->info(sprintf('Used in %d accounts as currency_id, return true. ', $meta));
 
@@ -131,7 +132,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         }
 
         // is being used in budget limits
-        $budgetLimit = BudgetLimit::where('transaction_currency_id', $currency->id)->count();
+        $budgetLimit      = BudgetLimit::where('transaction_currency_id', $currency->id)->count();
         if ($budgetLimit > 0) {
             app('log')->info(sprintf('Used in %d budget limits as currency, return true. ', $budgetLimit));
 
@@ -139,7 +140,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         }
 
         // is the default currency for the user or the system
-        $count = $this->userGroup->currencies()->where('transaction_currencies.id', $currency->id)->wherePivot('group_default', 1)->count();
+        $count            = $this->userGroup->currencies()->where('transaction_currencies.id', $currency->id)->wherePivot('group_default', 1)->count();
         if ($count > 0) {
             app('log')->info('Is the default currency of the user, return true.');
 
@@ -147,7 +148,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         }
 
         // is the default currency for the user or the system
-        $count = $this->userGroup->currencies()->where('transaction_currencies.id', $currency->id)->wherePivot('group_default', 1)->count();
+        $count            = $this->userGroup->currencies()->where('transaction_currencies.id', $currency->id)->wherePivot('group_default', 1)->count();
         if ($count > 0) {
             app('log')->info('Is the default currency of the user group, return true.');
 

@@ -55,11 +55,11 @@ class BillObserver
 
     private function updateNativeAmount(Bill $bill): void
     {
-        $userCurrency = app('amount')->getDefaultCurrencyByUserGroup($bill->user->userGroup);
+        $userCurrency            = app('amount')->getDefaultCurrencyByUserGroup($bill->user->userGroup);
         $bill->native_amount_min = null;
         $bill->native_amount_max = null;
         if ($bill->transactionCurrency->id !== $userCurrency->id) {
-            $converter = new ExchangeRateConverter();
+            $converter               = new ExchangeRateConverter();
             $converter->setIgnoreSettings(true);
             $bill->native_amount_min = $converter->convert($bill->transactionCurrency, $userCurrency, today(), $bill->amount_min);
             $bill->native_amount_max = $converter->convert($bill->transactionCurrency, $userCurrency, today(), $bill->amount_max);

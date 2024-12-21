@@ -6,7 +6,7 @@
         "flash_success": "Sukces!",
         "close": "Zamknij",
         "select_dest_account": "Please select or type a valid destination account name",
-        "select_source_account": "Please select or type a valid source account name",
+        "select_source_account": "Wybierz lub wpisz prawid\u0142ow\u0105 nazw\u0119 konta \u017ar\u00f3d\u0142owego",
         "split_transaction_title": "Opis podzielonej transakcji",
         "errors_submission": "Co\u015b posz\u0142o nie tak w czasie zapisu. Prosz\u0119, sprawd\u017a b\u0142\u0119dy poni\u017cej.",
         "split": "Podziel",

@@ -34,6 +34,7 @@ use Illuminate\Support\Collection;
 interface BudgetRepositoryInterface
 {
     public function getActiveBudgets(): Collection;
+
     public function getBudgets(): Collection;
 
     public function setUser(User $user): void;

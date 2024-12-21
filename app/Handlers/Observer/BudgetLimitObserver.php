@@ -1,4 +1,5 @@
 <?php
+
 /*
  * BudgetLimitObserver.php
  * Copyright (c) 2024 james@firefly-iii.org.
@@ -43,10 +44,10 @@ class BudgetLimitObserver
 
     private function updateNativeAmount(BudgetLimit $budgetLimit): void
     {
-        $userCurrency = app('amount')->getDefaultCurrencyByUserGroup($budgetLimit->budget->user->userGroup);
+        $userCurrency               = app('amount')->getDefaultCurrencyByUserGroup($budgetLimit->budget->user->userGroup);
         $budgetLimit->native_amount = null;
         if ($budgetLimit->transactionCurrency->id !== $userCurrency->id) {
-            $converter = new ExchangeRateConverter();
+            $converter                  = new ExchangeRateConverter();
             $converter->setIgnoreSettings(true);
             $budgetLimit->native_amount = $converter->convert($budgetLimit->transactionCurrency, $userCurrency, today(), $budgetLimit->amount);
         }
