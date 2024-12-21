@@ -1,4 +1,5 @@
 <?php
+
 /*
  * AutoBudgetObserver.php
  * Copyright (c) 2024 james@firefly-iii.org.
@@ -23,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Observer;
 
-use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Support\Facades\Log;
@@ -44,16 +44,14 @@ class PiggyBankEventObserver
 
     private function updateNativeAmount(PiggyBankEvent $event): void
     {
-        $userCurrency = app('amount')->getDefaultCurrencyByUserGroup($event->piggyBank->accounts()->first()->user->userGroup);
+        $userCurrency         = app('amount')->getDefaultCurrencyByUserGroup($event->piggyBank->accounts()->first()->user->userGroup);
         $event->native_amount = null;
         if ($event->piggyBank->transactionCurrency->id !== $userCurrency->id) {
-            $converter = new ExchangeRateConverter();
+            $converter            = new ExchangeRateConverter();
             $converter->setIgnoreSettings(true);
             $event->native_amount = $converter->convert($event->piggyBank->transactionCurrency, $userCurrency, today(), $event->amount);
         }
         $event->saveQuietly();
         Log::debug('Piggy bank event native amount is updated.');
     }
-
-
 }

@@ -43,7 +43,7 @@ class ExchangeRateConverter
     private bool  $noPreparedRates = false;
     private array $prepared        = [];
     private int   $queryCount      = 0;
-    private bool $ignoreSettings = false;
+    private bool $ignoreSettings   = false;
 
     public function setIgnoreSettings(bool $ignoreSettings): void
     {

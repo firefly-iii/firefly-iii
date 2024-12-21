@@ -1,4 +1,5 @@
 <?php
+
 /*
  * AutoBudgetObserver.php
  * Copyright (c) 2024 james@firefly-iii.org.
@@ -43,16 +44,14 @@ class AutoBudgetObserver
 
     private function updateNativeAmount(AutoBudget $autoBudget): void
     {
-        $userCurrency = app('amount')->getDefaultCurrencyByUserGroup($autoBudget->budget->user->userGroup);
-        $autoBudget->native_amount =null;
+        $userCurrency              = app('amount')->getDefaultCurrencyByUserGroup($autoBudget->budget->user->userGroup);
+        $autoBudget->native_amount = null;
         if ($autoBudget->transactionCurrency->id !== $userCurrency->id) {
-            $converter = new ExchangeRateConverter();
+            $converter                 = new ExchangeRateConverter();
             $converter->setIgnoreSettings(true);
             $autoBudget->native_amount = $converter->convert($autoBudget->transactionCurrency, $userCurrency, today(), $autoBudget->amount);
         }
         $autoBudget->saveQuietly();
         Log::debug('Auto budget native amount is updated.');
     }
-
-
 }
