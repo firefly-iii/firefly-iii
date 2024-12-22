@@ -34,6 +34,7 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\RuleTrigger;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class ReportSkeleton
@@ -69,135 +70,89 @@ class CorrectAmounts extends Command
 
     private function fixAutoBudgets(): void
     {
-        $set   = AutoBudget::where('amount', '<', 0)->get();
-        $count = $set->count();
+        $count = AutoBudget::where('amount', '<', 0)->update(['amount' => DB::raw('amount * -1')]);
         if (0 === $count) {
             $this->friendlyPositive('All auto budget amounts are positive.');
 
             return;
-        }
-
-        /** @var AutoBudget $item */
-        foreach ($set as $item) {
-            $item->amount = app('steam')->positive($item->amount);
-            $item->save();
         }
         $this->friendlyInfo(sprintf('Corrected %d auto budget amount(s).', $count));
     }
 
     private function fixAvailableBudgets(): void
     {
-        $set   = AvailableBudget::where('amount', '<', 0)->get();
-        $count = $set->count();
+        $count = AvailableBudget::where('amount', '<', 0)->update(['amount' => DB::raw('amount * -1')]);
         if (0 === $count) {
             $this->friendlyPositive('All available budget amounts are positive.');
 
             return;
-        }
-
-        /** @var AvailableBudget $item */
-        foreach ($set as $item) {
-            $item->amount = app('steam')->positive($item->amount);
-            $item->save();
         }
         $this->friendlyInfo(sprintf('Corrected %d available budget amount(s).', $count));
     }
 
     private function fixBills(): void
     {
-        $set   = Bill::where('amount_min', '<', 0)->orWhere('amount_max', '<', 0)->get();
-        $count = $set->count();
+        $count = 0;
+        $count += Bill::where('amount_max', '<', 0)->update(['amount_max' => DB::raw('amount_max * -1')]);
+        $count += Bill::where('amount_min', '<', 0)->update(['amount_min' => DB::raw('amount_min * -1')]);
         if (0 === $count) {
             $this->friendlyPositive('All bill amounts are positive.');
 
             return;
-        }
-
-        /** @var Bill $item */
-        foreach ($set as $item) {
-            $item->amount_min = app('steam')->positive($item->amount_min);
-            $item->amount_max = app('steam')->positive($item->amount_max);
-            $item->save();
         }
         $this->friendlyInfo(sprintf('Corrected %d bill amount(s).', $count));
     }
 
     private function fixBudgetLimits(): void
     {
-        $set   = BudgetLimit::where('amount', '<', 0)->get();
-        $count = $set->count();
+        $count = BudgetLimit::where('amount', '<', 0)->update(['amount' => DB::raw('amount * -1')]);
         if (0 === $count) {
             $this->friendlyPositive('All budget limit amounts are positive.');
 
             return;
-        }
-
-        /** @var BudgetLimit $item */
-        foreach ($set as $item) {
-            $item->amount = app('steam')->positive($item->amount);
-            $item->save();
         }
         $this->friendlyInfo(sprintf('Corrected %d budget limit amount(s).', $count));
     }
 
     private function fixExchangeRates(): void
     {
-        $set   = CurrencyExchangeRate::where('rate', '<', 0)->get();
-        $count = $set->count();
+        $count = CurrencyExchangeRate::where('rate', '<', 0)->update(['rate' => DB::raw('rate * -1')]);
         if (0 === $count) {
             $this->friendlyPositive('All currency exchange rates are positive.');
 
             return;
-        }
-
-        /** @var CurrencyExchangeRate $item */
-        foreach ($set as $item) {
-            $item->rate = app('steam')->positive($item->rate);
-            $item->save();
         }
         $this->friendlyInfo(sprintf('Corrected %d currency exchange rate(s).', $count));
     }
 
     private function fixPiggyBanks(): void
     {
-        $set   = PiggyBank::where('target_amount', '<', 0)->get();
-        $count = $set->count();
+        $count = PiggyBank::where('target_amount', '<', 0)->update(['target_amount' => DB::raw('target_amount * -1')]);
         if (0 === $count) {
             $this->friendlyPositive('All piggy bank amounts are positive.');
 
             return;
-        }
-
-        /** @var PiggyBank $item */
-        foreach ($set as $item) {
-            $item->target_amount = app('steam')->positive($item->target_amount);
-            $item->save();
         }
         $this->friendlyInfo(sprintf('Corrected %d piggy bank amount(s).', $count));
     }
 
     private function fixRecurrences(): void
     {
-        $set   = RecurrenceTransaction::where('amount', '<', 0)
-            ->orWhere('foreign_amount', '<', 0)
-            ->get()
-        ;
-        $count = $set->count();
+        $count = 0;
+        $count += RecurrenceTransaction::where('amount', '<', 0)->update(['amount' => DB::raw('amount * -1')]);
+        $count += RecurrenceTransaction::where('foreign_amount', '<', 0)->update(['foreign_amount' => DB::raw('foreign_amount * -1')]);
         if (0 === $count) {
             $this->friendlyPositive('All recurring transaction amounts are positive.');
 
             return;
         }
-
-        /** @var RecurrenceTransaction $item */
-        foreach ($set as $item) {
-            $item->amount         = app('steam')->positive($item->amount);
-            $item->foreign_amount = app('steam')->positive($item->foreign_amount);
-            $item->save();
-        }
         $this->friendlyInfo(sprintf('Corrected %d recurring transaction amount(s).', $count));
     }
 
+    /**
+     * Foreach loop is unavoidable here.
+     * @return void
+     */
     private function fixRuleTriggers(): void
     {
         $set   = RuleTrigger::whereIn('trigger_type', ['amount_less', 'amount_more', 'amount_is'])->get();
@@ -205,21 +160,9 @@ class CorrectAmounts extends Command
 
         /** @var RuleTrigger $item */
         foreach ($set as $item) {
-            // basic check:
-            $check = 0;
-
-            try {
-                $check = bccomp((string)$item->trigger_value, '0');
-            } catch (\ValueError $e) {
-                $this->friendlyError(sprintf('Rule #%d contained invalid %s-trigger "%s". The trigger has been removed, and the rule is disabled.', $item->rule_id, $item->trigger_type, $item->trigger_value));
-                $item->rule->active = false;
-                $item->rule->save();
-                $item->forceDelete();
-            }
-            if (-1 === $check) {
-                ++$fixed;
-                $item->trigger_value = app('steam')->positive($item->trigger_value);
-                $item->save();
+            $result = $this->fixRuleTrigger($item);
+            if (true === $result) {
+                $fixed++;
             }
         }
         if (0 === $fixed) {
@@ -228,5 +171,24 @@ class CorrectAmounts extends Command
             return;
         }
         $this->friendlyInfo(sprintf('Corrected %d rule trigger amount(s).', $fixed));
+    }
+
+    private function fixRuleTrigger(RuleTrigger $item): bool
+    {
+        try {
+            $check = bccomp((string) $item->trigger_value, '0');
+        } catch (\ValueError $e) {
+            $this->friendlyError(sprintf('Rule #%d contained invalid %s-trigger "%s". The trigger has been removed, and the rule is disabled.', $item->rule_id, $item->trigger_type, $item->trigger_value));
+            $item->rule->active = false;
+            $item->rule->save();
+            $item->forceDelete();
+            return false;
+        }
+        if (-1 === $check) {
+            $item->trigger_value = app('steam')->positive($item->trigger_value);
+            $item->save();
+            return true;
+        }
+        return false;
     }
 }
