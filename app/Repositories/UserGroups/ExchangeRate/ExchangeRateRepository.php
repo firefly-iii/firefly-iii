@@ -35,17 +35,19 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface
 
     #[\Override] public function getRates(TransactionCurrency $from, TransactionCurrency $to): Collection
     {
+        // orderBy('date', 'DESC')->toRawSql();
         return
             $this->userGroup->currencyExchangeRates()
-                            ->where(function (Builder $q) use ($from, $to) {
-                                $q->where('from_currency_id', $from->id)
-                                  ->orWhere('to_currency_id', $to->id);
+                            ->where(function (Builder $q1) use ($from, $to) {
+                                $q1->where(function (Builder $q) use ($from, $to) {
+                                    $q->where('from_currency_id', $from->id)
+                                      ->where('to_currency_id', $to->id);
+                                })->orWhere(function (Builder $q) use ($from, $to) {
+                                    $q->where('from_currency_id', $to->id)
+                                      ->where('to_currency_id', $from->id);
+                                });
                             })
-                            ->orWhere(function (Builder $q) use ($from, $to) {
-                                $q->where('from_currency_id', $to->id)
-                                  ->orWhere('to_currency_id', $from->id);
-                            })
-                            ->orderBy('date', 'DESC')->get();
+                            ->orderBy('date', 'DESC')->get(['currency_exchange_rates.*']);
 
     }
 }

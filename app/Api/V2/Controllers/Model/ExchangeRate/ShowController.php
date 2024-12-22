@@ -57,13 +57,13 @@ class ShowController extends Controller
 
     public function show(TransactionCurrency $from, TransactionCurrency $to): JsonResponse
     {
-//        $piggies   = $this->repository->getAll();
-//
-        $pageSize = $this->parameters->get('limit');
-        $rates    = $this->repository->getRates($from, $to);
+        $pageSize  = $this->parameters->get('limit');
+        $page      = $this->parameters->get('page');
+        $rates     = $this->repository->getRates($from, $to);
         $count     = $rates->count();
-        $rates    = $rates->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
-        $paginator = new LengthAwarePaginator($rates, $count, $pageSize, $this->parameters->get('page'));
+
+        $rates     = $rates->slice(($page - 1) * $pageSize, $pageSize);
+        $paginator = new LengthAwarePaginator($rates, $count, $pageSize, $page);
 
         $transformer = new ExchangeRateTransformer();
         $transformer->setParameters($this->parameters); // give params to transformer
