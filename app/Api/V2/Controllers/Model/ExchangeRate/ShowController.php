@@ -37,8 +37,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
  */
 class ShowController extends Controller
 {
-    public const string RESOURCE_KEY = 'exchange-rates';
     use ValidatesUserGroupTrait;
+    public const string RESOURCE_KEY = 'exchange-rates';
 
     private ExchangeRateRepositoryInterface $repository;
 
@@ -57,19 +57,20 @@ class ShowController extends Controller
 
     public function show(TransactionCurrency $from, TransactionCurrency $to): JsonResponse
     {
-//        $piggies   = $this->repository->getAll();
-//
-        $pageSize = $this->parameters->get('limit');
-        $rates    = $this->repository->getRates($from, $to);
-        $count     = $rates->count();
-        $rates    = $rates->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
-        $paginator = new LengthAwarePaginator($rates, $count, $pageSize, $this->parameters->get('page'));
+        //        $piggies   = $this->repository->getAll();
+        //
+        $pageSize    = $this->parameters->get('limit');
+        $rates       = $this->repository->getRates($from, $to);
+        $count       = $rates->count();
+        $rates       = $rates->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $paginator   = new LengthAwarePaginator($rates, $count, $pageSize, $this->parameters->get('page'));
 
         $transformer = new ExchangeRateTransformer();
         $transformer->setParameters($this->parameters); // give params to transformer
 
         return response()
             ->json($this->jsonApiList(self::RESOURCE_KEY, $paginator, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
 }

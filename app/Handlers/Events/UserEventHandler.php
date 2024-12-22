@@ -187,13 +187,13 @@ class UserEventHandler
      */
     public function notifyNewIPAddress(DetectedNewIPAddress $event): void
     {
-        $user      = $event->user;
+        $user = $event->user;
 
         if ($user->hasRole('demo')) {
             return; // do not email demo user.
         }
 
-        $list      = app('preferences')->getForUser($user, 'login_ip_history', [])->data;
+        $list = app('preferences')->getForUser($user, 'login_ip_history', [])->data;
         if (!is_array($list)) {
             $list = [];
         }

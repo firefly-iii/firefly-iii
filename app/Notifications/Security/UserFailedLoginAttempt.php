@@ -58,7 +58,7 @@ class UserFailedLoginAttempt extends Notification
      */
     public function toMail(User $notifiable)
     {
-        $subject = (string) trans('email.failed_login_subject');
+        $subject   = (string) trans('email.failed_login_subject');
         $ip        = Request::ip();
         $host      = Steam::getHostName($ip);
         $userAgent = Request::userAgent();

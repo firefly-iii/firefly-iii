@@ -151,7 +151,6 @@ class CorrectAmounts extends Command
 
     /**
      * Foreach loop is unavoidable here.
-     * @return void
      */
     private function fixRuleTriggers(): void
     {
@@ -162,7 +161,7 @@ class CorrectAmounts extends Command
         foreach ($set as $item) {
             $result = $this->fixRuleTrigger($item);
             if (true === $result) {
-                $fixed++;
+                ++$fixed;
             }
         }
         if (0 === $fixed) {
@@ -182,13 +181,16 @@ class CorrectAmounts extends Command
             $item->rule->active = false;
             $item->rule->save();
             $item->forceDelete();
+
             return false;
         }
         if (-1 === $check) {
             $item->trigger_value = app('steam')->positive($item->trigger_value);
             $item->save();
+
             return true;
         }
+
         return false;
     }
 }

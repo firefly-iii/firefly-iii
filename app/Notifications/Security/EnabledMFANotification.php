@@ -61,7 +61,7 @@ class EnabledMFANotification extends Notification
      */
     public function toMail(User $notifiable)
     {
-        $subject = (string) trans('email.enabled_mfa_subject');
+        $subject   = (string) trans('email.enabled_mfa_subject');
         $ip        = Request::ip();
         $host      = Steam::getHostName($ip);
         $userAgent = Request::userAgent();

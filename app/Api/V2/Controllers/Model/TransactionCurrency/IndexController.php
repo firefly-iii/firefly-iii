@@ -34,7 +34,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class IndexController extends Controller
 {
-    public const string RESOURCE_KEY = 'transaction-currencies';
+    public const string RESOURCE_KEY                   = 'transaction-currencies';
 
     private CurrencyRepositoryInterface $repository;
     protected array                     $acceptedRoles = [UserRoleEnum::READ_ONLY];
@@ -46,7 +46,7 @@ class IndexController extends Controller
             function ($request, $next) {
                 $this->repository = app(CurrencyRepositoryInterface::class);
                 // new way of user group validation
-                $userGroup = $this->validateUserGroup($request);
+                $userGroup        = $this->validateUserGroup($request);
                 $this->repository->setUserGroup($userGroup);
 
                 return $next($request);
@@ -56,20 +56,20 @@ class IndexController extends Controller
 
     public function index(IndexRequest $request): JsonResponse
     {
-        $settings  = $request->getAll();
-        if(true === $settings['enabled']) {
+        $settings    = $request->getAll();
+        if (true === $settings['enabled']) {
             $currencies = $this->repository->get();
         }
-        if(true !== $settings['enabled']) {
+        if (true !== $settings['enabled']) {
             $currencies = $this->repository->getAll();
         }
 
-        $pageSize   = $this->parameters->get('limit');
-        $count      = $currencies->count();
+        $pageSize    = $this->parameters->get('limit');
+        $count       = $currencies->count();
 
         // depending on the sort parameters, this list must not be split, because the
         // order is calculated in the account transformer and by that time it's too late.
-        $accounts = $currencies->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $accounts    = $currencies->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         $paginator   = new LengthAwarePaginator($accounts, $count, $pageSize, $this->parameters->get('page'));
         $transformer = new CurrencyTransformer();
 
@@ -78,6 +78,7 @@ class IndexController extends Controller
 
         return response()
             ->json($this->jsonApiList(self::RESOURCE_KEY, $paginator, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
 }

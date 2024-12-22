@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Notifications\User;
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Notifications\ReturnsAvailableChannels;
 use FireflyIII\Notifications\ReturnsSettings;
 use FireflyIII\Support\Facades\Steam;
@@ -68,13 +67,13 @@ class UserLogin extends Notification
 
     public function toNtfy(User $notifiable): Message
     {
-        $ip        = Request::ip();
-        $host      = Steam::getHostName($ip);
+        $ip       = Request::ip();
+        $host     = Steam::getHostName($ip);
         $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
         $message  = new Message();
         $message->topic($settings['ntfy_topic']);
         $message->title((string) trans('email.login_from_new_ip'));
-        $message->body((string) trans('email.slack_login_from_new_ip', ['ip' => $ip, 'host' => $host, ]));
+        $message->body((string) trans('email.slack_login_from_new_ip', ['ip' => $ip, 'host' => $host]));
 
         return $message;
     }
@@ -84,9 +83,10 @@ class UserLogin extends Notification
      */
     public function toPushover(User $notifiable): PushoverMessage
     {
-        $ip        = Request::ip();
-        $host      = Steam::getHostName($ip);
-        return PushoverMessage::create((string) trans('email.slack_login_from_new_ip', ['ip' => $ip, 'host' => $host, ]))
+        $ip   = Request::ip();
+        $host = Steam::getHostName($ip);
+
+        return PushoverMessage::create((string) trans('email.slack_login_from_new_ip', ['ip' => $ip, 'host' => $host]))
             ->title((string) trans('email.login_from_new_ip'))
         ;
     }
@@ -96,9 +96,10 @@ class UserLogin extends Notification
      */
     public function toSlack(User $notifiable)
     {
-        $ip        = Request::ip();
-        $host      = Steam::getHostName($ip);
-        return new SlackMessage()->content((string) trans('email.slack_login_from_new_ip', ['ip' => $ip, 'host' => $host, ]));
+        $ip   = Request::ip();
+        $host = Steam::getHostName($ip);
+
+        return new SlackMessage()->content((string) trans('email.slack_login_from_new_ip', ['ip' => $ip, 'host' => $host]));
     }
 
     /**
@@ -108,6 +109,4 @@ class UserLogin extends Notification
     {
         return ReturnsAvailableChannels::returnChannels('user', $notifiable);
     }
-
-
 }

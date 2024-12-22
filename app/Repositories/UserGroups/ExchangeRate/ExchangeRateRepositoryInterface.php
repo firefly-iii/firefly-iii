@@ -1,4 +1,5 @@
 <?php
+
 /*
  * ExchangeRateRepositoryInterface.php
  * Copyright (c) 2024 james@firefly-iii.org.
@@ -28,7 +29,5 @@ use Illuminate\Support\Collection;
 
 interface ExchangeRateRepositoryInterface
 {
-
     public function getRates(TransactionCurrency $from, TransactionCurrency $to): Collection;
-
 }

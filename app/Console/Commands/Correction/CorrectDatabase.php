@@ -69,7 +69,7 @@ class CorrectDatabase extends Command
             'firefly-iii:fix-long-descriptions',
             'firefly-iii:fix-recurring-transactions',
             'firefly-iii:upgrade-group-information',
-            //'firefly-iii:fix-transaction-types', // very resource heavy.
+            // 'firefly-iii:fix-transaction-types', // very resource heavy.
             'firefly-iii:fix-frontpage-accounts',
             // new!
             'firefly-iii:unify-group-accounts',

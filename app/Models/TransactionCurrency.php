@@ -43,7 +43,7 @@ class TransactionCurrency extends Model
     public ?bool $userGroupDefault = null;
     public ?bool $userGroupEnabled = null;
     protected $casts
-                        = [
+                                   = [
             'created_at'     => 'datetime',
             'updated_at'     => 'datetime',
             'deleted_at'     => 'datetime',
@@ -51,7 +51,7 @@ class TransactionCurrency extends Model
             'enabled'        => 'bool',
         ];
 
-    protected $fillable = ['name', 'code', 'symbol', 'decimal_places', 'enabled'];
+    protected $fillable            = ['name', 'code', 'symbol', 'decimal_places', 'enabled'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).

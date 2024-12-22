@@ -61,7 +61,7 @@ class MFABackupNoLeftNotification extends Notification
      */
     public function toMail(User $notifiable)
     {
-        $subject = (string) trans('email.mfa_no_backups_left_subject');
+        $subject   = (string) trans('email.mfa_no_backups_left_subject');
         $ip        = Request::ip();
         $host      = Steam::getHostName($ip);
         $userAgent = Request::userAgent();

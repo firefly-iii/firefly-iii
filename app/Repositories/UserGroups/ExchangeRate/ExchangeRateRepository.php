@@ -1,4 +1,5 @@
 <?php
+
 /*
  * ExchangeRateRepository.php
  * Copyright (c) 2024 james@firefly-iii.org.
@@ -32,20 +33,23 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface
 {
     use UserGroupTrait;
 
-
-    #[\Override] public function getRates(TransactionCurrency $from, TransactionCurrency $to): Collection
+    #[\Override]
+    public function getRates(TransactionCurrency $from, TransactionCurrency $to): Collection
     {
         return
             $this->userGroup->currencyExchangeRates()
-                            ->where(function (Builder $q) use ($from, $to) {
-                                $q->where('from_currency_id', $from->id)
-                                  ->orWhere('to_currency_id', $to->id);
-                            })
-                            ->orWhere(function (Builder $q) use ($from, $to) {
-                                $q->where('from_currency_id', $to->id)
-                                  ->orWhere('to_currency_id', $from->id);
-                            })
-                            ->orderBy('date', 'DESC')->get();
+                ->where(function (Builder $q) use ($from, $to): void {
+                    $q->where('from_currency_id', $from->id)
+                        ->orWhere('to_currency_id', $to->id)
+                    ;
+                })
+                ->orWhere(function (Builder $q) use ($from, $to): void {
+                    $q->where('from_currency_id', $to->id)
+                        ->orWhere('to_currency_id', $from->id)
+                    ;
+                })
+                ->orderBy('date', 'DESC')->get()
+        ;
 
     }
 }
