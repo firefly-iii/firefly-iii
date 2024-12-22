@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Facades\Steam;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -103,7 +104,7 @@ class AccountTransformer extends AbstractTransformer
             'currency_code'           => $currencyCode,
             'currency_symbol'         => $currencySymbol,
             'currency_decimal_places' => $decimalPlaces,
-            'current_balance'         => app('steam')->bcround(app('steam')->balance($account, $date), $decimalPlaces),
+            'current_balance'         => app('steam')->bcround(Steam::finalAccountBalance($account, $date)['balance'], $decimalPlaces),
             'current_balance_date'    => $date->toAtomString(),
             'notes'                   => $this->repository->getNoteText($account),
             'monthly_payment_date'    => $monthlyPaymentDate,

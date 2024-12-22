@@ -35,6 +35,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
@@ -334,7 +335,8 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     public function leftOnAccount(PiggyBank $piggyBank, Account $account, Carbon $date): string
     {
         Log::debug(sprintf('leftOnAccount("%s","%s","%s")', $piggyBank->name, $account->name, $date->format('Y-m-d H:i:s')));
-        $balance = app('steam')->balanceConvertedIgnoreVirtual($account, $date, $piggyBank->transactionCurrency);
+        $balance = Steam::finalAccountBalance($account, $date)['balance'];
+
         Log::debug(sprintf('Balance is: %s', $balance));
 
         /** @var Collection $piggies */

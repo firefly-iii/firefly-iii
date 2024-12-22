@@ -25,8 +25,11 @@ namespace FireflyIII\Support\Twig;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Search\OperatorQuerySearch;
 use League\CommonMark\GithubFlavoredMarkdownConverter;
 use Route;
@@ -63,28 +66,29 @@ class General extends AbstractExtension
                 }
 
                 /** @var Carbon $date */
-                $date           = session('end', today(config('app.timezone'))->endOfMonth());
-                $runningBalance = config('firefly.feature_flags.running_balance_column');
-                $info           = [];
-                if (true === $runningBalance) {
-                    $info = app('steam')->balanceByTransactions($account, $date, null);
-                }
-                if (false === $runningBalance) {
-                    $info[] = app('steam')->balance($account, $date);
-                }
-
-                $strings        = [];
-                foreach ($info as $currencyId => $balance) {
-                    $balance = (string) $balance;
-                    if (0 === $currencyId) {
-                        // not good code but OK
-                        /** @var AccountRepositoryInterface $accountRepos */
-                        $accountRepos = app(AccountRepositoryInterface::class);
-                        $currency     = $accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
-                        $strings[]    = app('amount')->formatAnything($currency, $balance, false);
+                $date            = session('end', today(config('app.timezone'))->endOfMonth());
+                $info            = Steam::finalAccountBalance($account, $date);
+                $currency        = Steam::getAccountCurrency($account);
+                $native          = Amount::getDefaultCurrency();
+                $convertToNative = app('preferences')->get('convert_to_native', false)->data;
+                $strings         = [];
+                foreach ($info as $key => $balance) {
+                    if ('balance' === $key) {
+                        // balance in account currency.
+                        if (!$convertToNative || $currency->code === $native->code) {
+                            $strings[] = app('amount')->formatAnything($currency, $balance, false);
+                        }
+                        continue;
                     }
-                    if (0 !== $currencyId) {
-                        $strings[] = app('amount')->formatByCurrencyId($currencyId, $balance, false);
+                    if ('native_balance' === $key) {
+                        // balance in native currency.
+                        if($convertToNative) {
+                            $strings[] = app('amount')->formatAnything($native, $balance, false);
+                        }
+                        continue;
+                    }
+                    if ($key !== $currency->code) {
+                        $strings[] = app('amount')->formatAnything(TransactionCurrency::where('code', $key)->first(), $balance, false);
                     }
                 }
 
@@ -104,15 +108,15 @@ class General extends AbstractExtension
             static function (int $size): string {
                 // less than one GB, more than one MB
                 if ($size < (1024 * 1024 * 2014) && $size >= (1024 * 1024)) {
-                    return round($size / (1024 * 1024), 2).' MB';
+                    return round($size / (1024 * 1024), 2) . ' MB';
                 }
 
                 // less than one MB
                 if ($size < (1024 * 1024)) {
-                    return round($size / 1024, 2).' KB';
+                    return round($size / 1024, 2) . ' KB';
                 }
 
-                return $size.' bytes';
+                return $size . ' bytes';
             }
         );
     }
@@ -134,7 +138,7 @@ class General extends AbstractExtension
                     case 'application/pdf':
                         return 'fa-file-pdf-o';
 
-                        // image
+                    // image
                     case 'image/png':
                     case 'image/jpeg':
                     case 'image/svg+xml':
@@ -143,7 +147,7 @@ class General extends AbstractExtension
                     case 'application/vnd.oasis.opendocument.image':
                         return 'fa-file-image-o';
 
-                        // MS word
+                    // MS word
                     case 'application/msword':
                     case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
                     case 'application/vnd.openxmlformats-officedocument.wordprocessingml.template':
@@ -159,7 +163,7 @@ class General extends AbstractExtension
                     case 'application/vnd.oasis.opendocument.text-master':
                         return 'fa-file-word-o';
 
-                        // MS excel
+                    // MS excel
                     case 'application/vnd.ms-excel':
                     case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
                     case 'application/vnd.openxmlformats-officedocument.spreadsheetml.template':
@@ -170,7 +174,7 @@ class General extends AbstractExtension
                     case 'application/vnd.oasis.opendocument.spreadsheet-template':
                         return 'fa-file-excel-o';
 
-                        // MS powerpoint
+                    // MS powerpoint
                     case 'application/vnd.ms-powerpoint':
                     case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
                     case 'application/vnd.openxmlformats-officedocument.presentationml.template':
@@ -182,7 +186,7 @@ class General extends AbstractExtension
                     case 'application/vnd.oasis.opendocument.presentation-template':
                         return 'fa-file-powerpoint-o';
 
-                        // calc
+                    // calc
                     case 'application/vnd.sun.xml.draw':
                     case 'application/vnd.sun.xml.draw.template':
                     case 'application/vnd.stardivision.draw':
@@ -318,7 +322,7 @@ class General extends AbstractExtension
             'activeRoutePartialObjectType',
             static function ($context): string {
                 [, $route, $objectType] = func_get_args();
-                $activeObjectType       = $context['objectType'] ?? false;
+                $activeObjectType = $context['objectType'] ?? false;
 
                 if ($objectType === $activeObjectType
                     && false !== stripos(

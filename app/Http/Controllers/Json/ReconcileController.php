@@ -32,6 +32,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Facades\Steam;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -193,8 +194,8 @@ class ReconcileController extends Controller
         $end->endOfDay();
 
         $currency       = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
-        $startBalance   = app('steam')->bcround(app('steam')->balance($account, $startDate), $currency->decimal_places);
-        $endBalance     = app('steam')->bcround(app('steam')->balance($account, $end), $currency->decimal_places);
+        $startBalance   = Steam::finalAccountBalance($account, $startDate)['balance'];
+        $endBalance     = Steam::finalAccountBalance($account, $end)['balance'];
 
         // get the transactions
         $selectionStart = clone $start;

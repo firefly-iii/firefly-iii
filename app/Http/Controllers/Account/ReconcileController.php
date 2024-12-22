@@ -34,6 +34,7 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
@@ -110,8 +111,8 @@ class ReconcileController extends Controller
 
         $startDate       = clone $start;
         $startDate->subDay();
-        $startBalance    = app('steam')->bcround(app('steam')->balance($account, $startDate), $currency->decimal_places);
-        $endBalance      = app('steam')->bcround(app('steam')->balance($account, $end), $currency->decimal_places);
+        $startBalance    = Steam::finalAccountBalance($account, $startDate)['balance'];
+        $endBalance      = Steam::finalAccountBalance($account, $end)['balance'];
         $subTitleIcon    = config(sprintf('firefly.subIconsByIdentifier.%s', $account->accountType->type));
         $subTitle        = (string) trans('firefly.reconcile_account', ['account' => $account->name]);
 

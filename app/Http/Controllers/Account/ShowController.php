@@ -30,6 +30,7 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
@@ -128,7 +129,7 @@ class ShowController extends Controller
 
         $groups->setPath(route('accounts.show', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]));
         $showAll          = false;
-        $balance          = app('steam')->balance($account, $end);
+        $balance          = Steam::finalAccountBalance($account, $end)['balance'];
 
         return view(
             'accounts.show',
@@ -190,7 +191,7 @@ class ShowController extends Controller
         $groups->setPath(route('accounts.show.all', [$account->id]));
         $chartUrl     = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
         $showAll      = true;
-        $balance      = app('steam')->balance($account, $end);
+        $balance      = Steam::finalAccountBalance($account, $end)['balance'];
 
         return view(
             'accounts.show',

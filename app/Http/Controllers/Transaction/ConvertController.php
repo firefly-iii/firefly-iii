@@ -34,6 +34,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Update\JournalUpdateService;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\ModelInformation;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\Validation\AccountValidator;
@@ -222,7 +223,7 @@ class ConvertController extends Controller
         // group accounts:
         /** @var Account $account */
         foreach ($accountList as $account) {
-            $balance                     = app('steam')->balance($account, today());
+            $balance                     = Steam::finalAccountBalance($account, today()->endOfDay())['balance'];
             $currency                    = $this->accountRepository->getAccountCurrency($account) ?? $defaultCurrency;
             $role                        = 'l_'.$account->accountType->type;
             $key                         = (string) trans('firefly.opt_group_'.$role);
@@ -245,7 +246,7 @@ class ConvertController extends Controller
         // group accounts:
         /** @var Account $account */
         foreach ($accountList as $account) {
-            $balance                     = app('steam')->balance($account, today());
+            $balance                     = Steam::finalAccountBalance($account, today()->endOfDay())['balance'];
             $currency                    = $this->accountRepository->getAccountCurrency($account) ?? $defaultCurrency;
             $role                        = (string) $this->accountRepository->getMetaValue($account, 'account_role');
             if ('' === $role) {

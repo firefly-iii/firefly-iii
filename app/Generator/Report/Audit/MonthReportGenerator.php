@@ -31,6 +31,7 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Collection;
 
 /**
@@ -129,8 +130,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
         ;
         $journals          = $collector->getExtractedJournals();
         $journals          = array_reverse($journals, true);
-        $dayBeforeBalance  = app('steam')->balance($account, $date);
-        $startBalance      = $dayBeforeBalance;
+        $dayBeforeBalance  = Steam::finalAccountBalance($account, $date);
+        $startBalance      = $dayBeforeBalance['balance'];
         $defaultCurrency   = app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
         $currency          = $accountRepository->getAccountCurrency($account) ?? $defaultCurrency;
 
@@ -169,7 +170,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
             'currency'         => $currency,
             'exists'           => 0 !== count($journals),
             'end'              => $this->end->isoFormat((string) trans('config.month_and_day_moment_js', [], $locale)),
-            'endBalance'       => app('steam')->balance($account, $this->end),
+            'endBalance'       => Steam::finalAccountBalance($account, $this->end)['balance'],
             'dayBefore'        => $date->isoFormat((string) trans('config.month_and_day_moment_js', [], $locale)),
             'dayBeforeBalance' => $dayBeforeBalance,
         ];

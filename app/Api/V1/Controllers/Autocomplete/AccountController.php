@@ -31,6 +31,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
+use FireflyIII\Support\Steam;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
@@ -89,11 +90,11 @@ class AccountController extends Controller
             $currency        = $this->repository->getAccountCurrency($account) ?? $defaultCurrency;
 
             if (in_array($account->accountType->type, $this->balanceTypes, true)) {
-                $balance         = app('steam')->balance($account, $date);
+                $balance         = Steam::finalAccountBalance($account, $date);
                 $nameWithBalance = sprintf(
                     '%s (%s)',
                     $account->name,
-                    app('amount')->formatAnything($currency, $balance, false)
+                    app('amount')->formatAnything($currency, $balance['balance'], false)
                 );
             }
 

@@ -36,6 +36,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\AugumentData;
 use FireflyIII\Support\Http\Controllers\ChartGeneration;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
@@ -450,7 +451,7 @@ class AccountController extends Controller
         if ('1W' === $step || '1M' === $step || '1Y' === $step) {
             while ($end >= $current) {
                 Log::debug(sprintf('Current is: %s', $current->format('Y-m-d')));
-                $balance         = (float) app('steam')->balance($account, $current, $currency);
+                $balance         = Steam::finalAccountBalance($account, $current)[$currency->code] ?? '0';
                 $label           = app('navigation')->periodShow($current, $step);
                 $entries[$label] = $balance;
                 $current         = app('navigation')->addPeriod($current, $step, 0);
