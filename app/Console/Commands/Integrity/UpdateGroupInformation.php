@@ -79,7 +79,7 @@ class UpdateGroupInformation extends Command
     {
         $group = $user->userGroup;
         if (null === $group) {
-            $this->friendlyWarning(sprintf('User "%s" has no group.', $user->email));
+            $this->friendlyWarning(sprintf('User "%s" has no group. Please run "php artisan firefly-iii:create-group-memberships"', $user->email));
 
             return;
         }

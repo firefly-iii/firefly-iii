@@ -40,7 +40,7 @@ interface PiggyBankRepositoryInterface
 {
     public function addAmount(PiggyBank $piggyBank, Account $account, string $amount, ?TransactionJournal $journal = null): bool;
 
-    public function addAmountToRepetition(PiggyBankRepetition $repetition, string $amount, TransactionJournal $journal): void;
+    public function addAmountToPiggyBank(PiggyBank $piggyBank, string $amount, TransactionJournal $journal): void;
 
     public function canAddAmount(PiggyBank $piggyBank, Account $account, string $amount): bool;
 
@@ -80,7 +80,7 @@ interface PiggyBankRepositoryInterface
     /**
      * Used for connecting to a piggy bank.
      */
-    public function getExactAmount(PiggyBank $piggyBank, PiggyBankRepetition $repetition, TransactionJournal $journal): string;
+    public function getExactAmount(PiggyBank $piggyBank, TransactionJournal $journal): string;
 
     /**
      * Return note for piggy bank.

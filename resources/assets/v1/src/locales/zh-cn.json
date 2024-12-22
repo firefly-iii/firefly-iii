@@ -132,14 +132,20 @@
         "reset_webhook_secret": "\u91cd\u7f6e webhook \u5bc6\u94a5",
         "header_exchange_rates": "Exchange rates",
         "exchange_rates_intro": "Firefly III supports downloading and using exchange rates. Read more about this in <a href=\"https:\/\/docs.firefly-iii.org\/LOL_NOT_FINISHED_YET_TODO\">the documentation<\/a>.",
-        "exchange_rates_from_to": "Between {from} and {to} (and the other way around)",
-        "exchange_rates_intro_rates": "Firefly III bla bla bla exchange rates."
+        "exchange_rates_from_to": "Between :from and :to",
+        "exchange_rates_intro_rates": "Firefly III bla bla bla exchange rates. Inverse is automatically calculated if not provided. Will go back to last found rate.",
+        "header_exchange_rates_rates": "Exchange rates",
+        "header_exchange_rates_table": "Table with exchange rates",
+        "help_rate_form": "On this day, how many {to} will you get for one {from}?",
+        "add_new_rate": "Add a new exchange rate",
+        "save_new_rate": "Save new rate"
     },
     "form": {
         "url": "\u7f51\u5740",
         "active": "\u542f\u7528",
         "interest_date": "\u5229\u606f\u65e5\u671f",
         "title": "\u6807\u9898",
+        "date": "\u65e5\u671f",
         "book_date": "\u767b\u8bb0\u65e5\u671f",
         "process_date": "\u5904\u7406\u65e5\u671f",
         "due_date": "\u5230\u671f\u65e5",
@@ -151,7 +157,8 @@
         "webhook_trigger": "\u89e6\u53d1\u6761\u4ef6",
         "webhook_delivery": "\u53d1\u9001\u683c\u5f0f",
         "from_currency_to_currency": "{from} &rarr; {to}",
-        "to_currency_from_currency": "{to} &rarr; {from}"
+        "to_currency_from_currency": "{to} &rarr; {from}",
+        "rate": "Rate"
     },
     "list": {
         "active": "\u662f\u5426\u542f\u7528\uff1f",

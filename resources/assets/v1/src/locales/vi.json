@@ -132,14 +132,20 @@
         "reset_webhook_secret": "C\u00e0i l\u1ea1i kh\u00f3a webhook",
         "header_exchange_rates": "Exchange rates",
         "exchange_rates_intro": "Firefly III supports downloading and using exchange rates. Read more about this in <a href=\"https:\/\/docs.firefly-iii.org\/LOL_NOT_FINISHED_YET_TODO\">the documentation<\/a>.",
-        "exchange_rates_from_to": "Between {from} and {to} (and the other way around)",
-        "exchange_rates_intro_rates": "Firefly III bla bla bla exchange rates."
+        "exchange_rates_from_to": "Between :from and :to",
+        "exchange_rates_intro_rates": "Firefly III bla bla bla exchange rates. Inverse is automatically calculated if not provided. Will go back to last found rate.",
+        "header_exchange_rates_rates": "Exchange rates",
+        "header_exchange_rates_table": "Table with exchange rates",
+        "help_rate_form": "On this day, how many {to} will you get for one {from}?",
+        "add_new_rate": "Add a new exchange rate",
+        "save_new_rate": "Save new rate"
     },
     "form": {
         "url": "URL",
         "active": "H\u00e0nh \u0111\u1ed9ng",
         "interest_date": "Ng\u00e0y l\u00e3i",
         "title": "Ti\u00eau \u0111\u1ec1",
+        "date": "Ng\u00e0y",
         "book_date": "Ng\u00e0y \u0111\u1eb7t s\u00e1ch",
         "process_date": "Ng\u00e0y x\u1eed l\u00fd",
         "due_date": "Ng\u00e0y \u0111\u00e1o h\u1ea1n",
@@ -151,7 +157,8 @@
         "webhook_trigger": "K\u00edch ho\u1ea1t",
         "webhook_delivery": "Ph\u00e2n ph\u1ed1i",
         "from_currency_to_currency": "{from} &rarr; {to}",
-        "to_currency_from_currency": "{to} &rarr; {from}"
+        "to_currency_from_currency": "{to} &rarr; {from}",
+        "rate": "Rate"
     },
     "list": {
         "active": "\u0110ang ho\u1ea1t \u0111\u1ed9ng?",

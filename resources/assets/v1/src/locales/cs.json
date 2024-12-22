@@ -132,14 +132,20 @@
         "reset_webhook_secret": "Restartovat tajn\u00fd kl\u00ed\u010d webhooku",
         "header_exchange_rates": "Exchange rates",
         "exchange_rates_intro": "Firefly III supports downloading and using exchange rates. Read more about this in <a href=\"https:\/\/docs.firefly-iii.org\/LOL_NOT_FINISHED_YET_TODO\">the documentation<\/a>.",
-        "exchange_rates_from_to": "Between {from} and {to} (and the other way around)",
-        "exchange_rates_intro_rates": "Firefly III bla bla bla exchange rates."
+        "exchange_rates_from_to": "Between :from and :to",
+        "exchange_rates_intro_rates": "Firefly III bla bla bla exchange rates. Inverse is automatically calculated if not provided. Will go back to last found rate.",
+        "header_exchange_rates_rates": "Exchange rates",
+        "header_exchange_rates_table": "Table with exchange rates",
+        "help_rate_form": "On this day, how many {to} will you get for one {from}?",
+        "add_new_rate": "Add a new exchange rate",
+        "save_new_rate": "Save new rate"
     },
     "form": {
         "url": "URL",
         "active": "Aktivn\u00ed",
         "interest_date": "\u00darokov\u00e9 datum",
         "title": "N\u00e1zev",
+        "date": "Datum",
         "book_date": "Datum rezervace",
         "process_date": "Datum zpracov\u00e1n\u00ed",
         "due_date": "Datum splatnosti",
@@ -151,7 +157,8 @@
         "webhook_trigger": "Spou\u0161t\u011b\u010d",
         "webhook_delivery": "Delivery",
         "from_currency_to_currency": "{from} &rarr; {to}",
-        "to_currency_from_currency": "{to} &rarr; {from}"
+        "to_currency_from_currency": "{to} &rarr; {from}",
+        "rate": "Rate"
     },
     "list": {
         "active": "Aktivn\u00ed?",

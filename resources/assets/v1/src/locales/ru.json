@@ -132,14 +132,20 @@
         "reset_webhook_secret": "",
         "header_exchange_rates": "Exchange rates",
         "exchange_rates_intro": "Firefly III supports downloading and using exchange rates. Read more about this in <a href=\"https:\/\/docs.firefly-iii.org\/LOL_NOT_FINISHED_YET_TODO\">the documentation<\/a>.",
-        "exchange_rates_from_to": "Between {from} and {to} (and the other way around)",
-        "exchange_rates_intro_rates": "Firefly III bla bla bla exchange rates."
+        "exchange_rates_from_to": "Between :from and :to",
+        "exchange_rates_intro_rates": "Firefly III bla bla bla exchange rates. Inverse is automatically calculated if not provided. Will go back to last found rate.",
+        "header_exchange_rates_rates": "Exchange rates",
+        "header_exchange_rates_table": "Table with exchange rates",
+        "help_rate_form": "On this day, how many {to} will you get for one {from}?",
+        "add_new_rate": "Add a new exchange rate",
+        "save_new_rate": "Save new rate"
     },
     "form": {
         "url": "\u0421\u0441\u044b\u043b\u043a\u0430",
         "active": "\u0410\u043a\u0442\u0438\u0432\u043d\u044b\u0439",
         "interest_date": "\u0414\u0430\u0442\u0430 \u043d\u0430\u0447\u0438\u0441\u043b\u0435\u043d\u0438\u044f \u043f\u0440\u043e\u0446\u0435\u043d\u0442\u043e\u0432",
         "title": "\u0417\u0430\u0433\u043e\u043b\u043e\u0432\u043e\u043a",
+        "date": "\u0414\u0430\u0442\u0430",
         "book_date": "\u0414\u0430\u0442\u0430 \u0431\u0440\u043e\u043d\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f",
         "process_date": "\u0414\u0430\u0442\u0430 \u043e\u0431\u0440\u0430\u0431\u043e\u0442\u043a\u0438",
         "due_date": "\u0421\u0440\u043e\u043a \u043e\u043f\u043b\u0430\u0442\u044b",
@@ -151,7 +157,8 @@
         "webhook_trigger": "\u0421\u043e\u0431\u044b\u0442\u0438\u044f",
         "webhook_delivery": "\u0414\u043e\u0441\u0442\u0430\u0432\u043a\u0430",
         "from_currency_to_currency": "{from} &rarr; {to}",
-        "to_currency_from_currency": "{to} &rarr; {from}"
+        "to_currency_from_currency": "{to} &rarr; {from}",
+        "rate": "Rate"
     },
     "list": {
         "active": "\u0410\u043a\u0442\u0438\u0432\u0435\u043d?",

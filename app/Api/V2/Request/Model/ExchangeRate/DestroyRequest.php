@@ -1,7 +1,6 @@
 <?php
-
 /*
- * ExchangeRateRepositoryInterface.php
+ * DestroyRequest.php
  * Copyright (c) 2024 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -22,23 +21,31 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Repositories\UserGroups\ExchangeRate;
+namespace FireflyIII\Api\V2\Request\Model\ExchangeRate;
 
 use Carbon\Carbon;
-use FireflyIII\Models\CurrencyExchangeRate;
-use FireflyIII\Models\TransactionCurrency;
-use Illuminate\Support\Collection;
+use FireflyIII\Support\Request\ChecksLogin;
+use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Foundation\Http\FormRequest;
 
-interface ExchangeRateRepositoryInterface
+class DestroyRequest extends FormRequest
 {
-    public function getRates(TransactionCurrency $from, TransactionCurrency $to): Collection;
+    use ChecksLogin;
+    use ConvertsDataTypes;
 
-    public function getSpecificRateOnDate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): ?CurrencyExchangeRate;
+    public function getDate(): Carbon
+    {
+        return $this->getCarbonDate('date');
+    }
 
-    public function deleteRate(CurrencyExchangeRate $rate): void;
-
-    public function updateExchangeRate(CurrencyExchangeRate $object, string $rate, ?Carbon $date = null): CurrencyExchangeRate;
-
-    public function storeExchangeRate(TransactionCurrency $from, TransactionCurrency $to, string $rate, Carbon $date): CurrencyExchangeRate;
+    /**
+     * The rules that the incoming request must be matched against.
+     */
+    public function rules(): array
+    {
+        return [
+            'date'  => 'required|date|after:1900-01-01|before:2099-12-31',
+        ];
+    }
 
 }

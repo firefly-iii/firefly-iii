@@ -274,12 +274,18 @@ return [
                 'exchange_rates_intro',
                 'exchange_rates_from_to',
                 'exchange_rates_intro_rates',
+                'header_exchange_rates_rates',
+                'header_exchange_rates_table',
+                'help_rate_form',
+                'add_new_rate',
+                'save_new_rate'
             ],
             'form'    => [
                 'url',
                 'active',
                 'interest_date',
                 'title',
+                'date',
                 'book_date',
                 'process_date',
                 'due_date',
@@ -292,6 +298,7 @@ return [
                 'webhook_delivery',
                 'from_currency_to_currency',
                 'to_currency_from_currency',
+                'rate',
             ],
             'list'    => [
                 'active',

@@ -129,10 +129,9 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      *
      * @throws FireflyException
      */
-    public function getExactAmount(PiggyBank $piggyBank, PiggyBankRepetition $repetition, TransactionJournal $journal): string
+    public function getExactAmount(PiggyBank $piggyBank, TransactionJournal $journal): string
     {
-        throw new FireflyException('[c] Piggy bank repetitions are EOL.');
-        app('log')->debug(sprintf('Now in getExactAmount(%d, %d, %d)', $piggyBank->id, $repetition->id, $journal->id));
+        app('log')->debug(sprintf('Now in getExactAmount(%d, %d)', $piggyBank->id, $journal->id));
 
         $operator          = null;
         $currency          = null;
@@ -146,9 +145,8 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         $accountRepos->setUser($this->user);
 
         $defaultCurrency   = app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
-        $piggyBankCurrency = $accountRepos->getAccountCurrency($piggyBank->account) ?? $defaultCurrency;
 
-        app('log')->debug(sprintf('Piggy bank #%d currency is %s', $piggyBank->id, $piggyBankCurrency->code));
+        app('log')->debug(sprintf('Piggy bank #%d currency is %s', $piggyBank->id, $piggyBank->transactionCurrency->code));
 
         /** @var Transaction $source */
         $source            = $journal->transactions()->with(['account'])->where('amount', '<', 0)->first();
@@ -192,8 +190,9 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         }
 
         app('log')->debug(sprintf('The currency is %s and the amount is %s', $currency->code, $amount));
-        $room              = bcsub($piggyBank->target_amount, $repetition->current_amount);
-        $compare           = bcmul($repetition->current_amount, '-1');
+        $currentAmount = $this->getCurrentAmount($piggyBank);
+        $room              = bcsub($piggyBank->target_amount, $currentAmount);
+        $compare           = bcmul($currentAmount, '-1');
 
         if (0 === bccomp($piggyBank->target_amount, '0')) {
             // amount is zero? then the "room" is positive amount of we wish to add or remove.
@@ -215,7 +214,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
         // amount is negative and $currentAmount is smaller than $amount
         if (-1 === bccomp($amount, '0') && 1 === bccomp($compare, $amount)) {
-            app('log')->debug(sprintf('Max amount to remove is %f', $repetition->current_amount));
+            app('log')->debug(sprintf('Max amount to remove is %f', $currentAmount));
             app('log')->debug(sprintf('Cannot remove %f from piggy bank #%d ("%s")', $amount, $piggyBank->id, $piggyBank->name));
             app('log')->debug(sprintf('New amount is %f', $compare));
 

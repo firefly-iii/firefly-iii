@@ -132,14 +132,20 @@
         "reset_webhook_secret": "\uc6f9\ud6c5 \uc2dc\ud06c\ub9bf \uc7ac\uc124\uc815",
         "header_exchange_rates": "Exchange rates",
         "exchange_rates_intro": "Firefly III supports downloading and using exchange rates. Read more about this in <a href=\"https:\/\/docs.firefly-iii.org\/LOL_NOT_FINISHED_YET_TODO\">the documentation<\/a>.",
-        "exchange_rates_from_to": "Between {from} and {to} (and the other way around)",
-        "exchange_rates_intro_rates": "Firefly III bla bla bla exchange rates."
+        "exchange_rates_from_to": "Between :from and :to",
+        "exchange_rates_intro_rates": "Firefly III bla bla bla exchange rates. Inverse is automatically calculated if not provided. Will go back to last found rate.",
+        "header_exchange_rates_rates": "Exchange rates",
+        "header_exchange_rates_table": "Table with exchange rates",
+        "help_rate_form": "On this day, how many {to} will you get for one {from}?",
+        "add_new_rate": "Add a new exchange rate",
+        "save_new_rate": "Save new rate"
     },
     "form": {
         "url": "URL",
         "active": "\ud65c\uc131",
         "interest_date": "\uc774\uc790 \ub0a0\uc9dc",
         "title": "\uc81c\ubaa9",
+        "date": "\ub0a0\uc9dc",
         "book_date": "\uc608\uc57d\uc77c",
         "process_date": "\ucc98\ub9ac\uc77c",
         "due_date": "\uae30\ud55c",
@@ -151,7 +157,8 @@
         "webhook_trigger": "\ud2b8\ub9ac\uac70",
         "webhook_delivery": "\uc804\ub2ec",
         "from_currency_to_currency": "{from} &rarr; {to}",
-        "to_currency_from_currency": "{to} &rarr; {from}"
+        "to_currency_from_currency": "{to} &rarr; {from}",
+        "rate": "Rate"
     },
     "list": {
         "active": "\ud65c\uc131 \uc0c1\ud0dc\uc785\ub2c8\uae4c?",
