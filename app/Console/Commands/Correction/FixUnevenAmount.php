@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Correction;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -240,6 +241,9 @@ class FixUnevenAmount extends Command
         Log::debug('convertOldStyleTransfers()');
         // select transactions with a foreign amount and a foreign currency. and it's a transfer. and they are different.
         $transactions = Transaction::distinct()
+            ->leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
+            ->leftJoin('transaction_types', 'transaction_types.id', 'transaction_journals.transaction_type_id')
+            ->where('transaction_types.type', TransactionTypeEnum::TRANSFER->value)
             ->whereNotNull('foreign_currency_id')
             ->whereNotNull('foreign_amount')->get(['transactions.transaction_journal_id'])
         ;
