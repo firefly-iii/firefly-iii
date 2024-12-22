@@ -188,7 +188,6 @@ class UserEventHandler
     public function notifyNewIPAddress(DetectedNewIPAddress $event): void
     {
         $user      = $event->user;
-        $ipAddress = $event->ipAddress;
 
         if ($user->hasRole('demo')) {
             return; // do not email demo user.
@@ -203,7 +202,7 @@ class UserEventHandler
         foreach ($list as $index => $entry) {
             if (false === $entry['notified']) {
                 try {
-                    Notification::send($user, new UserLogin($ipAddress));
+                    Notification::send($user, new UserLogin());
                 } catch (\Exception $e) { // @phpstan-ignore-line
                     $message = $e->getMessage();
                     if (str_contains($message, 'Bcc')) {
@@ -428,7 +427,7 @@ class UserEventHandler
         app('preferences')->setForUser($user, 'login_ip_history', $preference);
 
         if (false === $inArray && true === $send) {
-            event(new DetectedNewIPAddress($user, $ip));
+            event(new DetectedNewIPAddress($user));
         }
     }
 

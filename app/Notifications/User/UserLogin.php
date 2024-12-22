@@ -33,6 +33,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Request;
 use NotificationChannels\Pushover\PushoverMessage;
 use Ntfy\Message;
 
@@ -42,13 +43,6 @@ use Ntfy\Message;
 class UserLogin extends Notification
 {
     use Queueable;
-
-    private string $ip;
-
-    public function __construct(string $ip)
-    {
-        $this->ip = $ip;
-    }
 
     public function toArray(User $notifiable)
     {
@@ -61,21 +55,26 @@ class UserLogin extends Notification
      */
     public function toMail(User $notifiable)
     {
-        $time = now(config('app.timezone'))->isoFormat((string) trans('config.date_time_js'));
+        $ip        = Request::ip();
+        $host      = Steam::getHostName($ip);
+        $userAgent = Request::userAgent();
+        $time      = now(config('app.timezone'))->isoFormat((string) trans('config.date_time_js'));
 
         return (new MailMessage())
-            ->markdown('emails.new-ip', ['time' => $time, 'ipAddress' => $this->ip, 'host' => Steam::getHostName($this->ip)])
+            ->markdown('emails.new-ip', ['ip' => $ip, 'host' => $host, 'userAgent' => $userAgent, 'time' => $time])
             ->subject((string) trans('email.login_from_new_ip'))
         ;
     }
 
     public function toNtfy(User $notifiable): Message
     {
+        $ip        = Request::ip();
+        $host      = Steam::getHostName($ip);
         $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
         $message  = new Message();
         $message->topic($settings['ntfy_topic']);
         $message->title((string) trans('email.login_from_new_ip'));
-        $message->body((string) trans('email.slack_login_from_new_ip', ['host' => Steam::getHostName($this->ip), 'ip' => $this->ip]));
+        $message->body((string) trans('email.slack_login_from_new_ip', ['ip' => $ip, 'host' => $host, ]));
 
         return $message;
     }
@@ -85,7 +84,9 @@ class UserLogin extends Notification
      */
     public function toPushover(User $notifiable): PushoverMessage
     {
-        return PushoverMessage::create((string) trans('email.slack_login_from_new_ip', ['host' => Steam::getHostName($this->ip), 'ip' => $this->ip]))
+        $ip        = Request::ip();
+        $host      = Steam::getHostName($ip);
+        return PushoverMessage::create((string) trans('email.slack_login_from_new_ip', ['ip' => $ip, 'host' => $host, ]))
             ->title((string) trans('email.login_from_new_ip'))
         ;
     }
@@ -95,7 +96,9 @@ class UserLogin extends Notification
      */
     public function toSlack(User $notifiable)
     {
-        return new SlackMessage()->content((string) trans('email.slack_login_from_new_ip', ['host' => Steam::getHostName($this->ip), 'ip' => $this->ip]));
+        $ip        = Request::ip();
+        $host      = Steam::getHostName($ip);
+        return new SlackMessage()->content((string) trans('email.slack_login_from_new_ip', ['ip' => $ip, 'host' => $host, ]));
     }
 
     /**

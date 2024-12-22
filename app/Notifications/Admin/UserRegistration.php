@@ -27,12 +27,14 @@ namespace FireflyIII\Notifications\Admin;
 use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\Notifications\ReturnsAvailableChannels;
 use FireflyIII\Notifications\ReturnsSettings;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Request;
 use NotificationChannels\Pushover\PushoverMessage;
 use Ntfy\Message;
 
@@ -66,8 +68,13 @@ class UserRegistration extends Notification
      */
     public function toMail(OwnerNotifiable $notifiable)
     {
+        $ip        = Request::ip();
+        $host      = Steam::getHostName($ip);
+        $userAgent = Request::userAgent();
+        $time      = now(config('app.timezone'))->isoFormat((string) trans('config.date_time_js'));
+
         return (new MailMessage())
-            ->markdown('emails.registered-admin', ['email' => $this->user->email, 'id' => $this->user->id])
+            ->markdown('emails.registered-admin', ['email' => $this->user->email, 'id' => $this->user->id, 'ip' => $ip, 'host' => $host, 'userAgent' => $userAgent, 'time' => $time])
             ->subject((string) trans('email.registered_subject_admin'))
         ;
     }
