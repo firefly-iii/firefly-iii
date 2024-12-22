@@ -100,7 +100,6 @@ final class CurrencyControllerTest extends TestCase {
 
         // create test data
         $this->createTestCurrencies(10, true);
-        $this->createTestCurrencies(5, false);
 
         // test API
         $response = $this->get(route('api.v1.autocomplete.currencies'), ['Accept' => 'application/json']);
@@ -119,6 +118,22 @@ final class CurrencyControllerTest extends TestCase {
         ]);
 
         $response->assertJsonCount(10);
+    }
+
+    public function testGivenAuthenticatedRequestWhenCallingTheCurrenciesEndpointDoesNotReturnDisabledCurrencies(): void
+    {
+        // act as a user
+        $user     = $this->createAuthenticatedUser();
+        $this->actingAs($user);
+
+        // create test data
+        $this->createTestCurrencies(10, false);
+
+        // test API
+        $response = $this->get(route('api.v1.autocomplete.currencies'), ['Accept' => 'application/json']);
+        $response->assertStatus(200);
+        $response->assertHeader('Content-Type', 'application/json');
+        $response->assertJsonCount(0);
     }
 
     public function testGivenAuthenticatedRequestWhenCallingTheCurrenciesEndpointWithQueryThenReturnsCurrenciesWithLimit(): void
@@ -167,6 +182,5 @@ final class CurrencyControllerTest extends TestCase {
         $response->assertJsonCount(11);
     }
     
-
 
 }
