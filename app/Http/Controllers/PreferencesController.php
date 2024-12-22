@@ -103,6 +103,7 @@ class PreferencesController extends Controller
         $darkMode                       = app('preferences')->get('darkMode', 'browser')->data;
         $customFiscalYear               = app('preferences')->get('customFiscalYear', 0)->data;
         $fiscalYearStartStr             = app('preferences')->get('fiscalYearStart', '01-01')->data;
+        $convertToNative =app('preferences')->get('convert_to_native', false)->data;
         if (is_array($fiscalYearStartStr)) {
             $fiscalYearStartStr = '01-01';
         }
@@ -188,6 +189,7 @@ class PreferencesController extends Controller
             'darkMode',
             'availableDarkModes',
             'notifications',
+            'convertToNative',
             'slackUrl',
             'locales',
             'locale',
@@ -253,6 +255,10 @@ class PreferencesController extends Controller
             }
             app('preferences')->set('ntfy_auth', $all['ntfy_auth'] ?? false);
         }
+
+        // convert native
+        $convertToNative  = 1 === (int) $request->get('convertToNative');
+        app('preferences')->set('convert_to_native', $convertToNative);
 
         // custom fiscal year
         $customFiscalYear  = 1 === (int) $request->get('customFiscalYear');
