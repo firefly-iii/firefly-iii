@@ -1,4 +1,5 @@
 <?php
+
 /*
  * DestroyController.php
  * Copyright (c) 2024 james@firefly-iii.org.
@@ -30,7 +31,6 @@ use FireflyIII\Repositories\UserGroups\ExchangeRate\ExchangeRateRepositoryInterf
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\Transformers\V2\ExchangeRateTransformer;
 use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UpdateController extends Controller
 {
@@ -55,15 +55,15 @@ class UpdateController extends Controller
 
     public function update(UpdateRequest $request, CurrencyExchangeRate $exchangeRate): JsonResponse
     {
-        $date = $request->getDate();
-        $rate = $request->getRate();
+        $date         = $request->getDate();
+        $rate         = $request->getRate();
         $exchangeRate = $this->repository->updateExchangeRate($exchangeRate, $rate, $date);
-        $transformer = new ExchangeRateTransformer();
+        $transformer  = new ExchangeRateTransformer();
         $transformer->setParameters($this->parameters);
 
         return response()
             ->api($this->jsonApiObject(self::RESOURCE_KEY, $exchangeRate, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
-
 }

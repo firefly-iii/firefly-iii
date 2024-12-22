@@ -1,4 +1,5 @@
 <?php
+
 /*
  * DestroyController.php
  * Copyright (c) 2024 james@firefly-iii.org.
@@ -60,7 +61,7 @@ class DestroyController extends Controller
             throw new NotFoundHttpException();
         }
         $this->repository->deleteRate($rate);
+
         return response()->json([], 204);
     }
-
 }

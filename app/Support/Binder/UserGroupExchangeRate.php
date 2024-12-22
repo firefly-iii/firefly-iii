@@ -39,8 +39,9 @@ class UserGroupExchangeRate implements BinderInterface
             /** @var User $user */
             $user = auth()->user();
             $rate = CurrencyExchangeRate::where('id', (int) $value)
-                                        ->where('user_group_id', $user->user_group_id)
-                                        ->first();
+                ->where('user_group_id', $user->user_group_id)
+                ->first()
+            ;
             if (null !== $rate) {
                 return $rate;
             }

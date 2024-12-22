@@ -133,26 +133,26 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     {
         app('log')->debug(sprintf('Now in getExactAmount(%d, %d)', $piggyBank->id, $journal->id));
 
-        $operator          = null;
-        $currency          = null;
+        $operator        = null;
+        $currency        = null;
 
         /** @var JournalRepositoryInterface $journalRepost */
-        $journalRepost     = app(JournalRepositoryInterface::class);
+        $journalRepost   = app(JournalRepositoryInterface::class);
         $journalRepost->setUser($this->user);
 
         /** @var AccountRepositoryInterface $accountRepos */
-        $accountRepos      = app(AccountRepositoryInterface::class);
+        $accountRepos    = app(AccountRepositoryInterface::class);
         $accountRepos->setUser($this->user);
 
-        $defaultCurrency   = app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
+        $defaultCurrency = app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
 
         app('log')->debug(sprintf('Piggy bank #%d currency is %s', $piggyBank->id, $piggyBank->transactionCurrency->code));
 
         /** @var Transaction $source */
-        $source            = $journal->transactions()->with(['account'])->where('amount', '<', 0)->first();
+        $source          = $journal->transactions()->with(['account'])->where('amount', '<', 0)->first();
 
         /** @var Transaction $destination */
-        $destination       = $journal->transactions()->with(['account'])->where('amount', '>', 0)->first();
+        $destination     = $journal->transactions()->with(['account'])->where('amount', '>', 0)->first();
 
         // matches source, which means amount will be removed from piggy:
         if ($source->account_id === $piggyBank->account_id) {
@@ -174,7 +174,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         }
         // currency of the account + the piggy bank currency are almost the same.
         // which amount from the transaction matches?
-        $amount            = null;
+        $amount          = null;
         if ((int) $source->transaction_currency_id === $currency->id) {
             app('log')->debug('Use normal amount');
             $amount = app('steam')->{$operator}($source->amount); // @phpstan-ignore-line
@@ -190,9 +190,9 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         }
 
         app('log')->debug(sprintf('The currency is %s and the amount is %s', $currency->code, $amount));
-        $currentAmount = $this->getCurrentAmount($piggyBank);
-        $room              = bcsub($piggyBank->target_amount, $currentAmount);
-        $compare           = bcmul($currentAmount, '-1');
+        $currentAmount   = $this->getCurrentAmount($piggyBank);
+        $room            = bcsub($piggyBank->target_amount, $currentAmount);
+        $compare         = bcmul($currentAmount, '-1');
 
         if (0 === bccomp($piggyBank->target_amount, '0')) {
             // amount is zero? then the "room" is positive amount of we wish to add or remove.

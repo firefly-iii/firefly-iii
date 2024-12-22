@@ -68,9 +68,9 @@ trait ModifiesPiggyBanks
         $pivot->native_current_amount = null;
 
         // also update native_current_amount.
-        $userCurrency = app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
+        $userCurrency                 = app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
         if ($userCurrency->id !== $piggyBank->transaction_currency_id) {
-            $converter = new ExchangeRateConverter();
+            $converter                    = new ExchangeRateConverter();
             $converter->setIgnoreSettings(true);
             $pivot->native_current_amount = $converter->convert($piggyBank->transactionCurrency, $userCurrency, today(), $pivot->current_amount);
         }
@@ -91,9 +91,9 @@ trait ModifiesPiggyBanks
         $pivot->native_current_amount = null;
 
         // also update native_current_amount.
-        $userCurrency = app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
+        $userCurrency                 = app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
         if ($userCurrency->id !== $piggyBank->transaction_currency_id) {
-            $converter = new ExchangeRateConverter();
+            $converter                    = new ExchangeRateConverter();
             $converter->setIgnoreSettings(true);
             $pivot->native_current_amount = $converter->convert($piggyBank->transactionCurrency, $userCurrency, today(), $pivot->current_amount);
         }
@@ -125,8 +125,8 @@ trait ModifiesPiggyBanks
             Log::debug(sprintf('Maximum amount: %s', $maxAmount));
         }
 
-        $compare = bccomp($amount, $maxAmount);
-        $result  = $compare <= 0;
+        $compare       = bccomp($amount, $maxAmount);
+        $result        = $compare <= 0;
 
         Log::debug(sprintf('Compare <= 0? %d, so canAddAmount is %s', $compare, var_export($result, true)));
 
@@ -160,11 +160,11 @@ trait ModifiesPiggyBanks
 
     public function setCurrentAmount(PiggyBank $piggyBank, string $amount): PiggyBank
     {
-        $repetition = $this->getRepetition($piggyBank);
+        $repetition                 = $this->getRepetition($piggyBank);
         if (null === $repetition) {
             return $piggyBank;
         }
-        $max = $piggyBank->target_amount;
+        $max                        = $piggyBank->target_amount;
         if (1 === bccomp($amount, $max) && 0 !== bccomp($piggyBank->target_amount, '0')) {
             $amount = $max;
         }
@@ -207,14 +207,14 @@ trait ModifiesPiggyBanks
 
     public function update(PiggyBank $piggyBank, array $data): PiggyBank
     {
-        $piggyBank = $this->updateProperties($piggyBank, $data);
+        $piggyBank     = $this->updateProperties($piggyBank, $data);
         if (array_key_exists('notes', $data)) {
             $this->updateNote($piggyBank, (string) $data['notes']);
         }
 
         // update the order of the piggy bank:
-        $oldOrder = $piggyBank->order;
-        $newOrder = (int) ($data['order'] ?? $oldOrder);
+        $oldOrder      = $piggyBank->order;
+        $newOrder      = (int) ($data['order'] ?? $oldOrder);
         if ($oldOrder !== $newOrder) {
             $this->setOrder($piggyBank, $newOrder);
         }
@@ -306,7 +306,7 @@ trait ModifiesPiggyBanks
 
             return;
         }
-        $dbNote = $piggyBank->notes()->first();
+        $dbNote       = $piggyBank->notes()->first();
         if (null === $dbNote) {
             $dbNote = new Note();
             $dbNote->noteable()->associate($piggyBank);
@@ -317,15 +317,16 @@ trait ModifiesPiggyBanks
 
     public function setOrder(PiggyBank $piggyBank, int $newOrder): bool
     {
-        $oldOrder = $piggyBank->order;
+        $oldOrder         = $piggyBank->order;
         // Log::debug(sprintf('Will move piggy bank #%d ("%s") from %d to %d', $piggyBank->id, $piggyBank->name, $oldOrder, $newOrder));
         if ($newOrder > $oldOrder) {
             PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
-                     ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
-                     ->where('accounts.user_id', $this->user->id)
-                     ->where('piggy_banks.order', '<=', $newOrder)->where('piggy_banks.order', '>', $oldOrder)
-                     ->where('piggy_banks.id', '!=', $piggyBank->id)
-                     ->distinct()->decrement('piggy_banks.order');
+                ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
+                ->where('accounts.user_id', $this->user->id)
+                ->where('piggy_banks.order', '<=', $newOrder)->where('piggy_banks.order', '>', $oldOrder)
+                ->where('piggy_banks.id', '!=', $piggyBank->id)
+                ->distinct()->decrement('piggy_banks.order')
+            ;
 
             $piggyBank->order = $newOrder;
             Log::debug(sprintf('[1] Order of piggy #%d ("%s") from %d to %d', $piggyBank->id, $piggyBank->name, $oldOrder, $newOrder));
@@ -334,11 +335,12 @@ trait ModifiesPiggyBanks
             return true;
         }
         PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
-                 ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
-                 ->where('accounts.user_id', $this->user->id)
-                 ->where('piggy_banks.order', '>=', $newOrder)->where('piggy_banks.order', '<', $oldOrder)
-                 ->where('piggy_banks.id', '!=', $piggyBank->id)
-                 ->distinct()->increment('piggy_banks.order');
+            ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
+            ->where('accounts.user_id', $this->user->id)
+            ->where('piggy_banks.order', '>=', $newOrder)->where('piggy_banks.order', '<', $oldOrder)
+            ->where('piggy_banks.id', '!=', $piggyBank->id)
+            ->distinct()->increment('piggy_banks.order')
+        ;
 
         $piggyBank->order = $newOrder;
         Log::debug(sprintf('[2] Order of piggy #%d ("%s") from %d to %d', $piggyBank->id, $piggyBank->name, $oldOrder, $newOrder));

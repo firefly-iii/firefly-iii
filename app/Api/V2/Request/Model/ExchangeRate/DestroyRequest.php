@@ -1,4 +1,5 @@
 <?php
+
 /*
  * DestroyRequest.php
  * Copyright (c) 2024 james@firefly-iii.org.
@@ -47,5 +48,4 @@ class DestroyRequest extends FormRequest
             'date'  => 'required|date|after:1900-01-01|before:2099-12-31',
         ];
     }
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * DestroyRequest.php
  * Copyright (c) 2024 james@firefly-iii.org.
@@ -38,7 +39,8 @@ class UpdateRequest extends FormRequest
         return $this->getCarbonDate('date');
     }
 
-    public function getRate(): string {
+    public function getRate(): string
+    {
         return (string) $this->get('rate');
     }
 
@@ -52,5 +54,4 @@ class UpdateRequest extends FormRequest
             'rate'  => 'required|numeric|gt:0',
         ];
     }
-
 }

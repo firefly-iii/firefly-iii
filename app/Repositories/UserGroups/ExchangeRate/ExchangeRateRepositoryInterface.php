@@ -40,5 +40,4 @@ interface ExchangeRateRepositoryInterface
     public function updateExchangeRate(CurrencyExchangeRate $object, string $rate, ?Carbon $date = null): CurrencyExchangeRate;
 
     public function storeExchangeRate(TransactionCurrency $from, TransactionCurrency $to, string $rate, Carbon $date): CurrencyExchangeRate;
-
 }
