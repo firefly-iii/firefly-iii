@@ -62,14 +62,14 @@ class PiggyBankForm
 
         /** @var PiggyBank $piggy */
         foreach ($piggyBanks as $piggy) {
-            $group                                       = $piggy->objectGroups->first();
-            $groupTitle                                  = null;
-            $groupOrder                                  = 0;
+            $group      = $piggy->objectGroups->first();
+            $groupTitle = null;
+            $groupOrder = 0;
             if (null !== $group) {
                 $groupTitle = $group->title;
                 $groupOrder = $group->order;
             }
-            $subList[$groupOrder] ??= [
+            $subList[$groupOrder]                        ??= [
                 'group'   => [
                     'title' => $groupTitle,
                 ],

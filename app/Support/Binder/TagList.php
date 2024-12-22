@@ -43,11 +43,10 @@ class TagList implements BinderInterface
         if (auth()->check()) {
             if ('allTags' === $value) {
                 return auth()->user()->tags()
-                    ->orderBy('tag', 'ASC')
-                    ->get()
-                ;
+                             ->orderBy('tag', 'ASC')
+                             ->get();
             }
-            $list       = array_unique(array_map('\strtolower', explode(',', $value)));
+            $list = array_unique(array_map('\strtolower', explode(',', $value)));
             app('log')->debug('List of tags is', $list);
 
             if (0 === count($list)) { // @phpstan-ignore-line
@@ -59,7 +58,7 @@ class TagList implements BinderInterface
             /** @var TagRepositoryInterface $repository */
             $repository = app(TagRepositoryInterface::class);
             $repository->setUser(auth()->user());
-            $allTags    = $repository->get();
+            $allTags = $repository->get();
 
             $collection = $allTags->filter(
                 static function (Tag $tag) use ($list) {

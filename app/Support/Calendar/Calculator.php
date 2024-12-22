@@ -26,15 +26,16 @@ namespace FireflyIII\Support\Calendar;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\IntervalException;
+use SplObjectStorage;
 
 /**
  * Class Calculator
  */
 class Calculator
 {
-    public const int DEFAULT_INTERVAL              = 1;
-    private static ?\SplObjectStorage $intervalMap = null;
-    private static array             $intervals    = [];
+    public const int DEFAULT_INTERVAL = 1;
+    private static ?SplObjectStorage $intervalMap = null;
+    private static array             $intervals   = [];
 
     /**
      * @throws IntervalException
@@ -65,14 +66,14 @@ class Calculator
     /**
      * @SuppressWarnings(PHPMD.MissingImport)
      */
-    private static function loadIntervalMap(): \SplObjectStorage
+    private static function loadIntervalMap(): SplObjectStorage
     {
         if (null !== self::$intervalMap) {
             return self::$intervalMap;
         }
-        self::$intervalMap = new \SplObjectStorage();
+        self::$intervalMap = new SplObjectStorage();
         foreach (Periodicity::cases() as $interval) {
-            $periodicityClass  = __NAMESPACE__."\\Periodicity\\{$interval->name}";
+            $periodicityClass  = __NAMESPACE__ . "\\Periodicity\\{$interval->name}";
             self::$intervals[] = $interval->name;
             self::$intervalMap->attach($interval, new $periodicityClass());
         }

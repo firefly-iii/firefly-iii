@@ -102,7 +102,7 @@ trait CreateStuff
             return;
         }
 
-        $key                      = RSA::createKey(4096);
+        $key = RSA::createKey(4096);
 
         Log::alert('NO OAuth keys were found. They have been created.');
 

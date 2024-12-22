@@ -64,7 +64,7 @@ class AccountBalanceGrouped
         /** @var array $currency */
         foreach ($this->data as $currency) {
             // income and expense array prepped:
-            $income       = [
+            $income  = [
                 'label'                          => 'earned',
                 'currency_id'                    => (string) $currency['currency_id'],
                 'currency_symbol'                => $currency['currency_symbol'],
@@ -81,7 +81,7 @@ class AccountBalanceGrouped
                 'entries'                        => [],
                 'native_entries'                 => [],
             ];
-            $expense      = [
+            $expense = [
                 'label'                          => 'spent',
                 'currency_id'                    => (string) $currency['currency_id'],
                 'currency_symbol'                => $currency['currency_symbol'],
@@ -101,22 +101,22 @@ class AccountBalanceGrouped
             // loop all possible periods between $start and $end, and add them to the correct dataset.
             $currentStart = clone $this->start;
             while ($currentStart <= $this->end) {
-                $key                               = $currentStart->format($this->carbonFormat);
-                $label                             = $currentStart->toAtomString();
+                $key   = $currentStart->format($this->carbonFormat);
+                $label = $currentStart->toAtomString();
                 // normal entries
-                $income['entries'][$label]         = app('steam')->bcround($currency[$key]['earned'] ?? '0', $currency['currency_decimal_places']);
-                $expense['entries'][$label]        = app('steam')->bcround($currency[$key]['spent'] ?? '0', $currency['currency_decimal_places']);
+                $income['entries'][$label]  = app('steam')->bcround($currency[$key]['earned'] ?? '0', $currency['currency_decimal_places']);
+                $expense['entries'][$label] = app('steam')->bcround($currency[$key]['spent'] ?? '0', $currency['currency_decimal_places']);
 
                 // converted entries
                 $income['native_entries'][$label]  = app('steam')->bcround($currency[$key]['native_earned'] ?? '0', $currency['native_currency_decimal_places']);
                 $expense['native_entries'][$label] = app('steam')->bcround($currency[$key]['native_spent'] ?? '0', $currency['native_currency_decimal_places']);
 
                 // next loop
-                $currentStart                      = app('navigation')->addPeriod($currentStart, $this->preferredRange, 0);
+                $currentStart = app('navigation')->addPeriod($currentStart, $this->preferredRange, 0);
             }
 
-            $chartData[]  = $income;
-            $chartData[]  = $expense;
+            $chartData[] = $income;
+            $chartData[] = $expense;
         }
 
         return $chartData;
@@ -142,9 +142,9 @@ class AccountBalanceGrouped
     private function processJournal(array $journal): void
     {
         // format the date according to the period
-        $period                                          = $journal['date']->format($this->carbonFormat);
-        $currencyId                                      = (int) $journal['currency_id'];
-        $currency                                        = $this->findCurrency($currencyId);
+        $period     = $journal['date']->format($this->carbonFormat);
+        $currencyId = (int) $journal['currency_id'];
+        $currency   = $this->findCurrency($currencyId);
 
         // set the array with monetary info, if it does not exist.
         $this->createDefaultDataEntry($journal);
@@ -152,12 +152,12 @@ class AccountBalanceGrouped
         $this->createDefaultPeriodEntry($journal);
 
         // is this journal's amount in- our outgoing?
-        $key                                             = $this->getDataKey($journal);
-        $amount                                          = 'spent' === $key ? app('steam')->negative($journal['amount']) : app('steam')->positive($journal['amount']);
+        $key    = $this->getDataKey($journal);
+        $amount = 'spent' === $key ? app('steam')->negative($journal['amount']) : app('steam')->positive($journal['amount']);
 
         // get conversion rate
-        $rate                                            = $this->getRate($currency, $journal['date']);
-        $amountConverted                                 = bcmul($amount, $rate);
+        $rate            = $this->getRate($currency, $journal['date']);
+        $amountConverted = bcmul($amount, $rate);
 
         // perhaps transaction already has the foreign amount in the native currency.
         if ((int) $journal['foreign_currency_id'] === $this->default->id) {
@@ -166,7 +166,7 @@ class AccountBalanceGrouped
         }
 
         // add normal entry
-        $this->data[$currencyId][$period][$key]          = bcadd($this->data[$currencyId][$period][$key], $amount);
+        $this->data[$currencyId][$period][$key] = bcadd($this->data[$currencyId][$period][$key], $amount);
 
         // add converted entry
         $convertedKey                                    = sprintf('native_%s', $key);
@@ -185,7 +185,7 @@ class AccountBalanceGrouped
 
     private function createDefaultDataEntry(array $journal): void
     {
-        $currencyId = (int) $journal['currency_id'];
+        $currencyId              = (int) $journal['currency_id'];
         $this->data[$currencyId] ??= [
             'currency_id'                    => (string) $currencyId,
             'currency_symbol'                => $journal['currency_symbol'],
@@ -202,8 +202,8 @@ class AccountBalanceGrouped
 
     private function createDefaultPeriodEntry(array $journal): void
     {
-        $currencyId = (int) $journal['currency_id'];
-        $period     = $journal['date']->format($this->carbonFormat);
+        $currencyId                       = (int) $journal['currency_id'];
+        $period                           = $journal['date']->format($this->carbonFormat);
         $this->data[$currencyId][$period] ??= [
             'period'        => $period,
             'spent'         => '0',

@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\System;
 
+use Artisan;
+use Crypt;
 use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Laravel\Passport\Console\KeysCommand;
@@ -65,7 +67,7 @@ class OAuthKeys
             try {
                 $privateKey = (string) app('fireflyconfig')->get(self::PRIVATE_KEY)?->data;
                 $publicKey  = (string) app('fireflyconfig')->get(self::PUBLIC_KEY)?->data;
-            } catch (ContainerExceptionInterface|FireflyException|NotFoundExceptionInterface $e) {
+            } catch (ContainerExceptionInterface | FireflyException | NotFoundExceptionInterface $e) {
                 app('log')->error(sprintf('Could not validate keysInDatabase(): %s', $e->getMessage()));
                 app('log')->error($e->getTraceAsString());
             }
@@ -87,16 +89,16 @@ class OAuthKeys
 
     public static function generateKeys(): void
     {
-        \Artisan::registerCommand(new KeysCommand());
-        \Artisan::call('firefly-iii:laravel-passport-keys');
+        Artisan::registerCommand(new KeysCommand());
+        Artisan::call('firefly-iii:laravel-passport-keys');
     }
 
     public static function storeKeysInDB(): void
     {
         $private = storage_path('oauth-private.key');
         $public  = storage_path('oauth-public.key');
-        app('fireflyconfig')->set(self::PRIVATE_KEY, \Crypt::encrypt(file_get_contents($private)));
-        app('fireflyconfig')->set(self::PUBLIC_KEY, \Crypt::encrypt(file_get_contents($public)));
+        app('fireflyconfig')->set(self::PRIVATE_KEY, Crypt::encrypt(file_get_contents($private)));
+        app('fireflyconfig')->set(self::PUBLIC_KEY, Crypt::encrypt(file_get_contents($public)));
     }
 
     /**
@@ -108,8 +110,8 @@ class OAuthKeys
         $publicKey  = (string) app('fireflyconfig')->get(self::PUBLIC_KEY)?->data;
 
         try {
-            $privateContent = \Crypt::decrypt($privateKey);
-            $publicContent  = \Crypt::decrypt($publicKey);
+            $privateContent = Crypt::decrypt($privateKey);
+            $publicContent  = Crypt::decrypt($publicKey);
         } catch (DecryptException $e) {
             app('log')->error('Could not decrypt pub/private keypair.');
             app('log')->error($e->getMessage());
@@ -120,8 +122,8 @@ class OAuthKeys
 
             return false;
         }
-        $private    = storage_path('oauth-private.key');
-        $public     = storage_path('oauth-public.key');
+        $private = storage_path('oauth-private.key');
+        $public  = storage_path('oauth-public.key');
         file_put_contents($private, $privateContent);
         file_put_contents($public, $publicContent);
 

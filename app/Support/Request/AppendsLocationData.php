@@ -82,12 +82,12 @@ trait AppendsLocationData
         $data['latitude']        = null;
         $data['zoom_level']      = null;
 
-        $longitudeKey            = $this->getLocationKey($prefix, 'longitude');
-        $latitudeKey             = $this->getLocationKey($prefix, 'latitude');
-        $zoomLevelKey            = $this->getLocationKey($prefix, 'zoom_level');
-        $isValidPOST             = $this->isValidPost($prefix);
-        $isValidPUT              = $this->isValidPUT($prefix);
-        $isValidEmptyPUT         = $this->isValidEmptyPUT($prefix);
+        $longitudeKey    = $this->getLocationKey($prefix, 'longitude');
+        $latitudeKey     = $this->getLocationKey($prefix, 'latitude');
+        $zoomLevelKey    = $this->getLocationKey($prefix, 'zoom_level');
+        $isValidPOST     = $this->isValidPost($prefix);
+        $isValidPUT      = $this->isValidPUT($prefix);
+        $isValidEmptyPUT = $this->isValidEmptyPUT($prefix);
 
         // for a POST (store), all fields must be present and not NULL.
         if ($isValidPOST) {
@@ -245,9 +245,9 @@ trait AppendsLocationData
         $zoomLevelKey = $this->getLocationKey($prefix, 'zoom_level');
 
         return (
-            null === $this->get($longitudeKey)
-            && null === $this->get($latitudeKey)
-            && null === $this->get($zoomLevelKey))
+                   null === $this->get($longitudeKey)
+                   && null === $this->get($latitudeKey)
+                   && null === $this->get($zoomLevelKey))
                && (
                    'PUT' === $this->method()
                    || ('POST' === $this->method() && $this->routeIs('*.update'))

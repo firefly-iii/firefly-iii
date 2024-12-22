@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Support\MessageBag;
+use Throwable;
 
 /**
  * Trait FormSupport
@@ -36,7 +37,7 @@ trait FormSupport
 {
     public function multiSelect(string $name, ?array $list = null, $selected = null, ?array $options = null): string
     {
-        $list ??= [];
+        $list     ??= [];
         $label    = $this->label($name, $options);
         $options  = $this->expandOptionArray($name, $label, $options);
         $classes  = $this->getHolderClasses($name);
@@ -46,31 +47,9 @@ trait FormSupport
 
         try {
             $html = view('form.multi-select', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             app('log')->debug(sprintf('Could not render multi-select(): %s', $e->getMessage()));
             $html = 'Could not render multi-select.';
-        }
-
-        return $html;
-    }
-
-    /**
-     * @param mixed $selected
-     */
-    public function select(string $name, ?array $list = null, $selected = null, ?array $options = null): string
-    {
-        $list ??= [];
-        $label    = $this->label($name, $options);
-        $options  = $this->expandOptionArray($name, $label, $options);
-        $classes  = $this->getHolderClasses($name);
-        $selected = $this->fillFieldValue($name, $selected);
-        unset($options['autocomplete'], $options['placeholder']);
-
-        try {
-            $html = view('form.select', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
-        } catch (\Throwable $e) {
-            app('log')->debug(sprintf('Could not render select(): %s', $e->getMessage()));
-            $html = 'Could not render select.';
         }
 
         return $html;
@@ -84,7 +63,7 @@ trait FormSupport
         }
         $name = str_replace('[]', '', $name);
 
-        return (string) trans('form.'.$name);
+        return (string) trans('form.' . $name);
     }
 
     /**
@@ -92,10 +71,10 @@ trait FormSupport
      */
     protected function expandOptionArray(string $name, $label, ?array $options = null): array
     {
-        $options ??= [];
+        $options                 ??= [];
         $name                    = str_replace('[]', '', $name);
         $options['class']        = 'form-control';
-        $options['id']           = 'ffInput_'.$name;
+        $options['id']           = 'ffInput_' . $name;
         $options['autocomplete'] = 'off';
         $options['placeholder']  = ucfirst($label);
 
@@ -137,6 +116,28 @@ trait FormSupport
         }
 
         return $value;
+    }
+
+    /**
+     * @param mixed $selected
+     */
+    public function select(string $name, ?array $list = null, $selected = null, ?array $options = null): string
+    {
+        $list     ??= [];
+        $label    = $this->label($name, $options);
+        $options  = $this->expandOptionArray($name, $label, $options);
+        $classes  = $this->getHolderClasses($name);
+        $selected = $this->fillFieldValue($name, $selected);
+        unset($options['autocomplete'], $options['placeholder']);
+
+        try {
+            $html = view('form.select', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
+        } catch (Throwable $e) {
+            app('log')->debug(sprintf('Could not render select(): %s', $e->getMessage()));
+            $html = 'Could not render select.';
+        }
+
+        return $html;
     }
 
     protected function getAccountRepository(): AccountRepositoryInterface

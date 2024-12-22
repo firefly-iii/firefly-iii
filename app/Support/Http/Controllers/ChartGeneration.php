@@ -30,6 +30,7 @@ use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Collection;
 
 /**
@@ -45,59 +46,59 @@ trait ChartGeneration
     protected function accountBalanceChart(Collection $accounts, Carbon $start, Carbon $end): array // chart helper method.
     {
         // chart properties for cache:
-        $cache        = new CacheProperties();
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('chart.account.account-balance-chart');
         $cache->addProperty($accounts);
-        $convertToNative =app('preferences')->get('convert_to_native', false)->data;
+        $convertToNative = app('preferences')->get('convert_to_native', false)->data;
         if ($cache->has()) {
             // return $cache->get();
         }
         app('log')->debug('Regenerate chart.account.account-balance-chart from scratch.');
-        $locale       = app('steam')->getLocale();
+        $locale = app('steam')->getLocale();
 
         /** @var GeneratorInterface $generator */
-        $generator    = app(GeneratorInterface::class);
+        $generator = app(GeneratorInterface::class);
 
         /** @var AccountRepositoryInterface $accountRepos */
         $accountRepos = app(AccountRepositoryInterface::class);
 
-        $default      = app('amount')->getDefaultCurrency();
-        $chartData    = [];
+        $default   = app('amount')->getDefaultCurrency();
+        $chartData = [];
 
         /** @var Account $account */
         foreach ($accounts as $account) {
             // TODO we can use getAccountCurrency instead.
-            $currency     = $accountRepos->getAccountCurrency($account);
+            $currency = $accountRepos->getAccountCurrency($account);
             if (null === $currency) {
                 $currency = $default;
             }
             // if the user prefers the native currency, overrule the currency of the account.
-            if($currency->id !== $default->id && $convertToNative) {
+            if ($currency->id !== $default->id && $convertToNative) {
                 $currency = $default;
             }
 
-            $currentSet   = [
+            $currentSet = [
                 'label'           => $account->name,
                 'currency_symbol' => $currency->symbol,
                 'entries'         => [],
             ];
 
             $currentStart = clone $start;
-            $range        = $convertToNative ? app('steam')->balanceInRangeNative($account, $start, clone $end) : app('steam')->balanceInRange($account, $start, clone $end);
+            $range        = Steam::finalAccountBalanceInRange($account, $start, clone $end);
             $previous     = array_values($range)[0];
             while ($currentStart <= $end) {
-                $format                        = $currentStart->format('Y-m-d');
-                $label                         = trim($currentStart->isoFormat((string) trans('config.month_and_day_js', [], $locale)));
-                $balance                       = $range[$format] ?? $previous;
-                $previous                      = $balance;
+                $format   = $currentStart->format('Y-m-d');
+                $label    = trim($currentStart->isoFormat((string) trans('config.month_and_day_js', [], $locale)));
+                $balance  = $range[$format] ?? $previous;
+                $previous = $balance;
                 $currentStart->addDay();
-                $currentSet['entries'][$label] = $balance;
+                $currentSet['entries'][$label] = $balance['balance']; // TODO or native_balance
             }
-            $chartData[]  = $currentSet;
+            $chartData[] = $currentSet;
         }
-        $data         = $generator->multiSet($chartData);
+        $data = $generator->multiSet($chartData);
         $cache->store($data);
 
         return $data;

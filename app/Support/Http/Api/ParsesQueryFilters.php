@@ -40,7 +40,7 @@ trait ParsesQueryFilters
 
     private function dateOrToday(QueryParameters $parameters, string $field): Carbon
     {
-        $date  = today();
+        $date = today();
 
         $value = $parameters->filter()?->value($field, date('Y-m-d'));
 

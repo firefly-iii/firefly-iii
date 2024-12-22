@@ -106,28 +106,27 @@ class AccountController extends Controller
         $accountNames  = $this->extractNames($accounts);
 
         // grab all balances
-        $startBalances = app('steam')->balancesPerCurrencyByAccounts($accounts, $start);
-        $endBalances   = app('steam')->balancesPerCurrencyByAccounts($accounts, $end);
+        $startBalances = app('steam')->finalAccountsBalance($accounts, $start);
+        $endBalances   = app('steam')->finalAccountsBalance($accounts, $end);
 
         // loop the end balances. This is an array for each account ($expenses)
         foreach ($endBalances as $accountId => $expenses) {
             $accountId = (int) $accountId;
             // loop each expense entry (each entry can be a different currency).
-            foreach ($expenses as $currencyId => $endAmount) {
-                $currencyId  = (int) $currencyId;
+            foreach ($expenses as $currencyCode => $endAmount) {
 
                 // see if there is an accompanying start amount.
                 // grab the difference and find the currency.
-                $startAmount = (string) ($startBalances[$accountId][$currencyId] ?? '0');
+                $startAmount = (string) ($startBalances[$accountId][$currencyCode] ?? '0');
                 $diff        = bcsub((string) $endAmount, $startAmount);
-                $currencies[$currencyId] ??= $this->currencyRepository->find($currencyId);
+                $currencies[$currencyCode] ??= $this->currencyRepository->findByCode($currencyCode);
                 if (0 !== bccomp($diff, '0')) {
                     // store the values in a temporary array.
                     $tempData[] = [
                         'name'        => $accountNames[$accountId],
                         'difference'  => $diff,
                         'diff_float'  => (float) $diff, // intentional float
-                        'currency_id' => $currencyId,
+                        'currency_id' => $currencies[$currencyCode]->id,
                     ];
                 }
             }
@@ -437,11 +436,11 @@ class AccountController extends Controller
         if ('1D' === $step) {
             // per day the entire period, balance for every day.
             $format   = (string) trans('config.month_and_day_js', [], $locale);
-            $range    = app('steam')->balanceInRange($account, $start, $end, $currency);
+            $range    = app('steam')->finalAccountBalanceInRange($account, $start, $end);
             $previous = array_values($range)[0];
             while ($end >= $current) {
                 $theDate         = $current->format('Y-m-d');
-                $balance         = $range[$theDate] ?? $previous;
+                $balance         = $range[$theDate]['balance'] ?? $previous;
                 $label           = $current->isoFormat($format);
                 $entries[$label] = (float) $balance;
                 $previous        = $balance;
@@ -507,28 +506,27 @@ class AccountController extends Controller
         $accountNames  = $this->extractNames($accounts);
 
         // grab all balances
-        $startBalances = app('steam')->balancesPerCurrencyByAccounts($accounts, $start);
-        $endBalances   = app('steam')->balancesPerCurrencyByAccounts($accounts, $end);
+        $startBalances = app('steam')->finalAccountsBalance($accounts, $start);
+        $endBalances   = app('steam')->finalAccountsBalance($accounts, $end);
 
         // loop the end balances. This is an array for each account ($expenses)
         foreach ($endBalances as $accountId => $expenses) {
             $accountId = (int) $accountId;
             // loop each expense entry (each entry can be a different currency).
-            foreach ($expenses as $currencyId => $endAmount) {
-                $currencyId  = (int) $currencyId;
+            foreach ($expenses as $currencyCode => $endAmount) {
 
                 // see if there is an accompanying start amount.
                 // grab the difference and find the currency.
-                $startAmount = (string) ($startBalances[$accountId][$currencyId] ?? '0');
+                $startAmount = (string) ($startBalances[$accountId][$currencyCode] ?? '0');
                 $diff        = bcsub((string) $endAmount, $startAmount);
-                $currencies[$currencyId] ??= $this->currencyRepository->find($currencyId);
+                $currencies[$currencyCode] ??= $this->currencyRepository->findByCode($currencyCode);
                 if (0 !== bccomp($diff, '0')) {
                     // store the values in a temporary array.
                     $tempData[] = [
                         'name'        => $accountNames[$accountId],
                         'difference'  => $diff,
                         'diff_float'  => (float) $diff, // intentional float
-                        'currency_id' => $currencyId,
+                        'currency_id' => $currencies[$currencyCode]->id,
                     ];
                 }
             }

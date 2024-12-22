@@ -30,7 +30,7 @@ use Illuminate\Support\Facades\Log;
 
 class SummaryBalanceGrouped
 {
-    private const string SUM                     = 'sum';
+    private const string SUM = 'sum';
     private array                       $amounts = [];
     private array                       $currencies;
     private CurrencyRepositoryInterface $currencyRepository;
@@ -47,9 +47,9 @@ class SummaryBalanceGrouped
     public function groupData(): array
     {
         Log::debug('Now going to group data.');
-        $return      = [];
+        $return = [];
         foreach ($this->keys as $key) {
-            $title    = match ($key) {
+            $title = match ($key) {
                 'sum'     => 'balance',
                 'expense' => 'spent',
                 'income'  => 'earned',
@@ -108,11 +108,11 @@ class SummaryBalanceGrouped
         /** @var array $journal */
         foreach ($journals as $journal) {
             // transaction info:
-            $currencyId                            = (int) $journal['currency_id'];
-            $amount                                = bcmul($journal['amount'], $multiplier);
-            $currency                              = $this->currencies[$currencyId] ?? TransactionCurrency::find($currencyId);
-            $this->currencies[$currencyId]         = $currency;
-            $nativeAmount                          = $converter->convert($currency, $this->default, $journal['date'], $amount);
+            $currencyId                    = (int) $journal['currency_id'];
+            $amount                        = bcmul($journal['amount'], $multiplier);
+            $currency                      = $this->currencies[$currencyId] ?? TransactionCurrency::find($currencyId);
+            $this->currencies[$currencyId] = $currency;
+            $nativeAmount                  = $converter->convert($currency, $this->default, $journal['date'], $amount);
             if ((int) $journal['foreign_currency_id'] === $this->default->id) {
                 // use foreign amount instead
                 $nativeAmount = $journal['foreign_amount'];

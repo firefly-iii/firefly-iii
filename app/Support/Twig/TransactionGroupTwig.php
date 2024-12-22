@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Twig;
 
 use Carbon\Carbon;
+use DB;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -86,7 +87,7 @@ class TransactionGroupTwig extends AbstractExtension
             $colored = false;
         }
 
-        $result     = app('amount')->formatFlat($array['currency_symbol'], (int) $array['currency_decimal_places'], $amount, $colored);
+        $result = app('amount')->formatFlat($array['currency_symbol'], (int) $array['currency_decimal_places'], $amount, $colored);
         if (TransactionType::TRANSFER === $type) {
             $result = sprintf('<span class="text-info money-transfer">%s</span>', $result);
         }
@@ -119,9 +120,9 @@ class TransactionGroupTwig extends AbstractExtension
      */
     private function foreignJournalArrayAmount(array $array): string
     {
-        $type       = $array['transaction_type_type'] ?? TransactionType::WITHDRAWAL;
-        $amount     = $array['foreign_amount'] ?? '0';
-        $colored    = true;
+        $type    = $array['transaction_type_type'] ?? TransactionType::WITHDRAWAL;
+        $amount  = $array['foreign_amount'] ?? '0';
+        $colored = true;
 
         $sourceType = $array['source_account_type'] ?? 'invalid';
         $amount     = $this->signAmount($amount, $type, $sourceType);
@@ -129,7 +130,7 @@ class TransactionGroupTwig extends AbstractExtension
         if (TransactionType::TRANSFER === $type) {
             $colored = false;
         }
-        $result     = app('amount')->formatFlat($array['foreign_currency_symbol'], (int) $array['foreign_currency_decimal_places'], $amount, $colored);
+        $result = app('amount')->formatFlat($array['foreign_currency_symbol'], (int) $array['foreign_currency_decimal_places'], $amount, $colored);
         if (TransactionType::TRANSFER === $type) {
             $result = sprintf('<span class="text-info money-transfer">%s</span>', $result);
         }
@@ -170,12 +171,12 @@ class TransactionGroupTwig extends AbstractExtension
         $colored    = true;
         $sourceType = $first->account()->first()->accountType()->first()->type;
 
-        $amount     = $this->signAmount($amount, $type, $sourceType);
+        $amount = $this->signAmount($amount, $type, $sourceType);
 
         if (TransactionType::TRANSFER === $type) {
             $colored = false;
         }
-        $result     = app('amount')->formatFlat($currency->symbol, $currency->decimal_places, $amount, $colored);
+        $result = app('amount')->formatFlat($currency->symbol, $currency->decimal_places, $amount, $colored);
         if (TransactionType::TRANSFER === $type) {
             $result = sprintf('<span class="text-info money-transfer">%s</span>', $result);
         }
@@ -196,7 +197,7 @@ class TransactionGroupTwig extends AbstractExtension
      */
     private function foreignJournalObjectAmount(TransactionJournal $journal): string
     {
-        $type       = $journal->transactionType->type;
+        $type = $journal->transactionType->type;
 
         /** @var Transaction $first */
         $first      = $journal->transactions()->where('amount', '<', 0)->first();
@@ -205,12 +206,12 @@ class TransactionGroupTwig extends AbstractExtension
         $colored    = true;
         $sourceType = $first->account()->first()->accountType()->first()->type;
 
-        $amount     = $this->signAmount($amount, $type, $sourceType);
+        $amount = $this->signAmount($amount, $type, $sourceType);
 
         if (TransactionType::TRANSFER === $type) {
             $colored = false;
         }
-        $result     = app('amount')->formatFlat($currency->symbol, $currency->decimal_places, $amount, $colored);
+        $result = app('amount')->formatFlat($currency->symbol, $currency->decimal_places, $amount, $colored);
         if (TransactionType::TRANSFER === $type) {
             $result = sprintf('<span class="text-info money-transfer">%s</span>', $result);
         }
@@ -223,12 +224,11 @@ class TransactionGroupTwig extends AbstractExtension
         return new TwigFunction(
             'journalHasMeta',
             static function (int $journalId, string $metaField) {
-                $count = \DB::table('journal_meta')
-                    ->where('name', $metaField)
-                    ->where('transaction_journal_id', $journalId)
-                    ->whereNull('deleted_at')
-                    ->count()
-                ;
+                $count = DB::table('journal_meta')
+                            ->where('name', $metaField)
+                            ->where('transaction_journal_id', $journalId)
+                            ->whereNull('deleted_at')
+                            ->count();
 
                 return 1 === $count;
             }
@@ -241,12 +241,11 @@ class TransactionGroupTwig extends AbstractExtension
             'journalGetMetaDate',
             static function (int $journalId, string $metaField) {
                 /** @var null|TransactionJournalMeta $entry */
-                $entry = \DB::table('journal_meta')
-                    ->where('name', $metaField)
-                    ->where('transaction_journal_id', $journalId)
-                    ->whereNull('deleted_at')
-                    ->first()
-                ;
+                $entry = DB::table('journal_meta')
+                            ->where('name', $metaField)
+                            ->where('transaction_journal_id', $journalId)
+                            ->whereNull('deleted_at')
+                            ->first();
                 if (null === $entry) {
                     return today(config('app.timezone'));
                 }
@@ -262,12 +261,11 @@ class TransactionGroupTwig extends AbstractExtension
             'journalGetMetaField',
             static function (int $journalId, string $metaField) {
                 /** @var null|TransactionJournalMeta $entry */
-                $entry = \DB::table('journal_meta')
-                    ->where('name', $metaField)
-                    ->where('transaction_journal_id', $journalId)
-                    ->whereNull('deleted_at')
-                    ->first()
-                ;
+                $entry = DB::table('journal_meta')
+                            ->where('name', $metaField)
+                            ->where('transaction_journal_id', $journalId)
+                            ->whereNull('deleted_at')
+                            ->first();
                 if (null === $entry) {
                     return '';
                 }

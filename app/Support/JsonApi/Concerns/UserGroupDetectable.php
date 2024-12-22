@@ -37,7 +37,7 @@ trait UserGroupDetectable
     public function detectUserGroup(): ?UserGroup
     {
         /** @var User $user */
-        $user      = auth()->user();
+        $user = auth()->user();
         app('log')->debug('Now in detectUserGroup()');
 
         /** @var null|UserGroup $userGroup */
@@ -49,7 +49,7 @@ trait UserGroupDetectable
                 app('log')->debug(sprintf('Request class has no user_group_id parameter, grab default from user (group #%d).', $user->user_group_id));
                 $userGroupId = (int) $user->user_group_id;
             }
-            $userGroup   = UserGroup::find($userGroupId);
+            $userGroup = UserGroup::find($userGroupId);
             if (null === $userGroup) {
                 app('log')->error(sprintf('Request class has user_group_id (#%d), but group does not exist.', $userGroupId));
 

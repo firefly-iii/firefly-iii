@@ -95,7 +95,7 @@ class NetWorth implements NetWorthInterface
                 'native_currency_decimal_places' => $default->decimal_places,
             ],
         ];
-        $balances  = app('steam')->balancesByAccountsConverted($accounts, $date);
+        $balances  = app('steam')->finalAccountsBalance($accounts, $date);
 
         /** @var Account $account */
         foreach ($accounts as $account) {
@@ -187,10 +187,10 @@ class NetWorth implements NetWorthInterface
          */
         $accounts = $this->getAccounts();
         $return   = [];
-        $balances = app('steam')->balancesByAccounts($accounts, $date);
+        $balances = app('steam')->finalAccountsBalance($accounts, $date);
         foreach ($accounts as $account) {
             $currency                     = $this->getRepository()->getAccountCurrency($account);
-            $balance                      = $balances[$account->id] ?? '0';
+            $balance                      = $balances[$account->id]['balance'] ?? '0';
 
             // always subtract virtual balance.
             $virtualBalance               = $account->virtual_balance;

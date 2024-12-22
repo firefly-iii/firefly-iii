@@ -38,7 +38,7 @@ trait BasicDataSupport
      */
     protected function isInArray(array $array, int $entryId)
     {
-        return $array[$entryId] ?? '0';
+        return $array[$entryId]['balance'] ?? '0';
     }
 
     /**
@@ -46,6 +46,6 @@ trait BasicDataSupport
      */
     protected function isInArrayDate(array $array, int $entryId): ?Carbon
     {
-        return $array[$entryId] ?? null;
+        return $array[$entryId]['balance'] ?? null;
     }
 }

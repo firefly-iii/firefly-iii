@@ -82,7 +82,7 @@ class General extends AbstractExtension
                     }
                     if ('native_balance' === $key) {
                         // balance in native currency.
-                        if($convertToNative) {
+                        if ($convertToNative) {
                             $strings[] = app('amount')->formatAnything($native, $balance, false);
                         }
                         continue;
@@ -282,7 +282,7 @@ class General extends AbstractExtension
                 $args  = func_get_args();
                 $route = $args[0]; // name of the route.
 
-                if (\Route::getCurrentRoute()->getName() === $route) {
+                if (Route::getCurrentRoute()->getName() === $route) {
                     return 'active';
                 }
 
@@ -302,7 +302,7 @@ class General extends AbstractExtension
             static function (): string {
                 $args  = func_get_args();
                 $route = $args[0]; // name of the route.
-                $name  = \Route::getCurrentRoute()->getName() ?? '';
+                $name  = Route::getCurrentRoute()->getName() ?? '';
                 if (str_contains($name, $route)) {
                     return 'active';
                 }
@@ -326,7 +326,7 @@ class General extends AbstractExtension
 
                 if ($objectType === $activeObjectType
                     && false !== stripos(
-                        \Route::getCurrentRoute()->getName(),
+                        Route::getCurrentRoute()->getName(),
                         $route
                     )) {
                     return 'active';
@@ -349,7 +349,7 @@ class General extends AbstractExtension
             static function (): string {
                 $args  = func_get_args();
                 $route = $args[0]; // name of the route.
-                $name  = \Route::getCurrentRoute()->getName() ?? '';
+                $name  = Route::getCurrentRoute()->getName() ?? '';
                 if (str_contains($name, $route)) {
                     return 'menu-open';
                 }

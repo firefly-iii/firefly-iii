@@ -77,15 +77,15 @@ class ParseDateString
     public function parseDate(string $date): Carbon
     {
         app('log')->debug(sprintf('parseDate("%s")', $date));
-        $date        = strtolower($date);
+        $date = strtolower($date);
         // parse keywords:
         if (in_array($date, $this->keywords, true)) {
             return $this->parseKeyword($date);
         }
 
         // if regex for YYYY-MM-DD:
-        $pattern     = '/^(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])$/';
-        $result      = preg_match($pattern, $date);
+        $pattern = '/^(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])$/';
+        $result  = preg_match($pattern, $date);
         if (false !== $result && 0 !== $result) {
             return $this->parseDefaultDate($date);
         }
@@ -178,11 +178,11 @@ class ParseDateString
 
         foreach ($parts as $part) {
             app('log')->debug(sprintf('Now parsing part "%s"', $part));
-            $part      = trim($part);
+            $part = trim($part);
 
             // verify if correct
-            $pattern   = '/[+-]\d+[wqmdy]/';
-            $result    = preg_match($pattern, $part);
+            $pattern = '/[+-]\d+[wqmdy]/';
+            $result  = preg_match($pattern, $part);
             if (0 === $result || false === $result) {
                 app('log')->error(sprintf('Part "%s" does not match regular expression. Will be skipped.', $part));
 
@@ -196,7 +196,7 @@ class ParseDateString
 
                 continue;
             }
-            $func      = $functions[$direction][$period];
+            $func = $functions[$direction][$period];
             app('log')->debug(sprintf('Will now do %s(%d) on %s', $func, $number, $today->format('Y-m-d')));
             $today->{$func}($number); // @phpstan-ignore-line
             app('log')->debug(sprintf('Resulting date is %s', $today->format('Y-m-d')));

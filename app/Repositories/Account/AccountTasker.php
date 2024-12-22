@@ -47,8 +47,8 @@ class AccountTasker implements AccountTaskerInterface
     {
         $yesterday       = clone $start;
         $yesterday->subDay();
-        $startSet        = app('steam')->balancesByAccounts($accounts, $yesterday);
-        $endSet          = app('steam')->balancesByAccounts($accounts, $end);
+        $startSet        = app('steam')->finalAccountsBalance($accounts, $yesterday);
+        $endSet          = app('steam')->finalAccountsBalance($accounts, $end);
         app('log')->debug('Start of accountreport');
 
         /** @var AccountRepositoryInterface $repository */
@@ -86,8 +86,8 @@ class AccountTasker implements AccountTaskerInterface
 
             // get first journal date:
             $first                                  = $repository->oldestJournal($account);
-            $entry['start_balance']                 = $startSet[$account->id] ?? '0';
-            $entry['end_balance']                   = $endSet[$account->id] ?? '0';
+            $entry['start_balance']                 = $startSet[$account->id]['balance'] ?? '0';
+            $entry['end_balance']                   = $endSet[$account->id]['balance'] ?? '0';
 
             // first journal exists, and is on start, then this is the actual opening balance:
             if (null !== $first && $first->date->isSameDay($start) && TransactionType::OPENING_BALANCE === $first->transactionType->type) {

@@ -39,7 +39,7 @@ class JournalList implements BinderInterface
     public static function routeBinder(string $value, Route $route): array
     {
         if (auth()->check()) {
-            $list      = self::parseList($value);
+            $list = self::parseList($value);
 
             // get the journals by using the collector.
             /** @var GroupCollectorInterface $collector */
@@ -47,7 +47,7 @@ class JournalList implements BinderInterface
             $collector->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER, TransactionType::RECONCILIATION]);
             $collector->withCategoryInformation()->withBudgetInformation()->withTagInformation()->withAccountInformation();
             $collector->setJournalIds($list);
-            $result    = $collector->getExtractedJournals();
+            $result = $collector->getExtractedJournals();
             if (0 === count($result)) {
                 throw new NotFoundHttpException();
             }

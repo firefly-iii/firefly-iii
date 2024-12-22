@@ -35,8 +35,8 @@ trait GetSortInstructions
             return [];
         }
         foreach ($set as $info) {
-            $column          = $info['column'] ?? 'NOPE';
-            $direction       = $info['direction'] ?? 'NOPE';
+            $column    = $info['column'] ?? 'NOPE';
+            $direction = $info['direction'] ?? 'NOPE';
             if ('asc' !== $direction && 'desc' !== $direction) {
                 // skip invalid direction
                 continue;

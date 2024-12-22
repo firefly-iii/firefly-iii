@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\JsonApi\Enrichments;
 
 use Carbon\Carbon;
+use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\ObjectGroup;
@@ -36,6 +37,8 @@ use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Override;
+use stdClass;
 
 /**
  * Class AccountEnrichment
@@ -44,16 +47,16 @@ use Illuminate\Support\Facades\Log;
  */
 class AccountEnrichment implements EnrichmentInterface
 {
-    private array               $balances;
-    private Collection          $collection;
-    private array               $currencies;
+    private array                       $balances;
+    private Collection                  $collection;
+    private array                       $currencies;
     private CurrencyRepositoryInterface $currencyRepository;
-    private TransactionCurrency $default;
-    private ?Carbon             $end;
-    private array               $grouped;
-    private array               $objectGroups;
+    private TransactionCurrency         $default;
+    private ?Carbon                     $end;
+    private array                       $grouped;
+    private array                       $objectGroups;
     private AccountRepositoryInterface  $repository;
-    private ?Carbon             $start;
+    private ?Carbon                     $start;
 
     public function __construct()
     {
@@ -63,7 +66,7 @@ class AccountEnrichment implements EnrichmentInterface
         $this->end                = null;
     }
 
-    #[\Override]
+    #[Override]
     public function enrichSingle(Model $model): Account
     {
         Log::debug(__METHOD__);
@@ -73,7 +76,7 @@ class AccountEnrichment implements EnrichmentInterface
         return $collection->first();
     }
 
-    #[\Override]
+    #[Override]
     /**
      * Do the actual enrichment.
      */
@@ -144,7 +147,7 @@ class AccountEnrichment implements EnrichmentInterface
         $metaFields  = $this->repository->getMetaValues($this->collection, ['is_multi_currency', 'currency_id', 'account_role', 'account_number', 'liability_direction', 'interest', 'interest_period', 'current_debt']);
         $currencyIds = $metaFields->where('name', 'currency_id')->pluck('data')->toArray();
 
-        $currencies  = [];
+        $currencies = [];
         foreach ($this->currencyRepository->getByIds($currencyIds) as $currency) {
             $id              = $currency->id;
             $currencies[$id] = $currency;
@@ -174,8 +177,8 @@ class AccountEnrichment implements EnrichmentInterface
         $default        = $this->default;
 
         // get start and end, so the balance difference can be generated.
-        $start          = null;
-        $end            = null;
+        $start = null;
+        $end   = null;
         if (null !== $this->start) {
             $start = Balance::getAccountBalances($this->collection, $this->start);
         }
@@ -197,7 +200,7 @@ class AccountEnrichment implements EnrichmentInterface
                 'balance_difference'      => null,
             ];
             if (array_key_exists($account->id, $balances)) {
-                $set              = [];
+                $set = [];
                 foreach ($balances[$account->id] as $currencyId => $entry) {
                     $left  = $start[$account->id][$currencyId]['balance'] ?? null;
                     $right = $end[$account->id][$currencyId]['balance'] ?? null;
@@ -239,12 +242,11 @@ class AccountEnrichment implements EnrichmentInterface
 
     private function getObjectGroups(): void
     {
-        $set      = \DB::table('object_groupables')
-            ->where('object_groupable_type', Account::class)
-            ->whereIn('object_groupable_id', $this->collection->pluck('id')->toArray())
-            ->distinct()
-            ->get(['object_groupables.object_groupable_id', 'object_groupables.object_group_id'])
-        ;
+        $set = DB::table('object_groupables')
+                  ->where('object_groupable_type', Account::class)
+                  ->whereIn('object_groupable_id', $this->collection->pluck('id')->toArray())
+                  ->distinct()
+                  ->get(['object_groupables.object_groupable_id', 'object_groupables.object_group_id']);
         // get the groups:
         $groupIds = $set->pluck('object_group_id')->toArray();
         $groups   = ObjectGroup::whereIn('id', $groupIds)->get();
@@ -254,7 +256,7 @@ class AccountEnrichment implements EnrichmentInterface
             $this->objectGroups[$group->id] = $group;
         }
 
-        /** @var \stdClass $entry */
+        /** @var stdClass $entry */
         foreach ($set as $entry) {
             $this->grouped[(int) $entry->object_groupable_id] = (int) $entry->object_group_id;
         }

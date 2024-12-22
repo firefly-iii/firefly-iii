@@ -89,8 +89,8 @@ class IndexController extends Controller
         $start->subDay();
 
         $ids           = $accounts->pluck('id')->toArray();
-        $startBalances = app('steam')->balancesByAccounts($accounts, $start);
-        $endBalances   = app('steam')->balancesByAccounts($accounts, $end);
+        $startBalances = app('steam')->finalAccountsBalance($accounts, $start);
+        $endBalances   = app('steam')->finalAccountsBalance($accounts, $end);
         $activities    = app('steam')->getLastActivities($ids);
 
         $accounts->each(
@@ -149,8 +149,8 @@ class IndexController extends Controller
         $start->subDay();
 
         $ids           = $accounts->pluck('id')->toArray();
-        $startBalances = app('steam')->balancesByAccounts($accounts, $start);
-        $endBalances   = app('steam')->balancesByAccounts($accounts, $end);
+        $startBalances = app('steam')->finalAccountsBalance($accounts, $start);
+        $endBalances   = app('steam')->finalAccountsBalance($accounts, $end);
         $activities    = app('steam')->getLastActivities($ids);
 
         $accounts->each(

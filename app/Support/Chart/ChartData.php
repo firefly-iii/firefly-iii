@@ -46,7 +46,7 @@ class ChartData
         if (array_key_exists('native_currency_id', $data)) {
             $data['native_currency_id'] = (string) $data['native_currency_id'];
         }
-        $required       = ['start', 'date', 'end', 'entries', 'native_entries'];
+        $required = ['start', 'date', 'end', 'entries', 'native_entries'];
         foreach ($required as $field) {
             if (!array_key_exists($field, $data)) {
                 throw new FireflyException(sprintf('Data-set is missing the "%s"-variable.', $field));

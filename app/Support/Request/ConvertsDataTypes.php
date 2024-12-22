@@ -96,24 +96,6 @@ trait ConvertsDataTypes
         return Steam::filterSpaces($string);
     }
 
-    public function convertIban(string $field): string
-    {
-        return Steam::filterSpaces($this->convertString($field));
-    }
-
-    /**
-     * Return string value.
-     */
-    public function convertString(string $field, string $default = ''): string
-    {
-        $entry = $this->get($field);
-        if (!is_scalar($entry)) {
-            return $default;
-        }
-
-        return (string) $this->clearString((string) $entry);
-    }
-
     public function clearString(?string $string): ?string
     {
         $string = $this->clearStringKeepNewlines($string);
@@ -147,12 +129,22 @@ trait ConvertsDataTypes
         return trim((string) $string);
     }
 
-    /**
-     * Return integer value.
-     */
-    public function convertInteger(string $field): int
+    public function convertIban(string $field): string
     {
-        return (int) $this->get($field);
+        return Steam::filterSpaces($this->convertString($field));
+    }
+
+    /**
+     * Return string value.
+     */
+    public function convertString(string $field, string $default = ''): string
+    {
+        $entry = $this->get($field);
+        if (!is_scalar($entry)) {
+            return $default;
+        }
+
+        return (string) $this->clearString((string) $entry);
     }
 
     /**
@@ -160,6 +152,14 @@ trait ConvertsDataTypes
      * trait, OR a stub needs to be added by any other class that uses this train.
      */
     abstract public function get(string $key, mixed $default = null): mixed;
+
+    /**
+     * Return integer value.
+     */
+    public function convertInteger(string $field): int
+    {
+        return (int) $this->get($field);
+    }
 
     /**
      * TODO duplicate, see SelectTransactionsRequest
