@@ -770,13 +770,20 @@ class Steam
      */
     public function getHostName(string $ipAddress): string
     {
+        $host = '';
+
         try {
             $hostName = gethostbyaddr($ipAddress);
-        } catch (\Exception $e) { // intentional generic exception
-            throw new FireflyException($e->getMessage(), 0, $e);
+        } catch (\Exception $e) {
+            app('log')->error($e->getMessage());
+            $hostName = $ipAddress;
         }
 
-        return (string) $hostName;
+        if ('' !== (string) $hostName && $hostName !== $ipAddress) {
+            $host = $hostName;
+        }
+
+        return (string) $host;
     }
 
     public function getLastActivities(array $accounts): array

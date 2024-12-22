@@ -54,6 +54,7 @@ return [
     'ip_address'                                  => 'IP address',
     'host_name'                                   => 'Host',
     'date_time'                                   => 'Date + time',
+    'user_agent'                                  => 'Browser',
 
     // access token created
     'access_token_created_subject'                => 'A new access token was created',
