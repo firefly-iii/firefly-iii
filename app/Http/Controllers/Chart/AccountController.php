@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
@@ -300,7 +301,7 @@ class AccountController extends Controller
     {
         $start          = clone session('start', today(config('app.timezone'))->startOfMonth());
         $end            = clone session('end', today(config('app.timezone'))->endOfMonth());
-        $defaultSet     = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray();
+        $defaultSet     = $repository->getAccountsByType([AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value])->pluck('id')->toArray();
         Log::debug('Default set is ', $defaultSet);
         $frontpage      = app('preferences')->get('frontpageAccounts', $defaultSet);
         $frontpageArray = !is_array($frontpage->data) ? [] : $frontpage->data;

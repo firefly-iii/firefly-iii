@@ -27,9 +27,7 @@
                         <h3 class="box-title">{{ $t('firefly.header_exchange_rates') }}</h3>
                     </div>
                     <div class="box-body">
-                        <p>
-                            {{ $t('firefly.exchange_rates_intro') }}
-                        </p>
+                        <p v-html="$t('firefly.exchange_rates_intro')"></p>
                     </div>
                 </div>
             </div>

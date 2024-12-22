@@ -50,8 +50,9 @@ trait ChartGeneration
         $cache->addProperty($end);
         $cache->addProperty('chart.account.account-balance-chart');
         $cache->addProperty($accounts);
+        $convertToNative =app('preferences')->get('convert_to_native', false)->data;
         if ($cache->has()) {
-            return $cache->get();
+            // return $cache->get();
         }
         app('log')->debug('Regenerate chart.account.account-balance-chart from scratch.');
         $locale       = app('steam')->getLocale();
@@ -72,6 +73,11 @@ trait ChartGeneration
             if (null === $currency) {
                 $currency = $default;
             }
+            // if the user prefers the native currency, overrule the currency of the account.
+            if($currency->id !== $default->id && $convertToNative) {
+                $currency = $default;
+            }
+
             $currentSet   = [
                 'label'           => $account->name,
                 'currency_symbol' => $currency->symbol,
@@ -79,7 +85,7 @@ trait ChartGeneration
             ];
 
             $currentStart = clone $start;
-            $range        = app('steam')->balanceInRange($account, $start, clone $end);
+            $range        = $convertToNative ? app('steam')->balanceInRangeNative($account, $start, clone $end) : app('steam')->balanceInRange($account, $start, clone $end);
             $previous     = array_values($range)[0];
             while ($currentStart <= $end) {
                 $format                        = $currentStart->format('Y-m-d');

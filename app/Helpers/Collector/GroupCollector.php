@@ -131,6 +131,7 @@ class GroupCollector implements GroupCollectorInterface
 
             // currency info:
             'source.amount as amount',
+            'source.native_amount as native_amount',
             'source.transaction_currency_id as currency_id',
             'currency.code as currency_code',
             'currency.name as currency_name',
@@ -139,6 +140,7 @@ class GroupCollector implements GroupCollectorInterface
 
             // foreign currency info
             'source.foreign_amount as foreign_amount',
+            'source.native_foreign_amount as native_foreign_amount',
             'source.foreign_currency_id as foreign_currency_id',
             'foreign_currency.code as foreign_currency_code',
             'foreign_currency.name as foreign_currency_name',
