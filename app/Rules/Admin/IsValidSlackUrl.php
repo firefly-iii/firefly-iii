@@ -17,7 +17,7 @@ class IsValidSlackUrl implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
-        $value = (string)$value;
+        $value = (string) $value;
         if ('' === $value) {
             return;
         }

@@ -130,7 +130,7 @@ class AccountTasker implements AccountTaskerInterface
         // Obtain a list of columns
         $sum       = [];
         foreach ($report['accounts'] as $accountId => $row) {
-            $sum[$accountId] = (float)$row['sum']; // intentional float
+            $sum[$accountId] = (float) $row['sum']; // intentional float
         }
 
         array_multisort($sum, SORT_ASC, $report['accounts']);
@@ -155,8 +155,8 @@ class AccountTasker implements AccountTaskerInterface
 
         /** @var array $journal */
         foreach ($array as $journal) {
-            $sourceId                        = (int)$journal['destination_account_id'];
-            $currencyId                      = (int)$journal['currency_id'];
+            $sourceId                        = (int) $journal['destination_account_id'];
+            $currencyId                      = (int) $journal['currency_id'];
             $key                             = sprintf('%s-%s', $sourceId, $currencyId);
             $currencies[$currencyId]  ??= $currencyRepos->find($currencyId);
             $report['accounts'][$key] ??= [
@@ -181,7 +181,7 @@ class AccountTasker implements AccountTaskerInterface
         // do averages and sums.
         foreach (array_keys($report['accounts']) as $key) {
             if ($report['accounts'][$key]['count'] > 1) {
-                $report['accounts'][$key]['average'] = bcdiv($report['accounts'][$key]['sum'], (string)$report['accounts'][$key]['count']);
+                $report['accounts'][$key]['average'] = bcdiv($report['accounts'][$key]['sum'], (string) $report['accounts'][$key]['count']);
             }
             $currencyId                         = $report['accounts'][$key]['currency_id'];
             $report['sums'][$currencyId] ??= [
@@ -218,7 +218,7 @@ class AccountTasker implements AccountTaskerInterface
         // Obtain a list of columns
         $sum       = [];
         foreach ($report['accounts'] as $accountId => $row) {
-            $sum[$accountId] = (float)$row['sum']; // intentional float
+            $sum[$accountId] = (float) $row['sum']; // intentional float
         }
 
         array_multisort($sum, SORT_DESC, $report['accounts']);
@@ -243,8 +243,8 @@ class AccountTasker implements AccountTaskerInterface
 
         /** @var array $journal */
         foreach ($array as $journal) {
-            $sourceId                        = (int)$journal['source_account_id'];
-            $currencyId                      = (int)$journal['currency_id'];
+            $sourceId                        = (int) $journal['source_account_id'];
+            $currencyId                      = (int) $journal['currency_id'];
             $key                             = sprintf('%s-%s', $sourceId, $currencyId);
             if (!array_key_exists($key, $report['accounts'])) {
                 $currencies[$currencyId] ??= $currencyRepos->find($currencyId);
@@ -268,7 +268,7 @@ class AccountTasker implements AccountTaskerInterface
         // do averages and sums.
         foreach (array_keys($report['accounts']) as $key) {
             if ($report['accounts'][$key]['count'] > 1) {
-                $report['accounts'][$key]['average'] = bcdiv($report['accounts'][$key]['sum'], (string)$report['accounts'][$key]['count']);
+                $report['accounts'][$key]['average'] = bcdiv($report['accounts'][$key]['sum'], (string) $report['accounts'][$key]['count']);
             }
             $currencyId                         = $report['accounts'][$key]['currency_id'];
             $report['sums'][$currencyId] ??= [

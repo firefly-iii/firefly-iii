@@ -127,16 +127,16 @@ class AccountQuery extends QueryAll implements HasPagination
     }
 
     #[\Override]
-    public function paginate(array $page): Page
-    {
-        exit('here weare');
-        // TODO: Implement paginate() method.
-    }
-
-    #[\Override]
     public function getOrPaginate(?array $page): iterable
     {
         exit('here weare');
         // TODO: Implement getOrPaginate() method.
+    }
+
+    #[\Override]
+    public function paginate(array $page): Page
+    {
+        exit('here weare');
+        // TODO: Implement paginate() method.
     }
 }

@@ -61,6 +61,38 @@ class ListController extends Controller
 
     /**
      * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/piggy_banks/listAccountByPiggyBank
+     *
+     * List single resource.
+     *
+     * @throws FireflyException
+     */
+    public function accounts(PiggyBank $piggyBank): JsonResponse
+    {
+        // types to get, page size:
+        $pageSize    = $this->parameters->get('limit');
+        $manager     = $this->getManager();
+
+        $collection  = $piggyBank->accounts;
+        $count       = $collection->count();
+        $events      = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+
+        // make paginator:
+        $paginator   = new LengthAwarePaginator($events, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.piggy-banks.accounts', [$piggyBank->id]).$this->buildParams());
+
+        /** @var AccountTransformer $transformer */
+        $transformer = app(AccountTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource    = new FractalCollection($events, $transformer, 'accounts');
+        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
+    }
+
+    /**
+     * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/piggy_banks/listAttachmentByPiggyBank
      *
      * @throws FireflyException
@@ -115,38 +147,6 @@ class ListController extends Controller
         $transformer->setParameters($this->parameters);
 
         $resource    = new FractalCollection($events, $transformer, 'piggy_bank_events');
-        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-    }
-
-    /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/piggy_banks/listAccountByPiggyBank
-     *
-     * List single resource.
-     *
-     * @throws FireflyException
-     */
-    public function accounts(PiggyBank $piggyBank): JsonResponse
-    {
-        // types to get, page size:
-        $pageSize    = $this->parameters->get('limit');
-        $manager     = $this->getManager();
-
-        $collection  = $piggyBank->accounts;
-        $count       = $collection->count();
-        $events      = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
-
-        // make paginator:
-        $paginator   = new LengthAwarePaginator($events, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.piggy-banks.accounts', [$piggyBank->id]).$this->buildParams());
-
-        /** @var AccountTransformer $transformer */
-        $transformer = app(AccountTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource    = new FractalCollection($events, $transformer, 'accounts');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);

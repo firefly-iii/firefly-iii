@@ -168,9 +168,9 @@ class MonthReportGenerator implements ReportGeneratorInterface
             'journals'         => $journals,
             'currency'         => $currency,
             'exists'           => 0 !== count($journals),
-            'end'              => $this->end->isoFormat((string)trans('config.month_and_day_moment_js', [], $locale)),
+            'end'              => $this->end->isoFormat((string) trans('config.month_and_day_moment_js', [], $locale)),
             'endBalance'       => app('steam')->balance($account, $this->end),
-            'dayBefore'        => $date->isoFormat((string)trans('config.month_and_day_moment_js', [], $locale)),
+            'dayBefore'        => $date->isoFormat((string) trans('config.month_and_day_moment_js', [], $locale)),
             'dayBeforeBalance' => $dayBeforeBalance,
         ];
     }

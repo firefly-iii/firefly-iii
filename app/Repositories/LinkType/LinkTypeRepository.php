@@ -56,13 +56,13 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
 
     public function update(LinkType $linkType, array $data): LinkType
     {
-        if (array_key_exists('name', $data) && '' !== (string)$data['name']) {
+        if (array_key_exists('name', $data) && '' !== (string) $data['name']) {
             $linkType->name = $data['name'];
         }
-        if (array_key_exists('inward', $data) && '' !== (string)$data['inward']) {
+        if (array_key_exists('inward', $data) && '' !== (string) $data['inward']) {
             $linkType->inward = $data['inward'];
         }
-        if (array_key_exists('outward', $data) && '' !== (string)$data['outward']) {
+        if (array_key_exists('outward', $data) && '' !== (string) $data['outward']) {
             $linkType->outward = $data['outward'];
         }
         $linkType->save();
@@ -183,7 +183,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
      */
     public function storeLink(array $information, TransactionJournal $inward, TransactionJournal $outward): ?TransactionJournalLink
     {
-        $linkType = $this->find((int)($information['link_type_id'] ?? 0));
+        $linkType = $this->find((int) ($information['link_type_id'] ?? 0));
 
         if (null === $linkType) {
             $linkType = $this->findByName($information['link_type_name']);
@@ -215,7 +215,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
         $link->save();
 
         // make note in noteable:
-        $this->setNoteText($link, (string)$information['notes']);
+        $this->setNoteText($link, (string) $information['notes']);
 
         return $link;
     }

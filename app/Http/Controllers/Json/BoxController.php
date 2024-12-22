@@ -72,7 +72,7 @@ class BoxController extends Controller
         $end               = session('end', today(config('app.timezone'))->endOfMonth());
         $today             = today(config('app.timezone'));
         $display           = 2; // see method docs.
-        $boxTitle          = (string)trans('firefly.spent');
+        $boxTitle          = (string) trans('firefly.spent');
 
         $cache             = new CacheProperties();
         $cache->addProperty($start);
@@ -113,24 +113,24 @@ class BoxController extends Controller
         $spentAmount       = $spent[$currency->id]['sum'] ?? '0';
         app('log')->debug(sprintf('Spent for default currency for all budgets in this period: %s', $spentAmount));
 
-        $days              = (int)($today->between($start, $end) ? $today->diffInDays($start, true) + 1 : $end->diffInDays($start, true) + 1);
+        $days              = (int) ($today->between($start, $end) ? $today->diffInDays($start, true) + 1 : $end->diffInDays($start, true) + 1);
         app('log')->debug(sprintf('Number of days left: %d', $days));
-        $spentPerDay       = bcdiv($spentAmount, (string)$days);
+        $spentPerDay       = bcdiv($spentAmount, (string) $days);
         app('log')->debug(sprintf('Available to spend per day: %s', $spentPerDay));
         if ($availableBudgets->count() > 0) {
             $display           = 0; // assume user overspent
-            $boxTitle          = (string)trans('firefly.overspent');
-            $totalAvailableSum = (string)$availableBudgets->sum('amount');
+            $boxTitle          = (string) trans('firefly.overspent');
+            $totalAvailableSum = (string) $availableBudgets->sum('amount');
             app('log')->debug(sprintf('Total available sum is %s', $totalAvailableSum));
             // calculate with available budget.
             $leftToSpendAmount = bcadd($totalAvailableSum, $spentAmount);
             app('log')->debug(sprintf('So left to spend is %s', $leftToSpendAmount));
             if (bccomp($leftToSpendAmount, '0') >= 0) {
                 app('log')->debug('Left to spend is positive or zero!');
-                $boxTitle         = (string)trans('firefly.left_to_spend');
+                $boxTitle         = (string) trans('firefly.left_to_spend');
                 $activeDaysLeft   = $this->activeDaysLeft($start, $end);   // see method description.
                 $display          = 1;                                     // not overspent
-                $leftPerDayAmount = 0 === $activeDaysLeft ? $leftToSpendAmount : bcdiv($leftToSpendAmount, (string)$activeDaysLeft);
+                $leftPerDayAmount = 0 === $activeDaysLeft ? $leftToSpendAmount : bcdiv($leftToSpendAmount, (string) $activeDaysLeft);
                 app('log')->debug(sprintf('Left to spend per day is %s', $leftPerDayAmount));
             }
         }
@@ -185,7 +185,7 @@ class BoxController extends Controller
 
         /** @var array $journal */
         foreach ($set as $journal) {
-            $currencyId           = (int)$journal['currency_id'];
+            $currencyId           = (int) $journal['currency_id'];
             $amount               = $journal['amount'] ?? '0';
             $incomes[$currencyId] ??= '0';
             $incomes[$currencyId] = bcadd($incomes[$currencyId], app('steam')->positive($amount));
@@ -203,7 +203,7 @@ class BoxController extends Controller
 
         /** @var array $journal */
         foreach ($set as $journal) {
-            $currencyId            = (int)$journal['currency_id'];
+            $currencyId            = (int) $journal['currency_id'];
             $expenses[$currencyId] ??= '0';
             $expenses[$currencyId] = bcadd($expenses[$currencyId], $journal['amount'] ?? '0');
             $sums[$currencyId]     ??= '0';

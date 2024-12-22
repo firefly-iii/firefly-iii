@@ -132,8 +132,8 @@ class Installer
     private function oldDBVersion(): bool
     {
         // older version in config than database?
-        $configVersion = (int)config('firefly.db_version');
-        $dbVersion     = (int)app('fireflyconfig')->getFresh('db_version', 1)->data;
+        $configVersion = (int) config('firefly.db_version');
+        $dbVersion     = (int) app('fireflyconfig')->getFresh('db_version', 1)->data;
         if ($configVersion > $dbVersion) {
             Log::warning(
                 sprintf(
@@ -157,8 +157,8 @@ class Installer
     private function oldVersion(): bool
     {
         // version compare thing.
-        $configVersion = (string)config('firefly.version');
-        $dbVersion     = (string)app('fireflyconfig')->getFresh('ff3_version', '1.0')->data;
+        $configVersion = (string) config('firefly.version');
+        $dbVersion     = (string) app('fireflyconfig')->getFresh('ff3_version', '1.0')->data;
         if (str_starts_with($configVersion, 'develop')) {
             Log::debug('Skipping version check for develop version.');
 

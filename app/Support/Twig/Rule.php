@@ -46,9 +46,9 @@ class Rule extends AbstractExtension
             'allJournalTriggers',
             static function () {
                 return [
-                    'store-journal'     => (string)trans('firefly.rule_trigger_store_journal'),
-                    'update-journal'    => (string)trans('firefly.rule_trigger_update_journal'),
-                    'manual-activation' => (string)trans('firefly.rule_trigger_manual'),
+                    'store-journal'     => (string) trans('firefly.rule_trigger_store_journal'),
+                    'update-journal'    => (string) trans('firefly.rule_trigger_update_journal'),
+                    'manual-activation' => (string) trans('firefly.rule_trigger_manual'),
                 ];
             }
         );
@@ -63,7 +63,7 @@ class Rule extends AbstractExtension
                 $possibleTriggers = [];
                 foreach ($ruleTriggers as $key) {
                     if ('user_action' !== $key) {
-                        $possibleTriggers[$key] = (string)trans('firefly.rule_trigger_'.$key.'_choice');
+                        $possibleTriggers[$key] = (string) trans('firefly.rule_trigger_'.$key.'_choice');
                     }
                 }
                 unset($ruleTriggers);
@@ -83,7 +83,7 @@ class Rule extends AbstractExtension
                 $ruleActions     = array_keys(\Config::get('firefly.rule-actions'));
                 $possibleActions = [];
                 foreach ($ruleActions as $key) {
-                    $possibleActions[$key] = (string)trans('firefly.rule_action_'.$key.'_choice');
+                    $possibleActions[$key] = (string) trans('firefly.rule_action_'.$key.'_choice');
                 }
                 unset($ruleActions);
                 asort($possibleActions);

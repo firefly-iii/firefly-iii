@@ -65,7 +65,7 @@ class IndexController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.budgets'));
+                app('view')->share('title', (string) trans('firefly.budgets'));
                 app('view')->share('mainTitleIcon', 'fa-pie-chart');
                 $this->repository         = app(BudgetRepositoryInterface::class);
                 $this->opsRepository      = app(OperationsRepositoryInterface::class);
@@ -306,7 +306,7 @@ class IndexController extends Controller
         $budgetIds = $request->get('budgetIds');
 
         foreach ($budgetIds as $index => $budgetId) {
-            $budgetId = (int)$budgetId;
+            $budgetId = (int) $budgetId;
             $budget   = $repository->find($budgetId);
             if (null !== $budget) {
                 app('log')->debug(sprintf('Set budget #%d ("%s") to position %d', $budget->id, $budget->name, $index + 1));

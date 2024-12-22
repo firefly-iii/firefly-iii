@@ -71,7 +71,7 @@ class MoveDescriptionToNotes implements ActionInterface
             $object->description = '(no description)';
         }
         if ('' === $note->text) {
-            $note->text          = (string)$object->description;
+            $note->text          = (string) $object->description;
             $object->description = '(no description)';
         }
         $after             = $note->text;

@@ -95,7 +95,7 @@ class DownloadExchangeRates implements ShouldQueue
     private function downloadRates(TransactionCurrency $currency): void
     {
         app('log')->debug(sprintf('Now downloading new exchange rates for currency %s.', $currency->code));
-        $base       = sprintf('%s/%s/%s', (string)config('cer.url'), $this->date->year, $this->date->isoWeek);
+        $base       = sprintf('%s/%s/%s', (string) config('cer.url'), $this->date->year, $this->date->isoWeek);
         $client     = new Client();
         $url        = sprintf('%s/%s.json', $base, $currency->code);
 
@@ -112,7 +112,7 @@ class DownloadExchangeRates implements ShouldQueue
 
             return;
         }
-        $body       = (string)$res->getBody();
+        $body       = (string) $res->getBody();
         $json       = json_decode($body, true);
         if (false === $json || null === $json) {
             app('log')->warning(sprintf('Trying to grab "%s" resulted in bad JSON.', $url));

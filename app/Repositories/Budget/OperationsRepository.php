@@ -52,17 +52,17 @@ class OperationsRepository implements OperationsRepositoryInterface
         $total = '0';
         $count = 0;
         foreach ($budget->budgetlimits as $limit) {
-            $diff   = (int)$limit->start_date->diffInDays($limit->end_date, true);
+            $diff   = (int) $limit->start_date->diffInDays($limit->end_date, true);
             $diff   = 0 === $diff ? 1 : $diff;
             $amount = $limit->amount;
-            $perDay = bcdiv($amount, (string)$diff);
+            $perDay = bcdiv($amount, (string) $diff);
             $total  = bcadd($total, $perDay);
             ++$count;
             app('log')->debug(sprintf('Found %d budget limits. Per day is %s, total is %s', $count, $perDay, $total));
         }
         $avg   = $total;
         if ($count > 0) {
-            $avg = bcdiv($total, (string)$count);
+            $avg = bcdiv($total, (string) $count);
         }
         app('log')->debug(sprintf('%s / %d = %s = average.', $total, $count, $avg));
 
@@ -91,9 +91,9 @@ class OperationsRepository implements OperationsRepositoryInterface
         /** @var array $journal */
         foreach ($journals as $journal) {
             // prep data array for currency:
-            $budgetId                     = (int)$journal['budget_id'];
+            $budgetId                     = (int) $journal['budget_id'];
             $budgetName                   = $journal['budget_name'];
-            $currencyId                   = (int)$journal['currency_id'];
+            $currencyId                   = (int) $journal['currency_id'];
             $key                          = sprintf('%d-%d', $budgetId, $currencyId);
 
             $data[$key] ??= [
@@ -138,9 +138,9 @@ class OperationsRepository implements OperationsRepositoryInterface
         $array     = [];
 
         foreach ($journals as $journal) {
-            $currencyId                                                                   = (int)$journal['currency_id'];
-            $budgetId                                                                     = (int)$journal['budget_id'];
-            $budgetName                                                                   = (string)$journal['budget_name'];
+            $currencyId                                                                   = (int) $journal['currency_id'];
+            $budgetId                                                                     = (int) $journal['budget_id'];
+            $budgetName                                                                   = (string) $journal['budget_name'];
 
             // catch "no category" entries.
             if (0 === $budgetId) {
@@ -166,7 +166,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
             // add journal to array:
             // only a subset of the fields.
-            $journalId                                                                    = (int)$journal['transaction_journal_id'];
+            $journalId                                                                    = (int) $journal['transaction_journal_id'];
             $array[$currencyId]['budgets'][$budgetId]['transaction_journals'][$journalId] = [
                 'amount'                   => app('steam')->negative($journal['amount']),
                 'destination_account_id'   => $journal['destination_account_id'],
@@ -269,7 +269,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         $array      = [];
 
         foreach ($journals as $journal) {
-            $currencyId                = (int)$journal['currency_id'];
+            $currencyId                = (int) $journal['currency_id'];
             $array[$currencyId] ??= [
                 'sum'                     => '0',
                 'currency_id'             => $currencyId,
@@ -281,7 +281,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->negative($journal['amount']));
 
             // also do foreign amount:
-            $foreignId                 = (int)$journal['foreign_currency_id'];
+            $foreignId                 = (int) $journal['foreign_currency_id'];
             if (0 !== $foreignId) {
                 $array[$foreignId] ??= [
                     'sum'                     => '0',

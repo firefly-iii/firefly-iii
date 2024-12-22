@@ -48,6 +48,7 @@ class AccountController extends Controller
     use Actions\DetachRelationship;
 
     use Actions\FetchMany;
+
     // use Actions\FetchOne;
     use Actions\FetchRelated;
     use Actions\FetchRelationship;

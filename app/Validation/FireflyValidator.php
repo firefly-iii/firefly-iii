@@ -79,22 +79,6 @@ class FireflyValidator extends Validator
         return (bool) \Google2FA::verifyKey((string) $secret, $value);
     }
 
-    public function validateExistingMfaCode($attribute, $value): bool
-    {
-        if (!is_string($value) || 6 !== strlen($value)) {
-            return false;
-        }
-        $user   = auth()->user();
-        if (null === $user) {
-            app('log')->error('No user during validate2faCode');
-
-            return false;
-        }
-        $secret = (string)$user->mfa_secret;
-
-        return (bool) \Google2FA::verifyKey($secret, $value);
-    }
-
     /**
      * @param mixed $attribute
      * @param mixed $value
@@ -129,6 +113,22 @@ class FireflyValidator extends Validator
         }
 
         return true;
+    }
+
+    public function validateExistingMfaCode($attribute, $value): bool
+    {
+        if (!is_string($value) || 6 !== strlen($value)) {
+            return false;
+        }
+        $user   = auth()->user();
+        if (null === $user) {
+            app('log')->error('No user during validate2faCode');
+
+            return false;
+        }
+        $secret = (string) $user->mfa_secret;
+
+        return (bool) \Google2FA::verifyKey($secret, $value);
     }
 
     /**

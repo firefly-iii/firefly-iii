@@ -56,7 +56,7 @@ class WebhookMessage extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $messageId = (int)$value;
+            $messageId = (int) $value;
 
             /** @var User $user */
             $user      = auth()->user();
@@ -87,14 +87,14 @@ class WebhookMessage extends Model
     protected function sent(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (bool)$value,
+            get: static fn ($value) => (bool) $value,
         );
     }
 
     protected function webhookId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 }

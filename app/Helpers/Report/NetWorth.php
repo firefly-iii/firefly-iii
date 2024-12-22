@@ -122,12 +122,12 @@ class NetWorth implements NetWorthInterface
             $netWorth[$currencyCode] ??= [
                 'balance'                        => '0',
                 'native_balance'                 => '0',
-                'currency_id'                    => (string)$currency->id,
+                'currency_id'                    => (string) $currency->id,
                 'currency_code'                  => $currency->code,
                 'currency_name'                  => $currency->name,
                 'currency_symbol'                => $currency->symbol,
                 'currency_decimal_places'        => $currency->decimal_places,
-                'native_currency_id'             => (string)$default->id,
+                'native_currency_id'             => (string) $default->id,
                 'native_currency_code'           => $default->code,
                 'native_currency_name'           => $default->name,
                 'native_currency_symbol'         => $default->symbol,
@@ -199,7 +199,7 @@ class NetWorth implements NetWorthInterface
             }
 
             $return[$currency->id] ??= [
-                'id'             => (string)$currency->id,
+                'id'             => (string) $currency->id,
                 'name'           => $currency->name,
                 'symbol'         => $currency->symbol,
                 'code'           => $currency->code,
@@ -221,7 +221,7 @@ class NetWorth implements NetWorthInterface
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            if (1 === (int)$this->getRepository()->getMetaValue($account, 'include_net_worth')) {
+            if (1 === (int) $this->getRepository()->getMetaValue($account, 'include_net_worth')) {
                 $filtered->push($account);
             }
         }

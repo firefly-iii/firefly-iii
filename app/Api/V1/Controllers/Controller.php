@@ -82,7 +82,7 @@ abstract class Controller extends BaseController
     private function getParameters(): ParameterBag
     {
         $bag      = new ParameterBag();
-        $page     = (int)request()->get('page');
+        $page     = (int) request()->get('page');
         if ($page < 1) {
             $page = 1;
         }
@@ -107,13 +107,13 @@ abstract class Controller extends BaseController
             $obj  = null;
             if (null !== $date) {
                 try {
-                    $obj = Carbon::parse((string)$date);
+                    $obj = Carbon::parse((string) $date);
                 } catch (InvalidDateException|InvalidFormatException $e) {
                     // don't care
                     app('log')->warning(
                         sprintf(
                             'Ignored invalid date "%s" in API controller parameter check: %s',
-                            substr((string)$date, 0, 20),
+                            substr((string) $date, 0, 20),
                             $e->getMessage()
                         )
                     );
@@ -134,7 +134,7 @@ abstract class Controller extends BaseController
                 $value = null;
             }
             if (null !== $value) {
-                $bag->set($integer, (int)$value);
+                $bag->set($integer, (int) $value);
             }
             if (null === $value
                 && 'limit' === $integer // @phpstan-ignore-line
@@ -144,7 +144,7 @@ abstract class Controller extends BaseController
                 $user     = auth()->user();
 
                 /** @var Preference $pageSize */
-                $pageSize = (int)app('preferences')->getForUser($user, 'listPageSize', 50)->data;
+                $pageSize = (int) app('preferences')->getForUser($user, 'listPageSize', 50)->data;
                 $bag->set($integer, $pageSize);
             }
         }
@@ -158,7 +158,7 @@ abstract class Controller extends BaseController
         $sortParameters = [];
 
         try {
-            $param = (string)request()->query->get('sort');
+            $param = (string) request()->query->get('sort');
         } catch (BadRequestException $e) {
             app('log')->error('Request field "sort" contains a non-scalar value. Value set to NULL.');
             app('log')->error($e->getMessage());

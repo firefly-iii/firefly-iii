@@ -91,6 +91,13 @@ class AccountSchema extends Schema
         return $array;
     }
 
+    public function pagination(): EnumerablePagination
+    {
+        Log::debug(__METHOD__);
+
+        return EnumerablePagination::make();
+    }
+
     public function repository(): AccountRepository
     {
         Log::debug(__METHOD__);
@@ -101,12 +108,5 @@ class AccountSchema extends Schema
             ->withSchema($this)
             ->withUserGroup($this->userGroup)
         ;
-    }
-
-    public function pagination(): EnumerablePagination
-    {
-        Log::debug(__METHOD__);
-
-        return EnumerablePagination::make();
     }
 }

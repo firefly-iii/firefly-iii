@@ -67,14 +67,6 @@ class NewAccessToken extends Notification
         ;
     }
 
-    /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function toSlack(User $notifiable)
-    {
-        return new SlackMessage()->content((string) trans('email.access_token_created_body'));
-    }
-
     public function toNtfy(User $notifiable): Message
     {
         $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
@@ -94,6 +86,14 @@ class NewAccessToken extends Notification
         return PushoverMessage::create((string) trans('email.access_token_created_body'))
             ->title((string) trans('email.access_token_created_subject'))
         ;
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toSlack(User $notifiable)
+    {
+        return new SlackMessage()->content((string) trans('email.access_token_created_body'));
     }
 
     /**

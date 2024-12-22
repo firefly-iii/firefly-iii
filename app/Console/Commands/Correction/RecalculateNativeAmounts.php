@@ -181,17 +181,6 @@ class RecalculateNativeAmounts extends Command
         Log::debug(sprintf('Recalculated %d auto budgets.', $set->count()));
     }
 
-    private function recalculateBills(UserGroup $userGroup, TransactionCurrency $currency): void
-    {
-        $set = $userGroup->bills()->where('transaction_currency_id', '!=', $currency->id)->get();
-
-        /** @var Bill $bill */
-        foreach ($set as $bill) {
-            $bill->touch();
-        }
-        Log::debug(sprintf('Recalculated %d bills.', $set->count()));
-    }
-
     private function recalculateAvailableBudgets(UserGroup $userGroup, TransactionCurrency $currency): void
     {
         Log::debug('Start with available budgets.');
@@ -202,6 +191,17 @@ class RecalculateNativeAmounts extends Command
             $budget->touch();
         }
         Log::debug(sprintf('Recalculated %d available budgets.', $set->count()));
+    }
+
+    private function recalculateBills(UserGroup $userGroup, TransactionCurrency $currency): void
+    {
+        $set = $userGroup->bills()->where('transaction_currency_id', '!=', $currency->id)->get();
+
+        /** @var Bill $bill */
+        foreach ($set as $bill) {
+            $bill->touch();
+        }
+        Log::debug(sprintf('Recalculated %d bills.', $set->count()));
     }
 
     private function calculateTransactions(UserGroup $userGroup, TransactionCurrency $currency): void

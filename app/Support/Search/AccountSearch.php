@@ -90,7 +90,7 @@ class AccountSearch implements GenericSearchInterface
                 break;
 
             case self::SEARCH_ID:
-                $searchQuery->where('accounts.id', '=', (int)$originalQuery);
+                $searchQuery->where('accounts.id', '=', (int) $originalQuery);
 
                 break;
 

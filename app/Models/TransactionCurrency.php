@@ -61,7 +61,7 @@ class TransactionCurrency extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $currencyId = (int)$value;
+            $currencyId = (int) $value;
             $currency   = self::find($currencyId);
             if (null !== $currency) {
                 $currency->refreshForUser(auth()->user());
@@ -115,7 +115,7 @@ class TransactionCurrency extends Model
     protected function decimalPlaces(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 }

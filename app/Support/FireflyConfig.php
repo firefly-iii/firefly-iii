@@ -104,19 +104,6 @@ class FireflyConfig
         return $this->set($name, $default);
     }
 
-    public function setEncrypted(string $name, mixed $value): Configuration
-    {
-        try {
-            $encrypted = encrypt($value);
-        } catch (EncryptException $e) {
-            Log::error(sprintf('Could not encrypt configuration value "%s": %s', $name, $e->getMessage()));
-
-            throw new FireflyException(sprintf('Could not encrypt configuration value "%s". Cowardly refuse to continue.', $name));
-        }
-
-        return $this->set($name, $encrypted);
-    }
-
     public function set(string $name, mixed $value): Configuration
     {
         try {
@@ -169,5 +156,18 @@ class FireflyConfig
     public function put(string $name, $value): Configuration
     {
         return $this->set($name, $value);
+    }
+
+    public function setEncrypted(string $name, mixed $value): Configuration
+    {
+        try {
+            $encrypted = encrypt($value);
+        } catch (EncryptException $e) {
+            Log::error(sprintf('Could not encrypt configuration value "%s": %s', $name, $e->getMessage()));
+
+            throw new FireflyException(sprintf('Could not encrypt configuration value "%s". Cowardly refuse to continue.', $name));
+        }
+
+        return $this->set($name, $encrypted);
     }
 }

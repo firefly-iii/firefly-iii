@@ -55,7 +55,7 @@ class LinkType extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $linkTypeId = (int)$value;
+            $linkTypeId = (int) $value;
             $linkType   = self::find($linkTypeId);
             if (null !== $linkType) {
                 return $linkType;

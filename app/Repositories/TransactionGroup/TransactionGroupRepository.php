@@ -219,7 +219,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
                     'link'           => $entry->outward,
                     'group'          => $entry->destination->transaction_group_id,
                     'description'    => $entry->destination->description,
-                    'editable'       => 1 === (int)$entry->editable, // @phpstan-ignore-line
+                    'editable'       => 1 === (int) $entry->editable, // @phpstan-ignore-line
                     'amount'         => $amount,
                     'foreign_amount' => $foreignAmount,
                 ];
@@ -232,7 +232,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
                     'link'           => $entry->inward,
                     'group'          => $entry->source->transaction_group_id,
                     'description'    => $entry->source->description,
-                    'editable'       => 1 === (int)$entry->editable, // @phpstan-ignore-line
+                    'editable'       => 1 === (int) $entry->editable, // @phpstan-ignore-line
                     'amount'         => $amount,
                     'foreign_amount' => $foreignAmount,
                 ];

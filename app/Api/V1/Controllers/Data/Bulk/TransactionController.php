@@ -70,8 +70,8 @@ class TransactionController extends Controller
         // to respond to what is in the $query.
         // this is OK because only one thing can be in the query at the moment.
         if ($this->isUpdateTransactionAccount($params)) {
-            $original    = $this->repository->find((int)$params['where']['account_id']);
-            $destination = $this->repository->find((int)$params['update']['account_id']);
+            $original    = $this->repository->find((int) $params['where']['account_id']);
+            $destination = $this->repository->find((int) $params['update']['account_id']);
 
             /** @var AccountDestroyService $service */
             $service     = app(AccountDestroyService::class);

@@ -84,7 +84,7 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
         $allowRegistration = $this->allowedToRegister();
-        $inviteCode        = (string)$request->get('invite_code');
+        $inviteCode        = (string) $request->get('invite_code');
         $repository        = app(UserRepositoryInterface::class);
         $validCode         = $repository->validateInviteCode($inviteCode);
 
@@ -100,7 +100,7 @@ class RegisterController extends Controller
 
         $this->guard()->login($user);
 
-        session()->flash('success', (string)trans('firefly.registered'));
+        session()->flash('success', (string) trans('firefly.registered'));
 
         $this->registered($request, $user);
 
@@ -146,7 +146,7 @@ class RegisterController extends Controller
     public function showInviteForm(Request $request, string $code)
     {
         $isDemoSite        = app('fireflyconfig')->get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
-        $pageTitle         = (string)trans('firefly.register_page_title');
+        $pageTitle         = (string) trans('firefly.register_page_title');
         $repository        = app(UserRepositoryInterface::class);
         $allowRegistration = $this->allowedToRegister();
         $inviteCode        = $code;
@@ -178,7 +178,7 @@ class RegisterController extends Controller
     public function showRegistrationForm(Request $request)
     {
         $isDemoSite        = app('fireflyconfig')->get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
-        $pageTitle         = (string)trans('firefly.register_page_title');
+        $pageTitle         = (string) trans('firefly.register_page_title');
         $allowRegistration = $this->allowedToRegister();
 
         if (false === $allowRegistration) {

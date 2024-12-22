@@ -38,7 +38,7 @@ class ValidRecurrenceRepetitionType implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
-        $value = (string)$value;
+        $value = (string) $value;
         if ('daily' === $value) {
             return;
         }

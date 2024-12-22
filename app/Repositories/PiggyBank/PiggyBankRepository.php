@@ -119,35 +119,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         );
     }
 
-    /**
-     * Get current amount saved in piggy bank.
-     */
-    public function getCurrentAmount(PiggyBank $piggyBank, ?Account $account = null): string
-    {
-        $sum = '0';
-        foreach ($piggyBank->accounts as $current) {
-            if (null !== $account && $account->id !== $current->id) {
-                continue;
-            }
-            $amount = (string) $current->pivot->current_amount;
-            $amount = '' === $amount ? '0' : $amount;
-            $sum    = bcadd($sum, $amount);
-        }
-        Log::debug(sprintf('Current amount in piggy bank #%d ("%s") is %s', $piggyBank->id, $piggyBank->name, $sum));
-
-        return $sum;
-    }
-
-    public function getRepetition(PiggyBank $piggyBank, bool $overrule = false): ?PiggyBankRepetition
-    {
-        if (false === $overrule) {
-            throw new FireflyException('[b] Piggy bank repetitions are EOL.');
-        }
-        Log::warning('Piggy bank repetitions are EOL.');
-
-        return $piggyBank->piggyBankRepetitions()->first();
-    }
-
     public function getEvents(PiggyBank $piggyBank): Collection
     {
         return $piggyBank->piggyBankEvents()->orderBy('date', 'DESC')->orderBy('id', 'DESC')->get();
@@ -303,6 +274,35 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
     /**
+     * Get current amount saved in piggy bank.
+     */
+    public function getCurrentAmount(PiggyBank $piggyBank, ?Account $account = null): string
+    {
+        $sum = '0';
+        foreach ($piggyBank->accounts as $current) {
+            if (null !== $account && $account->id !== $current->id) {
+                continue;
+            }
+            $amount = (string) $current->pivot->current_amount;
+            $amount = '' === $amount ? '0' : $amount;
+            $sum    = bcadd($sum, $amount);
+        }
+        Log::debug(sprintf('Current amount in piggy bank #%d ("%s") is %s', $piggyBank->id, $piggyBank->name, $sum));
+
+        return $sum;
+    }
+
+    public function getRepetition(PiggyBank $piggyBank, bool $overrule = false): ?PiggyBankRepetition
+    {
+        if (false === $overrule) {
+            throw new FireflyException('[b] Piggy bank repetitions are EOL.');
+        }
+        Log::warning('Piggy bank repetitions are EOL.');
+
+        return $piggyBank->piggyBankRepetitions()->first();
+    }
+
+    /**
      * Returns the suggested amount the user should save per month, or "".
      */
     public function getSuggestedMonthlyAmount(PiggyBank $piggyBank): string
@@ -352,28 +352,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         return $balance;
     }
 
-    public function searchPiggyBank(string $query, int $limit): Collection
-    {
-        $search = PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
-            ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
-            ->where('accounts.user_id', $this->user->id)
-            ->with(
-                [
-                    'objectGroups',
-                ]
-            )
-            ->orderBy('piggy_banks.order', 'ASC')->distinct()
-        ;
-        if ('' !== $query) {
-            $search->whereLike('piggy_banks.name', sprintf('%%%s%%', $query));
-        }
-        $search->orderBy('piggy_banks.order', 'ASC')
-            ->orderBy('piggy_banks.name', 'ASC')
-        ;
-
-        return $search->take($limit)->get(['piggy_banks.*']);
-    }
-
     #[\Override]
     public function purgeAll(): void
     {
@@ -397,5 +375,27 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         $factory       = new PiggyBankFactory();
         $factory->user = $this->user;
         $factory->resetOrder();
+    }
+
+    public function searchPiggyBank(string $query, int $limit): Collection
+    {
+        $search = PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
+            ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
+            ->where('accounts.user_id', $this->user->id)
+            ->with(
+                [
+                    'objectGroups',
+                ]
+            )
+            ->orderBy('piggy_banks.order', 'ASC')->distinct()
+        ;
+        if ('' !== $query) {
+            $search->whereLike('piggy_banks.name', sprintf('%%%s%%', $query));
+        }
+        $search->orderBy('piggy_banks.order', 'ASC')
+            ->orderBy('piggy_banks.name', 'ASC')
+        ;
+
+        return $search->take($limit)->get(['piggy_banks.*']);
     }
 }

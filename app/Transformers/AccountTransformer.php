@@ -57,8 +57,8 @@ class AccountTransformer extends AbstractTransformer
 
         // get account type:
         $fullType                                                     = $account->accountType->type;
-        $accountType                                                  = (string)config(sprintf('firefly.shortNamesByFullName.%s', $fullType));
-        $liabilityType                                                = (string)config(sprintf('firefly.shortLiabilityNameByFullName.%s', $fullType));
+        $accountType                                                  = (string) config(sprintf('firefly.shortNamesByFullName.%s', $fullType));
+        $liabilityType                                                = (string) config(sprintf('firefly.shortLiabilityNameByFullName.%s', $fullType));
         $liabilityType                                                = '' === $liabilityType ? null : strtolower($liabilityType);
         $liabilityDirection                                           = $this->repository->getMetaValue($account, 'liability_direction');
 
@@ -81,7 +81,7 @@ class AccountTransformer extends AbstractTransformer
         if (null !== $location) {
             $longitude = $location->longitude;
             $latitude  = $location->latitude;
-            $zoomLevel = (int)$location->zoom_level;
+            $zoomLevel = (int) $location->zoom_level;
         }
 
         // no order for some accounts:
@@ -91,7 +91,7 @@ class AccountTransformer extends AbstractTransformer
         }
 
         return [
-            'id'                      => (string)$account->id,
+            'id'                      => (string) $account->id,
             'created_at'              => $account->created_at->toAtomString(),
             'updated_at'              => $account->updated_at->toAtomString(),
             'active'                  => $account->active,
@@ -135,7 +135,7 @@ class AccountTransformer extends AbstractTransformer
     private function getAccountRole(Account $account, string $accountType): ?string
     {
         $accountRole = $this->repository->getMetaValue($account, 'account_role');
-        if ('asset' !== $accountType || '' === (string)$accountRole) {
+        if ('asset' !== $accountType || '' === (string) $accountRole) {
             $accountRole = null;
         }
 
@@ -166,7 +166,7 @@ class AccountTransformer extends AbstractTransformer
         if (null === $currency) {
             $currency = app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
         }
-        $currencyId     = (string)$currency->id;
+        $currencyId     = (string) $currency->id;
         $currencyCode   = $currency->code;
         $decimalPlaces  = $currency->decimal_places;
         $currencySymbol = $currency->symbol;

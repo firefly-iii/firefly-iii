@@ -53,7 +53,7 @@ class DeleteController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.currencies'));
+                app('view')->share('title', (string) trans('firefly.currencies'));
                 app('view')->share('mainTitleIcon', 'fa-usd');
                 $this->repository     = app(CurrencyRepositoryInterface::class);
                 $this->userRepository = app(UserRepositoryInterface::class);
@@ -73,7 +73,7 @@ class DeleteController extends Controller
         /** @var User $user */
         $user     = auth()->user();
         if (!$this->userRepository->hasRole($user, 'owner')) {
-            $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => e(config('firefly.site_owner'))]));
+            $request->session()->flash('error', (string) trans('firefly.ask_site_owner', ['owner' => e(config('firefly.site_owner'))]));
             Log::channel('audit')->warning(sprintf('Tried to visit page to delete currency %s but is not site owner.', $currency->code));
 
             return redirect(route('currencies.index'));
@@ -81,7 +81,7 @@ class DeleteController extends Controller
 
         if ($this->repository->currencyInUse($currency)) {
             $location = $this->repository->currencyInUseAt($currency);
-            $message  = (string)trans(sprintf('firefly.cannot_disable_currency_%s', $location), ['name' => e($currency->name)]);
+            $message  = (string) trans(sprintf('firefly.cannot_disable_currency_%s', $location), ['name' => e($currency->name)]);
             $request->session()->flash('error', $message);
             Log::channel('audit')->warning(sprintf('Tried to visit page to delete currency %s but currency is in use.', $currency->code));
 
@@ -90,7 +90,7 @@ class DeleteController extends Controller
 
         // put previous url in session
         $this->rememberPreviousUrl('currencies.delete.url');
-        $subTitle = (string)trans('form.delete_currency', ['name' => $currency->name]);
+        $subTitle = (string) trans('form.delete_currency', ['name' => $currency->name]);
         Log::channel('audit')->info(sprintf('Visit page to delete currency %s.', $currency->code));
 
         return view('currencies.delete', compact('currency', 'subTitle'));
@@ -106,21 +106,21 @@ class DeleteController extends Controller
         /** @var User $user */
         $user = auth()->user();
         if (!$this->userRepository->hasRole($user, 'owner')) {
-            $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => e(config('firefly.site_owner'))]));
+            $request->session()->flash('error', (string) trans('firefly.ask_site_owner', ['owner' => e(config('firefly.site_owner'))]));
             Log::channel('audit')->warning(sprintf('Tried to delete currency %s but is not site owner.', $currency->code));
 
             return redirect(route('currencies.index'));
         }
 
         if ($this->repository->currencyInUse($currency)) {
-            $request->session()->flash('error', (string)trans('firefly.cannot_delete_currency', ['name' => e($currency->name)]));
+            $request->session()->flash('error', (string) trans('firefly.cannot_delete_currency', ['name' => e($currency->name)]));
             Log::channel('audit')->info(sprintf('Tried to delete currency %s but is in use.', $currency->code));
 
             return redirect(route('currencies.index'));
         }
 
         if ($this->repository->isFallbackCurrency($currency)) {
-            $request->session()->flash('error', (string)trans('firefly.cannot_delete_fallback_currency', ['name' => e($currency->name)]));
+            $request->session()->flash('error', (string) trans('firefly.cannot_delete_fallback_currency', ['name' => e($currency->name)]));
             Log::channel('audit')->info(sprintf('Tried to delete currency %s but is FALLBACK.', $currency->code));
 
             return redirect(route('currencies.index'));
@@ -129,7 +129,7 @@ class DeleteController extends Controller
         Log::channel('audit')->info(sprintf('Deleted currency %s.', $currency->code));
         $this->repository->destroy($currency);
 
-        $request->session()->flash('success', (string)trans('firefly.deleted_currency', ['name' => $currency->name]));
+        $request->session()->flash('success', (string) trans('firefly.deleted_currency', ['name' => $currency->name]));
 
         return redirect($this->getPreviousUrl('currencies.delete.url'));
     }

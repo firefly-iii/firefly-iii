@@ -148,7 +148,6 @@ return [
     'update_minimum_age'           => 7,
 
 
-
     // enabled languages
     'languages'                    => [
         // currently enabled languages

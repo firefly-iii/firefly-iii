@@ -40,11 +40,11 @@ class PiggyBankRepetition extends Model
 
     protected $casts
                         = [
-            'created_at'       => 'datetime',
-            'updated_at'       => 'datetime',
-            'start_date'       => SeparateTimezoneCaster::class,
-            'target_date'      => SeparateTimezoneCaster::class,
-            'virtual_balance'  => 'string',
+            'created_at'      => 'datetime',
+            'updated_at'      => 'datetime',
+            'start_date'      => SeparateTimezoneCaster::class,
+            'target_date'     => SeparateTimezoneCaster::class,
+            'virtual_balance' => 'string',
         ];
 
     protected $fillable = ['piggy_bank_id', 'start_date', 'start_date_tz', 'target_date', 'target_date_tz', 'current_amount'];
@@ -84,7 +84,7 @@ class PiggyBankRepetition extends Model
      */
     public function setCurrentAmountAttribute($value): void
     {
-        $this->attributes['current_amount'] = (string)$value;
+        $this->attributes['current_amount'] = (string) $value;
     }
 
     /**
@@ -93,14 +93,14 @@ class PiggyBankRepetition extends Model
     protected function currentAmount(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string)$value,
+            get: static fn ($value) => (string) $value,
         );
     }
 
     protected function piggyBankId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 }

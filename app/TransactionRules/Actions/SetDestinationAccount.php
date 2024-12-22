@@ -57,7 +57,7 @@ class SetDestinationAccount implements ActionInterface
         $user             = User::find($journal['user_id']);
 
         /** @var null|TransactionJournal $object */
-        $object           = $user->transactionJournals()->find((int)$journal['transaction_journal_id']);
+        $object           = $user->transactionJournals()->find((int) $journal['transaction_journal_id']);
         $this->repository = app(AccountRepositoryInterface::class);
 
         if (null === $object) {

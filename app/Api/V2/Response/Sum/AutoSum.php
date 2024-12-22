@@ -52,7 +52,7 @@ class AutoSum
             $amount                       = $getSum($object);
 
             $return[$currency->id] ??= [
-                'id'             => (string)$currency->id,
+                'id'             => (string) $currency->id,
                 'name'           => $currency->name,
                 'symbol'         => $currency->symbol,
                 'code'           => $currency->code,

@@ -128,7 +128,7 @@ class ReportHelper implements ReportHelperInterface
             $currentEnd                = clone $start;
             $currentEnd->endOfMonth();
             $months[$year]['months'][] = [
-                'formatted' => $start->isoFormat((string)trans('config.month_js')),
+                'formatted' => $start->isoFormat((string) trans('config.month_js')),
                 'start'     => $start->format('Y-m-d'),
                 'end'       => $currentEnd->format('Y-m-d'),
                 'month'     => $start->month,

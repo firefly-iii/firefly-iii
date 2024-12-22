@@ -256,6 +256,12 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         ;
     }
 
+    #[\Override]
+    public function getNoteText(BudgetLimit $budgetLimit): string
+    {
+        return (string) $budgetLimit->notes()->first()?->text;
+    }
+
     public function setUser(null|Authenticatable|User $user): void
     {
         if ($user instanceof User) {
@@ -324,6 +330,23 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         ;
     }
 
+    #[\Override]
+    public function setNoteText(BudgetLimit $budgetLimit, string $text): void
+    {
+        $dbNote = $budgetLimit->notes()->first();
+        if ('' !== $text) {
+            if (null === $dbNote) {
+                $dbNote = new Note();
+                $dbNote->noteable()->associate($budgetLimit);
+            }
+            $dbNote->text = trim($text);
+            $dbNote->save();
+
+            return;
+        }
+        $dbNote?->delete();
+    }
+
     /**
      * @throws FireflyException
      */
@@ -362,7 +385,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
 
         // update notes if they exist.
         if (array_key_exists('notes', $data)) {
-            $this->setNoteText($budgetLimit, (string)$data['notes']);
+            $this->setNoteText($budgetLimit, (string) $data['notes']);
         }
 
         return $budgetLimit;
@@ -426,28 +449,5 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         app('log')->debug(sprintf('Created new budget limit with ID #%d and amount %s', $limit->id, $amount));
 
         return $limit;
-    }
-
-    #[\Override]
-    public function getNoteText(BudgetLimit $budgetLimit): string
-    {
-        return (string) $budgetLimit->notes()->first()?->text;
-    }
-
-    #[\Override]
-    public function setNoteText(BudgetLimit $budgetLimit, string $text): void
-    {
-        $dbNote = $budgetLimit->notes()->first();
-        if ('' !== $text) {
-            if (null === $dbNote) {
-                $dbNote = new Note();
-                $dbNote->noteable()->associate($budgetLimit);
-            }
-            $dbNote->text = trim($text);
-            $dbNote->save();
-
-            return;
-        }
-        $dbNote?->delete();
     }
 }

@@ -75,14 +75,6 @@ class UserNewPassword extends Notification
         ;
     }
 
-    /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function toSlack(User $notifiable)
-    {
-        return new SlackMessage()->content((string) trans('email.reset_pw_message'));
-    }
-
     public function toNtfy(User $notifiable): Message
     {
         $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
@@ -99,6 +91,14 @@ class UserNewPassword extends Notification
     public function toPushover(User $notifiable): PushoverMessage
     {
         return PushoverMessage::create((string) trans('email.reset_pw_message'));
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toSlack(User $notifiable)
+    {
+        return new SlackMessage()->content((string) trans('email.reset_pw_message'));
     }
 
     public function via(User $notifiable)

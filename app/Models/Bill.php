@@ -93,7 +93,7 @@ class Bill extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $billId = (int)$value;
+            $billId = (int) $value;
 
             /** @var User $user */
             $user   = auth()->user();
@@ -139,7 +139,7 @@ class Bill extends Model
      */
     public function setAmountMaxAttribute($value): void
     {
-        $this->attributes['amount_max'] = (string)$value;
+        $this->attributes['amount_max'] = (string) $value;
     }
 
     /**
@@ -147,7 +147,7 @@ class Bill extends Model
      */
     public function setAmountMinAttribute($value): void
     {
-        $this->attributes['amount_min'] = (string)$value;
+        $this->attributes['amount_min'] = (string) $value;
     }
 
     public function transactionCurrency(): BelongsTo
@@ -166,7 +166,7 @@ class Bill extends Model
     protected function amountMax(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string)$value,
+            get: static fn ($value) => (string) $value,
         );
     }
 
@@ -176,14 +176,14 @@ class Bill extends Model
     protected function amountMin(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string)$value,
+            get: static fn ($value) => (string) $value,
         );
     }
 
     protected function order(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 
@@ -193,14 +193,14 @@ class Bill extends Model
     protected function skip(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 
     protected function transactionCurrencyId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 }

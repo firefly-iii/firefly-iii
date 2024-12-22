@@ -88,7 +88,7 @@ class PiggyBankTransformer extends AbstractTransformer
 
         /** @var AccountMeta $preference */
         foreach ($currencyPreferences as $preference) {
-            $currencyId                   = (int)$preference->data;
+            $currencyId                   = (int) $preference->data;
             $accountId                    = $preference->account_id;
             $currencies[$currencyId] ??= TransactionJournal::find($currencyId);
             $this->currencies[$accountId] = $currencies[$currencyId];
@@ -103,11 +103,11 @@ class PiggyBankTransformer extends AbstractTransformer
 
         /** @var ObjectGroup $entry */
         foreach ($set as $entry) {
-            $piggyBankId                = (int)$entry->object_groupable_id;
-            $id                         = (int)$entry->object_group_id;
+            $piggyBankId                = (int) $entry->object_groupable_id;
+            $id                         = (int) $entry->object_group_id;
             $order                      = $entry->order;
             $this->groups[$piggyBankId] = [
-                'object_group_id'    => (string)$id,
+                'object_group_id'    => (string) $id,
                 'object_group_title' => $entry->title,
                 'object_group_order' => $order,
             ];
@@ -195,24 +195,24 @@ class PiggyBankTransformer extends AbstractTransformer
         if (0 !== bccomp($targetAmount, '0')) { // target amount is not 0.00
             $leftToSave         = bcsub($targetAmount, $currentAmount);
             $nativeLeftToSave   = $this->converter->convert($this->default, $currency, today(), $leftToSave);
-            $percentage         = (int)bcmul(bcdiv($currentAmount, $targetAmount), '100');
+            $percentage         = (int) bcmul(bcdiv($currentAmount, $targetAmount), '100');
             $savePerMonth       = $this->getSuggestedMonthlyAmount($currentAmount, $targetAmount, $piggyBank->start_date, $piggyBank->target_date);
             $nativeSavePerMonth = $this->converter->convert($this->default, $currency, today(), $savePerMonth);
         }
         $this->converter->summarize();
 
         return [
-            'id'                             => (string)$piggyBank->id,
+            'id'                             => (string) $piggyBank->id,
             'created_at'                     => $piggyBank->created_at->toAtomString(),
             'updated_at'                     => $piggyBank->updated_at->toAtomString(),
-            'account_id'                     => (string)$piggyBank->account_id,
+            'account_id'                     => (string) $piggyBank->account_id,
             'account_name'                   => $accountName,
             'name'                           => $piggyBank->name,
-            'currency_id'                    => (string)$currency->id,
+            'currency_id'                    => (string) $currency->id,
             'currency_code'                  => $currency->code,
             'currency_symbol'                => $currency->symbol,
             'currency_decimal_places'        => $currency->decimal_places,
-            'native_currency_id'             => (string)$this->default->id,
+            'native_currency_id'             => (string) $this->default->id,
             'native_currency_code'           => $this->default->code,
             'native_currency_symbol'         => $this->default->symbol,
             'native_currency_decimal_places' => $this->default->decimal_places,
@@ -251,12 +251,12 @@ class PiggyBankTransformer extends AbstractTransformer
         if (bccomp($currentAmount, $targetAmount) < 1) {
             $now             = today(config('app.timezone'));
             $startDate       = null !== $startDate && $startDate->gte($now) ? $startDate : $now;
-            $diffInMonths    = (int)$startDate->diffInMonths($targetDate);
+            $diffInMonths    = (int) $startDate->diffInMonths($targetDate);
             $remainingAmount = bcsub($targetAmount, $currentAmount);
 
             // more than 1 month to go and still need money to save:
             if ($diffInMonths > 0 && 1 === bccomp($remainingAmount, '0')) {
-                $savePerMonth = bcdiv($remainingAmount, (string)$diffInMonths);
+                $savePerMonth = bcdiv($remainingAmount, (string) $diffInMonths);
             }
 
             // less than 1 month to go but still need money to save:

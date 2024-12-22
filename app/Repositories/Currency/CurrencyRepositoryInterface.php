@@ -35,14 +35,14 @@ use Illuminate\Support\Collection;
  */
 interface CurrencyRepositoryInterface
 {
+    public function find(int $currencyId): ?TransactionCurrency;
+
     /**
      * Find by currency code, return NULL if unfound.
      *
      * Used in the download exchange rates cron job. Does not require user object.
      */
     public function findByCode(string $currencyCode): ?TransactionCurrency;
-
-    public function find(int $currencyId): ?TransactionCurrency;
 
     /**
      * Returns the complete set of transactions but needs

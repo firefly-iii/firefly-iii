@@ -72,7 +72,7 @@ class BillController extends Controller
          */
         foreach ($paid as $info) {
             $amount            = $info['sum'];
-            $label             = (string)trans('firefly.paid_in_currency', ['currency' => $info['name']]);
+            $label             = (string) trans('firefly.paid_in_currency', ['currency' => $info['name']]);
             $chartData[$label] = [
                 'amount'          => $amount,
                 'currency_symbol' => $info['symbol'],
@@ -85,7 +85,7 @@ class BillController extends Controller
          */
         foreach ($unpaid as $info) {
             $amount            = $info['sum'];
-            $label             = (string)trans('firefly.unpaid_in_currency', ['currency' => $info['name']]);
+            $label             = (string) trans('firefly.unpaid_in_currency', ['currency' => $info['name']]);
             $chartData[$label] = [
                 'amount'          => $amount,
                 'currency_symbol' => $info['symbol'],
@@ -136,21 +136,21 @@ class BillController extends Controller
         $chartData  = [
             [
                 'type'            => 'line',
-                'label'           => (string)trans('firefly.min-amount'),
+                'label'           => (string) trans('firefly.min-amount'),
                 'currency_symbol' => $bill->transactionCurrency->symbol,
                 'currency_code'   => $bill->transactionCurrency->code,
                 'entries'         => [],
             ],
             [
                 'type'            => 'line',
-                'label'           => (string)trans('firefly.max-amount'),
+                'label'           => (string) trans('firefly.max-amount'),
                 'currency_symbol' => $bill->transactionCurrency->symbol,
                 'currency_code'   => $bill->transactionCurrency->code,
                 'entries'         => [],
             ],
             [
                 'type'            => 'bar',
-                'label'           => (string)trans('firefly.journal-amount'),
+                'label'           => (string) trans('firefly.journal-amount'),
                 'currency_symbol' => $bill->transactionCurrency->symbol,
                 'currency_code'   => $bill->transactionCurrency->code,
                 'entries'         => [],
@@ -158,7 +158,7 @@ class BillController extends Controller
         ];
         $currencyId = $bill->transaction_currency_id;
         foreach ($journals as $journal) {
-            $date                           = $journal['date']->isoFormat((string)trans('config.month_and_day_js', [], $locale));
+            $date                           = $journal['date']->isoFormat((string) trans('config.month_and_day_js', [], $locale));
             $chartData[0]['entries'][$date] = $bill->amount_min; // minimum amount of bill
             $chartData[1]['entries'][$date] = $bill->amount_max; // maximum amount of bill
 

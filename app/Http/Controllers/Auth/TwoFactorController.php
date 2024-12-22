@@ -163,6 +163,22 @@ class TwoFactorController extends Controller
         app('preferences')->set('mfa_history', $newHistory);
     }
 
+    private function addToMFAFailureCounter(): void
+    {
+        $preference = (int) app('preferences')->get('mfa_failure_count', 0)->data;
+        ++$preference;
+        Log::channel('audit')->info(sprintf('MFA failure count is set to %d.', $preference));
+        app('preferences')->set('mfa_failure_count', $preference);
+    }
+
+    private function getMFAFailureCounter(): int
+    {
+        $value = (int) app('preferences')->get('mfa_failure_count', 0)->data;
+        Log::channel('audit')->info(sprintf('MFA failure count is %d.', $value));
+
+        return $value;
+    }
+
     private function addToMFAHistory(string $mfaCode): void
     {
         /** @var array $mfaHistory */
@@ -175,6 +191,12 @@ class TwoFactorController extends Controller
 
         app('preferences')->set('mfa_history', $mfaHistory);
         $this->filterMFAHistory();
+    }
+
+    private function resetMFAFailureCounter(): void
+    {
+        app('preferences')->set('mfa_failure_count', 0);
+        Log::channel('audit')->info('MFA failure count is set to zero.');
     }
 
     /**
@@ -218,27 +240,5 @@ class TwoFactorController extends Controller
         }
 
         app('preferences')->set('mfa_recovery', $newList);
-    }
-
-    private function addToMFAFailureCounter(): void
-    {
-        $preference = (int) app('preferences')->get('mfa_failure_count', 0)->data;
-        ++$preference;
-        Log::channel('audit')->info(sprintf('MFA failure count is set to %d.', $preference));
-        app('preferences')->set('mfa_failure_count', $preference);
-    }
-
-    private function getMFAFailureCounter(): int
-    {
-        $value = (int) app('preferences')->get('mfa_failure_count', 0)->data;
-        Log::channel('audit')->info(sprintf('MFA failure count is %d.', $value));
-
-        return $value;
-    }
-
-    private function resetMFAFailureCounter(): void
-    {
-        app('preferences')->set('mfa_failure_count', 0);
-        Log::channel('audit')->info('MFA failure count is set to zero.');
     }
 }

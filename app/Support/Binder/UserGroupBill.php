@@ -41,7 +41,7 @@ class UserGroupBill implements BinderInterface
         if (auth()->check()) {
             /** @var User $user */
             $user     = auth()->user();
-            $currency = Bill::where('id', (int)$value)
+            $currency = Bill::where('id', (int) $value)
                 ->where('user_group_id', $user->user_group_id)
                 ->first()
             ;

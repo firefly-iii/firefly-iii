@@ -28,9 +28,9 @@ use FireflyIII\Models\Account;
 
 class AccountBalance
 {
-    public string $id;
     public string $amount;
     public string $currencyId;
+    public string $id;
 
     public static function fromArray(): self
     {

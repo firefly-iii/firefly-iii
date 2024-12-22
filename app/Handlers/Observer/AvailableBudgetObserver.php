@@ -30,15 +30,15 @@ use Illuminate\Support\Facades\Log;
 
 class AvailableBudgetObserver
 {
-    public function updated(AvailableBudget $availableBudget): void
-    {
-        Log::debug('Observe "updated" of an available budget.');
-        $this->updateNativeAmount($availableBudget);
-    }
-
     public function created(AvailableBudget $availableBudget): void
     {
         Log::debug('Observe "created" of an available budget.');
+        $this->updateNativeAmount($availableBudget);
+    }
+
+    public function updated(AvailableBudget $availableBudget): void
+    {
+        Log::debug('Observe "updated" of an available budget.');
         $this->updateNativeAmount($availableBudget);
     }
 

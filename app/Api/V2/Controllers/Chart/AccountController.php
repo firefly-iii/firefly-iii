@@ -45,9 +45,9 @@ class AccountController extends Controller
     use CollectsAccountsFromFilter;
     use ValidatesUserGroupTrait;
 
-    private AccountRepositoryInterface $repository;
     private ChartData                  $chartData;
     private TransactionCurrency        $default;
+    private AccountRepositoryInterface $repository;
 
     public function __construct()
     {

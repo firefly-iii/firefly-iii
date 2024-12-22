@@ -54,7 +54,7 @@ class SetDestinationToCashAccount implements ActionInterface
         $user        = User::find($journal['user_id']);
 
         /** @var null|TransactionJournal $object */
-        $object      = $user->transactionJournals()->find((int)$journal['transaction_journal_id']);
+        $object      = $user->transactionJournals()->find((int) $journal['transaction_journal_id']);
         $repository  = app(AccountRepositoryInterface::class);
 
         if (null === $object) {

@@ -51,7 +51,7 @@ class HomeController extends Controller
     public function index()
     {
         Log::channel('audit')->info('User visits admin index.');
-        $title         = (string)trans('firefly.administration');
+        $title         = (string) trans('firefly.administration');
         $mainTitleIcon = 'fa-hand-spock-o';
         $email         = auth()->user()->email;
         $pref          = app('preferences')->get('remote_guard_alt_email');

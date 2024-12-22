@@ -63,7 +63,7 @@ class MailError extends Job implements ShouldQueue
      */
     public function handle(): void
     {
-        $email            = (string)config('firefly.site_owner');
+        $email            = (string) config('firefly.site_owner');
         $args             = $this->exception;
         $args['loggedIn'] = $this->userData['id'] > 0;
         $args['user']     = $this->userData;
@@ -84,7 +84,7 @@ class MailError extends Job implements ShouldQueue
                     $args,
                     static function (Message $message) use ($email): void {
                         if ('mail@example.com' !== $email) {
-                            $message->to($email, $email)->subject((string)trans('email.error_subject'));
+                            $message->to($email, $email)->subject((string) trans('email.error_subject'));
                         }
                     }
                 );
@@ -130,7 +130,7 @@ class MailError extends Job implements ShouldQueue
         }
         if (file_exists($file)) {
             Log::debug(sprintf('Read file in "%s"', $file));
-            $limits = json_decode((string)file_get_contents($file), true);
+            $limits = json_decode((string) file_get_contents($file), true);
         }
         // limit reached?
         foreach ($types as $type => $info) {

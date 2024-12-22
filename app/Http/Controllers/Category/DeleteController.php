@@ -50,7 +50,7 @@ class DeleteController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.categories'));
+                app('view')->share('title', (string) trans('firefly.categories'));
                 app('view')->share('mainTitleIcon', 'fa-bookmark');
                 $this->repository = app(CategoryRepositoryInterface::class);
 
@@ -66,7 +66,7 @@ class DeleteController extends Controller
      */
     public function delete(Category $category)
     {
-        $subTitle = (string)trans('firefly.delete_category', ['name' => $category->name]);
+        $subTitle = (string) trans('firefly.delete_category', ['name' => $category->name]);
 
         // put previous url in session
         $this->rememberPreviousUrl('categories.delete.url');
@@ -84,7 +84,7 @@ class DeleteController extends Controller
         $name = $category->name;
         $this->repository->destroy($category);
 
-        $request->session()->flash('success', (string)trans('firefly.deleted_category', ['name' => $name]));
+        $request->session()->flash('success', (string) trans('firefly.deleted_category', ['name' => $name]));
         app('preferences')->mark();
 
         return redirect($this->getPreviousUrl('categories.delete.url'));

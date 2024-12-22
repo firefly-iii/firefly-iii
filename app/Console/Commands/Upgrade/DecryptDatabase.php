@@ -97,7 +97,7 @@ class DecryptDatabase extends Command
             app('log')->error($e->getMessage());
         }
         if (null !== $configVar) {
-            return (bool)$configVar->data;
+            return (bool) $configVar->data;
         }
 
         return false;
@@ -119,7 +119,7 @@ class DecryptDatabase extends Command
         if (null === $original) {
             return;
         }
-        $id       = (int)$row->id;
+        $id       = (int) $row->id;
         $value    = '';
 
         try {

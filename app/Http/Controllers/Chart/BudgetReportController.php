@@ -171,7 +171,7 @@ class BudgetReportController extends Controller
             $chartData[$spentKey] ??= [
                 'label'           => sprintf(
                     '%s (%s)',
-                    (string)trans('firefly.spent_in_specific_budget', ['budget' => $budget->name]),
+                    (string) trans('firefly.spent_in_specific_budget', ['budget' => $budget->name]),
                     $currency['currency_name']
                 ),
                 'type'            => 'bar',

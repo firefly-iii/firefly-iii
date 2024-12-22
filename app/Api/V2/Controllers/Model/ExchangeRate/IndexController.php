@@ -36,6 +36,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 class IndexController extends Controller
 {
     use ValidatesUserGroupTrait;
+
     public const string RESOURCE_KEY = 'exchange-rates';
 
     private ExchangeRateRepositoryInterface $repository;

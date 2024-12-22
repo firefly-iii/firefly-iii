@@ -144,7 +144,7 @@ class ActionExpression
     {
         $result = $this->expressionLanguage->evaluate($expr, $journal);
 
-        return (string)$result;
+        return (string) $result;
     }
 
     public function evaluate(array $journal): string

@@ -64,9 +64,9 @@ class OperationsRepository implements OperationsRepositoryInterface
         $array     = [];
 
         foreach ($journals as $journal) {
-            $currencyId                                                                        = (int)$journal['currency_id'];
-            $categoryId                                                                        = (int)$journal['category_id'];
-            $categoryName                                                                      = (string)$journal['category_name'];
+            $currencyId                                                                        = (int) $journal['currency_id'];
+            $categoryId                                                                        = (int) $journal['category_id'];
+            $categoryName                                                                      = (string) $journal['category_name'];
 
             // catch "no category" entries.
             if (0 === $categoryId) {
@@ -76,7 +76,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             // info about the currency:
             $array[$currencyId]                            ??= [
                 'categories'              => [],
-                'currency_id'             => (string)$currencyId,
+                'currency_id'             => (string) $currencyId,
                 'currency_name'           => $journal['currency_name'],
                 'currency_symbol'         => $journal['currency_symbol'],
                 'currency_code'           => $journal['currency_code'],
@@ -85,24 +85,24 @@ class OperationsRepository implements OperationsRepositoryInterface
 
             // info about the categories:
             $array[$currencyId]['categories'][$categoryId] ??= [
-                'id'                   => (string)$categoryId,
+                'id'                   => (string) $categoryId,
                 'name'                 => $categoryName,
                 'transaction_journals' => [],
             ];
 
             // add journal to array:
             // only a subset of the fields.
-            $journalId                                                                         = (int)$journal['transaction_journal_id'];
+            $journalId                                                                         = (int) $journal['transaction_journal_id'];
             $array[$currencyId]['categories'][$categoryId]['transaction_journals'][$journalId] = [
                 'amount'                   => app('steam')->negative($journal['amount']),
                 'date'                     => $journal['date'],
-                'source_account_id'        => (string)$journal['source_account_id'],
+                'source_account_id'        => (string) $journal['source_account_id'],
                 'budget_name'              => $journal['budget_name'],
                 'source_account_name'      => $journal['source_account_name'],
-                'destination_account_id'   => (string)$journal['destination_account_id'],
+                'destination_account_id'   => (string) $journal['destination_account_id'],
                 'destination_account_name' => $journal['destination_account_name'],
                 'description'              => $journal['description'],
-                'transaction_group_id'     => (string)$journal['transaction_group_id'],
+                'transaction_group_id'     => (string) $journal['transaction_group_id'],
             ];
         }
 
@@ -148,19 +148,19 @@ class OperationsRepository implements OperationsRepositoryInterface
         $array     = [];
 
         foreach ($journals as $journal) {
-            $currencyId                                                                        = (int)$journal['currency_id'];
-            $categoryId                                                                        = (int)$journal['category_id'];
-            $categoryName                                                                      = (string)$journal['category_name'];
+            $currencyId                                                                        = (int) $journal['currency_id'];
+            $categoryId                                                                        = (int) $journal['category_id'];
+            $categoryName                                                                      = (string) $journal['category_name'];
 
             // catch "no category" entries.
             if (0 === $categoryId) {
-                $categoryName = (string)trans('firefly.no_category');
+                $categoryName = (string) trans('firefly.no_category');
             }
 
             // info about the currency:
             $array[$currencyId]                            ??= [
                 'categories'              => [],
-                'currency_id'             => (string)$currencyId,
+                'currency_id'             => (string) $currencyId,
                 'currency_name'           => $journal['currency_name'],
                 'currency_symbol'         => $journal['currency_symbol'],
                 'currency_code'           => $journal['currency_code'],
@@ -169,23 +169,23 @@ class OperationsRepository implements OperationsRepositoryInterface
 
             // info about the categories:
             $array[$currencyId]['categories'][$categoryId] ??= [
-                'id'                   => (string)$categoryId,
+                'id'                   => (string) $categoryId,
                 'name'                 => $categoryName,
                 'transaction_journals' => [],
             ];
 
             // add journal to array:
             // only a subset of the fields.
-            $journalId                                                                         = (int)$journal['transaction_journal_id'];
+            $journalId                                                                         = (int) $journal['transaction_journal_id'];
             $array[$currencyId]['categories'][$categoryId]['transaction_journals'][$journalId] = [
                 'amount'                   => app('steam')->positive($journal['amount']),
                 'date'                     => $journal['date'],
-                'source_account_id'        => (string)$journal['source_account_id'],
-                'destination_account_id'   => (string)$journal['destination_account_id'],
+                'source_account_id'        => (string) $journal['source_account_id'],
+                'destination_account_id'   => (string) $journal['destination_account_id'],
                 'source_account_name'      => $journal['source_account_name'],
                 'destination_account_name' => $journal['destination_account_name'],
                 'description'              => $journal['description'],
-                'transaction_group_id'     => (string)$journal['transaction_group_id'],
+                'transaction_group_id'     => (string) $journal['transaction_group_id'],
             ];
         }
 
@@ -210,9 +210,9 @@ class OperationsRepository implements OperationsRepositoryInterface
         $array     = [];
 
         foreach ($journals as $journal) {
-            $currencyId                                                                        = (int)$journal['currency_id'];
-            $categoryId                                                                        = (int)$journal['category_id'];
-            $categoryName                                                                      = (string)$journal['category_name'];
+            $currencyId                                                                        = (int) $journal['currency_id'];
+            $categoryId                                                                        = (int) $journal['category_id'];
+            $categoryName                                                                      = (string) $journal['category_name'];
 
             // catch "no category" entries.
             if (0 === $categoryId) {
@@ -222,7 +222,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             // info about the currency:
             $array[$currencyId]                            ??= [
                 'categories'              => [],
-                'currency_id'             => (string)$currencyId,
+                'currency_id'             => (string) $currencyId,
                 'currency_name'           => $journal['currency_name'],
                 'currency_symbol'         => $journal['currency_symbol'],
                 'currency_code'           => $journal['currency_code'],
@@ -231,24 +231,24 @@ class OperationsRepository implements OperationsRepositoryInterface
 
             // info about the categories:
             $array[$currencyId]['categories'][$categoryId] ??= [
-                'id'                   => (string)$categoryId,
+                'id'                   => (string) $categoryId,
                 'name'                 => $categoryName,
                 'transaction_journals' => [],
             ];
 
             // add journal to array:
             // only a subset of the fields.
-            $journalId                                                                         = (int)$journal['transaction_journal_id'];
+            $journalId                                                                         = (int) $journal['transaction_journal_id'];
             $array[$currencyId]['categories'][$categoryId]['transaction_journals'][$journalId] = [
                 'amount'                   => app('steam')->positive($journal['amount']),
                 'date'                     => $journal['date'],
-                'source_account_id'        => (string)$journal['source_account_id'],
+                'source_account_id'        => (string) $journal['source_account_id'],
                 'category_name'            => $journal['category_name'],
                 'source_account_name'      => $journal['source_account_name'],
-                'destination_account_id'   => (string)$journal['destination_account_id'],
+                'destination_account_id'   => (string) $journal['destination_account_id'],
                 'destination_account_name' => $journal['destination_account_name'],
                 'description'              => $journal['description'],
-                'transaction_group_id'     => (string)$journal['transaction_group_id'],
+                'transaction_group_id'     => (string) $journal['transaction_group_id'],
             ];
         }
 
@@ -273,9 +273,9 @@ class OperationsRepository implements OperationsRepositoryInterface
         $array     = [];
 
         foreach ($journals as $journal) {
-            $currencyId                                                                        = (int)$journal['currency_id'];
-            $categoryId                                                                        = (int)$journal['category_id'];
-            $categoryName                                                                      = (string)$journal['category_name'];
+            $currencyId                                                                        = (int) $journal['currency_id'];
+            $categoryId                                                                        = (int) $journal['category_id'];
+            $categoryName                                                                      = (string) $journal['category_name'];
 
             // catch "no category" entries.
             if (0 === $categoryId) {
@@ -285,7 +285,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             // info about the currency:
             $array[$currencyId]                            ??= [
                 'categories'              => [],
-                'currency_id'             => (string)$currencyId,
+                'currency_id'             => (string) $currencyId,
                 'currency_name'           => $journal['currency_name'],
                 'currency_symbol'         => $journal['currency_symbol'],
                 'currency_code'           => $journal['currency_code'],
@@ -294,24 +294,24 @@ class OperationsRepository implements OperationsRepositoryInterface
 
             // info about the categories:
             $array[$currencyId]['categories'][$categoryId] ??= [
-                'id'                   => (string)$categoryId,
+                'id'                   => (string) $categoryId,
                 'name'                 => $categoryName,
                 'transaction_journals' => [],
             ];
 
             // add journal to array:
             // only a subset of the fields.
-            $journalId                                                                         = (int)$journal['transaction_journal_id'];
+            $journalId                                                                         = (int) $journal['transaction_journal_id'];
             $array[$currencyId]['categories'][$categoryId]['transaction_journals'][$journalId] = [
                 'amount'                   => app('steam')->negative($journal['amount']),
                 'date'                     => $journal['date'],
-                'source_account_id'        => (string)$journal['source_account_id'],
+                'source_account_id'        => (string) $journal['source_account_id'],
                 'category_name'            => $journal['category_name'],
                 'source_account_name'      => $journal['source_account_name'],
-                'destination_account_id'   => (string)$journal['destination_account_id'],
+                'destination_account_id'   => (string) $journal['destination_account_id'],
                 'destination_account_name' => $journal['destination_account_name'],
                 'description'              => $journal['description'],
-                'transaction_group_id'     => (string)$journal['transaction_group_id'],
+                'transaction_group_id'     => (string) $journal['transaction_group_id'],
             ];
         }
 
@@ -341,14 +341,14 @@ class OperationsRepository implements OperationsRepositoryInterface
         $array     = [];
 
         foreach ($journals as $journal) {
-            $currencyId                = (int)$journal['currency_id'];
+            $currencyId                = (int) $journal['currency_id'];
             $array[$currencyId] ??= [
                 'sum'                     => '0',
-                'currency_id'             => (string)$currencyId,
+                'currency_id'             => (string) $currencyId,
                 'currency_name'           => $journal['currency_name'],
                 'currency_symbol'         => $journal['currency_symbol'],
                 'currency_code'           => $journal['currency_code'],
-                'currency_decimal_places' => (int)$journal['currency_decimal_places'],
+                'currency_decimal_places' => (int) $journal['currency_decimal_places'],
             ];
             $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->negative($journal['amount']));
         }
@@ -378,10 +378,10 @@ class OperationsRepository implements OperationsRepositoryInterface
         $array     = [];
 
         foreach ($journals as $journal) {
-            $currencyId                = (int)$journal['currency_id'];
+            $currencyId                = (int) $journal['currency_id'];
             $array[$currencyId] ??= [
                 'sum'                     => '0',
-                'currency_id'             => (string)$currencyId,
+                'currency_id'             => (string) $currencyId,
                 'currency_name'           => $journal['currency_name'],
                 'currency_symbol'         => $journal['currency_symbol'],
                 'currency_code'           => $journal['currency_code'],
@@ -415,10 +415,10 @@ class OperationsRepository implements OperationsRepositoryInterface
         $array     = [];
 
         foreach ($journals as $journal) {
-            $currencyId                = (int)$journal['currency_id'];
+            $currencyId                = (int) $journal['currency_id'];
             $array[$currencyId] ??= [
                 'sum'                     => '0',
-                'currency_id'             => (string)$currencyId,
+                'currency_id'             => (string) $currencyId,
                 'currency_name'           => $journal['currency_name'],
                 'currency_symbol'         => $journal['currency_symbol'],
                 'currency_code'           => $journal['currency_code'],

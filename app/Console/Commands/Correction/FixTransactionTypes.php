@@ -92,7 +92,7 @@ class FixTransactionTypes extends Command
 
             return false;
         }
-        $expectedType = (string)config(sprintf('firefly.account_to_transaction.%s.%s', $source->accountType->type, $destination->accountType->type));
+        $expectedType = (string) config(sprintf('firefly.account_to_transaction.%s.%s', $source->accountType->type, $destination->accountType->type));
         if ($expectedType !== $type) {
             $this->friendlyWarning(
                 sprintf(

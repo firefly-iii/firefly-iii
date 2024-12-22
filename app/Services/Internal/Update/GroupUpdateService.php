@@ -108,7 +108,7 @@ class GroupUpdateService
             /** @var string $deletedId */
             foreach ($result as $deletedId) {
                 /** @var TransactionJournal $journal */
-                $journal = $transactionGroup->transactionJournals()->find((int)$deletedId);
+                $journal = $transactionGroup->transactionJournals()->find((int) $deletedId);
 
                 /** @var JournalDestroyService $service */
                 $service = app(JournalDestroyService::class);
@@ -163,7 +163,7 @@ class GroupUpdateService
          */
         foreach ($transactions as $index => $transaction) {
             app('log')->debug(sprintf('Now at #%d of %d', $index + 1, count($transactions)), $transaction);
-            $journalId = (int)($transaction['transaction_journal_id'] ?? 0);
+            $journalId = (int) ($transaction['transaction_journal_id'] ?? 0);
 
             /** @var null|TransactionJournal $journal */
             $journal   = $transactionGroup->transactionJournals()->find($journalId);

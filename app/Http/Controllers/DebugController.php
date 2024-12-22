@@ -138,7 +138,7 @@ class DebugController extends Controller
         }
         if ('' !== $logContent) {
             // last few lines
-            $logContent = 'Truncated from this point <----|'.substr((string)$logContent, -16384);
+            $logContent = 'Truncated from this point <----|'.substr((string) $logContent, -16384);
         }
 
         return view('debug', compact('table', 'now', 'logContent'));
@@ -152,13 +152,13 @@ class DebugController extends Controller
         $app    = $this->getAppInfo();
         $user   = $this->getuserInfo();
 
-        return (string)view('partials.debug-table', compact('system', 'docker', 'app', 'user'));
+        return (string) view('partials.debug-table', compact('system', 'docker', 'app', 'user'));
     }
 
     private function getSystemInformation(): array
     {
-        $maxFileSize   = app('steam')->phpBytes((string)ini_get('upload_max_filesize'));
-        $maxPostSize   = app('steam')->phpBytes((string)ini_get('post_max_size'));
+        $maxFileSize   = app('steam')->phpBytes((string) ini_get('upload_max_filesize'));
+        $maxPostSize   = app('steam')->phpBytes((string) ini_get('post_max_size'));
         $drivers       = \DB::availableDrivers();
         $currentDriver = \DB::getDriverName();
 
@@ -171,7 +171,7 @@ class DebugController extends Controller
             'bits'            => \PHP_INT_SIZE * 8,
             'bcscale'         => bcscale(),
             'display_errors'  => ini_get('display_errors'),
-            'error_reporting' => $this->errorReporting((int)ini_get('error_reporting')),
+            'error_reporting' => $this->errorReporting((int) ini_get('error_reporting')),
             'upload_size'     => min($maxFileSize, $maxPostSize),
             'all_drivers'     => $drivers,
             'current_driver'  => $currentDriver,
@@ -190,7 +190,7 @@ class DebugController extends Controller
 
         try {
             if (file_exists('/var/www/counter-main.txt')) {
-                $return['build'] = trim((string)file_get_contents('/var/www/counter-main.txt'));
+                $return['build'] = trim((string) file_get_contents('/var/www/counter-main.txt'));
                 app('log')->debug(sprintf('build is now "%s"', $return['build']));
             }
         } catch (\Exception $e) { // @phpstan-ignore-line
@@ -200,16 +200,16 @@ class DebugController extends Controller
 
         try {
             if (file_exists('/var/www/build-date-main.txt')) {
-                $return['build_date'] = trim((string)file_get_contents('/var/www/build-date-main.txt'));
+                $return['build_date'] = trim((string) file_get_contents('/var/www/build-date-main.txt'));
             }
         } catch (\Exception $e) { // @phpstan-ignore-line
             app('log')->debug('Could not check build date, but thats ok.');
             app('log')->warning($e->getMessage());
         }
-        if ('' !== (string)env('BASE_IMAGE_BUILD')) {
+        if ('' !== (string) env('BASE_IMAGE_BUILD')) {
             $return['base_build'] = env('BASE_IMAGE_BUILD');
         }
-        if ('' !== (string)env('BASE_IMAGE_DATE')) {
+        if ('' !== (string) env('BASE_IMAGE_DATE')) {
             $return['base_build_date'] = env('BASE_IMAGE_DATE');
         }
 
@@ -221,7 +221,7 @@ class DebugController extends Controller
         $userGuard      = config('auth.defaults.guard');
 
         $config         = app('fireflyconfig')->get('last_rt_job', 0);
-        $lastTime       = (int)$config->data;
+        $lastTime       = (int) $config->data;
         $lastCronjob    = 'never';
         $lastCronjobAgo = 'never';
         if ($lastTime > 0) {
@@ -233,8 +233,8 @@ class DebugController extends Controller
         return [
             'debug'              => var_export(config('app.debug'), true),
             'audit_log_channel'  => envNonEmpty('AUDIT_LOG_CHANNEL', '(empty)'),
-            'default_language'   => (string)config('firefly.default_language'),
-            'default_locale'     => (string)config('firefly.default_locale'),
+            'default_language'   => (string) config('firefly.default_language'),
+            'default_locale'     => (string) config('firefly.default_locale'),
             'remote_header'      => 'remote_user_guard' === $userGuard ? config('auth.guard_header') : 'N/A',
             'remote_mail_header' => 'remote_user_guard' === $userGuard ? config('auth.guard_email') : 'N/A',
             'stateful_domains'   => implode(', ', config('sanctum.stateful')),
@@ -265,7 +265,7 @@ class DebugController extends Controller
             $result                = setlocale(LC_ALL, $code);
             $localeAttempts[$code] = $result === $code;
         }
-        setlocale(LC_ALL, (string)$original);
+        setlocale(LC_ALL, (string) $original);
 
         return [
             'user_id'         => auth()->user()->id,

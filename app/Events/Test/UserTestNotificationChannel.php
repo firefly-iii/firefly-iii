@@ -31,8 +31,8 @@ class UserTestNotificationChannel
 {
     use SerializesModels;
 
-    public User   $user;
     public string $channel;
+    public User   $user;
 
     /**
      * Create a new event instance.

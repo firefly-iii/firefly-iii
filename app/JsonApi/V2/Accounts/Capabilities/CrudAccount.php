@@ -34,6 +34,13 @@ class CrudAccount extends CrudResource
 {
     use CollectsCustomParameters;
 
+    public function create(array $validatedData): Account
+    {
+        var_dump($validatedData);
+
+        exit;
+    }
+
     /**
      * Read the supplied site.
      */
@@ -50,12 +57,5 @@ class CrudAccount extends CrudResource
         $enrichment->setEnd($otherParams['end'] ?? null);
 
         return $enrichment->enrichSingle($account);
-    }
-
-    public function create(array $validatedData): Account
-    {
-        var_dump($validatedData);
-
-        exit;
     }
 }

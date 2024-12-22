@@ -185,7 +185,7 @@ class CategoryController extends Controller
             $inKey        = sprintf('%d-in', $currencyId);
             $chartData[$outKey]
                           = [
-                              'label'           => sprintf('%s (%s)', (string)trans('firefly.spent'), $currencyInfo['currency_name']),
+                              'label'           => sprintf('%s (%s)', (string) trans('firefly.spent'), $currencyInfo['currency_name']),
                               'entries'         => [],
                               'type'            => 'bar',
                               'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
@@ -193,7 +193,7 @@ class CategoryController extends Controller
 
             $chartData[$inKey]
                           = [
-                              'label'           => sprintf('%s (%s)', (string)trans('firefly.earned'), $currencyInfo['currency_name']),
+                              'label'           => sprintf('%s (%s)', (string) trans('firefly.earned'), $currencyInfo['currency_name']),
                               'entries'         => [],
                               'type'            => 'bar',
                               'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green

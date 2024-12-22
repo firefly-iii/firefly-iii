@@ -62,7 +62,7 @@ class Cron extends Command
         } catch (\InvalidArgumentException $e) {
             $this->friendlyError(sprintf('"%s" is not a valid date', $this->option('date')));
         }
-        $force = (bool)$this->option('force'); // @phpstan-ignore-line
+        $force = (bool) $this->option('force'); // @phpstan-ignore-line
 
         // Fire exchange rates cron job.
         if (true === config('cer.download_enabled') && ($doAll || $this->option('download-cer'))) {

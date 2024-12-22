@@ -32,6 +32,12 @@ use Illuminate\Support\Facades\Log;
  */
 class BillObserver
 {
+    public function created(Bill $bill): void
+    {
+        Log::debug('Observe "created" of a bill.');
+        $this->updateNativeAmount($bill);
+    }
+
     public function deleting(Bill $bill): void
     {
         app('log')->debug('Observe "deleting" of a bill.');
@@ -44,12 +50,6 @@ class BillObserver
     public function updated(Bill $bill): void
     {
         Log::debug('Observe "updated" of a bill.');
-        $this->updateNativeAmount($bill);
-    }
-
-    public function created(Bill $bill): void
-    {
-        Log::debug('Observe "created" of a bill.');
         $this->updateNativeAmount($bill);
     }
 

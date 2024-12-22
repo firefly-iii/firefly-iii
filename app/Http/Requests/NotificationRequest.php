@@ -64,10 +64,10 @@ class NotificationRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'slack_webhook_url'   => ['nullable', 'url', 'min:1', new IsValidSlackOrDiscordUrl()],
-            'ntfy_server'         => ['nullable', 'url', 'min:1'],
-            'ntfy_user'           => ['required_with:ntfy_pass,ntfy_auth', 'nullable', 'string', 'min:1'],
-            'ntfy_pass'           => ['required_with:ntfy_user,ntfy_auth', 'nullable', 'string', 'min:1'],
+            'slack_webhook_url' => ['nullable', 'url', 'min:1', new IsValidSlackOrDiscordUrl()],
+            'ntfy_server'       => ['nullable', 'url', 'min:1'],
+            'ntfy_user'         => ['required_with:ntfy_pass,ntfy_auth', 'nullable', 'string', 'min:1'],
+            'ntfy_pass'         => ['required_with:ntfy_user,ntfy_auth', 'nullable', 'string', 'min:1'],
         ];
         foreach (config('notifications.notifications.owner') as $key => $info) {
             $rules[sprintf('notification_%s', $key)] = 'in:0,1';

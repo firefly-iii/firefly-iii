@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use FireflyIII\Enums\AccountTypeEnum;
+use Deprecated;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -35,46 +35,46 @@ class AccountType extends Model
 {
     use ReturnsIntegerIdTrait;
 
-    #[\Deprecated] /** @deprecated  */
+    #[\Deprecated] /** @deprecated */
     public const string ASSET            = 'Asset account';
 
-    #[\Deprecated] /** @deprecated  */
+    #[\Deprecated] /** @deprecated */
     public const string BENEFICIARY      = 'Beneficiary account';
 
-    #[\Deprecated] /** @deprecated  */
+    #[\Deprecated] /** @deprecated */
     public const string CASH             = 'Cash account';
 
-    #[\Deprecated] /** @deprecated  */
+    #[\Deprecated] /** @deprecated */
     public const string CREDITCARD       = 'Credit card';
 
-    #[\Deprecated] /** @deprecated  */
+    #[\Deprecated] /** @deprecated */
     public const string DEBT             = 'Debt';
 
-    #[\Deprecated] /** @deprecated  */
+    #[\Deprecated] /** @deprecated */
     public const string DEFAULT          = 'Default account';
 
-    #[\Deprecated] /** @deprecated  */
+    #[\Deprecated] /** @deprecated */
     public const string EXPENSE          = 'Expense account';
 
-    #[\Deprecated] /** @deprecated  */
+    #[\Deprecated] /** @deprecated */
     public const string IMPORT           = 'Import account';
 
-    #[\Deprecated] /** @deprecated  */
+    #[\Deprecated] /** @deprecated */
     public const string INITIAL_BALANCE  = 'Initial balance account';
 
-    #[\Deprecated] /** @deprecated  */
+    #[\Deprecated] /** @deprecated */
     public const string LIABILITY_CREDIT = 'Liability credit account';
 
-    #[\Deprecated] /** @deprecated  */
+    #[\Deprecated] /** @deprecated */
     public const string LOAN             = 'Loan';
 
-    #[\Deprecated] /** @deprecated  */
+    #[\Deprecated] /** @deprecated */
     public const string MORTGAGE         = 'Mortgage';
 
-    #[\Deprecated] /** @deprecated  */
+    #[\Deprecated] /** @deprecated */
     public const string RECONCILIATION   = 'Reconciliation account';
 
-    #[\Deprecated] /** @deprecated  */
+    #[\Deprecated] /** @deprecated */
     public const string REVENUE          = 'Revenue account';
 
     protected $casts

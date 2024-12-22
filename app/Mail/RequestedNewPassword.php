@@ -55,7 +55,7 @@ class RequestedNewPassword extends Mailable
     {
         return $this
             ->markdown('emails.password')
-            ->subject((string)trans('email.reset_pw_subject'))
+            ->subject((string) trans('email.reset_pw_subject'))
         ;
     }
 }

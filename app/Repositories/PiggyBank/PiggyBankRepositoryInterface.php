@@ -53,8 +53,6 @@ interface PiggyBankRepositoryInterface
 
     public function destroyAll(): void;
 
-    public function purgeAll(): void;
-
     public function find(int $piggyBankId): ?PiggyBank;
 
     /**
@@ -70,21 +68,19 @@ interface PiggyBankRepositoryInterface
      * Get current amount saved in piggy bank.
      */
     public function getCurrentAmount(PiggyBank $piggyBank, ?Account $account = null): string;
-    /**
-     * Get current amount saved in piggy bank.
-     */
 
     /**
      * Get all events.
      */
     public function getEvents(PiggyBank $piggyBank): Collection;
+    /**
+     * Get current amount saved in piggy bank.
+     */
 
     /**
      * Used for connecting to a piggy bank.
      */
     public function getExactAmount(PiggyBank $piggyBank, PiggyBankRepetition $repetition, TransactionJournal $journal): string;
-
-    public function updateNote(PiggyBank $piggyBank, string $note): void;
 
     /**
      * Return note for piggy bank.
@@ -112,6 +108,8 @@ interface PiggyBankRepositoryInterface
      * Get for piggy account what is left to put in piggies.
      */
     public function leftOnAccount(PiggyBank $piggyBank, Account $account, Carbon $date): string;
+
+    public function purgeAll(): void;
 
     public function removeAmount(PiggyBank $piggyBank, Account $account, string $amount, ?TransactionJournal $journal = null): bool;
 
@@ -148,4 +146,6 @@ interface PiggyBankRepositoryInterface
      * Update existing piggy bank.
      */
     public function update(PiggyBank $piggyBank, array $data): PiggyBank;
+
+    public function updateNote(PiggyBank $piggyBank, string $note): void;
 }

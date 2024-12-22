@@ -231,7 +231,7 @@ class ExportData extends Command
     {
         $final       = new Collection();
         $accounts    = new Collection();
-        $accountList = (string)$this->option('accounts');
+        $accountList = (string) $this->option('accounts');
         $types       = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
         if ('' !== $accountList) {
             $accountIds = explode(',', $accountList);
@@ -260,7 +260,7 @@ class ExportData extends Command
      */
     private function getExportDirectory(): string
     {
-        $directory = (string)$this->option('export_directory');
+        $directory = (string) $this->option('export_directory');
         if ('' === $directory) {
             $directory = './';
         }

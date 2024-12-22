@@ -441,7 +441,7 @@ class CreateRecurringTransactions implements ShouldQueue
                 'identifier'            => $index,
                 'recurrence_id'         => $recurrence->id,
                 'order'                 => $index,
-                'notes'                 => (string)trans('firefly.created_from_recurrence', ['id' => $recurrence->id, 'title' => $recurrence->title]),
+                'notes'                 => (string) trans('firefly.created_from_recurrence', ['id' => $recurrence->id, 'title' => $recurrence->title]),
                 'tags'                  => $this->repository->getTags($transaction),
                 'piggy_bank_id'         => $this->repository->getPiggyBank($transaction),
                 'piggy_bank_name'       => null,

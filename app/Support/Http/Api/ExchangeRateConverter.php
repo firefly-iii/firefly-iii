@@ -39,21 +39,11 @@ class ExchangeRateConverter
 {
     // use ConvertsExchangeRates;
     private array $fallback        = [];
+    private bool  $ignoreSettings  = false;
     private bool  $isPrepared      = false;
     private bool  $noPreparedRates = false;
     private array $prepared        = [];
     private int   $queryCount      = 0;
-    private bool $ignoreSettings   = false;
-
-    public function setIgnoreSettings(bool $ignoreSettings): void
-    {
-        $this->ignoreSettings = $ignoreSettings;
-    }
-
-    public function enabled(): bool
-    {
-        return false !== config('cer.enabled') || true === $this->ignoreSettings;
-    }
 
     /**
      * @throws FireflyException
@@ -68,6 +58,11 @@ class ExchangeRateConverter
         $rate = $this->getCurrencyRate($from, $to, $date);
 
         return bcmul($amount, $rate);
+    }
+
+    public function enabled(): bool
+    {
+        return false !== config('cer.enabled') || true === $this->ignoreSettings;
     }
 
     /**
@@ -136,6 +131,11 @@ class ExchangeRateConverter
         Cache::forever($key, $rate);
 
         return $rate;
+    }
+
+    private function getCacheKey(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): string
+    {
+        return sprintf('cer-%d-%d-%s', $from->id, $to->id, $date->format('Y-m-d'));
     }
 
     private function getFromDB(int $from, int $to, string $date): ?string
@@ -338,16 +338,16 @@ class ExchangeRateConverter
         Log::debug(sprintf('Fallback rate %s > %s = %s', $to->code, $from->code, bcdiv('1', $fallback)));
     }
 
+    public function setIgnoreSettings(bool $ignoreSettings): void
+    {
+        $this->ignoreSettings = $ignoreSettings;
+    }
+
     public function summarize(): void
     {
         if (false === $this->enabled()) {
             return;
         }
         Log::debug(sprintf('ExchangeRateConverter ran %d queries.', $this->queryCount));
-    }
-
-    private function getCacheKey(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): string
-    {
-        return sprintf('cer-%d-%d-%s', $from->id, $to->id, $date->format('Y-m-d'));
     }
 }

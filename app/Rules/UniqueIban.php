@@ -68,13 +68,13 @@ class UniqueIban implements ValidationRule
      */
     public function message(): string
     {
-        return (string)trans('validation.unique_iban_for_user');
+        return (string) trans('validation.unique_iban_for_user');
     }
 
     public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
         if (!$this->passes($attribute, $value)) {
-            $fail((string)trans('validation.unique_iban_for_user'));
+            $fail((string) trans('validation.unique_iban_for_user'));
         }
     }
 

@@ -68,7 +68,7 @@ class UpgradeCurrencyPreferences extends Command
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
         if (null !== $configVar) {
-            return (bool)$configVar->data;
+            return (bool) $configVar->data;
         }
 
         return false;
@@ -138,7 +138,7 @@ class UpgradeCurrencyPreferences extends Command
         }
 
         if (null !== $preference->data && !is_array($preference->data)) {
-            return (string)$preference->data;
+            return (string) $preference->data;
         }
 
         return 'EUR';

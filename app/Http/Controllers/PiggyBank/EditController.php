@@ -54,7 +54,7 @@ class EditController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.piggyBanks'));
+                app('view')->share('title', (string) trans('firefly.piggyBanks'));
                 app('view')->share('mainTitleIcon', 'fa-bullseye');
 
                 $this->attachments       = app(AttachmentHelperInterface::class);
@@ -73,7 +73,7 @@ class EditController extends Controller
      */
     public function edit(PiggyBank $piggyBank)
     {
-        $subTitle     = (string)trans('firefly.update_piggy_title', ['name' => $piggyBank->name]);
+        $subTitle     = (string) trans('firefly.update_piggy_title', ['name' => $piggyBank->name]);
         $subTitleIcon = 'fa-pencil';
         $note         = $piggyBank->notes()->first();
         // Flash some data to fill the form.
@@ -116,7 +116,7 @@ class EditController extends Controller
         $data      = $request->getPiggyBankData();
         $piggyBank = $this->piggyRepos->update($piggyBank, $data);
 
-        session()->flash('success', (string)trans('firefly.updated_piggy_bank', ['name' => $piggyBank->name]));
+        session()->flash('success', (string) trans('firefly.updated_piggy_bank', ['name' => $piggyBank->name]));
         app('preferences')->mark();
 
         // store new attachment(s):
@@ -127,7 +127,7 @@ class EditController extends Controller
         }
         if (null !== $files && auth()->user()->hasRole('demo')) {
             Log::channel('audit')->warning(sprintf('The demo user is trying to upload attachments in %s.', __METHOD__));
-            session()->flash('info', (string)trans('firefly.no_att_demo_user'));
+            session()->flash('info', (string) trans('firefly.no_att_demo_user'));
         }
 
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
@@ -135,7 +135,7 @@ class EditController extends Controller
         }
         $redirect  = redirect($this->getPreviousUrl('piggy-banks.edit.url'));
 
-        if (1 === (int)$request->get('return_to_edit')) {
+        if (1 === (int) $request->get('return_to_edit')) {
             session()->put('piggy-banks.edit.fromUpdate', true);
 
             $redirect = redirect(route('piggy-banks.edit', [$piggyBank->id]));

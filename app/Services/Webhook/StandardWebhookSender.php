@@ -128,7 +128,7 @@ class StandardWebhookSender implements WebhookSenderInterface
             if (method_exists($e, 'hasResponse') && method_exists($e, 'getResponse')) {
                 $attempt->status_code = $e->hasResponse() ? $e->getResponse()->getStatusCode() : 0;
                 app('log')->error(sprintf('The status code of the error response is: %d', $attempt->status_code));
-                $body                 = (string)($e->hasResponse() ? $e->getResponse()->getBody() : '');
+                $body                 = (string) ($e->hasResponse() ? $e->getResponse()->getBody() : '');
                 app('log')->error(sprintf('The body of the error response is: %s', $body));
             }
             $attempt->logs          = $logs;

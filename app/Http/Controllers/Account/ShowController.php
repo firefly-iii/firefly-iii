@@ -60,7 +60,7 @@ class ShowController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-credit-card');
-                app('view')->share('title', (string)trans('firefly.accounts'));
+                app('view')->share('title', (string) trans('firefly.accounts'));
 
                 $this->repository = app(AccountRepositoryInterface::class);
 
@@ -96,19 +96,19 @@ class ShowController extends Controller
         $attachments      = $this->repository->getAttachments($account);
         $today            = today(config('app.timezone'));
         $subTitleIcon     = config(sprintf('firefly.subIconsByIdentifier.%s', $account->accountType->type));
-        $page             = (int)$request->get('page');
-        $pageSize         = (int)app('preferences')->get('listPageSize', 50)->data;
+        $page             = (int) $request->get('page');
+        $pageSize         = (int) app('preferences')->get('listPageSize', 50)->data;
         $currency         = $this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
         $fStart           = $start->isoFormat($this->monthAndDayFormat);
         $fEnd             = $end->isoFormat($this->monthAndDayFormat);
-        $subTitle         = (string)trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
+        $subTitle         = (string) trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
         $chartUrl         = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
         $firstTransaction = $this->repository->oldestJournalDate($account) ?? $start;
         $periods          = $this->getAccountPeriodOverview($account, $firstTransaction, $end);
 
         // if layout = v2, overrule the page title.
         if ('v1' !== config('view.layout')) {
-            $subTitle = (string)trans('firefly.all_journals_for_account', ['name' => $account->name]);
+            $subTitle = (string) trans('firefly.all_journals_for_account', ['name' => $account->name]);
         }
 
         /** @var GroupCollectorInterface $collector */
@@ -172,10 +172,10 @@ class ShowController extends Controller
         $today        = today(config('app.timezone'));
         $start        = $this->repository->oldestJournalDate($account) ?? today(config('app.timezone'))->startOfMonth();
         $subTitleIcon = config('firefly.subIconsByIdentifier.'.$account->accountType->type);
-        $page         = (int)$request->get('page');
-        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
+        $page         = (int) $request->get('page');
+        $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
         $currency     = $this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
-        $subTitle     = (string)trans('firefly.all_journals_for_account', ['name' => $account->name]);
+        $subTitle     = (string) trans('firefly.all_journals_for_account', ['name' => $account->name]);
         $periods      = new Collection();
 
         /** @var GroupCollectorInterface $collector */

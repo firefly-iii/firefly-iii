@@ -111,7 +111,7 @@ class JournalRepository implements JournalRepositoryInterface
 
         // saves on queries:
         $amount = $journal->transactions()->where('amount', '>', 0)->get()->sum('amount');
-        $amount = (string)$amount;
+        $amount = (string) $amount;
         $cache->store($amount);
 
         return $amount;
@@ -134,7 +134,7 @@ class JournalRepository implements JournalRepositoryInterface
         /** @var null|Note $note */
         $note = $link->notes()->first();
 
-        return (string)$note?->text;
+        return (string) $note?->text;
     }
 
     /**

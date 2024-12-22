@@ -65,6 +65,25 @@ class StoreRequest extends FormRequest
         return $data;
     }
 
+    private function parseAccounts(mixed $array): array
+    {
+        if (!is_array($array)) {
+            return [];
+        }
+        $return = [];
+        foreach ($array as $entry) {
+            if (!is_array($entry)) {
+                continue;
+            }
+            $return[] = [
+                'account_id'     => $this->integerFromValue((string) ($entry['account_id'] ?? '0')),
+                'current_amount' => $this->clearString((string) ($entry['current_amount'] ?? '0')),
+            ];
+        }
+
+        return $return;
+    }
+
     /**
      * The rules that the incoming request must be matched against.
      */
@@ -109,7 +128,7 @@ class StoreRequest extends FormRequest
                             // check currency here.
                             $accountCurrency = $repository->getAccountCurrency($account);
                             $isMultiCurrency = $repository->getMetaValue($account, 'is_multi_currency');
-                            $currentAmount   = bcadd($currentAmount, (string)($array['current_amount'] ?? '0'));
+                            $currentAmount   = bcadd($currentAmount, (string) ($array['current_amount'] ?? '0'));
                             if ($accountCurrency->id !== $currency->id && 'true' !== $isMultiCurrency) {
                                 $validator->errors()->add(sprintf('accounts.%d', $index), trans('validation.invalid_account_currency'));
                             }
@@ -128,25 +147,6 @@ class StoreRequest extends FormRequest
         if ($validator->fails()) {
             Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
         }
-    }
-
-    private function parseAccounts(mixed $array): array
-    {
-        if (!is_array($array)) {
-            return [];
-        }
-        $return = [];
-        foreach ($array as $entry) {
-            if (!is_array($entry)) {
-                continue;
-            }
-            $return[] = [
-                'account_id'     => $this->integerFromValue((string) ($entry['account_id'] ?? '0')),
-                'current_amount' => $this->clearString((string) ($entry['current_amount'] ?? '0')),
-            ];
-        }
-
-        return $return;
     }
 
     private function getCurrencyFromData(array $data): TransactionCurrency

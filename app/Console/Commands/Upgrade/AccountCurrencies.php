@@ -93,7 +93,7 @@ class AccountCurrencies extends Command
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
 
-        return (bool)$configVar?->data;
+        return (bool) $configVar?->data;
     }
 
     private function updateAccountCurrencies(): void
@@ -124,9 +124,9 @@ class AccountCurrencies extends Command
     private function updateAccount(Account $account, TransactionCurrency $currency): void
     {
         $this->accountRepos->setUser($account->user);
-        $accountCurrency = (int)$this->accountRepos->getMetaValue($account, 'currency_id');
+        $accountCurrency = (int) $this->accountRepos->getMetaValue($account, 'currency_id');
         $openingBalance  = $this->accountRepos->getOpeningBalance($account);
-        $obCurrency      = (int)$openingBalance?->transaction_currency_id;
+        $obCurrency      = (int) $openingBalance?->transaction_currency_id;
 
         // both 0? set to default currency:
         if (0 === $accountCurrency && 0 === $obCurrency) {

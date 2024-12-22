@@ -308,22 +308,6 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         return $currency->code === config('firefly.default_currency', 'EUR');
     }
 
-    public function makeDefault(TransactionCurrency $currency): void
-    {
-        $current = app('amount')->getDefaultCurrencyByUserGroup($this->userGroup);
-        app('log')->debug(sprintf('Enabled + made default currency %s for user #%d', $currency->code, $this->userGroup->id));
-        $this->userGroup->currencies()->detach($currency->id);
-        foreach ($this->userGroup->currencies()->get() as $item) {
-            $this->userGroup->currencies()->updateExistingPivot($item->id, ['group_default' => false]);
-        }
-        $this->userGroup->currencies()->syncWithoutDetaching([$currency->id => ['group_default' => true]]);
-        if ($current->id !== $currency->id) {
-            Log::debug('Trigger on a different default currency.');
-            // clear all native amounts through an event.
-            event(new UserGroupChangedDefaultCurrency($this->userGroup));
-        }
-    }
-
     public function searchCurrency(string $search, int $limit): Collection
     {
         $query = TransactionCurrency::where('enabled', true);
@@ -387,5 +371,21 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         $service = app(CurrencyUpdateService::class);
 
         return $service->update($currency, $data);
+    }
+
+    public function makeDefault(TransactionCurrency $currency): void
+    {
+        $current = app('amount')->getDefaultCurrencyByUserGroup($this->userGroup);
+        app('log')->debug(sprintf('Enabled + made default currency %s for user #%d', $currency->code, $this->userGroup->id));
+        $this->userGroup->currencies()->detach($currency->id);
+        foreach ($this->userGroup->currencies()->get() as $item) {
+            $this->userGroup->currencies()->updateExistingPivot($item->id, ['group_default' => false]);
+        }
+        $this->userGroup->currencies()->syncWithoutDetaching([$currency->id => ['group_default' => true]]);
+        if ($current->id !== $currency->id) {
+            Log::debug('Trigger on a different default currency.');
+            // clear all native amounts through an event.
+            event(new UserGroupChangedDefaultCurrency($this->userGroup));
+        }
     }
 }

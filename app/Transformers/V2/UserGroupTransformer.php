@@ -79,23 +79,6 @@ class UserGroupTransformer extends AbstractTransformer
         return $objects;
     }
 
-    /**
-     * Transform the user group.
-     */
-    public function transform(UserGroup $userGroup): array
-    {
-        return [
-            'id'              => $userGroup->id,
-            'created_at'      => $userGroup->created_at->toAtomString(),
-            'updated_at'      => $userGroup->updated_at->toAtomString(),
-            'in_use'          => $this->inUse[$userGroup->id] ?? false,
-            'title'           => $userGroup->title,
-            'can_see_members' => $this->membershipsVisible[$userGroup->id] ?? false,
-            'members'         => array_values($this->memberships[$userGroup->id] ?? []),
-        ];
-        // if the user has a specific role in this group, then collect the memberships.
-    }
-
     private function mergeMemberships(): void
     {
         $new               = [];
@@ -114,5 +97,22 @@ class UserGroupTransformer extends AbstractTransformer
             }
         }
         $this->memberships = $new;
+    }
+
+    /**
+     * Transform the user group.
+     */
+    public function transform(UserGroup $userGroup): array
+    {
+        return [
+            'id'              => $userGroup->id,
+            'created_at'      => $userGroup->created_at->toAtomString(),
+            'updated_at'      => $userGroup->updated_at->toAtomString(),
+            'in_use'          => $this->inUse[$userGroup->id] ?? false,
+            'title'           => $userGroup->title,
+            'can_see_members' => $this->membershipsVisible[$userGroup->id] ?? false,
+            'members'         => array_values($this->memberships[$userGroup->id] ?? []),
+        ];
+        // if the user has a specific role in this group, then collect the memberships.
     }
 }

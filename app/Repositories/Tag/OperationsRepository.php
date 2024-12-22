@@ -66,7 +66,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         $array          = [];
         $listedJournals = [];
         foreach ($journals as $journal) {
-            $currencyId = (int)$journal['currency_id'];
+            $currencyId = (int) $journal['currency_id'];
             $array[$currencyId] ??= [
                 'tags'                    => [],
                 'currency_id'             => $currencyId,
@@ -78,9 +78,9 @@ class OperationsRepository implements OperationsRepositoryInterface
 
             // may have multiple tags:
             foreach ($journal['tags'] as $tag) {
-                $tagId                                                                  = (int)$tag['id'];
-                $tagName                                                                = (string)$tag['name'];
-                $journalId                                                              = (int)$journal['transaction_journal_id'];
+                $tagId                                                                  = (int) $tag['id'];
+                $tagName                                                                = (string) $tag['name'];
+                $journalId                                                              = (int) $journal['transaction_journal_id'];
                 if (!in_array($tagId, $tagIds, true)) {
                     continue;
                 }
@@ -157,7 +157,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         $listedJournals = [];
 
         foreach ($journals as $journal) {
-            $currencyId = (int)$journal['currency_id'];
+            $currencyId = (int) $journal['currency_id'];
             $array[$currencyId] ??= [
                 'tags'                    => [],
                 'currency_id'             => $currencyId,
@@ -169,9 +169,9 @@ class OperationsRepository implements OperationsRepositoryInterface
 
             // may have multiple tags:
             foreach ($journal['tags'] as $tag) {
-                $tagId                                                                  = (int)$tag['id'];
-                $tagName                                                                = (string)$tag['name'];
-                $journalId                                                              = (int)$journal['transaction_journal_id'];
+                $tagId                                                                  = (int) $tag['id'];
+                $tagName                                                                = (string) $tag['name'];
+                $journalId                                                              = (int) $journal['transaction_journal_id'];
 
                 if (!in_array($tagId, $tagIds, true)) {
                     continue;
@@ -187,7 +187,7 @@ class OperationsRepository implements OperationsRepositoryInterface
                     'name'                 => $tagName,
                     'transaction_journals' => [],
                 ];
-                $journalId                                                              = (int)$journal['transaction_journal_id'];
+                $journalId                                                              = (int) $journal['transaction_journal_id'];
                 $array[$currencyId]['tags'][$tagId]['transaction_journals'][$journalId] = [
                     'amount'                   => app('steam')->positive($journal['amount']),
                     'date'                     => $journal['date'],

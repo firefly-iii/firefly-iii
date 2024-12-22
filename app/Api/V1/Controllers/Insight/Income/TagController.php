@@ -76,31 +76,31 @@ class TagController extends Controller
         $genericSet = $collector->getExtractedJournals();
 
         foreach ($genericSet as $journal) {
-            $currencyId        = (int)$journal['currency_id'];
-            $foreignCurrencyId = (int)$journal['foreign_currency_id'];
+            $currencyId        = (int) $journal['currency_id'];
+            $foreignCurrencyId = (int) $journal['foreign_currency_id'];
 
             if (0 !== $currencyId) {
                 $response[$currencyId] ??= [
                     'difference'       => '0',
                     'difference_float' => 0,
-                    'currency_id'      => (string)$currencyId,
+                    'currency_id'      => (string) $currencyId,
                     'currency_code'    => $journal['currency_code'],
                 ];
                 $response[$currencyId]['difference']       = bcadd($response[$currencyId]['difference'], app('steam')->positive($journal['amount']));
-                $response[$currencyId]['difference_float'] = (float)$response[$currencyId]['difference'];
+                $response[$currencyId]['difference_float'] = (float) $response[$currencyId]['difference'];
             }
             if (0 !== $foreignCurrencyId) {
                 $response[$foreignCurrencyId] ??= [
                     'difference'       => '0',
                     'difference_float' => 0,
-                    'currency_id'      => (string)$foreignCurrencyId,
+                    'currency_id'      => (string) $foreignCurrencyId,
                     'currency_code'    => $journal['foreign_currency_code'],
                 ];
                 $response[$foreignCurrencyId]['difference']       = bcadd(
                     $response[$foreignCurrencyId]['difference'],
                     app('steam')->positive($journal['foreign_amount'])
                 );
-                $response[$foreignCurrencyId]['difference_float'] = (float)$response[$foreignCurrencyId]['difference'];
+                $response[$foreignCurrencyId]['difference_float'] = (float) $response[$foreignCurrencyId]['difference'];
             }
         }
 
@@ -134,8 +134,8 @@ class TagController extends Controller
 
         /** @var array $journal */
         foreach ($genericSet as $journal) {
-            $currencyId        = (int)$journal['currency_id'];
-            $foreignCurrencyId = (int)$journal['foreign_currency_id'];
+            $currencyId        = (int) $journal['currency_id'];
+            $foreignCurrencyId = (int) $journal['foreign_currency_id'];
 
             /** @var array $tag */
             foreach ($journal['tags'] as $tag) {
@@ -146,15 +146,15 @@ class TagController extends Controller
                 // on currency ID
                 if (0 !== $currencyId) {
                     $response[$key] ??= [
-                        'id'               => (string)$tagId,
+                        'id'               => (string) $tagId,
                         'name'             => $tag['name'],
                         'difference'       => '0',
                         'difference_float' => 0,
-                        'currency_id'      => (string)$currencyId,
+                        'currency_id'      => (string) $currencyId,
                         'currency_code'    => $journal['currency_code'],
                     ];
                     $response[$key]['difference']       = bcadd($response[$key]['difference'], app('steam')->positive($journal['amount']));
-                    $response[$key]['difference_float'] = (float)$response[$key]['difference'];
+                    $response[$key]['difference_float'] = (float) $response[$key]['difference'];
                 }
 
                 // on foreign ID
@@ -162,14 +162,14 @@ class TagController extends Controller
                     $response[$foreignKey]                     = $journal[$foreignKey] ?? [
                         'difference'       => '0',
                         'difference_float' => 0,
-                        'currency_id'      => (string)$foreignCurrencyId,
+                        'currency_id'      => (string) $foreignCurrencyId,
                         'currency_code'    => $journal['foreign_currency_code'],
                     ];
                     $response[$foreignKey]['difference']       = bcadd(
                         $response[$foreignKey]['difference'],
                         app('steam')->positive($journal['foreign_amount'])
                     );
-                    $response[$foreignKey]['difference_float'] = (float)$response[$foreignKey]['difference'];
+                    $response[$foreignKey]['difference_float'] = (float) $response[$foreignKey]['difference'];
                 }
             }
         }

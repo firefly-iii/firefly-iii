@@ -141,7 +141,7 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
         }
 
         if (array_key_exists('order', $data)) {
-            $this->setOrder($objectGroup, (int)$data['order']);
+            $this->setOrder($objectGroup, (int) $data['order']);
         }
 
         $objectGroup->save();

@@ -73,21 +73,14 @@ class BillReminder extends Notification
         ;
     }
 
-    /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function toSlack(User $notifiable)
+    private function getSubject(): string
     {
-        $bill = $this->bill;
-        $url  = route('bills.show', [$bill->id]);
+        $message = (string) trans(sprintf('email.bill_warning_subject_%s', $this->field), ['diff' => $this->diff, 'name' => $this->bill->name]);
+        if (0 === $this->diff) {
+            $message = (string) trans(sprintf('email.bill_warning_subject_now_%s', $this->field), ['diff' => $this->diff, 'name' => $this->bill->name]);
+        }
 
-        return new SlackMessage()
-            ->warning()
-            ->attachment(static function ($attachment) use ($bill, $url): void {
-                $attachment->title((string) trans('firefly.visit_bill', ['name' => $bill->name]), $url);
-            })
-            ->content($this->getSubject())
-        ;
+        return $message;
     }
 
     public function toNtfy(User $notifiable): Message
@@ -111,14 +104,21 @@ class BillReminder extends Notification
         ;
     }
 
-    private function getSubject(): string
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toSlack(User $notifiable)
     {
-        $message = (string) trans(sprintf('email.bill_warning_subject_%s', $this->field), ['diff' => $this->diff, 'name' => $this->bill->name]);
-        if (0 === $this->diff) {
-            $message = (string) trans(sprintf('email.bill_warning_subject_now_%s', $this->field), ['diff' => $this->diff, 'name' => $this->bill->name]);
-        }
+        $bill = $this->bill;
+        $url  = route('bills.show', [$bill->id]);
 
-        return $message;
+        return new SlackMessage()
+            ->warning()
+            ->attachment(static function ($attachment) use ($bill, $url): void {
+                $attachment->title((string) trans('firefly.visit_bill', ['name' => $bill->name]), $url);
+            })
+            ->content($this->getSubject())
+        ;
     }
 
     /**

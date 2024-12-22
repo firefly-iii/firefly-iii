@@ -42,56 +42,6 @@ use Illuminate\Support\Facades\Notification;
 
 class MFAHandler
 {
-    public function sendMFAEnabledMail(EnabledMFA $event): void
-    {
-        app('log')->debug(sprintf('Now in %s', __METHOD__));
-
-        $user = $event->user;
-
-        try {
-            Notification::send($user, new EnabledMFANotification($user));
-        } catch (\Exception $e) { // @phpstan-ignore-line
-            $message = $e->getMessage();
-            if (str_contains($message, 'Bcc')) {
-                app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            if (str_contains($message, 'RFC 2822')) {
-                app('log')->warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            app('log')->error($e->getMessage());
-            app('log')->error($e->getTraceAsString());
-        }
-    }
-
-    public function sendNewMFABackupCodesMail(MFANewBackupCodes $event): void
-    {
-        app('log')->debug(sprintf('Now in %s', __METHOD__));
-
-        $user = $event->user;
-
-        try {
-            Notification::send($user, new NewBackupCodesNotification($user));
-        } catch (\Exception $e) { // @phpstan-ignore-line
-            $message = $e->getMessage();
-            if (str_contains($message, 'Bcc')) {
-                app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            if (str_contains($message, 'RFC 2822')) {
-                app('log')->warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            app('log')->error($e->getMessage());
-            app('log')->error($e->getTraceAsString());
-        }
-    }
-
     public function sendBackupFewLeftMail(MFABackupFewLeft $event): void
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
@@ -101,6 +51,81 @@ class MFAHandler
 
         try {
             Notification::send($user, new MFABackupFewLeftNotification($user, $count));
+        } catch (\Exception $e) { // @phpstan-ignore-line
+            $message = $e->getMessage();
+            if (str_contains($message, 'Bcc')) {
+                app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+
+                return;
+            }
+            if (str_contains($message, 'RFC 2822')) {
+                app('log')->warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+
+                return;
+            }
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
+        }
+    }
+
+    public function sendBackupNoLeftMail(MFABackupNoLeft $event): void
+    {
+        app('log')->debug(sprintf('Now in %s', __METHOD__));
+
+        $user = $event->user;
+
+        try {
+            Notification::send($user, new MFABackupNoLeftNotification($user));
+        } catch (\Exception $e) { // @phpstan-ignore-line
+            $message = $e->getMessage();
+            if (str_contains($message, 'Bcc')) {
+                app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+
+                return;
+            }
+            if (str_contains($message, 'RFC 2822')) {
+                app('log')->warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+
+                return;
+            }
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
+        }
+    }
+
+    public function sendMFADisabledMail(DisabledMFA $event): void
+    {
+        app('log')->debug(sprintf('Now in %s', __METHOD__));
+
+        $user = $event->user;
+
+        try {
+            Notification::send($user, new DisabledMFANotification($user));
+        } catch (\Exception $e) { // @phpstan-ignore-line
+            $message = $e->getMessage();
+            if (str_contains($message, 'Bcc')) {
+                app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+
+                return;
+            }
+            if (str_contains($message, 'RFC 2822')) {
+                app('log')->warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+
+                return;
+            }
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
+        }
+    }
+
+    public function sendMFAEnabledMail(EnabledMFA $event): void
+    {
+        app('log')->debug(sprintf('Now in %s', __METHOD__));
+
+        $user = $event->user;
+
+        try {
+            Notification::send($user, new EnabledMFANotification($user));
         } catch (\Exception $e) { // @phpstan-ignore-line
             $message = $e->getMessage();
             if (str_contains($message, 'Bcc')) {
@@ -144,14 +169,14 @@ class MFAHandler
         }
     }
 
-    public function sendBackupNoLeftMail(MFABackupNoLeft $event): void
+    public function sendNewMFABackupCodesMail(MFANewBackupCodes $event): void
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
 
         $user = $event->user;
 
         try {
-            Notification::send($user, new MFABackupNoLeftNotification($user));
+            Notification::send($user, new NewBackupCodesNotification($user));
         } catch (\Exception $e) { // @phpstan-ignore-line
             $message = $e->getMessage();
             if (str_contains($message, 'Bcc')) {
@@ -177,31 +202,6 @@ class MFAHandler
 
         try {
             Notification::send($user, new MFAUsedBackupCodeNotification($user));
-        } catch (\Exception $e) { // @phpstan-ignore-line
-            $message = $e->getMessage();
-            if (str_contains($message, 'Bcc')) {
-                app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            if (str_contains($message, 'RFC 2822')) {
-                app('log')->warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            app('log')->error($e->getMessage());
-            app('log')->error($e->getTraceAsString());
-        }
-    }
-
-    public function sendMFADisabledMail(DisabledMFA $event): void
-    {
-        app('log')->debug(sprintf('Now in %s', __METHOD__));
-
-        $user = $event->user;
-
-        try {
-            Notification::send($user, new DisabledMFANotification($user));
         } catch (\Exception $e) { // @phpstan-ignore-line
             $message = $e->getMessage();
             if (str_contains($message, 'Bcc')) {

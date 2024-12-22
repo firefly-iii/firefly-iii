@@ -70,16 +70,6 @@ class MFABackupNoLeftNotification extends Notification
         return (new MailMessage())->markdown('emails.security.no-backup-codes', ['user' => $this->user, 'ip' => $ip, 'host' => $host, 'userAgent' => $userAgent, 'time' => $time])->subject($subject);
     }
 
-    /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function toSlack(User $notifiable)
-    {
-        $message = (string) trans('email.mfa_no_backups_left_slack', ['email' => $this->user->email]);
-
-        return new SlackMessage()->content($message);
-    }
-
     public function toNtfy(User $notifiable): Message
     {
         $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
@@ -99,6 +89,16 @@ class MFABackupNoLeftNotification extends Notification
         return PushoverMessage::create((string) trans('email.mfa_few_backups_left_slack', ['email' => $this->user->email]))
             ->title((string) trans('email.mfa_no_backups_left_slack'))
         ;
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toSlack(User $notifiable)
+    {
+        $message = (string) trans('email.mfa_no_backups_left_slack', ['email' => $this->user->email]);
+
+        return new SlackMessage()->content($message);
     }
 
     /**

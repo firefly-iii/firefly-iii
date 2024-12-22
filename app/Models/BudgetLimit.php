@@ -67,7 +67,7 @@ class BudgetLimit extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $budgetLimitId = (int)$value;
+            $budgetLimitId = (int) $value;
             $budgetLimit   = self::where('budget_limits.id', $budgetLimitId)
                 ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
                 ->where('budgets.user_id', auth()->user()->id)
@@ -86,11 +86,6 @@ class BudgetLimit extends Model
         return $this->belongsTo(Budget::class);
     }
 
-    public function transactionCurrency(): BelongsTo
-    {
-        return $this->belongsTo(TransactionCurrency::class);
-    }
-
     /**
      * Get all the notes.
      */
@@ -99,27 +94,32 @@ class BudgetLimit extends Model
         return $this->morphMany(Note::class, 'noteable');
     }
 
+    public function transactionCurrency(): BelongsTo
+    {
+        return $this->belongsTo(TransactionCurrency::class);
+    }
+
     /**
      * Get the amount
      */
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string)$value,
+            get: static fn ($value) => (string) $value,
         );
     }
 
     protected function budgetId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 
     protected function transactionCurrencyId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 }

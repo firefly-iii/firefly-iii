@@ -53,7 +53,7 @@ class IndexController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.rules'));
+                app('view')->share('title', (string) trans('firefly.rules'));
                 app('view')->share('mainTitleIcon', 'fa-random');
                 $this->ruleGroupRepos = app(RuleGroupRepositoryInterface::class);
                 $this->ruleRepos      = app(RuleRepositoryInterface::class);
@@ -79,7 +79,7 @@ class IndexController extends Controller
 
     public function moveRule(Request $request, Rule $rule, RuleGroup $ruleGroup): JsonResponse
     {
-        $order = (int)$request->get('order');
+        $order = (int) $request->get('order');
         $this->ruleRepos->moveRule($rule, $ruleGroup, $order);
 
         return response()->json([]);

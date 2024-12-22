@@ -48,10 +48,6 @@ interface BudgetLimitRepositoryInterface
      */
     public function destroyAll(): void;
 
-    public function getNoteText(BudgetLimit $budgetLimit): string;
-
-    public function setNoteText(BudgetLimit $budgetLimit, string $text): void;
-
     /**
      * Destroy a budget limit.
      */
@@ -67,6 +63,10 @@ interface BudgetLimitRepositoryInterface
     public function getAllBudgetLimitsByCurrency(TransactionCurrency $currency, ?Carbon $start = null, ?Carbon $end = null): Collection;
 
     public function getBudgetLimits(Budget $budget, ?Carbon $start = null, ?Carbon $end = null): Collection;
+
+    public function getNoteText(BudgetLimit $budgetLimit): string;
+
+    public function setNoteText(BudgetLimit $budgetLimit, string $text): void;
 
     public function setUser(null|Authenticatable|User $user): void;
 

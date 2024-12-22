@@ -114,7 +114,7 @@ class TransferCurrenciesCorrections extends Command
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
         if (null !== $configVar) {
-            return (bool)$configVar->data;
+            return (bool) $configVar->data;
         }
 
         return false;
@@ -320,7 +320,7 @@ class TransferCurrenciesCorrections extends Command
     {
         if (null !== $this->sourceCurrency
             && null === $this->sourceTransaction->foreign_amount
-            && (int)$this->sourceTransaction->transaction_currency_id !== $this->sourceCurrency->id
+            && (int) $this->sourceTransaction->transaction_currency_id !== $this->sourceCurrency->id
         ) {
             $message                                          = sprintf(
                 'Transaction #%d has a currency setting #%d that should be #%d. Amount remains %s, currency is changed.',
@@ -366,7 +366,7 @@ class TransferCurrenciesCorrections extends Command
     {
         if (null !== $this->destinationCurrency
             && null === $this->destinationTransaction->foreign_amount
-            && (int)$this->destinationTransaction->transaction_currency_id !== $this->destinationCurrency->id
+            && (int) $this->destinationTransaction->transaction_currency_id !== $this->destinationCurrency->id
         ) {
             $message                                               = sprintf(
                 'Transaction #%d has a currency setting #%d that should be #%d. Amount remains %s, currency is changed.',
@@ -469,7 +469,7 @@ class TransferCurrenciesCorrections extends Command
      */
     private function fixTransactionJournalCurrency(TransactionJournal $journal): void
     {
-        if ((int)$journal->transaction_currency_id !== $this->sourceCurrency->id) {
+        if ((int) $journal->transaction_currency_id !== $this->sourceCurrency->id) {
             $oldCurrencyCode                  = $journal->transactionCurrency->code ?? '(nothing)';
             $journal->transaction_currency_id = $this->sourceCurrency->id;
             $message                          = sprintf(

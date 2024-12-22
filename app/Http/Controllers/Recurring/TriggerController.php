@@ -74,11 +74,11 @@ class TriggerController extends Controller
         app('preferences')->mark();
 
         if (0 === $groups->count()) {
-            $request->session()->flash('info', (string)trans('firefly.no_new_transaction_in_recurrence'));
+            $request->session()->flash('info', (string) trans('firefly.no_new_transaction_in_recurrence'));
         }
         if (1 === $groups->count()) {
             $first = $groups->first();
-            $request->session()->flash('success', (string)trans('firefly.stored_journal_no_descr'));
+            $request->session()->flash('success', (string) trans('firefly.stored_journal_no_descr'));
             $request->session()->flash('success_url', route('transactions.show', [$first->id]));
         }
 

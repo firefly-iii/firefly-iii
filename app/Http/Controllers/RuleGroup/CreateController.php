@@ -49,7 +49,7 @@ class CreateController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.rules'));
+                app('view')->share('title', (string) trans('firefly.rules'));
                 app('view')->share('mainTitleIcon', 'fa-random');
 
                 $this->repository = app(RuleGroupRepositoryInterface::class);
@@ -67,7 +67,7 @@ class CreateController extends Controller
     public function create()
     {
         $subTitleIcon = 'fa-clone';
-        $subTitle     = (string)trans('firefly.make_new_rule_group');
+        $subTitle     = (string) trans('firefly.make_new_rule_group');
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('rule-groups.create.fromStore')) {
@@ -88,11 +88,11 @@ class CreateController extends Controller
         $data      = $request->getRuleGroupData();
         $ruleGroup = $this->repository->store($data);
 
-        session()->flash('success', (string)trans('firefly.created_new_rule_group', ['title' => $ruleGroup->title]));
+        session()->flash('success', (string) trans('firefly.created_new_rule_group', ['title' => $ruleGroup->title]));
         app('preferences')->mark();
 
         $redirect  = redirect($this->getPreviousUrl('rule-groups.create.url'));
-        if (1 === (int)$request->get('create_another')) {
+        if (1 === (int) $request->get('create_another')) {
             session()->put('rule-groups.create.fromStore', true);
 
             $redirect = redirect(route('rule-groups.create'))->withInput();

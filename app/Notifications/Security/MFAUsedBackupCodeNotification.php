@@ -70,16 +70,6 @@ class MFAUsedBackupCodeNotification extends Notification
         return (new MailMessage())->markdown('emails.security.used-backup-code', ['user' => $this->user, 'ip' => $ip, 'host' => $host, 'userAgent' => $userAgent, 'time' => $time])->subject($subject);
     }
 
-    /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function toSlack(User $notifiable)
-    {
-        $message = (string) trans('email.used_backup_code_slack', ['email' => $this->user->email]);
-
-        return new SlackMessage()->content($message);
-    }
-
     public function toNtfy(User $notifiable): Message
     {
         $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
@@ -99,6 +89,16 @@ class MFAUsedBackupCodeNotification extends Notification
         return PushoverMessage::create((string) trans('email.used_backup_code_slack', ['email' => $this->user->email]))
             ->title((string) trans('email.used_backup_code_subject'))
         ;
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toSlack(User $notifiable)
+    {
+        $message = (string) trans('email.used_backup_code_slack', ['email' => $this->user->email]);
+
+        return new SlackMessage()->content($message);
     }
 
     /**

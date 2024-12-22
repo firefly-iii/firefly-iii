@@ -201,7 +201,7 @@ class ApplyRules extends Command
         $accountRepository = app(AccountRepositoryInterface::class);
         $accountRepository->setUser($this->getUser());
         foreach ($accountList as $accountId) {
-            $accountId = (int)$accountId;
+            $accountId = (int) $accountId;
             $account   = $accountRepository->find($accountId);
             if (null !== $account && in_array($account->accountType->type, $this->acceptedAccounts, true)) {
                 $finalList->push($account);
@@ -228,7 +228,7 @@ class ApplyRules extends Command
         $ruleGroupList   = explode(',', $ruleGroupString);
 
         foreach ($ruleGroupList as $ruleGroupId) {
-            $ruleGroup = $this->ruleGroupRepository->find((int)$ruleGroupId);
+            $ruleGroup = $this->ruleGroupRepository->find((int) $ruleGroupId);
             if ($ruleGroup->active) {
                 $this->ruleGroupSelection[] = $ruleGroup->id;
             }
@@ -250,7 +250,7 @@ class ApplyRules extends Command
         $ruleList   = explode(',', $ruleString);
 
         foreach ($ruleList as $ruleId) {
-            $rule = $this->ruleRepository->find((int)$ruleId);
+            $rule = $this->ruleRepository->find((int) $ruleId);
             if (null !== $rule && $rule->active) {
                 $this->ruleSelection[] = $rule->id;
             }

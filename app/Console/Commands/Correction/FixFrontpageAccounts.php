@@ -74,7 +74,7 @@ class FixFrontpageAccounts extends Command
         if (is_array($data)) {
             /** @var string $accountId */
             foreach ($data as $accountId) {
-                $accountIdInt = (int)$accountId;
+                $accountIdInt = (int) $accountId;
                 $account      = $repository->find($accountIdInt);
                 if (null !== $account
                     && in_array($account->accountType->type, [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE], true)

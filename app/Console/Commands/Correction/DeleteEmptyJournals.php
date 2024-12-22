@@ -65,7 +65,7 @@ class DeleteEmptyJournals extends Command
 
         /** @var Transaction $row */
         foreach ($set as $row) {
-            $count = (int)$row->the_count;
+            $count = (int) $row->the_count;
             if (1 === $count % 2) {
                 // uneven number, delete journal and transactions:
                 try {

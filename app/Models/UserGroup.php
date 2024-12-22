@@ -51,7 +51,7 @@ class UserGroup extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $userGroupId = (int)$value;
+            $userGroupId = (int) $value;
 
             /** @var User $user */
             $user        = auth()->user();

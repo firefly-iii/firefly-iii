@@ -38,6 +38,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 class ShowController extends Controller
 {
     use ValidatesUserGroupTrait;
+
     public const string RESOURCE_KEY = 'exchange-rates';
 
     private ExchangeRateRepositoryInterface $repository;
@@ -57,12 +58,12 @@ class ShowController extends Controller
 
     public function show(TransactionCurrency $from, TransactionCurrency $to): JsonResponse
     {
-        $pageSize  = $this->parameters->get('limit');
-        $page      = $this->parameters->get('page');
-        $rates     = $this->repository->getRates($from, $to);
-        $count     = $rates->count();
-        $rates     = $rates->slice(($page - 1) * $pageSize, $pageSize);
-        $paginator = new LengthAwarePaginator($rates, $count, $pageSize, $page);
+        $pageSize    = $this->parameters->get('limit');
+        $page        = $this->parameters->get('page');
+        $rates       = $this->repository->getRates($from, $to);
+        $count       = $rates->count();
+        $rates       = $rates->slice(($page - 1) * $pageSize, $pageSize);
+        $paginator   = new LengthAwarePaginator($rates, $count, $pageSize, $page);
 
         $transformer = new ExchangeRateTransformer();
         $transformer->setParameters($this->parameters); // give params to transformer

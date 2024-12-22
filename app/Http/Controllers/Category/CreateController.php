@@ -53,7 +53,7 @@ class CreateController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.categories'));
+                app('view')->share('title', (string) trans('firefly.categories'));
                 app('view')->share('mainTitleIcon', 'fa-bookmark');
                 $this->repository  = app(CategoryRepositoryInterface::class);
                 $this->attachments = app(AttachmentHelperInterface::class);
@@ -74,7 +74,7 @@ class CreateController extends Controller
             $this->rememberPreviousUrl('categories.create.url');
         }
         $request->session()->forget('categories.create.fromStore');
-        $subTitle = (string)trans('firefly.create_new_category');
+        $subTitle = (string) trans('firefly.create_new_category');
 
         return view('categories.create', compact('subTitle'));
     }
@@ -91,7 +91,7 @@ class CreateController extends Controller
         $data     = $request->getCategoryData();
         $category = $this->repository->store($data);
 
-        $request->session()->flash('success', (string)trans('firefly.stored_category', ['name' => $category->name]));
+        $request->session()->flash('success', (string) trans('firefly.stored_category', ['name' => $category->name]));
         app('preferences')->mark();
 
         // store attachment(s):
@@ -102,7 +102,7 @@ class CreateController extends Controller
         }
         if (null !== $files && auth()->user()->hasRole('demo')) {
             Log::channel('audit')->warning(sprintf('The demo user is trying to upload attachments in %s.', __METHOD__));
-            session()->flash('info', (string)trans('firefly.no_att_demo_user'));
+            session()->flash('info', (string) trans('firefly.no_att_demo_user'));
         }
 
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
@@ -110,7 +110,7 @@ class CreateController extends Controller
         }
 
         $redirect = redirect(route('categories.index'));
-        if (1 === (int)$request->get('create_another')) {
+        if (1 === (int) $request->get('create_another')) {
             $request->session()->put('categories.create.fromStore', true);
 
             $redirect = redirect(route('categories.create'))->withInput();

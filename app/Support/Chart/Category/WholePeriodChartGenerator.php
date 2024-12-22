@@ -71,14 +71,14 @@ class WholePeriodChartGenerator
             $code                                      = $currency['currency_code'];
             $name                                      = $currency['currency_name'];
             $chartData[sprintf('spent-in-%s', $code)]  = [
-                'label'           => (string)trans('firefly.box_spent_in_currency', ['currency' => $name]),
+                'label'           => (string) trans('firefly.box_spent_in_currency', ['currency' => $name]),
                 'entries'         => [],
                 'type'            => 'bar',
                 'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
             ];
 
             $chartData[sprintf('earned-in-%s', $code)] = [
-                'label'           => (string)trans('firefly.box_earned_in_currency', ['currency' => $name]),
+                'label'           => (string) trans('firefly.box_earned_in_currency', ['currency' => $name]),
                 'entries'         => [],
                 'type'            => 'bar',
                 'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green

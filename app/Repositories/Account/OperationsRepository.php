@@ -76,8 +76,8 @@ class OperationsRepository implements OperationsRepositoryInterface
     {
         $array = [];
         foreach ($journals as $journal) {
-            $currencyId                                             = (int)$journal['currency_id'];
-            $journalId                                              = (int)$journal['transaction_journal_id'];
+            $currencyId                                             = (int) $journal['currency_id'];
+            $journalId                                              = (int) $journal['transaction_journal_id'];
             $array[$currencyId] ??= [
                 'currency_id'             => $journal['currency_id'],
                 'currency_name'           => $journal['currency_name'],
@@ -88,7 +88,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             ];
 
             $array[$currencyId]['transaction_journals'][$journalId] = [
-                'amount'                   => app('steam')->{$direction}((string)$journal['amount']), // @phpstan-ignore-line
+                'amount'                   => app('steam')->{$direction}((string) $journal['amount']), // @phpstan-ignore-line
                 'date'                     => $journal['date'],
                 'transaction_journal_id'   => $journalId,
                 'budget_name'              => $journal['budget_name'],
@@ -219,7 +219,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         $array = [];
 
         foreach ($journals as $journal) {
-            $currencyId                = (int)$journal['currency_id'];
+            $currencyId                = (int) $journal['currency_id'];
             $array[$currencyId] ??= [
                 'sum'                     => '0',
                 'currency_id'             => $currencyId,
@@ -231,7 +231,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->{$direction}($journal['amount'])); // @phpstan-ignore-line
 
             // also do foreign amount:
-            $foreignId                 = (int)$journal['foreign_currency_id'];
+            $foreignId                 = (int) $journal['foreign_currency_id'];
             if (0 !== $foreignId) {
                 $array[$foreignId] ??= [
                     'sum'                     => '0',
@@ -281,10 +281,10 @@ class OperationsRepository implements OperationsRepositoryInterface
                 'currency_code'           => $journal['currency_code'],
                 'currency_decimal_places' => $journal['currency_decimal_places'],
             ];
-            $array[$key]['sum'] = bcadd($array[$key]['sum'], app('steam')->{$method}((string)$journal['amount'])); // @phpstan-ignore-line
+            $array[$key]['sum'] = bcadd($array[$key]['sum'], app('steam')->{$method}((string) $journal['amount'])); // @phpstan-ignore-line
 
             // also do foreign amount:
-            if (0 !== (int)$journal['foreign_currency_id']) {
+            if (0 !== (int) $journal['foreign_currency_id']) {
                 $key                = sprintf('%s-%s', $journal[$idKey], $journal['foreign_currency_id']);
                 $array[$key] ??= [
                     'id'                      => $journal[$idKey],
@@ -296,7 +296,7 @@ class OperationsRepository implements OperationsRepositoryInterface
                     'currency_code'           => $journal['foreign_currency_code'],
                     'currency_decimal_places' => $journal['foreign_currency_decimal_places'],
                 ];
-                $array[$key]['sum'] = bcadd($array[$key]['sum'], app('steam')->{$method}((string)$journal['foreign_amount'])); // @phpstan-ignore-line
+                $array[$key]['sum'] = bcadd($array[$key]['sum'], app('steam')->{$method}((string) $journal['foreign_amount'])); // @phpstan-ignore-line
             }
         }
 
@@ -380,9 +380,9 @@ class OperationsRepository implements OperationsRepositoryInterface
         }
         $final  = [];
         foreach ($return as $array) {
-            $array['difference_float'] = (float)$array['difference'];
-            $array['in_float']         = (float)$array['in'];
-            $array['out_float']        = (float)$array['out'];
+            $array['difference_float'] = (float) $array['difference'];
+            $array['in_float']         = (float) $array['in'];
+            $array['out_float']        = (float) $array['out'];
             $final[]                   = $array;
         }
 
@@ -400,7 +400,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
         // source first
         $return[$sourceKey] ??= [
-            'id'               => (string)$sourceId,
+            'id'               => (string) $sourceId,
             'name'             => $journal['source_account_name'],
             'difference'       => '0',
             'difference_float' => 0,
@@ -408,13 +408,13 @@ class OperationsRepository implements OperationsRepositoryInterface
             'in_float'         => 0,
             'out'              => '0',
             'out_float'        => 0,
-            'currency_id'      => (string)$currencyId,
+            'currency_id'      => (string) $currencyId,
             'currency_code'    => $journal['currency_code'],
         ];
 
         // dest next:
         $return[$destKey]   ??= [
-            'id'               => (string)$destinationId,
+            'id'               => (string) $destinationId,
             'name'             => $journal['destination_account_name'],
             'difference'       => '0',
             'difference_float' => 0,
@@ -422,7 +422,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             'in_float'         => 0,
             'out'              => '0',
             'out_float'        => 0,
-            'currency_id'      => (string)$currencyId,
+            'currency_id'      => (string) $currencyId,
             'currency_code'    => $journal['currency_code'],
         ];
 
@@ -444,7 +444,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             // same as above:
             // source first
             $return[$sourceKey] ??= [
-                'id'               => (string)$sourceId,
+                'id'               => (string) $sourceId,
                 'name'             => $journal['source_account_name'],
                 'difference'       => '0',
                 'difference_float' => 0,
@@ -452,13 +452,13 @@ class OperationsRepository implements OperationsRepositoryInterface
                 'in_float'         => 0,
                 'out'              => '0',
                 'out_float'        => 0,
-                'currency_id'      => (string)$currencyId,
+                'currency_id'      => (string) $currencyId,
                 'currency_code'    => $journal['foreign_currency_code'],
             ];
 
             // dest next:
             $return[$destKey]   ??= [
-                'id'               => (string)$destinationId,
+                'id'               => (string) $destinationId,
                 'name'             => $journal['destination_account_name'],
                 'difference'       => '0',
                 'difference_float' => 0,
@@ -466,7 +466,7 @@ class OperationsRepository implements OperationsRepositoryInterface
                 'in_float'         => 0,
                 'out'              => '0',
                 'out_float'        => 0,
-                'currency_id'      => (string)$currencyId,
+                'currency_id'      => (string) $currencyId,
                 'currency_code'    => $journal['foreign_currency_code'],
             ];
             // source account? money goes out! (same as above)

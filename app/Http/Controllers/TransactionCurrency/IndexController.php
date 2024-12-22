@@ -48,7 +48,7 @@ class IndexController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.currencies'));
+                app('view')->share('title', (string) trans('firefly.currencies'));
                 app('view')->share('mainTitleIcon', 'fa-usd');
                 $this->repository     = app(CurrencyRepositoryInterface::class);
                 $this->userRepository = app(UserRepositoryInterface::class);
@@ -67,8 +67,8 @@ class IndexController extends Controller
     {
         /** @var User $user */
         $user       = auth()->user();
-        $page       = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
-        $pageSize   = (int)app('preferences')->get('listPageSize', 50)->data;
+        $page       = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
+        $pageSize   = (int) app('preferences')->get('listPageSize', 50)->data;
         $collection = $this->repository->getAll();
 
         // order so default and enabled are on top:
@@ -87,7 +87,7 @@ class IndexController extends Controller
         $currencies->setPath(route('currencies.index'));
         $isOwner    = true;
         if (!$this->userRepository->hasRole($user, 'owner')) {
-            $request->session()->flash('info', (string)trans('firefly.ask_site_owner', ['owner' => config('firefly.site_owner')]));
+            $request->session()->flash('info', (string) trans('firefly.ask_site_owner', ['owner' => config('firefly.site_owner')]));
             $isOwner = false;
         }
 

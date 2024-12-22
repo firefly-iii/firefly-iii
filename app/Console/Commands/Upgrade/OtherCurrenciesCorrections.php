@@ -239,11 +239,6 @@ class OtherCurrenciesCorrections extends Command
         return $currency;
     }
 
-    private function markAsExecuted(): void
-    {
-        app('fireflyconfig')->set(self::CONFIG_NAME, true);
-    }
-
     private function isMultiCurrency(Account $account): bool
     {
         $value = $this->accountRepos->getMetaValue($account, 'is_multi_currency', false);
@@ -252,5 +247,10 @@ class OtherCurrenciesCorrections extends Command
         }
 
         return '1' === $value;
+    }
+
+    private function markAsExecuted(): void
+    {
+        app('fireflyconfig')->set(self::CONFIG_NAME, true);
     }
 }

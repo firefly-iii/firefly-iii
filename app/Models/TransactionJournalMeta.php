@@ -66,7 +66,7 @@ class TransactionJournalMeta extends Model
     {
         $data                     = json_encode($value);
         $this->attributes['data'] = $data;
-        $this->attributes['hash'] = hash('sha256', (string)$data);
+        $this->attributes['hash'] = hash('sha256', (string) $data);
     }
 
     public function transactionJournal(): BelongsTo
@@ -77,7 +77,7 @@ class TransactionJournalMeta extends Model
     protected function transactionJournalId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 }

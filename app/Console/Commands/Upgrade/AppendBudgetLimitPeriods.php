@@ -62,7 +62,7 @@ class AppendBudgetLimitPeriods extends Command
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
 
-        return (bool)$configVar->data;
+        return (bool) $configVar->data;
     }
 
     private function theresNoLimit(): void
@@ -111,7 +111,7 @@ class AppendBudgetLimitPeriods extends Command
             return 'daily';
         }
         // is weekly
-        if ('1' === $limit->start_date->format('N') && '7' === $limit->end_date->format('N') && 6 === (int)$limit->end_date->diffInDays($limit->start_date, true)) {
+        if ('1' === $limit->start_date->format('N') && '7' === $limit->end_date->format('N') && 6 === (int) $limit->end_date->diffInDays($limit->start_date, true)) {
             return 'weekly';
         }
 
@@ -130,7 +130,7 @@ class AppendBudgetLimitPeriods extends Command
         if (
             in_array($limit->start_date->format('j-n'), $start, true) // start of quarter
             && in_array($limit->end_date->format('j-n'), $end, true) // end of quarter
-            && 2 === (int)$limit->start_date->diffInMonths($limit->end_date, true)
+            && 2 === (int) $limit->start_date->diffInMonths($limit->end_date, true)
         ) {
             return 'quarterly';
         }
@@ -140,7 +140,7 @@ class AppendBudgetLimitPeriods extends Command
         if (
             in_array($limit->start_date->format('j-n'), $start, true) // start of quarter
             && in_array($limit->end_date->format('j-n'), $end, true) // end of quarter
-            && 5 === (int)$limit->start_date->diffInMonths($limit->end_date, true)
+            && 5 === (int) $limit->start_date->diffInMonths($limit->end_date, true)
         ) {
             return 'half_year';
         }

@@ -77,7 +77,7 @@ class EnableCurrencies extends Command
             ->where('account_meta.name', 'currency_id')->groupBy('data')->get(['data'])
         ;
         foreach ($meta as $entry) {
-            $found[] = (int)$entry->data;
+            $found[] = (int) $entry->data;
         }
 
         // get all from journals:
@@ -85,7 +85,7 @@ class EnableCurrencies extends Command
             ->groupBy('transaction_currency_id')->get(['transaction_currency_id'])
         ;
         foreach ($journals as $entry) {
-            $found[] = (int)$entry->transaction_currency_id;
+            $found[] = (int) $entry->transaction_currency_id;
         }
 
         // get all from transactions
@@ -95,8 +95,8 @@ class EnableCurrencies extends Command
             ->get(['transactions.transaction_currency_id', 'transactions.foreign_currency_id'])
         ;
         foreach ($transactions as $entry) {
-            $found[] = (int)$entry->transaction_currency_id;
-            $found[] = (int)$entry->foreign_currency_id;
+            $found[] = (int) $entry->transaction_currency_id;
+            $found[] = (int) $entry->foreign_currency_id;
         }
 
         // get all from budget limits

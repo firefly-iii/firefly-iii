@@ -72,16 +72,6 @@ class MFABackupFewLeftNotification extends Notification
         return (new MailMessage())->markdown('emails.security.few-backup-codes', ['user' => $this->user, 'count' => $this->count, 'ip' => $ip, 'host' => $host, 'userAgent' => $userAgent, 'time' => $time])->subject($subject);
     }
 
-    /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function toSlack(User $notifiable)
-    {
-        $message = (string) trans('email.mfa_few_backups_left_slack', ['email' => $this->user->email, 'count' => $this->count]);
-
-        return new SlackMessage()->content($message);
-    }
-
     public function toNtfy(User $notifiable): Message
     {
         $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
@@ -101,6 +91,16 @@ class MFABackupFewLeftNotification extends Notification
         return PushoverMessage::create((string) trans('email.mfa_few_backups_left_slack', ['email' => $this->user->email, 'count' => $this->count]))
             ->title((string) trans('email.mfa_few_backups_left_subject'))
         ;
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toSlack(User $notifiable)
+    {
+        $message = (string) trans('email.mfa_few_backups_left_slack', ['email' => $this->user->email, 'count' => $this->count]);
+
+        return new SlackMessage()->content($message);
     }
 
     /**

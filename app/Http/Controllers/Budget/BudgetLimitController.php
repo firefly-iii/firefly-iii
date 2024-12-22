@@ -102,13 +102,14 @@ class BudgetLimitController extends Controller
     }
 
     /**
-     * @return Factory|View
+     * @return Redirector|RedirectResponse
      */
-    public function show(BudgetLimit $budgetLimit)
+    public function delete(BudgetLimit $budgetLimit)
     {
-        $notes = $this->blRepository->getNoteText($budgetLimit);
+        $this->blRepository->destroyBudgetLimit($budgetLimit);
+        session()->flash('success', trans('firefly.deleted_bl'));
 
-        return view('budgets.budget-limits.show', compact('budgetLimit', 'notes'));
+        return redirect(route('budgets.index'));
     }
 
     /**
@@ -122,14 +123,13 @@ class BudgetLimitController extends Controller
     }
 
     /**
-     * @return Redirector|RedirectResponse
+     * @return Factory|View
      */
-    public function delete(BudgetLimit $budgetLimit)
+    public function show(BudgetLimit $budgetLimit)
     {
-        $this->blRepository->destroyBudgetLimit($budgetLimit);
-        session()->flash('success', trans('firefly.deleted_bl'));
+        $notes = $this->blRepository->getNoteText($budgetLimit);
 
-        return redirect(route('budgets.index'));
+        return view('budgets.budget-limits.show', compact('budgetLimit', 'notes'));
     }
 
     /**
@@ -250,7 +250,7 @@ class BudgetLimitController extends Controller
         if (-1 === bccomp($amount, '0')) {
             $amount = bcmul($amount, '-1');
         }
-        $notes                           = (string)$request->get('notes');
+        $notes                           = (string) $request->get('notes');
         if (strlen($notes) > 32768) {
             $notes = substr($notes, 0, 32768);
         }

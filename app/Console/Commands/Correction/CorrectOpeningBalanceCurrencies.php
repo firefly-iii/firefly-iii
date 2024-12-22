@@ -115,7 +115,7 @@ class CorrectOpeningBalanceCurrencies extends Command
     {
         $currency = $this->getCurrency($account);
         $count    = 0;
-        if ((int)$journal->transaction_currency_id !== $currency->id) {
+        if ((int) $journal->transaction_currency_id !== $currency->id) {
             $journal->transaction_currency_id = $currency->id;
             $journal->save();
             $count                            = 1;

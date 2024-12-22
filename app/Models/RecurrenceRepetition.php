@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use FireflyIII\Enums\RecurrenceRepetitionWeekend;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -67,6 +66,11 @@ class RecurrenceRepetition extends Model
     /** @var string The table to store the data in */
     protected $table                       = 'recurrences_repetitions';
 
+    public function recurrence(): BelongsTo
+    {
+        return $this->belongsTo(Recurrence::class);
+    }
+
     protected function casts(): array
     {
         return [
@@ -74,29 +78,24 @@ class RecurrenceRepetition extends Model
         ];
     }
 
-    public function recurrence(): BelongsTo
-    {
-        return $this->belongsTo(Recurrence::class);
-    }
-
     protected function recurrenceId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 
     protected function repetitionSkip(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 
     protected function weekend(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 }

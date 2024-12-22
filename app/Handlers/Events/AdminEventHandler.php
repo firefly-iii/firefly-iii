@@ -43,11 +43,16 @@ use Illuminate\Support\Facades\Notification;
  */
 class AdminEventHandler
 {
-    public function sendLoginAttemptNotification(UnknownUserAttemptedLogin $event): void
+    public function sendInvitationNotification(InvitationCreated $event): void
     {
+        $sendMail = app('fireflyconfig')->get('notification_invite_created', true)->data;
+        if (false === $sendMail) {
+            return;
+        }
+
         try {
             $owner = new OwnerNotifiable();
-            Notification::send($owner, new UnknownUserLoginAttempt($event->address));
+            Notification::send($owner, new UserInvitation($owner, $event->invitee));
         } catch (\Exception $e) { // @phpstan-ignore-line
             $message = $e->getMessage();
             if (str_contains($message, 'Bcc')) {
@@ -65,16 +70,11 @@ class AdminEventHandler
         }
     }
 
-    public function sendInvitationNotification(InvitationCreated $event): void
+    public function sendLoginAttemptNotification(UnknownUserAttemptedLogin $event): void
     {
-        $sendMail = app('fireflyconfig')->get('notification_invite_created', true)->data;
-        if (false === $sendMail) {
-            return;
-        }
-
         try {
             $owner = new OwnerNotifiable();
-            Notification::send($owner, new UserInvitation($owner, $event->invitee));
+            Notification::send($owner, new UnknownUserLoginAttempt($event->address));
         } catch (\Exception $e) { // @phpstan-ignore-line
             $message = $e->getMessage();
             if (str_contains($message, 'Bcc')) {

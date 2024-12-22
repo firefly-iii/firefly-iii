@@ -114,11 +114,11 @@ class UpdatePiggybank implements ActionInterface
                     'add_to_piggy',
                     null,
                     [
-                        'currency_symbol'    => $journalObj->transactionCurrency->symbol,
-                        'decimal_places'     => $journalObj->transactionCurrency->decimal_places,
-                        'amount'             => $destination->amount,
-                        'piggy'              => $piggyBank->name,
-                        'piggy_id'           => $piggyBank->id,
+                        'currency_symbol' => $journalObj->transactionCurrency->symbol,
+                        'decimal_places'  => $journalObj->transactionCurrency->decimal_places,
+                        'amount'          => $destination->amount,
+                        'piggy'           => $piggyBank->name,
+                        'piggy_id'        => $piggyBank->id,
                     ]
                 )
             );

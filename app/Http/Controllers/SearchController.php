@@ -46,7 +46,7 @@ class SearchController extends Controller
         $this->middleware(
             static function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-search');
-                app('view')->share('title', (string)trans('firefly.search'));
+                app('view')->share('title', (string) trans('firefly.search'));
 
                 return $next($request);
             }
@@ -65,9 +65,9 @@ class SearchController extends Controller
         if (is_array($request->get('search'))) {
             $fullQuery = '';
         }
-        $fullQuery        = (string)$fullQuery;
-        $page             = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
-        $ruleId           = (int)$request->get('rule');
+        $fullQuery        = (string) $fullQuery;
+        $page             = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
+        $ruleId           = (int) $request->get('rule');
         $ruleChanged      = false;
 
         // find rule, check if query is different, offer to update.
@@ -86,7 +86,7 @@ class SearchController extends Controller
         $query            = $searcher->getWordsAsString();
         $operators        = $searcher->getOperators();
         $invalidOperators = $searcher->getInvalidOperators();
-        $subTitle         = (string)trans('breadcrumbs.search_result', ['query' => $fullQuery]);
+        $subTitle         = (string) trans('breadcrumbs.search_result', ['query' => $fullQuery]);
 
         return view('search.index', compact('query', 'operators', 'page', 'rule', 'fullQuery', 'subTitle', 'ruleId', 'ruleChanged', 'invalidOperators'));
     }
@@ -102,8 +102,8 @@ class SearchController extends Controller
         if (!is_scalar($entry)) {
             $entry = '';
         }
-        $fullQuery  = (string)$entry;
-        $page       = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
+        $fullQuery  = (string) $entry;
+        $page       = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
 
         $searcher->parseQuery($fullQuery);
 

@@ -62,7 +62,7 @@ class ConfirmEmailChangeMail extends Mailable
             // ->view('emails.confirm-email-change-html')
             // ->text('emails.confirm-email-change-text')
             ->markdown('emails.confirm-email-change')
-            ->subject((string)trans('email.email_change_subject'))
+            ->subject((string) trans('email.email_change_subject'))
         ;
     }
 }

@@ -37,6 +37,12 @@ class CurrencyRepository implements CurrencyRepositoryInterface
 {
     private User $user;
 
+    #[\Override]
+    public function find(int $currencyId): ?TransactionCurrency
+    {
+        return TransactionCurrency::find($currencyId);
+    }
+
     /**
      * Find by currency code, return NULL if unfound.
      */
@@ -89,13 +95,13 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     {
         return CurrencyExchangeRate::create(
             [
-                'user_id'             => $this->user->id,
-                'user_group_id'       => $this->user->user_group_id,
-                'from_currency_id'    => $fromCurrency->id,
-                'to_currency_id'      => $toCurrency->id,
-                'date'                => $date,
-                'date_tz'             => $date->format('e'),
-                'rate'                => $rate,
+                'user_id'          => $this->user->id,
+                'user_group_id'    => $this->user->user_group_id,
+                'from_currency_id' => $fromCurrency->id,
+                'to_currency_id'   => $toCurrency->id,
+                'date'             => $date,
+                'date_tz'          => $date->format('e'),
+                'rate'             => $rate,
             ]
         );
     }
@@ -105,11 +111,5 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         if ($user instanceof User) {
             $this->user = $user;
         }
-    }
-
-    #[\Override]
-    public function find(int $currencyId): ?TransactionCurrency
-    {
-        return TransactionCurrency::find($currencyId);
     }
 }

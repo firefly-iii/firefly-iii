@@ -300,6 +300,27 @@ class UserEventHandler
         }
     }
 
+    public function sendLoginAttemptNotification(UserAttemptedLogin $event): void
+    {
+        try {
+            Notification::send($event->user, new UserFailedLoginAttempt($event->user));
+        } catch (\Exception $e) { // @phpstan-ignore-line
+            $message = $e->getMessage();
+            if (str_contains($message, 'Bcc')) {
+                app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+
+                return;
+            }
+            if (str_contains($message, 'RFC 2822')) {
+                app('log')->warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+
+                return;
+            }
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
+        }
+    }
+
     /**
      * Send a new password to the user.
      */
@@ -372,6 +393,61 @@ class UserEventHandler
     }
 
     /**
+     * Sends a test message to an administrator.
+     */
+    public function sendTestNotification(UserTestNotificationChannel $event): void
+    {
+        Log::debug(sprintf('Now in (user) sendTestNotification("%s")', $event->channel));
+
+        switch ($event->channel) {
+            case 'email':
+                $class = UserTestNotificationEmail::class;
+
+                break;
+
+            case 'slack':
+                $class = UserTestNotificationSlack::class;
+
+                break;
+
+            case 'ntfy':
+                $class = UserTestNotificationNtfy::class;
+
+                break;
+
+            case 'pushover':
+                $class = UserTestNotificationPushover::class;
+
+                break;
+
+            default:
+                app('log')->error(sprintf('Unknown channel "%s" in (user) sendTestNotification method.', $event->channel));
+
+                return;
+        }
+        Log::debug(sprintf('Will send %s as a notification.', $class));
+
+        try {
+            Notification::send($event->user, new $class($event->user));
+        } catch (\Exception $e) { // @phpstan-ignore-line
+            $message = $e->getMessage();
+            if (str_contains($message, 'Bcc')) {
+                app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+
+                return;
+            }
+            if (str_contains($message, 'RFC 2822')) {
+                app('log')->warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+
+                return;
+            }
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
+        }
+        Log::debug(sprintf('If you see no errors above this line, test notification was sent over channel "%s"', $event->channel));
+    }
+
+    /**
      * @throws FireflyException
      */
     public function storeUserIPAddress(ActuallyLoggedIn $event): void
@@ -429,81 +505,5 @@ class UserEventHandler
         if (false === $inArray && true === $send) {
             event(new DetectedNewIPAddress($user));
         }
-    }
-
-    public function sendLoginAttemptNotification(UserAttemptedLogin $event): void
-    {
-        try {
-            Notification::send($event->user, new UserFailedLoginAttempt($event->user));
-        } catch (\Exception $e) { // @phpstan-ignore-line
-            $message = $e->getMessage();
-            if (str_contains($message, 'Bcc')) {
-                app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            if (str_contains($message, 'RFC 2822')) {
-                app('log')->warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            app('log')->error($e->getMessage());
-            app('log')->error($e->getTraceAsString());
-        }
-    }
-
-    /**
-     * Sends a test message to an administrator.
-     */
-    public function sendTestNotification(UserTestNotificationChannel $event): void
-    {
-        Log::debug(sprintf('Now in (user) sendTestNotification("%s")', $event->channel));
-
-        switch ($event->channel) {
-            case 'email':
-                $class = UserTestNotificationEmail::class;
-
-                break;
-
-            case 'slack':
-                $class = UserTestNotificationSlack::class;
-
-                break;
-
-            case 'ntfy':
-                $class = UserTestNotificationNtfy::class;
-
-                break;
-
-            case 'pushover':
-                $class = UserTestNotificationPushover::class;
-
-                break;
-
-            default:
-                app('log')->error(sprintf('Unknown channel "%s" in (user) sendTestNotification method.', $event->channel));
-
-                return;
-        }
-        Log::debug(sprintf('Will send %s as a notification.', $class));
-
-        try {
-            Notification::send($event->user, new $class($event->user));
-        } catch (\Exception $e) { // @phpstan-ignore-line
-            $message = $e->getMessage();
-            if (str_contains($message, 'Bcc')) {
-                app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            if (str_contains($message, 'RFC 2822')) {
-                app('log')->warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            app('log')->error($e->getMessage());
-            app('log')->error($e->getTraceAsString());
-        }
-        Log::debug(sprintf('If you see no errors above this line, test notification was sent over channel "%s"', $event->channel));
     }
 }

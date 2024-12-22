@@ -36,18 +36,18 @@ class ConvertDatesToUTC extends Command
     use ShowsFriendlyMessages;
 
     /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature   = 'firefly-iii:migrate-to-utc';
-
-    /**
      * The console command description.
      *
      * @var string
      */
     protected $description = 'Convert stored dates to UTC.';
+
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature   = 'firefly-iii:migrate-to-utc';
 
     /**
      * Execute the console command.

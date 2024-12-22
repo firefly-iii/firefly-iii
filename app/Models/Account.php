@@ -94,6 +94,11 @@ class Account extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function accountBalances(): HasMany
+    {
+        return $this->hasMany(AccountBalance::class);
+    }
+
     public function accountType(): BelongsTo
     {
         return $this->belongsTo(AccountType::class);
@@ -121,11 +126,6 @@ class Account extends Model
     public function accountMeta(): HasMany
     {
         return $this->hasMany(AccountMeta::class);
-    }
-
-    public function accountBalances(): HasMany
-    {
-        return $this->hasMany(AccountBalance::class);
     }
 
     public function getEditNameAttribute(): string

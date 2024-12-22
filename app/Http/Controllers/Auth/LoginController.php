@@ -59,7 +59,7 @@ class LoginController extends Controller
     /**
      * Where to redirect users after login.
      */
-    protected string $redirectTo = RouteServiceProvider::HOME;
+    protected string                $redirectTo = RouteServiceProvider::HOME;
     private UserRepositoryInterface $repository;
 
     private string $username;
@@ -225,7 +225,7 @@ class LoginController extends Controller
 
         $count             = \DB::table('users')->count();
         $guard             = config('auth.defaults.guard');
-        $title             = (string)trans('firefly.login_page_title');
+        $title             = (string) trans('firefly.login_page_title');
 
         if (0 === $count && 'web' === $guard) {
             return redirect(route('register'));

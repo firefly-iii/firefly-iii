@@ -83,7 +83,7 @@ trait ChartGeneration
             $previous     = array_values($range)[0];
             while ($currentStart <= $end) {
                 $format                        = $currentStart->format('Y-m-d');
-                $label                         = trim($currentStart->isoFormat((string)trans('config.month_and_day_js', [], $locale)));
+                $label                         = trim($currentStart->isoFormat((string) trans('config.month_and_day_js', [], $locale)));
                 $balance                       = $range[$format] ?? $previous;
                 $previous                      = $balance;
                 $currentStart->addDay();

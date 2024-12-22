@@ -75,14 +75,14 @@ class PiggyBankController extends Controller
             $currency    = $piggy->transactionCurrency;
             $objectGroup = $piggy->objectGroups()->first();
             $response[]  = [
-                'id'                      => (string)$piggy->id,
+                'id'                      => (string) $piggy->id,
                 'name'                    => $piggy->name,
-                'currency_id'             => (string)$currency->id,
+                'currency_id'             => (string) $currency->id,
                 'currency_name'           => $currency->name,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
-                'object_group_id'         => null === $objectGroup ? null : (string)$objectGroup->id,
+                'object_group_id'         => null === $objectGroup ? null : (string) $objectGroup->id,
                 'object_group_title'      => $objectGroup?->title,
             ];
         }
@@ -106,7 +106,7 @@ class PiggyBankController extends Controller
             $currentAmount = $this->piggyRepository->getCurrentAmount($piggy);
             $objectGroup   = $piggy->objectGroups()->first();
             $response[]    = [
-                'id'                      => (string)$piggy->id,
+                'id'                      => (string) $piggy->id,
                 'name'                    => $piggy->name,
                 'name_with_balance'       => sprintf(
                     '%s (%s / %s)',
@@ -114,12 +114,12 @@ class PiggyBankController extends Controller
                     app('amount')->formatAnything($currency, $currentAmount, false),
                     app('amount')->formatAnything($currency, $piggy->target_amount, false),
                 ),
-                'currency_id'             => (string)$currency->id,
+                'currency_id'             => (string) $currency->id,
                 'currency_name'           => $currency->name,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
-                'object_group_id'         => null === $objectGroup ? null : (string)$objectGroup->id,
+                'object_group_id'         => null === $objectGroup ? null : (string) $objectGroup->id,
                 'object_group_title'      => $objectGroup?->title,
             ];
         }

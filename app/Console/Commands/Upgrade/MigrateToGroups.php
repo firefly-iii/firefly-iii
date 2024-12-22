@@ -105,7 +105,7 @@ class MigrateToGroups extends Command
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
         if (null !== $configVar) {
-            return (bool)$configVar->data;
+            return (bool) $configVar->data;
         }
 
         return false;
@@ -288,7 +288,7 @@ class MigrateToGroups extends Command
     {
         $set = $journal->transactions->filter(
             static function (Transaction $subject) use ($transaction) {
-                $amount     = (float)$transaction->amount * -1 === (float)$subject->amount;  // intentional float
+                $amount     = (float) $transaction->amount * -1 === (float) $subject->amount;  // intentional float
                 $identifier = $transaction->identifier === $subject->identifier;
                 app('log')->debug(sprintf('Amount the same? %s', var_export($amount, true)));
                 app('log')->debug(sprintf('ID the same?     %s', var_export($identifier, true)));

@@ -36,13 +36,13 @@ interface UserGroupRepositoryInterface
 {
     public function destroy(UserGroup $userGroup): void;
 
-    public function getMembershipsFromGroupId(int $groupId): Collection;
-
     public function get(): Collection;
+
+    public function getAll(): Collection;
 
     public function getById(int $id): ?UserGroup;
 
-    public function getAll(): Collection;
+    public function getMembershipsFromGroupId(int $groupId): Collection;
 
     public function setUser(null|Authenticatable|User $user): void;
 

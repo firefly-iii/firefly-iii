@@ -40,7 +40,7 @@ class UpdateRequest implements UpdateRequestInterface
         app('log')->debug(sprintf('Now in getUpdateInformation(%s)', $channel));
         $information = [
             'level'   => 'error',
-            'message' => (string)trans('firefly.unknown_error'),
+            'message' => (string) trans('firefly.unknown_error'),
         ];
 
         // try to get array from update server:
@@ -65,7 +65,7 @@ class UpdateRequest implements UpdateRequestInterface
             'version' => config('firefly.version'),
             'date'    => today(config('app.timezone'))->startOfDay(),
             'level'   => 'error',
-            'message' => (string)trans('firefly.unknown_error'),
+            'message' => (string) trans('firefly.unknown_error'),
         ];
 
         $url               = config('firefly.update_endpoint');
@@ -91,12 +91,12 @@ class UpdateRequest implements UpdateRequestInterface
 
         if (200 !== $res->getStatusCode()) {
             app('log')->error(sprintf('Response status from server is %d.', $res->getStatusCode()));
-            app('log')->error((string)$res->getBody());
+            app('log')->error((string) $res->getBody());
             $return['message'] = sprintf('Error: %d', $res->getStatusCode());
 
             return $return;
         }
-        $body              = (string)$res->getBody();
+        $body              = (string) $res->getBody();
 
         try {
             $json = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
@@ -135,8 +135,8 @@ class UpdateRequest implements UpdateRequestInterface
     private function parseResult(array $information): array
     {
         app('log')->debug('Now in parseResult()', $information);
-        $current  = (string)config('firefly.version');
-        $latest   = (string)$information['version'];
+        $current  = (string) config('firefly.version');
+        $latest   = (string) $information['version'];
 
         // strip the 'v' from the version if it's there.
         if (str_starts_with($latest, 'v')) {
@@ -189,13 +189,13 @@ class UpdateRequest implements UpdateRequestInterface
         if ($devDate->lte($information['date'])) {
             Log::debug(sprintf('This development release is older, release = %s, latest version %s = %s', $devDate->format('Y-m-d'), $latest, $information['date']->format('Y-m-d')));
             $return['level']   = 'info';
-            $return['message'] = (string)trans('firefly.update_current_dev_older', ['version' => $current, 'new_version' => $latest]);
+            $return['message'] = (string) trans('firefly.update_current_dev_older', ['version' => $current, 'new_version' => $latest]);
 
             return $return;
         }
         Log::debug(sprintf('This development release is newer, release = %s, latest version %s = %s', $devDate->format('Y-m-d'), $latest, $information['date']->format('Y-m-d')));
         $return['level']   = 'info';
-        $return['message'] = (string)trans('firefly.update_current_dev_newer', ['version' => $current, 'new_version' => $latest]);
+        $return['message'] = (string) trans('firefly.update_current_dev_newer', ['version' => $current, 'new_version' => $latest]);
 
         return $return;
     }
@@ -204,7 +204,7 @@ class UpdateRequest implements UpdateRequestInterface
     {
         $return = [
             'level'   => 'info',
-            'message' => (string)trans('firefly.update_newer_version_alert', ['your_version' => $current, 'new_version' => $latest]),
+            'message' => (string) trans('firefly.update_newer_version_alert', ['your_version' => $current, 'new_version' => $latest]),
         ];
         app('log')->debug('User is running a newer version', $return);
 
@@ -215,7 +215,7 @@ class UpdateRequest implements UpdateRequestInterface
     {
         $return = [
             'level'   => 'info',
-            'message' => (string)trans('firefly.update_current_version_alert', ['version' => $current]),
+            'message' => (string) trans('firefly.update_current_version_alert', ['version' => $current]),
         ];
         app('log')->debug('User is the current version.', $return);
 
@@ -225,12 +225,12 @@ class UpdateRequest implements UpdateRequestInterface
     private function releasedNewAlpha(string $current, string $latest, Carbon $date): array
     {
         app('log')->debug('New release is also a alpha!');
-        $message = (string)trans(
+        $message = (string) trans(
             'firefly.update_new_version_alert',
             [
                 'your_version' => $current,
                 'new_version'  => $latest,
-                'date'         => $date->isoFormat((string)trans('config.month_and_day_js')),
+                'date'         => $date->isoFormat((string) trans('config.month_and_day_js')),
             ]
         );
 
@@ -243,12 +243,12 @@ class UpdateRequest implements UpdateRequestInterface
     private function releasedNewBeta(string $current, string $latest, Carbon $date): array
     {
         app('log')->debug('New release is also a beta!');
-        $message = (string)trans(
+        $message = (string) trans(
             'firefly.update_new_version_alert',
             [
                 'your_version' => $current,
                 'new_version'  => $latest,
-                'date'         => $date->isoFormat((string)trans('config.month_and_day_js')),
+                'date'         => $date->isoFormat((string) trans('config.month_and_day_js')),
             ]
         );
 
@@ -261,12 +261,12 @@ class UpdateRequest implements UpdateRequestInterface
     private function releasedNewVersion(string $current, string $latest, Carbon $date): array
     {
         app('log')->debug('New release is old enough.');
-        $message = (string)trans(
+        $message = (string) trans(
             'firefly.update_new_version_alert',
             [
                 'your_version' => $current,
                 'new_version'  => $latest,
-                'date'         => $date->isoFormat((string)trans('config.month_and_day_js')),
+                'date'         => $date->isoFormat((string) trans('config.month_and_day_js')),
             ]
         );
         app('log')->debug('New release is here!', [$message]);

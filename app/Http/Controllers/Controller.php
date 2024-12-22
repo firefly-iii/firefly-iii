@@ -29,6 +29,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use Route;
 
 /**
  * Class Controller.
@@ -59,7 +60,7 @@ abstract class Controller extends BaseController
     {
         // is site a demo site?
         $isDemoSiteConfig = app('fireflyconfig')->get('is_demo_site', config('firefly.configuration.is_demo_site', false));
-        $isDemoSite       = (bool)$isDemoSiteConfig->data;
+        $isDemoSite       = (bool) $isDemoSiteConfig->data;
         app('view')->share('IS_DEMO_SITE', $isDemoSite);
         app('view')->share('DEMO_USERNAME', config('firefly.demo_username'));
         app('view')->share('DEMO_PASSWORD', config('firefly.demo_password'));
@@ -69,8 +70,8 @@ abstract class Controller extends BaseController
         app('view')->share('featuringWebhooks', true === config('firefly.feature_flags.webhooks') && true === config('firefly.allow_webhooks'));
 
         // share custom auth guard info.
-        $authGuard        = config('firefly.authentication_guard');
-        $logoutUrl        = config('firefly.custom_logout_url');
+        $authGuard = config('firefly.authentication_guard');
+        $logoutUrl = config('firefly.custom_logout_url');
 
         // overrule v2 layout back to v1.
         if ('true' === request()->get('force_default_layout') && 'v2' === config('view.layout')) {
@@ -81,18 +82,18 @@ abstract class Controller extends BaseController
         app('view')->share('logoutUrl', $logoutUrl);
 
         // upload size
-        $maxFileSize      = app('steam')->phpBytes((string)ini_get('upload_max_filesize'));
-        $maxPostSize      = app('steam')->phpBytes((string)ini_get('post_max_size'));
-        $uploadSize       = min($maxFileSize, $maxPostSize);
+        $maxFileSize = app('steam')->phpBytes((string) ini_get('upload_max_filesize'));
+        $maxPostSize = app('steam')->phpBytes((string) ini_get('post_max_size'));
+        $uploadSize  = min($maxFileSize, $maxPostSize);
         app('view')->share('uploadSize', $uploadSize);
 
         // share is alpha, is beta
-        $isAlpha          = false;
+        $isAlpha = false;
         if (str_contains(config('firefly.version'), 'alpha')) {
             $isAlpha = true;
         }
 
-        $isBeta           = false;
+        $isBeta = false;
         if (str_contains(config('firefly.version'), 'beta')) {
             $isBeta = true;
         }
@@ -102,11 +103,11 @@ abstract class Controller extends BaseController
 
         $this->middleware(
             function ($request, $next): mixed {
-                $locale                  = app('steam')->getLocale();
+                $locale = app('steam')->getLocale();
                 // translations for specific strings:
-                $this->monthFormat       = (string)trans('config.month_js', [], $locale);
-                $this->monthAndDayFormat = (string)trans('config.month_and_day_js', [], $locale);
-                $this->dateTimeFormat    = (string)trans('config.date_time_js', [], $locale);
+                $this->monthFormat       = (string) trans('config.month_js', [], $locale);
+                $this->monthAndDayFormat = (string) trans('config.month_and_day_js', [], $locale);
+                $this->dateTimeFormat    = (string) trans('config.date_time_js', [], $locale);
                 $darkMode                = 'browser';
                 // get shown-intro-preference:
                 if (auth()->check()) {
@@ -119,7 +120,7 @@ abstract class Controller extends BaseController
                     app('view')->share('locale', $locale);
                     app('view')->share('shownDemo', $shownDemo);
                     app('view')->share('current_route_name', $page);
-                    app('view')->share('original_route_name', \Route::currentRouteName());
+                    app('view')->share('original_route_name', Route::currentRouteName());
                 }
                 app('view')->share('darkMode', $darkMode);
 

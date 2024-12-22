@@ -24,10 +24,10 @@ declare(strict_types=1);
 
 return [
     'channels'      => [
-        'email'      => ['enabled' => true, 'ui_configurable' => 0],
-        'slack'      => ['enabled' => true, 'ui_configurable' => 1],
-        'ntfy'       => ['enabled' => true, 'ui_configurable' => 1],
-        'pushover'   => ['enabled' => true, 'ui_configurable' => 1],
+        'email'    => ['enabled' => true, 'ui_configurable' => 0],
+        'slack'    => ['enabled' => true, 'ui_configurable' => 1],
+        'ntfy'     => ['enabled' => true, 'ui_configurable' => 1],
+        'pushover' => ['enabled' => true, 'ui_configurable' => 1],
         //        'gotify'     => ['enabled' => false, 'ui_configurable' => 0],
         //        'pushbullet' => ['enabled' => false, 'ui_configurable' => 0],
     ],

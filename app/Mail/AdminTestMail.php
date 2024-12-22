@@ -53,7 +53,7 @@ class AdminTestMail extends Mailable
     {
         return $this
             ->markdown('emails.admin-test')
-            ->subject((string)trans('email.admin_test_subject'))
+            ->subject((string) trans('email.admin_test_subject'))
         ;
     }
 }

@@ -106,59 +106,6 @@ class IndexController extends Controller
         return view('piggy-banks.index', compact('piggyBanks', 'accounts'));
     }
 
-    private function makeSums(array $piggyBanks): array
-    {
-        $sums = [];
-        foreach ($piggyBanks as $groupOrder => $group) {
-            $groupId = $group['object_group_id'];
-            foreach ($group['piggy_banks'] as $piggy) {
-                $currencyId                                    = $piggy['currency_id'];
-                $sums[$groupId][$currencyId] ??= [
-                    'target'                  => '0',
-                    'saved'                   => '0',
-                    'left_to_save'            => '0',
-                    'save_per_month'          => '0',
-                    'currency_id'             => $currencyId,
-                    'currency_code'           => $piggy['currency_code'],
-                    'currency_symbol'         => $piggy['currency_symbol'],
-                    'currency_decimal_places' => $piggy['currency_decimal_places'],
-                ];
-                // target_amount
-                // current_amount
-                // left_to_save
-                // save_per_month
-                $sums[$groupId][$currencyId]['target']         = bcadd($sums[$groupId][$currencyId]['target'], (string) $piggy['target_amount']);
-                $sums[$groupId][$currencyId]['saved']          = bcadd($sums[$groupId][$currencyId]['saved'], (string) $piggy['current_amount']);
-                $sums[$groupId][$currencyId]['left_to_save']   = bcadd($sums[$groupId][$currencyId]['left_to_save'], (string) $piggy['left_to_save']);
-                $sums[$groupId][$currencyId]['save_per_month'] = bcadd($sums[$groupId][$currencyId]['save_per_month'], (string) $piggy['save_per_month']);
-            }
-        }
-        foreach ($piggyBanks as $groupOrder => $group) {
-            $groupId                         = $group['object_group_id'];
-            $piggyBanks[$groupOrder]['sums'] = $sums[$groupId] ?? [];
-        }
-
-        return $piggyBanks;
-    }
-
-    /**
-     * Set the order of a piggy bank.
-     */
-    public function setOrder(Request $request, PiggyBank $piggyBank): JsonResponse
-    {
-        $objectGroupTitle = (string) $request->get('objectGroupTitle');
-        $newOrder         = (int) $request->get('order');
-        $this->piggyRepos->setOrder($piggyBank, $newOrder);
-        if ('' !== $objectGroupTitle) {
-            $this->piggyRepos->setObjectGroup($piggyBank, $objectGroupTitle);
-        }
-        if ('' === $objectGroupTitle) {
-            $this->piggyRepos->removeObjectGroup($piggyBank);
-        }
-
-        return response()->json(['data' => 'OK']);
-    }
-
     private function groupPiggyBanks(Collection $collection): array
     {
         /** @var PiggyBankTransformer $transformer */
@@ -250,5 +197,58 @@ class IndexController extends Controller
         }
 
         return $accounts;
+    }
+
+    private function makeSums(array $piggyBanks): array
+    {
+        $sums = [];
+        foreach ($piggyBanks as $groupOrder => $group) {
+            $groupId = $group['object_group_id'];
+            foreach ($group['piggy_banks'] as $piggy) {
+                $currencyId                                    = $piggy['currency_id'];
+                $sums[$groupId][$currencyId] ??= [
+                    'target'                  => '0',
+                    'saved'                   => '0',
+                    'left_to_save'            => '0',
+                    'save_per_month'          => '0',
+                    'currency_id'             => $currencyId,
+                    'currency_code'           => $piggy['currency_code'],
+                    'currency_symbol'         => $piggy['currency_symbol'],
+                    'currency_decimal_places' => $piggy['currency_decimal_places'],
+                ];
+                // target_amount
+                // current_amount
+                // left_to_save
+                // save_per_month
+                $sums[$groupId][$currencyId]['target']         = bcadd($sums[$groupId][$currencyId]['target'], (string) $piggy['target_amount']);
+                $sums[$groupId][$currencyId]['saved']          = bcadd($sums[$groupId][$currencyId]['saved'], (string) $piggy['current_amount']);
+                $sums[$groupId][$currencyId]['left_to_save']   = bcadd($sums[$groupId][$currencyId]['left_to_save'], (string) $piggy['left_to_save']);
+                $sums[$groupId][$currencyId]['save_per_month'] = bcadd($sums[$groupId][$currencyId]['save_per_month'], (string) $piggy['save_per_month']);
+            }
+        }
+        foreach ($piggyBanks as $groupOrder => $group) {
+            $groupId                         = $group['object_group_id'];
+            $piggyBanks[$groupOrder]['sums'] = $sums[$groupId] ?? [];
+        }
+
+        return $piggyBanks;
+    }
+
+    /**
+     * Set the order of a piggy bank.
+     */
+    public function setOrder(Request $request, PiggyBank $piggyBank): JsonResponse
+    {
+        $objectGroupTitle = (string) $request->get('objectGroupTitle');
+        $newOrder         = (int) $request->get('order');
+        $this->piggyRepos->setOrder($piggyBank, $newOrder);
+        if ('' !== $objectGroupTitle) {
+            $this->piggyRepos->setObjectGroup($piggyBank, $objectGroupTitle);
+        }
+        if ('' === $objectGroupTitle) {
+            $this->piggyRepos->removeObjectGroup($piggyBank);
+        }
+
+        return response()->json(['data' => 'OK']);
     }
 }

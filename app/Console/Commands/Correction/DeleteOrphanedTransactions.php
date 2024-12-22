@@ -103,7 +103,7 @@ class DeleteOrphanedTransactions extends Command
 
         /** @var \stdClass $entry */
         foreach ($set as $entry) {
-            $transaction = Transaction::find((int)$entry->transaction_id);
+            $transaction = Transaction::find((int) $entry->transaction_id);
             if (null !== $transaction) {
                 $transaction->delete();
                 $this->friendlyWarning(

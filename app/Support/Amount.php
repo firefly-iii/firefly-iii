@@ -45,13 +45,6 @@ class Amount
         return $this->formatFlat($format->symbol, $format->decimal_places, $amount, $coloured);
     }
 
-    public function formatByCurrencyId(int $currencyId, string $amount, ?bool $coloured = null): string
-    {
-        $format = TransactionCurrency::find($currencyId);
-
-        return $this->formatFlat($format->symbol, $format->decimal_places, $amount, $coloured);
-    }
-
     /**
      * This method will properly format the given number, in color or "black and white",
      * as a currency, given two things: the currency required and the current locale.
@@ -70,7 +63,7 @@ class Amount
         $fmt->setSymbol(\NumberFormatter::CURRENCY_SYMBOL, $symbol);
         $fmt->setAttribute(\NumberFormatter::MIN_FRACTION_DIGITS, $decimalPlaces);
         $fmt->setAttribute(\NumberFormatter::MAX_FRACTION_DIGITS, $decimalPlaces);
-        $result  = (string)$fmt->format((float)$rounded); // intentional float
+        $result  = (string) $fmt->format((float) $rounded); // intentional float
 
         if (true === $coloured) {
             if (1 === bccomp($rounded, '0')) {
@@ -84,6 +77,13 @@ class Amount
         }
 
         return $result;
+    }
+
+    public function formatByCurrencyId(int $currencyId, string $amount, ?bool $coloured = null): string
+    {
+        $format = TransactionCurrency::find($currencyId);
+
+        return $this->formatFlat($format->symbol, $format->decimal_places, $amount, $coloured);
     }
 
     public function getAllCurrencies(): Collection

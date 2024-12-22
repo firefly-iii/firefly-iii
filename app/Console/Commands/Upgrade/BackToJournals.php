@@ -73,14 +73,14 @@ class BackToJournals extends Command
     {
         $configVar = app('fireflyconfig')->get(MigrateToGroups::CONFIG_NAME, false);
 
-        return (bool)$configVar->data;
+        return (bool) $configVar->data;
     }
 
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
 
-        return (bool)$configVar->data;
+        return (bool) $configVar->data;
     }
 
     private function migrateAll(): void

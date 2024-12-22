@@ -35,6 +35,18 @@ class TransactionObserver
 {
     public static bool $recalculate = true;
 
+    public function created(Transaction $transaction): void
+    {
+        Log::debug('Observe "created" of a transaction.');
+        if (config('firefly.feature_flags.running_balance_column')) {
+            if (1 === bccomp($transaction->amount, '0') && self::$recalculate) {
+                Log::debug('Trigger recalculateForJournal');
+                AccountBalanceCalculator::recalculateForJournal($transaction->transactionJournal);
+            }
+        }
+        $this->updateNativeAmount($transaction);
+    }
+
     public function deleting(?Transaction $transaction): void
     {
         app('log')->debug('Observe "deleting" of a transaction.');
@@ -46,18 +58,6 @@ class TransactionObserver
         Log::debug('Observe "updated" of a transaction.');
         if (config('firefly.feature_flags.running_balance_column') && self::$recalculate) {
             if (1 === bccomp($transaction->amount, '0')) {
-                Log::debug('Trigger recalculateForJournal');
-                AccountBalanceCalculator::recalculateForJournal($transaction->transactionJournal);
-            }
-        }
-        $this->updateNativeAmount($transaction);
-    }
-
-    public function created(Transaction $transaction): void
-    {
-        Log::debug('Observe "created" of a transaction.');
-        if (config('firefly.feature_flags.running_balance_column')) {
-            if (1 === bccomp($transaction->amount, '0') && self::$recalculate) {
                 Log::debug('Trigger recalculateForJournal');
                 AccountBalanceCalculator::recalculateForJournal($transaction->transactionJournal);
             }

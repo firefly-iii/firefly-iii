@@ -10,14 +10,6 @@ use LaravelJsonApi\Core\Resources\JsonApiResource;
 class AccountBalanceResource extends JsonApiResource
 {
     /**
-     * Get the resource id.
-     */
-    public function id(): string
-    {
-        return $this->resource->id;
-    }
-
-    /**
      * Get the resource's attributes.
      *
      * @param null|Request $request
@@ -28,6 +20,14 @@ class AccountBalanceResource extends JsonApiResource
             'name'   => $this->resource->amount,
             'amount' => $this->resource->amount,
         ];
+    }
+
+    /**
+     * Get the resource id.
+     */
+    public function id(): string
+    {
+        return $this->resource->id;
     }
 
     /**

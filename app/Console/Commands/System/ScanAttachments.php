@@ -71,8 +71,8 @@ class ScanAttachments extends Command
                 exit(1);
             }
             file_put_contents($tempFileName, $decryptedContent);
-            $attachment->md5  = (string)md5_file($tempFileName);
-            $attachment->mime = (string)mime_content_type($tempFileName);
+            $attachment->md5  = (string) md5_file($tempFileName);
+            $attachment->mime = (string) mime_content_type($tempFileName);
             $attachment->save();
             $this->friendlyInfo(sprintf('Fixed attachment #%d', $attachment->id));
         }

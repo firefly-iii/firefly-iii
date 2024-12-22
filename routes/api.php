@@ -115,8 +115,8 @@ Route::group(
     static function (): void {
         Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
         Route::get('rates/{fromCurrencyCode}/{toCurrencyCode}', ['uses' => 'ShowController@show', 'as' => 'show']);
-//        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
-//
+        //        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
+        //
         //        Route::put('{userGroup}', ['uses' => 'UpdateController@update', 'as' => 'update']);
         //        Route::post('{userGroup}/use', ['uses' => 'UpdateController@useUserGroup', 'as' => 'use']);
         //        Route::put('{userGroup}/update-membership', ['uses' => 'UpdateController@updateMembership', 'as' => 'updateMembership']);

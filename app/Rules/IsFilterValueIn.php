@@ -29,7 +29,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 class IsFilterValueIn implements ValidationRule
 {
     private string $key;
-    private array $values;
+    private array  $values;
 
     public function __construct(string $key, array $values)
     {

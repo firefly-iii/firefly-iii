@@ -179,7 +179,7 @@ class BasicController extends Controller
             $return[]     = [
                 'key'                     => sprintf('bills-paid-in-%s', $info['currency_code']),
                 'value'                   => $amount,
-                'currency_id'             => (string)$info['currency_id'],
+                'currency_id'             => (string) $info['currency_id'],
                 'currency_code'           => $info['currency_code'],
                 'currency_symbol'         => $info['currency_symbol'],
                 'currency_decimal_places' => $info['currency_decimal_places'],
@@ -187,7 +187,7 @@ class BasicController extends Controller
             $return[]     = [
                 'key'                     => 'bills-paid-in-native',
                 'value'                   => $nativeAmount,
-                'currency_id'             => (string)$info['native_currency_id'],
+                'currency_id'             => (string) $info['native_currency_id'],
                 'currency_code'           => $info['native_currency_code'],
                 'currency_symbol'         => $info['native_currency_symbol'],
                 'currency_decimal_places' => $info['native_currency_decimal_places'],
@@ -203,7 +203,7 @@ class BasicController extends Controller
             $return[]     = [
                 'key'                     => sprintf('bills-unpaid-in-%s', $info['currency_code']),
                 'value'                   => $amount,
-                'currency_id'             => (string)$info['currency_id'],
+                'currency_id'             => (string) $info['currency_id'],
                 'currency_code'           => $info['currency_code'],
                 'currency_symbol'         => $info['currency_symbol'],
                 'currency_decimal_places' => $info['currency_decimal_places'],
@@ -211,7 +211,7 @@ class BasicController extends Controller
             $return[]     = [
                 'key'                     => 'bills-unpaid-in-native',
                 'value'                   => $nativeAmount,
-                'currency_id'             => (string)$info['native_currency_id'],
+                'currency_id'             => (string) $info['native_currency_id'],
                 'currency_code'           => $info['native_currency_code'],
                 'currency_symbol'         => $info['native_currency_symbol'],
                 'currency_decimal_places' => $info['native_currency_decimal_places'],
@@ -241,7 +241,7 @@ class BasicController extends Controller
         $nativeLeft   = [
             'key'                     => 'left-to-spend-in-native',
             'value'                   => '0',
-            'currency_id'             => (string)$default->id,
+            'currency_id'             => (string) $default->id,
             'currency_code'           => $default->code,
             'currency_symbol'         => $default->symbol,
             'currency_decimal_places' => $default->decimal_places,
@@ -249,7 +249,7 @@ class BasicController extends Controller
         $nativePerDay = [
             'key'                     => 'left-per-day-to-spend-in-native',
             'value'                   => '0',
-            'currency_id'             => (string)$default->id,
+            'currency_id'             => (string) $default->id,
             'currency_code'           => $default->code,
             'currency_symbol'         => $default->symbol,
             'currency_decimal_places' => $default->decimal_places,
@@ -276,7 +276,7 @@ class BasicController extends Controller
                     $currencies[$currencyId] = $currency;
                     $amount                  = app('steam')->negative($journal['amount']);
                     $amountNative            = $converter->convert($default, $currency, $start, $amount);
-                    if ((int)$journal['foreign_currency_id'] === $default->id) {
+                    if ((int) $journal['foreign_currency_id'] === $default->id) {
                         $amountNative = $journal['foreign_amount'];
                     }
                     $spent                   = bcadd($spent, $amount);
@@ -296,24 +296,24 @@ class BasicController extends Controller
             app('log')->debug(sprintf('Amount left is %s', $left));
 
             // how much left per day?
-            $days                    = (int)$today->diffInDays($end, true) + 1;
+            $days                    = (int) $today->diffInDays($end, true) + 1;
             $perDay                  = '0';
             $perDayNative            = '0';
             if (0 !== $days && bccomp($left, '0') > -1) {
-                $perDay = bcdiv($left, (string)$days);
+                $perDay = bcdiv($left, (string) $days);
             }
             if (0 !== $days && bccomp($leftNative, '0') > -1) {
-                $perDayNative = bcdiv($leftNative, (string)$days);
+                $perDayNative = bcdiv($leftNative, (string) $days);
             }
 
             // left
             $return[]                = [
                 'key'                     => sprintf('left-to-spend-in-%s', $row['currency_code']),
                 'value'                   => $left,
-                'currency_id'             => (string)$row['currency_id'],
+                'currency_id'             => (string) $row['currency_id'],
                 'currency_code'           => $row['currency_code'],
                 'currency_symbol'         => $row['currency_symbol'],
-                'currency_decimal_places' => (int)$row['currency_decimal_places'],
+                'currency_decimal_places' => (int) $row['currency_decimal_places'],
             ];
             // left (native)
             $nativeLeft['value']     = $leftNative;
@@ -322,10 +322,10 @@ class BasicController extends Controller
             $return[]                = [
                 'key'                     => sprintf('left-per-day-to-spend-in-%s', $row['currency_code']),
                 'value'                   => $perDay,
-                'currency_id'             => (string)$row['currency_id'],
+                'currency_id'             => (string) $row['currency_id'],
                 'currency_code'           => $row['currency_code'],
                 'currency_symbol'         => $row['currency_symbol'],
-                'currency_decimal_places' => (int)$row['currency_decimal_places'],
+                'currency_decimal_places' => (int) $row['currency_decimal_places'],
             ];
 
             // left per day (native)
@@ -371,7 +371,7 @@ class BasicController extends Controller
         $return[]       = [
             'key'                     => 'net-worth-in-native',
             'value'                   => $netWorthSet['native']['balance'],
-            'currency_id'             => (string)$netWorthSet['native']['currency_id'],
+            'currency_id'             => (string) $netWorthSet['native']['currency_id'],
             'currency_code'           => $netWorthSet['native']['currency_code'],
             'currency_symbol'         => $netWorthSet['native']['currency_symbol'],
             'currency_decimal_places' => $netWorthSet['native']['currency_decimal_places'],
@@ -383,7 +383,7 @@ class BasicController extends Controller
             $return[] = [
                 'key'                     => sprintf('net-worth-in-%s', $data['currency_code']),
                 'value'                   => $data['balance'],
-                'currency_id'             => (string)$data['currency_id'],
+                'currency_id'             => (string) $data['currency_id'],
                 'currency_code'           => $data['currency_code'],
                 'currency_symbol'         => $data['currency_symbol'],
                 'currency_decimal_places' => $data['currency_decimal_places'],

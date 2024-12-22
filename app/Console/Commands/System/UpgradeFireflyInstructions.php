@@ -59,7 +59,7 @@ class UpgradeFireflyInstructions extends Command
      */
     private function updateInstructions(): void
     {
-        $version = (string)config('firefly.version');
+        $version = (string) config('firefly.version');
 
         /** @var array $config */
         $config  = config('upgrade.text.upgrade');
@@ -69,12 +69,12 @@ class UpgradeFireflyInstructions extends Command
         foreach (array_keys($config) as $compare) {
             // if string starts with:
             if (str_starts_with($version, $compare)) {
-                $text = (string)$config[$compare];
+                $text = (string) $config[$compare];
             }
         }
 
         // validate some settings.
-        if ('' === $text && 'local' === (string)config('app.env')) {
+        if ('' === $text && 'local' === (string) config('app.env')) {
             $text = 'Please set APP_ENV=production for a safer environment.';
         }
 
@@ -179,7 +179,7 @@ class UpgradeFireflyInstructions extends Command
      */
     private function installInstructions(): void
     {
-        $version = (string)config('firefly.version');
+        $version = (string) config('firefly.version');
 
         /** @var array $config */
         $config  = config('upgrade.text.install');
@@ -189,12 +189,12 @@ class UpgradeFireflyInstructions extends Command
         foreach (array_keys($config) as $compare) {
             // if string starts with:
             if (str_starts_with($version, $compare)) {
-                $text = (string)$config[$compare];
+                $text = (string) $config[$compare];
             }
         }
 
         // validate some settings.
-        if ('' === $text && 'local' === (string)config('app.env')) {
+        if ('' === $text && 'local' === (string) config('app.env')) {
             $text = 'Please set APP_ENV=production for a safer environment.';
         }
 

@@ -106,11 +106,6 @@ class User extends Authenticatable
         return $this->hasMany(Account::class);
     }
 
-    public function piggyBanks(): void
-    {
-        throw new FireflyException('Method no longer supported.');
-    }
-
     /**
      * Link to attachments
      */
@@ -332,6 +327,11 @@ class User extends Authenticatable
     public function objectGroups(): HasMany
     {
         return $this->hasMany(ObjectGroup::class);
+    }
+
+    public function piggyBanks(): void
+    {
+        throw new FireflyException('Method no longer supported.');
     }
 
     /**

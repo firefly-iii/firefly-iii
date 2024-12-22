@@ -39,9 +39,8 @@ class UpgradeMultiPiggyBanks extends Command
     protected $description          = 'Upgrade piggybanks so they can use multiple accounts.';
 
     protected $signature            = 'firefly-iii:upgrade-multi-piggies {--F|force : Force the execution of this command.}';
-
-    private PiggyBankRepositoryInterface $repository;
     private AccountRepositoryInterface   $accountRepository;
+    private PiggyBankRepositoryInterface $repository;
 
     /**
      * Execute the console command.
@@ -69,11 +68,6 @@ class UpgradeMultiPiggyBanks extends Command
         }
 
         return false;
-    }
-
-    private function markAsExecuted(): void
-    {
-        app('fireflyconfig')->set(self::CONFIG_NAME, true);
     }
 
     private function upgradePiggyBanks(): void
@@ -108,5 +102,10 @@ class UpgradeMultiPiggyBanks extends Command
         // remove all repetitions (no longer used)
         $piggyBank->piggyBankRepetitions()->delete();
 
+    }
+
+    private function markAsExecuted(): void
+    {
+        app('fireflyconfig')->set(self::CONFIG_NAME, true);
     }
 }

@@ -33,15 +33,32 @@ use Illuminate\Support\Facades\Log;
  */
 class PiggyBankObserver
 {
-    public function updated(PiggyBank $piggyBank): void
-    {
-        Log::debug('Observe "updated" of a piggy bank.');
-        $this->updateNativeAmount($piggyBank);
-    }
-
     public function created(PiggyBank $piggyBank): void
     {
         Log::debug('Observe "created" of a piggy bank.');
+        $this->updateNativeAmount($piggyBank);
+    }
+
+    /**
+     * Also delete related objects.
+     */
+    public function deleting(PiggyBank $piggyBank): void
+    {
+        app('log')->debug('Observe "deleting" of a piggy bank.');
+
+        foreach ($piggyBank->attachments()->get() as $attachment) {
+            $attachment->delete();
+        }
+
+        $piggyBank->piggyBankEvents()->delete();
+        $piggyBank->piggyBankRepetitions()->delete();
+
+        $piggyBank->notes()->delete();
+    }
+
+    public function updated(PiggyBank $piggyBank): void
+    {
+        Log::debug('Observe "updated" of a piggy bank.');
         $this->updateNativeAmount($piggyBank);
     }
 
@@ -65,22 +82,5 @@ class PiggyBankObserver
         }
         $piggyBank->saveQuietly();
         Log::debug('Piggy bank native target amount is updated.');
-    }
-
-    /**
-     * Also delete related objects.
-     */
-    public function deleting(PiggyBank $piggyBank): void
-    {
-        app('log')->debug('Observe "deleting" of a piggy bank.');
-
-        foreach ($piggyBank->attachments()->get() as $attachment) {
-            $attachment->delete();
-        }
-
-        $piggyBank->piggyBankEvents()->delete();
-        $piggyBank->piggyBankRepetitions()->delete();
-
-        $piggyBank->notes()->delete();
     }
 }

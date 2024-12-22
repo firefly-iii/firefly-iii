@@ -62,7 +62,7 @@ class FixLongDescriptions extends Command
 
         /** @var TransactionGroup $group */
         foreach ($groups as $group) {
-            if (strlen((string)$group->title) > self::MAX_LENGTH) {
+            if (strlen((string) $group->title) > self::MAX_LENGTH) {
                 $group->title = substr($group->title, 0, self::MAX_LENGTH);
                 $group->save();
                 $this->friendlyWarning(sprintf('Truncated description of transaction group #%d', $group->id));

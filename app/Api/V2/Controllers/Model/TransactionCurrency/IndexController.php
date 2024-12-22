@@ -35,9 +35,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
 class IndexController extends Controller
 {
     public const string RESOURCE_KEY                   = 'transaction-currencies';
-
-    private CurrencyRepositoryInterface $repository;
     protected array                     $acceptedRoles = [UserRoleEnum::READ_ONLY];
+    private CurrencyRepositoryInterface $repository;
 
     public function __construct()
     {

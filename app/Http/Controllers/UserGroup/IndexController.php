@@ -38,8 +38,8 @@ class IndexController extends Controller
      */
     public function index(Request $request)
     {
-        $title         = (string)trans('firefly.administrations_page_title');
-        $subTitle      = (string)trans('firefly.administrations_page_sub_title');
+        $title         = (string) trans('firefly.administrations_page_title');
+        $subTitle      = (string) trans('firefly.administrations_page_sub_title');
         $mainTitleIcon = 'fa-book';
         app('log')->debug(sprintf('Now at %s', __METHOD__));
 

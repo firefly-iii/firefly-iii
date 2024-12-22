@@ -45,34 +45,35 @@ class AddTimezonesToDates extends Command
 {
     use ShowsFriendlyMessages;
 
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature        = 'firefly-iii:add-timezones-to-dates';
+    public static array $models
+                           = [
+            AccountBalance::class       => ['date'], // done
+            AvailableBudget::class      => ['start_date', 'end_date'], // done
+            Bill::class                 => ['date', 'end_date', 'extension_date'], // done
+            BudgetLimit::class          => ['start_date', 'end_date'], // done
+            CurrencyExchangeRate::class => ['date'], // done
+            InvitedUser::class          => ['expires'],
+            PiggyBankEvent::class       => ['date'],
+            PiggyBankRepetition::class  => ['start_date', 'target_date'],
+            PiggyBank::class            => ['start_date', 'target_date'], // done
+            Recurrence::class           => ['first_date', 'repeat_until', 'latest_date'],
+            Tag::class                  => ['date'],
+            TransactionJournal::class   => ['date'],
+        ];
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description      = 'Make sure all dates have a timezone.';
+    protected $description = 'Make sure all dates have a timezone.';
 
-    public static array $models = [
-        AccountBalance::class       => ['date'], // done
-        AvailableBudget::class      => ['start_date', 'end_date'], // done
-        Bill::class                 => ['date', 'end_date', 'extension_date'], // done
-        BudgetLimit::class          => ['start_date', 'end_date'], // done
-        CurrencyExchangeRate::class => ['date'], // done
-        InvitedUser::class          => ['expires'],
-        PiggyBankEvent::class       => ['date'],
-        PiggyBankRepetition::class  => ['start_date', 'target_date'],
-        PiggyBank::class            => ['start_date', 'target_date'], // done
-        Recurrence::class           => ['first_date', 'repeat_until', 'latest_date'],
-        Tag::class                  => ['date'],
-        TransactionJournal::class   => ['date'],
-    ];
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature   = 'firefly-iii:add-timezones-to-dates';
 
     /**
      * Execute the console command.

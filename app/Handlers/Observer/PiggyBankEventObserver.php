@@ -30,15 +30,15 @@ use Illuminate\Support\Facades\Log;
 
 class PiggyBankEventObserver
 {
-    public function updated(PiggyBankEvent $event): void
-    {
-        Log::debug('Observe "updated" of a piggy bank event.');
-        $this->updateNativeAmount($event);
-    }
-
     public function created(PiggyBankEvent $event): void
     {
         Log::debug('Observe "created" of a piggy bank event.');
+        $this->updateNativeAmount($event);
+    }
+
+    public function updated(PiggyBankEvent $event): void
+    {
+        Log::debug('Observe "updated" of a piggy bank event.');
         $this->updateNativeAmount($event);
     }
 

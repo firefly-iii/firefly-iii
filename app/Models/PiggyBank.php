@@ -65,7 +65,7 @@ class PiggyBank extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $piggyBankId = (int)$value;
+            $piggyBankId = (int) $value;
             $piggyBank   = self::where('piggy_banks.id', $piggyBankId)
                 ->leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
                 ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
@@ -79,14 +79,14 @@ class PiggyBank extends Model
         throw new NotFoundHttpException();
     }
 
-    public function transactionCurrency(): BelongsTo
-    {
-        return $this->belongsTo(TransactionCurrency::class);
-    }
-
     public function account(): BelongsTo
     {
         return $this->belongsTo(Account::class);
+    }
+
+    public function accounts(): BelongsToMany
+    {
+        return $this->belongsToMany(Account::class)->withPivot(['current_amount', 'native_current_amount']);
     }
 
     public function attachments(): MorphMany
@@ -115,11 +115,6 @@ class PiggyBank extends Model
         return $this->hasMany(PiggyBankEvent::class);
     }
 
-    public function accounts(): BelongsToMany
-    {
-        return $this->belongsToMany(Account::class)->withPivot(['current_amount', 'native_current_amount']);
-    }
-
     public function piggyBankRepetitions(): HasMany
     {
         return $this->hasMany(PiggyBankRepetition::class);
@@ -130,20 +125,25 @@ class PiggyBank extends Model
      */
     public function setTargetAmountAttribute($value): void
     {
-        $this->attributes['target_amount'] = (string)$value;
+        $this->attributes['target_amount'] = (string) $value;
+    }
+
+    public function transactionCurrency(): BelongsTo
+    {
+        return $this->belongsTo(TransactionCurrency::class);
     }
 
     protected function accountId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 
     protected function order(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 
@@ -153,7 +153,7 @@ class PiggyBank extends Model
     protected function targetAmount(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string)$value,
+            get: static fn ($value) => (string) $value,
         );
     }
 }

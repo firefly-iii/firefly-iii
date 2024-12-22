@@ -61,7 +61,7 @@ class RuleRepository implements RuleRepositoryInterface
     public function duplicate(Rule $rule): Rule
     {
         $newRule        = $rule->replicate();
-        $newRule->title = (string)trans('firefly.rule_copy_of', ['title' => $rule->title]);
+        $newRule->title = (string) trans('firefly.rule_copy_of', ['title' => $rule->title]);
         $newRule->save();
 
         // replicate all triggers
@@ -101,7 +101,7 @@ class RuleRepository implements RuleRepositoryInterface
 
     public function getHighestOrderInRuleGroup(RuleGroup $ruleGroup): int
     {
-        return (int)$ruleGroup->rules()->max('order');
+        return (int) $ruleGroup->rules()->max('order');
     }
 
     /**
@@ -352,7 +352,7 @@ class RuleRepository implements RuleRepositoryInterface
 
     public function maxOrder(RuleGroup $ruleGroup): int
     {
-        return (int)$ruleGroup->rules()->max('order');
+        return (int) $ruleGroup->rules()->max('order');
     }
 
     private function storeTriggers(Rule $rule, array $data): void
@@ -477,7 +477,7 @@ class RuleRepository implements RuleRepositoryInterface
         // update the order:
         $this->resetRuleOrder($group);
         if (array_key_exists('order', $data)) {
-            $this->moveRule($rule, $group, (int)$data['order']);
+            $this->moveRule($rule, $group, (int) $data['order']);
         }
 
         // update the triggers:

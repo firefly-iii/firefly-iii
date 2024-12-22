@@ -49,8 +49,8 @@ class PiggyBankFactory
             $this->piggyBankRepository->setUser($value);
         }
     }
-    private CurrencyRepositoryInterface  $currencyRepository;
     private AccountRepositoryInterface   $accountRepository;
+    private CurrencyRepositoryInterface  $currencyRepository;
     private PiggyBankRepositoryInterface $piggyBankRepository;
 
     public function __construct()
@@ -120,6 +120,21 @@ class PiggyBankFactory
         return $piggyBank;
     }
 
+    private function getCurrency(array $data): TransactionCurrency
+    {
+        // currency:
+        $defaultCurrency = app('amount')->getDefaultCurrency();
+        $currency        = null;
+        if (array_key_exists('transaction_currency_code', $data)) {
+            $currency = $this->currencyRepository->findByCode((string) ($data['transaction_currency_code'] ?? ''));
+        }
+        if (array_key_exists('transaction_currency_id', $data)) {
+            $currency = $this->currencyRepository->find((int) ($data['transaction_currency_id'] ?? 0));
+        }
+        $currency ??= $defaultCurrency;
+        return $currency;
+    }
+
     public function find(?int $piggyBankId, ?string $piggyBankName): ?PiggyBank
     {
         $piggyBankId   = (int) $piggyBankId;
@@ -160,21 +175,6 @@ class PiggyBankFactory
             ->where('accounts.user_id', $this->user->id)
             ->where('piggy_banks.name', $name)
             ->first(['piggy_banks.*']);
-    }
-
-    private function getCurrency(array $data): TransactionCurrency
-    {
-        // currency:
-        $defaultCurrency = app('amount')->getDefaultCurrency();
-        $currency        = null;
-        if (array_key_exists('transaction_currency_code', $data)) {
-            $currency = $this->currencyRepository->findByCode((string) ($data['transaction_currency_code'] ?? ''));
-        }
-        if (array_key_exists('transaction_currency_id', $data)) {
-            $currency = $this->currencyRepository->find((int) ($data['transaction_currency_id'] ?? 0));
-        }
-        $currency ??= $defaultCurrency;
-        return $currency;
     }
 
     private function setOrder(PiggyBank $piggyBank, array $data): PiggyBank
@@ -227,10 +227,10 @@ class PiggyBankFactory
         // collect current current_amount so the sync does not remove them.
         // TODO this is a tedious check. Feels like a hack.
         $toBeLinked = [];
-        foreach($piggyBank->accounts as $account) {
-            foreach($accounts as $info) {
-                if($account->id === $info['account_id']) {
-                    if(array_key_exists($account->id, $accounts)) {
+        foreach ($piggyBank->accounts as $account) {
+            foreach ($accounts as $info) {
+                if ($account->id === $info['account_id']) {
+                    if (array_key_exists($account->id, $accounts)) {
                         $toBeLinked[$account->id] = ['current_amount' => $account->pivot->current_amount];
                         Log::debug(sprintf('Prefilled for account #%d with amount %s', $account->id, $account->pivot->current_amount));
                     }

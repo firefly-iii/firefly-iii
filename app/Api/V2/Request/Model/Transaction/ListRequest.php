@@ -76,7 +76,7 @@ class ListRequest extends FormRequest
 
     public function getTransactionTypes(): array
     {
-        $type = (string)$this->get('type', 'default');
+        $type = (string) $this->get('type', 'default');
 
         return $this->mapTransactionTypes($type);
     }

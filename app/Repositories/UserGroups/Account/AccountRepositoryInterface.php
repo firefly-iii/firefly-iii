@@ -37,12 +37,6 @@ interface AccountRepositoryInterface
 {
     public function countAccounts(array $types): int;
 
-    public function getAccountTypes(Collection $accounts): Collection;
-
-    public function getLastActivity(Collection $accounts): array;
-
-    public function getMetaValues(Collection $accounts, array $fields): Collection;
-
     public function find(int $accountId): ?Account;
 
     public function findByAccountNumber(string $number, array $types): ?Account;
@@ -51,9 +45,11 @@ interface AccountRepositoryInterface
 
     public function findByName(string $name, array $types): ?Account;
 
+    public function getAccountBalances(Account $account): Collection;
+
     public function getAccountCurrency(Account $account): ?TransactionCurrency;
 
-    public function getAccountBalances(Account $account): Collection;
+    public function getAccountTypes(Collection $accounts): Collection;
 
     public function getAccountsById(array $accountIds): Collection;
 
@@ -66,10 +62,14 @@ interface AccountRepositoryInterface
 
     public function getActiveAccountsByType(array $types): Collection;
 
+    public function getLastActivity(Collection $accounts): array;
+
     /**
      * Return meta value for account. Null if not found.
      */
     public function getMetaValue(Account $account, string $field): ?string;
+
+    public function getMetaValues(Collection $accounts, array $fields): Collection;
 
     public function getObjectGroups(Collection $accounts): array;
 
