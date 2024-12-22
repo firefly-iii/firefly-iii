@@ -52,6 +52,7 @@ class FixTransactionTypes extends Command
         $count    = 0;
         $journals = $this->collectJournals();
         Log::debug(sprintf('In FixTransactionTypes, found %d journals.', $journals->count()));
+
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             $fixed = $this->fixJournal($journal);

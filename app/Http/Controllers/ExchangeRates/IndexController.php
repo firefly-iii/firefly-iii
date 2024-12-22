@@ -1,4 +1,5 @@
 <?php
+
 /*
  * IndexController.php
  * Copyright (c) 2024 james@firefly-iii.org.
@@ -25,7 +26,6 @@ namespace FireflyIII\Http\Controllers\ExchangeRates;
 
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionCurrency;
-use Illuminate\View\Factory;
 use Illuminate\View\View;
 
 class IndexController extends Controller
@@ -42,6 +42,7 @@ class IndexController extends Controller
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-exchange');
                 app('view')->share('title', (string) trans('firefly.header_exchange_rates'));
+
                 return $next($request);
             }
         );
@@ -56,5 +57,4 @@ class IndexController extends Controller
     {
         return view('exchange-rates.rates', compact('from', 'to'));
     }
-
 }

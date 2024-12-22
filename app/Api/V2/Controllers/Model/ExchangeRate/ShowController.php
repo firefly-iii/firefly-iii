@@ -37,8 +37,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
  */
 class ShowController extends Controller
 {
-    public const string RESOURCE_KEY = 'exchange-rates';
     use ValidatesUserGroupTrait;
+    public const string RESOURCE_KEY = 'exchange-rates';
 
     private ExchangeRateRepositoryInterface $repository;
 
@@ -61,7 +61,6 @@ class ShowController extends Controller
         $page      = $this->parameters->get('page');
         $rates     = $this->repository->getRates($from, $to);
         $count     = $rates->count();
-
         $rates     = $rates->slice(($page - 1) * $pageSize, $pageSize);
         $paginator = new LengthAwarePaginator($rates, $count, $pageSize, $page);
 
@@ -70,6 +69,7 @@ class ShowController extends Controller
 
         return response()
             ->json($this->jsonApiList(self::RESOURCE_KEY, $paginator, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
 }

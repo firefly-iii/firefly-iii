@@ -91,7 +91,7 @@ return [
     'notification_index'     => 'Owner notifications',
 
     // exchange rates
-    'exchange_rates_index' => 'Exchange rates',
-    'exchange_rates_rates' => 'Exchange rates between :from and :to (and the other way around)',
+    'exchange_rates_index'   => 'Exchange rates',
+    'exchange_rates_rates'   => 'Exchange rates between :from and :to (and the other way around)',
 
 ];

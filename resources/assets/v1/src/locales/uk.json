@@ -132,7 +132,8 @@
         "reset_webhook_secret": "\u0412\u0456\u0434\u043d\u043e\u0432\u0438\u0442\u0438 \u0441\u0456\u043a\u0440\u0435\u0442 \u0432\u0435\u0431-\u0445\u0443\u043a\u0430",
         "header_exchange_rates": "Exchange rates",
         "exchange_rates_intro": "Firefly III supports downloading and using exchange rates. Read more about this in <a href=\"https:\/\/docs.firefly-iii.org\/LOL_NOT_FINISHED_YET_TODO\">the documentation<\/a>.",
-        "exchange_rates_from_to": "Between :from and :to"
+        "exchange_rates_from_to": "Between {from} and {to} (and the other way around)",
+        "exchange_rates_intro_rates": "Firefly III bla bla bla exchange rates."
     },
     "form": {
         "url": "URL-\u0430\u0434\u0440\u0435\u0441\u0430",

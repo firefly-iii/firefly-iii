@@ -32,8 +32,6 @@ use Illuminate\Support\Collection;
  */
 class ExchangeRateTransformer extends AbstractTransformer
 {
-
-
     /**
      * This method collects meta-data for one or all accounts in the transformer's collection.
      */
@@ -48,23 +46,23 @@ class ExchangeRateTransformer extends AbstractTransformer
     public function transform(CurrencyExchangeRate $rate): array
     {
         return [
-            'id'         => (string) $rate->id,
-            'created_at' => $rate->created_at->toAtomString(),
-            'updated_at' => $rate->updated_at->toAtomString(),
+            'id'                           => (string) $rate->id,
+            'created_at'                   => $rate->created_at->toAtomString(),
+            'updated_at'                   => $rate->updated_at->toAtomString(),
 
             'from_currency_id'             => (string) $rate->fromCurrency->id,
             'from_currency_code'           => $rate->fromCurrency->code,
             'from_currency_symbol'         => $rate->fromCurrency->symbol,
             'from_currency_decimal_places' => $rate->fromCurrency->decimal_places,
 
-            'to_currency_id'             => (string) $rate->toCurrency->id,
-            'to_currency_code'           => $rate->toCurrency->code,
-            'to_currency_symbol'         => $rate->toCurrency->symbol,
-            'to_currency_decimal_places' => $rate->toCurrency->decimal_places,
+            'to_currency_id'               => (string) $rate->toCurrency->id,
+            'to_currency_code'             => $rate->toCurrency->code,
+            'to_currency_symbol'           => $rate->toCurrency->symbol,
+            'to_currency_decimal_places'   => $rate->toCurrency->decimal_places,
 
-            'rate'  => $rate->rate,
-            'date'  => $rate->date->toAtomString(),
-            'links' => [
+            'rate'                         => $rate->rate,
+            'date'                         => $rate->date->toAtomString(),
+            'links'                        => [
                 [
                     'rel' => 'self',
                     'uri' => sprintf('/exchange-rates/%s', $rate->id),

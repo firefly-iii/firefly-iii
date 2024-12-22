@@ -35,8 +35,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
  */
 class IndexController extends Controller
 {
-    public const string RESOURCE_KEY = 'exchange-rates';
     use ValidatesUserGroupTrait;
+    public const string RESOURCE_KEY = 'exchange-rates';
 
     private ExchangeRateRepositoryInterface $repository;
 
@@ -55,11 +55,11 @@ class IndexController extends Controller
 
     public function index(): JsonResponse
     {
-        $piggies   = $this->repository->getAll();
-        $pageSize  = $this->parameters->get('limit');
-        $count     = $piggies->count();
-        $piggies   = $piggies->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
-        $paginator = new LengthAwarePaginator($piggies, $count, $pageSize, $this->parameters->get('page'));
+        $piggies     = $this->repository->getAll();
+        $pageSize    = $this->parameters->get('limit');
+        $count       = $piggies->count();
+        $piggies     = $piggies->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $paginator   = new LengthAwarePaginator($piggies, $count, $pageSize, $this->parameters->get('page'));
 
         var_dump('here we are');
 
@@ -68,6 +68,7 @@ class IndexController extends Controller
 
         return response()
             ->json($this->jsonApiList(self::RESOURCE_KEY, $paginator, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
 }

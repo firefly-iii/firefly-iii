@@ -61,7 +61,7 @@ class MFAUsedBackupCodeNotification extends Notification
      */
     public function toMail(User $notifiable)
     {
-        $subject = (string) trans('email.used_backup_code_subject');
+        $subject   = (string) trans('email.used_backup_code_subject');
         $ip        = Request::ip();
         $host      = Steam::getHostName($ip);
         $userAgent = Request::userAgent();

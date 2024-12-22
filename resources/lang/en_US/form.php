@@ -113,8 +113,8 @@ return [
     'tag'                          => 'Tag',
 
     // exchange rates
-    'from_currency_to_currency' => '{from} &rarr; {to}',
-    'to_currency_from_currency' => '{to} &rarr; {from}',
+    'from_currency_to_currency'    => '{from} &rarr; {to}',
+    'to_currency_from_currency'    => '{to} &rarr; {from}',
 
     'under'                        => 'Under',
     'symbol'                       => 'Symbol',

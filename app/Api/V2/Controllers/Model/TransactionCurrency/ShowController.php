@@ -47,7 +47,7 @@ class ShowController extends Controller
             function ($request, $next) {
                 $this->repository = app(CurrencyRepositoryInterface::class);
                 // new way of user group validation
-                $userGroup = $this->validateUserGroup($request);
+                $userGroup        = $this->validateUserGroup($request);
                 $this->repository->setUserGroup($userGroup);
 
                 return $next($request);
@@ -57,9 +57,10 @@ class ShowController extends Controller
 
     public function show(TransactionCurrency $currency): JsonResponse
     {
-        $groups  = $currency->userGroups()->where('user_groups.id', $this->repository->getUserGroup()->id)->get();
-        $enabled = $groups->count() > 0;
-        $default = false;
+        $groups                     = $currency->userGroups()->where('user_groups.id', $this->repository->getUserGroup()->id)->get();
+        $enabled                    = $groups->count() > 0;
+        $default                    = false;
+
         /** @var UserGroup $group */
         foreach ($groups as $group) {
             $default = 1 === $group->pivot->group_default;
@@ -68,11 +69,12 @@ class ShowController extends Controller
         $currency->userGroupDefault = $default;
 
 
-        $transformer = new CurrencyTransformer();
+        $transformer                = new CurrencyTransformer();
         $transformer->setParameters($this->parameters);
 
         return response()
             ->api($this->jsonApiObject(self::RESOURCE_KEY, $currency, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
 }

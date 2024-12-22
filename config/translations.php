@@ -273,7 +273,7 @@ return [
                 'header_exchange_rates',
                 'exchange_rates_intro',
                 'exchange_rates_from_to',
-                'exchange_rates_intro_rates'
+                'exchange_rates_intro_rates',
             ],
             'form'    => [
                 'url',
@@ -291,7 +291,7 @@ return [
                 'webhook_trigger',
                 'webhook_delivery',
                 'from_currency_to_currency',
-                'to_currency_from_currency'
+                'to_currency_from_currency',
             ],
             'list'    => [
                 'active',

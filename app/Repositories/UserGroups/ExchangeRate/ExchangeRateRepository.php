@@ -1,4 +1,5 @@
 <?php
+
 /*
  * ExchangeRateRepository.php
  * Copyright (c) 2024 james@firefly-iii.org.
@@ -32,8 +33,8 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface
 {
     use UserGroupTrait;
 
-
-    #[\Override] public function getRates(TransactionCurrency $from, TransactionCurrency $to): Collection
+    #[\Override]
+    public function getRates(TransactionCurrency $from, TransactionCurrency $to): Collection
     {
         // orderBy('date', 'DESC')->toRawSql();
         return

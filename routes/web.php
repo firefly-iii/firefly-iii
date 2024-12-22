@@ -366,12 +366,12 @@ Route::group(
     static function (): void {
         Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
         Route::get('{fromCurrencyCode}/{toCurrencyCode}', ['uses' => 'IndexController@rates', 'as' => 'rates']);
-//        Route::get('create', ['uses' => 'CreateController@create', 'as' => 'create']);
-//        Route::get('edit/{currency}', ['uses' => 'EditController@edit', 'as' => 'edit']);
-//        Route::get('delete/{currency}', ['uses' => 'DeleteController@delete', 'as' => 'delete']);
-//        Route::post('store', ['uses' => 'CreateController@store', 'as' => 'store']);
-//        Route::post('update/{currency}', ['uses' => 'EditController@update', 'as' => 'update']);
-//        Route::post('destroy/{currency}', ['uses' => 'DeleteController@destroy', 'as' => 'destroy']);
+        //        Route::get('create', ['uses' => 'CreateController@create', 'as' => 'create']);
+        //        Route::get('edit/{currency}', ['uses' => 'EditController@edit', 'as' => 'edit']);
+        //        Route::get('delete/{currency}', ['uses' => 'DeleteController@delete', 'as' => 'delete']);
+        //        Route::post('store', ['uses' => 'CreateController@store', 'as' => 'store']);
+        //        Route::post('update/{currency}', ['uses' => 'EditController@update', 'as' => 'update']);
+        //        Route::post('destroy/{currency}', ['uses' => 'DeleteController@destroy', 'as' => 'destroy']);
     }
 );
 

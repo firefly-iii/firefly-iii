@@ -61,7 +61,7 @@ class NewBackupCodesNotification extends Notification
      */
     public function toMail(User $notifiable)
     {
-        $subject = (string) trans('email.new_backup_codes_subject');
+        $subject   = (string) trans('email.new_backup_codes_subject');
         $ip        = Request::ip();
         $host      = Steam::getHostName($ip);
         $userAgent = Request::userAgent();
