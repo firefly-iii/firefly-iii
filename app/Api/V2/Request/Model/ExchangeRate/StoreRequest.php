@@ -1,4 +1,5 @@
 <?php
+
 /*
  * DestroyRequest.php
  * Copyright (c) 2024 james@firefly-iii.org.
@@ -44,10 +45,13 @@ class StoreRequest extends FormRequest
         return (string) $this->get('rate');
     }
 
-    public function getFromCurrency(): TransactionCurrency {
+    public function getFromCurrency(): TransactionCurrency
+    {
         return TransactionCurrency::where('code', $this->get('from'))->first();
     }
-    public function getToCurrency(): TransactionCurrency {
+
+    public function getToCurrency(): TransactionCurrency
+    {
         return TransactionCurrency::where('code', $this->get('to'))->first();
     }
 
@@ -63,5 +67,4 @@ class StoreRequest extends FormRequest
             'to'   => 'required|exists:transaction_currencies,code',
         ];
     }
-
 }

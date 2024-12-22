@@ -278,7 +278,7 @@ return [
                 'header_exchange_rates_table',
                 'help_rate_form',
                 'add_new_rate',
-                'save_new_rate'
+                'save_new_rate',
             ],
             'form'    => [
                 'url',

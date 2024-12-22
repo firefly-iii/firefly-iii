@@ -1,4 +1,5 @@
 <?php
+
 /*
  * DestroyController.php
  * Copyright (c) 2024 james@firefly-iii.org.
@@ -25,8 +26,6 @@ namespace FireflyIII\Api\V2\Controllers\Model\ExchangeRate;
 
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Model\ExchangeRate\StoreRequest;
-use FireflyIII\Api\V2\Request\Model\ExchangeRate\UpdateRequest;
-use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Repositories\UserGroups\ExchangeRate\ExchangeRateRepositoryInterface;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\Transformers\V2\ExchangeRateTransformer;
@@ -55,18 +54,18 @@ class StoreController extends Controller
 
     public function store(StoreRequest $request): JsonResponse
     {
-        $date = $request->getDate();
-        $rate = $request->getRate();
-        $from = $request->getFromCurrency();
-        $to = $request->getToCurrency();
+        $date        = $request->getDate();
+        $rate        = $request->getRate();
+        $from        = $request->getFromCurrency();
+        $to          = $request->getToCurrency();
 
         // already has rate?
-        $object = $this->repository->getSpecificRateOnDate($from, $to, $date);
-        if(null !== $object) {
+        $object      = $this->repository->getSpecificRateOnDate($from, $to, $date);
+        if (null !== $object) {
             // just update it, no matter.
             $rate = $this->repository->updateExchangeRate($object, $rate, $date);
         }
-        if(null === $object) {
+        if (null === $object) {
             // store new
             $rate = $this->repository->storeExchangeRate($from, $to, $rate, $date);
         }
@@ -76,7 +75,7 @@ class StoreController extends Controller
 
         return response()
             ->api($this->jsonApiObject(self::RESOURCE_KEY, $rate, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
-
 }

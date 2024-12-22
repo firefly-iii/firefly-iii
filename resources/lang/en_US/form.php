@@ -115,7 +115,7 @@ return [
     // exchange rates
     'from_currency_to_currency'    => '{from} &rarr; {to}',
     'to_currency_from_currency'    => '{to} &rarr; {from}',
-    'rate' => 'Rate',
+    'rate'                         => 'Rate',
 
     'under'                        => 'Under',
     'symbol'                       => 'Symbol',

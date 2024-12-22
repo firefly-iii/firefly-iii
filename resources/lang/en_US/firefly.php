@@ -1405,9 +1405,9 @@ return [
     'header_exchange_rates_rates'                         => 'Exchange rates',
     'exchange_rates_intro_rates'                          => 'Firefly III bla bla bla exchange rates. Inverse is automatically calculated if not provided. Will go back to last found rate.',
     'header_exchange_rates_table'                         => 'Table with exchange rates',
-    'help_rate_form' => 'On this day, how many {to} will you get for one {from}?',
-    'save_new_rate' => 'Save new rate',
-    'add_new_rate' => 'Add a new exchange rate',
+    'help_rate_form'                                      => 'On this day, how many {to} will you get for one {from}?',
+    'save_new_rate'                                       => 'Save new rate',
+    'add_new_rate'                                        => 'Add a new exchange rate',
 
     // Financial administrations
     'administration_index'                                => 'Financial administration',
