@@ -82,8 +82,8 @@ trait CalculateRangeOccurrences
      */
     protected function getNdomInRange(Carbon $start, Carbon $end, int $skipMod, string $moment): array
     {
-        $return   = [];
-        $attempts = 0;
+        $return     = [];
+        $attempts   = 0;
         $start->startOfMonth();
         // this feels a bit like a cop out but why reinvent the wheel?
         $counters   = [1 => 'first', 2 => 'second', 3 => 'third', 4 => 'fourth', 5 => 'fifth'];
@@ -108,12 +108,12 @@ trait CalculateRangeOccurrences
      */
     protected function getWeeklyInRange(Carbon $start, Carbon $end, int $skipMod, string $moment): array
     {
-        $return   = [];
-        $attempts = 0;
+        $return        = [];
+        $attempts      = 0;
         app('log')->debug('Rep is weekly.');
         // monday = 1
         // sunday = 7
-        $dayOfWeek = (int) $moment;
+        $dayOfWeek     = (int) $moment;
         app('log')->debug(sprintf('DoW in repetition is %d, in mutator is %d', $dayOfWeek, $start->dayOfWeekIso));
         if ($start->dayOfWeekIso > $dayOfWeek) {
             // day has already passed this week, add one week:
@@ -154,8 +154,8 @@ trait CalculateRangeOccurrences
         }
 
         // is $date between $start and $end?
-        $obj   = clone $date;
-        $count = 0;
+        $obj        = clone $date;
+        $count      = 0;
         while ($obj <= $end && $obj >= $start && $count < 10) {
             if (0 === $attempts % $skipMod) {
                 $return[] = clone $obj;

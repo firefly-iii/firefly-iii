@@ -78,6 +78,7 @@ class General extends AbstractExtension
                         if (!$convertToNative || $currency->code === $native->code) {
                             $strings[] = app('amount')->formatAnything($currency, $balance, false);
                         }
+
                         continue;
                     }
                     if ('native_balance' === $key) {
@@ -85,6 +86,7 @@ class General extends AbstractExtension
                         if ($convertToNative) {
                             $strings[] = app('amount')->formatAnything($native, $balance, false);
                         }
+
                         continue;
                     }
                     if ($key !== $currency->code) {
@@ -108,15 +110,15 @@ class General extends AbstractExtension
             static function (int $size): string {
                 // less than one GB, more than one MB
                 if ($size < (1024 * 1024 * 2014) && $size >= (1024 * 1024)) {
-                    return round($size / (1024 * 1024), 2) . ' MB';
+                    return round($size / (1024 * 1024), 2).' MB';
                 }
 
                 // less than one MB
                 if ($size < (1024 * 1024)) {
-                    return round($size / 1024, 2) . ' KB';
+                    return round($size / 1024, 2).' KB';
                 }
 
-                return $size . ' bytes';
+                return $size.' bytes';
             }
         );
     }
@@ -138,7 +140,7 @@ class General extends AbstractExtension
                     case 'application/pdf':
                         return 'fa-file-pdf-o';
 
-                    // image
+                        // image
                     case 'image/png':
                     case 'image/jpeg':
                     case 'image/svg+xml':
@@ -147,7 +149,7 @@ class General extends AbstractExtension
                     case 'application/vnd.oasis.opendocument.image':
                         return 'fa-file-image-o';
 
-                    // MS word
+                        // MS word
                     case 'application/msword':
                     case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
                     case 'application/vnd.openxmlformats-officedocument.wordprocessingml.template':
@@ -163,7 +165,7 @@ class General extends AbstractExtension
                     case 'application/vnd.oasis.opendocument.text-master':
                         return 'fa-file-word-o';
 
-                    // MS excel
+                        // MS excel
                     case 'application/vnd.ms-excel':
                     case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
                     case 'application/vnd.openxmlformats-officedocument.spreadsheetml.template':
@@ -174,7 +176,7 @@ class General extends AbstractExtension
                     case 'application/vnd.oasis.opendocument.spreadsheet-template':
                         return 'fa-file-excel-o';
 
-                    // MS powerpoint
+                        // MS powerpoint
                     case 'application/vnd.ms-powerpoint':
                     case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
                     case 'application/vnd.openxmlformats-officedocument.presentationml.template':
@@ -186,7 +188,7 @@ class General extends AbstractExtension
                     case 'application/vnd.oasis.opendocument.presentation-template':
                         return 'fa-file-powerpoint-o';
 
-                    // calc
+                        // calc
                     case 'application/vnd.sun.xml.draw':
                     case 'application/vnd.sun.xml.draw.template':
                     case 'application/vnd.stardivision.draw':
@@ -282,7 +284,7 @@ class General extends AbstractExtension
                 $args  = func_get_args();
                 $route = $args[0]; // name of the route.
 
-                if (Route::getCurrentRoute()->getName() === $route) {
+                if (\Route::getCurrentRoute()->getName() === $route) {
                     return 'active';
                 }
 
@@ -302,7 +304,7 @@ class General extends AbstractExtension
             static function (): string {
                 $args  = func_get_args();
                 $route = $args[0]; // name of the route.
-                $name  = Route::getCurrentRoute()->getName() ?? '';
+                $name  = \Route::getCurrentRoute()->getName() ?? '';
                 if (str_contains($name, $route)) {
                     return 'active';
                 }
@@ -322,11 +324,11 @@ class General extends AbstractExtension
             'activeRoutePartialObjectType',
             static function ($context): string {
                 [, $route, $objectType] = func_get_args();
-                $activeObjectType = $context['objectType'] ?? false;
+                $activeObjectType       = $context['objectType'] ?? false;
 
                 if ($objectType === $activeObjectType
                     && false !== stripos(
-                        Route::getCurrentRoute()->getName(),
+                        \Route::getCurrentRoute()->getName(),
                         $route
                     )) {
                     return 'active';
@@ -349,7 +351,7 @@ class General extends AbstractExtension
             static function (): string {
                 $args  = func_get_args();
                 $route = $args[0]; // name of the route.
-                $name  = Route::getCurrentRoute()->getName() ?? '';
+                $name  = \Route::getCurrentRoute()->getName() ?? '';
                 if (str_contains($name, $route)) {
                     return 'menu-open';
                 }

@@ -62,17 +62,17 @@ class CategoryReportGenerator
      */
     public function operations(): void
     {
-        $earnedWith = $this->opsRepository->listIncome($this->start, $this->end, $this->accounts);
-        $spentWith  = $this->opsRepository->listExpenses($this->start, $this->end, $this->accounts);
+        $earnedWith     = $this->opsRepository->listIncome($this->start, $this->end, $this->accounts);
+        $spentWith      = $this->opsRepository->listExpenses($this->start, $this->end, $this->accounts);
 
         // also transferred out and transferred into these accounts in this category:
         $transferredIn  = $this->opsRepository->listTransferredIn($this->start, $this->end, $this->accounts);
         $transferredOut = $this->opsRepository->listTransferredOut($this->start, $this->end, $this->accounts);
 
-        $earnedWithout = $this->noCatRepository->listIncome($this->start, $this->end, $this->accounts);
-        $spentWithout  = $this->noCatRepository->listExpenses($this->start, $this->end, $this->accounts);
+        $earnedWithout  = $this->noCatRepository->listIncome($this->start, $this->end, $this->accounts);
+        $spentWithout   = $this->noCatRepository->listExpenses($this->start, $this->end, $this->accounts);
 
-        $this->report = [
+        $this->report   = [
             'categories' => [],
             'sums'       => [],
         ];
@@ -121,7 +121,7 @@ class CategoryReportGenerator
 
     private function processCategoryRow(int $currencyId, array $currencyRow, int $categoryId, array $categoryRow): void
     {
-        $key                              = sprintf('%s-%s', $currencyId, $categoryId);
+        $key = sprintf('%s-%s', $currencyId, $categoryId);
         $this->report['categories'][$key] ??= [
             'id'                      => $categoryId,
             'title'                   => $categoryRow['name'],
@@ -137,9 +137,9 @@ class CategoryReportGenerator
         // loop journals:
         foreach ($categoryRow['transaction_journals'] as $journal) {
             // sum of sums
-            $this->report['sums'][$currencyId]['sum'] = bcadd($this->report['sums'][$currencyId]['sum'], $journal['amount']);
+            $this->report['sums'][$currencyId]['sum']    = bcadd($this->report['sums'][$currencyId]['sum'], $journal['amount']);
             // sum of spent:
-            $this->report['sums'][$currencyId]['spent'] = -1 === bccomp($journal['amount'], '0') ? bcadd(
+            $this->report['sums'][$currencyId]['spent']  = -1 === bccomp($journal['amount'], '0') ? bcadd(
                 $this->report['sums'][$currencyId]['spent'],
                 $journal['amount']
             ) : $this->report['sums'][$currencyId]['spent'];
@@ -150,14 +150,14 @@ class CategoryReportGenerator
             ) : $this->report['sums'][$currencyId]['earned'];
 
             // sum of category
-            $this->report['categories'][$key]['sum'] = bcadd($this->report['categories'][$key]['sum'], $journal['amount']);
+            $this->report['categories'][$key]['sum']     = bcadd($this->report['categories'][$key]['sum'], $journal['amount']);
             // total spent in category
-            $this->report['categories'][$key]['spent'] = -1 === bccomp($journal['amount'], '0') ? bcadd(
+            $this->report['categories'][$key]['spent']   = -1 === bccomp($journal['amount'], '0') ? bcadd(
                 $this->report['categories'][$key]['spent'],
                 $journal['amount']
             ) : $this->report['categories'][$key]['spent'];
             // total earned in category
-            $this->report['categories'][$key]['earned'] = 1 === bccomp($journal['amount'], '0') ? bcadd(
+            $this->report['categories'][$key]['earned']  = 1 === bccomp($journal['amount'], '0') ? bcadd(
                 $this->report['categories'][$key]['earned'],
                 $journal['amount']
             ) : $this->report['categories'][$key]['earned'];

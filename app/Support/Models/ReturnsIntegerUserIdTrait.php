@@ -37,14 +37,14 @@ trait ReturnsIntegerUserIdTrait
     protected function userGroupId(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int) $value,
+            get: static fn ($value) => (int) $value,
         );
     }
 
     protected function userId(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int) $value,
+            get: static fn ($value) => (int) $value,
         );
     }
 }

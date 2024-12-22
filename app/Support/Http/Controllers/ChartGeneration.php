@@ -46,7 +46,7 @@ trait ChartGeneration
     protected function accountBalanceChart(Collection $accounts, Carbon $start, Carbon $end): array // chart helper method.
     {
         // chart properties for cache:
-        $cache = new CacheProperties();
+        $cache           = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('chart.account.account-balance-chart');
@@ -56,21 +56,21 @@ trait ChartGeneration
             // return $cache->get();
         }
         app('log')->debug('Regenerate chart.account.account-balance-chart from scratch.');
-        $locale = app('steam')->getLocale();
+        $locale          = app('steam')->getLocale();
 
         /** @var GeneratorInterface $generator */
-        $generator = app(GeneratorInterface::class);
+        $generator       = app(GeneratorInterface::class);
 
         /** @var AccountRepositoryInterface $accountRepos */
-        $accountRepos = app(AccountRepositoryInterface::class);
+        $accountRepos    = app(AccountRepositoryInterface::class);
 
-        $default   = app('amount')->getDefaultCurrency();
-        $chartData = [];
+        $default         = app('amount')->getDefaultCurrency();
+        $chartData       = [];
 
         /** @var Account $account */
         foreach ($accounts as $account) {
             // TODO we can use getAccountCurrency instead.
-            $currency = $accountRepos->getAccountCurrency($account);
+            $currency     = $accountRepos->getAccountCurrency($account);
             if (null === $currency) {
                 $currency = $default;
             }
@@ -79,7 +79,7 @@ trait ChartGeneration
                 $currency = $default;
             }
 
-            $currentSet = [
+            $currentSet   = [
                 'label'           => $account->name,
                 'currency_symbol' => $currency->symbol,
                 'entries'         => [],
@@ -89,16 +89,16 @@ trait ChartGeneration
             $range        = Steam::finalAccountBalanceInRange($account, $start, clone $end);
             $previous     = array_values($range)[0];
             while ($currentStart <= $end) {
-                $format   = $currentStart->format('Y-m-d');
-                $label    = trim($currentStart->isoFormat((string) trans('config.month_and_day_js', [], $locale)));
-                $balance  = $range[$format] ?? $previous;
-                $previous = $balance;
+                $format                        = $currentStart->format('Y-m-d');
+                $label                         = trim($currentStart->isoFormat((string) trans('config.month_and_day_js', [], $locale)));
+                $balance                       = $range[$format] ?? $previous;
+                $previous                      = $balance;
                 $currentStart->addDay();
                 $currentSet['entries'][$label] = $balance['balance']; // TODO or native_balance
             }
-            $chartData[] = $currentSet;
+            $chartData[]  = $currentSet;
         }
-        $data = $generator->multiSet($chartData);
+        $data            = $generator->multiSet($chartData);
         $cache->store($data);
 
         return $data;

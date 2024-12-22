@@ -38,13 +38,13 @@ trait GetFilterInstructions
             return [];
         }
         foreach ($set as $info) {
-            $column      = $info['column'] ?? 'NOPE';
-            $filterValue = (string) ($info['filter'] ?? self::INVALID_FILTER);
+            $column          = $info['column'] ?? 'NOPE';
+            $filterValue     = (string) ($info['filter'] ?? self::INVALID_FILTER);
             if (false === in_array($column, $allowed, true)) {
                 // skip invalid column
                 continue;
             }
-            $filterType = $config[$column] ?? false;
+            $filterType      = $config[$column] ?? false;
 
             switch ($filterType) {
                 default:

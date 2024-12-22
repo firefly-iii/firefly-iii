@@ -30,15 +30,13 @@ use FireflyIII\Models\Role;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
-use Override;
-use Str;
 
 /**
  * Class RemoteUserProvider
  */
 class RemoteUserProvider implements UserProvider
 {
-    #[Override]
+    #[\Override]
     public function rehashPasswordIfRequired(Authenticatable $user, array $credentials, bool $force = false): void
     {
         app('log')->debug(sprintf('Now at %s', __METHOD__));
@@ -74,7 +72,7 @@ class RemoteUserProvider implements UserProvider
                     'blocked'      => false,
                     'blocked_code' => null,
                     'email'        => $identifier,
-                    'password'     => bcrypt(Str::random(64)),
+                    'password'     => bcrypt(\Str::random(64)),
                 ]
             );
             // if this is the first user, give them admin as well.

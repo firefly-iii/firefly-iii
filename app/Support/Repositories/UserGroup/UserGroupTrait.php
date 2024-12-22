@@ -54,10 +54,10 @@ trait UserGroupTrait
     /**
      * @throws FireflyException
      */
-    public function setUser(null | Authenticatable | User $user): void
+    public function setUser(null|Authenticatable|User $user): void
     {
         if ($user instanceof User) {
-            $this->user = $user;
+            $this->user      = $user;
             if (null === $user->userGroup) {
                 throw new FireflyException(sprintf('User #%d has no user group.', $user->id));
             }
@@ -70,15 +70,16 @@ trait UserGroupTrait
      */
     public function setUserGroupById(int $userGroupId): void
     {
-        $memberships = GroupMembership::where('user_id', $this->user->id)
-                                      ->where('user_group_id', $userGroupId)
-                                      ->count();
+        $memberships     = GroupMembership::where('user_id', $this->user->id)
+            ->where('user_group_id', $userGroupId)
+            ->count()
+        ;
         if (0 === $memberships) {
             throw new FireflyException(sprintf('User #%d has no access to administration #%d', $this->user->id, $userGroupId));
         }
 
         /** @var null|UserGroup $userGroup */
-        $userGroup = UserGroup::find($userGroupId);
+        $userGroup       = UserGroup::find($userGroupId);
         if (null === $userGroup) {
             throw new FireflyException(sprintf('Cannot find administration for user #%d', $this->user->id));
         }
