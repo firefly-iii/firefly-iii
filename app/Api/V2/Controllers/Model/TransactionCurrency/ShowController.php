@@ -1,8 +1,8 @@
 <?php
 
 /*
- * IndexController.php
- * Copyright (c) 2024 james@firefly-iii.org.
+ * ShowController.php
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -17,7 +17,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see https://www.gnu.org/licenses/.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -25,19 +25,20 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V2\Controllers\Model\TransactionCurrency;
 
 use FireflyIII\Api\V2\Controllers\Controller;
-use FireflyIII\Api\V2\Request\Model\TransactionCurrency\IndexRequest;
-use FireflyIII\Enums\UserRoleEnum;
+use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Transformers\V2\CurrencyTransformer;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Pagination\LengthAwarePaginator;
 
-class IndexController extends Controller
+/**
+ * Class ShowController
+ */
+class ShowController extends Controller
 {
     public const string RESOURCE_KEY = 'transaction-currencies';
 
     private CurrencyRepositoryInterface $repository;
-    protected array                     $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
     public function __construct()
     {
@@ -54,30 +55,24 @@ class IndexController extends Controller
         );
     }
 
-    public function index(IndexRequest $request): JsonResponse
+    public function show(TransactionCurrency $currency): JsonResponse
     {
-        $settings  = $request->getAll();
-        if(true === $settings['enabled']) {
-            $currencies = $this->repository->get();
+        $groups  = $currency->userGroups()->where('user_groups.id', $this->repository->getUserGroup()->id)->get();
+        $enabled = $groups->count() > 0;
+        $default = false;
+        /** @var UserGroup $group */
+        foreach ($groups as $group) {
+            $default = 1 === $group->pivot->group_default;
         }
-        if(true !== $settings['enabled']) {
-            $currencies = $this->repository->getAll();
-        }
+        $currency->userGroupEnabled = $enabled;
+        $currency->userGroupDefault = $default;
 
-        $pageSize   = $this->parameters->get('limit');
-        $count      = $currencies->count();
 
-        // depending on the sort parameters, this list must not be split, because the
-        // order is calculated in the account transformer and by that time it's too late.
-        $accounts = $currencies->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
-        $paginator   = new LengthAwarePaginator($accounts, $count, $pageSize, $this->parameters->get('page'));
         $transformer = new CurrencyTransformer();
-
-        $this->parameters->set('pageSize', $pageSize);
-        $transformer->setParameters($this->parameters); // give params to transformer
+        $transformer->setParameters($this->parameters);
 
         return response()
-            ->json($this->jsonApiList(self::RESOURCE_KEY, $paginator, $transformer))
+            ->api($this->jsonApiObject(self::RESOURCE_KEY, $currency, $transformer))
             ->header('Content-Type', self::CONTENT_TYPE);
     }
 }

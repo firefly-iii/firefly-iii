@@ -129,7 +129,10 @@
         "logs": "Nh\u1eadt k\u00fd",
         "response": "\u0110\u00e1p l\u1ea1i",
         "visit_webhook_url": "\u0110i \u0111\u1ebfn webhook URL",
-        "reset_webhook_secret": "C\u00e0i l\u1ea1i kh\u00f3a webhook"
+        "reset_webhook_secret": "C\u00e0i l\u1ea1i kh\u00f3a webhook",
+        "header_exchange_rates": "Exchange rates",
+        "exchange_rates_intro": "Firefly III supports downloading and using exchange rates. Read more about this in <a href=\"https:\/\/docs.firefly-iii.org\/LOL_NOT_FINISHED_YET_TODO\">the documentation<\/a>.",
+        "exchange_rates_from_to": "Between :from and :to"
     },
     "form": {
         "url": "URL",
@@ -145,7 +148,9 @@
         "internal_reference": "T\u00e0i li\u1ec7u tham kh\u1ea3o n\u1ed9i b\u1ed9",
         "webhook_response": "\u0110\u00e1p l\u1ea1i",
         "webhook_trigger": "K\u00edch ho\u1ea1t",
-        "webhook_delivery": "Ph\u00e2n ph\u1ed1i"
+        "webhook_delivery": "Ph\u00e2n ph\u1ed1i",
+        "from_currency_to_currency": "{from} &rarr; {to}",
+        "to_currency_from_currency": "{to} &rarr; {from}"
     },
     "list": {
         "active": "\u0110ang ho\u1ea1t \u0111\u1ed9ng?",

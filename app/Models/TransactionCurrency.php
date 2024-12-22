@@ -40,8 +40,8 @@ class TransactionCurrency extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    public ?bool $userGroupDefault;
-    public ?bool $userGroupEnabled;
+    public ?bool $userGroupDefault = null;
+    public ?bool $userGroupEnabled = null;
     protected $casts
                         = [
             'created_at'     => 'datetime',

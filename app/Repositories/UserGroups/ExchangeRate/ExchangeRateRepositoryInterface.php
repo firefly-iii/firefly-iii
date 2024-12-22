@@ -1,6 +1,7 @@
+<?php
 /*
- * edit_transactions.js
- * Copyright (c) 2019 james@firefly-iii.org
+ * ExchangeRateRepositoryInterface.php
+ * Copyright (c) 2024 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -15,25 +16,19 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
-import Rates from "../components/exchange-rates/Rates";
+declare(strict_types=1);
 
-/**
- * First we will load Axios via bootstrap.js
- * jquery and bootstrap-sass preloaded in app.js
- * vue, uiv and vuei18n are in app_vue.js
- */
+namespace FireflyIII\Repositories\UserGroups\ExchangeRate;
 
-require('../bootstrap');
-const i18n = require('../i18n');
+use FireflyIII\Models\TransactionCurrency;
+use Illuminate\Support\Collection;
 
-let props = {};
-const app = new Vue({
-    i18n,
-    el: "#exchange_rates_rates",
-    render: (createElement) => {
-        return createElement(Rates, {props: props})
-    },
-});
+interface ExchangeRateRepositoryInterface
+{
+
+    public function getRates(TransactionCurrency $from, TransactionCurrency $to): Collection;
+
+}

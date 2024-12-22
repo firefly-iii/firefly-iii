@@ -95,14 +95,35 @@ Route::group(
     ],
     static function (): void {
         Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
+        Route::get('{currency_code}', ['uses' => 'ShowController@show', 'as' => 'show']);
 //        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
-//        Route::get('{userGroup}', ['uses' => 'ShowController@show', 'as' => 'show']);
+//
         //        Route::put('{userGroup}', ['uses' => 'UpdateController@update', 'as' => 'update']);
         //        Route::post('{userGroup}/use', ['uses' => 'UpdateController@useUserGroup', 'as' => 'use']);
         //        Route::put('{userGroup}/update-membership', ['uses' => 'UpdateController@updateMembership', 'as' => 'updateMembership']);
         //        Route::delete('{userGroup}', ['uses' => 'DestroyController@destroy', 'as' => 'destroy']);
     }
 );
+
+// exchange rates
+Route::group(
+    [
+        'namespace' => 'FireflyIII\Api\V2\Controllers\Model\ExchangeRate',
+        'prefix'    => 'v2/exchange-rates',
+        'as'        => 'api.v2.exchange-rates.',
+    ],
+    static function (): void {
+        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
+        Route::get('{fromCurrencyCode}/{toCurrencyCode}', ['uses' => 'ShowController@show', 'as' => 'show']);
+//        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
+//
+        //        Route::put('{userGroup}', ['uses' => 'UpdateController@update', 'as' => 'update']);
+        //        Route::post('{userGroup}/use', ['uses' => 'UpdateController@useUserGroup', 'as' => 'use']);
+        //        Route::put('{userGroup}/update-membership', ['uses' => 'UpdateController@updateMembership', 'as' => 'updateMembership']);
+        //        Route::delete('{userGroup}', ['uses' => 'DestroyController@destroy', 'as' => 'destroy']);
+    }
+);
+
 
 // V2 API route for Summary boxes
 // BASIC

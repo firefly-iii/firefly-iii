@@ -129,7 +129,10 @@
         "logs": "Logger",
         "response": "Respons",
         "visit_webhook_url": "Bes\u00f8k URL til webhook",
-        "reset_webhook_secret": "Tilbakestill Webhook n\u00f8kkel"
+        "reset_webhook_secret": "Tilbakestill Webhook n\u00f8kkel",
+        "header_exchange_rates": "Exchange rates",
+        "exchange_rates_intro": "Firefly III supports downloading and using exchange rates. Read more about this in <a href=\"https:\/\/docs.firefly-iii.org\/LOL_NOT_FINISHED_YET_TODO\">the documentation<\/a>.",
+        "exchange_rates_from_to": "Between :from and :to"
     },
     "form": {
         "url": "Nettadresse",
@@ -145,7 +148,9 @@
         "internal_reference": "Intern referanse",
         "webhook_response": "Respons",
         "webhook_trigger": "Utl\u00f8ser",
-        "webhook_delivery": "Levering"
+        "webhook_delivery": "Levering",
+        "from_currency_to_currency": "{from} &rarr; {to}",
+        "to_currency_from_currency": "{to} &rarr; {from}"
     },
     "list": {
         "active": "Er aktiv?",

@@ -129,7 +129,10 @@
         "logs": "Logi",
         "response": "Odpowied\u017a",
         "visit_webhook_url": "Odwied\u017a adres URL webhooka",
-        "reset_webhook_secret": "Resetuj sekret webhooka"
+        "reset_webhook_secret": "Resetuj sekret webhooka",
+        "header_exchange_rates": "Exchange rates",
+        "exchange_rates_intro": "Firefly III supports downloading and using exchange rates. Read more about this in <a href=\"https:\/\/docs.firefly-iii.org\/LOL_NOT_FINISHED_YET_TODO\">the documentation<\/a>.",
+        "exchange_rates_from_to": "Between :from and :to"
     },
     "form": {
         "url": "URL",
@@ -145,7 +148,9 @@
         "internal_reference": "Wewn\u0119trzny numer",
         "webhook_response": "Odpowied\u017a",
         "webhook_trigger": "Wyzwalacz",
-        "webhook_delivery": "Dor\u0119czenie"
+        "webhook_delivery": "Dor\u0119czenie",
+        "from_currency_to_currency": "{from} &rarr; {to}",
+        "to_currency_from_currency": "{to} &rarr; {from}"
     },
     "list": {
         "active": "Jest aktywny?",

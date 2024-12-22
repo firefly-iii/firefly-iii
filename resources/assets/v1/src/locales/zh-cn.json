@@ -129,7 +129,10 @@
         "logs": "\u65e5\u5fd7",
         "response": "\u54cd\u5e94",
         "visit_webhook_url": "\u8bbf\u95ee webhook URL",
-        "reset_webhook_secret": "\u91cd\u7f6e webhook \u5bc6\u94a5"
+        "reset_webhook_secret": "\u91cd\u7f6e webhook \u5bc6\u94a5",
+        "header_exchange_rates": "Exchange rates",
+        "exchange_rates_intro": "Firefly III supports downloading and using exchange rates. Read more about this in <a href=\"https:\/\/docs.firefly-iii.org\/LOL_NOT_FINISHED_YET_TODO\">the documentation<\/a>.",
+        "exchange_rates_from_to": "Between :from and :to"
     },
     "form": {
         "url": "\u7f51\u5740",
@@ -145,7 +148,9 @@
         "internal_reference": "\u5185\u90e8\u5f15\u7528",
         "webhook_response": "\u54cd\u5e94\u5185\u5bb9",
         "webhook_trigger": "\u89e6\u53d1\u6761\u4ef6",
-        "webhook_delivery": "\u53d1\u9001\u683c\u5f0f"
+        "webhook_delivery": "\u53d1\u9001\u683c\u5f0f",
+        "from_currency_to_currency": "{from} &rarr; {to}",
+        "to_currency_from_currency": "{to} &rarr; {from}"
     },
     "list": {
         "active": "\u662f\u5426\u542f\u7528\uff1f",
