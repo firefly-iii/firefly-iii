@@ -30,8 +30,8 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Api\AccountFilter;
-use FireflyIII\Support\Steam;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
