@@ -1823,49 +1823,73 @@ class OperatorQuerySearch implements SearchInterface
                 $this->collector->setSepaCT($value);
 
                 break;
+
             case 'source_balance_gte':
             case '-source_balance_lt':
                 $this->collector->accountBalanceIs('source', '>=', $value);
+
                 break;
+
             case '-source_balance_gte':
             case 'source_balance_lt':
                 $this->collector->accountBalanceIs('source', '<', $value);
+
                 break;
+
             case 'source_balance_gt':
             case '-source_balance_lte':
                 $this->collector->accountBalanceIs('source', '>', $value);
+
                 break;
+
             case '-source_balance_gt':
             case 'source_balance_lte':
                 $this->collector->accountBalanceIs('source', '<=', $value);
+
                 break;
+
             case 'source_balance_is':
                 $this->collector->accountBalanceIs('source', '==', $value);
+
                 break;
+
             case '-source_balance_is':
                 $this->collector->accountBalanceIs('source', '!=', $value);
+
                 break;
+
             case 'destination_balance_gte':
             case '-destination_balance_lt':
                 $this->collector->accountBalanceIs('destination', '>=', $value);
+
                 break;
+
             case '-destination_balance_gte':
             case 'destination_balance_lt':
                 $this->collector->accountBalanceIs('destination', '<', $value);
+
                 break;
+
             case 'destination_balance_gt':
             case '-destination_balance_lte':
                 $this->collector->accountBalanceIs('destination', '>', $value);
+
                 break;
+
             case '-destination_balance_gt':
             case 'destination_balance_lte':
                 $this->collector->accountBalanceIs('destination', '<=', $value);
+
                 break;
+
             case 'destination_balance_is':
                 $this->collector->accountBalanceIs('destination', '==', $value);
+
                 break;
+
             case '-destination_balance_is':
                 $this->collector->accountBalanceIs('destination', '!=', $value);
+
                 break;
         }
 
