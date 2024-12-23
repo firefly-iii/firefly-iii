@@ -89,10 +89,10 @@ trait CalculateXOccurrences
      */
     protected function getXNDomOccurrences(Carbon $date, int $count, int $skipMod, string $moment): array
     {
-        $return   = [];
-        $total    = 0;
-        $attempts = 0;
-        $mutator  = clone $date;
+        $return     = [];
+        $total      = 0;
+        $attempts   = 0;
+        $mutator    = clone $date;
         $mutator->addDay(); // always assume today has passed.
         $mutator->startOfMonth();
         // this feels a bit like a cop out but why reinvent the wheel?
@@ -120,14 +120,14 @@ trait CalculateXOccurrences
      */
     protected function getXWeeklyOccurrences(Carbon $date, int $count, int $skipMod, string $moment): array
     {
-        $return   = [];
-        $total    = 0;
-        $attempts = 0;
-        $mutator  = clone $date;
+        $return        = [];
+        $total         = 0;
+        $attempts      = 0;
+        $mutator       = clone $date;
         // monday = 1
         // sunday = 7
         $mutator->addDay(); // always assume today has passed.
-        $dayOfWeek = (int) $moment;
+        $dayOfWeek     = (int) $moment;
         if ($mutator->dayOfWeekIso > $dayOfWeek) {
             // day has already passed this week, add one week:
             $mutator->addWeek();
@@ -164,7 +164,7 @@ trait CalculateXOccurrences
         if ($mutator > $date) {
             $date->addYear();
         }
-        $obj = clone $date;
+        $obj        = clone $date;
         while ($total < $count) {
             if (0 === $attempts % $skipMod) {
                 $return[] = clone $obj;

@@ -35,16 +35,16 @@ use Illuminate\Support\Collection;
 class AccountSearch implements GenericSearchInterface
 {
     /** @var string */
-    public const string SEARCH_ALL = 'all';
+    public const string SEARCH_ALL    = 'all';
 
     /** @var string */
-    public const string SEARCH_IBAN = 'iban';
+    public const string SEARCH_IBAN   = 'iban';
 
     /** @var string */
-    public const string SEARCH_ID = 'id';
+    public const string SEARCH_ID     = 'id';
 
     /** @var string */
-    public const string SEARCH_NAME = 'name';
+    public const string SEARCH_NAME   = 'name';
 
     /** @var string */
     public const string SEARCH_NUMBER = 'number';
@@ -61,9 +61,10 @@ class AccountSearch implements GenericSearchInterface
     public function search(): Collection
     {
         $searchQuery   = $this->user->accounts()
-                                    ->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id')
-                                    ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
-                                    ->whereIn('account_types.type', $this->types);
+            ->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id')
+            ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
+            ->whereIn('account_types.type', $this->types)
+        ;
         $like          = sprintf('%%%s%%', $this->query);
         $originalQuery = $this->query;
 
@@ -134,7 +135,7 @@ class AccountSearch implements GenericSearchInterface
         $this->types = $types;
     }
 
-    public function setUser(null | Authenticatable | User $user): void
+    public function setUser(null|Authenticatable|User $user): void
     {
         if ($user instanceof User) {
             $this->user = $user;

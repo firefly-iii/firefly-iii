@@ -47,15 +47,16 @@ class Preferences
         }
 
         return Preference::where('user_id', $user->id)
-                         ->where('name', '!=', 'currencyPreference')
-                         ->where(function (Builder $q) use ($user): void {
-                             $q->whereNull('user_group_id');
-                             $q->orWhere('user_group_id', $user->user_group_id);
-                         })
-                         ->get();
+            ->where('name', '!=', 'currencyPreference')
+            ->where(function (Builder $q) use ($user): void {
+                $q->whereNull('user_group_id');
+                $q->orWhere('user_group_id', $user->user_group_id);
+            })
+            ->get()
+        ;
     }
 
-    public function get(string $name, null | array | bool | int | string $default = null): ?Preference
+    public function get(string $name, null|array|bool|int|string $default = null): ?Preference
     {
         /** @var null|User $user */
         $user = auth()->user();
@@ -69,7 +70,7 @@ class Preferences
         return $this->getForUser($user, $name, $default);
     }
 
-    public function getForUser(User $user, string $name, null | array | bool | int | string $default = null): ?Preference
+    public function getForUser(User $user, string $name, null|array|bool|int|string $default = null): ?Preference
     {
         // don't care about user group ID, except for some specific preferences.
         $userGroupId = $this->getUserGroupId($user, $name);
@@ -121,16 +122,16 @@ class Preferences
         Cache::put($key, '', 5);
     }
 
-    public function setForUser(User $user, string $name, null | array | bool | int | string $value): Preference
+    public function setForUser(User $user, string $name, null|array|bool|int|string $value): Preference
     {
-        $fullName = sprintf('preference%s%s', $user->id, $name);
-        $groupId  = $this->getUserGroupId($user, $name);
-        $groupId  = 0 === (int) $groupId ? null : (int) $groupId;
+        $fullName   = sprintf('preference%s%s', $user->id, $name);
+        $groupId    = $this->getUserGroupId($user, $name);
+        $groupId    = 0 === (int) $groupId ? null : (int) $groupId;
 
         Cache::forget($fullName);
 
         /** @var null|Preference $pref */
-        $pref = Preference::where('user_group_id', $groupId)->where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data', 'updated_at', 'created_at']);
+        $pref       = Preference::where('user_group_id', $groupId)->where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data', 'updated_at', 'created_at']);
 
         if (null !== $pref && null === $value) {
             $pref->delete();
@@ -173,12 +174,13 @@ class Preferences
     {
         $result      = [];
         $preferences = Preference::where('user_id', $user->id)
-                                 ->where(function (Builder $q) use ($user): void {
-                                     $q->whereNull('user_group_id');
-                                     $q->orWhere('user_group_id', $user->user_group_id);
-                                 })
-                                 ->whereIn('name', $list)
-                                 ->get(['id', 'name', 'data']);
+            ->where(function (Builder $q) use ($user): void {
+                $q->whereNull('user_group_id');
+                $q->orWhere('user_group_id', $user->user_group_id);
+            })
+            ->whereIn('name', $list)
+            ->get(['id', 'name', 'data'])
+        ;
 
         /** @var Preference $preference */
         foreach ($preferences as $preference) {
@@ -216,7 +218,7 @@ class Preferences
         return $result;
     }
 
-    public function getEncryptedForUser(User $user, string $name, null | array | bool | int | string $default = null): ?Preference
+    public function getEncryptedForUser(User $user, string $name, null|array|bool|int|string $default = null): ?Preference
     {
         $result = $this->getForUser($user, $name, $default);
         if ('' === $result->data) {
@@ -237,7 +239,7 @@ class Preferences
         return $result;
     }
 
-    public function getFresh(string $name, null | array | bool | int | string $default = null): ?Preference
+    public function getFresh(string $name, null|array|bool|int|string $default = null): ?Preference
     {
         /** @var null|User $user */
         $user = auth()->user();
@@ -275,7 +277,7 @@ class Preferences
         Session::forget('first');
     }
 
-    public function set(string $name, null | array | bool | int | string $value): Preference
+    public function set(string $name, null|array|bool|int|string $value): Preference
     {
         /** @var null|User $user */
         $user = auth()->user();

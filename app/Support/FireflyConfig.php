@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support;
 
-use Cache;
-use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Configuration;
 use Illuminate\Contracts\Encryption\DecryptException;
@@ -39,9 +37,9 @@ class FireflyConfig
 {
     public function delete(string $name): void
     {
-        $fullName = 'ff-config-' . $name;
-        if (Cache::has($fullName)) {
-            Cache::forget($fullName);
+        $fullName = 'ff-config-'.$name;
+        if (\Cache::has($fullName)) {
+            \Cache::forget($fullName);
         }
         Configuration::where('name', $name)->forceDelete();
     }
@@ -81,20 +79,20 @@ class FireflyConfig
      */
     public function get(string $name, $default = null): ?Configuration
     {
-        $fullName = 'ff-config-' . $name;
-        if (Cache::has($fullName)) {
-            return Cache::get($fullName);
+        $fullName = 'ff-config-'.$name;
+        if (\Cache::has($fullName)) {
+            return \Cache::get($fullName);
         }
 
         try {
             /** @var null|Configuration $config */
             $config = Configuration::where('name', $name)->first(['id', 'name', 'data']);
-        } catch (Exception | QueryException $e) {
+        } catch (\Exception|QueryException $e) {
             throw new FireflyException(sprintf('Could not poll the database: %s', $e->getMessage()), 0, $e);
         }
 
         if (null !== $config) {
-            Cache::forever($fullName, $config);
+            \Cache::forever($fullName, $config);
 
             return $config;
         }
@@ -124,13 +122,13 @@ class FireflyConfig
             $item->name = $name;
             $item->data = $value;
             $item->save();
-            Cache::forget('ff-config-' . $name);
+            \Cache::forget('ff-config-'.$name);
 
             return $item;
         }
         $config->data = $value;
         $config->save();
-        Cache::forget('ff-config-' . $name);
+        \Cache::forget('ff-config-'.$name);
 
         return $config;
     }

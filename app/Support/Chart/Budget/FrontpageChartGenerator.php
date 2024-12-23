@@ -155,7 +155,7 @@ class FrontpageChartGenerator
      */
     private function processRow(array $data, Budget $budget, BudgetLimit $limit, array $entry): array
     {
-        $title = sprintf('%s (%s)', $budget->name, $entry['currency_name']);
+        $title                      = sprintf('%s (%s)', $budget->name, $entry['currency_name']);
         if ($limit->start_date->startOfDay()->ne($this->start->startOfDay()) || $limit->end_date->startOfDay()->ne($this->end->startOfDay())) {
             $title = sprintf(
                 '%s (%s) (%s - %s)',
@@ -165,7 +165,7 @@ class FrontpageChartGenerator
                 $limit->end_date->isoFormat($this->monthAndDayFormat)
             );
         }
-        $sumSpent = bcmul($entry['sum'], '-1'); // spent
+        $sumSpent                   = bcmul($entry['sum'], '-1'); // spent
 
         $data[0]['entries'][$title] = 1 === bccomp($sumSpent, $limit->amount) ? $limit->amount : $sumSpent;                              // spent
         $data[1]['entries'][$title] = 1 === bccomp($limit->amount, $sumSpent) ? bcadd($entry['sum'], $limit->amount) : '0';              // left to spent

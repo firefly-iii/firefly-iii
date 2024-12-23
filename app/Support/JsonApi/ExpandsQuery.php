@@ -77,7 +77,7 @@ trait ExpandsQuery
         $config = config('api.valid_api_filters')[$class];
         $parsed = [];
         foreach ($filters->all() as $filter) {
-            $key = $filter->key();
+            $key   = $filter->key();
             if (!in_array($key, $config, true)) {
                 continue;
             }

@@ -136,9 +136,9 @@
         "exchange_rates_intro_rates": "Firefly III bla bla bla exchange rates. Inverse is automatically calculated if not provided. Will go back to last found rate.",
         "header_exchange_rates_rates": "Wechselkurse",
         "header_exchange_rates_table": "Tabelle mit Wechselkursen",
-        "help_rate_form": "On this day, how many {to} will you get for one {from}?",
-        "add_new_rate": "Add a new exchange rate",
-        "save_new_rate": "Save new rate"
+        "help_rate_form": "An diesem Tag, wie viele {to} werden Sie f\u00fcr einen {from} bekommen?",
+        "add_new_rate": "Neuen Wechselkurs hinzuf\u00fcgen",
+        "save_new_rate": "Neuen Kurs speichern"
     },
     "form": {
         "url": "URL",
@@ -158,7 +158,7 @@
         "webhook_delivery": "Zustellung",
         "from_currency_to_currency": "{from} &rarr; {to}",
         "to_currency_from_currency": "{to} &rarr; {from}",
-        "rate": "Rate"
+        "rate": "Kurs"
     },
     "list": {
         "active": "Aktiv?",

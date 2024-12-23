@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Http\Api;
 
 use Carbon\Carbon;
-use DateTimeInterface;
 use FireflyIII\Models\TransactionCurrency;
 
 /**
@@ -46,7 +45,7 @@ trait ConvertsExchangeRates
 
         // if not enabled, return the same array but without conversion:
         return $set;
-        $this->enabled = false;
+        $this->enabled    = false;
         if (false === $this->enabled) {
             $set['converted'] = false;
 
@@ -56,8 +55,8 @@ trait ConvertsExchangeRates
         $set['converted'] = true;
 
         /** @var TransactionCurrency $native */
-        $native   = app('amount')->getDefaultCurrency();
-        $currency = $this->getCurrency((int) $set['currency_id']);
+        $native           = app('amount')->getDefaultCurrency();
+        $currency         = $this->getCurrency((int) $set['currency_id']);
         if ($native->id === $currency->id) {
             $set['native_currency_id']             = (string) $currency->id;
             $set['native_currency_code']           = $currency->code;
@@ -67,9 +66,9 @@ trait ConvertsExchangeRates
             return $set;
         }
         foreach ($set['entries'] as $date => $entry) {
-            $carbon = Carbon::createFromFormat(DateTimeInterface::ATOM, $date);
-            $rate   = $this->getRate($currency, $native, $carbon);
-            $rate   = '0' === $rate ? '1' : $rate;
+            $carbon                = Carbon::createFromFormat(\DateTimeInterface::ATOM, $date);
+            $rate                  = $this->getRate($currency, $native, $carbon);
+            $rate                  = '0' === $rate ? '1' : $rate;
             app('log')->debug(sprintf('bcmul("%s", "%s")', (string) $entry, $rate));
             $set['entries'][$date] = (float) bcmul((string) $entry, $rate);
         }

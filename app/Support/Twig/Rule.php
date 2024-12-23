@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Twig;
 
-use Config;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -64,7 +63,7 @@ class Rule extends AbstractExtension
                 $possibleTriggers = [];
                 foreach ($ruleTriggers as $key) {
                     if ('user_action' !== $key) {
-                        $possibleTriggers[$key] = (string) trans('firefly.rule_trigger_' . $key . '_choice');
+                        $possibleTriggers[$key] = (string) trans('firefly.rule_trigger_'.$key.'_choice');
                     }
                 }
                 unset($ruleTriggers);
@@ -81,10 +80,10 @@ class Rule extends AbstractExtension
             'allRuleActions',
             static function () {
                 // array of valid values for actions
-                $ruleActions     = array_keys(Config::get('firefly.rule-actions'));
+                $ruleActions     = array_keys(\Config::get('firefly.rule-actions'));
                 $possibleActions = [];
                 foreach ($ruleActions as $key) {
-                    $possibleActions[$key] = (string) trans('firefly.rule_action_' . $key . '_choice');
+                    $possibleActions[$key] = (string) trans('firefly.rule_action_'.$key.'_choice');
                 }
                 unset($ruleActions);
                 asort($possibleActions);

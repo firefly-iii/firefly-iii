@@ -39,8 +39,8 @@ trait FiltersPagination
         $pagination['number'] = min(65536, max($pagination['number'], 1));
 
         // clean up page size
-        $pagination['size'] = (int) ($pagination['size'] ?? $this->getPageSize());
-        $pagination['size'] = min(1337, max($pagination['size'], 1));
+        $pagination['size']   = (int) ($pagination['size'] ?? $this->getPageSize());
+        $pagination['size']   = min(1337, max($pagination['size'], 1));
 
         return $pagination;
     }

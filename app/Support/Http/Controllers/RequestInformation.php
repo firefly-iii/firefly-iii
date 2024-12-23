@@ -30,7 +30,6 @@ use FireflyIII\Http\Requests\RuleFormRequest;
 use FireflyIII\Http\Requests\TestRuleFormRequest;
 use FireflyIII\Support\Binder\AccountList;
 use FireflyIII\User;
-use Hash;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Validator;
@@ -83,13 +82,13 @@ trait RequestInformation
         $page         = $this->getPageName();
         $specificPage = $this->getSpecificPageName();
         // indicator if user has seen the help for this page ( + special page):
-        $key = sprintf('shown_demo_%s%s', $page, $specificPage);
+        $key          = sprintf('shown_demo_%s%s', $page, $specificPage);
         // is there an intro for this route?
         $intro        = config(sprintf('intro.%s', $page)) ?? [];
         $specialIntro = config(sprintf('intro.%s%s', $page, $specificPage)) ?? [];
         // some routes have a "what" parameter, which indicates a special page:
 
-        $shownDemo = true;
+        $shownDemo    = true;
         // both must be array and either must be > 0
         if (count($intro) > 0 || count($specialIntro) > 0) {
             $shownDemo = app('preferences')->get($key, false)->data;
@@ -123,7 +122,7 @@ trait RequestInformation
     final protected function notInSessionRange(Carbon $date): bool // Validate a preference
     {
         /** @var Carbon $start */
-        $start = session('start', today(config('app.timezone'))->startOfMonth());
+        $start  = session('start', today(config('app.timezone'))->startOfMonth());
 
         /** @var Carbon $end */
         $end    = session('end', today(config('app.timezone'))->endOfMonth());
@@ -145,20 +144,20 @@ trait RequestInformation
     final protected function parseAttributes(array $attributes): array // parse input + return result
     {
         $attributes['location'] ??= '';
-        $attributes['accounts'] = AccountList::routeBinder($attributes['accounts'] ?? '', new Route('get', '', []));
-        $date                   = Carbon::createFromFormat('Ymd', $attributes['startDate']);
+        $attributes['accounts']  = AccountList::routeBinder($attributes['accounts'] ?? '', new Route('get', '', []));
+        $date                    = Carbon::createFromFormat('Ymd', $attributes['startDate']);
         if (null === $date) {
             $date = today(config('app.timezone'));
         }
         $date->startOfMonth();
         $attributes['startDate'] = $date;
 
-        $date2 = Carbon::createFromFormat('Ymd', $attributes['endDate']);
+        $date2                   = Carbon::createFromFormat('Ymd', $attributes['endDate']);
         if (null === $date2) {
             $date2 = today(config('app.timezone'));
         }
         $date2->endOfDay();
-        $attributes['endDate'] = $date2;
+        $attributes['endDate']   = $date2;
 
         return $attributes;
     }
@@ -170,7 +169,7 @@ trait RequestInformation
      */
     final protected function validatePassword(User $user, string $current, string $new): bool // get request info
     {
-        if (!Hash::check($current, $user->password)) {
+        if (!\Hash::check($current, $user->password)) {
             throw new ValidationException((string) trans('firefly.invalid_current_password'));
         }
 

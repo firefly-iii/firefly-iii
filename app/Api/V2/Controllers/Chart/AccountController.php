@@ -56,8 +56,8 @@ class AccountController extends Controller
             function ($request, $next) {
                 $this->repository = app(AccountRepositoryInterface::class);
                 $this->repository->setUserGroup($this->validateUserGroup($request));
-                $this->chartData = new ChartData();
-                $this->default   = app('amount')->getDefaultCurrency();
+                $this->chartData  = new ChartData();
+                $this->default    = app('amount')->getDefaultCurrency();
 
                 return $next($request);
             }
@@ -92,11 +92,11 @@ class AccountController extends Controller
      */
     private function renderAccountData(array $params, Account $account): void
     {
-        $currency = $this->repository->getAccountCurrency($account);
+        $currency       = $this->repository->getAccountCurrency($account);
         if (null === $currency) {
             $currency = $this->default;
         }
-        $currentSet   = [
+        $currentSet     = [
             'label'                          => $account->name,
 
             // the currency that belongs to the account.
@@ -117,18 +117,18 @@ class AccountController extends Controller
             'entries'                        => [],
             'native_entries'                 => [],
         ];
-        $currentStart = clone $params['start'];
-        $range        = app('steam')->finalAccountBalanceInRange($account, $params['start'], clone $params['end'], $currency);
+        $currentStart   = clone $params['start'];
+        $range          = app('steam')->finalAccountBalanceInRange($account, $params['start'], clone $params['end'], $currency);
 
         $previous       = array_values($range)[0]['balance'];
         $previousNative = array_values($range)[0]['native_balance'];
         while ($currentStart <= $params['end']) {
-            $format         = $currentStart->format('Y-m-d');
-            $label          = $currentStart->toAtomString();
-            $balance        = array_key_exists($format, $range) ? $range[$format]['balance'] : $previous;
-            $balanceNative  = array_key_exists($format, $range) ? $range[$format]['balance_native'] : $previousNative;
-            $previous       = $balance;
-            $previousNative = $balanceNative;
+            $format                               = $currentStart->format('Y-m-d');
+            $label                                = $currentStart->toAtomString();
+            $balance                              = array_key_exists($format, $range) ? $range[$format]['balance'] : $previous;
+            $balanceNative                        = array_key_exists($format, $range) ? $range[$format]['balance_native'] : $previousNative;
+            $previous                             = $balance;
+            $previousNative                       = $balanceNative;
 
             $currentStart->addDay();
             $currentSet['entries'][$label]        = $balance;

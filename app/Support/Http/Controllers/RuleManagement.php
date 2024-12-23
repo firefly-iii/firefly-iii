@@ -28,7 +28,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Support\Search\OperatorQuerySearch;
 use Illuminate\Http\Request;
-use Throwable;
 
 /**
  * Trait RuleManagement
@@ -55,7 +54,7 @@ trait RuleManagement
                             'count'      => $index + 1,
                         ]
                     )->render();
-                } catch (Throwable $e) {
+                } catch (\Throwable $e) {
                     app('log')->error(sprintf('Throwable was thrown in getPreviousActions(): %s', $e->getMessage()));
                     app('log')->error($e->getTraceAsString());
 
@@ -74,8 +73,8 @@ trait RuleManagement
     protected function getPreviousTriggers(Request $request): array
     {
         // TODO duplicated code.
-        $operators = config('search.operators');
-        $triggers  = [];
+        $operators       = config('search.operators');
+        $triggers        = [];
         foreach ($operators as $key => $operator) {
             if ('user_action' !== $key && false === $operator['alias']) {
                 $triggers[$key] = (string) trans(sprintf('firefly.rule_trigger_%s_choice', $key));
@@ -100,7 +99,7 @@ trait RuleManagement
                             'triggers'      => $triggers,
                         ]
                     )->render();
-                } catch (Throwable $e) {
+                } catch (\Throwable $e) {
                     app('log')->debug(sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage()));
                     app('log')->error($e->getTraceAsString());
 
@@ -129,7 +128,7 @@ trait RuleManagement
         }
         asort($triggers);
 
-        $index = 0;
+        $index           = 0;
         foreach ($submittedOperators as $operator) {
             $rootOperator = OperatorQuerySearch::getRootOperator($operator['type']);
             $needsContext = (bool) config(sprintf('search.operators.%s.needs_context', $rootOperator));
@@ -146,7 +145,7 @@ trait RuleManagement
                         'triggers'      => $triggers,
                     ]
                 )->render();
-            } catch (Throwable $e) {
+            } catch (\Throwable $e) {
                 app('log')->debug(sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage()));
                 app('log')->error($e->getTraceAsString());
 
