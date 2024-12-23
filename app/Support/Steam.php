@@ -275,10 +275,10 @@ class Steam
             ->get(['transactions.amount'])->toArray()
         ;
         $return['balance'] = $this->sumTransactions($array, 'amount');
-        //Log::debug(sprintf('balance is %s', $return['balance']));
+        // Log::debug(sprintf('balance is %s', $return['balance']));
         // add virtual balance:
         $return['balance'] = bcadd('' === (string) $account->virtual_balance ? '0' : $account->virtual_balance, $return['balance']);
-        //Log::debug(sprintf('balance is %s (with virtual balance)', $return['balance']));
+        // Log::debug(sprintf('balance is %s (with virtual balance)', $return['balance']));
 
         // then, native balance (if necessary(
         if ($native->id !== $currency->id) {
@@ -288,19 +288,20 @@ class Steam
                 ->get(['transactions.native_amount'])->toArray()
             ;
             $return['native_balance'] = $this->sumTransactions($array, 'native_amount');
-//            Log::debug(sprintf('native_balance is %s', $return['native_balance']));
+            //            Log::debug(sprintf('native_balance is %s', $return['native_balance']));
             $return['native_balance'] = bcadd('' === (string) $account->native_virtual_balance ? '0' : $account->native_virtual_balance, $return['balance']);
-//            Log::debug(sprintf('native_balance is %s (with virtual balance)', $return['native_balance']));
+            //            Log::debug(sprintf('native_balance is %s (with virtual balance)', $return['native_balance']));
         }
 
         // balance(s) in other currencies.
-        $array  = $account->transactions()
-                          ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                          ->leftJoin('transaction_currencies', 'transaction_currencies.id', '=', 'transactions.transaction_currency_id')
-                          ->where('transaction_journals.date', '<=', $date->format('Y-m-d H:i:s'))
-                          ->get(['transaction_currencies.code', 'transactions.amount'])->toArray();
-        $others = $this->groupAndSumTransactions($array, 'code', 'amount');
-//        Log::debug('All others are (joined)', $others);
+        $array             = $account->transactions()
+            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->leftJoin('transaction_currencies', 'transaction_currencies.id', '=', 'transactions.transaction_currency_id')
+            ->where('transaction_journals.date', '<=', $date->format('Y-m-d H:i:s'))
+            ->get(['transaction_currencies.code', 'transactions.amount'])->toArray()
+        ;
+        $others            = $this->groupAndSumTransactions($array, 'code', 'amount');
+        //        Log::debug('All others are (joined)', $others);
 
         return array_merge($return, $others);
     }
@@ -350,7 +351,7 @@ class Steam
 
         /** @var Transaction $entry */
         foreach ($set as $entry) {
-            $date                     = new Carbon($entry->max_date, config('app.timezone'));
+            $date                          = new Carbon($entry->max_date, config('app.timezone'));
             $date->setTimezone(config('app.timezone'));
             $list[(int)$entry->account_id] = $date;
         }
