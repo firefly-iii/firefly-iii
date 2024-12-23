@@ -92,7 +92,7 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.account.expense-accounts');
         if ($cache->has()) {
-            return response()->json($cache->get());
+             return response()->json($cache->get());
         }
         $start->subDay();
 
@@ -102,7 +102,7 @@ class AccountController extends Controller
         $tempData      = [];
 
         // grab all accounts and names
-        $accounts      = $this->accountRepository->getAccountsByType([AccountType::EXPENSE]);
+        $accounts      = $this->accountRepository->getAccountsByType([AccountTypeEnum::EXPENSE->value]);
         $accountNames  = $this->extractNames($accounts);
 
         // grab all balances
@@ -133,6 +133,14 @@ class AccountController extends Controller
                 }
             }
         }
+        // recreate currencies, but on ID instead of code.
+        $newCurrencies = [];
+        foreach($currencies as $currency) {
+            $newCurrencies[$currency->id] = $currency;
+        }
+        $currencies = $newCurrencies;
+
+
 
         // sort temp array by amount.
         $amounts       = array_column($tempData, 'diff_float');
@@ -159,7 +167,7 @@ class AccountController extends Controller
         foreach ($tempData as $entry) {
             $currencyId                               = $entry['currency_id'];
             $name                                     = $entry['name'];
-            $chartData[$currencyId]['entries'][$name] = $entry['difference'];
+            $chartData[$currencyId]['entries'][$name] = (float) $entry['difference'];
         }
 
         $data          = $this->generator->multiSet($chartData);
@@ -494,7 +502,7 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.account.revenue-accounts');
         if ($cache->has()) {
-            return response()->json($cache->get());
+              return response()->json($cache->get());
         }
         $start->subDay();
 
@@ -510,6 +518,8 @@ class AccountController extends Controller
         // grab all balances
         $startBalances = app('steam')->finalAccountsBalance($accounts, $start);
         $endBalances   = app('steam')->finalAccountsBalance($accounts, $end);
+
+
 
         // loop the end balances. This is an array for each account ($expenses)
         foreach ($endBalances as $accountId => $expenses) {
@@ -536,6 +546,13 @@ class AccountController extends Controller
                 }
             }
         }
+
+        // recreate currencies, but on ID instead of code.
+        $newCurrencies = [];
+        foreach($currencies as $currency) {
+            $newCurrencies[$currency->id] = $currency;
+        }
+        $currencies = $newCurrencies;
 
         // sort temp array by amount.
         $amounts       = array_column($tempData, 'diff_float');
