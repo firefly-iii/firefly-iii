@@ -46,6 +46,6 @@ trait BasicDataSupport
      */
     protected function isInArrayDate(array $array, int $entryId): ?Carbon
     {
-        return $array[$entryId]['balance'] ?? null;
+        return $array[$entryId] ?? null;
     }
 }

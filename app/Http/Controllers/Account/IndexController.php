@@ -93,6 +93,8 @@ class IndexController extends Controller
         $endBalances   = app('steam')->finalAccountsBalance($accounts, $end);
         $activities    = app('steam')->getLastActivities($ids);
 
+
+
         $accounts->each(
             function (Account $account) use ($activities, $startBalances, $endBalances): void {
                 $account->lastActivityDate  = $this->isInArrayDate($activities, $account->id);
@@ -152,7 +154,6 @@ class IndexController extends Controller
         $startBalances = app('steam')->finalAccountsBalance($accounts, $start);
         $endBalances   = app('steam')->finalAccountsBalance($accounts, $end);
         $activities    = app('steam')->getLastActivities($ids);
-
         $accounts->each(
             function (Account $account) use ($activities, $startBalances, $endBalances): void {
                 $interest                     = (string) $this->repository->getMetaValue($account, 'interest');

@@ -114,7 +114,9 @@ class AccountController extends Controller
             $accountId = (int) $accountId;
             // loop each expense entry (each entry can be a different currency).
             foreach ($expenses as $currencyCode => $endAmount) {
-
+                if(3 !== strlen($currencyCode)) {
+                    continue;
+                }
                 // see if there is an accompanying start amount.
                 // grab the difference and find the currency.
                 $startAmount = (string) ($startBalances[$accountId][$currencyCode] ?? '0');
@@ -514,6 +516,9 @@ class AccountController extends Controller
             $accountId = (int) $accountId;
             // loop each expense entry (each entry can be a different currency).
             foreach ($expenses as $currencyCode => $endAmount) {
+                if(3 !== strlen($currencyCode)) {
+                    continue;
+                }
 
                 // see if there is an accompanying start amount.
                 // grab the difference and find the currency.
