@@ -130,15 +130,15 @@
         "response": "Odpowied\u017a",
         "visit_webhook_url": "Odwied\u017a adres URL webhooka",
         "reset_webhook_secret": "Resetuj sekret webhooka",
-        "header_exchange_rates": "Kursy wymiany",
-        "exchange_rates_intro": "Firefly III obs\u0142uguje pobieranie i korzystanie z kurs\u00f3w wymiany walut. Wi\u0119cej informacji na ten temat w <a href=\"https:\/\/docs.firefly-iii.org\/LOL_NOT_FINISHED_YET_TODO\">dokumentacji<\/a>.",
-        "exchange_rates_from_to": "Pomi\u0119dzy {from} i {to} (i odwrotnie)",
-        "exchange_rates_intro_rates": "Firefly III bla bla bla kurs wymiany. Odwrotno\u015b\u0107 jest obliczana automatycznie, je\u015bli nie zosta\u0142a podana. Zostanie u\u017cyty ostatni znaleziony kurs.",
-        "header_exchange_rates_rates": "Kursy wymiany",
-        "header_exchange_rates_table": "Tabela z kursami wymiany walut",
-        "help_rate_form": "W tym dniu, ile {to} otrzymasz za jeden {from}?",
-        "add_new_rate": "Dodaj nowy kurs wymiany",
-        "save_new_rate": "Zapisz nowy kurs"
+        "header_exchange_rates": "Exchange rates",
+        "exchange_rates_intro": "Firefly III supports downloading and using exchange rates. Read more about this in <a href=\"https:\/\/docs.firefly-iii.org\/LOL_NOT_FINISHED_YET_TODO\">the documentation<\/a>.",
+        "exchange_rates_from_to": "Between {from} and {to} (and the other way around)",
+        "exchange_rates_intro_rates": "Firefly III bla bla bla exchange rates. Inverse is automatically calculated if not provided. Will go back to last found rate.",
+        "header_exchange_rates_rates": "Exchange rates",
+        "header_exchange_rates_table": "Table with exchange rates",
+        "help_rate_form": "On this day, how many {to} will you get for one {from}?",
+        "add_new_rate": "Add a new exchange rate",
+        "save_new_rate": "Save new rate"
     },
     "form": {
         "url": "URL",
@@ -158,7 +158,7 @@
         "webhook_delivery": "Dor\u0119czenie",
         "from_currency_to_currency": "{from} &rarr; {to}",
         "to_currency_from_currency": "{to} &rarr; {from}",
-        "rate": "Kurs"
+        "rate": "Rate"
     },
     "list": {
         "active": "Jest aktywny?",
