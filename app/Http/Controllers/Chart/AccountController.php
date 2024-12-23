@@ -92,7 +92,7 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.account.expense-accounts');
         if ($cache->has()) {
-             return response()->json($cache->get());
+            return response()->json($cache->get());
         }
         $start->subDay();
 
@@ -135,10 +135,10 @@ class AccountController extends Controller
         }
         // recreate currencies, but on ID instead of code.
         $newCurrencies = [];
-        foreach($currencies as $currency) {
+        foreach ($currencies as $currency) {
             $newCurrencies[$currency->id] = $currency;
         }
-        $currencies = $newCurrencies;
+        $currencies    = $newCurrencies;
 
 
 
@@ -502,7 +502,7 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.account.revenue-accounts');
         if ($cache->has()) {
-              return response()->json($cache->get());
+            return response()->json($cache->get());
         }
         $start->subDay();
 
@@ -549,10 +549,10 @@ class AccountController extends Controller
 
         // recreate currencies, but on ID instead of code.
         $newCurrencies = [];
-        foreach($currencies as $currency) {
+        foreach ($currencies as $currency) {
             $newCurrencies[$currency->id] = $currency;
         }
-        $currencies = $newCurrencies;
+        $currencies    = $newCurrencies;
 
         // sort temp array by amount.
         $amounts       = array_column($tempData, 'diff_float');
