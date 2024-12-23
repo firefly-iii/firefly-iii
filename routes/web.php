@@ -80,7 +80,7 @@ Route::group(
 Route::group(
     ['middleware' => 'binders-only', 'namespace' => 'FireflyIII\Http\Controllers\System'],
     static function (): void {
-        Route::get('offline', static fn () => view('errors.offline'));
+        //Route::get('offline', static fn () => view('errors.offline'));
         Route::get('health', ['uses' => 'HealthcheckController@check', 'as' => 'healthcheck']);
     }
 );
@@ -117,7 +117,7 @@ Route::group(
         Route::get('error', ['uses' => 'DebugController@displayError', 'as' => 'error']);
         Route::post('logout', ['uses' => 'Auth\LoginController@logout', 'as' => 'logout']);
         Route::get('flush', ['uses' => 'DebugController@flush', 'as' => 'flush']);
-        // Route::get('routes', ['uses' => 'DebugController@routes', 'as' => 'routes']);
+        Route::get('routes', ['uses' => 'DebugController@routes', 'as' => 'routes']);
         Route::get('debug', 'DebugController@index')->name('debug');
     }
 );

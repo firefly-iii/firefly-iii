@@ -59,13 +59,14 @@
                 <td colspan="1" style="text-align:right;border-top:1px #aaa solid;">
                     {% for sum in group.sums %}
                         {% if group.transaction_type == 'Deposit' %}
-                            {{ formatAmountBySymbol(sum.amount*-1, sum.currency_symbol, sum.currency_decimal_places) }}{% if loop.index != group.sums|length %},{% endif %}
+                            {{ formatAmountBySymbol(sum.amount*-1, sum.currency_symbol, sum.currency_decimal_places) }}(TODO NATIVE){% if loop.index != group.sums|length %},{% endif %}
+
                         {% elseif group.transaction_type == 'Transfer' %}
                             <span class="text-info money-transfer">
-                            {{ formatAmountBySymbol(sum.amount*-1, sum.currency_symbol, sum.currency_decimal_places, false) }}{% if loop.index != group.sums|length %},{% endif %}
+                            {{ formatAmountBySymbol(sum.amount*-1, sum.currency_symbol, sum.currency_decimal_places, false) }}(TODO NATIVE){% if loop.index != group.sums|length %},{% endif %}
                             </span>
                         {% else %}
-                            {{ formatAmountBySymbol(sum.amount, sum.currency_symbol, sum.currency_decimal_places) }}{% if loop.index != group.sums|length %},{% endif %}
+                            {{ formatAmountBySymbol(sum.amount, sum.currency_symbol, sum.currency_decimal_places) }}(TODO NATIVE){% if loop.index != group.sums|length %},{% endif %}
                         {% endif %}
                     {% endfor %}
                 </td>
@@ -153,6 +154,7 @@
                         {% if null != transaction.foreign_amount %}
                             ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                         {% endif %}
+                        (TODO NATIVE1)
                         {# transfer #}
                     {% elseif transaction.transaction_type_type == 'Transfer' %}
                         <span class="text-info money-transfer">
@@ -160,6 +162,7 @@
                             {% if null != transaction.foreign_amount %}
                                 ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places, false) }})
                             {% endif %}
+                            (TODO NATIVE2)
                             </span>
                         {# opening balance #}
                     {% elseif transaction.transaction_type_type == 'Opening balance' %}
@@ -168,11 +171,13 @@
                             {% if null != transaction.foreign_amount %}
                                 ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             {% endif %}
+                            (TODO NATIVE3)
                         {% else %}
                             {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
                             {% if null != transaction.foreign_amount %}
                                 ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             {% endif %}
+                            (TODO NATIVE4)
                         {% endif %}
                         {# reconciliation #}
                     {% elseif transaction.transaction_type_type == 'Reconciliation' %}
@@ -181,11 +186,13 @@
                             {% if null != transaction.foreign_amount %}
                                 ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             {% endif %}
+                            (TODO NATIVE5)
                         {% else %}
                             {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
                             {% if null != transaction.foreign_amount %}
                                 ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             {% endif %}
+                            (TODO NATIVE6)
                         {% endif %}
                         {# liability credit #}
                     {% elseif transaction.transaction_type_type == 'Liability credit' %}
@@ -194,11 +201,13 @@
                             {% if null != transaction.foreign_amount %}
                                 ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             {% endif %}
+                            (TODO NATIVE7)
                         {% else %}
                             {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
                             {% if null != transaction.foreign_amount %}
                                 ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             {% endif %}
+                            (TODO NATIVE8)
                         {% endif %}
 
 
@@ -208,6 +217,7 @@
                         {% if null != transaction.foreign_amount %}
                             ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                         {% endif %}
+                        (TODO NATIVE9)
                     {% endif %}
                 </td>
                 <td style=" {{ style|raw }}">
