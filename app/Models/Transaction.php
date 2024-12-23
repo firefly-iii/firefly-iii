@@ -67,6 +67,8 @@ class Transaction extends Model
             'transaction_journal_id',
             'description',
             'amount',
+            'native_amount',
+            'native_foreign_amount',
             'identifier',
             'transaction_currency_id',
             'foreign_currency_id',

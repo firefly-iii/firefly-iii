@@ -71,7 +71,7 @@ class TransactionObserver
         $transaction->native_amount         = null;
         $transaction->native_foreign_amount = null;
         // first normal amount
-        if ($transaction->transactionCurrency->id !== $userCurrency->id) {
+        if ($transaction->transactionCurrency->id !== $userCurrency->id && (null === $transaction->foreign_currency_id || (null !== $transaction->foreign_currency_id && $transaction->foreign_currency_id !== $userCurrency->id))) {
             $converter                  = new ExchangeRateConverter();
             $converter->setIgnoreSettings(true);
             $transaction->native_amount = $converter->convert($transaction->transactionCurrency, $userCurrency, $transaction->transactionJournal->date, $transaction->amount);

@@ -210,11 +210,19 @@ class RecalculateNativeAmounts extends Command
         $set                              = DB::table('transactions')
             ->join('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->where('transaction_journals.user_group_id', $userGroup->id)
-            ->where(static function (DatabaseBuilder $q) use ($currency): void {
-                $q->whereNot('transactions.transaction_currency_id', $currency->id)
-                    ->orWhereNot('transactions.foreign_currency_id', $currency->id)
-                ;
+
+            ->where(function(DatabaseBuilder $q1) use ($currency) {
+                $q1->where(function(DatabaseBuilder $q2) use ($currency) {
+                    $q2->whereNot('transactions.transaction_currency_id', $currency->id)->whereNull('transactions.foreign_currency_id');
+                })->orWhere(function(DatabaseBuilder $q3) use ($currency) {
+                    $q3->whereNot('transactions.transaction_currency_id', $currency->id)->whereNot('transactions.foreign_currency_id', $currency->id);
+                });
             })
+//            ->where(static function (DatabaseBuilder $q) use ($currency): void {
+//                $q->whereNot('transactions.transaction_currency_id', $currency->id)
+//                    ->whereNot('transactions.foreign_currency_id', $currency->id)
+//                ;
+//            })
             ->get(['transactions.id'])
         ;
         TransactionObserver::$recalculate = false;
