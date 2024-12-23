@@ -699,6 +699,33 @@ return [
     'create_rule_from_query'                              => 'Create new rule from search query',
     'rule_from_search_words'                              => 'The rule engine has a hard time handling ":string". The suggested rule that fits your search query may give different results. Please verify the rule triggers carefully.',
 
+    // more new stuff
+    'search_modifier_destination_balance_is'     => 'Destination account balance is exactly ":value"',
+    'search_modifier_not_destination_balance_is' => 'Destination account balance is NOT exactly ":value"',
+    'search_modifier_source_balance_is'          => 'Source account balance is exactly ":value"',
+    'search_modifier_not_source_balance_is'      => 'Source account balance is NOT exactly ":value"',
+
+    'search_modifier_destination_balance_lte'     => 'Destination account balance is less than or equal to ":value"',
+    'search_modifier_not_destination_balance_lte' => 'Destination account balance is more than ":value"',
+    'search_modifier_source_balance_lte'          => 'Source account balance is less than or equal to ":value"',
+    'search_modifier_not_source_balance_lte'      => 'Source account balance is more than ":value"',
+
+    'search_modifier_destination_balance_lt'     => 'Destination account balance is less than ":value"',
+    'search_modifier_not_destination_balance_lt' => 'Destination account balance is more than or equal to ":value"',
+    'search_modifier_source_balance_lt'          => 'Source account balance is less than ":value"',
+    'search_modifier_not_source_balance_lt'      => 'Source account balance is more than or equal to ":value"',
+
+    'search_modifier_destination_balance_gte'     => 'Destination account balance is more than or equal to ":value"',
+    'search_modifier_not_destination_balance_gte' => 'Destination account balance is less than ":value"',
+    'search_modifier_source_balance_gte'          => 'Source account balance is more than or equal to ":value"',
+    'search_modifier_not_source_balance_gte'      => 'Source account balance is less than ":value"',
+
+    'search_modifier_destination_balance_gt'     => 'Destination account balance is more than ":value"',
+    'search_modifier_not_destination_balance_gt' => 'Destination account balance is less than or equal to ":value"',
+    'search_modifier_source_balance_gt'          => 'Source account balance is more than ":value"',
+    'search_modifier_not_source_balance_gt'      => 'Source account balance is less than or equal to ":value"',
+
+
     // Ignore this comment
 
     // END
@@ -1195,6 +1222,44 @@ return [
     'rule_trigger_not_source_is_cash'                     => 'Source account is not a cash account',
     'rule_trigger_not_destination_is_cash'                => 'Destination account is not a cash account',
     'rule_trigger_not_account_is_cash'                    => 'Neither account is a cash account',
+
+    // new account balance things.
+    'rule_trigger_destination_balance_gt_choice'          => 'Destination account balance is more than..',
+    'rule_trigger_destination_balance_gte_choice'          => 'Destination account balance is more than or equal to..',
+    'rule_trigger_destination_balance_is_choice'          => 'Destination account balance is exactly..',
+    'rule_trigger_destination_balance_lt_choice'          => 'Destination account balance is less than..',
+    'rule_trigger_destination_balance_lte_choice'          => 'Destination account balance is less than or equal to..',
+
+    'rule_trigger_source_balance_gt_choice'          => 'Source account balance is more than..',
+    'rule_trigger_source_balance_gte_choice'          => 'Source account balance is more than or equal to..',
+    'rule_trigger_source_balance_is_choice'          => 'Source account balance is exactly..',
+    'rule_trigger_source_balance_lt_choice'          => 'Source account balance is less than..',
+    'rule_trigger_source_balance_lte_choice'          => 'Source account balance is less than or equal to..',
+
+    'rule_trigger_destination_balance_gt'          => 'Destination account balance is more than :trigger_value',
+    'rule_trigger_destination_balance_gte'          => 'Destination account balance is more than or equal to :trigger_value',
+    'rule_trigger_destination_balance_is'          => 'Destination account balance is exactly :trigger_value',
+    'rule_trigger_destination_balance_lt'          => 'Destination account balance is less than :trigger_value',
+    'rule_trigger_destination_balance_lte'          => 'Destination account balance is less than or equal to :trigger_value',
+
+    'rule_trigger_source_balance_gt'          => 'Source account balance is more than :trigger_value',
+    'rule_trigger_source_balance_gte'          => 'Source account balance is more than or equal to :trigger_value',
+    'rule_trigger_source_balance_is'          => 'Source account balance is exactly :trigger_value',
+    'rule_trigger_source_balance_lt'          => 'Source account balance is less than :trigger_value',
+    'rule_trigger_source_balance_lte'          => 'Source account balance is less than or equal to :trigger_value',
+
+    // NOT
+    'rule_trigger_not_destination_balance_gt'          => 'Destination account balance is less than or equal to :trigger_value',
+    'rule_trigger_not_destination_balance_gte'          => 'Destination account balance is less than :trigger_value',
+    'rule_trigger_not_destination_balance_is'          => 'Destination account balance is not :trigger_value',
+    'rule_trigger_not_destination_balance_lt'          => 'Destination account balance is more than or equal to :trigger_value',
+    'rule_trigger_not_destination_balance_lte'          => 'Destination account balance is more than :trigger_value',
+
+    'rule_trigger_not_source_balance_gt'          => 'Source account balance is less than or equal to :trigger_value',
+    'rule_trigger_not_source_balance_gte'          => 'Source account balance is less than :trigger_value',
+    'rule_trigger_not_source_balance_is'          => 'Source account balance is not :trigger_value',
+    'rule_trigger_not_source_balance_lt'          => 'Source account balance is greater than or equal to :trigger_value',
+    'rule_trigger_not_source_balance_lte'          => 'Source account balance is greater than :trigger_value',
 
     // Ignore this comment
 

@@ -240,5 +240,17 @@ return [
         'sepa_ct_is'                      => ['alias' => false, 'needs_context' => true],
         'no_external_id'                  => ['alias' => false, 'needs_context' => false],
         'any_external_id'                 => ['alias' => false, 'needs_context' => false],
+
+        // based on source or destination balance. Very heavy search.
+        'source_balance_gte'                 => ['alias' => false, 'needs_context' => true],
+        'source_balance_gt'                 => ['alias' => false, 'needs_context' => true],
+        'source_balance_lte'                 => ['alias' => false, 'needs_context' => true],
+        'source_balance_lt'                 => ['alias' => false, 'needs_context' => true],
+        'source_balance_is'                 => ['alias' => false, 'needs_context' => true],
+        'destination_balance_gte'                 => ['alias' => false, 'needs_context' => true],
+        'destination_balance_gt'                 => ['alias' => false, 'needs_context' => true],
+        'destination_balance_lte'                 => ['alias' => false, 'needs_context' => true],
+        'destination_balance_lt'                 => ['alias' => false, 'needs_context' => true],
+        'destination_balance_is'                 => ['alias' => false, 'needs_context' => true],
     ],
 ];

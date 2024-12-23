@@ -732,4 +732,6 @@ interface GroupCollectorInterface
     public function yearIs(string $year): self;
 
     public function yearIsNot(string $year): self;
+
+    public function accountBalanceIs(string $direction, string $operator, string $value): self;
 }

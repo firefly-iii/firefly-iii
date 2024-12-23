@@ -25,8 +25,11 @@ declare(strict_types=1);
 namespace FireflyIII\Helpers\Collector\Extensions;
 
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
+use FireflyIII\Models\Account;
+use FireflyIII\Support\Facades\Steam;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait AccountCollection
@@ -211,9 +214,9 @@ trait AccountCollection
             $this->query->leftJoin('account_types as source_account_type', 'source_account_type.id', '=', 'source_account.account_type_id');
 
             // add source account fields:
-            $this->fields[]       = 'source_account.name as source_account_name';
-            $this->fields[]       = 'source_account.iban as source_account_iban';
-            $this->fields[]       = 'source_account_type.type as source_account_type';
+            $this->fields[] = 'source_account.name as source_account_name';
+            $this->fields[] = 'source_account.iban as source_account_iban';
+            $this->fields[] = 'source_account_type.type as source_account_type';
 
             // same for dest
             $this->query->leftJoin('accounts as dest_account', 'dest_account.id', '=', 'destination.account_id');
@@ -225,6 +228,63 @@ trait AccountCollection
             $this->fields[]       = 'dest_account_type.type as destination_account_type';
             $this->hasAccountInfo = true;
         }
+
+        return $this;
+    }
+
+    #[\Override] public function accountBalanceIs(string $direction, string $operator, string $value): GroupCollectorInterface
+    {
+        Log::warning(sprintf('GroupCollector will be SLOW: accountBalanceIs: "%s" "%s" "%s"', $direction, $operator, $value));
+
+        /**
+         * @param int   $index
+         * @param array $object
+         *
+         * @return bool
+         */
+        $filter              = static function (array $object) use ($direction, $operator, $value): bool {
+            /** @var array $transaction */
+            foreach ($object['transactions'] as $transaction) {
+                $key       = sprintf('%s_account_id', $direction);
+                $accountId = $transaction[$key] ?? 0;
+                if (0 === $accountId) {
+                    return false;
+                }
+                // in theory, this could lead to finding other users accounts.
+                $balance = Steam::finalAccountBalance(Account::find($accountId), $transaction['date']);
+                $result  = bccomp($balance['balance'], $value);
+                Log::debug(sprintf('"%s" vs "%s" is %d', $balance['balance'], $value, $result));
+                switch ($operator) {
+                    default:
+                        Log::error(sprintf('GroupCollector: accountBalanceIs: unknown operator "%s"', $operator));
+                        return false;
+                    case '==':
+                        Log::debug('Expect result to be 0 (equal)');
+                        return 0 === $result;
+                    case '!=':
+                        Log::debug('Expect result to be -1 or 1 (not equal)');
+                        return 0 !== $result;
+                    case '>':
+                        Log::debug('Expect result to be 1 (greater then)');
+                        return 1 === $result;
+                    case '>=':
+                        Log::debug('Expect result to be 0 or 1 (greater then or equal)');
+                        return -1 !== $result;
+                    case '<':
+                        Log::debug('Expect result to be -1 (less than)');
+                        return -1 === $result;
+                    case '<=':
+                        Log::debug('Expect result to be -1 or 0 (less than or equal)');
+                        return 1 !== $result;
+                }
+                //if($balance['balance'] $operator $value) {
+
+                //}
+            }
+
+            return false;
+        };
+        $this->postFilters[] = $filter;
 
         return $this;
     }
