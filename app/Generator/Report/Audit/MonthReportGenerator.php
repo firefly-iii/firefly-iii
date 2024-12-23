@@ -83,6 +83,9 @@ class MonthReportGenerator implements ReportGeneratorInterface
             'create_date',
             'update_date',
 
+            // more
+            'notes',
+
             // date fields.
             'interest_date',
             'book_date',
@@ -126,7 +129,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
         /** @var GroupCollectorInterface $collector */
         $collector         = app(GroupCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setRange($this->start, $this->end)->withAccountInformation()
-            ->withBudgetInformation()->withCategoryInformation()->withBillInformation()
+            ->withBudgetInformation()->withCategoryInformation()->withBillInformation()->withNotes()
         ;
         $journals          = $collector->getExtractedJournals();
         $journals          = array_reverse($journals, true);
