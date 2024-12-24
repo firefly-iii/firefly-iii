@@ -29,13 +29,11 @@ use FireflyIII\Helpers\Report\NetWorthInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
-use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 
@@ -48,6 +46,7 @@ class BoxController extends Controller
 
     /**
      * Deprecated method, no longer in use.
+     *
      * @deprecated
      */
     public function available(): JsonResponse
@@ -73,7 +72,7 @@ class BoxController extends Controller
         $cache->addProperty($convertToNative);
         $cache->addProperty('box-balance');
         if ($cache->has()) {
-            return response()->json($cache->get());
+            // return response()->json($cache->get());
         }
         // prep some arrays:
         $incomes  = [];
@@ -91,9 +90,8 @@ class BoxController extends Controller
 
         /** @var array $journal */
         foreach ($set as $journal) {
-            $field                = $convertToNative && $currency->id !== $journal['currency_id'] ? 'native_amount' : 'amount';
             $currencyId           = $convertToNative ? $currency->id : (int) $journal['currency_id'];
-            $amount               = $journal[$field] ?? '0';
+            $amount               = Amount::getAmountFromJournal($journal);
             $incomes[$currencyId] ??= '0';
             $incomes[$currencyId] = bcadd($incomes[$currencyId], app('steam')->positive($amount));
             $sums[$currencyId]    ??= '0';
@@ -109,9 +107,8 @@ class BoxController extends Controller
 
         /** @var array $journal */
         foreach ($set as $journal) {
-            $field                 = $convertToNative && $currency->id !== $journal['currency_id'] ? 'native_amount' : 'amount';
             $currencyId            = $convertToNative ? $currency->id : (int) $journal['currency_id'];
-            $amount                = $journal[$field] ?? '0';
+            $amount                = Amount::getAmountFromJournal($journal);
             $expenses[$currencyId] ??= '0';
             $expenses[$currencyId] = bcadd($expenses[$currencyId], $amount);
             $sums[$currencyId]     ??= '0';

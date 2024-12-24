@@ -37,6 +37,7 @@ use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use FireflyIII\Services\Internal\Destroy\BillDestroyService;
 use FireflyIII\Services\Internal\Update\BillUpdateService;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Query\JoinClause;
@@ -501,6 +502,7 @@ class BillRepository implements BillRepositoryInterface
 
     public function sumPaidInRange(Carbon $start, Carbon $end): array
     {
+        Log::debug(sprintf('sumPaidInRange from %s to %s', $start->toW3cString(), $end->toW3cString()));
         $bills           = $this->getActiveBills();
         $return          = [];
         $convertToNative = app('preferences')->getForUser($this->user, 'convert_to_native', false)->data;
@@ -508,12 +510,11 @@ class BillRepository implements BillRepositoryInterface
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {
+
             /** @var Collection $set */
-            $set                   = $bill->transactionJournals()->after($start)->before($end)->get(['transaction_journals.*']);
-            $currency              = $convertToNative && $bill->transactionCurrency->id !== $default->id ? $default : $bill->transactionCurrency;
-            $field                 = $convertToNative && $bill->transactionCurrency->id !== $default->id ? 'native_amount' : 'amount';
-            $foreignField          = $convertToNative && $bill->transactionCurrency->id !== $default->id ? 'native_foreign_amount' : 'foreign_amount';
-            $return[$currency->id] ??= [
+            $set                         = $bill->transactionJournals()->after($start)->before($end)->get(['transaction_journals.*']);
+            $currency                    = $convertToNative && $bill->transactionCurrency->id !== $default->id ? $default : $bill->transactionCurrency;
+            $return[(int) $currency->id] ??= [
                 'id'             => (string) $currency->id,
                 'name'           => $currency->name,
                 'symbol'         => $currency->symbol,
@@ -521,20 +522,14 @@ class BillRepository implements BillRepositoryInterface
                 'decimal_places' => $currency->decimal_places,
                 'sum'            => '0',
             ];
-
+            $setAmount                   = '0';
             /** @var TransactionJournal $transactionJournal */
             foreach ($set as $transactionJournal) {
-                /** @var null|Transaction $sourceTransaction */
-                $sourceTransaction = $transactionJournal->transactions()->where('amount', '<', 0)->first();
-                if (null !== $sourceTransaction) {
-                    $amount = $sourceTransaction->$field;
-                    if ((int) $sourceTransaction->foreign_currency_id === $currency->id) {
-                        // use foreign amount instead!
-                        $amount = (string) $sourceTransaction->$foreignField;
-                    }
-                    $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $amount);
-                }
+                $setAmount = bcadd($setAmount, Amount::getAmountFromJournalObject($transactionJournal));
             }
+            Log::debug(sprintf('Bill #%d ("%s") with %d transaction(s) and sum %s %s', $bill->id, $bill->name, $set->count(), $currency->code, $setAmount));
+            $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $setAmount);
+            Log::debug(sprintf('Total sum is now %s', $return[$currency->id]['sum']));
         }
 
         return $return;
@@ -568,6 +563,7 @@ class BillRepository implements BillRepositoryInterface
 
             $minField = $convertToNative && $bill->transactionCurrency->id !== $default->id ? 'native_amount_min' : 'amount_min';
             $maxField = $convertToNative && $bill->transactionCurrency->id !== $default->id ? 'native_amount_max' : 'amount_max';
+            Log::debug(sprintf('min field is %s, max field is %s', $minField, $maxField));
 
             if ($total > 0) {
                 $currency                     = $convertToNative && $bill->transactionCurrency->id !== $default->id ? $default : $bill->transactionCurrency;

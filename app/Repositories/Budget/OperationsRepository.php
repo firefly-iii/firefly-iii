@@ -31,9 +31,11 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class OperationsRepository
@@ -209,11 +211,12 @@ class OperationsRepository implements OperationsRepositoryInterface
         ?TransactionCurrency $currency = null
     ): array
     {
-        // this collector excludes all transfers TO
-        // liabilities (which are also withdrawals)
-        // because those expenses only become expenses
-        // once they move from the liability to the friend.
+        // this collector excludes all transfers TO liabilities (which are also withdrawals)
+        // because those expenses only become expenses once they move from the liability to the friend.
         // TODO this filter must be somewhere in AccountRepositoryInterface because I suspect its needed more often (A113)
+
+        // 2024-12-24 disable the exclusion for now.
+
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser($this->user);
         $subset    = $repository->getAccountsByType(config('firefly.valid_liabilities'));
@@ -234,7 +237,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)
                   ->setRange($start, $end)
-                  ->excludeDestinationAccounts($selection)
+                  // ->excludeDestinationAccounts($selection)
                   ->setTypes([TransactionType::WITHDRAWAL]);
 
         if (null !== $accounts) {
@@ -249,13 +252,12 @@ class OperationsRepository implements OperationsRepositoryInterface
         $collector->setBudgets($budgets);
         $journals = $collector->getExtractedJournals();
 
-        // same but for foreign currencies:
+        // same but for transactions in the foreign currency:
         if (null !== $currency) {
             // app('log')->debug(sprintf('Currency is "%s".', $currency->name));
             /** @var GroupCollectorInterface $collector */
             $collector = app(GroupCollectorInterface::class);
-            $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])
-                      ->setForeignCurrency($currency)->setBudgets($budgets);
+            $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setForeignCurrency($currency)->setBudgets($budgets);
 
             if (null !== $accounts) {
                 $collector->setAccounts($accounts);
@@ -273,9 +275,9 @@ class OperationsRepository implements OperationsRepositoryInterface
             $currencySymbol        = $journal['currency_symbol'];
             $currencyCode          = $journal['currency_code'];
             $currencyDecimalPlaces = $journal['currency_decimal_places'];
-            $field                 = 'amount';
-            $foreignField          = 'foreign_amount';
+
             // if the user wants everything in native currency, use it.
+            // if the foreign amount is in this currency it's OK because Amount::getAmountFromJournal catches that.
             if ($convertToNative && $default->id !== (int) $journal['currency_id']) {
                 // use default currency info
                 $currencyId            = $default->id;
@@ -283,8 +285,6 @@ class OperationsRepository implements OperationsRepositoryInterface
                 $currencySymbol        = $default->symbol;
                 $currencyCode          = $default->code;
                 $currencyDecimalPlaces = $default->decimal_places;
-                $field                 = 'native_amount';
-                $foreignField          = 'native_foreign_amount';
             }
             $array[$currencyId]        ??= [
                 'sum'                     => '0',
@@ -294,21 +294,9 @@ class OperationsRepository implements OperationsRepositoryInterface
                 'currency_code'           => $currencyCode,
                 'currency_decimal_places' => $currencyDecimalPlaces,
             ];
-            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->negative($journal[$field]));
-
-            // also do foreign amount:
-            $foreignId = (int) $journal['foreign_currency_id'];
-            if (0 !== $foreignId && $foreignId !== $currencyId) {
-                $array[$foreignId]        ??= [
-                    'sum'                     => '0',
-                    'currency_id'             => $foreignId,
-                    'currency_name'           => $journal['foreign_currency_name'],
-                    'currency_symbol'         => $journal['foreign_currency_symbol'],
-                    'currency_code'           => $journal['foreign_currency_code'],
-                    'currency_decimal_places' => $journal['foreign_currency_decimal_places'],
-                ];
-                $array[$foreignId]['sum'] = bcadd($array[$foreignId]['sum'], app('steam')->negative($journal['foreign_amount']));
-            }
+            $amount = Amount::getAmountFromJournal($journal);
+            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->negative($amount));
+            Log::debug(sprintf('Journal #%d adds amount %s %s', $journal['transaction_journal_id'], $currencyCode, $amount));
         }
 
         return $array;

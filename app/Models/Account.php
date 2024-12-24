@@ -61,7 +61,7 @@ class Account extends Model
             'virtual_balance' => 'string',
         ];
 
-    protected $fillable              = ['user_id', 'user_group_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban'];
+    protected $fillable              = ['user_id', 'user_group_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban','native_virtual_balance'];
 
     protected $hidden                = ['encrypted'];
     private bool $joinedAccountTypes = false;

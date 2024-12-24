@@ -27,6 +27,7 @@ namespace FireflyIII\Api\V1\Controllers\Summary;
 use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Data\DateRequest;
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Report\NetWorthInterface;
@@ -38,6 +39,7 @@ use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
@@ -102,10 +104,10 @@ class BasicController extends Controller
         $billData     = $this->getBillInformation($start, $end);
         $spentData    = $this->getLeftToSpendInfo($start, $end);
         $netWorthData = $this->getNetWorthInfo($start, $end);
-        $balanceData  = [];
-        $billData     = [];
-//                $spentData    = [];
-        $netWorthData = [];
+//        $balanceData  = [];
+//        $billData     = [];
+//        $spentData    = [];
+//        $netWorthData = [];
         $total        = array_merge($balanceData, $billData, $spentData, $netWorthData);
 
         // give new keys
@@ -121,6 +123,9 @@ class BasicController extends Controller
 
     private function getBalanceInformation(Carbon $start, Carbon $end): array
     {
+        // some config settings
+        $convertToNative = app('preferences')->get('convert_to_native', false)->data;
+        $default = app('amount')->getDefaultCurrency();
         // prep some arrays:
         $incomes  = [];
         $expenses = [];
@@ -134,16 +139,17 @@ class BasicController extends Controller
 
         $set = $collector->getExtractedJournals();
 
-        /** @var array $transactionJournal */
-        foreach ($set as $transactionJournal) {
-            $currencyId           = (int) $transactionJournal['currency_id'];
+        /** @var array $journal */
+        foreach ($set as $journal) {
+            $currencyId           = $convertToNative ? $default->id : (int) $journal['currency_id'];
+            $amount               = Amount::getAmountFromJournal($journal);
             $incomes[$currencyId] ??= '0';
             $incomes[$currencyId] = bcadd(
                 $incomes[$currencyId],
-                bcmul($transactionJournal['amount'], '-1')
+                bcmul($amount, '-1')
             );
             $sums[$currencyId]    ??= '0';
-            $sums[$currencyId]    = bcadd($sums[$currencyId], bcmul($transactionJournal['amount'], '-1'));
+            $sums[$currencyId]    = bcadd($sums[$currencyId], bcmul($amount, '-1'));
         }
 
         // collect expenses of user using the new group collector.
@@ -152,13 +158,14 @@ class BasicController extends Controller
         $collector->setRange($start, $end)->setPage($this->parameters->get('page'))->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
         $set = $collector->getExtractedJournals();
 
-        /** @var array $transactionJournal */
-        foreach ($set as $transactionJournal) {
-            $currencyId            = (int) $transactionJournal['currency_id'];
+        /** @var array $journal */
+        foreach ($set as $journal) {
+            $currencyId           = $convertToNative ? $default->id : (int) $journal['currency_id'];
+            $amount               = Amount::getAmountFromJournal($journal);
             $expenses[$currencyId] ??= '0';
-            $expenses[$currencyId] = bcadd($expenses[$currencyId], $transactionJournal['amount']);
+            $expenses[$currencyId] = bcadd($expenses[$currencyId], $amount);
             $sums[$currencyId]     ??= '0';
-            $sums[$currencyId]     = bcadd($sums[$currencyId], $transactionJournal['amount']);
+            $sums[$currencyId]     = bcadd($sums[$currencyId], $amount);
         }
 
         // format amounts:
@@ -317,7 +324,7 @@ class BasicController extends Controller
     {
         /** @var User $user */
         $user = auth()->user();
-        $date = today(config('app.timezone'))->startOfDay();
+        $date = now(config('app.timezone'));
         // start and end in the future? use $end
         if ($this->notInDateRange($date, $start, $end)) {
             /** @var Carbon $date */
@@ -327,9 +334,7 @@ class BasicController extends Controller
         /** @var NetWorthInterface $netWorthHelper */
         $netWorthHelper = app(NetWorthInterface::class);
         $netWorthHelper->setUser($user);
-        $allAccounts = $this->accountRepository->getActiveAccountsByType(
-            [AccountType::ASSET, AccountType::DEFAULT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::DEBT]
-        );
+        $allAccounts = $this->accountRepository->getActiveAccountsByType([AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::DEBT->value]);
 
         // filter list on preference of being included.
         $filtered = $allAccounts->filter(

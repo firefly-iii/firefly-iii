@@ -289,7 +289,7 @@ class Steam
             ;
             $return['native_balance'] = $this->sumTransactions($array, 'native_amount');
             //            Log::debug(sprintf('native_balance is %s', $return['native_balance']));
-            $return['native_balance'] = bcadd('' === (string) $account->native_virtual_balance ? '0' : $account->native_virtual_balance, $return['balance']);
+            $return['native_balance'] = bcadd('' === (string) $account->native_virtual_balance ? '0' : $account->native_virtual_balance, $return['native_balance']);
             //            Log::debug(sprintf('native_balance is %s (with virtual balance)', $return['native_balance']));
         }
 
