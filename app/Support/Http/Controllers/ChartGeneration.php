@@ -46,14 +46,15 @@ trait ChartGeneration
     protected function accountBalanceChart(Collection $accounts, Carbon $start, Carbon $end): array // chart helper method.
     {
         // chart properties for cache:
+        $convertToNative = app('preferences')->get('convert_to_native', false)->data;
         $cache           = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('chart.account.account-balance-chart');
         $cache->addProperty($accounts);
-        $convertToNative = app('preferences')->get('convert_to_native', false)->data;
+        $cache->addProperty($convertToNative);
         if ($cache->has()) {
-            // return $cache->get();
+             return $cache->get();
         }
         app('log')->debug('Regenerate chart.account.account-balance-chart from scratch.');
         $locale          = app('steam')->getLocale();
@@ -69,16 +70,10 @@ trait ChartGeneration
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            // TODO we can use getAccountCurrency instead.
-            $currency     = $accountRepos->getAccountCurrency($account);
-            if (null === $currency) {
-                $currency = $default;
-            }
-            // if the user prefers the native currency, overrule the currency of the account.
-            if ($currency->id !== $default->id && $convertToNative) {
-                $currency = $default;
-            }
-
+            $currency      = $accountRepos->getAccountCurrency($account) ?? $default;
+            $useNative     = $convertToNative && $default->id !== $currency->id;
+            $field =$useNative ? 'native_balance' : 'balance';
+            $currency      = $useNative ? $default : $currency;
             $currentSet   = [
                 'label'           => $account->name,
                 'currency_symbol' => $currency->symbol,
@@ -94,7 +89,7 @@ trait ChartGeneration
                 $balance                       = $range[$format] ?? $previous;
                 $previous                      = $balance;
                 $currentStart->addDay();
-                $currentSet['entries'][$label] = $balance['balance']; // TODO or native_balance
+                $currentSet['entries'][$label] = $balance[$field];
             }
             $chartData[]  = $currentSet;
         }

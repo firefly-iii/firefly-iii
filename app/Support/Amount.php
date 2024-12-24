@@ -30,6 +30,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class Amount.
@@ -57,9 +58,11 @@ class Amount
         $currency        = app('amount')->getDefaultCurrency();
         $field           = $convertToNative && $currency->id !== $journal['currency_id'] ? 'native_amount' : 'amount';
         $amount          = $journal[$field] ?? '0';
+        //Log::debug(sprintf('Field is %s, amount is %s', $field, $amount));
         // fallback, the transaction has a foreign amount in $currency.
-        if ($convertToNative && null !== $journal['foreign_amount'] && $currency->id === $journal['foreign_currency_id']) {
+        if ($convertToNative && null !== $journal['foreign_amount'] && $currency->id === (int)$journal['foreign_currency_id']) {
             $amount = $journal['foreign_amount'];
+            //Log::debug(sprintf('Overruled, amount is now %s', $amount));
         }
         return $amount;
     }

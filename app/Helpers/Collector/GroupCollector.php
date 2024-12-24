@@ -746,7 +746,7 @@ class GroupCollector implements GroupCollectorInterface
         $currentCollection = $collection;
         $countFilters      = count($this->postFilters);
         $countCollection   = count($currentCollection);
-        if (0 === $countFilters && 0 === $countCollection) {
+        if (0 === $countFilters) {
             return $currentCollection;
         }
         app('log')->debug(sprintf('GroupCollector: postFilterCollection has %d filter(s) and %d transaction(s).', count($this->postFilters), count($currentCollection)));

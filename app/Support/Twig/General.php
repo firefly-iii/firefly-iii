@@ -69,26 +69,31 @@ class General extends AbstractExtension
                 $date            = session('end', today(config('app.timezone'))->endOfMonth());
                 $info            = Steam::finalAccountBalance($account, $date);
                 $currency        = Steam::getAccountCurrency($account);
-                $native          = Amount::getDefaultCurrency();
+                $default          = Amount::getDefaultCurrency();
                 $convertToNative = app('preferences')->get('convert_to_native', false)->data;
+                $useNative     = $convertToNative && $default->id !== $currency->id;
                 $strings         = [];
                 foreach ($info as $key => $balance) {
                     if ('balance' === $key) {
                         // balance in account currency.
-                        if (!$convertToNative || $currency->code === $native->code) {
+                        if (!$useNative) {
                             $strings[] = app('amount')->formatAnything($currency, $balance, false);
+                        }
+                        if($useNative) {
+                            $strings[] =sprintf('(%s)', app('amount')->formatAnything($currency, $balance, false));
                         }
 
                         continue;
                     }
                     if ('native_balance' === $key) {
                         // balance in native currency.
-                        if ($convertToNative) {
-                            $strings[] = app('amount')->formatAnything($native, $balance, false);
+                        if ($useNative) {
+                            $strings[] = app('amount')->formatAnything($default, $balance, false);
                         }
 
                         continue;
                     }
+                    // for multi currency accounts.
                     if ($key !== $currency->code) {
                         $strings[] = app('amount')->formatAnything(TransactionCurrency::where('code', $key)->first(), $balance, false);
                     }

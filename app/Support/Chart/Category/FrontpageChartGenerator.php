@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Chart\Category;
 
 use Carbon\Carbon;
-use FireflyIII\Models\AccountType;
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
@@ -33,6 +33,7 @@ use FireflyIII\Repositories\Category\NoCategoryRepositoryInterface;
 use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\AugumentData;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class FrontpageChartGenerator
@@ -65,13 +66,12 @@ class FrontpageChartGenerator
 
     public function generate(): array
     {
-        $categories   = $this->repository->getCategories();
-        $accounts     = $this->accountRepos->getAccountsByType(
-            [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::ASSET, AccountType::DEFAULT]
-        );
+        Log::debug('Now in generate()');
+        $categories = $this->repository->getCategories();
+        $accounts   = $this->accountRepos->getAccountsByType([AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value]);
 
         // get expenses + income per category:
-        $collection   = [];
+        $collection = [];
 
         /** @var Category $category */
         foreach ($categories as $category) {
@@ -82,10 +82,10 @@ class FrontpageChartGenerator
         // collect for no-category:
         $collection[] = $this->collectNoCatExpenses($accounts);
 
-        $tempData     = array_merge(...$collection);
+        $tempData = array_merge(...$collection);
 
         // sort temp array by amount.
-        $amounts      = array_column($tempData, 'sum_float');
+        $amounts = array_column($tempData, 'sum_float');
         array_multisort($amounts, SORT_ASC, $tempData);
 
         $currencyData = $this->createCurrencyGroups($tempData);
@@ -95,9 +95,11 @@ class FrontpageChartGenerator
 
     private function collectExpenses(Category $category, Collection $accounts): array
     {
+        Log::debug(sprintf('Collect expenses for category #%d ("%s")', $category->id, $category->name));
         $spent    = $this->opsRepos->sumExpenses($this->start, $this->end, $accounts, new Collection([$category]));
         $tempData = [];
         foreach ($spent as $currency) {
+            Log::debug(sprintf('Spent %s %s', $currency['currency_code'], $currency['sum']));
             $this->addCurrency($currency);
             $tempData[] = [
                 'name'        => $category->name,

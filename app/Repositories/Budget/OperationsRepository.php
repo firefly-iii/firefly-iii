@@ -211,6 +211,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         ?TransactionCurrency $currency = null
     ): array
     {
+        Log::debug('Start of sumExpenses.');
         // this collector excludes all transfers TO liabilities (which are also withdrawals)
         // because those expenses only become expenses once they move from the liability to the friend.
         // TODO this filter must be somewhere in AccountRepositoryInterface because I suspect its needed more often (A113)
@@ -237,7 +238,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)
                   ->setRange($start, $end)
-                  // ->excludeDestinationAccounts($selection)
+            // ->excludeDestinationAccounts($selection)
                   ->setTypes([TransactionType::WITHDRAWAL]);
 
         if (null !== $accounts) {
@@ -247,6 +248,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             $budgets = $this->getBudgets();
         }
         if (null !== $currency) {
+            Log::debug(sprintf('Limit to currency %s', $currency->code));
             $collector->setCurrency($currency);
         }
         $collector->setBudgets($budgets);
@@ -265,26 +267,47 @@ class OperationsRepository implements OperationsRepositoryInterface
             $result = $collector->getExtractedJournals();
             // app('log')->debug(sprintf('Found %d journals with currency %s.', count($result), $currency->code));
             // do not use array_merge because you want keys to overwrite (otherwise you get double results):
+            Log::debug(sprintf('Found %d extra journals in foreign currency.', count($result)));
             $journals = $result + $journals;
         }
         $array = [];
 
         foreach ($journals as $journal) {
+//            Log::debug(sprintf('Journal #%d.', $journal['transaction_journal_id']));
+//            Log::debug(sprintf('Amounts: %1$s %2$s (amount), %3$s %4$s (foreign_amount), %5$s %6$s (native_amount) %5$s %7$s (foreign native amount)',
+//                               $journal['currency_code'], $journal['amount'], $journal['foreign_currency_code'], $journal['foreign_amount'],
+//                               $default->code, $journal['native_amount'], $journal['native_foreign_amount'])
+//            );
+            // TODO same as in category::sumexpenses
+            $amount                = '0';
             $currencyId            = (int) $journal['currency_id'];
             $currencyName          = $journal['currency_name'];
             $currencySymbol        = $journal['currency_symbol'];
             $currencyCode          = $journal['currency_code'];
             $currencyDecimalPlaces = $journal['currency_decimal_places'];
-
-            // if the user wants everything in native currency, use it.
-            // if the foreign amount is in this currency it's OK because Amount::getAmountFromJournal catches that.
-            if ($convertToNative && $default->id !== (int) $journal['currency_id']) {
-                // use default currency info
-                $currencyId            = $default->id;
-                $currencyName          = $default->name;
-                $currencySymbol        = $default->symbol;
-                $currencyCode          = $default->code;
-                $currencyDecimalPlaces = $default->decimal_places;
+            if ($convertToNative) {
+                $useNative = $default->id !== (int) $journal['currency_id'];
+                $amount                = Amount::getAmountFromJournal($journal);
+                if($useNative) {
+                    $currencyId            = $default->id;
+                    $currencyName          = $default->name;
+                    $currencySymbol        = $default->symbol;
+                    $currencyCode          = $default->code;
+                    $currencyDecimalPlaces = $default->decimal_places;
+                }
+            }
+            if (!$convertToNative) {
+                $amount                = $journal['amount'];
+                // if the amount is not in $currency (but should be), use the foreign_amount if that one is correct.
+                // otherwise, ignore the transaction all together.
+                if (null !== $currency && $currencyId !== $currency->id && $currency->id === (int) $journal['foreign_currency_id']) {
+                    $amount = $journal['foreign_amount'];
+                    $currencyId            = (int) $journal['foreign_currency_id'];
+                    $currencyName          = $journal['foreign_currency_name'];
+                    $currencySymbol        = $journal['foreign_currency_symbol'];
+                    $currencyCode          = $journal['foreign_currency_code'];
+                    $currencyDecimalPlaces = $journal['foreign_currency_decimal_places'];
+                }
             }
             $array[$currencyId]        ??= [
                 'sum'                     => '0',
@@ -294,11 +317,10 @@ class OperationsRepository implements OperationsRepositoryInterface
                 'currency_code'           => $currencyCode,
                 'currency_decimal_places' => $currencyDecimalPlaces,
             ];
-            $amount = Amount::getAmountFromJournal($journal);
             $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->negative($amount));
             Log::debug(sprintf('Journal #%d adds amount %s %s', $journal['transaction_journal_id'], $currencyCode, $amount));
         }
-
+        Log::debug('End of sumExpenses.', $array);
         return $array;
     }
 }

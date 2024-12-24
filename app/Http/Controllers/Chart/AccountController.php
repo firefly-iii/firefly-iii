@@ -36,6 +36,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\AugumentData;
 use FireflyIII\Support\Http\Controllers\ChartGeneration;
@@ -87,12 +88,14 @@ class AccountController extends Controller
 
         /** @var Carbon $end */
         $end           = clone session('end', today(config('app.timezone'))->endOfMonth());
+        $convertToNative = app('preferences')->get('convert_to_native', false)->data;
         $cache         = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
+        $cache->addProperty($convertToNative);
         $cache->addProperty('chart.account.expense-accounts');
         if ($cache->has()) {
-            return response()->json($cache->get());
+            // return response()->json($cache->get());
         }
         $start->subDay();
 
@@ -100,6 +103,7 @@ class AccountController extends Controller
         $currencies    = [];
         $chartData     = [];
         $tempData      = [];
+        $default       = Amount::getDefaultCurrency();
 
         // grab all accounts and names
         $accounts      = $this->accountRepository->getAccountsByType([AccountTypeEnum::EXPENSE->value]);
@@ -110,25 +114,43 @@ class AccountController extends Controller
         $endBalances   = app('steam')->finalAccountsBalance($accounts, $end);
 
         // loop the end balances. This is an array for each account ($expenses)
-        foreach ($endBalances as $accountId => $expenses) {
-            $accountId = (int) $accountId;
-            // loop each expense entry (each entry can be a different currency).
-            foreach ($expenses as $currencyCode => $endAmount) {
-                if (3 !== strlen($currencyCode)) {
+        // loop the accounts, then check for balance and currency info.
+        foreach($accounts as $account) {
+            Log::debug(sprintf('Now in account #%d ("%s")', $account->id, $account->name));
+            $expenses = $endBalances[$account->id] ?? false;
+            if(false === $expenses) {
+                Log::error(sprintf('Found no end balance for account #%d',$account->id));
+                continue;
+            }
+            /**
+             * @var string $key
+             * @var string $endBalance
+             */
+            foreach ($expenses as $key => $endBalance) {
+                if(!$convertToNative && 'native_balance' === $key) {
+                    Log::debug(sprintf('[a] Will skip expense array "%s"', $key));
                     continue;
                 }
+                if($convertToNative && 'native_balance' !== $key) {
+                    Log::debug(sprintf('[b] Will skip expense array "%s"', $key));
+                    continue;
+                }
+                Log::debug(sprintf('Will process expense array "%s" with amount %s', $key, $endBalance));
+                $searchCode = $convertToNative ? $default->code: $key;
+                Log::debug(sprintf('Search code is %s', $searchCode));
                 // see if there is an accompanying start amount.
                 // grab the difference and find the currency.
-                $startAmount = (string) ($startBalances[$accountId][$currencyCode] ?? '0');
-                $diff        = bcsub((string) $endAmount, $startAmount);
-                $currencies[$currencyCode] ??= $this->currencyRepository->findByCode($currencyCode);
+                $startBalance = ($startBalances[$account->id][$key] ?? '0');
+                Log::debug(sprintf('Start balance is %s', $startBalance));
+                $diff        = bcsub($endBalance, $startBalance);
+                $currencies[$searchCode] ??= $this->currencyRepository->findByCode($searchCode);
                 if (0 !== bccomp($diff, '0')) {
                     // store the values in a temporary array.
                     $tempData[] = [
-                        'name'        => $accountNames[$accountId],
+                        'name'        => $accountNames[$account->id],
                         'difference'  => $diff,
                         'diff_float'  => (float) $diff, // intentional float
-                        'currency_id' => $currencies[$currencyCode]->id,
+                        'currency_id' => $currencies[$searchCode]->id,
                     ];
                 }
             }
@@ -139,8 +161,6 @@ class AccountController extends Controller
             $newCurrencies[$currency->id] = $currency;
         }
         $currencies    = $newCurrencies;
-
-
 
         // sort temp array by amount.
         $amounts       = array_column($tempData, 'diff_float');
