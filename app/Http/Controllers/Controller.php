@@ -52,6 +52,7 @@ abstract class Controller extends BaseController
 
     protected string $dateTimeFormat;
     protected string $monthAndDayFormat;
+    protected bool $convertToNative = false;
     protected string $monthFormat;
     protected string $redirectUrl = '/';
 
@@ -116,12 +117,12 @@ abstract class Controller extends BaseController
                     $language  = Steam::getLanguage();
                     $locale    = Steam::getLocale();
                     $darkMode  = app('preferences')->get('darkMode', 'browser')->data;
-                    $convertToNative =app('preferences')->get('convert_to_native', false)->data;
+                    $this->convertToNative =app('preferences')->get('convert_to_native', false)->data;
                     $page      = $this->getPageName();
                     $shownDemo = $this->hasSeenDemo();
                     View::share('language', $language);
                     View::share('locale', $locale);
-                    View::share('convertToNative', $convertToNative);
+                    View::share('convertToNative', $this->convertToNative);
                     View::share('shownDemo', $shownDemo);
                     View::share('current_route_name', $page);
                     View::share('original_route_name', Route::currentRouteName());

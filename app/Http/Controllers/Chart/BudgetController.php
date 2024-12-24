@@ -378,12 +378,11 @@ class BudgetController extends Controller
     {
         $start           = session('start', today(config('app.timezone'))->startOfMonth());
         $end             = session('end', today(config('app.timezone'))->endOfMonth());
-        $convertToNative = app('preferences')->get('convert_to_native', false)->data;
         // chart properties for cache:
         $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
-        $cache->addProperty($convertToNative);
+        $cache->addProperty($this->convertToNative);
         $cache->addProperty('chart.budget.frontpage');
         if ($cache->has()) {
             // return response()->json($cache->get());
@@ -393,7 +392,7 @@ class BudgetController extends Controller
         $chartGenerator->setUser(auth()->user());
         $chartGenerator->setStart($start);
         $chartGenerator->setEnd($end);
-        $chartGenerator->convertToNative = $convertToNative;
+        $chartGenerator->convertToNative = $this->convertToNative;
         $chartGenerator->default         = Amount::getDefaultCurrency();
 
         $chartData = $chartGenerator->generate();

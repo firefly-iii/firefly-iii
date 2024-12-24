@@ -89,14 +89,13 @@ class AccountController extends Controller
 
         /** @var Carbon $end */
         $end           = clone session('end', today(config('app.timezone'))->endOfMonth());
-        $convertToNative = app('preferences')->get('convert_to_native', false)->data;
         $cache         = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
-        $cache->addProperty($convertToNative);
+        $cache->addProperty($this->convertToNative);
         $cache->addProperty('chart.account.expense-accounts');
         if ($cache->has()) {
-             // return response()->json($cache->get());
+              return response()->json($cache->get());
         }
         $start->subDay();
 
@@ -127,16 +126,16 @@ class AccountController extends Controller
              * @var string $endBalance
              */
             foreach ($expenses as $key => $endBalance) {
-                if(!$convertToNative && 'native_balance' === $key) {
+                if(!$this->convertToNative && 'native_balance' === $key) {
                     Log::debug(sprintf('[a] Will skip expense array "%s"', $key));
                     continue;
                 }
-                if($convertToNative && 'native_balance' !== $key) {
+                if($this->convertToNative && 'native_balance' !== $key) {
                     Log::debug(sprintf('[b] Will skip expense array "%s"', $key));
                     continue;
                 }
                 Log::debug(sprintf('Will process expense array "%s" with amount %s', $key, $endBalance));
-                $searchCode = $convertToNative ? $default->code: $key;
+                $searchCode = $this->convertToNative ? $default->code: $key;
                 Log::debug(sprintf('Search code is %s', $searchCode));
                 // see if there is an accompanying start amount.
                 // grab the difference and find the currency.
@@ -518,13 +517,12 @@ class AccountController extends Controller
         /** @var Carbon $end */
         $end           = clone session('end', today(config('app.timezone'))->endOfMonth());
         $cache         = new CacheProperties();
-        $convertToNative = app('preferences')->get('convert_to_native', false)->data;
         $cache->addProperty($start);
         $cache->addProperty($end);
-        $cache->addProperty($convertToNative);
+        $cache->addProperty($this->convertToNative);
         $cache->addProperty('chart.account.revenue-accounts');
         if ($cache->has()) {
-            // return response()->json($cache->get());
+             return response()->json($cache->get());
         }
         $start->subDay();
 
@@ -556,16 +554,16 @@ class AccountController extends Controller
              * @var string $endBalance
              */
             foreach ($expenses as $key => $endBalance) {
-                if(!$convertToNative && 'native_balance' === $key) {
+                if(!$this->convertToNative && 'native_balance' === $key) {
                     Log::debug(sprintf('[a] Will skip expense array "%s"', $key));
                     continue;
                 }
-                if($convertToNative && 'native_balance' !== $key) {
+                if($this->convertToNative && 'native_balance' !== $key) {
                     Log::debug(sprintf('[b] Will skip expense array "%s"', $key));
                     continue;
                 }
                 Log::debug(sprintf('Will process expense array "%s" with amount %s', $key, $endBalance));
-                $searchCode = $convertToNative ? $default->code: $key;
+                $searchCode = $this->convertToNative ? $default->code: $key;
                 Log::debug(sprintf('Search code is %s', $searchCode));
                 // see if there is an accompanying start amount.
                 // grab the difference and find the currency.

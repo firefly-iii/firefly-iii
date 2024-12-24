@@ -282,12 +282,6 @@ class Steam
         $accountCurrency = $this->getAccountCurrency($account);
         $hasCurrency     = null !== $accountCurrency;
         $currency        = $hasCurrency ? $accountCurrency : $native;
-        if (!$hasCurrency) {
-            //Log::debug('Pretend native currency is fake, because account has no currency.');
-            // fake currency
-            //$native = new TransactionCurrency();
-        }
-        //unset($accountCurrency);
         $return = [];
 
         // first, the "balance", as described earlier.
@@ -336,10 +330,16 @@ class Steam
         Log::debug('All balances are (joined)', $others);
         // if the account has no own currency preference, drop balance in favor of native balance
         if ($hasCurrency && !$convertToNative) {
-            $return['balance'] = $others[$currency->code] ?? null;
-            $return['native_balance'] = $others[$currency->code] ?? null;
+            $return['balance'] = $others[$currency->code] ?? '0';
+            $return['native_balance'] = $others[$currency->code] ?? '0';
             Log::debug(sprintf('Set balance + native_balance to %s', $return['balance']));
         }
+
+        // if the currency is the same as the native currency, set the native_balance to the balance for consistency.
+        if($currency->id === $native->id) {
+            $return['native_balance'] = $return['balance'];
+        }
+
         if (!$hasCurrency) {
             Log::debug('Account has no currency preference, dropping balance in favor of native balance.');
             $sum = bcadd($return['balance'], $return['native_balance']);

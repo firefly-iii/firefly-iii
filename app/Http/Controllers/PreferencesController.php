@@ -103,7 +103,7 @@ class PreferencesController extends Controller
         $darkMode                       = app('preferences')->get('darkMode', 'browser')->data;
         $customFiscalYear               = app('preferences')->get('customFiscalYear', 0)->data;
         $fiscalYearStartStr             = app('preferences')->get('fiscalYearStart', '01-01')->data;
-        $convertToNative                = app('preferences')->get('convert_to_native', false)->data;
+        $convertToNative                = $this->convertToNative;
         if (is_array($fiscalYearStartStr)) {
             $fiscalYearStartStr = '01-01';
         }
