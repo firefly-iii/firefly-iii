@@ -48,6 +48,7 @@ class AvailableBudgetObserver
         $availableBudget->native_amount = null;
         if ($availableBudget->transactionCurrency->id !== $userCurrency->id) {
             $converter                      = new ExchangeRateConverter();
+            $converter->setUserGroup($availableBudget->user->userGroup);
             $converter->setIgnoreSettings(true);
             $availableBudget->native_amount = $converter->convert($availableBudget->transactionCurrency, $userCurrency, today(), $availableBudget->amount);
         }

@@ -458,6 +458,11 @@ interface GroupCollectorInterface
     public function setCurrency(TransactionCurrency $currency): self;
 
     /**
+     * Limit results to a specific currency, either foreign or normal one.
+     */
+    public function setNormalCurrency(TransactionCurrency $currency): self;
+
+    /**
      * Set destination accounts.
      */
     public function setDestinationAccounts(Collection $accounts): self;

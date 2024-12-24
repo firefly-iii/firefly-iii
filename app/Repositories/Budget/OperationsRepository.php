@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
@@ -239,7 +240,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         $collector->setUser($this->user)
                   ->setRange($start, $end)
             // ->excludeDestinationAccounts($selection)
-                  ->setTypes([TransactionType::WITHDRAWAL]);
+                  ->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
 
         if (null !== $accounts) {
             $collector->setAccounts($accounts);
@@ -249,26 +250,29 @@ class OperationsRepository implements OperationsRepositoryInterface
         }
         if (null !== $currency) {
             Log::debug(sprintf('Limit to currency %s', $currency->code));
-            $collector->setCurrency($currency);
+            $collector->setNormalCurrency($currency);
         }
         $collector->setBudgets($budgets);
         $journals = $collector->getExtractedJournals();
 
         // same but for transactions in the foreign currency:
         if (null !== $currency) {
-            // app('log')->debug(sprintf('Currency is "%s".', $currency->name));
-            /** @var GroupCollectorInterface $collector */
-            $collector = app(GroupCollectorInterface::class);
-            $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setForeignCurrency($currency)->setBudgets($budgets);
+            Log::debug('STOP looking for transactions in the foreign currency.');
 
-            if (null !== $accounts) {
-                $collector->setAccounts($accounts);
-            }
-            $result = $collector->getExtractedJournals();
-            // app('log')->debug(sprintf('Found %d journals with currency %s.', count($result), $currency->code));
-            // do not use array_merge because you want keys to overwrite (otherwise you get double results):
-            Log::debug(sprintf('Found %d extra journals in foreign currency.', count($result)));
-            $journals = $result + $journals;
+//            Log::debug(sprintf('Look for transactions with foreign currency %s', $currency->code));
+//            // app('log')->debug(sprintf('Currency is "%s".', $currency->name));
+//            /** @var GroupCollectorInterface $collector */
+//            $collector = app(GroupCollectorInterface::class);
+//            $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->setForeignCurrency($currency)->setBudgets($budgets);
+//
+//            if (null !== $accounts) {
+//                $collector->setAccounts($accounts);
+//            }
+//            $result = $collector->getExtractedJournals();
+//            // app('log')->debug(sprintf('Found %d journals with currency %s.', count($result), $currency->code));
+//            // do not use array_merge because you want keys to overwrite (otherwise you get double results):
+//            Log::debug(sprintf('Found %d extra journals in foreign currency.', count($result)));
+//            $journals = $result + $journals;
         }
         $array = [];
 
@@ -289,6 +293,7 @@ class OperationsRepository implements OperationsRepositoryInterface
                 $useNative = $default->id !== (int) $journal['currency_id'];
                 $amount                = Amount::getAmountFromJournal($journal);
                 if($useNative) {
+                    Log::debug(sprintf('Journal #%d switches to native amount (original is %s)', $journal['transaction_journal_id'], $journal['currency_code']));
                     $currencyId            = $default->id;
                     $currencyName          = $default->name;
                     $currencySymbol        = $default->symbol;
@@ -301,6 +306,7 @@ class OperationsRepository implements OperationsRepositoryInterface
                 // if the amount is not in $currency (but should be), use the foreign_amount if that one is correct.
                 // otherwise, ignore the transaction all together.
                 if (null !== $currency && $currencyId !== $currency->id && $currency->id === (int) $journal['foreign_currency_id']) {
+                    Log::debug(sprintf('Journal #%d switches to foreign amount because it matches native.', $journal['transaction_journal_id']));
                     $amount = $journal['foreign_amount'];
                     $currencyId            = (int) $journal['foreign_currency_id'];
                     $currencyName          = $journal['foreign_currency_name'];

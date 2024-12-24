@@ -62,7 +62,9 @@ class Steam
             $value = (string) ($transaction[$key] ?? '0');
             $value = '' === $value ? '0' : $value;
             $sum   = bcadd($sum, $value);
+            //Log::debug(sprintf('Add value from "%s": %s', $key, $value));
         }
+        Log::debug(sprintf('Sum of "%s"-fields is %s', $key, $sum));
 
         return $sum;
     }
@@ -257,63 +259,94 @@ class Steam
      * THAT currency.
      * "native_balance" the balance according to the "native_amount" + "native_foreign_amount" fields.
      * "ABC" the balance in this particular currency code (may repeat for each found currency).
+     *
+     * Het maakt niet uit of de native currency wel of niet gelijk is aan de account currency.
+     * Optelsom zou hetzelfde moeten zijn. Als het EUR is en de rekening ook is native_amount 0.
+     * Zo niet is amount 0 en native_amount het bedrag.
+     *
+     * Eerst een som van alle transacties in de native currency. Alle EUR bij elkaar opgeteld.
+     * Om te weten wat er nog meer op de rekening gebeurt, pak alles waar currency niet EUR is, en de foreign ook niet,
+     * en tel native_amount erbij op.
+     * Daarna pak je alle transacties waar currency niet EUR is, en de foreign wel, en tel foreign_amount erbij op.
+     *
+     * Wil je niks weten van native currencies, pak je:
+     *
+     * Eerst een som van alle transacties gegroepeerd op currency. Einde.
+     *
      */
     public function finalAccountBalance(Account $account, Carbon $date): array
     {
+        Log::debug(sprintf('Now in finalAccountBalance(#%d, "%s", "%s")', $account->id, $account->name, $date->format('Y-m-d H:i:s')));
         $native          = app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
+        $convertToNative = app('preferences')->getForUser($account->user, 'convert_to_native', false)->data;
         $accountCurrency = $this->getAccountCurrency($account);
         $hasCurrency     = null !== $accountCurrency;
-        $currency        = $accountCurrency ?? $native;
+        $currency        = $hasCurrency ? $accountCurrency : $native;
         if (!$hasCurrency) {
-            Log::debug('Gave account fake currency.');
+            //Log::debug('Pretend native currency is fake, because account has no currency.');
             // fake currency
-            $native = new TransactionCurrency();
+            //$native = new TransactionCurrency();
         }
-        $return = [
-            'native_balance' => '0',
-        ];
-        Log::debug(sprintf('Now in finalAccountBalance("%s", "%s")', $account->name, $date->format('Y-m-d H:i:s')));
+        //unset($accountCurrency);
+        $return = [];
+
         // first, the "balance", as described earlier.
-        $array             = $account->transactions()
-                                     ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                     ->where('transaction_journals.date', '<=', $date->format('Y-m-d H:i:s'))
-                                     ->where('transactions.transaction_currency_id', $currency->id)
-                                     ->get(['transactions.amount'])->toArray();
-        $return['balance'] = $this->sumTransactions($array, 'amount');
-        //Log::debug(sprintf('balance is %s', $return['balance']));
-        // add virtual balance:
-        $return['balance'] = bcadd('' === (string) $account->virtual_balance ? '0' : $account->virtual_balance, $return['balance']);
-        Log::debug(sprintf('balance is %s (with virtual balance)', $return['balance']));
+        if ($convertToNative) {
+            // normal balance
+            $return['balance'] = (string) $account->transactions()
+                                                  ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                                                  ->where('transaction_journals.date', '<=', $date->format('Y-m-d H:i:s'))
+                                                  ->where('transactions.transaction_currency_id', $native->id)
+                                                  ->sum('transactions.amount');
+            // plus virtual balance, if the account has a virtual_balance in the native currency
+            if($native->id === $accountCurrency?->id) {
+                $return['balance'] = bcadd('' === (string) $account->virtual_balance ? '0' : $account->virtual_balance, $return['balance']);
+            }
+            Log::debug(sprintf('balance is (%s only) %s (with virtual balance)', $native->code, $return['balance']));
 
-        // then, native balance (if necessary(
-        if ($native->id !== $currency->id) {
-            Log::debug('Will grab native balance for transactions on this account.');
-            $array                    = $account->transactions()
-                                                ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                                ->where('transaction_journals.date', '<=', $date->format('Y-m-d H:i:s'))
-                                                ->get(['transactions.native_amount'])->toArray();
-            $return['native_balance'] = $this->sumTransactions($array, 'native_amount');
-//                        Log::debug(sprintf('native_balance is %s', $return['native_balance']));
+            // native balance
+            $return['native_balance'] = (string) $account->transactions()
+                                                         ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                                                         ->where('transaction_journals.date', '<=', $date->format('Y-m-d H:i:s'))
+                                                         ->whereNot('transactions.transaction_currency_id', $native->id)
+                                                         ->sum('transactions.native_amount');
+            // plus native virtual balance.
             $return['native_balance'] = bcadd('' === (string) $account->native_virtual_balance ? '0' : $account->native_virtual_balance, $return['native_balance']);
-            Log::debug(sprintf('native_balance is %s (with virtual balance)', $return['native_balance']));
+            Log::debug(sprintf('native_balance is (all transactions to %s) %s (with virtual balance)', $native->code, $return['native_balance']));
+
+            // plus foreign transactions in THIS currency.
+            $sum                      = (string) $account->transactions()
+                                                         ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                                                         ->where('transaction_journals.date', '<=', $date->format('Y-m-d H:i:s'))
+                                                         ->whereNot('transactions.transaction_currency_id', $native->id)
+                                                         ->where('transactions.foreign_currency_id', $native->id)
+                                                         ->sum('transactions.foreign_amount');
+            $return['native_balance'] = bcadd($return['native_balance'], $sum);
+
+            Log::debug(sprintf('Foreign amount transactions add (%s only) %s, total native_balance is now %s', $native->code, $sum, $return['native_balance']));
         }
 
-        // balance(s) in other currencies.
+        // balance(s) in other (all) currencies.
         $array  = $account->transactions()
                           ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                           ->leftJoin('transaction_currencies', 'transaction_currencies.id', '=', 'transactions.transaction_currency_id')
                           ->where('transaction_journals.date', '<=', $date->format('Y-m-d H:i:s'))
                           ->get(['transaction_currencies.code', 'transactions.amount'])->toArray();
         $others = $this->groupAndSumTransactions($array, 'code', 'amount');
-
+        Log::debug('All balances are (joined)', $others);
         // if the account has no own currency preference, drop balance in favor of native balance
+        if ($hasCurrency && !$convertToNative) {
+            $return['balance'] = $others[$currency->code] ?? null;
+            $return['native_balance'] = $others[$currency->code] ?? null;
+            Log::debug(sprintf('Set balance + native_balance to %s', $return['balance']));
+        }
         if (!$hasCurrency) {
             Log::debug('Account has no currency preference, dropping balance in favor of native balance.');
-            $return['native_balance'] = bcadd($return['balance'], $return['native_balance']);
+            $sum = bcadd($return['balance'], $return['native_balance']);
+            Log::debug(sprintf('%s + %s = %s', $return['balance'], $return['native_balance'], $sum));
+            $return['native_balance'] = $sum;
             unset($return['balance']);
         }
-
-        Log::debug('All others are (joined)', $others);
 
         return array_merge($return, $others);
     }

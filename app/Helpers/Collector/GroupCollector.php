@@ -874,6 +874,16 @@ class GroupCollector implements GroupCollectorInterface
         return $this;
     }
 
+    /**
+     * Limit results to a specific currency, only normal one.
+     */
+    public function setNormalCurrency(TransactionCurrency $currency): GroupCollectorInterface
+    {
+        $this->query->where('source.transaction_currency_id', $currency->id);
+
+        return $this;
+    }
+
     public function setEndRow(int $endRow): self
     {
         $this->endRow = $endRow;

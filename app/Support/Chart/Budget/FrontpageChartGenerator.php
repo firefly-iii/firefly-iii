@@ -150,8 +150,7 @@ class FrontpageChartGenerator
         $useNative = $this->convertToNative && $this->default->id !== $limit->transaction_currency_id;
         $currency  = $limit->transactionCurrency;
         if ($useNative) {
-            Log::debug(sprintf('Processing limit #%d with %s %s', $limit->id, $this->default->code, $limit->native_amount));
-            $currency = null;
+            Log::debug(sprintf('Processing limit #%d with (native) %s %s', $limit->id, $this->default->code, $limit->native_amount));
         }
         if (!$useNative) {
             Log::debug(sprintf('Processing limit #%d with %s %s', $limit->id, $limit->transactionCurrency->code, $limit->amount));
@@ -167,6 +166,9 @@ class FrontpageChartGenerator
                 Log::debug(sprintf('Process spent row (%s)', $entry['currency_code']));
                 $data = $this->processRow($data, $budget, $limit, $entry);
             }
+            if (!($entry['currency_id'] === $limit->transaction_currency_id || $useNative)) {
+                Log::debug(sprintf('Skipping spent row (%s).', $entry['currency_code']));
+            }
         }
 
         return $data;
@@ -181,6 +183,7 @@ class FrontpageChartGenerator
     private function processRow(array $data, Budget $budget, BudgetLimit $limit, array $entry): array
     {
         $title = sprintf('%s (%s)', $budget->name, $entry['currency_name']);
+        Log::debug(sprintf('Title is "%s"', $title));
         if ($limit->start_date->startOfDay()->ne($this->start->startOfDay()) || $limit->end_date->startOfDay()->ne($this->end->startOfDay())) {
             $title = sprintf(
                 '%s (%s) (%s - %s)',
@@ -190,15 +193,26 @@ class FrontpageChartGenerator
                 $limit->end_date->isoFormat($this->monthAndDayFormat)
             );
         }
+        $useNative = $this->convertToNative && $this->default->id !== $limit->transaction_currency_id;
+        $amount = $limit->amount;
+        if($useNative) {
+            $amount = $limit->native_amount;
+        }
+
+
         $sumSpent = bcmul($entry['sum'], '-1'); // spent
         $data[0]['entries'][$title] ??= '0';
         $data[1]['entries'][$title] ??= '0';
         $data[2]['entries'][$title] ??= '0';
 
 
-        $data[0]['entries'][$title] = bcadd($data[0]['entries'][$title], 1 === bccomp($sumSpent, $limit->amount) ? $limit->amount : $sumSpent);                              // spent
-        $data[1]['entries'][$title] = bcadd($data[1]['entries'][$title],1 === bccomp($limit->amount, $sumSpent) ? bcadd($entry['sum'], $limit->amount) : '0');              // left to spent
-        $data[2]['entries'][$title] = bcadd($data[2]['entries'][$title],1 === bccomp($limit->amount, $sumSpent) ? '0' : bcmul(bcadd($entry['sum'], $limit->amount), '-1')); // overspent
+        $data[0]['entries'][$title] = bcadd($data[0]['entries'][$title], 1 === bccomp($sumSpent, $amount) ? $amount : $sumSpent);                              // spent
+        $data[1]['entries'][$title] = bcadd($data[1]['entries'][$title],1 === bccomp($amount, $sumSpent) ? bcadd($entry['sum'], $amount) : '0');              // left to spent
+        $data[2]['entries'][$title] = bcadd($data[2]['entries'][$title],1 === bccomp($amount, $sumSpent) ? '0' : bcmul(bcadd($entry['sum'], $amount), '-1')); // overspent
+
+        Log::debug(sprintf('Amount [spent]     is now %s.', $data[0]['entries'][$title]));
+        Log::debug(sprintf('Amount [left]      is now %s.', $data[1]['entries'][$title]));
+        Log::debug(sprintf('Amount [overspent] is now %s.', $data[2]['entries'][$title]));
 
         return $data;
     }

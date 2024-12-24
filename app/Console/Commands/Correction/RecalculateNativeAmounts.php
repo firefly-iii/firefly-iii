@@ -108,6 +108,7 @@ class RecalculateNativeAmounts extends Command
     private function recalculatePiggyBanks(UserGroup $userGroup, TransactionCurrency $currency): void
     {
         $converter  = new ExchangeRateConverter();
+        $converter->setUserGroup($userGroup);
         $converter->setIgnoreSettings(true);
         $repository = app(PiggyBankRepositoryInterface::class);
         $repository->setUserGroup($userGroup);

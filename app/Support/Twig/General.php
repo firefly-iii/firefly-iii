@@ -79,10 +79,6 @@ class General extends AbstractExtension
                         if (!$useNative) {
                             $strings[] = app('amount')->formatAnything($currency, $balance, false);
                         }
-                        if($useNative) {
-                            $strings[] =sprintf('(%s)', app('amount')->formatAnything($currency, $balance, false));
-                        }
-
                         continue;
                     }
                     if ('native_balance' === $key) {
@@ -94,7 +90,7 @@ class General extends AbstractExtension
                         continue;
                     }
                     // for multi currency accounts.
-                    if ($key !== $currency->code) {
+                    if ($useNative && $key !== $default->code) {
                         $strings[] = app('amount')->formatAnything(TransactionCurrency::where('code', $key)->first(), $balance, false);
                     }
                 }

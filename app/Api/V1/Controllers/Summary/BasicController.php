@@ -322,6 +322,7 @@ class BasicController extends Controller
 
     private function getNetWorthInfo(Carbon $start, Carbon $end): array
     {
+        Log::debug('getNetWorthInfo');
         /** @var User $user */
         $user = auth()->user();
         $date = now(config('app.timezone'));
@@ -369,6 +370,7 @@ class BasicController extends Controller
                 'sub_title'               => '',
             ];
         }
+        Log::debug('End of getNetWorthInfo');
 
         return $return;
     }
