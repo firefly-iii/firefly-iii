@@ -355,6 +355,62 @@ class Steam
         return array_merge($return, $others);
     }
 
+    public function filterAccountBalances(array $total, Account $account, bool $convertToNative, ?TransactionCurrency $currency = null): array {
+        $return = [];
+        foreach($total as $key => $value) {
+            $return[$key] = $this->filterAccountBalance($value, $account, $convertToNative, $currency);
+        }
+        return $return;
+    }
+
+    public function filterAccountBalance(array $set, Account $account, bool $convertToNative, ?TransactionCurrency $currency = null): array {
+        if(0 === count($set)) {
+            Log::debug(sprintf('Return empty array for account #%d', $account->id));
+            return [];
+        }
+        $defaultCurrency = app('amount')->getDefaultCurrency();
+        if($convertToNative) {
+            if ($defaultCurrency->id === $currency?->id) {
+                Log::debug(sprintf('Unset "native_balance" and "%s" for account #%d', $defaultCurrency->code, $account->id));
+                unset($set['native_balance'], $set[$defaultCurrency->code]);
+            }
+            if (null !== $currency && $defaultCurrency->id !== $currency->id) {
+                Log::debug(sprintf('Unset balance for account #%d', $account->id));
+                unset($set['balance']);
+            }
+
+            if (null === $currency) {
+                Log::debug(sprintf('TEMP DO NOT Drop defaultCurrency balance for account #%d', $account->id));
+                //unset($set[$this->defaultCurrency->code]);
+            }
+        }
+
+        if(!$convertToNative) {
+            if (null === $currency) {
+                Log::debug(sprintf('Unset native_balance and make defaultCurrency balance the balance for account #%d', $account->id));
+                $set['balance'] = $set[$this->defaultCurrency->code] ?? '0';
+                unset($set['native_balance'], $set[$defaultCurrency->code]);
+            }
+
+            if (null !== $currency) {
+                Log::debug(sprintf('Unset native_balance + defaultCurrency + currencyCode balance for account #%d', $account->id));
+                unset($set['native_balance'], $set[$defaultCurrency->code], $set[$currency->code]);
+            }
+        }
+
+
+        // put specific value first in array.
+        if (array_key_exists('native_balance', $set)) {
+            $set = ['native_balance' => $set['native_balance']] + $set;
+        }
+        if (array_key_exists('balance', $set)) {
+            $set = ['balance' => $set['balance']] + $set;
+        }
+        Log::debug(sprintf('Return #%d', $account->id), $set);
+
+        return $set;
+    }
+
     private function groupAndSumTransactions(array $array, string $group, string $field): array
     {
         $return = [];

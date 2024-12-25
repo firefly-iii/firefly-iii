@@ -431,11 +431,10 @@ class AccountRepository implements AccountRepositoryInterface
 
     public function getUsedCurrencies(Account $account): Collection
     {
-        $info        = $account->transactions()->get(['transaction_currency_id', 'foreign_currency_id'])->toArray();
+        $info        = $account->transactions()->distinct()->groupBy('transaction_currency_id')->get(['transaction_currency_id'])->toArray();
         $currencyIds = [];
         foreach ($info as $entry) {
             $currencyIds[] = (int) $entry['transaction_currency_id'];
-            $currencyIds[] = (int) $entry['foreign_currency_id'];
         }
         $currencyIds = array_unique($currencyIds);
 

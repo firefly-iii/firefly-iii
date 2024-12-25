@@ -30,6 +30,7 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use Illuminate\Contracts\View\Factory;
@@ -90,7 +91,7 @@ class ShowController extends Controller
         // @var Carbon $end
         $end   ??= session('end');
 
-        if ($end < $start) {
+        if ($end->lt($start)) {
             [$start, $end] = [$end, $start];
         }
         $location         = $this->repository->getLocation($account);
@@ -99,7 +100,8 @@ class ShowController extends Controller
         $subTitleIcon     = config(sprintf('firefly.subIconsByIdentifier.%s', $account->accountType->type));
         $page             = (int) $request->get('page');
         $pageSize         = (int) app('preferences')->get('listPageSize', 50)->data;
-        $currency         = $this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
+        $accountCurrency = $this->repository->getAccountCurrency($account);
+        $currency         = $accountCurrency ?? Amount::getDefaultCurrency();
         $fStart           = $start->isoFormat($this->monthAndDayFormat);
         $fEnd             = $end->isoFormat($this->monthAndDayFormat);
         $subTitle         = (string) trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
@@ -129,7 +131,7 @@ class ShowController extends Controller
 
         $groups->setPath(route('accounts.show', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]));
         $showAll          = false;
-        $balance          = Steam::finalAccountBalance($account, $end)['balance'] ?? '0'; // TODO fix me
+        $balances          = Steam::filterAccountBalance(Steam::finalAccountBalance($account, $end), $account, $this->convertToNative, $accountCurrency);
 
         return view(
             'accounts.show',
@@ -148,7 +150,7 @@ class ShowController extends Controller
                 'end',
                 'chartUrl',
                 'location',
-                'balance'
+                'balances'
             )
         );
     }
@@ -175,7 +177,7 @@ class ShowController extends Controller
         $subTitleIcon = config('firefly.subIconsByIdentifier.'.$account->accountType->type);
         $page         = (int) $request->get('page');
         $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
-        $currency     = $this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
+        $currency     = $this->repository->getAccountCurrency($account) ?? Amount::getDefaultCurrency();
         $subTitle     = (string) trans('firefly.all_journals_for_account', ['name' => $account->name]);
         $periods      = new Collection();
 
