@@ -129,7 +129,7 @@ class ShowController extends Controller
 
         $groups->setPath(route('accounts.show', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]));
         $showAll          = false;
-        $balance          = Steam::finalAccountBalance($account, $end)['balance'];
+        $balance          = Steam::finalAccountBalance($account, $end)['balance'] ?? '0'; // TODO fix me
 
         return view(
             'accounts.show',
