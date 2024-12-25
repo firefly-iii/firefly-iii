@@ -54,7 +54,7 @@ abstract class Controller extends BaseController
     protected string $dateTimeFormat;
     protected string $monthAndDayFormat;
     protected bool $convertToNative = false;
-    protected TransactionCurrency $defaultCurrency;
+    protected ?TransactionCurrency $defaultCurrency;
     protected string $monthFormat;
     protected string $redirectUrl = '/';
 
@@ -113,10 +113,11 @@ abstract class Controller extends BaseController
                 $this->monthFormat       = (string) trans('config.month_js', [], $locale);
                 $this->monthAndDayFormat = (string) trans('config.month_and_day_js', [], $locale);
                 $this->dateTimeFormat    = (string) trans('config.date_time_js', [], $locale);
-                $this->defaultCurrency   = app('amount')->getDefaultCurrency();
                 $darkMode                = 'browser';
+                $this->defaultCurrency   =null;
                 // get shown-intro-preference:
                 if (auth()->check()) {
+                    $this->defaultCurrency   = app('amount')->getDefaultCurrency();
                     $language  = Steam::getLanguage();
                     $locale    = Steam::getLocale();
                     $darkMode  = app('preferences')->get('darkMode', 'browser')->data;
