@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\RequestInformation;
 use FireflyIII\Support\Http\Controllers\UserNavigation;
@@ -53,6 +54,7 @@ abstract class Controller extends BaseController
     protected string $dateTimeFormat;
     protected string $monthAndDayFormat;
     protected bool $convertToNative = false;
+    protected TransactionCurrency $defaultCurrency;
     protected string $monthFormat;
     protected string $redirectUrl = '/';
 
@@ -111,6 +113,7 @@ abstract class Controller extends BaseController
                 $this->monthFormat       = (string) trans('config.month_js', [], $locale);
                 $this->monthAndDayFormat = (string) trans('config.month_and_day_js', [], $locale);
                 $this->dateTimeFormat    = (string) trans('config.date_time_js', [], $locale);
+                $this->defaultCurrency   = app('amount')->getDefaultCurrency();
                 $darkMode                = 'browser';
                 // get shown-intro-preference:
                 if (auth()->check()) {

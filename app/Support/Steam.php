@@ -336,11 +336,11 @@ class Steam
         }
 
         // if the currency is the same as the native currency, set the native_balance to the balance for consistency.
-        if($currency->id === $native->id) {
-            $return['native_balance'] = $return['balance'];
-        }
+//        if($currency->id === $native->id) {
+//            $return['native_balance'] = $return['balance'];
+//        }
 
-        if (!$hasCurrency) {
+        if (!$hasCurrency && array_key_exists('balance', $return) && array_key_exists('native_balance', $return)) {
             Log::debug('Account has no currency preference, dropping balance in favor of native balance.');
             $sum = bcadd($return['balance'], $return['native_balance']);
             Log::debug(sprintf('%s + %s = %s', $return['balance'], $return['native_balance'], $sum));

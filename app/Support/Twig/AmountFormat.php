@@ -75,6 +75,7 @@ class AmountFormat extends AbstractExtension
             $this->formatAmountByAccount(),
             $this->formatAmountBySymbol(),
             $this->formatAmountByCurrency(),
+            $this->formatAmountByCode()
         ];
     }
 
@@ -101,6 +102,25 @@ class AmountFormat extends AbstractExtension
     }
 
     /**
+     * Use the code to format a currency.
+     */
+    protected function formatAmountByCode(): TwigFunction
+    {
+        // formatAmountByCode
+        return new TwigFunction(
+            'formatAmountByCode',
+            static function (string $amount, string $code, ?bool $coloured = null): string {
+                $coloured ??= true;
+                /** @var TransactionCurrency $currency */
+                $currency = TransactionCurrency::whereCode($code)->first();
+
+                return app('amount')->formatAnything($currency, $amount, $coloured);
+            },
+            ['is_safe' => ['html']]
+        );
+    }
+
+    /**
      * Will format the amount by the currency related to the given account.
      */
     protected function formatAmountBySymbol(): TwigFunction
@@ -108,8 +128,8 @@ class AmountFormat extends AbstractExtension
         return new TwigFunction(
             'formatAmountBySymbol',
             static function (string $amount, string $symbol, ?int $decimalPlaces = null, ?bool $coloured = null): string {
-                $decimalPlaces ??= 2;
-                $coloured      ??= true;
+                $decimalPlaces            ??= 2;
+                $coloured                 ??= true;
                 $currency                 = new TransactionCurrency();
                 $currency->symbol         = $symbol;
                 $currency->decimal_places = $decimalPlaces;
