@@ -48,7 +48,6 @@ class FrontpageChartGenerator
     public bool                             $convertToNative = false;
     public TransactionCurrency              $default;
 
-
     /**
      * FrontpageChartGenerator constructor.
      */
@@ -100,10 +99,12 @@ class FrontpageChartGenerator
         if (0 === $limits->count()) {
             $result = $this->noBudgetLimits($data, $budget);
             Log::debug(sprintf('Now DONE processing budget #%d ("%s")', $budget->id, $budget->name));
+
             return $result;
         }
         $result = $this->budgetLimits($data, $budget, $limits);
         Log::debug(sprintf('Now DONE processing budget #%d ("%s")', $budget->id, $budget->name));
+
         return $result;
     }
 
@@ -132,6 +133,7 @@ class FrontpageChartGenerator
     private function budgetLimits(array $data, Budget $budget, Collection $limits): array
     {
         Log::debug('Start processing budget limits.');
+
         /** @var BudgetLimit $limit */
         foreach ($limits as $limit) {
             $data = $this->processLimit($data, $budget, $limit);
@@ -156,8 +158,9 @@ class FrontpageChartGenerator
             Log::debug(sprintf('Processing limit #%d with %s %s', $limit->id, $limit->transactionCurrency->code, $limit->amount));
         }
 
-        $spent = $this->opsRepository->sumExpenses($limit->start_date, $limit->end_date, null, new Collection([$budget]), $currency);
+        $spent     = $this->opsRepository->sumExpenses($limit->start_date, $limit->end_date, null, new Collection([$budget]), $currency);
         Log::debug(sprintf('Spent array has %d entries.', count($spent)));
+
         /** @var array $entry */
         foreach ($spent as $entry) {
             // only spent the entry where the entry's currency matches the budget limit's currency
@@ -182,7 +185,7 @@ class FrontpageChartGenerator
      */
     private function processRow(array $data, Budget $budget, BudgetLimit $limit, array $entry): array
     {
-        $title = sprintf('%s (%s)', $budget->name, $entry['currency_name']);
+        $title                      = sprintf('%s (%s)', $budget->name, $entry['currency_name']);
         Log::debug(sprintf('Title is "%s"', $title));
         if ($limit->start_date->startOfDay()->ne($this->start->startOfDay()) || $limit->end_date->startOfDay()->ne($this->end->startOfDay())) {
             $title = sprintf(
@@ -193,22 +196,22 @@ class FrontpageChartGenerator
                 $limit->end_date->isoFormat($this->monthAndDayFormat)
             );
         }
-        $useNative = $this->convertToNative && $this->default->id !== $limit->transaction_currency_id;
-        $amount = $limit->amount;
-        if($useNative) {
+        $useNative                  = $this->convertToNative && $this->default->id !== $limit->transaction_currency_id;
+        $amount                     = $limit->amount;
+        if ($useNative) {
             $amount = $limit->native_amount;
         }
 
 
-        $sumSpent = bcmul($entry['sum'], '-1'); // spent
+        $sumSpent                   = bcmul($entry['sum'], '-1'); // spent
         $data[0]['entries'][$title] ??= '0';
         $data[1]['entries'][$title] ??= '0';
         $data[2]['entries'][$title] ??= '0';
 
 
         $data[0]['entries'][$title] = bcadd($data[0]['entries'][$title], 1 === bccomp($sumSpent, $amount) ? $amount : $sumSpent);                              // spent
-        $data[1]['entries'][$title] = bcadd($data[1]['entries'][$title],1 === bccomp($amount, $sumSpent) ? bcadd($entry['sum'], $amount) : '0');              // left to spent
-        $data[2]['entries'][$title] = bcadd($data[2]['entries'][$title],1 === bccomp($amount, $sumSpent) ? '0' : bcmul(bcadd($entry['sum'], $amount), '-1')); // overspent
+        $data[1]['entries'][$title] = bcadd($data[1]['entries'][$title], 1 === bccomp($amount, $sumSpent) ? bcadd($entry['sum'], $amount) : '0');              // left to spent
+        $data[2]['entries'][$title] = bcadd($data[2]['entries'][$title], 1 === bccomp($amount, $sumSpent) ? '0' : bcmul(bcadd($entry['sum'], $amount), '-1')); // overspent
 
         Log::debug(sprintf('Amount [spent]     is now %s.', $data[0]['entries'][$title]));
         Log::debug(sprintf('Amount [left]      is now %s.', $data[1]['entries'][$title]));

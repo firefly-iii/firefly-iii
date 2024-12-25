@@ -71,22 +71,22 @@ class IndexController extends Controller
      *                                              */
     public function inactive(Request $request, string $objectType)
     {
-        $inactivePage = true;
-        $subTitle     = (string) trans(sprintf('firefly.%s_accounts_inactive', $objectType));
-        $subTitleIcon = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
-        $types        = config(sprintf('firefly.accountTypesByIdentifier.%s', $objectType));
-        $collection   = $this->repository->getInactiveAccountsByType($types);
-        $total        = $collection->count();
-        $page         = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
-        $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
-        $accounts     = $collection->slice(($page - 1) * $pageSize, $pageSize);
+        $inactivePage  = true;
+        $subTitle      = (string) trans(sprintf('firefly.%s_accounts_inactive', $objectType));
+        $subTitleIcon  = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
+        $types         = config(sprintf('firefly.accountTypesByIdentifier.%s', $objectType));
+        $collection    = $this->repository->getInactiveAccountsByType($types);
+        $total         = $collection->count();
+        $page          = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
+        $pageSize      = (int) app('preferences')->get('listPageSize', 50)->data;
+        $accounts      = $collection->slice(($page - 1) * $pageSize, $pageSize);
         unset($collection);
 
         /** @var Carbon $start */
-        $start = clone session('start', today(config('app.timezone'))->startOfMonth());
+        $start         = clone session('start', today(config('app.timezone'))->startOfMonth());
 
         /** @var Carbon $end */
-        $end = clone session('end', today(config('app.timezone'))->endOfMonth());
+        $end           = clone session('end', today(config('app.timezone'))->endOfMonth());
         $start->subDay();
 
         $ids           = $accounts->pluck('id')->toArray();
@@ -111,7 +111,7 @@ class IndexController extends Controller
         );
 
         // make paginator:
-        $accounts = new LengthAwarePaginator($accounts, $total, $pageSize, $page);
+        $accounts      = new LengthAwarePaginator($accounts, $total, $pageSize, $page);
         $accounts->setPath(route('accounts.inactive.index', [$objectType]));
 
         return view('accounts.index', compact('objectType', 'inactivePage', 'subTitleIcon', 'subTitle', 'page', 'accounts'));
@@ -127,9 +127,9 @@ class IndexController extends Controller
     public function index(Request $request, string $objectType)
     {
         app('log')->debug(sprintf('Now at %s', __METHOD__));
-        $subTitle     = (string) trans(sprintf('firefly.%s_accounts', $objectType));
-        $subTitleIcon = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
-        $types        = config(sprintf('firefly.accountTypesByIdentifier.%s', $objectType));
+        $subTitle      = (string) trans(sprintf('firefly.%s_accounts', $objectType));
+        $subTitleIcon  = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
+        $types         = config(sprintf('firefly.accountTypesByIdentifier.%s', $objectType));
 
         $this->repository->resetAccountOrder();
 
@@ -145,10 +145,10 @@ class IndexController extends Controller
         unset($collection);
 
         /** @var Carbon $start */
-        $start = clone session('start', today(config('app.timezone'))->startOfMonth());
+        $start         = clone session('start', today(config('app.timezone'))->startOfMonth());
 
         /** @var Carbon $end */
-        $end = clone session('end', today(config('app.timezone'))->endOfMonth());
+        $end           = clone session('end', today(config('app.timezone'))->endOfMonth());
         $start->subDay();
 
         $ids           = $accounts->pluck('id')->toArray();
@@ -159,9 +159,9 @@ class IndexController extends Controller
 
         $accounts->each(
             function (Account $account) use ($activities, $startBalances, $endBalances): void {
-                $interest = (string) $this->repository->getMetaValue($account, 'interest');
-                $interest = '' === $interest ? '0' : $interest;
-                $currency = $this->repository->getAccountCurrency($account);
+                $interest                     = (string) $this->repository->getMetaValue($account, 'interest');
+                $interest                     = '' === $interest ? '0' : $interest;
+                $currency                     = $this->repository->getAccountCurrency($account);
 
                 $account->startBalances       = $this->getBalance($account, $currency, $startBalances);
                 $account->endBalances         = $this->getBalance($account, $currency, $endBalances);
@@ -175,7 +175,7 @@ class IndexController extends Controller
                 $account->location            = $this->repository->getLocation($account);
                 $account->liability_direction = $this->repository->getMetaValue($account, 'liability_direction');
                 $account->current_debt        = $this->repository->getMetaValue($account, 'current_debt') ?? '-';
-                $account->currency = $currency;
+                $account->currency            = $currency;
                 $account->iban                = implode(' ', str_split((string) $account->iban, 4));
 
 
@@ -185,7 +185,7 @@ class IndexController extends Controller
         app('log')->debug(sprintf('Count of accounts before LAP: %d', $accounts->count()));
 
         /** @var LengthAwarePaginator $accounts */
-        $accounts = new LengthAwarePaginator($accounts, $total, $pageSize, $page);
+        $accounts      = new LengthAwarePaginator($accounts, $total, $pageSize, $page);
         $accounts->setPath(route('accounts.index', [$objectType]));
 
         app('log')->debug(sprintf('Count of accounts after LAP (1): %d', $accounts->count()));
@@ -194,7 +194,7 @@ class IndexController extends Controller
         return view('accounts.index', compact('objectType', 'inactiveCount', 'subTitleIcon', 'subTitle', 'page', 'accounts'));
     }
 
-    private function getBalance(Account $account, ?TransactionCurrency $currency = null, array $balances): array
+    private function getBalance(Account $account, ?TransactionCurrency $currency, array $balances): array
     {
         if (!array_key_exists($account->id, $balances)) {
             return [];
@@ -217,6 +217,7 @@ class IndexController extends Controller
         foreach ($endBalances as $key => $value) {
             $result[$key] = bcsub($value, $startBalances[$key] ?? '0');
         }
+
         return $result;
     }
 }

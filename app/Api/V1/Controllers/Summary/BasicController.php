@@ -32,7 +32,6 @@ use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Report\NetWorthInterface;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
@@ -94,24 +93,24 @@ class BasicController extends Controller
     public function basic(DateRequest $request): JsonResponse
     {
         // parameters for boxes:
-        $dates = $request->getAll();
-        $start = $dates['start'];
-        $end   = $dates['end'];
-        $code  = $request->get('currency_code');
+        $dates        = $request->getAll();
+        $start        = $dates['start'];
+        $end          = $dates['end'];
+        $code         = $request->get('currency_code');
 
         // balance information:
         $balanceData  = $this->getBalanceInformation($start, $end);
         $billData     = $this->getBillInformation($start, $end);
         $spentData    = $this->getLeftToSpendInfo($start, $end);
         $netWorthData = $this->getNetWorthInfo($start, $end);
-//        $balanceData  = [];
-//        $billData     = [];
-//        $spentData    = [];
-//        $netWorthData = [];
+        //        $balanceData  = [];
+        //        $billData     = [];
+        //        $spentData    = [];
+        //        $netWorthData = [];
         $total        = array_merge($balanceData, $billData, $spentData, $netWorthData);
 
         // give new keys
-        $return = [];
+        $return       = [];
         foreach ($total as $entry) {
             if (null === $code || ($code === $entry['currency_code'])) {
                 $return[$entry['key']] = $entry;
@@ -125,19 +124,19 @@ class BasicController extends Controller
     {
         // some config settings
         $convertToNative = app('preferences')->get('convert_to_native', false)->data;
-        $default = app('amount')->getDefaultCurrency();
+        $default         = app('amount')->getDefaultCurrency();
         // prep some arrays:
-        $incomes  = [];
-        $expenses = [];
-        $sums     = [];
-        $return   = [];
+        $incomes         = [];
+        $expenses        = [];
+        $sums            = [];
+        $return          = [];
 
         // collect income of user using the new group collector.
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector       = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)->setPage($this->parameters->get('page'))->setTypes([TransactionTypeEnum::DEPOSIT->value]);
 
-        $set = $collector->getExtractedJournals();
+        $set             = $collector->getExtractedJournals();
 
         /** @var array $journal */
         foreach ($set as $journal) {
@@ -154,14 +153,14 @@ class BasicController extends Controller
 
         // collect expenses of user using the new group collector.
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector       = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)->setPage($this->parameters->get('page'))->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
-        $set = $collector->getExtractedJournals();
+        $set             = $collector->getExtractedJournals();
 
         /** @var array $journal */
         foreach ($set as $journal) {
-            $currencyId           = $convertToNative ? $default->id : (int) $journal['currency_id'];
-            $amount               = Amount::getAmountFromJournal($journal);
+            $currencyId            = $convertToNative ? $default->id : (int) $journal['currency_id'];
+            $amount                = Amount::getAmountFromJournal($journal);
             $expenses[$currencyId] ??= '0';
             $expenses[$currencyId] = bcadd($expenses[$currencyId], $amount);
             $sums[$currencyId]     ??= '0';
@@ -169,7 +168,7 @@ class BasicController extends Controller
         }
 
         // format amounts:
-        $keys = array_keys($sums);
+        $keys            = array_keys($sums);
         foreach ($keys as $currencyId) {
             $currency = $this->currencyRepos->find($currencyId);
             if (null === $currency) {
@@ -186,8 +185,8 @@ class BasicController extends Controller
                 'currency_decimal_places' => $currency->decimal_places,
                 'value_parsed'            => app('amount')->formatAnything($currency, $sums[$currencyId] ?? '0', false),
                 'local_icon'              => 'balance-scale',
-                'sub_title'               => app('amount')->formatAnything($currency, $expenses[$currencyId] ?? '0', false) .
-                                             ' + ' . app('amount')->formatAnything($currency, $incomes[$currencyId] ?? '0', false),
+                'sub_title'               => app('amount')->formatAnything($currency, $expenses[$currencyId] ?? '0', false).
+                                             ' + '.app('amount')->formatAnything($currency, $incomes[$currencyId] ?? '0', false),
             ];
             $return[] = [
                 'key'                     => sprintf('spent-in-%s', $currency->code),
@@ -228,7 +227,7 @@ class BasicController extends Controller
         $paidAmount   = $this->billRepository->sumPaidInRange($start, $end);
         $unpaidAmount = $this->billRepository->sumUnpaidInRange($start, $end);
 
-        $return = [];
+        $return       = [];
 
         /**
          * @var array $info
@@ -298,7 +297,7 @@ class BasicController extends Controller
 
             Log::debug(sprintf('Spent %s %s', $row['currency_code'], $row['sum']));
 
-            $return[] = [
+            $return[]        = [
                 'key'                     => sprintf('left-to-spend-in-%s', $row['currency_code']),
                 'title'                   => trans('firefly.box_left_to_spend_in_currency', ['currency' => $row['currency_symbol']]),
                 'monetary_value'          => $leftToSpend,
@@ -323,9 +322,10 @@ class BasicController extends Controller
     private function getNetWorthInfo(Carbon $start, Carbon $end): array
     {
         Log::debug('getNetWorthInfo');
+
         /** @var User $user */
-        $user = auth()->user();
-        $date = now(config('app.timezone'));
+        $user           = auth()->user();
+        $date           = now(config('app.timezone'));
         // start and end in the future? use $end
         if ($this->notInDateRange($date, $start, $end)) {
             /** @var Carbon $date */
@@ -335,10 +335,10 @@ class BasicController extends Controller
         /** @var NetWorthInterface $netWorthHelper */
         $netWorthHelper = app(NetWorthInterface::class);
         $netWorthHelper->setUser($user);
-        $allAccounts = $this->accountRepository->getActiveAccountsByType([AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::DEBT->value]);
+        $allAccounts    = $this->accountRepository->getActiveAccountsByType([AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::DEBT->value]);
 
         // filter list on preference of being included.
-        $filtered = $allAccounts->filter(
+        $filtered       = $allAccounts->filter(
             function (Account $account) {
                 $includeNetWorth = $this->accountRepository->getMetaValue($account, 'include_net_worth');
 
@@ -346,13 +346,13 @@ class BasicController extends Controller
             }
         );
 
-        $netWorthSet = $netWorthHelper->byAccounts($filtered, $date);
-        $return      = [];
+        $netWorthSet    = $netWorthHelper->byAccounts($filtered, $date);
+        $return         = [];
         foreach ($netWorthSet as $key => $data) {
             if ('native' === $key) {
                 continue;
             }
-            $amount = $data['balance'];
+            $amount   = $data['balance'];
             if (0 === bccomp($amount, '0')) {
                 continue;
             }

@@ -69,9 +69,9 @@ class General extends AbstractExtension
                 $date            = session('end', today(config('app.timezone'))->endOfMonth());
                 $info            = Steam::finalAccountBalance($account, $date);
                 $currency        = Steam::getAccountCurrency($account);
-                $default          = Amount::getDefaultCurrency();
+                $default         = Amount::getDefaultCurrency();
                 $convertToNative = app('preferences')->get('convert_to_native', false)->data;
-                $useNative     = $convertToNative && $default->id !== $currency->id;
+                $useNative       = $convertToNative && $default->id !== $currency->id;
                 $strings         = [];
                 foreach ($info as $key => $balance) {
                     if ('balance' === $key) {
@@ -79,6 +79,7 @@ class General extends AbstractExtension
                         if (!$useNative) {
                             $strings[] = app('amount')->formatAnything($currency, $balance, false);
                         }
+
                         continue;
                     }
                     if ('native_balance' === $key) {

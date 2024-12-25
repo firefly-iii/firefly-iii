@@ -39,6 +39,7 @@ trait BasicDataSupport
     protected function isInArray(array $array, int $entryId)
     {
         $key = $this->convertToNative ? 'native_balance' : 'balance';
+
         return $array[$entryId][$key] ?? '0';
     }
 

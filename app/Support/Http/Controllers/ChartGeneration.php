@@ -54,7 +54,7 @@ trait ChartGeneration
         $cache->addProperty($accounts);
         $cache->addProperty($convertToNative);
         if ($cache->has()) {
-             //return $cache->get();
+            // return $cache->get();
         }
         app('log')->debug('Regenerate chart.account.account-balance-chart from scratch.');
         $locale          = app('steam')->getLocale();
@@ -70,10 +70,10 @@ trait ChartGeneration
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $currency      = $accountRepos->getAccountCurrency($account) ?? $default;
-            $useNative     = $convertToNative && $default->id !== $currency->id;
-            $field =$useNative ? 'native_balance' : 'balance';
-            $currency      = $useNative ? $default : $currency;
+            $currency     = $accountRepos->getAccountCurrency($account) ?? $default;
+            $useNative    = $convertToNative && $default->id !== $currency->id;
+            $field        = $useNative ? 'native_balance' : 'balance';
+            $currency     = $useNative ? $default : $currency;
             $currentSet   = [
                 'label'           => $account->name,
                 'currency_symbol' => $currency->symbol,

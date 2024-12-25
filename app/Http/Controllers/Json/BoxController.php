@@ -62,31 +62,32 @@ class BoxController extends Controller
     {
         // Cache result, return cache if present.
         /** @var Carbon $start */
-        $start = session('start', today(config('app.timezone'))->startOfMonth());
+        $start     = session('start', today(config('app.timezone'))->startOfMonth());
 
         /** @var Carbon $end */
-        $end             = session('end', today(config('app.timezone'))->endOfMonth());
-        $cache           = new CacheProperties();
+        $end       = session('end', today(config('app.timezone'))->endOfMonth());
+        $cache     = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty($this->convertToNative);
         $cache->addProperty('box-balance');
         if ($cache->has()) {
-             return response()->json($cache->get());
+            return response()->json($cache->get());
         }
         // prep some arrays:
-        $incomes  = [];
-        $expenses = [];
-        $sums     = [];
-        $currency = app('amount')->getDefaultCurrency();
+        $incomes   = [];
+        $expenses  = [];
+        $sums      = [];
+        $currency  = app('amount')->getDefaultCurrency();
 
 
         // collect income of user:
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)
-                  ->setTypes([TransactionType::DEPOSIT]);
-        $set = $collector->getExtractedJournals();
+            ->setTypes([TransactionType::DEPOSIT])
+        ;
+        $set       = $collector->getExtractedJournals();
 
         /** @var array $journal */
         foreach ($set as $journal) {
@@ -102,8 +103,9 @@ class BoxController extends Controller
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)
-                  ->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
-        $set = $collector->getExtractedJournals();
+            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value])
+        ;
+        $set       = $collector->getExtractedJournals();
 
         /** @var array $journal */
         foreach ($set as $journal) {
@@ -116,7 +118,7 @@ class BoxController extends Controller
         }
 
         // format amounts:
-        $keys = array_keys($sums);
+        $keys      = array_keys($sums);
         foreach ($keys as $currencyId) {
             $currency              = $repository->find($currencyId);
             $sums[$currencyId]     = app('amount')->formatAnything($currency, $sums[$currencyId], false);
@@ -130,7 +132,7 @@ class BoxController extends Controller
             $expenses[$currency->id] = app('amount')->formatAnything($currency, '0', false);
         }
 
-        $response = [
+        $response  = [
             'incomes'   => $incomes,
             'expenses'  => $expenses,
             'sums'      => $sums,
@@ -147,7 +149,7 @@ class BoxController extends Controller
      */
     public function netWorth(): JsonResponse
     {
-        $date = today(config('app.timezone'))->endOfDay();
+        $date              = today(config('app.timezone'))->endOfDay();
 
         // start and end in the future? use $end
         if ($this->notInSessionRange($date)) {
@@ -156,7 +158,7 @@ class BoxController extends Controller
         }
 
         /** @var NetWorthInterface $netWorthHelper */
-        $netWorthHelper = app(NetWorthInterface::class);
+        $netWorthHelper    = app(NetWorthInterface::class);
         $netWorthHelper->setUser(auth()->user());
 
         /** @var AccountRepositoryInterface $accountRepository */
@@ -167,7 +169,7 @@ class BoxController extends Controller
         app('log')->debug(sprintf('Found %d accounts.', $allAccounts->count()));
 
         // filter list on preference of being included.
-        $filtered = $allAccounts->filter(
+        $filtered          = $allAccounts->filter(
             static function (Account $account) use ($accountRepository) {
                 $includeNetWorth = $accountRepository->getMetaValue($account, 'include_net_worth');
                 $result          = null === $includeNetWorth ? true : '1' === $includeNetWorth;
@@ -179,15 +181,15 @@ class BoxController extends Controller
             }
         );
 
-        $netWorthSet = $netWorthHelper->byAccounts($filtered, $date);
-        $return      = [];
+        $netWorthSet       = $netWorthHelper->byAccounts($filtered, $date);
+        $return            = [];
         foreach ($netWorthSet as $key => $data) {
             if ('native' === $key) {
                 continue;
             }
             $return[$data['currency_id']] = app('amount')->formatFlat($data['currency_symbol'], $data['currency_decimal_places'], $data['balance'], false);
         }
-        $return = [
+        $return            = [
             'net_worths' => array_values($return),
         ];
 

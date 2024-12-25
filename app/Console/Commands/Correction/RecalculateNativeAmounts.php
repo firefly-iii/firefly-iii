@@ -212,10 +212,10 @@ class RecalculateNativeAmounts extends Command
             ->join('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->where('transaction_journals.user_group_id', $userGroup->id)
 
-            ->where(function(DatabaseBuilder $q1) use ($currency) {
-                $q1->where(function(DatabaseBuilder $q2) use ($currency) {
+            ->where(function (DatabaseBuilder $q1) use ($currency): void {
+                $q1->where(function (DatabaseBuilder $q2) use ($currency): void {
                     $q2->whereNot('transactions.transaction_currency_id', $currency->id)->whereNull('transactions.foreign_currency_id');
-                })->orWhere(function(DatabaseBuilder $q3) use ($currency) {
+                })->orWhere(function (DatabaseBuilder $q3) use ($currency): void {
                     $q3->whereNot('transactions.transaction_currency_id', $currency->id)->whereNot('transactions.foreign_currency_id', $currency->id);
                 });
             })

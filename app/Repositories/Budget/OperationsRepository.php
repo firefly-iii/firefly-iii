@@ -63,7 +63,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             ++$count;
             app('log')->debug(sprintf('Found %d budget limits. Per day is %s, total is %s', $count, $perDay, $total));
         }
-        $avg = $total;
+        $avg   = $total;
         if ($count > 0) {
             $avg = bcdiv($total, (string) $count);
         }
@@ -85,21 +85,21 @@ class OperationsRepository implements OperationsRepositoryInterface
 
         // get all transactions:
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector    = app(GroupCollectorInterface::class);
         $collector->setAccounts($accounts)->setRange($start, $end);
         $collector->setBudgets($budgets);
-        $journals = $collector->getExtractedJournals();
+        $journals     = $collector->getExtractedJournals();
 
         // loop transactions:
         /** @var array $journal */
         foreach ($journals as $journal) {
             // prep data array for currency:
-            $budgetId   = (int) $journal['budget_id'];
-            $budgetName = $journal['budget_name'];
-            $currencyId = (int) $journal['currency_id'];
-            $key        = sprintf('%d-%d', $budgetId, $currencyId);
+            $budgetId                     = (int) $journal['budget_id'];
+            $budgetName                   = $journal['budget_name'];
+            $currencyId                   = (int) $journal['currency_id'];
+            $key                          = sprintf('%d-%d', $budgetId, $currencyId);
 
-            $data[$key]                   ??= [
+            $data[$key] ??= [
                 'id'                      => $budgetId,
                 'name'                    => sprintf('%s (%s)', $budgetName, $journal['currency_name']),
                 'sum'                     => '0',
@@ -137,13 +137,13 @@ class OperationsRepository implements OperationsRepositoryInterface
             $collector->setBudgets($this->getBudgets());
         }
         $collector->withBudgetInformation()->withAccountInformation()->withCategoryInformation();
-        $journals = $collector->getExtractedJournals();
-        $array    = [];
+        $journals  = $collector->getExtractedJournals();
+        $array     = [];
 
         foreach ($journals as $journal) {
-            $currencyId = (int) $journal['currency_id'];
-            $budgetId   = (int) $journal['budget_id'];
-            $budgetName = (string) $journal['budget_name'];
+            $currencyId                                                                   = (int) $journal['currency_id'];
+            $budgetId                                                                     = (int) $journal['budget_id'];
+            $budgetName                                                                   = (string) $journal['budget_name'];
 
             // catch "no category" entries.
             if (0 === $budgetId) {
@@ -151,7 +151,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             }
 
             // info about the currency:
-            $array[$currencyId] ??= [
+            $array[$currencyId]                       ??= [
                 'budgets'                 => [],
                 'currency_id'             => $currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -186,7 +186,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         return $array;
     }
 
-    public function setUser(null | Authenticatable | User $user): void
+    public function setUser(null|Authenticatable|User $user): void
     {
         if ($user instanceof User) {
             $this->user = $user;
@@ -210,8 +210,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         ?Collection          $accounts = null,
         ?Collection          $budgets = null,
         ?TransactionCurrency $currency = null
-    ): array
-    {
+    ): array {
         Log::debug('Start of sumExpenses.');
         // this collector excludes all transfers TO liabilities (which are also withdrawals)
         // because those expenses only become expenses once they move from the liability to the friend.
@@ -219,10 +218,10 @@ class OperationsRepository implements OperationsRepositoryInterface
 
         // 2024-12-24 disable the exclusion for now.
 
-        $repository = app(AccountRepositoryInterface::class);
+        $repository      = app(AccountRepositoryInterface::class);
         $repository->setUser($this->user);
-        $subset    = $repository->getAccountsByType(config('firefly.valid_liabilities'));
-        $selection = new Collection();
+        $subset          = $repository->getAccountsByType(config('firefly.valid_liabilities'));
+        $selection       = new Collection();
 
         // default currency information for native stuff.
         $convertToNative = app('preferences')->get('convert_to_native', false)->data;
@@ -236,11 +235,12 @@ class OperationsRepository implements OperationsRepositoryInterface
         }
 
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector       = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)
-                  ->setRange($start, $end)
+            ->setRange($start, $end)
             // ->excludeDestinationAccounts($selection)
-                  ->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
+            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value])
+        ;
 
         if (null !== $accounts) {
             $collector->setAccounts($accounts);
@@ -253,46 +253,46 @@ class OperationsRepository implements OperationsRepositoryInterface
             $collector->setNormalCurrency($currency);
         }
         $collector->setBudgets($budgets);
-        $journals = $collector->getExtractedJournals();
+        $journals        = $collector->getExtractedJournals();
 
         // same but for transactions in the foreign currency:
         if (null !== $currency) {
             Log::debug('STOP looking for transactions in the foreign currency.');
 
-//            Log::debug(sprintf('Look for transactions with foreign currency %s', $currency->code));
-//            // app('log')->debug(sprintf('Currency is "%s".', $currency->name));
-//            /** @var GroupCollectorInterface $collector */
-//            $collector = app(GroupCollectorInterface::class);
-//            $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->setForeignCurrency($currency)->setBudgets($budgets);
-//
-//            if (null !== $accounts) {
-//                $collector->setAccounts($accounts);
-//            }
-//            $result = $collector->getExtractedJournals();
-//            // app('log')->debug(sprintf('Found %d journals with currency %s.', count($result), $currency->code));
-//            // do not use array_merge because you want keys to overwrite (otherwise you get double results):
-//            Log::debug(sprintf('Found %d extra journals in foreign currency.', count($result)));
-//            $journals = $result + $journals;
+            //            Log::debug(sprintf('Look for transactions with foreign currency %s', $currency->code));
+            //            // app('log')->debug(sprintf('Currency is "%s".', $currency->name));
+            //            /** @var GroupCollectorInterface $collector */
+            //            $collector = app(GroupCollectorInterface::class);
+            //            $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->setForeignCurrency($currency)->setBudgets($budgets);
+            //
+            //            if (null !== $accounts) {
+            //                $collector->setAccounts($accounts);
+            //            }
+            //            $result = $collector->getExtractedJournals();
+            //            // app('log')->debug(sprintf('Found %d journals with currency %s.', count($result), $currency->code));
+            //            // do not use array_merge because you want keys to overwrite (otherwise you get double results):
+            //            Log::debug(sprintf('Found %d extra journals in foreign currency.', count($result)));
+            //            $journals = $result + $journals;
         }
-        $array = [];
+        $array           = [];
 
         foreach ($journals as $journal) {
-//            Log::debug(sprintf('Journal #%d.', $journal['transaction_journal_id']));
-//            Log::debug(sprintf('Amounts: %1$s %2$s (amount), %3$s %4$s (foreign_amount), %5$s %6$s (native_amount) %5$s %7$s (foreign native amount)',
-//                               $journal['currency_code'], $journal['amount'], $journal['foreign_currency_code'], $journal['foreign_amount'],
-//                               $default->code, $journal['native_amount'], $journal['native_foreign_amount'])
-//            );
+            //            Log::debug(sprintf('Journal #%d.', $journal['transaction_journal_id']));
+            //            Log::debug(sprintf('Amounts: %1$s %2$s (amount), %3$s %4$s (foreign_amount), %5$s %6$s (native_amount) %5$s %7$s (foreign native amount)',
+            //                               $journal['currency_code'], $journal['amount'], $journal['foreign_currency_code'], $journal['foreign_amount'],
+            //                               $default->code, $journal['native_amount'], $journal['native_foreign_amount'])
+            //            );
             // TODO same as in category::sumexpenses
-            $amount                = '0';
-            $currencyId            = (int) $journal['currency_id'];
-            $currencyName          = $journal['currency_name'];
-            $currencySymbol        = $journal['currency_symbol'];
-            $currencyCode          = $journal['currency_code'];
-            $currencyDecimalPlaces = $journal['currency_decimal_places'];
+            $amount                    = '0';
+            $currencyId                = (int) $journal['currency_id'];
+            $currencyName              = $journal['currency_name'];
+            $currencySymbol            = $journal['currency_symbol'];
+            $currencyCode              = $journal['currency_code'];
+            $currencyDecimalPlaces     = $journal['currency_decimal_places'];
             if ($convertToNative) {
                 $useNative = $default->id !== (int) $journal['currency_id'];
-                $amount                = Amount::getAmountFromJournal($journal);
-                if($useNative) {
+                $amount    = Amount::getAmountFromJournal($journal);
+                if ($useNative) {
                     Log::debug(sprintf('Journal #%d switches to native amount (original is %s)', $journal['transaction_journal_id'], $journal['currency_code']));
                     $currencyId            = $default->id;
                     $currencyName          = $default->name;
@@ -302,12 +302,12 @@ class OperationsRepository implements OperationsRepositoryInterface
                 }
             }
             if (!$convertToNative) {
-                $amount                = $journal['amount'];
+                $amount = $journal['amount'];
                 // if the amount is not in $currency (but should be), use the foreign_amount if that one is correct.
                 // otherwise, ignore the transaction all together.
                 if (null !== $currency && $currencyId !== $currency->id && $currency->id === (int) $journal['foreign_currency_id']) {
                     Log::debug(sprintf('Journal #%d switches to foreign amount because it matches native.', $journal['transaction_journal_id']));
-                    $amount = $journal['foreign_amount'];
+                    $amount                = $journal['foreign_amount'];
                     $currencyId            = (int) $journal['foreign_currency_id'];
                     $currencyName          = $journal['foreign_currency_name'];
                     $currencySymbol        = $journal['foreign_currency_symbol'];
@@ -315,7 +315,7 @@ class OperationsRepository implements OperationsRepositoryInterface
                     $currencyDecimalPlaces = $journal['foreign_currency_decimal_places'];
                 }
             }
-            $array[$currencyId]        ??= [
+            $array[$currencyId] ??= [
                 'sum'                     => '0',
                 'currency_id'             => $currencyId,
                 'currency_name'           => $currencyName,
@@ -327,6 +327,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             Log::debug(sprintf('Journal #%d adds amount %s %s', $journal['transaction_journal_id'], $currencyCode, $amount));
         }
         Log::debug('End of sumExpenses.', $array);
+
         return $array;
     }
 }

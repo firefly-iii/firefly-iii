@@ -145,26 +145,26 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface
     public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null): array
     {
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector       = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->withoutCategory();
 
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        $journals  = $collector->getExtractedJournals();
-        $array     = [];
+        $journals        = $collector->getExtractedJournals();
+        $array           = [];
         // default currency information for native stuff.
         $convertToNative = app('preferences')->get('convert_to_native', false)->data;
         $default         = app('amount')->getDefaultCurrency();
 
         foreach ($journals as $journal) {
             // Almost the same as in \FireflyIII\Repositories\Budget\OperationsRepository::sumExpenses
-            $amount                = '0';
-            $currencyId            = (int) $journal['currency_id'];
-            $currencyName          = $journal['currency_name'];
-            $currencySymbol        = $journal['currency_symbol'];
-            $currencyCode          = $journal['currency_code'];
-            $currencyDecimalPlaces = $journal['currency_decimal_places'];
+            $amount                    = '0';
+            $currencyId                = (int) $journal['currency_id'];
+            $currencyName              = $journal['currency_name'];
+            $currencySymbol            = $journal['currency_symbol'];
+            $currencyCode              = $journal['currency_code'];
+            $currencyDecimalPlaces     = $journal['currency_decimal_places'];
             if ($convertToNative) {
                 $useNative = $default->id !== (int) $journal['currency_id'];
                 $amount    = Amount::getAmountFromJournal($journal);
@@ -184,7 +184,7 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface
             }
 
 
-            $array[$currencyId]        ??= [
+            $array[$currencyId] ??= [
                 'sum'                     => '0',
                 'currency_id'             => (string) $currencyId,
                 'currency_name'           => $currencyName,

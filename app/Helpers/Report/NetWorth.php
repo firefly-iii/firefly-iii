@@ -77,28 +77,28 @@ class NetWorth implements NetWorthInterface
             // return $cache->get();
         }
         Log::debug(sprintf('Now in byAccounts("%s", "%s")', $ids, $date->format('Y-m-d H:i:s')));
-        $default  = Amount::getDefaultCurrency();
-        $netWorth = [];
-        $balances = Steam::finalAccountsBalance($accounts, $date);
+        $default         = Amount::getDefaultCurrency();
+        $netWorth        = [];
+        $balances        = Steam::finalAccountsBalance($accounts, $date);
 
         /** @var Account $account */
         foreach ($accounts as $account) {
             Log::debug(sprintf('Now at account #%d ("%s")', $account->id, $account->name));
-            $currency      = $this->getRepository()->getAccountCurrency($account) ?? $default;
-            $useNative     = $convertToNative && $default->id !== $currency->id;
-            $currency      = $useNative ? $default : $currency;
-            $currencyCode  = $currency->code;
-            $balance       = '0';
-            $nativeBalance = '0';
+            $currency                           = $this->getRepository()->getAccountCurrency($account) ?? $default;
+            $useNative                          = $convertToNative && $default->id !== $currency->id;
+            $currency                           = $useNative ? $default : $currency;
+            $currencyCode                       = $currency->code;
+            $balance                            = '0';
+            $nativeBalance                      = '0';
             if (array_key_exists($account->id, $balances)) {
                 $balance       = $balances[$account->id]['balance'] ?? '0';
                 $nativeBalance = $balances[$account->id]['native_balance'] ?? '0';
             }
             Log::debug(sprintf('Balance is %s, native balance is %s', $balance, $nativeBalance));
             // always subtract virtual balance again.
-            $balance       = '' !== (string) $account->virtual_balance ? bcsub($balance, $account->virtual_balance) : $balance;
-            $nativeBalance = '' !== (string) $account->native_virtual_balance ? bcsub($nativeBalance, $account->native_virtual_balance) : $nativeBalance;
-            $amountToUse   = $useNative ? $nativeBalance : $balance;
+            $balance                            = '' !== (string) $account->virtual_balance ? bcsub($balance, $account->virtual_balance) : $balance;
+            $nativeBalance                      = '' !== (string) $account->native_virtual_balance ? bcsub($nativeBalance, $account->native_virtual_balance) : $nativeBalance;
+            $amountToUse                        = $useNative ? $nativeBalance : $balance;
             Log::debug(sprintf('Will use %s %s', $currencyCode, $amountToUse));
 
             $netWorth[$currencyCode] ??= [
@@ -117,7 +117,7 @@ class NetWorth implements NetWorthInterface
         return $netWorth;
     }
 
-    private function getRepository(): AccountRepositoryInterface | AdminAccountRepositoryInterface
+    private function getRepository(): AccountRepositoryInterface|AdminAccountRepositoryInterface
     {
         if (null === $this->userGroup) {
             return $this->accountRepository;
@@ -126,19 +126,19 @@ class NetWorth implements NetWorthInterface
         return $this->adminAccountRepository;
     }
 
-    public function setUser(null | Authenticatable | User $user): void
+    public function setUser(null|Authenticatable|User $user): void
     {
         if (!$user instanceof User) {
             return;
         }
-        $this->user      = $user;
-        $this->userGroup = null;
+        $this->user              = $user;
+        $this->userGroup         = null;
 
         // make repository:
         $this->accountRepository = app(AccountRepositoryInterface::class);
         $this->accountRepository->setUser($this->user);
 
-        $this->currencyRepos = app(CurrencyRepositoryInterface::class);
+        $this->currencyRepos     = app(CurrencyRepositoryInterface::class);
         $this->currencyRepos->setUser($this->user);
     }
 
@@ -161,16 +161,16 @@ class NetWorth implements NetWorthInterface
         $return   = [];
         $balances = Steam::finalAccountsBalance($accounts, $date);
         foreach ($accounts as $account) {
-            $currency = $this->getRepository()->getAccountCurrency($account);
-            $balance  = $balances[$account->id]['balance'] ?? '0';
+            $currency                     = $this->getRepository()->getAccountCurrency($account);
+            $balance                      = $balances[$account->id]['balance'] ?? '0';
 
             // always subtract virtual balance.
-            $virtualBalance = $account->virtual_balance;
+            $virtualBalance               = $account->virtual_balance;
             if ('' !== $virtualBalance) {
                 $balance = bcsub($balance, $virtualBalance);
             }
 
-            $return[$currency->id]        ??= [
+            $return[$currency->id] ??= [
                 'id'             => (string) $currency->id,
                 'name'           => $currency->name,
                 'symbol'         => $currency->symbol,

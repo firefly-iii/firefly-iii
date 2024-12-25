@@ -33,7 +33,6 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use FireflyIII\Support\Models\AccountBalanceCalculator;
 use FireflyIII\User;
-use Http\Discovery\Exception\NotFoundException;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -63,55 +62,59 @@ class DebugController extends Controller
 
     public function routes(): never
     {
-        if(!auth()->user()->hasRole('owner')) {
+        if (!auth()->user()->hasRole('owner')) {
             throw new NotFoundHttpException();
         }
         $routes = Route::getRoutes();
         $return = [];
+
         /** @var \Illuminate\Routing\Route $route */
         foreach ($routes as $route) {
             // skip API and other routes.
             if (
-                str_starts_with($route->uri(), 'api') ||
-                str_starts_with($route->uri(), '_debugbar') ||
-                str_starts_with($route->uri(), '_ignition') ||
-                str_starts_with($route->uri(), 'oauth') ||
-                str_starts_with($route->uri(), 'sanctum')
+                str_starts_with($route->uri(), 'api')
+                || str_starts_with($route->uri(), '_debugbar')
+                || str_starts_with($route->uri(), '_ignition')
+                || str_starts_with($route->uri(), 'oauth')
+                || str_starts_with($route->uri(), 'sanctum')
             ) {
                 continue;
             }
             // skip non GET routes
-            if (!in_array('GET', $route->methods())) {
+            if (!in_array('GET', $route->methods(), true)) {
                 continue;
             }
             // no name route:
             if (null === $route->getName()) {
                 var_dump($route);
+
                 exit;
             }
             if (!str_contains($route->uri(), '{')) {
 
                 $return[$route->getName()] = route($route->getName());
+
                 continue;
             }
-            $params = [];
+            $params                    = [];
             foreach ($route->parameterNames() as $name) {
                 $params[] = $this->getParameter($name);
             }
             $return[$route->getName()] = route($route->getName(), $params);
         }
-        $count = 0;
+        $count  = 0;
         echo '<hr>';
         echo '<h1>Routes</h1>';
         echo sprintf('<h2>%s</h2>', $count);
-        foreach($return as $name => $path) {
-            echo sprintf('<a href="%1$s">%2$s</a><br>', $path, $name) . PHP_EOL;
-            $count++;
-            if(0 === $count % 10) {
+        foreach ($return as $name => $path) {
+            echo sprintf('<a href="%1$s">%2$s</a><br>', $path, $name).PHP_EOL;
+            ++$count;
+            if (0 === $count % 10) {
                 echo '<hr>';
                 echo sprintf('<h2>%s</h2>', $count);
             }
         }
+
         exit;
         var_dump($return);
     }
@@ -176,12 +179,12 @@ class DebugController extends Controller
      */
     public function index()
     {
-        $table = $this->generateTable();
-        $table = str_replace(["\n", "\t", '  '], '', $table);
-        $now   = now(config('app.timezone'))->format('Y-m-d H:i:s');
+        $table      = $this->generateTable();
+        $table      = str_replace(["\n", "\t", '  '], '', $table);
+        $now        = now(config('app.timezone'))->format('Y-m-d H:i:s');
 
         // get latest log file:
-        $logger = Log::driver();
+        $logger     = Log::driver();
         // PHPstan doesn't recognize the method because of its polymorphic nature.
         $handlers   = $logger->getHandlers(); // @phpstan-ignore-line
         $logContent = '';
@@ -195,7 +198,7 @@ class DebugController extends Controller
         }
         if ('' !== $logContent) {
             // last few lines
-            $logContent = 'Truncated from this point <----|' . substr((string) $logContent, -16384);
+            $logContent = 'Truncated from this point <----|'.substr((string) $logContent, -16384);
         }
 
         return view('debug', compact('table', 'now', 'logContent'));
@@ -275,7 +278,7 @@ class DebugController extends Controller
 
     private function getAppInfo(): array
     {
-        $userGuard = config('auth.defaults.guard');
+        $userGuard      = config('auth.defaults.guard');
 
         $config         = app('fireflyconfig')->get('last_rt_job', 0);
         $lastTime       = (int) $config->data;
@@ -300,24 +303,24 @@ class DebugController extends Controller
             // any of the cron jobs will do, they always run at the same time.
             // but this job is the oldest, so the biggest chance it ran once
 
-            'last_cronjob'     => $lastCronjob,
-            'last_cronjob_ago' => $lastCronjobAgo,
+            'last_cronjob'       => $lastCronjob,
+            'last_cronjob_ago'   => $lastCronjobAgo,
         ];
     }
 
     private function getuserInfo(): array
     {
-        $userFlags = $this->getUserFlags();
+        $userFlags      = $this->getUserFlags();
 
         // user info
-        $userAgent = request()->header('user-agent');
+        $userAgent      = request()->header('user-agent');
 
         // set languages, see what happens:
         $original       = setlocale(LC_ALL, '0');
         $localeAttempts = [];
         $parts          = app('steam')->getLocaleArray(app('steam')->getLocale());
         foreach ($parts as $code) {
-            $code = trim($code);
+            $code                  = trim($code);
             app('log')->debug(sprintf('Trying to set %s', $code));
             $result                = setlocale(LC_ALL, $code);
             $localeAttempts[$code] = $result === $code;
@@ -338,10 +341,10 @@ class DebugController extends Controller
 
     private function getUserFlags(): string
     {
-        $flags = [];
+        $flags      = [];
 
         /** @var User $user */
-        $user = auth()->user();
+        $user       = auth()->user();
 
         // has liabilities
         if ($user->accounts()->accountTypeIn([AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE])->count() > 0) {
@@ -357,7 +360,7 @@ class DebugController extends Controller
         }
 
         // has stored reconciliations
-        $type = TransactionType::whereType(TransactionType::RECONCILIATION)->first();
+        $type       = TransactionType::whereType(TransactionType::RECONCILIATION)->first();
         if ($user->transactionJournals()->where('transaction_type_id', $type->id)->count() > 0) {
             $flags[] = '<span title="Has reconciled">:ledger:</span>';
         }
@@ -407,81 +410,118 @@ class DebugController extends Controller
         switch ($name) {
             default:
                 throw new FireflyException(sprintf('Unknown parameter "%s"', $name));
+
             case 'cliToken':
             case 'token':
             case 'code':
             case 'oldAddressHash':
                 return 'fake-token';
+
             case 'objectType':
                 return 'asset';
+
             case 'account':
                 return '1';
+
             case 'start_date':
                 return '20241201';
+
             case 'end_date':
                 return '20241231';
+
             case 'attachment':
                 return '1';
+
             case 'bill':
                 return '1';
+
             case 'budget':
                 return '1';
+
             case 'budgetLimit':
                 return '1';
+
             case 'category':
                 return '1';
+
             case 'currency':
                 return '1';
+
             case 'fromCurrencyCode':
                 return 'EUR';
+
             case 'toCurrencyCode':
                 return 'USD';
+
             case 'accountList':
                 return '1,6';
+
             case 'budgetList':
                 return '1,2';
+
             case 'categoryList':
                 return '1,2';
+
             case 'doubleList':
                 return '1,2';
+
             case 'tagList':
                 return '1,2';
+
             case 'tag':
                 return '1';
+
             case 'piggyBank':
                 return '1';
+
             case 'objectGroup':
                 return '1';
+
             case 'route':
                 return 'accounts';
+
             case 'specificPage':
                 return 'show';
+
             case 'recurrence':
                 return '1';
+
             case 'tj':
                 return '1';
+
             case 'reportType':
                 return 'default';
+
             case 'ruleGroup':
                 return '1';
+
             case 'rule':
                 return '1';
+
             case 'tagOrId':
                 return '1';
+
             case 'transactionGroup':
                 return '1';
+
             case 'journalList':
                 return '1,2';
+
             case 'transactionType':
                 return 'withdrawal';
+
             case 'journalLink':
                 return '1';
+
             case 'webhook':
                 return '1';
+
             case 'user':
                 return '1';
+
             case 'linkType':
                 return '1';
+
             case 'userGroup':
                 return '1';
 

@@ -84,6 +84,7 @@ class AccountController extends Controller
     public function expenseAccounts(): JsonResponse
     {
         Log::debug('RevenueAccounts');
+
         /** @var Carbon $start */
         $start         = clone session('start', today(config('app.timezone'))->startOfMonth());
 
@@ -95,7 +96,7 @@ class AccountController extends Controller
         $cache->addProperty($this->convertToNative);
         $cache->addProperty('chart.account.expense-accounts');
         if ($cache->has()) {
-              return response()->json($cache->get());
+            return response()->json($cache->get());
         }
         $start->subDay();
 
@@ -114,34 +115,38 @@ class AccountController extends Controller
         $endBalances   = app('steam')->finalAccountsBalance($accounts, $end);
 
         // loop the accounts, then check for balance and currency info.
-        foreach($accounts as $account) {
+        foreach ($accounts as $account) {
             Log::debug(sprintf('Now in account #%d ("%s")', $account->id, $account->name));
             $expenses = $endBalances[$account->id] ?? false;
-            if(false === $expenses) {
-                Log::error(sprintf('Found no end balance for account #%d',$account->id));
+            if (false === $expenses) {
+                Log::error(sprintf('Found no end balance for account #%d', $account->id));
+
                 continue;
             }
+
             /**
              * @var string $key
              * @var string $endBalance
              */
             foreach ($expenses as $key => $endBalance) {
-                if(!$this->convertToNative && 'native_balance' === $key) {
+                if (!$this->convertToNative && 'native_balance' === $key) {
                     Log::debug(sprintf('[a] Will skip expense array "%s"', $key));
+
                     continue;
                 }
-                if($this->convertToNative && 'native_balance' !== $key) {
+                if ($this->convertToNative && 'native_balance' !== $key) {
                     Log::debug(sprintf('[b] Will skip expense array "%s"', $key));
+
                     continue;
                 }
                 Log::debug(sprintf('Will process expense array "%s" with amount %s', $key, $endBalance));
-                $searchCode = $this->convertToNative ? $default->code: $key;
+                $searchCode   = $this->convertToNative ? $default->code : $key;
                 Log::debug(sprintf('Search code is %s', $searchCode));
                 // see if there is an accompanying start amount.
                 // grab the difference and find the currency.
                 $startBalance = ($startBalances[$account->id][$key] ?? '0');
                 Log::debug(sprintf('Start balance is %s', $startBalance));
-                $diff        = bcsub($endBalance, $startBalance);
+                $diff         = bcsub($endBalance, $startBalance);
                 $currencies[$searchCode] ??= $this->currencyRepository->findByCode($searchCode);
                 if (0 !== bccomp($diff, '0')) {
                     // store the values in a temporary array.
@@ -522,7 +527,7 @@ class AccountController extends Controller
         $cache->addProperty($this->convertToNative);
         $cache->addProperty('chart.account.revenue-accounts');
         if ($cache->has()) {
-             return response()->json($cache->get());
+            return response()->json($cache->get());
         }
         $start->subDay();
 
@@ -541,35 +546,39 @@ class AccountController extends Controller
         $endBalances   = app('steam')->finalAccountsBalance($accounts, $end);
 
 
-// loop the accounts, then check for balance and currency info.
-        foreach($accounts as $account) {
+        // loop the accounts, then check for balance and currency info.
+        foreach ($accounts as $account) {
             Log::debug(sprintf('Now in account #%d ("%s")', $account->id, $account->name));
             $expenses = $endBalances[$account->id] ?? false;
-            if(false === $expenses) {
-                Log::error(sprintf('Found no end balance for account #%d',$account->id));
+            if (false === $expenses) {
+                Log::error(sprintf('Found no end balance for account #%d', $account->id));
+
                 continue;
             }
+
             /**
              * @var string $key
              * @var string $endBalance
              */
             foreach ($expenses as $key => $endBalance) {
-                if(!$this->convertToNative && 'native_balance' === $key) {
+                if (!$this->convertToNative && 'native_balance' === $key) {
                     Log::debug(sprintf('[a] Will skip expense array "%s"', $key));
+
                     continue;
                 }
-                if($this->convertToNative && 'native_balance' !== $key) {
+                if ($this->convertToNative && 'native_balance' !== $key) {
                     Log::debug(sprintf('[b] Will skip expense array "%s"', $key));
+
                     continue;
                 }
                 Log::debug(sprintf('Will process expense array "%s" with amount %s', $key, $endBalance));
-                $searchCode = $this->convertToNative ? $default->code: $key;
+                $searchCode   = $this->convertToNative ? $default->code : $key;
                 Log::debug(sprintf('Search code is %s', $searchCode));
                 // see if there is an accompanying start amount.
                 // grab the difference and find the currency.
                 $startBalance = ($startBalances[$account->id][$key] ?? '0');
                 Log::debug(sprintf('Start balance is %s', $startBalance));
-                $diff        = bcsub($endBalance, $startBalance);
+                $diff         = bcsub($endBalance, $startBalance);
                 $currencies[$searchCode] ??= $this->currencyRepository->findByCode($searchCode);
                 if (0 !== bccomp($diff, '0')) {
                     // store the values in a temporary array.
