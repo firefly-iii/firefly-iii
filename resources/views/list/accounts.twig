@@ -67,11 +67,13 @@
             <td style="text-align: right;">
                 <span style="margin-right:5px;">
                     {% for key, balance in account.endBalances %}
+                        <span title="{{ key }}">
                         {% if 'balance' == key or 'native_balance' == key %}
                             {{ formatAmountBySymbol(balance, defaultCurrency.symbol, defaultCurrency.currency.decimal_places)  }}
                         {% else %}
                             ({{ formatAmountByCode(balance, key)  }})
                         {% endif %}
+                        </span>
                     {% endfor %}
                 </span>
             </td>
