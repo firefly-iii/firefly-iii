@@ -173,6 +173,7 @@ class ShowController extends Controller
         $objectType   = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
         $end          = today(config('app.timezone'));
         $today        = today(config('app.timezone'));
+        $accountCurrency = $this->repository->getAccountCurrency($account);
         $start        = $this->repository->oldestJournalDate($account) ?? today(config('app.timezone'))->startOfMonth();
         $subTitleIcon = config('firefly.subIconsByIdentifier.'.$account->accountType->type);
         $page         = (int) $request->get('page');
@@ -193,7 +194,7 @@ class ShowController extends Controller
         $groups->setPath(route('accounts.show.all', [$account->id]));
         $chartUrl     = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
         $showAll      = true;
-        $balance      = Steam::finalAccountBalance($account, $end)['balance'];
+        $balances          = Steam::filterAccountBalance(Steam::finalAccountBalance($account, $end), $account, $this->convertToNative, $accountCurrency);
 
         return view(
             'accounts.show',
@@ -213,7 +214,7 @@ class ShowController extends Controller
                 'subTitle',
                 'start',
                 'end',
-                'balance'
+                'balances'
             )
         );
     }

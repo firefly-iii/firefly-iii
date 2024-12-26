@@ -148,9 +148,19 @@ class Steam
 
             // if convert to native, if NOT convert to native.
             if($convertToNative) {
-                Log::debug(sprintf('Amount is %s %s, foreign amount is %s, native amount is %s', $entryCurrency->code, $modified, $foreignModified, $nativeModified));
+                Log::debug(sprintf('Amount is %s %s, foreign amount is %s, native amount is %s', $entryCurrency->code, $this->bcround($modified,2), $this->bcround($foreignModified,2), $this->bcround($nativeModified,2)));
+                // if the currency is the default currency add to native balance + currency balance
+                if($entry->transaction_currency_id === $defaultCurrency->id) {
+                    Log::debug('Add amount to native.');
+                    $currentBalance['native_balance']       = bcadd($currentBalance['native_balance'], $modified);
+                }
+
                 // add to native balance.
-                $currentBalance['native_balance']       = bcadd($currentBalance['native_balance'], $nativeModified);
+                if($entry->foreign_currency_id !== $defaultCurrency->id) {
+                    // this check is not necessary, because if the foreign currency is the same as the default currency, the native amount is zero.
+                    // so adding this would mean nothing.
+                    $currentBalance['native_balance']       = bcadd($currentBalance['native_balance'], $nativeModified);
+                }
                 if($entry->foreign_currency_id === $defaultCurrency->id) {
                     $currentBalance['native_balance']       = bcadd($currentBalance['native_balance'], $foreignModified);
                 }
@@ -159,14 +169,14 @@ class Steam
                     $currentBalance['balance']       = bcadd($currentBalance['balance'], $modified);
                 }
                 // add currency balance
-                $currentBalance[$entryCurrency->code] = bcadd($currentBalance[$entryCurrency->code], $modified);
+                $currentBalance[$entryCurrency->code] = bcadd($currentBalance[$entryCurrency->code] ?? '0', $modified);
             }
             if(!$convertToNative) {
                 Log::debug(sprintf('Amount is %s %s, foreign amount is %s, native amount is %s', $entryCurrency->code, $modified, $foreignModified, $nativeModified));
                 // add to balance, as expected.
                 $currentBalance['balance']       = bcadd($currentBalance['balance'] ?? '0', $modified);
                 // add to GBP, as expected.
-                $currentBalance[$entryCurrency->code] = bcadd($currentBalance[$entryCurrency->code], $modified);
+                $currentBalance[$entryCurrency->code] = bcadd($currentBalance[$entryCurrency->code] ?? '0', $modified);
             }
 
 //            // add "modified" to amount if the currency id matches the account currency id.
@@ -190,6 +200,7 @@ class Steam
             Log::debug('Updated entry',$currentBalance);
         }
         $cache->store($balances);
+        Log::debug('End of method');
 
         return $balances;
     }
@@ -334,7 +345,7 @@ class Steam
             if ($native->id === $accountCurrency?->id) {
                 $return['balance'] = bcadd('' === (string) $account->virtual_balance ? '0' : $account->virtual_balance, $return['balance']);
             }
-            Log::debug(sprintf('balance is (%s only) %s (with virtual balance)', $native->code, $return['balance']));
+            Log::debug(sprintf('balance is (%s only) %s (with virtual balance)', $native->code, $this->bcround($return['balance'],2)));
 
             // native balance
             $return['native_balance'] = (string) $account->transactions()
@@ -344,7 +355,7 @@ class Steam
                                                          ->sum('transactions.native_amount');
             // plus native virtual balance.
             $return['native_balance'] = bcadd('' === (string) $account->native_virtual_balance ? '0' : $account->native_virtual_balance, $return['native_balance']);
-            Log::debug(sprintf('native_balance is (all transactions to %s) %s (with virtual balance)', $native->code, $return['native_balance']));
+            Log::debug(sprintf('native_balance is (all transactions to %s) %s (with virtual balance)', $native->code,$this->bcround( $return['native_balance'])));
 
             // plus foreign transactions in THIS currency.
             $sum                      = (string) $account->transactions()
@@ -355,7 +366,7 @@ class Steam
                                                          ->sum('transactions.foreign_amount');
             $return['native_balance'] = bcadd($return['native_balance'], $sum);
 
-            Log::debug(sprintf('Foreign amount transactions add (%s only) %s, total native_balance is now %s', $native->code, $sum, $return['native_balance']));
+            Log::debug(sprintf('Foreign amount transactions add (%s only) %s, total native_balance is now %s', $native->code, $this->bcround($sum), $this->bcround($return['native_balance'])));
         }
 
         // balance(s) in other (all) currencies.

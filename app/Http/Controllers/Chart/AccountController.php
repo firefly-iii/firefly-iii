@@ -430,9 +430,9 @@ class AccountController extends Controller
         }
 
         // collect and filter balances for the entire period.
-        $step    = $this->calculateStep($start, $end);
+        $step = $this->calculateStep($start, $end);
         Log::debug(sprintf('Step is %s', $step));
-        $locale  = app('steam')->getLocale();
+        $locale = app('steam')->getLocale();
         $return = [];
         // fix for issue https://github.com/firefly-iii/firefly-iii/issues/8041
         // have to make sure this chart is always based on the balance at the END of the period.
@@ -445,45 +445,71 @@ class AccountController extends Controller
         Log::debug('One');
         $range = Steam::finalAccountBalanceInRange($account, $start, $end, $this->convertToNative);
         Log::debug('Two');
-        $range    = Steam::filterAccountBalances($range, $account, $this->convertToNative, $accountCurrency);
+        $range = Steam::filterAccountBalances($range, $account, $this->convertToNative, $accountCurrency);
         Log::debug('Three');
-        $previous = array_values($range)[0];
+
+        // temp, get end balance.
+        Log::debug('temp get end balance');
+        Steam::finalAccountBalance($account, $end);
+        Log::debug('END temp get end balance done');
+
+        $previous        = array_values($range)[0];
         $accountCurrency = $accountCurrency ?? $this->defaultCurrency; // do this AFTER getting the balances.
-        while ($end >= $current) {
+        Log::debug('Start chart loop.');
+
+        $newRange      = [];
+        $expectedIndex = 0;
+        Log::debug('Balances exist at:');
+        foreach ($range as $key => $value) {
+            $newRange[] = ['date' => $key, 'info' => $value];
+            Log::debug(sprintf(' - %s', $key));
+        }
+        $carbon = Carbon::createFromFormat('Y-m-d', $newRange[0]['date']);
+        while ($end->gte($current)) {
+            $momentBalance = $previous;
             $theDate = $current->format('Y-m-d');
-            // each day contains multiple balances, and this may even be different over time.
-            $momentBalance = $range[$theDate] ?? $previous;
-            $return       = $this->updateChartKeys($return, $momentBalance);
+            while ($carbon->lte($current) && array_key_exists($expectedIndex, $newRange)) {
+                $momentBalance = $newRange[$expectedIndex]['info'];
+                Log::debug(sprintf('Expected index is %d!, date is %s, current is %s', $expectedIndex, $carbon->format('Y-m-d'), $current->format('Y-m-d')));
+                $carbon = Carbon::createFromFormat('Y-m-d', $newRange[$expectedIndex]['date']);
+                $expectedIndex++;
+            }
+
+            $return   = $this->updateChartKeys($return, $momentBalance);
+            $previous = $momentBalance;
+
+            Log::debug(sprintf('Now at %s', $theDate), $momentBalance);
 
             // process each balance thing.
-            foreach($momentBalance as $key => $amount) {
-                $label = $current->isoFormat($format);
+            foreach ($momentBalance as $key => $amount) {
+                $label                           = $current->isoFormat($format);
                 $return[$key]['entries'][$label] = $amount;
             }
-            $current         = app('navigation')->addPeriod($current, $step, 0);
+            $current = app('navigation')->addPeriod($current, $step, 0);
             // here too, to fix #8041, the data is corrected to the end of the period.
             $current = app('navigation')->endOfX($current, $step, null);
-            $previous = $momentBalance;
+            Log::debug(sprintf('Next moment is %s', $current->format('Y-m-d')));
         }
+        Log::debug('End of chart loop.');
         // second loop (yes) to create nice array with info! Yay!
         $chartData = [];
-        foreach($return as $key => $info) {
-            if(3 === strlen($key)) {
+        foreach ($return as $key => $info) {
+            if (3 === strlen($key)) {
                 // assume it's a currency:
-                $setCurrency = $this->currencyRepository->findByCode($key);
+                $setCurrency             = $this->currencyRepository->findByCode($key);
                 $info['currency_symbol'] = $setCurrency->symbol;
                 $info['currency_code']   = $setCurrency->code;
                 $info['label']           = sprintf('%s (%s)', $account->name, $setCurrency->symbol);
             }
-            if('balance' === $key) {
+            if ('balance' === $key) {
                 $info['currency_symbol'] = $accountCurrency->symbol;
                 $info['currency_code']   = $accountCurrency->code;
                 $info['label']           = sprintf('%s (%s)', $account->name, $accountCurrency->symbol);
             }
-            if('native_balance' === $key) {
+            if ('native_balance' === $key) {
                 $info['currency_symbol'] = $this->defaultCurrency->symbol;
                 $info['currency_code']   = $this->defaultCurrency->code;
-                $info['label']           = sprintf('%s (%s) (%s)', $account->name, (string)trans('firefly.sum'), $this->defaultCurrency->symbol);
+                $info['label']           = sprintf('%s (%s) (%s)', $account->name, (string) trans('firefly.sum'), $this->defaultCurrency->symbol);
             }
             $chartData[] = $info;
         }
@@ -492,115 +518,6 @@ class AccountController extends Controller
         $cache->store($data);
 
         return response()->json($data);
-
-
-
-        var_dump($chartData);exit;
-
-
-
-
-        $result  = [
-            'label'           => sprintf('%s (%s)', $account->name, $currency->symbol),
-            'currency_symbol' => $currency->symbol,
-            'currency_code'   => $currency->code,
-        ];
-        $entries = [];
-        $current = clone $start;
-
-
-        Log::debug(sprintf('$current date is %s', $current->format('Y-m-d')));
-        if ('1D' === $step) {
-            // per day the entire period, balance for every day.
-            $format   = (string) trans('config.month_and_day_js', [], $locale);
-            $range    = app('steam')->finalAccountBalanceInRange($account, $start, $end, $this->convertToNative);
-            $previous = array_values($range)[0];
-            while ($end >= $current) {
-                $theDate         = $current->format('Y-m-d');
-                $balance         = $range[$theDate]['balance'] ?? $previous;
-                $label           = $current->isoFormat($format);
-                $entries[$label] = (float) $balance;
-                $previous        = $balance;
-                $current->addDay();
-            }
-        }
-        if ('1W' === $step || '1M' === $step || '1Y' === $step) {
-            while ($end >= $current) {
-                Log::debug(sprintf('Current is: %s', $current->format('Y-m-d')));
-                $balance         = Steam::finalAccountBalance($account, $current)[$currency->code] ?? '0';
-                $label           = app('navigation')->periodShow($current, $step);
-                $entries[$label] = $balance;
-                $current         = app('navigation')->addPeriod($current, $step, 0);
-                // here too, to fix #8041, the data is corrected to the end of the period.
-                $current = app('navigation')->endOfX($current, $step, null);
-            }
-        }
-        $result['entries'] = $entries;
-
-        return $result;
-
-
-        /** @var TransactionCurrency $currency */
-        foreach ($currencies as $currency) {
-            $chartData[] = $this->periodByCurrency($start, $end, $account, $currency);
-        }
-
-        $data = $this->generator->multiSet($chartData);
-        $cache->store($data);
-
-        return response()->json($data);
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    private function periodByCurrency(Carbon $start, Carbon $end, Account $account, TransactionCurrency $currency): array
-    {
-        Log::debug(sprintf('Now in periodByCurrency("%s", "%s", %s, "%s")', $start->format('Y-m-d'), $end->format('Y-m-d'), $account->id, $currency->code));
-        $locale  = app('steam')->getLocale();
-        $step    = $this->calculateStep($start, $end);
-        $result  = [
-            'label'           => sprintf('%s (%s)', $account->name, $currency->symbol),
-            'currency_symbol' => $currency->symbol,
-            'currency_code'   => $currency->code,
-        ];
-        $entries = [];
-        $current = clone $start;
-        Log::debug(sprintf('Step is %s', $step));
-
-        // fix for issue https://github.com/firefly-iii/firefly-iii/issues/8041
-        // have to make sure this chart is always based on the balance at the END of the period.
-        // This period depends on the size of the chart
-        $current = app('navigation')->endOfX($current, $step, null);
-        Log::debug(sprintf('$current date is %s', $current->format('Y-m-d')));
-        if ('1D' === $step) {
-            // per day the entire period, balance for every day.
-            $format   = (string) trans('config.month_and_day_js', [], $locale);
-            $range    = app('steam')->finalAccountBalanceInRange($account, $start, $end, $this->convertToNative);
-            $previous = array_values($range)[0];
-            while ($end >= $current) {
-                $theDate         = $current->format('Y-m-d');
-                $balance         = $range[$theDate]['balance'] ?? $previous;
-                $label           = $current->isoFormat($format);
-                $entries[$label] = (float) $balance;
-                $previous        = $balance;
-                $current->addDay();
-            }
-        }
-        if ('1W' === $step || '1M' === $step || '1Y' === $step) {
-            while ($end >= $current) {
-                Log::debug(sprintf('Current is: %s', $current->format('Y-m-d')));
-                $balance         = Steam::finalAccountBalance($account, $current)[$currency->code] ?? '0';
-                $label           = app('navigation')->periodShow($current, $step);
-                $entries[$label] = $balance;
-                $current         = app('navigation')->addPeriod($current, $step, 0);
-                // here too, to fix #8041, the data is corrected to the end of the period.
-                $current = app('navigation')->endOfX($current, $step, null);
-            }
-        }
-        $result['entries'] = $entries;
-
-        return $result;
     }
 
     /**
