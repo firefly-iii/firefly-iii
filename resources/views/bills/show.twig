@@ -16,8 +16,8 @@
                         <div class="btn-group">
                             <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-v"></span></button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('bills.edit', object.data.id) }}"><span class="fa fa-fw fa-pencil"></span> {{ 'edit'|_ }}</a></li>
-                                <li><a href="{{ route('bills.delete', object.data.id) }}"><span class="fa fa-fw fa-trash-o"></span> {{ 'delete'|_ }}</a></li>
+                                <li><a href="{{ route('subscriptions.edit', object.data.id) }}"><span class="fa fa-fw fa-pencil"></span> {{ 'edit'|_ }}</a></li>
+                                <li><a href="{{ route('subscriptions.delete', object.data.id) }}"><span class="fa fa-fw fa-trash-o"></span> {{ 'delete'|_ }}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -67,7 +67,7 @@
                             <td>
                                 {% for avg in yearAverage %}
                                     {{ formatAmountBySymbol(avg.avg, avg.currency_symbol, avg.currency_decimal_places, true) }}
-                                    {% if convertToNative %}
+                                    {% if convertToNative and 0 != avg.native_avg %}
                                     ({{ formatAmountBySymbol(avg.native_avg,
                                         defaultCurrency.symbol, defaultCurrency.decimal_places, true) }})
                                     {% endif %}
@@ -81,7 +81,7 @@
                             <td>
                                 {% for avg in overallAverage %}
                                     {{ formatAmountBySymbol(avg.avg, avg.currency_symbol, avg.currency_decimal_places, true) }}
-                                    {% if convertToNative %}
+                                    {% if convertToNative and 0 != avg.native_avg %}
                                         ({{ formatAmountBySymbol(avg.native_avg,
                                         defaultCurrency.symbol, defaultCurrency.decimal_places, true) }})
                                     {% endif %}
@@ -93,8 +93,8 @@
                 </div>
                 <div class="box-footer">
                     <div class="btn-group">
-                        <a class="btn btn-default" href="{{ route('bills.edit', [object.data.id]) }}">{{ 'edit'|_ }}</a>
-                        <a class="btn btn-danger" href="{{ route('bills.delete', [object.data.id]) }}">{{ 'delete'|_ }}</a>
+                        <a class="btn btn-default" href="{{ route('subscriptions.edit', [object.data.id]) }}">{{ 'edit'|_ }}</a>
+                        <a class="btn btn-danger" href="{{ route('subscriptions.delete', [object.data.id]) }}">{{ 'delete'|_ }}</a>
                     </div>
                 </div>
             </div>
@@ -116,7 +116,7 @@
                     {% endif %}
                 </div>
                 <div class="box-footer">
-                    <form action="{{ route('bills.rescan',object.data.id) }}" method="post">
+                    <form action="{{ route('subscriptions.rescan',object.data.id) }}" method="post">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                         <p>
                             <input type="submit" name="submit" value="{{ 'rescan_old'|_ }}" class="btn btn-default"/>

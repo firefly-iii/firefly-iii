@@ -139,14 +139,14 @@ return [
     'new_journals_header'                         => 'Firefly III has created a transaction for you. You can find it in your Firefly III installation:|Firefly III has created :count transactions for you. You can find them in your Firefly III installation:',
 
     // bill warning
-    'bill_warning_subject_end_date'               => 'Your bill ":name" is due to end in :diff days',
-    'bill_warning_subject_now_end_date'           => 'Your bill ":name" is due to end TODAY',
-    'bill_warning_subject_extension_date'         => 'Your bill ":name" is due to be extended or cancelled in :diff days',
-    'bill_warning_subject_now_extension_date'     => 'Your bill ":name" is due to be extended or cancelled TODAY',
-    'bill_warning_end_date'                       => 'Your bill **":name"** is due to end on :date. This moment will pass in about **:diff days**.',
-    'bill_warning_extension_date'                 => 'Your bill **":name"** is due to be extended or cancelled on :date. This moment will pass in about **:diff days**.',
-    'bill_warning_end_date_zero'                  => 'Your bill **":name"** is due to end on :date. This moment will pass **TODAY!**',
-    'bill_warning_extension_date_zero'            => 'Your bill **":name"** is due to be extended or cancelled on :date. This moment will pass **TODAY!**',
+    'bill_warning_subject_end_date'               => 'Your subscription ":name" is due to end in :diff days',
+    'bill_warning_subject_now_end_date'           => 'Your subscription ":name" is due to end TODAY',
+    'bill_warning_subject_extension_date'         => 'Your subscription ":name" is due to be extended or cancelled in :diff days',
+    'bill_warning_subject_now_extension_date'     => 'Your subscription ":name" is due to be extended or cancelled TODAY',
+    'bill_warning_end_date'                       => 'Your subscription **":name"** is due to end on :date. This moment will pass in about **:diff days**.',
+    'bill_warning_extension_date'                 => 'Your subscription **":name"** is due to be extended or cancelled on :date. This moment will pass in about **:diff days**.',
+    'bill_warning_end_date_zero'                  => 'Your subscription **":name"** is due to end on :date. This moment will pass **TODAY!**',
+    'bill_warning_extension_date_zero'            => 'Your subscription **":name"** is due to be extended or cancelled on :date. This moment will pass **TODAY!**',
     'bill_warning_please_action'                  => 'Please take the appropriate action.',
 
     // user has enabled MFA

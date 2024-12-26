@@ -31,17 +31,17 @@
                         <span class="fa fa-fw fa-bars bill-handle"></span>
                     </td>
                     <td class="hidden-sm hidden-xs">
-                        <div class="btn-group btn-group-xs edit_tr_buttons"><a href="{{ route('bills.edit',entry.id) }}"
+                        <div class="btn-group btn-group-xs edit_tr_buttons"><a href="{{ route('subscriptions.edit',entry.id) }}"
                                                                                class="btn btn-default btn-xs"><span
                                         class="fa fa-fw fa-pencil"></span></a><a
-                                    href="{{ route('bills.delete',entry.id) }}" class="btn btn-danger btn-xs"><span
+                                    href="{{ route('subscriptions.delete',entry.id) }}" class="btn btn-danger btn-xs"><span
                                         class="fa fa-fw fa-trash-o"></span></a></div>
                     </td>
                     <td>
                         {% if not entry.active %}
                             <span class="fa fa-fw fa-ban"></span>
                         {% endif %}
-                        <a href="{{ route('bills.show',entry.id) }}" title="{{ entry.name }}">{{ entry.name }}</a>
+                        <a href="{{ route('subscriptions.show',entry.id) }}" title="{{ entry.name }}">{{ entry.name }}</a>
                         {# count attachments #}
                         {% if entry.attachments.count() > 0 %}
                             <span class="fa fa-paperclip"></span>

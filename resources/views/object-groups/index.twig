@@ -46,7 +46,7 @@
                                             - {{ 'piggy_bank'|_ }}: <a href="{{ route('piggy-banks.show', [piggyBank.id]) }}">{{ piggyBank.name }}</a><br>
                                         {% endfor %}
                                         {% for bill in objectGroup.bills %}
-                                            - {{ 'bill'|_ }}: <a href="{{ route('bills.show', [bill.id]) }}">{{ bill.name }}</a><br>
+                                            - {{ 'bill'|_ }}: <a href="{{ route('subscriptions.show', [bill.id]) }}">{{ bill.name }}</a><br>
                                         {% endfor %}
                                     </td>
                                     <td>

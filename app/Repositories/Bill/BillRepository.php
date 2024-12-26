@@ -268,7 +268,7 @@ class BillRepository implements BillRepositoryInterface
                 'currency_decimal_places' => $currency->decimal_places,
             ];
             $result[$currencyId]['sum'] = bcadd($result[$currencyId]['sum'], $transaction->amount);
-            $result[$currencyId]['native_sum'] = bcadd($result[$currencyId]['native_sum'], $transaction->native_amount);
+            $result[$currencyId]['native_sum'] = bcadd($result[$currencyId]['native_sum'], $transaction->native_amount ?? '0');
             if ($journal->foreign_currency_id === Amount::getDefaultCurrency()->id) {
                 $result[$currencyId]['native_sum'] = bcadd($result[$currencyId]['native_sum'], $transaction->amount);
             }
@@ -394,7 +394,7 @@ class BillRepository implements BillRepositoryInterface
                 'currency_decimal_places' => $currency->decimal_places,
             ];
             $result[$currencyId]['sum']        = bcadd($result[$currencyId]['sum'], $transaction->amount);
-            $result[$currencyId]['native_sum'] = bcadd($result[$currencyId]['native_sum'], $transaction->native_amount);
+            $result[$currencyId]['native_sum'] = bcadd($result[$currencyId]['native_sum'], $transaction->native_amount ?? '0');
             if ($journal->foreign_currency_id === Amount::getDefaultCurrency()->id) {
                 $result[$currencyId]['native_sum'] = bcadd($result[$currencyId]['native_sum'], $transaction->amount);
             }

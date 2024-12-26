@@ -6,7 +6,7 @@
 
 {% block content %}
 
-    <form method="POST" action="{{ route('bills.destroy',bill.id) }}" accept-charset="UTF-8" class="form-horizontal" id="destroy">
+    <form method="POST" action="{{ route('subscriptions.destroy',bill.id) }}" accept-charset="UTF-8" class="form-horizontal" id="destroy">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <div class="row">
             <div class="col-lg-6 col-lg-offset-3 col-md-12 col-sm-12">

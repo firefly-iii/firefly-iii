@@ -134,7 +134,7 @@
             </td>
             <td class="hide-bill">
                 {% if journal.bill_id %}
-                    <a href="{{ route('bills.show', [journal.bill_id]) }}" title="{{ journal.bill_name }}">{{ journal.bill_name }}</a>
+                    <a href="{{ route('subscriptions.show', [journal.bill_id]) }}" title="{{ journal.bill_name }}">{{ journal.bill_name }}</a>
                 {% endif %}
             </td>
 

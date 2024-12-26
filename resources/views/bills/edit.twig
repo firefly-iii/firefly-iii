@@ -6,7 +6,7 @@
 
 {% block content %}
 
-    <form method="post" action="{{ route('bills.update', bill.id) }}" class="form-horizontal" accept-charset="UTF-8"
+    <form method="post" action="{{ route('subscriptions.update', bill.id) }}" class="form-horizontal" accept-charset="UTF-8"
           enctype="multipart/form-data">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
         <input type="hidden" name="id" value="{{ bill.id }}"/>

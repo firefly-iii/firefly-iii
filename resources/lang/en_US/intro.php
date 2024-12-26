@@ -105,22 +105,29 @@ return [
     'piggy-banks_show_piggyEvents'                            => 'Any additions or removals are also listed here.',
 
     // bill index
-    'bills_index_rules'                                       => 'Here you see which rules will check if this bill is hit',
-    'bills_index_paid_in_period'                              => 'This field indicates when the bill was last paid.',
-    'bills_index_expected_in_period'                          => 'This field indicates for each bill if and when the next bill is expected to hit.',
+    'bills_index_rules'                                       => 'Here you see which rules will check if this subscription is hit',
+    'bills_index_paid_in_period'                              => 'This field indicates when the subscription was last paid.',
+    'bills_index_expected_in_period'                          => 'This field indicates for each subscription if and when the next subscription is expected to hit.',
+
+    'subscriptions_index_rules'                                       => 'Here you see which rules will check if this subscription is hit',
+    'subscriptions_index_paid_in_period'                              => 'This field indicates when the subscription was last paid.',
+    'subscriptions_index_expected_in_period'                          => 'This field indicates for each subscription if and when the next subscription is expected to hit.',
 
     // show bill
-    'bills_show_billInfo'                                     => 'This table shows some general information about this bill.',
-    'bills_show_billButtons'                                  => 'Use this button to re-scan old transactions so they will be matched to this bill.',
-    'bills_show_billChart'                                    => 'This chart shows the transactions linked to this bill.',
+    'bills_show_billInfo'                                     => 'This table shows some general information about this subscription.',
+    'bills_show_billButtons'                                  => 'Use this button to re-scan old transactions so they will be matched to this subscription.',
+    'bills_show_billChart'                                    => 'This chart shows the transactions linked to this subscription.',
+    'subscriptions_show_billInfo'                                     => 'This table shows some general information about this subscription.',
+    'subscriptions_show_billButtons'                                  => 'Use this button to re-scan old transactions so they will be matched to this subscription.',
+    'subscriptions_show_billChart'                                    => 'This chart shows the transactions linked to this subscription.',
 
     // create bill
-    'bills_create_intro'                                      => 'Use bills to track the amount of money you\'re due every period. Think about expenses like rent, insurance or mortgage payments.',
+    'bills_create_intro'                                      => 'Use subscriptions to track the amount of money you\'re due every period. Think about expenses like rent, insurance or mortgage payments.',
     'bills_create_name'                                       => 'Use a descriptive name such as "Rent" or "Health insurance".',
     // 'bills_create_match'                                      => 'To match transactions, use terms from those transactions or the expense account involved. All words must match.',
-    'bills_create_amount_min_holder'                          => 'Select a minimum and maximum amount for this bill.',
-    'bills_create_repeat_freq_holder'                         => 'Most bills repeat monthly, but you can set another frequency here.',
-    'bills_create_skip_holder'                                => 'If a bill repeats every 2 weeks, the "skip"-field should be set to "1" to skip every other week.',
+    'bills_create_amount_min_holder'                          => 'Select a minimum and maximum amount for this subscription.',
+    'bills_create_repeat_freq_holder'                         => 'Most subscriptions repeat monthly, but you can set another frequency here.',
+    'bills_create_skip_holder'                                => 'If a subscription repeats every 2 weeks, the "skip"-field should be set to "1" to skip every other week.',
 
     // rules index
     'rules_index_intro'                                       => 'Firefly III allows you to manage rules, that will automagically be applied to any transaction you create or edit.',

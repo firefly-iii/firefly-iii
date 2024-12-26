@@ -13,7 +13,7 @@
         {% if (bill.expected_dates|length > 0 or bill.paid_moments|length > 0) and bill.active %}
             <tr>
                 <td>
-                    <a href="{{ route('bills.show',bill.id) }}">{{ bill.name }}</a>
+                    <a href="{{ route('subscriptions.show',bill.id) }}">{{ bill.name }}</a>
                 </td>
                 <td class="hidden-xs" style="text-align:right;">
                     {{ formatAmountBySymbol(bill.amount_min, bill.currency_symbol, bill.currency_decimal_places) }}
@@ -49,7 +49,7 @@
     {% for line in bills.getBills %}
         <tr>
             <td data-value="{{ line.getBill.name }}">
-                <a href="{{ route('bills.show',line.getBill.id) }}">{{ line.getBill.name }}</a>
+                <a href="{{ route('subscriptions.show',line.getBill.id) }}">{{ line.getBill.name }}</a>
                 <small class="text-muted"><br/>
                     {{ trans('firefly.bill_expected_between', {start: line.getPayDate.isoFormat(monthAndDayFormat), end: line.getEndOfPayDate.isoFormat(monthAndDayFormat) }) }}
                 </small>
