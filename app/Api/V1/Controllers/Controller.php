@@ -50,7 +50,7 @@ abstract class Controller extends BaseController
     use DispatchesJobs;
     use ValidatesRequests;
 
-    protected const string CONTENT_TYPE = 'application/vnd.api+json';
+    protected const string CONTENT_TYPE    = 'application/vnd.api+json';
 
     /** @var array<int, string> */
     protected array        $allowedSort;
@@ -68,7 +68,7 @@ abstract class Controller extends BaseController
             function ($request, $next) {
                 $this->parameters = $this->getParameters();
                 if (auth()->check()) {
-                    $language = app('steam')->getLanguage();
+                    $language              = app('steam')->getLanguage();
                     $this->convertToNative = app('preferences')->get('convert_to_native', false)->data;
                     app()->setLocale($language);
 
