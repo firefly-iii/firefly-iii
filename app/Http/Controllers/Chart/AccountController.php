@@ -417,7 +417,7 @@ class AccountController extends Controller
      */
     public function period(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
-        Log::debug('Now in period()');
+        Log::debug(sprintf('Now in period("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d')));
         $chartData       = [];
         $cache           = new CacheProperties();
         $cache->addProperty('chart.account.period');
