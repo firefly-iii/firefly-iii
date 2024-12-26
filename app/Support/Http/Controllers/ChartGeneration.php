@@ -81,7 +81,7 @@ trait ChartGeneration
             ];
 
             $currentStart = clone $start;
-            $range        = Steam::finalAccountBalanceInRange($account, $start, clone $end);
+            $range        = Steam::finalAccountBalanceInRange($account, $start, clone $end, $this->convertToNative);
             $previous     = array_values($range)[0];
             while ($currentStart <= $end) {
                 $format                        = $currentStart->format('Y-m-d');
