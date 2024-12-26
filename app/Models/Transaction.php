@@ -59,6 +59,8 @@ class Transaction extends Model
             'date'                => 'datetime',
             'amount'              => 'string',
             'foreign_amount'      => 'string',
+            'native_amount'              => 'string',
+            'native_foreign_amount'      => 'string',
         ];
 
     protected $fillable

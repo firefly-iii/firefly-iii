@@ -66,7 +66,13 @@
                             <td>{{ trans('firefly.average_bill_amount_year', {year: year}) }}</td>
                             <td>
                                 {% for avg in yearAverage %}
-                                    {{ formatAmountBySymbol(avg.avg, avg.currency_symbol, avg.currency_decimal_places, true) }}<br>
+                                    {{ formatAmountBySymbol(avg.avg, avg.currency_symbol, avg.currency_decimal_places, true) }}
+                                    {% if convertToNative %}
+                                    ({{ formatAmountBySymbol(avg.native_avg,
+                                        defaultCurrency.symbol, defaultCurrency.decimal_places, true) }})
+                                    {% endif %}
+                                    <br>
+
                                 {% endfor %}
                             </td>
                         </tr>
@@ -74,7 +80,12 @@
                             <td>{{ 'average_bill_amount_overall'|_ }}</td>
                             <td>
                                 {% for avg in overallAverage %}
-                                    {{ formatAmountBySymbol(avg.avg, avg.currency_symbol, avg.currency_decimal_places, true) }}<br>
+                                    {{ formatAmountBySymbol(avg.avg, avg.currency_symbol, avg.currency_decimal_places, true) }}
+                                    {% if convertToNative %}
+                                        ({{ formatAmountBySymbol(avg.native_avg,
+                                        defaultCurrency.symbol, defaultCurrency.decimal_places, true) }})
+                                    {% endif %}
+                                    <br>
                                 {% endfor %}
                             </td>
                         </tr>
@@ -174,7 +185,7 @@
 
 {% block scripts %}
     <script type="text/javascript" nonce="{{ JS_NONCE }}">
-        var billCurrencySymbol = "{{ object.data.currency.symbol }}";
+        var billCurrencySymbol = "{{ convertToNative ? defaultCurrency.symbol : object.data.currency.symbol }}";
         var billUrl = '{{ route('chart.bill.single', [object.data.id]) }}';
     </script>
     <script type="text/javascript" src="v1/js/lib/Chart.bundle.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
