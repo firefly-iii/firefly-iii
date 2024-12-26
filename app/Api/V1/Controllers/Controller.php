@@ -55,6 +55,7 @@ abstract class Controller extends BaseController
     /** @var array<int, string> */
     protected array        $allowedSort;
     protected ParameterBag $parameters;
+    protected bool        $convertToNative = false;
 
     /**
      * Controller constructor.
@@ -68,7 +69,9 @@ abstract class Controller extends BaseController
                 $this->parameters = $this->getParameters();
                 if (auth()->check()) {
                     $language = app('steam')->getLanguage();
+                    $this->convertToNative = app('preferences')->get('convert_to_native', false)->data;
                     app()->setLocale($language);
+
                 }
 
                 return $next($request);

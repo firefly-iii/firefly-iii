@@ -116,7 +116,7 @@ class AccountController extends Controller
             ];
             // TODO this code is also present in the V2 chart account controller so this method is due to be deprecated.
             $currentStart = clone $start;
-            $range        = app('steam')->finalAccountBalanceInRange($account, $start, clone $end);
+            $range        = app('steam')->finalAccountBalanceInRange($account, $start, clone $end, $this->convertToNative);
             // 2022-10-11 this method no longer converts to float.
             $previous     = array_values($range)[0];
             while ($currentStart <= $end) {

@@ -118,7 +118,7 @@ class AccountController extends Controller
             'native_entries'                 => [],
         ];
         $currentStart   = clone $params['start'];
-        $range          = app('steam')->finalAccountBalanceInRange($account, $params['start'], clone $params['end'], $currency);
+        $range          = app('steam')->finalAccountBalanceInRange($account, $params['start'], clone $params['end'], $this->convertToNative);
 
         $previous       = array_values($range)[0]['balance'];
         $previousNative = array_values($range)[0]['native_balance'];
