@@ -167,34 +167,34 @@ class ShowController extends Controller
         if (!$this->isEditableAccount($account)) {
             return $this->redirectAccountToAccount($account);
         }
-        $location     = $this->repository->getLocation($account);
-        $isLiability  = $this->repository->isLiability($account);
-        $attachments  = $this->repository->getAttachments($account);
-        $objectType   = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
-        $end          = today(config('app.timezone'));
-        $today        = today(config('app.timezone'));
+        $location        = $this->repository->getLocation($account);
+        $isLiability     = $this->repository->isLiability($account);
+        $attachments     = $this->repository->getAttachments($account);
+        $objectType      = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
+        $end             = today(config('app.timezone'));
+        $today           = today(config('app.timezone'));
         $accountCurrency = $this->repository->getAccountCurrency($account);
-        $start        = $this->repository->oldestJournalDate($account) ?? today(config('app.timezone'))->startOfMonth();
-        $subTitleIcon = config('firefly.subIconsByIdentifier.'.$account->accountType->type);
-        $page         = (int) $request->get('page');
-        $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
-        $currency     = $this->repository->getAccountCurrency($account) ?? Amount::getDefaultCurrency();
-        $subTitle     = (string) trans('firefly.all_journals_for_account', ['name' => $account->name]);
-        $periods      = new Collection();
+        $start           = $this->repository->oldestJournalDate($account) ?? today(config('app.timezone'))->startOfMonth();
+        $subTitleIcon    = config('firefly.subIconsByIdentifier.'.$account->accountType->type);
+        $page            = (int) $request->get('page');
+        $pageSize        = (int) app('preferences')->get('listPageSize', 50)->data;
+        $currency        = $this->repository->getAccountCurrency($account) ?? Amount::getDefaultCurrency();
+        $subTitle        = (string) trans('firefly.all_journals_for_account', ['name' => $account->name]);
+        $periods         = new Collection();
 
         /** @var GroupCollectorInterface $collector */
-        $collector    = app(GroupCollectorInterface::class);
+        $collector       = app(GroupCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page)->withAccountInformation()->withCategoryInformation();
 
         // this search will not include transaction groups where this asset account (or liability)
         // is just part of ONE of the journals. To force this:
         $collector->setExpandGroupSearch(true);
 
-        $groups       = $collector->getPaginatedGroups();
+        $groups          = $collector->getPaginatedGroups();
         $groups->setPath(route('accounts.show.all', [$account->id]));
-        $chartUrl     = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
-        $showAll      = true;
-        $balances          = Steam::filterAccountBalance(Steam::finalAccountBalance($account, $end), $account, $this->convertToNative, $accountCurrency);
+        $chartUrl        = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
+        $showAll         = true;
+        $balances        = Steam::filterAccountBalance(Steam::finalAccountBalance($account, $end), $account, $this->convertToNative, $accountCurrency);
 
         return view(
             'accounts.show',

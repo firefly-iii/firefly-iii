@@ -418,8 +418,8 @@ class AccountController extends Controller
     public function period(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
         Log::debug('Now in period()');
-        $chartData         = [];
-        $cache             = new CacheProperties();
+        $chartData       = [];
+        $cache           = new CacheProperties();
         $cache->addProperty('chart.account.period');
         $cache->addProperty($start);
         $cache->addProperty($end);
@@ -430,23 +430,23 @@ class AccountController extends Controller
         }
 
         // collect and filter balances for the entire period.
-        $step = $this->calculateStep($start, $end);
+        $step            = $this->calculateStep($start, $end);
         Log::debug(sprintf('Step is %s', $step));
-        $locale = app('steam')->getLocale();
-        $return = [];
+        $locale          = app('steam')->getLocale();
+        $return          = [];
 
         // fix for issue https://github.com/firefly-iii/firefly-iii/issues/8041
         // have to make sure this chart is always based on the balance at the END of the period.
         // This period depends on the size of the chart
-        $current           = clone $start;
-        $current           = app('navigation')->endOfX($current, $step, null);
-        $format            = (string) trans('config.month_and_day_js', [], $locale);
-        $accountCurrency   = $this->accountRepository->getAccountCurrency($account);
+        $current         = clone $start;
+        $current         = app('navigation')->endOfX($current, $step, null);
+        $format          = (string) trans('config.month_and_day_js', [], $locale);
+        $accountCurrency = $this->accountRepository->getAccountCurrency($account);
 
         Log::debug('One');
-        $range             = Steam::finalAccountBalanceInRange($account, $start, $end, $this->convertToNative);
+        $range           = Steam::finalAccountBalanceInRange($account, $start, $end, $this->convertToNative);
         Log::debug('Two');
-        $range = Steam::filterAccountBalances($range, $account, $this->convertToNative, $accountCurrency);
+        $range           = Steam::filterAccountBalances($range, $account, $this->convertToNative, $accountCurrency);
         Log::debug('Three');
 
         // temp, get end balance.
@@ -455,29 +455,29 @@ class AccountController extends Controller
         Log::debug('END temp get end balance done');
 
         $previous        = array_values($range)[0];
-        $accountCurrency = $accountCurrency ?? $this->defaultCurrency; // do this AFTER getting the balances.
+        $accountCurrency ??= $this->defaultCurrency; // do this AFTER getting the balances.
         Log::debug('Start chart loop.');
 
-        $newRange      = [];
-        $expectedIndex = 0;
+        $newRange        = [];
+        $expectedIndex   = 0;
         Log::debug('Balances exist at:');
         foreach ($range as $key => $value) {
             $newRange[] = ['date' => $key, 'info' => $value];
             Log::debug(sprintf(' - %s', $key));
         }
-        $carbon = Carbon::createFromFormat('Y-m-d', $newRange[0]['date']);
+        $carbon          = Carbon::createFromFormat('Y-m-d', $newRange[0]['date']);
         while ($end->gte($current)) {
             $momentBalance = $previous;
-            $theDate = $current->format('Y-m-d');
+            $theDate       = $current->format('Y-m-d');
             while ($carbon->lte($current) && array_key_exists($expectedIndex, $newRange)) {
                 $momentBalance = $newRange[$expectedIndex]['info'];
                 Log::debug(sprintf('Expected index is %d!, date is %s, current is %s', $expectedIndex, $carbon->format('Y-m-d'), $current->format('Y-m-d')));
-                $carbon = Carbon::createFromFormat('Y-m-d', $newRange[$expectedIndex]['date']);
-                $expectedIndex++;
+                $carbon        = Carbon::createFromFormat('Y-m-d', $newRange[$expectedIndex]['date']);
+                ++$expectedIndex;
             }
 
-            $return   = $this->updateChartKeys($return, $momentBalance);
-            $previous = $momentBalance;
+            $return        = $this->updateChartKeys($return, $momentBalance);
+            $previous      = $momentBalance;
 
             Log::debug(sprintf('Now at %s', $theDate), $momentBalance);
 
@@ -487,15 +487,15 @@ class AccountController extends Controller
                 $label                           = $current->isoFormat($format);
                 $return[$key]['entries'][$label] = $amount;
             }
-            $current = app('navigation')->addPeriod($current, $step, 0);
+            $current       = app('navigation')->addPeriod($current, $step, 0);
             // here too, to fix #8041, the data is corrected to the end of the period.
-            $current = app('navigation')->endOfX($current, $step, null);
+            $current       = app('navigation')->endOfX($current, $step, null);
             Log::debug(sprintf('Next moment is %s', $current->format('Y-m-d')));
 
         }
         Log::debug('End of chart loop.');
         // second loop (yes) to create nice array with info! Yay!
-        $chartData = [];
+        $chartData       = [];
 
         foreach ($return as $key => $info) {
             if (3 === strlen($key)) {
@@ -518,7 +518,7 @@ class AccountController extends Controller
             $chartData[] = $info;
         }
 
-        $data              = $this->generator->multiSet($chartData);
+        $data            = $this->generator->multiSet($chartData);
         $cache->store($data);
 
         return response()->json($data);

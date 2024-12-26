@@ -71,29 +71,30 @@ class IndexController extends Controller
     {
         $this->cleanupObjectGroups();
         $this->repository->correctOrder();
-        $start           = session('start');
-        $end             = session('end');
-        $collection      = $this->repository->getBills();
-        $total           = $collection->count();
+        $start       = session('start');
+        $end         = session('end');
+        $collection  = $this->repository->getBills();
+        $total       = $collection->count();
 
-        $parameters      = new ParameterBag();
+        $parameters  = new ParameterBag();
         // sub one day from temp start so the last paid date is one day before it should be.
-        $tempStart       = clone $start;
+        $tempStart   = clone $start;
         // 2023-06-23 do not sub one day from temp start, fix is in BillTransformer::payDates instead
         // $tempStart->subDay();
         $parameters->set('start', $tempStart);
         $parameters->set('end', $end);
         $parameters->set('convertToNative', $this->convertToNative);
         $parameters->set('defaultCurrency', $this->defaultCurrency);
+
         /** @var BillTransformer $transformer */
-        $transformer     = app(BillTransformer::class);
+        $transformer = app(BillTransformer::class);
         $transformer->setParameters($parameters);
 
         // loop all bills, convert to array and add rules and stuff.
-        $rules           = $this->repository->getRulesForBills($collection);
+        $rules       = $this->repository->getRulesForBills($collection);
 
         // make bill groups:
-        $bills           = [
+        $bills       = [
             0 => [ // the index is the order, not the ID.
                 'object_group_id'    => 0,
                 'object_group_title' => (string) trans('firefly.default_group_title_name'),
@@ -126,9 +127,9 @@ class IndexController extends Controller
         ksort($bills);
 
         // summarise per currency / per group.
-        $sums            = $this->getSums($bills);
-        $totals          = $this->getTotals($sums);
-        $today           = now()->startOfDay();
+        $sums        = $this->getSums($bills);
+        $totals      = $this->getTotals($sums);
+        $today       = now()->startOfDay();
 
         return view('bills.index', compact('bills', 'sums', 'total', 'totals', 'today'));
     }
