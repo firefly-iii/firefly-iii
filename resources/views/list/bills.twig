@@ -67,6 +67,10 @@
                       title="{{ formatAmountBySymbol(entry.amount_min, entry.currency_symbol, entry.currency_decimal_places, false)|escape }} -- {{ formatAmountBySymbol(entry.amount_max, entry.currency_symbol, entry.currency_decimal_places, false)|escape }}"
                 >
                     ~ {{ formatAmountBySymbol((entry.amount_max + entry.amount_min)/2, entry.currency_symbol, entry.currency_decimal_places) }}
+
+                    {% if '0' != entry.native_amount_max %}
+                    ({{ formatAmountBySymbol((entry.native_amount_max + entry.native_amount_min)/2, defaultCurrency.symbol, defaultCurrency.decimal_places) }})
+                    {% endif %}
                 </span>
                     </td>
 

@@ -29,6 +29,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -123,10 +124,10 @@ class Steam
                            [ // @phpstan-ignore-line
                              'transaction_journals.date',
                              'transactions.transaction_currency_id',
-                             \DB::raw('SUM(transactions.amount) AS modified'),
+                             DB::raw('SUM(transactions.amount) AS modified'),
                              'transactions.foreign_currency_id',
-                             \DB::raw('SUM(transactions.foreign_amount) AS modified_foreign'),
-                             \DB::raw('SUM(transactions.native_amount) AS modified_native'),
+                             DB::raw('SUM(transactions.foreign_amount) AS modified_foreign'),
+                             DB::raw('SUM(transactions.native_amount) AS modified_native'),
                            ]
                        );
 
@@ -178,24 +179,6 @@ class Steam
                 // add to GBP, as expected.
                 $currentBalance[$entryCurrency->code] = bcadd($currentBalance[$entryCurrency->code] ?? '0', $modified);
             }
-
-//            // add "modified" to amount if the currency id matches the account currency id.
-//            if ($entry->transaction_currency_id === $currency->id) {
-//                $currentBalance['balance']       = bcadd($currentBalance['balance'], $modified);
-//                $currentBalance[$currency->code] = bcadd($currentBalance[$currency->code], $modified);
-//            }
-//
-//            // always add the native balance, even if it ends up at zero.
-//            $currentBalance['native_balance'] = bcadd($currentBalance['native_balance'], $nativeModified);
-
-            // DO NOT add modified foreign to the array
-//            if (null !== $entry->foreign_currency_id) {
-//                $foreignId                              = $entry->foreign_currency_id;
-//                $currencies[$foreignId]                 ??= TransactionCurrency::find($foreignId);
-//                $foreignCurrency                        = $currencies[$foreignId];
-//                $currentBalance[$foreignCurrency->code] ??= '0';
-//                $currentBalance[$foreignCurrency->code] = bcadd($currentBalance[$foreignCurrency->code], $foreignModified);
-//            }
             $balances[$carbon->format('Y-m-d')] = $currentBalance;
             Log::debug('Updated entry',$currentBalance);
         }

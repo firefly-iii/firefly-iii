@@ -27,7 +27,15 @@
                     <table class="table table-striped">
                         <tr>
                             <td colspan="2">
-                                {{ trans('firefly.match_between_amounts', {low: formatAmountByCurrency(object.data.currency,object.data.amount_min), high: formatAmountByCurrency(object.data.currency,object.data.amount_max) })|raw }}
+                                {% set lowAmount  = formatAmountByCurrency(object.data.currency,object.data.amount_min) %}
+                                {% set highAmount = formatAmountByCurrency(object.data.currency,object.data.amount_max) %}
+                                {% if(0 != object.data.native_amount_min) %}
+                                    {% set lowAmount = lowAmount ~ ' (' ~ formatAmountByCode(object.data.native_amount_min, defaultCurrency.code) ~ ')'  %}
+                                {% endif %}
+                                {% if(0 != object.data.native_amount_max) %}
+                                    {% set highAmount = highAmount ~ ' (' ~ formatAmountByCode(object.data.native_amount_max, defaultCurrency.code) ~ ')'  %}
+                                {% endif %}
+                                {{ trans('firefly.match_between_amounts', {low: lowAmount, high: highAmount })|raw }}
                                 {{ 'repeats'|_ }}
                                 {{ trans('firefly.repeat_freq_' ~object.data.repeat_freq) }}.
                             </td>

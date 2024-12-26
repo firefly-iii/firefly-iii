@@ -60,6 +60,8 @@ class Bill extends Model
             'match_encrypted' => 'boolean',
             'amount_min'      => 'string',
             'amount_max'      => 'string',
+            'native_amount_min'      => 'string',
+            'native_amount_max'      => 'string',
         ];
 
     protected $fillable
@@ -81,6 +83,8 @@ class Bill extends Model
             'extension_date',
             'end_date_tz',
             'extension_date_tz',
+            'native_amount_min',
+            'native_amount_max',
         ];
 
     protected $hidden = ['amount_min_encrypted', 'amount_max_encrypted', 'name_encrypted', 'match_encrypted'];
