@@ -54,8 +54,8 @@ class Controller extends BaseController
 {
     use ValidatesUserGroupTrait;
 
-    protected const string CONTENT_TYPE = 'application/vnd.api+json';
-    protected array        $acceptedRoles = [UserRoleEnum::READ_ONLY];
+    protected const string CONTENT_TYPE     = 'application/vnd.api+json';
+    protected array        $acceptedRoles   = [UserRoleEnum::READ_ONLY];
     protected ParameterBag $parameters;
     protected bool         $convertToNative = false;
 
@@ -78,12 +78,12 @@ class Controller extends BaseController
      */
     private function getParameters(): ParameterBag
     {
-        $bag = new ParameterBag();
+        $bag      = new ParameterBag();
         $bag->set('limit', 50);
 
         try {
             $page = (int) request()->get('page');
-        } catch (ContainerExceptionInterface | NotFoundExceptionInterface $e) {
+        } catch (ContainerExceptionInterface|NotFoundExceptionInterface $e) {
             $page = 1;
         }
 
@@ -113,7 +113,7 @@ class Controller extends BaseController
             if (null !== $date) {
                 try {
                     $obj = Carbon::parse((string) $date, config('app.timezone'));
-                } catch (InvalidDateException | InvalidFormatException $e) {
+                } catch (InvalidDateException|InvalidFormatException $e) {
                     // don't care
                     app('log')->warning(sprintf('Ignored invalid date "%s" in API v2 controller parameter check: %s', substr((string) $date, 0, 20), $e->getMessage()));
                 }
@@ -156,18 +156,18 @@ class Controller extends BaseController
 
     final protected function jsonApiList(string $key, LengthAwarePaginator $paginator, AbstractTransformer $transformer): array
     {
-        $manager = new Manager();
-        $baseUrl = request()->getSchemeAndHttpHost() . '/api/v2';
+        $manager  = new Manager();
+        $baseUrl  = request()->getSchemeAndHttpHost().'/api/v2';
 
         // TODO add stuff to path?
 
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $objects = $paginator->getCollection();
+        $objects  = $paginator->getCollection();
 
         // the transformer, at this point, needs to collect information that ALL items in the collection
         // require, like meta-data and stuff like that, and save it for later.
-        $objects = $transformer->collectMetaData($objects);
+        $objects  = $transformer->collectMetaData($objects);
         $paginator->setCollection($objects);
 
         $resource = new FractalCollection($objects, $transformer, $key);
@@ -181,11 +181,11 @@ class Controller extends BaseController
      *
      * @param array<int, mixed>|Model $object
      */
-    final protected function jsonApiObject(string $key, array | Model $object, AbstractTransformer $transformer): array
+    final protected function jsonApiObject(string $key, array|Model $object, AbstractTransformer $transformer): array
     {
         // create some objects:
-        $manager = new Manager();
-        $baseUrl = request()->getSchemeAndHttpHost() . '/api/v2';
+        $manager  = new Manager();
+        $baseUrl  = request()->getSchemeAndHttpHost().'/api/v2';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         $transformer->collectMetaData(new Collection([$object]));

@@ -100,7 +100,7 @@ class ShowController extends Controller
         $subTitleIcon     = config(sprintf('firefly.subIconsByIdentifier.%s', $account->accountType->type));
         $page             = (int) $request->get('page');
         $pageSize         = (int) app('preferences')->get('listPageSize', 50)->data;
-        $accountCurrency = $this->repository->getAccountCurrency($account);
+        $accountCurrency  = $this->repository->getAccountCurrency($account);
         $currency         = $accountCurrency ?? Amount::getDefaultCurrency();
         $fStart           = $start->isoFormat($this->monthAndDayFormat);
         $fEnd             = $end->isoFormat($this->monthAndDayFormat);
@@ -131,7 +131,7 @@ class ShowController extends Controller
 
         $groups->setPath(route('accounts.show', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]));
         $showAll          = false;
-        $balances          = Steam::filterAccountBalance(Steam::finalAccountBalance($account, $end), $account, $this->convertToNative, $accountCurrency);
+        $balances         = Steam::filterAccountBalance(Steam::finalAccountBalance($account, $end), $account, $this->convertToNative, $accountCurrency);
 
         return view(
             'accounts.show',
