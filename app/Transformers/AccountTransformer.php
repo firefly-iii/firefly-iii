@@ -104,7 +104,7 @@ class AccountTransformer extends AbstractTransformer
             'currency_code'           => $currencyCode,
             'currency_symbol'         => $currencySymbol,
             'currency_decimal_places' => $decimalPlaces,
-            'current_balance'         => app('steam')->bcround(Steam::finalAccountBalance($account, $date)['balance'], $decimalPlaces),
+            'current_balance'         => app('steam')->bcround(Steam::finalAccountBalance($account, $date)['balance'] ?? '0', $decimalPlaces),
             'current_balance_date'    => $date->toAtomString(),
             'notes'                   => $this->repository->getNoteText($account),
             'monthly_payment_date'    => $monthlyPaymentDate,
