@@ -231,8 +231,8 @@ class PiggyBankFactory
             foreach ($accounts as $info) {
                 if ($account->id === $info['account_id']) {
                     if (array_key_exists($account->id, $accounts)) {
-                        $toBeLinked[$account->id] = ['current_amount' => $account->pivot->current_amount];
-                        Log::debug(sprintf('Prefilled for account #%d with amount %s', $account->id, $account->pivot->current_amount));
+                        $toBeLinked[$account->id] = ['current_amount' => $account->pivot->current_amount ?? '0'];
+                        Log::debug(sprintf('Prefilled for account #%d with amount %s', $account->id, $account->pivot->current_amount ?? '0'));
                     }
                 }
             }
