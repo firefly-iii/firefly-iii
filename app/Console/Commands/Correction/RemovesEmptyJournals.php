@@ -39,7 +39,7 @@ class RemovesEmptyJournals extends Command
 
     protected $description = 'Delete empty and uneven transaction journals.';
 
-    protected $signature   = 'firefly-iii:delete-empty-journals';
+    protected $signature   = 'correction:empty-journals';
 
     /**
      * Execute the console command.
@@ -82,9 +82,6 @@ class RemovesEmptyJournals extends Command
                 ++$total;
             }
         }
-        if (0 === $total) {
-            $this->friendlyPositive('No uneven transaction journals.');
-        }
     }
 
     private function deleteEmptyJournals(): void
@@ -106,9 +103,6 @@ class RemovesEmptyJournals extends Command
 
             $this->friendlyInfo(sprintf('Deleted empty transaction journal #%d', $entry->id));
             ++$count;
-        }
-        if (0 === $count) {
-            $this->friendlyPositive('No empty transaction journals.');
         }
     }
 }

@@ -37,7 +37,7 @@ class CorrectsTransferBudgets extends Command
     use ShowsFriendlyMessages;
 
     protected $description = 'Removes budgets from transfers.';
-    protected $signature   = 'firefly-iii:fix-transfer-budgets';
+    protected $signature   = 'correction:transfer-budgets';
 
     /**
      * Execute the console command.
@@ -59,10 +59,6 @@ class CorrectsTransferBudgets extends Command
             app('log')->debug($message);
             $entry->budgets()->sync([]);
             ++$count;
-        }
-        if (0 === $count) {
-            $message = 'No invalid budget/journal entries.';
-            $this->friendlyPositive($message);
         }
         if (0 !== $count) {
             $message = sprintf('Corrected %d invalid budget/journal entries (entry).', $count);

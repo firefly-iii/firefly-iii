@@ -30,9 +30,6 @@ use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Note;
 use Illuminate\Console\Command;
 
-/**
- * Class MigrateAttachments
- */
 class UpgradesAttachments extends Command
 {
     use ShowsFriendlyMessages;

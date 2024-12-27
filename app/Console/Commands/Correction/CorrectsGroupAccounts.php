@@ -39,7 +39,7 @@ class CorrectsGroupAccounts extends Command
     use ShowsFriendlyMessages;
 
     protected $description = 'Unify the source / destination accounts of split groups.';
-    protected $signature   = 'firefly-iii:unify-group-accounts';
+    protected $signature   = 'correction:group-accounts';
 
     /**
      * Execute the console command.
@@ -63,8 +63,6 @@ class CorrectsGroupAccounts extends Command
             $event = new UpdatedTransactionGroup($group, true, true);
             $handler->unifyAccounts($event);
         }
-
-        $this->friendlyPositive('Updated possible inconsistent transaction groups.');
 
         return 0;
     }

@@ -39,7 +39,7 @@ class CorrectsTransactionTypes extends Command
     use ShowsFriendlyMessages;
 
     protected $description = 'Make sure all transactions are of the correct type, based on source + dest.';
-    protected $signature   = 'firefly-iii:fix-transaction-types';
+    protected $signature   = 'correction:transaction-types';
 
     /**
      * Execute the console command.

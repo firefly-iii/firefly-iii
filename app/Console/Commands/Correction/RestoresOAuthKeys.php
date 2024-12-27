@@ -36,7 +36,7 @@ class RestoresOAuthKeys extends Command
     use ShowsFriendlyMessages;
 
     protected $description = 'Will restore the OAuth keys generated for the system.';
-    protected $signature   = 'firefly-iii:restore-oauth-keys';
+    protected $signature   = 'correction:restore-oauth-keys';
 
     /**
      * Execute the console command.
@@ -76,7 +76,6 @@ class RestoresOAuthKeys extends Command
 
             return;
         }
-        $this->friendlyPositive('OAuth keys are OK');
     }
 
     private function keysInDatabase(): bool

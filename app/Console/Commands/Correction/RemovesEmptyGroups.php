@@ -37,7 +37,7 @@ class RemovesEmptyGroups extends Command
     use ShowsFriendlyMessages;
 
     protected $description = 'Delete empty transaction groups.';
-    protected $signature   = 'firefly-iii:delete-empty-groups';
+    protected $signature   = 'correction:empty-groups';
 
     /**
      * Execute the console command.
@@ -60,9 +60,6 @@ class RemovesEmptyGroups extends Command
             foreach ($chunks as $chunk) {
                 TransactionGroup::whereNull('deleted_at')->whereIn('id', $chunk)->delete();
             }
-        }
-        if (0 === $total) {
-            $this->friendlyInfo('Verified there are no empty groups.');
         }
 
         return 0;

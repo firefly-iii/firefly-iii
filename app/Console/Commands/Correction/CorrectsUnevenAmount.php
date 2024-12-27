@@ -41,7 +41,7 @@ class CorrectsUnevenAmount extends Command
     use ShowsFriendlyMessages;
 
     protected $description = 'Fix journals with uneven amounts.';
-    protected $signature   = 'firefly-iii:fix-uneven-amount';
+    protected $signature   = 'correction:uneven-amounts';
     private int $count;
 
     /**
@@ -118,11 +118,6 @@ class CorrectsUnevenAmount extends Command
                 ++$count;
             }
         }
-        if (0 === $count) {
-            $this->friendlyPositive('No "old style" foreign currency transfers.');
-
-            return;
-        }
     }
 
     private function fixUnevenAmounts(): void
@@ -163,9 +158,6 @@ class CorrectsUnevenAmount extends Command
             if (0 !== $res) {
                 $this->fixJournal($entry->transaction_journal_id);
             }
-        }
-        if (0 === $this->count) {
-            $this->friendlyPositive('Database amount integrity is OK');
         }
     }
 
@@ -291,8 +283,6 @@ class CorrectsUnevenAmount extends Command
             Log::debug(sprintf('Can skip foreign currency transfer #%d.', $journal->id));
         }
         if (0 === $count) {
-            $this->friendlyPositive('Journal currency integrity is OK');
-
             return;
         }
 

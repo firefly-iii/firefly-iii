@@ -29,9 +29,6 @@ use FireflyIII\Models\Location;
 use FireflyIII\Models\Tag;
 use Illuminate\Console\Command;
 
-/**
- * Class MigrateTagLocations
- */
 class UpgradesTagLocations extends Command
 {
     use ShowsFriendlyMessages;

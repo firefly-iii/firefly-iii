@@ -41,7 +41,7 @@ class CorrectsAccountTypes extends Command
     use ShowsFriendlyMessages;
 
     protected $description = 'Make sure all journals have the correct from/to account types.';
-    protected $signature   = 'firefly-iii:fix-account-types';
+    protected $signature   = 'correction:account-types';
     private int            $count;
     private array          $expected;
     private AccountFactory $factory;
@@ -116,9 +116,6 @@ class CorrectsAccountTypes extends Command
                     $this->inspectJournal($journal);
                 }
             }
-        }
-        if (0 === $this->count) {
-            $this->friendlyPositive('All account types are OK');
         }
         if (0 !== $this->count) {
             app('log')->debug(sprintf('%d journals had to be fixed.', $this->count));

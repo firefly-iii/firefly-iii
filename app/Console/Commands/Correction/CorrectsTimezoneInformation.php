@@ -92,7 +92,7 @@ class CorrectsTimezoneInformation extends Command
      *
      * @var string
      */
-    protected $signature   = 'firefly-iii:add-timezones-to-dates';
+    protected $signature   = 'correction:timezones';
 
     /**
      * Execute the console command.
@@ -126,8 +126,6 @@ class CorrectsTimezoneInformation extends Command
             Log::error($e->getMessage());
         }
         if (0 === $count) {
-            $this->friendlyPositive(sprintf('Timezone information is present in field "%s" of model "%s".', $field, $shortModel));
-
             return;
         }
         $this->friendlyInfo(sprintf('Adding timezone information to field "%s" of model "%s".', $field, $shortModel));

@@ -36,9 +36,6 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 
-/**
- * Class AccountCurrencies
- */
 class UpgradesAccountCurrencies extends Command
 {
     use ShowsFriendlyMessages;

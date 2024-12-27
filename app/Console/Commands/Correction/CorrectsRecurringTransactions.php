@@ -38,7 +38,7 @@ class CorrectsRecurringTransactions extends Command
     use ShowsFriendlyMessages;
 
     protected $description                      = 'Fixes recurring transactions with the wrong transaction type.';
-    protected $signature                        = 'firefly-iii:fix-recurring-transactions';
+    protected $signature                        = 'correction:recurring-transactions';
     private int                          $count = 0;
     private RecurringRepositoryInterface $recurringRepos;
     private UserRepositoryInterface      $userRepos;
@@ -50,9 +50,6 @@ class CorrectsRecurringTransactions extends Command
     {
         $this->stupidLaravel();
         $this->correctTransactions();
-        if (0 === $this->count) {
-            $this->friendlyPositive('All recurring transactions are OK.');
-        }
 
         return 0;
     }

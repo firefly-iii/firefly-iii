@@ -34,7 +34,7 @@ class CorrectsAccountOrder extends Command
     use ShowsFriendlyMessages;
 
     protected $description = 'Make sure account order is correct.';
-    protected $signature   = 'firefly-iii:fix-account-order';
+    protected $signature   = 'correction:account-order';
 
     private AccountRepositoryInterface $repository;
 
@@ -50,8 +50,6 @@ class CorrectsAccountOrder extends Command
             $this->repository->setUser($user);
             $this->repository->resetAccountOrder();
         }
-
-        $this->friendlyPositive('All accounts are ordered correctly');
 
         return 0;
     }

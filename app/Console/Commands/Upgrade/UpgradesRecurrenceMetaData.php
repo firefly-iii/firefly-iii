@@ -30,9 +30,6 @@ use FireflyIII\Models\RecurrenceMeta;
 use FireflyIII\Models\RecurrenceTransactionMeta;
 use Illuminate\Console\Command;
 
-/**
- * Class MigrateRecurrenceMeta
- */
 class UpgradesRecurrenceMetaData extends Command
 {
     use ShowsFriendlyMessages;

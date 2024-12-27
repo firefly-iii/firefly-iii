@@ -34,10 +34,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
 use Illuminate\Console\Command;
 
-/**
- * Class UpgradeTransferCurrencies
- */
-class UpgradeTransferCurrencies extends Command
+class UpgradesTransferCurrencies extends Command
 {
     use ShowsFriendlyMessages;
 

@@ -1,8 +1,7 @@
 <?php
-
 /*
- * MigrateRecurrenceType.php
- * Copyright (c) 2021 james@firefly-iii.org
+ * UpgradesNativeAmounts.php
+ * Copyright (c) 2024 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -17,28 +16,28 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
-
-declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
 
-class UpgradesRecurrenceType extends Command
+class UpgradesNativeAmounts extends Command
 {
     use ShowsFriendlyMessages;
+    public const string CONFIG_NAME = '620_native_amounts';
 
-    public const string CONFIG_NAME = '550_migrate_recurrence_type';
+    protected $description = 'Runs the native amounts calculations.';
 
-    protected $description          = 'Migrate transaction type of recurring transaction.';
-
-    protected $signature            = 'upgrade:550-recurrence-type {--F|force : Force the execution of this command.}';
+    protected $signature = 'upgrade:620-native-amounts {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
+     *
+     * @return int
      */
     public function handle(): int
     {
@@ -47,19 +46,32 @@ class UpgradesRecurrenceType extends Command
 
             return 0;
         }
-        $this->friendlyWarning('This command has been disabled.');
+
+        Artisan::call('correction:recalculate-native-amounts');
+
         $this->markAsExecuted();
+
 
         return 0;
     }
 
+    /**
+     * @return bool
+     */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
+        if (null !== $configVar) {
+            return (bool)$configVar->data;
+        }
 
-        return (bool) $configVar?->data;
+        return false;
     }
 
+
+    /**
+     *
+     */
     private function markAsExecuted(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);

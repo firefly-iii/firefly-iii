@@ -35,7 +35,7 @@ class CorrectsIbans extends Command
     use ShowsFriendlyMessages;
 
     protected $description = 'Removes spaces from IBANs';
-    protected $signature   = 'firefly-iii:fix-ibans';
+    protected $signature   = 'correction:ibans';
     private int $count     = 0;
 
     /**
@@ -46,9 +46,6 @@ class CorrectsIbans extends Command
         $accounts = Account::whereNotNull('iban')->get();
         $this->filterIbans($accounts);
         $this->countAndCorrectIbans($accounts);
-        if (0 === $this->count) {
-            $this->friendlyPositive('All IBANs are valid.');
-        }
 
         return 0;
     }

@@ -38,7 +38,7 @@ class CreatesAccessTokens extends Command
 
     protected $description = 'Creates user access tokens which are used for command line access to personal data.';
 
-    protected $signature   = 'firefly-iii:create-access-tokens';
+    protected $signature   = 'correction:access-tokens';
 
     /**
      * Execute the console command.
@@ -63,9 +63,6 @@ class CreatesAccessTokens extends Command
                 $this->friendlyInfo(sprintf('Generated access token for user %s', $user->email));
                 ++$count;
             }
-        }
-        if (0 === $count) {
-            $this->friendlyPositive('Verified access tokens.');
         }
 
         return 0;

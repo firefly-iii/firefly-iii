@@ -39,7 +39,7 @@ class CreatesGroupMemberships extends Command
 
     public const string CONFIG_NAME = '560_create_group_memberships';
     protected $description          = 'Update group memberships';
-    protected $signature            = 'firefly-iii:create-group-memberships';
+    protected $signature            = 'correction:create-group-memberships';
 
     /**
      * Execute the console command.
@@ -49,7 +49,6 @@ class CreatesGroupMemberships extends Command
     public function handle(): int
     {
         $this->createGroupMemberships();
-        $this->friendlyPositive('Validated group memberships');
 
         return 0;
     }

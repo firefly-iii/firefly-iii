@@ -42,7 +42,7 @@ class CorrectsCurrencies extends Command
     use ShowsFriendlyMessages;
 
     protected $description = 'Enables all currencies in use.';
-    protected $signature   = 'firefly-iii:enable-currencies';
+    protected $signature   = 'correction:currencies';
 
     /**
      * Execute the console command.

@@ -52,7 +52,7 @@ class CorrectsNativeAmounts extends Command
 
     protected $description = 'Recalculate native amounts for all objects.';
 
-    protected $signature   = 'firefly-iii:recalculate-native-amounts';
+    protected $signature   = 'correction:recalculate-native-amounts';
 
     /**
      * Execute the console command.

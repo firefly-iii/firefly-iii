@@ -28,13 +28,10 @@ use FireflyIII\Models\Account;
 use FireflyIII\Services\Internal\Support\CreditRecalculateService;
 use Illuminate\Console\Command;
 
-/**
- * Class CorrectionSkeleton
- */
 class TriggersCreditCalculation extends Command
 {
     protected $description = 'Triggers the credit recalculation service for liabilities.';
-    protected $signature   = 'firefly-iii:trigger-credit-recalculation';
+    protected $signature   = 'correction:recalculates-liabilities';
 
     /**
      * Execute the console command.

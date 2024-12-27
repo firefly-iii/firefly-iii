@@ -37,7 +37,7 @@ class RemovesBills extends Command
     use ShowsFriendlyMessages;
 
     protected $description = 'Remove bills from transactions that shouldn\'t have one.';
-    protected $signature   = 'firefly-iii:remove-bills';
+    protected $signature   = 'correction:bills';
 
     /**
      * Execute the console command.
@@ -60,7 +60,6 @@ class RemovesBills extends Command
         if ($journals->count() > 0) {
             $this->friendlyInfo('Fixed all transaction journals so they have correct bill information.');
         }
-        $this->friendlyPositive('All bills and journals are OK');
 
         return 0;
     }

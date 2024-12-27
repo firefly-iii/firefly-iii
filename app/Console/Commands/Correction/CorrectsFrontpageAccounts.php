@@ -36,7 +36,7 @@ class CorrectsFrontpageAccounts extends Command
     use ShowsFriendlyMessages;
 
     protected $description = 'Fixes a preference that may include deleted accounts or accounts of another type.';
-    protected $signature   = 'firefly-iii:fix-frontpage-accounts';
+    protected $signature   = 'correction:frontpage-accounts';
 
     /**
      * Execute the console command.
@@ -52,8 +52,6 @@ class CorrectsFrontpageAccounts extends Command
                 $this->fixPreference($preference);
             }
         }
-        $this->friendlyPositive('Account preferences are OK');
-
         return 0;
     }
 

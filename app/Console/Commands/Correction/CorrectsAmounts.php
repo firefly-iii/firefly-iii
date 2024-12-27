@@ -41,7 +41,7 @@ class CorrectsAmounts extends Command
     use ShowsFriendlyMessages;
 
     protected $description = 'This command makes sure positive and negative amounts are recorded correctly.';
-    protected $signature   = 'correction:fix-amount-pos-neg';
+    protected $signature   = 'correction:amounts';
 
     public function handle(): int
     {
@@ -69,7 +69,6 @@ class CorrectsAmounts extends Command
     {
         $count = AutoBudget::where('amount', '<', 0)->update(['amount' => DB::raw('amount * -1')]);
         if (0 === $count) {
-            $this->friendlyPositive('All auto budget amounts are positive.');
 
             return;
         }
@@ -80,7 +79,6 @@ class CorrectsAmounts extends Command
     {
         $count = AvailableBudget::where('amount', '<', 0)->update(['amount' => DB::raw('amount * -1')]);
         if (0 === $count) {
-            $this->friendlyPositive('All available budget amounts are positive.');
 
             return;
         }
@@ -93,7 +91,6 @@ class CorrectsAmounts extends Command
         $count += Bill::where('amount_max', '<', 0)->update(['amount_max' => DB::raw('amount_max * -1')]);
         $count += Bill::where('amount_min', '<', 0)->update(['amount_min' => DB::raw('amount_min * -1')]);
         if (0 === $count) {
-            $this->friendlyPositive('All bill amounts are positive.');
 
             return;
         }
@@ -104,7 +101,6 @@ class CorrectsAmounts extends Command
     {
         $count = BudgetLimit::where('amount', '<', 0)->update(['amount' => DB::raw('amount * -1')]);
         if (0 === $count) {
-            $this->friendlyPositive('All budget limit amounts are positive.');
 
             return;
         }
@@ -115,7 +111,6 @@ class CorrectsAmounts extends Command
     {
         $count = CurrencyExchangeRate::where('rate', '<', 0)->update(['rate' => DB::raw('rate * -1')]);
         if (0 === $count) {
-            $this->friendlyPositive('All currency exchange rates are positive.');
 
             return;
         }
@@ -126,7 +121,6 @@ class CorrectsAmounts extends Command
     {
         $count = PiggyBank::where('target_amount', '<', 0)->update(['target_amount' => DB::raw('target_amount * -1')]);
         if (0 === $count) {
-            $this->friendlyPositive('All piggy bank amounts are positive.');
 
             return;
         }
@@ -139,7 +133,6 @@ class CorrectsAmounts extends Command
         $count += RecurrenceTransaction::where('amount', '<', 0)->update(['amount' => DB::raw('amount * -1')]);
         $count += RecurrenceTransaction::where('foreign_amount', '<', 0)->update(['foreign_amount' => DB::raw('foreign_amount * -1')]);
         if (0 === $count) {
-            $this->friendlyPositive('All recurring transaction amounts are positive.');
 
             return;
         }
@@ -162,7 +155,6 @@ class CorrectsAmounts extends Command
             }
         }
         if (0 === $fixed) {
-            $this->friendlyPositive('All rule trigger amounts are positive.');
 
             return;
         }

@@ -37,7 +37,7 @@ class CreatesLinkTypes extends Command
 
     protected $description = 'Creates all link types.';
 
-    protected $signature   = 'firefly-iii:create-link-types';
+    protected $signature   = 'correction:link-types';
 
     /**
      * Execute the console command.
@@ -65,9 +65,6 @@ class CreatesLinkTypes extends Command
             }
             $link->editable = false;
             $link->save();
-        }
-        if (0 === $count) {
-            $this->friendlyPositive('All link types are OK');
         }
 
         return 0;

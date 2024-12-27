@@ -26,13 +26,14 @@ namespace FireflyIII\Console\Commands\Correction;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
-class CorrectsMetDataFields extends Command
+class CorrectsMetaDataFields extends Command
 {
     use ShowsFriendlyMessages;
 
     protected $description = 'Rename changed meta fields.';
-    protected $signature   = 'firefly-iii:rename-meta-fields';
+    protected $signature   = 'correction:meta-fields';
 
     private int $count     = 0;
 
@@ -58,9 +59,6 @@ class CorrectsMetDataFields extends Command
         foreach ($changes as $original => $update) {
             $this->rename($original, $update);
         }
-        if (0 === $this->count) {
-            $this->friendlyPositive('All meta fields are correct.');
-        }
         if (0 !== $this->count) {
             $this->friendlyInfo(sprintf('Renamed %d meta field(s).', $this->count));
         }
@@ -70,7 +68,7 @@ class CorrectsMetDataFields extends Command
 
     private function rename(string $original, string $update): void
     {
-        $total = \DB::table('journal_meta')
+        $total = DB::table('journal_meta')
             ->where('name', '=', $original)
             ->update(['name' => $update])
         ;

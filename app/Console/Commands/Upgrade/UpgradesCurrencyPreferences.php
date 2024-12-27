@@ -32,9 +32,6 @@ use FireflyIII\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 
-/**
- * Class UpgradesCurrencyPreferences
- */
 class UpgradesCurrencyPreferences extends Command
 {
     use ShowsFriendlyMessages;

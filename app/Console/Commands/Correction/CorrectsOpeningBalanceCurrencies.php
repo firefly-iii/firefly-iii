@@ -40,7 +40,7 @@ class CorrectsOpeningBalanceCurrencies extends Command
     use ShowsFriendlyMessages;
 
     protected $description = 'Will make sure that opening balance transaction currencies match the account they\'re for.';
-    protected $signature   = 'firefly-iii:fix-ob-currencies';
+    protected $signature   = 'correction:opening-balance-currencies';
 
     /**
      * Execute the console command.
@@ -58,10 +58,6 @@ class CorrectsOpeningBalanceCurrencies extends Command
         if ($count > 0) {
             $message = sprintf('Corrected %d opening balance transaction(s).', $count);
             $this->friendlyInfo($message);
-        }
-        if (0 === $count) {
-            $message = 'There was nothing to fix in the opening balance transactions.';
-            $this->friendlyPositive($message);
         }
 
         return 0;

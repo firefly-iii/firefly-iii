@@ -38,7 +38,7 @@ class RemovesOrphanedTransactions extends Command
 
     protected $description = 'Deletes orphaned transactions.';
 
-    protected $signature   = 'firefly-iii:delete-orphaned-transactions';
+    protected $signature   = 'correction:orphaned-transactions';
 
     /**
      * Execute the console command.
@@ -63,7 +63,7 @@ class RemovesOrphanedTransactions extends Command
         ;
         $count = $set->count();
         if (0 === $count) {
-            $this->friendlyPositive('No orphaned journals.');
+            //$this->friendlyPositive('No orphaned journals.');
 
             return;
         }
@@ -116,9 +116,6 @@ class RemovesOrphanedTransactions extends Command
                 ++$count;
             }
         }
-        if (0 === $count) {
-            $this->friendlyPositive('No orphaned transactions.');
-        }
     }
 
     private function deleteFromOrphanedAccounts(): void
@@ -146,9 +143,6 @@ class RemovesOrphanedTransactions extends Command
                 )
             );
             ++$count;
-        }
-        if (0 === $count) {
-            $this->friendlyPositive('No orphaned accounts.');
         }
     }
 }

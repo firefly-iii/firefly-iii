@@ -29,16 +29,13 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
 
-/**
- * Class DeleteZeroAmount
- */
-class DeletesZeroAmount extends Command
+class RemovesZeroAmount extends Command
 {
     use ShowsFriendlyMessages;
 
     protected $description = 'Delete transactions with zero amount.';
 
-    protected $signature   = 'firefly-iii:delete-zero-amount';
+    protected $signature   = 'correction:zero-amounts';
 
     /**
      * Execute the console command.
@@ -55,9 +52,6 @@ class DeletesZeroAmount extends Command
             $journal->delete();
 
             Transaction::where('transaction_journal_id', $journal->id)->delete();
-        }
-        if (0 === $journals->count()) {
-            $this->friendlyPositive('No zero-amount transaction journals.');
         }
 
         return 0;

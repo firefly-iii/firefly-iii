@@ -50,7 +50,7 @@ class CorrectsGroupInformation extends Command
     use ShowsFriendlyMessages;
 
     protected $description = 'Makes sure that every object is linked to a group';
-    protected $signature   = 'firefly-iii:upgrade-group-information';
+    protected $signature   = 'correction:group-information';
 
     /**
      * Execute the console command.

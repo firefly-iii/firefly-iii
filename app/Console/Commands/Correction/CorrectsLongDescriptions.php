@@ -28,6 +28,7 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class CorrectsLongDescriptions extends Command
 {
@@ -35,14 +36,14 @@ class CorrectsLongDescriptions extends Command
 
     private const int MAX_LENGTH = 1000;
     protected $description       = 'Fixes long descriptions in journals and groups.';
-    protected $signature         = 'firefly-iii:fix-long-descriptions';
+    protected $signature         = 'correction:long-descriptions';
 
     /**
      * Execute the console command.
      */
     public function handle(): int
     {
-        $journals = TransactionJournal::get(['id', 'description']);
+        $journals = TransactionJournal::where(DB::raw('LENGTH(description)'),'>', self::MAX_LENGTH)->get(['id', 'description']);
         $count    = 0;
 
         /** @var TransactionJournal $journal */
@@ -55,7 +56,7 @@ class CorrectsLongDescriptions extends Command
             }
         }
 
-        $groups   = TransactionGroup::get(['id', 'title']);
+        $groups   = TransactionGroup::where(DB::raw('LENGTH(title)'),'>', self::MAX_LENGTH)->get(['id', 'title']);
 
         /** @var TransactionGroup $group */
         foreach ($groups as $group) {
@@ -65,9 +66,6 @@ class CorrectsLongDescriptions extends Command
                 $this->friendlyWarning(sprintf('Truncated description of transaction group #%d', $group->id));
                 ++$count;
             }
-        }
-        if (0 === $count) {
-            $this->friendlyPositive('All transaction group and journal title lengths are within bounds.');
         }
 
         return 0;

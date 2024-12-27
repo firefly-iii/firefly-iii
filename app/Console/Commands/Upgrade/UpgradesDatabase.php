@@ -63,6 +63,10 @@ class UpgradesDatabase extends Command
             'upgrade:550-budget-limit-periods',
             'upgrade:600-rule-actions',
             'upgrade:610-account-balance',
+            'upgrade:610-currency-preferences',
+            'upgrade:610-currency-preferences',
+            'upgrade:620-piggy-banks',
+            'upgrade:620-native-amounts',
             'firefly-iii:correct-database',
         ];
         $args     = [];

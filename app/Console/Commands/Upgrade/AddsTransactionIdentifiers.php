@@ -32,9 +32,6 @@ use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 
-/**
- * Class TransactionIdentifier
- */
 class AddsTransactionIdentifiers extends Command
 {
     use ShowsFriendlyMessages;

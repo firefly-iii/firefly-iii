@@ -14,7 +14,7 @@ class UpgradeSkeleton extends Command
 
     protected $description = 'SOME DESCRIPTION';
 
-    protected $signature = 'firefly-iii:UPGRSKELETON {--F|force : Force the execution of this command.}';
+    protected $signature = 'upgrade:UPGRSKELETON {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.

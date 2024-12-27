@@ -39,7 +39,7 @@ class CorrectsPiggyBanks extends Command
     use ShowsFriendlyMessages;
 
     protected $description = 'Fixes common issues with piggy banks.';
-    protected $signature   = 'firefly-iii:fix-piggies';
+    protected $signature   = 'correction:piggy-banks';
 
     /**
      * Execute the console command.
@@ -65,9 +65,6 @@ class CorrectsPiggyBanks extends Command
 
                 continue;
             }
-        }
-        if (0 === $count) {
-            $this->friendlyPositive('All piggy bank events are OK.');
         }
         if (0 !== $count) {
             $this->friendlyInfo(sprintf('Fixed %d piggy bank event(s).', $count));
