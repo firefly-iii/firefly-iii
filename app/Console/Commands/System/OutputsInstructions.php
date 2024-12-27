@@ -27,16 +27,13 @@ namespace FireflyIII\Console\Commands\System;
 use FireflyIII\Support\System\GeneratesInstallationId;
 use Illuminate\Console\Command;
 
-/**
- * Class UpgradeFireflyInstructions.
- */
-class UpgradeFireflyInstructions extends Command
+class OutputsInstructions extends Command
 {
     use GeneratesInstallationId;
 
     protected $description = 'Instructions in case of upgrade trouble.';
 
-    protected $signature   = 'firefly:instructions {task}';
+    protected $signature   = 'firefly-iii:instructions {task=install}';
 
     /**
      * Execute the console command.
@@ -79,7 +76,7 @@ class UpgradeFireflyInstructions extends Command
         }
 
         $prefix  = 'v';
-        if (str_starts_with($version, 'develop')) {
+        if (str_starts_with($version, 'develop') || str_starts_with($version, 'branch')) {
             $prefix = '';
         }
 
@@ -94,6 +91,8 @@ class UpgradeFireflyInstructions extends Command
             $this->boxedInfo('There are no extra upgrade instructions.');
             $this->boxed('Firefly III should be ready for use.');
             $this->boxed('');
+            $this->donationText();
+            $this->boxed('');
             $this->showLine();
 
             return;
@@ -101,6 +100,8 @@ class UpgradeFireflyInstructions extends Command
 
         $this->boxed(sprintf('Thank you for updating to Firefly III, %s%s!', $prefix, $version));
         $this->boxedInfo($text);
+        $this->boxed('');
+        $this->donationText();
         $this->boxed('');
         $this->showLine();
     }
@@ -213,6 +214,8 @@ class UpgradeFireflyInstructions extends Command
             $this->boxedInfo('There are no extra installation instructions.');
             $this->boxed('Firefly III should be ready for use.');
             $this->boxed('');
+            $this->donationText();
+            $this->boxed('');
             $this->showLine();
 
             return;
@@ -221,6 +224,15 @@ class UpgradeFireflyInstructions extends Command
         $this->boxed(sprintf('Thank you for installing Firefly III, %s%s!', $prefix, $version));
         $this->boxedInfo($text);
         $this->boxed('');
+        $this->donationText();
+        $this->boxed('');
         $this->showLine();
+    }
+
+    private function donationText(): void
+    {
+        $this->boxed('Did you know you can support the development of Firefly III?');
+        $this->boxed('You can donate in many ways, like GitHub Sponsors or Patreon.');
+        $this->boxed('For more information, please visit https://bit.ly/donate-to-Firefly-III');
     }
 }

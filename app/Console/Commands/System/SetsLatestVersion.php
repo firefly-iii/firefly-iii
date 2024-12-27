@@ -1,7 +1,7 @@
 <?php
 
 /*
- * OutputVersion.php
+ * SetLatestVersion.php
  * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -24,23 +24,30 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\System;
 
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 
-/**
- * Class OutputVersion
- */
-class OutputVersion extends Command
+class SetsLatestVersion extends Command
 {
-    protected $description = 'Outputs the Firefly III version';
+    use ShowsFriendlyMessages;
 
-    protected $signature   = 'firefly-iii:output-version';
+    protected $description = 'Set latest version in DB.';
+
+    protected $signature   = 'firefly-iii:set-latest-version {--james-is-cool}';
 
     /**
      * Execute the console command.
      */
     public function handle(): int
     {
-        echo config('firefly.version');
+        if (!$this->option('james-is-cool')) {
+            $this->friendlyError('Am too!');
+
+            return 0;
+        }
+        app('fireflyconfig')->set('db_version', config('firefly.db_version'));
+        app('fireflyconfig')->set('ff3_version', config('firefly.version'));
+        $this->friendlyInfo('Updated version.');
 
         return 0;
     }

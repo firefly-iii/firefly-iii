@@ -29,9 +29,6 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 
-/**
- * Class CreateAccessTokens
- */
 class CreatesAccessTokens extends Command
 {
     use ShowsFriendlyMessages;

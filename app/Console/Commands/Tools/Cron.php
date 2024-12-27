@@ -34,9 +34,6 @@ use FireflyIII\Support\Cronjobs\RecurringCronjob;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-/**
- * Class Cron
- */
 class Cron extends Command
 {
     use ShowsFriendlyMessages;

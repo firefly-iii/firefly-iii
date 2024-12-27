@@ -31,9 +31,6 @@ use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
 use Illuminate\Console\Command;
 
-/**
- * Class ReportEmptyObjects
- */
 class ReportsEmptyObjects extends Command
 {
     use ShowsFriendlyMessages;

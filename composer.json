@@ -172,13 +172,11 @@
             "@php artisan clear-compiled",
             "@php artisan cache:clear",
             "@php artisan firefly-iii:upgrade-database",
-            "@php artisan firefly-iii:correct-database",
-            "@php artisan firefly-iii:report-integrity",
             "@php artisan firefly-iii:laravel-passport-keys",
-            "@php artisan firefly:instructions update"
+            "@php artisan firefly-iii:instructions update"
         ],
         "post-install-cmd": [
-            "@php artisan firefly:instructions install",
+            "@php artisan firefly-iii:instructions install",
             "@php artisan firefly-iii:verify-security-alerts"
         ],
         "unit-test": [

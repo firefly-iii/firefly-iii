@@ -44,13 +44,11 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Class ForceDecimalSize
- *
  * This command was inspired by https://github.com/elliot-gh. It will check all amount fields
  * and their values and correct them to the correct number of decimal places. This fixes issues where
  * Firefly III would store 0.01 as 0.01000000000000000020816681711721685132943093776702880859375.
  */
-class ForceDecimalSize extends Command
+class ForcesDecimalSize extends Command
 {
     use ShowsFriendlyMessages;
 

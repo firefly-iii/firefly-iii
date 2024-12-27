@@ -29,9 +29,6 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Console\Command;
 
-/**
- * Class RemoveBills
- */
 class RemovesBills extends Command
 {
     use ShowsFriendlyMessages;

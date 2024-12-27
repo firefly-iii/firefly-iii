@@ -36,10 +36,7 @@ use FireflyIII\Support\Export\ExportDataGenerator;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 
-/**
- * Class ExportData
- */
-class ExportData extends Command
+class ExportsData extends Command
 {
     use ShowsFriendlyMessages;
     use VerifiesAccessToken;

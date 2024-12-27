@@ -29,11 +29,6 @@ use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
 
-/**
- * Report (and fix) piggy banks.
- *
- * Class FixPiggies
- */
 class CorrectsPiggyBanks extends Command
 {
     use ShowsFriendlyMessages;

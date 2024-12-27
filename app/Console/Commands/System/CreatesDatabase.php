@@ -28,10 +28,7 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 use PDO;
 
-/**
- * Class CreateDatabase
- */
-class CreateDatabase extends Command
+class CreatesDatabase extends Command
 {
     use ShowsFriendlyMessages;
 

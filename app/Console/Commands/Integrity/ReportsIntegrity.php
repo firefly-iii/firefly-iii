@@ -27,9 +27,6 @@ namespace FireflyIII\Console\Commands\Integrity;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 
-/**
- * Class ReportIntegrity
- */
 class ReportsIntegrity extends Command
 {
     use ShowsFriendlyMessages;

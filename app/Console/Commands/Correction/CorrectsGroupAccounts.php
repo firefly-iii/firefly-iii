@@ -31,9 +31,6 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
 
-/**
- * Class FixGroupAccounts
- */
 class CorrectsGroupAccounts extends Command
 {
     use ShowsFriendlyMessages;

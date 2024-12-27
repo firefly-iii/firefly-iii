@@ -28,9 +28,6 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Support\System\OAuthKeys;
 use Illuminate\Console\Command;
 
-/**
- * Class RestoreOAuthKeys
- */
 class RestoresOAuthKeys extends Command
 {
     use ShowsFriendlyMessages;

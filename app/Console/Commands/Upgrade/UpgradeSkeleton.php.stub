@@ -4,9 +4,6 @@ namespace FireflyIII\Console\Commands\Upgrade;
 
 use Illuminate\Console\Command;
 
-/**
- * Class UpgradeSkeleton.
- */
 class UpgradeSkeleton extends Command
 {
     use ShowsFriendlyMessages;

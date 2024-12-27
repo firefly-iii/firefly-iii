@@ -29,9 +29,6 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\TransactionGroup;
 use Illuminate\Console\Command;
 
-/**
- * Class DeleteEmptyGroups
- */
 class RemovesEmptyGroups extends Command
 {
     use ShowsFriendlyMessages;

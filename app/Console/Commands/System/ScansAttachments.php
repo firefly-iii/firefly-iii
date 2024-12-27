@@ -29,10 +29,7 @@ use FireflyIII\Models\Attachment;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Encryption\DecryptException;
 
-/**
- * Class ScanAttachments.
- */
-class ScanAttachments extends Command
+class ScansAttachments extends Command
 {
     use ShowsFriendlyMessages;
 

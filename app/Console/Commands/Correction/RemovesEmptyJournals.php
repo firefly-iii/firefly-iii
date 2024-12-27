@@ -30,9 +30,6 @@ use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 
-/**
- * Class DeleteEmptyJournals
- */
 class RemovesEmptyJournals extends Command
 {
     use ShowsFriendlyMessages;

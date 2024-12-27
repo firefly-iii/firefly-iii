@@ -28,9 +28,6 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\LinkType;
 use Illuminate\Console\Command;
 
-/**
- * Class CreateLinkTypes. Created all link types in case a migration hasn't fired.
- */
 class CreatesLinkTypes extends Command
 {
     use ShowsFriendlyMessages;

@@ -28,7 +28,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Symfony\Component\Console\Command\Command as CommandAlias;
 
-class LaravelPassportKeys extends Command
+class CallsLaravelPassportKeys extends Command
 {
     use ShowsFriendlyMessages;
 

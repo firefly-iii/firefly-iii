@@ -33,9 +33,6 @@ use FireflyIII\Support\Models\AccountBalanceCalculator;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-/**
- * Class FixUnevenAmount
- */
 class CorrectsUnevenAmount extends Command
 {
     use ShowsFriendlyMessages;
