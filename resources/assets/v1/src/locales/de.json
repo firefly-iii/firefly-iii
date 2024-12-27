@@ -21,7 +21,7 @@
         "apply_rules_checkbox": "Regeln anwenden",
         "fire_webhooks_checkbox": "Webhooks abfeuern",
         "no_budget_pointer": "Sie scheinen noch keine Budgets festgelegt zu haben. Sie sollten einige davon auf der Seite <a href=\"budgets\">Budgets<\/a> anlegen. Budgets k\u00f6nnen Ihnen dabei helfen, den \u00dcberblick \u00fcber die Ausgaben zu behalten.",
-        "no_bill_pointer": "You seem to have no subscription yet. You should create some on the <a href=\"subscriptions\">subscription<\/a>-page. Subscriptions can help you keep track of expenses.",
+        "no_bill_pointer": "Sie scheinen noch kein Abonnement zu haben. Sie sollten einige auf der Seite <a href=\"subscriptions\">Abonnement<\/a> erstellen. Abonnements k\u00f6nnen Ihnen helfen, den \u00dcberblick \u00fcber Ihre Ausgaben zu behalten.",
         "source_account": "Quellkonto",
         "hidden_fields_preferences": "Sie k\u00f6nnen weitere Buchungsoptionen in Ihren <a href=\"preferences\">Einstellungen<\/a> aktivieren.",
         "destination_account": "Zielkonto",

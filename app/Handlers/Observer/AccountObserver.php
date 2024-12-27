@@ -37,7 +37,7 @@ class AccountObserver
 {
     public function created(Account $account): void
     {
-//        Log::debug('Observe "created" of an account.');
+        //        Log::debug('Observe "created" of an account.');
         $this->updateNativeAmount($account);
     }
 
@@ -57,7 +57,7 @@ class AccountObserver
             $account->native_virtual_balance = null;
         }
         $account->saveQuietly();
-        //Log::debug('Account native virtual balance is updated.');
+        // Log::debug('Account native virtual balance is updated.');
     }
 
     /**
@@ -65,7 +65,7 @@ class AccountObserver
      */
     public function deleting(Account $account): void
     {
-//        app('log')->debug('Observe "deleting" of an account.');
+        //        app('log')->debug('Observe "deleting" of an account.');
         $account->accountMeta()->delete();
 
         /** @var PiggyBank $piggy */
@@ -84,7 +84,7 @@ class AccountObserver
 
     public function updated(Account $account): void
     {
-//        Log::debug('Observe "updated" of an account.');
+        //        Log::debug('Observe "updated" of an account.');
         $this->updateNativeAmount($account);
     }
 }
