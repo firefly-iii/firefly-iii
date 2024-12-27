@@ -76,6 +76,10 @@ class DebugController extends Controller
                 || str_starts_with($route->uri(), '_debugbar')
                 || str_starts_with($route->uri(), '_ignition')
                 || str_starts_with($route->uri(), 'oauth')
+                || str_starts_with($route->uri(), 'chart')
+                || str_starts_with($route->uri(), 'v1/jscript')
+                || str_starts_with($route->uri(), 'v2/jscript')
+                || str_starts_with($route->uri(), 'json')
                 || str_starts_with($route->uri(), 'sanctum')
             ) {
                 continue;

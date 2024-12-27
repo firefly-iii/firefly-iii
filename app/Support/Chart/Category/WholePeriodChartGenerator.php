@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Chart\Category;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -36,6 +37,8 @@ use Illuminate\Support\Collection;
  */
 class WholePeriodChartGenerator
 {
+    public bool $convertToNative;
+
     public function generate(Category $category, Carbon $start, Carbon $end): array
     {
         $collection        = new Collection([$category]);
@@ -46,7 +49,7 @@ class WholePeriodChartGenerator
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
 
-        $types             = [AccountType::DEFAULT, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
+        $types             = [AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value];
         $accounts          = $accountRepository->getAccountsByType($types);
         $step              = $this->calculateStep($start, $end);
         $chartData         = [];
