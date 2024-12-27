@@ -10,7 +10,7 @@ on:
       phpversion:
         description: 'PHP version'
         required: true
-        default: '8.3'
+        default: '8.4'
   schedule:
     - cron: '0 3 * * MON'
 
