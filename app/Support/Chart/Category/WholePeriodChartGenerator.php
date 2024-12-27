@@ -26,7 +26,6 @@ namespace FireflyIII\Support\Chart\Category;
 
 use Carbon\Carbon;
 use FireflyIII\Enums\AccountTypeEnum;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\OperationsRepositoryInterface;

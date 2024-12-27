@@ -74,7 +74,7 @@ class NetWorth implements NetWorthInterface
         $cache->addProperty('net-worth-by-accounts');
         $cache->addProperty($ids);
         if ($cache->has()) {
-             return $cache->get();
+            return $cache->get();
         }
         Log::debug(sprintf('Now in byAccounts("%s", "%s")', $ids, $date->format('Y-m-d H:i:s')));
         $default         = Amount::getDefaultCurrency();

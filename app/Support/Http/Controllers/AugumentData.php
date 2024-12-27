@@ -183,7 +183,7 @@ trait AugumentData
         $cache->addProperty('get-limits');
 
         if ($cache->has()) {
-              return $cache->get();
+            return $cache->get();
         }
 
         $set              = $blRepository->getBudgetLimits($budget, $start, $end);
@@ -191,12 +191,12 @@ trait AugumentData
         $budgetCollection = new Collection([$budget]);
 
         // merge sets based on a key, in case of convert to native
-        $limits = new Collection();
+        $limits           = new Collection();
 
         /** @var BudgetLimit $entry */
         foreach ($set as $entry) {
             $currency     = $entry->transactionCurrency;
-            if($this->convertToNative) {
+            if ($this->convertToNative) {
                 // the sumExpenses method already handles this.
                 $currency = $this->defaultCurrency;
             }

@@ -63,13 +63,13 @@ class OperationsRepository implements OperationsRepositoryInterface
             $collector->setCategories($this->getCategories());
         }
         $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation();
-        $journals = $collector->getExtractedJournals();
-        $array    = [];
+        $journals  = $collector->getExtractedJournals();
+        $array     = [];
 
         foreach ($journals as $journal) {
-            $currencyId   = (int) $journal['currency_id'];
-            $categoryId   = (int) $journal['category_id'];
-            $categoryName = (string) $journal['category_name'];
+            $currencyId                                                                        = (int) $journal['currency_id'];
+            $categoryId                                                                        = (int) $journal['category_id'];
+            $categoryName                                                                      = (string) $journal['category_name'];
 
             // catch "no category" entries.
             if (0 === $categoryId) {
@@ -77,7 +77,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             }
 
             // info about the currency:
-            $array[$currencyId] ??= [
+            $array[$currencyId]                            ??= [
                 'categories'              => [],
                 'currency_id'             => (string) $currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -112,7 +112,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         return $array;
     }
 
-    public function setUser(null | Authenticatable | User $user): void
+    public function setUser(null|Authenticatable|User $user): void
     {
         if ($user instanceof User) {
             $this->user = $user;
@@ -147,13 +147,13 @@ class OperationsRepository implements OperationsRepositoryInterface
             $collector->setCategories($this->getCategories());
         }
         $collector->withCategoryInformation()->withAccountInformation();
-        $journals = $collector->getExtractedJournals();
-        $array    = [];
+        $journals  = $collector->getExtractedJournals();
+        $array     = [];
 
         foreach ($journals as $journal) {
-            $currencyId   = (int) $journal['currency_id'];
-            $categoryId   = (int) $journal['category_id'];
-            $categoryName = (string) $journal['category_name'];
+            $currencyId                                                                        = (int) $journal['currency_id'];
+            $categoryId                                                                        = (int) $journal['category_id'];
+            $categoryName                                                                      = (string) $journal['category_name'];
 
             // catch "no category" entries.
             if (0 === $categoryId) {
@@ -161,7 +161,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             }
 
             // info about the currency:
-            $array[$currencyId] ??= [
+            $array[$currencyId]                            ??= [
                 'categories'              => [],
                 'currency_id'             => (string) $currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -200,7 +200,8 @@ class OperationsRepository implements OperationsRepositoryInterface
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::TRANSFER])
-                  ->setDestinationAccounts($accounts)->excludeSourceAccounts($accounts);
+            ->setDestinationAccounts($accounts)->excludeSourceAccounts($accounts)
+        ;
         if (null !== $categories && $categories->count() > 0) {
             $collector->setCategories($categories);
         }
@@ -208,13 +209,13 @@ class OperationsRepository implements OperationsRepositoryInterface
             $collector->setCategories($this->getCategories());
         }
         $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation();
-        $journals = $collector->getExtractedJournals();
-        $array    = [];
+        $journals  = $collector->getExtractedJournals();
+        $array     = [];
 
         foreach ($journals as $journal) {
-            $currencyId   = (int) $journal['currency_id'];
-            $categoryId   = (int) $journal['category_id'];
-            $categoryName = (string) $journal['category_name'];
+            $currencyId                                                                        = (int) $journal['currency_id'];
+            $categoryId                                                                        = (int) $journal['category_id'];
+            $categoryName                                                                      = (string) $journal['category_name'];
 
             // catch "no category" entries.
             if (0 === $categoryId) {
@@ -222,7 +223,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             }
 
             // info about the currency:
-            $array[$currencyId] ??= [
+            $array[$currencyId]                            ??= [
                 'categories'              => [],
                 'currency_id'             => (string) $currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -262,7 +263,8 @@ class OperationsRepository implements OperationsRepositoryInterface
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::TRANSFER])
-                  ->setSourceAccounts($accounts)->excludeDestinationAccounts($accounts);
+            ->setSourceAccounts($accounts)->excludeDestinationAccounts($accounts)
+        ;
         if (null !== $categories && $categories->count() > 0) {
             $collector->setCategories($categories);
         }
@@ -270,13 +272,13 @@ class OperationsRepository implements OperationsRepositoryInterface
             $collector->setCategories($this->getCategories());
         }
         $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation();
-        $journals = $collector->getExtractedJournals();
-        $array    = [];
+        $journals  = $collector->getExtractedJournals();
+        $array     = [];
 
         foreach ($journals as $journal) {
-            $currencyId   = (int) $journal['currency_id'];
-            $categoryId   = (int) $journal['category_id'];
-            $categoryName = (string) $journal['category_name'];
+            $currencyId                                                                        = (int) $journal['currency_id'];
+            $categoryId                                                                        = (int) $journal['category_id'];
+            $categoryName                                                                      = (string) $journal['category_name'];
 
             // catch "no category" entries.
             if (0 === $categoryId) {
@@ -284,7 +286,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             }
 
             // info about the currency:
-            $array[$currencyId] ??= [
+            $array[$currencyId]                            ??= [
                 'categories'              => [],
                 'currency_id'             => (string) $currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -325,7 +327,7 @@ class OperationsRepository implements OperationsRepositoryInterface
     public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector       = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
 
         // default currency information for native stuff.
@@ -339,19 +341,19 @@ class OperationsRepository implements OperationsRepositoryInterface
         }
         $collector->setCategories($categories);
         $collector->withCategoryInformation();
-        $journals = $collector->getExtractedJournals();
-        $array    = [];
+        $journals        = $collector->getExtractedJournals();
+        $array           = [];
 
         Log::debug(sprintf('Collected %d journals', count($journals)));
 
         foreach ($journals as $journal) {
             // Almost the same as in \FireflyIII\Repositories\Budget\OperationsRepository::sumExpenses
-            $amount                = '0';
-            $currencyId            = (int) $journal['currency_id'];
-            $currencyName          = $journal['currency_name'];
-            $currencySymbol        = $journal['currency_symbol'];
-            $currencyCode          = $journal['currency_code'];
-            $currencyDecimalPlaces = $journal['currency_decimal_places'];
+            $amount                    = '0';
+            $currencyId                = (int) $journal['currency_id'];
+            $currencyName              = $journal['currency_name'];
+            $currencySymbol            = $journal['currency_symbol'];
+            $currencyCode              = $journal['currency_code'];
+            $currencyDecimalPlaces     = $journal['currency_decimal_places'];
             if ($convertToNative) {
                 $amount = Amount::getAmountFromJournal($journal);
                 if ($default->id !== (int) $journal['currency_id'] && $default->id !== (int) $journal['foreign_currency_id']) {
@@ -376,7 +378,7 @@ class OperationsRepository implements OperationsRepositoryInterface
                 $amount = $journal['amount'];
             }
 
-            $array[$currencyId]        ??= [
+            $array[$currencyId] ??= [
                 'sum'                     => '0',
                 'currency_id'             => (string) $currencyId,
                 'currency_name'           => $currencyName,
@@ -396,9 +398,10 @@ class OperationsRepository implements OperationsRepositoryInterface
     public function sumIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector       = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)
-                  ->setTypes([TransactionTypeEnum::DEPOSIT->value]);
+            ->setTypes([TransactionTypeEnum::DEPOSIT->value])
+        ;
 
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
@@ -407,19 +410,19 @@ class OperationsRepository implements OperationsRepositoryInterface
             $categories = $this->getCategories();
         }
         $collector->setCategories($categories);
-        $journals = $collector->getExtractedJournals();
+        $journals        = $collector->getExtractedJournals();
         $convertToNative = app('preferences')->get('convert_to_native', false)->data;
         $default         = app('amount')->getDefaultCurrency();
-        $array    = [];
+        $array           = [];
 
         foreach ($journals as $journal) {
             // Almost the same as in \FireflyIII\Repositories\Budget\OperationsRepository::sumExpenses
-            $amount                = '0';
-            $currencyId            = (int) $journal['currency_id'];
-            $currencyName          = $journal['currency_name'];
-            $currencySymbol        = $journal['currency_symbol'];
-            $currencyCode          = $journal['currency_code'];
-            $currencyDecimalPlaces = $journal['currency_decimal_places'];
+            $amount                    = '0';
+            $currencyId                = (int) $journal['currency_id'];
+            $currencyName              = $journal['currency_name'];
+            $currencySymbol            = $journal['currency_symbol'];
+            $currencyCode              = $journal['currency_code'];
+            $currencyDecimalPlaces     = $journal['currency_decimal_places'];
             if ($convertToNative) {
                 $amount = Amount::getAmountFromJournal($journal);
                 if ($default->id !== (int) $journal['currency_id'] && $default->id !== (int) $journal['foreign_currency_id']) {
@@ -444,7 +447,7 @@ class OperationsRepository implements OperationsRepositoryInterface
                 $amount = $journal['amount'];
             }
 
-            $array[$currencyId]        ??= [
+            $array[$currencyId] ??= [
                 'sum'                     => '0',
                 'currency_id'             => (string) $currencyId,
                 'currency_name'           => $currencyName,
@@ -466,7 +469,8 @@ class OperationsRepository implements OperationsRepositoryInterface
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)
-                  ->setTypes([TransactionType::TRANSFER]);
+            ->setTypes([TransactionType::TRANSFER])
+        ;
 
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
@@ -475,12 +479,12 @@ class OperationsRepository implements OperationsRepositoryInterface
             $categories = $this->getCategories();
         }
         $collector->setCategories($categories);
-        $journals = $collector->getExtractedJournals();
-        $array    = [];
+        $journals  = $collector->getExtractedJournals();
+        $array     = [];
 
         foreach ($journals as $journal) {
             $currencyId                = (int) $journal['currency_id'];
-            $array[$currencyId]        ??= [
+            $array[$currencyId] ??= [
                 'sum'                     => '0',
                 'currency_id'             => (string) $currencyId,
                 'currency_name'           => $journal['currency_name'],
