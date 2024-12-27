@@ -116,6 +116,9 @@
                                     <small>{{ 'budgeted'|_ }}:
                                         <span class="text-success money-positive budgeted_amount" data-id="{{ budget.id }}" data-currency="{{ budget.transaction_currency.id }}">
                                         {{ formatAmountBySymbol(budget.budgeted, budget.transaction_currency.symbol, budget.transaction_currency.decimal_places, false) }}
+                                            {% if null != budget.native_budgeted %}
+                                            ({{ formatAmountBySymbol(budget.native_budgeted, defaultCurrency.symbol, defaultCurrency.decimal_places, false) }})
+                                            {% endif %}
                                     </span>
                                     </small>
                                 </div>
@@ -125,7 +128,13 @@
                                            data-id="{{ budget.id }}">{{ trans('firefly.available_between', {start: budget.start_date.isoFormat(monthAndDayFormat), end: budget.end_date.isoFormat(monthAndDayFormat) }) }}
                                         :
                                         <span class="available_amount" data-id="{{ budget.id }}" data-currency="{{ budget.transaction_currency.id }}"
-                                              data-value="{{ budget.amount }}">{{ formatAmountBySymbol(budget.amount, budget.transaction_currency.symbol, budget.transaction_currency.decimal_places, true) }}</span>
+                                              data-value="{{ budget.amount }}">
+                                            {{ formatAmountBySymbol(budget.amount, budget.transaction_currency.symbol, budget.transaction_currency.decimal_places, true) }}
+                                            {% if(convertToNative and 0 != budget.native_amount) %}
+                                            ({{ formatAmountBySymbol(budget.native_amount, defaultCurrency.symbol, defaultCurrency.decimal_places, true) }})
+                                            {% endif %}
+
+                                        </span>
                                     </small>
                                 </div>
                             </div>

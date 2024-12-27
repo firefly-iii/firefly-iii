@@ -158,12 +158,19 @@
                                     <td style="width:33%;">{{ 'amount'|_ }}</td>
                                     <td>
                                         {{ formatAmountBySymbol(limit.amount, limit.transactionCurrency.symbol, limit.transactionCurrency.decimal_places) }}
+                                        {% if convertToNative and 0 != limit.native_amount %}
+                                            ({{ formatAmountBySymbol(limit.native_amount, defaultCurrency.symbol, defaultCurrency.decimal_places) }})
+                                        {% endif %}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td style="width:33%;">{{ 'spent'|_ }}</td>
                                     <td>
-                                        {{ formatAmountBySymbol(limit.spent, limit.transactionCurrency.symbol, limit.transactionCurrency.decimal_places) }}
+                                        {% if convertToNative %}
+                                            {{ formatAmountBySymbol(limit.spent, defaultCurrency.symbol, defaultCurrency.decimal_places) }}
+                                        {% else %}
+                                            {{ formatAmountBySymbol(limit.spent, limit.transactionCurrency.symbol, limit.transactionCurrency.decimal_places) }}
+                                        {% endif %}
                                     </td>
                                 </tr>
                                 {% if limit.spent > 0 %}

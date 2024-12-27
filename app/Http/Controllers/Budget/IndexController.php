@@ -36,6 +36,7 @@ use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
@@ -161,6 +162,7 @@ class IndexController extends Controller
 
     private function getAllAvailableBudgets(Carbon $start, Carbon $end): array
     {
+        $converter = new ExchangeRateConverter();
         // get all available budgets.
         $ab               = $this->abRepository->get($start, $end);
         $availableBudgets = [];
@@ -175,14 +177,17 @@ class IndexController extends Controller
             // spent in period:
             $spentArr            = $this->opsRepository->sumExpenses($entry->start_date, $entry->end_date, null, null, $entry->transactionCurrency);
             $array['spent']      = $spentArr[$entry->transaction_currency_id]['sum'] ?? '0';
-
+            $array['native_spent'] = $this->convertToNative && $entry->transaction_currency_id !== $this->defaultCurrency->id ? $converter->convert($entry->transactionCurrency, $this->defaultCurrency, $entry->start_date, $array['spent']) : null;
             // budgeted in period:
             $budgeted            = $this->blRepository->budgeted($entry->start_date, $entry->end_date, $entry->transactionCurrency);
             $array['budgeted']   = $budgeted;
+            $array['native_budgeted'] = $this->convertToNative && $entry->transaction_currency_id !== $this->defaultCurrency->id ? $converter->convert($entry->transactionCurrency, $this->defaultCurrency, $entry->start_date, $budgeted) : null;
+            // this time, because of complex sums, use the currency converter.
+
+
             $availableBudgets[]  = $array;
             unset($spentArr);
         }
-
         return $availableBudgets;
     }
 

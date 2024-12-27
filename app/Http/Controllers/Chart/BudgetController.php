@@ -158,21 +158,28 @@ class BudgetController extends Controller
         $cache                                  = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
+        $cache->addProperty($this->convertToNative);
         $cache->addProperty('chart.budget.budget.limit');
         $cache->addProperty($budgetLimit->id);
         $cache->addProperty($budget->id);
 
         if ($cache->has()) {
-            return response()->json($cache->get());
+             return response()->json($cache->get());
         }
         $locale                                 = app('steam')->getLocale();
         $entries                                = [];
         $amount                                 = $budgetLimit->amount;
         $budgetCollection                       = new Collection([$budget]);
         $currency                               = $budgetLimit->transactionCurrency;
+        if($this->convertToNative) {
+            $amount                                 = $budgetLimit->native_amount;
+            $currency = $this->defaultCurrency;
+        }
+
+
         while ($start <= $end) {
             $current          = clone $start;
-            $expenses         = $this->opsRepository->sumExpenses($current, $current, null, $budgetCollection, $currency);
+            $expenses         = $this->opsRepository->sumExpenses($current, $current, null, $budgetCollection, $budgetLimit->transactionCurrency);
             $spent            = $expenses[$currency->id]['sum'] ?? '0';
             $amount           = bcadd($amount, $spent);
             $format           = $start->isoFormat((string) trans('config.month_and_day_js', [], $locale));
@@ -182,8 +189,8 @@ class BudgetController extends Controller
         }
         $data                                   = $this->generator->singleSet((string) trans('firefly.left'), $entries);
         // add currency symbol from budget limit:
-        $data['datasets'][0]['currency_symbol'] = $budgetLimit->transactionCurrency->symbol;
-        $data['datasets'][0]['currency_code']   = $budgetLimit->transactionCurrency->code;
+        $data['datasets'][0]['currency_symbol'] = $currency->symbol;
+        $data['datasets'][0]['currency_code']   = $currency->code;
         $cache->store($data);
 
         return response()->json($data);
