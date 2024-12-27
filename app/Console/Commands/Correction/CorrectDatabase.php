@@ -34,7 +34,7 @@ class CorrectDatabase extends Command
 {
     use ShowsFriendlyMessages;
 
-    protected $description = 'Will correct the integrity of your database, if necessary.';
+    protected $description = 'Will validate and correct the integrity of your database, if necessary.';
     protected $signature   = 'firefly-iii:correct-database';
 
     /**
@@ -49,6 +49,14 @@ class CorrectDatabase extends Command
             return 1;
         }
         $commands = [
+
+            // also just in case, some integrity commands:
+            //            'upgrade:restore-oauth-keys',
+            //            'upgrade:add-timezones-to-dates',
+            //            'upgrade:create-group-memberships',
+            //            'upgrade:upgrade-group-information',
+            //            'upgrade:610-currency-preferences',
+            //            'upgrade:620-piggy-banks',
             'firefly-iii:fix-piggies',
             'firefly-iii:create-link-types',
             'firefly-iii:create-access-tokens',

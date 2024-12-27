@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Authentication;
 
-use FireflyIII\Console\Commands\Integrity\CreateGroupMemberships;
+use FireflyIII\Console\Commands\Correction\CreateGroupMemberships;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Role;
 use FireflyIII\User;
