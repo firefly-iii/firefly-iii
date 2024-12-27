@@ -35,36 +35,41 @@ trait ExpandsQuery
 {
     use AccountFilter;
 
-    final protected function addPagination(Builder $query, array $pagination): Builder
+    final protected function addFilterParams(string $class, Builder $query, ?FilterParameters $filters): Builder
     {
-        $skip = ($pagination['number'] - 1) * $pagination['size'];
-
-        return $query->skip($skip)->take($pagination['size']);
-    }
-
-    final protected function addSortParams(string $class, Builder $query, ?SortFields $sort): Builder
-    {
-        $config = config('api.valid_query_sort')[$class] ?? [];
-        if (null === $sort) {
+        Log::debug(__METHOD__);
+        if (null === $filters) {
             return $query;
         }
-        foreach ($sort->all() as $sortField) {
-            if (in_array($sortField->name(), $config, true)) {
-                $query->orderBy($sortField->name(), $sortField->isAscending() ? 'ASC' : 'DESC');
+        if (0 === count($filters->all())) {
+            return $query;
+        }
+        // parse filters valid for this class.
+        $parsed = $this->parseAllFilters($class, $filters);
+
+        // expand query for each query filter
+        $config = config('api.valid_query_filters')[$class];
+        $query->where(function (Builder $q) use ($config, $parsed): void {
+            foreach ($parsed as $key => $filter) {
+                if (in_array($key, $config, true)) {
+                    Log::debug(sprintf('Add query filter "%s"', $key));
+                    // add type to query:
+                    foreach ($filter as $value) {
+                        $q->whereLike($key, sprintf('%%%s%%', $value));
+                    }
+                }
+            }
+        });
+
+        // TODO this is special treatment, but alas, unavoidable right now.
+        if (Account::class === $class && array_key_exists('type', $parsed)) {
+            if (count($parsed['type']) > 0) {
+                $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
+                $query->whereIn('account_types.type', $parsed['type']);
             }
         }
 
         return $query;
-    }
-
-    private function parseAccountTypeFilter(array $value): array
-    {
-        $return = [];
-        foreach ($value as $entry) {
-            $return = array_merge($return, $this->mapAccountTypes($entry));
-        }
-
-        return array_unique($return);
     }
 
     private function parseAllFilters(string $class, FilterParameters $filters): array
@@ -101,37 +106,32 @@ trait ExpandsQuery
         return $parsed;
     }
 
-    final protected function addFilterParams(string $class, Builder $query, ?FilterParameters $filters): Builder
+    private function parseAccountTypeFilter(array $value): array
     {
-        Log::debug(__METHOD__);
-        if (null === $filters) {
+        $return = [];
+        foreach ($value as $entry) {
+            $return = array_merge($return, $this->mapAccountTypes($entry));
+        }
+
+        return array_unique($return);
+    }
+
+    final protected function addPagination(Builder $query, array $pagination): Builder
+    {
+        $skip = ($pagination['number'] - 1) * $pagination['size'];
+
+        return $query->skip($skip)->take($pagination['size']);
+    }
+
+    final protected function addSortParams(string $class, Builder $query, ?SortFields $sort): Builder
+    {
+        $config = config('api.valid_query_sort')[$class] ?? [];
+        if (null === $sort) {
             return $query;
         }
-        if (0 === count($filters->all())) {
-            return $query;
-        }
-        // parse filters valid for this class.
-        $parsed = $this->parseAllFilters($class, $filters);
-
-        // expand query for each query filter
-        $config = config('api.valid_query_filters')[$class];
-        $query->where(function (Builder $q) use ($config, $parsed): void {
-            foreach ($parsed as $key => $filter) {
-                if (in_array($key, $config, true)) {
-                    Log::debug(sprintf('Add query filter "%s"', $key));
-                    // add type to query:
-                    foreach ($filter as $value) {
-                        $q->whereLike($key, sprintf('%%%s%%', $value));
-                    }
-                }
-            }
-        });
-
-        // TODO this is special treatment, but alas, unavoidable right now.
-        if (Account::class === $class && array_key_exists('type', $parsed)) {
-            if (count($parsed['type']) > 0) {
-                $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
-                $query->whereIn('account_types.type', $parsed['type']);
+        foreach ($sort->all() as $sortField) {
+            if (in_array($sortField->name(), $config, true)) {
+                $query->orderBy($sortField->name(), $sortField->isAscending() ? 'ASC' : 'DESC');
             }
         }
 

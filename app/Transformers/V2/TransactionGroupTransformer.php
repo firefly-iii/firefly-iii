@@ -101,12 +101,12 @@ class TransactionGroupTransformer extends AbstractTransformer
     private function collectForArray(array $object): void
     {
         foreach ($object['sums'] as $sum) {
-            $this->currencies[(int)$sum['currency_id']] ??= TransactionCurrency::find($sum['currency_id']);
+            $this->currencies[(int) $sum['currency_id']] ??= TransactionCurrency::find($sum['currency_id']);
         }
 
         /** @var array $transaction */
         foreach ($object['transactions'] as $transaction) {
-            $this->journals[(int)$transaction['transaction_journal_id']] = [];
+            $this->journals[(int) $transaction['transaction_journal_id']] = [];
         }
     }
 
@@ -169,7 +169,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
         /** @var \stdClass $tag */
         foreach ($tags as $tag) {
-            $id                            = (int)$tag->transaction_journal_id;
+            $id                            = (int) $tag->transaction_journal_id;
             $this->journals[$id]['tags'][] = $tag->tag;
         }
     }
@@ -196,7 +196,7 @@ class TransactionGroupTransformer extends AbstractTransformer
             /** @var null|Budget $budget */
             $budget                                     = $journal->budgets()->first();
             if (null !== $budget) {
-                $this->journals[$id]['budget_id']   = (string)$budget->id;
+                $this->journals[$id]['budget_id']   = (string) $budget->id;
                 $this->journals[$id]['budget_name'] = $budget->name;
             }
 
@@ -204,14 +204,14 @@ class TransactionGroupTransformer extends AbstractTransformer
             /** @var null|Category $category */
             $category                                   = $journal->categories()->first();
             if (null !== $category) {
-                $this->journals[$id]['category_id']   = (string)$category->id;
+                $this->journals[$id]['category_id']   = (string) $category->id;
                 $this->journals[$id]['category_name'] = $category->name;
             }
 
             // collect bill:
             if (null !== $journal->bill_id) {
                 $bill                             = $journal->bill;
-                $this->journals[$id]['bill_id']   = (string)$bill->id;
+                $this->journals[$id]['bill_id']   = (string) $bill->id;
                 $this->journals[$id]['bill_name'] = $bill->name;
             }
 
@@ -262,11 +262,11 @@ class TransactionGroupTransformer extends AbstractTransformer
             $first = reset($group['transactions']);
 
             return [
-                'id'           => (string)$group['id'],
+                'id'           => (string) $group['id'],
                 'created_at'   => $group['created_at']->toAtomString(),
                 'updated_at'   => $group['updated_at']->toAtomString(),
-                'user'         => (string)$first['user_id'],
-                'user_group'   => (string)$first['user_group_id'],
+                'user'         => (string) $first['user_id'],
+                'user_group'   => (string) $first['user_group_id'],
                 'group_title'  => $group['title'] ?? null,
                 'transactions' => $this->transformTransactions($group['transactions'] ?? []),
                 'links'        => [
@@ -279,11 +279,11 @@ class TransactionGroupTransformer extends AbstractTransformer
         }
 
         return [
-            'id'           => (string)$group->id,
+            'id'           => (string) $group->id,
             'created_at'   => $group->created_at->toAtomString(),
             'updated_at'   => $group->created_at->toAtomString(),
-            'user'         => (string)$group->user_id,
-            'user_group'   => (string)$group->user_group_id,
+            'user'         => (string) $group->user_id,
+            'user_group'   => (string) $group->user_group_id,
             'group_title'  => $group->title ?? null,
             'transactions' => $this->transformJournals($group),
             'links'        => [
@@ -316,19 +316,19 @@ class TransactionGroupTransformer extends AbstractTransformer
     {
         $transaction         = new NullArrayObject($transaction);
         $type                = $this->stringFromArray($transaction, 'transaction_type_type', TransactionType::WITHDRAWAL);
-        $journalId           = (int)$transaction['transaction_journal_id'];
+        $journalId           = (int) $transaction['transaction_journal_id'];
         $meta                = new NullArrayObject($this->meta[$journalId] ?? []);
 
         /**
          * Convert and use amount:
          */
-        $amount              = app('steam')->positive((string)($transaction['amount'] ?? '0'));
-        $currencyId          = (int)$transaction['currency_id'];
+        $amount              = app('steam')->positive((string) ($transaction['amount'] ?? '0'));
+        $currencyId          = (int) $transaction['currency_id'];
         $nativeAmount        = $this->converter->convert($this->default, $this->currencies[$currencyId], $transaction['date'], $amount);
         $foreignAmount       = null;
         $nativeForeignAmount = null;
         if (null !== $transaction['foreign_amount']) {
-            $foreignCurrencyId   = (int)$transaction['foreign_currency_id'];
+            $foreignCurrencyId   = (int) $transaction['foreign_currency_id'];
             $foreignAmount       = app('steam')->positive($transaction['foreign_amount']);
             $nativeForeignAmount = $this->converter->convert($this->default, $this->currencies[$foreignCurrencyId], $transaction['date'], $foreignAmount);
         }
@@ -338,15 +338,15 @@ class TransactionGroupTransformer extends AbstractTransformer
         $latitude            = null;
         $zoomLevel           = null;
         if (array_key_exists('location', $this->journals[$journalId])) {
-            $latitude  = (string)$this->journals[$journalId]['location']['latitude'];
-            $longitude = (string)$this->journals[$journalId]['location']['longitude'];
+            $latitude  = (string) $this->journals[$journalId]['location']['latitude'];
+            $longitude = (string) $this->journals[$journalId]['location']['longitude'];
             $zoomLevel = $this->journals[$journalId]['location']['zoom_level'];
         }
 
         return [
-            'user'                            => (string)$transaction['user_id'],
-            'user_group'                      => (string)$transaction['user_group_id'],
-            'transaction_journal_id'          => (string)$transaction['transaction_journal_id'],
+            'user'                            => (string) $transaction['user_id'],
+            'user_group'                      => (string) $transaction['user_group_id'],
+            'transaction_journal_id'          => (string) $transaction['transaction_journal_id'],
             'type'                            => strtolower($type),
             'date'                            => $transaction['date']->toAtomString(),
             'order'                           => $transaction['order'],
@@ -354,14 +354,14 @@ class TransactionGroupTransformer extends AbstractTransformer
             'native_amount'                   => $nativeAmount,
             'foreign_amount'                  => $foreignAmount,
             'native_foreign_amount'           => $nativeForeignAmount,
-            'currency_id'                     => (string)$transaction['currency_id'],
+            'currency_id'                     => (string) $transaction['currency_id'],
             'currency_code'                   => $transaction['currency_code'],
             'currency_name'                   => $transaction['currency_name'],
             'currency_symbol'                 => $transaction['currency_symbol'],
-            'currency_decimal_places'         => (int)$transaction['currency_decimal_places'],
+            'currency_decimal_places'         => (int) $transaction['currency_decimal_places'],
 
             // converted to native currency
-            'native_currency_id'              => (string)$this->default->id,
+            'native_currency_id'              => (string) $this->default->id,
             'native_currency_code'            => $this->default->code,
             'native_currency_name'            => $this->default->name,
             'native_currency_symbol'          => $this->default->symbol,
@@ -376,11 +376,11 @@ class TransactionGroupTransformer extends AbstractTransformer
 
             // foreign converted to native:
             'description'                     => $transaction['description'],
-            'source_id'                       => (string)$transaction['source_account_id'],
+            'source_id'                       => (string) $transaction['source_account_id'],
             'source_name'                     => $transaction['source_account_name'],
             'source_iban'                     => $transaction['source_account_iban'],
             'source_type'                     => $transaction['source_account_type'],
-            'destination_id'                  => (string)$transaction['destination_account_id'],
+            'destination_id'                  => (string) $transaction['destination_account_id'],
             'destination_name'                => $transaction['destination_account_name'],
             'destination_iban'                => $transaction['destination_account_iban'],
             'destination_type'                => $transaction['destination_account_type'],
@@ -444,7 +444,7 @@ class TransactionGroupTransformer extends AbstractTransformer
             return $default;
         }
         if (null !== $array[$key]) {
-            return (string)$array[$key];
+            return (string) $array[$key];
         }
 
         if (null !== $default) {
@@ -532,15 +532,15 @@ class TransactionGroupTransformer extends AbstractTransformer
         $latitude            = null;
         $zoomLevel           = null;
         if (array_key_exists('location', $this->journals[$id])) {
-            $latitude  = (string)$this->journals[$id]['location']['latitude'];
-            $longitude = (string)$this->journals[$id]['location']['longitude'];
+            $latitude  = (string) $this->journals[$id]['location']['latitude'];
+            $longitude = (string) $this->journals[$id]['location']['longitude'];
             $zoomLevel = $this->journals[$id]['location']['zoom_level'];
         }
 
         return [
-            'user'                            => (string)$journal->user_id,
-            'user_group'                      => (string)$journal->user_group_id,
-            'transaction_journal_id'          => (string)$journal->id,
+            'user'                            => (string) $journal->user_id,
+            'user_group'                      => (string) $journal->user_group_id,
+            'transaction_journal_id'          => (string) $journal->id,
             'type'                            => $this->journals[$journal->id]['type'],
             'date'                            => $journal->date->toAtomString(),
             'order'                           => $journal->order,
@@ -548,14 +548,14 @@ class TransactionGroupTransformer extends AbstractTransformer
             'native_amount'                   => $nativeAmount,
             'foreign_amount'                  => $foreignAmount,
             'native_foreign_amount'           => $nativeForeignAmount,
-            'currency_id'                     => (string)$currency->id,
+            'currency_id'                     => (string) $currency->id,
             'currency_code'                   => $currency->code,
             'currency_name'                   => $currency->name,
             'currency_symbol'                 => $currency->symbol,
             'currency_decimal_places'         => $currency->decimal_places,
 
             // converted to native currency
-            'native_currency_id'              => (string)$this->default->id,
+            'native_currency_id'              => (string) $this->default->id,
             'native_currency_code'            => $this->default->code,
             'native_currency_name'            => $this->default->name,
             'native_currency_symbol'          => $this->default->symbol,
@@ -569,12 +569,12 @@ class TransactionGroupTransformer extends AbstractTransformer
             'foreign_currency_decimal_places' => $foreignCurrency?->decimal_places,
 
             'description'                     => $journal->description,
-            'source_id'                       => (string)$this->journals[$id]['source_account_id'],
+            'source_id'                       => (string) $this->journals[$id]['source_account_id'],
             'source_name'                     => $this->journals[$id]['source_account_name'],
             'source_iban'                     => $this->journals[$id]['source_account_iban'],
             'source_type'                     => $this->journals[$id]['source_account_type'],
 
-            'destination_id'                  => (string)$this->journals[$id]['destination_account_id'],
+            'destination_id'                  => (string) $this->journals[$id]['destination_account_id'],
             'destination_name'                => $this->journals[$id]['destination_account_name'],
             'destination_iban'                => $this->journals[$id]['destination_account_iban'],
             'destination_type'                => $this->journals[$id]['destination_account_type'],

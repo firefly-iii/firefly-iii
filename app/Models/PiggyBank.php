@@ -27,6 +27,7 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
@@ -43,20 +44,18 @@ class PiggyBank extends Model
 
     protected $casts
                         = [
-            'created_at'   => 'datetime',
-            'updated_at'   => 'datetime',
-            'deleted_at'   => 'datetime',
-            'startdate'    => 'date',
-            'targetdate'   => 'date',
-            'order'        => 'int',
-            'active'       => 'boolean',
-            'encrypted'    => 'boolean',
-            'targetamount' => 'string',
+            'created_at'    => 'datetime',
+            'updated_at'    => 'datetime',
+            'deleted_at'    => 'datetime',
+            'start_date'    => 'date',
+            'target_date'   => 'date',
+            'order'         => 'int',
+            'active'        => 'boolean',
+            'encrypted'     => 'boolean',
+            'target_amount' => 'string',
         ];
 
-    protected $fillable = ['name', 'account_id', 'order', 'targetamount', 'startdate', 'startdate_tz', 'targetdate', 'targetdate_tz', 'active'];
-
-    protected $hidden   = ['targetamount_encrypted', 'encrypted'];
+    protected $fillable = ['name', 'order', 'target_amount', 'start_date', 'start_date_tz', 'target_date', 'target_date_tz', 'active', 'transaction_currency_id'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
@@ -66,9 +65,10 @@ class PiggyBank extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $piggyBankId = (int)$value;
+            $piggyBankId = (int) $value;
             $piggyBank   = self::where('piggy_banks.id', $piggyBankId)
-                ->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
+                ->leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
+                ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
                 ->where('accounts.user_id', auth()->user()->id)->first(['piggy_banks.*'])
             ;
             if (null !== $piggyBank) {
@@ -82,6 +82,11 @@ class PiggyBank extends Model
     public function account(): BelongsTo
     {
         return $this->belongsTo(Account::class);
+    }
+
+    public function accounts(): BelongsToMany
+    {
+        return $this->belongsToMany(Account::class)->withPivot(['current_amount', 'native_current_amount']);
     }
 
     public function attachments(): MorphMany
@@ -118,32 +123,37 @@ class PiggyBank extends Model
     /**
      * @param mixed $value
      */
-    public function setTargetamountAttribute($value): void
+    public function setTargetAmountAttribute($value): void
     {
-        $this->attributes['targetamount'] = (string)$value;
+        $this->attributes['target_amount'] = (string) $value;
+    }
+
+    public function transactionCurrency(): BelongsTo
+    {
+        return $this->belongsTo(TransactionCurrency::class);
     }
 
     protected function accountId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 
     protected function order(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 
     /**
      * Get the max amount
      */
-    protected function targetamount(): Attribute
+    protected function targetAmount(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string)$value,
+            get: static fn ($value) => (string) $value,
         );
     }
 }

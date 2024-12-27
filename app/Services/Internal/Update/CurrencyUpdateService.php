@@ -33,15 +33,15 @@ class CurrencyUpdateService
 {
     public function update(TransactionCurrency $currency, array $data): TransactionCurrency
     {
-        if (array_key_exists('code', $data) && '' !== (string)$data['code']) {
+        if (array_key_exists('code', $data) && '' !== (string) $data['code']) {
             $currency->code = e($data['code']);
         }
 
-        if (array_key_exists('symbol', $data) && '' !== (string)$data['symbol']) {
+        if (array_key_exists('symbol', $data) && '' !== (string) $data['symbol']) {
             $currency->symbol = e($data['symbol']);
         }
 
-        if (array_key_exists('name', $data) && '' !== (string)$data['name']) {
+        if (array_key_exists('name', $data) && '' !== (string) $data['name']) {
             $currency->name = e($data['name']);
         }
 

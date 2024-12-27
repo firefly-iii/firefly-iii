@@ -49,7 +49,7 @@ class ShowController extends Controller
             static function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-bolt');
                 app('view')->share('subTitleIcon', 'fa-bolt');
-                app('view')->share('title', (string)trans('firefly.webhooks'));
+                app('view')->share('title', (string) trans('firefly.webhooks'));
 
                 return $next($request);
             }
@@ -69,7 +69,7 @@ class ShowController extends Controller
             throw new NotFoundHttpException('Webhooks are not enabled.');
         }
         Log::channel('audit')->info(sprintf('User visits webhook #%d page.', $webhook->id));
-        $subTitle = (string)trans('firefly.show_webhook', ['title' => $webhook->title]);
+        $subTitle = (string) trans('firefly.show_webhook', ['title' => $webhook->title]);
 
         return view('webhooks.show', compact('webhook', 'subTitle'));
     }

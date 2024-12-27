@@ -59,7 +59,7 @@ class SummaryBalanceGrouped
             $return[] = [
                 'key'                     => sprintf('%s-in-native', $title),
                 'value'                   => $this->amounts[$key]['native'] ?? '0',
-                'currency_id'             => (string)$this->default->id,
+                'currency_id'             => (string) $this->default->id,
                 'currency_code'           => $this->default->code,
                 'currency_symbol'         => $this->default->symbol,
                 'currency_decimal_places' => $this->default->decimal_places,
@@ -72,7 +72,7 @@ class SummaryBalanceGrouped
                 // skip native entries.
                 continue;
             }
-            $currencyId                    = (int)$currencyId;
+            $currencyId                    = (int) $currencyId;
             $currency                      = $this->currencies[$currencyId] ?? $this->currencyRepository->find($currencyId);
             $this->currencies[$currencyId] = $currency;
             // create objects for big array.
@@ -86,7 +86,7 @@ class SummaryBalanceGrouped
                 $return[] = [
                     'key'                     => sprintf('%s-in-%s', $title, $currency->code),
                     'value'                   => $this->amounts[$key][$currencyId] ?? '0',
-                    'currency_id'             => (string)$currency->id,
+                    'currency_id'             => (string) $currency->id,
                     'currency_code'           => $currency->code,
                     'currency_symbol'         => $currency->symbol,
                     'currency_decimal_places' => $currency->decimal_places,
@@ -108,12 +108,12 @@ class SummaryBalanceGrouped
         /** @var array $journal */
         foreach ($journals as $journal) {
             // transaction info:
-            $currencyId                            = (int)$journal['currency_id'];
+            $currencyId                            = (int) $journal['currency_id'];
             $amount                                = bcmul($journal['amount'], $multiplier);
             $currency                              = $this->currencies[$currencyId] ?? TransactionCurrency::find($currencyId);
             $this->currencies[$currencyId]         = $currency;
             $nativeAmount                          = $converter->convert($currency, $this->default, $journal['date'], $amount);
-            if ((int)$journal['foreign_currency_id'] === $this->default->id) {
+            if ((int) $journal['foreign_currency_id'] === $this->default->id) {
                 // use foreign amount instead
                 $nativeAmount = $journal['foreign_amount'];
             }

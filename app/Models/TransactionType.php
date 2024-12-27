@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -38,25 +37,25 @@ class TransactionType extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    /** @deprecated */
+    #[\Deprecated] /** @deprecated  */
     public const string DEPOSIT          = 'Deposit';
 
-    /** @deprecated */
+    #[\Deprecated] /** @deprecated  */
     public const string INVALID          = 'Invalid';
 
-    /** @deprecated */
+    #[\Deprecated] /** @deprecated  */
     public const string LIABILITY_CREDIT = 'Liability credit';
 
-    /** @deprecated */
+    #[\Deprecated] /** @deprecated  */
     public const string OPENING_BALANCE  = 'Opening balance';
 
-    /** @deprecated */
+    #[\Deprecated] /** @deprecated  */
     public const string RECONCILIATION   = 'Reconciliation';
 
-    /** @deprecated */
+    #[\Deprecated] /** @deprecated  */
     public const string TRANSFER         = 'Transfer';
 
-    /** @deprecated */
+    #[\Deprecated] /** @deprecated  */
     public const string WITHDRAWAL       = 'Withdrawal';
 
     protected $casts
@@ -66,13 +65,6 @@ class TransactionType extends Model
             'deleted_at' => 'datetime',
         ];
     protected $fillable                  = ['type'];
-
-    protected function casts(): array
-    {
-        return [
-            // 'type' => TransactionTypeEnum::class,
-        ];
-    }
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
@@ -115,5 +107,12 @@ class TransactionType extends Model
     public function transactionJournals(): HasMany
     {
         return $this->hasMany(TransactionJournal::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            // 'type' => TransactionTypeEnum::class,
+        ];
     }
 }

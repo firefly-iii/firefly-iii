@@ -40,9 +40,6 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
-/**
- * Class ApplyRules
- */
 class ApplyRules extends Command
 {
     use ShowsFriendlyMessages;
@@ -128,7 +125,7 @@ class ApplyRules extends Command
         $ruleEngine->addOperator(['type' => 'account_id', 'value' => $list]);
 
         // add the date as a filter:
-        $ruleEngine->addOperator(['type' => 'date_after', 'value' => $this->startDate->format('Y-m-d')]);
+        $ruleEngine->addOperator(['type' => 'date_after', 'value' => $this->start_date->format('Y-m-d')]);
         $ruleEngine->addOperator(['type' => 'date_before', 'value' => $this->endDate->format('Y-m-d')]);
 
         // start running rules.
@@ -201,7 +198,7 @@ class ApplyRules extends Command
         $accountRepository = app(AccountRepositoryInterface::class);
         $accountRepository->setUser($this->getUser());
         foreach ($accountList as $accountId) {
-            $accountId = (int)$accountId;
+            $accountId = (int) $accountId;
             $account   = $accountRepository->find($accountId);
             if (null !== $account && in_array($account->accountType->type, $this->acceptedAccounts, true)) {
                 $finalList->push($account);
@@ -228,7 +225,7 @@ class ApplyRules extends Command
         $ruleGroupList   = explode(',', $ruleGroupString);
 
         foreach ($ruleGroupList as $ruleGroupId) {
-            $ruleGroup = $this->ruleGroupRepository->find((int)$ruleGroupId);
+            $ruleGroup = $this->ruleGroupRepository->find((int) $ruleGroupId);
             if ($ruleGroup->active) {
                 $this->ruleGroupSelection[] = $ruleGroup->id;
             }
@@ -250,7 +247,7 @@ class ApplyRules extends Command
         $ruleList   = explode(',', $ruleString);
 
         foreach ($ruleList as $ruleId) {
-            $rule = $this->ruleRepository->find((int)$ruleId);
+            $rule = $this->ruleRepository->find((int) $ruleId);
             if (null !== $rule && $rule->active) {
                 $this->ruleSelection[] = $rule->id;
             }
@@ -265,8 +262,8 @@ class ApplyRules extends Command
     private function verifyInputDates(): void
     {
         // parse start date.
-        $inputStart      = today(config('app.timezone'))->startOfMonth();
-        $startString     = $this->option('start_date');
+        $inputStart       = today(config('app.timezone'))->startOfMonth();
+        $startString      = $this->option('start_date');
         if (null === $startString) {
             /** @var JournalRepositoryInterface $repository */
             $repository = app(JournalRepositoryInterface::class);
@@ -281,8 +278,8 @@ class ApplyRules extends Command
         }
 
         // parse end date
-        $inputEnd        = today(config('app.timezone'));
-        $endString       = $this->option('end_date');
+        $inputEnd         = today(config('app.timezone'));
+        $endString        = $this->option('end_date');
         if (null !== $endString && '' !== $endString) {
             $inputEnd = Carbon::createFromFormat('Y-m-d', $endString);
         }
@@ -296,8 +293,8 @@ class ApplyRules extends Command
             [$inputEnd, $inputStart] = [$inputStart, $inputEnd];
         }
 
-        $this->startDate = $inputStart;
-        $this->endDate   = $inputEnd;
+        $this->start_date = $inputStart;
+        $this->endDate    = $inputEnd;
     }
 
     private function grabAllRules(): void

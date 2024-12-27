@@ -4,11 +4,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\JsonApi\V2\Accounts;
 
-use FireflyIII\Rules\Account\IsUniqueAccount;
-use FireflyIII\Rules\IsBoolean;
-use FireflyIII\Rules\IsValidPositiveAmount;
-use FireflyIII\Rules\UniqueAccountNumber;
-use FireflyIII\Rules\UniqueIban;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Support\Facades\Log;
 use LaravelJsonApi\Laravel\Http\Requests\ResourceRequest;
@@ -30,8 +25,8 @@ class AccountRequest extends ResourceRequest
         // var_dump($types);exit;
 
         return [
-            'name'                         => ['required', 'max:1024', 'min:1'], // , new IsUniqueAccount()
-            'account_type'                 => ['required', 'max:1024', 'min:1', sprintf('in:%s', $types)],
+            'name'         => ['required', 'max:1024', 'min:1'], // , new IsUniqueAccount()
+            'account_type' => ['required', 'max:1024', 'min:1', sprintf('in:%s', $types)],
             //            'iban'                 => ['iban', 'nullable', new UniqueIban(null, $type)],
             //            'bic'                  => 'bic|nullable',
             //            'account_number'       => ['min:1', 'max:255', 'nullable', new UniqueAccountNumber(null, $type)],

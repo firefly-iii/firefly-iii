@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Observer;
 
 use FireflyIII\Models\Transaction;
+use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\Models\AccountBalanceCalculator;
 use Illuminate\Support\Facades\Log;
 
@@ -32,6 +33,20 @@ use Illuminate\Support\Facades\Log;
  */
 class TransactionObserver
 {
+    public static bool $recalculate = true;
+
+    public function created(Transaction $transaction): void
+    {
+        Log::debug('Observe "created" of a transaction.');
+        if (config('firefly.feature_flags.running_balance_column')) {
+            if (1 === bccomp($transaction->amount, '0') && self::$recalculate) {
+                Log::debug('Trigger recalculateForJournal');
+                AccountBalanceCalculator::recalculateForJournal($transaction->transactionJournal);
+            }
+        }
+        $this->updateNativeAmount($transaction);
+    }
+
     public function deleting(?Transaction $transaction): void
     {
         app('log')->debug('Observe "deleting" of a transaction.');
@@ -41,22 +56,36 @@ class TransactionObserver
     public function updated(Transaction $transaction): void
     {
         Log::debug('Observe "updated" of a transaction.');
-        if (config('firefly.feature_flags.running_balance_column')) {
+        if (config('firefly.feature_flags.running_balance_column') && self::$recalculate) {
             if (1 === bccomp($transaction->amount, '0')) {
                 Log::debug('Trigger recalculateForJournal');
                 AccountBalanceCalculator::recalculateForJournal($transaction->transactionJournal);
             }
         }
+        $this->updateNativeAmount($transaction);
     }
 
-    public function created(Transaction $transaction): void
+    private function updateNativeAmount(Transaction $transaction): void
     {
-        Log::debug('Observe "created" of a transaction.');
-        if (config('firefly.feature_flags.running_balance_column')) {
-            if (1 === bccomp($transaction->amount, '0')) {
-                Log::debug('Trigger recalculateForJournal');
-                AccountBalanceCalculator::recalculateForJournal($transaction->transactionJournal);
-            }
+        $userCurrency                       = app('amount')->getDefaultCurrencyByUserGroup($transaction->transactionJournal->user->userGroup);
+        $transaction->native_amount         = null;
+        $transaction->native_foreign_amount = null;
+        // first normal amount
+        if ($transaction->transactionCurrency->id !== $userCurrency->id && (null === $transaction->foreign_currency_id || (null !== $transaction->foreign_currency_id && $transaction->foreign_currency_id !== $userCurrency->id))) {
+            $converter                  = new ExchangeRateConverter();
+            $converter->setUserGroup($transaction->transactionJournal->user->userGroup);
+            $converter->setIgnoreSettings(true);
+            $transaction->native_amount = $converter->convert($transaction->transactionCurrency, $userCurrency, $transaction->transactionJournal->date, $transaction->amount);
         }
+        // then foreign amount
+        if ($transaction->foreignCurrency?->id !== $userCurrency->id && null !== $transaction->foreign_amount && null !== $transaction->foreignCurrency) {
+            $converter                          = new ExchangeRateConverter();
+            $converter->setUserGroup($transaction->transactionJournal->user->userGroup);
+            $converter->setIgnoreSettings(true);
+            $transaction->native_foreign_amount = $converter->convert($transaction->foreignCurrency, $userCurrency, $transaction->transactionJournal->date, $transaction->foreign_amount);
+        }
+
+        $transaction->saveQuietly();
+        Log::debug('Transaction native amounts are updated.');
     }
 }

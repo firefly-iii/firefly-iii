@@ -55,9 +55,9 @@ class CreateRequest extends FormRequest
 
         // this is the way.
         $return             = $this->getAllData($fields);
-        $return['trigger']  = $triggers[$return['trigger']] ?? (int)$return['trigger'];
-        $return['response'] = $responses[$return['response']] ?? (int)$return['response'];
-        $return['delivery'] = $deliveries[$return['delivery']] ?? (int)$return['delivery'];
+        $return['trigger']  = $triggers[$return['trigger']] ?? (int) $return['trigger'];
+        $return['response'] = $responses[$return['response']] ?? (int) $return['response'];
+        $return['delivery'] = $deliveries[$return['delivery']] ?? (int) $return['delivery'];
 
         return $return;
     }

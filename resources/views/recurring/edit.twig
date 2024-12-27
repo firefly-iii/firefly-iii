@@ -136,7 +136,7 @@
                         {% if bills|length > 1 %}
                             {{ ExpandedForm.select('bill_id', bills, array.transactions[0].bill_id) }}
                         {% else %}
-                            {{ ExpandedForm.select('bill_id', bills, array.transactions[0].bill_id, {helpText: trans('firefly.no_bill_pointer', {link: route('bills.index')})}) }}
+                            {{ ExpandedForm.select('bill_id', bills, array.transactions[0].bill_id, {helpText: trans('firefly.no_bill_pointer', {link: route('subscriptions.index')})}) }}
                         {% endif %}
 
                         {# TAGS #}

@@ -114,7 +114,7 @@ class SearchRuleEngine implements RuleEngineInterface
             }
 
             // if the trigger needs no context, value is different:
-            $needsContext  = (bool)(config(sprintf('search.operators.%s.needs_context', $contextSearch)) ?? true);
+            $needsContext  = (bool) (config(sprintf('search.operators.%s.needs_context', $contextSearch)) ?? true);
             if (false === $needsContext) {
                 app('log')->debug(sprintf('SearchRuleEngine:: add a rule trigger (no context): %s:true', $ruleTrigger->trigger_type));
                 $searchArray[$ruleTrigger->trigger_type][] = 'true';
@@ -187,7 +187,7 @@ class SearchRuleEngine implements RuleEngineInterface
         $journalId = 0;
         foreach ($array as $triggerName => $values) {
             if ('journal_id' === $triggerName && is_array($values) && 1 === count($values)) {
-                $journalId = (int)trim($values[0] ?? '"0"', '"'); // follows format "123".
+                $journalId = (int) trim($values[0] ?? '"0"', '"'); // follows format "123".
                 app('log')->debug(sprintf('Found journal ID #%d', $journalId));
             }
         }
@@ -476,7 +476,7 @@ class SearchRuleEngine implements RuleEngineInterface
     private function addNotes(array $transaction): array
     {
         $transaction['notes'] = '';
-        $dbNote               = Note::where('noteable_id', (int)$transaction['transaction_journal_id'])->where('noteable_type', TransactionJournal::class)->first(['notes.*']);
+        $dbNote               = Note::where('noteable_id', (int) $transaction['transaction_journal_id'])->where('noteable_type', TransactionJournal::class)->first(['notes.*']);
         if (null !== $dbNote) {
             $transaction['notes'] = $dbNote->text;
         }

@@ -24,12 +24,20 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Observer;
 
 use FireflyIII\Models\Bill;
+use FireflyIII\Support\Http\Api\ExchangeRateConverter;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class BillObserver
  */
 class BillObserver
 {
+    public function created(Bill $bill): void
+    {
+        Log::debug('Observe "created" of a bill.');
+        $this->updateNativeAmount($bill);
+    }
+
     public function deleting(Bill $bill): void
     {
         app('log')->debug('Observe "deleting" of a bill.');
@@ -37,5 +45,26 @@ class BillObserver
             $attachment->delete();
         }
         $bill->notes()->delete();
+    }
+
+    public function updated(Bill $bill): void
+    {
+        Log::debug('Observe "updated" of a bill.');
+        $this->updateNativeAmount($bill);
+    }
+
+    private function updateNativeAmount(Bill $bill): void
+    {
+        $userCurrency            = app('amount')->getDefaultCurrencyByUserGroup($bill->user->userGroup);
+        $bill->native_amount_min = null;
+        $bill->native_amount_max = null;
+        if ($bill->transactionCurrency->id !== $userCurrency->id) {
+            $converter               = new ExchangeRateConverter();
+            $converter->setIgnoreSettings(true);
+            $bill->native_amount_min = $converter->convert($bill->transactionCurrency, $userCurrency, today(), $bill->amount_min);
+            $bill->native_amount_max = $converter->convert($bill->transactionCurrency, $userCurrency, today(), $bill->amount_max);
+        }
+        $bill->saveQuietly();
+        Log::debug('Bill native amounts are updated.');
     }
 }

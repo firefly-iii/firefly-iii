@@ -69,7 +69,7 @@ class ObjectGroupController extends Controller
         /** @var ObjectGroup $objectGroup */
         foreach ($result as $objectGroup) {
             $return[] = [
-                'id'    => (string)$objectGroup->id,
+                'id'    => (string) $objectGroup->id,
                 'name'  => $objectGroup->title,
                 'title' => $objectGroup->title,
             ];

@@ -42,6 +42,7 @@ class UserGroups extends Migration
             'categories',
             'recurrences',
             'object_groups',
+            'preferences',
             'rule_groups',
             'rules',
             'tags',

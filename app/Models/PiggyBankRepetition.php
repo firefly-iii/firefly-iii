@@ -42,12 +42,12 @@ class PiggyBankRepetition extends Model
                         = [
             'created_at'      => 'datetime',
             'updated_at'      => 'datetime',
-            'startdate'       => SeparateTimezoneCaster::class,
-            'targetdate'      => SeparateTimezoneCaster::class,
+            'start_date'      => SeparateTimezoneCaster::class,
+            'target_date'     => SeparateTimezoneCaster::class,
             'virtual_balance' => 'string',
         ];
 
-    protected $fillable = ['piggy_bank_id', 'startdate', 'startdate_tz', 'targetdate', 'targetdate_tz', 'currentamount'];
+    protected $fillable = ['piggy_bank_id', 'start_date', 'start_date_tz', 'target_date', 'target_date_tz', 'current_amount'];
 
     public function piggyBank(): BelongsTo
     {
@@ -56,7 +56,7 @@ class PiggyBankRepetition extends Model
 
     public function scopeOnDates(EloquentBuilder $query, Carbon $start, Carbon $target): EloquentBuilder
     {
-        return $query->where('startdate', $start->format('Y-m-d'))->where('targetdate', $target->format('Y-m-d'));
+        return $query->where('start_date', $start->format('Y-m-d'))->where('target_date', $target->format('Y-m-d'));
     }
 
     /**
@@ -66,14 +66,14 @@ class PiggyBankRepetition extends Model
     {
         return $query->where(
             static function (EloquentBuilder $q) use ($date): void {
-                $q->where('startdate', '<=', $date->format('Y-m-d 00:00:00'));
-                $q->orWhereNull('startdate');
+                $q->where('start_date', '<=', $date->format('Y-m-d 00:00:00'));
+                $q->orWhereNull('start_date');
             }
         )
             ->where(
                 static function (EloquentBuilder $q) use ($date): void {
-                    $q->where('targetdate', '>=', $date->format('Y-m-d 00:00:00'));
-                    $q->orWhereNull('targetdate');
+                    $q->where('target_date', '>=', $date->format('Y-m-d 00:00:00'));
+                    $q->orWhereNull('target_date');
                 }
             )
         ;
@@ -82,25 +82,25 @@ class PiggyBankRepetition extends Model
     /**
      * @param mixed $value
      */
-    public function setCurrentamountAttribute($value): void
+    public function setCurrentAmountAttribute($value): void
     {
-        $this->attributes['currentamount'] = (string)$value;
+        $this->attributes['current_amount'] = (string) $value;
     }
 
     /**
      * Get the amount
      */
-    protected function currentamount(): Attribute
+    protected function currentAmount(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string)$value,
+            get: static fn ($value) => (string) $value,
         );
     }
 
     protected function piggyBankId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 }

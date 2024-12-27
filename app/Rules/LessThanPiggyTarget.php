@@ -36,7 +36,7 @@ class LessThanPiggyTarget implements ValidationRule
      */
     public function message(): string
     {
-        return (string)trans('validation.current_target_amount');
+        return (string) trans('validation.current_target_amount');
     }
 
     /**

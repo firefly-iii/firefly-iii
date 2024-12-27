@@ -16,8 +16,8 @@
                         <div class="btn-group">
                             <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-v"></span></button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('bills.edit', object.data.id) }}"><span class="fa fa-fw fa-pencil"></span> {{ 'edit'|_ }}</a></li>
-                                <li><a href="{{ route('bills.delete', object.data.id) }}"><span class="fa fa-fw fa-trash-o"></span> {{ 'delete'|_ }}</a></li>
+                                <li><a href="{{ route('subscriptions.edit', object.data.id) }}"><span class="fa fa-fw fa-pencil"></span> {{ 'edit'|_ }}</a></li>
+                                <li><a href="{{ route('subscriptions.delete', object.data.id) }}"><span class="fa fa-fw fa-trash-o"></span> {{ 'delete'|_ }}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -27,7 +27,15 @@
                     <table class="table table-striped">
                         <tr>
                             <td colspan="2">
-                                {{ trans('firefly.match_between_amounts', {low: formatAmountByCurrency(object.data.currency,object.data.amount_min), high: formatAmountByCurrency(object.data.currency,object.data.amount_max) })|raw }}
+                                {% set lowAmount  = formatAmountByCurrency(object.data.currency,object.data.amount_min) %}
+                                {% set highAmount = formatAmountByCurrency(object.data.currency,object.data.amount_max) %}
+                                {% if(0 != object.data.native_amount_min) %}
+                                    {% set lowAmount = lowAmount ~ ' (' ~ formatAmountByCode(object.data.native_amount_min, defaultCurrency.code) ~ ')'  %}
+                                {% endif %}
+                                {% if(0 != object.data.native_amount_max) %}
+                                    {% set highAmount = highAmount ~ ' (' ~ formatAmountByCode(object.data.native_amount_max, defaultCurrency.code) ~ ')'  %}
+                                {% endif %}
+                                {{ trans('firefly.match_between_amounts', {low: lowAmount, high: highAmount })|raw }}
                                 {{ 'repeats'|_ }}
                                 {{ trans('firefly.repeat_freq_' ~object.data.repeat_freq) }}.
                             </td>
@@ -58,7 +66,13 @@
                             <td>{{ trans('firefly.average_bill_amount_year', {year: year}) }}</td>
                             <td>
                                 {% for avg in yearAverage %}
-                                    {{ formatAmountBySymbol(avg.avg, avg.currency_symbol, avg.currency_decimal_places, true) }}<br>
+                                    {{ formatAmountBySymbol(avg.avg, avg.currency_symbol, avg.currency_decimal_places, true) }}
+                                    {% if convertToNative and 0 != avg.native_avg %}
+                                    ({{ formatAmountBySymbol(avg.native_avg,
+                                        defaultCurrency.symbol, defaultCurrency.decimal_places, true) }})
+                                    {% endif %}
+                                    <br>
+
                                 {% endfor %}
                             </td>
                         </tr>
@@ -66,7 +80,12 @@
                             <td>{{ 'average_bill_amount_overall'|_ }}</td>
                             <td>
                                 {% for avg in overallAverage %}
-                                    {{ formatAmountBySymbol(avg.avg, avg.currency_symbol, avg.currency_decimal_places, true) }}<br>
+                                    {{ formatAmountBySymbol(avg.avg, avg.currency_symbol, avg.currency_decimal_places, true) }}
+                                    {% if convertToNative and 0 != avg.native_avg %}
+                                        ({{ formatAmountBySymbol(avg.native_avg,
+                                        defaultCurrency.symbol, defaultCurrency.decimal_places, true) }})
+                                    {% endif %}
+                                    <br>
                                 {% endfor %}
                             </td>
                         </tr>
@@ -74,8 +93,8 @@
                 </div>
                 <div class="box-footer">
                     <div class="btn-group">
-                        <a class="btn btn-default" href="{{ route('bills.edit', [object.data.id]) }}">{{ 'edit'|_ }}</a>
-                        <a class="btn btn-danger" href="{{ route('bills.delete', [object.data.id]) }}">{{ 'delete'|_ }}</a>
+                        <a class="btn btn-default" href="{{ route('subscriptions.edit', [object.data.id]) }}">{{ 'edit'|_ }}</a>
+                        <a class="btn btn-danger" href="{{ route('subscriptions.delete', [object.data.id]) }}">{{ 'delete'|_ }}</a>
                     </div>
                 </div>
             </div>
@@ -97,7 +116,7 @@
                     {% endif %}
                 </div>
                 <div class="box-footer">
-                    <form action="{{ route('bills.rescan',object.data.id) }}" method="post">
+                    <form action="{{ route('subscriptions.rescan',object.data.id) }}" method="post">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                         <p>
                             <input type="submit" name="submit" value="{{ 'rescan_old'|_ }}" class="btn btn-default"/>
@@ -166,7 +185,7 @@
 
 {% block scripts %}
     <script type="text/javascript" nonce="{{ JS_NONCE }}">
-        var billCurrencySymbol = "{{ object.data.currency.symbol }}";
+        var billCurrencySymbol = "{{ convertToNative ? defaultCurrency.symbol : object.data.currency.symbol }}";
         var billUrl = '{{ route('chart.bill.single', [object.data.id]) }}';
     </script>
     <script type="text/javascript" src="v1/js/lib/Chart.bundle.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>

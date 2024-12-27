@@ -58,7 +58,7 @@ class ObjectGroup extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $objectGroupId = (int)$value;
+            $objectGroupId = (int) $value;
 
             /** @var null|ObjectGroup $objectGroup */
             $objectGroup   = self::where('object_groups.id', $objectGroupId)
@@ -104,7 +104,7 @@ class ObjectGroup extends Model
     protected function order(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 }

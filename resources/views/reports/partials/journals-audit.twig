@@ -22,6 +22,8 @@
         <th class="hide-create_date">{{ trans('list.create_date') }}</th>
         <th class="hide-update_date">{{ trans('list.update_date') }}</th>
 
+        <th class="hide-notes">{{ trans('list.notes') }}</th>
+
         {# even more optional fields #}
         <th class="hide-interest_date">{{ trans('list.interest_date') }}</th>
         <th class="hide-book_date">{{ trans('list.book_date') }}</th>
@@ -132,7 +134,7 @@
             </td>
             <td class="hide-bill">
                 {% if journal.bill_id %}
-                    <a href="{{ route('bills.show', [journal.bill_id]) }}" title="{{ journal.bill_name }}">{{ journal.bill_name }}</a>
+                    <a href="{{ route('subscriptions.show', [journal.bill_id]) }}" title="{{ journal.bill_name }}">{{ journal.bill_name }}</a>
                 {% endif %}
             </td>
 
@@ -143,6 +145,9 @@
 
             <td class="hide-update_date">
                 {{ journal.updated_at.isoFormat(dateTimeFormat) }}
+            </td>
+            <td class="hide-notes">
+                {{ journal.notes|default('')|markdown }}
             </td>
 
             <!-- more new dates -->

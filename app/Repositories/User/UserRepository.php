@@ -201,7 +201,7 @@ class UserRepository implements UserRepositoryInterface
         // two factor:
         $return['has_2fa']             = null !== $user->mfa_secret;
         $return['is_admin']            = $this->hasRole($user, 'owner');
-        $return['blocked']             = 1 === (int)$user->blocked;
+        $return['blocked']             = 1 === (int) $user->blocked;
         $return['blocked_code']        = $user->blocked_code;
         $return['accounts']            = $user->accounts()->count();
         $return['journals']            = $user->transactionJournals()->count();

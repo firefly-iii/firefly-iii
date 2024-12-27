@@ -142,7 +142,7 @@ class TransactionFactory
 
             return;
         }
-        if ('' !== (string)$this->account->iban) {
+        if ('' !== (string) $this->account->iban) {
             app('log')->debug('Account already has IBAN information, will not update.');
 
             return;

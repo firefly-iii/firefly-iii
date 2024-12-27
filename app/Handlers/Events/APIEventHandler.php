@@ -43,7 +43,7 @@ class APIEventHandler
 
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
-        $user       = $repository->find((int)$event->userId);
+        $user       = $repository->find((int) $event->userId);
 
         if (null !== $user) {
             try {

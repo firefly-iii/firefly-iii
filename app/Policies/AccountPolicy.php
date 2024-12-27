@@ -30,17 +30,14 @@ use Illuminate\Support\Facades\Log;
 
 class AccountPolicy
 {
-    /**
-     * TODO needs better authentication, also for group.
-     */
-    public function view(User $user, Account $account): bool
-    {
-        return auth()->check() && $user->id === $account->user_id;
-    }
-
     public function create(): bool
     {
         return auth()->check();
+    }
+
+    public function viewAccountBalances(User $user, Account $account): bool
+    {
+        return $this->view($user, $account);
     }
 
     /**
@@ -65,8 +62,11 @@ class AccountPolicy
         return $this->view($user, $account);
     }
 
-    public function viewAccountBalances(User $user, Account $account): bool
+    /**
+     * TODO needs better authentication, also for group.
+     */
+    public function view(User $user, Account $account): bool
     {
-        return $this->view($user, $account);
+        return auth()->check() && $user->id === $account->user_id;
     }
 }

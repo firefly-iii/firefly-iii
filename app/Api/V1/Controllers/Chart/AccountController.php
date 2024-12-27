@@ -104,7 +104,7 @@ class AccountController extends Controller
             }
             $currentSet   = [
                 'label'                   => $account->name,
-                'currency_id'             => (string)$currency->id,
+                'currency_id'             => (string) $currency->id,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
@@ -116,13 +116,13 @@ class AccountController extends Controller
             ];
             // TODO this code is also present in the V2 chart account controller so this method is due to be deprecated.
             $currentStart = clone $start;
-            $range        = app('steam')->balanceInRange($account, $start, clone $end);
+            $range        = app('steam')->finalAccountBalanceInRange($account, $start, clone $end, $this->convertToNative);
             // 2022-10-11 this method no longer converts to float.
             $previous     = array_values($range)[0];
             while ($currentStart <= $end) {
                 $format                        = $currentStart->format('Y-m-d');
                 $label                         = $currentStart->toAtomString();
-                $balance                       = array_key_exists($format, $range) ? $range[$format] : $previous;
+                $balance                       = array_key_exists($format, $range) ? $range[$format]['balance'] : $previous;
                 $previous                      = $balance;
                 $currentStart->addDay();
                 $currentSet['entries'][$label] = $balance;

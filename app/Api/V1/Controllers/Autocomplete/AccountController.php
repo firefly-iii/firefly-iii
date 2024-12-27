@@ -30,6 +30,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -78,7 +79,7 @@ class AccountController extends Controller
         $query           = $data['query'];
         $date            = $data['date'] ?? today(config('app.timezone'));
         $return          = [];
-        $result          = $this->repository->searchAccount((string)$query, $types, $this->parameters->get('limit'));
+        $result          = $this->repository->searchAccount((string) $query, $types, $this->parameters->get('limit'));
 
         // TODO this code is duplicated in the V2 Autocomplete controller, which means this code is due to be deprecated.
         $defaultCurrency = app('amount')->getDefaultCurrency();
@@ -89,20 +90,20 @@ class AccountController extends Controller
             $currency        = $this->repository->getAccountCurrency($account) ?? $defaultCurrency;
 
             if (in_array($account->accountType->type, $this->balanceTypes, true)) {
-                $balance         = app('steam')->balance($account, $date);
+                $balance         = Steam::finalAccountBalance($account, $date);
                 $nameWithBalance = sprintf(
                     '%s (%s)',
                     $account->name,
-                    app('amount')->formatAnything($currency, $balance, false)
+                    app('amount')->formatAnything($currency, $balance['balance'], false)
                 );
             }
 
             $return[]        = [
-                'id'                      => (string)$account->id,
+                'id'                      => (string) $account->id,
                 'name'                    => $account->name,
                 'name_with_balance'       => $nameWithBalance,
                 'type'                    => $account->accountType->type,
-                'currency_id'             => (string)$currency->id,
+                'currency_id'             => (string) $currency->id,
                 'currency_name'           => $currency->name,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
@@ -115,8 +116,8 @@ class AccountController extends Controller
             $return,
             static function (array $left, array $right) {
                 $order = [AccountType::ASSET, AccountType::REVENUE, AccountType::EXPENSE];
-                $posA  = (int)array_search($left['type'], $order, true);
-                $posB  = (int)array_search($right['type'], $order, true);
+                $posA  = (int) array_search($left['type'], $order, true);
+                $posB  = (int) array_search($right['type'], $order, true);
 
                 return $posA - $posB;
             }

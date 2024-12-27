@@ -47,20 +47,13 @@ class PiggyBankEventFactory
         $piggyRepos = app(PiggyBankRepositoryInterface::class);
         $piggyRepos->setUser($journal->user);
 
-        $repetition = $piggyRepos->getRepetition($piggyBank);
-        if (null === $repetition) {
-            app('log')->error(sprintf('No piggy bank repetition on %s!', $journal->date->format('Y-m-d')));
-
-            return;
-        }
-        app('log')->debug('Found repetition');
-        $amount     = $piggyRepos->getExactAmount($piggyBank, $repetition, $journal);
+        $amount     = $piggyRepos->getExactAmount($piggyBank, $journal);
         if (0 === bccomp($amount, '0')) {
             app('log')->debug('Amount is zero, will not create event.');
 
             return;
         }
         // amount can be negative here
-        $piggyRepos->addAmountToRepetition($repetition, $amount, $journal);
+        $piggyRepos->addAmountToPiggyBank($piggyBank, $amount, $journal);
     }
 }

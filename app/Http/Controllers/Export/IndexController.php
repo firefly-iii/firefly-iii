@@ -52,7 +52,7 @@ class IndexController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-life-bouy');
-                app('view')->share('title', (string)trans('firefly.export_data_title'));
+                app('view')->share('title', (string) trans('firefly.export_data_title'));
                 $this->journalRepository = app(JournalRepositoryInterface::class);
                 $this->middleware(IsDemoUser::class)->except(['index']);
 
@@ -67,7 +67,7 @@ class IndexController extends Controller
     public function export(): LaravelResponse|RedirectResponse
     {
         if (auth()->user()->hasRole('demo')) {
-            session()->flash('info', (string)trans('firefly.demo_user_export'));
+            session()->flash('info', (string) trans('firefly.demo_user_export'));
 
             return redirect(route('export.index'));
         }
@@ -103,7 +103,7 @@ class IndexController extends Controller
             ->header('Expires', '0')
             ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
             ->header('Pragma', 'public')
-            ->header('Content-Length', (string)strlen($result['transactions']))
+            ->header('Content-Length', (string) strlen($result['transactions']))
         ;
 
         // return CSV file made from 'transactions' array.

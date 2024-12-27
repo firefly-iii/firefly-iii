@@ -24,23 +24,25 @@ declare(strict_types=1);
 
 namespace FireflyIII\Notifications\Security;
 
-use FireflyIII\Support\Notifications\UrlValidator;
+use FireflyIII\Notifications\ReturnsAvailableChannels;
+use FireflyIII\Notifications\ReturnsSettings;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Request;
+use NotificationChannels\Pushover\PushoverMessage;
+use Ntfy\Message;
 
 class MFABackupFewLeftNotification extends Notification
 {
     use Queueable;
 
-    private User   $user;
-    private int $count;
+    private int  $count;
+    private User $user;
 
-    /**
-     * Create a new notification instance.
-     */
     public function __construct(User $user, int $count)
     {
         $this->user  = $user;
@@ -48,73 +50,64 @@ class MFABackupFewLeftNotification extends Notification
     }
 
     /**
-     * Get the array representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return array
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function toArray($notifiable)
+    public function toArray(User $notifiable)
     {
         return [
         ];
     }
 
     /**
-     * Get the mail representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return MailMessage
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function toMail($notifiable)
+    public function toMail(User $notifiable)
     {
-        $subject = (string)trans('email.mfa_few_backups_left_subject', ['count' => $this->count]);
+        $subject   = (string) trans('email.mfa_few_backups_left_subject', ['count' => $this->count]);
+        $ip        = Request::ip();
+        $host      = Steam::getHostName($ip);
+        $userAgent = Request::userAgent();
+        $time      = now(config('app.timezone'))->isoFormat((string) trans('config.date_time_js'));
 
-        return (new MailMessage())->markdown('emails.security.few-backup-codes', ['user' => $this->user, 'count' => $this->count])->subject($subject);
+        return (new MailMessage())->markdown('emails.security.few-backup-codes', ['user' => $this->user, 'count' => $this->count, 'ip' => $ip, 'host' => $host, 'userAgent' => $userAgent, 'time' => $time])->subject($subject);
+    }
+
+    public function toNtfy(User $notifiable): Message
+    {
+        $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
+        $message  = new Message();
+        $message->topic($settings['ntfy_topic']);
+        $message->title((string) trans('email.mfa_few_backups_left_subject'));
+        $message->body((string) trans('email.mfa_few_backups_left_slack', ['email' => $this->user->email, 'count' => $this->count]));
+
+        return $message;
     }
 
     /**
-     * Get the Slack representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return SlackMessage
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function toSlack($notifiable)
+    public function toPushover(User $notifiable): PushoverMessage
     {
-        $message = (string)trans('email.mfa_few_backups_left_slack', ['email' => $this->user->email, 'count' => $this->count]);
-
-        return (new SlackMessage())->content($message);
+        return PushoverMessage::create((string) trans('email.mfa_few_backups_left_slack', ['email' => $this->user->email, 'count' => $this->count]))
+            ->title((string) trans('email.mfa_few_backups_left_subject'))
+        ;
     }
 
     /**
-     * Get the notification's delivery channels.
-     *
-     * @param mixed $notifiable
-     *
-     * @return array
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function via($notifiable)
+    public function toSlack(User $notifiable)
     {
-        /** @var null|User $user */
-        $user     = auth()->user();
-        $slackUrl = null === $user ? '' : app('preferences')->getForUser(auth()->user(), 'slack_webhook_url', '')->data;
-        if (is_array($slackUrl)) {
-            $slackUrl = '';
-        }
-        if (UrlValidator::isValidWebhookURL((string)$slackUrl)) {
-            return ['mail', 'slack'];
-        }
+        $message = (string) trans('email.mfa_few_backups_left_slack', ['email' => $this->user->email, 'count' => $this->count]);
 
-        return ['mail'];
+        return new SlackMessage()->content($message);
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function via(User $notifiable)
+    {
+        return ReturnsAvailableChannels::returnChannels('user', $notifiable);
     }
 }

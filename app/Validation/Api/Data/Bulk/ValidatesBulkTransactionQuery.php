@@ -41,20 +41,20 @@ trait ValidatesBulkTransactionQuery
             // find both accounts, must be same type.
             // already validated: belongs to this user.
             $repository     = app(AccountRepositoryInterface::class);
-            $source         = $repository->find((int)$json['where']['account_id']);
-            $dest           = $repository->find((int)$json['update']['account_id']);
+            $source         = $repository->find((int) $json['where']['account_id']);
+            $dest           = $repository->find((int) $json['update']['account_id']);
             if (null === $source) {
-                $validator->errors()->add('query', sprintf((string)trans('validation.invalid_query_data'), 'where', 'account_id'));
+                $validator->errors()->add('query', sprintf((string) trans('validation.invalid_query_data'), 'where', 'account_id'));
 
                 return;
             }
             if (null === $dest) {
-                $validator->errors()->add('query', sprintf((string)trans('validation.invalid_query_data'), 'update', 'account_id'));
+                $validator->errors()->add('query', sprintf((string) trans('validation.invalid_query_data'), 'update', 'account_id'));
 
                 return;
             }
             if ($source->accountType->type !== $dest->accountType->type) {
-                $validator->errors()->add('query', (string)trans('validation.invalid_query_account_type'));
+                $validator->errors()->add('query', (string) trans('validation.invalid_query_account_type'));
 
                 return;
             }
@@ -68,7 +68,7 @@ trait ValidatesBulkTransactionQuery
                 && null !== $destCurrency
                 && $sourceCurrency->id !== $destCurrency->id
             ) {
-                $validator->errors()->add('query', (string)trans('validation.invalid_query_currency'));
+                $validator->errors()->add('query', (string) trans('validation.invalid_query_currency'));
             }
         }
     }

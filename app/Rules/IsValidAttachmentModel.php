@@ -78,14 +78,14 @@ class IsValidAttachmentModel implements ValidationRule
             return;
         }
         $result = match ($this->model) {
-            Account::class            => $this->validateAccount((int)$value),
-            Bill::class               => $this->validateBill((int)$value),
-            Budget::class             => $this->validateBudget((int)$value),
-            Category::class           => $this->validateCategory((int)$value),
-            PiggyBank::class          => $this->validatePiggyBank((int)$value),
-            Tag::class                => $this->validateTag((int)$value),
-            Transaction::class        => $this->validateTransaction((int)$value),
-            TransactionJournal::class => $this->validateJournal((int)$value),
+            Account::class            => $this->validateAccount((int) $value),
+            Bill::class               => $this->validateBill((int) $value),
+            Budget::class             => $this->validateBudget((int) $value),
+            Category::class           => $this->validateCategory((int) $value),
+            PiggyBank::class          => $this->validatePiggyBank((int) $value),
+            Tag::class                => $this->validateTag((int) $value),
+            Transaction::class        => $this->validateTransaction((int) $value),
+            TransactionJournal::class => $this->validateJournal((int) $value),
             default                   => false,
         };
 

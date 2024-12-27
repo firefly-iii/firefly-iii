@@ -16,7 +16,7 @@
     </li>
 
     <li class="{{ activeRoutePartial('bills') }}">
-        <a href="{{ route('bills.index') }}">
+        <a href="{{ route('subscriptions.index') }}">
             <em class="fa fa-calendar-o fa-fw"></em>
             <span>{{ 'bills'|_ }}</span>
         </a>
@@ -189,7 +189,7 @@
         </li>
     {% endif %}
 
-    <li class="{{ activeRoutePartial('admin') }} {{ activeRoutePartial('profile') }} {{ activeRoutePartial('preferences') }} {{ activeRoutePartial('currencies') }} treeview"
+    <li class="{{ activeRoutePartial('admin') }} {{ activeRoutePartial('profile') }} {{ activeRoutePartial('preferences') }} {{ activeRoutePartial('currencies') }} {{ activeRoutePartial('exchange-rates') }} treeview"
         id="option-menu">
         <a href="#">
             <em class="fa fa-sliders fa-fw"></em>
@@ -217,6 +217,12 @@
                 <a class="{{ activeRoutePartial('currencies') }}" href="{{ route('currencies.index') }}">
                     <span class="fa fa-angle-right fa-fw"></span>
                     <span>{{ 'currencies'|_ }}</span>
+                </a>
+            </li>
+            <li class="{{ activeRoutePartial('exchange-rates') }}">
+                <a class="{{ activeRoutePartial('exchange-rates') }}" href="{{ route('exchange-rates.index') }}">
+                    <span class="fa fa-angle-right fa-fw"></span>
+                    <span>{{ 'menu_exchange_rates_index'|_ }}</span>
                 </a>
             </li>
             {% if hasRole('owner') %}

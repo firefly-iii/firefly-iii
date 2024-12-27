@@ -42,7 +42,7 @@ class TagOrId implements BinderInterface
 
             $result     = $repository->findByTag($value);
             if (null === $result) {
-                $result = $repository->find((int)$value);
+                $result = $repository->find((int) $value);
             }
             if (null !== $result) {
                 return $result;

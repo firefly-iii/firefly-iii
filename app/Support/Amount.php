@@ -24,10 +24,13 @@ declare(strict_types=1);
 namespace FireflyIII\Support;
 
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class Amount.
@@ -45,11 +48,48 @@ class Amount
         return $this->formatFlat($format->symbol, $format->decimal_places, $amount, $coloured);
     }
 
-    public function formatByCurrencyId(int $currencyId, string $amount, ?bool $coloured = null): string
+    /**
+     * Experimental function to see if we can quickly and quietly get the amount from a journal.
+     * This depends on the user's default currency and the wish to have it converted.
+     */
+    public function getAmountFromJournal(array $journal): string
     {
-        $format = TransactionCurrency::find($currencyId);
+        $convertToNative = app('preferences')->get('convert_to_native', false)->data;
+        $currency        = app('amount')->getDefaultCurrency();
+        $field           = $convertToNative && $currency->id !== $journal['currency_id'] ? 'native_amount' : 'amount';
+        $amount          = $journal[$field] ?? '0';
+        // Log::debug(sprintf('Field is %s, amount is %s', $field, $amount));
+        // fallback, the transaction has a foreign amount in $currency.
+        if ($convertToNative && null !== $journal['foreign_amount'] && $currency->id === (int)$journal['foreign_currency_id']) {
+            $amount = $journal['foreign_amount'];
+            // Log::debug(sprintf('Overruled, amount is now %s', $amount));
+        }
 
-        return $this->formatFlat($format->symbol, $format->decimal_places, $amount, $coloured);
+        return $amount;
+    }
+
+    /**
+     * Experimental function to see if we can quickly and quietly get the amount from a journal.
+     * This depends on the user's default currency and the wish to have it converted.
+     */
+    public function getAmountFromJournalObject(TransactionJournal $journal): string
+    {
+        $convertToNative   = app('preferences')->get('convert_to_native', false)->data;
+        $currency          = app('amount')->getDefaultCurrency();
+        $field             = $convertToNative && $currency->id !== $journal->transaction_currency_id ? 'native_amount' : 'amount';
+
+        /** @var null|Transaction $sourceTransaction */
+        $sourceTransaction = $journal->transactions()->where('amount', '<', 0)->first();
+        if (null === $sourceTransaction) {
+            return '0';
+        }
+        $amount            = $sourceTransaction->{$field};
+        if ((int) $sourceTransaction->foreign_currency_id === $currency->id) {
+            // use foreign amount instead!
+            $amount = (string) $sourceTransaction->foreign_amount; // hard coded to be foreign amount.
+        }
+
+        return $amount;
     }
 
     /**
@@ -70,7 +110,7 @@ class Amount
         $fmt->setSymbol(\NumberFormatter::CURRENCY_SYMBOL, $symbol);
         $fmt->setAttribute(\NumberFormatter::MIN_FRACTION_DIGITS, $decimalPlaces);
         $fmt->setAttribute(\NumberFormatter::MAX_FRACTION_DIGITS, $decimalPlaces);
-        $result  = (string)$fmt->format((float)$rounded); // intentional float
+        $result  = (string) $fmt->format((float) $rounded); // intentional float
 
         if (true === $coloured) {
             if (1 === bccomp($rounded, '0')) {
@@ -84,6 +124,13 @@ class Amount
         }
 
         return $result;
+    }
+
+    public function formatByCurrencyId(int $currencyId, string $amount, ?bool $coloured = null): string
+    {
+        $format = TransactionCurrency::find($currencyId);
+
+        return $this->formatFlat($format->symbol, $format->decimal_places, $amount, $coloured);
     }
 
     public function getAllCurrencies(): Collection

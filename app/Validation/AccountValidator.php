@@ -277,7 +277,7 @@ class AccountValidator
         }
 
         // find by iban
-        if (null !== $accountIban && '' !== (string)$accountIban) {
+        if (null !== $accountIban && '' !== (string) $accountIban) {
             $first       = $this->getRepository()->findByIbanNull($accountIban, $validTypes);
             $accountType = null === $first ? 'invalid' : $first->accountType->type;
             $check       = in_array($accountType, $validTypes, true);
@@ -290,7 +290,7 @@ class AccountValidator
         }
 
         // find by number
-        if (null !== $accountNumber && '' !== (string)$accountNumber) {
+        if (null !== $accountNumber && '' !== (string) $accountNumber) {
             $first       = $this->getRepository()->findByAccountNumber($accountNumber, $validTypes);
             $accountType = null === $first ? 'invalid' : $first->accountType->type;
             $check       = in_array($accountType, $validTypes, true);
@@ -303,7 +303,7 @@ class AccountValidator
         }
 
         // find by name:
-        if ('' !== (string)$accountName) {
+        if ('' !== (string) $accountName) {
             $first = $this->getRepository()->findByName($accountName, $validTypes);
             if (null !== $first) {
                 app('log')->debug(sprintf('Name: Found %s account #%d ("%s", IBAN "%s")', $first->accountType->type, $first->id, $first->name, $first->iban ?? 'no iban'));

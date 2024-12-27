@@ -75,7 +75,7 @@ class PiggyBankController extends Controller
         $locale                 = app('steam')->getLocale();
 
         // get first event or start date of piggy bank or today
-        $startDate              = $piggyBank->startdate ?? today(config('app.timezone'));
+        $startDate              = $piggyBank->start_date ?? today(config('app.timezone'));
 
         /** @var null|PiggyBankEvent $firstEvent */
         $firstEvent             = $set->first();
@@ -95,7 +95,7 @@ class PiggyBankController extends Controller
                 }
             );
             $currentSum        = $filtered->sum('amount');
-            $label             = $oldest->isoFormat((string)trans('config.month_and_day_js', [], $locale));
+            $label             = $oldest->isoFormat((string) trans('config.month_and_day_js', [], $locale));
             $chartData[$label] = $currentSum;
             $oldest            = app('navigation')->addPeriod($oldest, $step, 0);
         }
@@ -105,7 +105,7 @@ class PiggyBankController extends Controller
             }
         );
         $finalSum               = $finalFiltered->sum('amount');
-        $finalLabel             = $today->isoFormat((string)trans('config.month_and_day_js', [], $locale));
+        $finalLabel             = $today->isoFormat((string) trans('config.month_and_day_js', [], $locale));
         $chartData[$finalLabel] = $finalSum;
 
         $data                   = $this->generator->singleSet($piggyBank->name, $chartData);

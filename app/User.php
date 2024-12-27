@@ -36,7 +36,6 @@ use FireflyIII\Models\Category;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\GroupMembership;
 use FireflyIII\Models\ObjectGroup;
-use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\Role;
@@ -50,8 +49,6 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Models\UserRole;
 use FireflyIII\Models\Webhook;
-use FireflyIII\Notifications\Admin\TestNotification;
-use FireflyIII\Notifications\Admin\UserInvitation;
 use FireflyIII\Notifications\Admin\UserRegistration;
 use FireflyIII\Notifications\Admin\VersionCheckResult;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -64,7 +61,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Laravel\Passport\HasApiTokens;
-use Laravel\Passport\Token;
+use NotificationChannels\Pushover\PushoverReceiver;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -91,7 +88,7 @@ class User extends Authenticatable
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $userId = (int)$value;
+            $userId = (int) $value;
             $user   = self::find($userId);
             if (null !== $user) {
                 return $user;
@@ -184,7 +181,7 @@ class User extends Authenticatable
      */
     public function getAdministrationId(): int
     {
-        $groupId = (int)$this->user_group_id;
+        $groupId = (int) $this->user_group_id;
         if (0 === $groupId) {
             throw new FireflyException('User has no administration ID.');
         }
@@ -332,12 +329,9 @@ class User extends Authenticatable
         return $this->hasMany(ObjectGroup::class);
     }
 
-    /**
-     * Link to piggy banks.
-     */
-    public function piggyBanks(): HasManyThrough
+    public function piggyBanks(): void
     {
-        return $this->hasManyThrough(PiggyBank::class, Account::class);
+        throw new FireflyException('Method no longer supported.');
     }
 
     /**
@@ -382,9 +376,8 @@ class User extends Authenticatable
         }
 
         return match ($driver) {
-            'database' => $this->notifications(),
-            'mail'     => $email,
-            default    => null,
+            'mail'  => $email,
+            default => null,
         };
     }
 
@@ -404,35 +397,43 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class);
     }
 
+    public function routeNotificationForPushover()
+    {
+        $appToken  = (string) app('preferences')->getEncrypted('pushover_app_token', '')->data;
+        $userToken = (string) app('preferences')->getEncrypted('pushover_user_token', '')->data;
+
+        return PushoverReceiver::withUserKey($userToken)->withApplicationToken($appToken);
+    }
+
     /**
      * Route notifications for the Slack channel.
      */
-    public function routeNotificationForSlack(Notification $notification): string
+    public function routeNotificationForSlack(Notification $notification): ?string
     {
         // this check does not validate if the user is owner, Should be done by notification itself.
-        $res  = app('fireflyconfig')->get('slack_webhook_url', '')->data;
+        $res  = app('fireflyconfig')->getEncrypted('slack_webhook_url', '')->data;
         if (is_array($res)) {
             $res = '';
         }
-        $res  = (string)$res;
-        if ($notification instanceof TestNotification) {
+        $res  = (string) $res;
+
+        if (property_exists($notification, 'type') && 'owner' === $notification->type) {
             return $res;
         }
-        if ($notification instanceof UserInvitation) {
-            return $res;
-        }
+
+        // not the best way to do this, but alas.
         if ($notification instanceof UserRegistration) {
             return $res;
         }
         if ($notification instanceof VersionCheckResult) {
             return $res;
         }
-        $pref = app('preferences')->getForUser($this, 'slack_webhook_url', '')->data;
+        $pref = app('preferences')->getEncryptedForUser($this, 'slack_webhook_url', '')->data;
         if (is_array($pref)) {
             return '';
         }
 
-        return (string)$pref;
+        return (string) $pref;
     }
 
     /**

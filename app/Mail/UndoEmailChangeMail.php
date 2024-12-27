@@ -58,7 +58,7 @@ class UndoEmailChangeMail extends Mailable
     {
         return $this
             ->markdown('emails.undo-email-change')
-            ->subject((string)trans('email.email_change_subject'))
+            ->subject((string) trans('email.email_change_subject'))
         ;
     }
 }

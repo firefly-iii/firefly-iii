@@ -23,12 +23,16 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\RequestInformation;
 use FireflyIII\Support\Http\Controllers\UserNavigation;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\View;
+use Route;
 
 /**
  * Class Controller.
@@ -44,8 +48,13 @@ abstract class Controller extends BaseController
     use UserNavigation;
     use ValidatesRequests;
 
+    // fails on PHP < 8.4
+    public protected(set) string $name;
+
     protected string $dateTimeFormat;
     protected string $monthAndDayFormat;
+    protected bool $convertToNative = false;
+    protected ?TransactionCurrency $defaultCurrency;
     protected string $monthFormat;
     protected string $redirectUrl = '/';
 
@@ -56,69 +65,73 @@ abstract class Controller extends BaseController
     {
         // is site a demo site?
         $isDemoSiteConfig = app('fireflyconfig')->get('is_demo_site', config('firefly.configuration.is_demo_site', false));
-        $isDemoSite       = (bool)$isDemoSiteConfig->data;
-        app('view')->share('IS_DEMO_SITE', $isDemoSite);
-        app('view')->share('DEMO_USERNAME', config('firefly.demo_username'));
-        app('view')->share('DEMO_PASSWORD', config('firefly.demo_password'));
-        app('view')->share('FF_VERSION', config('firefly.version'));
+        $isDemoSite       = (bool) $isDemoSiteConfig->data;
+        View::share('IS_DEMO_SITE', $isDemoSite);
+        View::share('DEMO_USERNAME', config('firefly.demo_username'));
+        View::share('DEMO_PASSWORD', config('firefly.demo_password'));
+        View::share('FF_VERSION', config('firefly.version'));
 
         // is webhooks enabled?
-        app('view')->share('featuringWebhooks', true === config('firefly.feature_flags.webhooks') && true === config('firefly.allow_webhooks'));
+        View::share('featuringWebhooks', true === config('firefly.feature_flags.webhooks') && true === config('firefly.allow_webhooks'));
 
         // share custom auth guard info.
-        $authGuard        = config('firefly.authentication_guard');
-        $logoutUrl        = config('firefly.custom_logout_url');
+        $authGuard = config('firefly.authentication_guard');
+        $logoutUrl = config('firefly.custom_logout_url');
 
         // overrule v2 layout back to v1.
         if ('true' === request()->get('force_default_layout') && 'v2' === config('view.layout')) {
-            app('view')->getFinder()->setPaths([realpath(base_path('resources/views'))]); // @phpstan-ignore-line
+            View::getFinder()->setPaths([realpath(base_path('resources/views'))]); // @phpstan-ignore-line
         }
 
-        app('view')->share('authGuard', $authGuard);
-        app('view')->share('logoutUrl', $logoutUrl);
+        View::share('authGuard', $authGuard);
+        View::share('logoutUrl', $logoutUrl);
 
         // upload size
-        $maxFileSize      = app('steam')->phpBytes((string)ini_get('upload_max_filesize'));
-        $maxPostSize      = app('steam')->phpBytes((string)ini_get('post_max_size'));
-        $uploadSize       = min($maxFileSize, $maxPostSize);
-        app('view')->share('uploadSize', $uploadSize);
+        $maxFileSize = Steam::phpBytes((string) ini_get('upload_max_filesize'));
+        $maxPostSize = Steam::phpBytes((string) ini_get('post_max_size'));
+        $uploadSize  = min($maxFileSize, $maxPostSize);
+        View::share('uploadSize', $uploadSize);
 
         // share is alpha, is beta
-        $isAlpha          = false;
+        $isAlpha = false;
         if (str_contains(config('firefly.version'), 'alpha')) {
             $isAlpha = true;
         }
 
-        $isBeta           = false;
+        $isBeta = false;
         if (str_contains(config('firefly.version'), 'beta')) {
             $isBeta = true;
         }
 
-        app('view')->share('FF_IS_ALPHA', $isAlpha);
-        app('view')->share('FF_IS_BETA', $isBeta);
+        View::share('FF_IS_ALPHA', $isAlpha);
+        View::share('FF_IS_BETA', $isBeta);
 
         $this->middleware(
             function ($request, $next): mixed {
-                $locale                  = app('steam')->getLocale();
+                $locale = Steam::getLocale();
                 // translations for specific strings:
-                $this->monthFormat       = (string)trans('config.month_js', [], $locale);
-                $this->monthAndDayFormat = (string)trans('config.month_and_day_js', [], $locale);
-                $this->dateTimeFormat    = (string)trans('config.date_time_js', [], $locale);
+                $this->monthFormat       = (string) trans('config.month_js', [], $locale);
+                $this->monthAndDayFormat = (string) trans('config.month_and_day_js', [], $locale);
+                $this->dateTimeFormat    = (string) trans('config.date_time_js', [], $locale);
                 $darkMode                = 'browser';
+                $this->defaultCurrency   =null;
                 // get shown-intro-preference:
                 if (auth()->check()) {
-                    $language  = app('steam')->getLanguage();
-                    $locale    = app('steam')->getLocale();
+                    $this->defaultCurrency   = app('amount')->getDefaultCurrency();
+                    $language  = Steam::getLanguage();
+                    $locale    = Steam::getLocale();
                     $darkMode  = app('preferences')->get('darkMode', 'browser')->data;
+                    $this->convertToNative =app('preferences')->get('convert_to_native', false)->data;
                     $page      = $this->getPageName();
                     $shownDemo = $this->hasSeenDemo();
-                    app('view')->share('language', $language);
-                    app('view')->share('locale', $locale);
-                    app('view')->share('shownDemo', $shownDemo);
-                    app('view')->share('current_route_name', $page);
-                    app('view')->share('original_route_name', \Route::currentRouteName());
+                    View::share('language', $language);
+                    View::share('locale', $locale);
+                    View::share('convertToNative', $this->convertToNative);
+                    View::share('shownDemo', $shownDemo);
+                    View::share('current_route_name', $page);
+                    View::share('original_route_name', Route::currentRouteName());
                 }
-                app('view')->share('darkMode', $darkMode);
+                View::share('darkMode', $darkMode);
 
                 return $next($request);
             }

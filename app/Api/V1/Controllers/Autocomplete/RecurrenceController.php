@@ -67,7 +67,7 @@ class RecurrenceController extends Controller
         /** @var Recurrence $recurrence */
         foreach ($recurrences as $recurrence) {
             $response[] = [
-                'id'          => (string)$recurrence->id,
+                'id'          => (string) $recurrence->id,
                 'name'        => $recurrence->title,
                 'description' => $recurrence->description,
             ];

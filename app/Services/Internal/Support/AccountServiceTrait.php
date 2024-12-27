@@ -144,7 +144,7 @@ trait AccountServiceTrait
                     $data[$field] = $data[$field]->toAtomString();
                 }
 
-                $factory->crud($account, $field, (string)$data[$field]);
+                $factory->crud($account, $field, (string) $data[$field]);
             }
         }
     }
@@ -174,7 +174,7 @@ trait AccountServiceTrait
      */
     public function validOBData(array $data): bool
     {
-        $data['opening_balance'] = (string)($data['opening_balance'] ?? '');
+        $data['opening_balance'] = (string) ($data['opening_balance'] ?? '');
         if ('' !== $data['opening_balance'] && 0 === bccomp($data['opening_balance'], '0')) {
             $data['opening_balance'] = '';
         }
@@ -201,7 +201,7 @@ trait AccountServiceTrait
         if (is_array($language)) {
             $language = 'en_US';
         }
-        $language   = (string)$language;
+        $language   = (string) $language;
         $sourceId   = null;
         $sourceName = null;
         $destId     = null;
@@ -434,7 +434,7 @@ trait AccountServiceTrait
         if (is_array($language)) {
             $language = 'en_US';
         }
-        $language   = (string)$language;
+        $language   = (string) $language;
 
         // set source and/or destination based on whether the amount is positive or negative.
         // first, assume the amount is positive and go from there:
@@ -623,7 +623,7 @@ trait AccountServiceTrait
         if (is_array($language)) {
             $language = 'en_US';
         }
-        $language   = (string)$language;
+        $language   = (string) $language;
         $sourceId   = null;
         $sourceName = null;
         $destId     = null;

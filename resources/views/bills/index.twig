@@ -6,7 +6,7 @@
 
 {% block content %}
     {% if total == 0 %}
-        {% include 'partials.empty' with {objectType: 'default', type: 'bills',route: route('bills.create')} %}
+        {% include 'partials.empty' with {objectType: 'default', type: 'bills',route: route('subscriptions.create')} %}
     {% else %}
         <div class="row">
             <div class="col-lg-12 col-sm-12 col-md-12">
@@ -17,19 +17,19 @@
                             <div class="btn-group">
                                 <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-v"></span></button>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="{{ route('bills.create') }}"><span class="fa fa-plus fa-fw"></span> {{ 'new_bill'|_ }}</a></li>
+                                    <li><a href="{{ route('subscriptions.create') }}"><span class="fa fa-plus fa-fw"></span> {{ 'new_bill'|_ }}</a></li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                     <div class="box-body no-padding">
                         <div style="padding:8px;">
-                            <a class="btn btn-success" href="{{ route('bills.create') }}"><span class="fa fa-plus fa-fw"></span> {{ 'create_new_bill'|_ }}</a>
+                            <a class="btn btn-success" href="{{ route('subscriptions.create') }}"><span class="fa fa-plus fa-fw"></span> {{ 'create_new_bill'|_ }}</a>
                         </div>
                         {% include 'list/bills' %}
                     </div>
                     <div class="box-footer">
-                        <a class="btn btn-success" href="{{ route('bills.create') }}"><span class="fa fa-plus fa-fw"></span> {{ 'create_new_bill'|_ }}</a>
+                        <a class="btn btn-success" href="{{ route('subscriptions.create') }}"><span class="fa fa-plus fa-fw"></span> {{ 'create_new_bill'|_ }}</a>
                     </div>
                 </div>
             </div>

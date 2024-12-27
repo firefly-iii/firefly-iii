@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use FireflyIII\Enums\AccountTypeEnum;
+use Deprecated;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -35,46 +35,46 @@ class AccountType extends Model
 {
     use ReturnsIntegerIdTrait;
 
-    /** @deprecated */
+    #[\Deprecated] /** @deprecated */
     public const string ASSET            = 'Asset account';
 
-    /** @deprecated */
+    #[\Deprecated] /** @deprecated */
     public const string BENEFICIARY      = 'Beneficiary account';
 
-    /** @deprecated */
+    #[\Deprecated] /** @deprecated */
     public const string CASH             = 'Cash account';
 
-    /** @deprecated */
+    #[\Deprecated] /** @deprecated */
     public const string CREDITCARD       = 'Credit card';
 
-    /** @deprecated */
+    #[\Deprecated] /** @deprecated */
     public const string DEBT             = 'Debt';
 
-    /** @deprecated */
+    #[\Deprecated] /** @deprecated */
     public const string DEFAULT          = 'Default account';
 
-    /** @deprecated */
+    #[\Deprecated] /** @deprecated */
     public const string EXPENSE          = 'Expense account';
 
-    /** @deprecated */
+    #[\Deprecated] /** @deprecated */
     public const string IMPORT           = 'Import account';
 
-    /** @deprecated */
+    #[\Deprecated] /** @deprecated */
     public const string INITIAL_BALANCE  = 'Initial balance account';
 
-    /** @deprecated */
+    #[\Deprecated] /** @deprecated */
     public const string LIABILITY_CREDIT = 'Liability credit account';
 
-    /** @deprecated */
+    #[\Deprecated] /** @deprecated */
     public const string LOAN             = 'Loan';
 
-    /** @deprecated */
+    #[\Deprecated] /** @deprecated */
     public const string MORTGAGE         = 'Mortgage';
 
-    /** @deprecated */
+    #[\Deprecated] /** @deprecated */
     public const string RECONCILIATION   = 'Reconciliation account';
 
-    /** @deprecated */
+    #[\Deprecated] /** @deprecated */
     public const string REVENUE          = 'Revenue account';
 
     protected $casts

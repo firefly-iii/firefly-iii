@@ -89,7 +89,7 @@ class BudgetLimitHandler
         if (null === $viewRange || is_array($viewRange)) {
             $viewRange = '1M';
         }
-        $viewRange   = (string)$viewRange;
+        $viewRange   = (string) $viewRange;
 
         $start       = app('navigation')->startOfPeriod($budgetLimit->start_date, $viewRange);
         $end         = app('navigation')->startOfPeriod($budgetLimit->end_date, $viewRange);
@@ -119,7 +119,7 @@ class BudgetLimitHandler
                 // if not exists:
                 $currentPeriod = Period::make($current, $currentEnd, precision: Precision::DAY(), boundaries: Boundaries::EXCLUDE_NONE());
                 $daily         = $this->getDailyAmount($budgetLimit);
-                $amount        = bcmul($daily, (string)$currentPeriod->length(), 12);
+                $amount        = bcmul($daily, (string) $currentPeriod->length(), 12);
 
                 // no need to calculate if period is equal.
                 if ($currentPeriod->equals($limitPeriod)) {
@@ -132,14 +132,14 @@ class BudgetLimitHandler
                     app('log')->debug(sprintf('Will create AB for period %s to %s', $current->format('Y-m-d'), $currentEnd->format('Y-m-d')));
                     $availableBudget = new AvailableBudget(
                         [
-                            'user_id'                    => $user->id,
-                            'user_group_id'              => $user->user_group_id,
-                            'transaction_currency_id'    => $budgetLimit->transaction_currency_id,
-                            'start_date'                 => $current,
-                            'start_date_tz'              => $current->format('e'),
-                            'end_date'                   => $currentEnd,
-                            'end_date_tz'                => $currentEnd->format('e'),
-                            'amount'                     => $amount,
+                            'user_id'                 => $user->id,
+                            'user_group_id'           => $user->user_group_id,
+                            'transaction_currency_id' => $budgetLimit->transaction_currency_id,
+                            'start_date'              => $current,
+                            'start_date_tz'           => $current->format('e'),
+                            'end_date'                => $currentEnd,
+                            'end_date_tz'             => $currentEnd->format('e'),
+                            'amount'                  => $amount,
                         ]
                     );
                     $availableBudget->save();
@@ -202,7 +202,7 @@ class BudgetLimitHandler
                 $overlap = $abPeriod->overlap($limitPeriod);
                 if (null !== $overlap) {
                     $length    = $overlap->length();
-                    $daily     = bcmul($this->getDailyAmount($budgetLimit), (string)$length);
+                    $daily     = bcmul($this->getDailyAmount($budgetLimit), (string) $length);
                     $newAmount = bcadd($newAmount, $daily);
                 }
             }
@@ -230,7 +230,7 @@ class BudgetLimitHandler
             boundaries: Boundaries::EXCLUDE_NONE()
         );
         $days        = $limitPeriod->length();
-        $amount      = bcdiv($budgetLimit->amount, (string)$days, 12);
+        $amount      = bcdiv($budgetLimit->amount, (string) $days, 12);
         app('log')->debug(
             sprintf('Total amount for budget limit #%d is %s. Nr. of days is %d. Amount per day is %s', $budgetLimit->id, $budgetLimit->amount, $days, $amount)
         );

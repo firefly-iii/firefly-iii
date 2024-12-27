@@ -71,7 +71,7 @@ trait CreateStuff
         /** @var AccountRepositoryInterface $repository */
         $repository   = app(AccountRepositoryInterface::class);
         $assetAccount = [
-            'name'                 => (string)trans('firefly.cash_wallet', [], $language),
+            'name'                 => (string) trans('firefly.cash_wallet', [], $language),
             'iban'                 => null,
             'account_type_name'    => 'asset',
             'virtual_balance'      => 0,
@@ -106,7 +106,7 @@ trait CreateStuff
 
         Log::alert('NO OAuth keys were found. They have been created.');
 
-        file_put_contents($publicKey, (string)$key->getPublicKey());
+        file_put_contents($publicKey, (string) $key->getPublicKey());
         file_put_contents($privateKey, $key->toString('PKCS1'));
     }
 
@@ -118,7 +118,7 @@ trait CreateStuff
         /** @var AccountRepositoryInterface $repository */
         $repository     = app(AccountRepositoryInterface::class);
         $savingsAccount = [
-            'name'                 => (string)trans('firefly.new_savings_account', ['bank_name' => $request->get('bank_name')], $language),
+            'name'                 => (string) trans('firefly.new_savings_account', ['bank_name' => $request->get('bank_name')], $language),
             'iban'                 => null,
             'account_type_name'    => 'asset',
             'account_type_id'      => null,

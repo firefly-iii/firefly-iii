@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Notifications\User;
 
+use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
@@ -37,39 +38,24 @@ class TransactionCreation extends Notification
 
     private array $collection;
 
-    /**
-     * Create a new notification instance.
-     */
     public function __construct(array $collection)
     {
         $this->collection = $collection;
     }
 
     /**
-     * Get the array representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return array
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function toArray($notifiable)
+    public function toArray(User $notifiable)
     {
         return [
         ];
     }
 
     /**
-     * Get the mail representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return MailMessage
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function toMail($notifiable)
+    public function toMail(User $notifiable)
     {
         return (new MailMessage())
             ->markdown('emails.report-new-journals', ['transformed' => $this->collection])
@@ -78,15 +64,9 @@ class TransactionCreation extends Notification
     }
 
     /**
-     * Get the notification's delivery channels.
-     *
-     * @param mixed $notifiable
-     *
-     * @return array
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function via($notifiable)
+    public function via(User $notifiable)
     {
         return ['mail'];
     }

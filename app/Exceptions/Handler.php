@@ -157,7 +157,7 @@ class Handler extends ExceptionHandler
             $errorCode = 500;
             $errorCode = $e instanceof MethodNotAllowedHttpException ? 405 : $errorCode;
 
-            $isDebug   = (bool)config('app.debug', false);
+            $isDebug   = (bool) config('app.debug', false);
             if ($isDebug) {
                 app('log')->debug(sprintf('Return JSON %s with debug.', get_class($e)));
 
@@ -214,7 +214,7 @@ class Handler extends ExceptionHandler
      */
     public function report(\Throwable $e): void
     {
-        $doMailError = (bool)config('firefly.send_error_message');
+        $doMailError = (bool) config('firefly.send_error_message');
         if ($this->shouldntReportLocal($e) || !$doMailError) {
             parent::report($e);
 
@@ -250,7 +250,7 @@ class Handler extends ExceptionHandler
 
         // create job that will mail.
         $ipAddress   = request()->ip() ?? '0.0.0.0';
-        $job         = new MailError($userData, (string)config('firefly.site_owner'), $ipAddress, $data);
+        $job         = new MailError($userData, (string) config('firefly.site_owner'), $ipAddress, $data);
         dispatch($job);
 
         parent::report($e);

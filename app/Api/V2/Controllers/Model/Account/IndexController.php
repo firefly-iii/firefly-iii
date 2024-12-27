@@ -36,9 +36,8 @@ use Illuminate\Support\Facades\Log;
 class IndexController extends Controller
 {
     public const string RESOURCE_KEY                  = 'accounts';
-
-    private AccountRepositoryInterface $repository;
     protected array                    $acceptedRoles = [UserRoleEnum::READ_ONLY, UserRoleEnum::MANAGE_TRANSACTIONS];
+    private AccountRepositoryInterface $repository;
 
     /**
      * AccountController constructor.

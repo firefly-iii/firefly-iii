@@ -89,36 +89,11 @@ trait ConvertsDataTypes
             "\r", // carriage return
         ];
 
-    /**
-     * Return integer value.
-     */
-    public function convertInteger(string $field): int
+    public function clearIban(?string $string): ?string
     {
-        return (int)$this->get($field);
-    }
+        $string = $this->clearString($string);
 
-    /**
-     * Abstract method that always exists in the Request classes that use this
-     * trait, OR a stub needs to be added by any other class that uses this train.
-     */
-    abstract public function get(string $key, mixed $default = null): mixed;
-
-    /**
-     * Return string value.
-     */
-    public function convertString(string $field, string $default = ''): string
-    {
-        $entry = $this->get($field);
-        if (!is_scalar($entry)) {
-            return $default;
-        }
-
-        return (string)$this->clearString((string)$entry);
-    }
-
-    public function convertIban(string $field): string
-    {
-        return Steam::filterSpaces($this->convertString($field));
+        return Steam::filterSpaces($string);
     }
 
     public function clearString(?string $string): ?string
@@ -138,13 +113,6 @@ trait ConvertsDataTypes
         return trim($string);
     }
 
-    public function clearIban(?string $string): ?string
-    {
-        $string = $this->clearString($string);
-
-        return Steam::filterSpaces($string);
-    }
-
     public function clearStringKeepNewlines(?string $string): ?string
     {
         if (null === $string) {
@@ -158,7 +126,39 @@ trait ConvertsDataTypes
         // clear zalgo text (TODO also in API v2)
         $string = preg_replace('/(\pM{2})\pM+/u', '\1', $string);
 
-        return trim((string)$string);
+        return trim((string) $string);
+    }
+
+    public function convertIban(string $field): string
+    {
+        return Steam::filterSpaces($this->convertString($field));
+    }
+
+    /**
+     * Return string value.
+     */
+    public function convertString(string $field, string $default = ''): string
+    {
+        $entry = $this->get($field);
+        if (!is_scalar($entry)) {
+            return $default;
+        }
+
+        return (string) $this->clearString((string) $entry);
+    }
+
+    /**
+     * Abstract method that always exists in the Request classes that use this
+     * trait, OR a stub needs to be added by any other class that uses this train.
+     */
+    abstract public function get(string $key, mixed $default = null): mixed;
+
+    /**
+     * Return integer value.
+     */
+    public function convertInteger(string $field): int
+    {
+        return (int) $this->get($field);
     }
 
     /**
@@ -183,7 +183,7 @@ trait ConvertsDataTypes
         $collection = new Collection();
         if (is_array($set)) {
             foreach ($set as $accountId) {
-                $account = $repository->find((int)$accountId);
+                $account = $repository->find((int) $accountId);
                 if (null !== $account) {
                     $collection->push($account);
                 }
@@ -198,7 +198,7 @@ trait ConvertsDataTypes
      */
     public function stringWithNewlines(string $field): string
     {
-        return (string)$this->clearStringKeepNewlines((string)($this->get($field) ?? ''));
+        return (string) $this->clearStringKeepNewlines((string) ($this->get($field) ?? ''));
     }
 
     /**
@@ -242,7 +242,7 @@ trait ConvertsDataTypes
 
     protected function convertDateTime(?string $string): ?Carbon
     {
-        $value = $this->get((string)$string);
+        $value = $this->get((string) $string);
         if (null === $value) {
             return null;
         }
@@ -297,7 +297,7 @@ trait ConvertsDataTypes
             return null;
         }
 
-        return (float)$res;
+        return (float) $res;
     }
 
     protected function dateFromValue(?string $string): ?Carbon
@@ -360,7 +360,7 @@ trait ConvertsDataTypes
         $result = null;
 
         try {
-            $result = '' !== (string)$this->get($field) ? new Carbon((string)$this->get($field), config('app.timezone')) : null;
+            $result = '' !== (string) $this->get($field) ? new Carbon((string) $this->get($field), config('app.timezone')) : null;
         } catch (InvalidFormatException $e) {
             // @ignoreException
         }
@@ -383,7 +383,7 @@ trait ConvertsDataTypes
             return null;
         }
 
-        return (int)$string;
+        return (int) $string;
     }
 
     /**
@@ -395,11 +395,11 @@ trait ConvertsDataTypes
             return null;
         }
 
-        $value = (string)$this->get($field);
+        $value = (string) $this->get($field);
         if ('' === $value) {
             return null;
         }
 
-        return (int)$value;
+        return (int) $value;
     }
 }

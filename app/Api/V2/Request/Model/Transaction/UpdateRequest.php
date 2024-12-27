@@ -139,7 +139,7 @@ class UpdateRequest extends Request
     {
         foreach ($this->integerFields as $fieldName) {
             if (array_key_exists($fieldName, $transaction)) {
-                $current[$fieldName] = $this->integerFromValue((string)$transaction[$fieldName]);
+                $current[$fieldName] = $this->integerFromValue((string) $transaction[$fieldName]);
             }
         }
 
@@ -154,7 +154,7 @@ class UpdateRequest extends Request
     {
         foreach ($this->stringFields as $fieldName) {
             if (array_key_exists($fieldName, $transaction)) {
-                $current[$fieldName] = $this->clearString((string)$transaction[$fieldName]);
+                $current[$fieldName] = $this->clearString((string) $transaction[$fieldName]);
             }
         }
 
@@ -169,7 +169,7 @@ class UpdateRequest extends Request
     {
         foreach ($this->textareaFields as $fieldName) {
             if (array_key_exists($fieldName, $transaction)) {
-                $current[$fieldName] = $this->clearStringKeepNewlines((string)$transaction[$fieldName]); // keep newlines
+                $current[$fieldName] = $this->clearStringKeepNewlines((string) $transaction[$fieldName]); // keep newlines
             }
         }
 
@@ -185,8 +185,8 @@ class UpdateRequest extends Request
         foreach ($this->dateFields as $fieldName) {
             app('log')->debug(sprintf('Now at date field %s', $fieldName));
             if (array_key_exists($fieldName, $transaction)) {
-                app('log')->debug(sprintf('New value: "%s"', (string)$transaction[$fieldName]));
-                $current[$fieldName] = $this->dateFromValue((string)$transaction[$fieldName]);
+                app('log')->debug(sprintf('New value: "%s"', (string) $transaction[$fieldName]));
+                $current[$fieldName] = $this->dateFromValue((string) $transaction[$fieldName]);
             }
         }
 
@@ -201,7 +201,7 @@ class UpdateRequest extends Request
     {
         foreach ($this->booleanFields as $fieldName) {
             if (array_key_exists($fieldName, $transaction)) {
-                $current[$fieldName] = $this->convertBoolean((string)$transaction[$fieldName]);
+                $current[$fieldName] = $this->convertBoolean((string) $transaction[$fieldName]);
             }
         }
 
@@ -236,7 +236,7 @@ class UpdateRequest extends Request
                     $current[$fieldName] = sprintf('%.12f', $value);
                 }
                 if (!is_float($value)) {
-                    $current[$fieldName] = (string)$value;
+                    $current[$fieldName] = (string) $value;
                 }
             }
         }

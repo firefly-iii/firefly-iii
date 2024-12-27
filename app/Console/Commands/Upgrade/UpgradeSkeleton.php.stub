@@ -4,10 +4,6 @@ namespace FireflyIII\Console\Commands\Upgrade;
 
 use Illuminate\Console\Command;
 
-/**
- * Class UpgradeSkeleton.
- * TODO DONT FORGET TO ADD THIS TO THE DOCKER BUILD
- */
 class UpgradeSkeleton extends Command
 {
     use ShowsFriendlyMessages;
@@ -15,7 +11,7 @@ class UpgradeSkeleton extends Command
 
     protected $description = 'SOME DESCRIPTION';
 
-    protected $signature = 'firefly-iii:UPGRSKELETON {--F|force : Force the execution of this command.}';
+    protected $signature = 'upgrade:UPGRSKELETON {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.

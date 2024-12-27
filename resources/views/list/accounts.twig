@@ -66,14 +66,26 @@
             {% if objectType != 'liabilities' %}
             <td style="text-align: right;">
                 <span style="margin-right:5px;">
-                {{ formatAmountByAccount(account, account.endBalance) }}
+                    {% for key, balance in account.endBalances %}
+                        <span title="{{ key }}">
+                        {% if 'balance' == key %}
+                            {{ formatAmountBySymbol(balance, account.currency.symbol, account.currency.decimal_places)  }}
+                        {% elseif 'native_balance' == key %}
+                            {{ formatAmountBySymbol(balance, defaultCurrency.symbol, defaultCurrency.decimal_places)  }}
+                        {% else %}
+                            ({{ formatAmountByCode(balance, key)  }})
+                        {% endif %}
+                        </span>
+                    {% endfor %}
                 </span>
             </td>
             {% endif %}
             {% if objectType == 'liabilities' %}
             <td style="text-align: right;">
                 {% if '-' != account.current_debt %}
-                    <span class="text-info money-transfer">{{ formatAmountByAccount(account, account.current_debt, false) }}</span>
+                    <span class="text-info money-transfer">
+                        {{ formatAmountBySymbol(account.current_debt, account.currency.symbol, account.currency.decimal_places, false) }}
+                    </span>
                 {% endif %}
             </td>
             {% endif %}
@@ -99,7 +111,16 @@
             {% endif %}
             <td class="hidden-sm hidden-xs hidden-md" style="text-align: right;">
                 <span style="margin-right:5px;">
-                    {{ formatAmountByAccount(account, account.difference) }}
+                    {% for key, balance in account.differences %}
+                        <span title="{{ key }}">
+                        {% if 'balance' == key or 'native_balance' == key %}
+                            {{ formatAmountBySymbol(balance, account.currency.symbol, account.currency.currency.decimal_places)  }}
+
+                        {% else %}
+                            ({{ formatAmountByCode(balance, key)  }})
+                        {% endif %}
+                            </span>
+                    {% endfor %}
                 </span>
             </td>
             <td class="hidden-sm hidden-xs">

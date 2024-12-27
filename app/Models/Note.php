@@ -57,7 +57,7 @@ class Note extends Model
     protected function noteableId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 }

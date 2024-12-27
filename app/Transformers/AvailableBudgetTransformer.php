@@ -57,10 +57,10 @@ class AvailableBudgetTransformer extends AbstractTransformer
 
         $currency = $availableBudget->transactionCurrency;
         $data     = [
-            'id'                      => (string)$availableBudget->id,
+            'id'                      => (string) $availableBudget->id,
             'created_at'              => $availableBudget->created_at->toAtomString(),
             'updated_at'              => $availableBudget->updated_at->toAtomString(),
-            'currency_id'             => (string)$currency->id,
+            'currency_id'             => (string) $currency->id,
             'currency_code'           => $currency->code,
             'currency_symbol'         => $currency->symbol,
             'currency_decimal_places' => $currency->decimal_places,

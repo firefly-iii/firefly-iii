@@ -35,6 +35,8 @@ $(function () {
 
     $('.budget_amount').on('change', updateBudgetedAmount);
     $('.create_bl').on('click', createBudgetLimit);
+    $('.edit_bl').on('click', editBudgetLimit);
+    $('.show_bl').on('click', showBudgetLimit);
     $('.delete_bl').on('click', deleteBudgetLimit);
 
 
@@ -211,6 +213,24 @@ function createBudgetLimit(e) {
     var button = $(e.currentTarget);
     var budgetId = button.data('id');
     $('#defaultModal').empty().load(createBudgetLimitUrl.replace('REPLACEME', budgetId.toString()), function () {
+        $('#defaultModal').modal('show');
+    });
+    return false;
+}
+
+function editBudgetLimit(e) {
+    var button = $(e.currentTarget);
+    var budgetLimitId = button.data('id');
+    $('#defaultModal').empty().load(editBudgetLimitUrl.replace('REPLACEME', budgetLimitId.toString()), function () {
+        $('#defaultModal').modal('show');
+    });
+    return false;
+}
+
+function showBudgetLimit(e) {
+    var button = $(e.currentTarget);
+    var budgetLimitId = button.data('id');
+    $('#defaultModal').empty().load(showBudgetLimitUrl.replace('REPLACEME', budgetLimitId.toString()), function () {
         $('#defaultModal').modal('show');
     });
     return false;

@@ -34,9 +34,6 @@ use FireflyIII\Support\Cronjobs\RecurringCronjob;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-/**
- * Class Cron
- */
 class Cron extends Command
 {
     use ShowsFriendlyMessages;
@@ -62,7 +59,7 @@ class Cron extends Command
         } catch (\InvalidArgumentException $e) {
             $this->friendlyError(sprintf('"%s" is not a valid date', $this->option('date')));
         }
-        $force = (bool)$this->option('force'); // @phpstan-ignore-line
+        $force = (bool) $this->option('force'); // @phpstan-ignore-line
 
         // Fire exchange rates cron job.
         if (true === config('cer.download_enabled') && ($doAll || $this->option('download-cer'))) {

@@ -45,9 +45,10 @@ class BalanceController extends Controller
     use CleansChartData;
     use CollectsAccountsFromFilter;
 
-    private AccountRepositoryInterface $repository;
-    private GroupCollectorInterface    $collector;
     private ChartData                  $chartData;
+    private GroupCollectorInterface    $collector;
+    private AccountRepositoryInterface $repository;
+
     // private TransactionCurrency        $default;
 
     public function __construct()

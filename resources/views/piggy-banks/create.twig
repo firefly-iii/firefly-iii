@@ -8,7 +8,6 @@
 
     <form method="POST" action="{{ route('piggy-banks.store') }}" accept-charset="UTF-8" class="form-horizontal" id="store" enctype="multipart/form-data">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
-        <input type="hidden" name="repeats" value="0"/>
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <div class="box box-primary">
@@ -16,10 +15,10 @@
                         <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
                     </div>
                     <div class="box-body">
-
                         {{ ExpandedForm.text('name') }}
-                        {{ AccountForm.assetAccountList('account_id', null, {label: 'saveOnAccount'|_   }) }}
-                        {{ ExpandedForm.amountNoCurrency('targetamount') }}
+                        {{ ExpandedForm.amountNoCurrency('target_amount') }}
+                        {{ CurrencyForm.currencyList('transaction_currency_id', null, {helpText:'piggy_default_currency'|_}) }}
+                        {{ AccountForm.assetLiabilityMultiAccountList('accounts', preFilled.accounts, {label: 'saveOnAccounts'|_, helpText: 'piggy_account_currency_match'|_   }) }}
 
                     </div>
                 </div>
@@ -30,7 +29,7 @@
                         <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
                     </div>
                     <div class="box-body">
-                        {{ ExpandedForm.date('targetdate') }}
+                        {{ ExpandedForm.date('target_date') }}
                         {{ ExpandedForm.textarea('notes', null, {helpText: trans('firefly.field_supports_markdown')} ) }}
                         {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
                         {{ ExpandedForm.objectGroup() }}

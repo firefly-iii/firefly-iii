@@ -26,6 +26,7 @@ namespace FireflyIII\TransactionRules\Actions;
 
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Transaction;
@@ -81,6 +82,8 @@ class UpdatePiggybank implements ActionInterface
 
         if ($source->account_id === $piggyBank->account_id) {
             app('log')->debug('Piggy bank account is linked to source, so remove amount from piggy bank.');
+
+            throw new FireflyException('Reference the correct account here.');
             $this->removeAmount($piggyBank, $journal, $journalObj, $destination->amount);
 
             event(
@@ -111,11 +114,11 @@ class UpdatePiggybank implements ActionInterface
                     'add_to_piggy',
                     null,
                     [
-                        'currency_symbol'    => $journalObj->transactionCurrency->symbol,
-                        'decimal_places'     => $journalObj->transactionCurrency->decimal_places,
-                        'amount'             => $destination->amount,
-                        'piggy'              => $piggyBank->name,
-                        'piggy_id'           => $piggyBank->id,
+                        'currency_symbol' => $journalObj->transactionCurrency->symbol,
+                        'decimal_places'  => $journalObj->transactionCurrency->decimal_places,
+                        'amount'          => $destination->amount,
+                        'piggy'           => $piggyBank->name,
+                        'piggy_id'        => $piggyBank->id,
                     ]
                 )
             );
@@ -161,6 +164,7 @@ class UpdatePiggybank implements ActionInterface
         }
 
         // make sure we can remove amount:
+        throw new FireflyException('Reference the correct account here.');
         if (false === $repository->canRemoveAmount($piggyBank, $amount)) {
             app('log')->warning(sprintf('Cannot remove %s from piggy bank.', $amount));
             event(new RuleActionFailedOnArray($this->action, $array, trans('rules.cannot_remove_from_piggy', ['amount' => $amount, 'name' => $piggyBank->name])));
@@ -169,6 +173,7 @@ class UpdatePiggybank implements ActionInterface
         }
         app('log')->debug(sprintf('Will now remove %s from piggy bank.', $amount));
 
+        throw new FireflyException('Reference the correct account here.');
         $repository->removeAmount($piggyBank, $amount, $journal);
     }
 
@@ -178,15 +183,15 @@ class UpdatePiggybank implements ActionInterface
         $repository->setUser($journal->user);
 
         // how much can we add to the piggy bank?
-        if (0 !== bccomp($piggyBank->targetamount, '0')) {
-            $toAdd  = bcsub($piggyBank->targetamount, $repository->getCurrentAmount($piggyBank));
+        if (0 !== bccomp($piggyBank->target_amount, '0')) {
+            $toAdd  = bcsub($piggyBank->target_amount, $repository->getCurrentAmount($piggyBank));
             app('log')->debug(sprintf('Max amount to add to piggy bank is %s, amount is %s', $toAdd, $amount));
 
             // update amount to fit:
             $amount = -1 === bccomp($amount, $toAdd) ? $amount : $toAdd;
             app('log')->debug(sprintf('Amount is now %s', $amount));
         }
-        if (0 === bccomp($piggyBank->targetamount, '0')) {
+        if (0 === bccomp($piggyBank->target_amount, '0')) {
             app('log')->debug('Target amount is zero, can add anything.');
         }
 
@@ -199,6 +204,7 @@ class UpdatePiggybank implements ActionInterface
         }
 
         // make sure we can add amount:
+        throw new FireflyException('Reference the correct account here.');
         if (false === $repository->canAddAmount($piggyBank, $amount)) {
             app('log')->warning(sprintf('Cannot add %s to piggy bank.', $amount));
             event(new RuleActionFailedOnArray($this->action, $array, trans('rules.cannot_add_to_piggy', ['amount' => $amount, 'name' => $piggyBank->name])));

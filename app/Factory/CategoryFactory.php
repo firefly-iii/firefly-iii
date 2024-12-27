@@ -40,8 +40,8 @@ class CategoryFactory
      */
     public function findOrCreate(?int $categoryId, ?string $categoryName): ?Category
     {
-        $categoryId   = (int)$categoryId;
-        $categoryName = (string)$categoryName;
+        $categoryId   = (int) $categoryId;
+        $categoryName = (string) $categoryName;
 
         app('log')->debug(sprintf('Going to find category with ID %d and name "%s"', $categoryId, $categoryName));
 

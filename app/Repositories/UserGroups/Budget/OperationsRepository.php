@@ -60,9 +60,9 @@ class OperationsRepository implements OperationsRepositoryInterface
         $array     = [];
 
         foreach ($journals as $journal) {
-            $currencyId                                                                   = (int)$journal['currency_id'];
-            $budgetId                                                                     = (int)$journal['budget_id'];
-            $budgetName                                                                   = (string)$journal['budget_name'];
+            $currencyId                                                                   = (int) $journal['currency_id'];
+            $budgetId                                                                     = (int) $journal['budget_id'];
+            $budgetName                                                                   = (string) $journal['budget_name'];
 
             // catch "no budget" entries.
             if (0 === $budgetId) {
@@ -88,7 +88,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
             // add journal to array:
             // only a subset of the fields.
-            $journalId                                                                    = (int)$journal['transaction_journal_id'];
+            $journalId                                                                    = (int) $journal['transaction_journal_id'];
             $final                                                                        = [
                 'amount'                          => app('steam')->negative($journal['amount']),
                 'currency_id'                     => $journal['currency_id'],

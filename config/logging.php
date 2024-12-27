@@ -34,8 +34,8 @@ $validChannels      = ['single', 'papertrail', 'stdout', 'daily', 'syslog', 'err
 $validAuditChannels = ['audit_papertrail', 'audit_stdout', 'audit_stdout', 'audit_daily', 'audit_syslog', 'audit_errorlog'];
 
 // which settings did the user set, if any?
-$defaultLogChannel  = (string)envNonEmpty('LOG_CHANNEL', 'stack');
-$auditLogChannel    = (string)envNonEmpty('AUDIT_LOG_CHANNEL', '');
+$defaultLogChannel  = (string) envNonEmpty('LOG_CHANNEL', 'stack');
+$auditLogChannel    = (string) envNonEmpty('AUDIT_LOG_CHANNEL', '');
 
 if ('stack' === $defaultLogChannel) {
     $defaultChannels = ['daily', 'stdout'];

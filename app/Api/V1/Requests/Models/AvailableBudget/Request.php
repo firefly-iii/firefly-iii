@@ -84,7 +84,7 @@ class Request extends FormRequest
                     $start = new Carbon($data['start']);
                     $end   = new Carbon($data['end']);
                     if ($end->isBefore($start)) {
-                        $validator->errors()->add('end', (string)trans('validation.date_after'));
+                        $validator->errors()->add('end', (string) trans('validation.date_after'));
                     }
                 }
             }

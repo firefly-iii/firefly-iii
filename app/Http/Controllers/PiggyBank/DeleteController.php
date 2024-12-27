@@ -47,7 +47,7 @@ class DeleteController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.piggyBanks'));
+                app('view')->share('title', (string) trans('firefly.piggyBanks'));
                 app('view')->share('mainTitleIcon', 'fa-bullseye');
 
                 $this->piggyRepos = app(PiggyBankRepositoryInterface::class);
@@ -64,7 +64,7 @@ class DeleteController extends Controller
      */
     public function delete(PiggyBank $piggyBank)
     {
-        $subTitle = (string)trans('firefly.delete_piggy_bank', ['name' => $piggyBank->name]);
+        $subTitle = (string) trans('firefly.delete_piggy_bank', ['name' => $piggyBank->name]);
 
         // put previous url in session
         $this->rememberPreviousUrl('piggy-banks.delete.url');
@@ -77,7 +77,7 @@ class DeleteController extends Controller
      */
     public function destroy(PiggyBank $piggyBank): RedirectResponse
     {
-        session()->flash('success', (string)trans('firefly.deleted_piggy_bank', ['name' => $piggyBank->name]));
+        session()->flash('success', (string) trans('firefly.deleted_piggy_bank', ['name' => $piggyBank->name]));
         app('preferences')->mark();
         $this->piggyRepos->destroy($piggyBank);
 

@@ -10,15 +10,16 @@
             </div>
 
             <div class="modal-body">
+                {% for account in accounts %}
                 <p>
-                    {{ 'max_amount_remove'|_ }}: {{ formatAmountByCurrency(currency, repetition.currentamount) }}.
+                    {{  account.account.name }}: {{ 'max_amount_remove'|_ }}: {{ formatAmountByCurrency(piggyBank.transactionCurrency, account.saved_so_far) }}.
                 </p>
-
                 <div class="input-group">
-                    <div class="input-group-addon">{{ currency.symbol|raw }}</div>
-                    <input step="any" class="form-control" id="amount" autocomplete="off" name="amount" max="{{ repetition.currentamount }}"
+                    <div class="input-group-addon">{{ piggyBank.transactionCurrency.symbol|raw }}</div>
+                    <input step="any" class="form-control" id="amount_{{ account.account.id }}" autocomplete="off" name="amount[{{ account.account.id }}]" max="{{ account.saved_so_far }}"
                            type="number">
                 </div>
+                {% endfor %}
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'close'|_ }}</button>

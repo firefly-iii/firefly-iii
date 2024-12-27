@@ -30,6 +30,7 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Models\BillDateCalculator;
 use Illuminate\Support\Collection;
 
@@ -58,6 +59,8 @@ class BillTransformer extends AbstractTransformer
      */
     public function transform(Bill $bill): array
     {
+        $defaultCurrency   = $this->parameters->get('defaultCurrency') ?? Amount::getDefaultCurrency();
+
         $paidData          = $this->paidData($bill);
         $lastPaidDate      = $this->getLastPaidDate($paidData);
         $start             = $this->parameters->get('start') ?? today()->subYears(10);
@@ -142,13 +145,15 @@ class BillTransformer extends AbstractTransformer
             'id'                       => $bill->id,
             'created_at'               => $bill->created_at->toAtomString(),
             'updated_at'               => $bill->updated_at->toAtomString(),
-            'currency_id'              => (string)$bill->transaction_currency_id,
+            'currency_id'              => (string) $bill->transaction_currency_id,
             'currency_code'            => $currency->code,
             'currency_symbol'          => $currency->symbol,
             'currency_decimal_places'  => $currency->decimal_places,
             'name'                     => $bill->name,
             'amount_min'               => app('steam')->bcround($bill->amount_min, $currency->decimal_places),
             'amount_max'               => app('steam')->bcround($bill->amount_max, $currency->decimal_places),
+            'native_amount_min'        => app('steam')->bcround($bill->native_amount_min, $defaultCurrency->decimal_places),
+            'native_amount_max'        => app('steam')->bcround($bill->native_amount_max, $defaultCurrency->decimal_places),
             'date'                     => $bill->date->toAtomString(),
             'end_date'                 => $bill->end_date?->toAtomString(),
             'extension_date'           => $bill->extension_date?->toAtomString(),
@@ -157,7 +162,7 @@ class BillTransformer extends AbstractTransformer
             'active'                   => $bill->active,
             'order'                    => $bill->order,
             'notes'                    => $notes,
-            'object_group_id'          => null !== $objectGroupId ? (string)$objectGroupId : null,
+            'object_group_id'          => null !== $objectGroupId ? (string) $objectGroupId : null,
             'object_group_order'       => $objectGroupOrder,
             'object_group_title'       => $objectGroupTitle,
 
@@ -219,8 +224,8 @@ class BillTransformer extends AbstractTransformer
         $result       = [];
         foreach ($set as $entry) {
             $result[] = [
-                'transaction_group_id'   => (string)$entry->transaction_group_id,
-                'transaction_journal_id' => (string)$entry->id,
+                'transaction_group_id'   => (string) $entry->transaction_group_id,
+                'transaction_journal_id' => (string) $entry->id,
                 'date'                   => $entry->date->format('Y-m-d'),
                 'date_object'            => $entry->date,
             ];

@@ -66,7 +66,7 @@ trait GroupValidation
             $hasAccountInfo = false;
             $hasJournalId   = array_key_exists('transaction_journal_id', $transaction);
             foreach ($keys as $key) {
-                if (array_key_exists($key, $transaction) && '' !== (string)$transaction[$key]) {
+                if (array_key_exists($key, $transaction) && '' !== (string) $transaction[$key]) {
                     $hasAccountInfo = true;
                 }
             }
@@ -74,11 +74,11 @@ trait GroupValidation
             if (false === $hasAccountInfo && !$hasJournalId) {
                 $validator->errors()->add(
                     sprintf('transactions.%d.source_id', $index),
-                    (string)trans('validation.generic_no_source')
+                    (string) trans('validation.generic_no_source')
                 );
                 $validator->errors()->add(
                     sprintf('transactions.%d.destination_id', $index),
-                    (string)trans('validation.generic_no_destination')
+                    (string) trans('validation.generic_no_destination')
                 );
             }
         }
@@ -117,7 +117,7 @@ trait GroupValidation
                 if (array_key_exists($key, $row)) {
                     $validator->errors()->add(
                         sprintf('transactions.%d.%s', $index, $key),
-                        (string)trans('validation.reconciled_forbidden_field', ['field' => $key])
+                        (string) trans('validation.reconciled_forbidden_field', ['field' => $key])
                     );
                 }
             }
@@ -139,7 +139,7 @@ trait GroupValidation
         $transactions      = $this->getTransactionsArray($validator);
         $validDescriptions = 0;
         foreach ($transactions as $transaction) {
-            if ('' !== (string)($transaction['description'] ?? null)) {
+            if ('' !== (string) ($transaction['description'] ?? null)) {
                 ++$validDescriptions;
             }
         }
@@ -148,7 +148,7 @@ trait GroupValidation
         if (0 === $validDescriptions) {
             $validator->errors()->add(
                 'transactions.0.description',
-                (string)trans('validation.filled', ['attribute' => (string)trans('validation.attributes.description')])
+                (string) trans('validation.filled', ['attribute' => (string) trans('validation.attributes.description')])
             );
         }
     }
@@ -164,7 +164,7 @@ trait GroupValidation
 
         $groupTitle   = $data['group_title'] ?? '';
         if ('' === $groupTitle && count($transactions) > 1) {
-            $validator->errors()->add('group_title', (string)trans('validation.group_title_mandatory'));
+            $validator->errors()->add('group_title', (string) trans('validation.group_title_mandatory'));
         }
     }
 
@@ -210,12 +210,12 @@ trait GroupValidation
 
             return;
         }
-        $journalId = (int)$journalId;
+        $journalId = (int) $journalId;
         $count     = $transactionGroup->transactionJournals()->where('transaction_journals.id', $journalId)->count();
         if (0 === $journalId || 0 === $count) {
             app('log')->warning(sprintf('Transaction group #%d has %d journals with ID %d', $transactionGroup->id, $count, $journalId));
             app('log')->warning('Invalid submission: Each split must have transaction_journal_id (either valid ID or 0).');
-            $validator->errors()->add(sprintf('transactions.%d.source_name', $index), (string)trans('validation.need_id_in_edit'));
+            $validator->errors()->add(sprintf('transactions.%d.source_name', $index), (string) trans('validation.need_id_in_edit'));
         }
     }
 }

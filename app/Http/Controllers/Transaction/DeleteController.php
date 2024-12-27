@@ -54,7 +54,7 @@ class DeleteController extends Controller
         // translations:
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.transactions'));
+                app('view')->share('title', (string) trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-exchange');
 
                 $this->repository = app(TransactionGroupRepositoryInterface::class);
@@ -82,7 +82,7 @@ class DeleteController extends Controller
             throw new NotFoundHttpException();
         }
         $objectType = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
-        $subTitle   = (string)trans('firefly.delete_'.$objectType, ['description' => $group->title ?? $journal->description]);
+        $subTitle   = (string) trans('firefly.delete_'.$objectType, ['description' => $group->title ?? $journal->description]);
         $previous   = app('steam')->getSafePreviousUrl();
         // put previous url in session
         app('log')->debug('Will try to remember previous URL');
@@ -106,7 +106,7 @@ class DeleteController extends Controller
             throw new NotFoundHttpException();
         }
         $objectType = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
-        session()->flash('success', (string)trans('firefly.deleted_'.strtolower($objectType), ['description' => $group->title ?? $journal->description]));
+        session()->flash('success', (string) trans('firefly.deleted_'.strtolower($objectType), ['description' => $group->title ?? $journal->description]));
 
         // grab asset account(s) from group:
         $accounts   = [];

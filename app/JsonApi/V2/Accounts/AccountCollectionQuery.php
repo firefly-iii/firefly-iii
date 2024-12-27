@@ -24,50 +24,50 @@ class AccountCollectionQuery extends ResourceQuery
         $validFilters = config('api.valid_api_filters')[Account::class];
 
         return [
-            'fields'        => [
+            'fields'      => [
                 'nullable',
                 'array',
                 JsonApiRule::fieldSets(),
             ],
-            'userGroupId'   => [
+            'userGroupId' => [
                 'nullable',
                 'integer',
                 new IsAllowedGroupAction(Account::class, request()->method()),
             ],
-            'startPeriod'   => [
+            'startPeriod' => [
                 'nullable',
                 'date',
                 new IsDateOrTime(),
                 new IsValidDateRange(),
             ],
-            'endPeriod'     => [
+            'endPeriod'   => [
                 'nullable',
                 'date',
                 new IsDateOrTime(),
                 new IsValidDateRange(),
             ],
-            'filter'        => [
+            'filter'      => [
                 'nullable',
                 'array',
                 JsonApiRule::filter($validFilters),
                 new IsValidAccountType(),
             ],
-            'include'       => [
+            'include'     => [
                 'nullable',
                 'string',
                 JsonApiRule::includePaths(),
             ],
-            'page'          => [
+            'page'        => [
                 'nullable',
                 'array',
                 JsonApiRule::page(),
             ],
-            'sort'          => [
+            'sort'        => [
                 'nullable',
                 'string',
                 JsonApiRule::sort(),
             ],
-            'withCount'     => [
+            'withCount'   => [
                 'nullable',
                 'string',
                 JsonApiRule::countable(),

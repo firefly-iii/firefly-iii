@@ -49,8 +49,8 @@ class DeleteController extends Controller
             static function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-bolt');
                 app('view')->share('subTitleIcon', 'fa-trash');
-                app('view')->share('title', (string)trans('firefly.webhooks'));
-                app('view')->share('subTitle', (string)trans('firefly.delete_webhook'));
+                app('view')->share('title', (string) trans('firefly.webhooks'));
+                app('view')->share('subTitle', (string) trans('firefly.delete_webhook'));
 
                 return $next($request);
             }
@@ -70,7 +70,7 @@ class DeleteController extends Controller
             throw new NotFoundHttpException('Webhooks are not enabled.');
         }
         Log::channel('audit')->info('User visits webhook delete page.');
-        $subTitle = (string)trans('firefly.delete_webhook', ['title' => $webhook->title]);
+        $subTitle = (string) trans('firefly.delete_webhook', ['title' => $webhook->title]);
         $this->rememberPreviousUrl('webhooks.delete.url');
 
         return view('webhooks.delete', compact('webhook', 'subTitle'));

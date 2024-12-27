@@ -47,7 +47,7 @@ class PiggyBankForm
         /** @var PiggyBankRepositoryInterface $repository */
         $repository = app(PiggyBankRepositoryInterface::class);
         $piggyBanks = $repository->getPiggyBanksWithAmount();
-        $title      = (string)trans('firefly.default_group_title_name');
+        $title      = (string) trans('firefly.default_group_title_name');
         $array      = [];
         $subList    = [
             0 => [
@@ -55,7 +55,7 @@ class PiggyBankForm
                     'title' => $title,
                 ],
                 'piggies' => [
-                    (string)trans('firefly.none_in_select_list'),
+                    (string) trans('firefly.none_in_select_list'),
                 ],
             ],
         ];

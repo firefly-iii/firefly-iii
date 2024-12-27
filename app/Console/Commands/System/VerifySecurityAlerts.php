@@ -29,9 +29,6 @@ use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use League\Flysystem\FilesystemException;
 
-/**
- * Class VerifySecurityAlerts
- */
 class VerifySecurityAlerts extends Command
 {
     use ShowsFriendlyMessages;

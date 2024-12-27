@@ -42,7 +42,7 @@ trait TransferValidation
         if (null === $accountId && null === $accountName && null === $accountIban && false === $this->canCreateTypes($validTypes)) {
             // if both values are NULL we return false,
             // because the destination of a transfer can't be created.
-            $this->destError = (string)trans('validation.transfer_dest_need_data');
+            $this->destError = (string) trans('validation.transfer_dest_need_data');
             app('log')->error('Both values are NULL, cant create transfer destination.');
 
             return false;
@@ -51,7 +51,7 @@ trait TransferValidation
         // or try to find the account:
         $search      = $this->findExistingAccount($validTypes, $array);
         if (null === $search) {
-            $this->destError = (string)trans('validation.transfer_dest_bad_data', ['id' => $accountId, 'name' => $accountName]);
+            $this->destError = (string) trans('validation.transfer_dest_bad_data', ['id' => $accountId, 'name' => $accountName]);
 
             return false;
         }
@@ -86,7 +86,7 @@ trait TransferValidation
             && false === $this->canCreateTypes($validTypes)) {
             // if both values are NULL we return false,
             // because the source of a withdrawal can't be created.
-            $this->sourceError = (string)trans('validation.transfer_source_need_data');
+            $this->sourceError = (string) trans('validation.transfer_source_need_data');
             app('log')->warning('Not a valid source, need more data.');
 
             return false;
@@ -95,7 +95,7 @@ trait TransferValidation
         // otherwise try to find the account:
         $search        = $this->findExistingAccount($validTypes, $array);
         if (null === $search) {
-            $this->sourceError = (string)trans('validation.transfer_source_bad_data', ['id' => $accountId, 'name' => $accountName]);
+            $this->sourceError = (string) trans('validation.transfer_source_bad_data', ['id' => $accountId, 'name' => $accountName]);
             app('log')->warning('Not a valid source, cant find it.', $validTypes);
 
             return false;

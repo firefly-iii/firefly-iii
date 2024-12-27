@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use FireflyIII\Enums\UserRoleEnum;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
@@ -50,7 +51,7 @@ class UserGroup extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $userGroupId = (int)$value;
+            $userGroupId = (int) $value;
 
             /** @var User $user */
             $user        = auth()->user();
@@ -150,7 +151,7 @@ class UserGroup extends Model
      */
     public function piggyBanks(): HasManyThrough
     {
-        return $this->hasManyThrough(PiggyBank::class, Account::class);
+        throw new FireflyException('This user group method is EOL.');
     }
 
     public function recurrences(): HasMany

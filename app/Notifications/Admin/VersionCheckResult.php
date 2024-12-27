@@ -24,11 +24,16 @@ declare(strict_types=1);
 
 namespace FireflyIII\Notifications\Admin;
 
-use FireflyIII\Support\Notifications\UrlValidator;
+use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
+use FireflyIII\Notifications\ReturnsAvailableChannels;
+use FireflyIII\Notifications\ReturnsSettings;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Log;
+use NotificationChannels\Pushover\PushoverMessage;
+use Ntfy\Message;
 
 /**
  * Class VersionCheckResult
@@ -39,58 +44,64 @@ class VersionCheckResult extends Notification
 
     private string $message;
 
-    /**
-     * Create a new notification instance.
-     */
     public function __construct(string $message)
     {
         $this->message = $message;
     }
 
     /**
-     * Get the array representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return array
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function toArray($notifiable)
+    public function toArray(OwnerNotifiable $notifiable)
     {
         return [
         ];
     }
 
     /**
-     * Get the mail representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return MailMessage
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function toMail($notifiable)
+    public function toMail(OwnerNotifiable $notifiable)
     {
         return (new MailMessage())
             ->markdown('emails.new-version', ['message' => $this->message])
-            ->subject((string)trans('email.new_version_email_subject'))
+            ->subject((string) trans('email.new_version_email_subject'))
         ;
     }
 
     /**
-     * Get the Slack representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return SlackMessage
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function toSlack($notifiable)
+    public function toNtfy(OwnerNotifiable $notifiable): Message
     {
-        return (new SlackMessage())->content($this->message)
+        Log::debug('Now in toNtfy() for VersionCheckResult');
+        $settings = ReturnsSettings::getSettings('ntfy', 'owner', null);
+        $message  = new Message();
+        $message->topic($settings['ntfy_topic']);
+        $message->title((string) trans('email.new_version_email_subject'));
+        $message->body($this->message);
+
+        return $message;
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toPushover(OwnerNotifiable $notifiable): PushoverMessage
+    {
+        Log::debug('Now in toPushover() for VersionCheckResult');
+
+        return PushoverMessage::create($this->message)
+            ->title((string) trans('email.new_version_email_subject'))
+        ;
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toSlack(OwnerNotifiable $notifiable)
+    {
+        return new SlackMessage()->content($this->message)
             ->attachment(static function ($attachment): void {
                 $attachment->title('Firefly III @ GitHub', 'https://github.com/firefly-iii/firefly-iii/releases');
             })
@@ -98,21 +109,10 @@ class VersionCheckResult extends Notification
     }
 
     /**
-     * Get the notification's delivery channels.
-     *
-     * @param mixed $notifiable
-     *
-     * @return array
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function via($notifiable)
+    public function via(OwnerNotifiable $notifiable)
     {
-        $slackUrl = app('fireflyconfig')->get('slack_webhook_url', '')->data;
-        if (UrlValidator::isValidWebhookURL($slackUrl)) {
-            return ['mail', 'slack'];
-        }
-
-        return ['mail'];
+        return ReturnsAvailableChannels::returnChannels('owner');
     }
 }

@@ -116,6 +116,9 @@
                                     <small>{{ 'budgeted'|_ }}:
                                         <span class="text-success money-positive budgeted_amount" data-id="{{ budget.id }}" data-currency="{{ budget.transaction_currency.id }}">
                                         {{ formatAmountBySymbol(budget.budgeted, budget.transaction_currency.symbol, budget.transaction_currency.decimal_places, false) }}
+                                            {% if null != budget.native_budgeted %}
+                                            ({{ formatAmountBySymbol(budget.native_budgeted, defaultCurrency.symbol, defaultCurrency.decimal_places, false) }})
+                                            {% endif %}
                                     </span>
                                     </small>
                                 </div>
@@ -125,7 +128,13 @@
                                            data-id="{{ budget.id }}">{{ trans('firefly.available_between', {start: budget.start_date.isoFormat(monthAndDayFormat), end: budget.end_date.isoFormat(monthAndDayFormat) }) }}
                                         :
                                         <span class="available_amount" data-id="{{ budget.id }}" data-currency="{{ budget.transaction_currency.id }}"
-                                              data-value="{{ budget.amount }}">{{ formatAmountBySymbol(budget.amount, budget.transaction_currency.symbol, budget.transaction_currency.decimal_places, true) }}</span>
+                                              data-value="{{ budget.amount }}">
+                                            {{ formatAmountBySymbol(budget.amount, budget.transaction_currency.symbol, budget.transaction_currency.decimal_places, true) }}
+                                            {% if(convertToNative and 0 != budget.native_amount) %}
+                                            ({{ formatAmountBySymbol(budget.native_amount, defaultCurrency.symbol, defaultCurrency.decimal_places, true) }})
+                                            {% endif %}
+
+                                        </span>
                                     </small>
                                 </div>
                             </div>
@@ -212,6 +221,7 @@
                             </tr>
                             </thead>
                             <tbody>
+                            {# START OF BUDGET ROW #}
                             {% for budget in budgets %}
                                 <tr data-id="{{ budget.id }}">
                                     <td class="hidden-sm hidden-xs">
@@ -269,7 +279,6 @@
                                                 {% if not budgetLimit.in_range %}
                                                     <small class="text-muted">
                                                         {{ trans('firefly.budget_limit_not_in_range', {start: budgetLimit.start_date, end: budgetLimit.end_date}) }}
-
                                                     </small><br>
                                                 {% endif %}
                                                 <div class="input-group bl_entry" data-budget-limit-id="{{ budgetLimit.id }}">
@@ -285,7 +294,13 @@
                                                             <li>
                                                                 <a class="delete_bl" href="#" data-budget-limit-id="{{ budgetLimit.id }}">{{ trans('firefly.remove_budgeted_amount', {currency: budgetLimit.currency_name }) }}</a>
                                                             </li>
+                                                            <li>
+                                                                <a class="edit_bl" href="#" data-id="{{ budgetLimit.id }}">{{ trans('firefly.edit_bl_notes') }}</a>
+                                                            </li>
                                                         </ul>
+                                                        {% if '' != budgetLimit.notes %}
+                                                            <a href="#" class="btn btn-default show_bl" data-id="{{ budgetLimit.id }}"><em title="{{ 'view_notes'|_ }}" class="fa fa-commenting-o" aria-hidden="true"></em></a>
+                                                        {% endif %}
                                                     </div>
                                                 </div>
                                                 <span class="text-danger budget_warning" data-id="{{ budget.id }}" data-budgetLimit="{{ budgetLimit.id }}"
@@ -368,6 +383,7 @@
                                     </td>
                                 </tr>
                             {% endfor %}
+                            {# END OF BUDGET ROW #}
                             </tbody>
                         </table>
                     </div>
@@ -444,6 +460,8 @@
         var createBudgetLimitUrl = "{{ route('budget-limits.create', ['REPLACEME', start.format('Y-m-d'), end.format('Y-m-d')]) }}";
         var storeBudgetLimitUrl = "{{ route('budget-limits.store') }}";
         var updateBudgetLimitUrl = "{{ route('budget-limits.update', ['REPLACEME']) }}";
+        var showBudgetLimitUrl = "{{ route('budget-limits.show', ['REPLACEME']) }}";
+        var editBudgetLimitUrl = "{{ route('budget-limits.edit', ['REPLACEME']) }}";
         var deleteBudgetLimitUrl = "{{ route('budget-limits.delete', ['REPLACEME']) }}";
         var totalBudgetedUrl = "{{ route('json.budget.total-budgeted', ['REPLACEME', start.format('Y-m-d'), end.format('Y-m-d')]) }}";
 

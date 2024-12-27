@@ -164,8 +164,8 @@ class BudgetController extends Controller
                     ];
                     ++$result[$key]['transactions'];
                     $result[$key]['sum']       = bcadd($journal['amount'], $result[$key]['sum']);
-                    $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string)$result[$key]['transactions']);
-                    $result[$key]['avg_float'] = (float)$result[$key]['avg']; // intentional float
+                    $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string) $result[$key]['transactions']);
+                    $result[$key]['avg_float'] = (float) $result[$key]['avg']; // intentional float
                 }
             }
         }
@@ -242,7 +242,7 @@ class BudgetController extends Controller
                 $total                                                   = $sums[$currencyId]['sum'] ?? '0';
                 $pct                                                     = '0';
                 if (0 !== bccomp($sum, '0') && 0 !== bccomp($total, '9')) {
-                    $pct = round((float)bcmul(bcdiv($sum, $total), '100')); // intentional float
+                    $pct = round((float) bcmul(bcdiv($sum, $total), '100')); // intentional float
                 }
                 $report[$budgetId]['currencies'][$currencyId]['sum_pct'] = $pct;
             }
@@ -319,7 +319,7 @@ class BudgetController extends Controller
                     $report[$key]['entries'][$dateKey] ??= '0';
                     $report[$key]['entries'][$dateKey] = bcadd($journal['amount'], $report[$key]['entries'][$dateKey]);
                     $report[$key]['sum']               = bcadd($report[$key]['sum'], $journal['amount']);
-                    $report[$key]['avg']               = bcdiv($report[$key]['sum'], (string)count($periods));
+                    $report[$key]['avg']               = bcdiv($report[$key]['sum'], (string) count($periods));
                 }
             }
         }
@@ -354,7 +354,7 @@ class BudgetController extends Controller
                     $result[] = [
                         'description'              => $journal['description'],
                         'transaction_group_id'     => $journal['transaction_group_id'],
-                        'amount_float'             => (float)$journal['amount'], // intentional float
+                        'amount_float'             => (float) $journal['amount'], // intentional float
                         'amount'                   => $journal['amount'],
                         'date'                     => $journal['date']->isoFormat($this->monthAndDayFormat),
                         'date_sort'                => $journal['date']->format('Y-m-d'),

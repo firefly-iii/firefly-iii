@@ -66,7 +66,7 @@ class NewUserController extends Controller
      */
     public function index()
     {
-        app('view')->share('title', (string)trans('firefly.welcome'));
+        app('view')->share('title', (string) trans('firefly.welcome'));
         app('view')->share('mainTitleIcon', 'fa-fire');
 
         $types     = config('firefly.accountTypesByIdentifier.asset');
@@ -98,7 +98,7 @@ class NewUserController extends Controller
         // set language preference:
         app('preferences')->set('language', $language);
         // Store currency preference from input:
-        $currency      = $currencyRepository->find((int)$request->input('amount_currency_id_bank_balance'));
+        $currency      = $currencyRepository->find((int) $request->input('amount_currency_id_bank_balance'));
 
         // if is null, set to EUR:
         if (null === $currency) {
@@ -134,7 +134,7 @@ class NewUserController extends Controller
         ];
         app('preferences')->set('transaction_journal_optional_fields', $visibleFields);
 
-        session()->flash('success', (string)trans('firefly.stored_new_accounts_new_user'));
+        session()->flash('success', (string) trans('firefly.stored_new_accounts_new_user'));
         app('preferences')->mark();
 
         return redirect(route('index'));

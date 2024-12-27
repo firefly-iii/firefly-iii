@@ -65,7 +65,7 @@
         }
     ],
     "require": {
-        "php": ">=8.3",
+        "php": ">=8.4",
         "ext-bcmath": "*",
         "ext-curl": "*",
         "ext-fileinfo": "*",
@@ -90,6 +90,7 @@
         "jc5/recovery": "^2",
         "laravel-json-api/laravel": "^5.0",
         "laravel-json-api/non-eloquent": "^4.0",
+        "laravel-notification-channels/pushover": "^4.0",
         "laravel/framework": "^11",
         "laravel/passport": "^12",
         "laravel/sanctum": "^4",
@@ -110,7 +111,8 @@
         "spatie/period": "^2.4",
         "symfony/expression-language": "^7.0",
         "symfony/http-client": "^7.1",
-        "symfony/mailgun-mailer": "^7.1"
+        "symfony/mailgun-mailer": "^7.1",
+        "wijourdil/ntfy-notification-channel": "^3.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.9",
@@ -170,13 +172,11 @@
             "@php artisan clear-compiled",
             "@php artisan cache:clear",
             "@php artisan firefly-iii:upgrade-database",
-            "@php artisan firefly-iii:correct-database",
-            "@php artisan firefly-iii:report-integrity",
             "@php artisan firefly-iii:laravel-passport-keys",
-            "@php artisan firefly:instructions update"
+            "@php artisan firefly-iii:instructions update"
         ],
         "post-install-cmd": [
-            "@php artisan firefly:instructions install",
+            "@php artisan firefly-iii:instructions install",
             "@php artisan firefly-iii:verify-security-alerts"
         ],
         "unit-test": [

@@ -126,7 +126,7 @@ class AccountFactory
      */
     protected function getAccountType(array $data): ?AccountType
     {
-        $accountTypeId   = array_key_exists('account_type_id', $data) ? (int)$data['account_type_id'] : 0;
+        $accountTypeId   = array_key_exists('account_type_id', $data) ? (int) $data['account_type_id'] : 0;
         $accountTypeName = array_key_exists('account_type_name', $data) ? $data['account_type_name'] : null;
         $result          = null;
         // find by name or ID
@@ -184,7 +184,7 @@ class AccountFactory
             'iban'            => $data['iban'],
         ];
         // fix virtual balance when it's empty
-        if ('' === (string)$databaseData['virtual_balance']) {
+        if ('' === (string) $databaseData['virtual_balance']) {
             $databaseData['virtual_balance'] = null;
         }
         // remove virtual balance when not an asset account
@@ -236,9 +236,9 @@ class AccountFactory
      */
     private function cleanMetaDataArray(Account $account, array $data): array
     {
-        $currencyId           = array_key_exists('currency_id', $data) ? (int)$data['currency_id'] : 0;
-        $currencyCode         = array_key_exists('currency_code', $data) ? (string)$data['currency_code'] : '';
-        $accountRole          = array_key_exists('account_role', $data) ? (string)$data['account_role'] : null;
+        $currencyId           = array_key_exists('currency_id', $data) ? (int) $data['currency_id'] : 0;
+        $currencyCode         = array_key_exists('currency_code', $data) ? (string) $data['currency_code'] : '';
+        $accountRole          = array_key_exists('account_role', $data) ? (string) $data['account_role'] : null;
         $currency             = $this->getCurrency($currencyId, $currencyCode);
 
         // only asset account may have a role:
@@ -289,7 +289,7 @@ class AccountFactory
                     $data[$field] = 1;
                 }
 
-                $factory->crud($account, $field, (string)$data[$field]);
+                $factory->crud($account, $field, (string) $data[$field]);
             }
         }
     }
@@ -351,7 +351,7 @@ class AccountFactory
             $order = $maxOrder + 1;
         }
         if (array_key_exists('order', $data)) {
-            $order = (int)($data['order'] > $maxOrder ? $maxOrder + 1 : $data['order']);
+            $order = (int) ($data['order'] > $maxOrder ? $maxOrder + 1 : $data['order']);
             $order = 0 === $order ? $maxOrder + 1 : $order;
         }
 

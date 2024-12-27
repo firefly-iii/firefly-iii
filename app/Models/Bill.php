@@ -47,19 +47,21 @@ class Bill extends Model
 
     protected $casts
                       = [
-            'created_at'      => 'datetime',
-            'updated_at'      => 'datetime',
-            'deleted_at'      => 'datetime',
-            'date'            => SeparateTimezoneCaster::class,
-            'end_date'        => SeparateTimezoneCaster::class,
-            'extension_date'  => SeparateTimezoneCaster::class,
-            'skip'            => 'int',
-            'automatch'       => 'boolean',
-            'active'          => 'boolean',
-            'name_encrypted'  => 'boolean',
-            'match_encrypted' => 'boolean',
-            'amount_min'      => 'string',
-            'amount_max'      => 'string',
+            'created_at'             => 'datetime',
+            'updated_at'             => 'datetime',
+            'deleted_at'             => 'datetime',
+            'date'                   => SeparateTimezoneCaster::class,
+            'end_date'               => SeparateTimezoneCaster::class,
+            'extension_date'         => SeparateTimezoneCaster::class,
+            'skip'                   => 'int',
+            'automatch'              => 'boolean',
+            'active'                 => 'boolean',
+            'name_encrypted'         => 'boolean',
+            'match_encrypted'        => 'boolean',
+            'amount_min'             => 'string',
+            'amount_max'             => 'string',
+            'native_amount_min'      => 'string',
+            'native_amount_max'      => 'string',
         ];
 
     protected $fillable
@@ -81,6 +83,8 @@ class Bill extends Model
             'extension_date',
             'end_date_tz',
             'extension_date_tz',
+            'native_amount_min',
+            'native_amount_max',
         ];
 
     protected $hidden = ['amount_min_encrypted', 'amount_max_encrypted', 'name_encrypted', 'match_encrypted'];
@@ -93,7 +97,7 @@ class Bill extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $billId = (int)$value;
+            $billId = (int) $value;
 
             /** @var User $user */
             $user   = auth()->user();
@@ -139,7 +143,7 @@ class Bill extends Model
      */
     public function setAmountMaxAttribute($value): void
     {
-        $this->attributes['amount_max'] = (string)$value;
+        $this->attributes['amount_max'] = (string) $value;
     }
 
     /**
@@ -147,7 +151,7 @@ class Bill extends Model
      */
     public function setAmountMinAttribute($value): void
     {
-        $this->attributes['amount_min'] = (string)$value;
+        $this->attributes['amount_min'] = (string) $value;
     }
 
     public function transactionCurrency(): BelongsTo
@@ -166,7 +170,7 @@ class Bill extends Model
     protected function amountMax(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string)$value,
+            get: static fn ($value) => (string) $value,
         );
     }
 
@@ -176,14 +180,14 @@ class Bill extends Model
     protected function amountMin(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string)$value,
+            get: static fn ($value) => (string) $value,
         );
     }
 
     protected function order(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 
@@ -193,14 +197,14 @@ class Bill extends Model
     protected function skip(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 
     protected function transactionCurrencyId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 }

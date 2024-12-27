@@ -84,7 +84,7 @@ class SetBudget implements ActionInterface
         $object        = $user->transactionJournals()->find($journal['transaction_journal_id']);
         $oldBudget     = $object->budgets()->first();
         $oldBudgetName = $oldBudget?->name;
-        if ((int)$oldBudget?->id === $budget->id) {
+        if ((int) $oldBudget?->id === $budget->id) {
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.already_linked_to_budget', ['name' => $budget->name])));
 
             return false;

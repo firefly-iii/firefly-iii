@@ -184,7 +184,7 @@
                                 {% endif %}
                                 {% if 0 != transaction.bill_id %}
                                     <p>
-                                        <a href="{{ route('bills.show', [transaction.bill_id]) }}">{{ transaction.bill_name }}</a>
+                                        <a href="{{ route('subscriptions.show', [transaction.bill_id]) }}">{{ transaction.bill_name }}</a>
                                     </p>
                                 {% endif %}
                             </td>

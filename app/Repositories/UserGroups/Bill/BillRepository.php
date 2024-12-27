@@ -81,12 +81,12 @@ class BillRepository implements BillRepositoryInterface
             $currencyId = $bill->transaction_currency_id;
 
             $return[$currencyId] ??= [
-                'currency_id'                    => (string)$currency->id,
+                'currency_id'                    => (string) $currency->id,
                 'currency_name'                  => $currency->name,
                 'currency_symbol'                => $currency->symbol,
                 'currency_code'                  => $currency->code,
                 'currency_decimal_places'        => $currency->decimal_places,
-                'native_currency_id'             => (string)$default->id,
+                'native_currency_id'             => (string) $default->id,
                 'native_currency_name'           => $default->name,
                 'native_currency_symbol'         => $default->symbol,
                 'native_currency_code'           => $default->code,
@@ -101,9 +101,9 @@ class BillRepository implements BillRepositoryInterface
                 $sourceTransaction = $transactionJournal->transactions()->where('amount', '<', 0)->first();
                 if (null !== $sourceTransaction) {
                     $amount                            = $sourceTransaction->amount;
-                    if ((int)$sourceTransaction->foreign_currency_id === $currency->id) {
+                    if ((int) $sourceTransaction->foreign_currency_id === $currency->id) {
                         // use foreign amount instead!
-                        $amount = (string)$sourceTransaction->foreign_amount;
+                        $amount = (string) $sourceTransaction->foreign_amount;
                     }
                     // convert to native currency
                     $nativeAmount                      = $amount;
@@ -111,9 +111,9 @@ class BillRepository implements BillRepositoryInterface
                         // get rate and convert.
                         $nativeAmount = $converter->convert($currency, $default, $transactionJournal->date, $amount);
                     }
-                    if ((int)$sourceTransaction->foreign_currency_id === $default->id) {
+                    if ((int) $sourceTransaction->foreign_currency_id === $default->id) {
                         // ignore conversion, use foreign amount
-                        $nativeAmount = (string)$sourceTransaction->foreign_amount;
+                        $nativeAmount = (string) $sourceTransaction->foreign_amount;
                     }
                     $return[$currencyId]['sum']        = bcadd($return[$currencyId]['sum'], $amount);
                     $return[$currencyId]['native_sum'] = bcadd($return[$currencyId]['native_sum'], $nativeAmount);
@@ -154,12 +154,12 @@ class BillRepository implements BillRepositoryInterface
                 $average                           = bcdiv(bcadd($bill->amount_max, $bill->amount_min), '2');
                 $nativeAverage                     = $converter->convert($currency, $default, $start, $average);
                 $return[$currencyId] ??= [
-                    'currency_id'                    => (string)$currency->id,
+                    'currency_id'                    => (string) $currency->id,
                     'currency_name'                  => $currency->name,
                     'currency_symbol'                => $currency->symbol,
                     'currency_code'                  => $currency->code,
                     'currency_decimal_places'        => $currency->decimal_places,
-                    'native_currency_id'             => (string)$default->id,
+                    'native_currency_id'             => (string) $default->id,
                     'native_currency_name'           => $default->name,
                     'native_currency_symbol'         => $default->symbol,
                     'native_currency_code'           => $default->code,
@@ -167,8 +167,8 @@ class BillRepository implements BillRepositoryInterface
                     'sum'                            => '0',
                     'native_sum'                     => '0',
                 ];
-                $return[$currencyId]['sum']        = bcadd($return[$currencyId]['sum'], bcmul($average, (string)$total));
-                $return[$currencyId]['native_sum'] = bcadd($return[$currencyId]['native_sum'], bcmul($nativeAverage, (string)$total));
+                $return[$currencyId]['sum']        = bcadd($return[$currencyId]['sum'], bcmul($average, (string) $total));
+                $return[$currencyId]['native_sum'] = bcadd($return[$currencyId]['native_sum'], bcmul($nativeAverage, (string) $total));
             }
         }
         $converter->summarize();

@@ -82,8 +82,8 @@ trait SortsQueryResults
         if (Account::class === $class && 'last_activity' === $field->name()) {
             $ascending  = $field->isAscending();
             $collection = $collection->sort(function (Account $left, Account $right) use ($ascending): int {
-                $leftNr  = (int)$left->last_activity?->format('U');
-                $rightNr = (int)$right->last_activity?->format('U');
+                $leftNr  = (int) $left->last_activity?->format('U');
+                $rightNr = (int) $right->last_activity?->format('U');
                 if ($ascending) {
                     return $leftNr <=> $rightNr;
                 }

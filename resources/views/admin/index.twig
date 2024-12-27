@@ -17,6 +17,7 @@
                         </li>
                         <li><a href="{{ route('admin.links.index') }}">{{ 'journal_link_configuration'|_ }}</a></li>
                         <li><a href="{{ route('admin.update-check') }}">{{ 'update_check_title'|_ }}</a></li>
+                        <li><a href="{{ route('admin.notification.index') }}">{{ 'settings_notifications'|_ }}</a></li>
                     </ul>
                 </div>
             </div>
@@ -30,32 +31,6 @@
                     </ul>
                 </div>
             </div>
-            <form action="{{ route('admin.notifications') }}" method="post">
-                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                <div class="box box-default">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'admin_notifications'|_ }}</h3>
-                    </div>
-                    <div class="box-body">
-                        <p>
-                            {{ 'admin_notifications_expl'|_ }}
-                        </p>
-                        {% for notification, value in notifications %}
-                        <div class="checkbox">
-                            <label>
-                                <input value="1" {% if true == value %}checked{% endif %} type="checkbox" name="notification_{{ notification }}"> {{ trans('firefly.admin_notification_check_'~notification) }}
-                            </label>
-                        </div>
-                        {% endfor %}
-                        {{ ExpandedForm.text('slackUrl', slackUrl, {'label' : 'slack_url_label'|_}) }}
-                    </div>
-                    <div class="box-footer">
-                        <button type="submit" class="btn btn-success">
-                                <span class="fa fa-check-circle"></span> {{ ('save_notification_settings')|_ }}
-                        </button>
-                    </div>
-                </div>
-            </form>
         </div>
         <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
             <div class="box box-default">

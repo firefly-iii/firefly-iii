@@ -70,8 +70,8 @@ class RuleFormRequest extends FormRequest
                 $set            = [
                     'type'            => $trigger['type'] ?? 'invalid',
                     'value'           => $trigger['value'] ?? '',
-                    'stop_processing' => 1 === (int)$stopProcessing,
-                    'prohibited'      => 1 === (int)$prohibited,
+                    'stop_processing' => 1 === (int) $stopProcessing,
+                    'prohibited'      => 1 === (int) $prohibited,
                 ];
                 $set            = self::replaceAmountTrigger($set);
                 $return[]       = $set;
@@ -116,7 +116,7 @@ class RuleFormRequest extends FormRequest
                 $return[]       = [
                     'type'            => $action['type'] ?? 'invalid',
                     'value'           => $action['value'] ?? '',
-                    'stop_processing' => 1 === (int)$stopProcessing,
+                    'stop_processing' => 1 === (int) $stopProcessing,
                 ];
             }
         }
@@ -144,7 +144,7 @@ class RuleFormRequest extends FormRequest
             'description'      => 'min:1|max:32768|nullable',
             'stop_processing'  => 'boolean',
             'rule_group_id'    => 'required|belongsToUser:rule_groups',
-            'trigger'          => 'required|in:store-journal,update-journal',
+            'trigger'          => 'required|in:store-journal,update-journal,manual-activation',
             'triggers.*.type'  => 'required|in:'.implode(',', $validTriggers),
             'triggers.*.value' => sprintf('required_if:triggers.*.type,%s|max:1024|min:1|ruleTriggerValue', $contextTriggers),
             'actions.*.type'   => 'required|in:'.implode(',', $validActions),

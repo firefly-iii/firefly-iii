@@ -43,7 +43,7 @@ class AcceptHeaders
         $method       = $request->getMethod();
         $accepts      = ['application/x-www-form-urlencoded', 'application/json', 'application/vnd.api+json', 'application/octet-stream', '*/*'];
         $contentTypes = ['application/x-www-form-urlencoded', 'application/json', 'application/vnd.api+json', 'application/octet-stream'];
-        $submitted    = (string)$request->header('Content-Type');
+        $submitted    = (string) $request->header('Content-Type');
 
         // if bad Accept header, send error.
         if (!$request->accepts($accepts)) {

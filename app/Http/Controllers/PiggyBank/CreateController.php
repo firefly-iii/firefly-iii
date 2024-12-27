@@ -31,6 +31,7 @@ use FireflyIII\Http\Requests\PiggyBankStoreRequest;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
@@ -52,7 +53,7 @@ class CreateController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.piggyBanks'));
+                app('view')->share('title', (string) trans('firefly.piggyBanks'));
                 app('view')->share('mainTitleIcon', 'fa-bullseye');
 
                 $this->attachments = app(AttachmentHelperInterface::class);
@@ -68,10 +69,12 @@ class CreateController extends Controller
      *
      * @return Factory|View
      */
-    public function create()
+    public function create(Request $request)
     {
-        $subTitle     = (string)trans('firefly.new_piggy_bank');
+        $subTitle     = (string) trans('firefly.new_piggy_bank');
         $subTitleIcon = 'fa-plus';
+        $hasOldInput  = null !== $request->old('_token');
+        $preFilled    = $request->old();
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('piggy-banks.create.fromStore')) {
@@ -79,7 +82,7 @@ class CreateController extends Controller
         }
         session()->forget('piggy-banks.create.fromStore');
 
-        return view('piggy-banks.create', compact('subTitle', 'subTitleIcon'));
+        return view('piggy-banks.create', compact('subTitle', 'subTitleIcon', 'preFilled'));
     }
 
     /**
@@ -92,12 +95,14 @@ class CreateController extends Controller
     public function store(PiggyBankStoreRequest $request)
     {
         $data      = $request->getPiggyBankData();
-        if (null === $data['startdate']) {
-            $data['startdate'] = today(config('app.timezone'));
+
+        if (null === $data['start_date']) {
+            $data['start_date'] = today(config('app.timezone'));
         }
         $piggyBank = $this->piggyRepos->store($data);
 
-        session()->flash('success', (string)trans('firefly.stored_piggy_bank', ['name' => $piggyBank->name]));
+        session()->flash('success', (string) trans('firefly.stored_piggy_bank', ['name' => $piggyBank->name]));
+        session()->flash('success_url', route('piggy-banks.show', [$piggyBank->id]));
         app('preferences')->mark();
 
         // store attachment(s):
@@ -108,7 +113,7 @@ class CreateController extends Controller
         }
         if (null !== $files && auth()->user()->hasRole('demo')) {
             Log::channel('audit')->warning(sprintf('The demo user is trying to upload attachments in %s.', __METHOD__));
-            session()->flash('info', (string)trans('firefly.no_att_demo_user'));
+            session()->flash('info', (string) trans('firefly.no_att_demo_user'));
         }
 
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
@@ -116,7 +121,7 @@ class CreateController extends Controller
         }
         $redirect  = redirect($this->getPreviousUrl('piggy-banks.create.url'));
 
-        if (1 === (int)$request->get('create_another')) {
+        if (1 === (int) $request->get('create_another')) {
             session()->put('piggy-banks.create.fromStore', true);
 
             $redirect = redirect(route('piggy-banks.create'))->withInput();

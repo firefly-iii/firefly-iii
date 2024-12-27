@@ -65,7 +65,7 @@ class Budget extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $budgetId = (int)$value;
+            $budgetId = (int) $value;
 
             /** @var User $user */
             $user     = auth()->user();
@@ -121,7 +121,7 @@ class Budget extends Model
     protected function order(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 }

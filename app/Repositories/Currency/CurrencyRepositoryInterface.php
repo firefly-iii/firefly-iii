@@ -35,6 +35,8 @@ use Illuminate\Support\Collection;
  */
 interface CurrencyRepositoryInterface
 {
+    public function find(int $currencyId): ?TransactionCurrency;
+
     /**
      * Find by currency code, return NULL if unfound.
      *

@@ -61,7 +61,7 @@ class Attachment extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $attachmentId = (int)$value;
+            $attachmentId = (int) $value;
 
             /** @var User $user */
             $user         = auth()->user();
@@ -94,7 +94,7 @@ class Attachment extends Model
      */
     public function fileName(): string
     {
-        return sprintf('at-%s.data', (string)$this->id);
+        return sprintf('at-%s.data', (string) $this->id);
     }
 
     /**
@@ -108,7 +108,7 @@ class Attachment extends Model
     protected function attachableId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 }

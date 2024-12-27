@@ -101,15 +101,15 @@ class UpdateRequest extends FormRequest
             }
 
             if (array_key_exists('moment', $repetition)) {
-                $current['moment'] = (string)$repetition['moment'];
+                $current['moment'] = (string) $repetition['moment'];
             }
 
             if (array_key_exists('skip', $repetition)) {
-                $current['skip'] = (int)$repetition['skip'];
+                $current['skip'] = (int) $repetition['skip'];
             }
 
             if (array_key_exists('weekend', $repetition)) {
-                $current['weekend'] = (int)$repetition['weekend'];
+                $current['weekend'] = (int) $repetition['weekend'];
             }
             $return[] = $current;
         }

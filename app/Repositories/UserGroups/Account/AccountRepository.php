@@ -117,6 +117,12 @@ class AccountRepository implements AccountRepositoryInterface
         return $account;
     }
 
+    #[\Override]
+    public function getAccountBalances(Account $account): Collection
+    {
+        return $account->accountBalances;
+    }
+
     public function getAccountCurrency(Account $account): ?TransactionCurrency
     {
         $type       = $account->accountType->type;
@@ -162,6 +168,15 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         return $account;
+    }
+
+    #[\Override]
+    public function getAccountTypes(Collection $accounts): Collection
+    {
+        return AccountType::leftJoin('accounts', 'accounts.account_type_id', '=', 'account_types.id')
+            ->whereIn('accounts.id', $accounts->pluck('id')->toArray())
+            ->get(['accounts.id', 'account_types.type'])
+        ;
     }
 
     public function getAccountsById(array $accountIds): Collection
@@ -216,6 +231,57 @@ class AccountRepository implements AccountRepositoryInterface
         $query->orderBy('accounts.name', 'ASC');
 
         return $query->get(['accounts.*']);
+    }
+
+    #[\Override]
+    public function getLastActivity(Collection $accounts): array
+    {
+        return Transaction::whereIn('account_id', $accounts->pluck('id')->toArray())
+            ->leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
+            ->groupBy('transactions.account_id')
+            ->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) as date_max')])->toArray() // @phpstan-ignore-line
+        ;
+    }
+
+    #[\Override]
+    public function getMetaValues(Collection $accounts, array $fields): Collection
+    {
+        $query = AccountMeta::whereIn('account_id', $accounts->pluck('id')->toArray());
+        if (count($fields) > 0) {
+            $query->whereIn('name', $fields);
+        }
+
+        return $query->get(['account_meta.id', 'account_meta.account_id', 'account_meta.name', 'account_meta.data']);
+    }
+
+    #[\Override]
+    public function getObjectGroups(Collection $accounts): array
+    {
+        $groupIds = [];
+        $return   = [];
+        $set      = DB::table('object_groupables')->where('object_groupable_type', Account::class)
+            ->whereIn('object_groupable_id', $accounts->pluck('id')->toArray())->get()
+        ;
+
+        /** @var \stdClass $row */
+        foreach ($set as $row) {
+            $groupIds[] = $row->object_group_id;
+        }
+        $groupIds = array_unique($groupIds);
+        $groups   = ObjectGroup::whereIn('id', $groupIds)->get();
+
+        /** @var \stdClass $row */
+        foreach ($set as $row) {
+            if (!array_key_exists($row->object_groupable_id, $return)) {
+                /** @var null|ObjectGroup $group */
+                $group = $groups->firstWhere('id', '=', $row->object_group_id);
+                if (null !== $group) {
+                    $return[$row->object_groupable_id] = ['title' => $group->title, 'order' => $group->order, 'id' => $group->id];
+                }
+            }
+        }
+
+        return $return;
     }
 
     public function resetAccountOrder(): void
@@ -298,6 +364,15 @@ class AccountRepository implements AccountRepositoryInterface
         return $query->get(['accounts.*']);
     }
 
+    #[\Override]
+    public function update(Account $account, array $data): Account
+    {
+        /** @var AccountUpdateService $service */
+        $service = app(AccountUpdateService::class);
+
+        return $service->update($account, $data);
+    }
+
     public function searchAccount(string $query, array $types, int $page, int $limit): Collection
     {
         // search by group, not by user
@@ -330,80 +405,5 @@ class AccountRepository implements AccountRepositoryInterface
 
         return $dbQuery->get(['accounts.*']);
 
-    }
-
-    #[\Override]
-    public function update(Account $account, array $data): Account
-    {
-        /** @var AccountUpdateService $service */
-        $service = app(AccountUpdateService::class);
-
-        return $service->update($account, $data);
-    }
-
-    #[\Override]
-    public function getMetaValues(Collection $accounts, array $fields): Collection
-    {
-        $query = AccountMeta::whereIn('account_id', $accounts->pluck('id')->toArray());
-        if (count($fields) > 0) {
-            $query->whereIn('name', $fields);
-        }
-
-        return $query->get(['account_meta.id', 'account_meta.account_id', 'account_meta.name', 'account_meta.data']);
-    }
-
-    #[\Override]
-    public function getAccountTypes(Collection $accounts): Collection
-    {
-        return AccountType::leftJoin('accounts', 'accounts.account_type_id', '=', 'account_types.id')
-            ->whereIn('accounts.id', $accounts->pluck('id')->toArray())
-            ->get(['accounts.id', 'account_types.type'])
-        ;
-    }
-
-    #[\Override]
-    public function getLastActivity(Collection $accounts): array
-    {
-        return Transaction::whereIn('account_id', $accounts->pluck('id')->toArray())
-            ->leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
-            ->groupBy('transactions.account_id')
-            ->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) as date_max')])->toArray() // @phpstan-ignore-line
-        ;
-    }
-
-    #[\Override]
-    public function getObjectGroups(Collection $accounts): array
-    {
-        $groupIds = [];
-        $return   = [];
-        $set      = DB::table('object_groupables')->where('object_groupable_type', Account::class)
-            ->whereIn('object_groupable_id', $accounts->pluck('id')->toArray())->get()
-        ;
-
-        /** @var \stdClass $row */
-        foreach ($set as $row) {
-            $groupIds[] = $row->object_group_id;
-        }
-        $groupIds = array_unique($groupIds);
-        $groups   = ObjectGroup::whereIn('id', $groupIds)->get();
-
-        /** @var \stdClass $row */
-        foreach ($set as $row) {
-            if (!array_key_exists($row->object_groupable_id, $return)) {
-                /** @var null|ObjectGroup $group */
-                $group = $groups->firstWhere('id', '=', $row->object_group_id);
-                if (null !== $group) {
-                    $return[$row->object_groupable_id] = ['title' => $group->title, 'order' => $group->order, 'id' => $group->id];
-                }
-            }
-        }
-
-        return $return;
-    }
-
-    #[\Override]
-    public function getAccountBalances(Account $account): Collection
-    {
-        return $account->accountBalances;
     }
 }

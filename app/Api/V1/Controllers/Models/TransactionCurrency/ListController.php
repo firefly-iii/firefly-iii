@@ -91,7 +91,7 @@ class ListController extends Controller
         // filter list on currency preference:
         $collection        = $unfiltered->filter(
             static function (Account $account) use ($currency, $accountRepository) {
-                $currencyId = (int)$accountRepository->getMetaValue($account, 'currency_id');
+                $currencyId = (int) $accountRepository->getMetaValue($account, 'currency_id');
 
                 return $currencyId === $currency->id;
             }

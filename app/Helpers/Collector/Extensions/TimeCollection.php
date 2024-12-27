@@ -125,7 +125,7 @@ trait TimeCollection
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon
                 ) {
-                    return $transaction[$field]->day >= (int)$day;
+                    return $transaction[$field]->day >= (int) $day;
                 }
             }
 
@@ -143,7 +143,7 @@ trait TimeCollection
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon
                 ) {
-                    return $transaction[$field]->day <= (int)$day;
+                    return $transaction[$field]->day <= (int) $day;
                 }
             }
 
@@ -161,7 +161,7 @@ trait TimeCollection
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon
                 ) {
-                    return (int)$day === $transaction[$field]->day;
+                    return (int) $day === $transaction[$field]->day;
                 }
             }
 
@@ -179,7 +179,7 @@ trait TimeCollection
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon
                 ) {
-                    return (int)$day !== $transaction[$field]->day;
+                    return (int) $day !== $transaction[$field]->day;
                 }
             }
 
@@ -197,7 +197,7 @@ trait TimeCollection
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon
                 ) {
-                    return $transaction[$field]->month >= (int)$month;
+                    return $transaction[$field]->month >= (int) $month;
                 }
             }
 
@@ -215,7 +215,7 @@ trait TimeCollection
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon
                 ) {
-                    return $transaction[$field]->month <= (int)$month;
+                    return $transaction[$field]->month <= (int) $month;
                 }
             }
 
@@ -233,7 +233,7 @@ trait TimeCollection
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon
                 ) {
-                    return (int)$month === $transaction[$field]->month;
+                    return (int) $month === $transaction[$field]->month;
                 }
             }
 
@@ -251,7 +251,7 @@ trait TimeCollection
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon
                 ) {
-                    return (int)$month !== $transaction[$field]->month;
+                    return (int) $month !== $transaction[$field]->month;
                 }
             }
 
@@ -269,7 +269,7 @@ trait TimeCollection
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon
                 ) {
-                    return $transaction[$field]->year >= (int)$year;
+                    return $transaction[$field]->year >= (int) $year;
                 }
             }
 
@@ -287,7 +287,7 @@ trait TimeCollection
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon
                 ) {
-                    return $transaction[$field]->year <= (int)$year;
+                    return $transaction[$field]->year <= (int) $year;
                 }
             }
 
@@ -305,7 +305,7 @@ trait TimeCollection
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon
                 ) {
-                    return $year === (string)$transaction[$field]->year;
+                    return $year === (string) $transaction[$field]->year;
                 }
             }
 
@@ -323,7 +323,7 @@ trait TimeCollection
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon
                 ) {
-                    return $year !== (string)$transaction[$field]->year;
+                    return $year !== (string) $transaction[$field]->year;
                 }
             }
 

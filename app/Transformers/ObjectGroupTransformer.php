@@ -50,7 +50,7 @@ class ObjectGroupTransformer extends AbstractTransformer
         $this->repository->setUser($objectGroup->user);
 
         return [
-            'id'         => (string)$objectGroup->id,
+            'id'         => (string) $objectGroup->id,
             'created_at' => $objectGroup->created_at?->toAtomString(),
             'updated_at' => $objectGroup->updated_at?->toAtomString(),
             'title'      => $objectGroup->title,

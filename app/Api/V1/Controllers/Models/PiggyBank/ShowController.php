@@ -72,7 +72,7 @@ class ShowController extends Controller
         // types to get, page size:
         $pageSize    = $this->parameters->get('limit');
 
-        // get list of budgets. Count it and split it.
+        // get list of piggy banks. Count it and split it.
         $collection  = $this->repository->getPiggyBanks();
         $count       = $collection->count();
         $piggyBanks  = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);

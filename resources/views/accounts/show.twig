@@ -11,9 +11,15 @@
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">
+                        {% if balances.balance %}
                         {{ trans('firefly.chart_account_in_period', {
-                            balance: formatAmountBySymbol(balance, currency.symbol, currency.decimal_places, true),
+                            balance: formatAmountBySymbol(balances.balance, currency.symbol, currency.decimal_places, true),
                             name: account.name|escape, start: start.isoFormat(monthAndDayFormat), end: end.isoFormat(monthAndDayFormat) })|raw }}
+                        {% elseif balances.native_balance %}
+                            {{ trans('firefly.chart_account_in_period', {
+                                balance: formatAmountBySymbol(balances.native_balance, defaultCurrency.symbol, defaultCurrency.decimal_places, true),
+                                name: account.name|escape, start: start.isoFormat(monthAndDayFormat), end: end.isoFormat(monthAndDayFormat) })|raw }}
+                        {% endif %}
                     </h3>
                     <div class="box-tools pull-right">
                         <div class="btn-group">
@@ -140,7 +146,12 @@
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'transactions'|_ }}
-                        ({{ formatAmountBySymbol(balance, currency.symbol, currency.decimal_places, true)|raw }})</h3>
+                        {% if balances.balance %}
+                        ({{ formatAmountBySymbol(balances.balance, currency.symbol, currency.decimal_places, true)|raw }})
+                        {% elseif balances.native_balance %}
+                            ({{ formatAmountBySymbol(balances.native_balance, defaultCurrency.symbol, defaultCurrency.decimal_places, true)|raw }})
+                        {% endif %}
+                    </h3>
                 </div>
                 <div class="box-body">
                     {% if account.accountType.type == 'Asset account' %}

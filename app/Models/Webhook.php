@@ -54,15 +54,6 @@ class Webhook extends Model
         ];
     protected $fillable = ['active', 'trigger', 'response', 'delivery', 'user_id', 'user_group_id', 'url', 'title', 'secret'];
 
-    protected function casts(): array
-    {
-        return [
-            //            'delivery' => WebhookDelivery::class,
-            //            'response' => WebhookResponse::class,
-            //            'trigger'  => WebhookTrigger::class,
-        ];
-    }
-
     public static function getDeliveries(): array
     {
         $array = [];
@@ -163,5 +154,14 @@ class Webhook extends Model
     public function webhookMessages(): HasMany
     {
         return $this->hasMany(WebhookMessage::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            //            'delivery' => WebhookDelivery::class,
+            //            'response' => WebhookResponse::class,
+            //            'trigger'  => WebhookTrigger::class,
+        ];
     }
 }

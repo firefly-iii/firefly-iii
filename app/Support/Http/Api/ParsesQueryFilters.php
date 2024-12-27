@@ -31,6 +31,13 @@ use LaravelJsonApi\Core\Query\QueryParameters;
 
 trait ParsesQueryFilters
 {
+    private function arrayOfStrings(QueryParameters $parameters, string $field): array
+    {
+        $array = $parameters->filter()?->value($field, []) ?? [];
+
+        return is_string($array) ? [$array] : $array;
+    }
+
     private function dateOrToday(QueryParameters $parameters, string $field): Carbon
     {
         $date  = today();
@@ -51,25 +58,18 @@ trait ParsesQueryFilters
         return $date;
     }
 
-    private function arrayOfStrings(QueryParameters $parameters, string $field): array
-    {
-        $array = $parameters->filter()?->value($field, []) ?? [];
-
-        return is_string($array) ? [$array] : $array;
-    }
-
     private function integerFromQueryParams(QueryParameters $parameters, string $field, int $default): int
     {
         return (int) ($parameters->page()[$field] ?? $default);
     }
 
+    private function stringFromFilterParams(QueryParameters $parameters, string $field, string $default): string
+    {
+        return (string) $parameters->filter()?->value($field, $default) ?? $default;
+    }
+
     private function stringFromQueryParams(QueryParameters $parameters, string $field, string $default): string
     {
         return (string) ($parameters->page()[$field] ?? $default);
-    }
-
-    private function stringFromFilterParams(QueryParameters $parameters, string $field, string $default): string
-    {
-        return (string)$parameters->filter()?->value($field, $default) ?? $default;
     }
 }

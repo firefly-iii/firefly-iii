@@ -29,6 +29,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -255,6 +256,12 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         ;
     }
 
+    #[\Override]
+    public function getNoteText(BudgetLimit $budgetLimit): string
+    {
+        return (string) $budgetLimit->notes()->first()?->text;
+    }
+
     public function setUser(null|Authenticatable|User $user): void
     {
         if ($user instanceof User) {
@@ -303,6 +310,12 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         $limit->amount                  = $data['amount'];
         $limit->transaction_currency_id = $currency->id;
         $limit->save();
+
+        $noteText                       = (string) ($data['notes'] ?? '');
+        if ('' !== $noteText) {
+            $this->setNoteText($limit, $noteText);
+        }
+
         app('log')->debug(sprintf('Created new budget limit with ID #%d and amount %s', $limit->id, $data['amount']));
 
         return $limit;
@@ -315,6 +328,23 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
             ->where('start_date', $start->format('Y-m-d'))
             ->where('end_date', $end->format('Y-m-d'))->first()
         ;
+    }
+
+    #[\Override]
+    public function setNoteText(BudgetLimit $budgetLimit, string $text): void
+    {
+        $dbNote = $budgetLimit->notes()->first();
+        if ('' !== $text) {
+            if (null === $dbNote) {
+                $dbNote = new Note();
+                $dbNote->noteable()->associate($budgetLimit);
+            }
+            $dbNote->text = trim($text);
+            $dbNote->save();
+
+            return;
+        }
+        $dbNote?->delete();
     }
 
     /**
@@ -352,6 +382,11 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
 
         $budgetLimit->transaction_currency_id = $currency->id;
         $budgetLimit->save();
+
+        // update notes if they exist.
+        if (array_key_exists('notes', $data)) {
+            $this->setNoteText($budgetLimit, (string) $data['notes']);
+        }
 
         return $budgetLimit;
     }

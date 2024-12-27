@@ -49,7 +49,7 @@ class TagTransformer extends AbstractTransformer
         if (null !== $location) {
             $latitude  = $location->latitude;
             $longitude = $location->longitude;
-            $zoomLevel = (int)$location->zoom_level;
+            $zoomLevel = (int) $location->zoom_level;
         }
 
         return [

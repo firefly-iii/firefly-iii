@@ -169,7 +169,7 @@ class ConvertToTransfer implements ActionInterface
             return '';
         }
 
-        return (string)$journal->transactions()->where('amount', '<', 0)->first()?->account?->accountType?->type;
+        return (string) $journal->transactions()->where('amount', '<', 0)->first()?->account?->accountType?->type;
     }
 
     private function getDestinationType(int $journalId): string
@@ -182,7 +182,7 @@ class ConvertToTransfer implements ActionInterface
             return '';
         }
 
-        return (string)$journal->transactions()->where('amount', '>', 0)->first()?->account?->accountType?->type;
+        return (string) $journal->transactions()->where('amount', '>', 0)->first()?->account?->accountType?->type;
     }
 
     /**

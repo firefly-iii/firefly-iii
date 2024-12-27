@@ -64,7 +64,7 @@ class Rule extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $ruleId = (int)$value;
+            $ruleId = (int) $value;
 
             /** @var User $user */
             $user   = auth()->user();
@@ -115,14 +115,14 @@ class Rule extends Model
     protected function order(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 
     protected function ruleGroupId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 }

@@ -40,10 +40,10 @@ class TransactionCurrency extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    public ?bool $userGroupDefault;
-    public ?bool $userGroupEnabled;
+    public ?bool $userGroupDefault = null;
+    public ?bool $userGroupEnabled = null;
     protected $casts
-                        = [
+                                   = [
             'created_at'     => 'datetime',
             'updated_at'     => 'datetime',
             'deleted_at'     => 'datetime',
@@ -51,7 +51,7 @@ class TransactionCurrency extends Model
             'enabled'        => 'bool',
         ];
 
-    protected $fillable = ['name', 'code', 'symbol', 'decimal_places', 'enabled'];
+    protected $fillable            = ['name', 'code', 'symbol', 'decimal_places', 'enabled'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
@@ -61,7 +61,7 @@ class TransactionCurrency extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $currencyId = (int)$value;
+            $currencyId = (int) $value;
             $currency   = self::find($currencyId);
             if (null !== $currency) {
                 $currency->refreshForUser(auth()->user());
@@ -115,7 +115,7 @@ class TransactionCurrency extends Model
     protected function decimalPlaces(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 }

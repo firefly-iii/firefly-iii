@@ -68,7 +68,7 @@ class TagList implements BinderInterface
 
                         return true;
                     }
-                    if (in_array((string)$tag->id, $list, true)) {
+                    if (in_array((string) $tag->id, $list, true)) {
                         Log::debug(sprintf('TagList: (id) found tag #%d ("%s") in list.', $tag->id, $tag->tag));
 
                         return true;

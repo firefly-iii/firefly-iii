@@ -75,7 +75,7 @@ class Recurrence extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $recurrenceId = (int)$value;
+            $recurrenceId = (int) $value;
 
             /** @var User $user */
             $user         = auth()->user();
@@ -136,7 +136,7 @@ class Recurrence extends Model
     protected function transactionTypeId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 }

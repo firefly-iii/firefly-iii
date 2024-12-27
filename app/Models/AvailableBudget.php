@@ -62,7 +62,7 @@ class AvailableBudget extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $availableBudgetId = (int)$value;
+            $availableBudgetId = (int) $value;
 
             /** @var User $user */
             $user              = auth()->user();
@@ -90,14 +90,14 @@ class AvailableBudget extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string)$value,
+            get: static fn ($value) => (string) $value,
         );
     }
 
     protected function transactionCurrencyId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 }

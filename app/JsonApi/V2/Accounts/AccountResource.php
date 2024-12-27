@@ -14,14 +14,6 @@ use LaravelJsonApi\Core\Resources\JsonApiResource;
 class AccountResource extends JsonApiResource
 {
     /**
-     * Get the resource id.
-     */
-    public function id(): string
-    {
-        return (string) $this->resource->id;
-    }
-
-    /**
      * Get the resource's attributes.
      *
      * @param null|Request $request
@@ -67,6 +59,14 @@ class AccountResource extends JsonApiResource
             'object_group_title'      => $this->resource->object_group_title,
             'object_group_order'      => $this->resource->object_group_order,
         ];
+    }
+
+    /**
+     * Get the resource id.
+     */
+    public function id(): string
+    {
+        return (string) $this->resource->id;
     }
 
     /**

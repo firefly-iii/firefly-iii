@@ -119,7 +119,7 @@ class AccountDestroyService
 
         /** @var \stdClass $row */
         foreach ($collection as $row) {
-            if ((int)$row->the_count > 1) {
+            if ((int) $row->the_count > 1) {
                 $journalId = $row->transaction_journal_id;
                 $journal   = $user->transactionJournals()->find($journalId);
                 if (null !== $journal) {
@@ -168,7 +168,7 @@ class AccountDestroyService
         /** @var RecurrenceDestroyService $destroyService */
         $destroyService = app(RecurrenceDestroyService::class);
         foreach ($recurrences as $recurrenceId) {
-            $destroyService->destroyById((int)$recurrenceId);
+            $destroyService->destroyById((int) $recurrenceId);
         }
     }
 }

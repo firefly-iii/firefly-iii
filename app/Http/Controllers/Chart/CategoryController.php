@@ -49,8 +49,7 @@ class CategoryController extends Controller
     use ChartGeneration;
     use DateCalculation;
 
-    /** @var GeneratorInterface Chart generation methods. */
-    protected $generator;
+    protected GeneratorInterface $generator;
 
     /**
      * CategoryController constructor.
@@ -71,24 +70,27 @@ class CategoryController extends Controller
     public function all(Category $category): JsonResponse
     {
         // cache results:
-        $cache          = new CacheProperties();
+        $cache = new CacheProperties();
         $cache->addProperty('chart.category.all');
         $cache->addProperty($category->id);
+        $cache->addProperty($this->convertToNative);
         if ($cache->has()) {
-            return response()->json($cache->get());
+             return response()->json($cache->get());
         }
 
         /** @var CategoryRepositoryInterface $repository */
-        $repository     = app(CategoryRepositoryInterface::class);
-        $start          = $repository->firstUseDate($category) ?? $this->getDate();
-        $range          = app('navigation')->getViewRange(false);
-        $start          = app('navigation')->startOfPeriod($start, $range);
-        $end            = $this->getDate();
+        $repository = app(CategoryRepositoryInterface::class);
+        $start      = $repository->firstUseDate($category) ?? $this->getDate();
+        $range      = app('navigation')->getViewRange(false);
+        $start      = app('navigation')->startOfPeriod($start, $range);
+        $end        = $this->getDate();
 
         /** @var WholePeriodChartGenerator $chartGenerator */
-        $chartGenerator = app(WholePeriodChartGenerator::class);
-        $chartData      = $chartGenerator->generate($category, $start, $end);
-        $data           = $this->generator->multiSet($chartData);
+        $chartGenerator                  = app(WholePeriodChartGenerator::class);
+        $chartGenerator->convertToNative = $this->convertToNative;
+
+        $chartData = $chartGenerator->generate($category, $start, $end);
+        $data      = $this->generator->multiSet($chartData);
         $cache->store($data);
 
         return response()->json($data);
@@ -105,15 +107,16 @@ class CategoryController extends Controller
      */
     public function frontPage(): JsonResponse
     {
-        $start              = session('start', today(config('app.timezone'))->startOfMonth());
-        $end                = session('end', today(config('app.timezone'))->endOfMonth());
+        $start = session('start', today(config('app.timezone'))->startOfMonth());
+        $end   = session('end', today(config('app.timezone'))->endOfMonth());
         // chart properties for cache:
-        $cache              = new CacheProperties();
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
+        $cache->addProperty($this->convertToNative);
         $cache->addProperty('chart.category.frontpage');
         if ($cache->has()) {
-            return response()->json($cache->get());
+             return response()->json($cache->get());
         }
 
         $frontpageGenerator = new FrontpageChartGenerator($start, $end);
@@ -136,10 +139,11 @@ class CategoryController extends Controller
         $cache->addProperty('chart.category.period');
         $cache->addProperty($accounts->pluck('id')->toArray());
         $cache->addProperty($category);
+        $cache->addProperty($this->convertToNative);
         if ($cache->has()) {
-            return response()->json($cache->get());
+             return response()->json($cache->get());
         }
-        $data  = $this->reportPeriodChart($accounts, $start, $end, $category);
+        $data = $this->reportPeriodChart($accounts, $start, $end, $category);
 
         $cache->store($data);
 
@@ -160,8 +164,8 @@ class CategoryController extends Controller
             $noCatRepository = app(NoCategoryRepositoryInterface::class);
 
             // this gives us all currencies
-            $expenses        = $noCatRepository->listExpenses($start, $end, $accounts);
-            $income          = $noCatRepository->listIncome($start, $end, $accounts);
+            $expenses = $noCatRepository->listExpenses($start, $end, $accounts);
+            $income   = $noCatRepository->listIncome($start, $end, $accounts);
         }
 
         if (null !== $category) {
@@ -169,9 +173,9 @@ class CategoryController extends Controller
             $opsRepository = app(OperationsRepositoryInterface::class);
             $categoryId    = $category->id;
             // this gives us all currencies
-            $collection    = new Collection([$category]);
-            $expenses      = $opsRepository->listExpenses($start, $end, $accounts, $collection);
-            $income        = $opsRepository->listIncome($start, $end, $accounts, $collection);
+            $collection = new Collection([$category]);
+            $expenses   = $opsRepository->listExpenses($start, $end, $accounts, $collection);
+            $income     = $opsRepository->listIncome($start, $end, $accounts, $collection);
         }
         $currencies = array_unique(array_merge(array_keys($income), array_keys($expenses)));
         $periods    = app('navigation')->listOfPeriods($start, $end);
@@ -185,19 +189,19 @@ class CategoryController extends Controller
             $inKey        = sprintf('%d-in', $currencyId);
             $chartData[$outKey]
                           = [
-                              'label'           => sprintf('%s (%s)', (string)trans('firefly.spent'), $currencyInfo['currency_name']),
-                              'entries'         => [],
-                              'type'            => 'bar',
-                              'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
-                          ];
+                'label'           => sprintf('%s (%s)', (string) trans('firefly.spent'), $currencyInfo['currency_name']),
+                'entries'         => [],
+                'type'            => 'bar',
+                'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
+            ];
 
             $chartData[$inKey]
-                          = [
-                              'label'           => sprintf('%s (%s)', (string)trans('firefly.earned'), $currencyInfo['currency_name']),
-                              'entries'         => [],
-                              'type'            => 'bar',
-                              'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
-                          ];
+                = [
+                'label'           => sprintf('%s (%s)', (string) trans('firefly.earned'), $currencyInfo['currency_name']),
+                'entries'         => [],
+                'type'            => 'bar',
+                'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
+            ];
             // loop empty periods:
             foreach (array_keys($periods) as $period) {
                 $label                                 = $periods[$period];
@@ -205,7 +209,7 @@ class CategoryController extends Controller
                 $chartData[$inKey]['entries'][$label]  = '0';
             }
             // loop income and expenses for this category.:
-            $outSet       = $expenses[$currencyId]['categories'][$categoryId] ?? ['transaction_journals' => []];
+            $outSet = $expenses[$currencyId]['categories'][$categoryId] ?? ['transaction_journals' => []];
             foreach ($outSet['transaction_journals'] as $journal) {
                 $amount                               = app('steam')->positive($journal['amount']);
                 $date                                 = $journal['date']->isoFormat($format);
@@ -214,7 +218,7 @@ class CategoryController extends Controller
                 $chartData[$outKey]['entries'][$date] = bcadd($amount, $chartData[$outKey]['entries'][$date]);
             }
 
-            $inSet        = $income[$currencyId]['categories'][$categoryId] ?? ['transaction_journals' => []];
+            $inSet = $income[$currencyId]['categories'][$categoryId] ?? ['transaction_journals' => []];
             foreach ($inSet['transaction_journals'] as $journal) {
                 $amount                              = app('steam')->positive($journal['amount']);
                 $date                                = $journal['date']->isoFormat($format);
@@ -240,7 +244,7 @@ class CategoryController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get());
         }
-        $data  = $this->reportPeriodChart($accounts, $start, $end, null);
+        $data = $this->reportPeriodChart($accounts, $start, $end, null);
 
         $cache->store($data);
 
@@ -255,14 +259,14 @@ class CategoryController extends Controller
      */
     public function specificPeriod(Category $category, Carbon $date): JsonResponse
     {
-        $range          = app('navigation')->getViewRange(false);
-        $start          = app('navigation')->startOfPeriod($date, $range);
-        $end            = session()->get('end');
+        $range = app('navigation')->getViewRange(false);
+        $start = app('navigation')->startOfPeriod($date, $range);
+        $end   = session()->get('end');
         if ($end < $start) {
             [$end, $start] = [$start, $end];
         }
 
-        $cache          = new CacheProperties();
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty($category->id);

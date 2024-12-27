@@ -133,9 +133,16 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
             ->where('end_date', $end->format('Y-m-d'))->get()
         ;
 
+        // use native amount if necessary?
+        $convertToNative  = app('preferences')->getForUser($this->user, 'convert_to_native', false)->data;
+        $default          = app('amount')->getDefaultCurrency();
+
         /** @var AvailableBudget $availableBudget */
         foreach ($availableBudgets as $availableBudget) {
-            $return[$availableBudget->transaction_currency_id] = $availableBudget->amount;
+            $currencyId          = $convertToNative && $availableBudget->transaction_currency_id !== $default->id ? $default->id : $availableBudget->transaction_currency_id;
+            $field               = $convertToNative && $availableBudget->transaction_currency_id !== $default->id ? 'native_amount' : 'amount';
+            $return[$currencyId] ??= '0';
+            $return[$currencyId] = bcadd($return[$currencyId], $availableBudget->{$field});
         }
 
         return $return;

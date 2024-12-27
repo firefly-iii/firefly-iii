@@ -66,12 +66,12 @@ class RuleForm
         // get all currencies:
         $list             = $groupRepos->get();
         $array            = [
-            0 => (string)trans('firefly.none_in_select_list'),
+            0 => (string) trans('firefly.none_in_select_list'),
         ];
 
         /** @var RuleGroup $group */
         foreach ($list as $group) {
-            if (array_key_exists('hidden', $options) && (int)$options['hidden'] !== $group->id) {
+            if (array_key_exists('hidden', $options) && (int) $options['hidden'] !== $group->id) {
                 $array[$group->id] = $group->title;
             }
         }

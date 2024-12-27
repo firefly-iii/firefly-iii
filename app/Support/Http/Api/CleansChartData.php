@@ -48,10 +48,10 @@ trait CleansChartData
          */
         foreach ($data as $index => $array) {
             if (array_key_exists('currency_id', $array)) {
-                $array['currency_id'] = (string)$array['currency_id'];
+                $array['currency_id'] = (string) $array['currency_id'];
             }
             if (array_key_exists('native_currency_id', $array)) {
-                $array['native_currency_id'] = (string)$array['native_currency_id'];
+                $array['native_currency_id'] = (string) $array['native_currency_id'];
             }
             if (!array_key_exists('start', $array)) {
                 throw new FireflyException(sprintf('Data-set "%s" is missing the "start"-variable.', $index));
