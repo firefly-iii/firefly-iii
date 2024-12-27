@@ -102,7 +102,7 @@ class DownloadExchangeRates implements ShouldQueue
         try {
             $res = $client->get($url);
         } catch (ConnectException|RequestException $e) {
-            app('log')->warning(sprintf('Trying to grab "%s" resulted in error "%d".', $url, $e->getMessage()));
+            app('log')->warning(sprintf('Trying to grab "%s" resulted in error "%s".', $url, $e->getMessage()));
 
             return;
         }
