@@ -92,11 +92,12 @@ class BudgetController extends Controller
         $cache          = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
+        $cache->addProperty($this->convertToNative);
         $cache->addProperty('chart.budget.budget');
         $cache->addProperty($budget->id);
 
         if ($cache->has()) {
-            return response()->json($cache->get());
+             return response()->json($cache->get());
         }
         $step           = $this->calculateStep($start, $end); // depending on diff, do something with range of chart.
         $collection     = new Collection([$budget]);
@@ -108,7 +109,7 @@ class BudgetController extends Controller
         while ($end >= $loopStart) {
             /** @var Carbon $loopEnd */
             $loopEnd                = app('navigation')->endOfPeriod($loopStart, $step);
-            $spent                  = $this->opsRepository->sumExpenses($loopStart, $loopEnd, null, $collection);
+            $spent                  = $this->opsRepository->sumExpenses($loopStart, $loopEnd, null, $collection); // this method already converts to native.
             $label                  = trim(app('navigation')->periodShow($loopStart, $step));
 
             foreach ($spent as $row) {
@@ -198,6 +199,7 @@ class BudgetController extends Controller
         $budgetLimitId = null === $budgetLimit ? 0 : $budgetLimit->id;
         $cache         = new CacheProperties();
         $cache->addProperty($budget->id);
+        $cache->addProperty($this->convertToNative);
         $cache->addProperty($budgetLimitId);
         $cache->addProperty('chart.budget.expense-asset');
         $start         = session('first', today(config('app.timezone'))->startOfYear());
@@ -212,7 +214,7 @@ class BudgetController extends Controller
         $cache->addProperty($end);
 
         if ($cache->has()) {
-            return response()->json($cache->get());
+            // return response()->json($cache->get());
         }
         $collector->setRange($start, $end);
         $collector->setBudget($budget);
@@ -222,14 +224,33 @@ class BudgetController extends Controller
 
         // group by asset account ID:
         foreach ($journals as $journal) {
-            $key                    = sprintf('%d-%d', (int) $journal['source_account_id'], $journal['currency_id']);
+            $key                    = sprintf('%d-%d', $journal['source_account_id'], $journal['currency_id']);
+            $amount = $journal['amount'];
+
+            // if convert to native, use the native things, unless it's the foreign amount which is in the native currency.
+            if($this->convertToNative && $journal['currency_id'] !== $this->defaultCurrency->id && $journal['foreign_currency_id'] !== $this->defaultCurrency->id) {
+                $key = sprintf('%d-%d', $journal['source_account_id'], $this->defaultCurrency->id);
+                $symbol = $this->defaultCurrency->symbol;
+                $code = $this->defaultCurrency->code;
+                $name = $this->defaultCurrency->name;
+                $amount = $journal['native_amount'];
+            }
+
+            if($this->convertToNative && $journal['currency_id'] !== $this->defaultCurrency->id && $journal['foreign_currency_id'] === $this->defaultCurrency->id) {
+                $key = sprintf('%d-%d', $journal['source_account_id'], $this->defaultCurrency->id);
+                $symbol = $this->defaultCurrency->symbol;
+                $code = $this->defaultCurrency->code;
+                $name = $this->defaultCurrency->name;
+                $amount = $journal['foreign_amount'];
+            }
+
             $result[$key] ??= [
                 'amount'          => '0',
-                'currency_symbol' => $journal['currency_symbol'],
-                'currency_code'   => $journal['currency_code'],
-                'currency_name'   => $journal['currency_name'],
+                'currency_symbol' => $symbol,
+                'currency_code'   => $code,
+                'currency_name'   => $name,
             ];
-            $result[$key]['amount'] = bcadd($journal['amount'], $result[$key]['amount']);
+            $result[$key]['amount'] = bcadd($amount, $result[$key]['amount']);
         }
 
         $names         = $this->getAccountNames(array_keys($result));
@@ -261,6 +282,7 @@ class BudgetController extends Controller
         $budgetLimitId = null === $budgetLimit ? 0 : $budgetLimit->id;
         $cache         = new CacheProperties();
         $cache->addProperty($budget->id);
+        $cache->addProperty($this->convertToNative);
         $cache->addProperty($budgetLimitId);
         $cache->addProperty('chart.budget.expense-category');
         $start         = session('first', today(config('app.timezone'))->startOfYear());
@@ -283,13 +305,36 @@ class BudgetController extends Controller
         $chartData     = [];
         foreach ($journals as $journal) {
             $key                    = sprintf('%d-%d', $journal['category_id'], $journal['currency_id']);
+            $symbol = $journal['currency_symbol'];
+            $code = $journal['currency_code'];
+            $name = $journal['currency_name'];
+            $amount = $journal['amount'];
+            // if convert to native, use the native things, unless it's the foreign amount which is in the native currency.
+            if($this->convertToNative && $journal['currency_id'] !== $this->defaultCurrency->id && $journal['foreign_currency_id'] !== $this->defaultCurrency->id
+            ) {
+                $key = sprintf('%d-%d', $journal['category_id'], $this->defaultCurrency->id);
+                $symbol = $this->defaultCurrency->symbol;
+                $code = $this->defaultCurrency->code;
+                $name = $this->defaultCurrency->name;
+                $amount = $journal['native_amount'];
+            }
+
+            if($this->convertToNative && $journal['currency_id'] !== $this->defaultCurrency->id && $journal['foreign_currency_id'] === $this->defaultCurrency->id
+            ) {
+                $key = sprintf('%d-%d', $journal['category_id'], $this->defaultCurrency->id);
+                $symbol = $this->defaultCurrency->symbol;
+                $code = $this->defaultCurrency->code;
+                $name = $this->defaultCurrency->name;
+                $amount = $journal['foreign_amount'];
+            }
+
             $result[$key] ??= [
                 'amount'          => '0',
-                'currency_symbol' => $journal['currency_symbol'],
-                'currency_code'   => $journal['currency_code'],
-                'currency_name'   => $journal['currency_name'],
+                'currency_symbol' => $symbol,
+                'currency_code'   => $code,
+                'currency_name'   => $name,
             ];
-            $result[$key]['amount'] = bcadd($journal['amount'], $result[$key]['amount']);
+            $result[$key]['amount'] = bcadd($amount, $result[$key]['amount']);
         }
 
         $names         = $this->getCategoryNames(array_keys($result));
@@ -320,6 +365,7 @@ class BudgetController extends Controller
         $cache         = new CacheProperties();
         $cache->addProperty($budget->id);
         $cache->addProperty($budgetLimitId);
+        $cache->addProperty($this->convertToNative);
         $cache->addProperty('chart.budget.expense-expense');
         $start         = session('first', today(config('app.timezone'))->startOfYear());
         $end           = today();
@@ -332,7 +378,7 @@ class BudgetController extends Controller
         $cache->addProperty($end);
 
         if ($cache->has()) {
-            return response()->json($cache->get());
+            // return response()->json($cache->get());
         }
         $collector->setRange($start, $end);
         $collector->setTypes([TransactionType::WITHDRAWAL])->setBudget($budget)->withAccountInformation();
@@ -343,13 +389,32 @@ class BudgetController extends Controller
         /** @var array $journal */
         foreach ($journals as $journal) {
             $key                    = sprintf('%d-%d', $journal['destination_account_id'], $journal['currency_id']);
+            $amount = $journal['amount'];
+
+            // if convert to native, use the native things, unless it's the foreign amount which is in the native currency.
+            if($this->convertToNative && $journal['currency_id'] !== $this->defaultCurrency->id && $journal['foreign_currency_id'] !== $this->defaultCurrency->id) {
+                $key = sprintf('%d-%d', $journal['destination_account_id'], $this->defaultCurrency->id);
+                $symbol = $this->defaultCurrency->symbol;
+                $code = $this->defaultCurrency->code;
+                $name = $this->defaultCurrency->name;
+                $amount = $journal['native_amount'];
+            }
+
+            if($this->convertToNative && $journal['currency_id'] !== $this->defaultCurrency->id && $journal['foreign_currency_id'] === $this->defaultCurrency->id) {
+                $key = sprintf('%d-%d', $journal['destination_account_id'], $this->defaultCurrency->id);
+                $symbol = $this->defaultCurrency->symbol;
+                $code = $this->defaultCurrency->code;
+                $name = $this->defaultCurrency->name;
+                $amount = $journal['foreign_amount'];
+            }
+
             $result[$key] ??= [
                 'amount'          => '0',
-                'currency_symbol' => $journal['currency_symbol'],
-                'currency_code'   => $journal['currency_code'],
-                'currency_name'   => $journal['currency_name'],
+                'currency_symbol' => $symbol,
+                'currency_code'   => $code,
+                'currency_name'   => $name
             ];
-            $result[$key]['amount'] = bcadd($journal['amount'], $result[$key]['amount']);
+            $result[$key]['amount'] = bcadd($amount, $result[$key]['amount']);
         }
 
         $names         = $this->getAccountNames(array_keys($result));

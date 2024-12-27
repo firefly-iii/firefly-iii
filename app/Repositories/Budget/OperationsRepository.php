@@ -214,7 +214,6 @@ class OperationsRepository implements OperationsRepositoryInterface
         Log::debug('Start of sumExpenses.');
         // this collector excludes all transfers TO liabilities (which are also withdrawals)
         // because those expenses only become expenses once they move from the liability to the friend.
-        // TODO this filter must be somewhere in AccountRepositoryInterface because I suspect its needed more often (A113)
 
         // 2024-12-24 disable the exclusion for now.
 
@@ -258,30 +257,10 @@ class OperationsRepository implements OperationsRepositoryInterface
         // same but for transactions in the foreign currency:
         if (null !== $currency) {
             Log::debug('STOP looking for transactions in the foreign currency.');
-
-            //            Log::debug(sprintf('Look for transactions with foreign currency %s', $currency->code));
-            //            // app('log')->debug(sprintf('Currency is "%s".', $currency->name));
-            //            /** @var GroupCollectorInterface $collector */
-            //            $collector = app(GroupCollectorInterface::class);
-            //            $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->setForeignCurrency($currency)->setBudgets($budgets);
-            //
-            //            if (null !== $accounts) {
-            //                $collector->setAccounts($accounts);
-            //            }
-            //            $result = $collector->getExtractedJournals();
-            //            // app('log')->debug(sprintf('Found %d journals with currency %s.', count($result), $currency->code));
-            //            // do not use array_merge because you want keys to overwrite (otherwise you get double results):
-            //            Log::debug(sprintf('Found %d extra journals in foreign currency.', count($result)));
-            //            $journals = $result + $journals;
         }
         $array           = [];
 
         foreach ($journals as $journal) {
-            //            Log::debug(sprintf('Journal #%d.', $journal['transaction_journal_id']));
-            //            Log::debug(sprintf('Amounts: %1$s %2$s (amount), %3$s %4$s (foreign_amount), %5$s %6$s (native_amount) %5$s %7$s (foreign native amount)',
-            //                               $journal['currency_code'], $journal['amount'], $journal['foreign_currency_code'], $journal['foreign_amount'],
-            //                               $default->code, $journal['native_amount'], $journal['native_foreign_amount'])
-            //            );
             // TODO same as in category::sumexpenses
             $amount                    = '0';
             $currencyId                = (int) $journal['currency_id'];
