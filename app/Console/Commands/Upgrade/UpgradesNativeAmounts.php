@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * UpgradesNativeAmounts.php
  * Copyright (c) 2024 james@firefly-iii.org.
@@ -30,14 +32,12 @@ class UpgradesNativeAmounts extends Command
     use ShowsFriendlyMessages;
     public const string CONFIG_NAME = '620_native_amounts';
 
-    protected $description = 'Runs the native amounts calculations.';
+    protected $description          = 'Runs the native amounts calculations.';
 
-    protected $signature = 'upgrade:620-native-amounts {--F|force : Force the execution of this command.}';
+    protected $signature            = 'upgrade:620-native-amounts {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle(): int
     {
@@ -55,9 +55,6 @@ class UpgradesNativeAmounts extends Command
         return 0;
     }
 
-    /**
-     * @return bool
-     */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
@@ -68,10 +65,6 @@ class UpgradesNativeAmounts extends Command
         return false;
     }
 
-
-    /**
-     *
-     */
     private function markAsExecuted(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);

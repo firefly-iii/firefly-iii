@@ -46,19 +46,19 @@ class Transaction extends Model
 
     protected $casts
                       = [
-            'created_at'          => 'datetime',
-            'updated_at'          => 'datetime',
-            'deleted_at'          => 'datetime',
-            'identifier'          => 'int',
-            'encrypted'           => 'boolean', // model does not have these fields though
-            'bill_name_encrypted' => 'boolean',
-            'reconciled'          => 'boolean',
-            'balance_dirty'       => 'boolean',
-            'balance_before'      => 'string',
-            'balance_after'       => 'string',
-            'date'                => 'datetime',
-            'amount'              => 'string',
-            'foreign_amount'      => 'string',
+            'created_at'                 => 'datetime',
+            'updated_at'                 => 'datetime',
+            'deleted_at'                 => 'datetime',
+            'identifier'                 => 'int',
+            'encrypted'                  => 'boolean', // model does not have these fields though
+            'bill_name_encrypted'        => 'boolean',
+            'reconciled'                 => 'boolean',
+            'balance_dirty'              => 'boolean',
+            'balance_before'             => 'string',
+            'balance_after'              => 'string',
+            'date'                       => 'datetime',
+            'amount'                     => 'string',
+            'foreign_amount'             => 'string',
             'native_amount'              => 'string',
             'native_foreign_amount'      => 'string',
         ];

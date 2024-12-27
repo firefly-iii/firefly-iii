@@ -1,4 +1,5 @@
 <?php
+
 /*
  * ConvertsDatesToUTC.php
  * Copyright (c) 2024 james@firefly-iii.org.
@@ -74,7 +75,9 @@ class ConvertsDatesToUTC extends Command
     public function handle(): int
     {
         $this->friendlyWarning('Please do not use this command.');
+
         return 0;
+
         /**
          * @var string $model
          * @var array  $fields

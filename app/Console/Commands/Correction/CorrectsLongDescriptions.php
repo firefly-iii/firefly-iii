@@ -43,7 +43,7 @@ class CorrectsLongDescriptions extends Command
      */
     public function handle(): int
     {
-        $journals = TransactionJournal::where(DB::raw('LENGTH(description)'),'>', self::MAX_LENGTH)->get(['id', 'description']);
+        $journals = TransactionJournal::where(DB::raw('LENGTH(description)'), '>', self::MAX_LENGTH)->get(['id', 'description']);
         $count    = 0;
 
         /** @var TransactionJournal $journal */
@@ -56,7 +56,7 @@ class CorrectsLongDescriptions extends Command
             }
         }
 
-        $groups   = TransactionGroup::where(DB::raw('LENGTH(title)'),'>', self::MAX_LENGTH)->get(['id', 'title']);
+        $groups   = TransactionGroup::where(DB::raw('LENGTH(title)'), '>', self::MAX_LENGTH)->get(['id', 'title']);
 
         /** @var TransactionGroup $group */
         foreach ($groups as $group) {

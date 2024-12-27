@@ -39,7 +39,7 @@ class Preference extends Model
     use ReturnsIntegerUserIdTrait;
 
     protected $casts
-        = [
+                        = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'data'       => 'array',
@@ -56,7 +56,7 @@ class Preference extends Model
     {
         if (auth()->check()) {
             /** @var User $user */
-            $user = auth()->user();
+            $user        = auth()->user();
 
             // some preferences do not have an administration ID.
             // some need it, to make sure the correct one is selected.
@@ -64,8 +64,8 @@ class Preference extends Model
             $userGroupId = 0 === $userGroupId ? null : $userGroupId;
 
             /** @var null|Preference $preference */
-            $preference = null;
-            $items      = config('firefly.admin_specific_prefs');
+            $preference  = null;
+            $items       = config('firefly.admin_specific_prefs');
             if (null !== $userGroupId && in_array($value, $items, true)) {
                 // find a preference with a specific user_group_id
                 $preference = $user->preferences()->where('user_group_id', $userGroupId)->where('name', $value)->first();
@@ -82,7 +82,7 @@ class Preference extends Model
             if (null !== $preference) {
                 return $preference;
             }
-            $default = config('firefly.default_preferences');
+            $default     = config('firefly.default_preferences');
             if (array_key_exists($value, $default)) {
                 $preference                = new self();
                 $preference->name          = $value;

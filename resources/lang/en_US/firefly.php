@@ -1766,7 +1766,7 @@ return [
     'updated_currency'                                     => 'Currency :name updated',
     'ask_site_owner'                                       => 'Please ask :owner to add, remove or edit currencies.',
     'currencies_intro'                                     => 'Firefly III supports various currencies which you can set and enable here.',
-    'currencies_switch_default' => 'If you have a large database, switching from one default currency to another may take a moment.',
+    'currencies_switch_default'                            => 'If you have a large database, switching from one default currency to another may take a moment.',
     'make_default_currency'                                => 'Make default',
     'default_currency'                                     => 'default',
     'currency_is_disabled'                                 => 'Disabled',
