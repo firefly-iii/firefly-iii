@@ -75,7 +75,7 @@ class CategoryController extends Controller
         $cache->addProperty($category->id);
         $cache->addProperty($this->convertToNative);
         if ($cache->has()) {
-            // return response()->json($cache->get());
+             return response()->json($cache->get());
         }
 
         /** @var CategoryRepositoryInterface $repository */
@@ -116,7 +116,7 @@ class CategoryController extends Controller
         $cache->addProperty($this->convertToNative);
         $cache->addProperty('chart.category.frontpage');
         if ($cache->has()) {
-            // return response()->json($cache->get());
+             return response()->json($cache->get());
         }
 
         $frontpageGenerator = new FrontpageChartGenerator($start, $end);
@@ -141,7 +141,7 @@ class CategoryController extends Controller
         $cache->addProperty($category);
         $cache->addProperty($this->convertToNative);
         if ($cache->has()) {
-            // return response()->json($cache->get());
+             return response()->json($cache->get());
         }
         $data = $this->reportPeriodChart($accounts, $start, $end, $category);
 

@@ -111,7 +111,7 @@ class BillController extends Controller
         $cache->addProperty($bill->id);
         $cache->addProperty($this->convertToNative);
         if ($cache->has()) {
-            // return response()->json($cache->get());
+             return response()->json($cache->get());
         }
         $locale     = app('steam')->getLocale();
 

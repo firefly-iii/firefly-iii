@@ -426,7 +426,7 @@ class AccountController extends Controller
         $cache->addProperty($this->convertToNative);
         $cache->addProperty($account->id);
         if ($cache->has()) {
-            // return response()->json($cache->get());
+             return response()->json($cache->get());
         }
 
         // collect and filter balances for the entire period.

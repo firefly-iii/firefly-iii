@@ -221,7 +221,7 @@ class BudgetController extends Controller
         $cache->addProperty($end);
 
         if ($cache->has()) {
-            // return response()->json($cache->get());
+             return response()->json($cache->get());
         }
         $collector->setRange($start, $end);
         $collector->setBudget($budget);
@@ -385,7 +385,7 @@ class BudgetController extends Controller
         $cache->addProperty($end);
 
         if ($cache->has()) {
-            // return response()->json($cache->get());
+             return response()->json($cache->get());
         }
         $collector->setRange($start, $end);
         $collector->setTypes([TransactionType::WITHDRAWAL])->setBudget($budget)->withAccountInformation();
@@ -457,7 +457,7 @@ class BudgetController extends Controller
         $cache->addProperty($this->convertToNative);
         $cache->addProperty('chart.budget.frontpage');
         if ($cache->has()) {
-            // return response()->json($cache->get());
+             return response()->json($cache->get());
         }
         Log::debug('Regenerate frontpage chart from scratch.');
         $chartGenerator                  = app(FrontpageChartGenerator::class);

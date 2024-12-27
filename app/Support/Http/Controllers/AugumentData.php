@@ -183,7 +183,7 @@ trait AugumentData
         $cache->addProperty('get-limits');
 
         if ($cache->has()) {
-             // return $cache->get();
+              return $cache->get();
         }
 
         $set              = $blRepository->getBudgetLimits($budget, $start, $end);

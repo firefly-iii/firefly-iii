@@ -145,7 +145,7 @@ class ReportController extends Controller
         $cache->addProperty($accounts);
         $cache->addProperty($end);
         if ($cache->has()) {
-            // return response()->json($cache->get());
+             return response()->json($cache->get());
         }
 
         Log::debug('Going to do operations for accounts ', $accounts->pluck('id')->toArray());

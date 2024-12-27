@@ -333,7 +333,7 @@ trait PeriodOverview
         $cache->addProperty('no-budget-period-entries');
 
         if ($cache->has()) {
-            // return $cache->get();
+             return $cache->get();
         }
 
         /** @var array $dates */

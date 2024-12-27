@@ -84,7 +84,7 @@ class Steam
         $cache->addProperty($start);
         $cache->addProperty($end);
         if ($cache->has()) {
-            // return $cache->get();
+             return $cache->get();
         }
 
         $balances             = [];
