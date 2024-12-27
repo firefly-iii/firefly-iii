@@ -1,7 +1,7 @@
 <?php
 
 /**
- * FixPiggies.php
+ * DeleteEmptyGroups.php
  * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -24,53 +24,45 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Correction;
 
+use Exception;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
-use FireflyIII\Models\PiggyBankEvent;
-use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionGroup;
 use Illuminate\Console\Command;
 
 /**
- * Report (and fix) piggy banks.
- *
- * Class FixPiggies
+ * Class DeleteEmptyGroups
  */
-class FixPiggies extends Command
+class RemovesEmptyGroups extends Command
 {
     use ShowsFriendlyMessages;
 
-    protected $description = 'Fixes common issues with piggy banks.';
-    protected $signature   = 'firefly-iii:fix-piggies';
+    protected $description = 'Delete empty transaction groups.';
+    protected $signature   = 'firefly-iii:delete-empty-groups';
 
     /**
      * Execute the console command.
+     *
+     * @throws Exception;
      */
     public function handle(): int
     {
-        $count = 0;
-        $set   = PiggyBankEvent::with(['PiggyBank', 'TransactionJournal'])->get();
+        $groupIds
+               = TransactionGroup::leftJoin('transaction_journals', 'transaction_groups.id', '=', 'transaction_journals.transaction_group_id')
+                   ->whereNull('transaction_journals.id')->get(['transaction_groups.id'])->pluck('id')->toArray()
+        ;
 
-        /** @var PiggyBankEvent $event */
-        foreach ($set as $event) {
-            if (null === $event->transaction_journal_id) {
-                continue;
-            }
+        $total = count($groupIds);
+        if ($total > 0) {
+            $this->friendlyInfo(sprintf('Deleted %d empty transaction group(s).', $total));
 
-            /** @var null|TransactionJournal $journal */
-            $journal = $event->transactionJournal;
-
-            if (null === $journal) {
-                $event->transaction_journal_id = null;
-                $event->save();
-                ++$count;
-
-                continue;
+            // again, chunks for SQLite.
+            $chunks = array_chunk($groupIds, 500);
+            foreach ($chunks as $chunk) {
+                TransactionGroup::whereNull('deleted_at')->whereIn('id', $chunk)->delete();
             }
         }
-        if (0 === $count) {
-            $this->friendlyPositive('All piggy bank events are OK.');
-        }
-        if (0 !== $count) {
-            $this->friendlyInfo(sprintf('Fixed %d piggy bank event(s).', $count));
+        if (0 === $total) {
+            $this->friendlyInfo('Verified there are no empty groups.');
         }
 
         return 0;

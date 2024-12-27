@@ -1,7 +1,7 @@
 <?php
 
 /**
- * FixGroupAccounts.php
+ * FixPiggies.php
  * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -25,46 +25,53 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Correction;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
-use FireflyIII\Events\UpdatedTransactionGroup;
-use FireflyIII\Handlers\Events\UpdatedGroupEventHandler;
-use FireflyIII\Models\TransactionGroup;
+use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
 
 /**
- * Class FixGroupAccounts
+ * Report (and fix) piggy banks.
+ *
+ * Class FixPiggies
  */
-class FixGroupAccounts extends Command
+class CorrectsPiggyBanks extends Command
 {
     use ShowsFriendlyMessages;
 
-    protected $description = 'Unify the source / destination accounts of split groups.';
-    protected $signature   = 'firefly-iii:unify-group-accounts';
+    protected $description = 'Fixes common issues with piggy banks.';
+    protected $signature   = 'firefly-iii:fix-piggies';
 
     /**
      * Execute the console command.
      */
     public function handle(): int
     {
-        $groups  = [];
-        $res     = TransactionJournal::groupBy('transaction_group_id')
-            ->get(['transaction_group_id', \DB::raw('COUNT(transaction_group_id) as the_count')])// @phpstan-ignore-line
-        ;
+        $count = 0;
+        $set   = PiggyBankEvent::with(['PiggyBank', 'TransactionJournal'])->get();
 
-        /** @var TransactionJournal $journal */
-        foreach ($res as $journal) {
-            if ((int) $journal->the_count > 1) {
-                $groups[] = (int) $journal->transaction_group_id;
+        /** @var PiggyBankEvent $event */
+        foreach ($set as $event) {
+            if (null === $event->transaction_journal_id) {
+                continue;
+            }
+
+            /** @var null|TransactionJournal $journal */
+            $journal = $event->transactionJournal;
+
+            if (null === $journal) {
+                $event->transaction_journal_id = null;
+                $event->save();
+                ++$count;
+
+                continue;
             }
         }
-        $handler = new UpdatedGroupEventHandler();
-        foreach ($groups as $groupId) {
-            $group = TransactionGroup::find($groupId);
-            $event = new UpdatedTransactionGroup($group, true, true);
-            $handler->unifyAccounts($event);
+        if (0 === $count) {
+            $this->friendlyPositive('All piggy bank events are OK.');
         }
-
-        $this->friendlyPositive('Updated possible inconsistent transaction groups.');
+        if (0 !== $count) {
+            $this->friendlyInfo(sprintf('Fixed %d piggy bank event(s).', $count));
+        }
 
         return 0;
     }

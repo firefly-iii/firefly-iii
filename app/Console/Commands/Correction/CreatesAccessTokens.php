@@ -1,7 +1,7 @@
 <?php
 
 /**
- * FixAccountOrder.php
+ * CreateAccessTokens.php
  * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -25,47 +25,49 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Correction;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 
 /**
- * Class FixAccountOrder
+ * Class CreateAccessTokens
  */
-class FixAccountOrder extends Command
+class CreatesAccessTokens extends Command
 {
     use ShowsFriendlyMessages;
 
-    protected $description = 'Make sure account order is correct.';
-    protected $signature   = 'firefly-iii:fix-account-order';
+    protected $description = 'Creates user access tokens which are used for command line access to personal data.';
 
-    private AccountRepositoryInterface $repository;
+    protected $signature   = 'firefly-iii:create-access-tokens';
 
     /**
      * Execute the console command.
+     *
+     * @throws \Exception
      */
     public function handle(): int
     {
-        $this->stupidLaravel();
+        // make repository:
+        /** @var UserRepositoryInterface $repository */
+        $repository = app(UserRepositoryInterface::class);
 
-        $users = User::get();
+        $count      = 0;
+        $users      = $repository->all();
+
+        /** @var User $user */
         foreach ($users as $user) {
-            $this->repository->setUser($user);
-            $this->repository->resetAccountOrder();
+            $pref = app('preferences')->getForUser($user, 'access_token');
+            if (null === $pref) {
+                $token = $user->generateAccessToken();
+                app('preferences')->setForUser($user, 'access_token', $token);
+                $this->friendlyInfo(sprintf('Generated access token for user %s', $user->email));
+                ++$count;
+            }
+        }
+        if (0 === $count) {
+            $this->friendlyPositive('Verified access tokens.');
         }
 
-        $this->friendlyPositive('All accounts are ordered correctly');
-
         return 0;
-    }
-
-    /**
-     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
-     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
-     * be called from the handle method instead of using the constructor to initialize the command.
-     */
-    private function stupidLaravel(): void
-    {
-        $this->repository = app(AccountRepositoryInterface::class);
     }
 }

@@ -50,7 +50,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
-class ConvertDatesToUTC extends Command
+class ConvertsDatesToUTC extends Command
 {
     use ShowsFriendlyMessages;
 
@@ -66,7 +66,7 @@ class ConvertDatesToUTC extends Command
      *
      * @var string
      */
-    protected $signature   = 'firefly-iii:migrate-to-utc';
+    protected $signature   = 'correction:convert-to-utc';
 
     /**
      * Execute the console command.

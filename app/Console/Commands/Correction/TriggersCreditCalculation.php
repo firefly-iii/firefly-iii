@@ -31,7 +31,7 @@ use Illuminate\Console\Command;
 /**
  * Class CorrectionSkeleton
  */
-class TriggerCreditCalculation extends Command
+class TriggersCreditCalculation extends Command
 {
     protected $description = 'Triggers the credit recalculation service for liabilities.';
     protected $signature   = 'firefly-iii:trigger-credit-recalculation';

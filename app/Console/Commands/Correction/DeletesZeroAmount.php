@@ -32,7 +32,7 @@ use Illuminate\Console\Command;
 /**
  * Class DeleteZeroAmount
  */
-class DeleteZeroAmount extends Command
+class DeletesZeroAmount extends Command
 {
     use ShowsFriendlyMessages;
 

@@ -36,15 +36,12 @@ use FireflyIII\Models\RuleTrigger;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
-/**
- * Class ReportSkeleton
- */
-class CorrectAmounts extends Command
+class CorrectsAmounts extends Command
 {
     use ShowsFriendlyMessages;
 
     protected $description = 'This command makes sure positive and negative amounts are recorded correctly.';
-    protected $signature   = 'firefly-iii:fix-amount-pos-neg';
+    protected $signature   = 'correction:fix-amount-pos-neg';
 
     public function handle(): int
     {

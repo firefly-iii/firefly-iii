@@ -27,10 +27,7 @@ namespace FireflyIII\Console\Commands\Correction;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 
-/**
- * Class RenameMetaFields
- */
-class RenameMetaFields extends Command
+class CorrectsMetDataFields extends Command
 {
     use ShowsFriendlyMessages;
 

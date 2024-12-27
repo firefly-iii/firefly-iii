@@ -33,7 +33,7 @@ use Illuminate\Database\QueryException;
 /**
  * Class DeleteEmptyJournals
  */
-class DeleteEmptyJournals extends Command
+class RemovesEmptyJournals extends Command
 {
     use ShowsFriendlyMessages;
 

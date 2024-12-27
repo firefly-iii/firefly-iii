@@ -27,10 +27,7 @@ namespace FireflyIII\Console\Commands\Correction;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 
-/**
- * Class CorrectDatabase
- */
-class CorrectDatabase extends Command
+class CorrectsDatabase extends Command
 {
     use ShowsFriendlyMessages;
 

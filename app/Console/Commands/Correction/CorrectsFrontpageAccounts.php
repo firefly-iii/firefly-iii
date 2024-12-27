@@ -31,10 +31,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 
-/**
- * Class FixFrontpageAccounts
- */
-class FixFrontpageAccounts extends Command
+class CorrectsFrontpageAccounts extends Command
 {
     use ShowsFriendlyMessages;
 

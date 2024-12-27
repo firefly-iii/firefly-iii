@@ -30,10 +30,7 @@ use FireflyIII\Models\AccountType;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 
-/**
- * Class FixIbans
- */
-class FixIbans extends Command
+class CorrectsIbans extends Command
 {
     use ShowsFriendlyMessages;
 

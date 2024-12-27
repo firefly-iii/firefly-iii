@@ -31,7 +31,7 @@ use Illuminate\Console\Command;
 /**
  * Class CreateLinkTypes. Created all link types in case a migration hasn't fired.
  */
-class CreateLinkTypes extends Command
+class CreatesLinkTypes extends Command
 {
     use ShowsFriendlyMessages;
 

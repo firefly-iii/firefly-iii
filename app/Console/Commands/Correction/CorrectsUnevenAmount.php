@@ -36,7 +36,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class FixUnevenAmount
  */
-class FixUnevenAmount extends Command
+class CorrectsUnevenAmount extends Command
 {
     use ShowsFriendlyMessages;
 

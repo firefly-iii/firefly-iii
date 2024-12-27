@@ -1,7 +1,7 @@
 <?php
 
 /**
- * DeleteEmptyGroups.php
+ * RemoveBills.php
  * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -24,46 +24,43 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Correction;
 
-use Exception;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
-use FireflyIII\Models\TransactionGroup;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use Illuminate\Console\Command;
 
 /**
- * Class DeleteEmptyGroups
+ * Class RemoveBills
  */
-class DeleteEmptyGroups extends Command
+class RemovesBills extends Command
 {
     use ShowsFriendlyMessages;
 
-    protected $description = 'Delete empty transaction groups.';
-    protected $signature   = 'firefly-iii:delete-empty-groups';
+    protected $description = 'Remove bills from transactions that shouldn\'t have one.';
+    protected $signature   = 'firefly-iii:remove-bills';
 
     /**
      * Execute the console command.
-     *
-     * @throws Exception;
      */
     public function handle(): int
     {
-        $groupIds
-               = TransactionGroup::leftJoin('transaction_journals', 'transaction_groups.id', '=', 'transaction_journals.transaction_group_id')
-                   ->whereNull('transaction_journals.id')->get(['transaction_groups.id'])->pluck('id')->toArray()
-        ;
-
-        $total = count($groupIds);
-        if ($total > 0) {
-            $this->friendlyInfo(sprintf('Deleted %d empty transaction group(s).', $total));
-
-            // again, chunks for SQLite.
-            $chunks = array_chunk($groupIds, 500);
-            foreach ($chunks as $chunk) {
-                TransactionGroup::whereNull('deleted_at')->whereIn('id', $chunk)->delete();
-            }
+        /** @var null|TransactionType $withdrawal */
+        $withdrawal = TransactionType::where('type', TransactionType::WITHDRAWAL)->first();
+        if (null === $withdrawal) {
+            return 0;
         }
-        if (0 === $total) {
-            $this->friendlyInfo('Verified there are no empty groups.');
+        $journals   = TransactionJournal::whereNotNull('bill_id')->where('transaction_type_id', '!=', $withdrawal->id)->get();
+
+        /** @var TransactionJournal $journal */
+        foreach ($journals as $journal) {
+            $this->friendlyWarning(sprintf('Transaction journal #%d will be unlinked from bill #%d.', $journal->id, $journal->bill_id));
+            $journal->bill_id = null;
+            $journal->save();
         }
+        if ($journals->count() > 0) {
+            $this->friendlyInfo('Fixed all transaction journals so they have correct bill information.');
+        }
+        $this->friendlyPositive('All bills and journals are OK');
 
         return 0;
     }

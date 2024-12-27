@@ -46,7 +46,7 @@ use Illuminate\Database\Query\Builder as DatabaseBuilder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class RecalculateNativeAmounts extends Command
+class CorrectsNativeAmounts extends Command
 {
     use ShowsFriendlyMessages;
 

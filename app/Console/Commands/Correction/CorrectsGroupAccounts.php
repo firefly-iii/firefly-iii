@@ -1,7 +1,7 @@
 <?php
 
 /**
- * RemoveBills.php
+ * FixGroupAccounts.php
  * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -25,42 +25,46 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Correction;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
+use FireflyIII\Events\UpdatedTransactionGroup;
+use FireflyIII\Handlers\Events\UpdatedGroupEventHandler;
+use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
 use Illuminate\Console\Command;
 
 /**
- * Class RemoveBills
+ * Class FixGroupAccounts
  */
-class RemoveBills extends Command
+class CorrectsGroupAccounts extends Command
 {
     use ShowsFriendlyMessages;
 
-    protected $description = 'Remove bills from transactions that shouldn\'t have one.';
-    protected $signature   = 'firefly-iii:remove-bills';
+    protected $description = 'Unify the source / destination accounts of split groups.';
+    protected $signature   = 'firefly-iii:unify-group-accounts';
 
     /**
      * Execute the console command.
      */
     public function handle(): int
     {
-        /** @var null|TransactionType $withdrawal */
-        $withdrawal = TransactionType::where('type', TransactionType::WITHDRAWAL)->first();
-        if (null === $withdrawal) {
-            return 0;
-        }
-        $journals   = TransactionJournal::whereNotNull('bill_id')->where('transaction_type_id', '!=', $withdrawal->id)->get();
+        $groups  = [];
+        $res     = TransactionJournal::groupBy('transaction_group_id')
+            ->get(['transaction_group_id', \DB::raw('COUNT(transaction_group_id) as the_count')])// @phpstan-ignore-line
+        ;
 
         /** @var TransactionJournal $journal */
-        foreach ($journals as $journal) {
-            $this->friendlyWarning(sprintf('Transaction journal #%d will be unlinked from bill #%d.', $journal->id, $journal->bill_id));
-            $journal->bill_id = null;
-            $journal->save();
+        foreach ($res as $journal) {
+            if ((int) $journal->the_count > 1) {
+                $groups[] = (int) $journal->transaction_group_id;
+            }
         }
-        if ($journals->count() > 0) {
-            $this->friendlyInfo('Fixed all transaction journals so they have correct bill information.');
+        $handler = new UpdatedGroupEventHandler();
+        foreach ($groups as $groupId) {
+            $group = TransactionGroup::find($groupId);
+            $event = new UpdatedTransactionGroup($group, true, true);
+            $handler->unifyAccounts($event);
         }
-        $this->friendlyPositive('All bills and journals are OK');
+
+        $this->friendlyPositive('Updated possible inconsistent transaction groups.');
 
         return 0;
     }

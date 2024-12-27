@@ -29,10 +29,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
 
-/**
- * Class FixLongDescriptions
- */
-class FixLongDescriptions extends Command
+class CorrectsLongDescriptions extends Command
 {
     use ShowsFriendlyMessages;
 

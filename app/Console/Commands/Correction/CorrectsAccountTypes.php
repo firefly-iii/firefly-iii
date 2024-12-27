@@ -36,10 +36,7 @@ use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 
-/**
- * Class FixAccountTypes
- */
-class FixAccountTypes extends Command
+class CorrectsAccountTypes extends Command
 {
     use ShowsFriendlyMessages;
 

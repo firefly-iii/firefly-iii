@@ -32,7 +32,7 @@ use Illuminate\Console\Command;
 /**
  * Deletes transactions where the journal has been deleted.
  */
-class DeleteOrphanedTransactions extends Command
+class RemovesOrphanedTransactions extends Command
 {
     use ShowsFriendlyMessages;
 

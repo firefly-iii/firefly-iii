@@ -33,10 +33,7 @@ use FireflyIII\Models\UserRole;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 
-/**
- * Class CreateGroupMemberships
- */
-class CreateGroupMemberships extends Command
+class CreatesGroupMemberships extends Command
 {
     use ShowsFriendlyMessages;
 

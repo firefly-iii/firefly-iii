@@ -35,10 +35,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 
-/**
- * Class CorrectOpeningBalanceCurrencies
- */
-class CorrectOpeningBalanceCurrencies extends Command
+class CorrectsOpeningBalanceCurrencies extends Command
 {
     use ShowsFriendlyMessages;
 

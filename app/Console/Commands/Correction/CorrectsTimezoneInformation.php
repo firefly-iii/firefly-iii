@@ -60,7 +60,7 @@ use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 
-class AddTimezonesToDates extends Command
+class CorrectsTimezoneInformation extends Command
 {
     use ShowsFriendlyMessages;
 

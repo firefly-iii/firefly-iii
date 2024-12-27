@@ -32,7 +32,7 @@ use Illuminate\Console\Command;
 /**
  * Class TransferBudgets
  */
-class TransferBudgets extends Command
+class CorrectsTransferBudgets extends Command
 {
     use ShowsFriendlyMessages;
 

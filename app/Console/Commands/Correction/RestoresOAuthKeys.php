@@ -31,7 +31,7 @@ use Illuminate\Console\Command;
 /**
  * Class RestoreOAuthKeys
  */
-class RestoreOAuthKeys extends Command
+class RestoresOAuthKeys extends Command
 {
     use ShowsFriendlyMessages;
 
