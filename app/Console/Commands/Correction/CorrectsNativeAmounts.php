@@ -102,7 +102,7 @@ class CorrectsNativeAmounts extends Command
         foreach ($set as $account) {
             $account->touch();
         }
-        Log::debug(sprintf('Recalculated %d accounts', $set->count()));
+        Log::debug(sprintf('Recalculated %d accounts for user group #%d.', $set->count(), $userGroup->id));
     }
 
     private function recalculatePiggyBanks(UserGroup $userGroup, TransactionCurrency $currency): void
@@ -131,7 +131,7 @@ class CorrectsNativeAmounts extends Command
             }
             $this->recalculatePiggyBankEvents($piggyBank);
         }
-        Log::debug(sprintf('Recalculated %d piggy banks.', $set->count()));
+        Log::debug(sprintf('Recalculated %d piggy banks for user group #%d.', $set->count(), $userGroup->id));
 
     }
 
@@ -168,7 +168,7 @@ class CorrectsNativeAmounts extends Command
             $limit->touch();
             Log::debug(sprintf('Done with touch BL #%d', $limit->id));
         }
-        Log::debug(sprintf('Recalculated %d budget limits.', $set->count()));
+        Log::debug(sprintf('Recalculated %d budget limits for budget #%d.', $set->count(), $budget->id));
     }
 
     private function recalculateAutoBudgets(Budget $budget, TransactionCurrency $currency): void
@@ -179,7 +179,7 @@ class CorrectsNativeAmounts extends Command
         foreach ($set as $autoBudget) {
             $autoBudget->touch();
         }
-        Log::debug(sprintf('Recalculated %d auto budgets.', $set->count()));
+        Log::debug(sprintf('Recalculated %d auto budgets for budget #%d.', $set->count(), $budget->id));
     }
 
     private function recalculateAvailableBudgets(UserGroup $userGroup, TransactionCurrency $currency): void
