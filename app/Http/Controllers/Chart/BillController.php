@@ -133,8 +133,8 @@ class BillController extends Controller
                 return 0;
             }
         );
-        $currency = $bill->transactionCurrency;
-        if($this->convertToNative) {
+        $currency   = $bill->transactionCurrency;
+        if ($this->convertToNative) {
             $currency = $this->defaultCurrency;
         }
 
@@ -162,9 +162,9 @@ class BillController extends Controller
             ],
         ];
         $currencyId = $bill->transaction_currency_id;
-        $amountMin = $bill->amount_min;
-        $amountMax = $bill->amount_max;
-        if($this->convertToNative && $currencyId !== $this->defaultCurrency->id) {
+        $amountMin  = $bill->amount_min;
+        $amountMax  = $bill->amount_max;
+        if ($this->convertToNative && $currencyId !== $this->defaultCurrency->id) {
             $amountMin = $bill->native_amount_min;
             $amountMax = $bill->native_amount_max;
         }
@@ -178,10 +178,10 @@ class BillController extends Controller
                 $chartData[2]['entries'][$date] = '0';
             }
             $amount                         = bcmul($journal['amount'], '-1');
-            if($this->convertToNative && $currencyId !== $journal['currency_id']) {
-                $amount                         = bcmul($journal['native_amount'], '-1');
+            if ($this->convertToNative && $currencyId !== $journal['currency_id']) {
+                $amount = bcmul($journal['native_amount'], '-1');
             }
-            if($this->convertToNative && $currencyId === $journal['foreign_currency_id']) {
+            if ($this->convertToNative && $currencyId === $journal['foreign_currency_id']) {
                 $amount = bcmul($journal['foreign_amount'], '-1');
             }
 

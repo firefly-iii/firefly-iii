@@ -52,6 +52,7 @@ class CorrectsFrontpageAccounts extends Command
                 $this->fixPreference($preference);
             }
         }
+
         return 0;
     }
 

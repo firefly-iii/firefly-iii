@@ -39,7 +39,6 @@ class ReportsSums extends Command
     protected $description = 'Report on the total sum of transactions. Must be 0.';
     protected $signature   = 'integrity:total-sums';
 
-
     /**
      * Execute the console command.
      */

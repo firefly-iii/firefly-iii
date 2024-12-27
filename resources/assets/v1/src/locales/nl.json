@@ -21,7 +21,7 @@
         "apply_rules_checkbox": "Regels toepassen",
         "fire_webhooks_checkbox": "Webhooks starten",
         "no_budget_pointer": "Je hebt nog geen budgetten. Maak er een aantal op de <a href=\"budgets\">budgetten<\/a>-pagina. Met budgetten kan je je uitgaven beter bijhouden.",
-        "no_bill_pointer": "Je hebt nog geen contracten. Maak er een aantal op de <a href=\"bills\">contracten<\/a>-pagina. Met contracten kan je je uitgaven beter bijhouden.",
+        "no_bill_pointer": "You seem to have no subscription yet. You should create some on the <a href=\"subscriptions\">subscription<\/a>-page. Subscriptions can help you keep track of expenses.",
         "source_account": "Bronrekening",
         "hidden_fields_preferences": "Je kan meer transactieopties inschakelen in je <a href=\"preferences\">instellingen<\/a>.",
         "destination_account": "Doelrekening",
@@ -36,7 +36,7 @@
         "is_reconciled_fields_dropped": "Omdat deze transactie al is afgestemd, kan je het bedrag noch de rekeningen wijzigen.",
         "tags": "Tags",
         "no_budget": "(geen budget)",
-        "no_bill": "(geen contract)",
+        "no_bill": "(no subscription)",
         "category": "Categorie",
         "attachments": "Bijlagen",
         "notes": "Notities",
@@ -52,7 +52,7 @@
         "destination_account_reconciliation": "Je kan de doelrekening van een afstemming niet wijzigen.",
         "source_account_reconciliation": "Je kan de bronrekening van een afstemming niet wijzigen.",
         "budget": "Budget",
-        "bill": "Contract",
+        "bill": "Subscription",
         "you_create_withdrawal": "Je maakt een uitgave.",
         "you_create_transfer": "Je maakt een overschrijving.",
         "you_create_deposit": "Je maakt inkomsten.",
@@ -158,7 +158,7 @@
         "webhook_delivery": "Bericht",
         "from_currency_to_currency": "{from} &rarr; {to}",
         "to_currency_from_currency": "{to} &rarr; {from}",
-        "rate": "Rate"
+        "rate": "Tarief"
     },
     "list": {
         "active": "Actief?",
