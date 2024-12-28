@@ -47,6 +47,7 @@ class BudgetLimitObserver
     {
         if (!Amount::convertToNative($budgetLimit->budget->user)) {
             Log::debug('Do not update native amount of the budget limit.');
+
             return;
         }
         $userCurrency               = app('amount')->getDefaultCurrencyByUserGroup($budgetLimit->budget->user->userGroup);

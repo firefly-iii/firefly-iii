@@ -128,7 +128,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
 
     public function getAvailableBudgetWithCurrency(Carbon $start, Carbon $end): array
     {
-        Log::debug(sprintf('Now in %s(%s, %s)',__METHOD__, $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
+        Log::debug(sprintf('Now in %s(%s, %s)', __METHOD__, $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
         $return           = [];
         $availableBudgets = $this->user->availableBudgets()
             ->where('start_date', $start->format('Y-m-d H:i:s'))

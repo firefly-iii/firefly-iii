@@ -72,14 +72,12 @@ class Amount
     public function convertToNative(?User $user = null): bool
     {
         if (null === $user) {
-            $result = Preferences::get('convert_to_native', false)->data && config('cer.enabled');
-//            Log::debug(sprintf('convertToNative [a]: %s', var_export($result, true)));
-            return $result;
+            return Preferences::get('convert_to_native', false)->data && config('cer.enabled');
+            //            Log::debug(sprintf('convertToNative [a]: %s', var_export($result, true)));
         }
 
-        $result = Preferences::getForUser($user, 'convert_to_native', false)->data && config('cer.enabled');
-        //Log::debug(sprintf('convertToNative [b]: %s', var_export($result, true)));
-        return $result;
+        return Preferences::getForUser($user, 'convert_to_native', false)->data && config('cer.enabled');
+        // Log::debug(sprintf('convertToNative [b]: %s', var_export($result, true)));
     }
 
     /**
@@ -88,16 +86,16 @@ class Amount
      */
     public function getAmountFromJournalObject(TransactionJournal $journal): string
     {
-        $convertToNative = $this->convertToNative();
-        $currency        = $this->getDefaultCurrency();
-        $field           = $convertToNative && $currency->id !== $journal->transaction_currency_id ? 'native_amount' : 'amount';
+        $convertToNative   = $this->convertToNative();
+        $currency          = $this->getDefaultCurrency();
+        $field             = $convertToNative && $currency->id !== $journal->transaction_currency_id ? 'native_amount' : 'amount';
 
         /** @var null|Transaction $sourceTransaction */
         $sourceTransaction = $journal->transactions()->where('amount', '<', 0)->first();
         if (null === $sourceTransaction) {
             return '0';
         }
-        $amount = $sourceTransaction->{$field} ?? '0';
+        $amount            = $sourceTransaction->{$field} ?? '0';
         if ((int) $sourceTransaction->foreign_currency_id === $currency->id) {
             // use foreign amount instead!
             $amount = (string) $sourceTransaction->foreign_amount; // hard coded to be foreign amount.
@@ -116,15 +114,15 @@ class Amount
      */
     public function formatFlat(string $symbol, int $decimalPlaces, string $amount, ?bool $coloured = null): string
     {
-        $locale   = app('steam')->getLocale();
-        $rounded  = app('steam')->bcround($amount, $decimalPlaces);
+        $locale  = app('steam')->getLocale();
+        $rounded = app('steam')->bcround($amount, $decimalPlaces);
         $coloured ??= true;
 
-        $fmt = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
+        $fmt     = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
         $fmt->setSymbol(\NumberFormatter::CURRENCY_SYMBOL, $symbol);
         $fmt->setAttribute(\NumberFormatter::MIN_FRACTION_DIGITS, $decimalPlaces);
         $fmt->setAttribute(\NumberFormatter::MAX_FRACTION_DIGITS, $decimalPlaces);
-        $result = (string) $fmt->format((float) $rounded); // intentional float
+        $result  = (string) $fmt->format((float) $rounded); // intentional float
 
         if (true === $coloured) {
             if (1 === bccomp($rounded, '0')) {
@@ -170,7 +168,7 @@ class Amount
 
     public function getDefaultCurrencyByUserGroup(UserGroup $userGroup): TransactionCurrency
     {
-        $cache = new CacheProperties();
+        $cache   = new CacheProperties();
         $cache->addProperty('getDefaultCurrencyByGroup');
         $cache->addProperty($userGroup->id);
         if ($cache->has()) {
@@ -233,20 +231,20 @@ class Amount
     private function getLocaleInfo(): array
     {
         // get config from preference, not from translation:
-        $locale = app('steam')->getLocale();
-        $array  = app('steam')->getLocaleArray($locale);
+        $locale                    = app('steam')->getLocale();
+        $array                     = app('steam')->getLocaleArray($locale);
 
         setlocale(LC_MONETARY, $array);
-        $info = localeconv();
+        $info                      = localeconv();
 
         // correct variables
-        $info['n_cs_precedes'] = $this->getLocaleField($info, 'n_cs_precedes');
-        $info['p_cs_precedes'] = $this->getLocaleField($info, 'p_cs_precedes');
+        $info['n_cs_precedes']     = $this->getLocaleField($info, 'n_cs_precedes');
+        $info['p_cs_precedes']     = $this->getLocaleField($info, 'p_cs_precedes');
 
-        $info['n_sep_by_space'] = $this->getLocaleField($info, 'n_sep_by_space');
-        $info['p_sep_by_space'] = $this->getLocaleField($info, 'p_sep_by_space');
+        $info['n_sep_by_space']    = $this->getLocaleField($info, 'n_sep_by_space');
+        $info['p_sep_by_space']    = $this->getLocaleField($info, 'p_sep_by_space');
 
-        $fmt = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
+        $fmt                       = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
 
         $info['mon_decimal_point'] = $fmt->getSymbol(\NumberFormatter::MONETARY_SEPARATOR_SYMBOL);
         $info['mon_thousands_sep'] = $fmt->getSymbol(\NumberFormatter::MONETARY_GROUPING_SEPARATOR_SYMBOL);
@@ -269,7 +267,7 @@ class Amount
     public static function getAmountJsConfig(bool $sepBySpace, int $signPosn, string $sign, bool $csPrecedes): string
     {
         // negative first:
-        $space = ' ';
+        $space  = ' ';
 
         // require space between symbol and amount?
         if (false === $sepBySpace) {
@@ -278,11 +276,11 @@ class Amount
 
         // there are five possible positions for the "+" or "-" sign (if it is even used)
         // pos_a and pos_e could be the ( and ) symbol.
-        $posA = ''; // before everything
-        $posB = ''; // before currency symbol
-        $posC = ''; // after currency symbol
-        $posD = ''; // before amount
-        $posE = ''; // after everything
+        $posA   = ''; // before everything
+        $posB   = ''; // before currency symbol
+        $posC   = ''; // after currency symbol
+        $posD   = ''; // before amount
+        $posE   = ''; // after everything
 
         // format would be (currency before amount)
         // AB%sC_D%vE
@@ -324,11 +322,11 @@ class Amount
         }
 
         // default is amount before currency
-        $format = $posA . $posD . '%v' . $space . $posB . '%s' . $posC . $posE;
+        $format = $posA.$posD.'%v'.$space.$posB.'%s'.$posC.$posE;
 
         if ($csPrecedes) {
             // alternative is currency before amount
-            $format = $posA . $posB . '%s' . $posC . $space . $posD . '%v' . $posE;
+            $format = $posA.$posB.'%s'.$posC.$space.$posD.'%v'.$posE;
         }
 
         return $format;

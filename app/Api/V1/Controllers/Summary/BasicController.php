@@ -103,10 +103,10 @@ class BasicController extends Controller
         $billData     = $this->getBillInformation($start, $end);
         $spentData    = $this->getLeftToSpendInfo($start, $end);
         $netWorthData = $this->getNetWorthInfo($start, $end);
-//                $balanceData  = [];
-//                $billData     = [];
-//                $spentData    = [];
-//                $netWorthData = [];
+        //                $balanceData  = [];
+        //                $billData     = [];
+        //                $spentData    = [];
+        //                $netWorthData = [];
         $total        = array_merge($balanceData, $billData, $spentData, $netWorthData);
 
         // give new keys
