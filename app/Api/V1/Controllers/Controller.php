@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use Carbon\Exceptions\InvalidFormatException;
 use FireflyIII\Models\Preference;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\User;
@@ -58,6 +59,7 @@ abstract class Controller extends BaseController
     protected array        $allowedSort;
     protected ParameterBag $parameters;
     protected bool        $convertToNative = false;
+    protected TransactionCurrency $defaultCurrency;
 
     /**
      * Controller constructor.
@@ -72,6 +74,7 @@ abstract class Controller extends BaseController
                 if (auth()->check()) {
                     $language              = Steam::getLanguage();
                     $this->convertToNative = Amount::convertToNative();
+                    $this->defaultCurrency = Amount::getDefaultCurrency();
                     app()->setLocale($language);
 
                 }
@@ -91,8 +94,8 @@ abstract class Controller extends BaseController
         if ($page < 1) {
             $page = 1;
         }
-        if ($page > 2 ** 16) {
-            $page = 2 ** 16;
+        if ($page > pow(2,16)) {
+            $page = pow(2, 16);
         }
         $bag->set('page', $page);
 

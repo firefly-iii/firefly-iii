@@ -44,7 +44,7 @@ class PiggyBankFactory
     public User                          $user {
         set(User $value) {
             $this->user = $value;
-            $this->currencyRepository->setUser($value);
+            $this->currencyRepository->setUser($value); 
             $this->accountRepository->setUser($value);
             $this->piggyBankRepository->setUser($value);
         }
