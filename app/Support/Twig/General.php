@@ -70,7 +70,7 @@ class General extends AbstractExtension
                 $info            = Steam::finalAccountBalance($account, $date);
                 $currency        = Steam::getAccountCurrency($account);
                 $default         = Amount::getDefaultCurrency();
-                $convertToNative = app('preferences')->get('convert_to_native', false)->data;
+                $convertToNative = Amount::convertToNative();
                 $useNative       = $convertToNative && $default->id !== $currency->id;
                 $strings         = [];
                 foreach ($info as $key => $balance) {

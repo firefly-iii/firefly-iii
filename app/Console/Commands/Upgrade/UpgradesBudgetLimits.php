@@ -77,9 +77,6 @@ class UpgradesBudgetLimits extends Command
                 }
             }
         }
-        if (0 === $count) {
-            $this->friendlyPositive('All budget limits are OK.');
-        }
         $this->markAsExecuted();
 
         return 0;

@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\RequestInformation;
 use FireflyIII\Support\Http\Controllers\UserNavigation;
@@ -121,7 +122,7 @@ abstract class Controller extends BaseController
                     $language  = Steam::getLanguage();
                     $locale    = Steam::getLocale();
                     $darkMode  = app('preferences')->get('darkMode', 'browser')->data;
-                    $this->convertToNative =app('preferences')->get('convert_to_native', false)->data;
+                    $this->convertToNative =Amount::convertToNative();
                     $page      = $this->getPageName();
                     $shownDemo = $this->hasSeenDemo();
                     View::share('language', $language);

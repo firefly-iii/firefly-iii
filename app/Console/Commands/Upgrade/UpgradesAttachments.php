@@ -79,9 +79,6 @@ class UpgradesAttachments extends Command
                 ++$count;
             }
         }
-        if (0 === $count) {
-            $this->friendlyPositive('All attachments are OK.');
-        }
         if (0 !== $count) {
             $this->friendlyInfo(sprintf('Updated %d attachment(s).', $count));
         }

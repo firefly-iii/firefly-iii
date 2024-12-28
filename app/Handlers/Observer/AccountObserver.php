@@ -27,6 +27,7 @@ namespace FireflyIII\Handlers\Observer;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Support\Facades\Log;
 
@@ -43,6 +44,9 @@ class AccountObserver
 
     private function updateNativeAmount(Account $account): void
     {
+        if(!Amount::convertToNative($account->user)) {
+            return;
+        }
         $userCurrency = app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
         $repository   = app(AccountRepositoryInterface::class);
         $currency     = $repository->getAccountCurrency($account);

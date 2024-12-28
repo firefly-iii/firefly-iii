@@ -76,9 +76,6 @@ class AddsTransactionIdentifiers extends Command
             $this->updateJournalIdentifiers($journal);
         }
 
-        if (0 === $this->count) {
-            $this->friendlyPositive('All split journal transaction identifiers are OK.');
-        }
         if (0 !== $this->count) {
             $this->friendlyInfo(sprintf('Fixed %d split journal transaction identifier(s).', $this->count));
         }

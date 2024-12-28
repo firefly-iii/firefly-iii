@@ -72,9 +72,6 @@ class UpgradesToGroups extends Command
         if (0 !== $this->count) {
             $this->friendlyInfo(sprintf('Migrated %d transaction journal(s).', $this->count));
         }
-        if (0 === $this->count) {
-            $this->friendlyPositive('No journals to migrate to groups.');
-        }
         $this->markAsMigrated();
 
         return 0;
@@ -362,9 +359,6 @@ class UpgradesToGroups extends Command
             foreach ($orphanedJournals as $array) {
                 $this->giveGroup($array);
             }
-        }
-        if (0 === $total) {
-            $this->friendlyPositive('No need to convert transaction journals.');
         }
     }
 

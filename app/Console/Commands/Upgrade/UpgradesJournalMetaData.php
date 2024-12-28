@@ -68,7 +68,7 @@ class UpgradesJournalMetaData extends Command
 
     private function isMigrated(): bool
     {
-        $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
+        $configVar = app('fireflyconfig')->get(UpgradesToGroups::CONFIG_NAME, false);
 
         return (bool) $configVar->data;
     }

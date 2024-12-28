@@ -66,7 +66,7 @@ class NetWorth implements NetWorthInterface
     public function byAccounts(Collection $accounts, Carbon $date): array
     {
         // start in the past, end in the future? use $date
-        $convertToNative = app('preferences')->get('convert_to_native', false)->data;
+        $convertToNative = Amount::convertToNative();
         $ids             = implode(',', $accounts->pluck('id')->toArray());
         $cache           = new CacheProperties();
         $cache->addProperty($date);

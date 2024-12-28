@@ -73,9 +73,6 @@ class UpgradesBillsToRules extends Command
             $this->migrateUser($user);
         }
 
-        if (0 === $this->count) {
-            $this->friendlyPositive('All bills are OK.');
-        }
         if (0 !== $this->count) {
             $this->friendlyInfo(sprintf('Verified and fixed %d bill(s).', $this->count));
         }

@@ -27,6 +27,7 @@ namespace FireflyIII\Repositories\Budget;
 use Carbon\Carbon;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
@@ -134,8 +135,8 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
         ;
 
         // use native amount if necessary?
-        $convertToNative  = app('preferences')->getForUser($this->user, 'convert_to_native', false)->data;
-        $default          = app('amount')->getDefaultCurrency();
+        $convertToNative  = Amount::convertToNative($this->user);
+        $default          = Amount::getDefaultCurrency();
 
         /** @var AvailableBudget $availableBudget */
         foreach ($availableBudgets as $availableBudget) {

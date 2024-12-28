@@ -78,6 +78,7 @@ class PiggyBankObserver
         if ($piggyBank->transactionCurrency->id !== $userCurrency->id) {
             $converter                       = new ExchangeRateConverter();
             $converter->setIgnoreSettings(true);
+            $converter->setUserGroup($group);
             $piggyBank->native_target_amount = $converter->convert($piggyBank->transactionCurrency, $userCurrency, today(), $piggyBank->target_amount);
         }
         $piggyBank->saveQuietly();

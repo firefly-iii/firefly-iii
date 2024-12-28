@@ -310,8 +310,8 @@ class Steam
     public function finalAccountBalance(Account $account, Carbon $date): array
     {
         Log::debug(sprintf('Now in finalAccountBalance(#%d, "%s", "%s")', $account->id, $account->name, $date->format('Y-m-d H:i:s')));
-        $native          = app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
-        $convertToNative = app('preferences')->getForUser($account->user, 'convert_to_native', false)->data;
+        $native          = \FireflyIII\Support\Facades\Amount::getDefaultCurrencyByUserGroup($account->user->userGroup);
+        $convertToNative = \FireflyIII\Support\Facades\Amount::convertToNative($account->user);
         $accountCurrency = $this->getAccountCurrency($account);
         $hasCurrency     = null !== $accountCurrency;
         $currency        = $hasCurrency ? $accountCurrency : $native;

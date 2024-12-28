@@ -331,8 +331,8 @@ class OperationsRepository implements OperationsRepositoryInterface
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
 
         // default currency information for native stuff.
-        $convertToNative = app('preferences')->get('convert_to_native', false)->data;
-        $default         = app('amount')->getDefaultCurrency();
+        $convertToNative = Amount::convertToNative($this->user);;
+        $default         = Amount::getDefaultCurrency();
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
@@ -411,8 +411,8 @@ class OperationsRepository implements OperationsRepositoryInterface
         }
         $collector->setCategories($categories);
         $journals        = $collector->getExtractedJournals();
-        $convertToNative = app('preferences')->get('convert_to_native', false)->data;
-        $default         = app('amount')->getDefaultCurrency();
+        $convertToNative = Amount::convertToNative($this->user);;
+        $default         = Amount::getDefaultCurrency();
         $array           = [];
 
         foreach ($journals as $journal) {

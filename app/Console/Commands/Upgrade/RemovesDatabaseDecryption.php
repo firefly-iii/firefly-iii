@@ -70,7 +70,6 @@ class RemovesDatabaseDecryption extends Command
     private function decryptTable(string $table, array $fields): void
     {
         if ($this->isDecrypted($table)) {
-            $this->friendlyInfo(sprintf('No decryption required for table "%s".', $table));
 
             return;
         }

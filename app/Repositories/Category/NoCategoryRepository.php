@@ -154,8 +154,8 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface
         $journals        = $collector->getExtractedJournals();
         $array           = [];
         // default currency information for native stuff.
-        $convertToNative = app('preferences')->get('convert_to_native', false)->data;
-        $default         = app('amount')->getDefaultCurrency();
+        $convertToNative = Amount::convertToNative($this->user);;
+        $default         = Amount::getDefaultCurrency();
 
         foreach ($journals as $journal) {
             // Almost the same as in \FireflyIII\Repositories\Budget\OperationsRepository::sumExpenses

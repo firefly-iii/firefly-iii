@@ -69,12 +69,6 @@ class UpgradesTransferCurrencies extends Command
         $this->startUpdateRoutine();
         $this->markAsExecuted();
 
-        if (0 === $this->count) {
-            $this->friendlyPositive('All transfers have correct currency information.');
-
-            return 0;
-        }
-
         $this->friendlyInfo(sprintf('Verified currency information of %d transfer(s).', $this->count));
 
         return 0;

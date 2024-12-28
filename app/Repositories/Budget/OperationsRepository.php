@@ -223,8 +223,8 @@ class OperationsRepository implements OperationsRepositoryInterface
         $selection       = new Collection();
 
         // default currency information for native stuff.
-        $convertToNative = app('preferences')->get('convert_to_native', false)->data;
-        $default         = app('amount')->getDefaultCurrency();
+        $convertToNative = Amount::convertToNative($this->user);
+        $default         = Amount::getDefaultCurrency();
 
         /** @var Account $account */
         foreach ($subset as $account) {

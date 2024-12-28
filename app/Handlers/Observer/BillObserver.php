@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Observer;
 
 use FireflyIII\Models\Bill;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Support\Facades\Log;
 
@@ -55,6 +56,9 @@ class BillObserver
 
     private function updateNativeAmount(Bill $bill): void
     {
+        if(!Amount::convertToNative($bill->user)) {
+            return;
+        }
         $userCurrency            = app('amount')->getDefaultCurrencyByUserGroup($bill->user->userGroup);
         $bill->native_amount_min = null;
         $bill->native_amount_max = null;

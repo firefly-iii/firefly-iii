@@ -30,6 +30,7 @@ use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Collection;
 
@@ -46,7 +47,7 @@ trait ChartGeneration
     protected function accountBalanceChart(Collection $accounts, Carbon $start, Carbon $end): array // chart helper method.
     {
         // chart properties for cache:
-        $convertToNative = app('preferences')->get('convert_to_native', false)->data;
+        $convertToNative = Amount::convertToNative();
         $cache           = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);

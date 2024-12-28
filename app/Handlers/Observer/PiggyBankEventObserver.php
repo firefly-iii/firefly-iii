@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Observer;
 
 use FireflyIII\Models\PiggyBankEvent;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Support\Facades\Log;
 
@@ -44,6 +45,9 @@ class PiggyBankEventObserver
 
     private function updateNativeAmount(PiggyBankEvent $event): void
     {
+        if(!Amount::convertToNative($event->piggyBank->accounts()->first()->user)) {
+            return;
+        }
         $userCurrency         = app('amount')->getDefaultCurrencyByUserGroup($event->piggyBank->accounts()->first()->user->userGroup);
         $event->native_amount = null;
         if ($event->piggyBank->transactionCurrency->id !== $userCurrency->id) {

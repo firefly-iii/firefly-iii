@@ -100,7 +100,8 @@
                                         {{ ExpandedForm.date('fiscalYearStart',fiscalYearStart,{ 'label' : 'pref_fiscal_year_start_label'|_ }) }}
                                     </div>
 
-                                    {#  conversion back to natiev #}
+                                    {#  conversion back to native #}
+                                    {% if config('cer.enabled') %}
                                     <div class="preferences-box">
                                         <h3>{{ 'pref_convert_to_native'|_ }}</h3>
                                         <p class="text-info">
@@ -108,6 +109,7 @@
                                         </p>
                                         {{ ExpandedForm.checkbox('convertToNative','1',convertToNative,{ 'label' : 'pref_convert_native_help'|_ }) }}
                                     </div>
+                                    {% endif %}
                                 </div>
 
                                 {# general settings column B #}

@@ -73,9 +73,6 @@ class UpgradesAccountMetaData extends Command
 
         $this->markAsExecuted();
 
-        if (0 === $count) {
-            $this->friendlyPositive('All account meta is OK.');
-        }
         if (0 !== $count) {
             $this->friendlyInfo(sprintf('Renamed %d account meta entries (entry).', $count));
         }

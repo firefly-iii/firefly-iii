@@ -62,9 +62,6 @@ class UpgradesAccountCurrencies extends Command
         }
         $this->updateAccountCurrencies();
 
-        if (0 === $this->count) {
-            $this->friendlyPositive('All account currencies are OK.');
-        }
         if (0 !== $this->count) {
             $this->friendlyInfo(sprintf('Corrected %d account(s).', $this->count));
         }

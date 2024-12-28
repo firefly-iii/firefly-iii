@@ -72,9 +72,6 @@ class UpgradesJournalNotes extends Command
             ++$count;
         }
 
-        if (0 === $count) {
-            $this->friendlyPositive('No notes to migrate.');
-        }
         if (0 !== $count) {
             $this->friendlyInfo(sprintf('Migrated %d note(s).', $count));
         }

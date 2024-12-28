@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Observer;
 
 use FireflyIII\Models\Transaction;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\Models\AccountBalanceCalculator;
 use Illuminate\Support\Facades\Log;
@@ -67,6 +68,9 @@ class TransactionObserver
 
     private function updateNativeAmount(Transaction $transaction): void
     {
+        if(!Amount::convertToNative($transaction->transactionJournal->user)) {
+            return;
+        }
         $userCurrency                       = app('amount')->getDefaultCurrencyByUserGroup($transaction->transactionJournal->user->userGroup);
         $transaction->native_amount         = null;
         $transaction->native_foreign_amount = null;

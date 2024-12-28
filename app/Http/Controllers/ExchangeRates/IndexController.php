@@ -27,6 +27,7 @@ namespace FireflyIII\Http\Controllers\ExchangeRates;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionCurrency;
 use Illuminate\View\View;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class IndexController extends Controller
 {
@@ -46,6 +47,9 @@ class IndexController extends Controller
                 return $next($request);
             }
         );
+        if(!config('cer.enabled'))  {
+            throw new NotFoundHttpException();
+        }
     }
 
     public function index(): View

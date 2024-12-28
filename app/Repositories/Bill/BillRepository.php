@@ -527,7 +527,7 @@ class BillRepository implements BillRepositoryInterface
         Log::debug(sprintf('sumPaidInRange from %s to %s', $start->toW3cString(), $end->toW3cString()));
         $bills           = $this->getActiveBills();
         $return          = [];
-        $convertToNative = app('preferences')->getForUser($this->user, 'convert_to_native', false)->data;
+        $convertToNative = Amount::convertToNative($this->user);
         $default         = app('amount')->getDefaultCurrency();
 
         /** @var Bill $bill */
@@ -572,7 +572,7 @@ class BillRepository implements BillRepositoryInterface
         app('log')->debug(sprintf('Now in sumUnpaidInRange("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d')));
         $bills           = $this->getActiveBills();
         $return          = [];
-        $convertToNative = app('preferences')->getForUser($this->user, 'convert_to_native', false)->data;
+        $convertToNative = Amount::convertToNative($this->user);
         $default         = app('amount')->getDefaultCurrency();
 
         /** @var Bill $bill */

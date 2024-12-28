@@ -52,9 +52,6 @@ class UpgradesRecurrenceMetaData extends Command
         }
         $count = $this->migrateMetaData();
 
-        if (0 === $count) {
-            $this->friendlyPositive('No recurrence meta data migrated.');
-        }
         if ($count > 0) {
             $this->friendlyInfo(sprintf('Migrated %d meta data entries', $count));
         }

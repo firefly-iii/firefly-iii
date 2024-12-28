@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Observer;
 
 use FireflyIII\Models\AutoBudget;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Support\Facades\Log;
 
@@ -44,6 +45,9 @@ class AutoBudgetObserver
 
     private function updateNativeAmount(AutoBudget $autoBudget): void
     {
+        if(!Amount::convertToNative($autoBudget->budget->user)) {
+            return;
+        }
         $userCurrency              = app('amount')->getDefaultCurrencyByUserGroup($autoBudget->budget->user->userGroup);
         $autoBudget->native_amount = null;
         if ($autoBudget->transactionCurrency->id !== $userCurrency->id) {

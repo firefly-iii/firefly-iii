@@ -57,7 +57,6 @@ class UpgradesDatabase extends Command
             'upgrade:480-account-meta',
             'upgrade:481-recurrence-meta',
             'upgrade:500-tag-locations',
-            'upgrade:550-recurrence-type',
             'upgrade:560-liabilities',
             'upgrade:600-liabilities',
             'upgrade:550-budget-limit-periods',

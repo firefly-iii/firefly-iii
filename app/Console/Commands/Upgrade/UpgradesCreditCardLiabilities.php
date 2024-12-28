@@ -55,7 +55,6 @@ class UpgradesCreditCardLiabilities extends Command
         $ccType   = AccountType::where('type', AccountType::CREDITCARD)->first();
         $debtType = AccountType::where('type', AccountType::DEBT)->first();
         if (null === $ccType || null === $debtType) {
-            $this->friendlyPositive('No incorrectly stored credit card liabilities.');
             $this->markAsExecuted();
 
             return 0;
@@ -72,9 +71,6 @@ class UpgradesCreditCardLiabilities extends Command
             $this->friendlyWarning(
                 'Credit card liability types are no longer supported and have been converted to generic debts. See: https://bit.ly/FF3-credit-cards'
             );
-        }
-        if (0 === $accounts->count()) {
-            $this->friendlyPositive('No incorrectly stored credit card liabilities.');
         }
         $this->markAsExecuted();
 

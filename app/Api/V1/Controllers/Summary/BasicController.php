@@ -123,8 +123,8 @@ class BasicController extends Controller
     private function getBalanceInformation(Carbon $start, Carbon $end): array
     {
         // some config settings
-        $convertToNative = app('preferences')->get('convert_to_native', false)->data;
-        $default         = app('amount')->getDefaultCurrency();
+        $convertToNative = Amount::convertToNative();
+        $default         = Amount::getDefaultCurrency();
         // prep some arrays:
         $incomes         = [];
         $expenses        = [];

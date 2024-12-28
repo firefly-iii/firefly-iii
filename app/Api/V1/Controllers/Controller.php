@@ -28,6 +28,8 @@ use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use Carbon\Exceptions\InvalidFormatException;
 use FireflyIII\Models\Preference;
+use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -68,8 +70,8 @@ abstract class Controller extends BaseController
             function ($request, $next) {
                 $this->parameters = $this->getParameters();
                 if (auth()->check()) {
-                    $language              = app('steam')->getLanguage();
-                    $this->convertToNative = app('preferences')->get('convert_to_native', false)->data;
+                    $language              = Steam::getLanguage();
+                    $this->convertToNative = Amount::convertToNative();
                     app()->setLocale($language);
 
                 }
