@@ -45,7 +45,6 @@ class ReportsIntegrity extends Command
             return 1;
         }
         $commands = [
-            // 'firefly-iii:add-timezones-to-dates',
             'integrity:empty-objects',
             'integrity:total-sums',
         ];

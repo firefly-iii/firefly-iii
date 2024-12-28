@@ -211,7 +211,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         ?Collection          $budgets = null,
         ?TransactionCurrency $currency = null
     ): array {
-        Log::debug('Start of sumExpenses.');
+        Log::debug(sprintf('Start of %s.', __METHOD__));
         // this collector excludes all transfers TO liabilities (which are also withdrawals)
         // because those expenses only become expenses once they move from the liability to the friend.
 

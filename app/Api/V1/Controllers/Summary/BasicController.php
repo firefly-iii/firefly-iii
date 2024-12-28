@@ -103,10 +103,10 @@ class BasicController extends Controller
         $billData     = $this->getBillInformation($start, $end);
         $spentData    = $this->getLeftToSpendInfo($start, $end);
         $netWorthData = $this->getNetWorthInfo($start, $end);
-        //        $balanceData  = [];
-        //        $billData     = [];
-        //        $spentData    = [];
-        //        $netWorthData = [];
+//                $balanceData  = [];
+//                $billData     = [];
+//                $spentData    = [];
+//                $netWorthData = [];
         $total        = array_merge($balanceData, $billData, $spentData, $netWorthData);
 
         // give new keys
@@ -276,13 +276,13 @@ class BasicController extends Controller
      */
     private function getLeftToSpendInfo(Carbon $start, Carbon $end): array
     {
+        Log::debug(sprintf('Now in getLeftToSpendInfo("%s", "%s")', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
         $return    = [];
         $today     = today(config('app.timezone'));
         $available = $this->abRepository->getAvailableBudgetWithCurrency($start, $end);
         $budgets   = $this->budgetRepository->getActiveBudgets();
         $spent     = $this->opsRepository->sumExpenses($start, $end, null, $budgets);
         $days      = (int) $today->diffInDays($end, true) + 1;
-        Log::debug(sprintf('Now in getLeftToSpendInfo("%s", "%s")', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
 
         foreach ($spent as $row) {
             // either an amount was budgeted or 0 is available.

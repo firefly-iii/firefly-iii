@@ -68,8 +68,8 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
         if (null !== $start && null !== $end) {
             $query->where(
                 static function (Builder $q1) use ($start, $end): void { // @phpstan-ignore-line
-                    $q1->where('start_date', '=', $start->format('Y-m-d'));
-                    $q1->where('end_date', '=', $end->format('Y-m-d'));
+                    $q1->where('start_date', '=', $start->format('Y-m-d H:i:s'));
+                    $q1->where('end_date', '=', $end->format('Y-m-d H:i:s'));
                 }
             );
         }
@@ -128,11 +128,14 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
 
     public function getAvailableBudgetWithCurrency(Carbon $start, Carbon $end): array
     {
+        Log::debug(sprintf('Now in %s(%s, %s)',__METHOD__, $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
         $return           = [];
         $availableBudgets = $this->user->availableBudgets()
-            ->where('start_date', $start->format('Y-m-d'))
-            ->where('end_date', $end->format('Y-m-d'))->get()
+            ->where('start_date', $start->format('Y-m-d H:i:s'))
+            ->where('end_date', $end->format('Y-m-d H:i:s'))->get()
         ;
+
+        Log::debug(sprintf('Found %d available budgets', $availableBudgets->count()));
 
         // use native amount if necessary?
         $convertToNative  = Amount::convertToNative($this->user);
@@ -144,6 +147,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
             $field               = $convertToNative && $availableBudget->transaction_currency_id !== $default->id ? 'native_amount' : 'amount';
             $return[$currencyId] ??= '0';
             $return[$currencyId] = bcadd($return[$currencyId], $availableBudget->{$field});
+            Log::debug(sprintf('Add #%d %s (%s) for a total of %s', $currencyId, $availableBudget->{$field}, $field, $return[$currencyId]));
         }
 
         return $return;
