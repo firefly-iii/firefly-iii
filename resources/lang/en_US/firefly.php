@@ -1258,8 +1258,8 @@ return [
     'rule_trigger_not_source_balance_gt'                   => 'Source account balance is less than or equal to :trigger_value',
     'rule_trigger_not_source_balance_gte'                  => 'Source account balance is less than :trigger_value',
     'rule_trigger_not_source_balance_is'                   => 'Source account balance is not :trigger_value',
-    'rule_trigger_not_source_balance_lt'                   => 'Source account balance is greater than or equal to :trigger_value',
-    'rule_trigger_not_source_balance_lte'                  => 'Source account balance is greater than :trigger_value',
+    'rule_trigger_not_source_balance_lt'                   => 'Source account balance is more than or equal to :trigger_value',
+    'rule_trigger_not_source_balance_lte'                  => 'Source account balance is more than :trigger_value',
 
     // Ignore this comment
 
