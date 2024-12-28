@@ -13,14 +13,14 @@ return new class () extends Migration {
     public function up(): void
     {
         // make account_id nullable and the relation also nullable.
-        Schema::table('piggy_banks', static function (Blueprint $table): void {
-            // 1. drop index
-            try {
+        try {
+            Schema::table('piggy_banks', static function (Blueprint $table): void {
+                // 1. drop index
                 $table->dropForeign('piggy_banks_account_id_foreign');
-            } catch(RuntimeException $e) {
-                // do nothing.
-            }
-        });
+            });
+        } catch (RuntimeException $e) {
+            \Illuminate\Support\Facades\Log::error('Could not drop foreign key "piggy_banks_account_id_foreign". Probably not an issue.');
+        }
         Schema::table('piggy_banks', static function (Blueprint $table): void {
             // 2. make column nullable.
             $table->unsignedInteger('account_id')->nullable()->change();
