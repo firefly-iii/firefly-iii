@@ -26,7 +26,6 @@ namespace FireflyIII\Models;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
-use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -44,7 +43,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class Account extends Model
 {
-    use Cachable;
     use HasFactory;
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;
