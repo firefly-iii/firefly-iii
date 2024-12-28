@@ -56,7 +56,7 @@ class TransactionObserver
 
     public function updated(Transaction $transaction): void
     {
-        Log::debug('Observe "updated" of a transaction.');
+//        Log::debug('Observe "updated" of a transaction.');
         if (config('firefly.feature_flags.running_balance_column') && self::$recalculate) {
             if (1 === bccomp($transaction->amount, '0')) {
                 Log::debug('Trigger recalculateForJournal');

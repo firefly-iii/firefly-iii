@@ -1913,6 +1913,7 @@ return [
     'extension_date_is'                                    => 'Extension date is {date}',
 
     // accounts:
+    'account_locked_currency' => 'The currency of this account must remain :name as long as piggy banks are linked to it.',
     'i_am_owed_amount'                                     => 'I am owed amount',
     'i_owe_amount'                                         => 'I owe amount',
     'inactive_account_link'                                => 'You have :count inactive (archived) account, which you can view on this separate page.|You have :count inactive (archived) accounts, which you can view on this separate page.',

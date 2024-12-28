@@ -27,9 +27,12 @@
                     </div>
                     <div class="box-body">
                         {{ ExpandedForm.text('name', account.name) }}
-                        {% if account.accountType.type == 'Default account' or account.accountType.type == 'Asset account' or objectType == 'liabilities' %}
+                        {% if canEditCurrency and (account.accountType.type == 'Default account' or account.accountType.type == 'Asset account' or objectType == 'liabilities') %}
                             {{ CurrencyForm.currencyList('currency_id', null, {helpText:'account_default_currency'|_}) }}
-
+                        {% endif %}
+                        {% if not canEditCurrency and (account.accountType.type == 'Default account' or account.accountType.type == 'Asset account' or objectType == 'liabilities') %}
+                            <input type="hidden" name="currency_id" value="{{ currency.id }}"/>
+                            {{ ExpandedForm.staticText('currency_id', trans('firefly.account_locked_currency', {name: currency.name})) }}
                         {% endif %}
 
                         {% if objectType == 'liabilities' %}

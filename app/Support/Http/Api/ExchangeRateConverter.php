@@ -30,6 +30,7 @@ use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
@@ -72,7 +73,7 @@ class ExchangeRateConverter
         }
         $rate = $this->getCurrencyRate($from, $to, $date);
 
-        return bcmul($amount, $rate);
+        return Steam::bcround(bcmul($amount, $rate), $to->decimal_places);
     }
 
     public function enabled(): bool

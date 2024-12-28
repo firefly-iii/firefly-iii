@@ -128,8 +128,8 @@ class CorrectsNativeAmounts extends Command
 
             foreach ($piggyBank->accounts as $account) {
                 $account->pivot->native_current_amount = null;
-                if (0 !== bccomp($account->pivot->current_amount, '0')) {
-                    $account->pivot->native_current_amount = $converter->convert($piggyBank->transactionCurrency, $currency, today(), $account->pivot->current_amount);
+                if (0 !== bccomp((string) $account->pivot->current_amount, '0')) {
+                    $account->pivot->native_current_amount = $converter->convert($piggyBank->transactionCurrency, $currency, today(), (string) $account->pivot->current_amount);
                 }
                 $account->pivot->save();
             }

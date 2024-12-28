@@ -90,6 +90,7 @@ class EditController extends Controller
         $latitude             = null !== $location ? $location->latitude : config('firefly.default_location.latitude');
         $longitude            = null !== $location ? $location->longitude : config('firefly.default_location.longitude');
         $zoomLevel            = null !== $location ? $location->zoom_level : config('firefly.default_location.zoom_level');
+        $canEditCurrency = $account->piggyBanks()->count() === 0;
         $hasLocation          = null !== $location;
         $locations            = [
             'location' => [
@@ -162,7 +163,7 @@ class EditController extends Controller
 
         $request->session()->flash('preFilled', $preFilled);
 
-        return view('accounts.edit', compact('account', 'currency', 'showNetWorth', 'subTitle', 'subTitleIcon', 'locations', 'liabilityDirections', 'objectType', 'roles', 'preFilled', 'liabilityTypes', 'interestPeriods'));
+        return view('accounts.edit', compact('account', 'currency','canEditCurrency', 'showNetWorth', 'subTitle', 'subTitleIcon', 'locations', 'liabilityDirections', 'objectType', 'roles', 'preFilled', 'liabilityTypes', 'interestPeriods'));
     }
 
     /**
