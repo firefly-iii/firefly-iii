@@ -36,8 +36,6 @@ use Illuminate\Session\TokenMismatchException;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException as LaravelValidationException;
 use Laravel\Passport\Exceptions\OAuthServerException as LaravelOAuthException;
-use LaravelJsonApi\Core\Exceptions\JsonApiException;
-use LaravelJsonApi\Exceptions\ExceptionParser;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
 use Symfony\Component\HttpFoundation\Response;
@@ -65,7 +63,6 @@ class Handler extends ExceptionHandler
             HttpException::class,
             SuspiciousOperationException::class,
             BadHttpHeaderException::class,
-            JsonApiException::class,
         ];
 
     /**
@@ -73,9 +70,6 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->renderable(
-            ExceptionParser::make()->renderable()
-        );
     }
 
     /**

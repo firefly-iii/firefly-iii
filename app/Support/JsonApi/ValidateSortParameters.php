@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Support\JsonApi;
 
 use Illuminate\Support\Facades\Log;
-use LaravelJsonApi\Core\Query\SortFields;
 
 trait ValidateSortParameters
 {

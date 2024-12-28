@@ -27,8 +27,6 @@ namespace FireflyIII\Support\JsonApi;
 use FireflyIII\Models\Account;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
-use LaravelJsonApi\Core\Query\SortField;
-use LaravelJsonApi\Core\Query\SortFields;
 
 trait SortsQueryResults
 {

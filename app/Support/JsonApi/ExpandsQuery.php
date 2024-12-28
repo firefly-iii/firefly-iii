@@ -28,8 +28,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Log;
-use LaravelJsonApi\Core\Query\FilterParameters;
-use LaravelJsonApi\Core\Query\SortFields;
 
 trait ExpandsQuery
 {
