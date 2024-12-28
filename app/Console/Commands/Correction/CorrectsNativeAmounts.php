@@ -59,8 +59,9 @@ class CorrectsNativeAmounts extends Command
      */
     public function handle(): int
     {
-        if(!config('cer.enabled')) {
+        if (!config('cer.enabled')) {
             $this->friendlyInfo('This command will not run because currency exchange rates are disabled.');
+
             return 0;
         }
         Log::debug('Will update all native amounts. This may take some time.');

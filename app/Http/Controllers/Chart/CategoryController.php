@@ -197,11 +197,11 @@ class CategoryController extends Controller
 
             $chartData[$inKey]
                           = [
-                    'label'           => sprintf('%s (%s)', (string) trans('firefly.earned'), $currencyInfo['currency_name']),
-                    'entries'         => [],
-                    'type'            => 'bar',
-                    'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
-                ];
+                              'label'           => sprintf('%s (%s)', (string) trans('firefly.earned'), $currencyInfo['currency_name']),
+                              'entries'         => [],
+                              'type'            => 'bar',
+                              'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
+                          ];
             // loop empty periods:
             foreach (array_keys($periods) as $period) {
                 $label                                 = $periods[$period];

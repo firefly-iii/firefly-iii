@@ -31,6 +31,7 @@ use FireflyIII\Models\TransactionCurrency;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use FireflyIII\Support\Facades\Amount;
 
 /**
  * Class Steam.
@@ -310,8 +311,8 @@ class Steam
     public function finalAccountBalance(Account $account, Carbon $date): array
     {
         Log::debug(sprintf('Now in finalAccountBalance(#%d, "%s", "%s")', $account->id, $account->name, $date->format('Y-m-d H:i:s')));
-        $native          = \FireflyIII\Support\Facades\Amount::getDefaultCurrencyByUserGroup($account->user->userGroup);
-        $convertToNative = \FireflyIII\Support\Facades\Amount::convertToNative($account->user);
+        $native          = Amount::getDefaultCurrencyByUserGroup($account->user->userGroup);
+        $convertToNative = Amount::convertToNative($account->user);
         $accountCurrency = $this->getAccountCurrency($account);
         $hasCurrency     = null !== $accountCurrency;
         $currency        = $hasCurrency ? $accountCurrency : $native;

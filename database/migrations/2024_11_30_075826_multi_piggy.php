@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Log;
 
 return new class () extends Migration {
     /**
@@ -19,7 +20,7 @@ return new class () extends Migration {
                 $table->dropForeign('piggy_banks_account_id_foreign');
             });
         } catch (RuntimeException $e) {
-            \Illuminate\Support\Facades\Log::error('Could not drop foreign key "piggy_banks_account_id_foreign". Probably not an issue.');
+            Log::error('Could not drop foreign key "piggy_banks_account_id_foreign". Probably not an issue.');
         }
         Schema::table('piggy_banks', static function (Blueprint $table): void {
             // 2. make column nullable.

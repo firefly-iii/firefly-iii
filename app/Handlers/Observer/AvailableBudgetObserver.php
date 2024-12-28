@@ -45,7 +45,7 @@ class AvailableBudgetObserver
 
     private function updateNativeAmount(AvailableBudget $availableBudget): void
     {
-        if(!Amount::convertToNative($availableBudget->user)) {
+        if (!Amount::convertToNative($availableBudget->user)) {
             return;
         }
         $userCurrency                   = app('amount')->getDefaultCurrencyByUserGroup($availableBudget->user->userGroup);

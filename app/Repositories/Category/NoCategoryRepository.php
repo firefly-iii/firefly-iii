@@ -154,7 +154,7 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface
         $journals        = $collector->getExtractedJournals();
         $array           = [];
         // default currency information for native stuff.
-        $convertToNative = Amount::convertToNative($this->user);;
+        $convertToNative = Amount::convertToNative($this->user);
         $default         = Amount::getDefaultCurrency();
 
         foreach ($journals as $journal) {

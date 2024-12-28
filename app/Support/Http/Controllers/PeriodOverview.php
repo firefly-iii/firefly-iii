@@ -576,13 +576,13 @@ trait PeriodOverview
             }
             $entries[]
                          = [
-                    'title'              => $title,
-                    'route'              => route('transactions.index', [$transactionType, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
-                    'total_transactions' => count($spent) + count($earned) + count($transferred),
-                    'spent'              => $this->groupByCurrency($spent),
-                    'earned'             => $this->groupByCurrency($earned),
-                    'transferred'        => $this->groupByCurrency($transferred),
-                ];
+                             'title'              => $title,
+                             'route'              => route('transactions.index', [$transactionType, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
+                             'total_transactions' => count($spent) + count($earned) + count($transferred),
+                             'spent'              => $this->groupByCurrency($spent),
+                             'earned'             => $this->groupByCurrency($earned),
+                             'transferred'        => $this->groupByCurrency($transferred),
+                         ];
         }
 
         return $entries;
