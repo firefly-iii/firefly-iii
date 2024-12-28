@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.2.0 - 2025-01-xx
+
+### Added
+
+- Multi-currency support. If you set `ENABLE_EXCHANGE_RATES=true` and optionally `ENABLE_EXTERNAL_RATES=true` Firefly III will try to calculate all foreign currencies back to your native currency. This is a work in progress, not all fields and all places will support this yet. Please check out the [documentation](#).
+- Notifications support Nfty, Pushover, Slack and Discord.
+- Many new security related notifications.
+- #5523
+- #8531
+- #8307
+- #7945
+- #6760
+- #6557
+
+### Changed
+
+- Firefly III requires PHP 8.4.
+- #9501
+- Docker container no longer runs under root.
+- "Bills" are now called "subscriptions" to better reflect their purpose.
+
+### Removed
+
+- Removed support for PHP 8.3 and lower.
+- Removed Docker support for linux/arm/v7, linux/arm/v8 and linux/386. Sorry. 
+
+### Fixed
+
+- #9532
+- #7288
+
+### API
+
+- API changes related to new features are [documented](#).
+
 ## 6.1.25 - 2024-12-19
 
 ### Fixed
