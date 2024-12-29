@@ -29,6 +29,7 @@ use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Report\Summarizer\TransactionSummarizer;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
@@ -219,44 +220,8 @@ class OperationsRepository implements OperationsRepositoryInterface
 
     private function groupByCurrency(array $journals, string $direction): array
     {
-        $array = [];
-        $convertToNative = Amount::convertToNative($this->user);
-        $default         = Amount::getDefaultCurrencyByUserGroup($this->user->userGroup);
-
-        foreach ($journals as $journal) {
-            // currency
-            $currencyId            = $journal['currency_id'];
-            $currencyName          = $journal['currency_name'];
-            $currencySymbol        = $journal['currency_symbol'];
-            $currencyCode          = $journal['currency_code'];
-            $currencyDecimalPlaces = $journal['currency_decimal_places'];
-            $field                 = $convertToNative && $currencyId !== $default->id ? 'native_amount' : 'amount';
-
-            // perhaps use default currency instead?
-            if ($convertToNative && $journal['currency_id'] !== $default->id) {
-                $currencyId            = $default->id;
-                $currencyName          = $default->name;
-                $currencySymbol        = $default->symbol;
-                $currencyCode          = $default->code;
-                $currencyDecimalPlaces = $default->decimal_places;
-            }
-            // use foreign amount when the foreign currency IS the default currency.
-            if ($convertToNative && $journal['currency_id'] !== $default->id && $default->id === $journal['foreign_currency_id']) {
-                $field = 'foreign_amount';
-            }
-
-            $array[$currencyId]        ??= [
-                'sum'                     => '0',
-                'currency_id'             => $currencyId,
-                'currency_name'           => $currencyName,
-                'currency_symbol'         => $currencySymbol,
-                'currency_code'           => $currencyCode,
-                'currency_decimal_places' => $currencyDecimalPlaces,
-            ];
-            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->{$direction}($journal[$field])); // @phpstan-ignore-line
-        }
-
-        return $array;
+        $summarizer = new TransactionSummarizer($this->user);
+        return $summarizer->groupByCurrencyId($journals, $direction);
     }
 
     /**
@@ -277,70 +242,8 @@ class OperationsRepository implements OperationsRepositoryInterface
 
     private function groupByDirection(array $journals, string $direction, string $method): array
     {
-        $array           = [];
-        $idKey           = sprintf('%s_account_id', $direction);
-        $nameKey         = sprintf('%s_account_name', $direction);
-        $convertToNative = Amount::convertToNative($this->user);
-        $default         = Amount::getDefaultCurrencyByUserGroup($this->user->userGroup);
-        Log::debug(sprintf('groupByDirection(array, %s, %s).', $direction, $method));
-        foreach ($journals as $journal) {
-            // currency
-            $currencyId            = $journal['currency_id'];
-            $currencyName          = $journal['currency_name'];
-            $currencySymbol        = $journal['currency_symbol'];
-            $currencyCode          = $journal['currency_code'];
-            $currencyDecimalPlaces = $journal['currency_decimal_places'];
-            $field                 = $convertToNative && $currencyId !== $default->id ? 'native_amount' : 'amount';
-
-            // perhaps use default currency instead?
-            if ($convertToNative && $journal['currency_id'] !== $default->id) {
-                $currencyId            = $default->id;
-                $currencyName          = $default->name;
-                $currencySymbol        = $default->symbol;
-                $currencyCode          = $default->code;
-                $currencyDecimalPlaces = $default->decimal_places;
-            }
-            // use foreign amount when the foreign currency IS the default currency.
-            if ($convertToNative && $journal['currency_id'] !== $default->id && $default->id === $journal['foreign_currency_id']) {
-                $field = 'foreign_amount';
-            }
-            $key = sprintf('%s-%s', $journal[$idKey], $currencyId);
-            // sum it all up or create a new array.
-            $array[$key] ??= [
-                'id'                      => $journal[$idKey],
-                'name'                    => $journal[$nameKey],
-                'sum'                     => '0',
-                'currency_id'             => $currencyId,
-                'currency_name'           => $currencyName,
-                'currency_symbol'         => $currencySymbol,
-                'currency_code'           => $currencyCode,
-                'currency_decimal_places' => $currencyDecimalPlaces,
-            ];
-
-            // add the data from the $field to the array.
-            $array[$key]['sum'] = bcadd($array[$key]['sum'], app('steam')->{$method}((string) ($journal[$field] ?? '0'))); // @phpstan-ignore-line
-            Log::debug(sprintf('Field for transaction #%d is "%s" (%s). Sum: %s', $journal['transaction_group_id'], $currencyCode, $field, $array[$key]['sum']));
-
-            // also do foreign amount, but only when convertToNative is false (otherwise we have it already)
-            // or when convertToNative is true and the foreign currency is ALSO not the default currency.
-            if ((!$convertToNative || $journal['foreign_currency_id'] !== $default->id) && 0 !== (int) $journal['foreign_currency_id']) {
-                Log::debug(sprintf('Use foreign amount from transaction #%d: %s %s. Sum: %s', $journal['transaction_group_id'], $currencyCode, $journal['foreign_amount'], $array[$key]['sum']));
-                $key                = sprintf('%s-%s', $journal[$idKey], $journal['foreign_currency_id']);
-                $array[$key]        ??= [
-                    'id'                      => $journal[$idKey],
-                    'name'                    => $journal[$nameKey],
-                    'sum'                     => '0',
-                    'currency_id'             => $journal['foreign_currency_id'],
-                    'currency_name'           => $journal['foreign_currency_name'],
-                    'currency_symbol'         => $journal['foreign_currency_symbol'],
-                    'currency_code'           => $journal['foreign_currency_code'],
-                    'currency_decimal_places' => $journal['foreign_currency_decimal_places'],
-                ];
-                $array[$key]['sum'] = bcadd($array[$key]['sum'], app('steam')->{$method}((string) $journal['foreign_amount'])); // @phpstan-ignore-line
-            }
-        }
-
-        return $array;
+        $summarizer = new TransactionSummarizer($this->user);
+        return $summarizer->groupByDirection($journals, $method, $direction);
     }
 
     /**
