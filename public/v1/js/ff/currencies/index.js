@@ -26,7 +26,6 @@ $(function () {
     $('.make_default').on('click', setDefaultCurrency);
     $('.enable-currency').on('click', enableCurrency);
     $('.disable-currency').on('click', disableCurrency);
-    console.log('Loaded3');
 });
 
 function setDefaultCurrency(e) {
@@ -47,6 +46,7 @@ function setDefaultCurrency(e) {
     }
 
     $.ajax({
+        timeout: 30000, // sets timeout to 30 seconds
         url: updateCurrencyUrl + '/' + currencyCode,
         data: JSON.stringify(params),
         type: 'PUT',
