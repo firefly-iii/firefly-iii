@@ -160,10 +160,12 @@ class Amount
 
     public function getDefaultCurrency(): TransactionCurrency
     {
-        /** @var User $user */
-        $user = auth()->user();
-
-        return $this->getDefaultCurrencyByUserGroup($user->userGroup);
+        if(auth()->check()) {
+            /** @var User $user */
+            $user = auth()->user();
+            return $this->getDefaultCurrencyByUserGroup($user->userGroup);
+        }
+        return $this->getSystemCurrency();
     }
 
     public function getDefaultCurrencyByUserGroup(UserGroup $userGroup): TransactionCurrency
