@@ -10,4 +10,5 @@
 - {{ trans('email.date_time') }}: {{ $time }}
 - {{ trans('email.user_agent') }}: {{ $userAgent }}
 
+
 @endcomponent

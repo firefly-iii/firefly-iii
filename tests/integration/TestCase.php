@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tests\integration;
 
+use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Tests\integration\Traits\CollectsValues;
