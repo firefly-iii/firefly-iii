@@ -26,10 +26,19 @@ $(function () {
     $('.make_default').on('click', setDefaultCurrency);
     $('.enable-currency').on('click', enableCurrency);
     $('.disable-currency').on('click', disableCurrency);
+    console.log('Loaded3');
 });
 
 function setDefaultCurrency(e) {
+    console.log('Setting default currency');
     var button = $(e.currentTarget);
+    // disable everything.
+    button.prop('disabled', true);
+    $('a').css('pointer-events', 'none');
+
+    // change cursor to hourglass
+    $('body').css('cursor', 'wait');
+
     var currencyCode = button.data('code');
 
     var params = {

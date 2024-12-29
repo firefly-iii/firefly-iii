@@ -30,7 +30,9 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\UserGroups\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\PiggyBank\PiggyBankRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -57,6 +59,10 @@ class PreferencesEventHandler
         $this->resetPiggyBanks($event->userGroup);
         $this->resetBudgets($event->userGroup);
         $this->resetTransactions($event->userGroup);
+        // fire laravel command to recalculate them all.
+        if (Amount::convertToNative()) {
+            Artisan::call('correction:recalculate-native-amounts');
+        }
     }
 
     private function resetPiggyBanks(UserGroup $userGroup): void
@@ -93,7 +99,7 @@ class PreferencesEventHandler
     {
         $repository = app(BudgetRepositoryInterface::class);
         $repository->setUserGroup($userGroup);
-        $set        = $repository->getBudgets();
+        $set = $repository->getBudgets();
 
         /** @var Budget $budget */
         foreach ($set as $budget) {
@@ -121,15 +127,13 @@ class PreferencesEventHandler
     {
         // custom query because of the potential size of this update.
         $success = DB::table('transactions')
-            ->join('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-            ->where('transaction_journals.user_group_id', $userGroup->id)
-            ->where(static function (Builder $q): void {
-                $q->whereNotNull('native_amount')
-                    ->orWhereNotNull('native_foreign_amount')
-                ;
-            })
-            ->update(['native_amount' => null, 'native_foreign_amount' => null])
-        ;
-        Log::debug(sprintf('Updated %d transactions.', $success));
+                     ->join('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                     ->where('transaction_journals.user_group_id', $userGroup->id)
+                     ->where(static function (Builder $q): void {
+                         $q->whereNotNull('native_amount')
+                           ->orWhereNotNull('native_foreign_amount');
+                     })
+                     ->update(['native_amount' => null, 'native_foreign_amount' => null]);
+        Log::debug(sprintf('Reset %d transactions.', $success));
     }
 }
