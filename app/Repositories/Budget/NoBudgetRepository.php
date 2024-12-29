@@ -28,9 +28,11 @@ use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class NoBudgetRepository
@@ -79,54 +81,6 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
         return $data;
     }
 
-    /**
-     * @deprecated
-     */
-    public function spentInPeriodWoBudgetMc(Collection $accounts, Carbon $start, Carbon $end): array
-    {
-        /** @var GroupCollectorInterface $collector */
-        $collector  = app(GroupCollectorInterface::class);
-
-        $collector->setUser($this->user);
-        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->withoutBudget();
-
-        if ($accounts->count() > 0) {
-            $collector->setAccounts($accounts);
-        }
-        $journals   = $collector->getExtractedJournals();
-        $return     = [];
-        $total      = [];
-        $currencies = [];
-
-        /** @var array $journal */
-        foreach ($journals as $journal) {
-            $code         = $journal['currency_code'];
-            if (!array_key_exists($code, $currencies)) {
-                $currencies[$code] = [
-                    'id'             => $journal['currency_id'],
-                    'name'           => $journal['currency_name'],
-                    'symbol'         => $journal['currency_symbol'],
-                    'decimal_places' => $journal['currency_decimal_places'],
-                ];
-            }
-            $total[$code] = array_key_exists($code, $total) ? bcadd($total[$code], $journal['amount']) : $journal['amount'];
-        }
-        foreach ($total as $code => $spent) {
-            /** @var TransactionCurrency $currency */
-            $currency = $currencies[$code];
-            $return[] = [
-                'currency_id'             => (string) $currency['id'],
-                'currency_code'           => $code,
-                'currency_name'           => $currency['name'],
-                'currency_symbol'         => $currency['symbol'],
-                'currency_decimal_places' => $currency['decimal_places'],
-                'amount'                  => app('steam')->bcround($spent, $currency['decimal_places']),
-            ];
-        }
-
-        return $return;
-    }
-
     public function setUser(null|Authenticatable|User $user): void
     {
         if ($user instanceof User) {
@@ -134,10 +88,6 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
         }
     }
 
-    /**
-     * TODO this method does not include multi currency. It just counts.
-     * TODO this probably also applies to the other "sumExpenses" methods.
-     */
     public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?TransactionCurrency $currency = null): array
     {
         /** @var GroupCollectorInterface $collector */
@@ -154,18 +104,54 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
         $collector->withBudgetInformation();
         $journals  = $collector->getExtractedJournals();
         $array     = [];
+        $convertToNative = Amount::convertToNative($this->user);
+        $default         = Amount::getDefaultCurrency();
 
         foreach ($journals as $journal) {
+            // same as in the other methods.
+            $amount                    = '0';
             $currencyId                = (int) $journal['currency_id'];
+            $currencyName              = $journal['currency_name'];
+            $currencySymbol            = $journal['currency_symbol'];
+            $currencyCode              = $journal['currency_code'];
+            $currencyDecimalPlaces     = $journal['currency_decimal_places'];
+
+            if ($convertToNative) {
+                $useNative = $default->id !== (int) $journal['currency_id'];
+                $amount    = Amount::getAmountFromJournal($journal);
+                if ($useNative) {
+                    Log::debug(sprintf('Journal #%d switches to native amount (original is %s)', $journal['transaction_journal_id'], $journal['currency_code']));
+                    $currencyId            = $default->id;
+                    $currencyName          = $default->name;
+                    $currencySymbol        = $default->symbol;
+                    $currencyCode          = $default->code;
+                    $currencyDecimalPlaces = $default->decimal_places;
+                }
+            }
+            if (!$convertToNative) {
+                $amount = $journal['amount'];
+                // if the amount is not in $currency (but should be), use the foreign_amount if that one is correct.
+                // otherwise, ignore the transaction all together.
+                if (null !== $currency && $currencyId !== $currency->id && $currency->id === (int) $journal['foreign_currency_id']) {
+                    Log::debug(sprintf('Journal #%d switches to foreign amount because it matches native.', $journal['transaction_journal_id']));
+                    $amount                = $journal['foreign_amount'];
+                    $currencyId            = (int) $journal['foreign_currency_id'];
+                    $currencyName          = $journal['foreign_currency_name'];
+                    $currencySymbol        = $journal['foreign_currency_symbol'];
+                    $currencyCode          = $journal['foreign_currency_code'];
+                    $currencyDecimalPlaces = $journal['foreign_currency_decimal_places'];
+                }
+            }
+
             $array[$currencyId] ??= [
                 'sum'                     => '0',
                 'currency_id'             => $currencyId,
-                'currency_name'           => $journal['currency_name'],
-                'currency_symbol'         => $journal['currency_symbol'],
-                'currency_code'           => $journal['currency_code'],
-                'currency_decimal_places' => $journal['currency_decimal_places'],
+                'currency_name'           => $currencyName,
+                'currency_symbol'         => $currencySymbol,
+                'currency_code'           => $currencyCode,
+                'currency_decimal_places' => $currencyDecimalPlaces,
             ];
-            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->negative($journal['amount']));
+            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->negative($amount));
         }
 
         return $array;

@@ -28,6 +28,7 @@ use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Insight\GenericRequest;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
+use FireflyIII\Support\Facades\Amount;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -41,42 +42,41 @@ class PeriodController extends Controller
      */
     public function total(GenericRequest $request): JsonResponse
     {
-        $accounts   = $request->getAssetAccounts();
-        $start      = $request->getStart();
-        $end        = $request->getEnd();
-        $response   = [];
+        $accounts        = $request->getAssetAccounts();
+        $start           = $request->getStart();
+        $end             = $request->getEnd();
+        $response        = [];
+        $convertToNative = Amount::convertToNative();
+        $default         = Amount::getDefaultCurrency();
 
         // collect all expenses in this period (regardless of type)
-        $collector  = app(GroupCollectorInterface::class);
+        $collector = app(GroupCollectorInterface::class);
         $collector->setTypes([TransactionTypeEnum::DEPOSIT->value])->setRange($start, $end)->setDestinationAccounts($accounts);
         $genericSet = $collector->getExtractedJournals();
         foreach ($genericSet as $journal) {
-            $currencyId        = (int) $journal['currency_id'];
-            $foreignCurrencyId = (int) $journal['foreign_currency_id'];
+            // currency
+            $currencyId   = $journal['currency_id'];
+            $currencyCode = $journal['currency_code'];
+            $field        = $convertToNative && $currencyId !== $default->id ? 'native_amount' : 'amount';
 
-            if (0 !== $currencyId) {
-                $response[$currencyId] ??= [
-                    'difference'       => '0',
-                    'difference_float' => 0,
-                    'currency_id'      => (string) $currencyId,
-                    'currency_code'    => $journal['currency_code'],
-                ];
-                $response[$currencyId]['difference']       = bcadd($response[$currencyId]['difference'], app('steam')->positive($journal['amount']));
-                $response[$currencyId]['difference_float'] = (float) $response[$currencyId]['difference']; // float but on purpose.
+            // perhaps use default currency instead?
+            if ($convertToNative && $journal['currency_id'] !== $default->id) {
+                $currencyId   = $default->id;
+                $currencyCode = $default->code;
             }
-            if (0 !== $foreignCurrencyId) {
-                $response[$foreignCurrencyId] ??= [
-                    'difference'       => '0',
-                    'difference_float' => 0,
-                    'currency_id'      => (string) $foreignCurrencyId,
-                    'currency_code'    => $journal['foreign_currency_code'],
-                ];
-                $response[$foreignCurrencyId]['difference']       = bcadd(
-                    $response[$foreignCurrencyId]['difference'],
-                    app('steam')->positive($journal['foreign_amount'])
-                );
-                $response[$foreignCurrencyId]['difference_float'] = (float) $response[$foreignCurrencyId]['difference']; // float but on purpose.
+            // use foreign amount when the foreign currency IS the default currency.
+            if ($convertToNative && $journal['currency_id'] !== $default->id && $default->id === $journal['foreign_currency_id']) {
+                $field = 'foreign_amount';
             }
+
+            $response[$currencyId]                     ??= [
+                'difference'       => '0',
+                'difference_float' => 0,
+                'currency_id'      => (string) $currencyId,
+                'currency_code'    => $currencyCode,
+            ];
+            $response[$currencyId]['difference']       = bcadd($response[$currencyId]['difference'], app('steam')->positive($journal[$field]));
+            $response[$currencyId]['difference_float'] = (float) $response[$currencyId]['difference']; // float but on purpose.
         }
 
         return response()->json(array_values($response));
