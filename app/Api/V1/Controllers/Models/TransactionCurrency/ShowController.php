@@ -107,8 +107,7 @@ class ShowController extends Controller
         /** @var User $user */
         $user            = auth()->user();
         $manager         = $this->getManager();
-        $defaultCurrency = app('amount')->getDefaultCurrencyByUserGroup($user->userGroup);
-        $this->parameters->set('defaultCurrency', $defaultCurrency);
+        $this->parameters->set('defaultCurrency', $this->defaultCurrency);
 
         // update fields with user info.
         $currency->refreshForUser($user);
@@ -135,7 +134,7 @@ class ShowController extends Controller
         /** @var User $user */
         $user        = auth()->user();
         $manager     = $this->getManager();
-        $currency    = app('amount')->getDefaultCurrencyByUserGroup($user->userGroup);
+        $currency    = $this->defaultCurrency;
 
         // update fields with user info.
         $currency->refreshForUser($user);

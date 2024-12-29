@@ -52,9 +52,11 @@ abstract class TestCase extends BaseTestCase
 
     protected function createAuthenticatedUser(): User
     {
+        $group = UserGroup::create(['title' => 'test@email.com']);
         return User::create([
             'email'    => 'test@email.com',
             'password' => 'password',
+            'user_group_id' => $group->id,
         ]);
     }
 }
