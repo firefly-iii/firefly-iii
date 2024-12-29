@@ -26,10 +26,10 @@ namespace FireflyIII\Api\V1\Controllers\Data;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Data\DestroyRequest;
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -63,12 +63,12 @@ class DestroyController extends Controller
      */
     public function destroy(DestroyRequest $request): JsonResponse
     {
-        $objects         = $request->getObjects();
-        $this->unused    = $request->boolean('unused', false);
+        $objects      = $request->getObjects();
+        $this->unused = $request->boolean('unused', false);
 
-        $allExceptAssets = [AccountType::BENEFICIARY, AccountType::CASH, AccountType::CREDITCARD, AccountType::DEFAULT, AccountType::EXPENSE, AccountType::IMPORT, AccountType::INITIAL_BALANCE, AccountType::LIABILITY_CREDIT, AccountType::RECONCILIATION, AccountType::REVENUE];
-        $all             = [AccountType::ASSET, AccountType::BENEFICIARY, AccountType::CASH, AccountType::CREDITCARD, AccountType::DEBT, AccountType::DEFAULT, AccountType::EXPENSE, AccountType::IMPORT, AccountType::INITIAL_BALANCE, AccountType::LIABILITY_CREDIT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::RECONCILIATION];
-        $liabilities     = [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD];
+        $allExceptAssets = [AccountTypeEnum::BENEFICIARY->value, AccountTypeEnum::CASH->value, AccountTypeEnum::CREDITCARD->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::EXPENSE->value, AccountTypeEnum::IMPORT->value, AccountTypeEnum::INITIAL_BALANCE->value, AccountTypeEnum::LIABILITY_CREDIT->value, AccountTypeEnum::RECONCILIATION->value, AccountTypeEnum::REVENUE->value];
+        $all             = [AccountTypeEnum::ASSET->value, AccountTypeEnum::BENEFICIARY->value, AccountTypeEnum::CASH->value, AccountTypeEnum::CREDITCARD->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::EXPENSE->value, AccountTypeEnum::IMPORT->value, AccountTypeEnum::INITIAL_BALANCE->value, AccountTypeEnum::LIABILITY_CREDIT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::RECONCILIATION->value];
+        $liabilities     = [AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::CREDITCARD->value];
         $transactions    = [TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::TRANSFER->value, TransactionTypeEnum::RECONCILIATION->value];
 
         match ($objects) {
@@ -82,9 +82,9 @@ class DestroyController extends Controller
             'object_groups'          => $this->destroyObjectGroups(),
             'not_assets_liabilities' => $this->destroyAccounts($allExceptAssets),
             'accounts'               => $this->destroyAccounts($all),
-            'asset_accounts'         => $this->destroyAccounts([AccountType::ASSET, AccountType::DEFAULT]),
-            'expense_accounts'       => $this->destroyAccounts([AccountType::BENEFICIARY, AccountType::EXPENSE]),
-            'revenue_accounts'       => $this->destroyAccounts([AccountType::REVENUE]),
+            'asset_accounts'         => $this->destroyAccounts([AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value]),
+            'expense_accounts'       => $this->destroyAccounts([AccountTypeEnum::BENEFICIARY->value, AccountTypeEnum::EXPENSE->value]),
+            'revenue_accounts'       => $this->destroyAccounts([AccountTypeEnum::REVENUE->value]),
             'liabilities'            => $this->destroyAccounts($liabilities),
             'transactions'           => $this->destroyTransactions($transactions),
             'withdrawals'            => $this->destroyTransactions([TransactionTypeEnum::WITHDRAWAL->value]),
@@ -101,11 +101,11 @@ class DestroyController extends Controller
     private function destroyBudgets(): void
     {
         /** @var AvailableBudgetRepositoryInterface $abRepository */
-        $abRepository     = app(AvailableBudgetRepositoryInterface::class);
+        $abRepository = app(AvailableBudgetRepositoryInterface::class);
         $abRepository->destroyAll();
 
         /** @var BudgetLimitRepositoryInterface $blRepository */
-        $blRepository     = app(BudgetLimitRepositoryInterface::class);
+        $blRepository = app(BudgetLimitRepositoryInterface::class);
         $blRepository->destroyAll();
 
         /** @var BudgetRepositoryInterface $budgetRepository */
