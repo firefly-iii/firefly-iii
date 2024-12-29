@@ -198,8 +198,10 @@ class FrontpageChartGenerator
         }
         $useNative                  = $this->convertToNative && $this->default->id !== $limit->transaction_currency_id;
         $amount                     = $limit->amount;
-        if ($useNative) {
+        Log::debug(sprintf('Amount is "%s".', $amount));
+        if ($useNative && $limit->transaction_currency_id !== $this->default->id) {
             $amount = $limit->native_amount;
+            Log::debug(sprintf('Amount is now "%s".', $amount));
         }
 
 
@@ -207,7 +209,6 @@ class FrontpageChartGenerator
         $data[0]['entries'][$title] ??= '0';
         $data[1]['entries'][$title] ??= '0';
         $data[2]['entries'][$title] ??= '0';
-
 
         $data[0]['entries'][$title] = bcadd($data[0]['entries'][$title], 1 === bccomp($sumSpent, $amount) ? $amount : $sumSpent);                              // spent
         $data[1]['entries'][$title] = bcadd($data[1]['entries'][$title], 1 === bccomp($amount, $sumSpent) ? bcadd($entry['sum'], $amount) : '0');              // left to spent

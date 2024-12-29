@@ -57,6 +57,7 @@ class Account extends Model
             'active'          => 'boolean',
             'encrypted'       => 'boolean',
             'virtual_balance' => 'string',
+            'native_virtual_balance' => 'string',
         ];
 
     protected $fillable              = ['user_id', 'user_group_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban', 'native_virtual_balance'];

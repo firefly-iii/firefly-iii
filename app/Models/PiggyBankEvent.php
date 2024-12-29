@@ -42,9 +42,10 @@ class PiggyBankEvent extends Model
             'updated_at' => 'datetime',
             'date'       => SeparateTimezoneCaster::class,
             'amount'     => 'string',
+            'amount'     => 'native_string',
         ];
 
-    protected $fillable = ['piggy_bank_id', 'transaction_journal_id', 'date', 'date_tz', 'amount'];
+    protected $fillable = ['piggy_bank_id', 'transaction_journal_id', 'date', 'date_tz', 'amount','native_amount'];
 
     protected $hidden   = ['amount_encrypted'];
 

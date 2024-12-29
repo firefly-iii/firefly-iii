@@ -65,7 +65,7 @@ class Amount
             // Log::debug(sprintf('Overruled, amount is now %s', $amount));
         }
 
-        return $amount;
+        return (string) $amount;
     }
 
     public function convertToNative(?User $user = null): bool

@@ -38,19 +38,20 @@ class AutoBudget extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    #[\Deprecated]
+    #[\Deprecated] /** @deprecated  */
     public const int AUTO_BUDGET_ADJUSTED = 3;
 
-    #[\Deprecated]
+    #[\Deprecated] /** @deprecated  */
     public const int AUTO_BUDGET_RESET    = 1;
 
-    #[\Deprecated]
+    #[\Deprecated] /** @deprecated  */
     public const int AUTO_BUDGET_ROLLOVER = 2;
     protected $casts
                                           = [
             'amount' => 'string',
+            'native_amount' => 'string',
         ];
-    protected $fillable                   = ['budget_id', 'amount', 'period'];
+    protected $fillable                   = ['budget_id', 'amount', 'period','native_amount'];
 
     public function budget(): BelongsTo
     {

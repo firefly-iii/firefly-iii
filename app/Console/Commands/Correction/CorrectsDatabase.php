@@ -74,7 +74,7 @@ class CorrectsDatabase extends Command
             'correction:recalculates-liabilities',
             'correction:preferences',
             // 'correction:transaction-types', // resource heavy, disabled.
-            // 'correction:recalculate-native-amounts', // not necessary, disabled.
+            'correction:recalculate-native-amounts', // not necessary, disabled.
             'firefly-iii:report-integrity',
         ];
         foreach ($commands as $command) {

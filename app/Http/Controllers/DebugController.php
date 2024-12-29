@@ -160,8 +160,8 @@ class DebugController extends Controller
         Artisan::call('view:clear');
 
         // also do some recalculations.
-        Artisan::call('firefly-iii:trigger-credit-recalculation');
-        AccountBalanceCalculator::recalculateAll(true);
+        Artisan::call('correction:recalculates-liabilities');
+        AccountBalanceCalculator::recalculateAll(false);
 
         try {
             Artisan::call('twig:clean');
