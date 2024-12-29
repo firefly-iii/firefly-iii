@@ -18,6 +18,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 6557](https://github.com/firefly-iii/firefly-iii/issues/6557) (Piggy Banks - Draw Funds from Multiple Accounts) reported by @BugPhobic
 - #5532
 - #6314
+- #9586
 
 ### Changed
 

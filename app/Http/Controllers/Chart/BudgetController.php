@@ -234,8 +234,12 @@ class BudgetController extends Controller
             $key                    = sprintf('%d-%d', $journal['source_account_id'], $journal['currency_id']);
             $amount                 = $journal['amount'];
 
+            $symbol = $journal['currency_symbol'];
+            $code   = $journal['currency_code'];
+            $name   = $journal['currency_name'];
+
             // if convert to native, use the native things, unless it's the foreign amount which is in the native currency.
-            if ($this->convertToNative && $journal['currency_id'] !== $this->defaultCurrency->id && $journal['foreign_currency_id'] !== $this->defaultCurrency->id) {
+            if ($this->convertToNative && $journal['currency_id'] !== $this->defaultCurrency->id) {
                 $key    = sprintf('%d-%d', $journal['source_account_id'], $this->defaultCurrency->id);
                 $symbol = $this->defaultCurrency->symbol;
                 $code   = $this->defaultCurrency->code;
@@ -243,11 +247,7 @@ class BudgetController extends Controller
                 $amount = $journal['native_amount'];
             }
 
-            if ($this->convertToNative && $journal['currency_id'] !== $this->defaultCurrency->id && $journal['foreign_currency_id'] === $this->defaultCurrency->id) {
-                $key    = sprintf('%d-%d', $journal['source_account_id'], $this->defaultCurrency->id);
-                $symbol = $this->defaultCurrency->symbol;
-                $code   = $this->defaultCurrency->code;
-                $name   = $this->defaultCurrency->name;
+            if ($journal['foreign_currency_id'] === $this->defaultCurrency->id) {
                 $amount = $journal['foreign_amount'];
             }
 

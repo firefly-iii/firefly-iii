@@ -27,6 +27,7 @@ namespace FireflyIII\Api\V1\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Data\DateRequest;
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -81,11 +82,10 @@ class AccountController extends Controller
         $end        = $dates['end'];
 
         // user's preferences
-        $defaultSet = $this->repository->getAccountsByType([AccountType::ASSET])->pluck('id')->toArray();
+        $defaultSet = $this->repository->getAccountsByType([AccountTypeEnum::ASSET->value])->pluck('id')->toArray();
 
         /** @var Preference $frontpage */
         $frontpage  = app('preferences')->get('frontpageAccounts', $defaultSet);
-        $default    = app('amount')->getDefaultCurrency();
 
         if (!(is_array($frontpage->data) && count($frontpage->data) > 0)) {
             $frontpage->data = $defaultSet;
@@ -98,10 +98,8 @@ class AccountController extends Controller
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $currency     = $this->repository->getAccountCurrency($account);
-            if (null === $currency) {
-                $currency = $default;
-            }
+            $currency     = $this->repository->getAccountCurrency($account) ?? $this->defaultCurrency;
+            $field = $this->convertToNative ? 'native_balance' : 'balance';
             $currentSet   = [
                 'label'                   => $account->name,
                 'currency_id'             => (string) $currency->id,
@@ -117,12 +115,11 @@ class AccountController extends Controller
             // TODO this code is also present in the V2 chart account controller so this method is due to be deprecated.
             $currentStart = clone $start;
             $range        = app('steam')->finalAccountBalanceInRange($account, $start, clone $end, $this->convertToNative);
-            // 2022-10-11 this method no longer converts to float.
-            $previous     = array_values($range)[0];
+            $previous     = array_values($range)[0][$field];
             while ($currentStart <= $end) {
                 $format                        = $currentStart->format('Y-m-d');
                 $label                         = $currentStart->toAtomString();
-                $balance                       = array_key_exists($format, $range) ? $range[$format]['balance'] : $previous;
+                $balance                       = array_key_exists($format, $range) ? $range[$format][$field] : $previous;
                 $previous                      = $balance;
                 $currentStart->addDay();
                 $currentSet['entries'][$label] = $balance;
