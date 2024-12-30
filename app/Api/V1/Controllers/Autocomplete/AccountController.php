@@ -29,7 +29,6 @@ use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Api\AccountFilter;
@@ -86,7 +85,7 @@ class AccountController extends Controller
         foreach ($result as $account) {
             $nameWithBalance = $account->name;
             $currency        = $this->repository->getAccountCurrency($account) ?? $this->defaultCurrency;
-
+            $useCurrency     = $currency;
             if (in_array($account->accountType->type, $this->balanceTypes, true)) {
                 $balance         = Steam::finalAccountBalance($account, $date);
                 $key             = $this->convertToNative && $currency->id !== $this->defaultCurrency->id ? 'native_balance' : 'balance';
@@ -116,7 +115,7 @@ class AccountController extends Controller
         usort(
             $return,
             static function (array $left, array $right) {
-                $order = [AccountType::ASSET, AccountType::REVENUE, AccountType::EXPENSE];
+                $order = [AccountTypeEnum::ASSET->value, AccountTypeEnum::REVENUE->value, AccountTypeEnum::EXPENSE->value];
                 $posA  = (int) array_search($left['type'], $order, true);
                 $posB  = (int) array_search($right['type'], $order, true);
 
