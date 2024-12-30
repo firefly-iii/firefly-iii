@@ -44,19 +44,19 @@ class PiggyBank extends Model
 
     protected $casts
                         = [
-            'created_at'    => 'datetime',
-            'updated_at'    => 'datetime',
-            'deleted_at'    => 'datetime',
-            'start_date'    => 'date',
-            'target_date'   => 'date',
-            'order'         => 'int',
-            'active'        => 'boolean',
-            'encrypted'     => 'boolean',
-            'target_amount' => 'string',
+            'created_at'           => 'datetime',
+            'updated_at'           => 'datetime',
+            'deleted_at'           => 'datetime',
+            'start_date'           => 'date',
+            'target_date'          => 'date',
+            'order'                => 'int',
+            'active'               => 'boolean',
+            'encrypted'            => 'boolean',
+            'target_amount'        => 'string',
             'native_target_amount' => 'string',
         ];
 
-    protected $fillable = ['name', 'order', 'target_amount', 'start_date', 'start_date_tz', 'target_date', 'target_date_tz', 'active', 'transaction_currency_id','native_target_amount'];
+    protected $fillable = ['name', 'order', 'target_amount', 'start_date', 'start_date_tz', 'target_date', 'target_date_tz', 'active', 'transaction_currency_id', 'native_target_amount'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).

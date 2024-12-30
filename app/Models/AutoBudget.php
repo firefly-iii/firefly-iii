@@ -48,10 +48,10 @@ class AutoBudget extends Model
     public const int AUTO_BUDGET_ROLLOVER = 2;
     protected $casts
                                           = [
-            'amount' => 'string',
+            'amount'        => 'string',
             'native_amount' => 'string',
         ];
-    protected $fillable                   = ['budget_id', 'amount', 'period','native_amount'];
+    protected $fillable                   = ['budget_id', 'amount', 'period', 'native_amount'];
 
     public function budget(): BelongsTo
     {

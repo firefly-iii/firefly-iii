@@ -1,4 +1,5 @@
 <?php
+
 /*
  * TransactionSummarizer.php
  * Copyright (c) 2024 james@firefly-iii.org.
@@ -52,14 +53,14 @@ class TransactionSummarizer
     {
         $array = [];
         foreach ($journals as $journal) {
-            $field  = 'amount';
+            $field                     = 'amount';
 
             // grab default currency information.
-            $currencyId            = (int) $journal['currency_id'];
-            $currencyName          = $journal['currency_name'];
-            $currencySymbol        = $journal['currency_symbol'];
-            $currencyCode          = $journal['currency_code'];
-            $currencyDecimalPlaces = $journal['currency_decimal_places'];
+            $currencyId                = (int) $journal['currency_id'];
+            $currencyName              = $journal['currency_name'];
+            $currencySymbol            = $journal['currency_symbol'];
+            $currencyCode              = $journal['currency_code'];
+            $currencyDecimalPlaces     = $journal['currency_decimal_places'];
             if ($this->convertToNative) {
                 // if convert to native, use the native amount yes or no?
                 $useNative  = $this->default->id !== (int) $journal['currency_id'];
@@ -83,11 +84,11 @@ class TransactionSummarizer
                     $currencyDecimalPlaces = $journal['foreign_currency_decimal_places'];
                 }
             }
-            if(!$this->convertToNative) {
+            if (!$this->convertToNative) {
                 // default to the normal amount, but also
             }
             $amount                    = (string) ($journal[$field] ?? '0');
-            $array[$currencyId]        ??= [
+            $array[$currencyId] ??= [
                 'sum'                     => '0',
                 'currency_id'             => $currencyId,
                 'currency_name'           => $currencyName,
@@ -95,14 +96,16 @@ class TransactionSummarizer
                 'currency_code'           => $currencyCode,
                 'currency_decimal_places' => $currencyDecimalPlaces,
             ];
-            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->$method($amount));
+            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->{$method}($amount));
             Log::debug(sprintf('Journal #%d adds amount %s %s', $journal['transaction_journal_id'], $currencyCode, $amount));
         }
         Log::debug('End of sumExpenses.', $array);
+
         return $array;
     }
 
-    public function groupByDirection(array $journals, string $method, string $direction): array {
+    public function groupByDirection(array $journals, string $method, string $direction): array
+    {
 
         $array           = [];
         $idKey           = sprintf('%s_account_id', $direction);
@@ -136,7 +139,7 @@ class TransactionSummarizer
             if ($convertToNative && $journal['currency_id'] !== $default->id && $default->id === $journal['foreign_currency_id']) {
                 $field = 'foreign_amount';
             }
-            $key = sprintf('%s-%s', $journal[$idKey], $currencyId);
+            $key                   = sprintf('%s-%s', $journal[$idKey], $currencyId);
             // sum it all up or create a new array.
             $array[$key] ??= [
                 'id'                      => $journal[$idKey],
@@ -150,7 +153,7 @@ class TransactionSummarizer
             ];
 
             // add the data from the $field to the array.
-            $array[$key]['sum'] = bcadd($array[$key]['sum'], app('steam')->{$method}((string) ($journal[$field] ?? '0'))); // @phpstan-ignore-line
+            $array[$key]['sum']    = bcadd($array[$key]['sum'], app('steam')->{$method}((string) ($journal[$field] ?? '0'))); // @phpstan-ignore-line
             Log::debug(sprintf('Field for transaction #%d is "%s" (%s). Sum: %s', $journal['transaction_group_id'], $currencyCode, $field, $array[$key]['sum']));
 
             // also do foreign amount, but only when convertToNative is false (otherwise we have it already)
@@ -158,7 +161,7 @@ class TransactionSummarizer
             if ((!$convertToNative || $journal['foreign_currency_id'] !== $default->id) && 0 !== (int) $journal['foreign_currency_id']) {
                 Log::debug(sprintf('Use foreign amount from transaction #%d: %s %s. Sum: %s', $journal['transaction_group_id'], $currencyCode, $journal['foreign_amount'], $array[$key]['sum']));
                 $key                = sprintf('%s-%s', $journal[$idKey], $journal['foreign_currency_id']);
-                $array[$key]        ??= [
+                $array[$key] ??= [
                     'id'                      => $journal[$idKey],
                     'name'                    => $journal[$nameKey],
                     'sum'                     => '0',
@@ -174,5 +177,4 @@ class TransactionSummarizer
 
         return $array;
     }
-
 }

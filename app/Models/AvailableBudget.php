@@ -53,7 +53,7 @@ class AvailableBudget extends Model
             'native_amount'           => 'string',
         ];
 
-    protected $fillable = ['user_id', 'user_group_id', 'transaction_currency_id', 'amount', 'start_date', 'end_date', 'start_date_tz', 'end_date_tz','native_amount'];
+    protected $fillable = ['user_id', 'user_group_id', 'transaction_currency_id', 'amount', 'start_date', 'end_date', 'start_date_tz', 'end_date_tz', 'native_amount'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).

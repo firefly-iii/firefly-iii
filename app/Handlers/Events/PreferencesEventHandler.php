@@ -99,7 +99,7 @@ class PreferencesEventHandler
     {
         $repository = app(BudgetRepositoryInterface::class);
         $repository->setUserGroup($userGroup);
-        $set = $repository->getBudgets();
+        $set        = $repository->getBudgets();
 
         /** @var Budget $budget */
         foreach ($set as $budget) {
@@ -127,13 +127,15 @@ class PreferencesEventHandler
     {
         // custom query because of the potential size of this update.
         $success = DB::table('transactions')
-                     ->join('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                     ->where('transaction_journals.user_group_id', $userGroup->id)
-                     ->where(static function (Builder $q): void {
-                         $q->whereNotNull('native_amount')
-                           ->orWhereNotNull('native_foreign_amount');
-                     })
-                     ->update(['native_amount' => null, 'native_foreign_amount' => null]);
+            ->join('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->where('transaction_journals.user_group_id', $userGroup->id)
+            ->where(static function (Builder $q): void {
+                $q->whereNotNull('native_amount')
+                    ->orWhereNotNull('native_foreign_amount')
+                ;
+            })
+            ->update(['native_amount' => null, 'native_foreign_amount' => null])
+        ;
         Log::debug(sprintf('Reset %d transactions.', $success));
     }
 }

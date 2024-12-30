@@ -328,7 +328,7 @@ class OperationsRepository implements OperationsRepositoryInterface
     public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
-        $collector       = app(GroupCollectorInterface::class);
+        $collector  = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
 
         if (null !== $accounts && $accounts->count() > 0) {
@@ -339,8 +339,9 @@ class OperationsRepository implements OperationsRepositoryInterface
         }
         $collector->setCategories($categories);
         $collector->withCategoryInformation();
-        $journals        = $collector->getExtractedJournals();
+        $journals   = $collector->getExtractedJournals();
         $summarizer = new TransactionSummarizer($this->user);
+
         return $summarizer->groupByCurrencyId($journals);
     }
 

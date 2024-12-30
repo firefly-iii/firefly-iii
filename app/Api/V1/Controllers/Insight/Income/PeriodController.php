@@ -50,14 +50,14 @@ class PeriodController extends Controller
         $default         = Amount::getDefaultCurrency();
 
         // collect all expenses in this period (regardless of type)
-        $collector = app(GroupCollectorInterface::class);
+        $collector       = app(GroupCollectorInterface::class);
         $collector->setTypes([TransactionTypeEnum::DEPOSIT->value])->setRange($start, $end)->setDestinationAccounts($accounts);
-        $genericSet = $collector->getExtractedJournals();
+        $genericSet      = $collector->getExtractedJournals();
         foreach ($genericSet as $journal) {
             // currency
-            $currencyId   = $journal['currency_id'];
-            $currencyCode = $journal['currency_code'];
-            $field        = $convertToNative && $currencyId !== $default->id ? 'native_amount' : 'amount';
+            $currencyId                                = $journal['currency_id'];
+            $currencyCode                              = $journal['currency_code'];
+            $field                                     = $convertToNative && $currencyId !== $default->id ? 'native_amount' : 'amount';
 
             // perhaps use default currency instead?
             if ($convertToNative && $journal['currency_id'] !== $default->id) {
@@ -69,7 +69,7 @@ class PeriodController extends Controller
                 $field = 'foreign_amount';
             }
 
-            $response[$currencyId]                     ??= [
+            $response[$currencyId] ??= [
                 'difference'       => '0',
                 'difference_float' => 0,
                 'currency_id'      => (string) $currencyId,

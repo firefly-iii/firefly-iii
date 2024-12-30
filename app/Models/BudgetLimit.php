@@ -43,12 +43,12 @@ class BudgetLimit extends Model
 
     protected $casts
                         = [
-            'created_at'  => 'datetime',
-            'updated_at'  => 'datetime',
-            'start_date'  => SeparateTimezoneCaster::class,
-            'end_date'    => SeparateTimezoneCaster::class,
-            'auto_budget' => 'boolean',
-            'amount'      => 'string',
+            'created_at'         => 'datetime',
+            'updated_at'         => 'datetime',
+            'start_date'         => SeparateTimezoneCaster::class,
+            'end_date'           => SeparateTimezoneCaster::class,
+            'auto_budget'        => 'boolean',
+            'amount'             => 'string',
             'native_amount'      => 'string',
         ];
     protected $dispatchesEvents
