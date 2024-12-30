@@ -257,9 +257,45 @@ jobs:
             echo ":warning: Please be careful with this branch pre-release, as it may not work as expected." >> output.txt
           fi
           # describe the main release
-          if [[ "develop" != "$version" ]] && [[ "$version" != branch* ]]; then
-            sudo chown -R runner:docker output.txt
+          if [[ "develop" != "$version" ]] && [[ "$version" != branch* ]] && [[ "$version" != *alpha* ]] && [[ "$version" != *beta* ]]; then
             echo 'Main release.'
+            sudo chown -R runner:docker output.txt
+            echo '' >> output.txt
+            echo '### Instructions' >> output.txt
+            echo '' >> output.txt
+            echo "* Installation instructions for [Docker](https://docs.firefly-iii.org/how-to/firefly-iii/installation/docker/), [Portainer](https://docs.firefly-iii.org/how-to/firefly-iii/installation/portainer/), [Kubernetes](https://docs.firefly-iii.org/how-to/firefly-iii/installation/kubernetes/) or [self-managed servers](https://docs.firefly-iii.org/how-to/firefly-iii/installation/self-managed/)" >> output.txt
+            echo "* Or read the upgrade instructions for [Docker](https://docs.firefly-iii.org/how-to/firefly-iii/upgrade/docker/), [Kubernetes](https://docs.firefly-iii.org/how-to/firefly-iii/upgrade/kubernetes/) or [self-managed servers](https://docs.firefly-iii.org/how-to/firefly-iii/upgrade/self-managed/)" >> output.txt
+            echo "* The releases are signed, and you can verify them using the [Firefly III releases PGP key](https://docs.firefly-iii.org/explanation/more-information/signatures/)." >> output.txt
+
+          fi
+
+          # describe alpha release
+          if [[ "$version" == *alpha* ]]; then
+            echo 'ALPHA release.'
+            rm output.txt
+            touch output.txt
+            sudo chown -R runner:docker output.txt
+            echo "Very early ALPHA release of Firefly III. This release contains specific features or changes. Docker users can find this release under the \`$version\` tag." >> output.txt
+            echo '' >> output.txt
+            echo "This release was created on **$(date +'%Y-%m-%d')** and may contain unexpected bugs. Data loss is rare but is not impossible. The releases are signed, and you can verify them using the [Firefly III releases PGP key](https://docs.firefly-iii.org/explanation/more-information/signatures/)." >> output.txt
+            echo '' >> output.txt
+            echo '### Instructions' >> output.txt
+            echo '' >> output.txt
+            echo "* Installation instructions for [Docker](https://docs.firefly-iii.org/how-to/firefly-iii/installation/docker/), [Portainer](https://docs.firefly-iii.org/how-to/firefly-iii/installation/portainer/), [Kubernetes](https://docs.firefly-iii.org/how-to/firefly-iii/installation/kubernetes/) or [self-managed servers](https://docs.firefly-iii.org/how-to/firefly-iii/installation/self-managed/)" >> output.txt
+            echo "* Or read the upgrade instructions for [Docker](https://docs.firefly-iii.org/how-to/firefly-iii/upgrade/docker/), [Kubernetes](https://docs.firefly-iii.org/how-to/firefly-iii/upgrade/kubernetes/) or [self-managed servers](https://docs.firefly-iii.org/how-to/firefly-iii/upgrade/self-managed/)" >> output.txt
+            echo "* The releases are signed, and you can verify them using the [Firefly III releases PGP key](https://docs.firefly-iii.org/explanation/more-information/signatures/)." >> output.txt
+
+          fi
+
+          # describe beta release
+          if [[ "$version" == *beta* ]]; then
+            echo 'BETA release.'
+            rm output.txt
+            touch output.txt
+            sudo chown -R runner:docker output.txt
+            echo "Very early BETA release of Firefly III. This release contains specific features or changes. Docker users can find this release under the \`$version\` tag." >> output.txt
+            echo '' >> output.txt
+            echo "This release was created on **$(date +'%Y-%m-%d')** and may contain unexpected bugs. Data loss is rare but is not impossible. The releases are signed, and you can verify them using the [Firefly III releases PGP key](https://docs.firefly-iii.org/explanation/more-information/signatures/)." >> output.txt
             echo '' >> output.txt
             echo '### Instructions' >> output.txt
             echo '' >> output.txt
