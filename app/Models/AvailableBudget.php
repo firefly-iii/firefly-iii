@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
@@ -66,10 +67,10 @@ class AvailableBudget extends Model
             $availableBudgetId = (int) $value;
 
             /** @var User $user */
-            $user              = auth()->user();
+            $user = auth()->user();
 
             /** @var null|AvailableBudget $availableBudget */
-            $availableBudget   = $user->availableBudgets()->find($availableBudgetId);
+            $availableBudget = $user->availableBudgets()->find($availableBudgetId);
             if (null !== $availableBudget) {
                 return $availableBudget;
             }
@@ -91,14 +92,29 @@ class AvailableBudget extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string) $value,
+            get: static fn($value) => (string) $value,
         );
     }
 
     protected function transactionCurrencyId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int) $value,
+            get: static fn($value) => (int) $value,
+        );
+    }
+    protected function startDate(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => Carbon::parse($value),
+            set: fn (Carbon $value) => $value->format('Y-m-d'),
+        );
+    }
+
+    protected function endDate(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => Carbon::parse($value),
+            set: fn (Carbon $value) => $value->format('Y-m-d'),
         );
     }
 }
