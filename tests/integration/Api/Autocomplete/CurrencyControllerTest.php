@@ -30,7 +30,6 @@ use Tests\integration\TestCase;
 use FireflyIII\User;
 use FireflyIII\Models\UserGroup;
 
-
 /**
  * Class CurrencyControllerTest
  *
@@ -38,7 +37,8 @@ use FireflyIII\Models\UserGroup;
  *
  * @coversNothing
  */
-final class CurrencyControllerTest extends TestCase {
+final class CurrencyControllerTest extends TestCase
+{
     /**
      * @covers \FireflyIII\Api\V1\Controllers\Autocomplete\CurrencyController
      */
@@ -46,15 +46,16 @@ final class CurrencyControllerTest extends TestCase {
 
     protected function createAuthenticatedUser(): User
     {
-        $userGroup = UserGroup::create(['title' => 'Test Group']);
+        $userGroup           = UserGroup::create(['title' => 'Test Group']);
 
 
-        $user=  User::create([
+        $user                = User::create([
             'email'         => 'test@email.com',
             'password'      => 'password',
         ]);
         $user->user_group_id = $userGroup->id;
         $user->save();
+
         return $user;
     }
 
@@ -62,11 +63,11 @@ final class CurrencyControllerTest extends TestCase {
     {
         for ($i = 1; $i <= $count; ++$i) {
             $currency = TransactionCurrency::create([
-                'name'          => 'Currency '.$i,
-                'code'          => 'CUR'.$i,
-                'symbol'        => 'C'.$i,
+                'name'           => 'Currency '.$i,
+                'code'           => 'CUR'.$i,
+                'symbol'         => 'C'.$i,
                 'decimal_places' => $i,
-                'enabled'       => $enabled
+                'enabled'        => $enabled,
             ]);
         }
     }
@@ -162,13 +163,11 @@ final class CurrencyControllerTest extends TestCase {
 
         $response->assertJsonCount(1);
 
-}
-
-
+    }
 
     public function testGivenAuthenticatedRequestWhenCallingTheCurrenciesEndpointWithQueryThenReturnsCurrenciesThatMatchQuery(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestCurrencies(20, true);
@@ -178,9 +177,7 @@ final class CurrencyControllerTest extends TestCase {
         ]), ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');
-         // Currency 1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 (11)
+        // Currency 1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 (11)
         $response->assertJsonCount(11);
     }
-    
-
 }

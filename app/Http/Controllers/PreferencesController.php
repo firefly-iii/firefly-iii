@@ -260,7 +260,7 @@ class PreferencesController extends Controller
 
         // convert native
         $convertToNative   = 1 === (int) $request->get('convertToNative');
-        if($convertToNative && !$this->convertToNative) {
+        if ($convertToNative && !$this->convertToNative) {
             // set to true!
             Log::debug('User sets convertToNative to true.');
             event(new UserGroupChangedDefaultCurrency(auth()->user()->userGroup));

@@ -78,7 +78,8 @@ class BoxController extends Controller
         $incomes   = [];
         $expenses  = [];
         $sums      = [];
-        $currency                = $this->defaultCurrency;
+        $currency  = $this->defaultCurrency;
+
         // collect income of user:
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -124,7 +125,7 @@ class BoxController extends Controller
             $expenses[$currencyId] = app('amount')->formatAnything($currency, $expenses[$currencyId] ?? '0', false);
         }
         if (0 === count($sums)) {
-            $currency                = $this->defaultCurrency;
+            $currency                             = $this->defaultCurrency;
             $sums[$this->defaultCurrency->id]     = app('amount')->formatAnything($this->defaultCurrency, '0', false);
             $incomes[$this->defaultCurrency->id]  = app('amount')->formatAnything($this->defaultCurrency, '0', false);
             $expenses[$this->defaultCurrency->id] = app('amount')->formatAnything($this->defaultCurrency, '0', false);

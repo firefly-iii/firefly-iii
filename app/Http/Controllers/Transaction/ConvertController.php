@@ -216,8 +216,8 @@ class ConvertController extends Controller
     private function getLiabilities(): array
     {
         // make repositories
-        $accountList     = $this->accountRepository->getActiveAccountsByType([AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
-        $grouped         = [];
+        $accountList = $this->accountRepository->getActiveAccountsByType([AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
+        $grouped     = [];
 
         // group accounts:
         /** @var Account $account */
@@ -238,8 +238,8 @@ class ConvertController extends Controller
     private function getAssetAccounts(): array
     {
         // make repositories
-        $accountList     = $this->accountRepository->getActiveAccountsByType([AccountType::ASSET]);
-        $grouped         = [];
+        $accountList = $this->accountRepository->getActiveAccountsByType([AccountType::ASSET]);
+        $grouped     = [];
 
         // group accounts:
         /** @var Account $account */

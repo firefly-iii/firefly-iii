@@ -64,7 +64,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
      */
     public function get(?Carbon $start = null, ?Carbon $end = null): Collection
     {
-        $query = $this->user->availableBudgets()->with(['transactionCurrency']);
+        $query  = $this->user->availableBudgets()->with(['transactionCurrency']);
         if (null !== $start && null !== $end) {
             $query->where(
                 static function (Builder $q1) use ($start, $end): void { // @phpstan-ignore-line
@@ -75,6 +75,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
         }
         $result = $query->get(['available_budgets.*']);
         Log::debug(sprintf('Found %d available budgets between %s and %s', $result->count(), $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
+
         return $result;
     }
 

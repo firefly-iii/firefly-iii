@@ -37,26 +37,28 @@ use FireflyIII\Models\UserGroup;
  *
  * @coversNothing
  */
-final class ObjectGroupControllerTest extends TestCase {
+final class ObjectGroupControllerTest extends TestCase
+{
     /**
      * @covers \FireflyIII\Api\V1\Controllers\Autocomplete\ObjectGroupController
      */
     use RefreshDatabase;
+
     protected function createAuthenticatedUser(): User
     {
-        $userGroup = UserGroup::create(['title' => 'Test Group']);
+        $userGroup           = UserGroup::create(['title' => 'Test Group']);
 
 
-        $user=  User::create([
+        $user                = User::create([
             'email'         => 'test@email.com',
             'password'      => 'password',
         ]);
         $user->user_group_id = $userGroup->id;
         $user->save();
+
         return $user;
     }
 
-    
     private function createTestObjectGroups(int $count, User $user): void
     {
         for ($i = 1; $i <= $count; ++$i) {
@@ -89,7 +91,6 @@ final class ObjectGroupControllerTest extends TestCase {
         $response->assertHeader('Content-Type', 'application/json');
     }
 
-
     public function testGivenAuthenticatedRequestWhenCallingTheObjectGroupsEndpointThenReturnsObjectGroups(): void
     {
         $user     = $this->createAuthenticatedUser();
@@ -105,7 +106,7 @@ final class ObjectGroupControllerTest extends TestCase {
             '*' => [
                 'id',
                 'name',
-                'title'
+                'title',
             ],
         ]);
     }
@@ -152,6 +153,4 @@ final class ObjectGroupControllerTest extends TestCase {
         $response->assertJsonCount(11);
         $response->assertJsonMissing(['name' => 'Object Group 2']);
     }
-
-
 }
