@@ -27,6 +27,7 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Rules\IsValidPositiveAmount;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
@@ -128,7 +129,7 @@ class PiggyBankUpdateRequest extends FormRequest
         $currencyId = (int) ($data['transaction_currency_id'] ?? 0);
         $currency   = TransactionCurrency::find($currencyId);
         if (null === $currency) {
-            return app('amount')->getDefaultCurrency();
+            return Amount::getDefaultCurrency();
         }
 
         return $currency;

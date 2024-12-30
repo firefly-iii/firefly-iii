@@ -590,7 +590,7 @@ class BillRepository implements BillRepositoryInterface
 
             if ($total > 0) {
                 $currency                     = $convertToNative && $bill->transactionCurrency->id !== $default->id ? $default : $bill->transactionCurrency;
-                $average                      = bcdiv(bcadd($bill->{$maxField}, $bill->{$minField}), '2');
+                $average                      = bcdiv(bcadd($bill->{$maxField} ?? '0', $bill->{$minField} ?? '0'), '2');
                 Log::debug(sprintf('Amount to pay is %s %s (%d times)', $currency->code, $average, $total));
                 $return[$currency->id] ??= [
                     'id'             => (string) $currency->id,

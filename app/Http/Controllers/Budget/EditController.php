@@ -91,10 +91,9 @@ class EditController extends Controller
 
         // code to handle active-checkboxes
         $hasOldInput       = null !== $request->old('_token');
-        $currency          = app('amount')->getDefaultCurrency();
         $preFilled         = [
             'active'                  => $hasOldInput ? (bool) $request->old('active') : $budget->active,
-            'auto_budget_currency_id' => $hasOldInput ? (int) $request->old('auto_budget_currency_id') : $currency->id,
+            'auto_budget_currency_id' => $hasOldInput ? (int) $request->old('auto_budget_currency_id') : $this->defaultCurrency->id,
         ];
         if (null !== $autoBudget) {
             $amount                          = $hasOldInput ? $request->old('auto_budget_amount') : $autoBudget->amount;

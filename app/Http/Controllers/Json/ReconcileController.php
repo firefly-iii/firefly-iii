@@ -73,7 +73,7 @@ class ReconcileController extends Controller
     {
         $startBalance    = $request->get('startBalance');
         $endBalance      = $request->get('endBalance');
-        $accountCurrency = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
+        $accountCurrency = $this->accountRepos->getAccountCurrency($account) ?? $this->defaultCurrency;
         $amount          = '0';
         $clearedAmount   = '0';
 
@@ -193,7 +193,7 @@ class ReconcileController extends Controller
         $startDate->subDay();
         $end->endOfDay();
 
-        $currency       = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
+        $currency       = $this->accountRepos->getAccountCurrency($account) ?? $this->defaultCurrency;
         $startBalance   = Steam::finalAccountBalance($account, $startDate)['balance'];
         $endBalance     = Steam::finalAccountBalance($account, $end)['balance'];
 

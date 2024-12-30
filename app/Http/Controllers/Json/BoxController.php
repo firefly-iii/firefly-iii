@@ -78,9 +78,7 @@ class BoxController extends Controller
         $incomes   = [];
         $expenses  = [];
         $sums      = [];
-        $currency  = app('amount')->getDefaultCurrency();
-
-
+        $currency                = $this->defaultCurrency;
         // collect income of user:
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -91,7 +89,7 @@ class BoxController extends Controller
 
         /** @var array $journal */
         foreach ($set as $journal) {
-            $currencyId           = $this->convertToNative ? $currency->id : (int) $journal['currency_id'];
+            $currencyId           = $this->convertToNative && $this->defaultCurrency->id !== (int) $journal['currency_id'] ? $this->defaultCurrency->id : (int) $journal['currency_id'];
             $amount               = Amount::getAmountFromJournal($journal);
             $incomes[$currencyId] ??= '0';
             $incomes[$currencyId] = bcadd($incomes[$currencyId], app('steam')->positive($amount));
@@ -109,7 +107,7 @@ class BoxController extends Controller
 
         /** @var array $journal */
         foreach ($set as $journal) {
-            $currencyId            = $this->convertToNative ? $currency->id : (int) $journal['currency_id'];
+            $currencyId            = $this->convertToNative ? $this->defaultCurrency->id : (int) $journal['currency_id'];
             $amount                = Amount::getAmountFromJournal($journal);
             $expenses[$currencyId] ??= '0';
             $expenses[$currencyId] = bcadd($expenses[$currencyId], $amount);
@@ -126,10 +124,10 @@ class BoxController extends Controller
             $expenses[$currencyId] = app('amount')->formatAnything($currency, $expenses[$currencyId] ?? '0', false);
         }
         if (0 === count($sums)) {
-            $currency                = app('amount')->getDefaultCurrency();
-            $sums[$currency->id]     = app('amount')->formatAnything($currency, '0', false);
-            $incomes[$currency->id]  = app('amount')->formatAnything($currency, '0', false);
-            $expenses[$currency->id] = app('amount')->formatAnything($currency, '0', false);
+            $currency                = $this->defaultCurrency;
+            $sums[$this->defaultCurrency->id]     = app('amount')->formatAnything($this->defaultCurrency, '0', false);
+            $incomes[$this->defaultCurrency->id]  = app('amount')->formatAnything($this->defaultCurrency, '0', false);
+            $expenses[$this->defaultCurrency->id] = app('amount')->formatAnything($this->defaultCurrency, '0', false);
         }
 
         $response  = [

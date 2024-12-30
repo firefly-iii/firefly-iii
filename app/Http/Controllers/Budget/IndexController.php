@@ -42,6 +42,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 /**
@@ -106,7 +107,6 @@ class IndexController extends Controller
             $end   ??= session('end', today(config('app.timezone'))->endOfMonth());
         }
 
-        $defaultCurrency  = app('amount')->getDefaultCurrency();
         $currencies       = $this->currencyRepository->get();
         $budgeted         = '0';
         $spent            = '0';
@@ -119,14 +119,14 @@ class IndexController extends Controller
         // get all available budgets:
         $availableBudgets = $this->getAllAvailableBudgets($start, $end);
         // get all active budgets:
-        $budgets          = $this->getAllBudgets($start, $end, $currencies, $defaultCurrency);
+        $budgets          = $this->getAllBudgets($start, $end, $currencies, $this->defaultCurrency);
         $sums             = $this->getSums($budgets);
 
         // get budgeted for default currency:
         if (0 === count($availableBudgets)) {
-            $budgeted = $this->blRepository->budgeted($start, $end, $defaultCurrency);
-            $spentArr = $this->opsRepository->sumExpenses($start, $end, null, null, $defaultCurrency);
-            $spent    = $spentArr[$defaultCurrency->id]['sum'] ?? '0';
+            $budgeted = $this->blRepository->budgeted($start, $end, $this->defaultCurrency);
+            $spentArr = $this->opsRepository->sumExpenses($start, $end, null, null, $this->defaultCurrency);
+            $spent    = $spentArr[$this->defaultCurrency->id]['sum'] ?? '0';
             unset($spentArr);
         }
 
@@ -136,6 +136,7 @@ class IndexController extends Controller
 
         // get all inactive budgets, and simply list them:
         $inactive         = $this->repository->getInactiveBudgets();
+        $defaultCurrency  = $this->defaultCurrency;
 
         return view(
             'budgets.index',
@@ -162,6 +163,7 @@ class IndexController extends Controller
 
     private function getAllAvailableBudgets(Carbon $start, Carbon $end): array
     {
+        Log::debug(sprintf('Start of getAllAvailableBudgets("%s", "%s")', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
         $converter        = new ExchangeRateConverter();
         // get all available budgets.
         $ab               = $this->abRepository->get($start, $end);

@@ -84,7 +84,7 @@ class CreateController extends Controller
     {
         $budgets           = app('expandedform')->makeSelectListWithEmpty($this->budgetRepos->getActiveBudgets());
         $bills             = app('expandedform')->makeSelectListWithEmpty($this->billRepository->getActiveBills());
-        $defaultCurrency   = app('amount')->getDefaultCurrency();
+        $defaultCurrency   = $this->defaultCurrency;
         $tomorrow          = today(config('app.timezone'));
         $oldRepetitionType = $request->old('repetition_type');
         $tomorrow->addDay();
@@ -129,7 +129,7 @@ class CreateController extends Controller
     {
         $budgets           = app('expandedform')->makeSelectListWithEmpty($this->budgetRepos->getActiveBudgets());
         $bills             = app('expandedform')->makeSelectListWithEmpty($this->billRepository->getActiveBills());
-        $defaultCurrency   = app('amount')->getDefaultCurrency();
+        $defaultCurrency   = $this->defaultCurrency;
         $tomorrow          = today(config('app.timezone'));
         $oldRepetitionType = $request->old('repetition_type');
         $tomorrow->addDay();

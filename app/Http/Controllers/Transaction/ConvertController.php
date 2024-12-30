@@ -217,14 +217,13 @@ class ConvertController extends Controller
     {
         // make repositories
         $accountList     = $this->accountRepository->getActiveAccountsByType([AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
-        $defaultCurrency = app('amount')->getDefaultCurrency();
         $grouped         = [];
 
         // group accounts:
         /** @var Account $account */
         foreach ($accountList as $account) {
             $balance                     = Steam::finalAccountBalance($account, today()->endOfDay())['balance'];
-            $currency                    = $this->accountRepository->getAccountCurrency($account) ?? $defaultCurrency;
+            $currency                    = $this->accountRepository->getAccountCurrency($account) ?? $this->defaultCurrency;
             $role                        = 'l_'.$account->accountType->type;
             $key                         = (string) trans('firefly.opt_group_'.$role);
             $grouped[$key][$account->id] = $account->name.' ('.app('amount')->formatAnything($currency, $balance, false).')';
@@ -240,14 +239,13 @@ class ConvertController extends Controller
     {
         // make repositories
         $accountList     = $this->accountRepository->getActiveAccountsByType([AccountType::ASSET]);
-        $defaultCurrency = app('amount')->getDefaultCurrency();
         $grouped         = [];
 
         // group accounts:
         /** @var Account $account */
         foreach ($accountList as $account) {
             $balance                     = Steam::finalAccountBalance($account, today()->endOfDay())['balance'];
-            $currency                    = $this->accountRepository->getAccountCurrency($account) ?? $defaultCurrency;
+            $currency                    = $this->accountRepository->getAccountCurrency($account) ?? $this->defaultCurrency;
             $role                        = (string) $this->accountRepository->getMetaValue($account, 'account_role');
             if ('' === $role) {
                 $role = 'no_account_type';

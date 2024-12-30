@@ -68,13 +68,14 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
         if (null !== $start && null !== $end) {
             $query->where(
                 static function (Builder $q1) use ($start, $end): void { // @phpstan-ignore-line
-                    $q1->where('start_date', '=', $start->format('Y-m-d H:i:s'));
-                    $q1->where('end_date', '=', $end->format('Y-m-d H:i:s'));
+                    $q1->where('start_date', '=', $start->format('Y-m-d'));
+                    $q1->where('end_date', '=', $end->format('Y-m-d'));
                 }
             );
         }
-
-        return $query->get(['available_budgets.*']);
+        $result = $query->get(['available_budgets.*']);
+        Log::debug(sprintf('Found %d available budgets between %s and %s', $result->count(), $start->format('Y-m-d'), $end->format('Y-m-d')));
+        return $result;
     }
 
     /**

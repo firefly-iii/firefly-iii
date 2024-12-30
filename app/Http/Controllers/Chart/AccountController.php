@@ -103,7 +103,6 @@ class AccountController extends Controller
         $currencies    = [];
         $chartData     = [];
         $tempData      = [];
-        $default       = Amount::getDefaultCurrency();
 
         // grab all accounts and names
         $accounts      = $this->accountRepository->getAccountsByType([AccountTypeEnum::EXPENSE->value]);
@@ -139,7 +138,7 @@ class AccountController extends Controller
                     continue;
                 }
                 Log::debug(sprintf('Will process expense array "%s" with amount %s', $key, $endBalance));
-                $searchCode   = $this->convertToNative ? $default->code : $key;
+                $searchCode   = $this->convertToNative ? $this->defaultCurrency->code : $key;
                 Log::debug(sprintf('Search code is %s', $searchCode));
                 // see if there is an accompanying start amount.
                 // grab the difference and find the currency.
@@ -562,7 +561,6 @@ class AccountController extends Controller
         $currencies    = [];
         $chartData     = [];
         $tempData      = [];
-        $default       = Amount::getDefaultCurrency();
 
         // grab all accounts and names
         $accounts      = $this->accountRepository->getAccountsByType([AccountTypeEnum::REVENUE->value]);
@@ -599,7 +597,7 @@ class AccountController extends Controller
                     continue;
                 }
                 Log::debug(sprintf('Will process expense array "%s" with amount %s', $key, $endBalance));
-                $searchCode   = $this->convertToNative ? $default->code : $key;
+                $searchCode   = $this->convertToNative ? $this->defaultCurrency->code : $key;
                 Log::debug(sprintf('Search code is %s', $searchCode));
                 // see if there is an accompanying start amount.
                 // grab the difference and find the currency.

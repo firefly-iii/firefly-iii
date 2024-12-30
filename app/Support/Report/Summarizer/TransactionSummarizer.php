@@ -97,7 +97,7 @@ class TransactionSummarizer
                 'currency_decimal_places' => $currencyDecimalPlaces,
             ];
             $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->{$method}($amount));
-            Log::debug(sprintf('Journal #%d adds amount %s %s', $journal['transaction_journal_id'], $currencyCode, $amount));
+            //Log::debug(sprintf('Journal #%d adds amount %s %s', $journal['transaction_journal_id'], $currencyCode, $amount));
         }
         Log::debug('End of sumExpenses.', $array);
 

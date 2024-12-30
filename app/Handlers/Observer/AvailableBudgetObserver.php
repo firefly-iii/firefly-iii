@@ -33,7 +33,7 @@ class AvailableBudgetObserver
 {
     public function created(AvailableBudget $availableBudget): void
     {
-        Log::debug('Observe "created" of an available budget.');
+        // Log::debug('Observe "created" of an available budget.');
         $this->updateNativeAmount($availableBudget);
     }
 

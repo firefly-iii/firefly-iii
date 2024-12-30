@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Middleware;
 
 use Carbon\Carbon;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Http\Controllers\RequestInformation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -108,7 +109,7 @@ class Range
         setlocale(LC_TIME, $localeArray);
         $moneyResult       = setlocale(LC_MONETARY, $localeArray);
 
-        // send error to view, if could not set money format
+        // send error to view, if it could not set money format
         if (false === $moneyResult) {
             app('log')->error('Could not set locale. The following array doesnt work: ', $localeArray);
             app('view')->share('invalidMonetaryLocale', true);
@@ -117,7 +118,7 @@ class Range
         // save some formats:
         $monthAndDayFormat = (string) trans('config.month_and_day_js', [], $locale);
         $dateTimeFormat    = (string) trans('config.date_time_js', [], $locale);
-        $defaultCurrency   = app('amount')->getDefaultCurrency();
+        $defaultCurrency   = Amount::getDefaultCurrency();
 
         // also format for moment JS:
         $madMomentJS       = (string) trans('config.month_and_day_moment_js', [], $locale);

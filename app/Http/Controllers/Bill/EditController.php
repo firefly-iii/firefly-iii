@@ -85,11 +85,10 @@ class EditController extends Controller
             $this->rememberPreviousUrl('bills.edit.url');
         }
 
-        $currency         = app('amount')->getDefaultCurrency();
-        $bill->amount_min = app('steam')->bcround($bill->amount_min, $currency->decimal_places);
-        $bill->amount_max = app('steam')->bcround($bill->amount_max, $currency->decimal_places);
+        $bill->amount_min = app('steam')->bcround($bill->amount_min, $bill->transactionCurrency->decimal_places);
+        $bill->amount_max = app('steam')->bcround($bill->amount_max, $bill->transactionCurrency->decimal_places);
         $rules            = $this->repository->getRulesForBill($bill);
-        $defaultCurrency  = app('amount')->getDefaultCurrency();
+        $defaultCurrency  = $this->defaultCurrency;
 
         // code to handle active-checkboxes
         $hasOldInput      = null !== $request->old('_token');

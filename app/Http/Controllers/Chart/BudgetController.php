@@ -465,7 +465,7 @@ class BudgetController extends Controller
         $chartGenerator->setStart($start);
         $chartGenerator->setEnd($end);
         $chartGenerator->convertToNative = $this->convertToNative;
-        $chartGenerator->default         = Amount::getDefaultCurrency();
+        $chartGenerator->default         = $this->defaultCurrency;
 
         $chartData                       = $chartGenerator->generate();
         $data                            = $this->generator->multiSet($chartData);

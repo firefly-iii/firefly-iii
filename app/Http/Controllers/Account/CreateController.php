@@ -76,7 +76,6 @@ class CreateController extends Controller
      */
     public function create(Request $request, string $objectType)
     {
-        $defaultCurrency     = app('amount')->getDefaultCurrency();
         $subTitleIcon        = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
         $subTitle            = (string) trans(sprintf('firefly.make_new_%s_account', $objectType));
         $roles               = $this->getRoles();
@@ -106,7 +105,7 @@ class CreateController extends Controller
         $request->session()->flash(
             'preFilled',
             [
-                'currency_id'       => $defaultCurrency->id,
+                'currency_id'       => $this->defaultCurrency->id,
                 'include_net_worth' => $hasOldInput ? (bool) $request->old('include_net_worth') : true,
             ]
         );

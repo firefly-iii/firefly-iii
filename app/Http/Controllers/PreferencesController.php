@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use FireflyIII\Events\Preferences\UserGroupChangedDefaultCurrency;
 use FireflyIII\Events\Test\UserTestNotificationChannel;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Requests\PreferencesRequest;
@@ -35,6 +36,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 /**
@@ -258,6 +260,11 @@ class PreferencesController extends Controller
 
         // convert native
         $convertToNative   = 1 === (int) $request->get('convertToNative');
+        if($convertToNative && !$this->convertToNative) {
+            // set to true!
+            Log::debug('User sets convertToNative to true.');
+            event(new UserGroupChangedDefaultCurrency(auth()->user()->userGroup));
+        }
         app('preferences')->set('convert_to_native', $convertToNative);
 
         // custom fiscal year

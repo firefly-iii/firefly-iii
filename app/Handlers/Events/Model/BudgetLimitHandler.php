@@ -143,6 +143,7 @@ class BudgetLimitHandler
                     );
                     $availableBudget->save();
                     Log::debug(sprintf('ID of new AB is #%d', $availableBudget->id));
+                    $this->calculateAmount($availableBudget);
                 }
             }
 
