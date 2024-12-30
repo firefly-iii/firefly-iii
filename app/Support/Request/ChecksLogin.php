@@ -86,10 +86,10 @@ trait ChecksLogin
         $userGroup = $this->route()?->parameter('userGroup');
         if (null === $userGroup) {
             app('log')->debug('Request class has no userGroup parameter, but perhaps there is a parameter.');
-            $userGroupId = (int)$this->get('user_group_id');
+            $userGroupId = (int) $this->get('user_group_id');
             if (0 === $userGroupId) {
                 app('log')->debug(sprintf('Request class has no user_group_id parameter, grab default from user (group #%d).', $user->user_group_id));
-                $userGroupId = (int)$user->user_group_id;
+                $userGroupId = (int) $user->user_group_id;
             }
             $userGroup   = UserGroup::find($userGroupId);
             if (null === $userGroup) {

@@ -56,9 +56,9 @@ trait ConvertsExchangeRates
 
         /** @var TransactionCurrency $native */
         $native           = app('amount')->getDefaultCurrency();
-        $currency         = $this->getCurrency((int)$set['currency_id']);
+        $currency         = $this->getCurrency((int) $set['currency_id']);
         if ($native->id === $currency->id) {
-            $set['native_currency_id']             = (string)$currency->id;
+            $set['native_currency_id']             = (string) $currency->id;
             $set['native_currency_code']           = $currency->code;
             $set['native_currency_symbol']         = $currency->symbol;
             $set['native_currency_decimal_places'] = $currency->decimal_places;
@@ -69,8 +69,8 @@ trait ConvertsExchangeRates
             $carbon                = Carbon::createFromFormat(\DateTimeInterface::ATOM, $date);
             $rate                  = $this->getRate($currency, $native, $carbon);
             $rate                  = '0' === $rate ? '1' : $rate;
-            app('log')->debug(sprintf('bcmul("%s", "%s")', (string)$entry, $rate));
-            $set['entries'][$date] = (float)bcmul((string)$entry, $rate);
+            app('log')->debug(sprintf('bcmul("%s", "%s")', (string) $entry, $rate));
+            $set['entries'][$date] = (float) bcmul((string) $entry, $rate);
         }
 
         return $set;
@@ -128,12 +128,12 @@ trait ConvertsExchangeRates
 
         /** @var array $entry */
         foreach ($entries as $entry) {
-            $currency = $this->getCurrency((int)$entry['id']);
+            $currency = $this->getCurrency((int) $entry['id']);
             if ($currency->id !== $native->id) {
                 $amount                                  = $this->convertAmount($entry['sum'], $currency, $native);
                 $entry['converted']                      = true;
                 $entry['native_sum']                     = $amount;
-                $entry['native_currency_id']             = (string)$native->id;
+                $entry['native_currency_id']             = (string) $native->id;
                 $entry['native_currency_name']           = $native->name;
                 $entry['native_currency_symbol']         = $native->symbol;
                 $entry['native_currency_code']           = $native->code;
@@ -142,7 +142,7 @@ trait ConvertsExchangeRates
             if ($currency->id === $native->id) {
                 $entry['converted']                      = false;
                 $entry['native_sum']                     = $entry['sum'];
-                $entry['native_currency_id']             = (string)$native->id;
+                $entry['native_currency_id']             = (string) $native->id;
                 $entry['native_currency_name']           = $native->name;
                 $entry['native_currency_symbol']         = $native->symbol;
                 $entry['native_currency_code']           = $native->code;

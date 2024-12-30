@@ -49,8 +49,7 @@ class CategoryController extends Controller
     use ChartGeneration;
     use DateCalculation;
 
-    /** @var GeneratorInterface Chart generation methods. */
-    protected $generator;
+    protected GeneratorInterface $generator;
 
     /**
      * CategoryController constructor.
@@ -71,24 +70,27 @@ class CategoryController extends Controller
     public function all(Category $category): JsonResponse
     {
         // cache results:
-        $cache          = new CacheProperties();
+        $cache                           = new CacheProperties();
         $cache->addProperty('chart.category.all');
         $cache->addProperty($category->id);
+        $cache->addProperty($this->convertToNative);
         if ($cache->has()) {
             return response()->json($cache->get());
         }
 
         /** @var CategoryRepositoryInterface $repository */
-        $repository     = app(CategoryRepositoryInterface::class);
-        $start          = $repository->firstUseDate($category) ?? $this->getDate();
-        $range          = app('navigation')->getViewRange(false);
-        $start          = app('navigation')->startOfPeriod($start, $range);
-        $end            = $this->getDate();
+        $repository                      = app(CategoryRepositoryInterface::class);
+        $start                           = $repository->firstUseDate($category) ?? $this->getDate();
+        $range                           = app('navigation')->getViewRange(false);
+        $start                           = app('navigation')->startOfPeriod($start, $range);
+        $end                             = $this->getDate();
 
         /** @var WholePeriodChartGenerator $chartGenerator */
-        $chartGenerator = app(WholePeriodChartGenerator::class);
-        $chartData      = $chartGenerator->generate($category, $start, $end);
-        $data           = $this->generator->multiSet($chartData);
+        $chartGenerator                  = app(WholePeriodChartGenerator::class);
+        $chartGenerator->convertToNative = $this->convertToNative;
+
+        $chartData                       = $chartGenerator->generate($category, $start, $end);
+        $data                            = $this->generator->multiSet($chartData);
         $cache->store($data);
 
         return response()->json($data);
@@ -111,6 +113,7 @@ class CategoryController extends Controller
         $cache              = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
+        $cache->addProperty($this->convertToNative);
         $cache->addProperty('chart.category.frontpage');
         if ($cache->has()) {
             return response()->json($cache->get());
@@ -136,6 +139,7 @@ class CategoryController extends Controller
         $cache->addProperty('chart.category.period');
         $cache->addProperty($accounts->pluck('id')->toArray());
         $cache->addProperty($category);
+        $cache->addProperty($this->convertToNative);
         if ($cache->has()) {
             return response()->json($cache->get());
         }
@@ -185,7 +189,7 @@ class CategoryController extends Controller
             $inKey        = sprintf('%d-in', $currencyId);
             $chartData[$outKey]
                           = [
-                              'label'           => sprintf('%s (%s)', (string)trans('firefly.spent'), $currencyInfo['currency_name']),
+                              'label'           => sprintf('%s (%s)', (string) trans('firefly.spent'), $currencyInfo['currency_name']),
                               'entries'         => [],
                               'type'            => 'bar',
                               'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
@@ -193,7 +197,7 @@ class CategoryController extends Controller
 
             $chartData[$inKey]
                           = [
-                              'label'           => sprintf('%s (%s)', (string)trans('firefly.earned'), $currencyInfo['currency_name']),
+                              'label'           => sprintf('%s (%s)', (string) trans('firefly.earned'), $currencyInfo['currency_name']),
                               'entries'         => [],
                               'type'            => 'bar',
                               'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green

@@ -1,0 +1,12 @@
+{% set VUE_SCRIPT_NAME = 'exchange-rates/index' %}
+{% extends './layout/default' %}
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, objectType) }}
+{% endblock %}
+
+{% block content %}
+    <div id="exchange_rates_index"></div>
+{% endblock %}
+{% block scripts %}
+
+{% endblock %}

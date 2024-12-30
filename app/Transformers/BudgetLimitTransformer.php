@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepository;
 use Illuminate\Support\Collection;
 use League\Fractal\Resource\Item;
@@ -55,7 +56,9 @@ class BudgetLimitTransformer extends AbstractTransformer
     public function transform(BudgetLimit $budgetLimit): array
     {
         $repository            = app(OperationsRepository::class);
+        $limitRepos            = app(BudgetLimitRepositoryInterface::class);
         $repository->setUser($budgetLimit->budget->user);
+        $limitRepos->setUser($budgetLimit->budget->user);
         $expenses              = $repository->sumExpenses(
             $budgetLimit->start_date,
             $budgetLimit->end_date,
@@ -65,6 +68,7 @@ class BudgetLimitTransformer extends AbstractTransformer
         );
         $currency              = $budgetLimit->transactionCurrency;
         $amount                = $budgetLimit->amount;
+        $notes                 = $limitRepos->getNoteText($budgetLimit);
         $currencyDecimalPlaces = 2;
         $currencyId            = null;
         $currencyName          = null;
@@ -81,13 +85,13 @@ class BudgetLimitTransformer extends AbstractTransformer
         $amount                = app('steam')->bcround($amount, $currencyDecimalPlaces);
 
         return [
-            'id'                      => (string)$budgetLimit->id,
+            'id'                      => (string) $budgetLimit->id,
             'created_at'              => $budgetLimit->created_at->toAtomString(),
             'updated_at'              => $budgetLimit->updated_at->toAtomString(),
             'start'                   => $budgetLimit->start_date->toAtomString(),
             'end'                     => $budgetLimit->end_date->endOfDay()->toAtomString(),
-            'budget_id'               => (string)$budgetLimit->budget_id,
-            'currency_id'             => (string)$currencyId,
+            'budget_id'               => (string) $budgetLimit->budget_id,
+            'currency_id'             => (string) $currencyId,
             'currency_code'           => $currencyCode,
             'currency_name'           => $currencyName,
             'currency_decimal_places' => $currencyDecimalPlaces,
@@ -95,6 +99,7 @@ class BudgetLimitTransformer extends AbstractTransformer
             'amount'                  => $amount,
             'period'                  => $budgetLimit->period,
             'spent'                   => $expenses[$currencyId]['sum'] ?? '0',
+            'notes'                   => '' === $notes ? null : $notes,
             'links'                   => [
                 [
                     'rel' => 'self',

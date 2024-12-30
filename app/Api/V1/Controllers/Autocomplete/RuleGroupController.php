@@ -66,7 +66,7 @@ class RuleGroupController extends Controller
         /** @var RuleGroup $group */
         foreach ($groups as $group) {
             $response[] = [
-                'id'          => (string)$group->id,
+                'id'          => (string) $group->id,
                 'name'        => $group->title,
                 'description' => $group->description,
             ];

@@ -39,9 +39,8 @@ use Illuminate\Http\JsonResponse;
 class ShowController extends Controller
 {
     public const string RESOURCE_KEY                  = 'accounts';
-
-    private AccountRepositoryInterface $repository;
     protected array                    $acceptedRoles = [UserRoleEnum::READ_ONLY, UserRoleEnum::MANAGE_TRANSACTIONS];
+    private AccountRepositoryInterface $repository;
 
     /**
      * AccountController constructor.

@@ -17,7 +17,7 @@ class IsValidZeroOrMoreAmount implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
-        $value = (string)$value;
+        $value = (string) $value;
         // must not be empty:
         if ($this->emptyString($value)) {
             $fail('validation.filled')->translate();

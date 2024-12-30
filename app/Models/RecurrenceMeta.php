@@ -60,7 +60,7 @@ class RecurrenceMeta extends Model
     protected function recurrenceId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 }

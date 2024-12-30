@@ -183,6 +183,7 @@ return [
                     'file',
                     'staticText',
                     'password',
+                    'passwordWithValue',
                     'nonSelectableAmount',
                     'number',
                     'amountNoCurrency',
@@ -197,6 +198,7 @@ return [
                     'assetAccountCheckList',
                     'assetAccountList',
                     'longAccountList',
+                    'assetLiabilityMultiAccountList',
                 ],
             ],
             'CurrencyForm'  => [

@@ -66,7 +66,7 @@ class Tag extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $tagId = (int)$value;
+            $tagId = (int) $value;
 
             /** @var User $user */
             $user  = auth()->user();

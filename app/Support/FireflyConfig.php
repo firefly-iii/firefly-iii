@@ -25,7 +25,10 @@ namespace FireflyIII\Support;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Configuration;
+use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Contracts\Encryption\EncryptException;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class FireflyConfig.
@@ -44,6 +47,29 @@ class FireflyConfig
     public function has(string $name): bool
     {
         return 1 === Configuration::where('name', $name)->count();
+    }
+
+    public function getEncrypted(string $name, $default = null): ?Configuration
+    {
+        $result = $this->get($name, $default);
+        if (null === $result) {
+            return null;
+        }
+        if ('' === $result->data) {
+            Log::warning(sprintf('Empty encrypted configuration value found: "%s"', $name));
+
+            return $result;
+        }
+
+        try {
+            $result->data = decrypt($result->data);
+        } catch (DecryptException $e) {
+            Log::error(sprintf('Could not decrypt configuration value "%s": %s', $name, $e->getMessage()));
+
+            return $result;
+        }
+
+        return $result;
     }
 
     /**
@@ -78,10 +104,7 @@ class FireflyConfig
         return $this->set($name, $default);
     }
 
-    /**
-     * @param mixed $value
-     */
-    public function set(string $name, $value): Configuration
+    public function set(string $name, mixed $value): Configuration
     {
         try {
             $config = Configuration::whereName($name)->whereNull('deleted_at')->first();
@@ -133,5 +156,18 @@ class FireflyConfig
     public function put(string $name, $value): Configuration
     {
         return $this->set($name, $value);
+    }
+
+    public function setEncrypted(string $name, mixed $value): Configuration
+    {
+        try {
+            $encrypted = encrypt($value);
+        } catch (EncryptException $e) {
+            Log::error(sprintf('Could not encrypt configuration value "%s": %s', $name, $e->getMessage()));
+
+            throw new FireflyException(sprintf('Could not encrypt configuration value "%s". Cowardly refuse to continue.', $name));
+        }
+
+        return $this->set($name, $encrypted);
     }
 }

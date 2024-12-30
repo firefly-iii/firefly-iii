@@ -25,11 +25,18 @@ declare(strict_types=1);
 namespace FireflyIII\Notifications\Admin;
 
 use FireflyIII\Models\InvitedUser;
-use FireflyIII\Support\Notifications\UrlValidator;
+use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
+use FireflyIII\Notifications\ReturnsAvailableChannels;
+use FireflyIII\Notifications\ReturnsSettings;
+use FireflyIII\Support\Facades\Steam;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Request;
+use NotificationChannels\Pushover\PushoverMessage;
+use Ntfy\Message;
 
 /**
  * Class UserInvitation
@@ -38,80 +45,83 @@ class UserInvitation extends Notification
 {
     use Queueable;
 
-    private InvitedUser $invitee;
+    private InvitedUser     $invitee;
+    private OwnerNotifiable $owner;
 
-    /**
-     * Create a new notification instance.
-     */
-    public function __construct(InvitedUser $invitee)
+    public function __construct(OwnerNotifiable $owner, InvitedUser $invitee)
     {
         $this->invitee = $invitee;
+        $this->owner   = $owner;
     }
 
     /**
-     * Get the array representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return array
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function toArray($notifiable)
+    public function toArray(OwnerNotifiable $notifiable)
     {
         return [
         ];
     }
 
     /**
-     * Get the mail representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return MailMessage
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function toMail($notifiable)
+    public function toMail(OwnerNotifiable $notifiable)
     {
+        $ip        = Request::ip();
+        $host      = Steam::getHostName($ip);
+        $userAgent = Request::userAgent();
+        $time      = now(config('app.timezone'))->isoFormat((string) trans('config.date_time_js'));
+
+
         return (new MailMessage())
-            ->markdown('emails.invitation-created', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email])
-            ->subject((string)trans('email.invitation_created_subject'))
+            ->markdown('emails.invitation-created', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email, 'ip' => $ip, 'host' => $host, 'userAgent' => $userAgent, 'time' => $time])
+            ->subject((string) trans('email.invitation_created_subject'))
         ;
     }
 
     /**
-     * Get the Slack representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return SlackMessage
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function toSlack($notifiable)
+    public function toNtfy(OwnerNotifiable $notifiable): Message
     {
-        return (new SlackMessage())->content(
-            (string)trans('email.invitation_created_body', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email])
+        Log::debug('Now in toNtfy() for UserInvitation');
+        $settings = ReturnsSettings::getSettings('ntfy', 'owner', null);
+        $message  = new Message();
+        $message->topic($settings['ntfy_topic']);
+        $message->title((string) trans('email.invitation_created_subject'));
+        $message->body((string) trans('email.invitation_created_body', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email]));
+
+        return $message;
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toPushover(OwnerNotifiable $notifiable): PushoverMessage
+    {
+        Log::debug('Now in toPushover() for UserInvitation');
+
+        return PushoverMessage::create((string) trans('email.invitation_created_body', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email]))
+            ->title((string) trans('email.invitation_created_subject'))
+        ;
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toSlack(OwnerNotifiable $notifiable)
+    {
+        return new SlackMessage()->content(
+            (string) trans('email.invitation_created_body', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email])
         );
     }
 
     /**
-     * Get the notification's delivery channels.
-     *
-     * @param mixed $notifiable
-     *
-     * @return array
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function via($notifiable)
+    public function via(OwnerNotifiable $notifiable)
     {
-        $slackUrl = app('fireflyconfig')->get('slack_webhook_url', '')->data;
-        if (UrlValidator::isValidWebhookURL($slackUrl)) {
-            return ['mail', 'slack'];
-        }
-
-        return ['mail'];
+        return ReturnsAvailableChannels::returnChannels('owner');
     }
 }

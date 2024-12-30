@@ -130,7 +130,7 @@ class ResetPasswordController extends Controller
         $singleUserMode    = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $userCount         = User::count();
         $allowRegistration = true;
-        $pageTitle         = (string)trans('firefly.reset_pw_page_title');
+        $pageTitle         = (string) trans('firefly.reset_pw_page_title');
         if (true === $singleUserMode && $userCount > 0) {
             $allowRegistration = false;
         }

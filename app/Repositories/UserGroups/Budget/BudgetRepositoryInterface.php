@@ -35,6 +35,8 @@ interface BudgetRepositoryInterface
 {
     public function getActiveBudgets(): Collection;
 
+    public function getBudgets(): Collection;
+
     public function setUser(User $user): void;
 
     public function setUserGroup(UserGroup $userGroup): void;

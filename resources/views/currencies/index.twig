@@ -13,11 +13,10 @@
                     <a class="btn btn-success pull-right" href="{{ route('currencies.create') }}">{{ 'create_currency'|_ }}</a>
                 </div>
                 <div class="box-body">
-                    <p class="text-info">
+                    <p>
                         {{ 'currencies_intro'|_ }}
-                    </p>
-                    <p class="text-info">
                         {{ 'currencies_default_disabled'|_ }}
+                        {{ 'currencies_switch_default'|_ }}
                     </p>
                     {% if currencies|length > 0 %}
                         <div style="padding-left:8px;">

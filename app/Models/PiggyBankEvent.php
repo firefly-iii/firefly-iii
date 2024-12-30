@@ -42,9 +42,10 @@ class PiggyBankEvent extends Model
             'updated_at' => 'datetime',
             'date'       => SeparateTimezoneCaster::class,
             'amount'     => 'string',
+            'amount'     => 'native_string',
         ];
 
-    protected $fillable = ['piggy_bank_id', 'transaction_journal_id', 'date', 'date_tz', 'amount'];
+    protected $fillable = ['piggy_bank_id', 'transaction_journal_id', 'date', 'date_tz', 'amount', 'native_amount'];
 
     protected $hidden   = ['amount_encrypted'];
 
@@ -58,7 +59,7 @@ class PiggyBankEvent extends Model
      */
     public function setAmountAttribute($value): void
     {
-        $this->attributes['amount'] = (string)$value;
+        $this->attributes['amount'] = (string) $value;
     }
 
     public function transactionJournal(): BelongsTo
@@ -72,14 +73,14 @@ class PiggyBankEvent extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string)$value,
+            get: static fn ($value) => (string) $value,
         );
     }
 
     protected function piggyBankId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 }

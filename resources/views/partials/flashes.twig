@@ -56,7 +56,13 @@
         {% endif %}
         {# SINGLE INFO MESSAGE #}
         {% if session('info') is not iterable %}
+            {% if session_has('info_url') %}
+                <a href="{{ session('info_url') }}">
+            {% endif %}
             <strong>{{ 'flash_info'|_ }}:</strong> {{ session('info')|raw }}
+            {% if session_has('info_url') %}
+                </a>
+            {% endif %}
         {% endif %}
 
     </div>

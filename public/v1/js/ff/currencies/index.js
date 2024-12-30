@@ -29,7 +29,15 @@ $(function () {
 });
 
 function setDefaultCurrency(e) {
+    console.log('Setting default currency');
     var button = $(e.currentTarget);
+    // disable everything.
+    button.prop('disabled', true);
+    $('a').css('pointer-events', 'none');
+
+    // change cursor to hourglass
+    $('body').css('cursor', 'wait');
+
     var currencyCode = button.data('code');
 
     var params = {
@@ -38,6 +46,7 @@ function setDefaultCurrency(e) {
     }
 
     $.ajax({
+        timeout: 30000, // sets timeout to 30 seconds
         url: updateCurrencyUrl + '/' + currencyCode,
         data: JSON.stringify(params),
         type: 'PUT',

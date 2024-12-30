@@ -25,9 +25,12 @@ namespace FireflyIII\Http\Controllers\Auth;
 
 use Cookie;
 use FireflyIII\Events\ActuallyLoggedIn;
+use FireflyIII\Events\Security\UnknownUserAttemptedLogin;
+use FireflyIII\Events\Security\UserAttemptedLogin;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Providers\RouteServiceProvider;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -56,7 +59,8 @@ class LoginController extends Controller
     /**
      * Where to redirect users after login.
      */
-    protected string $redirectTo = RouteServiceProvider::HOME;
+    protected string                $redirectTo = RouteServiceProvider::HOME;
+    private UserRepositoryInterface $repository;
 
     private string $username;
 
@@ -66,8 +70,9 @@ class LoginController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->username = 'email';
+        $this->username   = 'email';
         $this->middleware('guest')->except('logout');
+        $this->repository = app(UserRepositoryInterface::class);
     }
 
     /**
@@ -122,6 +127,15 @@ class LoginController extends Controller
             return $this->sendLoginResponse($request);
         }
         app('log')->warning('Login attempt failed.');
+        $username = (string) $request->get($this->username());
+        $user     = $this->repository->findByEmail($username);
+        if (null === $user) {
+            // send event to owner.
+            event(new UnknownUserAttemptedLogin($username));
+        }
+        if (null !== $user) {
+            event(new UserAttemptedLogin($user));
+        }
 
         // Copied directly from AuthenticatesUsers, but with logging added:
         // If the login attempt was unsuccessful we will increment the number of attempts
@@ -211,7 +225,7 @@ class LoginController extends Controller
 
         $count             = \DB::table('users')->count();
         $guard             = config('auth.defaults.guard');
-        $title             = (string)trans('firefly.login_page_title');
+        $title             = (string) trans('firefly.login_page_title');
 
         if (0 === $count && 'web' === $guard) {
             return redirect(route('register'));

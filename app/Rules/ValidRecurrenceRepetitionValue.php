@@ -37,7 +37,7 @@ class ValidRecurrenceRepetitionValue implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
-        $value = (string)$value;
+        $value = (string) $value;
 
         if ('daily' === $value) {
             return;
@@ -68,7 +68,7 @@ class ValidRecurrenceRepetitionValue implements ValidationRule
 
     private function validateMonthly(string $value): bool
     {
-        $dayOfMonth = (int)substr($value, 8);
+        $dayOfMonth = (int) substr($value, 8);
 
         return $dayOfMonth > 0 && $dayOfMonth < 32;
     }
@@ -79,8 +79,8 @@ class ValidRecurrenceRepetitionValue implements ValidationRule
         if (2 !== count($parameters)) {
             return false;
         }
-        $nthDay     = (int)($parameters[0] ?? 0.0);
-        $dayOfWeek  = (int)($parameters[1] ?? 0.0);
+        $nthDay     = (int) ($parameters[0] ?? 0.0);
+        $dayOfWeek  = (int) ($parameters[1] ?? 0.0);
         if ($nthDay < 1 || $nthDay > 5) {
             return false;
         }
@@ -90,7 +90,7 @@ class ValidRecurrenceRepetitionValue implements ValidationRule
 
     private function validateWeekly(string $value): bool
     {
-        $dayOfWeek = (int)substr($value, 7);
+        $dayOfWeek = (int) substr($value, 7);
 
         return $dayOfWeek > 0 && $dayOfWeek < 8;
     }

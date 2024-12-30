@@ -54,7 +54,7 @@ class CreateController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.currencies'));
+                app('view')->share('title', (string) trans('firefly.currencies'));
                 app('view')->share('mainTitleIcon', 'fa-usd');
                 $this->repository     = app(CurrencyRepositoryInterface::class);
                 $this->userRepository = app(UserRepositoryInterface::class);
@@ -74,13 +74,13 @@ class CreateController extends Controller
         /** @var User $user */
         $user         = auth()->user();
         if (!$this->userRepository->hasRole($user, 'owner')) {
-            $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => e(config('firefly.site_owner'))]));
+            $request->session()->flash('error', (string) trans('firefly.ask_site_owner', ['owner' => e(config('firefly.site_owner'))]));
 
             return redirect(route('currencies.index'));
         }
 
         $subTitleIcon = 'fa-plus';
-        $subTitle     = (string)trans('firefly.create_currency');
+        $subTitle     = (string) trans('firefly.create_currency');
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('currencies.create.fromStore')) {
@@ -117,15 +117,15 @@ class CreateController extends Controller
         } catch (FireflyException $e) {
             app('log')->error($e->getMessage());
             Log::channel('audit')->warning('Could not store (POST) currency without admin rights.', $data);
-            $request->session()->flash('error', (string)trans('firefly.could_not_store_currency'));
+            $request->session()->flash('error', (string) trans('firefly.could_not_store_currency'));
             $currency = null;
         }
         $redirect        = redirect($this->getPreviousUrl('currencies.create.url'));
 
         if (null !== $currency) {
-            $request->session()->flash('success', (string)trans('firefly.created_currency', ['name' => $currency->name]));
+            $request->session()->flash('success', (string) trans('firefly.created_currency', ['name' => $currency->name]));
             Log::channel('audit')->info('Created (POST) currency.', $data);
-            if (1 === (int)$request->get('create_another')) {
+            if (1 === (int) $request->get('create_another')) {
                 $request->session()->put('currencies.create.fromStore', true);
 
                 $redirect = redirect(route('currencies.create'))->withInput();

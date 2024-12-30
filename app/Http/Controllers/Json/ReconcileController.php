@@ -32,6 +32,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Facades\Steam;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -55,7 +56,7 @@ class ReconcileController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-credit-card');
-                app('view')->share('title', (string)trans('firefly.accounts'));
+                app('view')->share('title', (string) trans('firefly.accounts'));
                 $this->accountRepos = app(AccountRepositoryInterface::class);
 
                 return $next($request);
@@ -72,7 +73,7 @@ class ReconcileController extends Controller
     {
         $startBalance    = $request->get('startBalance');
         $endBalance      = $request->get('endBalance');
-        $accountCurrency = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
+        $accountCurrency = $this->accountRepos->getAccountCurrency($account) ?? $this->defaultCurrency;
         $amount          = '0';
         $clearedAmount   = '0';
 
@@ -122,10 +123,10 @@ class ReconcileController extends Controller
         Log::debug(sprintf('End balance: "%s"', $endBalance));
         Log::debug(sprintf('Cleared amount: "%s"', $clearedAmount));
         Log::debug(sprintf('Amount: "%s"', $amount));
-        $difference      = bcadd(bcadd(bcsub($startBalance, $endBalance), $clearedAmount), $amount);
+        $difference      = bcadd(bcadd(bcsub($startBalance ?? '0', $endBalance ?? '0'), $clearedAmount ?? '0'), $amount);
         $diffCompare     = bccomp($difference, '0');
         $countCleared    = count($clearedJournals);
-        $reconSum        = bcadd(bcadd($startBalance, $amount), $clearedAmount);
+        $reconSum        = bcadd(bcadd($startBalance ?? '0', $amount ?? '0'), $clearedAmount ?? '0');
 
         try {
             $view = view('accounts.reconcile.overview', compact('account', 'start', 'diffCompare', 'difference', 'end', 'clearedAmount', 'startBalance', 'endBalance', 'amount', 'route', 'countCleared', 'reconSum', 'selectedIds'))->render();
@@ -192,9 +193,9 @@ class ReconcileController extends Controller
         $startDate->subDay();
         $end->endOfDay();
 
-        $currency       = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
-        $startBalance   = app('steam')->bcround(app('steam')->balance($account, $startDate), $currency->decimal_places);
-        $endBalance     = app('steam')->bcround(app('steam')->balance($account, $end), $currency->decimal_places);
+        $currency       = $this->accountRepos->getAccountCurrency($account) ?? $this->defaultCurrency;
+        $startBalance   = Steam::finalAccountBalance($account, $startDate)['balance'];
+        $endBalance     = Steam::finalAccountBalance($account, $end)['balance'];
 
         // get the transactions
         $selectionStart = clone $start;

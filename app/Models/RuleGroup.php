@@ -62,7 +62,7 @@ class RuleGroup extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $ruleGroupId = (int)$value;
+            $ruleGroupId = (int) $value;
 
             /** @var User $user */
             $user        = auth()->user();
@@ -90,7 +90,7 @@ class RuleGroup extends Model
     protected function order(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 }

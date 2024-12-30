@@ -27,8 +27,6 @@ namespace FireflyIII\Support\JsonApi;
 use FireflyIII\Models\Account;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
-use LaravelJsonApi\Core\Query\SortField;
-use LaravelJsonApi\Core\Query\SortFields;
 
 trait SortsQueryResults
 {
@@ -82,8 +80,8 @@ trait SortsQueryResults
         if (Account::class === $class && 'last_activity' === $field->name()) {
             $ascending  = $field->isAscending();
             $collection = $collection->sort(function (Account $left, Account $right) use ($ascending): int {
-                $leftNr  = (int)$left->last_activity?->format('U');
-                $rightNr = (int)$right->last_activity?->format('U');
+                $leftNr  = (int) $left->last_activity?->format('U');
+                $rightNr = (int) $right->last_activity?->format('U');
                 if ($ascending) {
                     return $leftNr <=> $rightNr;
                 }

@@ -63,7 +63,7 @@ class CategoryController extends Controller
         $filtered        = $result->map(
             static function (Category $item) {
                 return [
-                    'id'    => (string)$item->id,
+                    'id'    => (string) $item->id,
                     'title' => $item->name,
                     'meta'  => [],
                 ];

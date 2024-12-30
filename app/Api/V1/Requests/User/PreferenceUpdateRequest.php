@@ -49,7 +49,7 @@ class PreferenceUpdateRequest extends FormRequest
             $array['data'] = false;
         }
         if (is_numeric($array['data'])) {
-            $array['data'] = (float)$array['data']; // intentional float.
+            $array['data'] = (float) $array['data']; // intentional float.
         }
 
         return $array;

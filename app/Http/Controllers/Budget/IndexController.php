@@ -36,11 +36,13 @@ use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 /**
@@ -65,7 +67,7 @@ class IndexController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.budgets'));
+                app('view')->share('title', (string) trans('firefly.budgets'));
                 app('view')->share('mainTitleIcon', 'fa-pie-chart');
                 $this->repository         = app(BudgetRepositoryInterface::class);
                 $this->opsRepository      = app(OperationsRepositoryInterface::class);
@@ -105,7 +107,6 @@ class IndexController extends Controller
             $end   ??= session('end', today(config('app.timezone'))->endOfMonth());
         }
 
-        $defaultCurrency  = app('amount')->getDefaultCurrency();
         $currencies       = $this->currencyRepository->get();
         $budgeted         = '0';
         $spent            = '0';
@@ -118,14 +119,14 @@ class IndexController extends Controller
         // get all available budgets:
         $availableBudgets = $this->getAllAvailableBudgets($start, $end);
         // get all active budgets:
-        $budgets          = $this->getAllBudgets($start, $end, $currencies, $defaultCurrency);
+        $budgets          = $this->getAllBudgets($start, $end, $currencies, $this->defaultCurrency);
         $sums             = $this->getSums($budgets);
 
         // get budgeted for default currency:
         if (0 === count($availableBudgets)) {
-            $budgeted = $this->blRepository->budgeted($start, $end, $defaultCurrency);
-            $spentArr = $this->opsRepository->sumExpenses($start, $end, null, null, $defaultCurrency);
-            $spent    = $spentArr[$defaultCurrency->id]['sum'] ?? '0';
+            $budgeted = $this->blRepository->budgeted($start, $end, $this->defaultCurrency);
+            $spentArr = $this->opsRepository->sumExpenses($start, $end, null, null, $this->defaultCurrency);
+            $spent    = $spentArr[$this->defaultCurrency->id]['sum'] ?? '0';
             unset($spentArr);
         }
 
@@ -135,6 +136,7 @@ class IndexController extends Controller
 
         // get all inactive budgets, and simply list them:
         $inactive         = $this->repository->getInactiveBudgets();
+        $defaultCurrency  = $this->defaultCurrency;
 
         return view(
             'budgets.index',
@@ -161,6 +163,8 @@ class IndexController extends Controller
 
     private function getAllAvailableBudgets(Carbon $start, Carbon $end): array
     {
+        Log::debug(sprintf('Start of getAllAvailableBudgets("%s", "%s")', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
+        $converter        = new ExchangeRateConverter();
         // get all available budgets.
         $ab               = $this->abRepository->get($start, $end);
         $availableBudgets = [];
@@ -168,18 +172,22 @@ class IndexController extends Controller
         // for each, complement with spent amount:
         /** @var AvailableBudget $entry */
         foreach ($ab as $entry) {
-            $array               = $entry->toArray();
-            $array['start_date'] = $entry->start_date;
-            $array['end_date']   = $entry->end_date;
+            $array                    = $entry->toArray();
+            $array['start_date']      = $entry->start_date;
+            $array['end_date']        = $entry->end_date;
 
             // spent in period:
-            $spentArr            = $this->opsRepository->sumExpenses($entry->start_date, $entry->end_date, null, null, $entry->transactionCurrency);
-            $array['spent']      = $spentArr[$entry->transaction_currency_id]['sum'] ?? '0';
-
+            $spentArr                 = $this->opsRepository->sumExpenses($entry->start_date, $entry->end_date, null, null, $entry->transactionCurrency);
+            $array['spent']           = $spentArr[$entry->transaction_currency_id]['sum'] ?? '0';
+            $array['native_spent']    = $this->convertToNative && $entry->transaction_currency_id !== $this->defaultCurrency->id ? $converter->convert($entry->transactionCurrency, $this->defaultCurrency, $entry->start_date, $array['spent']) : null;
             // budgeted in period:
-            $budgeted            = $this->blRepository->budgeted($entry->start_date, $entry->end_date, $entry->transactionCurrency);
-            $array['budgeted']   = $budgeted;
-            $availableBudgets[]  = $array;
+            $budgeted                 = $this->blRepository->budgeted($entry->start_date, $entry->end_date, $entry->transactionCurrency);
+            $array['budgeted']        = $budgeted;
+            $array['native_budgeted'] = $this->convertToNative && $entry->transaction_currency_id !== $this->defaultCurrency->id ? $converter->convert($entry->transactionCurrency, $this->defaultCurrency, $entry->start_date, $budgeted) : null;
+            // this time, because of complex sums, use the currency converter.
+
+
+            $availableBudgets[]       = $array;
             unset($spentArr);
         }
 
@@ -213,6 +221,7 @@ class IndexController extends Controller
                 $array['budgeted'][] = [
                     'id'                      => $limit->id,
                     'amount'                  => $amount,
+                    'notes'                   => $this->blRepository->getNoteText($limit),
                     'start_date'              => $limit->start_date->isoFormat($this->monthAndDayFormat),
                     'end_date'                => $limit->end_date->isoFormat($this->monthAndDayFormat),
                     'in_range'                => $limit->start_date->isSameDay($start) && $limit->end_date->isSameDay($end),
@@ -305,7 +314,7 @@ class IndexController extends Controller
         $budgetIds = $request->get('budgetIds');
 
         foreach ($budgetIds as $index => $budgetId) {
-            $budgetId = (int)$budgetId;
+            $budgetId = (int) $budgetId;
             $budget   = $repository->find($budgetId);
             if (null !== $budget) {
                 app('log')->debug(sprintf('Set budget #%d ("%s") to position %d', $budget->id, $budget->name, $index + 1));

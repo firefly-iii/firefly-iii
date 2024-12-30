@@ -24,13 +24,17 @@ declare(strict_types=1);
 
 namespace FireflyIII\Notifications\User;
 
-use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Support\Notifications\UrlValidator;
+use FireflyIII\Notifications\ReturnsAvailableChannels;
+use FireflyIII\Notifications\ReturnsSettings;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Request;
+use NotificationChannels\Pushover\PushoverMessage;
+use Ntfy\Message;
 
 /**
  * Class UserLogin
@@ -39,108 +43,70 @@ class UserLogin extends Notification
 {
     use Queueable;
 
-    private string $ip;
-
-    /**
-     * Create a new notification instance.
-     */
-    public function __construct(string $ip)
-    {
-        $this->ip = $ip;
-    }
-
-    /**
-     * Get the array representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return array
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function toArray($notifiable)
+    public function toArray(User $notifiable)
     {
         return [
         ];
     }
 
     /**
-     * Get the mail representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return MailMessage
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function toMail($notifiable)
+    public function toMail(User $notifiable)
     {
-        $time = now(config('app.timezone'))->isoFormat((string)trans('config.date_time_js'));
-        $host = '';
-
-        try {
-            $hostName = app('steam')->getHostName($this->ip);
-        } catch (FireflyException $e) {
-            app('log')->error($e->getMessage());
-            $hostName = $this->ip;
-        }
-        if ($hostName !== $this->ip) {
-            $host = $hostName;
-        }
+        $ip        = Request::ip();
+        $host      = Steam::getHostName($ip);
+        $userAgent = Request::userAgent();
+        $time      = now(config('app.timezone'))->isoFormat((string) trans('config.date_time_js'));
 
         return (new MailMessage())
-            ->markdown('emails.new-ip', ['time' => $time, 'ipAddress' => $this->ip, 'host' => $host])
-            ->subject((string)trans('email.login_from_new_ip'))
+            ->markdown('emails.new-ip', ['ip' => $ip, 'host' => $host, 'userAgent' => $userAgent, 'time' => $time])
+            ->subject((string) trans('email.login_from_new_ip'))
+        ;
+    }
+
+    public function toNtfy(User $notifiable): Message
+    {
+        $ip       = Request::ip();
+        $host     = Steam::getHostName($ip);
+        $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
+        $message  = new Message();
+        $message->topic($settings['ntfy_topic']);
+        $message->title((string) trans('email.login_from_new_ip'));
+        $message->body((string) trans('email.slack_login_from_new_ip', ['ip' => $ip, 'host' => $host]));
+
+        return $message;
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toPushover(User $notifiable): PushoverMessage
+    {
+        $ip   = Request::ip();
+        $host = Steam::getHostName($ip);
+
+        return PushoverMessage::create((string) trans('email.slack_login_from_new_ip', ['ip' => $ip, 'host' => $host]))
+            ->title((string) trans('email.login_from_new_ip'))
         ;
     }
 
     /**
-     * Get the Slack representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return SlackMessage
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function toSlack($notifiable)
+    public function toSlack(User $notifiable)
     {
-        $host = '';
+        $ip   = Request::ip();
+        $host = Steam::getHostName($ip);
 
-        try {
-            $hostName = app('steam')->getHostName($this->ip);
-        } catch (FireflyException $e) {
-            app('log')->error($e->getMessage());
-            $hostName = $this->ip;
-        }
-        if ($hostName !== $this->ip) {
-            $host = $hostName;
-        }
-
-        return (new SlackMessage())->content((string)trans('email.slack_login_from_new_ip', ['host' => $host, 'ip' => $this->ip]));
+        return new SlackMessage()->content((string) trans('email.slack_login_from_new_ip', ['ip' => $ip, 'host' => $host]));
     }
 
     /**
-     * Get the notification's delivery channels.
-     *
-     * @param mixed $notifiable
-     *
-     * @return array
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function via($notifiable)
+    public function via(User $notifiable)
     {
-        /** @var null|User $user */
-        $user     = auth()->user();
-        $slackUrl = null === $user ? '' : app('preferences')->getForUser(auth()->user(), 'slack_webhook_url', '')->data;
-        if (is_array($slackUrl)) {
-            $slackUrl = '';
-        }
-        if (UrlValidator::isValidWebhookURL((string)$slackUrl)) {
-            return ['mail', 'slack'];
-        }
-
-        return ['mail'];
+        return ReturnsAvailableChannels::returnChannels('user', $notifiable);
     }
 }

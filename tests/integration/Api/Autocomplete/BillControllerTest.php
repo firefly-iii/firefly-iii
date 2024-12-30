@@ -46,13 +46,16 @@ final class BillControllerTest extends TestCase
 
     protected function createAuthenticatedUser(): User
     {
-        $userGroup = UserGroup::create(['title' => 'Test Group']);
+        $userGroup           = UserGroup::create(['title' => 'Test Group']);
 
-        return User::create([
+        $user                = User::create([
             'email'         => 'test@email.com',
             'password'      => 'password',
-            'user_group_id' => $userGroup->id,
         ]);
+        $user->user_group_id = $userGroup->id;
+        $user->save();
+
+        return $user;
     }
 
     private function createTestBills(int $count, User $user): void

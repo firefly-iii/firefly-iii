@@ -28,47 +28,48 @@ return [
     'download_enabled' => env('ENABLE_EXTERNAL_RATES', false),
 
     // if currencies are added, default rates must be added as well!
-    // last exchange rate update: 6-6-2022
+    // last exchange rate update: 2024-12-30
     // source: https://www.xe.com/currencyconverter/
-    'date'             => '2022-06-06',
+    'date'             => '2024-12-30',
 
     // all rates are from EUR to $currency:
     'rates'            => [
         // europa
         'EUR' => 1,
-        'HUF' => 387.9629,
-        'GBP' => 0.85420754,
-        'UAH' => 31.659752,
-        'PLN' => 4.581788,
-        'TRY' => 17.801397,
-        'DKK' => 7.4389753,
+        'HUF' => 410.79798,
+        'GBP' => 0.82858703,
+        'UAH' => 43.485934,
+        'PLN' => 4.2708542,
+        'TRY' => 36.804124,
+        'DKK' => 7.4591,
+        'RON' => 4.9768699,
 
         // Americas
-        'USD' => 1.0722281,
-        'BRL' => 5.0973173,
-        'CAD' => 1.3459969,
-        'MXN' => 20.899824,
+        'USD' => 1.0430046,
+        'BRL' => 6.4639113,
+        'CAD' => 1.5006908,
+        'MXN' => 21.249542,
 
         // Oceania currencies
-        'IDR' => 15466.299,
-        'AUD' => 1.4838549,
-        'NZD' => 1.6425829,
+        'IDR' => 16860.057,
+        'AUD' => 1.6705648,
+        'NZD' => 1.8436945,
 
         // africa
-        'EGP' => 19.99735,
-        'MAD' => 10.573307,
-        'ZAR' => 16.413167,
+        'EGP' => 53.038174,
+        'MAD' => 10.521629,
+        'ZAR' => 19.460263,
 
         // asia
-        'JPY' => 140.15257,
-        'RMB' => 7.1194265,
-        'CNY' => 1,
-        'RUB' => 66.000895,
-        'INR' => 83.220481,
+        'JPY' => 164.74767,
+        'RMB' => 7.6138994,
+        'CNY' => 7.6138994,
+        'RUB' => 108.56771,
+        'INR' => 89.157391,
 
         // int
-        'ILS' => 3.5712508,
-        'CHF' => 1.0323891,
-        'HRK' => 7.5220845,
+        'ILS' => 3.8428028,
+        'CHF' => 0.94044969,
+        'HRK' => 7.5345, // replaced by EUR
     ],
 ];

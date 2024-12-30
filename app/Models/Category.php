@@ -63,7 +63,7 @@ class Category extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $categoryId = (int)$value;
+            $categoryId = (int) $value;
 
             /** @var User $user */
             $user       = auth()->user();

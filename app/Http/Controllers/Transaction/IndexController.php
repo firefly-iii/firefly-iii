@@ -54,7 +54,7 @@ class IndexController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-exchange');
-                app('view')->share('title', (string)trans('firefly.transactions'));
+                app('view')->share('title', (string) trans('firefly.transactions'));
 
                 $this->repository = app(JournalRepositoryInterface::class);
 
@@ -78,8 +78,8 @@ class IndexController extends Controller
 
         $subTitleIcon  = config('firefly.transactionIconsByType.'.$objectType);
         $types         = config('firefly.transactionTypesByType.'.$objectType);
-        $page          = (int)$request->get('page');
-        $pageSize      = (int)app('preferences')->get('listPageSize', 50)->data;
+        $page          = (int) $request->get('page');
+        $pageSize      = (int) app('preferences')->get('listPageSize', 50)->data;
 
         if (null === $start) {
             $start = session('start');
@@ -94,7 +94,7 @@ class IndexController extends Controller
         [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
         $startStr      = $start->isoFormat($this->monthAndDayFormat);
         $endStr        = $end->isoFormat($this->monthAndDayFormat);
-        $subTitle      = (string)trans(sprintf('firefly.title_%s_between', $objectType), ['start' => $startStr, 'end' => $endStr]);
+        $subTitle      = (string) trans(sprintf('firefly.title_%s_between', $objectType), ['start' => $startStr, 'end' => $endStr]);
         $path          = route('transactions.index', [$objectType, $start->format('Y-m-d'), $end->format('Y-m-d')]);
         $firstJournal  = $this->repository->firstNull();
         $startPeriod   = null === $firstJournal ? new Carbon() : $firstJournal->date;
@@ -128,14 +128,14 @@ class IndexController extends Controller
     {
         $subTitleIcon = config('firefly.transactionIconsByType.'.$objectType);
         $types        = config('firefly.transactionTypesByType.'.$objectType);
-        $page         = (int)$request->get('page');
-        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
+        $page         = (int) $request->get('page');
+        $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
         $path         = route('transactions.index.all', [$objectType]);
         $first        = $this->repository->firstNull();
         $start        = null === $first ? new Carbon() : $first->date;
         $last         = $this->repository->getLast();
         $end          = null !== $last ? $last->date : today(config('app.timezone'));
-        $subTitle     = (string)trans('firefly.all_'.$objectType);
+        $subTitle     = (string) trans('firefly.all_'.$objectType);
 
         /** @var GroupCollectorInterface $collector */
         $collector    = app(GroupCollectorInterface::class);

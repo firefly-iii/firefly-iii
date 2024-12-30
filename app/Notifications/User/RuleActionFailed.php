@@ -24,11 +24,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Notifications\User;
 
-use FireflyIII\Support\Notifications\UrlValidator;
+use FireflyIII\Notifications\ReturnsAvailableChannels;
+use FireflyIII\Notifications\ReturnsSettings;
 use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
+use NotificationChannels\Pushover\PushoverMessage;
+use Ntfy\Message;
 
 /**
  * Class RuleActionFailed
@@ -43,9 +46,6 @@ class RuleActionFailed extends Notification
     private string $ruleLink;
     private string $ruleTitle;
 
-    /**
-     * Create a new notification instance.
-     */
     public function __construct(array $params)
     {
         [$mainMessage, $groupTitle, $groupLink, $ruleTitle, $ruleLink] = $params;
@@ -57,67 +57,59 @@ class RuleActionFailed extends Notification
     }
 
     /**
-     * Get the array representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return array
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function toArray($notifiable)
+    public function toArray(User $notifiable)
     {
         return [
         ];
     }
 
+    public function toNtfy(User $notifiable): Message
+    {
+        $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
+        $message  = new Message();
+        $message->topic($settings['ntfy_topic']);
+        $message->body($this->message);
+
+        return $message;
+    }
+
     /**
-     * Get the Slack representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return SlackMessage
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function toSlack($notifiable)
+    public function toPushover(User $notifiable): PushoverMessage
+    {
+        return PushoverMessage::create($this->message);
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function toSlack(User $notifiable)
     {
         $groupTitle = $this->groupTitle;
         $groupLink  = $this->groupLink;
         $ruleTitle  = $this->ruleTitle;
         $ruleLink   = $this->ruleLink;
 
-        return (new SlackMessage())->content($this->message)->attachment(static function ($attachment) use ($groupTitle, $groupLink): void {
-            $attachment->title((string)trans('rules.inspect_transaction', ['title' => $groupTitle]), $groupLink);
+        return new SlackMessage()->content($this->message)->attachment(static function ($attachment) use ($groupTitle, $groupLink): void {
+            $attachment->title((string) trans('rules.inspect_transaction', ['title' => $groupTitle]), $groupLink);
         })->attachment(static function ($attachment) use ($ruleTitle, $ruleLink): void {
-            $attachment->title((string)trans('rules.inspect_rule', ['title' => $ruleTitle]), $ruleLink);
+            $attachment->title((string) trans('rules.inspect_rule', ['title' => $ruleTitle]), $ruleLink);
         });
     }
 
     /**
-     * Get the notification's delivery channels.
-     *
-     * @param mixed $notifiable
-     *
-     * @return array
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function via($notifiable)
+    public function via(User $notifiable)
     {
-        /** @var null|User $user */
-        $user     = auth()->user();
-        $slackUrl = null === $user ? '' : app('preferences')->getForUser(auth()->user(), 'slack_webhook_url', '')->data;
-        if (is_array($slackUrl)) {
-            $slackUrl = '';
+        $channels = ReturnsAvailableChannels::returnChannels('user', $notifiable);
+        if (($key = array_search('mail', $channels, true)) !== false) {
+            unset($channels[$key]);
         }
-        if (UrlValidator::isValidWebhookURL((string)$slackUrl)) {
-            app('log')->debug('Will send ruleActionFailed through Slack or Discord!');
 
-            return ['slack'];
-        }
-        app('log')->debug('Will NOT send ruleActionFailed through Slack or Discord');
-
-        return [];
+        return $channels;
     }
 }

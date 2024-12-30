@@ -28,16 +28,15 @@ use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\UserGroup\UserGroupRepositoryInterface;
 use FireflyIII\User;
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Log;
 
 class IsAllowedGroupAction implements ValidationRule
 {
+    private array                        $acceptedRoles;
     private string $className;
     private string $methodName;
-
-    private array $acceptedRoles;
     private UserGroupRepositoryInterface $repository;
 
     public function __construct(string $className, string $methodName)
@@ -71,7 +70,7 @@ class IsAllowedGroupAction implements ValidationRule
                     break;
             }
         }
-        $this->validateUserGroup((int)$value, $fail);
+        $this->validateUserGroup((int) $value, $fail);
     }
 
     private function validateUserGroup(int $userGroupId, \Closure $fail): void

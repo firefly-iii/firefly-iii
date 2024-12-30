@@ -49,7 +49,7 @@ trait UserNavigation
     final protected function getPreviousUrl(string $identifier): string
     {
         app('log')->debug(sprintf('Trying to retrieve URL stored under "%s"', $identifier));
-        $url = (string)session($identifier);
+        $url = (string) session($identifier);
         app('log')->debug(sprintf('The URL is %s', $url));
 
         return app('steam')->getSafeUrl($url, route('index'));

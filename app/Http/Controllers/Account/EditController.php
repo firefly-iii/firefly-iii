@@ -58,7 +58,7 @@ class EditController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-credit-card');
-                app('view')->share('title', (string)trans('firefly.accounts'));
+                app('view')->share('title', (string) trans('firefly.accounts'));
 
                 $this->repository  = app(AccountRepositoryInterface::class);
                 $this->attachments = app(AttachmentHelperInterface::class);
@@ -82,7 +82,7 @@ class EditController extends Controller
         }
 
         $objectType           = config('firefly.shortNamesByFullName')[$account->accountType->type];
-        $subTitle             = (string)trans(sprintf('firefly.edit_%s_account', $objectType), ['name' => $account->name]);
+        $subTitle             = (string) trans(sprintf('firefly.edit_%s_account', $objectType), ['name' => $account->name]);
         $subTitleIcon         = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
         $roles                = $this->getRoles();
         $liabilityTypes       = $this->getLiabilityTypes();
@@ -90,6 +90,7 @@ class EditController extends Controller
         $latitude             = null !== $location ? $location->latitude : config('firefly.default_location.latitude');
         $longitude            = null !== $location ? $location->longitude : config('firefly.default_location.longitude');
         $zoomLevel            = null !== $location ? $location->zoom_level : config('firefly.default_location.zoom_level');
+        $canEditCurrency      = 0 === $account->piggyBanks()->count();
         $hasLocation          = null !== $location;
         $locations            = [
             'location' => [
@@ -107,9 +108,9 @@ class EditController extends Controller
 
         // interest calculation periods:
         $interestPeriods      = [
-            'daily'   => (string)trans('firefly.interest_calc_daily'),
-            'monthly' => (string)trans('firefly.interest_calc_monthly'),
-            'yearly'  => (string)trans('firefly.interest_calc_yearly'),
+            'daily'   => (string) trans('firefly.interest_calc_daily'),
+            'monthly' => (string) trans('firefly.interest_calc_monthly'),
+            'yearly'  => (string) trans('firefly.interest_calc_yearly'),
         ];
 
         // put previous url in session if not redirect from store (not "return_to_edit").
@@ -118,12 +119,12 @@ class EditController extends Controller
         }
         $request->session()->forget('accounts.edit.fromUpdate');
 
-        $openingBalanceAmount = (string)$repository->getOpeningBalanceAmount($account);
+        $openingBalanceAmount = (string) $repository->getOpeningBalanceAmount($account);
         if ('0' === $openingBalanceAmount) {
             $openingBalanceAmount = '';
         }
         $openingBalanceDate   = $repository->getOpeningBalanceDate($account);
-        $currency             = $this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
+        $currency             = $this->repository->getAccountCurrency($account) ?? $this->defaultCurrency;
 
         // include this account in net-worth charts?
         $includeNetWorth      = $repository->getMetaValue($account, 'include_net_worth');
@@ -144,17 +145,17 @@ class EditController extends Controller
             'cc_type'                 => $repository->getMetaValue($account, 'cc_type'),
             'cc_monthly_payment_date' => $repository->getMetaValue($account, 'cc_monthly_payment_date'),
             'BIC'                     => $repository->getMetaValue($account, 'BIC'),
-            'opening_balance_date'    => substr((string)$openingBalanceDate, 0, 10),
+            'opening_balance_date'    => substr((string) $openingBalanceDate, 0, 10),
             'liability_type_id'       => $account->account_type_id,
             'opening_balance'         => app('steam')->bcround($openingBalanceAmount, $currency->decimal_places),
             'liability_direction'     => $this->repository->getMetaValue($account, 'liability_direction'),
             'virtual_balance'         => app('steam')->bcround($virtualBalance, $currency->decimal_places),
             'currency_id'             => $currency->id,
-            'include_net_worth'       => $hasOldInput ? (bool)$request->old('include_net_worth') : $includeNetWorth,
+            'include_net_worth'       => $hasOldInput ? (bool) $request->old('include_net_worth') : $includeNetWorth,
             'interest'                => $repository->getMetaValue($account, 'interest'),
             'interest_period'         => $repository->getMetaValue($account, 'interest_period'),
             'notes'                   => $this->repository->getNoteText($account),
-            'active'                  => $hasOldInput ? (bool)$request->old('active') : $account->active,
+            'active'                  => $hasOldInput ? (bool) $request->old('active') : $account->active,
         ];
         if ('' === $openingBalanceAmount) {
             $preFilled['opening_balance'] = '';
@@ -162,7 +163,7 @@ class EditController extends Controller
 
         $request->session()->flash('preFilled', $preFilled);
 
-        return view('accounts.edit', compact('account', 'currency', 'showNetWorth', 'subTitle', 'subTitleIcon', 'locations', 'liabilityDirections', 'objectType', 'roles', 'preFilled', 'liabilityTypes', 'interestPeriods'));
+        return view('accounts.edit', compact('account', 'currency', 'canEditCurrency', 'showNetWorth', 'subTitle', 'subTitleIcon', 'locations', 'liabilityDirections', 'objectType', 'roles', 'preFilled', 'liabilityTypes', 'interestPeriods'));
     }
 
     /**
@@ -179,7 +180,7 @@ class EditController extends Controller
         $data     = $request->getAccountData();
         $this->repository->update($account, $data);
         Log::channel('audit')->info(sprintf('Updated account #%d.', $account->id), $data);
-        $request->session()->flash('success', (string)trans('firefly.updated_account', ['name' => $account->name]));
+        $request->session()->flash('success', (string) trans('firefly.updated_account', ['name' => $account->name]));
 
         // store new attachment(s):
         /** @var null|array $files */
@@ -189,7 +190,7 @@ class EditController extends Controller
         }
         if (null !== $files && auth()->user()->hasRole('demo')) {
             Log::channel('audit')->warning(sprintf('The demo user is trying to upload attachments in %s.', __METHOD__));
-            session()->flash('info', (string)trans('firefly.no_att_demo_user'));
+            session()->flash('info', (string) trans('firefly.no_att_demo_user'));
         }
 
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
@@ -198,7 +199,7 @@ class EditController extends Controller
 
         // redirect
         $redirect = redirect($this->getPreviousUrl('accounts.edit.url'));
-        if (1 === (int)$request->get('return_to_edit')) {
+        if (1 === (int) $request->get('return_to_edit')) {
             // set value so edit routine will not overwrite URL:
             $request->session()->put('accounts.edit.fromUpdate', true);
 

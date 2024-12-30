@@ -40,9 +40,9 @@ use Illuminate\Support\Facades\Log;
  */
 class AccountController extends Controller
 {
-    private AccountRepositoryInterface $repository;
-    private TransactionCurrency        $default;
     private ExchangeRateConverter      $converter;
+    private TransactionCurrency        $default;
+    private AccountRepositoryInterface $repository;
 
     /**
      * AccountController constructor.

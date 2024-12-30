@@ -31,6 +31,7 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -42,12 +43,13 @@ class BudgetLimit extends Model
 
     protected $casts
                         = [
-            'created_at'  => 'datetime',
-            'updated_at'  => 'datetime',
-            'start_date'  => SeparateTimezoneCaster::class,
-            'end_date'    => SeparateTimezoneCaster::class,
-            'auto_budget' => 'boolean',
-            'amount'      => 'string',
+            'created_at'         => 'datetime',
+            'updated_at'         => 'datetime',
+            'start_date'         => SeparateTimezoneCaster::class,
+            'end_date'           => SeparateTimezoneCaster::class,
+            'auto_budget'        => 'boolean',
+            'amount'             => 'string',
+            'native_amount'      => 'string',
         ];
     protected $dispatchesEvents
                         = [
@@ -56,7 +58,7 @@ class BudgetLimit extends Model
             'deleted' => Deleted::class,
         ];
 
-    protected $fillable = ['budget_id', 'start_date', 'end_date', 'start_date_tz', 'end_date_tz', 'amount', 'transaction_currency_id'];
+    protected $fillable = ['budget_id', 'start_date', 'end_date', 'start_date_tz', 'end_date_tz', 'amount', 'transaction_currency_id', 'native_amount'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
@@ -66,7 +68,7 @@ class BudgetLimit extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $budgetLimitId = (int)$value;
+            $budgetLimitId = (int) $value;
             $budgetLimit   = self::where('budget_limits.id', $budgetLimitId)
                 ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
                 ->where('budgets.user_id', auth()->user()->id)
@@ -85,6 +87,14 @@ class BudgetLimit extends Model
         return $this->belongsTo(Budget::class);
     }
 
+    /**
+     * Get all the notes.
+     */
+    public function notes(): MorphMany
+    {
+        return $this->morphMany(Note::class, 'noteable');
+    }
+
     public function transactionCurrency(): BelongsTo
     {
         return $this->belongsTo(TransactionCurrency::class);
@@ -96,21 +106,21 @@ class BudgetLimit extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string)$value,
+            get: static fn ($value) => (string) $value,
         );
     }
 
     protected function budgetId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 
     protected function transactionCurrencyId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 }

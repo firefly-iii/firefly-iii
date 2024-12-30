@@ -56,7 +56,7 @@ class RegisteredUser extends Mailable
     {
         return $this
             ->markdown('emails.registered')
-            ->subject((string)trans('email.registered_subject'))
+            ->subject((string) trans('email.registered_subject'))
         ;
     }
 }

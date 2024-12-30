@@ -62,7 +62,7 @@ class TransactionGroup extends Model
     {
         app('log')->debug(sprintf('Now in %s("%s")', __METHOD__, $value));
         if (auth()->check()) {
-            $groupId = (int)$value;
+            $groupId = (int) $value;
 
             /** @var User $user */
             $user    = auth()->user();

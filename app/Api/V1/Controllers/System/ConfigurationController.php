@@ -101,8 +101,8 @@ class ConfigurationController extends Controller
 
         return [
             'is_demo_site'            => $isDemoSite?->data,
-            'permission_update_check' => null === $updateCheck ? null : (int)$updateCheck->data,
-            'last_update_check'       => null === $lastCheck ? null : (int)$lastCheck->data,
+            'permission_update_check' => null === $updateCheck ? null : (int) $updateCheck->data,
+            'last_update_check'       => null === $lastCheck ? null : (int) $lastCheck->data,
             'single_user_mode'        => $singleUser?->data,
         ];
     }

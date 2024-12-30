@@ -50,7 +50,7 @@ class IndexController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-envelope-o');
-                app('view')->share('title', (string)trans('firefly.object_groups_page_title'));
+                app('view')->share('title', (string) trans('firefly.object_groups_page_title'));
                 $this->repository = app(ObjectGroupRepositoryInterface::class);
 
                 return $next($request);
@@ -65,7 +65,7 @@ class IndexController extends Controller
     {
         $this->repository->deleteEmpty();
         $this->repository->resetOrder();
-        $subTitle     = (string)trans('firefly.object_groups_index');
+        $subTitle     = (string) trans('firefly.object_groups_index');
         $objectGroups = $this->repository->get();
 
         return view('object-groups.index', compact('subTitle', 'objectGroups'));
@@ -77,7 +77,7 @@ class IndexController extends Controller
     public function setOrder(Request $request, ObjectGroup $objectGroup)
     {
         app('log')->debug(sprintf('Found object group #%d "%s"', $objectGroup->id, $objectGroup->title));
-        $newOrder = (int)$request->get('order');
+        $newOrder = (int) $request->get('order');
         $this->repository->setOrder($objectGroup, $newOrder);
 
         return response()->json([]);

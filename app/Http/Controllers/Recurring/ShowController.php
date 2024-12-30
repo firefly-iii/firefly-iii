@@ -60,7 +60,7 @@ class ShowController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-paint-brush');
-                app('view')->share('title', (string)trans('firefly.recurrences'));
+                app('view')->share('title', (string) trans('firefly.recurrences'));
 
                 $this->recurring = app(RecurringRepositoryInterface::class);
 
@@ -125,7 +125,7 @@ class ShowController extends Controller
             }
         }
 
-        $subTitle               = (string)trans('firefly.overview_for_recurrence', ['title' => $recurrence->title]);
+        $subTitle               = (string) trans('firefly.overview_for_recurrence', ['title' => $recurrence->title]);
 
         return view('recurring.show', compact('recurrence', 'subTitle', 'array', 'groups', 'today'));
     }

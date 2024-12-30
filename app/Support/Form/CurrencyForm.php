@@ -69,7 +69,7 @@ class CurrencyForm
             $preFilled = [];
         }
         $key             = 'amount_currency_id_'.$name;
-        $sentCurrencyId  = array_key_exists($key, $preFilled) ? (int)$preFilled[$key] : $defaultCurrency->id;
+        $sentCurrencyId  = array_key_exists($key, $preFilled) ? (int) $preFilled[$key] : $defaultCurrency->id;
 
         app('log')->debug(sprintf('Sent currency ID is %d', $sentCurrencyId));
 
@@ -138,7 +138,7 @@ class CurrencyForm
             $preFilled = [];
         }
         $key             = 'amount_currency_id_'.$name;
-        $sentCurrencyId  = array_key_exists($key, $preFilled) ? (int)$preFilled[$key] : $defaultCurrency->id;
+        $sentCurrencyId  = array_key_exists($key, $preFilled) ? (int) $preFilled[$key] : $defaultCurrency->id;
 
         app('log')->debug(sprintf('Sent currency ID is %d', $sentCurrencyId));
 
@@ -204,7 +204,7 @@ class CurrencyForm
         // get all currencies:
         $list          = $currencyRepos->get();
         $array         = [
-            0 => (string)trans('firefly.no_currency'),
+            0 => (string) trans('firefly.no_currency'),
         ];
 
         /** @var TransactionCurrency $currency */

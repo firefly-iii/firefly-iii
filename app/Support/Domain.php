@@ -30,7 +30,7 @@ class Domain
 {
     public static function getBindables(): array
     {
-        return config('firefly.bindables');
+        return config('bindables.bindables');
     }
 
     public static function getRuleActions(): array

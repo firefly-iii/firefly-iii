@@ -50,13 +50,13 @@ class AppendNotes implements ActionInterface
     public function actOnArray(array $journal): bool
     {
         $this->refreshNotes($journal);
-        $dbNote       = Note::where('noteable_id', (int)$journal['transaction_journal_id'])
+        $dbNote       = Note::where('noteable_id', (int) $journal['transaction_journal_id'])
             ->where('noteable_type', TransactionJournal::class)
             ->first(['notes.*'])
         ;
         if (null === $dbNote) {
             $dbNote                = new Note();
-            $dbNote->noteable_id   = (int)$journal['transaction_journal_id'];
+            $dbNote->noteable_id   = (int) $journal['transaction_journal_id'];
             $dbNote->noteable_type = TransactionJournal::class;
             $dbNote->text          = '';
         }

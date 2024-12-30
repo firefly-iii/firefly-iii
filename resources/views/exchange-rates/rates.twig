@@ -1,0 +1,13 @@
+{% set VUE_SCRIPT_NAME = 'exchange-rates/rates' %}
+{% extends './layout/default' %}
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, from, to) }}
+{% endblock %}
+
+{% block content %}
+    <div id="exchange_rates_rates"></div>
+
+{% endblock %}
+{% block scripts %}
+
+{% endblock %}

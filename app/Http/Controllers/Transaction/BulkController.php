@@ -55,7 +55,7 @@ class BulkController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->repository = app(JournalRepositoryInterface::class);
-                app('view')->share('title', (string)trans('firefly.transactions'));
+                app('view')->share('title', (string) trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-exchange');
 
                 return $next($request);
@@ -72,7 +72,7 @@ class BulkController extends Controller
      */
     public function edit(array $journals)
     {
-        $subTitle    = (string)trans('firefly.mass_bulk_journals');
+        $subTitle    = (string) trans('firefly.mass_bulk_journals');
 
         $this->rememberPreviousUrl('transactions.bulk-edit.url');
 
@@ -95,14 +95,14 @@ class BulkController extends Controller
     {
         $journalIds     = $request->get('journals');
         $journalIds     = is_array($journalIds) ? $journalIds : [];
-        $ignoreCategory = 1 === (int)$request->get('ignore_category');
-        $ignoreBudget   = 1 === (int)$request->get('ignore_budget');
+        $ignoreCategory = 1 === (int) $request->get('ignore_category');
+        $ignoreBudget   = 1 === (int) $request->get('ignore_budget');
         $tagsAction     = $request->get('tags_action');
         $collection     = new Collection();
         $count          = 0;
 
         foreach ($journalIds as $journalId) {
-            $journalId = (int)$journalId;
+            $journalId = (int) $journalId;
             $journal   = $this->repository->find($journalId);
             if (null !== $journal) {
                 $resultA = $this->updateJournalBudget($journal, $ignoreBudget, $request->integer('budget_id'));

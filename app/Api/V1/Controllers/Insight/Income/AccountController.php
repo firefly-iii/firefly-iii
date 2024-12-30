@@ -73,17 +73,18 @@ class AccountController extends Controller
         $start         = $request->getStart();
         $end           = $request->getEnd();
         $assetAccounts = $request->getAssetAccounts();
+
         $income        = $this->opsRepository->sumIncomeByDestination($start, $end, $assetAccounts);
         $result        = [];
 
         /** @var array $entry */
         foreach ($income as $entry) {
             $result[] = [
-                'id'               => (string)$entry['id'],
+                'id'               => (string) $entry['id'],
                 'name'             => $entry['name'],
                 'difference'       => $entry['sum'],
-                'difference_float' => (float)$entry['sum'], // float but on purpose.
-                'currency_id'      => (string)$entry['currency_id'],
+                'difference_float' => (float) $entry['sum'], // float but on purpose.
+                'currency_id'      => (string) $entry['currency_id'],
                 'currency_code'    => $entry['currency_code'],
             ];
         }
@@ -107,11 +108,11 @@ class AccountController extends Controller
         /** @var array $entry */
         foreach ($income as $entry) {
             $result[] = [
-                'id'               => (string)$entry['id'],
+                'id'               => (string) $entry['id'],
                 'name'             => $entry['name'],
                 'difference'       => $entry['sum'],
-                'difference_float' => (float)$entry['sum'], // float but on purpose.
-                'currency_id'      => (string)$entry['currency_id'],
+                'difference_float' => (float) $entry['sum'], // float but on purpose.
+                'currency_id'      => (string) $entry['currency_id'],
                 'currency_code'    => $entry['currency_code'],
             ];
         }

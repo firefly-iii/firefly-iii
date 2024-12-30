@@ -45,15 +45,15 @@ class IsTransferAccount implements ValidationRule
         $validator->setTransactionType(TransactionType::TRANSFER);
         $validator->setUser(auth()->user());
 
-        $validAccount = $validator->validateSource(['name' => (string)$value]);
+        $validAccount = $validator->validateSource(['name' => (string) $value]);
         if (true === $validAccount) {
             app('log')->debug('Found account based on name. Return true.');
 
             // found by name, use repos to return.
             return;
         }
-        $validAccount = $validator->validateSource(['id' => (int)$value]);
-        app('log')->debug(sprintf('Search by id (%d), result is %s.', (int)$value, var_export($validAccount, true)));
+        $validAccount = $validator->validateSource(['id' => (int) $value]);
+        app('log')->debug(sprintf('Search by id (%d), result is %s.', (int) $value, var_export($validAccount, true)));
 
         if (false === $validAccount) {
             $fail('validation.not_transfer_account')->translate();

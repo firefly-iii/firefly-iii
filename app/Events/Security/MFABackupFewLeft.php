@@ -33,8 +33,8 @@ class MFABackupFewLeft extends Event
 {
     use SerializesModels;
 
+    public int  $count;
     public User $user;
-    public int $count;
 
     public function __construct(null|Authenticatable|User $user, int $count)
     {

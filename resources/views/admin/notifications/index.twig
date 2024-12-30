@@ -1,0 +1,87 @@
+{% extends './layout/default' %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render }}
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+            <form action="{{ route('admin.notification.post') }}" method="post">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <div class="box box-default">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'notification_settings'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <p>
+                            {{ trans('firefly.owner_notifications_expl') }}
+                        </p>
+                        {% for notification, value in notifications %}
+                            <div class="checkbox">
+                                <label>
+                                    <input value="1" {% if true == value %}checked{% endif %} type="checkbox" name="notification_{{ notification }}"> {{ trans('firefly.owner_notification_check_'~notification) }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                        <p style="margin-top:2em;">{{ 'channel_settings'|_ }}</p>
+                        {{ ExpandedForm.text('slack_webhook_url', slackUrl, {'label' : 'slack_url_label'|_, helpText: trans('firefly.slack_discord_double')}) }}
+
+                        {{ ExpandedForm.text('pushover_app_token', pushoverAppToken, {}) }}
+                        {{ ExpandedForm.text('pushover_user_token', pushoverUserToken, {}) }}
+
+                        {{ ExpandedForm.text('ntfy_server', ntfyServer, {}) }}
+                        {{ ExpandedForm.text('ntfy_topic', ntfyTopic, {}) }}
+                        {{ ExpandedForm.checkbox('ntfy_auth','1', ntfyAuth, {}) }}
+                        {{ ExpandedForm.text('ntfy_user', ntfyUser, {}) }}
+                        {{ ExpandedForm.passwordWithValue('ntfy_pass', ntfyPass, {}) }}
+                    </div>
+                    <div class="box-footer">
+                        <button type="submit" class="btn btn-success">
+                            <span class="fa fa-check-circle"></span> {{ ('save_notification_settings')|_ }}
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <form action="{{ route('admin.notification.test') }}" method="post">
+            <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <div class="box box-default">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'available_channels_title'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <p>
+                            {{ 'available_channels_expl'|_ }}
+                        </p>
+                        <ul>
+                            {% for name,info in channels %}
+                                <li>
+                                    {% if true == info.enabled and true == forcedAvailability[name] %}
+                                        ☑️ {{ trans('firefly.notification_channel_name_'~name) }}
+                                        {% if 0 == info.ui_configurable %}({{ 'configure_channel_in_env'|_ }}) {% endif %}
+                                    {% endif %}
+                                    {% if false == info.enabled or false == forcedAvailability[name] %}
+                                        ⚠️ {{ trans('firefly.notification_channel_name_'~name) }} ({{ 'channel_not_available'|_ }})
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="box-footer">
+                        <div class="btn-group">
+                            {% for name,info in channels %}
+                                {% if true == info.enabled and true == forcedAvailability[name] %}
+                                    <button type="submit" name="test_submit" value="{{ name }}" class="btn btn-default">
+                                        {{ trans('firefly.test_notification_channel_name_'~name) }}
+                                    </button>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}

@@ -62,7 +62,7 @@ class ShowController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.bills'));
+                app('view')->share('title', (string) trans('firefly.bills'));
                 app('view')->share('mainTitleIcon', 'fa-calendar-o');
                 $this->repository = app(BillRepositoryInterface::class);
 
@@ -80,13 +80,13 @@ class ShowController extends Controller
     {
         $total      = 0;
         if (false === $bill->active) {
-            $request->session()->flash('warning', (string)trans('firefly.cannot_scan_inactive_bill'));
+            $request->session()->flash('warning', (string) trans('firefly.cannot_scan_inactive_bill'));
 
             return redirect(route('bills.show', [$bill->id]));
         }
         $set        = $this->repository->getRulesForBill($bill);
         if (0 === $set->count()) {
-            $request->session()->flash('error', (string)trans('firefly.no_rules_for_bill'));
+            $request->session()->flash('error', (string) trans('firefly.no_rules_for_bill'));
 
             return redirect(route('bills.show', [$bill->id]));
         }
@@ -125,8 +125,8 @@ class ShowController extends Controller
         /** @var Carbon $end */
         $end                        = session('end');
         $year                       = $start->year;
-        $page                       = (int)$request->get('page');
-        $pageSize                   = (int)app('preferences')->get('listPageSize', 50)->data;
+        $page                       = (int) $request->get('page');
+        $pageSize                   = (int) app('preferences')->get('listPageSize', 50)->data;
         $yearAverage                = $this->repository->getYearAverage($bill, $start);
         $overallAverage             = $this->repository->getOverallAverage($bill);
         $manager                    = new Manager();

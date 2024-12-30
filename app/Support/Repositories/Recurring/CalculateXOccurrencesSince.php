@@ -67,7 +67,7 @@ trait CalculateXOccurrencesSince
         $mutator    = clone $date;
         $total      = 0;
         $attempts   = 0;
-        $dayOfMonth = (int)$moment;
+        $dayOfMonth = (int) $moment;
         $dayOfMonth = 0 === $dayOfMonth ? 1 : $dayOfMonth;
         if ($mutator->day > $dayOfMonth) {
             app('log')->debug(sprintf('%d is after %d, add a month. Mutator is now', $mutator->day, $dayOfMonth));
@@ -143,7 +143,7 @@ trait CalculateXOccurrencesSince
         // sunday = 7
         // Removed assumption today has passed, see issue https://github.com/firefly-iii/firefly-iii/issues/4798
         // $mutator->addDay(); // always assume today has passed.
-        $dayOfWeek     = (int)$moment;
+        $dayOfWeek     = (int) $moment;
         if ($mutator->dayOfWeekIso > $dayOfWeek) {
             // day has already passed this week, add one week:
             $mutator->addWeek();

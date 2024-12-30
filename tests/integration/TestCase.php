@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tests\integration;
 
+use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Tests\integration\Traits\CollectsValues;
@@ -52,9 +53,12 @@ abstract class TestCase extends BaseTestCase
 
     protected function createAuthenticatedUser(): User
     {
+        $group = UserGroup::create(['title' => 'test@email.com']);
+
         return User::create([
-            'email'    => 'test@email.com',
-            'password' => 'password',
+            'email'         => 'test@email.com',
+            'password'      => 'password',
+            'user_group_id' => $group->id,
         ]);
     }
 }

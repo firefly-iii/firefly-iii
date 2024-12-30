@@ -58,7 +58,7 @@
                                         account_name: account.name|escape,
                                         url: url,
                                         end: auditData[account.id].dayBefore,
-                                        balance: formatAmountByAccount(account, auditData[account.id].dayBeforeBalance)
+                                        balance: formatAmountByAccount(account, auditData[account.id].dayBeforeBalance.balance)
                                     })|raw }}
                             </p>
                             {% include 'reports.partials.journals-audit'  with {'journals': auditData[account.id].journals,'account':account} %}

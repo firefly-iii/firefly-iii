@@ -37,7 +37,7 @@ class IsAssetAccountId implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
-        $accountId = (int)$value;
+        $accountId = (int) $value;
 
         /** @var null|Account $account */
         $account   = Account::with('accountType')->find($accountId);

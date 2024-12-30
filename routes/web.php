@@ -80,7 +80,7 @@ Route::group(
 Route::group(
     ['middleware' => 'binders-only', 'namespace' => 'FireflyIII\Http\Controllers\System'],
     static function (): void {
-        Route::get('offline', static fn () => view('errors.offline'));
+        // Route::get('offline', static fn () => view('errors.offline'));
         Route::get('health', ['uses' => 'HealthcheckController@check', 'as' => 'healthcheck']);
     }
 );
@@ -117,7 +117,7 @@ Route::group(
         Route::get('error', ['uses' => 'DebugController@displayError', 'as' => 'error']);
         Route::post('logout', ['uses' => 'Auth\LoginController@logout', 'as' => 'logout']);
         Route::get('flush', ['uses' => 'DebugController@flush', 'as' => 'flush']);
-        // Route::get('routes', ['uses' => 'DebugController@routes', 'as' => 'routes']);
+        Route::get('routes', ['uses' => 'DebugController@routes', 'as' => 'routes']);
         Route::get('debug', 'DebugController@index')->name('debug');
     }
 );
@@ -284,19 +284,13 @@ Route::group(
         Route::get('show/{budget}', ['uses' => 'Budget\ShowController@show', 'as' => 'show']);
         Route::get('show/{budget}/{budgetLimit}', ['uses' => 'Budget\ShowController@showByBudgetLimit', 'as' => 'show.limit']);
         Route::get('list/no-budget/all', ['uses' => 'Budget\ShowController@noBudgetAll', 'as' => 'no-budget-all']);
-        Route::get('list/no-budget/{start_date?}/{end_date?}', ['uses' => 'Budget\ShowController@noBudget', 'as' => 'no-budget'])
-            ->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+        Route::get('list/no-budget/{start_date?}/{end_date?}', ['uses' => 'Budget\ShowController@noBudget', 'as' => 'no-budget']);
 
         // reorder budgets
         Route::post('reorder', ['uses' => 'Budget\IndexController@reorder', 'as' => 'reorder']);
 
         // index
-        Route::get('{start_date?}/{end_date?}', ['uses' => 'Budget\IndexController@index', 'as' => 'index'])
-            ->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+        Route::get('{start_date?}/{end_date?}', ['uses' => 'Budget\IndexController@index', 'as' => 'index']);
     }
 );
 
@@ -304,10 +298,10 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'budget-limits', 'as' => 'budget-limits.'],
     static function (): void {
-        Route::get('create/{budget}/{start_date}/{end_date}', ['uses' => 'Budget\BudgetLimitController@create', 'as' => 'create'])
-            ->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+        Route::get('create/{budget}/{start_date}/{end_date}', ['uses' => 'Budget\BudgetLimitController@create', 'as' => 'create'])->where(['start_date' => DATEFORMAT])->where(['end_date' => DATEFORMAT]);
+        Route::get('edit/{budgetLimit}', ['uses' => 'Budget\BudgetLimitController@edit', 'as' => 'edit']);
+        Route::get('show/{budgetLimit}', ['uses' => 'Budget\BudgetLimitController@show', 'as' => 'show']);
+
         Route::post('store', ['uses' => 'Budget\BudgetLimitController@store', 'as' => 'store']);
 
         Route::post('delete/{budgetLimit}', ['uses' => 'Budget\BudgetLimitController@delete', 'as' => 'delete']);
@@ -363,6 +357,21 @@ Route::group(
         Route::post('store', ['uses' => 'CreateController@store', 'as' => 'store']);
         Route::post('update/{currency}', ['uses' => 'EditController@update', 'as' => 'update']);
         Route::post('destroy/{currency}', ['uses' => 'DeleteController@destroy', 'as' => 'destroy']);
+    }
+);
+
+// exchange rates controller
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\ExchangeRates', 'prefix' => 'exchange-rates', 'as' => 'exchange-rates.'],
+    static function (): void {
+        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
+        Route::get('{fromCurrencyCode}/{toCurrencyCode}', ['uses' => 'IndexController@rates', 'as' => 'rates']);
+        //        Route::get('create', ['uses' => 'CreateController@create', 'as' => 'create']);
+        //        Route::get('edit/{currency}', ['uses' => 'EditController@edit', 'as' => 'edit']);
+        //        Route::get('delete/{currency}', ['uses' => 'DeleteController@delete', 'as' => 'delete']);
+        //        Route::post('store', ['uses' => 'CreateController@store', 'as' => 'store']);
+        //        Route::post('update/{currency}', ['uses' => 'EditController@update', 'as' => 'update']);
+        //        Route::post('destroy/{currency}', ['uses' => 'DeleteController@destroy', 'as' => 'destroy']);
     }
 );
 
@@ -806,6 +815,7 @@ Route::group(
     static function (): void {
         Route::get('', ['uses' => 'PreferencesController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'PreferencesController@postIndex', 'as' => 'update']);
+        Route::post('test-notification', ['uses' => 'PreferencesController@testNotification', 'as' => 'test-notification']);
     }
 );
 
@@ -1398,6 +1408,11 @@ Route::group(
         // FF configuration:
         Route::get('configuration', ['uses' => 'ConfigurationController@index', 'as' => 'configuration.index']);
         Route::post('configuration', ['uses' => 'ConfigurationController@postIndex', 'as' => 'configuration.index.post']);
+
+        // routes for notifications settings.
+        Route::get('notifications', ['uses' => 'NotificationController@index', 'as' => 'notification.index']);
+        Route::post('notifications', ['uses' => 'NotificationController@postIndex', 'as' => 'notification.post']);
+        Route::post('notifications/test', ['uses' => 'NotificationController@testNotification', 'as' => 'notification.test']);
     }
 );
 

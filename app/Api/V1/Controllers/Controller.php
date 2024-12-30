@@ -28,6 +28,9 @@ use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use Carbon\Exceptions\InvalidFormatException;
 use FireflyIII\Models\Preference;
+use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -50,11 +53,13 @@ abstract class Controller extends BaseController
     use DispatchesJobs;
     use ValidatesRequests;
 
-    protected const string CONTENT_TYPE = 'application/vnd.api+json';
+    protected const string CONTENT_TYPE    = 'application/vnd.api+json';
 
     /** @var array<int, string> */
     protected array        $allowedSort;
     protected ParameterBag $parameters;
+    protected bool        $convertToNative = false;
+    protected TransactionCurrency $defaultCurrency;
 
     /**
      * Controller constructor.
@@ -67,8 +72,11 @@ abstract class Controller extends BaseController
             function ($request, $next) {
                 $this->parameters = $this->getParameters();
                 if (auth()->check()) {
-                    $language = app('steam')->getLanguage();
+                    $language              = Steam::getLanguage();
+                    $this->convertToNative = Amount::convertToNative();
+                    $this->defaultCurrency = Amount::getDefaultCurrency();
                     app()->setLocale($language);
+
                 }
 
                 return $next($request);
@@ -82,7 +90,7 @@ abstract class Controller extends BaseController
     private function getParameters(): ParameterBag
     {
         $bag      = new ParameterBag();
-        $page     = (int)request()->get('page');
+        $page     = (int) request()->get('page');
         if ($page < 1) {
             $page = 1;
         }
@@ -107,13 +115,13 @@ abstract class Controller extends BaseController
             $obj  = null;
             if (null !== $date) {
                 try {
-                    $obj = Carbon::parse((string)$date);
+                    $obj = Carbon::parse((string) $date);
                 } catch (InvalidDateException|InvalidFormatException $e) {
                     // don't care
                     app('log')->warning(
                         sprintf(
                             'Ignored invalid date "%s" in API controller parameter check: %s',
-                            substr((string)$date, 0, 20),
+                            substr((string) $date, 0, 20),
                             $e->getMessage()
                         )
                     );
@@ -134,7 +142,7 @@ abstract class Controller extends BaseController
                 $value = null;
             }
             if (null !== $value) {
-                $bag->set($integer, (int)$value);
+                $bag->set($integer, (int) $value);
             }
             if (null === $value
                 && 'limit' === $integer // @phpstan-ignore-line
@@ -144,7 +152,7 @@ abstract class Controller extends BaseController
                 $user     = auth()->user();
 
                 /** @var Preference $pageSize */
-                $pageSize = (int)app('preferences')->getForUser($user, 'listPageSize', 50)->data;
+                $pageSize = (int) app('preferences')->getForUser($user, 'listPageSize', 50)->data;
                 $bag->set($integer, $pageSize);
             }
         }
@@ -158,7 +166,7 @@ abstract class Controller extends BaseController
         $sortParameters = [];
 
         try {
-            $param = (string)request()->query->get('sort');
+            $param = (string) request()->query->get('sort');
         } catch (BadRequestException $e) {
             app('log')->error('Request field "sort" contains a non-scalar value. Value set to NULL.');
             app('log')->error($e->getMessage());

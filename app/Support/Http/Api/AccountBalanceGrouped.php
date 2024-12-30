@@ -38,6 +38,7 @@ class AccountBalanceGrouped
 {
     private array                 $accountIds;
     private string                $carbonFormat;
+    private ExchangeRateConverter $converter;
     private array                 $currencies = [];
     private array                 $data       = [];
     private TransactionCurrency   $default;
@@ -45,7 +46,6 @@ class AccountBalanceGrouped
     private array                 $journals   = [];
     private string                $preferredRange;
     private Carbon                $start;
-    private ExchangeRateConverter $converter;
 
     public function __construct()
     {
@@ -137,51 +137,6 @@ class AccountBalanceGrouped
             $this->processJournal($journal);
         }
         $converter->summarize();
-    }
-
-    public function setAccounts(Collection $accounts): void
-    {
-        $this->accountIds = $accounts->pluck('id')->toArray();
-    }
-
-    public function setDefault(TransactionCurrency $default): void
-    {
-        $this->default                  = $default;
-        $defaultCurrencyId              = $default->id;
-        $this->currencies               = [$default->id => $default]; // currency cache
-        $this->data[$defaultCurrencyId] = [
-            'currency_id'                    => (string) $defaultCurrencyId,
-            'currency_symbol'                => $default->symbol,
-            'currency_code'                  => $default->code,
-            'currency_name'                  => $default->name,
-            'currency_decimal_places'        => $default->decimal_places,
-            'native_currency_id'             => (string) $defaultCurrencyId,
-            'native_currency_symbol'         => $default->symbol,
-            'native_currency_code'           => $default->code,
-            'native_currency_name'           => $default->name,
-            'native_currency_decimal_places' => $default->decimal_places,
-        ];
-    }
-
-    public function setEnd(Carbon $end): void
-    {
-        $this->end = $end;
-    }
-
-    public function setJournals(array $journals): void
-    {
-        $this->journals = $journals;
-    }
-
-    public function setPreferredRange(string $preferredRange): void
-    {
-        $this->preferredRange = $preferredRange;
-        $this->carbonFormat   = app('navigation')->preferredCarbonFormatByPeriod($preferredRange);
-    }
-
-    public function setStart(Carbon $start): void
-    {
-        $this->start = $start;
     }
 
     private function processJournal(array $journal): void
@@ -291,5 +246,50 @@ class AccountBalanceGrouped
         }
 
         return $rate;
+    }
+
+    public function setAccounts(Collection $accounts): void
+    {
+        $this->accountIds = $accounts->pluck('id')->toArray();
+    }
+
+    public function setDefault(TransactionCurrency $default): void
+    {
+        $this->default                  = $default;
+        $defaultCurrencyId              = $default->id;
+        $this->currencies               = [$default->id => $default]; // currency cache
+        $this->data[$defaultCurrencyId] = [
+            'currency_id'                    => (string) $defaultCurrencyId,
+            'currency_symbol'                => $default->symbol,
+            'currency_code'                  => $default->code,
+            'currency_name'                  => $default->name,
+            'currency_decimal_places'        => $default->decimal_places,
+            'native_currency_id'             => (string) $defaultCurrencyId,
+            'native_currency_symbol'         => $default->symbol,
+            'native_currency_code'           => $default->code,
+            'native_currency_name'           => $default->name,
+            'native_currency_decimal_places' => $default->decimal_places,
+        ];
+    }
+
+    public function setEnd(Carbon $end): void
+    {
+        $this->end = $end;
+    }
+
+    public function setJournals(array $journals): void
+    {
+        $this->journals = $journals;
+    }
+
+    public function setPreferredRange(string $preferredRange): void
+    {
+        $this->preferredRange = $preferredRange;
+        $this->carbonFormat   = app('navigation')->preferredCarbonFormatByPeriod($preferredRange);
+    }
+
+    public function setStart(Carbon $start): void
+    {
+        $this->start = $start;
     }
 }

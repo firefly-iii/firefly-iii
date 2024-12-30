@@ -26,12 +26,12 @@ namespace FireflyIII\Models;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
-use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
@@ -43,7 +43,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class Account extends Model
 {
-    use Cachable;
     use HasFactory;
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;
@@ -51,16 +50,17 @@ class Account extends Model
 
     protected $casts
                                      = [
-            'created_at'      => 'datetime',
-            'updated_at'      => 'datetime',
-            'user_id'         => 'integer',
-            'deleted_at'      => 'datetime',
-            'active'          => 'boolean',
-            'encrypted'       => 'boolean',
-            'virtual_balance' => 'string',
+            'created_at'             => 'datetime',
+            'updated_at'             => 'datetime',
+            'user_id'                => 'integer',
+            'deleted_at'             => 'datetime',
+            'active'                 => 'boolean',
+            'encrypted'              => 'boolean',
+            'virtual_balance'        => 'string',
+            'native_virtual_balance' => 'string',
         ];
 
-    protected $fillable              = ['user_id', 'user_group_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban'];
+    protected $fillable              = ['user_id', 'user_group_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban', 'native_virtual_balance'];
 
     protected $hidden                = ['encrypted'];
     private bool $joinedAccountTypes = false;
@@ -93,6 +93,11 @@ class Account extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function accountBalances(): HasMany
+    {
+        return $this->hasMany(AccountBalance::class);
+    }
+
     public function accountType(): BelongsTo
     {
         return $this->belongsTo(AccountType::class);
@@ -122,11 +127,6 @@ class Account extends Model
         return $this->hasMany(AccountMeta::class);
     }
 
-    public function accountBalances(): HasMany
-    {
-        return $this->hasMany(AccountBalance::class);
-    }
-
     public function getEditNameAttribute(): string
     {
         $name = $this->name;
@@ -144,7 +144,7 @@ class Account extends Model
     }
 
     /**
-     * Get all of the notes.
+     * Get all the notes.
      */
     public function notes(): MorphMany
     {
@@ -159,9 +159,9 @@ class Account extends Model
         return $this->morphToMany(ObjectGroup::class, 'object_groupable');
     }
 
-    public function piggyBanks(): HasMany
+    public function piggyBanks(): BelongsToMany
     {
-        return $this->hasMany(PiggyBank::class);
+        return $this->belongsToMany(PiggyBank::class);
     }
 
     public function scopeAccountTypeIn(EloquentBuilder $query, array $types): void

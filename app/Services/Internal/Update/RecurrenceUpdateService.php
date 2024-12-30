@@ -74,7 +74,7 @@ class RecurrenceUpdateService
                 $recurrence->repetitions     = 0;
             }
             if (array_key_exists('nr_of_repetitions', $info)) {
-                if (0 !== (int)$info['nr_of_repetitions']) {
+                if (0 !== (int) $info['nr_of_repetitions']) {
                     $recurrence->repeat_until = null;
                 }
                 $recurrence->repetitions = $info['nr_of_repetitions'];
@@ -212,7 +212,7 @@ class RecurrenceUpdateService
         // First, make sure to loop all existing transactions and match them to a counterpart in the submitted transactions array.
         foreach ($originalTransactions as $i => $originalTransaction) {
             foreach ($transactions as $ii => $submittedTransaction) {
-                if (array_key_exists('id', $submittedTransaction) && (int)$originalTransaction['id'] === (int)$submittedTransaction['id']) {
+                if (array_key_exists('id', $submittedTransaction) && (int) $originalTransaction['id'] === (int) $submittedTransaction['id']) {
                     app('log')->debug(sprintf('Match original transaction #%d with an entry in the submitted array.', $originalTransaction['id']));
                     $combinations[] = [
                         'original'  => $originalTransaction,
@@ -241,7 +241,7 @@ class RecurrenceUpdateService
         // anything left in the original transactions array can be deleted.
         foreach ($originalTransactions as $original) {
             app('log')->debug(sprintf('Original transaction #%d is unmatched, delete it!', $original['id']));
-            $this->deleteTransaction($recurrence, (int)$original['id']);
+            $this->deleteTransaction($recurrence, (int) $original['id']);
         }
         // anything left is new.
         $this->createTransactions($recurrence, $transactions);
@@ -268,7 +268,7 @@ class RecurrenceUpdateService
         $foreignCurrency = null;
         if (array_key_exists('currency_id', $submitted) || array_key_exists('currency_code', $submitted)) {
             $currency = $currencyFactory->find(
-                array_key_exists('currency_id', $submitted) ? (int)$submitted['currency_id'] : null,
+                array_key_exists('currency_id', $submitted) ? (int) $submitted['currency_id'] : null,
                 array_key_exists('currency_code', $submitted) ? $submitted['currency_code'] : null
             );
         }
@@ -280,7 +280,7 @@ class RecurrenceUpdateService
         }
         if (array_key_exists('foreign_currency_id', $submitted) || array_key_exists('foreign_currency_code', $submitted)) {
             $foreignCurrency = $currencyFactory->find(
-                array_key_exists('foreign_currency_id', $submitted) ? (int)$submitted['foreign_currency_id'] : null,
+                array_key_exists('foreign_currency_id', $submitted) ? (int) $submitted['foreign_currency_id'] : null,
                 array_key_exists('foreign_currency_code', $submitted) ? $submitted['foreign_currency_code'] : null
             );
         }
@@ -309,29 +309,29 @@ class RecurrenceUpdateService
         }
         // update meta data
         if (array_key_exists('budget_id', $submitted)) {
-            $this->setBudget($transaction, (int)$submitted['budget_id']);
+            $this->setBudget($transaction, (int) $submitted['budget_id']);
         }
         if (array_key_exists('bill_id', $submitted)) {
-            $this->setBill($transaction, (int)$submitted['bill_id']);
+            $this->setBill($transaction, (int) $submitted['bill_id']);
         }
         // reset category if name is set but empty:
         // can be removed when v1 is retired.
-        if (array_key_exists('category_name', $submitted) && '' === (string)$submitted['category_name']) {
+        if (array_key_exists('category_name', $submitted) && '' === (string) $submitted['category_name']) {
             app('log')->debug('Category name is submitted but is empty. Set category to be empty.');
             $submitted['category_name'] = null;
             $submitted['category_id']   = 0;
         }
 
         if (array_key_exists('category_id', $submitted)) {
-            app('log')->debug(sprintf('Category ID is submitted, set category to be %d.', (int)$submitted['category_id']));
-            $this->setCategory($transaction, (int)$submitted['category_id']);
+            app('log')->debug(sprintf('Category ID is submitted, set category to be %d.', (int) $submitted['category_id']));
+            $this->setCategory($transaction, (int) $submitted['category_id']);
         }
 
         if (array_key_exists('tags', $submitted) && is_array($submitted['tags'])) {
             $this->updateTags($transaction, $submitted['tags']);
         }
         if (array_key_exists('piggy_bank_id', $submitted)) {
-            $this->updatePiggyBank($transaction, (int)$submitted['piggy_bank_id']);
+            $this->updatePiggyBank($transaction, (int) $submitted['piggy_bank_id']);
         }
     }
 

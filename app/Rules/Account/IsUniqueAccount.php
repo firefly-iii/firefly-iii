@@ -35,8 +35,14 @@ use Illuminate\Contracts\Validation\ValidationRule;
  */
 class IsUniqueAccount implements ValidationRule, DataAwareRule
 {
+    protected array    $data = [];
     protected \Closure $fail;
-    protected array   $data = [];
+
+    #[\Override]
+    public function setData(array $data): void
+    {
+        $this->data = $data;
+    }
 
     #[\Override]
     public function validate(string $attribute, mixed $value, \Closure $fail): void
@@ -99,28 +105,6 @@ class IsUniqueAccount implements ValidationRule, DataAwareRule
             ->where('name', $value)
             ->first()
         ;
-
-        return null === $result;
-    }
-
-    /**
-     * TODO duplicate from old validation class.
-     */
-    private function validateAccountAnonymously(): bool
-    {
-        if (!array_key_exists('user_id', $this->data)) {
-            $this->fail('No user ID provided.');
-
-            return false;
-        }
-
-        /** @var User $user */
-        $user   = User::find($this->data['user_id']);
-        $type   = AccountType::find($this->data['account_type_id'])->first();
-        $value  = $this->data['name'];
-
-        /** @var null|Account $result */
-        $result = $user->accounts()->where('account_type_id', $type->id)->where('name', $value)->first();
 
         return null === $result;
     }
@@ -196,9 +180,25 @@ class IsUniqueAccount implements ValidationRule, DataAwareRule
         return 0 === auth()->user()->accounts()->where('name', $value)->count();
     }
 
-    #[\Override]
-    public function setData(array $data): void
+    /**
+     * TODO duplicate from old validation class.
+     */
+    private function validateAccountAnonymously(): bool
     {
-        $this->data = $data;
+        if (!array_key_exists('user_id', $this->data)) {
+            $this->fail('No user ID provided.');
+
+            return false;
+        }
+
+        /** @var User $user */
+        $user   = User::find($this->data['user_id']);
+        $type   = AccountType::find($this->data['account_type_id'])->first();
+        $value  = $this->data['name'];
+
+        /** @var null|Account $result */
+        $result = $user->accounts()->where('account_type_id', $type->id)->where('name', $value)->first();
+
+        return null === $result;
     }
 }

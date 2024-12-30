@@ -28,7 +28,9 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
@@ -39,14 +41,24 @@ class ExchangeRateConverter
 {
     // use ConvertsExchangeRates;
     private array $fallback        = [];
+    private bool  $ignoreSettings  = false;
     private bool  $isPrepared      = false;
     private bool  $noPreparedRates = false;
     private array $prepared        = [];
     private int   $queryCount      = 0;
 
-    public function enabled(): bool
+    private UserGroup $userGroup;
+
+    public function __construct()
     {
-        return false !== config('cer.enabled');
+        if (auth()->check()) {
+            $this->userGroup = auth()->user()->userGroup;
+        }
+    }
+
+    public function setUserGroup(UserGroup $userGroup): void
+    {
+        $this->userGroup = $userGroup;
     }
 
     /**
@@ -61,7 +73,12 @@ class ExchangeRateConverter
         }
         $rate = $this->getCurrencyRate($from, $to, $date);
 
-        return bcmul($amount, $rate);
+        return Steam::bcround(bcmul($amount, $rate), $to->decimal_places);
+    }
+
+    public function enabled(): bool
+    {
+        return false !== config('cer.enabled') || true === $this->ignoreSettings;
     }
 
     /**
@@ -108,7 +125,7 @@ class ExchangeRateConverter
         if (null !== $rate) {
             $rate = bcdiv('1', $rate);
             Cache::forever($key, $rate);
-            Log::debug(sprintf('ExchangeRateConverter: Return DB rate from #%d to #%d on %s.', $from->id, $to->id, $date->format('Y-m-d')));
+            Log::debug(sprintf('ExchangeRateConverter: Return inverse DB rate from #%d to #%d on %s.', $from->id, $to->id, $date->format('Y-m-d')));
 
             return $rate;
         }
@@ -130,6 +147,11 @@ class ExchangeRateConverter
         Cache::forever($key, $rate);
 
         return $rate;
+    }
+
+    private function getCacheKey(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): string
+    {
+        return sprintf('cer-%d-%d-%s', $from->id, $to->id, $date->format('Y-m-d'));
     }
 
     private function getFromDB(int $from, int $to, string $date): ?string
@@ -160,8 +182,7 @@ class ExchangeRateConverter
         }
 
         /** @var null|CurrencyExchangeRate $result */
-        $result       = auth()->user()
-            ->currencyExchangeRates()
+        $result       = $this->userGroup->currencyExchangeRates()
             ->where('from_currency_id', $from)
             ->where('to_currency_id', $to)
             ->where('date', '<=', $date)
@@ -266,7 +287,7 @@ class ExchangeRateConverter
         $start->startOfDay();
         $end->endOfDay();
         Log::debug(sprintf('Preparing for %s to %s between %s and %s', $from->code, $to->code, $start->format('Y-m-d'), $end->format('Y-m-d')));
-        $set              = auth()->user()
+        $set              = $this->userGroup
             ->currencyExchangeRates()
             ->where('from_currency_id', $from->id)
             ->where('to_currency_id', $to->id)
@@ -332,16 +353,16 @@ class ExchangeRateConverter
         Log::debug(sprintf('Fallback rate %s > %s = %s', $to->code, $from->code, bcdiv('1', $fallback)));
     }
 
+    public function setIgnoreSettings(bool $ignoreSettings): void
+    {
+        $this->ignoreSettings = $ignoreSettings;
+    }
+
     public function summarize(): void
     {
         if (false === $this->enabled()) {
             return;
         }
         Log::debug(sprintf('ExchangeRateConverter ran %d queries.', $this->queryCount));
-    }
-
-    private function getCacheKey(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): string
-    {
-        return sprintf('cer-%d-%d-%s', $from->id, $to->id, $date->format('Y-m-d'));
     }
 }

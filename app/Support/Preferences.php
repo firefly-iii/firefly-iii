@@ -26,9 +26,12 @@ namespace FireflyIII\Support;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Preference;
 use FireflyIII\User;
+use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Contracts\Encryption\EncryptException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
 /**
@@ -95,7 +98,7 @@ class Preferences
         $groupId = null;
         $items   = config('firefly.admin_specific_prefs') ?? [];
         if (in_array($preferenceName, $items, true)) {
-            $groupId = (int)$user->user_group_id;
+            $groupId = (int) $user->user_group_id;
         }
 
         return $groupId;
@@ -123,6 +126,8 @@ class Preferences
     {
         $fullName   = sprintf('preference%s%s', $user->id, $name);
         $groupId    = $this->getUserGroupId($user, $name);
+        $groupId    = 0 === (int) $groupId ? null : (int) $groupId;
+
         Cache::forget($fullName);
 
         /** @var null|Preference $pref */
@@ -138,9 +143,10 @@ class Preferences
         }
         if (null === $pref) {
             $pref                = new Preference();
-            $pref->user_id       = (int)$user->id;
+            $pref->user_id       = (int) $user->id;
             $pref->user_group_id = $groupId;
             $pref->name          = $name;
+
         }
         $pref->data = $value;
         $pref->save();
@@ -189,6 +195,50 @@ class Preferences
         return $result;
     }
 
+    public function getEncrypted(string $name, $default = null): ?Preference
+    {
+        $result = $this->get($name, $default);
+        if (null === $result) {
+            return null;
+        }
+        if ('' === $result->data) {
+            Log::warning(sprintf('Empty encrypted preference found: "%s"', $name));
+
+            return $result;
+        }
+
+        try {
+            $result->data = decrypt($result->data);
+        } catch (DecryptException $e) {
+            Log::error(sprintf('Could not decrypt preference "%s": %s', $name, $e->getMessage()));
+
+            return $result;
+        }
+
+        return $result;
+    }
+
+    public function getEncryptedForUser(User $user, string $name, null|array|bool|int|string $default = null): ?Preference
+    {
+        $result = $this->getForUser($user, $name, $default);
+        if ('' === $result->data) {
+            Log::warning(sprintf('Empty encrypted preference found: "%s"', $name));
+
+            return $result;
+        }
+
+        try {
+            $result->data = decrypt($result->data);
+        } catch (DecryptException $e) {
+            Log::error(sprintf('Could not decrypt preference "%s": %s', $name, $e->getMessage()));
+
+            return $result;
+        }
+
+
+        return $result;
+    }
+
     public function getFresh(string $name, null|array|bool|int|string $default = null): ?Preference
     {
         /** @var null|User $user */
@@ -218,7 +268,7 @@ class Preferences
             $lastActivity = implode(',', $lastActivity);
         }
 
-        return hash('sha256', (string)$lastActivity);
+        return hash('sha256', (string) $lastActivity);
     }
 
     public function mark(): void
@@ -241,5 +291,18 @@ class Preferences
         }
 
         return $this->setForUser($user, $name, $value);
+    }
+
+    public function setEncrypted(string $name, mixed $value): Preference
+    {
+        try {
+            $encrypted = encrypt($value);
+        } catch (EncryptException $e) {
+            Log::error(sprintf('Could not encrypt preference "%s": %s', $name, $e->getMessage()));
+
+            throw new FireflyException(sprintf('Could not encrypt preference "%s". Cowardly refuse to continue.', $name));
+        }
+
+        return $this->set($name, $encrypted);
     }
 }

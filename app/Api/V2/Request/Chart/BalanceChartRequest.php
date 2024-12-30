@@ -40,7 +40,8 @@ class BalanceChartRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
     use ValidatesUserGroupTrait;
-    protected array                    $acceptedRoles = [UserRoleEnum::READ_ONLY];
+
+    protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
     /**
      * Get all data from the request.

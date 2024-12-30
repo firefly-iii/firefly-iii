@@ -52,7 +52,7 @@ class CreateController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.bills'));
+                app('view')->share('title', (string) trans('firefly.bills'));
                 app('view')->share('mainTitleIcon', 'fa-calendar-o');
                 $this->attachments = app(AttachmentHelperInterface::class);
                 $this->repository  = app(BillRepositoryInterface::class);
@@ -74,10 +74,10 @@ class CreateController extends Controller
         /** @var array $billPeriods */
         $billPeriods     = config('firefly.bill_periods');
         foreach ($billPeriods as $current) {
-            $periods[$current] = (string)trans('firefly.repeat_freq_'.$current);
+            $periods[$current] = (string) trans('firefly.repeat_freq_'.$current);
         }
-        $subTitle        = (string)trans('firefly.create_new_bill');
-        $defaultCurrency = app('amount')->getDefaultCurrency();
+        $subTitle        = (string) trans('firefly.create_new_bill');
+        $defaultCurrency = $this->defaultCurrency;
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('bills.create.fromStore')) {
@@ -101,13 +101,13 @@ class CreateController extends Controller
             $bill = $this->repository->store($billData);
         } catch (FireflyException $e) {
             app('log')->error($e->getMessage());
-            $request->session()->flash('error', (string)trans('firefly.bill_store_error'));
+            $request->session()->flash('error', (string) trans('firefly.bill_store_error'));
 
             return redirect(route('bills.create'))->withInput();
         }
 
         Log::channel('audit')->info('Stored new bill.', $billData);
-        $request->session()->flash('success', (string)trans('firefly.stored_new_bill', ['name' => $bill->name]));
+        $request->session()->flash('success', (string) trans('firefly.stored_new_bill', ['name' => $bill->name]));
         app('preferences')->mark();
 
         /** @var null|array $files */
@@ -117,7 +117,7 @@ class CreateController extends Controller
         }
         if (null !== $files && auth()->user()->hasRole('demo')) {
             Log::channel('audit')->warning(sprintf('The demo user is trying to upload attachments in %s.', __METHOD__));
-            session()->flash('info', (string)trans('firefly.no_att_demo_user'));
+            session()->flash('info', (string) trans('firefly.no_att_demo_user'));
         }
 
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {

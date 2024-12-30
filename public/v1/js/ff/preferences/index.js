@@ -23,10 +23,19 @@
 $(document).ready(function () {
     "use strict";
     if (!Modernizr.inputtypes.date) {
-        $('input[type="date"]').datepicker(
-            {
-                dateFormat: 'yy-mm-dd'
-            }
-        );
+        $('input[type="date"]').datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
     }
+    $('.submit-test').click(submitTest);
 });
+
+function submitTest(e) {
+    var current = $(e.currentTarget);
+    var channel = current.data('channel');
+
+    $.post(postUrl, {channel: channel}, function () {
+        window.location.reload(true);
+    });
+    return false;
+}

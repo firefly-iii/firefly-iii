@@ -64,7 +64,7 @@ trait RequestInformation
                     'type'            => $triggerInfo['type'] ?? '',
                     'value'           => $triggerInfo['value'] ?? '',
                     'prohibited'      => $triggerInfo['prohibited'] ?? false,
-                    'stop_processing' => 1 === (int)($triggerInfo['stop_processing'] ?? '0'),
+                    'stop_processing' => 1 === (int) ($triggerInfo['stop_processing'] ?? '0'),
                 ];
                 $current    = RuleFormRequest::replaceAmountTrigger($current);
                 $triggers[] = $current;
@@ -170,11 +170,11 @@ trait RequestInformation
     final protected function validatePassword(User $user, string $current, string $new): bool // get request info
     {
         if (!\Hash::check($current, $user->password)) {
-            throw new ValidationException((string)trans('firefly.invalid_current_password'));
+            throw new ValidationException((string) trans('firefly.invalid_current_password'));
         }
 
         if ($current === $new) {
-            throw new ValidationException((string)trans('firefly.should_change'));
+            throw new ValidationException((string) trans('firefly.should_change'));
         }
 
         return true;

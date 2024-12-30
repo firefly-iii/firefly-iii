@@ -86,9 +86,9 @@ trait ModelInformation
         /** @var AccountType $mortgage */
         $mortgage       = $repository->getAccountTypeByType(AccountType::MORTGAGE);
         $liabilityTypes = [
-            $debt->id     => (string)trans(sprintf('firefly.account_type_%s', AccountTypeEnum::DEBT->value)),
-            $loan->id     => (string)trans(sprintf('firefly.account_type_%s', AccountTypeEnum::LOAN->value)),
-            $mortgage->id => (string)trans(sprintf('firefly.account_type_%s', AccountTypeEnum::MORTGAGE->value)),
+            $debt->id     => (string) trans(sprintf('firefly.account_type_%s', AccountTypeEnum::DEBT->value)),
+            $loan->id     => (string) trans(sprintf('firefly.account_type_%s', AccountTypeEnum::LOAN->value)),
+            $mortgage->id => (string) trans(sprintf('firefly.account_type_%s', AccountTypeEnum::MORTGAGE->value)),
         ];
         asort($liabilityTypes);
 
@@ -99,7 +99,7 @@ trait ModelInformation
     {
         $roles = [];
         foreach (config('firefly.accountRoles') as $role) {
-            $roles[$role] = (string)trans(sprintf('firefly.account_role_%s', $role));
+            $roles[$role] = (string) trans(sprintf('firefly.account_role_%s', $role));
         }
 
         return $roles;
@@ -117,7 +117,7 @@ trait ModelInformation
         $triggers     = [];
         foreach ($operators as $key => $operator) {
             if ('user_action' !== $key && false === $operator['alias']) {
-                $triggers[$key] = (string)trans(sprintf('firefly.rule_trigger_%s_choice', $key));
+                $triggers[$key] = (string) trans(sprintf('firefly.rule_trigger_%s_choice', $key));
             }
         }
         asort($triggers);
@@ -168,7 +168,7 @@ trait ModelInformation
         $triggers                = [];
         foreach ($operators as $key => $operator) {
             if ('user_action' !== $key && false === $operator['alias']) {
-                $triggers[$key] = (string)trans(sprintf('firefly.rule_trigger_%s_choice', $key));
+                $triggers[$key] = (string) trans(sprintf('firefly.rule_trigger_%s_choice', $key));
             }
         }
         asort($triggers);

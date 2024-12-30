@@ -29,7 +29,9 @@ use FireflyIII\Api\V1\Requests\Insight\GenericRequest;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class BillController
@@ -63,11 +65,13 @@ class BillController extends Controller
      */
     public function bill(GenericRequest $request): JsonResponse
     {
-        $accounts   = $request->getAssetAccounts();
-        $bills      = $request->getBills();
-        $start      = $request->getStart();
-        $end        = $request->getEnd();
-        $response   = [];
+        $accounts        = $request->getAssetAccounts();
+        $bills           = $request->getBills();
+        $start           = $request->getStart();
+        $end             = $request->getEnd();
+        $convertToNative = Amount::convertToNative();
+        $default         = Amount::getDefaultCurrency();
+        $response        = [];
 
         // get all bills:
         if (0 === $bills->count()) {
@@ -75,39 +79,42 @@ class BillController extends Controller
         }
 
         // collect all expenses in this period (regardless of type) by the given bills and accounts.
-        $collector  = app(GroupCollectorInterface::class);
+        $collector       = app(GroupCollectorInterface::class);
         $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->setRange($start, $end)->setSourceAccounts($accounts);
         $collector->setBills($bills);
 
-        $genericSet = $collector->getExtractedJournals();
+        $genericSet      = $collector->getExtractedJournals();
         foreach ($genericSet as $journal) {
-            $billId            = (int)$journal['bill_id'];
-            $currencyId        = (int)$journal['currency_id'];
-            $foreignCurrencyId = (int)$journal['foreign_currency_id'];
-            $key               = sprintf('%d-%d', $billId, $currencyId);
-            $foreignKey        = sprintf('%d-%d', $billId, $foreignCurrencyId);
+            $billId       = (int) $journal['bill_id'];
+            $currencyId   = (int) $journal['currency_id'];
+            $currencyCode = $journal['currency_code'];
+            $field        = 'amount';
+
+            // use the native amount if the user wants to convert to native currency
+            if ($convertToNative && $currencyId !== $default->id) {
+                $currencyId   = $default->id;
+                $currencyCode = $default->code;
+                $field        = 'native_amount';
+            }
+            // use foreign amount when the foreign currency IS the default currency.
+            if ($convertToNative && $journal['currency_id'] !== $default->id && $default->id === $journal['foreign_currency_id']) {
+                $field = 'foreign_amount';
+            }
+            Log::debug(sprintf('Journal #%d in bill #%d will use %s (%s %s)', $journal['transaction_group_id'], $billId, $field, $currencyCode, $journal[$field] ?? '0'));
+
+            $key          = sprintf('%d-%d', $billId, $currencyId);
 
             if (0 !== $currencyId) {
                 $response[$key] ??= [
-                    'id'               => (string)$billId,
+                    'id'               => (string) $billId,
                     'name'             => $journal['bill_name'],
                     'difference'       => '0',
                     'difference_float' => 0,
-                    'currency_id'      => (string)$currencyId,
-                    'currency_code'    => $journal['currency_code'],
+                    'currency_id'      => (string) $currencyId,
+                    'currency_code'    => $currencyCode,
                 ];
-                $response[$key]['difference']       = bcadd($response[$key]['difference'], $journal['amount']);
-                $response[$key]['difference_float'] = (float)$response[$key]['difference']; // intentional float
-            }
-            if (0 !== $foreignCurrencyId) {
-                $response[$foreignKey] ??= [
-                    'difference'       => '0',
-                    'difference_float' => 0,
-                    'currency_id'      => (string)$foreignCurrencyId,
-                    'currency_code'    => $journal['foreign_currency_code'],
-                ];
-                $response[$foreignKey]['difference']       = bcadd($response[$foreignKey]['difference'], $journal['foreign_amount']);
-                $response[$foreignKey]['difference_float'] = (float)$response[$foreignKey]['difference']; // intentional float
+                $response[$key]['difference']       = bcadd($response[$key]['difference'], (string) ($journal[$field] ?? '0'));
+                $response[$key]['difference_float'] = (float) $response[$key]['difference']; // intentional float
             }
         }
 
@@ -122,41 +129,46 @@ class BillController extends Controller
      */
     public function noBill(GenericRequest $request): JsonResponse
     {
-        $accounts   = $request->getAssetAccounts();
-        $start      = $request->getStart();
-        $end        = $request->getEnd();
-        $response   = [];
+        $accounts        = $request->getAssetAccounts();
+        $start           = $request->getStart();
+        $end             = $request->getEnd();
+        $convertToNative = Amount::convertToNative();
+        $default         = Amount::getDefaultCurrency();
+        $response        = [];
 
         // collect all expenses in this period (regardless of type) by the given bills and accounts.
-        $collector  = app(GroupCollectorInterface::class);
+        $collector       = app(GroupCollectorInterface::class);
         $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->setRange($start, $end)->setSourceAccounts($accounts);
         $collector->withoutBill();
 
-        $genericSet = $collector->getExtractedJournals();
+        $genericSet      = $collector->getExtractedJournals();
 
         foreach ($genericSet as $journal) {
-            $currencyId        = (int)$journal['currency_id'];
-            $foreignCurrencyId = (int)$journal['foreign_currency_id'];
+            $currencyId   = (int) $journal['currency_id'];
+            $currencyCode = $journal['currency_code'];
+            $field        = 'amount';
+
+            // use the native amount if the user wants to convert to native currency
+            if ($convertToNative && $currencyId !== $default->id) {
+                $currencyId   = $default->id;
+                $currencyCode = $default->code;
+                $field        = 'native_amount';
+            }
+            // use foreign amount when the foreign currency IS the default currency.
+            if ($convertToNative && $journal['currency_id'] !== $default->id && $default->id === $journal['foreign_currency_id']) {
+                $field = 'foreign_amount';
+            }
+            Log::debug(sprintf('Journal #%d will use %s (%s %s)', $journal['transaction_group_id'], $field, $currencyCode, $journal[$field] ?? '0'));
 
             if (0 !== $currencyId) {
                 $response[$currencyId] ??= [
                     'difference'       => '0',
                     'difference_float' => 0,
-                    'currency_id'      => (string)$currencyId,
-                    'currency_code'    => $journal['currency_code'],
+                    'currency_id'      => (string) $currencyId,
+                    'currency_code'    => $currencyCode,
                 ];
-                $response[$currencyId]['difference']       = bcadd($response[$currencyId]['difference'], $journal['amount']);
-                $response[$currencyId]['difference_float'] = (float)$response[$currencyId]['difference']; // intentional float
-            }
-            if (0 !== $foreignCurrencyId) {
-                $response[$foreignCurrencyId] ??= [
-                    'difference'       => '0',
-                    'difference_float' => 0,
-                    'currency_id'      => (string)$foreignCurrencyId,
-                    'currency_code'    => $journal['foreign_currency_code'],
-                ];
-                $response[$foreignCurrencyId]['difference']       = bcadd($response[$foreignCurrencyId]['difference'], $journal['foreign_amount']);
-                $response[$foreignCurrencyId]['difference_float'] = (float)$response[$foreignCurrencyId]['difference']; // intentional float
+                $response[$currencyId]['difference']       = bcadd($response[$currencyId]['difference'], (string) ($journal[$field] ?? '0'));
+                $response[$currencyId]['difference_float'] = (float) $response[$currencyId]['difference']; // intentional float
             }
         }
 

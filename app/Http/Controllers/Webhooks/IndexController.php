@@ -43,7 +43,7 @@ class IndexController extends Controller
         $this->middleware(
             static function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-bolt');
-                app('view')->share('title', (string)trans('firefly.webhooks'));
+                app('view')->share('title', (string) trans('firefly.webhooks'));
 
                 return $next($request);
             }

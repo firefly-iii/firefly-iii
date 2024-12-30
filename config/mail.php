@@ -39,7 +39,7 @@ return [
         'smtp'       => [
             'transport'   => 'smtp',
             'host'        => envNonEmpty('MAIL_HOST', 'smtp.mailtrap.io'),
-            'port'        => (int)env('MAIL_PORT', 2525),
+            'port'        => (int) env('MAIL_PORT', 2525),
             'encryption'  => envNonEmpty('MAIL_ENCRYPTION', 'tls'),
             'username'    => envNonEmpty('MAIL_USERNAME', 'user@example.com'),
             'password'    => envNonEmpty('MAIL_PASSWORD', 'password'),

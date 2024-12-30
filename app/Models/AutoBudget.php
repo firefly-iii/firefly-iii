@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use FireflyIII\Enums\AutoBudgetType;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -39,19 +38,20 @@ class AutoBudget extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    /** @deprecated */
+    #[\Deprecated] /** @deprecated  */
     public const int AUTO_BUDGET_ADJUSTED = 3;
 
-    /** @deprecated */
+    #[\Deprecated] /** @deprecated  */
     public const int AUTO_BUDGET_RESET    = 1;
 
-    /** @deprecated */
+    #[\Deprecated] /** @deprecated  */
     public const int AUTO_BUDGET_ROLLOVER = 2;
-    protected $fillable                   = ['budget_id', 'amount', 'period'];
-
-    protected $casts                      = [
-        'amount' => 'string',
-    ];
+    protected $casts
+                                          = [
+            'amount'        => 'string',
+            'native_amount' => 'string',
+        ];
+    protected $fillable                   = ['budget_id', 'amount', 'period', 'native_amount'];
 
     public function budget(): BelongsTo
     {
@@ -63,6 +63,20 @@ class AutoBudget extends Model
         return $this->belongsTo(TransactionCurrency::class);
     }
 
+    protected function amount(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (string) $value,
+        );
+    }
+
+    protected function budgetId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int) $value,
+        );
+    }
+
     protected function casts(): array
     {
         return [
@@ -70,24 +84,10 @@ class AutoBudget extends Model
         ];
     }
 
-    protected function amount(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (string)$value,
-        );
-    }
-
-    protected function budgetId(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (int)$value,
-        );
-    }
-
     protected function transactionCurrencyId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
         );
     }
 }

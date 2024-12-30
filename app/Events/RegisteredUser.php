@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Events;
 
+use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\User;
 use Illuminate\Queue\SerializesModels;
 
@@ -34,13 +35,15 @@ class RegisteredUser extends Event
 {
     use SerializesModels;
 
-    public User $user;
+    public OwnerNotifiable $owner;
+    public User            $user;
 
     /**
      * Create a new event instance. This event is triggered when a new user registers.
      */
-    public function __construct(User $user)
+    public function __construct(OwnerNotifiable $owner, User $user)
     {
-        $this->user = $user;
+        $this->user  = $user;
+        $this->owner = $owner;
     }
 }

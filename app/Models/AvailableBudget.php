@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
@@ -50,9 +51,10 @@ class AvailableBudget extends Model
             'end_date'                => 'date',
             'transaction_currency_id' => 'int',
             'amount'                  => 'string',
+            'native_amount'           => 'string',
         ];
 
-    protected $fillable = ['user_id', 'user_group_id', 'transaction_currency_id', 'amount', 'start_date', 'end_date', 'start_date_tz', 'end_date_tz'];
+    protected $fillable = ['user_id', 'user_group_id', 'transaction_currency_id', 'amount', 'start_date', 'end_date', 'start_date_tz', 'end_date_tz', 'native_amount'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
@@ -62,7 +64,7 @@ class AvailableBudget extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $availableBudgetId = (int)$value;
+            $availableBudgetId = (int) $value;
 
             /** @var User $user */
             $user              = auth()->user();
@@ -90,14 +92,30 @@ class AvailableBudget extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string)$value,
+            get: static fn ($value) => (string) $value,
         );
     }
 
     protected function transactionCurrencyId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value) => (int) $value,
+        );
+    }
+
+    protected function startDate(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => Carbon::parse($value),
+            set: fn (Carbon $value) => $value->format('Y-m-d'),
+        );
+    }
+
+    protected function endDate(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => Carbon::parse($value),
+            set: fn (Carbon $value) => $value->format('Y-m-d'),
         );
     }
 }

@@ -105,19 +105,18 @@ class ShowController extends Controller
     public function show(TransactionCurrency $currency): JsonResponse
     {
         /** @var User $user */
-        $user            = auth()->user();
-        $manager         = $this->getManager();
-        $defaultCurrency = app('amount')->getDefaultCurrencyByUserGroup($user->userGroup);
-        $this->parameters->set('defaultCurrency', $defaultCurrency);
+        $user        = auth()->user();
+        $manager     = $this->getManager();
+        $this->parameters->set('defaultCurrency', $this->defaultCurrency);
 
         // update fields with user info.
         $currency->refreshForUser($user);
 
         /** @var CurrencyTransformer $transformer */
-        $transformer     = app(CurrencyTransformer::class);
+        $transformer = app(CurrencyTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource        = new Item($currency, $transformer, 'currencies');
+        $resource    = new Item($currency, $transformer, 'currencies');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
@@ -135,7 +134,7 @@ class ShowController extends Controller
         /** @var User $user */
         $user        = auth()->user();
         $manager     = $this->getManager();
-        $currency    = app('amount')->getDefaultCurrencyByUserGroup($user->userGroup);
+        $currency    = $this->defaultCurrency;
 
         // update fields with user info.
         $currency->refreshForUser($user);

@@ -25,9 +25,11 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Support\Report\Summarizer\TransactionSummarizer;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
@@ -48,14 +50,14 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
         $collector    = app(GroupCollectorInterface::class);
 
         $collector->setAccounts($accounts)->setRange($start, $end);
-        $collector->setTypes([TransactionType::WITHDRAWAL]);
+        $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
         $collector->withoutBudget();
         $journals     = $collector->getExtractedJournals();
         $data         = [];
 
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $currencyId                          = (int)$journal['currency_id'];
+            $currencyId                          = (int) $journal['currency_id'];
 
             $data[$currencyId] ??= [
                 'id'                      => 0,
@@ -79,54 +81,6 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
         return $data;
     }
 
-    /**
-     * @deprecated
-     */
-    public function spentInPeriodWoBudgetMc(Collection $accounts, Carbon $start, Carbon $end): array
-    {
-        /** @var GroupCollectorInterface $collector */
-        $collector  = app(GroupCollectorInterface::class);
-
-        $collector->setUser($this->user);
-        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->withoutBudget();
-
-        if ($accounts->count() > 0) {
-            $collector->setAccounts($accounts);
-        }
-        $journals   = $collector->getExtractedJournals();
-        $return     = [];
-        $total      = [];
-        $currencies = [];
-
-        /** @var array $journal */
-        foreach ($journals as $journal) {
-            $code         = $journal['currency_code'];
-            if (!array_key_exists($code, $currencies)) {
-                $currencies[$code] = [
-                    'id'             => $journal['currency_id'],
-                    'name'           => $journal['currency_name'],
-                    'symbol'         => $journal['currency_symbol'],
-                    'decimal_places' => $journal['currency_decimal_places'],
-                ];
-            }
-            $total[$code] = array_key_exists($code, $total) ? bcadd($total[$code], $journal['amount']) : $journal['amount'];
-        }
-        foreach ($total as $code => $spent) {
-            /** @var TransactionCurrency $currency */
-            $currency = $currencies[$code];
-            $return[] = [
-                'currency_id'             => (string)$currency['id'],
-                'currency_code'           => $code,
-                'currency_name'           => $currency['name'],
-                'currency_symbol'         => $currency['symbol'],
-                'currency_decimal_places' => $currency['decimal_places'],
-                'amount'                  => app('steam')->bcround($spent, $currency['decimal_places']),
-            ];
-        }
-
-        return $return;
-    }
-
     public function setUser(null|Authenticatable|User $user): void
     {
         if ($user instanceof User) {
@@ -134,14 +88,10 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
         }
     }
 
-    /**
-     * TODO this method does not include multi currency. It just counts.
-     * TODO this probably also applies to the other "sumExpenses" methods.
-     */
     public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?TransactionCurrency $currency = null): array
     {
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector  = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL]);
 
         if (null !== $accounts && $accounts->count() > 0) {
@@ -152,22 +102,9 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
         }
         $collector->withoutBudget();
         $collector->withBudgetInformation();
-        $journals  = $collector->getExtractedJournals();
-        $array     = [];
+        $journals   = $collector->getExtractedJournals();
+        $summarizer = new TransactionSummarizer($this->user);
 
-        foreach ($journals as $journal) {
-            $currencyId                = (int)$journal['currency_id'];
-            $array[$currencyId] ??= [
-                'sum'                     => '0',
-                'currency_id'             => $currencyId,
-                'currency_name'           => $journal['currency_name'],
-                'currency_symbol'         => $journal['currency_symbol'],
-                'currency_code'           => $journal['currency_code'],
-                'currency_decimal_places' => $journal['currency_decimal_places'],
-            ];
-            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->negative($journal['amount']));
-        }
-
-        return $array;
+        return $summarizer->groupByCurrencyId($journals);
     }
 }

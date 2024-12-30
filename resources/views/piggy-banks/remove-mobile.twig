@@ -14,15 +14,17 @@
                     </div>
                     <div class="box-body">
 
-                        <p>
-                            {{ 'max_amount_remove'|_ }}: {{ formatAmountByCurrency(currency, repetition.currentamount) }}.
-                        </p>
+                        {% for account in accounts %}
+                            <p>
+                                {{  account.account.name }}: {{ 'max_amount_remove'|_ }}: {{ formatAmountByCurrency(piggyBank.transactionCurrency, account.saved_so_far) }}.
+                            </p>
+                            <div class="input-group">
+                                <div class="input-group-addon">{{ piggyBank.transactionCurrency.symbol|raw }}</div>
+                                <input step="any" class="form-control" id="amount_{{ account.account.id }}" autocomplete="off" name="amount[{{ account.account.id }}]" max="{{ account.saved_so_far }}"
+                                       type="number">
+                            </div>
+                        {% endfor %}
 
-                        <div class="input-group">
-                            <div class="input-group-addon">{{ currency.symbol|raw }}</div>
-                            <input step="any" class="form-control" id="amount" autocomplete="off" name="amount" max="{{ repetition.currentamount }}"
-                                   type="number"/>
-                        </div>
                         <p>
                             &nbsp;
                         </p>

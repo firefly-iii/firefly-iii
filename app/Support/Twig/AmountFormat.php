@@ -75,6 +75,7 @@ class AmountFormat extends AbstractExtension
             $this->formatAmountByAccount(),
             $this->formatAmountBySymbol(),
             $this->formatAmountByCurrency(),
+            $this->formatAmountByCode(),
         ];
     }
 
@@ -93,6 +94,26 @@ class AmountFormat extends AbstractExtension
                 /** @var AccountRepositoryInterface $accountRepos */
                 $accountRepos = app(AccountRepositoryInterface::class);
                 $currency     = $accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
+
+                return app('amount')->formatAnything($currency, $amount, $coloured);
+            },
+            ['is_safe' => ['html']]
+        );
+    }
+
+    /**
+     * Use the code to format a currency.
+     */
+    protected function formatAmountByCode(): TwigFunction
+    {
+        // formatAmountByCode
+        return new TwigFunction(
+            'formatAmountByCode',
+            static function (string $amount, string $code, ?bool $coloured = null): string {
+                $coloured ??= true;
+
+                /** @var TransactionCurrency $currency */
+                $currency = TransactionCurrency::whereCode($code)->first();
 
                 return app('amount')->formatAnything($currency, $amount, $coloured);
             },

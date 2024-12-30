@@ -26,10 +26,11 @@ namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -61,7 +62,7 @@ class AccountController extends Controller
                 return $next($request);
             }
         );
-        $this->balanceTypes = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
+        $this->balanceTypes = [AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value];
     }
 
     /**
@@ -73,40 +74,40 @@ class AccountController extends Controller
      */
     public function accounts(AutocompleteRequest $request): JsonResponse
     {
-        $data            = $request->getData();
-        $types           = $data['types'];
-        $query           = $data['query'];
-        $date            = $data['date'] ?? today(config('app.timezone'));
-        $return          = [];
-        $result          = $this->repository->searchAccount((string)$query, $types, $this->parameters->get('limit'));
-
-        // TODO this code is duplicated in the V2 Autocomplete controller, which means this code is due to be deprecated.
-        $defaultCurrency = app('amount')->getDefaultCurrency();
+        $data   = $request->getData();
+        $types  = $data['types'];
+        $query  = $data['query'];
+        $date   = $data['date'] ?? today(config('app.timezone'));
+        $return = [];
+        $result = $this->repository->searchAccount((string) $query, $types, $this->parameters->get('limit'));
 
         /** @var Account $account */
         foreach ($result as $account) {
             $nameWithBalance = $account->name;
-            $currency        = $this->repository->getAccountCurrency($account) ?? $defaultCurrency;
-
+            $currency        = $this->repository->getAccountCurrency($account) ?? $this->defaultCurrency;
+            $useCurrency     = $currency;
             if (in_array($account->accountType->type, $this->balanceTypes, true)) {
-                $balance         = app('steam')->balance($account, $date);
+                $balance         = Steam::finalAccountBalance($account, $date);
+                $key             = $this->convertToNative && $currency->id !== $this->defaultCurrency->id ? 'native_balance' : 'balance';
+                $useCurrency     = $this->convertToNative && $currency->id !== $this->defaultCurrency->id ? $this->defaultCurrency : $currency;
+                $amount          = $balance[$key] ?? '0';
                 $nameWithBalance = sprintf(
                     '%s (%s)',
                     $account->name,
-                    app('amount')->formatAnything($currency, $balance, false)
+                    app('amount')->formatAnything($useCurrency, $amount, false)
                 );
             }
 
             $return[]        = [
-                'id'                      => (string)$account->id,
+                'id'                      => (string) $account->id,
                 'name'                    => $account->name,
                 'name_with_balance'       => $nameWithBalance,
                 'type'                    => $account->accountType->type,
-                'currency_id'             => (string)$currency->id,
-                'currency_name'           => $currency->name,
-                'currency_code'           => $currency->code,
-                'currency_symbol'         => $currency->symbol,
-                'currency_decimal_places' => $currency->decimal_places,
+                'currency_id'             => (string) $useCurrency->id,
+                'currency_name'           => $useCurrency->name,
+                'currency_code'           => $useCurrency->code,
+                'currency_symbol'         => $useCurrency->symbol,
+                'currency_decimal_places' => $useCurrency->decimal_places,
             ];
         }
 
@@ -114,9 +115,9 @@ class AccountController extends Controller
         usort(
             $return,
             static function (array $left, array $right) {
-                $order = [AccountType::ASSET, AccountType::REVENUE, AccountType::EXPENSE];
-                $posA  = (int)array_search($left['type'], $order, true);
-                $posB  = (int)array_search($right['type'], $order, true);
+                $order = [AccountTypeEnum::ASSET->value, AccountTypeEnum::REVENUE->value, AccountTypeEnum::EXPENSE->value];
+                $posA  = (int) array_search($left['type'], $order, true);
+                $posB  = (int) array_search($right['type'], $order, true);
 
                 return $posA - $posB;
             }

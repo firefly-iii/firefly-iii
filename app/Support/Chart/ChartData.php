@@ -35,15 +35,6 @@ class ChartData
         $this->series = [];
     }
 
-    public function render(): array
-    {
-        if (0 === count($this->series)) {
-            throw new FireflyException('No series added to chart');
-        }
-
-        return $this->series;
-    }
-
     /**
      * @throws FireflyException
      */
@@ -63,5 +54,14 @@ class ChartData
         }
 
         $this->series[] = $data;
+    }
+
+    public function render(): array
+    {
+        if (0 === count($this->series)) {
+            throw new FireflyException('No series added to chart');
+        }
+
+        return $this->series;
     }
 }

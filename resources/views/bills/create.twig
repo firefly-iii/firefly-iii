@@ -6,7 +6,7 @@
 
 {% block content %}
 
-    <form method="POST" action="{{ route('bills.store') }}" accept-charset="UTF-8" class="form-horizontal" id="store" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('subscriptions.store') }}" accept-charset="UTF-8" class="form-horizontal" id="store" enctype="multipart/form-data">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
 
         <div class="row">

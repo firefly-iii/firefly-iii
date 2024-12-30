@@ -166,7 +166,7 @@ trait PeriodOverview
 
         /** @var array $journal */
         foreach ($journals as $journal) {
-            if ($account->id === (int)$journal['source_account_id']) {
+            if ($account->id === (int) $journal['source_account_id']) {
                 $return[] = $journal;
             }
         }
@@ -183,7 +183,7 @@ trait PeriodOverview
 
         /** @var array $journal */
         foreach ($journals as $journal) {
-            if ($account->id === (int)$journal['destination_account_id']) {
+            if ($account->id === (int) $journal['destination_account_id']) {
                 $return[] = $journal;
             }
         }
@@ -197,37 +197,44 @@ trait PeriodOverview
 
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $currencyId                    = (int)$journal['currency_id'];
+            $currencyId                    = (int) $journal['currency_id'];
+            $currencyCode                  = $journal['currency_code'];
+            $currencyName                  = $journal['currency_name'];
+            $currencySymbol                = $journal['currency_symbol'];
+            $currencyDecimalPlaces         = $journal['currency_decimal_places'];
             $foreignCurrencyId             = $journal['foreign_currency_id'];
-            if (!array_key_exists($currencyId, $return)) {
-                $return[$currencyId] = [
-                    'amount'                  => '0',
-                    'count'                   => 0,
-                    'currency_id'             => $currencyId,
-                    'currency_name'           => $journal['currency_name'],
-                    'currency_code'           => $journal['currency_code'],
-                    'currency_symbol'         => $journal['currency_symbol'],
-                    'currency_decimal_places' => $journal['currency_decimal_places'],
-                ];
-            }
-            $return[$currencyId]['amount'] = bcadd($return[$currencyId]['amount'], $journal['amount'] ?? '0');
-            ++$return[$currencyId]['count'];
+            $amount                        = $journal['amount'];
 
-            if (null !== $foreignCurrencyId && null !== $journal['foreign_amount']) {
-                if (!array_key_exists($foreignCurrencyId, $return)) {
-                    $return[$foreignCurrencyId] = [
-                        'amount'                  => '0',
-                        'count'                   => 0,
-                        'currency_id'             => (int)$foreignCurrencyId,
-                        'currency_name'           => $journal['foreign_currency_name'],
-                        'currency_code'           => $journal['foreign_currency_code'],
-                        'currency_symbol'         => $journal['foreign_currency_symbol'],
-                        'currency_decimal_places' => $journal['foreign_currency_decimal_places'],
-                    ];
-                }
-                ++$return[$foreignCurrencyId]['count'];
-                $return[$foreignCurrencyId]['amount'] = bcadd($return[$foreignCurrencyId]['amount'], $journal['foreign_amount']);
+
+            if ($this->convertToNative && $currencyId !== $this->defaultCurrency->id && $foreignCurrencyId !== $this->defaultCurrency->id) {
+                $amount                = $journal['native_amount'];
+                $currencyId            = $this->defaultCurrency->id;
+                $currencyCode          = $this->defaultCurrency->code;
+                $currencyName          = $this->defaultCurrency->name;
+                $currencySymbol        = $this->defaultCurrency->symbol;
+                $currencyDecimalPlaces = $this->defaultCurrency->decimal_places;
             }
+            if ($this->convertToNative && $currencyId !== $this->defaultCurrency->id && $foreignCurrencyId === $this->defaultCurrency->id) {
+                $currencyId            = (int) $foreignCurrencyId;
+                $currencyCode          = $journal['foreign_currency_code'];
+                $currencyName          = $journal['foreign_currency_name'];
+                $currencySymbol        = $journal['foreign_currency_symbol'];
+                $currencyDecimalPlaces = $journal['foreign_currency_decimal_places'];
+                $amount                = $journal['foreign_amount'];
+            }
+            $return[$currencyId] ??= [
+                'amount'                  => '0',
+                'count'                   => 0,
+                'currency_id'             => $currencyId,
+                'currency_name'           => $currencyName,
+                'currency_code'           => $currencyCode,
+                'currency_symbol'         => $currencySymbol,
+                'currency_decimal_places' => $currencyDecimalPlaces,
+            ];
+
+
+            $return[$currencyId]['amount'] = bcadd($return[$currencyId]['amount'], $amount);
+            ++$return[$currencyId]['count'];
         }
 
         return $return;
@@ -322,6 +329,7 @@ trait PeriodOverview
         $cache         = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
+        $cache->addProperty($this->convertToNative);
         $cache->addProperty('no-budget-period-entries');
 
         if ($cache->has()) {

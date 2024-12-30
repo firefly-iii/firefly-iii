@@ -23,7 +23,7 @@ import CreateTransaction from './components/transactions/CreateTransaction';
 import CustomDate from "./components/transactions/CustomDate";
 import CustomString from "./components/transactions/CustomString";
 import CustomTextarea from "./components/transactions/CustomTextarea";
-import StandardDate from "./components/transactions/StandardDate";
+import  StandardDate from "./components/transactions/StandardDate";
 import GroupDescription from "./components/transactions/GroupDescription";
 import TransactionDescription from "./components/transactions/TransactionDescription";
 import CustomTransactionFields from "./components/transactions/CustomTransactionFields";

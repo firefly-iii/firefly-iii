@@ -180,6 +180,15 @@ Breadcrumbs::for(
 );
 
 Breadcrumbs::for(
+    'admin.notification.index',
+    static function (Generator $breadcrumbs): void {
+        $breadcrumbs->parent('home');
+        $breadcrumbs->push(trans('firefly.administration'), route('admin.index'));
+        $breadcrumbs->push(trans('breadcrumbs.notification_index'), route('admin.notification.index'));
+    }
+);
+
+Breadcrumbs::for(
     'admin.users',
     static function (Generator $breadcrumbs): void {
         $breadcrumbs->parent('admin.index');
@@ -744,6 +753,22 @@ Breadcrumbs::for(
     }
 );
 
+// exchange rates
+Breadcrumbs::for(
+    'exchange-rates.index',
+    static function (Generator $breadcrumbs): void {
+        $breadcrumbs->parent('home');
+        $breadcrumbs->push(trans('breadcrumbs.exchange_rates_index'), route('exchange-rates.index'));
+    }
+);
+
+Breadcrumbs::for(
+    'exchange-rates.rates',
+    static function (Generator $breadcrumbs, TransactionCurrency $from, TransactionCurrency $to): void {
+        $breadcrumbs->parent('exchange-rates.index');
+        $breadcrumbs->push(trans('breadcrumbs.exchange_rates_rates', ['from' => $from->name, 'to' => $to->name]), route('exchange-rates.rates', [$from->code, $to->code]));
+    }
+);
 
 
 // PROFILE

@@ -36,7 +36,7 @@ class ActionExpressionLanguageProvider implements ExpressionFunctionProviderInte
     {
         $function = function ($arguments, $str): string {
             if (!is_string($str)) {
-                return (string)$str;
+                return (string) $str;
             }
 
             return strtolower($str.'!');

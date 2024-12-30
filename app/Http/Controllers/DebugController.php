@@ -25,11 +25,11 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
-use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use FireflyIII\Support\Models\AccountBalanceCalculator;
 use FireflyIII\User;
@@ -39,8 +39,10 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Route;
 use Illuminate\View\View;
 use Monolog\Handler\RotatingFileHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class DebugController
@@ -56,6 +58,69 @@ class DebugController extends Controller
     {
         parent::__construct();
         $this->middleware(IsDemoUser::class)->except(['displayError']);
+    }
+
+    public function routes(): never
+    {
+        if (!auth()->user()->hasRole('owner')) {
+            throw new NotFoundHttpException();
+        }
+        $routes = Route::getRoutes();
+        $return = [];
+
+        /** @var \Illuminate\Routing\Route $route */
+        foreach ($routes as $route) {
+            // skip API and other routes.
+            if (
+                str_starts_with($route->uri(), 'api')
+                || str_starts_with($route->uri(), '_debugbar')
+                || str_starts_with($route->uri(), '_ignition')
+                || str_starts_with($route->uri(), 'oauth')
+                || str_starts_with($route->uri(), 'chart')
+                || str_starts_with($route->uri(), 'v1/jscript')
+                || str_starts_with($route->uri(), 'v2/jscript')
+                || str_starts_with($route->uri(), 'json')
+                || str_starts_with($route->uri(), 'sanctum')
+            ) {
+                continue;
+            }
+            // skip non GET routes
+            if (!in_array('GET', $route->methods(), true)) {
+                continue;
+            }
+            // no name route:
+            if (null === $route->getName()) {
+                var_dump($route);
+
+                exit;
+            }
+            if (!str_contains($route->uri(), '{')) {
+
+                $return[$route->getName()] = route($route->getName());
+
+                continue;
+            }
+            $params                    = [];
+            foreach ($route->parameterNames() as $name) {
+                $params[] = $this->getParameter($name);
+            }
+            $return[$route->getName()] = route($route->getName(), $params);
+        }
+        $count  = 0;
+        echo '<hr>';
+        echo '<h1>Routes</h1>';
+        echo sprintf('<h2>%s</h2>', $count);
+        foreach ($return as $name => $path) {
+            echo sprintf('<a href="%1$s">%2$s</a><br>', $path, $name).PHP_EOL;
+            ++$count;
+            if (0 === $count % 10) {
+                echo '<hr>';
+                echo sprintf('<h2>%s</h2>', $count);
+            }
+        }
+
+        exit;
+        var_dump($return);
     }
 
     /**
@@ -95,8 +160,8 @@ class DebugController extends Controller
         Artisan::call('view:clear');
 
         // also do some recalculations.
-        Artisan::call('firefly-iii:trigger-credit-recalculation');
-        AccountBalanceCalculator::recalculateAll(true);
+        Artisan::call('correction:recalculates-liabilities');
+        AccountBalanceCalculator::recalculateAll(false);
 
         try {
             Artisan::call('twig:clean');
@@ -137,7 +202,7 @@ class DebugController extends Controller
         }
         if ('' !== $logContent) {
             // last few lines
-            $logContent = 'Truncated from this point <----|'.substr((string)$logContent, -16384);
+            $logContent = 'Truncated from this point <----|'.substr((string) $logContent, -16384);
         }
 
         return view('debug', compact('table', 'now', 'logContent'));
@@ -151,13 +216,13 @@ class DebugController extends Controller
         $app    = $this->getAppInfo();
         $user   = $this->getuserInfo();
 
-        return (string)view('partials.debug-table', compact('system', 'docker', 'app', 'user'));
+        return (string) view('partials.debug-table', compact('system', 'docker', 'app', 'user'));
     }
 
     private function getSystemInformation(): array
     {
-        $maxFileSize   = app('steam')->phpBytes((string)ini_get('upload_max_filesize'));
-        $maxPostSize   = app('steam')->phpBytes((string)ini_get('post_max_size'));
+        $maxFileSize   = app('steam')->phpBytes((string) ini_get('upload_max_filesize'));
+        $maxPostSize   = app('steam')->phpBytes((string) ini_get('post_max_size'));
         $drivers       = \DB::availableDrivers();
         $currentDriver = \DB::getDriverName();
 
@@ -170,7 +235,7 @@ class DebugController extends Controller
             'bits'            => \PHP_INT_SIZE * 8,
             'bcscale'         => bcscale(),
             'display_errors'  => ini_get('display_errors'),
-            'error_reporting' => $this->errorReporting((int)ini_get('error_reporting')),
+            'error_reporting' => $this->errorReporting((int) ini_get('error_reporting')),
             'upload_size'     => min($maxFileSize, $maxPostSize),
             'all_drivers'     => $drivers,
             'current_driver'  => $currentDriver,
@@ -189,7 +254,7 @@ class DebugController extends Controller
 
         try {
             if (file_exists('/var/www/counter-main.txt')) {
-                $return['build'] = trim((string)file_get_contents('/var/www/counter-main.txt'));
+                $return['build'] = trim((string) file_get_contents('/var/www/counter-main.txt'));
                 app('log')->debug(sprintf('build is now "%s"', $return['build']));
             }
         } catch (\Exception $e) { // @phpstan-ignore-line
@@ -199,16 +264,16 @@ class DebugController extends Controller
 
         try {
             if (file_exists('/var/www/build-date-main.txt')) {
-                $return['build_date'] = trim((string)file_get_contents('/var/www/build-date-main.txt'));
+                $return['build_date'] = trim((string) file_get_contents('/var/www/build-date-main.txt'));
             }
         } catch (\Exception $e) { // @phpstan-ignore-line
             app('log')->debug('Could not check build date, but thats ok.');
             app('log')->warning($e->getMessage());
         }
-        if ('' !== (string)env('BASE_IMAGE_BUILD')) {
+        if ('' !== (string) env('BASE_IMAGE_BUILD')) {
             $return['base_build'] = env('BASE_IMAGE_BUILD');
         }
-        if ('' !== (string)env('BASE_IMAGE_DATE')) {
+        if ('' !== (string) env('BASE_IMAGE_DATE')) {
             $return['base_build_date'] = env('BASE_IMAGE_DATE');
         }
 
@@ -220,7 +285,7 @@ class DebugController extends Controller
         $userGuard      = config('auth.defaults.guard');
 
         $config         = app('fireflyconfig')->get('last_rt_job', 0);
-        $lastTime       = (int)$config->data;
+        $lastTime       = (int) $config->data;
         $lastCronjob    = 'never';
         $lastCronjobAgo = 'never';
         if ($lastTime > 0) {
@@ -232,8 +297,8 @@ class DebugController extends Controller
         return [
             'debug'              => var_export(config('app.debug'), true),
             'audit_log_channel'  => envNonEmpty('AUDIT_LOG_CHANNEL', '(empty)'),
-            'default_language'   => (string)config('firefly.default_language'),
-            'default_locale'     => (string)config('firefly.default_locale'),
+            'default_language'   => (string) config('firefly.default_language'),
+            'default_locale'     => (string) config('firefly.default_locale'),
             'remote_header'      => 'remote_user_guard' === $userGuard ? config('auth.guard_header') : 'N/A',
             'remote_mail_header' => 'remote_user_guard' === $userGuard ? config('auth.guard_email') : 'N/A',
             'stateful_domains'   => implode(', ', config('sanctum.stateful')),
@@ -264,7 +329,7 @@ class DebugController extends Controller
             $result                = setlocale(LC_ALL, $code);
             $localeAttempts[$code] = $result === $code;
         }
-        setlocale(LC_ALL, (string)$original);
+        setlocale(LC_ALL, (string) $original);
 
         return [
             'user_id'         => auth()->user()->id,
@@ -280,10 +345,10 @@ class DebugController extends Controller
 
     private function getUserFlags(): string
     {
-        $flags = [];
+        $flags      = [];
 
         /** @var User $user */
-        $user  = auth()->user();
+        $user       = auth()->user();
 
         // has liabilities
         if ($user->accounts()->accountTypeIn([AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE])->count() > 0) {
@@ -291,12 +356,15 @@ class DebugController extends Controller
         }
 
         // has piggies
-        if ($user->piggyBanks()->count() > 0) {
+        $repository = app(PiggyBankRepositoryInterface::class);
+        $repository->setUser($user);
+
+        if ($repository->getPiggyBanks()->count() > 0) {
             $flags[] = '<span title="Has piggy banks">:pig:</span>';
         }
 
         // has stored reconciliations
-        $type  = TransactionType::whereType(TransactionType::RECONCILIATION)->first();
+        $type       = TransactionType::whereType(TransactionType::RECONCILIATION)->first();
         if ($user->transactionJournals()->where('transaction_type_id', $type->id)->count() > 0) {
             $flags[] = '<span title="Has reconciled">:ledger:</span>';
         }
@@ -339,5 +407,131 @@ class DebugController extends Controller
         $request->session()->flash('error', 'This is an error!');
 
         return redirect(route('home'));
+    }
+
+    private function getParameter(string $name): string
+    {
+        switch ($name) {
+            default:
+                throw new FireflyException(sprintf('Unknown parameter "%s"', $name));
+
+            case 'cliToken':
+            case 'token':
+            case 'code':
+            case 'oldAddressHash':
+                return 'fake-token';
+
+            case 'objectType':
+                return 'asset';
+
+            case 'account':
+                return '1';
+
+            case 'start_date':
+                return '20241201';
+
+            case 'end_date':
+                return '20241231';
+
+            case 'attachment':
+                return '1';
+
+            case 'bill':
+                return '1';
+
+            case 'budget':
+                return '1';
+
+            case 'budgetLimit':
+                return '1';
+
+            case 'category':
+                return '1';
+
+            case 'currency':
+                return '1';
+
+            case 'fromCurrencyCode':
+                return 'EUR';
+
+            case 'toCurrencyCode':
+                return 'USD';
+
+            case 'accountList':
+                return '1,6';
+
+            case 'budgetList':
+                return '1,2';
+
+            case 'categoryList':
+                return '1,2';
+
+            case 'doubleList':
+                return '1,2';
+
+            case 'tagList':
+                return '1,2';
+
+            case 'tag':
+                return '1';
+
+            case 'piggyBank':
+                return '1';
+
+            case 'objectGroup':
+                return '1';
+
+            case 'route':
+                return 'accounts';
+
+            case 'specificPage':
+                return 'show';
+
+            case 'recurrence':
+                return '1';
+
+            case 'tj':
+                return '1';
+
+            case 'reportType':
+                return 'default';
+
+            case 'ruleGroup':
+                return '1';
+
+            case 'rule':
+                return '1';
+
+            case 'tagOrId':
+                return '1';
+
+            case 'transactionGroup':
+                return '1';
+
+            case 'journalList':
+                return '1,2';
+
+            case 'transactionType':
+                return 'withdrawal';
+
+            case 'journalLink':
+                return '1';
+
+            case 'webhook':
+                return '1';
+
+            case 'user':
+                return '1';
+
+            case 'linkType':
+                return '1';
+
+            case 'userGroup':
+                return '1';
+
+            case 'date':
+                return '20241201';
+
+        }
     }
 }

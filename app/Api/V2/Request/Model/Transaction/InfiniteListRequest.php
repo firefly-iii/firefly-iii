@@ -87,7 +87,7 @@ class InfiniteListRequest extends FormRequest
 
     public function getAccountTypes(): array
     {
-        $type = (string)$this->get('type', 'default');
+        $type = (string) $this->get('type', 'default');
 
         return $this->mapAccountTypes($type);
     }
@@ -101,7 +101,7 @@ class InfiniteListRequest extends FormRequest
 
     public function getTransactionTypes(): array
     {
-        $type = (string)$this->get('type', 'default');
+        $type = (string) $this->get('type', 'default');
 
         return $this->mapTransactionTypes($type);
     }

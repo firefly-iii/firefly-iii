@@ -25,10 +25,14 @@ namespace FireflyIII\Support\Twig;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Search\OperatorQuerySearch;
 use League\CommonMark\GithubFlavoredMarkdownConverter;
+use Route;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -62,28 +66,33 @@ class General extends AbstractExtension
                 }
 
                 /** @var Carbon $date */
-                $date           = session('end', today(config('app.timezone'))->endOfMonth());
-                $runningBalance = config('firefly.feature_flags.running_balance_column');
-                $info           = [];
-                if (true === $runningBalance) {
-                    $info = app('steam')->balanceByTransactions($account, $date, null);
-                }
-                if (false === $runningBalance) {
-                    $info[] = app('steam')->balance($account, $date);
-                }
+                $date            = session('end', today(config('app.timezone'))->endOfMonth());
+                $info            = Steam::finalAccountBalance($account, $date);
+                $currency        = Steam::getAccountCurrency($account);
+                $default         = Amount::getDefaultCurrency();
+                $convertToNative = Amount::convertToNative();
+                $useNative       = $convertToNative && $default->id !== $currency->id;
+                $strings         = [];
+                foreach ($info as $key => $balance) {
+                    if ('balance' === $key) {
+                        // balance in account currency.
+                        if (!$useNative) {
+                            $strings[] = app('amount')->formatAnything($currency, $balance, false);
+                        }
 
-                $strings        = [];
-                foreach ($info as $currencyId => $balance) {
-                    $balance = (string) $balance;
-                    if (0 === $currencyId) {
-                        // not good code but OK
-                        /** @var AccountRepositoryInterface $accountRepos */
-                        $accountRepos = app(AccountRepositoryInterface::class);
-                        $currency     = $accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
-                        $strings[]    = app('amount')->formatAnything($currency, $balance, false);
+                        continue;
                     }
-                    if (0 !== $currencyId) {
-                        $strings[] = app('amount')->formatByCurrencyId($currencyId, $balance, false);
+                    if ('native_balance' === $key) {
+                        // balance in native currency.
+                        if ($useNative) {
+                            $strings[] = app('amount')->formatAnything($default, $balance, false);
+                        }
+
+                        continue;
+                    }
+                    // for multi currency accounts.
+                    if ($useNative && $key !== $default->code) {
+                        $strings[] = app('amount')->formatAnything(TransactionCurrency::where('code', $key)->first(), $balance, false);
                     }
                 }
 

@@ -1,9 +1,7 @@
 @component('mail::message')
 {{ trans('email.registered_welcome') }}
 
-* {{ trans('email.registered_pw', ['address' => $address]) }}
-* {{ trans('email.registered_help') }}
-* {{ trans('email.registered_doc_text') }}
+{{ trans('email.registered_pw', ['address' => $address]) }} {{ trans('email.registered_help') }}
 
 {{ trans('email.registered_closing') }}
 

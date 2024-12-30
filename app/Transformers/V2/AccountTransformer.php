@@ -41,11 +41,11 @@ class AccountTransformer extends AbstractTransformer
 {
     private array               $accountMeta;
     private array               $accountTypes;
-    private array               $fullTypes;
     private array               $balanceDifferences;
     private array               $convertedBalances;
     private array               $currencies;
     private TransactionCurrency $default;
+    private array               $fullTypes;
     private array               $lastActivity;
     private array               $objectGroups;
 
@@ -102,6 +102,25 @@ class AccountTransformer extends AbstractTransformer
         return $objects;
     }
 
+    private function getLastActivity(Collection $accounts): void
+    {
+        /** @var AccountRepositoryInterface $accountRepository */
+        $accountRepository = app(AccountRepositoryInterface::class);
+        $lastActivity      = $accountRepository->getLastActivity($accounts);
+        foreach ($lastActivity as $row) {
+            $this->lastActivity[(int) $row['account_id']] = Carbon::parse($row['date_max'], config('app.timezone'));
+        }
+    }
+
+    private function getMetaBalances(Collection $accounts): void
+    {
+        try {
+            $this->convertedBalances = app('steam')->finalAccountsBalance($accounts, $this->getDate());
+        } catch (FireflyException $e) {
+            Log::error($e->getMessage());
+        }
+    }
+
     private function getDate(): Carbon
     {
         $date = today(config('app.timezone'));
@@ -110,6 +129,189 @@ class AccountTransformer extends AbstractTransformer
         }
 
         return $date;
+    }
+
+    private function getDefaultCurrency(): void
+    {
+        $this->default = app('amount')->getDefaultCurrency();
+    }
+
+    private function collectAccountMetaData(Collection $accounts): void
+    {
+        /** @var CurrencyRepositoryInterface $repository */
+        $repository        = app(CurrencyRepositoryInterface::class);
+
+        /** @var AccountRepositoryInterface $accountRepository */
+        $accountRepository = app(AccountRepositoryInterface::class);
+        $metaFields        = $accountRepository->getMetaValues($accounts, ['currency_id', 'account_role', 'account_number', 'liability_direction', 'interest', 'interest_period', 'current_debt']);
+        $currencyIds       = $metaFields->where('name', 'currency_id')->pluck('data')->toArray();
+
+        $currencies        = $repository->getByIds($currencyIds);
+        foreach ($currencies as $currency) {
+            $id                    = $currency->id;
+            $this->currencies[$id] = $currency;
+        }
+        foreach ($metaFields as $entry) {
+            $id                                   = $entry->account_id;
+            $this->accountMeta[$id][$entry->name] = $entry->data;
+        }
+    }
+
+    private function collectAccountTypes(Collection $accounts): void
+    {
+        /** @var AccountRepositoryInterface $accountRepository */
+        $accountRepository = app(AccountRepositoryInterface::class);
+        $accountTypes      = $accountRepository->getAccountTypes($accounts);
+
+        /** @var AccountType $row */
+        foreach ($accountTypes as $row) {
+            $this->accountTypes[$row->id] = (string) config(sprintf('firefly.shortNamesByFullName.%s', $row->type));
+            $this->fullTypes[$row->id]    = $row->type;
+        }
+    }
+
+    private function getBalanceDifference(Collection $accounts, Carbon $start, Carbon $end): void
+    {
+        throw new FireflyException('Used deprecated method, rethink this.');
+        // collect balances, start and end for both native and converted.
+        // yes the b is usually used for boolean by idiots but here it's for balance.
+        $bStart = [];
+        $bEnd   = [];
+
+        try {
+            $bStart = app('steam')->finalAccountsBalance($accounts, $start);
+            $bEnd   = app('steam')->finalAccountsBalance($accounts, $end);
+        } catch (FireflyException $e) {
+            Log::error($e->getMessage());
+        }
+
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $id = $account->id;
+            if (array_key_exists($id, $bStart) && array_key_exists($id, $bEnd)) {
+                $this->balanceDifferences[$id] = [
+                    'balance'        => bcsub($bEnd[$id]['balance'], $bStart[$id]['balance']),
+                    'native_balance' => bcsub($bEnd[$id]['native_balance'], $bStart[$id]['native_balance']),
+                ];
+            }
+        }
+    }
+
+    private function getObjectGroups(Collection $accounts): void
+    {
+        /** @var AccountRepositoryInterface $accountRepository */
+        $accountRepository  = app(AccountRepositoryInterface::class);
+        $this->objectGroups = $accountRepository->getObjectGroups($accounts);
+    }
+
+    private function sortAccounts(Collection $accounts): Collection
+    {
+        /** @var null|array $sort */
+        $sort = $this->parameters->get('sort');
+
+        if (null === $sort || 0 === count($sort)) {
+            return $accounts;
+        }
+
+        /**
+         * @var string $column
+         * @var string $direction
+         */
+        foreach ($sort as $column => $direction) {
+            // account_number + iban
+            if ('iban' === $column) {
+                $accounts = $this->sortByIban($accounts, $direction);
+            }
+            if ('balance' === $column) {
+                $accounts = $this->sortByBalance($accounts, $direction);
+            }
+            if ('last_activity' === $column) {
+                $accounts = $this->sortByLastActivity($accounts, $direction);
+            }
+            if ('balance_difference' === $column) {
+                $accounts = $this->sortByBalanceDifference($accounts, $direction);
+            }
+            if ('current_debt' === $column) {
+                $accounts = $this->sortByCurrentDebt($accounts, $direction);
+            }
+        }
+
+        return $accounts;
+    }
+
+    private function sortByIban(Collection $accounts, string $direction): Collection
+    {
+        $meta = $this->accountMeta;
+
+        return $accounts->sort(function (Account $left, Account $right) use ($meta, $direction) {
+            $leftIban  = trim(sprintf('%s%s', $left->iban, $meta[$left->id]['account_number'] ?? ''));
+            $rightIban = trim(sprintf('%s%s', $right->iban, $meta[$right->id]['account_number'] ?? ''));
+            if ('asc' === $direction) {
+                return strcasecmp($leftIban, $rightIban);
+            }
+
+            return strcasecmp($rightIban, $leftIban);
+        });
+    }
+
+    private function sortByBalance(Collection $accounts, string $direction): Collection
+    {
+        $balances = $this->convertedBalances;
+
+        return $accounts->sort(function (Account $left, Account $right) use ($balances, $direction) {
+            $leftBalance  = (float) ($balances[$left->id]['native_balance'] ?? 0);
+            $rightBalance = (float) ($balances[$right->id]['native_balance'] ?? 0);
+            if ('asc' === $direction) {
+                return $leftBalance <=> $rightBalance;
+            }
+
+            return $rightBalance <=> $leftBalance;
+        });
+    }
+
+    private function sortByLastActivity(Collection $accounts, string $direction): Collection
+    {
+        $dates = $this->lastActivity;
+
+        return $accounts->sort(function (Account $left, Account $right) use ($dates, $direction) {
+            $leftDate  = $dates[$left->id] ?? Carbon::create(1900, 1, 1, 0, 0, 0);
+            $rightDate = $dates[$right->id] ?? Carbon::create(1900, 1, 1, 0, 0, 0);
+            if ('asc' === $direction) {
+                return $leftDate->gt($rightDate) ? 1 : -1;
+            }
+
+            return $rightDate->gt($leftDate) ? 1 : -1;
+        });
+    }
+
+    private function sortByBalanceDifference(Collection $accounts, string $direction): Collection
+    {
+        $balances = $this->balanceDifferences;
+
+        return $accounts->sort(function (Account $left, Account $right) use ($balances, $direction) {
+            $leftBalance  = (float) ($balances[$left->id]['native_balance'] ?? 0);
+            $rightBalance = (float) ($balances[$right->id]['native_balance'] ?? 0);
+            if ('asc' === $direction) {
+                return $leftBalance <=> $rightBalance;
+            }
+
+            return $rightBalance <=> $leftBalance;
+        });
+    }
+
+    private function sortByCurrentDebt(Collection $accounts, string $direction): Collection
+    {
+        $amounts = $this->accountMeta;
+
+        return $accounts->sort(function (Account $left, Account $right) use ($amounts, $direction) {
+            $leftCurrent  = (float) ($amounts[$left->id]['current_debt'] ?? 0);
+            $rightCurrent = (float) ($amounts[$right->id]['current_debt'] ?? 0);
+            if ('asc' === $direction) {
+                return $leftCurrent <=> $rightCurrent;
+            }
+
+            return $rightCurrent <=> $leftCurrent;
+        });
     }
 
     /**
@@ -227,206 +429,5 @@ class AccountTransformer extends AbstractTransformer
                 ],
             ],
         ];
-    }
-
-    private function getMetaBalances(Collection $accounts): void
-    {
-        try {
-            $this->convertedBalances = app('steam')->balancesByAccountsConverted($accounts, $this->getDate());
-        } catch (FireflyException $e) {
-            Log::error($e->getMessage());
-        }
-    }
-
-    private function getDefaultCurrency(): void
-    {
-        $this->default = app('amount')->getDefaultCurrency();
-    }
-
-    private function collectAccountMetaData(Collection $accounts): void
-    {
-        /** @var CurrencyRepositoryInterface $repository */
-        $repository        = app(CurrencyRepositoryInterface::class);
-
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app(AccountRepositoryInterface::class);
-        $metaFields        = $accountRepository->getMetaValues($accounts, ['currency_id', 'account_role', 'account_number', 'liability_direction', 'interest', 'interest_period', 'current_debt']);
-        $currencyIds       = $metaFields->where('name', 'currency_id')->pluck('data')->toArray();
-
-        $currencies        = $repository->getByIds($currencyIds);
-        foreach ($currencies as $currency) {
-            $id                    = $currency->id;
-            $this->currencies[$id] = $currency;
-        }
-        foreach ($metaFields as $entry) {
-            $id                                   = $entry->account_id;
-            $this->accountMeta[$id][$entry->name] = $entry->data;
-        }
-    }
-
-    private function collectAccountTypes(Collection $accounts): void
-    {
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app(AccountRepositoryInterface::class);
-        $accountTypes      = $accountRepository->getAccountTypes($accounts);
-
-        /** @var AccountType $row */
-        foreach ($accountTypes as $row) {
-            $this->accountTypes[$row->id] = (string) config(sprintf('firefly.shortNamesByFullName.%s', $row->type));
-            $this->fullTypes[$row->id]    = $row->type;
-        }
-    }
-
-    private function getLastActivity(Collection $accounts): void
-    {
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app(AccountRepositoryInterface::class);
-        $lastActivity      = $accountRepository->getLastActivity($accounts);
-        foreach ($lastActivity as $row) {
-            $this->lastActivity[(int) $row['account_id']] = Carbon::parse($row['date_max'], config('app.timezone'));
-        }
-    }
-
-    private function sortAccounts(Collection $accounts): Collection
-    {
-        /** @var null|array $sort */
-        $sort = $this->parameters->get('sort');
-
-        if (null === $sort || 0 === count($sort)) {
-            return $accounts;
-        }
-
-        /**
-         * @var string $column
-         * @var string $direction
-         */
-        foreach ($sort as $column => $direction) {
-            // account_number + iban
-            if ('iban' === $column) {
-                $accounts = $this->sortByIban($accounts, $direction);
-            }
-            if ('balance' === $column) {
-                $accounts = $this->sortByBalance($accounts, $direction);
-            }
-            if ('last_activity' === $column) {
-                $accounts = $this->sortByLastActivity($accounts, $direction);
-            }
-            if ('balance_difference' === $column) {
-                $accounts = $this->sortByBalanceDifference($accounts, $direction);
-            }
-            if ('current_debt' === $column) {
-                $accounts = $this->sortByCurrentDebt($accounts, $direction);
-            }
-        }
-
-        return $accounts;
-    }
-
-    private function sortByIban(Collection $accounts, string $direction): Collection
-    {
-        $meta = $this->accountMeta;
-
-        return $accounts->sort(function (Account $left, Account $right) use ($meta, $direction) {
-            $leftIban  = trim(sprintf('%s%s', $left->iban, $meta[$left->id]['account_number'] ?? ''));
-            $rightIban = trim(sprintf('%s%s', $right->iban, $meta[$right->id]['account_number'] ?? ''));
-            if ('asc' === $direction) {
-                return strcasecmp($leftIban, $rightIban);
-            }
-
-            return strcasecmp($rightIban, $leftIban);
-        });
-    }
-
-    private function sortByBalance(Collection $accounts, string $direction): Collection
-    {
-        $balances = $this->convertedBalances;
-
-        return $accounts->sort(function (Account $left, Account $right) use ($balances, $direction) {
-            $leftBalance  = (float) ($balances[$left->id]['native_balance'] ?? 0);
-            $rightBalance = (float) ($balances[$right->id]['native_balance'] ?? 0);
-            if ('asc' === $direction) {
-                return $leftBalance <=> $rightBalance;
-            }
-
-            return $rightBalance <=> $leftBalance;
-        });
-    }
-
-    private function sortByLastActivity(Collection $accounts, string $direction): Collection
-    {
-        $dates = $this->lastActivity;
-
-        return $accounts->sort(function (Account $left, Account $right) use ($dates, $direction) {
-            $leftDate  = $dates[$left->id] ?? Carbon::create(1900, 1, 1, 0, 0, 0);
-            $rightDate = $dates[$right->id] ?? Carbon::create(1900, 1, 1, 0, 0, 0);
-            if ('asc' === $direction) {
-                return $leftDate->gt($rightDate) ? 1 : -1;
-            }
-
-            return $rightDate->gt($leftDate) ? 1 : -1;
-        });
-    }
-
-    private function getBalanceDifference(Collection $accounts, Carbon $start, Carbon $end): void
-    {
-        // collect balances, start and end for both native and converted.
-        // yes the b is usually used for boolean by idiots but here it's for balance.
-        $bStart = [];
-        $bEnd   = [];
-
-        try {
-            $bStart = app('steam')->balancesByAccountsConverted($accounts, $start);
-            $bEnd   = app('steam')->balancesByAccountsConverted($accounts, $end);
-        } catch (FireflyException $e) {
-            Log::error($e->getMessage());
-        }
-
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $id = $account->id;
-            if (array_key_exists($id, $bStart) && array_key_exists($id, $bEnd)) {
-                $this->balanceDifferences[$id] = [
-                    'balance'        => bcsub($bEnd[$id]['balance'], $bStart[$id]['balance']),
-                    'native_balance' => bcsub($bEnd[$id]['native_balance'], $bStart[$id]['native_balance']),
-                ];
-            }
-        }
-    }
-
-    private function sortByBalanceDifference(Collection $accounts, string $direction): Collection
-    {
-        $balances = $this->balanceDifferences;
-
-        return $accounts->sort(function (Account $left, Account $right) use ($balances, $direction) {
-            $leftBalance  = (float) ($balances[$left->id]['native_balance'] ?? 0);
-            $rightBalance = (float) ($balances[$right->id]['native_balance'] ?? 0);
-            if ('asc' === $direction) {
-                return $leftBalance <=> $rightBalance;
-            }
-
-            return $rightBalance <=> $leftBalance;
-        });
-    }
-
-    private function sortByCurrentDebt(Collection $accounts, string $direction): Collection
-    {
-        $amounts = $this->accountMeta;
-
-        return $accounts->sort(function (Account $left, Account $right) use ($amounts, $direction) {
-            $leftCurrent  = (float) ($amounts[$left->id]['current_debt'] ?? 0);
-            $rightCurrent = (float) ($amounts[$right->id]['current_debt'] ?? 0);
-            if ('asc' === $direction) {
-                return $leftCurrent <=> $rightCurrent;
-            }
-
-            return $rightCurrent <=> $leftCurrent;
-        });
-    }
-
-    private function getObjectGroups(Collection $accounts): void
-    {
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository  = app(AccountRepositoryInterface::class);
-        $this->objectGroups = $accountRepository->getObjectGroups($accounts);
     }
 }

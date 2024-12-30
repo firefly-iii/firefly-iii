@@ -49,15 +49,15 @@ class BelongsUser implements ValidationRule
         app('log')->debug(sprintf('Going to validate %s', $attribute));
 
         $result    = match ($attribute) {
-            'piggy_bank_id'               => $this->validatePiggyBankId((int)$value),
+            'piggy_bank_id'               => $this->validatePiggyBankId((int) $value),
             'piggy_bank_name'             => $this->validatePiggyBankName($value),
-            'bill_id'                     => $this->validateBillId((int)$value),
-            'transaction_journal_id'      => $this->validateJournalId((int)$value),
+            'bill_id'                     => $this->validateBillId((int) $value),
+            'transaction_journal_id'      => $this->validateJournalId((int) $value),
             'bill_name'                   => $this->validateBillName($value),
-            'budget_id'                   => $this->validateBudgetId((int)$value),
-            'category_id'                 => $this->validateCategoryId((int)$value),
+            'budget_id'                   => $this->validateBudgetId((int) $value),
+            'category_id'                 => $this->validateCategoryId((int) $value),
             'budget_name'                 => $this->validateBudgetName($value),
-            'source_id', 'destination_id' => $this->validateAccountId((int)$value),
+            'source_id', 'destination_id' => $this->validateAccountId((int) $value),
             default                       => throw new FireflyException(sprintf('Rule BelongsUser cannot handle "%s"', $attribute)),
         };
         if (false === $result) {
@@ -110,7 +110,7 @@ class BelongsUser implements ValidationRule
         }
         $count   = 0;
         foreach ($objects as $object) {
-            $objectValue = trim((string)$object->{$field}); // @phpstan-ignore-line
+            $objectValue = trim((string) $object->{$field}); // @phpstan-ignore-line
             app('log')->debug(sprintf('Comparing object "%s" with value "%s"', $objectValue, $value));
             if ($objectValue === $value) {
                 ++$count;

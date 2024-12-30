@@ -50,10 +50,10 @@ class AttachmentTransformer extends AbstractTransformer
         $this->repository->setUser($attachment->user);
 
         return [
-            'id'              => (string)$attachment->id,
+            'id'              => (string) $attachment->id,
             'created_at'      => $attachment->created_at->toAtomString(),
             'updated_at'      => $attachment->updated_at->toAtomString(),
-            'attachable_id'   => (string)$attachment->attachable_id,
+            'attachable_id'   => (string) $attachment->attachable_id,
             'attachable_type' => str_replace('FireflyIII\Models\\', '', $attachment->attachable_type),
             'md5'             => $attachment->md5,
             'filename'        => $attachment->filename,
@@ -62,7 +62,7 @@ class AttachmentTransformer extends AbstractTransformer
             'title'           => $attachment->title,
             'notes'           => $this->repository->getNoteText($attachment),
             'mime'            => $attachment->mime,
-            'size'            => (int)$attachment->size,
+            'size'            => (int) $attachment->size,
             'links'           => [
                 [
                     'rel' => 'self',

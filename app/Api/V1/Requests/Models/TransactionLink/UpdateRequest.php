@@ -100,8 +100,8 @@ class UpdateRequest extends FormRequest
 
         $inwardId     = $data['inward_id'] ?? $existing->source_id;
         $outwardId    = $data['outward_id'] ?? $existing->destination_id;
-        $inward       = $journalRepos->find((int)$inwardId);
-        $outward      = $journalRepos->find((int)$outwardId);
+        $inward       = $journalRepos->find((int) $inwardId);
+        $outward      = $journalRepos->find((int) $outwardId);
         if (null === $inward) {
             $inward = $existing->source;
         }

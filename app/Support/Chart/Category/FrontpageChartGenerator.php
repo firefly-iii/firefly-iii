@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Chart\Category;
 
 use Carbon\Carbon;
-use FireflyIII\Models\AccountType;
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
@@ -33,6 +33,7 @@ use FireflyIII\Repositories\Category\NoCategoryRepositoryInterface;
 use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\AugumentData;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class FrontpageChartGenerator
@@ -65,10 +66,9 @@ class FrontpageChartGenerator
 
     public function generate(): array
     {
+        Log::debug('Now in generate()');
         $categories   = $this->repository->getCategories();
-        $accounts     = $this->accountRepos->getAccountsByType(
-            [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::ASSET, AccountType::DEFAULT]
-        );
+        $accounts     = $this->accountRepos->getAccountsByType([AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value]);
 
         // get expenses + income per category:
         $collection   = [];
@@ -95,15 +95,17 @@ class FrontpageChartGenerator
 
     private function collectExpenses(Category $category, Collection $accounts): array
     {
+        Log::debug(sprintf('Collect expenses for category #%d ("%s")', $category->id, $category->name));
         $spent    = $this->opsRepos->sumExpenses($this->start, $this->end, $accounts, new Collection([$category]));
         $tempData = [];
         foreach ($spent as $currency) {
+            Log::debug(sprintf('Spent %s %s', $currency['currency_code'], $currency['sum']));
             $this->addCurrency($currency);
             $tempData[] = [
                 'name'        => $category->name,
                 'sum'         => $currency['sum'],
-                'sum_float'   => round((float)$currency['sum'], $currency['currency_decimal_places']),
-                'currency_id' => (int)$currency['currency_id'],
+                'sum_float'   => round((float) $currency['sum'], $currency['currency_decimal_places']),
+                'currency_id' => (int) $currency['currency_id'],
             ];
         }
 
@@ -112,7 +114,7 @@ class FrontpageChartGenerator
 
     private function addCurrency(array $currency): void
     {
-        $currencyId = (int)$currency['currency_id'];
+        $currencyId = (int) $currency['currency_id'];
 
         $this->currencies[$currencyId] ??= [
             'currency_id'             => $currencyId,
@@ -132,8 +134,8 @@ class FrontpageChartGenerator
             $tempData[] = [
                 'name'        => trans('firefly.no_category'),
                 'sum'         => $currency['sum'],
-                'sum_float'   => round((float)$currency['sum'], $currency['currency_decimal_places'] ?? 2), // intentional float
-                'currency_id' => (int)$currency['currency_id'],
+                'sum_float'   => round((float) $currency['sum'], $currency['currency_decimal_places'] ?? 2), // intentional float
+                'currency_id' => (int) $currency['currency_id'],
             ];
         }
 
@@ -151,7 +153,7 @@ class FrontpageChartGenerator
         foreach ($this->currencies as $currencyId => $currency) {
             $key          = sprintf('spent-%d', $currencyId);
             $return[$key] = [
-                'label'           => sprintf('%s (%s)', (string)trans('firefly.spent'), $currency['currency_name']),
+                'label'           => sprintf('%s (%s)', (string) trans('firefly.spent'), $currency['currency_name']),
                 'type'            => 'bar',
                 'currency_symbol' => $currency['currency_symbol'],
                 'entries'         => $names,

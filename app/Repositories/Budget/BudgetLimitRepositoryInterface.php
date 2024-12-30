@@ -64,6 +64,10 @@ interface BudgetLimitRepositoryInterface
 
     public function getBudgetLimits(Budget $budget, ?Carbon $start = null, ?Carbon $end = null): Collection;
 
+    public function getNoteText(BudgetLimit $budgetLimit): string;
+
+    public function setNoteText(BudgetLimit $budgetLimit, string $text): void;
+
     public function setUser(null|Authenticatable|User $user): void;
 
     public function store(array $data): BudgetLimit;

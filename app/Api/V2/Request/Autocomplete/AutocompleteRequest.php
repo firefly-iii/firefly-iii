@@ -73,6 +73,16 @@ class AutocompleteRequest extends FormRequest
         return $array;
     }
 
+    private function getAccountTypeParameter(array $types): array
+    {
+        $return = [];
+        foreach ($types as $type) {
+            $return = array_merge($return, $this->mapAccountTypes($type));
+        }
+
+        return array_unique($return);
+    }
+
     public function rules(): array
     {
         $valid = array_keys($this->types);
@@ -85,15 +95,5 @@ class AutocompleteRequest extends FormRequest
             'account_types'     => sprintf('nullable|in:%s', implode(',', $valid)),
             'transaction_types' => 'nullable|in:todo',
         ];
-    }
-
-    private function getAccountTypeParameter(array $types): array
-    {
-        $return = [];
-        foreach ($types as $type) {
-            $return = array_merge($return, $this->mapAccountTypes($type));
-        }
-
-        return array_unique($return);
     }
 }

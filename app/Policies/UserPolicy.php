@@ -38,19 +38,19 @@ class UserPolicy
         return auth()->check() && $user->id === $account->user_id;
     }
 
-    /**
-     * Everybody can do this, but selection should limit to user.
-     *
-     * @return true
-     */
-    public function viewAny(): bool
+    public function viewAccounts(User $user): bool
     {
         return true;
 
         return auth()->check();
     }
 
-    public function viewAccounts(User $user): bool
+    /**
+     * Everybody can do this, but selection should limit to user.
+     *
+     * @return true
+     */
+    public function viewAny(): bool
     {
         return true;
 

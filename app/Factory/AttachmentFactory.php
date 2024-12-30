@@ -50,7 +50,7 @@ class AttachmentFactory
         // get journal instead of transaction.
         if (Transaction::class === $model) {
             /** @var null|Transaction $transaction */
-            $transaction           = $this->user->transactions()->find((int)$data['attachable_id']);
+            $transaction           = $this->user->transactions()->find((int) $data['attachable_id']);
             if (null === $transaction) {
                 throw new FireflyException('Unexpectedly could not find transaction');
             }
@@ -73,7 +73,7 @@ class AttachmentFactory
                 'uploaded'        => 0,
             ]
         );
-        $notes      = (string)($data['notes'] ?? '');
+        $notes      = (string) ($data['notes'] ?? '');
         if ('' !== $notes) {
             $note       = new Note();
             $note->noteable()->associate($attachment);

@@ -52,7 +52,7 @@ class AccountMeta extends Model
 
     public function getDataAttribute(mixed $value): string
     {
-        return (string)json_decode($value, true);
+        return (string) json_decode($value, true);
     }
 
     public function setDataAttribute(mixed $value): void

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
+use Exception;
 use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -33,6 +34,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Update\JournalUpdateService;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\ModelInformation;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\Validation\AccountValidator;
@@ -214,15 +216,14 @@ class ConvertController extends Controller
     private function getLiabilities(): array
     {
         // make repositories
-        $accountList     = $this->accountRepository->getActiveAccountsByType([AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
-        $defaultCurrency = app('amount')->getDefaultCurrency();
-        $grouped         = [];
+        $accountList = $this->accountRepository->getActiveAccountsByType([AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
+        $grouped     = [];
 
         // group accounts:
         /** @var Account $account */
         foreach ($accountList as $account) {
-            $balance                     = app('steam')->balance($account, today());
-            $currency                    = $this->accountRepository->getAccountCurrency($account) ?? $defaultCurrency;
+            $balance                     = Steam::finalAccountBalance($account, today()->endOfDay())['balance'];
+            $currency                    = $this->accountRepository->getAccountCurrency($account) ?? $this->defaultCurrency;
             $role                        = 'l_'.$account->accountType->type;
             $key                         = (string) trans('firefly.opt_group_'.$role);
             $grouped[$key][$account->id] = $account->name.' ('.app('amount')->formatAnything($currency, $balance, false).')';
@@ -237,15 +238,14 @@ class ConvertController extends Controller
     private function getAssetAccounts(): array
     {
         // make repositories
-        $accountList     = $this->accountRepository->getActiveAccountsByType([AccountType::ASSET]);
-        $defaultCurrency = app('amount')->getDefaultCurrency();
-        $grouped         = [];
+        $accountList = $this->accountRepository->getActiveAccountsByType([AccountType::ASSET]);
+        $grouped     = [];
 
         // group accounts:
         /** @var Account $account */
         foreach ($accountList as $account) {
-            $balance                     = app('steam')->balance($account, today());
-            $currency                    = $this->accountRepository->getAccountCurrency($account) ?? $defaultCurrency;
+            $balance                     = Steam::finalAccountBalance($account, today()->endOfDay())['balance'];
+            $currency                    = $this->accountRepository->getAccountCurrency($account) ?? $this->defaultCurrency;
             $role                        = (string) $this->accountRepository->getMetaValue($account, 'account_role');
             if ('' === $role) {
                 $role = 'no_account_type';
