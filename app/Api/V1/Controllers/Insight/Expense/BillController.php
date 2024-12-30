@@ -79,11 +79,11 @@ class BillController extends Controller
         }
 
         // collect all expenses in this period (regardless of type) by the given bills and accounts.
-        $collector = app(GroupCollectorInterface::class);
+        $collector       = app(GroupCollectorInterface::class);
         $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->setRange($start, $end)->setSourceAccounts($accounts);
         $collector->setBills($bills);
 
-        $genericSet = $collector->getExtractedJournals();
+        $genericSet      = $collector->getExtractedJournals();
         foreach ($genericSet as $journal) {
             $billId       = (int) $journal['bill_id'];
             $currencyId   = (int) $journal['currency_id'];
@@ -102,10 +102,10 @@ class BillController extends Controller
             }
             Log::debug(sprintf('Journal #%d in bill #%d will use %s (%s %s)', $journal['transaction_group_id'], $billId, $field, $currencyCode, $journal[$field] ?? '0'));
 
-            $key = sprintf('%d-%d', $billId, $currencyId);
+            $key          = sprintf('%d-%d', $billId, $currencyId);
 
             if (0 !== $currencyId) {
-                $response[$key]                     ??= [
+                $response[$key] ??= [
                     'id'               => (string) $billId,
                     'name'             => $journal['bill_name'],
                     'difference'       => '0',
@@ -137,11 +137,11 @@ class BillController extends Controller
         $response        = [];
 
         // collect all expenses in this period (regardless of type) by the given bills and accounts.
-        $collector = app(GroupCollectorInterface::class);
+        $collector       = app(GroupCollectorInterface::class);
         $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->setRange($start, $end)->setSourceAccounts($accounts);
         $collector->withoutBill();
 
-        $genericSet = $collector->getExtractedJournals();
+        $genericSet      = $collector->getExtractedJournals();
 
         foreach ($genericSet as $journal) {
             $currencyId   = (int) $journal['currency_id'];
@@ -161,7 +161,7 @@ class BillController extends Controller
             Log::debug(sprintf('Journal #%d will use %s (%s %s)', $journal['transaction_group_id'], $field, $currencyCode, $journal[$field] ?? '0'));
 
             if (0 !== $currencyId) {
-                $response[$currencyId]                     ??= [
+                $response[$currencyId] ??= [
                     'difference'       => '0',
                     'difference_float' => 0,
                     'currency_id'      => (string) $currencyId,

@@ -51,14 +51,14 @@ class PeriodController extends Controller
         $default         = Amount::getDefaultCurrency();
 
         // collect all expenses in this period (regardless of type)
-        $collector = app(GroupCollectorInterface::class);
+        $collector       = app(GroupCollectorInterface::class);
         $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->setRange($start, $end)->setSourceAccounts($accounts);
-        $genericSet = $collector->getExtractedJournals();
+        $genericSet      = $collector->getExtractedJournals();
         foreach ($genericSet as $journal) {
             // same code as many other sumExpense methods. I think this needs some kind of generic method.
-            $amount       = '0';
-            $currencyId   = (int) $journal['currency_id'];
-            $currencyCode = $journal['currency_code'];
+            $amount                                    = '0';
+            $currencyId                                = (int) $journal['currency_id'];
+            $currencyCode                              = $journal['currency_code'];
             if ($convertToNative) {
                 $amount = Amount::getAmountFromJournal($journal);
                 if ($default->id !== (int) $journal['currency_id'] && $default->id !== (int) $journal['foreign_currency_id']) {
@@ -78,7 +78,7 @@ class PeriodController extends Controller
             }
 
 
-            $response[$currencyId]                     ??= [
+            $response[$currencyId] ??= [
                 'difference'       => '0',
                 'difference_float' => 0,
                 'currency_id'      => (string) $currencyId,

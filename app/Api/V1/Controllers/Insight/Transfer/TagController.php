@@ -71,17 +71,17 @@ class TagController extends Controller
 
 
         // collect all expenses in this period (regardless of type) by the given bills and accounts.
-        $collector = app(GroupCollectorInterface::class);
+        $collector       = app(GroupCollectorInterface::class);
         $collector->setTypes([TransactionType::TRANSFER])->setRange($start, $end)->setDestinationAccounts($accounts);
         $collector->withoutTags();
 
-        $genericSet = $collector->getExtractedJournals();
+        $genericSet      = $collector->getExtractedJournals();
 
         foreach ($genericSet as $journal) {
             // currency
-            $currencyId   = $journal['currency_id'];
-            $currencyCode = $journal['currency_code'];
-            $field        = $convertToNative && $currencyId !== $default->id ? 'native_amount' : 'amount';
+            $currencyId                                = $journal['currency_id'];
+            $currencyCode                              = $journal['currency_code'];
+            $field                                     = $convertToNative && $currencyId !== $default->id ? 'native_amount' : 'amount';
 
             // perhaps use default currency instead?
             if ($convertToNative && $journal['currency_id'] !== $default->id) {
@@ -93,7 +93,7 @@ class TagController extends Controller
                 $field = 'foreign_amount';
             }
 
-            $response[$currencyId]                     ??= [
+            $response[$currencyId] ??= [
                 'difference'       => '0',
                 'difference_float' => 0,
                 'currency_id'      => (string) $currencyId,
@@ -115,11 +115,11 @@ class TagController extends Controller
      */
     public function tag(GenericRequest $request): JsonResponse
     {
-        $accounts = $request->getAssetAccounts();
-        $tags     = $request->getTags();
-        $start    = $request->getStart();
-        $end      = $request->getEnd();
-        $response = [];
+        $accounts   = $request->getAssetAccounts();
+        $tags       = $request->getTags();
+        $start      = $request->getStart();
+        $end        = $request->getEnd();
+        $response   = [];
 
         // get all tags:
         if (0 === $tags->count()) {
@@ -127,7 +127,7 @@ class TagController extends Controller
         }
 
         // collect all expenses in this period (regardless of type) by the given bills and accounts.
-        $collector = app(GroupCollectorInterface::class);
+        $collector  = app(GroupCollectorInterface::class);
         $collector->setTypes([TransactionType::TRANSFER])->setRange($start, $end)->setDestinationAccounts($accounts);
         $collector->setTags($tags);
         $genericSet = $collector->getExtractedJournals();
@@ -145,7 +145,7 @@ class TagController extends Controller
 
                 // on currency ID
                 if (0 !== $currencyId) {
-                    $response[$key]                     ??= [
+                    $response[$key] ??= [
                         'id'               => (string) $tagId,
                         'name'             => $tag['name'],
                         'difference'       => '0',

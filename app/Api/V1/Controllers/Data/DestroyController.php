@@ -63,8 +63,8 @@ class DestroyController extends Controller
      */
     public function destroy(DestroyRequest $request): JsonResponse
     {
-        $objects      = $request->getObjects();
-        $this->unused = $request->boolean('unused', false);
+        $objects         = $request->getObjects();
+        $this->unused    = $request->boolean('unused', false);
 
         $allExceptAssets = [AccountTypeEnum::BENEFICIARY->value, AccountTypeEnum::CASH->value, AccountTypeEnum::CREDITCARD->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::EXPENSE->value, AccountTypeEnum::IMPORT->value, AccountTypeEnum::INITIAL_BALANCE->value, AccountTypeEnum::LIABILITY_CREDIT->value, AccountTypeEnum::RECONCILIATION->value, AccountTypeEnum::REVENUE->value];
         $all             = [AccountTypeEnum::ASSET->value, AccountTypeEnum::BENEFICIARY->value, AccountTypeEnum::CASH->value, AccountTypeEnum::CREDITCARD->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::EXPENSE->value, AccountTypeEnum::IMPORT->value, AccountTypeEnum::INITIAL_BALANCE->value, AccountTypeEnum::LIABILITY_CREDIT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::RECONCILIATION->value];
@@ -101,11 +101,11 @@ class DestroyController extends Controller
     private function destroyBudgets(): void
     {
         /** @var AvailableBudgetRepositoryInterface $abRepository */
-        $abRepository = app(AvailableBudgetRepositoryInterface::class);
+        $abRepository     = app(AvailableBudgetRepositoryInterface::class);
         $abRepository->destroyAll();
 
         /** @var BudgetLimitRepositoryInterface $blRepository */
-        $blRepository = app(BudgetLimitRepositoryInterface::class);
+        $blRepository     = app(BudgetLimitRepositoryInterface::class);
         $blRepository->destroyAll();
 
         /** @var BudgetRepositoryInterface $budgetRepository */

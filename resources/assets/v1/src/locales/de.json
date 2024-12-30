@@ -133,7 +133,7 @@
         "header_exchange_rates": "Wechselkurse",
         "exchange_rates_intro": "Firefly III unterst\u00fctzt das Herunterladen und Verwenden von Wechselkursen. Lesen Sie mehr dar\u00fcber in <a href=\u201ehttps:\/\/docs.firefly-iii.org\/LOL_NOT_FINISHED_YET_TODO\u201c>der Dokumentation<\/a>.",
         "exchange_rates_from_to": "Zwischen {from} und {to} (und umgekehrt)",
-        "exchange_rates_intro_rates": "Firefly III uses the following exchange rates. The inverse is automatically calculated when it is not provided. If no exchange rate exists for the date of the transaction, Firefly III will go back in time to find one. If none are present, the rate \"1\" will be used.",
+        "exchange_rates_intro_rates": "Firefly III verwendet die folgenden Wechselkurse. Der Kehrwert wird automatisch berechnet, wenn er nicht angegeben wurde. Wenn f\u00fcr das Datum der Transaktion kein Wechselkurs vorhanden ist, sucht Firefly III in der Vergangenheit nach einem Kurs. Wenn keine vorhanden sind, wird der Kurs \u201e1\u201c verwendet.",
         "header_exchange_rates_rates": "Wechselkurse",
         "header_exchange_rates_table": "Tabelle mit Wechselkursen",
         "help_rate_form": "An diesem Tag, wie viele {to} werden Sie f\u00fcr {from} bekommen?",

@@ -72,19 +72,19 @@ class AccountController extends Controller
     public function overview(DateRequest $request): JsonResponse
     {
         // parameters for chart:
-        $dates = $request->getAll();
+        $dates      = $request->getAll();
 
         /** @var Carbon $start */
-        $start = $dates['start'];
+        $start      = $dates['start'];
 
         /** @var Carbon $end */
-        $end = $dates['end'];
+        $end        = $dates['end'];
 
         // user's preferences
         $defaultSet = $this->repository->getAccountsByType([AccountTypeEnum::ASSET->value])->pluck('id')->toArray();
 
         /** @var Preference $frontpage */
-        $frontpage = app('preferences')->get('frontpageAccounts', $defaultSet);
+        $frontpage  = app('preferences')->get('frontpageAccounts', $defaultSet);
 
         if (!(is_array($frontpage->data) && count($frontpage->data) > 0)) {
             $frontpage->data = $defaultSet;
@@ -92,14 +92,14 @@ class AccountController extends Controller
         }
 
         // get accounts:
-        $accounts  = $this->repository->getAccountsById($frontpage->data);
-        $chartData = [];
+        $accounts   = $this->repository->getAccountsById($frontpage->data);
+        $chartData  = [];
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $currency   = $this->repository->getAccountCurrency($account) ?? $this->defaultCurrency;
-            $field      = $this->convertToNative && $currency->id !== $this->defaultCurrency->id ? 'native_balance' : 'balance';
-            $currentSet = [
+            $currency     = $this->repository->getAccountCurrency($account) ?? $this->defaultCurrency;
+            $field        = $this->convertToNative && $currency->id !== $this->defaultCurrency->id ? 'native_balance' : 'balance';
+            $currentSet   = [
                 'label'                   => $account->name,
                 'currency_id'             => (string) $currency->id,
                 'currency_code'           => $currency->code,
@@ -116,14 +116,14 @@ class AccountController extends Controller
             $range        = app('steam')->finalAccountBalanceInRange($account, $start, clone $end, $this->convertToNative);
             $previous     = array_values($range)[0][$field];
             while ($currentStart <= $end) {
-                $format   = $currentStart->format('Y-m-d');
-                $label    = $currentStart->toAtomString();
-                $balance  = array_key_exists($format, $range) ? $range[$format][$field] : $previous;
-                $previous = $balance;
+                $format                        = $currentStart->format('Y-m-d');
+                $label                         = $currentStart->toAtomString();
+                $balance                       = array_key_exists($format, $range) ? $range[$format][$field] : $previous;
+                $previous                      = $balance;
                 $currentStart->addDay();
                 $currentSet['entries'][$label] = $balance;
             }
-            $chartData[] = $currentSet;
+            $chartData[]  = $currentSet;
         }
 
         return response()->json($chartData);

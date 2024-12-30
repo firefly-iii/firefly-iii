@@ -218,10 +218,10 @@ class OperationsRepository implements OperationsRepositoryInterface
 
         // 2024-12-24 disable the exclusion for now.
 
-        $repository      = app(AccountRepositoryInterface::class);
+        $repository = app(AccountRepositoryInterface::class);
         $repository->setUser($this->user);
-        $subset          = $repository->getAccountsByType(config('firefly.valid_liabilities'));
-        $selection       = new Collection();
+        $subset     = $repository->getAccountsByType(config('firefly.valid_liabilities'));
+        $selection  = new Collection();
 
         /** @var Account $account */
         foreach ($subset as $account) {
@@ -231,7 +231,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         }
 
         /** @var GroupCollectorInterface $collector */
-        $collector       = app(GroupCollectorInterface::class);
+        $collector  = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)
             ->setRange($start, $end)
             // ->excludeDestinationAccounts($selection)
@@ -249,13 +249,14 @@ class OperationsRepository implements OperationsRepositoryInterface
             $collector->setNormalCurrency($currency);
         }
         $collector->setBudgets($budgets);
-        $journals        = $collector->getExtractedJournals();
+        $journals   = $collector->getExtractedJournals();
 
         // same but for transactions in the foreign currency:
         if (null !== $currency) {
             Log::debug('STOP looking for transactions in the foreign currency.');
         }
         $summarizer = new TransactionSummarizer($this->user);
+
         return $summarizer->groupByCurrencyId($journals);
     }
 }

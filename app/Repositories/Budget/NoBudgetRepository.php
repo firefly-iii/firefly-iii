@@ -29,12 +29,10 @@ use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Report\Summarizer\TransactionSummarizer;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class NoBudgetRepository
@@ -93,7 +91,7 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
     public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?TransactionCurrency $currency = null): array
     {
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector  = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL]);
 
         if (null !== $accounts && $accounts->count() > 0) {
@@ -104,8 +102,9 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
         }
         $collector->withoutBudget();
         $collector->withBudgetInformation();
-        $journals  = $collector->getExtractedJournals();
+        $journals   = $collector->getExtractedJournals();
         $summarizer = new TransactionSummarizer($this->user);
+
         return $summarizer->groupByCurrencyId($journals);
     }
 }

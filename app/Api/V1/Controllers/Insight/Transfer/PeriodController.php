@@ -42,22 +42,22 @@ class PeriodController extends Controller
      */
     public function total(GenericRequest $request): JsonResponse
     {
-        $accounts   = $request->getAssetAccounts();
-        $start      = $request->getStart();
-        $end        = $request->getEnd();
-        $response   = [];
+        $accounts        = $request->getAssetAccounts();
+        $start           = $request->getStart();
+        $end             = $request->getEnd();
+        $response        = [];
         $convertToNative = Amount::convertToNative();
         $default         = Amount::getDefaultCurrency();
 
         // collect all expenses in this period (regardless of type)
-        $collector  = app(GroupCollectorInterface::class);
+        $collector       = app(GroupCollectorInterface::class);
         $collector->setTypes([TransactionType::TRANSFER])->setRange($start, $end)->setDestinationAccounts($accounts);
-        $genericSet = $collector->getExtractedJournals();
+        $genericSet      = $collector->getExtractedJournals();
         foreach ($genericSet as $journal) {
             // currency
-            $currencyId   = $journal['currency_id'];
-            $currencyCode = $journal['currency_code'];
-            $field        = $convertToNative && $currencyId !== $default->id ? 'native_amount' : 'amount';
+            $currencyId                                = $journal['currency_id'];
+            $currencyCode                              = $journal['currency_code'];
+            $field                                     = $convertToNative && $currencyId !== $default->id ? 'native_amount' : 'amount';
 
             // perhaps use default currency instead?
             if ($convertToNative && $journal['currency_id'] !== $default->id) {
@@ -69,14 +69,14 @@ class PeriodController extends Controller
                 $field = 'foreign_amount';
             }
 
-                $response[$currencyId] ??= [
-                    'difference'       => '0',
-                    'difference_float' => 0,
-                    'currency_id'      => (string) $currencyId,
-                    'currency_code'    => $currencyCode,
-                ];
-                $response[$currencyId]['difference']       = bcadd($response[$currencyId]['difference'], app('steam')->positive($journal[$field]));
-                $response[$currencyId]['difference_float'] = (float) $response[$currencyId]['difference'];
+            $response[$currencyId] ??= [
+                'difference'       => '0',
+                'difference_float' => 0,
+                'currency_id'      => (string) $currencyId,
+                'currency_code'    => $currencyCode,
+            ];
+            $response[$currencyId]['difference']       = bcadd($response[$currencyId]['difference'], app('steam')->positive($journal[$field]));
+            $response[$currencyId]['difference_float'] = (float) $response[$currencyId]['difference'];
 
         }
 

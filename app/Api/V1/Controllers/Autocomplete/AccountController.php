@@ -99,7 +99,7 @@ class AccountController extends Controller
                 );
             }
 
-            $return[] = [
+            $return[]        = [
                 'id'                      => (string) $account->id,
                 'name'                    => $account->name,
                 'name_with_balance'       => $nameWithBalance,

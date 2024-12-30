@@ -45,7 +45,7 @@ class PiggyBankEvent extends Model
             'amount'     => 'native_string',
         ];
 
-    protected $fillable = ['piggy_bank_id', 'transaction_journal_id', 'date', 'date_tz', 'amount','native_amount'];
+    protected $fillable = ['piggy_bank_id', 'transaction_journal_id', 'date', 'date_tz', 'amount', 'native_amount'];
 
     protected $hidden   = ['amount_encrypted'];
 

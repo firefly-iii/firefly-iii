@@ -27,12 +27,10 @@ namespace FireflyIII\Repositories\Category;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Report\Summarizer\TransactionSummarizer;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class NoCategoryRepository
@@ -146,14 +144,15 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface
     public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null): array
     {
         /** @var GroupCollectorInterface $collector */
-        $collector       = app(GroupCollectorInterface::class);
+        $collector  = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->withoutCategory();
 
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        $journals        = $collector->getExtractedJournals();
+        $journals   = $collector->getExtractedJournals();
         $summarizer = new TransactionSummarizer($this->user);
+
         return $summarizer->groupByCurrencyId($journals);
     }
 
