@@ -10,7 +10,7 @@ on:
       phpversion:
         description: 'PHP version'
         required: true
-        default: '8.3'
+        default: '8.4'
   schedule:
     - cron: '0 3 * * MON'
 
@@ -168,7 +168,7 @@ jobs:
 
           # if this is a develop build, slightly different variable names.
           if [[ "develop" == "$version" ]]; then
-            [[ -z $(git status --untracked-files=normal --porcelain) ]] && echo "this branch is clean, no need to push..." && exit 0;
+            #[[ -z $(git status --untracked-files=normal --porcelain) ]] && echo "this branch is clean, no need to push..." && exit 0;
             releaseName=$version-$(date +'%Y%m%d')
             originalName=$releaseName
             zipName=FireflyIII-develop.zip
@@ -177,7 +177,7 @@ jobs:
 
           # if this is a branch build, also slightly different variable names.
           if [[ "$version" == branch* ]]; then
-            [[ -z $(git status --untracked-files=normal --porcelain) ]] && echo "this branch is clean, no need to push..." && exit 0;
+            #[[ -z $(git status --untracked-files=normal --porcelain) ]] && echo "this branch is clean, no need to push..." && exit 0;
             # branch builds overrule develop
             releaseName=$version-$(date +'%Y%m%d')
             originalName=$releaseName
@@ -229,7 +229,7 @@ jobs:
           # describe the development release.
           if [[ "develop" == "$version" ]]; then
             echo 'Develop release.'
-            rm output.txt
+            rm -f output.txt
             touch output.txt
             sudo chown -R runner:docker output.txt
             echo "Weekly development release of Firefly III with the latest fixes, translations and features. Docker users can find this release under the \`develop\` tag." >> output.txt
@@ -244,7 +244,7 @@ jobs:
           # describe a branch release
           if [[ "$version" == branch* ]]; then
             echo 'Branch release.'
-            rm output.txt
+            rm -f output.txt
             touch output.txt
             sudo chown -R runner:docker output.txt
             echo "Irregular BRANCH release of Firefly III. This release contains specific features or changes. Docker users can find this release under the \`$version\` tag." >> output.txt
@@ -272,7 +272,7 @@ jobs:
           # describe alpha release
           if [[ "$version" == *alpha* ]]; then
             echo 'ALPHA release.'
-            rm output.txt
+            rm -f output.txt
             touch output.txt
             sudo chown -R runner:docker output.txt
             echo "Very early ALPHA release of Firefly III. This release contains specific features or changes. Docker users can find this release under the \`$version\` tag." >> output.txt
@@ -290,7 +290,7 @@ jobs:
           # describe beta release
           if [[ "$version" == *beta* ]]; then
             echo 'BETA release.'
-            rm output.txt
+            rm -f output.txt
             touch output.txt
             sudo chown -R runner:docker output.txt
             echo "Very early BETA release of Firefly III. This release contains specific features or changes. Docker users can find this release under the \`$version\` tag." >> output.txt
@@ -372,12 +372,12 @@ jobs:
             gh release upload $releaseName HEAD.txt
 
             # remove all temporary files
-            rm output.txt
-            rm HEAD.txt
-            rm $zipName
-            rm $zipName.sha256
-            rm $tarName
-            rm $tarName.sha256
+            rm -f output.txt
+            rm -f HEAD.txt
+            rm -f $zipName
+            rm -f $zipName.sha256
+            rm -f $tarName
+            rm -f $tarName.sha256
 
             # merge main back into develop
             git checkout develop
