@@ -159,7 +159,7 @@ class CreditRecalculateService
 
     private function processWorkAccount(Account $account): void
     {
-        Log::debug(sprintf('Now processing account #%d ("%s"). All amounts with 2 decimals!', $account->id, $account->name));
+        Log::debug(sprintf('Now processing account #%d ("%s").', $account->id, $account->name));
         // get opening balance (if present)
         $this->repository->setUser($account->user);
         $direction      = (string) $this->repository->getMetaValue($account, 'liability_direction');
@@ -230,7 +230,7 @@ class CreditRecalculateService
 
             return;
         }
-        Log::debug('Opening balance is valid');
+        //Log::debug('Opening balance is valid');
     }
 
     /**
@@ -263,7 +263,7 @@ class CreditRecalculateService
             return $leftOfDebt;
         }
         if (TransactionTypeEnum::LIABILITY_CREDIT->value === $type || TransactionTypeEnum::OPENING_BALANCE->value === $type) {
-            Log::warning(sprintf('Transaction type is "%s", so do nothing.', $type));
+            // Log::warning(sprintf('Transaction type is "%s", so do nothing.', $type));
 
             return $leftOfDebt;
         }

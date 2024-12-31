@@ -310,7 +310,15 @@ class Steam
      */
     public function finalAccountBalance(Account $account, Carbon $date): array
     {
+        $cache     = new CacheProperties();
+        $cache->addProperty($account->id);
+        $cache->addProperty($date);
+        if ($cache->has()) {
+            return $cache->get();
+        }
+
         Log::debug(sprintf('Now in finalAccountBalance(#%d, "%s", "%s")', $account->id, $account->name, $date->format('Y-m-d H:i:s')));
+
         $native          = Amount::getDefaultCurrencyByUserGroup($account->user->userGroup);
         $convertToNative = Amount::convertToNative($account->user);
         $accountCurrency = $this->getAccountCurrency($account);
@@ -387,6 +395,7 @@ class Steam
         }
         $final           = array_merge($return, $others);
         // Log::debug('Return is', $final);
+        $cache->store($final);
 
         return $final;
     }
