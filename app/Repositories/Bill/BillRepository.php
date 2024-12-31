@@ -550,9 +550,9 @@ class BillRepository implements BillRepositoryInterface
             foreach ($set as $transactionJournal) {
                 $setAmount = bcadd($setAmount, Amount::getAmountFromJournalObject($transactionJournal));
             }
-            //Log::debug(sprintf('Bill #%d ("%s") with %d transaction(s) and sum %s %s', $bill->id, $bill->name, $set->count(), $currency->code, $setAmount));
+            // Log::debug(sprintf('Bill #%d ("%s") with %d transaction(s) and sum %s %s', $bill->id, $bill->name, $set->count(), $currency->code, $setAmount));
             $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $setAmount);
-            //Log::debug(sprintf('Total sum is now %s', $return[$currency->id]['sum']));
+            // Log::debug(sprintf('Total sum is now %s', $return[$currency->id]['sum']));
         }
 
         return $return;

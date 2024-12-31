@@ -91,7 +91,7 @@ class ReturnsAvailableChannels
         }
 
         // validate presence of of Ntfy settings.
-        $ntfyTopic = (string) app('preferences')->getEncryptedForUser($user, 'ntfy_topic', '')->data;
+        $ntfyTopic         = (string) app('preferences')->getEncryptedForUser($user, 'ntfy_topic', '')->data;
         if ('' !== $ntfyTopic) {
             Log::debug(sprintf('Enabled ntfy, "%s"', $ntfyTopic));
             $channels[] = NtfyChannel::class;
