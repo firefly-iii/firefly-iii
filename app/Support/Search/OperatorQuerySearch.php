@@ -41,20 +41,6 @@ use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\ParseDateString;
 use FireflyIII\User;
-use Gdbots\QueryParser\Enum\BoolOperator;
-use Gdbots\QueryParser\Node\Date;
-use Gdbots\QueryParser\Node\Emoji;
-use Gdbots\QueryParser\Node\Emoticon;
-use Gdbots\QueryParser\Node\Field;
-use Gdbots\QueryParser\Node\Hashtag;
-use Gdbots\QueryParser\Node\Mention;
-use Gdbots\QueryParser\Node\Node;
-use Gdbots\QueryParser\Node\Numbr;
-use Gdbots\QueryParser\Node\Phrase;
-use Gdbots\QueryParser\Node\Subquery;
-use Gdbots\QueryParser\Node\Url;
-use Gdbots\QueryParser\Node\Word;
-use Gdbots\QueryParser\QueryParser;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
@@ -145,10 +131,11 @@ class OperatorQuerySearch implements SearchInterface
     public function parseQuery(string $query): void
     {
         app('log')->debug(sprintf('Now in parseQuery(%s)', $query));
-        $parser = new QueryParser();
+        $parser = app(QueryParserInterface::class);
+        app('log')->debug(sprintf('Using %s as implementation for QueryParserInterface', get_class($parser)));
 
         try {
-            $query1 = $parser->parse($query);
+            $nodes = $parser->parse($query);
         } catch (\LogicException|\TypeError $e) {
             app('log')->error($e->getMessage());
             app('log')->error(sprintf('Could not parse search: "%s".', $query));
@@ -156,9 +143,9 @@ class OperatorQuerySearch implements SearchInterface
             throw new FireflyException(sprintf('Invalid search value "%s". See the logs.', e($query)), 0, $e);
         }
 
-        app('log')->debug(sprintf('Found %d node(s)', count($query1->getNodes())));
-        foreach ($query1->getNodes() as $searchNode) {
-            $this->handleSearchNode($searchNode);
+        app('log')->debug(sprintf('Found %d node(s)', count($nodes)));
+        foreach ($nodes as $node) {
+            $this->handleSearchNode($node);
         }
 
         // add missing information
@@ -173,81 +160,71 @@ class OperatorQuerySearch implements SearchInterface
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function handleSearchNode(Node $searchNode): void
+    private function handleSearchNode(Node $node): void
     {
-        $class = get_class($searchNode);
-        app('log')->debug(sprintf('Now in handleSearchNode(%s)', $class));
+        app('log')->debug(sprintf('Now in handleSearchNode(%s)', get_class($node)));
 
-        switch ($class) {
-            default:
-                app('log')->error(sprintf('Cannot handle node %s', $class));
-
-                throw new FireflyException(sprintf('Firefly III search can\'t handle "%s"-nodes', $class));
-
-            case Subquery::class:
-                // loop all notes in subquery:
-                foreach ($searchNode->getNodes() as $subNode) { // @phpstan-ignore-line PHPStan thinks getNodes() does not exist but it does.
-                    $this->handleSearchNode($subNode);          // let's hope it's not too recursive
-                }
-
-                break;
-
-            case Word::class:
-            case Phrase::class:
-            case Numbr::class:
-            case Url::class:
-            case Date::class:
-            case Hashtag::class:
-            case Emoticon::class:
-            case Emoji::class:
-            case Mention::class:
-                $allWords      = (string) $searchNode->getValue();
-                app('log')->debug(sprintf('Add words "%s" to search string, because Node class is "%s"', $allWords, $class));
+        switch (true) {
+            case $node instanceof Word:
+                $allWords      = (string) $node->getValue();
+                app('log')->debug(sprintf('Add words "%s" to search string', $allWords));
                 $this->words[] = $allWords;
-
                 break;
 
-            case Field::class:
-                app('log')->debug(sprintf('Now handle Node class %s', $class));
+            case $node instanceof Field:
+                $this->handleFieldNode($node);
+                break;
 
-                /** @var Field $searchNode */
-                // used to search for x:y
-                $operator      = strtolower($searchNode->getValue());
-                $value         = $searchNode->getNode()->getValue();
-                $prohibited    = BoolOperator::PROHIBITED === $searchNode->getBoolOperator();
-                $context       = config(sprintf('search.operators.%s.needs_context', $operator));
+            case $node instanceof Subquery:
+                foreach ($node->getNodes() as $subNode) {
+                    $this->handleSearchNode($subNode);
+                }
+                break;
 
-                // is an operator that needs no context, and value is false, then prohibited = true.
-                if ('false' === $value && in_array($operator, $this->validOperators, true) && false === $context && !$prohibited) {
-                    $prohibited = true;
-                    $value      = 'true';
-                }
-                // if the operator is prohibited, but the value is false, do an uno reverse
-                if ('false' === $value && $prohibited && in_array($operator, $this->validOperators, true) && false === $context) {
-                    $prohibited = false;
-                    $value      = 'true';
-                }
+            default:
+                app('log')->error(sprintf('Cannot handle node %s', get_class($node)));
+                throw new FireflyException(sprintf('Firefly III search can\'t handle "%s"-nodes', get_class($node)));
+        }
+    }
 
-                // must be valid operator:
-                if (
-                    in_array($operator, $this->validOperators, true)
-                    && $this->updateCollector($operator, (string) $value, $prohibited)) {
-                    $this->operators->push(
-                        [
-                            'type'       => self::getRootOperator($operator),
-                            'value'      => (string) $value,
-                            'prohibited' => $prohibited,
-                        ]
-                    );
-                    app('log')->debug(sprintf('Added operator type "%s"', $operator));
-                }
-                if (!in_array($operator, $this->validOperators, true)) {
-                    app('log')->debug(sprintf('Added INVALID operator type "%s"', $operator));
-                    $this->invalidOperators[] = [
-                        'type'  => $operator,
-                        'value' => (string) $value,
-                    ];
-                }
+    /**
+     * @throws FireflyException
+     */
+    private function handleFieldNode(Field $node): void
+    {
+        $operator = strtolower($node->getOperator());
+        $value = $node->getValue();
+        $prohibited = $node->isProhibited();
+
+        $context = config(sprintf('search.operators.%s.needs_context', $operator));
+
+        // is an operator that needs no context, and value is false, then prohibited = true.
+        if ('false' === $value && in_array($operator, $this->validOperators, true) && false === $context && !$prohibited) {
+            $prohibited = true;
+            $value = 'true';
+        }
+        // if the operator is prohibited, but the value is false, do an uno reverse
+        if ('false' === $value && $prohibited && in_array($operator, $this->validOperators, true) && false === $context) {
+            $prohibited = false;
+            $value = 'true';
+        }
+
+        // must be valid operator:
+        if (in_array($operator, $this->validOperators, true)) {
+            if ($this->updateCollector($operator, (string)$value, $prohibited)) {
+                $this->operators->push([
+                    'type' => self::getRootOperator($operator),
+                    'value' => (string)$value,
+                    'prohibited' => $prohibited,
+                ]);
+                app('log')->debug(sprintf('Added operator type "%s"', $operator));
+            }
+        } else {
+            app('log')->debug(sprintf('Added INVALID operator type "%s"', $operator));
+            $this->invalidOperators[] = [
+                'type' => $operator,
+                'value' => (string)$value,
+            ];
         }
     }
 

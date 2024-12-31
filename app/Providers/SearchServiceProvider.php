@@ -24,6 +24,8 @@ declare(strict_types=1);
 namespace FireflyIII\Providers;
 
 use FireflyIII\Support\Search\OperatorQuerySearch;
+use FireflyIII\Support\Search\QueryParser;
+use FireflyIII\Support\Search\QueryParserInterface;
 use FireflyIII\Support\Search\SearchInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
@@ -43,6 +45,15 @@ class SearchServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->bind(
+            QueryParserInterface::class,
+            static function (Application $app) {
+                /** @var QueryParser $queryParser */
+                $queryParser = app(QueryParser::class);
+                return $queryParser;
+            }
+        );
+
         $this->app->bind(
             SearchInterface::class,
             static function (Application $app) {
