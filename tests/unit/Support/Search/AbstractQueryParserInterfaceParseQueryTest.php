@@ -22,7 +22,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\unit\Support;
+namespace Tests\unit\Support\Search;
 
 use FireflyIII\Support\Search\Field;
 use FireflyIII\Support\Search\QueryParserInterface;
