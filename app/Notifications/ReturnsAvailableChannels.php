@@ -83,15 +83,17 @@ class ReturnsAvailableChannels
 
     private static function returnUserChannels(User $user): array
     {
+        Log::debug(sprintf('Checking channels for user #%d', $user->id));
         $channels          = ['mail'];
-        $slackUrl          = app('preferences')->getEncryptedForUser($user, 'slack_webhook_url', '')->data;
+        $slackUrl          = (string) app('preferences')->getEncryptedForUser($user, 'slack_webhook_url', '')->data;
         if (UrlValidator::isValidWebhookURL($slackUrl)) {
             $channels[] = 'slack';
         }
 
         // validate presence of of Ntfy settings.
-        if ('' !== (string) app('preferences')->getEncryptedForUser($user, 'ntfy_topic', '')->data) {
-            Log::debug('Enabled ntfy.');
+        $ntfyTopic = (string) app('preferences')->getEncryptedForUser($user, 'ntfy_topic', '')->data;
+        if ('' !== $ntfyTopic) {
+            Log::debug(sprintf('Enabled ntfy, "%s"', $ntfyTopic));
             $channels[] = NtfyChannel::class;
         }
         if ('' === (string) app('preferences')->getEncryptedForUser($user, 'ntfy_topic', '')->data) {

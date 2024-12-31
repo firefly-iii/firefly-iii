@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V2\Request\Chart;
 
 use FireflyIII\Enums\UserRoleEnum;
-use FireflyIII\Support\Http\Api\ParsesQueryFilters;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
@@ -40,7 +39,6 @@ class ChartRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;
-    use ParsesQueryFilters;
     use ValidatesUserGroupTrait;
 
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];

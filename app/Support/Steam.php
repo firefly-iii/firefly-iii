@@ -331,7 +331,7 @@ class Steam
             if ($native->id === $accountCurrency?->id) {
                 $return['balance'] = bcadd('' === (string) $account->virtual_balance ? '0' : $account->virtual_balance, $return['balance']);
             }
-            Log::debug(sprintf('balance is (%s only) %s (with virtual balance)', $native->code, $this->bcround($return['balance'], 2)));
+            //Log::debug(sprintf('balance is (%s only) %s (with virtual balance)', $native->code, $this->bcround($return['balance'], 2)));
 
             // native balance
             $return['native_balance'] = (string) $account->transactions()
@@ -342,7 +342,7 @@ class Steam
             ;
             // plus native virtual balance.
             $return['native_balance'] = bcadd('' === (string) $account->native_virtual_balance ? '0' : $account->native_virtual_balance, $return['native_balance']);
-            Log::debug(sprintf('native_balance is (all transactions to %s) %s (with virtual balance)', $native->code, $this->bcround($return['native_balance'])));
+            //Log::debug(sprintf('native_balance is (all transactions to %s) %s (with virtual balance)', $native->code, $this->bcround($return['native_balance'])));
 
             // plus foreign transactions in THIS currency.
             $sum                      = (string) $account->transactions()
@@ -354,7 +354,7 @@ class Steam
             ;
             $return['native_balance'] = bcadd($return['native_balance'], $sum);
 
-            Log::debug(sprintf('Foreign amount transactions add (%s only) %s, total native_balance is now %s', $native->code, $this->bcround($sum), $this->bcround($return['native_balance'])));
+            // Log::debug(sprintf('Foreign amount transactions add (%s only) %s, total native_balance is now %s', $native->code, $this->bcround($sum), $this->bcround($return['native_balance'])));
         }
 
         // balance(s) in other (all) currencies.
@@ -365,12 +365,12 @@ class Steam
             ->get(['transaction_currencies.code', 'transactions.amount'])->toArray()
         ;
         $others          = $this->groupAndSumTransactions($array, 'code', 'amount');
-        Log::debug('All balances are (joined)', $others);
+        // Log::debug('All balances are (joined)', $others);
         // if the account has no own currency preference, drop balance in favor of native balance
         if ($hasCurrency && !$convertToNative) {
             $return['balance']        = $others[$currency->code] ?? '0';
             $return['native_balance'] = $others[$currency->code] ?? '0';
-            Log::debug(sprintf('Set balance + native_balance to %s', $return['balance']));
+            // Log::debug(sprintf('Set balance + native_balance to %s', $return['balance']));
         }
 
         // if the currency is the same as the native currency, set the native_balance to the balance for consistency.
@@ -379,14 +379,14 @@ class Steam
         //        }
 
         if (!$hasCurrency && array_key_exists('balance', $return) && array_key_exists('native_balance', $return)) {
-            Log::debug('Account has no currency preference, dropping balance in favor of native balance.');
+//            Log::debug('Account has no currency preference, dropping balance in favor of native balance.');
             $sum                      = bcadd($return['balance'], $return['native_balance']);
-            Log::debug(sprintf('%s + %s = %s', $return['balance'], $return['native_balance'], $sum));
+//            Log::debug(sprintf('%s + %s = %s', $return['balance'], $return['native_balance'], $sum));
             $return['native_balance'] = $sum;
             unset($return['balance']);
         }
         $final           = array_merge($return, $others);
-        Log::debug('Return is', $final);
+        // Log::debug('Return is', $final);
 
         return $final;
     }

@@ -133,8 +133,8 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
         Log::debug(sprintf('Now in %s(%s, %s)', __METHOD__, $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
         $return           = [];
         $availableBudgets = $this->user->availableBudgets()
-            ->where('start_date', $start->format('Y-m-d H:i:s'))
-            ->where('end_date', $end->format('Y-m-d H:i:s'))->get()
+            ->where('start_date', $start->format('Y-m-d'))
+            ->where('end_date', $end->format('Y-m-d'))->get()
         ;
 
         Log::debug(sprintf('Found %d available budgets', $availableBudgets->count()));

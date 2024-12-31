@@ -137,13 +137,13 @@ class AccountController extends Controller
 
                     continue;
                 }
-                Log::debug(sprintf('Will process expense array "%s" with amount %s', $key, $endBalance));
+                //Log::debug(sprintf('Will process expense array "%s" with amount %s', $key, $endBalance));
                 $searchCode   = $this->convertToNative ? $this->defaultCurrency->code : $key;
-                Log::debug(sprintf('Search code is %s', $searchCode));
+                //Log::debug(sprintf('Search code is %s', $searchCode));
                 // see if there is an accompanying start amount.
                 // grab the difference and find the currency.
                 $startBalance = ($startBalances[$account->id][$key] ?? '0');
-                Log::debug(sprintf('Start balance is %s', $startBalance));
+//                Log::debug(sprintf('Start balance is %s', $startBalance));
                 $diff         = bcsub($endBalance, $startBalance);
                 $currencies[$searchCode] ??= $this->currencyRepository->findByCode($searchCode);
                 if (0 !== bccomp($diff, '0')) {
@@ -596,13 +596,13 @@ class AccountController extends Controller
 
                     continue;
                 }
-                Log::debug(sprintf('Will process expense array "%s" with amount %s', $key, $endBalance));
+                //Log::debug(sprintf('Will process expense array "%s" with amount %s', $key, $endBalance));
                 $searchCode   = $this->convertToNative ? $this->defaultCurrency->code : $key;
-                Log::debug(sprintf('Search code is %s', $searchCode));
+                //Log::debug(sprintf('Search code is %s', $searchCode));
                 // see if there is an accompanying start amount.
                 // grab the difference and find the currency.
                 $startBalance = ($startBalances[$account->id][$key] ?? '0');
-                Log::debug(sprintf('Start balance is %s', $startBalance));
+                //Log::debug(sprintf('Start balance is %s', $startBalance));
                 $diff         = bcsub($endBalance, $startBalance);
                 $currencies[$searchCode] ??= $this->currencyRepository->findByCode($searchCode);
                 if (0 !== bccomp($diff, '0')) {
