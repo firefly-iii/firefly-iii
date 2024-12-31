@@ -114,7 +114,7 @@ class AccountController extends Controller
 
         // loop the accounts, then check for balance and currency info.
         foreach ($accounts as $account) {
-            Log::debug(sprintf('[a] Now in account #%d ("%s")', $account->id, $account->name));
+            // Log::debug(sprintf('[a] Now in account #%d ("%s")', $account->id, $account->name));
             $expenses = $endBalances[$account->id] ?? false;
             if (false === $expenses) {
                 Log::error(sprintf('Found no end balance for account #%d', $account->id));
@@ -573,7 +573,7 @@ class AccountController extends Controller
 
         // loop the accounts, then check for balance and currency info.
         foreach ($accounts as $account) {
-            Log::debug(sprintf('[b] Now in account #%d ("%s")', $account->id, $account->name));
+            // Log::debug(sprintf('[b] Now in account #%d ("%s")', $account->id, $account->name));
             $expenses = $endBalances[$account->id] ?? false;
             if (false === $expenses) {
                 Log::error(sprintf('Found no end balance for account #%d', $account->id));
