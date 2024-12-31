@@ -331,7 +331,7 @@ class Steam
             if ($native->id === $accountCurrency?->id) {
                 $return['balance'] = bcadd('' === (string) $account->virtual_balance ? '0' : $account->virtual_balance, $return['balance']);
             }
-            //Log::debug(sprintf('balance is (%s only) %s (with virtual balance)', $native->code, $this->bcround($return['balance'], 2)));
+            // Log::debug(sprintf('balance is (%s only) %s (with virtual balance)', $native->code, $this->bcround($return['balance'], 2)));
 
             // native balance
             $return['native_balance'] = (string) $account->transactions()
@@ -342,7 +342,7 @@ class Steam
             ;
             // plus native virtual balance.
             $return['native_balance'] = bcadd('' === (string) $account->native_virtual_balance ? '0' : $account->native_virtual_balance, $return['native_balance']);
-            //Log::debug(sprintf('native_balance is (all transactions to %s) %s (with virtual balance)', $native->code, $this->bcround($return['native_balance'])));
+            // Log::debug(sprintf('native_balance is (all transactions to %s) %s (with virtual balance)', $native->code, $this->bcround($return['native_balance'])));
 
             // plus foreign transactions in THIS currency.
             $sum                      = (string) $account->transactions()
@@ -379,16 +379,15 @@ class Steam
         //        }
 
         if (!$hasCurrency && array_key_exists('balance', $return) && array_key_exists('native_balance', $return)) {
-//            Log::debug('Account has no currency preference, dropping balance in favor of native balance.');
+            //            Log::debug('Account has no currency preference, dropping balance in favor of native balance.');
             $sum                      = bcadd($return['balance'], $return['native_balance']);
-//            Log::debug(sprintf('%s + %s = %s', $return['balance'], $return['native_balance'], $sum));
+            //            Log::debug(sprintf('%s + %s = %s', $return['balance'], $return['native_balance'], $sum));
             $return['native_balance'] = $sum;
             unset($return['balance']);
         }
-        $final           = array_merge($return, $others);
-        // Log::debug('Return is', $final);
 
-        return $final;
+        return array_merge($return, $others);
+        // Log::debug('Return is', $final);
     }
 
     public function filterAccountBalances(array $total, Account $account, bool $convertToNative, ?TransactionCurrency $currency = null): array
