@@ -30,7 +30,6 @@ use FireflyIII\Support\Search\Word;
 use FireflyIII\Support\Search\Subquery;
 use Tests\integration\TestCase;
 
-
 abstract class AbstractQueryParserInterfaceParseQueryTest extends TestCase
 {
     abstract protected function createParser(): QueryParserInterface;
@@ -60,9 +59,11 @@ abstract class AbstractQueryParserInterfaceParseQueryTest extends TestCase
         $this->assertIsArray($result);
         $this->assertCount(1, $result);
         $this->assertInstanceOf(Field::class, $result[0]);
-        $this->assertTrue($result[0]->isProhibited());
-        $this->assertEquals('amount', $result[0]->getOperator());
-        $this->assertEquals('100', $result[0]->getValue());
+        /** @var Field $field */
+        $field = $result[0];
+        $this->assertTrue($field->isProhibited());
+        $this->assertEquals('amount', $field->getOperator());
+        $this->assertEquals('100', $field->getValue());
     }
 
     public function testGivenSimpleWordWhenParsingQueryThenReturnsWordNode(): void
@@ -72,7 +73,9 @@ abstract class AbstractQueryParserInterfaceParseQueryTest extends TestCase
         $this->assertIsArray($result);
         $this->assertCount(1, $result);
         $this->assertInstanceOf(Word::class, $result[0]);
-        $this->assertEquals('groceries', $result[0]->getValue());
+        /** @var Word $word */
+        $word = $result[0];
+        $this->assertEquals('groceries', $word->getValue());
     }
 
     public function testGivenMultipleWordsWhenParsingQueryThenReturnsWordNodes(): void
@@ -83,13 +86,19 @@ abstract class AbstractQueryParserInterfaceParseQueryTest extends TestCase
         $this->assertCount(3, $result);
 
         $this->assertInstanceOf(Word::class, $result[0]);
-        $this->assertEquals('groceries', $result[0]->getValue());
+        /** @var Word $word1 */
+        $word1 = $result[0];
+        $this->assertEquals('groceries', $word1->getValue());
 
         $this->assertInstanceOf(Word::class, $result[1]);
-        $this->assertEquals('shopping', $result[1]->getValue());
+        /** @var Word $word2 */
+        $word2 = $result[1];
+        $this->assertEquals('shopping', $word2->getValue());
 
         $this->assertInstanceOf(Word::class, $result[2]);
-        $this->assertEquals('market', $result[2]->getValue());
+        /** @var Word $word3 */
+        $word3 = $result[2];
+        $this->assertEquals('market', $word3->getValue());
     }
 
     public function testGivenMixedWordsAndOperatorsWhenParsingQueryThenReturnsCorrectNodes(): void
@@ -100,14 +109,20 @@ abstract class AbstractQueryParserInterfaceParseQueryTest extends TestCase
         $this->assertCount(3, $result);
 
         $this->assertInstanceOf(Word::class, $result[0]);
-        $this->assertEquals('groceries', $result[0]->getValue());
+        /** @var Word $word1 */
+        $word1 = $result[0];
+        $this->assertEquals('groceries', $word1->getValue());
 
         $this->assertInstanceOf(Field::class, $result[1]);
-        $this->assertEquals('amount', $result[1]->getOperator());
-        $this->assertEquals('50', $result[1]->getValue());
+        /** @var Field $field */
+        $field = $result[1];
+        $this->assertEquals('amount', $field->getOperator());
+        $this->assertEquals('50', $field->getValue());
 
         $this->assertInstanceOf(Word::class, $result[2]);
-        $this->assertEquals('shopping', $result[2]->getValue());
+        /** @var Word $word2 */
+        $word2 = $result[2];
+        $this->assertEquals('shopping', $word2->getValue());
     }
 
     public function testGivenQuotedValueWithSpacesWhenParsingQueryThenReturnsFieldNode(): void
@@ -115,100 +130,10 @@ abstract class AbstractQueryParserInterfaceParseQueryTest extends TestCase
         $result = $this->createParser()->parse('description_contains:"shopping at market"');
 
         $this->assertInstanceOf(Field::class, $result[0]);
-        $this->assertEquals('description_contains', $result[0]->getOperator());
-        $this->assertEquals('shopping at market', $result[0]->getValue());
-    }
-
-    public function testGivenDecimalNumberWhenParsingQueryThenReturnsFieldNode(): void
-    {
-        $result = $this->createParser()->parse('amount:123.45');
-
-        $this->assertInstanceOf(Field::class, $result[0]);
-        $this->assertEquals('amount', $result[0]->getOperator());
-        $this->assertEquals('123.45', $result[0]->getValue());
-    }
-
-    public function testGivenBooleanOperatorWhenParsingQueryThenReturnsFieldNode(): void
-    {
-        $result = $this->createParser()->parse('has_any_category:true');
-
-        $this->assertInstanceOf(Field::class, $result[0]);
-        $this->assertEquals('has_any_category', $result[0]->getOperator());
-        $this->assertEquals('true', $result[0]->getValue());
-    }
-
-    public function testGivenFieldOperatorWithBlankValueWhenParsingQueryThenReturnsCorrectNodes(): void
-    {
-        $result = $this->createParser()->parse('amount:');
-
-        $this->assertInstanceOf(Field::class, $result[0]);
-        $this->assertEquals('amount', $result[0]->getOperator());
-        $this->assertEquals('', $result[0]->getValue());
-    }
-
-    public function testGivenFieldOperatorWithEmptyQuotedStringWhenParsingQueryThenReturnsCorrectNodes(): void
-    {
-        $result = $this->createParser()->parse('amount:""');
-
-        $this->assertInstanceOf(Field::class, $result[0]);
-        $this->assertEquals('amount', $result[0]->getOperator());
-        $this->assertEquals('', $result[0]->getValue());
-    }
-
-    public function testGivenUnterminatedQuoteWhenParsingQueryThenHandlesGracefully(): void
-    {
-        $result = $this->createParser()->parse('description_contains:"unterminated');
-
-        $this->assertInstanceOf(Field::class, $result[0]);
-        $this->assertEquals('description_contains', $result[0]->getOperator());
-        $this->assertEquals('unterminated', $result[0]->getValue());
-    }
-
-    public function testGivenWordFollowedBySubqueryWhenParsingQueryThenReturnsCorrectNodes(): void
-    {
-        $result = $this->createParser()->parse('groceries (amount:100 description_contains:"test")');
-
-        $this->assertIsArray($result);
-        $this->assertCount(2, $result);
-
-        // Test the word node
-        $this->assertInstanceOf(Word::class, $result[0]);
-        $this->assertEquals('groceries', $result[0]->getValue());
-
-        // Test the subquery node
-        $this->assertInstanceOf(Subquery::class, $result[1]);
-        $nodes = $result[1]->getNodes();
-        $this->assertCount(2, $nodes);
-
-        // Test first field in subquery
-        $this->assertInstanceOf(Field::class, $nodes[0]);
-        $this->assertEquals('amount', $nodes[0]->getOperator());
-        $this->assertEquals('100', $nodes[0]->getValue());
-
-        // Test second field in subquery
-        $this->assertInstanceOf(Field::class, $nodes[1]);
-        $this->assertEquals('description_contains', $nodes[1]->getOperator());
-        $this->assertEquals('test', $nodes[1]->getValue());
-    }
-
-    public function testGivenMultipleFieldsWithQuotedValuesWhenParsingQueryThenReturnsFieldNodes(): void
-    {
-        $result = $this->createParser()->parse('description:"shopping at market" notes:"paid in cash" category:"groceries and food"');
-
-        $this->assertIsArray($result);
-        $this->assertCount(3, $result);
-
-        $this->assertInstanceOf(Field::class, $result[0]);
-        $this->assertEquals('description', $result[0]->getOperator());
-        $this->assertEquals('shopping at market', $result[0]->getValue());
-
-        $this->assertInstanceOf(Field::class, $result[1]);
-        $this->assertEquals('notes', $result[1]->getOperator());
-        $this->assertEquals('paid in cash', $result[1]->getValue());
-
-        $this->assertInstanceOf(Field::class, $result[2]);
-        $this->assertEquals('category', $result[2]->getOperator());
-        $this->assertEquals('groceries and food', $result[2]->getValue());
+        /** @var Field $field */
+        $field = $result[0];
+        $this->assertEquals('description_contains', $field->getOperator());
+        $this->assertEquals('shopping at market', $field->getValue());
     }
 
     public function testGivenSubqueryAfterFieldValueWhenParsingQueryThenReturnsCorrectNodes(): void
@@ -219,60 +144,97 @@ abstract class AbstractQueryParserInterfaceParseQueryTest extends TestCase
         $this->assertCount(2, $result);
 
         $this->assertInstanceOf(Field::class, $result[0]);
-        $this->assertEquals('amount', $result[0]->getOperator());
-        $this->assertEquals('100', $result[0]->getValue());
+        /** @var Field $field */
+        $field = $result[0];
+        $this->assertEquals('amount', $field->getOperator());
+        $this->assertEquals('100', $field->getValue());
 
         $this->assertInstanceOf(Subquery::class, $result[1]);
-        $nodes = $result[1]->getNodes();
+        /** @var Subquery $subquery */
+        $subquery = $result[1];
+        $nodes = $subquery->getNodes();
         $this->assertCount(2, $nodes);
 
         $this->assertInstanceOf(Field::class, $nodes[0]);
-        $this->assertEquals('description', $nodes[0]->getOperator());
-        $this->assertEquals('market', $nodes[0]->getValue());
+        /** @var Field $field1 */
+        $field1 = $nodes[0];
+        $this->assertEquals('description', $field1->getOperator());
+        $this->assertEquals('market', $field1->getValue());
 
         $this->assertInstanceOf(Field::class, $nodes[1]);
-        $this->assertEquals('category', $nodes[1]->getOperator());
-        $this->assertEquals('food', $nodes[1]->getValue());
+        /** @var Field $field2 */
+        $field2 = $nodes[1];
+        $this->assertEquals('category', $field2->getOperator());
+        $this->assertEquals('food', $field2->getValue());
     }
 
-    public function testGivenMultipleFieldsWithQuotedValuesWithoutSpacesWhenParsingQueryThenReturnsFieldNodes(): void
+    public function testGivenWordFollowedBySubqueryWhenParsingQueryThenReturnsCorrectNodes(): void
     {
-        $result = $this->createParser()->parse('description:"shopping market"category:"groceries"notes:"cash payment"');
+        $result = $this->createParser()->parse('groceries (amount:100 description_contains:"test")');
 
         $this->assertIsArray($result);
-        $this->assertCount(3, $result);
+        $this->assertCount(2, $result);
 
-        $this->assertInstanceOf(Field::class, $result[0]);
-        $this->assertEquals('description', $result[0]->getOperator());
-        $this->assertEquals('shopping market', $result[0]->getValue());
+        $this->assertInstanceOf(Word::class, $result[0]);
+        /** @var Word $word */
+        $word = $result[0];
+        $this->assertEquals('groceries', $word->getValue());
 
-        $this->assertInstanceOf(Field::class, $result[1]);
-        $this->assertEquals('category', $result[1]->getOperator());
-        $this->assertEquals('groceries', $result[1]->getValue());
+        $this->assertInstanceOf(Subquery::class, $result[1]);
+        /** @var Subquery $subquery */
+        $subquery = $result[1];
+        $nodes = $subquery->getNodes();
+        $this->assertCount(2, $nodes);
 
-        $this->assertInstanceOf(Field::class, $result[2]);
-        $this->assertEquals('notes', $result[2]->getOperator());
-        $this->assertEquals('cash payment', $result[2]->getValue());
+        $this->assertInstanceOf(Field::class, $nodes[0]);
+        /** @var Field $field1 */
+        $field1 = $nodes[0];
+        $this->assertEquals('amount', $field1->getOperator());
+        $this->assertEquals('100', $field1->getValue());
+
+        $this->assertInstanceOf(Field::class, $nodes[1]);
+        /** @var Field $field2 */
+        $field2 = $nodes[1];
+        $this->assertEquals('description_contains', $field2->getOperator());
+        $this->assertEquals('test', $field2->getValue());
     }
 
-    public function testGivenStringWithSingleQuoteInMiddleWhenParsingQueryThenReturnsWordNode(): void
+    public function testGivenNestedSubqueryWhenParsingQueryThenReturnsSubqueryNode(): void
     {
-        $result = $this->createParser()->parse('stringWithSingle"InMiddle');
+        $result = $this->createParser()->parse('(amount:100 (description_contains:"test payment" -has_attachments:true))');
 
         $this->assertIsArray($result);
         $this->assertCount(1, $result);
-        $this->assertInstanceOf(Word::class, $result[0]);
-        $this->assertEquals('stringWithSingle"InMiddle', $result[0]->getValue());
-    }
+        $this->assertInstanceOf(Subquery::class, $result[0]);
+        /** @var Subquery $outerSubquery */
+        $outerSubquery = $result[0];
+        $nodes = $outerSubquery->getNodes();
+        $this->assertCount(2, $nodes);
 
-    public function testGivenWordStartingWithColonWhenParsingQueryThenReturnsWordNode(): void
-    {
-        $result = $this->createParser()->parse(':startingWithColon');
+        $this->assertInstanceOf(Field::class, $nodes[0]);
+        /** @var Field $field1 */
+        $field1 = $nodes[0];
+        $this->assertEquals('amount', $field1->getOperator());
+        $this->assertEquals('100', $field1->getValue());
 
-        $this->assertIsArray($result);
-        $this->assertCount(1, $result);
-        $this->assertInstanceOf(Word::class, $result[0]);
-        $this->assertEquals(':startingWithColon', $result[0]->getValue());
+        $this->assertInstanceOf(Subquery::class, $nodes[1]);
+        /** @var Subquery $innerSubquery */
+        $innerSubquery = $nodes[1];
+        $subNodes = $innerSubquery->getNodes();
+        $this->assertCount(2, $subNodes);
+
+        $this->assertInstanceOf(Field::class, $subNodes[0]);
+        /** @var Field $field2 */
+        $field2 = $subNodes[0];
+        $this->assertEquals('description_contains', $field2->getOperator());
+        $this->assertEquals('test payment', $field2->getValue());
+
+        $this->assertInstanceOf(Field::class, $subNodes[1]);
+        /** @var Field $field3 */
+        $field3 = $subNodes[1];
+        $this->assertTrue($field3->isProhibited());
+        $this->assertEquals('has_attachments', $field3->getOperator());
+        $this->assertEquals('true', $field3->getValue());
     }
 
     public function testGivenComplexNestedSubqueriesWhenParsingQueryThenReturnsCorrectNodes(): void
@@ -282,54 +244,178 @@ abstract class AbstractQueryParserInterfaceParseQueryTest extends TestCase
         $this->assertIsArray($result);
         $this->assertCount(2, $result);
 
-        // Test the first word node
         $this->assertInstanceOf(Word::class, $result[0]);
-        $this->assertEquals('shopping', $result[0]->getValue());
+        /** @var Word $word */
+        $word = $result[0];
+        $this->assertEquals('shopping', $word->getValue());
 
-        // Test first level subquery
         $this->assertInstanceOf(Subquery::class, $result[1]);
         /** @var Subquery $firstLevelSubquery */
         $firstLevelSubquery = $result[1];
         $level1Nodes = $firstLevelSubquery->getNodes();
         $this->assertCount(3, $level1Nodes);
 
-        // Test field in first level
         $this->assertInstanceOf(Field::class, $level1Nodes[0]);
-        $this->assertEquals('amount', $level1Nodes[0]->getOperator());
-        $this->assertEquals('50', $level1Nodes[0]->getValue());
+        /** @var Field $field1 */
+        $field1 = $level1Nodes[0];
+        $this->assertEquals('amount', $field1->getOperator());
+        $this->assertEquals('50', $field1->getValue());
 
-        // Test word in first level
         $this->assertInstanceOf(Word::class, $level1Nodes[1]);
-        $this->assertEquals('market', $level1Nodes[1]->getValue());
+        /** @var Word $word2 */
+        $word2 = $level1Nodes[1];
+        $this->assertEquals('market', $word2->getValue());
 
-        // Test second level subquery
         $this->assertInstanceOf(Subquery::class, $level1Nodes[2]);
-        $level2Nodes = $level1Nodes[2]->getNodes();
+        /** @var Subquery $secondLevelSubquery */
+        $secondLevelSubquery = $level1Nodes[2];
+        $level2Nodes = $secondLevelSubquery->getNodes();
         $this->assertCount(4, $level2Nodes);
 
-        // Test prohibited field in second level
         $this->assertInstanceOf(Field::class, $level2Nodes[0]);
-        $this->assertTrue($level2Nodes[0]->isProhibited());
-        $this->assertEquals('category', $level2Nodes[0]->getOperator());
-        $this->assertEquals('food', $level2Nodes[0]->getValue());
+        /** @var Field $field2 */
+        $field2 = $level2Nodes[0];
+        $this->assertTrue($field2->isProhibited());
+        $this->assertEquals('category', $field2->getOperator());
+        $this->assertEquals('food', $field2->getValue());
 
-        // Test word in second level
         $this->assertInstanceOf(Word::class, $level2Nodes[1]);
-        $this->assertEquals('word', $level2Nodes[1]->getValue());
+        /** @var Word $word3 */
+        $word3 = $level2Nodes[1];
+        $this->assertEquals('word', $word3->getValue());
 
-        // Test field with quoted value in second level
         $this->assertInstanceOf(Field::class, $level2Nodes[2]);
-        $this->assertEquals('description', $level2Nodes[2]->getOperator());
-        $this->assertEquals('test phrase', $level2Nodes[2]->getValue());
+        /** @var Field $field3 */
+        $field3 = $level2Nodes[2];
+        $this->assertEquals('description', $field3->getOperator());
+        $this->assertEquals('test phrase', $field3->getValue());
 
-        // Test third level subquery
         $this->assertInstanceOf(Subquery::class, $level2Nodes[3]);
-        $level3Nodes = $level2Nodes[3]->getNodes();
+        /** @var Subquery $thirdLevelSubquery */
+        $thirdLevelSubquery = $level2Nodes[3];
+        $level3Nodes = $thirdLevelSubquery->getNodes();
         $this->assertCount(1, $level3Nodes);
 
-        // Test field in third level
         $this->assertInstanceOf(Field::class, $level3Nodes[0]);
-        $this->assertEquals('has_notes', $level3Nodes[0]->getOperator());
-        $this->assertEquals('true', $level3Nodes[0]->getValue());
+        /** @var Field $field4 */
+        $field4 = $level3Nodes[0];
+        $this->assertEquals('has_notes', $field4->getOperator());
+        $this->assertEquals('true', $field4->getValue());
+    }
+
+    public function testGivenProhibitedWordWhenParsingQueryThenReturnsWordNode(): void
+    {
+        $result = $this->createParser()->parse('-groceries');
+
+        $this->assertIsArray($result);
+        $this->assertCount(1, $result);
+        $this->assertInstanceOf(Word::class, $result[0]);
+        /** @var Word $word */
+        $word = $result[0];
+        $this->assertTrue($word->isProhibited());
+        $this->assertEquals('groceries', $word->getValue());
+    }
+
+    public function testGivenQuotedWordWhenParsingQueryThenReturnsWordNode(): void
+    {
+        $result = $this->createParser()->parse('"test phrase"');
+
+        $this->assertIsArray($result);
+        $this->assertCount(1, $result);
+        $this->assertInstanceOf(Word::class, $result[0]);
+        /** @var Word $word */
+        $word = $result[0];
+        $this->assertEquals('test phrase', $word->getValue());
+    }
+
+    public function testGivenProhibitedQuotedWordWhenParsingQueryThenReturnsWordNode(): void
+    {
+        $result = $this->createParser()->parse('-"test phrase"');
+
+        $this->assertIsArray($result);
+        $this->assertCount(1, $result);
+        $this->assertInstanceOf(Word::class, $result[0]);
+        /** @var Word $word */
+        $word = $result[0];
+        $this->assertTrue($word->isProhibited());
+        $this->assertEquals('test phrase', $word->getValue());
+    }
+
+    public function testGivenMultipleFieldsWhenParsingQueryThenReturnsFieldNodes(): void
+    {
+        $result = $this->createParser()->parse('amount:100 category:food description:"test phrase"');
+
+        $this->assertIsArray($result);
+        $this->assertCount(3, $result);
+
+        $this->assertInstanceOf(Field::class, $result[0]);
+        /** @var Field $field1 */
+        $field1 = $result[0];
+        $this->assertEquals('amount', $field1->getOperator());
+        $this->assertEquals('100', $field1->getValue());
+
+        $this->assertInstanceOf(Field::class, $result[1]);
+        /** @var Field $field2 */
+        $field2 = $result[1];
+        $this->assertEquals('category', $field2->getOperator());
+        $this->assertEquals('food', $field2->getValue());
+
+        $this->assertInstanceOf(Field::class, $result[2]);
+        /** @var Field $field3 */
+        $field3 = $result[2];
+        $this->assertEquals('description', $field3->getOperator());
+        $this->assertEquals('test phrase', $field3->getValue());
+    }
+
+    public function testGivenProhibitedSubqueryWhenParsingQueryThenReturnsSubqueryNode(): void
+    {
+        $result = $this->createParser()->parse('-(amount:100 category:food)');
+
+        $this->assertIsArray($result);
+        $this->assertCount(1, $result);
+        $this->assertInstanceOf(Subquery::class, $result[0]);
+        /** @var Subquery $subquery */
+        $subquery = $result[0];
+        $this->assertTrue($subquery->isProhibited());
+
+        $nodes = $subquery->getNodes();
+        $this->assertCount(2, $nodes);
+
+        $this->assertInstanceOf(Field::class, $nodes[0]);
+        /** @var Field $field1 */
+        $field1 = $nodes[0];
+        $this->assertEquals('amount', $field1->getOperator());
+        $this->assertEquals('100', $field1->getValue());
+
+        $this->assertInstanceOf(Field::class, $nodes[1]);
+        /** @var Field $field2 */
+        $field2 = $nodes[1];
+        $this->assertEquals('category', $field2->getOperator());
+        $this->assertEquals('food', $field2->getValue());
+    }
+
+    public function testGivenWordWithMultipleSpacesWhenParsingQueryThenRetainsSpaces(): void
+    {
+        $result = $this->createParser()->parse('"multiple   spaces"');
+
+        $this->assertIsArray($result);
+        $this->assertCount(1, $result);
+        $this->assertInstanceOf(Word::class, $result[0]);
+        /** @var Word $word */
+        $word = $result[0];
+        $this->assertEquals('multiple   spaces', $word->getValue());
+    }
+
+    public function testGivenFieldWithMultipleSpacesInValueWhenParsingQueryThenRetainsSpaces(): void
+    {
+        $result = $this->createParser()->parse('description:"multiple   spaces   here"');
+
+        $this->assertIsArray($result);
+        $this->assertCount(1, $result);
+        $this->assertInstanceOf(Field::class, $result[0]);
+        /** @var Field $field */
+        $field = $result[0];
+        $this->assertEquals('description', $field->getOperator());
+        $this->assertEquals('multiple   spaces   here', $field->getValue());
     }
 }
