@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
+use FireflyIII\Support\Search\GdbotsQueryParser;
 use FireflyIII\Support\Search\OperatorQuerySearch;
 use FireflyIII\Support\Search\QueryParser;
 use FireflyIII\Support\Search\QueryParserInterface;
@@ -47,10 +48,13 @@ class SearchServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             QueryParserInterface::class,
-            static function (Application $app) {
-                /** @var QueryParser $queryParser */
-                $queryParser = app(QueryParser::class);
-                return $queryParser;
+            static function () {
+                $implementation = env('QUERY_PARSER_IMPLEMENTATION', 'default');
+
+                return match($implementation) {
+                    'new' => app(QueryParser::class),
+                    default => app(GdbotsQueryParser::class),
+                };
             }
         );
 
