@@ -310,7 +310,7 @@ class Steam
      */
     public function finalAccountBalance(Account $account, Carbon $date): array
     {
-        $cache     = new CacheProperties();
+        $cache           = new CacheProperties();
         $cache->addProperty($account->id);
         $cache->addProperty($date);
         if ($cache->has()) {
