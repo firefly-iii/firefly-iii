@@ -291,9 +291,7 @@ abstract class AbstractQueryParserInterfaceParseQueryTest extends TestCase
         $this->assertInstanceOf(Word::class, $node);
         /** @var Word $node */
         $this->assertEquals($expectedValue, $node->getValue());
-        if ($prohibited) {
-            $this->assertTrue($node->isProhibited());
-        }
+        $this->assertEquals($prohibited, $node->isProhibited());
     }
 
     private function assertIsField(
@@ -306,9 +304,7 @@ abstract class AbstractQueryParserInterfaceParseQueryTest extends TestCase
         /** @var Field $node */
         $this->assertEquals($expectedOperator, $node->getOperator());
         $this->assertEquals($expectedValue, $node->getValue());
-        if ($prohibited) {
-            $this->assertTrue($node->isProhibited());
-        }
+        $this->assertEquals($prohibited, $node->isProhibited());
     }
 
     private function assertIsSubquery(Node $node, array $expectedNodes, bool $prohibited = false): void
@@ -316,9 +312,7 @@ abstract class AbstractQueryParserInterfaceParseQueryTest extends TestCase
         $this->assertInstanceOf(Subquery::class, $node);
         /** @var Subquery $node */
         $this->assertCount(count($expectedNodes), $node->getNodes());
-        if ($prohibited) {
-            $this->assertTrue($node->isProhibited());
-        }
+        $this->assertEquals($prohibited, $node->isProhibited());
 
         foreach ($expectedNodes as $index => $expected) {
             $actual = $node->getNodes()[$index];
