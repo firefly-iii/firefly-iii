@@ -7,7 +7,7 @@ namespace FireflyIII\Support\Search;
 /**
  * Query parser class
  */
-class QueryParser2 implements QueryParserInterface
+class QueryParser implements QueryParserInterface
 {
     private string $query;
     private int $position = 0;
