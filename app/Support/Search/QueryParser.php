@@ -14,7 +14,7 @@ class NodeResult
 {
     public function __construct(
         public readonly ?Node $node,
-        public readonly bool $isQueryEnd
+        public readonly bool $isSubqueryEnd
     ) {
     }
 }
@@ -30,6 +30,7 @@ class QueryParser implements QueryParserInterface
     private string $query;
     private int $position = 0;
 
+    /** @return Node[] */
     public function parse(string $query): array
     {
         $this->query = $query;
@@ -37,6 +38,7 @@ class QueryParser implements QueryParserInterface
         return $this->parseQuery(false);
     }
 
+    /** @return Node[] */
     private function parseQuery(bool $isSubquery): array
     {
         $nodes = [];
@@ -44,7 +46,7 @@ class QueryParser implements QueryParserInterface
 
         while ($nodeResult->node !== null) {
             $nodes[] = $nodeResult->node;
-            if($nodeResult->isQueryEnd) {
+            if($nodeResult->isSubqueryEnd) {
                 break;
             }
             $nodeResult = $this->buildNextNode($isSubquery);
