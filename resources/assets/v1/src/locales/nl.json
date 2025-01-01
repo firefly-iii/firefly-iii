@@ -21,7 +21,7 @@
         "apply_rules_checkbox": "Regels toepassen",
         "fire_webhooks_checkbox": "Webhooks starten",
         "no_budget_pointer": "Je hebt nog geen budgetten. Maak er een aantal op de <a href=\"budgets\">budgetten<\/a>-pagina. Met budgetten kan je je uitgaven beter bijhouden.",
-        "no_bill_pointer": "You seem to have no subscription yet. You should create some on the <a href=\"subscriptions\">subscription<\/a>-page. Subscriptions can help you keep track of expenses.",
+        "no_bill_pointer": "Je hebt nog geen abonnementen. Maak er een aantal op de <a href=\"subscriptions\">abonnementenpagina<\/a>. Met abonnementen kan je uitgaven bijhouden.",
         "source_account": "Bronrekening",
         "hidden_fields_preferences": "Je kan meer transactieopties inschakelen in je <a href=\"preferences\">instellingen<\/a>.",
         "destination_account": "Doelrekening",
