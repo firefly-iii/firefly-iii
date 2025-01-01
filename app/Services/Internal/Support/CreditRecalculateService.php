@@ -230,7 +230,7 @@ class CreditRecalculateService
 
             return;
         }
-        //Log::debug('Opening balance is valid');
+        // Log::debug('Opening balance is valid');
     }
 
     /**
