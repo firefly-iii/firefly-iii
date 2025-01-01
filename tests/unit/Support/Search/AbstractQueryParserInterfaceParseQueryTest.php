@@ -418,4 +418,60 @@ abstract class AbstractQueryParserInterfaceParseQueryTest extends TestCase
         $this->assertEquals('description', $field->getOperator());
         $this->assertEquals('multiple   spaces   here', $field->getValue());
     }
+
+    public function testGivenUnmatchedRightParenthesisWhenParsingQueryThenTreatsAsCharacter(): void
+    {
+        $result = $this->createParser()->parse('test)word');
+
+        $this->assertIsArray($result);
+        $this->assertCount(1, $result);
+        $this->assertInstanceOf(Word::class, $result[0]);
+        /** @var Word $word */
+        $word = $result[0];
+        $this->assertEquals('test)word', $word->getValue());
+    }
+
+    public function testGivenUnmatchedRightParenthesisInFieldWhenParsingQueryThenTreatsAsCharacter(): void
+    {
+        $result = $this->createParser()->parse('description:test)phrase');
+
+        $this->assertIsArray($result);
+        $this->assertCount(1, $result);
+        $this->assertInstanceOf(Field::class, $result[0]);
+        /** @var Field $field */
+        $field = $result[0];
+        $this->assertEquals('description', $field->getOperator());
+        $this->assertEquals('test)phrase', $field->getValue());
+    }
+
+    public function testGivenSubqueryFollowedByWordWhenParsingQueryThenReturnsCorrectNodes(): void
+    {
+        $result = $this->createParser()->parse('(amount:100 category:food) shopping');
+
+        $this->assertIsArray($result);
+        $this->assertCount(2, $result);
+
+        $this->assertInstanceOf(Subquery::class, $result[0]);
+        /** @var Subquery $subquery */
+        $subquery = $result[0];
+        $nodes = $subquery->getNodes();
+        $this->assertCount(2, $nodes);
+
+        $this->assertInstanceOf(Field::class, $nodes[0]);
+        /** @var Field $field1 */
+        $field1 = $nodes[0];
+        $this->assertEquals('amount', $field1->getOperator());
+        $this->assertEquals('100', $field1->getValue());
+
+        $this->assertInstanceOf(Field::class, $nodes[1]);
+        /** @var Field $field2 */
+        $field2 = $nodes[1];
+        $this->assertEquals('category', $field2->getOperator());
+        $this->assertEquals('food', $field2->getValue());
+
+        $this->assertInstanceOf(Word::class, $result[1]);
+        /** @var Word $word */
+        $word = $result[1];
+        $this->assertEquals('shopping', $word->getValue());
+    }
 }

@@ -5,7 +5,25 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Search;
 
 /**
- * Query parser class
+ * Represents a result from parsing a query node
+ *
+ * Contains the parsed node and a flag indicating if this is the end of the query.
+ * Used to handle subquery parsing and termination.
+ */
+class NodeResult
+{
+    public function __construct(
+        public readonly ?Node $node,
+        public readonly bool $isQueryEnd
+    ) {
+    }
+}
+
+
+/**
+ * Single-pass parser that processes query strings into structured nodes.
+ * Scans each character once (O(n)) to build field searches, quoted strings,
+ * prohibited terms and nested subqueries without backtracking.
  */
 class QueryParser implements QueryParserInterface
 {
@@ -16,23 +34,26 @@ class QueryParser implements QueryParserInterface
     {
         $this->query = $query;
         $this->position = 0;
-        return $this->parseQuery();
+        return $this->parseQuery(false);
     }
 
-    private function parseQuery(): array
+    private function parseQuery(bool $isSubquery): array
     {
         $nodes = [];
-        $token = $this->buildNextNode();
+        $nodeResult = $this->buildNextNode($isSubquery);
 
-        while ($token !== null) {
-            $nodes[] = $token;
-            $token = $this->buildNextNode();
+        while ($nodeResult->node !== null) {
+            $nodes[] = $nodeResult->node;
+            if($nodeResult->isQueryEnd) {
+                break;
+            }
+            $nodeResult = $this->buildNextNode($isSubquery);
         }
 
         return $nodes;
     }
 
-    private function buildNextNode(): ?Node
+    private function buildNextNode(bool $isSubquery): NodeResult
     {
         $tokenUnderConstruction = '';
         $inQuotes = false;
@@ -44,13 +65,16 @@ class QueryParser implements QueryParserInterface
 
             // If we're in a quoted string, we treat all characters except another quote as ordinary characters
             if ($inQuotes) {
-                if($char !== '"') {
+                if ($char !== '"') {
                     $tokenUnderConstruction .= $char;
                     $this->position++;
                     continue;
                 } else {
                     $this->position++;
-                    return $this->createNode($tokenUnderConstruction, $fieldName, $prohibited);
+                    return new NodeResult(
+                        $this->createNode($tokenUnderConstruction, $fieldName, $prohibited),
+                        false
+                    );
                 }
             }
 
@@ -79,7 +103,10 @@ class QueryParser implements QueryParserInterface
                     if ($tokenUnderConstruction === '') {
                         // A left parentheses at the beginning of a token indicates the start of a subquery
                         $this->position++;
-                        return new Subquery($this->parseQuery(), $prohibited);
+                        return new NodeResult(
+                            new Subquery($this->parseQuery(true), $prohibited),
+                            false
+                        );
                     } else {
                         // In any other location, it's just a normal character
                         $tokenUnderConstruction .= $char;
@@ -87,12 +114,20 @@ class QueryParser implements QueryParserInterface
                     break;
 
                 case ')':
-                    if ($tokenUnderConstruction !== '') {
+                    // A right parentheses while in a subquery means the subquery ended,
+                    // thus also signaling the end of any node currently being built
+                    if ($isSubquery) {
                         $this->position++;
-                        return $this->createNode($tokenUnderConstruction, $fieldName, $prohibited);
+                        return new NodeResult(
+                            $tokenUnderConstruction !== ''
+                            ? $this->createNode($tokenUnderConstruction, $fieldName, $prohibited)
+                            : null,
+                            true
+                        );
                     }
-                    $this->position++;
-                    return null;
+                    // In any other location, it's just a normal character
+                    $tokenUnderConstruction .= $char;
+                    break;
 
 
                 case ':':
@@ -110,7 +145,10 @@ class QueryParser implements QueryParserInterface
                     // A space indicates the end of a token construction if non-empty, otherwise it's just ignored
                     if ($tokenUnderConstruction !== '') {
                         $this->position++;
-                        return $this->createNode($tokenUnderConstruction, $fieldName, $prohibited);
+                        return new NodeResult(
+                            $this->createNode($tokenUnderConstruction, $fieldName, $prohibited),
+                            false
+                        );
                     }
                     break;
 
@@ -121,9 +159,9 @@ class QueryParser implements QueryParserInterface
             $this->position++;
         }
 
-        return $fieldName !== '' || $tokenUnderConstruction !== ''
+        return new NodeResult($tokenUnderConstruction !== '' || $fieldName !== ''
             ? $this->createNode($tokenUnderConstruction, $fieldName, $prohibited)
-            : null;
+            : null, true);
     }
 
     private function createNode(string $token, string $fieldName, bool $prohibited): Node
