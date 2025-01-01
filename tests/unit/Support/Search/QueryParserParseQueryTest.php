@@ -2,7 +2,7 @@
 
 namespace Tests\unit\Support\Search;
 
-use FireflyIII\Support\Search\QueryParser;
+use FireflyIII\Support\Search\QueryParser2;
 use FireflyIII\Support\Search\QueryParserInterface;
 use Tests\unit\Support\Search\AbstractQueryParserInterfaceParseQueryTest;
 
@@ -20,6 +20,6 @@ final class QueryParserParseQueryTest extends AbstractQueryParserInterfaceParseQ
 {
     protected function createParser(): QueryParserInterface
     {
-        return new QueryParser();
+        return new QueryParser2();
     }
 }

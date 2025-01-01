@@ -27,10 +27,12 @@ abstract class Node
 class Word extends Node
 {
     private string $value;
+    private bool $prohibited;
 
-    public function __construct(string $value)
+    public function __construct(string $value, bool $prohibited = false)
     {
         $this->value = $value;
+        $this->prohibited = $prohibited;
     }
 
     public function getValue(): string
@@ -38,9 +40,14 @@ class Word extends Node
         return $this->value;
     }
 
+    public function isProhibited(): bool
+    {
+        return $this->prohibited;
+    }
+
     public function __toString(): string
     {
-        return $this->value;
+        return ($this->prohibited ? '-' : '') . $this->value;
     }
 }
 
@@ -89,12 +96,15 @@ class Subquery extends Node
     /** @var Node[] */
     private array $nodes;
 
+    private bool $prohibited;
+
     /**
      * @param Node[] $nodes
      */
-    public function __construct(array $nodes)
+    public function __construct(array $nodes, bool $prohibited = false)
     {
         $this->nodes = $nodes;
+        $this->prohibited = $prohibited;
     }
 
     /**
@@ -105,8 +115,13 @@ class Subquery extends Node
         return $this->nodes;
     }
 
+    public function isProhibited(): bool
+    {
+        return $this->prohibited;
+    }
+
     public function __toString(): string
     {
-        return '(' . implode(' ', array_map(fn($node) => (string)$node, $this->nodes)) . ')';
+        return ($this->prohibited ? '-' : '') . '(' . implode(' ', array_map(fn($node) => (string)$node, $this->nodes)) . ')';
     }
 }

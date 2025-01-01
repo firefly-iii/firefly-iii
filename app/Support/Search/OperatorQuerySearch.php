@@ -166,9 +166,15 @@ class OperatorQuerySearch implements SearchInterface
 
         switch (true) {
             case $node instanceof Word:
-                $allWords      = (string) $node->getValue();
-                app('log')->debug(sprintf('Add words "%s" to search string', $allWords));
-                $this->words[] = $allWords;
+                $word      = (string) $node->getValue();
+                if($node->isProhibited()) {
+                    app('log')->debug(sprintf('Exclude word "%s" from search string', $word));
+                    $this->prohibitedWords[] = $word;
+                } else {
+                    app('log')->debug(sprintf('Add word "%s" to search string', $word));
+                    $this->words[] = $word;
+                }
+
                 break;
 
             case $node instanceof Field:
@@ -176,6 +182,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case $node instanceof Subquery:
+                //TODO: Handle Subquery prohibition, i.e. flip all prohibition flags inside the subquery
                 foreach ($node->getNodes() as $subNode) {
                     $this->handleSearchNode($subNode);
                 }
