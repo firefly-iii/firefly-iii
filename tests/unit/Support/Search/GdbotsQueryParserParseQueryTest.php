@@ -9,7 +9,7 @@ use Tests\unit\Support\Search\AbstractQueryParserInterfaceParseQueryTest;
 /**
  * @group unit-test
  * @group support
- * @group navigation
+ * @group search
  *
  * @internal
  *
