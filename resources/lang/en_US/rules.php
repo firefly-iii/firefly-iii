@@ -66,6 +66,7 @@ return [
     'cannot_find_destination_transaction_account' => 'Firefly III can\'t find the destination transaction account',
     'cannot_find_piggy'                           => 'Firefly III can\'t find a piggy bank named ":name"',
     'no_link_piggy'                               => 'This transaction\'s accounts are not linked to the piggy bank, so no action will be taken',
+    'both_link_piggy'                               => 'This transaction\'s accounts are both linked to the piggy bank, so no action will be taken',
     'cannot_unlink_tag'                           => 'Tag ":tag" isn\'t linked to this transaction',
     'cannot_find_budget'                          => 'Firefly III can\'t find budget ":name"',
     'cannot_find_category'                        => 'Firefly III can\'t find category ":name"',
