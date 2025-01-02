@@ -329,8 +329,9 @@ return [
     'search_query'                                         => 'Query',
     'search_found_transactions'                            => 'Firefly III found :count transaction in :time seconds.|Firefly III found :count transactions in :time seconds.',
     'search_found_more_transactions'                       => 'Firefly III found more than :count transactions in :time seconds.',
-    'search_for_query'                                     => 'Firefly III is searching for transactions with all of these words in them: <span class="text-info">:query</span>',
-    'search_for_excluded_words'                            => 'Firefly III is searching for transactions with none of these words in them: <span class="text-info">:excluded_words</span>',
+    'search_for_overview'                                  => 'Firefly III is searching for transactions that fulfill <b>all</b> of the following conditions:',
+    'search_for_query'                                     => 'All of these words must be present: <span class="text-info">:query</span>',
+    'search_for_excluded_words'                            => 'None of these words may be present: <span class="text-info">:excluded_words</span>',
     'invalid_operators_list'                               => 'These search parameters are not valid and have been ignored.',
 
     // old
@@ -730,7 +731,6 @@ return [
     // Ignore this comment
 
     // END
-    'modifiers_applies_are'                                => 'The following modifiers are applied to the search as well:',
     'general_search_error'                                 => 'An error occurred while searching. Please check the log files for more information.',
     'search_box'                                           => 'Search',
     'search_box_intro'                                     => 'Welcome to the search function of Firefly III. Enter your search query in the box. Make sure you check out the help file because the search is pretty advanced.',

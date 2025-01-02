@@ -38,36 +38,36 @@
                             <input type="hidden" name="rule" value="{{ ruleId }}"/>
                         {% endif %}
                     </form>
+                     <p>
+                            {{ trans('firefly.search_for_overview') |raw }}
+                    </p>
+                    <ul>
                     {% if '' != query %}
-                        <p>
-                            {{ trans('firefly.search_for_query', {query: query|escape})|raw }}
-                        </p>
+                        <li>
+                            {{- trans('firefly.search_for_query', {query: query|escape})|raw -}}
+                        </li>
                     {% endif %}
                     {% if '' != excludedWords %}
-                        <p>
-                            {{ trans('firefly.search_for_excluded_words', {excluded_words: excludedWords|escape})|raw }}
-                        </p>
+                        <li>
+                            {{- trans('firefly.search_for_excluded_words', {excluded_words: excludedWords|escape})|raw -}}
+                        </li>
                     {% endif %}
+
+                    {% for operator in operators %}
+                            {% if operator.prohibited %}
+                                <li>{{- trans('firefly.search_modifier_not_'~operator.type, {value: operator.value}) -}}</li>
+                            {% endif %}
+                            {% if not operator.prohibited %}
+                                <li>{{- trans('firefly.search_modifier_'~operator.type, {value: operator.value}) -}}</li>
+                            {% endif %}
+                    {% endfor %}
+                    </ul>
 
                     {% if invalidOperators|length > 0 %}
                         <p>{{ trans('firefly.invalid_operators_list') }}</p>
                         <ul>
                             {% for operator in invalidOperators %}
                                 <li class="text-danger">{{ operator.type }}:{{ operator.value }}</li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-
-                    {% if operators|length > 0 %}
-                        <p>{{ trans('firefly.modifiers_applies_are') }}</p>
-                        <ul>
-                            {% for operator in operators %}
-                                {% if operator.prohibited %}
-                                    <li>{{ trans('firefly.search_modifier_not_'~operator.type, {value: operator.value}) }}</li>
-                                {% endif %}
-                                {% if not operator.prohibited %}
-                                    <li>{{ trans('firefly.search_modifier_'~operator.type, {value: operator.value}) }}</li>
-                                {% endif %}
                             {% endfor %}
                         </ul>
                     {% endif %}
