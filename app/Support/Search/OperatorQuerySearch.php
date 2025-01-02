@@ -123,6 +123,11 @@ class OperatorQuerySearch implements SearchInterface
         return implode(' ', $this->words);
     }
 
+    public function getExcludedWordsAsString(): string
+    {
+        return implode(' ', $this->prohibitedWords);
+    }
+
     /**
      * @throws FireflyException
      */

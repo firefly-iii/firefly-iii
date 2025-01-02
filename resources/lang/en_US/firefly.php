@@ -330,6 +330,7 @@ return [
     'search_found_transactions'                            => 'Firefly III found :count transaction in :time seconds.|Firefly III found :count transactions in :time seconds.',
     'search_found_more_transactions'                       => 'Firefly III found more than :count transactions in :time seconds.',
     'search_for_query'                                     => 'Firefly III is searching for transactions with all of these words in them: <span class="text-info">:query</span>',
+    'search_for_excluded_words'                            => 'Firefly III is searching for transactions with none of these words in them: <span class="text-info">:excluded_words</span>',
     'invalid_operators_list'                               => 'These search parameters are not valid and have been ignored.',
 
     // old

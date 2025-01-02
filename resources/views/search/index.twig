@@ -43,6 +43,11 @@
                             {{ trans('firefly.search_for_query', {query: query|escape})|raw }}
                         </p>
                     {% endif %}
+                    {% if '' != excludedWords %}
+                        <p>
+                            {{ trans('firefly.search_for_excluded_words', {excluded_words: excludedWords|escape})|raw }}
+                        </p>
+                    {% endif %}
 
                     {% if invalidOperators|length > 0 %}
                         <p>{{ trans('firefly.invalid_operators_list') }}</p>
@@ -70,7 +75,7 @@
             </div>
         </div>
     </div>
-    {% if query or operators|length > 0 %}
+    {% if query or excludedWords or operators|length > 0 %}
         <div class="row result_row">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="box search_box">
@@ -125,7 +130,7 @@
             </div>
         </div>
     {% endif %}
-    {% if query == "" and operators|length == 0 %}
+    {% if query == "" and excludedWords == "" and operators|length == 0 %}
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="box">
