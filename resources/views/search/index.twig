@@ -42,14 +42,22 @@
                             {{ trans('firefly.search_for_overview') |raw }}
                     </p>
                     <ul>
-                    {% if '' != query %}
+                    {% if words|length > 0 %}
                         <li>
-                            {{- trans('firefly.search_for_query', {query: query|escape})|raw -}}
+                            {{- trans('firefly.search_for_query', {
+                                query: words
+                                    |map(word => '<span class="search-word">' ~ word|escape ~ '</span>')
+                                    |join(' ')
+                            })|raw -}}
                         </li>
                     {% endif %}
-                    {% if '' != excludedWords %}
+                    {% if excludedWords|length > 0 %}
                         <li>
-                            {{- trans('firefly.search_for_excluded_words', {excluded_words: excludedWords|escape})|raw -}}
+                                    {{- trans('firefly.search_for_excluded_words', {
+                                        excluded_words: excludedWords
+                                            |map(word => '<span class="search-word">' ~ word|escape ~ '</span>')
+                                            |join(' ')
+                                    })|raw -}}
                         </li>
                     {% endif %}
 
@@ -75,7 +83,7 @@
             </div>
         </div>
     </div>
-    {% if query or excludedWords or operators|length > 0 %}
+    {% if query|length > 0 or excludedWords|length > 0 or operators|length > 0 %}
         <div class="row result_row">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="box search_box">
@@ -130,7 +138,7 @@
             </div>
         </div>
     {% endif %}
-    {% if query == "" and excludedWords == "" and operators|length == 0 %}
+    {% if query|length == 0 and excludedWords|length == 0 and operators|length == 0 %}
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="box">

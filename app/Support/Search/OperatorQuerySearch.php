@@ -123,9 +123,14 @@ class OperatorQuerySearch implements SearchInterface
         return implode(' ', $this->words);
     }
 
-    public function getExcludedWordsAsString(): string
+    public function getWords(): array
     {
-        return implode(' ', $this->prohibitedWords);
+        return $this->words;
+    }
+
+    public function getExcludedWords(): array
+    {
+        return $this->prohibitedWords;
     }
 
     /**
@@ -2824,16 +2829,6 @@ class OperatorQuerySearch implements SearchInterface
             }
             $this->collector->setTags($collection);
         }
-    }
-
-    public function getWords(): array
-    {
-        return $this->words;
-    }
-
-    public function getExcludedWords(): array
-    {
-        return $this->prohibitedWords;
     }
 
     public function setDate(Carbon $date): void
