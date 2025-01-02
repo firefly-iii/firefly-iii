@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Support\Search;
+namespace FireflyIII\Support\Search\QueryParser;
 
 /**
  * Represents a result from parsing a query node
