@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Search\QueryParser;
 
 /**
- * Represents a subquery (group of nodes)
+ * Represents a group of nodes.
+ *
+ * NodeGroups can be nested inside other NodeGroups, making them subqueries
  */
-class Subquery extends Node
+class NodeGroup extends Node
 {
     /** @var Node[] */
     private array $nodes;

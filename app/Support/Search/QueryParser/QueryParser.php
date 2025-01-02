@@ -30,16 +30,16 @@ class QueryParser implements QueryParserInterface
     private string $query;
     private int $position = 0;
 
-    /** @return Node[] */
-    public function parse(string $query): array
+    /** @return NodeGroup */
+    public function parse(string $query): NodeGroup
     {
         $this->query = $query;
         $this->position = 0;
-        return $this->parseQuery(false);
+        return $this->buildNodeGroup(false);
     }
 
-    /** @return Node[] */
-    private function parseQuery(bool $isSubquery): array
+    /** @return NodeGroup */
+    private function buildNodeGroup(bool $isSubquery, bool $prohibited = false): NodeGroup
     {
         $nodes = [];
         $nodeResult = $this->buildNextNode($isSubquery);
@@ -52,7 +52,7 @@ class QueryParser implements QueryParserInterface
             $nodeResult = $this->buildNextNode($isSubquery);
         }
 
-        return $nodes;
+        return new NodeGroup($nodes, $prohibited);
     }
 
     private function buildNextNode(bool $isSubquery): NodeResult
@@ -105,8 +105,7 @@ class QueryParser implements QueryParserInterface
                     if ($tokenUnderConstruction === '') {
                         // A left parentheses at the beginning of a token indicates the start of a subquery
                         $this->position++;
-                        return new NodeResult(
-                            new Subquery($this->parseQuery(true), $prohibited),
+                        return new NodeResult($this->buildNodeGroup(true, $prohibited),
                             false
                         );
                     } else {
@@ -161,16 +160,18 @@ class QueryParser implements QueryParserInterface
             $this->position++;
         }
 
-        return new NodeResult($tokenUnderConstruction !== '' || $fieldName !== ''
-            ? $this->createNode($tokenUnderConstruction, $fieldName, $prohibited)
-            : null, true);
+        $finalNode = $tokenUnderConstruction !== '' || $fieldName !== ''
+        ? $this->createNode($tokenUnderConstruction, $fieldName, $prohibited)
+        : null;
+
+        return new NodeResult($finalNode, true);
     }
 
     private function createNode(string $token, string $fieldName, bool $prohibited): Node
     {
         if (strlen($fieldName) > 0) {
-            return new Field(trim($fieldName), trim($token), $prohibited);
+            return new FieldNode(trim($fieldName), trim($token), $prohibited);
         }
-        return new Word(trim($token), $prohibited);
+        return new StringNode(trim($token), $prohibited);
     }
 }

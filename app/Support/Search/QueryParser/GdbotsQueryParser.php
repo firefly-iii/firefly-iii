@@ -19,17 +19,18 @@ class GdbotsQueryParser implements QueryParserInterface
     }
 
     /**
-     * @return Node[]
+     * @return NodeGroup
      * @throws FireflyException
      */
-    public function parse(string $query): array
+    public function parse(string $query): NodeGroup
     {
         try {
             $result = $this->parser->parse($query);
-            return array_map(
+            $nodes = array_map(
                 fn(GdbotsNode\Node $node) => $this->convertNode($node),
                 $result->getNodes()
             );
+            return new NodeGroup($nodes);
         } catch (\LogicException|\TypeError $e) {
             fwrite(STDERR, "Setting up GdbotsQueryParserTest\n");
             dd('Creating GdbotsQueryParser');
@@ -44,17 +45,17 @@ class GdbotsQueryParser implements QueryParserInterface
     {
         switch (true) {
             case $node instanceof GdbotsNode\Word:
-                return new Word($node->getValue());
+                return new StringNode($node->getValue());
 
             case $node instanceof GdbotsNode\Field:
-                return new Field(
+                return new FieldNode(
                     $node->getValue(),
                     (string) $node->getNode()->getValue(),
                     BoolOperator::PROHIBITED === $node->getBoolOperator()
                 );
 
             case $node instanceof GdbotsNode\Subquery:
-                return new Subquery(
+                return new NodeGroup(
                     array_map(
                         fn(GdbotsNode\Node $subNode) => $this->convertNode($subNode),
                         $node->getNodes()
@@ -69,7 +70,7 @@ class GdbotsQueryParser implements QueryParserInterface
             case $node instanceof GdbotsNode\Mention:
             case $node instanceof GdbotsNode\Emoticon:
             case $node instanceof GdbotsNode\Emoji:
-                return new Word((string) $node->getValue());
+                return new StringNode((string) $node->getValue());
 
             default:
                 throw new FireflyException(

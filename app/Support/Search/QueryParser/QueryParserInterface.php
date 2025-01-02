@@ -7,7 +7,7 @@ namespace FireflyIII\Support\Search\QueryParser;
 interface QueryParserInterface
 {
     /**
-     * @return Node[]
+     * @return NodeGroup
      */
-    public function parse(string $query): array;
+    public function parse(string $query): NodeGroup;
 }

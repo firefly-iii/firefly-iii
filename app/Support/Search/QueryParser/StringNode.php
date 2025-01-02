@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Search\QueryParser;
 
 /**
- * Represents a word in the search query, meaning either a single-word without spaces or a quote-delimited string
+ * Represents a string in the search query, meaning either a single-word without spaces or a quote-delimited string
  */
-class Word extends Node
+class StringNode extends Node
 {
     private string $value;
 

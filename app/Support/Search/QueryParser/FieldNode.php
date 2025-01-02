@@ -7,7 +7,7 @@ namespace FireflyIII\Support\Search\QueryParser;
 /**
  * Represents a field operator with value (e.g. amount:100)
  */
-class Field extends Node
+class FieldNode extends Node
 {
     private string $operator;
     private string $value;

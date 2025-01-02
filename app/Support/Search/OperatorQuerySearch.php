@@ -41,9 +41,10 @@ use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Search\QueryParser\QueryParserInterface;
 use FireflyIII\Support\Search\QueryParser\Node;
-use FireflyIII\Support\Search\QueryParser\Field;
-use FireflyIII\Support\Search\QueryParser\Word;
-use FireflyIII\Support\Search\QueryParser\Subquery;
+use FireflyIII\Support\Search\QueryParser\FieldNode;
+use FireflyIII\Support\Search\QueryParser\StringNode;
+use FireflyIII\Support\Search\QueryParser\NodeGroup;
+
 use FireflyIII\Support\ParseDateString;
 use FireflyIII\User;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -140,7 +141,7 @@ class OperatorQuerySearch implements SearchInterface
         app('log')->debug(sprintf('Using %s as implementation for QueryParserInterface', get_class($parser)));
 
         try {
-            $nodes = $parser->parse($query);
+            $parsedQuery = $parser->parse($query);
         } catch (\LogicException|\TypeError $e) {
             app('log')->error($e->getMessage());
             app('log')->error(sprintf('Could not parse search: "%s".', $query));
@@ -148,10 +149,8 @@ class OperatorQuerySearch implements SearchInterface
             throw new FireflyException(sprintf('Invalid search value "%s". See the logs.', e($query)), 0, $e);
         }
 
-        app('log')->debug(sprintf('Found %d node(s)', count($nodes)));
-        foreach ($nodes as $node) {
-            $this->handleSearchNode($node);
-        }
+        app('log')->debug(sprintf('Found %d node(s) at top-level', count($parsedQuery->getNodes())));
+        $this->handleSearchNode($parsedQuery);
 
         // add missing information
         $this->collector->withBillInformation();
@@ -170,27 +169,16 @@ class OperatorQuerySearch implements SearchInterface
         app('log')->debug(sprintf('Now in handleSearchNode(%s)', get_class($node)));
 
         switch (true) {
-            case $node instanceof Word:
-                $word      = (string) $node->getValue();
-                if($node->isProhibited()) {
-                    app('log')->debug(sprintf('Exclude word "%s" from search string', $word));
-                    $this->prohibitedWords[] = $word;
-                } else {
-                    app('log')->debug(sprintf('Add word "%s" to search string', $word));
-                    $this->words[] = $word;
-                }
-
+            case $node instanceof StringNode:
+                $this->handleStringNode($node);
                 break;
 
-            case $node instanceof Field:
+            case $node instanceof FieldNode:
                 $this->handleFieldNode($node);
                 break;
 
-            case $node instanceof Subquery:
-                //TODO: Handle Subquery prohibition, i.e. flip all prohibition flags inside the subquery
-                foreach ($node->getNodes() as $subNode) {
-                    $this->handleSearchNode($subNode);
-                }
+            case $node instanceof NodeGroup:
+                $this->handleNodeGroup($node);
                 break;
 
             default:
@@ -199,10 +187,32 @@ class OperatorQuerySearch implements SearchInterface
         }
     }
 
+    private function handleNodeGroup(NodeGroup $node): void
+    {
+        //TODO: Handle Subquery prohibition, i.e. flip all prohibition flags inside the subquery
+        foreach ($node->getNodes() as $subNode) {
+            $this->handleSearchNode($subNode);
+        }
+    }
+
+
+
+    private function handleStringNode(StringNode $node): void
+    {
+        $string = (string) $node->getValue();
+        if($node->isProhibited()) {
+            app('log')->debug(sprintf('Exclude string "%s" from search string', $string));
+            $this->prohibitedWords[] = $string;
+        } else {
+            app('log')->debug(sprintf('Add string "%s" to search string', $string));
+            $this->words[] = $string;
+        }
+    }
+
     /**
      * @throws FireflyException
      */
-    private function handleFieldNode(Field $node): void
+    private function handleFieldNode(FieldNode $node): void
     {
         $operator = strtolower($node->getOperator());
         $value = $node->getValue();
