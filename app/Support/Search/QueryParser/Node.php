@@ -9,8 +9,6 @@ namespace FireflyIII\Support\Search\QueryParser;
  */
 abstract class Node
 {
-    abstract public function __toString(): string;
-
     protected bool $prohibited;
 
     public function isProhibited(): bool

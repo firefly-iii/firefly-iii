@@ -31,10 +31,4 @@ class NodeGroup extends Node
     {
         return $this->nodes;
     }
-
-
-    public function __toString(): string
-    {
-        return ($this->prohibited ? '-' : '') . '[' . implode(' ', array_map(fn($node) => (string)$node, $this->nodes)) . ']';
-    }
 }

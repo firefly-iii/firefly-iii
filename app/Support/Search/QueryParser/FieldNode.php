@@ -28,9 +28,4 @@ class FieldNode extends Node
     {
         return $this->value;
     }
-
-    public function __toString(): string
-    {
-        return ($this->prohibited ? '-' : '') . $this->operator . ':' . $this->value;
-    }
 }

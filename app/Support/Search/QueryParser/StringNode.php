@@ -21,9 +21,4 @@ class StringNode extends Node
     {
         return $this->value;
     }
-
-    public function __toString(): string
-    {
-        return ($this->prohibited ? '-' : '') . $this->value;
-    }
 }
