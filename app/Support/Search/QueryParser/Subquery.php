@@ -33,6 +33,6 @@ class Subquery extends Node
 
     public function __toString(): string
     {
-        return ($this->prohibited ? '-' : '') . '(' . implode(' ', array_map(fn($node) => (string)$node, $this->nodes)) . ')';
+        return ($this->prohibited ? '-' : '') . '[' . implode(' ', array_map(fn($node) => (string)$node, $this->nodes)) . ']';
     }
 }

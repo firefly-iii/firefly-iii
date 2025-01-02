@@ -23,7 +23,7 @@ abstract class AbstractQueryParserInterfaceParseQueryTest extends TestCase
                 'expected' => []
             ],
             'simple word' => [
-                'query' => 'grocaeries',
+                'query' => 'groceries',
                 'expected' => [new Word('groceries')]
             ],
             'prohibited word' => [
@@ -196,7 +196,13 @@ abstract class AbstractQueryParserInterfaceParseQueryTest extends TestCase
 
     private function assertNodesMatch(array $expected, array $actual): void
     {
-        $this->assertCount(count($expected), $actual);
+        $message = sprintf(
+            "Expected: %s\nActual: %s",
+            $this->formatNodes($expected),
+            $this->formatNodes($actual)
+        );
+
+        $this->assertCount(count($expected), $actual, $message);
 
         foreach ($expected as $index => $expectedNode) {
             $actualNode = $actual[$index];
@@ -206,8 +212,10 @@ abstract class AbstractQueryParserInterfaceParseQueryTest extends TestCase
 
     private function assertNodeMatches(Node $expected, Node $actual): void
     {
-        $this->assertInstanceOf(get_class($expected), $actual);
-        $this->assertEquals($expected->isProhibited(), $actual->isProhibited());
+        $message = $this->formatAssertMessage($expected, $actual);
+
+        $this->assertInstanceOf(get_class($expected), $actual, $message);
+        $this->assertEquals($expected->isProhibited(), $actual->isProhibited(), $message);
 
         match (get_class($expected)) {
             Word::class => $this->assertWordMatches($expected, $actual),
@@ -220,15 +228,22 @@ abstract class AbstractQueryParserInterfaceParseQueryTest extends TestCase
         };
     }
 
+
     private function assertWordMatches(Word $expected, Word $actual): void
     {
-        $this->assertEquals($expected->getValue(), $actual->getValue());
+        $message = $this->formatAssertMessage($expected, $actual);  // Using your implementation
+        $this->assertEquals($expected->getValue(), $actual->getValue(), $message);
     }
 
     private function assertFieldMatches(Field $expected, Field $actual): void
     {
-        $this->assertEquals($expected->getOperator(), $actual->getOperator());
-        $this->assertEquals($expected->getValue(), $actual->getValue());
+        $message = sprintf(
+            "\nExpected field: %s\nActual field: %s",
+            $this->formatNode($expected),
+            $this->formatNode($actual)
+        );
+        $this->assertEquals($expected->getOperator(), $actual->getOperator(), $message);
+        $this->assertEquals($expected->getValue(), $actual->getValue(), $message);
     }
 
     private function assertSubqueryMatches(Subquery $expected, Subquery $actual): void
@@ -236,43 +251,30 @@ abstract class AbstractQueryParserInterfaceParseQueryTest extends TestCase
         $this->assertNodesMatch($expected->getNodes(), $actual->getNodes());
     }
 
-    private function assertIsWord(Node $node, string $expectedValue, bool $prohibited = false): void
+    private function formatAssertMessage(Node $expected, Node $actual): string
     {
-        $this->assertInstanceOf(Word::class, $node);
-        /** @var Word $node */
-        $this->assertEquals($expectedValue, $node->getValue());
-        $this->assertEquals($prohibited, $node->isProhibited());
+        return sprintf(
+            "\nExpected: %s\nActual: %s",
+            $this->formatNode($expected),
+            $this->formatNode($actual)
+        );
     }
 
-    private function assertIsField(
-        Node $node,
-        string $expectedOperator,
-        string $expectedValue,
-        bool $prohibited = false
-    ): void {
-        $this->assertInstanceOf(Field::class, $node);
-        /** @var Field $node */
-        $this->assertEquals($expectedOperator, $node->getOperator());
-        $this->assertEquals($expectedValue, $node->getValue());
-        $this->assertEquals($prohibited, $node->isProhibited());
+    private function formatNode(Node $node): string
+    {
+        return sprintf(
+            '%s(%s)',
+            basename(str_replace('\\', '/', get_class($node))),
+            $node->__toString()
+        );
     }
 
-    private function assertIsSubquery(Node $node, array $expectedNodes, bool $prohibited = false): void
-    {
-        $this->assertInstanceOf(Subquery::class, $node);
-        /** @var Subquery $node */
-        $this->assertCount(count($expectedNodes), $node->getNodes());
-        $this->assertEquals($prohibited, $node->isProhibited());
 
-        foreach ($expectedNodes as $index => $expected) {
-            $actual = $node->getNodes()[$index];
-            if ($expected instanceof Word) {
-                $this->assertIsWord($actual, $expected->getValue(), $expected->isProhibited());
-            } elseif ($expected instanceof Field) {
-                $this->assertIsField($actual, $expected->getOperator(), $expected->getValue(), $expected->isProhibited());
-            } elseif ($expected instanceof Subquery) {
-                $this->assertIsSubquery($actual, $expected->getNodes(), $expected->isProhibited());
-            }
-        }
+    private function formatNodes(array $nodes): string
+    {
+        return '[' . implode(', ', array_map(
+            fn(Node $node) => $this->formatNode($node),
+            $nodes
+        )) . ']';
     }
 }
