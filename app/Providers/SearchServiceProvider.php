@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
-use FireflyIII\Support\Search\GdbotsQueryParser;
+use FireflyIII\Support\Search\QueryParser\GdbotsQueryParser;
 use FireflyIII\Support\Search\OperatorQuerySearch;
-use FireflyIII\Support\Search\QueryParser;
-use FireflyIII\Support\Search\QueryParserInterface;
+use FireflyIII\Support\Search\QueryParser\QueryParser;
+use FireflyIII\Support\Search\QueryParser\QueryParserInterface;
 use FireflyIII\Support\Search\SearchInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;

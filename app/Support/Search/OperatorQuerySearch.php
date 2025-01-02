@@ -150,7 +150,7 @@ class OperatorQuerySearch implements SearchInterface
         }
 
         app('log')->debug(sprintf('Found %d node(s) at top-level', count($parsedQuery->getNodes())));
-        $this->handleSearchNode($parsedQuery);
+        $this->handleSearchNode($parsedQuery, $parsedQuery->isProhibited(false));
 
         // add missing information
         $this->collector->withBillInformation();
@@ -164,21 +164,21 @@ class OperatorQuerySearch implements SearchInterface
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function handleSearchNode(Node $node): void
+    private function handleSearchNode(Node $node, $flipProhibitedFlag): void
     {
         app('log')->debug(sprintf('Now in handleSearchNode(%s)', get_class($node)));
 
         switch (true) {
             case $node instanceof StringNode:
-                $this->handleStringNode($node);
+                $this->handleStringNode($node, $flipProhibitedFlag);
                 break;
 
             case $node instanceof FieldNode:
-                $this->handleFieldNode($node);
+                $this->handleFieldNode($node, $flipProhibitedFlag);
                 break;
 
             case $node instanceof NodeGroup:
-                $this->handleNodeGroup($node);
+                $this->handleNodeGroup($node, $flipProhibitedFlag);
                 break;
 
             default:
@@ -187,20 +187,24 @@ class OperatorQuerySearch implements SearchInterface
         }
     }
 
-    private function handleNodeGroup(NodeGroup $node): void
+    private function handleNodeGroup(NodeGroup $node, $flipProhibitedFlag): void
     {
-        //TODO: Handle Subquery prohibition, i.e. flip all prohibition flags inside the subquery
+        $prohibited = $node->isProhibited($flipProhibitedFlag);
+
         foreach ($node->getNodes() as $subNode) {
-            $this->handleSearchNode($subNode);
+            $this->handleSearchNode($subNode, $prohibited);
         }
     }
 
 
 
-    private function handleStringNode(StringNode $node): void
+    private function handleStringNode(StringNode $node, $flipProhibitedFlag): void
     {
         $string = (string) $node->getValue();
-        if($node->isProhibited()) {
+
+        $prohibited = $node->isProhibited($flipProhibitedFlag);
+
+        if($prohibited) {
             app('log')->debug(sprintf('Exclude string "%s" from search string', $string));
             $this->prohibitedWords[] = $string;
         } else {
@@ -212,11 +216,11 @@ class OperatorQuerySearch implements SearchInterface
     /**
      * @throws FireflyException
      */
-    private function handleFieldNode(FieldNode $node): void
+    private function handleFieldNode(FieldNode $node, $flipProhibitedFlag): void
     {
         $operator = strtolower($node->getOperator());
         $value = $node->getValue();
-        $prohibited = $node->isProhibited();
+        $prohibited = $node->isProhibited($flipProhibitedFlag);
 
         $context = config(sprintf('search.operators.%s.needs_context', $operator));
 
