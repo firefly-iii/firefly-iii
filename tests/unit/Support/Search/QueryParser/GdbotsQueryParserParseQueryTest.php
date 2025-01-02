@@ -1,10 +1,9 @@
 <?php
 
-namespace Tests\unit\Support\Search;
+namespace Tests\unit\Support\Search\QueryParser;
 
-use FireflyIII\Support\Search\GdbotsQueryParser;
-use FireflyIII\Support\Search\QueryParserInterface;
-use Tests\unit\Support\Search\AbstractQueryParserInterfaceParseQueryTest;
+use FireflyIII\Support\Search\QueryParser\GdbotsQueryParser;
+use FireflyIII\Support\Search\QueryParser\QueryParserInterface;
 
 /**
  * @group unit-test
