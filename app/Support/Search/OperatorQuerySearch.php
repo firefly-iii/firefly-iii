@@ -2774,7 +2774,7 @@ class OperatorQuerySearch implements SearchInterface
     public function searchTransactions(): LengthAwarePaginator
     {
         $this->parseTagInstructions();
-        if (0 === count($this->getWords()) && 0 === count($this->getOperators())) {
+        if (0 === count($this->getWords()) && 0 === count($this->getExcludedWords()) && 0 === count($this->getOperators())) {
             return new LengthAwarePaginator([], 0, 5, 1);
         }
 
@@ -2829,6 +2829,11 @@ class OperatorQuerySearch implements SearchInterface
     public function getWords(): array
     {
         return $this->words;
+    }
+
+    public function getExcludedWords(): array
+    {
+        return $this->prohibitedWords;
     }
 
     public function setDate(Carbon $date): void
