@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Destroy;
 
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\RecurrenceTransaction;
@@ -68,7 +69,7 @@ class AccountDestroyService
         $set = $account->transactions()
             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-            ->where('transaction_types.type', TransactionType::OPENING_BALANCE)
+            ->where('transaction_types.type', TransactionTypeEnum::OPENING_BALANCE->value)
             ->get(['transactions.transaction_journal_id'])
         ;
         if ($set->count() > 0) {

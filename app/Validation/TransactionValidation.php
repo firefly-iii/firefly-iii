@@ -159,7 +159,7 @@ trait TransactionValidation
     protected function sanityCheckReconciliation(Validator $validator, string $transactionType, int $index, array $source, array $destination): void
     {
         app('log')->debug('Now in sanityCheckReconciliation');
-        if (TransactionType::RECONCILIATION === ucfirst($transactionType)
+        if (TransactionTypeEnum::RECONCILIATION->value === ucfirst($transactionType)
             && null === $source['id'] && null === $source['name'] && null === $destination['id'] && null === $destination['name']
         ) {
             app('log')->debug('Both are NULL, error!');
@@ -169,7 +169,7 @@ trait TransactionValidation
             $validator->errors()->add(sprintf('transactions.%d.destination_name', $index), trans('validation.reconciliation_either_account'));
         }
 
-        if (TransactionType::RECONCILIATION === $transactionType
+        if (TransactionTypeEnum::RECONCILIATION->value === $transactionType
             && (null !== $source['id'] || null !== $source['name'])
             && (null !== $destination['id'] || null !== $destination['name'])) {
             app('log')->debug('Both are not NULL, error!');

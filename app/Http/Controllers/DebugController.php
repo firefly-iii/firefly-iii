@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Models\AccountType;
@@ -364,7 +365,7 @@ class DebugController extends Controller
         }
 
         // has stored reconciliations
-        $type       = TransactionType::whereType(TransactionType::RECONCILIATION)->first();
+        $type       = TransactionType::whereType(TransactionTypeEnum::RECONCILIATION->value)->first();
         if ($user->transactionJournals()->where('transaction_type_id', $type->id)->count() > 0) {
             $flags[] = '<span title="Has reconciled">:ledger:</span>';
         }

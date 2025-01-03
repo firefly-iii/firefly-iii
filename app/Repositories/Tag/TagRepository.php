@@ -269,8 +269,8 @@ class TagRepository implements TagRepositoryInterface
                 TransactionTypeEnum::WITHDRAWAL->value      => '0',
                 TransactionTypeEnum::DEPOSIT->value         => '0',
                 TransactionTypeEnum::TRANSFER->value        => '0',
-                TransactionType::RECONCILIATION  => '0',
-                TransactionType::OPENING_BALANCE => '0',
+                TransactionTypeEnum::RECONCILIATION->value  => '0',
+                TransactionTypeEnum::OPENING_BALANCE->value => '0',
             ];
 
             // add amount to correct type:
@@ -291,8 +291,8 @@ class TagRepository implements TagRepositoryInterface
                     TransactionTypeEnum::WITHDRAWAL->value      => '0',
                     TransactionTypeEnum::DEPOSIT->value         => '0',
                     TransactionTypeEnum::TRANSFER->value        => '0',
-                    TransactionType::RECONCILIATION  => '0',
-                    TransactionType::OPENING_BALANCE => '0',
+                    TransactionTypeEnum::RECONCILIATION->value  => '0',
+                    TransactionTypeEnum::OPENING_BALANCE->value => '0',
                 ];
                 // add foreign amount to correct type:
                 $amount                          = app('steam')->positive((string) $journal['foreign_amount']);

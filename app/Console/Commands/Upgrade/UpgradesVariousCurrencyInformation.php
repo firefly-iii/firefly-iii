@@ -104,7 +104,7 @@ class UpgradesVariousCurrencyInformation extends Command
     private function updateOtherJournalsCurrencies(): void
     {
         $set = $this->cliRepos->getAllJournals(
-            [TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::DEPOSIT->value, TransactionType::OPENING_BALANCE, TransactionType::RECONCILIATION]
+            [TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::OPENING_BALANCE->value, TransactionTypeEnum::RECONCILIATION->value]
         );
 
         /** @var TransactionJournal $journal */
@@ -191,7 +191,7 @@ class UpgradesVariousCurrencyInformation extends Command
 
                 break;
 
-            case TransactionType::OPENING_BALANCE:
+            case TransactionTypeEnum::OPENING_BALANCE->value:
                 // whichever isn't an initial balance account:
                 $lead = $journal->transactions()->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')->leftJoin(
                     'account_types',
@@ -202,7 +202,7 @@ class UpgradesVariousCurrencyInformation extends Command
 
                 break;
 
-            case TransactionType::RECONCILIATION:
+            case TransactionTypeEnum::RECONCILIATION->value:
                 // whichever isn't the reconciliation account:
                 $lead = $journal->transactions()->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')->leftJoin(
                     'account_types',

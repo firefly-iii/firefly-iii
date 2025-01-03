@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -118,8 +119,8 @@ class UpgradesLiabilitiesEight extends Command
 
     private function hasBadOpening(Account $account): bool
     {
-        $openingBalanceType = TransactionType::whereType(TransactionType::OPENING_BALANCE)->first();
-        $liabilityType      = TransactionType::whereType(TransactionType::LIABILITY_CREDIT)->first();
+        $openingBalanceType = TransactionType::whereType(TransactionTypeEnum::OPENING_BALANCE->value)->first();
+        $liabilityType      = TransactionType::whereType(TransactionTypeEnum::LIABILITY_CREDIT->value)->first();
         $openingJournal     = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->where('transactions.account_id', $account->id)
             ->where('transaction_journals.transaction_type_id', $openingBalanceType->id)
@@ -145,7 +146,7 @@ class UpgradesLiabilitiesEight extends Command
 
     private function deleteCreditTransaction(Account $account): void
     {
-        $liabilityType    = TransactionType::whereType(TransactionType::LIABILITY_CREDIT)->first();
+        $liabilityType    = TransactionType::whereType(TransactionTypeEnum::LIABILITY_CREDIT->value)->first();
         $liabilityJournal = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->where('transactions.account_id', $account->id)
             ->where('transaction_journals.transaction_type_id', $liabilityType->id)
@@ -162,7 +163,7 @@ class UpgradesLiabilitiesEight extends Command
 
     private function reverseOpeningBalance(Account $account): void
     {
-        $openingBalanceType = TransactionType::whereType(TransactionType::OPENING_BALANCE)->first();
+        $openingBalanceType = TransactionType::whereType(TransactionTypeEnum::OPENING_BALANCE->value)->first();
 
         /** @var TransactionJournal $openingJournal */
         $openingJournal     = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')

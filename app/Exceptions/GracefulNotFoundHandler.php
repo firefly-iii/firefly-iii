@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Exceptions;
 
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Bill;
@@ -208,7 +209,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
         $type    = $journal->transactionType->type;
         $request->session()->reflash();
 
-        if (TransactionType::RECONCILIATION === $type) {
+        if (TransactionTypeEnum::RECONCILIATION->value === $type) {
             return redirect(route('accounts.index', ['asset']));
         }
 

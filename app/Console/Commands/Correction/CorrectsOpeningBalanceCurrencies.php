@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Correction;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
@@ -68,7 +69,7 @@ class CorrectsOpeningBalanceCurrencies extends Command
         // @var Collection
         return TransactionJournal::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
             ->whereNull('transaction_journals.deleted_at')
-            ->where('transaction_types.type', TransactionType::OPENING_BALANCE)->get(['transaction_journals.*'])
+            ->where('transaction_types.type', TransactionTypeEnum::OPENING_BALANCE->value)->get(['transaction_journals.*'])
         ;
     }
 

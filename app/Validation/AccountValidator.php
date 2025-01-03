@@ -156,17 +156,17 @@ class AccountValidator
 
                 break;
 
-            case TransactionType::OPENING_BALANCE:
+            case TransactionTypeEnum::OPENING_BALANCE->value:
                 $result          = $this->validateOBDestination($array);
 
                 break;
 
-            case TransactionType::LIABILITY_CREDIT:
+            case TransactionTypeEnum::LIABILITY_CREDIT->value:
                 $result          = $this->validateLCDestination($array);
 
                 break;
 
-            case TransactionType::RECONCILIATION:
+            case TransactionTypeEnum::RECONCILIATION->value:
                 $result          = $this->validateReconciliationDestination($array);
 
                 break;
@@ -201,17 +201,17 @@ class AccountValidator
 
                 break;
 
-            case TransactionType::OPENING_BALANCE:
+            case TransactionTypeEnum::OPENING_BALANCE->value:
                 $result = $this->validateOBSource($array);
 
                 break;
 
-            case TransactionType::LIABILITY_CREDIT:
+            case TransactionTypeEnum::LIABILITY_CREDIT->value:
                 $result = $this->validateLCSource($array);
 
                 break;
 
-            case TransactionType::RECONCILIATION:
+            case TransactionTypeEnum::RECONCILIATION->value:
                 app('log')->debug('Calling validateReconciliationSource');
                 $result = $this->validateReconciliationSource($array);
 

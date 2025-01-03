@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Models\Account;
@@ -247,7 +248,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $journal = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->where('transactions.account_id', $account->id)
-            ->transactionTypes([TransactionType::LIABILITY_CREDIT])
+            ->transactionTypes([TransactionTypeEnum::LIABILITY_CREDIT->value])
             ->first(['transaction_journals.*'])
         ;
 
@@ -295,7 +296,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $journal     = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->where('transactions.account_id', $account->id)
-            ->transactionTypes([TransactionType::OPENING_BALANCE, TransactionType::LIABILITY_CREDIT])
+            ->transactionTypes([TransactionTypeEnum::OPENING_BALANCE->value, TransactionTypeEnum::LIABILITY_CREDIT->value])
             ->first(['transaction_journals.*'])
         ;
         if (null === $journal) {
@@ -316,7 +317,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         return TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->where('transactions.account_id', $account->id)
-            ->transactionTypes([TransactionType::OPENING_BALANCE, TransactionType::LIABILITY_CREDIT])
+            ->transactionTypes([TransactionTypeEnum::OPENING_BALANCE->value, TransactionTypeEnum::LIABILITY_CREDIT->value])
             ->first(['transaction_journals.*'])?->date->format('Y-m-d H:i:s')
         ;
     }
@@ -332,7 +333,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         return TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->where('transactions.account_id', $account->id)
-            ->transactionTypes([TransactionType::OPENING_BALANCE])
+            ->transactionTypes([TransactionTypeEnum::OPENING_BALANCE->value])
             ->first(['transaction_journals.*'])
         ;
     }

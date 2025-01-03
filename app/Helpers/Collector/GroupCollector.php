@@ -27,6 +27,7 @@ namespace FireflyIII\Helpers\Collector;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
 use Exception;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\Extensions\AccountCollection;
 use FireflyIII\Helpers\Collector\Extensions\AmountCollection;
@@ -414,7 +415,7 @@ class GroupCollector implements GroupCollectorInterface
         $this->query->whereNull('transaction_groups.deleted_at');
         $this->query->whereNotIn(
             'transaction_types.type',
-            [TransactionType::LIABILITY_CREDIT, TransactionType::OPENING_BALANCE, TransactionType::RECONCILIATION]
+            [TransactionTypeEnum::LIABILITY_CREDIT->value, TransactionTypeEnum::OPENING_BALANCE->value, TransactionTypeEnum::RECONCILIATION->value]
         );
 
         return $this;

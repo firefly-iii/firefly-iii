@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Account;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionGroupFactory;
@@ -223,7 +224,7 @@ class ReconcileController extends Controller
             'transactions' => [
                 [
                     'user'                => auth()->user()->id,
-                    'type'                => strtolower(TransactionType::RECONCILIATION),
+                    'type'                => strtolower(TransactionTypeEnum::RECONCILIATION->value),
                     'date'                => $end,
                     'order'               => 0,
                     'currency_id'         => $currency->id,

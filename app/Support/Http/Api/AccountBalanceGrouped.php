@@ -225,8 +225,8 @@ class AccountBalanceGrouped
             || (
                 (
                     TransactionTypeEnum::TRANSFER->value === $journal['transaction_type_type']
-                    || TransactionType::RECONCILIATION === $journal['transaction_type_type']
-                    || TransactionType::OPENING_BALANCE === $journal['transaction_type_type']
+                    || TransactionTypeEnum::RECONCILIATION->value === $journal['transaction_type_type']
+                    || TransactionTypeEnum::OPENING_BALANCE->value === $journal['transaction_type_type']
                 )
                 && in_array($journal['destination_account_id'], $this->accountIds, true)
             )

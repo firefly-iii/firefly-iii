@@ -103,12 +103,12 @@ class TransactionGroupTwig extends AbstractExtension
         }
 
         // opening balance and it comes from initial balance? its expense.
-        if (TransactionType::OPENING_BALANCE === $transactionType && AccountType::INITIAL_BALANCE !== $sourceType) {
+        if (TransactionTypeEnum::OPENING_BALANCE->value === $transactionType && AccountType::INITIAL_BALANCE !== $sourceType) {
             $amount = bcmul($amount, '-1');
         }
 
         // reconciliation and it comes from reconciliation?
-        if (TransactionType::RECONCILIATION === $transactionType && AccountType::RECONCILIATION !== $sourceType) {
+        if (TransactionTypeEnum::RECONCILIATION->value === $transactionType && AccountType::RECONCILIATION !== $sourceType) {
             $amount = bcmul($amount, '-1');
         }
 
