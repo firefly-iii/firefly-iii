@@ -236,9 +236,9 @@ class CreditRecalculateService
     /**
      * A complex and long method, but rarely used luckily.
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
+     * @SuppressWarnings("PHPMD.NPathComplexity")
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      */
     private function processTransaction(Account $account, string $direction, Transaction $transaction, string $leftOfDebt): string
     {

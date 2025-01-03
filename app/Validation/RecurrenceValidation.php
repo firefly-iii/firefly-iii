@@ -301,7 +301,7 @@ trait RecurrenceValidation
     }
 
     /**
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     protected function validateTransactionId(Recurrence $recurrence, Validator $validator): void
     {

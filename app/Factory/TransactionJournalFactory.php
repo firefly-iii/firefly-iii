@@ -151,7 +151,7 @@ class TransactionJournalFactory
      * @throws DuplicateTransactionException
      * @throws FireflyException
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
     private function createJournal(NullArrayObject $row): ?TransactionJournal
     {

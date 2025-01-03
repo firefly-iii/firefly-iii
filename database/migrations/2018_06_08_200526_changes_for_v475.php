@@ -48,8 +48,8 @@ class ChangesForV475 extends Migration
     /**
      * Run the migrations.
      *
-     * @SuppressWarnings(PHPMD.ShortMethodName)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.ShortMethodName")
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
     public function up(): void
     {

@@ -48,7 +48,7 @@ class UserTestNotificationNtfy extends Notification
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function toArray(User $notifiable)
     {
@@ -57,7 +57,7 @@ class UserTestNotificationNtfy extends Notification
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function toNtfy(User $user): Message
     {
@@ -72,7 +72,7 @@ class UserTestNotificationNtfy extends Notification
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function via(User $user)
     {

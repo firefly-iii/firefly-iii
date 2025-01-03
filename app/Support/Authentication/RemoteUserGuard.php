@@ -137,7 +137,7 @@ class RemoteUserGuard implements Guard
     }
 
     /**
-     * @SuppressWarnings(PHPMD.ShortMethodName)
+     * @SuppressWarnings("PHPMD.ShortMethodName")
      */
     public function id(): null|int|string
     {
@@ -160,7 +160,7 @@ class RemoteUserGuard implements Guard
     /**
      * @throws FireflyException
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function validate(array $credentials = []): bool
     {

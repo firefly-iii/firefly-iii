@@ -110,7 +110,7 @@ class UserEventHandler
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function createExchangeRates(RegisteredUser $event): void
     {

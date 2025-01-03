@@ -91,7 +91,7 @@ trait RecurringTransactionTrait
      *
      * @throws FireflyException
      *
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     protected function createTransactions(Recurrence $recurrence, array $transactions): void
     {

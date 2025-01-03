@@ -54,7 +54,7 @@ class UserFailedLoginAttempt extends Notification
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function toMail(User $notifiable)
     {
@@ -79,7 +79,7 @@ class UserFailedLoginAttempt extends Notification
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function toPushover(User $notifiable): PushoverMessage
     {
@@ -89,7 +89,7 @@ class UserFailedLoginAttempt extends Notification
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function toSlack(User $notifiable)
     {
@@ -99,7 +99,7 @@ class UserFailedLoginAttempt extends Notification
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function via(User $notifiable)
     {

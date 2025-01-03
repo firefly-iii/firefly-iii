@@ -55,7 +55,7 @@ class UserRegistration extends Notification
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function toArray(OwnerNotifiable $notifiable)
     {
@@ -64,7 +64,7 @@ class UserRegistration extends Notification
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function toMail(OwnerNotifiable $notifiable)
     {
@@ -80,7 +80,7 @@ class UserRegistration extends Notification
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function toNtfy(OwnerNotifiable $notifiable): Message
     {
@@ -95,7 +95,7 @@ class UserRegistration extends Notification
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function toPushover(OwnerNotifiable $notifiable): PushoverMessage
     {
@@ -107,7 +107,7 @@ class UserRegistration extends Notification
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function toSlack(OwnerNotifiable $notifiable)
     {
@@ -115,7 +115,7 @@ class UserRegistration extends Notification
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function via(OwnerNotifiable $notifiable)
     {

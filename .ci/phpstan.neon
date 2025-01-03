@@ -1,11 +1,22 @@
 parameters:
+  scanFiles:
+    - ../_ide_helper_models.php
+    - ../_ide_helper.php
+  paths:
+    - ../app
+    - ../database
+    - ../routes
+    - ../config
+    - ../bootstrap/app.php
   universalObjectCratesClasses:
     - Illuminate\Database\Eloquent\Model
   # TODO: slowly remove these parameters and fix the issues found.
   reportUnmatchedIgnoredErrors: false
   ignoreErrors:
   # TODO: slowly remove these exceptions and fix the issues found.
-    # - '#Dynamic call to static method#' # all the Laravel ORM things depend on this.
+    - '#Dynamic call to static method#' # all the Laravel ORM things depend on this.
+    - identifier: varTag.nativeType
+    - identifier: varTag.type
     # - '#Control structures using switch should not be used.#' # switch is fine in some cases.
     # - '#with no value type specified in iterable type array#' # remove this rule when all other issues are solved.
     # - '#has no value type specified in iterable type array#' # remove this rule when all other issues are solved.
@@ -48,14 +59,9 @@ parameters:
     #     message: '#Either catch a more specific exception#'
     #     paths:
     #         - ../app/Support/Form/FormSupport.php
-  paths:
-    - ../app
-    - ../database
-    - ../routes
-    - ../config
-    - ../bootstrap/app.php
+
 
   # The level 8 is the highest level. original was 5
   # 7 is more than enough, higher just leaves NULL things.
-  level: 1
+  level: 2
 

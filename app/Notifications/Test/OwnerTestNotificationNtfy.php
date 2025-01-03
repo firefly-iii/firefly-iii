@@ -48,7 +48,7 @@ class OwnerTestNotificationNtfy extends Notification
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      *
      * @param mixed $notifiable
      */
@@ -59,7 +59,7 @@ class OwnerTestNotificationNtfy extends Notification
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function toNtfy(OwnerNotifiable $notifiable): Message
     {
@@ -74,7 +74,7 @@ class OwnerTestNotificationNtfy extends Notification
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function via(OwnerNotifiable $notifiable)
     {

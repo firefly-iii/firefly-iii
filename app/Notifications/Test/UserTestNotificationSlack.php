@@ -46,7 +46,7 @@ class UserTestNotificationSlack extends Notification
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function toArray(User $user)
     {
@@ -55,7 +55,7 @@ class UserTestNotificationSlack extends Notification
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function toSlack(User $user)
     {
@@ -64,7 +64,7 @@ class UserTestNotificationSlack extends Notification
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function via(User $user)
     {

@@ -43,7 +43,7 @@ class ChangesForV410 extends Migration
     /**
      * Run the migrations.
      *
-     * @SuppressWarnings(PHPMD.ShortMethodName)
+     * @SuppressWarnings("PHPMD.ShortMethodName")
      */
     public function up(): void
     {

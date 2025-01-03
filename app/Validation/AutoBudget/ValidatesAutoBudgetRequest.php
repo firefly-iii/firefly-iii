@@ -32,7 +32,7 @@ use Illuminate\Validation\Validator;
 trait ValidatesAutoBudgetRequest
 {
     /**
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     protected function validateAutoBudgetAmount(Validator $validator): void
     {

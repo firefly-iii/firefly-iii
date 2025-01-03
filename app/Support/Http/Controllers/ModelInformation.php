@@ -159,7 +159,7 @@ trait ModelInformation
     /**
      * @throws FireflyException
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
     private function getTriggersForJournal(TransactionJournal $journal): array
     {

@@ -56,7 +56,7 @@ class MFAManyFailedAttemptsNotification extends Notification
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function toMail(User $notifiable)
     {
@@ -81,7 +81,7 @@ class MFAManyFailedAttemptsNotification extends Notification
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function toPushover(User $notifiable): PushoverMessage
     {
@@ -91,7 +91,7 @@ class MFAManyFailedAttemptsNotification extends Notification
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function toSlack(User $notifiable)
     {
@@ -101,7 +101,7 @@ class MFAManyFailedAttemptsNotification extends Notification
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function via(User $notifiable)
     {

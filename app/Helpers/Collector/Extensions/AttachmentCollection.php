@@ -124,7 +124,7 @@ trait AttachmentCollection
          *
          * @return bool
          *
-         * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+         * @SuppressWarnings("PHPMD.UnusedFormalParameter")
          */
         $filter              = static function (array $object) use ($name): bool {
             /** @var array $transaction */
@@ -159,7 +159,7 @@ trait AttachmentCollection
          *
          * @return bool
          *
-         * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+         * @SuppressWarnings("PHPMD.UnusedFormalParameter")
          */
         $filter              = static function (array $object) use ($name): bool {
             /** @var array $transaction */
@@ -194,7 +194,7 @@ trait AttachmentCollection
          *
          * @return bool
          *
-         * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+         * @SuppressWarnings("PHPMD.UnusedFormalParameter")
          */
         $filter              = static function (array $object) use ($name): bool {
             /** @var array $transaction */

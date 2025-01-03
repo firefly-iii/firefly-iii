@@ -165,7 +165,7 @@ class DoubleController extends Controller
     /**
      * @return Factory|View
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
     public function operations(Collection $accounts, Collection $double, Carbon $start, Carbon $end)
     {

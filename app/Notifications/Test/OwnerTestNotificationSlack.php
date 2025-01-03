@@ -46,7 +46,7 @@ class OwnerTestNotificationSlack extends Notification
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function toArray(OwnerNotifiable $notifiable)
     {
@@ -55,7 +55,7 @@ class OwnerTestNotificationSlack extends Notification
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function toSlack(OwnerNotifiable $notifiable)
     {
@@ -64,7 +64,7 @@ class OwnerTestNotificationSlack extends Notification
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function via(OwnerNotifiable $notifiable)
     {

@@ -52,8 +52,8 @@ class ConvertToTransfer implements ActionInterface
     }
 
     /**
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     public function actOnArray(array $journal): bool
     {

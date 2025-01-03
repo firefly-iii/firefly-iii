@@ -37,7 +37,7 @@ class BillDateCalculator
     /**
      * Returns the dates a bill needs to be paid.
      *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function getPayDates(Carbon $earliest, Carbon $latest, Carbon $billStart, string $period, int $skip, ?Carbon $lastPaid): array
     {

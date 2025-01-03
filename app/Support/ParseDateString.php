@@ -72,7 +72,7 @@ class ParseDateString
     /**
      * @throws FireflyException
      *
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     public function parseDate(string $date): Carbon
     {

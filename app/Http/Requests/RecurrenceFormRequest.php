@@ -52,7 +52,7 @@ class RecurrenceFormRequest extends FormRequest
      *
      * @throws FireflyException
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
     public function getAll(): array
     {

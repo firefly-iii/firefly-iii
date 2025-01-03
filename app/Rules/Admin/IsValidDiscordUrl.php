@@ -34,7 +34,7 @@ class IsValidDiscordUrl implements ValidationRule
     use ValidatesAmountsTrait;
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function validate(string $attribute, mixed $value, \Closure $fail): void
     {

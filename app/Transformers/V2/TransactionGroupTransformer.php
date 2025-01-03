@@ -311,7 +311,7 @@ class TransactionGroupTransformer extends AbstractTransformer
     /**
      * @throws FireflyException
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
     private function transformTransaction(array $transaction): array
     {
@@ -505,7 +505,7 @@ class TransactionGroupTransformer extends AbstractTransformer
     /**
      * @throws FireflyException
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
     private function transformJournal(TransactionJournal $journal): array
     {

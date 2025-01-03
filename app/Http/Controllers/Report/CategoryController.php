@@ -156,7 +156,7 @@ class CategoryController extends Controller
     /**
      * @return Factory|View
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
     public function accounts(Collection $accounts, Collection $categories, Carbon $start, Carbon $end)
     {
@@ -358,7 +358,7 @@ class CategoryController extends Controller
     /**
      * @return Factory|View
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
     public function categories(Collection $accounts, Collection $categories, Carbon $start, Carbon $end)
     {

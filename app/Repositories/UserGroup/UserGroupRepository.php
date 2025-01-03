@@ -203,7 +203,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface
     }
 
     /**
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      *
      * @throws FireflyException
      */

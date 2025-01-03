@@ -49,7 +49,7 @@ class StandardWebhookSender implements WebhookSenderInterface
     /**
      * @throws GuzzleException
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
     public function send(): void
     {

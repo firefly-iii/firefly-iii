@@ -203,7 +203,7 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumExpenses(
         Carbon               $start,

@@ -122,7 +122,7 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumExpenses(
         Carbon               $start,
@@ -137,8 +137,8 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings("PHPMD.ExcessiveParameterList")
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     private function getTransactionsForSum(
         string               $type,
@@ -223,7 +223,7 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumExpensesByDestination(
         Carbon               $start,
@@ -245,7 +245,7 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumExpensesBySource(
         Carbon               $start,
@@ -260,7 +260,7 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumIncome(
         Carbon               $start,
@@ -275,7 +275,7 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumIncomeByDestination(
         Carbon               $start,
@@ -290,7 +290,7 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumIncomeBySource(
         Carbon               $start,

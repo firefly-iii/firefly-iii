@@ -122,9 +122,9 @@ class ChangesForV550 extends Migration
     /**
      * Run the migrations.
      *
-     * @SuppressWarnings(PHPMD.ShortMethodName)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings("PHPMD.ShortMethodName")
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     public function up(): void
     {

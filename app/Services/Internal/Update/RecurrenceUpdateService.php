@@ -250,8 +250,8 @@ class RecurrenceUpdateService
     /**
      * It's a complex method but nothing surprising.
      *
-     * @SuppressWarnings(PHPMD.NPathComplexity)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings("PHPMD.NPathComplexity")
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      */
     private function updateCombination(Recurrence $recurrence, array $combination): void
     {

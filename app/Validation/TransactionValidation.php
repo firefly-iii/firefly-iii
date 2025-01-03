@@ -34,6 +34,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Models\UserGroup;
+use FireflyIII\Repositories\Account\AccountRepository;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Validation\Validator;
@@ -61,7 +62,7 @@ trait TransactionValidation
         app('log')->debug(sprintf('Going to loop %d transaction(s)', count($transactions)));
 
         /**
-         * @var null|int $index
+         * @var string|int $index
          * @var array    $transaction
          */
         foreach ($transactions as $index => $transaction) {
@@ -91,7 +92,7 @@ trait TransactionValidation
     }
 
     /**
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     protected function validateSingleAccount(Validator $validator, int $index, string $transactionType, array $transaction): void
     {
@@ -155,7 +156,7 @@ trait TransactionValidation
     }
 
     /**
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     protected function sanityCheckReconciliation(Validator $validator, string $transactionType, int $index, array $source, array $destination): void
     {
@@ -184,8 +185,8 @@ trait TransactionValidation
     /**
      * TODO describe this method.
      *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings("PHPMD.ExcessiveParameterList")
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     private function sanityCheckForeignCurrency(
         Validator        $validator,
@@ -222,7 +223,7 @@ trait TransactionValidation
             return;
         }
 
-        /** @var AccountRepositoryInterface $accountRepository */
+        /** @var AccountRepository $accountRepository */
         $accountRepository   = app(AccountRepositoryInterface::class);
         $defaultCurrency     = app('amount')->getDefaultCurrency();
         $sourceCurrency      = $accountRepository->getAccountCurrency($source) ?? $defaultCurrency;
@@ -347,7 +348,7 @@ trait TransactionValidation
         $transactions = $this->getTransactionsArray($validator);
 
         /**
-         * @var null|int $index
+         * @var string|int $index
          * @var array    $transaction
          */
         foreach ($transactions as $index => $transaction) {

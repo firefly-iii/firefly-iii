@@ -131,7 +131,7 @@ class BillUpdateService
     }
 
     /**
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     private function updateBillProperties(Bill $bill, array $data): Bill
     {

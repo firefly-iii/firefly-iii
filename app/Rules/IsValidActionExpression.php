@@ -36,7 +36,7 @@ class IsValidActionExpression implements ValidationRule
      *
      * @param \Closure(string): PotentiallyTranslatedString $fail
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function validate(string $attribute, mixed $value, \Closure $fail): void
     {

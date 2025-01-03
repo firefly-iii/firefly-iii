@@ -90,7 +90,7 @@ trait AccountServiceTrait
     /**
      * Update metadata for account. Depends on type which fields are valid.
      *
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      *
      * TODO this method treats expense accounts and liabilities the same way (tries to save interest)
      */

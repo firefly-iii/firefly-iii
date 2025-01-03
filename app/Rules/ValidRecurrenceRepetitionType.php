@@ -34,7 +34,7 @@ class ValidRecurrenceRepetitionType implements ValidationRule
     /**
      * Determine if the validation rule passes.
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function validate(string $attribute, mixed $value, \Closure $fail): void
     {

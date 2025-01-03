@@ -26,6 +26,7 @@ namespace FireflyIII\Models;
 
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
@@ -151,7 +152,7 @@ class UserGroup extends Model
      */
     public function piggyBanks(): HasManyThrough
     {
-        throw new FireflyException('This user group method is EOL.');
+        return $this->hasManyThrough( PiggyBank::class, Account::class);
     }
 
     public function recurrences(): HasMany

@@ -44,7 +44,7 @@ class OwnerTestNotificationEmail extends Notification
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function toArray(OwnerNotifiable $notifiable)
     {
@@ -53,7 +53,7 @@ class OwnerTestNotificationEmail extends Notification
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function toMail(OwnerNotifiable $notifiable)
     {
@@ -66,7 +66,7 @@ class OwnerTestNotificationEmail extends Notification
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function via(OwnerNotifiable $notifiable)
     {

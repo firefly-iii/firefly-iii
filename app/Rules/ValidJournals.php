@@ -33,7 +33,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 class ValidJournals implements ValidationRule
 {
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function validate(string $attribute, mixed $value, \Closure $fail): void
     {

@@ -58,7 +58,7 @@ class SumController extends Controller
      *
      * TODO see autocomplete/accountcontroller for list.
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function paid(DateRequest $request): JsonResponse
     {
@@ -74,7 +74,7 @@ class SumController extends Controller
      *
      * TODO see autocomplete/accountcontroller for list.
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function unpaid(DateRequest $request): JsonResponse
     {

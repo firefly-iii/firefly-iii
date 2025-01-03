@@ -69,7 +69,7 @@ class ExpenseReportController extends Controller
      *
      * TODO this chart is not multi currency aware.
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
     public function mainChart(Collection $accounts, Collection $expense, Carbon $start, Carbon $end): JsonResponse
     {

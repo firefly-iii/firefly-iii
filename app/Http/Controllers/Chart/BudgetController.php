@@ -483,7 +483,7 @@ class BudgetController extends Controller
      *
      * Suppress warning because this method will be replaced by API calls.
      *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function period(Budget $budget, TransactionCurrency $currency, Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {

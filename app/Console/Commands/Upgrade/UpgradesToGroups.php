@@ -185,7 +185,7 @@ class UpgradesToGroups extends Command
     }
 
     /**
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
     private function generateTransaction(TransactionJournal $journal, Transaction $transaction): array
     {

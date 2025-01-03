@@ -54,7 +54,7 @@ class RecurrenceFactory
     /**
      * @throws FireflyException
      *
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     public function create(array $data): Recurrence
     {

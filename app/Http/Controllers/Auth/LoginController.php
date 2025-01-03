@@ -163,7 +163,7 @@ class LoginController extends Controller
     /**
      * Get the failed login response instance.
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      *
      * @throws ValidationException
      */

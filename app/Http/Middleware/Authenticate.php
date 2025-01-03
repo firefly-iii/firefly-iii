@@ -76,7 +76,7 @@ class Authenticate
      * @throws FireflyException
      * @throws AuthenticationException
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     protected function authenticate($request, array $guards)
     {

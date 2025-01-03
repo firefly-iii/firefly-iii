@@ -57,7 +57,7 @@ class FireflyValidator extends Validator
      * @throws InvalidCharactersException
      * @throws SecretKeyTooShortException
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function validate2faCode($attribute, $value): bool
     {
@@ -85,7 +85,7 @@ class FireflyValidator extends Validator
      * @param mixed $value
      * @param mixed $parameters
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function validateBelongsToUser($attribute, $value, $parameters): bool
     {
@@ -103,7 +103,7 @@ class FireflyValidator extends Validator
      * @param mixed $attribute
      * @param mixed $value
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function validateBic($attribute, $value): bool
     {
@@ -133,8 +133,8 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
     public function validateIban(mixed $attribute, mixed $value): bool
     {
@@ -229,7 +229,7 @@ class FireflyValidator extends Validator
      * @param mixed $value
      * @param mixed $parameters
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function validateLess($attribute, $value, $parameters): bool
     {
@@ -244,7 +244,7 @@ class FireflyValidator extends Validator
      * @param mixed $value
      * @param mixed $parameters
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function validateMore($attribute, $value, $parameters): bool
     {
@@ -259,7 +259,7 @@ class FireflyValidator extends Validator
      * @param mixed $value
      * @param mixed $parameters
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function validateMustExist($attribute, $value, $parameters): bool
     {
@@ -443,7 +443,7 @@ class FireflyValidator extends Validator
      * @param mixed $attribute
      * @param mixed $value
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function validateSecurePassword($attribute, $value): bool
     {
@@ -466,7 +466,7 @@ class FireflyValidator extends Validator
      * @param mixed $value
      * @param mixed $parameters
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function validateUniqueAccountForUser($attribute, $value, $parameters): bool
     {
@@ -614,7 +614,7 @@ class FireflyValidator extends Validator
      * @param mixed $value
      * @param mixed $parameters
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function validateUniqueAccountNumberForUser($attribute, $value, $parameters): bool
     {
@@ -668,7 +668,7 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function validateUniqueCurrencyCode(?string $attribute, ?string $value): bool
     {
@@ -676,7 +676,7 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function validateUniqueCurrency(string $field, string $attribute, string $value): bool
     {
@@ -698,7 +698,7 @@ class FireflyValidator extends Validator
      * @param mixed $parameters
      * @param mixed $something
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function validateUniqueExistingWebhook($value, $parameters, $something): bool
     {
@@ -753,7 +753,7 @@ class FireflyValidator extends Validator
      * @param mixed $value
      * @param mixed $parameters
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function validateUniqueObjectForUser($attribute, $value, $parameters): bool
     {
@@ -787,7 +787,7 @@ class FireflyValidator extends Validator
      * @param mixed $value
      * @param mixed $parameters
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function validateUniqueObjectGroup($attribute, $value, $parameters): bool
     {
@@ -809,7 +809,7 @@ class FireflyValidator extends Validator
      * @param mixed $value
      * @param mixed $parameters
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function validateUniquePiggyBankForUser($attribute, $value, $parameters): bool
     {
@@ -830,7 +830,7 @@ class FireflyValidator extends Validator
      * @param mixed $value
      * @param mixed $parameters
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function validateUniqueWebhook($value, $parameters): bool
     {

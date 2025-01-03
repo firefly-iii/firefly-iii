@@ -47,7 +47,7 @@ class RemoteUserProvider implements UserProvider
     /**
      * @throws FireflyException
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function retrieveByCredentials(array $credentials): ?Authenticatable
     {
@@ -95,7 +95,7 @@ class RemoteUserProvider implements UserProvider
      *
      * @throws FireflyException
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function retrieveByToken($identifier, $token): ?Authenticatable
     {
@@ -105,7 +105,7 @@ class RemoteUserProvider implements UserProvider
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      *
      * @param mixed $token
      *
@@ -121,7 +121,7 @@ class RemoteUserProvider implements UserProvider
     /**
      * @throws FireflyException
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function validateCredentials(Authenticatable $user, array $credentials): bool
     {

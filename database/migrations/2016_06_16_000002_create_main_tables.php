@@ -73,7 +73,7 @@ class CreateMainTables extends Migration
     /**
      * Run the migrations.
      *
-     * @SuppressWarnings(PHPMD.ShortMethodName)
+     * @SuppressWarnings("PHPMD.ShortMethodName")
      */
     public function up(): void
     {
@@ -368,7 +368,7 @@ class CreateMainTables extends Migration
     }
 
     /**
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
     private function createRuleTables(): void
     {
@@ -507,8 +507,8 @@ class CreateMainTables extends Migration
     }
 
     /**
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     private function createTransactionTables(): void
     {

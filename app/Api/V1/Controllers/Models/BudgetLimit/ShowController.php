@@ -100,7 +100,7 @@ class ShowController extends Controller
      *
      * Display a listing of the budget limits for this budget.
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function indexAll(SameDateRequest $request): JsonResponse
     {

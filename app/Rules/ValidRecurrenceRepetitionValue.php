@@ -33,7 +33,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 class ValidRecurrenceRepetitionValue implements ValidationRule
 {
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function validate(string $attribute, mixed $value, \Closure $fail): void
     {

@@ -54,7 +54,7 @@ interface OperationsRepositoryInterface
     /**
      * Sum of withdrawal journals in period for a set of accounts, grouped per currency. Amounts are always negative.
      *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumExpenses(
         Carbon               $start,
@@ -68,7 +68,7 @@ interface OperationsRepositoryInterface
      * Sum of withdrawal journals in period for a set of accounts, grouped per destination / currency. Amounts are
      * always negative.
      *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumExpensesByDestination(
         Carbon               $start,
@@ -82,7 +82,7 @@ interface OperationsRepositoryInterface
      * Sum of withdrawal journals in period for a set of accounts, grouped per source / currency. Amounts are always
      * negative.
      *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumExpensesBySource(
         Carbon               $start,
@@ -95,7 +95,7 @@ interface OperationsRepositoryInterface
     /**
      * Sum of income journals in period for a set of accounts, grouped per currency. Amounts are always positive.
      *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumIncome(
         Carbon               $start,
@@ -109,7 +109,7 @@ interface OperationsRepositoryInterface
      * Sum of income journals in period for a set of accounts, grouped per destination + currency. Amounts are always
      * positive.
      *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumIncomeByDestination(
         Carbon               $start,
@@ -123,7 +123,7 @@ interface OperationsRepositoryInterface
      * Sum of income journals in period for a set of accounts, grouped per source + currency. Amounts are always
      * positive.
      *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumIncomeBySource(
         Carbon               $start,

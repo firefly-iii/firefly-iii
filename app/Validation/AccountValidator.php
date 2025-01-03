@@ -251,9 +251,9 @@ class AccountValidator
     /**
      * It's a long and fairly complex method, but I don't mind.
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+     * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     protected function findExistingAccount(array $validTypes, array $data, bool $inverse = false): ?Account
     {

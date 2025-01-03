@@ -39,7 +39,7 @@ class UserRegistration extends Notification
     public function __construct() {}
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function toArray(User $notifiable)
     {
@@ -48,7 +48,7 @@ class UserRegistration extends Notification
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function toMail(User $notifiable)
     {
@@ -59,7 +59,7 @@ class UserRegistration extends Notification
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function via(User $notifiable)
     {

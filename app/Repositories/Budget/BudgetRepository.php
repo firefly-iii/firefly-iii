@@ -721,7 +721,7 @@ class BudgetRepository implements BudgetRepositoryInterface
     /**
      * @throws FireflyException
      *
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     public function store(array $data): Budget
     {

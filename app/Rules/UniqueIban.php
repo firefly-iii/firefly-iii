@@ -85,7 +85,7 @@ class UniqueIban implements ValidationRule
      * @param string $attribute
      * @param mixed  $value
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function passes($attribute, $value): bool
     {

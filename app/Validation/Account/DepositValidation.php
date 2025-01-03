@@ -83,8 +83,8 @@ trait DepositValidation
     /**
      * Pretty complex unfortunately.
      *
-     * @SuppressWarnings(PHPMD.NPathComplexity)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings("PHPMD.NPathComplexity")
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      */
     protected function validateDepositSource(array $array): bool
     {

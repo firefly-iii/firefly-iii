@@ -128,7 +128,7 @@ class General extends AbstractExtension
     /**
      * Show icon with attachment.
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      */
     protected function mimeIcon(): TwigFilter
     {

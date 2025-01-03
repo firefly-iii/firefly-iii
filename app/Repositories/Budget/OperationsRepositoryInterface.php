@@ -57,7 +57,7 @@ interface OperationsRepositoryInterface
     public function setUser(null|Authenticatable|User $user): void;
 
     /**
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumExpenses(
         Carbon               $start,

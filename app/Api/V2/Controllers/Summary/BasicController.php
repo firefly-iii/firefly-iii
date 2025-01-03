@@ -95,7 +95,7 @@ class BasicController extends Controller
      *
      * @throws \Exception
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function basic(DateRequest $request): JsonResponse
     {
@@ -223,7 +223,7 @@ class BasicController extends Controller
     }
 
     /**
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
     private function getLeftToSpendInfo(Carbon $start, Carbon $end): array
     {

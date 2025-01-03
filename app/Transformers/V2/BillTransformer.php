@@ -53,7 +53,7 @@ class BillTransformer extends AbstractTransformer
     /**
      * @throws FireflyException
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
     public function collectMetaData(Collection $objects): Collection
     {

@@ -172,7 +172,7 @@ class OperatorQuerySearch implements SearchInterface
     /**
      * @throws FireflyException
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      */
     private function handleSearchNode(Node $searchNode): void
     {
@@ -255,8 +255,8 @@ class OperatorQuerySearch implements SearchInterface
     /**
      * @throws FireflyException
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      */
     private function updateCollector(string $operator, string $value, bool $prohibited): bool
     {
@@ -1931,8 +1931,8 @@ class OperatorQuerySearch implements SearchInterface
      * searchDirection: 1 = source (default), 2 = destination, 3 = both
      * stringPosition: 1 = start (default), 2 = end, 3 = contains, 4 = is
      *
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     private function searchAccount(string $value, SearchDirection $searchDirection, StringPosition $stringPosition, bool $prohibited = false): void
     {
@@ -2011,8 +2011,8 @@ class OperatorQuerySearch implements SearchInterface
      * searchDirection: 1 = source (default), 2 = destination, 3 = both
      * stringPosition: 1 = start (default), 2 = end, 3 = contains, 4 = is
      *
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     private function searchAccountNr(string $value, SearchDirection $searchDirection, StringPosition $stringPosition, bool $prohibited = false): void
     {
@@ -2146,7 +2146,7 @@ class OperatorQuerySearch implements SearchInterface
     /**
      * @throws FireflyException
      *
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
      */
     private function setExactDateParams(array $range, bool $prohibited = false): void
     {
@@ -2238,7 +2238,7 @@ class OperatorQuerySearch implements SearchInterface
     /**
      * @throws FireflyException
      *
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
      */
     private function setDateBeforeParams(array $range, bool $prohibited = false): void
     {
@@ -2294,7 +2294,7 @@ class OperatorQuerySearch implements SearchInterface
     /**
      * @throws FireflyException
      *
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
      */
     private function setDateAfterParams(array $range, bool $prohibited = false): void
     {
@@ -2350,7 +2350,7 @@ class OperatorQuerySearch implements SearchInterface
     /**
      * @throws FireflyException
      *
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
      */
     private function setExactMetaDateParams(string $field, array $range, bool $prohibited = false): void
     {
@@ -2445,7 +2445,7 @@ class OperatorQuerySearch implements SearchInterface
     /**
      * @throws FireflyException
      *
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
      */
     private function setMetaDateBeforeParams(string $field, array $range, bool $prohibited = false): void
     {
@@ -2501,7 +2501,7 @@ class OperatorQuerySearch implements SearchInterface
     /**
      * @throws FireflyException
      *
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
      */
     private function setMetaDateAfterParams(string $field, array $range, bool $prohibited = false): void
     {
@@ -2557,7 +2557,7 @@ class OperatorQuerySearch implements SearchInterface
     /**
      * @throws FireflyException
      *
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
      */
     private function setExactObjectDateParams(string $field, array $range, bool $prohibited = false): void
     {
@@ -2650,7 +2650,7 @@ class OperatorQuerySearch implements SearchInterface
     /**
      * @throws FireflyException
      *
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
      */
     private function setObjectDateBeforeParams(string $field, array $range, bool $prohibited = false): void
     {
@@ -2706,7 +2706,7 @@ class OperatorQuerySearch implements SearchInterface
     /**
      * @throws FireflyException
      *
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
      */
     private function setObjectDateAfterParams(string $field, array $range, bool $prohibited = false): void
     {

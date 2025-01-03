@@ -60,8 +60,8 @@ class RecurrenceController extends Controller
     /**
      * Shows all events for a repetition. Used in calendar.
      *
-     * @SuppressWarnings(PHPMD.NPathComplexity)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings("PHPMD.NPathComplexity")
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      *
      * @throws FireflyException
      */

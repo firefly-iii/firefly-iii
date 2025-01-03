@@ -62,7 +62,7 @@ class EitherConfigKey
     /**
      * @throws NotFoundHttpException
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public static function routeBinder(string $value, Route $route): string
     {

@@ -87,7 +87,7 @@ class ExchangeRateSeeder extends Seeder
     }
 
     /**
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     private function addRate(User $user, TransactionCurrency $from, TransactionCurrency $to, string $date, float $rate): void
     {

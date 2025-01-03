@@ -78,8 +78,8 @@ class Handler extends ExceptionHandler
      *
      * @throws \Throwable
      *
-     * @SuppressWarnings(PHPMD.NPathComplexity)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings("PHPMD.NPathComplexity")
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      */
     public function render($request, \Throwable $e): Response
     {

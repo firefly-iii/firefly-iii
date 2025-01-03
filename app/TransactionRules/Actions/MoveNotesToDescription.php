@@ -89,7 +89,7 @@ class MoveNotesToDescription implements ActionInterface
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function get(string $key, mixed $default = null): mixed
     {
@@ -97,7 +97,7 @@ class MoveNotesToDescription implements ActionInterface
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function has(mixed $key): mixed
     {

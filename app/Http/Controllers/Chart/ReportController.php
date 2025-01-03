@@ -133,7 +133,7 @@ class ReportController extends Controller
     /**
      * Shows income and expense, debit/credit: operations.
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
     public function operations(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
