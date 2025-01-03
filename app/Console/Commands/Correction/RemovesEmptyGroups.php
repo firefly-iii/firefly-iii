@@ -39,7 +39,7 @@ class RemovesEmptyGroups extends Command
     /**
      * Execute the console command.
      *
-     * @throws Exception;
+     * @throws Exception
      */
     public function handle(): int
     {

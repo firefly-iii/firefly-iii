@@ -70,7 +70,6 @@ class RepairsAccountBalances extends Command
 
     private function correctBalanceAmounts(): void
     {
-        return;
-        AccountBalanceCalculator::recalculateAll(true);
+        AccountBalanceCalculator::recalculateAll(false);
     }
 }

@@ -103,4 +103,12 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface
 
         return $object;
     }
+
+    /**
+     * @return Collection
+     */
+    #[\Override] public function getAll(): Collection
+    {
+        return $this->userGroup->currencyExchangeRates()->get();
+    }
 }

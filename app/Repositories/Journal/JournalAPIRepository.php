@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Journal;
 
 use FireflyIII\Models\Attachment;
+use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -89,7 +90,7 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface
         $events = $journal->piggyBankEvents()->get();
         $events->each(
             static function (PiggyBankEvent $event): void {
-                $event->piggyBank = $event->piggyBank()->withTrashed()->first();
+                $event->piggyBank = PiggyBank::withTrashed()->find($event->piggy_bank_id);
             }
         );
 

@@ -1,7 +1,6 @@
 parameters:
   scanFiles:
-    - ../_ide_helper_models.php
-    - ../_ide_helper.php
+    - ../_ide_helper
   paths:
     - ../app
     - ../database
@@ -17,6 +16,11 @@ parameters:
     - '#Dynamic call to static method#' # all the Laravel ORM things depend on this.
     - identifier: varTag.nativeType
     - identifier: varTag.type
+    - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\HasMany::before#'
+    - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\HasMany::after#'
+    - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\HasMany::withTrashed#'
+    - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\HasMany::accountTypeIn#'
+    - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\BelongsTo::withTrashed#'
     # - '#Control structures using switch should not be used.#' # switch is fine in some cases.
     # - '#with no value type specified in iterable type array#' # remove this rule when all other issues are solved.
     # - '#has no value type specified in iterable type array#' # remove this rule when all other issues are solved.

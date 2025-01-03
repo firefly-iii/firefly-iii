@@ -192,7 +192,7 @@ class TransactionJournal extends Model
     /**
      * Checks if tables are joined.
      */
-    public static function isJoined(Builder $query, string $table): bool
+    public static function isJoined(EloquentBuilder $query, string $table): bool
     {
         $joins = $query->getQuery()->joins;
         foreach ($joins as $join) {

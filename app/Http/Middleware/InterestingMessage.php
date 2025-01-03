@@ -30,6 +30,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\Webhook;
+use FireflyIII\User;
 use Illuminate\Http\Request;
 
 /**
@@ -140,8 +141,10 @@ class InterestingMessage
         $accountId = $request->get('account_id');
         $message   = $request->get('message');
 
+        /** @var User $user */
+        $user = auth()->user();
         /** @var null|Account $account */
-        $account   = auth()->user()->accounts()->withTrashed()->find($accountId);
+        $account   = $user->accounts()->withTrashed()->find($accountId);
 
         if (null === $account) {
             return;

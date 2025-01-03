@@ -26,12 +26,15 @@ namespace FireflyIII\Repositories\UserGroups\Currency;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 interface CurrencyRepositoryInterface
 {
     public function currencyInUse(TransactionCurrency $currency): bool;
+
+    public function getUserGroup(): UserGroup;
 
     /**
      * Currency is in use where exactly.

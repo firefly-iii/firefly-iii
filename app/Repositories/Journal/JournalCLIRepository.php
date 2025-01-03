@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Journal;
 
 use Carbon\Carbon;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\User;
@@ -57,7 +58,9 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
         if (null !== $budget) {
             return $budget->id;
         }
-        $budget = $journal->transactions()->first()->budgets()->first();
+        /** @var Transaction|null $transaction */
+        $transaction = $journal->transactions()->first();
+        $budget = $transaction?->budgets()->first();
         if (null !== $budget) {
             return $budget->id;
         }
@@ -74,7 +77,9 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
         if (null !== $category) {
             return $category->id;
         }
-        $category = $journal->transactions()->first()->categories()->first();
+        /** @var Transaction|null $transaction */
+        $transaction = $journal->transactions()->first();
+        $category = $transaction?->categories()->first();
         if (null !== $category) {
             return $category->id;
         }

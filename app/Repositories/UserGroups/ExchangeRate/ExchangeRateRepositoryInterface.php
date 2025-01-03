@@ -33,6 +33,8 @@ interface ExchangeRateRepositoryInterface
 {
     public function getRates(TransactionCurrency $from, TransactionCurrency $to): Collection;
 
+    public function getAll(): Collection;
+
     public function getSpecificRateOnDate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): ?CurrencyExchangeRate;
 
     public function deleteRate(CurrencyExchangeRate $rate): void;
