@@ -397,6 +397,9 @@ class BudgetController extends Controller
         foreach ($journals as $journal) {
             $key                    = sprintf('%d-%d', $journal['destination_account_id'], $journal['currency_id']);
             $amount                 = $journal['amount'];
+            $symbol                 = $journal['currency_symbol'];
+            $code                   = $journal['currency_code'];
+            $name                   = $journal['currency_name'];
 
             // if convert to native, use the native things, unless it's the foreign amount which is in the native currency.
             if ($this->convertToNative && $journal['currency_id'] !== $this->defaultCurrency->id && $journal['foreign_currency_id'] !== $this->defaultCurrency->id) {
