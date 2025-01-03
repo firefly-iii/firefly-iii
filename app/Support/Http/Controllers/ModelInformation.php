@@ -78,13 +78,13 @@ trait ModelInformation
 
         // types of liability:
         /** @var AccountType $debt */
-        $debt           = $repository->getAccountTypeByType(AccountType::DEBT);
+        $debt           = $repository->getAccountTypeByType(AccountTypeEnum::DEBT->value);
 
         /** @var AccountType $loan */
-        $loan           = $repository->getAccountTypeByType(AccountType::LOAN);
+        $loan           = $repository->getAccountTypeByType(AccountTypeEnum::LOAN->value);
 
         /** @var AccountType $mortgage */
-        $mortgage       = $repository->getAccountTypeByType(AccountType::MORTGAGE);
+        $mortgage       = $repository->getAccountTypeByType(AccountTypeEnum::MORTGAGE->value);
         $liabilityTypes = [
             $debt->id     => (string) trans(sprintf('firefly.account_type_%s', AccountTypeEnum::DEBT->value)),
             $loan->id     => (string) trans(sprintf('firefly.account_type_%s', AccountTypeEnum::LOAN->value)),

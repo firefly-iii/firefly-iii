@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Correction;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use Illuminate\Console\Command;
@@ -78,14 +79,14 @@ class CorrectsIbans extends Command
                 continue;
             }
             $type   = $account->accountType->type;
-            if (in_array($type, [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE], true)) {
+            if (in_array($type, [AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value], true)) {
                 $type = 'liabilities';
             }
             if (array_key_exists($iban, $set[$userId])) {
                 // iban already in use! two exceptions exist:
                 if (
-                    !(AccountType::EXPENSE === $set[$userId][$iban] && AccountType::REVENUE === $type) // allowed combination
-                    && !(AccountType::REVENUE === $set[$userId][$iban] && AccountType::EXPENSE === $type) // also allowed combination.
+                    !(AccountTypeEnum::EXPENSE->value === $set[$userId][$iban] && AccountTypeEnum::REVENUE->value === $type) // allowed combination
+                    && !(AccountTypeEnum::REVENUE->value === $set[$userId][$iban] && AccountTypeEnum::EXPENSE->value === $type) // also allowed combination.
                 ) {
                     $this->friendlyWarning(
                         sprintf(

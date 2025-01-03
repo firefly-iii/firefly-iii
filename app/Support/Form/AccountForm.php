@@ -47,7 +47,7 @@ class AccountForm
      */
     public function activeDepositDestinations(string $name, mixed $value = null, ?array $options = null): string
     {
-        $types                    = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN, AccountType::REVENUE];
+        $types                    = [AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::CREDITCARD->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::REVENUE->value];
         $repository               = $this->getAccountRepository();
         $grouped                  = $this->getAccountsGrouped($types, $repository);
         $cash                     = $repository->getCashAccount();
@@ -63,7 +63,7 @@ class AccountForm
             $repository = $this->getAccountRepository();
         }
         $accountList    = $repository->getActiveAccountsByType($types);
-        $liabilityTypes = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN];
+        $liabilityTypes = [AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::CREDITCARD->value, AccountTypeEnum::LOAN->value];
         $grouped        = [];
 
         /** @var Account $account */
@@ -74,10 +74,10 @@ class AccountForm
             }
             if ('' === $role) {
                 $role = 'no_account_type';
-                if (AccountType::EXPENSE === $account->accountType->type) {
+                if (AccountTypeEnum::EXPENSE->value === $account->accountType->type) {
                     $role = 'expense_account';
                 }
-                if (AccountType::REVENUE === $account->accountType->type) {
+                if (AccountTypeEnum::REVENUE->value === $account->accountType->type) {
                     $role = 'revenue_account';
                 }
             }
@@ -93,7 +93,7 @@ class AccountForm
      */
     public function activeWithdrawalDestinations(string $name, mixed $value = null, ?array $options = null): string
     {
-        $types                    = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN, AccountType::EXPENSE];
+        $types                    = [AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::CREDITCARD->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::EXPENSE->value];
         $repository               = $this->getAccountRepository();
         $grouped                  = $this->getAccountsGrouped($types, $repository);
 
@@ -118,7 +118,7 @@ class AccountForm
         $selected = request()->old($name) ?? [];
 
         // get all asset accounts:
-        $types    = [AccountType::ASSET, AccountType::DEFAULT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::DEBT];
+        $types    = [AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::DEBT->value];
         $grouped  = $this->getAccountsGrouped($types);
 
         unset($options['class']);
@@ -168,7 +168,7 @@ class AccountForm
      */
     public function longAccountList(string $name, $value = null, ?array $options = null): string
     {
-        $types   = [AccountType::ASSET, AccountType::DEFAULT, AccountType::MORTGAGE, AccountType::DEBT, AccountType::LOAN];
+        $types   = [AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value];
         $grouped = $this->getAccountsGrouped($types);
 
         return $this->select($name, $grouped, $value, $options);

@@ -27,6 +27,7 @@ namespace FireflyIII\Console\Commands\Tools;
 use Carbon\Carbon;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Console\Commands\VerifiesAccessToken;
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Rule;
@@ -154,7 +155,7 @@ class ApplyRules extends Command
         $this->ruleGroupSelection  = [];
         $this->ruleRepository      = app(RuleRepositoryInterface::class);
         $this->ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
-        $this->acceptedAccounts    = [AccountType::DEFAULT, AccountType::DEBT, AccountType::ASSET, AccountType::LOAN, AccountType::MORTGAGE];
+        $this->acceptedAccounts    = [AccountTypeEnum::DEFAULT->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value];
         $this->groups              = new Collection();
     }
 

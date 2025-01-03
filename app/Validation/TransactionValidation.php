@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation;
 
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
@@ -308,7 +309,7 @@ trait TransactionValidation
     {
         $type = $account->accountType->type;
 
-        return AccountType::ASSET === $type;
+        return AccountTypeEnum::ASSET->value === $type;
     }
 
     private function hasForeignCurrencyInfo(array $transaction): bool

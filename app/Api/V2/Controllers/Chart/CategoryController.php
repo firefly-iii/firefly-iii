@@ -27,6 +27,7 @@ namespace FireflyIII\Api\V2\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Generic\DateRequest;
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
@@ -81,7 +82,7 @@ class CategoryController extends Controller
 
         /** @var Carbon $end */
         $end        = $this->parameters->get('end');
-        $accounts   = $this->accountRepos->getAccountsByType([AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::ASSET, AccountType::DEFAULT]);
+        $accounts   = $this->accountRepos->getAccountsByType([AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value]);
         $default    = app('amount')->getDefaultCurrency();
         $converter  = new ExchangeRateConverter();
         $currencies = [];

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
@@ -142,7 +143,7 @@ class ConvertToWithdrawal implements ActionInterface
         $validTypes      = config('firefly.expected_source_types.destination.Withdrawal');
         $opposingAccount = $repository->findByName($opposingName, $validTypes);
         if (null === $opposingAccount) {
-            $opposingAccount = $factory->findOrCreate($opposingName, AccountType::EXPENSE);
+            $opposingAccount = $factory->findOrCreate($opposingName, AccountTypeEnum::EXPENSE->value);
         }
 
         app('log')->debug(sprintf('ConvertToWithdrawal. Action value is "%s", expense name is "%s"', $actionValue, $opposingName));
@@ -228,7 +229,7 @@ class ConvertToWithdrawal implements ActionInterface
         $validTypes      = config('firefly.expected_source_types.destination.Withdrawal');
         $opposingAccount = $repository->findByName($opposingName, $validTypes);
         if (null === $opposingAccount) {
-            $opposingAccount = $factory->findOrCreate($opposingName, AccountType::EXPENSE);
+            $opposingAccount = $factory->findOrCreate($opposingName, AccountTypeEnum::EXPENSE->value);
         }
 
         app('log')->debug(sprintf('ConvertToWithdrawal. Action value is "%s", destination name is "%s"', $actionValue, $opposingName));

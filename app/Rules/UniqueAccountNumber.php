@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
@@ -49,13 +50,13 @@ class UniqueAccountNumber implements ValidationRule
         $this->expectedType = $expectedType;
         // a very basic fix to make sure we get the correct account type:
         if ('expense' === $expectedType) {
-            $this->expectedType = AccountType::EXPENSE;
+            $this->expectedType = AccountTypeEnum::EXPENSE->value;
         }
         if ('revenue' === $expectedType) {
-            $this->expectedType = AccountType::REVENUE;
+            $this->expectedType = AccountTypeEnum::REVENUE->value;
         }
         if ('asset' === $expectedType) {
-            $this->expectedType = AccountType::ASSET;
+            $this->expectedType = AccountTypeEnum::ASSET->value;
         }
         app('log')->debug(sprintf('Expected type is "%s"', $this->expectedType));
     }
@@ -106,20 +107,20 @@ class UniqueAccountNumber implements ValidationRule
     private function getMaxOccurrences(): array
     {
         $maxCounts = [
-            AccountType::ASSET   => 0,
-            AccountType::EXPENSE => 0,
-            AccountType::REVENUE => 0,
+            AccountTypeEnum::ASSET->value   => 0,
+            AccountTypeEnum::EXPENSE->value => 0,
+            AccountTypeEnum::REVENUE->value => 0,
         ];
 
-        if ('expense' === $this->expectedType || AccountType::EXPENSE === $this->expectedType) {
+        if ('expense' === $this->expectedType || AccountTypeEnum::EXPENSE->value === $this->expectedType) {
             // IBAN should be unique amongst expense and asset accounts.
             // may appear once in revenue accounts
-            $maxCounts[AccountType::REVENUE] = 1;
+            $maxCounts[AccountTypeEnum::REVENUE->value] = 1;
         }
-        if ('revenue' === $this->expectedType || AccountType::REVENUE === $this->expectedType) {
+        if ('revenue' === $this->expectedType || AccountTypeEnum::REVENUE->value === $this->expectedType) {
             // IBAN should be unique amongst revenue and asset accounts.
             // may appear once in expense accounts
-            $maxCounts[AccountType::EXPENSE] = 1;
+            $maxCounts[AccountTypeEnum::EXPENSE->value] = 1;
         }
 
         return $maxCounts;

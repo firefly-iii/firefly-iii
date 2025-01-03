@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Twig;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
@@ -103,12 +104,12 @@ class TransactionGroupTwig extends AbstractExtension
         }
 
         // opening balance and it comes from initial balance? its expense.
-        if (TransactionTypeEnum::OPENING_BALANCE->value === $transactionType && AccountType::INITIAL_BALANCE !== $sourceType) {
+        if (TransactionTypeEnum::OPENING_BALANCE->value === $transactionType && AccountTypeEnum::INITIAL_BALANCE->value !== $sourceType) {
             $amount = bcmul($amount, '-1');
         }
 
         // reconciliation and it comes from reconciliation?
-        if (TransactionTypeEnum::RECONCILIATION->value === $transactionType && AccountType::RECONCILIATION !== $sourceType) {
+        if (TransactionTypeEnum::RECONCILIATION->value === $transactionType && AccountTypeEnum::RECONCILIATION->value !== $sourceType) {
             $amount = bcmul($amount, '-1');
         }
 

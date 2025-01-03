@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Support\Facades\Steam;
@@ -50,16 +51,16 @@ class UniqueIban implements ValidationRule
         $this->expectedTypes = [$expectedType];
         // a very basic fix to make sure we get the correct account type:
         if ('expense' === $expectedType) {
-            $this->expectedTypes = [AccountType::EXPENSE];
+            $this->expectedTypes = [AccountTypeEnum::EXPENSE->value];
         }
         if ('revenue' === $expectedType) {
-            $this->expectedTypes = [AccountType::REVENUE];
+            $this->expectedTypes = [AccountTypeEnum::REVENUE->value];
         }
         if ('asset' === $expectedType) {
-            $this->expectedTypes = [AccountType::ASSET];
+            $this->expectedTypes = [AccountTypeEnum::ASSET->value];
         }
         if ('liabilities' === $expectedType) {
-            $this->expectedTypes = [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
+            $this->expectedTypes = [AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value];
         }
     }
 
@@ -123,21 +124,21 @@ class UniqueIban implements ValidationRule
     private function getMaxOccurrences(): array
     {
         $maxCounts = [
-            AccountType::ASSET   => 0,
-            AccountType::EXPENSE => 0,
-            AccountType::REVENUE => 0,
+            AccountTypeEnum::ASSET->value   => 0,
+            AccountTypeEnum::EXPENSE->value => 0,
+            AccountTypeEnum::REVENUE->value => 0,
             'liabilities'        => 0,
         ];
 
-        if (in_array('expense', $this->expectedTypes, true) || in_array(AccountType::EXPENSE, $this->expectedTypes, true)) {
+        if (in_array('expense', $this->expectedTypes, true) || in_array(AccountTypeEnum::EXPENSE->value, $this->expectedTypes, true)) {
             // IBAN should be unique amongst expense and asset accounts.
             // may appear once in revenue accounts
-            $maxCounts[AccountType::REVENUE] = 1;
+            $maxCounts[AccountTypeEnum::REVENUE->value] = 1;
         }
-        if (in_array('revenue', $this->expectedTypes, true) || in_array(AccountType::REVENUE, $this->expectedTypes, true)) {
+        if (in_array('revenue', $this->expectedTypes, true) || in_array(AccountTypeEnum::REVENUE->value, $this->expectedTypes, true)) {
             // IBAN should be unique amongst revenue and asset accounts.
             // may appear once in expense accounts
-            $maxCounts[AccountType::EXPENSE] = 1;
+            $maxCounts[AccountTypeEnum::EXPENSE->value] = 1;
         }
 
         return $maxCounts;
@@ -147,7 +148,7 @@ class UniqueIban implements ValidationRule
     {
         $typesArray = [$type];
         if ('liabilities' === $type) {
-            $typesArray = [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
+            $typesArray = [AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value];
         }
         $query
                     = auth()->user()

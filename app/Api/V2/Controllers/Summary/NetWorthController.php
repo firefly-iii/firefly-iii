@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V2\Controllers\Summary;
 
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Generic\SingleDateRequest;
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Helpers\Report\NetWorthInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -67,7 +68,7 @@ class NetWorthController extends Controller
     public function get(SingleDateRequest $request): JsonResponse
     {
         $date     = $request->getDate();
-        $accounts = $this->repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
+        $accounts = $this->repository->getAccountsByType([AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value]);
 
         // filter list on preference of being included.
         $filtered = $accounts->filter(

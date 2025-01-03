@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Support;
 
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Factory\BillFactory;
@@ -189,7 +190,7 @@ trait RecurringTransactionTrait
         }
 
         // maybe we can create it? Try to avoid LOAN and other asset types.
-        $cannotCreate = [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD];
+        $cannotCreate = [AccountTypeEnum::ASSET->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::CREDITCARD->value];
 
         /** @var AccountFactory $factory */
         $factory      = app(AccountFactory::class);

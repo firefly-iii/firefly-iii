@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Http\Controllers;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
@@ -59,7 +60,7 @@ trait AugumentData
             $collection                      = new Collection();
             $collection->push($expenseAccount);
 
-            $revenue                         = $repository->findByName($expenseAccount->name, [AccountType::REVENUE]);
+            $revenue                         = $repository->findByName($expenseAccount->name, [AccountTypeEnum::REVENUE->value]);
             if (null !== $revenue) {
                 $collection->push($revenue);
             }
@@ -106,7 +107,7 @@ trait AugumentData
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
-        $accounts   = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT, AccountType::EXPENSE, AccountType::CASH]);
+        $accounts   = $repository->getAccountsByType([AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::EXPENSE->value, AccountTypeEnum::CASH->value]);
         $grouped    = $accounts->groupBy('id')->toArray();
         $return     = [];
         foreach ($accountIds as $combinedId) {

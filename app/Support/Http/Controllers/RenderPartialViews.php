@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Http\Controllers;
 
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Report\PopupReportInterface;
 use FireflyIII\Models\Account;
@@ -192,8 +193,8 @@ trait RenderPartialViews
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
-        $expense    = $repository->getActiveAccountsByType([AccountType::EXPENSE, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
-        $revenue    = $repository->getActiveAccountsByType([AccountType::REVENUE, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
+        $expense    = $repository->getActiveAccountsByType([AccountTypeEnum::EXPENSE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value]);
+        $revenue    = $repository->getActiveAccountsByType([AccountTypeEnum::REVENUE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value]);
         $set        = [];
 
         /** @var Account $account */

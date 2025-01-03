@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -52,8 +53,8 @@ class UpgradesCreditCardLiabilities extends Command
             return 0;
         }
 
-        $ccType   = AccountType::where('type', AccountType::CREDITCARD)->first();
-        $debtType = AccountType::where('type', AccountType::DEBT)->first();
+        $ccType   = AccountType::where('type', AccountTypeEnum::CREDITCARD->value)->first();
+        $debtType = AccountType::where('type', AccountTypeEnum::DEBT->value)->first();
         if (null === $ccType || null === $debtType) {
             $this->markAsExecuted();
 

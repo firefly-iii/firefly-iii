@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
@@ -131,7 +132,7 @@ class Account extends Model
     {
         $name = $this->name;
 
-        if (AccountType::CASH === $this->accountType->type) {
+        if (AccountTypeEnum::CASH->value === $this->accountType->type) {
             return '';
         }
 

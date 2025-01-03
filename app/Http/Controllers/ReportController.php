@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Report\ReportGeneratorFactory;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
@@ -242,7 +243,7 @@ class ReportController extends Controller
         $months           = $this->helper->listOfMonths($start);
         $customFiscalYear = app('preferences')->get('customFiscalYear', 0)->data;
         $accounts         = $repository->getAccountsByType(
-            [AccountType::DEFAULT, AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE]
+            [AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value]
         );
 
         // group accounts by role:
@@ -253,7 +254,7 @@ class ReportController extends Controller
             $type                                                                        = $account->accountType->type;
             $role                                                                        = sprintf('opt_group_%s', $repository->getMetaValue($account, 'account_role'));
 
-            if (in_array($type, [AccountType::MORTGAGE, AccountType::DEBT, AccountType::LOAN], true)) {
+            if (in_array($type, [AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value], true)) {
                 $role = sprintf('opt_group_l_%s', $type);
             }
 

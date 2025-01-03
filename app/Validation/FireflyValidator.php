@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation;
 
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
@@ -316,12 +317,12 @@ class FireflyValidator extends Validator
             $account    = $repository->findByName(
                 $value,
                 [
-                    AccountType::DEFAULT,
-                    AccountType::ASSET,
-                    AccountType::LOAN,
-                    AccountType::DEBT,
-                    AccountType::MORTGAGE,
-                    AccountType::CREDITCARD,
+                    AccountTypeEnum::DEFAULT->value,
+                    AccountTypeEnum::ASSET->value,
+                    AccountTypeEnum::LOAN->value,
+                    AccountTypeEnum::DEBT->value,
+                    AccountTypeEnum::MORTGAGE->value,
+                    AccountTypeEnum::CREDITCARD->value,
                 ]
             );
 

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Requests\NewUserFormRequest;
 use FireflyIII\Models\AccountType;
@@ -114,7 +115,7 @@ class NewUserController extends Controller
         $currencyRepository->makeDefault($currency);
 
         // store frontpage preferences:
-        $accounts      = $this->repository->getAccountsByType([AccountType::ASSET])->pluck('id')->toArray();
+        $accounts      = $this->repository->getAccountsByType([AccountTypeEnum::ASSET->value])->pluck('id')->toArray();
         app('preferences')->set('frontpageAccounts', $accounts);
 
         // mark.

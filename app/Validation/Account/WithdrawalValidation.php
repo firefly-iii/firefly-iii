@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation\Account;
 
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 
@@ -39,7 +40,7 @@ trait WithdrawalValidation
         $accountIban = array_key_exists('iban', $array) ? $array['iban'] : null;
         app('log')->debug('Now in validateGenericSource', $array);
         // source can be any of the following types.
-        $validTypes  = [AccountType::ASSET, AccountType::REVENUE, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
+        $validTypes  = [AccountTypeEnum::ASSET->value, AccountTypeEnum::REVENUE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value];
         if (null === $accountId && null === $accountName && null === $accountIban && false === $this->canCreateTypes($validTypes)) {
             // if both values are NULL we return TRUE
             // because we assume the user doesn't want to submit / change anything.

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\UserGroups\Account;
 
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
@@ -287,8 +288,8 @@ class AccountRepository implements AccountRepositoryInterface
     public function resetAccountOrder(): void
     {
         $sets = [
-            [AccountType::DEFAULT, AccountType::ASSET],
-            [AccountType::LOAN, AccountType::DEBT, AccountType::CREDITCARD, AccountType::MORTGAGE],
+            [AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value],
+            [AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::CREDITCARD->value, AccountTypeEnum::MORTGAGE->value],
         ];
         foreach ($sets as $set) {
             $list  = $this->getAccountsByType($set);
@@ -308,7 +309,7 @@ class AccountRepository implements AccountRepositoryInterface
             }
         }
         // reset the rest to zero.
-        $all  = [AccountType::DEFAULT, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::CREDITCARD, AccountType::MORTGAGE];
+        $all  = [AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::CREDITCARD->value, AccountTypeEnum::MORTGAGE->value];
         $this->user->accounts()->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
             ->whereNotIn('account_types.type', $all)
             ->update(['order' => 0])
@@ -318,7 +319,7 @@ class AccountRepository implements AccountRepositoryInterface
     public function getAccountsByType(array $types, ?array $sort = [], ?array $filters = []): Collection
     {
         $sortable        = ['name', 'active']; // TODO yes this is a duplicate array.
-        $res             = array_intersect([AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT], $types);
+        $res             = array_intersect([AccountTypeEnum::ASSET->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value], $types);
         $query           = $this->userGroup->accounts();
         if (0 !== count($types)) {
             $query->accountTypeIn($types);

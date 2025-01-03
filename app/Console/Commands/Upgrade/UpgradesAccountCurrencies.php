@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
@@ -104,7 +105,7 @@ class UpgradesAccountCurrencies extends Command
     private function updateCurrenciesForUser(User $user): void
     {
         $this->accountRepos->setUser($user);
-        $accounts        = $this->accountRepos->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $accounts        = $this->accountRepos->getAccountsByType([AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value]);
 
         // get user's currency preference:
         $defaultCurrency = app('amount')->getDefaultCurrencyByUserGroup($user->userGroup);

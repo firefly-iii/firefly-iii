@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation\Account;
 
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 
@@ -43,7 +44,7 @@ trait LiabilityValidation
         // if the ID is not null the source account should be a dummy account of the type liability credit.
         // the ID of the destination must belong to a liability.
         if (null !== $accountId) {
-            if (AccountType::LIABILITY_CREDIT !== $this->source?->accountType?->type) {
+            if (AccountTypeEnum::LIABILITY_CREDIT->value !== $this->source?->accountType?->type) {
                 app('log')->error('Source account is not a liability.');
 
                 return false;
@@ -104,7 +105,7 @@ trait LiabilityValidation
             app('log')->error('Array has a name, return true.');
             // set the source to be a (dummy) revenue account.
             $account              = new Account();
-            $accountType          = AccountType::whereType(AccountType::LIABILITY_CREDIT)->first();
+            $accountType          = AccountType::whereType(AccountTypeEnum::LIABILITY_CREDIT->value)->first();
             $account->accountType = $accountType;
             $this->setSource($account);
         }

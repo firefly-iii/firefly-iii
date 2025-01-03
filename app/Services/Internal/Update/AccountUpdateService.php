@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Events\UpdatedAccount;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
@@ -153,7 +154,7 @@ class AccountUpdateService
     {
         $type = $account->accountType->type;
 
-        return in_array($type, [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE], true);
+        return in_array($type, [AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value], true);
     }
 
     private function getAccountType(string $type): AccountType
@@ -171,7 +172,7 @@ class AccountUpdateService
         }
         // skip if not of orderable type.
         $type           = $account->accountType->type;
-        if (!in_array($type, [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT], true)) {
+        if (!in_array($type, [AccountTypeEnum::ASSET->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value], true)) {
             app('log')->debug('Will not change order of this account.');
 
             return $account;
@@ -180,9 +181,9 @@ class AccountUpdateService
         $oldOrder       = $account->order;
         $newOrder       = $data['order'];
         app('log')->debug(sprintf('Order is set to be updated from %s to %s', $oldOrder, $newOrder));
-        $list           = $this->getTypeIds([AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT]);
-        if (AccountType::ASSET === $type) {
-            $list = $this->getTypeIds([AccountType::ASSET]);
+        $list           = $this->getTypeIds([AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value]);
+        if (AccountTypeEnum::ASSET->value === $type) {
+            $list = $this->getTypeIds([AccountTypeEnum::ASSET->value]);
         }
 
         if ($newOrder > $oldOrder) {

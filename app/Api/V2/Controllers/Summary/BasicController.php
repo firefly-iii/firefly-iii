@@ -27,6 +27,7 @@ namespace FireflyIII\Api\V2\Controllers\Summary;
 use Carbon\Carbon;
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Generic\DateRequest;
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
@@ -353,7 +354,7 @@ class BasicController extends Controller
         $netWorthHelper = app(NetWorthInterface::class);
         $netWorthHelper->setUserGroup($userGroup);
         $allAccounts    = $this->accountRepository->getActiveAccountsByType(
-            [AccountType::ASSET, AccountType::DEFAULT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::DEBT]
+            [AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::DEBT->value]
         );
 
         // filter list on preference of being included.

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
@@ -148,7 +149,7 @@ class ConvertToDeposit implements ActionInterface
         $validTypes      = config('firefly.expected_source_types.source.Deposit');
         $opposingAccount = $repository->findByName($opposingName, $validTypes);
         if (null === $opposingAccount) {
-            $opposingAccount = $factory->findOrCreate($opposingName, AccountType::REVENUE);
+            $opposingAccount = $factory->findOrCreate($opposingName, AccountTypeEnum::REVENUE->value);
         }
 
         app('log')->debug(sprintf('ConvertToDeposit. Action value is "%s", new opposing name is "%s"', $actionValue, $opposingAccount->name));
@@ -236,7 +237,7 @@ class ConvertToDeposit implements ActionInterface
         $validTypes      = config('firefly.expected_source_types.source.Deposit');
         $opposingAccount = $repository->findByName($opposingName, $validTypes);
         if (null === $opposingAccount) {
-            $opposingAccount = $factory->findOrCreate($opposingName, AccountType::REVENUE);
+            $opposingAccount = $factory->findOrCreate($opposingName, AccountTypeEnum::REVENUE->value);
         }
 
         app('log')->debug(sprintf('ConvertToDeposit. Action value is "%s", revenue name is "%s"', $actionValue, $opposingAccount->name));

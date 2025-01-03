@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Data\Export;
 
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Request\ChecksLogin;
@@ -55,7 +56,7 @@ class ExportRequest extends FormRequest
             $accountId = (int) $part;
             if (0 !== $accountId) {
                 $account = $repository->find($accountId);
-                if (null !== $account && AccountType::ASSET === $account->accountType->type) {
+                if (null !== $account && AccountTypeEnum::ASSET->value === $account->accountType->type) {
                     $accounts->push($account);
                 }
             }

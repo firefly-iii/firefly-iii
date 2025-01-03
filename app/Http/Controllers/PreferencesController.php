@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Events\Preferences\UserGroupChangedDefaultCurrency;
 use FireflyIII\Events\Test\UserTestNotificationChannel;
 use FireflyIII\Exceptions\FireflyException;
@@ -70,7 +71,7 @@ class PreferencesController extends Controller
      */
     public function index(AccountRepositoryInterface $repository)
     {
-        $accounts                       = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
+        $accounts                       = $repository->getAccountsByType([AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value]);
         $isDocker                       = env('IS_DOCKER', false);
         $groupedAccounts                = [];
 
@@ -79,7 +80,7 @@ class PreferencesController extends Controller
             $type                                                                        = $account->accountType->type;
             $role                                                                        = sprintf('opt_group_%s', $repository->getMetaValue($account, 'account_role'));
 
-            if (in_array($type, [AccountType::MORTGAGE, AccountType::DEBT, AccountType::LOAN], true)) {
+            if (in_array($type, [AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value], true)) {
                 $role = sprintf('opt_group_l_%s', $type);
             }
 

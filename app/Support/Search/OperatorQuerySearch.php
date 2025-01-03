@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Search;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\SearchDirection;
 use FireflyIII\Enums\StringPosition;
 use FireflyIII\Exceptions\FireflyException;
@@ -1938,7 +1939,7 @@ class OperatorQuerySearch implements SearchInterface
         app('log')->debug(sprintf('searchAccount("%s", %s, %s)', $value, $stringPosition->name, $searchDirection->name));
 
         // search direction (default): for source accounts
-        $searchTypes     = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::REVENUE];
+        $searchTypes     = [AccountTypeEnum::ASSET->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::REVENUE->value];
         $collectorMethod = 'setSourceAccounts';
         if ($prohibited) {
             $collectorMethod = 'excludeSourceAccounts';
@@ -1947,7 +1948,7 @@ class OperatorQuerySearch implements SearchInterface
         // search direction: for destination accounts
         if (SearchDirection::DESTINATION === $searchDirection) { // destination
             // destination can be
-            $searchTypes     = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::EXPENSE];
+            $searchTypes     = [AccountTypeEnum::ASSET->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::EXPENSE->value];
             $collectorMethod = 'setDestinationAccounts';
             if ($prohibited) {
                 $collectorMethod = 'excludeDestinationAccounts';
@@ -1955,7 +1956,7 @@ class OperatorQuerySearch implements SearchInterface
         }
         // either account could be:
         if (SearchDirection::BOTH === $searchDirection) {
-            $searchTypes     = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::EXPENSE, AccountType::REVENUE];
+            $searchTypes     = [AccountTypeEnum::ASSET->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::EXPENSE->value, AccountTypeEnum::REVENUE->value];
             $collectorMethod = 'setAccounts';
             if ($prohibited) {
                 $collectorMethod = 'excludeAccounts';
@@ -2018,7 +2019,7 @@ class OperatorQuerySearch implements SearchInterface
         app('log')->debug(sprintf('searchAccountNr(%s, %d, %d)', $value, $searchDirection->name, $stringPosition->name));
 
         // search direction (default): for source accounts
-        $searchTypes     = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::REVENUE];
+        $searchTypes     = [AccountTypeEnum::ASSET->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::REVENUE->value];
         $collectorMethod = 'setSourceAccounts';
         if (true === $prohibited) {
             $collectorMethod = 'excludeSourceAccounts';
@@ -2027,7 +2028,7 @@ class OperatorQuerySearch implements SearchInterface
         // search direction: for destination accounts
         if (SearchDirection::DESTINATION === $searchDirection) {
             // destination can be
-            $searchTypes     = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::EXPENSE];
+            $searchTypes     = [AccountTypeEnum::ASSET->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::EXPENSE->value];
             $collectorMethod = 'setDestinationAccounts';
             if (true === $prohibited) {
                 $collectorMethod = 'excludeDestinationAccounts';
@@ -2036,7 +2037,7 @@ class OperatorQuerySearch implements SearchInterface
 
         // either account could be:
         if (SearchDirection::BOTH === $searchDirection) {
-            $searchTypes     = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::EXPENSE, AccountType::REVENUE];
+            $searchTypes     = [AccountTypeEnum::ASSET->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::EXPENSE->value, AccountTypeEnum::REVENUE->value];
             $collectorMethod = 'setAccounts';
             if (true === $prohibited) {
                 $collectorMethod = 'excludeAccounts';

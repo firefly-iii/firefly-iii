@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation\Account;
 
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 
@@ -126,7 +127,7 @@ trait OBValidation
             $account              = new Account();
 
             /** @var AccountType $accountType */
-            $accountType          = AccountType::whereType(AccountType::INITIAL_BALANCE)->first();
+            $accountType          = AccountType::whereType(AccountTypeEnum::INITIAL_BALANCE->value)->first();
             $account->accountType = $accountType;
             $this->setSource($account);
         }

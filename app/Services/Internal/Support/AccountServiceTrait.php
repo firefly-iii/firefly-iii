@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Internal\Support;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountMetaFactory;
@@ -96,7 +97,7 @@ trait AccountServiceTrait
     public function updateMetaData(Account $account, array $data): void
     {
         $fields  = $this->validFields;
-        if (AccountType::ASSET === $account->accountType->type) {
+        if (AccountTypeEnum::ASSET->value === $account->accountType->type) {
             $fields = $this->validAssetFields;
         }
 
@@ -119,11 +120,11 @@ trait AccountServiceTrait
         }
 
         // only asset account may have a role:
-        if (AccountType::ASSET !== $account->accountType->type) {
+        if (AccountTypeEnum::ASSET->value !== $account->accountType->type) {
             $data['account_role'] = '';
         }
 
-        if (AccountType::ASSET === $account->accountType->type && 'ccAsset' === $data['account_role']) {
+        if (AccountTypeEnum::ASSET->value === $account->accountType->type && 'ccAsset' === $data['account_role']) {
             $fields = $this->validCCFields;
         }
 
