@@ -33,7 +33,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * @mixin IdeHelperTransactionGroup
  */
 class TransactionGroup extends Model
 {

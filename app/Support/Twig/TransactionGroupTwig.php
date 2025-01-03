@@ -166,11 +166,12 @@ class TransactionGroupTwig extends AbstractExtension
     private function normalJournalObjectAmount(TransactionJournal $journal): string
     {
         $type       = $journal->transactionType->type;
+        /** @var Transaction $first */
         $first      = $journal->transactions()->where('amount', '<', 0)->first();
         $currency   = $journal->transactionCurrency;
         $amount     = $first->amount ?? '0';
         $colored    = true;
-        $sourceType = $first->account()->first()->accountType()->first()->type;
+        $sourceType = $first->account->accountType()->first()->type;
 
         $amount     = $this->signAmount($amount, $type, $sourceType);
 
@@ -205,7 +206,7 @@ class TransactionGroupTwig extends AbstractExtension
         $currency   = $first->foreignCurrency;
         $amount     = '' === $first->foreign_amount ? '0' : $first->foreign_amount;
         $colored    = true;
-        $sourceType = $first->account()->first()->accountType()->first()->type;
+        $sourceType = $first->account->accountType()->first()->type;
 
         $amount     = $this->signAmount($amount, $type, $sourceType);
 

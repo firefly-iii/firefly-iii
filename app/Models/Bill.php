@@ -37,7 +37,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * @mixin IdeHelperBill
  */
 class Bill extends Model
 {

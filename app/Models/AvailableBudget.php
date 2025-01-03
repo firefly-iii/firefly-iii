@@ -34,7 +34,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * @mixin IdeHelperAvailableBudget
  */
 class AvailableBudget extends Model
 {

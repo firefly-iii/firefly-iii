@@ -54,7 +54,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class TransactionJournalFactory
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
  */
 class TransactionJournalFactory
 {

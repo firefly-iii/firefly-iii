@@ -32,7 +32,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @mixin IdeHelperPiggyBankRepetition
  */
 class PiggyBankRepetition extends Model
 {

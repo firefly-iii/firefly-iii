@@ -106,10 +106,7 @@ class Amount
     /**
      * This method will properly format the given number, in color or "black and white",
      * as a currency, given two things: the currency required and the current locale.
-     *
      * @throws FireflyException
-     *
-     * @SuppressWarnings(PHPMD.MissingImport)
      */
     public function formatFlat(string $symbol, int $decimalPlaces, string $amount, ?bool $coloured = null): string
     {
@@ -229,8 +226,6 @@ class Amount
 
     /**
      * @throws FireflyException
-     *
-     * @SuppressWarnings(PHPMD.MissingImport)
      */
     private function getLocaleInfo(): array
     {

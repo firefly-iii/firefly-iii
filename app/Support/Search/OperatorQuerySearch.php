@@ -62,7 +62,7 @@ use Illuminate\Support\Collection;
 /**
  * Class OperatorQuerySearch
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
  */
 class OperatorQuerySearch implements SearchInterface
 {

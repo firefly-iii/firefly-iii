@@ -214,7 +214,6 @@ class TagRepository implements TagRepositoryInterface
      */
     public function searchTags(string $query, int $limit): Collection
     {
-        /** @var Collection $tags */
         $tags = $this->user->tags()->orderBy('tag', 'ASC');
         if ('' !== $query) {
             $search = sprintf('%%%s%%', $query);

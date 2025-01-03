@@ -36,11 +36,6 @@ class CreatesDatabase extends Command
 
     protected $signature   = 'firefly-iii:create-database';
 
-    /**
-     * Execute the console command.
-     *
-     * @suppressWarnings(PHPMD.MissingImport)
-     */
     public function handle(): int
     {
         if ('mysql' !== config('database.default')) {

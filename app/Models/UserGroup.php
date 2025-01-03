@@ -36,7 +36,6 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * @mixin IdeHelperUserGroup
  */
 class UserGroup extends Model
 {

@@ -34,7 +34,6 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * @mixin IdeHelperObjectGroup
  */
 class ObjectGroup extends Model
 {

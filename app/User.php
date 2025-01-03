@@ -66,9 +66,6 @@ use Laravel\Passport\HasApiTokens;
 use NotificationChannels\Pushover\PushoverReceiver;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-/**
- * @mixin IdeHelperUser
- */
 class User extends Authenticatable
 {
     use HasApiTokens;

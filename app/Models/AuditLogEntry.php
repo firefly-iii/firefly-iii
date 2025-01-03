@@ -31,7 +31,6 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * @mixin IdeHelperAuditLogEntry
  */
 class AuditLogEntry extends Model
 {

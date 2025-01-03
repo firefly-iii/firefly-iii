@@ -38,7 +38,7 @@ use Route;
 /**
  * Class Controller.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
  * @SuppressWarnings(PHPMD.NumberOfChildren)
  */
 abstract class Controller extends BaseController

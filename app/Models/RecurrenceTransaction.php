@@ -32,7 +32,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * @mixin IdeHelperRecurrenceTransaction
  */
 class RecurrenceTransaction extends Model
 {

@@ -105,7 +105,7 @@ use Laravel\Passport\Events\AccessTokenCreated;
 /**
  * Class EventServiceProvider.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
  */
 class EventServiceProvider extends ServiceProvider
 {

@@ -62,9 +62,6 @@ class Calculator
         return self::loadIntervalMap()->contains($periodicity);
     }
 
-    /**
-     * @SuppressWarnings(PHPMD.MissingImport)
-     */
     private static function loadIntervalMap(): \SplObjectStorage
     {
         if (null !== self::$intervalMap) {

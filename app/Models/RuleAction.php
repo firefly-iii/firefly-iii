@@ -32,7 +32,6 @@ use Illuminate\Support\Facades\Log;
 use Symfony\Component\ExpressionLanguage\SyntaxError;
 
 /**
- * @mixin IdeHelperRuleAction
  */
 class RuleAction extends Model
 {
