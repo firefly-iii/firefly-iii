@@ -96,7 +96,13 @@ class TransactionSummarizer
                 'currency_code'           => $currencyCode,
                 'currency_decimal_places' => $currencyDecimalPlaces,
             ];
-            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->{$method}($amount));
+            if('positive' === $method) {
+                $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->positive($amount));
+            }
+            if('negative' === $method) {
+                $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->negative($amount));
+            }
+            // $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->{$method}($amount));
             // Log::debug(sprintf('Journal #%d adds amount %s %s', $journal['transaction_journal_id'], $currencyCode, $amount));
         }
         Log::debug('End of sumExpenses.', $array);

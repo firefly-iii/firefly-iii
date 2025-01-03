@@ -492,7 +492,7 @@ class JournalUpdateService
 
                 $value->setTimezone(config('app.timezone'));
                 // 2024-11-22, overrule timezone with UTC and store it as UTC.
-                if (FireflyConfig::get('utc', false)->data) {
+                if (true === FireflyConfig::get('utc', false)->data) {
                     $value->setTimezone('UTC');
                 }
 
@@ -770,6 +770,4 @@ class JournalUpdateService
         $this->sourceTransaction->refresh();
         $this->destinationTransaction->refresh();
     }
-
-    private function collectCurrency(): TransactionCurrency {}
 }

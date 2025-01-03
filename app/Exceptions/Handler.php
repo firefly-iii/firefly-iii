@@ -87,17 +87,6 @@ class Handler extends ExceptionHandler
 
         app('log')->debug('Now in Handler::render()');
 
-        if ($e instanceof JsonApiException) {
-            // ignore it: controller will handle it.
-
-            app('log')->debug(sprintf(
-                'Return to parent to handle JsonApiException(%d)',
-                $e->getCode()
-            ));
-
-            return parent::render($request, $e);
-        }
-
         if ($e instanceof LaravelValidationException && $expectsJson) {
             // ignore it: controller will handle it.
 

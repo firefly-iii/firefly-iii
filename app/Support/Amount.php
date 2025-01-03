@@ -71,11 +71,11 @@ class Amount
     public function convertToNative(?User $user = null): bool
     {
         if (null === $user) {
-            return Preferences::get('convert_to_native', false)->data && config('cer.enabled');
+            return true === Preferences::get('convert_to_native', false)->data && true === config('cer.enabled');
             //            Log::debug(sprintf('convertToNative [a]: %s', var_export($result, true)));
         }
 
-        return Preferences::getForUser($user, 'convert_to_native', false)->data && config('cer.enabled');
+        return true === Preferences::getForUser($user, 'convert_to_native', false)->data && true === config('cer.enabled');
         // Log::debug(sprintf('convertToNative [b]: %s', var_export($result, true)));
     }
 

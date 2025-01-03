@@ -59,7 +59,7 @@ class BillTransformer extends AbstractTransformer
      */
     public function transform(Bill $bill): array
     {
-        $defaultCurrency   = $this->parameters->get('defaultCurrency') ?? Amount::getDefaultCurrency();
+        $defaultCurrency   = $this->parameters->get('defaultCurrency') ?? app('amount')->getDefaultCurrency();
 
         $paidData          = $this->paidData($bill);
         $lastPaidDate      = $this->getLastPaidDate($paidData);

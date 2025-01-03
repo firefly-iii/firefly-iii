@@ -27,6 +27,7 @@ namespace FireflyIII\Support\Chart\Category;
 use Carbon\Carbon;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Category;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Category\NoCategoryRepositoryInterface;
@@ -48,6 +49,8 @@ class FrontpageChartGenerator
     private NoCategoryRepositoryInterface $noCatRepos;
     private OperationsRepositoryInterface $opsRepos;
     private CategoryRepositoryInterface   $repository;
+    public bool                             $convertToNative = false;
+    public TransactionCurrency              $defaultCurrency;
     private Carbon                        $start;
 
     /**

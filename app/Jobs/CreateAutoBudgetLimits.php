@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Jobs;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\AutoBudgetType;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\AutoBudget;
 use FireflyIII\Models\Budget;
@@ -126,7 +127,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
         // find budget limit:
         $budgetLimit = $this->findBudgetLimit($autoBudget->budget, $start, $end);
 
-        if (null === $budgetLimit && AutoBudget::AUTO_BUDGET_RESET === (int) $autoBudget->auto_budget_type) {
+        if (null === $budgetLimit && AutoBudgetType::AUTO_BUDGET_RESET->value === (int) $autoBudget->auto_budget_type) {
             // that's easy: create one.
             // do nothing else.
             $this->createBudgetLimit($autoBudget, $start, $end);
@@ -135,14 +136,14 @@ class CreateAutoBudgetLimits implements ShouldQueue
             return;
         }
 
-        if (null === $budgetLimit && AutoBudget::AUTO_BUDGET_ROLLOVER === (int) $autoBudget->auto_budget_type) {
+        if (null === $budgetLimit && AutoBudgetType::AUTO_BUDGET_ROLLOVER->value === (int) $autoBudget->auto_budget_type) {
             // budget limit exists already,
             $this->createRollover($autoBudget);
             app('log')->debug(sprintf('Done with auto budget #%d', $autoBudget->id));
 
             return;
         }
-        if (null === $budgetLimit && AutoBudget::AUTO_BUDGET_ADJUSTED === (int) $autoBudget->auto_budget_type) {
+        if (null === $budgetLimit && AutoBudgetType::AUTO_BUDGET_ADJUSTED->value === (int) $autoBudget->auto_budget_type) {
             // budget limit exists already,
             $this->createAdjustedLimit($autoBudget);
             app('log')->debug(sprintf('Done with auto budget #%d', $autoBudget->id));

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Transformers;
 
+use FireflyIII\Enums\AutoBudgetType;
 use FireflyIII\Models\AutoBudget;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -71,9 +72,9 @@ class BudgetTransformer extends AbstractTransformer
         $notes          = $this->repository->getNoteText($budget);
 
         $types          = [
-            AutoBudget::AUTO_BUDGET_RESET    => 'reset',
-            AutoBudget::AUTO_BUDGET_ROLLOVER => 'rollover',
-            AutoBudget::AUTO_BUDGET_ADJUSTED => 'adjusted',
+            AutoBudgetType::AUTO_BUDGET_RESET->value    => 'reset',
+            AutoBudgetType::AUTO_BUDGET_ROLLOVER->value => 'rollover',
+            AutoBudgetType::AUTO_BUDGET_ADJUSTED->value => 'adjusted',
         ];
 
         if (null !== $autoBudget) {

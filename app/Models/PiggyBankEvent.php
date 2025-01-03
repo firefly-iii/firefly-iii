@@ -37,17 +37,17 @@ class PiggyBankEvent extends Model
     use ReturnsIntegerIdTrait;
 
     protected $casts
-                        = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'date'       => SeparateTimezoneCaster::class,
-            'amount'     => 'string',
-            'amount'     => 'native_string',
+        = [
+            'created_at'    => 'datetime',
+            'updated_at'    => 'datetime',
+            'date'          => SeparateTimezoneCaster::class,
+            'amount'        => 'string',
+            'native_amount' => 'string',
         ];
 
     protected $fillable = ['piggy_bank_id', 'transaction_journal_id', 'date', 'date_tz', 'amount', 'native_amount'];
 
-    protected $hidden   = ['amount_encrypted'];
+    protected $hidden = ['amount_encrypted'];
 
     public function piggyBank(): BelongsTo
     {
@@ -73,14 +73,14 @@ class PiggyBankEvent extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string) $value,
+            get: static fn($value) => (string) $value,
         );
     }
 
     protected function piggyBankId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int) $value,
+            get: static fn($value) => (int) $value,
         );
     }
 }

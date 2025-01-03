@@ -277,7 +277,7 @@ class SearchRuleEngine implements RuleEngineInterface
             app('log')->debug(sprintf('Total collection is now %d transactions', $total->count()));
             ++$count;
             // if trigger says stop processing, do so.
-            if ($ruleTrigger->stop_processing && $result->count() > 0) {
+            if (true === $ruleTrigger->stop_processing && $result->count() > 0) {
                 app('log')->debug('The trigger says to stop processing, so stop processing other triggers.');
 
                 break;
@@ -319,10 +319,10 @@ class SearchRuleEngine implements RuleEngineInterface
             /** @var Rule $rule */
             foreach ($this->rules as $rule) {
                 $result = $this->fireRule($rule);
-                if (true === $result && $rule->stop_processing) {
+                if (true === $result && true === $rule->stop_processing) {
                     app('log')->debug(sprintf('Rule #%d has triggered and executed, but calls to stop processing. Since not in the context of a group, do not stop.', $rule->id));
                 }
-                if (false === $result && $rule->stop_processing) {
+                if (false === $result && true === $rule->stop_processing) {
                     app('log')->debug(sprintf('Rule #%d has triggered and changed nothing, but calls to stop processing. Do not stop.', $rule->id));
                 }
             }
@@ -461,12 +461,12 @@ class SearchRuleEngine implements RuleEngineInterface
         }
 
         // pick up from the action if it actually acted or not:
-        if ($ruleAction->stop_processing && true === $result) {
+        if (true === $ruleAction->stop_processing && true === $result) {
             app('log')->debug(sprintf('Rule action "%s" reports changes AND asks to break, so break!', $ruleAction->action_type));
 
             return true;
         }
-        if ($ruleAction->stop_processing && false === $result) {
+        if (true === $ruleAction->stop_processing && false === $result) {
             app('log')->debug(sprintf('Rule action "%s" reports NO changes AND asks to break, but we wont break!', $ruleAction->action_type));
         }
 

@@ -235,7 +235,7 @@ class UpdatePiggybank implements ActionInterface
                 return true;
             }
         }
-        Log::debug(sprintf('Piggy bank is not connected to account #%d "%s"', $account->id, $account->name));
+        Log::debug(sprintf('Piggy bank is not connected to account #%d "%s"', $link?->id, $link?->name));
 
         return false;
     }

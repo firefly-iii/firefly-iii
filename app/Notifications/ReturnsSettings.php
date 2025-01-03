@@ -69,7 +69,7 @@ class ReturnsSettings
         config(['ntfy-notification-channel.server' => $settings['ntfy_server']]);
         config(['ntfy-notification-channel.topic' => $settings['ntfy_topic']]);
 
-        if ($settings['ntfy_auth']) {
+        if (true === $settings['ntfy_auth']) {
             // overrule auth as well.
             config(['ntfy-notification-channel.authentication.enabled' => true]);
             config(['ntfy-notification-channel.authentication.username' => $settings['ntfy_user']]);

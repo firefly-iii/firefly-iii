@@ -65,7 +65,7 @@ class SecureHeaders
         ];
 
         // overrule in development mode
-        if (true === env('IS_LOCAL_DEV')) {
+        if (true === env('IS_LOCAL_DEV')) { // @phpstan-ignore-line
             $csp = [
                 "default-src 'none'",
                 "object-src 'none'",

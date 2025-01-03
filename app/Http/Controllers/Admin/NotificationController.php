@@ -57,7 +57,7 @@ class NotificationController extends Controller
         // admin notification settings:
         $notifications                  = [];
         foreach (config('notifications.notifications.owner') as $key => $info) {
-            if ($info['enabled']) {
+            if (true === $info['enabled']) {
                 $notifications[$key] = app('fireflyconfig')->get(sprintf('notification_%s', $key), true)->data;
             }
         }

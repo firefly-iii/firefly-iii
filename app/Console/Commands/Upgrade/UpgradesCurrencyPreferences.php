@@ -95,7 +95,7 @@ class UpgradesCurrencyPreferences extends Command
 
         /** @var TransactionCurrency $currency */
         foreach ($currencies as $currency) {
-            if ($currency->enabled) {
+            if (true === $currency->enabled) {
                 $enabled->push($currency);
             }
         }
@@ -109,7 +109,7 @@ class UpgradesCurrencyPreferences extends Command
 
         /** @var TransactionCurrency $currency */
         foreach ($currencies as $currency) {
-            if ($currency->enabled) {
+            if (true === $currency->enabled) {
                 $enabled->push($currency);
             }
         }

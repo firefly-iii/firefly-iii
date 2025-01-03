@@ -48,6 +48,7 @@ class AccountTransformer extends AbstractTransformer
     private array               $fullTypes;
     private array               $lastActivity;
     private array               $objectGroups;
+    private array $balances;
 
     /**
      * This method collects meta-data for one or all accounts in the transformer's collection.
@@ -55,6 +56,7 @@ class AccountTransformer extends AbstractTransformer
     public function collectMetaData(Collection $objects): Collection
     {
         $this->currencies         = [];
+        $this->balances = [];
         $this->accountMeta        = [];
         $this->accountTypes       = [];
         $this->fullTypes          = [];

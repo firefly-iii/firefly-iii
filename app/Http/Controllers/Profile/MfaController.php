@@ -215,7 +215,7 @@ class MfaController extends Controller
 
         $domain     = $this->getDomain();
         $secret     = \Google2FA::generateSecretKey();
-        $image      = \Google2FA::getQRCodeInline($domain, auth()->user()->email, (string) $secret);
+        $image      = \Google2FA::getQRCodeInline($domain, auth()->user()->email, $secret);
 
         app('preferences')->set('temp-mfa-secret', $secret);
 

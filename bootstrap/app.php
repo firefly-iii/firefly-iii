@@ -43,7 +43,7 @@ if (!function_exists('envNonEmpty')) {
      */
     function envNonEmpty(string $key, string | int | bool | null $default = null)
     {
-        $result = env($key, $default);
+        $result = env($key, $default); // @phpstan-ignore-line
         if ('' === $result) {
             $result = $default;
         }

@@ -77,7 +77,7 @@ class FireflyValidator extends Validator
         }
         $secret           = (string) $secret;
 
-        return (bool) \Google2FA::verifyKey((string) $secret, $value);
+        return (bool) \Google2FA::verifyKey($secret, $value);
     }
 
     /**
@@ -823,7 +823,7 @@ class FireflyValidator extends Validator
         }
         $query->where('piggy_banks.name', $value);
 
-        return 0 === $query->get(['piggy_banks.*'])->count();
+        return 0 === $query->count(['piggy_banks.*']);
     }
 
     /**

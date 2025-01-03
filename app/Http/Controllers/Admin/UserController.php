@@ -85,7 +85,7 @@ class UserController extends Controller
     public function deleteInvite(InvitedUser $invitedUser): JsonResponse
     {
         app('log')->debug('Will now delete invitation');
-        if ($invitedUser->redeemed) {
+        if (true === $invitedUser->redeemed) {
             app('log')->debug('Is already redeemed.');
             session()->flash('error', trans('firefly.invite_is_already_redeemed', ['address' => $invitedUser->email]));
 

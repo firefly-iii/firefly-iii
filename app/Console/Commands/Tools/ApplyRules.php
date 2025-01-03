@@ -126,7 +126,7 @@ class ApplyRules extends Command
         $ruleEngine->addOperator(['type' => 'account_id', 'value' => $list]);
 
         // add the date as a filter:
-        $ruleEngine->addOperator(['type' => 'date_after', 'value' => $this->start_date->format('Y-m-d')]);
+        $ruleEngine->addOperator(['type' => 'date_after', 'value' => $this->startDate->format('Y-m-d')]);
         $ruleEngine->addOperator(['type' => 'date_before', 'value' => $this->endDate->format('Y-m-d')]);
 
         // start running rules.
@@ -227,7 +227,7 @@ class ApplyRules extends Command
 
         foreach ($ruleGroupList as $ruleGroupId) {
             $ruleGroup = $this->ruleGroupRepository->find((int) $ruleGroupId);
-            if ($ruleGroup->active) {
+            if (true === $ruleGroup->active) {
                 $this->ruleGroupSelection[] = $ruleGroup->id;
             }
             if (false === $ruleGroup->active) {
@@ -249,7 +249,7 @@ class ApplyRules extends Command
 
         foreach ($ruleList as $ruleId) {
             $rule = $this->ruleRepository->find((int) $ruleId);
-            if (null !== $rule && $rule->active) {
+            if (null !== $rule && true === $rule->active) {
                 $this->ruleSelection[] = $rule->id;
             }
         }
@@ -294,7 +294,7 @@ class ApplyRules extends Command
             [$inputEnd, $inputStart] = [$inputStart, $inputEnd];
         }
 
-        $this->start_date = $inputStart;
+        $this->startDate = $inputStart;
         $this->endDate    = $inputEnd;
     }
 

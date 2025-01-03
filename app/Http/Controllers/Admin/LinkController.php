@@ -88,7 +88,7 @@ class LinkController extends Controller
      */
     public function delete(Request $request, LinkType $linkType)
     {
-        if (!$linkType->editable) {
+        if (false === $linkType->editable) {
             $request->session()->flash('error', (string) trans('firefly.cannot_edit_link_type', ['name' => e($linkType->name)]));
 
             return redirect(route('admin.links.index'));
@@ -139,7 +139,7 @@ class LinkController extends Controller
      */
     public function edit(Request $request, LinkType $linkType)
     {
-        if (!$linkType->editable) {
+        if (false === $linkType->editable) {
             $request->session()->flash('error', (string) trans('firefly.cannot_edit_link_type', ['name' => e($linkType->name)]));
 
             return redirect(route('admin.links.index'));
@@ -231,7 +231,7 @@ class LinkController extends Controller
      */
     public function update(LinkTypeFormRequest $request, LinkType $linkType)
     {
-        if (!$linkType->editable) {
+        if (false === $linkType->editable) {
             $request->session()->flash('error', (string) trans('firefly.cannot_edit_link_type', ['name' => e($linkType->name)]));
 
             return redirect(route('admin.links.index'));

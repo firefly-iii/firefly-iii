@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\AutoBudgetType;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
@@ -760,13 +761,13 @@ class BudgetRepository implements BudgetRepositoryInterface
         }
 
         if ('reset' === $type) {
-            $type = AutoBudget::AUTO_BUDGET_RESET;
+            $type = AutoBudgetType::AUTO_BUDGET_RESET->value;
         }
         if ('rollover' === $type) {
-            $type = AutoBudget::AUTO_BUDGET_ROLLOVER;
+            $type = AutoBudgetType::AUTO_BUDGET_ROLLOVER->value;
         }
         if ('adjusted' === $type) {
-            $type = AutoBudget::AUTO_BUDGET_ADJUSTED;
+            $type = AutoBudgetType::AUTO_BUDGET_ADJUSTED->value;
         }
 
         /** @var CurrencyRepositoryInterface $repos */

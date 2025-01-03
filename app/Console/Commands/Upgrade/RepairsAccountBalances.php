@@ -43,7 +43,7 @@ class RepairsAccountBalances extends Command
 
             return 0;
         }
-        if (config('firefly.feature_flags.running_balance_column')) {
+        if (true === config('firefly.feature_flags.running_balance_column')) {
             $this->friendlyInfo('Will recalculate account balances. This may take a LONG time. Please be patient.');
             $this->markAsExecuted();
             $this->correctBalanceAmounts();

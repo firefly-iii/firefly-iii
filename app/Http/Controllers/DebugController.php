@@ -247,7 +247,7 @@ class DebugController extends Controller
     private function getBuildInfo(): array
     {
         $return = [
-            'is_docker'       => env('IS_DOCKER', false),
+            'is_docker'       => env('IS_DOCKER', false), // @phpstan-ignore-line
             'build'           => '(unknown)',
             'build_date'      => '(unknown)',
             'base_build'      => '(unknown)',
@@ -272,11 +272,11 @@ class DebugController extends Controller
             app('log')->debug('Could not check build date, but thats ok.');
             app('log')->warning($e->getMessage());
         }
-        if ('' !== (string) env('BASE_IMAGE_BUILD')) {
-            $return['base_build'] = env('BASE_IMAGE_BUILD');
+        if ('' !== (string) env('BASE_IMAGE_BUILD')) { // @phpstan-ignore-line
+            $return['base_build'] = env('BASE_IMAGE_BUILD'); // @phpstan-ignore-line
         }
-        if ('' !== (string) env('BASE_IMAGE_DATE')) {
-            $return['base_build_date'] = env('BASE_IMAGE_DATE');
+        if ('' !== (string) env('BASE_IMAGE_DATE')) { // @phpstan-ignore-line
+            $return['base_build_date'] = env('BASE_IMAGE_DATE'); // @phpstan-ignore-line
         }
 
         return $return;

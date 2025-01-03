@@ -40,7 +40,7 @@ Route::group(
 
         // the rest
         $guard = config('passport.guard', null);
-        Route::middleware(['web', $guard ? 'auth:'.$guard : 'auth'])->group(function (): void {
+        Route::middleware(['web', null !== $guard ? 'auth:'.$guard : 'auth'])->group(function (): void {
             Route::post('/token/refresh', ['uses' => 'TransientTokenController@refresh', 'as' => 'token.refresh']);
             Route::post('/authorize', ['uses' => 'ApproveAuthorizationController@approve', 'as' => 'authorizations.approve']);
             Route::delete('/authorize', ['uses' => 'DenyAuthorizationController@deny', 'as' => 'authorizations.deny']);

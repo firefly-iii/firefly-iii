@@ -72,7 +72,7 @@ class PreferencesController extends Controller
     public function index(AccountRepositoryInterface $repository)
     {
         $accounts                       = $repository->getAccountsByType([AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value]);
-        $isDocker                       = env('IS_DOCKER', false);
+        $isDocker                       = env('IS_DOCKER', false); // @phpstan-ignore-line
         $groupedAccounts                = [];
 
         /** @var Account $account */
@@ -129,10 +129,10 @@ class PreferencesController extends Controller
         // notification preferences
         $notifications                  = [];
         foreach (config('notifications.notifications.user') as $key => $info) {
-            if ($info['enabled']) {
+            if (true === $info['enabled']) {
                 $notifications[$key]
                     = [
-                        'enabled'      => app('preferences')->get(sprintf('notification_%s', $key), true)->data,
+                        'enabled'      => true === app('preferences')->get(sprintf('notification_%s', $key), true)->data,
                         'configurable' => $info['configurable'],
                     ];
             }

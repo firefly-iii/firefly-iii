@@ -56,10 +56,10 @@ class TransactionGroupTransformer extends AbstractTransformer
 
     //    private array                 $currencies        = [];
     //    private array                 $transactionTypes  = [];
-    //    private array                 $meta              = [];
-    //    private array                 $notes             = [];
+        private array                 $meta              = [];
+        private array                 $notes             = [];
     //    private array                 $locations         = [];
-    //    private array                 $tags              = [];
+        private array                 $tags              = [];
     //    private array                 $amounts           = [];
     //    private array                 $foreignAmounts    = [];
     //    private array                 $journalCurrencies = [];

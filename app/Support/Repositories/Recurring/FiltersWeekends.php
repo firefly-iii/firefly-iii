@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Repositories\Recurring;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\RecurrenceRepetitionWeekend;
 use FireflyIII\Models\RecurrenceRepetition;
 use Illuminate\Support\Collection;
 
@@ -39,7 +40,7 @@ trait FiltersWeekends
     protected function filterWeekends(RecurrenceRepetition $repetition, array $dates): array
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
-        if (RecurrenceRepetition::WEEKEND_DO_NOTHING === $repetition->weekend) {
+        if (RecurrenceRepetitionWeekend::WEEKEND_DO_NOTHING->value === $repetition->weekend) {
             app('log')->debug('Repetition will not be filtered on weekend days.');
 
             return $dates;
@@ -57,7 +58,7 @@ trait FiltersWeekends
             }
 
             // is weekend and must set back to Friday?
-            if (RecurrenceRepetition::WEEKEND_TO_FRIDAY === $repetition->weekend) {
+            if (RecurrenceRepetitionWeekend::WEEKEND_TO_FRIDAY->value === $repetition->weekend) {
                 $clone    = clone $date;
                 $clone->addDays(5 - $date->dayOfWeekIso);
                 app('log')->debug(
@@ -69,7 +70,7 @@ trait FiltersWeekends
             }
 
             // postpone to Monday?
-            if (RecurrenceRepetition::WEEKEND_TO_MONDAY === $repetition->weekend) {
+            if (RecurrenceRepetitionWeekend::WEEKEND_TO_MONDAY->value === $repetition->weekend) {
                 $clone    = clone $date;
                 $clone->addDays(8 - $date->dayOfWeekIso);
                 app('log')->debug(

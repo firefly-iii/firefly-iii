@@ -47,7 +47,7 @@ class IndexController extends Controller
                 return $next($request);
             }
         );
-        if (!config('cer.enabled')) {
+        if (false === config('cer.enabled')) {
             throw new NotFoundHttpException();
         }
     }
