@@ -84,7 +84,7 @@ class CorrectsUnevenAmount extends Command
                 continue;
             }
             // needs to be a transfer.
-            if (TransactionType::TRANSFER !== $journal->transactionType->type) {
+            if (TransactionTypeEnum::TRANSFER->value !== $journal->transactionType->type) {
                 Log::debug('Must be a transfer, continue.');
 
                 continue;
@@ -228,7 +228,7 @@ class CorrectsUnevenAmount extends Command
 
     private function isForeignCurrencyTransfer(TransactionJournal $journal): bool
     {
-        if (TransactionType::TRANSFER !== $journal->transactionType->type) {
+        if (TransactionTypeEnum::TRANSFER->value !== $journal->transactionType->type) {
             return false;
         }
 

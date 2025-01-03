@@ -114,7 +114,7 @@ trait PeriodOverview
         $collector     = app(GroupCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]));
         $collector->setRange($start, $end);
-        $collector->setTypes([TransactionType::TRANSFER]);
+        $collector->setTypes([TransactionTypeEnum::TRANSFER->value]);
         $transferSet   = $collector->getExtractedJournals();
 
         // loop dates
@@ -288,7 +288,7 @@ trait PeriodOverview
         $collector     = app(GroupCollectorInterface::class);
         $collector->setCategory($category);
         $collector->setRange($start, $end);
-        $collector->setTypes([TransactionType::TRANSFER]);
+        $collector->setTypes([TransactionTypeEnum::TRANSFER->value]);
         $transferSet   = $collector->getExtractedJournals();
         foreach ($dates as $currentDate) {
             $spent       = $this->filterJournalsByDate($spentSet, $currentDate['start'], $currentDate['end']);
@@ -410,7 +410,7 @@ trait PeriodOverview
         $collector   = app(GroupCollectorInterface::class);
         $collector->withoutCategory();
         $collector->setRange($start, $end);
-        $collector->setTypes([TransactionType::TRANSFER]);
+        $collector->setTypes([TransactionTypeEnum::TRANSFER->value]);
         $transferSet = $collector->getExtractedJournals();
 
         /** @var array $currentDate */
@@ -479,7 +479,7 @@ trait PeriodOverview
         $collector     = app(GroupCollectorInterface::class);
         $collector->setTag($tag);
         $collector->setRange($start, $end);
-        $collector->setTypes([TransactionType::TRANSFER]);
+        $collector->setTypes([TransactionTypeEnum::TRANSFER->value]);
         $transferSet   = $collector->getExtractedJournals();
 
         // filer all of them:

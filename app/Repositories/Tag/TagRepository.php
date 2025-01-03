@@ -268,7 +268,7 @@ class TagRepository implements TagRepositoryInterface
                 'currency_decimal_places'        => $journal['currency_decimal_places'],
                 TransactionTypeEnum::WITHDRAWAL->value      => '0',
                 TransactionType::DEPOSIT         => '0',
-                TransactionType::TRANSFER        => '0',
+                TransactionTypeEnum::TRANSFER->value        => '0',
                 TransactionType::RECONCILIATION  => '0',
                 TransactionType::OPENING_BALANCE => '0',
             ];
@@ -290,7 +290,7 @@ class TagRepository implements TagRepositoryInterface
                     'currency_decimal_places'        => $journal['foreign_currency_decimal_places'],
                     TransactionTypeEnum::WITHDRAWAL->value      => '0',
                     TransactionType::DEPOSIT         => '0',
-                    TransactionType::TRANSFER        => '0',
+                    TransactionTypeEnum::TRANSFER->value        => '0',
                     TransactionType::RECONCILIATION  => '0',
                     TransactionType::OPENING_BALANCE => '0',
                 ];
@@ -325,7 +325,7 @@ class TagRepository implements TagRepositoryInterface
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user);
-        $collector->setRange($start, $end)->setTypes([TransactionType::TRANSFER])->setTag($tag);
+        $collector->setRange($start, $end)->setTypes([TransactionTypeEnum::TRANSFER->value])->setTag($tag);
 
         return $collector->getExtractedJournals();
     }

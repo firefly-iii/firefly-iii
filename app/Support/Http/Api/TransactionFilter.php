@@ -41,7 +41,7 @@ trait TransactionFilter
             'all'             => [
                 TransactionTypeEnum::WITHDRAWAL->value,
                 TransactionType::DEPOSIT,
-                TransactionType::TRANSFER,
+                TransactionTypeEnum::TRANSFER->value,
                 TransactionType::OPENING_BALANCE,
                 TransactionType::RECONCILIATION,
             ],
@@ -52,14 +52,14 @@ trait TransactionFilter
             'income'          => [TransactionType::DEPOSIT],
             'deposit'         => [TransactionType::DEPOSIT],
             'deposits'        => [TransactionType::DEPOSIT],
-            'transfer'        => [TransactionType::TRANSFER],
-            'transfers'       => [TransactionType::TRANSFER],
+            'transfer'        => [TransactionTypeEnum::TRANSFER->value],
+            'transfers'       => [TransactionTypeEnum::TRANSFER->value],
             'opening_balance' => [TransactionType::OPENING_BALANCE],
             'reconciliation'  => [TransactionType::RECONCILIATION],
             'reconciliations' => [TransactionType::RECONCILIATION],
             'special'         => [TransactionType::OPENING_BALANCE, TransactionType::RECONCILIATION],
             'specials'        => [TransactionType::OPENING_BALANCE, TransactionType::RECONCILIATION],
-            'default'         => [TransactionTypeEnum::WITHDRAWAL->value, TransactionType::DEPOSIT, TransactionType::TRANSFER],
+            'default'         => [TransactionTypeEnum::WITHDRAWAL->value, TransactionType::DEPOSIT, TransactionTypeEnum::TRANSFER->value],
         ];
         $return = [];
         $parts  = explode(',', $type);

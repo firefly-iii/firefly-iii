@@ -143,13 +143,13 @@ class UpdatedGroupEventHandler
         $destAccount   = $first->transactions()->where('amount', '>', '0')->first()->account;
 
         $type          = $first->transactionType->type;
-        if (TransactionType::TRANSFER === $type || TransactionTypeEnum::WITHDRAWAL->value === $type) {
+        if (TransactionTypeEnum::TRANSFER->value === $type || TransactionTypeEnum::WITHDRAWAL->value === $type) {
             // set all source transactions to source account:
             Transaction::whereIn('transaction_journal_id', $all)
                 ->where('amount', '<', 0)->update(['account_id' => $sourceAccount->id])
             ;
         }
-        if (TransactionType::TRANSFER === $type || TransactionType::DEPOSIT === $type) {
+        if (TransactionTypeEnum::TRANSFER->value === $type || TransactionType::DEPOSIT === $type) {
             // set all destination transactions to destination account:
             Transaction::whereIn('transaction_journal_id', $all)
                 ->where('amount', '>', 0)->update(['account_id' => $destAccount->id])

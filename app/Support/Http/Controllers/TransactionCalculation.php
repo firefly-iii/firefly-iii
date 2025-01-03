@@ -61,7 +61,7 @@ trait TransactionCalculation
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
 
-        $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionType::TRANSFER])
+        $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::TRANSFER->value])
             ->setTags($tags)->withAccountInformation()
         ;
 
@@ -75,7 +75,7 @@ trait TransactionCalculation
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionType::TRANSFER])
+        $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::TRANSFER->value])
             ->setBudgets($budgets)->withAccountInformation()
         ;
 
@@ -92,7 +92,7 @@ trait TransactionCalculation
         $collector
             ->setAccounts($accounts)
             ->setRange($start, $end)
-            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionType::TRANSFER])
+            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::TRANSFER->value])
             ->setCategories($categories)
             ->withAccountInformation()
         ;
@@ -107,7 +107,7 @@ trait TransactionCalculation
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
+        $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT, TransactionTypeEnum::TRANSFER->value])
             ->setCategories($categories)->withAccountInformation()
         ;
 
@@ -135,7 +135,7 @@ trait TransactionCalculation
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
+        $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT, TransactionTypeEnum::TRANSFER->value])
             ->setTags($tags)->withAccountInformation()
         ;
 

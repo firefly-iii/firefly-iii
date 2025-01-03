@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Transaction;
 
 use Exception;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -331,7 +332,7 @@ class ConvertController extends Controller
         ];
 
         // also set the currency to the currency of the source account, in case you're converting a deposit into a transfer.
-        if (TransactionType::TRANSFER === $transactionType->type && TransactionType::DEPOSIT === $journal->transactionType->type) {
+        if (TransactionTypeEnum::TRANSFER->value === $transactionType->type && TransactionType::DEPOSIT === $journal->transactionType->type) {
             $source         = $this->accountRepository->find((int) $sourceId);
             $sourceCurrency = $this->accountRepository->getAccountCurrency($source);
             $dest           = $this->accountRepository->find((int) $destinationId);

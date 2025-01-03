@@ -122,7 +122,7 @@ class AccountTasker implements AccountTaskerInterface
 
         $collector->setSourceAccounts($accounts)->setRange($start, $end);
         $collector->excludeDestinationAccounts($accounts);
-        $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionType::TRANSFER])->withAccountInformation();
+        $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::TRANSFER->value])->withAccountInformation();
         $journals  = $collector->getExtractedJournals();
 
         $report    = $this->groupExpenseByDestination($journals);
@@ -212,7 +212,7 @@ class AccountTasker implements AccountTaskerInterface
         $collector = app(GroupCollectorInterface::class);
         $collector->setDestinationAccounts($accounts)->setRange($start, $end);
         $collector->excludeSourceAccounts($accounts);
-        $collector->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])->withAccountInformation();
+        $collector->setTypes([TransactionType::DEPOSIT, TransactionTypeEnum::TRANSFER->value])->withAccountInformation();
         $report    = $this->groupIncomeBySource($collector->getExtractedJournals());
 
         // sort the result

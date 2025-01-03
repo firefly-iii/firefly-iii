@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
@@ -66,7 +67,7 @@ class SwitchAccounts implements ActionInterface
         }
 
         $type                          = $object->transactionType->type;
-        if (TransactionType::TRANSFER !== $type) {
+        if (TransactionTypeEnum::TRANSFER->value !== $type) {
             app('log')->error(sprintf('Journal #%d is NOT a transfer (rule #%d), cannot switch accounts.', $journal['transaction_journal_id'], $this->action->rule_id));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.is_not_transfer')));
 

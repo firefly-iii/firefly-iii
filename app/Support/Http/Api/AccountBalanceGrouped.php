@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Http\Api;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
@@ -223,7 +224,7 @@ class AccountBalanceGrouped
 
             || (
                 (
-                    TransactionType::TRANSFER === $journal['transaction_type_type']
+                    TransactionTypeEnum::TRANSFER->value === $journal['transaction_type_type']
                     || TransactionType::RECONCILIATION === $journal['transaction_type_type']
                     || TransactionType::OPENING_BALANCE === $journal['transaction_type_type']
                 )

@@ -533,7 +533,7 @@ class JournalUpdateService
             $this->storeBudget($this->transactionJournal, new NullArrayObject($this->data));
         }
         // is transfer? remove budget
-        if (TransactionType::TRANSFER === $this->transactionJournal->transactionType->type) {
+        if (TransactionTypeEnum::TRANSFER->value === $this->transactionJournal->transactionType->type) {
             $this->transactionJournal->budgets()->sync([]);
         }
     }

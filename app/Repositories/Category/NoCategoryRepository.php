@@ -192,7 +192,7 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::TRANSFER])->withoutCategory();
+        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::TRANSFER->value])->withoutCategory();
 
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);

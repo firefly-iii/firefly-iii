@@ -79,7 +79,7 @@ class ConvertToTransfer implements ActionInterface
         $type         = $object->transactionType->type;
         $user         = $object->user;
         $journalId    = $object->id;
-        if (TransactionType::TRANSFER === $type) {
+        if (TransactionTypeEnum::TRANSFER->value === $type) {
             app('log')->error(
                 sprintf('Journal #%d is already a transfer so cannot be converted (rule #%d).', $object->id, $this->action->rule_id)
             );
@@ -136,7 +136,7 @@ class ConvertToTransfer implements ActionInterface
                 return false;
             }
             if (false !== $res) {
-                event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionTypeEnum::WITHDRAWAL->value, TransactionType::TRANSFER));
+                event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::TRANSFER->value));
             }
 
             return $res;
@@ -154,7 +154,7 @@ class ConvertToTransfer implements ActionInterface
             return false;
         }
         if (false !== $res) {
-            event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::DEPOSIT, TransactionType::TRANSFER));
+            event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::DEPOSIT, TransactionTypeEnum::TRANSFER->value));
         }
 
         return $res;
@@ -216,7 +216,7 @@ class ConvertToTransfer implements ActionInterface
         ;
 
         // change transaction type of journal:
-        $newType       = TransactionType::whereType(TransactionType::TRANSFER)->first();
+        $newType       = TransactionType::whereType(TransactionTypeEnum::TRANSFER->value)->first();
 
         \DB::table('transaction_journals')
             ->where('id', '=', $journal->id)
@@ -271,7 +271,7 @@ class ConvertToTransfer implements ActionInterface
         ;
 
         // change transaction type of journal:
-        $newType     = TransactionType::whereType(TransactionType::TRANSFER)->first();
+        $newType     = TransactionType::whereType(TransactionTypeEnum::TRANSFER->value)->first();
 
         \DB::table('transaction_journals')
             ->where('id', '=', $journal->id)

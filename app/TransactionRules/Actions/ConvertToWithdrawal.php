@@ -80,7 +80,7 @@ class ConvertToWithdrawal implements ActionInterface
 
             return false;
         }
-        if (TransactionType::DEPOSIT !== $type && TransactionType::TRANSFER !== $type) {
+        if (TransactionType::DEPOSIT !== $type && TransactionTypeEnum::TRANSFER->value !== $type) {
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.unsupported_transaction_type_withdrawal', ['type' => $type])));
 
             return false;
@@ -113,7 +113,7 @@ class ConvertToWithdrawal implements ActionInterface
 
             return false;
         }
-        event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::TRANSFER, TransactionTypeEnum::WITHDRAWAL->value));
+        event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionTypeEnum::TRANSFER->value, TransactionTypeEnum::WITHDRAWAL->value));
 
         return $res;
     }

@@ -116,7 +116,7 @@ class TransactionController extends Controller
             $collector->setTypes([TransactionType::DEPOSIT]);
         }
         if ('transfer' === $objectType || 'transfers' === $objectType) {
-            $collector->setTypes([TransactionType::TRANSFER]);
+            $collector->setTypes([TransactionTypeEnum::TRANSFER->value]);
         }
 
         $result    = $collector->getExtractedJournals();
@@ -166,7 +166,7 @@ class TransactionController extends Controller
             $collector->setTypes([TransactionType::DEPOSIT]);
         }
         if ('transfer' === $objectType || 'transfers' === $objectType) {
-            $collector->setTypes([TransactionType::TRANSFER]);
+            $collector->setTypes([TransactionTypeEnum::TRANSFER->value]);
         }
 
         $result    = $collector->getExtractedJournals();
@@ -216,7 +216,7 @@ class TransactionController extends Controller
             $collector->setTypes([TransactionType::DEPOSIT]);
         }
         if ('transfer' === $objectType || 'transfers' === $objectType) {
-            $collector->setTypes([TransactionType::TRANSFER]);
+            $collector->setTypes([TransactionTypeEnum::TRANSFER->value]);
         }
 
         $result    = $collector->getExtractedJournals();

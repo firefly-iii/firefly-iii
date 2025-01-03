@@ -343,7 +343,7 @@ class CreditRecalculateService
         }
 
         // in any other case, remove amount from left of debt.
-        if (in_array($type, [TransactionTypeEnum::WITHDRAWAL->value, TransactionType::DEPOSIT, TransactionType::TRANSFER], true)) {
+        if (in_array($type, [TransactionTypeEnum::WITHDRAWAL->value, TransactionType::DEPOSIT, TransactionTypeEnum::TRANSFER->value], true)) {
             $usedAmount = app('steam')->negative($usedAmount);
 
             return bcadd($leftOfDebt, $usedAmount);
@@ -437,7 +437,7 @@ class CreditRecalculateService
      */
     private function isTransferIn(string $amount, string $transactionType): bool
     {
-        return TransactionType::TRANSFER === $transactionType && 1 === bccomp($amount, '0');
+        return TransactionTypeEnum::TRANSFER->value === $transactionType && 1 === bccomp($amount, '0');
     }
 
     /**
@@ -449,7 +449,7 @@ class CreditRecalculateService
      */
     private function isTransferOut(string $amount, string $transactionType): bool
     {
-        return TransactionType::TRANSFER === $transactionType && -1 === bccomp($amount, '0');
+        return TransactionTypeEnum::TRANSFER->value === $transactionType && -1 === bccomp($amount, '0');
     }
 
     public function setAccount(?Account $account): void

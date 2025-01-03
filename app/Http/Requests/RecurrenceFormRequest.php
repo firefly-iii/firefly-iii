@@ -252,7 +252,7 @@ class RecurrenceFormRequest extends FormRequest
             $rules['source_name']    = 'min:1|max:255|nullable';
             $rules['destination_id'] = 'required|exists:accounts,id|belongsToUser:accounts';
         }
-        if (strtolower(TransactionType::TRANSFER) === $type) {
+        if (strtolower(TransactionTypeEnum::TRANSFER->value) === $type) {
             // this may not work:
             $rules['source_id']      = 'required|exists:accounts,id|belongsToUser:accounts|different:destination_id';
             $rules['destination_id'] = 'required|exists:accounts,id|belongsToUser:accounts|different:source_id';

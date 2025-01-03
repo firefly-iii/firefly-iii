@@ -95,7 +95,7 @@ class NoCategoryController extends Controller
         $collector->setRange($start, $end)
             ->setLimit($pageSize)->setPage($page)->withoutCategory()
             ->withAccountInformation()->withBudgetInformation()
-            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionType::DEPOSIT, TransactionType::TRANSFER])
+            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionType::DEPOSIT, TransactionTypeEnum::TRANSFER->value])
         ;
         $groups    = $collector->getPaginatedGroups();
         $groups->setPath(route('categories.no-category', [$start->format('Y-m-d'), $end->format('Y-m-d')]));
@@ -128,7 +128,7 @@ class NoCategoryController extends Controller
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withoutCategory()
             ->withAccountInformation()->withBudgetInformation()
-            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionType::DEPOSIT, TransactionType::TRANSFER])
+            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionType::DEPOSIT, TransactionTypeEnum::TRANSFER->value])
         ;
         $groups    = $collector->getPaginatedGroups();
         $groups->setPath(route('categories.no-category.all'));

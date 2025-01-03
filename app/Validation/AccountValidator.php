@@ -151,7 +151,7 @@ class AccountValidator
 
                 break;
 
-            case TransactionType::TRANSFER:
+            case TransactionTypeEnum::TRANSFER->value:
                 $result          = $this->validateTransferDestination($array);
 
                 break;
@@ -196,7 +196,7 @@ class AccountValidator
 
                 break;
 
-            case TransactionType::TRANSFER:
+            case TransactionTypeEnum::TRANSFER->value:
                 $result = $this->validateTransferSource($array);
 
                 break;

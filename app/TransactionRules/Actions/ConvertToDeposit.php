@@ -99,7 +99,7 @@ class ConvertToDeposit implements ActionInterface
 
             return $res;
         }
-        if (TransactionType::TRANSFER === $type) {
+        if (TransactionTypeEnum::TRANSFER->value === $type) {
             app('log')->debug('Going to transform a transfer to a deposit.');
 
             try {
@@ -111,7 +111,7 @@ class ConvertToDeposit implements ActionInterface
 
                 return false;
             }
-            event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::TRANSFER, TransactionType::DEPOSIT));
+            event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionTypeEnum::TRANSFER->value, TransactionType::DEPOSIT));
 
             return $res;
         }

@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
@@ -122,7 +123,7 @@ class UpgradesTransferCurrencies extends Command
      */
     private function startUpdateRoutine(): void
     {
-        $set = $this->cliRepos->getAllJournals([TransactionType::TRANSFER]);
+        $set = $this->cliRepos->getAllJournals([TransactionTypeEnum::TRANSFER->value]);
 
         /** @var TransactionJournal $journal */
         foreach ($set as $journal) {

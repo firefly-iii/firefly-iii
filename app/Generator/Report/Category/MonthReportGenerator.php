@@ -139,7 +139,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
         /** @var GroupCollectorInterface $collector */
         $collector      = app(GroupCollectorInterface::class);
         $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
-            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionType::TRANSFER])
+            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::TRANSFER->value])
             ->setCategories($this->categories)->withAccountInformation()
         ;
 
@@ -182,7 +182,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $collector    = app(GroupCollectorInterface::class);
 
         $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
-            ->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
+            ->setTypes([TransactionType::DEPOSIT, TransactionTypeEnum::TRANSFER->value])
             ->setCategories($this->categories)->withAccountInformation()
         ;
 

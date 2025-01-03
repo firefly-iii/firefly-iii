@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Json;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
@@ -245,7 +246,7 @@ class ReconcileController extends Controller
                 $inverse = true;
             }
             // transfer to this account? then positive amount:
-            if (TransactionType::TRANSFER === $journal['transaction_type_type'] && $account->id === $journal['destination_account_id']) {
+            if (TransactionTypeEnum::TRANSFER->value === $journal['transaction_type_type'] && $account->id === $journal['destination_account_id']) {
                 $inverse = true;
             }
 

@@ -246,7 +246,7 @@ class CorrectsAccountTypes extends Command
 
     private function shouldBeTransfer(string $transactionType, string $sourceType, string $destinationType): bool
     {
-        return TransactionType::TRANSFER === $transactionType && AccountType::ASSET === $sourceType && $this->isLiability($destinationType);
+        return TransactionTypeEnum::TRANSFER->value === $transactionType && AccountType::ASSET === $sourceType && $this->isLiability($destinationType);
     }
 
     private function isLiability(string $destinationType): bool
@@ -269,7 +269,7 @@ class CorrectsAccountTypes extends Command
 
     private function shouldBeDeposit(string $transactionType, string $sourceType, string $destinationType): bool
     {
-        return TransactionType::TRANSFER === $transactionType && $this->isLiability($sourceType) && AccountType::ASSET === $destinationType;
+        return TransactionTypeEnum::TRANSFER->value === $transactionType && $this->isLiability($sourceType) && AccountType::ASSET === $destinationType;
     }
 
     private function makeDeposit(TransactionJournal $journal): void

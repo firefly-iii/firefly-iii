@@ -279,7 +279,7 @@ class TransactionJournalFactory
         $amount                = (string) $row['amount'];
         $foreignAmount         = (string) $row['foreign_amount'];
         if (null !== $foreignCurrency && $foreignCurrency->id !== $currency->id
-            && TransactionType::TRANSFER === $type->type
+            && TransactionTypeEnum::TRANSFER->value === $type->type
         ) {
             $transactionFactory->setCurrency($foreignCurrency);
             $transactionFactory->setForeignCurrency($currency);
@@ -495,7 +495,7 @@ class TransactionJournalFactory
      */
     private function getForeignByAccount(string $type, ?TransactionCurrency $foreignCurrency, Account $destination): ?TransactionCurrency
     {
-        if (TransactionType::TRANSFER === $type) {
+        if (TransactionTypeEnum::TRANSFER->value === $type) {
             return $this->getCurrency($foreignCurrency, $destination);
         }
 

@@ -25,6 +25,7 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use FireflyIII\Casts\SeparateTimezoneCaster;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
@@ -143,7 +144,7 @@ class TransactionJournal extends Model
     public function isTransfer(): bool
     {
         if (null !== $this->transaction_type_type) {
-            return TransactionType::TRANSFER === $this->transaction_type_type;
+            return TransactionTypeEnum::TRANSFER->value === $this->transaction_type_type;
         }
 
         return $this->transactionType->isTransfer();

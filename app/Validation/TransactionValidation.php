@@ -260,7 +260,7 @@ trait TransactionValidation
                 return;
             }
         }
-        if (TransactionType::TRANSFER === ucfirst($transactionType) || TransactionTypeEnum::WITHDRAWAL->value === ucfirst($transactionType)) {
+        if (TransactionTypeEnum::TRANSFER->value === ucfirst($transactionType) || TransactionTypeEnum::WITHDRAWAL->value === ucfirst($transactionType)) {
             app('log')->debug(sprintf('Processing as a "%s"', $transactionType));
             // use case: withdrawal from asset account to a liability account.
             // the foreign amount must be in the currency of the destination
