@@ -247,6 +247,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
     private function getLocation(TransactionJournal $journal): ?Location
     {
+        /** @var Location|null */
         return $journal->locations()->first();
     }
 

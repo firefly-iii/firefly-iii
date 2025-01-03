@@ -169,7 +169,7 @@ class RecurrenceUpdateService
         if (1 === $originalCount) {
             app('log')->debug('Return the first one');
 
-            // @var RecurrenceRepetition|null
+            /** @var RecurrenceRepetition|null */
             return $recurrence->recurrenceRepetitions()->first();
         }
         // find it:
@@ -187,7 +187,7 @@ class RecurrenceUpdateService
             }
         }
 
-        // @var RecurrenceRepetition|null
+        /** @var RecurrenceRepetition|null */
         return $query->first();
     }
 
