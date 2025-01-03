@@ -5,49 +5,49 @@ parameters:
   reportUnmatchedIgnoredErrors: false
   ignoreErrors:
   # TODO: slowly remove these exceptions and fix the issues found.
-    - '#Dynamic call to static method#' # all the Laravel ORM things depend on this.
-    - '#Control structures using switch should not be used.#' # switch is fine in some cases.
-    - '#with no value type specified in iterable type array#' # remove this rule when all other issues are solved.
-    - '#has no value type specified in iterable type array#' # remove this rule when all other issues are solved.
-    - '#is not allowed to extend#'
-    - '#does not specify its types#'
-    - '#switch is forbidden to use#'
-    - '#is neither abstract nor final#'
-    - '#on left side of \?\?\= always exists and is not nullable#'
-    - '#has a nullable return type declaration#' # perhaps throw errors instead?
-    - '#with a nullable type declaration#' # decide what action should be if param is null.
-    - '#with null as default value#'
-    -
-        message: '#Constructor in [a-zA-Z0-9\\_]+ has parameter \$[a-zA-Z0-9\\_]+ with default value#'
-        paths:
-            - ../app/Exceptions/IntervalException.php
-            - ../app/Support/Navigation.php
-    -
-        message: '#but containers should not be injected#'
-        paths:
-            - ../app/Support/Authentication/RemoteUserGuard.php
-    -
-        message: '#Function compact\(\) should not be used#' # too useful in template rendering.
-        paths:
-            - ../app/Generator/Report/Account/MonthReportGenerator.php
-            - ../app/Generator/Report/Audit/MonthReportGenerator.php
-            - ../app/Generator/Report/Budget/MonthReportGenerator.php
-            - ../app/Generator/Report/Category/MonthReportGenerator.php
-            - ../app/Generator/Report/Standard/MonthReportGenerator.php
-            - ../app/Generator/Report/Standard/MultiYearReportGenerator.php
-            - ../app/Generator/Report/Standard/YearReportGenerator.php
-            - ../app/Generator/Report/Tag/MonthReportGenerator.php
-            - ../app/Http/Controllers/Account/*.php
-            - ../app/Http/Controllers/Admin/*.php
-            - ../app/Http/Controllers/*.php
-            - ../app/Support/ExpandedForm.php
-            - ../app/Support/Form/AccountForm.php
-            - ../app/Support/Form/CurrencyForm.php
-            - ../app/Support/Form/FormSupport.php
-    -
-        message: '#Either catch a more specific exception#'
-        paths:
-            - ../app/Support/Form/FormSupport.php
+    # - '#Dynamic call to static method#' # all the Laravel ORM things depend on this.
+    # - '#Control structures using switch should not be used.#' # switch is fine in some cases.
+    # - '#with no value type specified in iterable type array#' # remove this rule when all other issues are solved.
+    # - '#has no value type specified in iterable type array#' # remove this rule when all other issues are solved.
+    # - '#is not allowed to extend#'
+    # - '#does not specify its types#'
+    # - '#switch is forbidden to use#'
+    # - '#is neither abstract nor final#'
+    # - '#on left side of \?\?\= always exists and is not nullable#'
+    # - '#has a nullable return type declaration#' # perhaps throw errors instead?
+    # - '#with a nullable type declaration#' # decide what action should be if param is null.
+    # - '#with null as default value#'
+    # -
+    #     message: '#Constructor in [a-zA-Z0-9\\_]+ has parameter \$[a-zA-Z0-9\\_]+ with default value#'
+    #     paths:
+    #         - ../app/Exceptions/IntervalException.php
+    #         - ../app/Support/Navigation.php
+    # -
+    #     message: '#but containers should not be injected#'
+    #     paths:
+    #         - ../app/Support/Authentication/RemoteUserGuard.php
+    # -
+    #     message: '#Function compact\(\) should not be used#' # too useful in template rendering.
+    #     paths:
+    #         - ../app/Generator/Report/Account/MonthReportGenerator.php
+    #         - ../app/Generator/Report/Audit/MonthReportGenerator.php
+    #         - ../app/Generator/Report/Budget/MonthReportGenerator.php
+    #         - ../app/Generator/Report/Category/MonthReportGenerator.php
+    #         - ../app/Generator/Report/Standard/MonthReportGenerator.php
+    #         - ../app/Generator/Report/Standard/MultiYearReportGenerator.php
+    #         - ../app/Generator/Report/Standard/YearReportGenerator.php
+    #         - ../app/Generator/Report/Tag/MonthReportGenerator.php
+    #         - ../app/Http/Controllers/Account/*.php
+    #         - ../app/Http/Controllers/Admin/*.php
+    #         - ../app/Http/Controllers/*.php
+    #         - ../app/Support/ExpandedForm.php
+    #         - ../app/Support/Form/AccountForm.php
+    #         - ../app/Support/Form/CurrencyForm.php
+    #         - ../app/Support/Form/FormSupport.php
+    # -
+    #     message: '#Either catch a more specific exception#'
+    #     paths:
+    #         - ../app/Support/Form/FormSupport.php
   paths:
     - ../app
     - ../database

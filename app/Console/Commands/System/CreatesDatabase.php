@@ -52,7 +52,7 @@ class CreatesDatabase extends Command
         $exists  = false;
         $dsn     = sprintf('mysql:host=%s;port=%d;charset=utf8mb4', config('database.mysql.host'), config('database.mysql.port'));
 
-        if ('' !== env('DB_SOCKET', '')) {
+        if ('' !== config('database.mysql.unix_socket')) {
             $dsn = sprintf('mysql:unix_socket=%s;charset=utf8mb4', config('database.mysql.unix_socket'));
         }
         $this->friendlyLine(sprintf('DSN is %s', $dsn));

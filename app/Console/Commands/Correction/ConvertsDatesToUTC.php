@@ -122,7 +122,7 @@ class ConvertsDatesToUTC extends Command
         $items->each(
             function ($item) use ($field, $timezoneField): void {
                 /** @var Carbon $date */
-                $date                   = Carbon::parse($item->{$field}, $item->{$timezoneField});
+                $date                   = Carbon::parse($item->{$field}, $item->{$timezoneField}); // @phpstan-ignore-line
                 $date->setTimezone('UTC');
                 $item->{$field}         = $date->format('Y-m-d H:i:s'); // @phpstan-ignore-line
                 $item->{$timezoneField} = 'UTC'; // @phpstan-ignore-line
