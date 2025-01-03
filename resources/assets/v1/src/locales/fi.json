@@ -101,7 +101,7 @@
         "webhook_trigger_UPDATE_TRANSACTION": "After transaction update",
         "webhook_trigger_DESTROY_TRANSACTION": "After transaction delete",
         "webhook_response_TRANSACTIONS": "Transaction details",
-        "webhook_response_ACCOUNTS": "Account details",
+        "webhook_response_ACCOUNTS": "Tilin tiedot",
         "webhook_response_none_NONE": "No details",
         "webhook_delivery_JSON": "JSON",
         "actions": "Toiminnot",

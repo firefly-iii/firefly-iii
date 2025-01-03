@@ -84,8 +84,7 @@ class BelongsUser implements ValidationRule
 
 
 
-        $count = PiggyBank
-            ::leftJoin('account_piggy_bank','account_piggy_bank.piggy_bank_id','=','piggy_banks.id')
+        $count = PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
             ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
             ->where('piggy_banks.id', '=', $value)
             ->where('accounts.user_id', '=', auth()->user()->id)->count()
@@ -96,14 +95,13 @@ class BelongsUser implements ValidationRule
 
     private function validatePiggyBankName(string $value): bool
     {
-        $count = PiggyBank
-            ::leftJoin('account_piggy_bank','account_piggy_bank.piggy_bank_id','=','piggy_banks.id')
+        $count = PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
             ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
             ->where('piggy_banks.name', '=', $value)
             ->where('accounts.user_id', '=', auth()->user()->id)->count()
         ;
 
-        return $count>0;
+        return $count > 0;
     }
 
     protected function countField(string $class, string $field, string $value): int

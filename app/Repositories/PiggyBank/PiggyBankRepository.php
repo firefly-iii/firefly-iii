@@ -154,22 +154,22 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
         /** @var Transaction $destination */
         $destination     = $journal->transactions()->with(['account'])->where('amount', '>', 0)->first();
-        $hits = 0;
-        foreach($piggyBank->accounts as $account) {
+        $hits            = 0;
+        foreach ($piggyBank->accounts as $account) {
 
             // matches source, which means amount will be removed from piggy:
-            if($account->id === $source->account_id) {
+            if ($account->id === $source->account_id) {
                 $operator = 'negative';
                 $currency = $accountRepos->getAccountCurrency($source->account) ?? $defaultCurrency;
                 app('log')->debug(sprintf('Currency will draw money out of piggy bank. Source currency is %s', $currency->code));
-                $hits++;
+                ++$hits;
             }
             // matches destination, which means amount will be added to piggy.
             if ($account->id === $destination->account_id) {
                 $operator = 'positive';
                 $currency = $accountRepos->getAccountCurrency($destination->account) ?? $defaultCurrency;
                 app('log')->debug(sprintf('Currency will add money to piggy bank. Destination currency is %s', $currency->code));
-                $hits++;
+                ++$hits;
             }
         }
         if ($hits > 1) {
