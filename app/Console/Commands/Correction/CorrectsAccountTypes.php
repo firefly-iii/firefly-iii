@@ -275,7 +275,7 @@ class CorrectsAccountTypes extends Command
     private function makeDeposit(TransactionJournal $journal): void
     {
         // from a liability to an asset should be a deposit.
-        $deposit = TransactionType::whereType(TransactionType::DEPOSIT)->first();
+        $deposit = TransactionType::whereType(TransactionTypeEnum::DEPOSIT->value)->first();
         $journal->transactionType()->associate($deposit);
         $journal->save();
         $message = sprintf('Converted transaction #%d from a transfer to a deposit.', $journal->id);
@@ -313,7 +313,7 @@ class CorrectsAccountTypes extends Command
 
     private function shouldComeFromRevenueAccount(string $transactionType, string $sourceType, string $destinationType): bool
     {
-        return TransactionType::DEPOSIT === $transactionType && AccountType::EXPENSE === $sourceType && AccountType::ASSET === $destinationType;
+        return TransactionTypeEnum::DEPOSIT->value === $transactionType && AccountType::EXPENSE === $sourceType && AccountType::ASSET === $destinationType;
     }
 
     private function makeRevenueSource(TransactionJournal $journal, Transaction $source): void

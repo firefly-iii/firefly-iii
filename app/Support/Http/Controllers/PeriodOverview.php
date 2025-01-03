@@ -98,7 +98,7 @@ trait PeriodOverview
         $collector     = app(GroupCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]));
         $collector->setRange($start, $end);
-        $collector->setTypes([TransactionType::DEPOSIT]);
+        $collector->setTypes([TransactionTypeEnum::DEPOSIT->value]);
         $earnedSet     = $collector->getExtractedJournals();
 
         // collect all income in this period:
@@ -272,7 +272,7 @@ trait PeriodOverview
         $collector     = app(GroupCollectorInterface::class);
         $collector->setCategory($category);
         $collector->setRange($start, $end);
-        $collector->setTypes([TransactionType::DEPOSIT]);
+        $collector->setTypes([TransactionTypeEnum::DEPOSIT->value]);
         $earnedSet     = $collector->getExtractedJournals();
 
         // collect all income in this period:
@@ -394,7 +394,7 @@ trait PeriodOverview
         $collector   = app(GroupCollectorInterface::class);
         $collector->withoutCategory();
         $collector->setRange($start, $end);
-        $collector->setTypes([TransactionType::DEPOSIT]);
+        $collector->setTypes([TransactionTypeEnum::DEPOSIT->value]);
         $earnedSet   = $collector->getExtractedJournals();
 
         // collect all income in this period:
@@ -463,7 +463,7 @@ trait PeriodOverview
         $collector     = app(GroupCollectorInterface::class);
         $collector->setTag($tag);
         $collector->setRange($start, $end);
-        $collector->setTypes([TransactionType::DEPOSIT]);
+        $collector->setTypes([TransactionTypeEnum::DEPOSIT->value]);
         $earnedSet     = $collector->getExtractedJournals();
 
         // collect all income in this period:

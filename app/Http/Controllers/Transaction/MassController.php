@@ -132,7 +132,7 @@ class MassController extends Controller
         $withdrawalSources   = $accountRepository->getAccountsByType($array);
 
         // valid deposit destinations:
-        $array               = config(sprintf('firefly.source_dests.%s.%s', TransactionType::DEPOSIT, AccountType::REVENUE));
+        $array               = config(sprintf('firefly.source_dests.%s.%s', TransactionTypeEnum::DEPOSIT->value, AccountType::REVENUE));
         $depositDestinations = $accountRepository->getAccountsByType($array);
 
         /** @var BudgetRepositoryInterface $budgetRepository */

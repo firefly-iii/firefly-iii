@@ -72,7 +72,7 @@ class SetDestinationAccount implements ActionInterface
 
         // if this is a transfer or a deposit, the new destination account must be an asset account or a default account, and it MUST exist:
         $newAccount       = $this->findAssetAccount($type, $accountName);
-        if ((TransactionType::DEPOSIT === $type || TransactionTypeEnum::TRANSFER->value === $type) && null === $newAccount) {
+        if ((TransactionTypeEnum::DEPOSIT->value === $type || TransactionTypeEnum::TRANSFER->value === $type) && null === $newAccount) {
             app('log')->error(
                 sprintf(
                     'Cant change destination account of journal #%d because no asset account with name "%s" exists.',

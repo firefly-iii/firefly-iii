@@ -113,7 +113,7 @@ class TransactionController extends Controller
             $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
         }
         if ('deposit' === $objectType) {
-            $collector->setTypes([TransactionType::DEPOSIT]);
+            $collector->setTypes([TransactionTypeEnum::DEPOSIT->value]);
         }
         if ('transfer' === $objectType || 'transfers' === $objectType) {
             $collector->setTypes([TransactionTypeEnum::TRANSFER->value]);
@@ -163,7 +163,7 @@ class TransactionController extends Controller
             $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
         }
         if ('deposit' === $objectType) {
-            $collector->setTypes([TransactionType::DEPOSIT]);
+            $collector->setTypes([TransactionTypeEnum::DEPOSIT->value]);
         }
         if ('transfer' === $objectType || 'transfers' === $objectType) {
             $collector->setTypes([TransactionTypeEnum::TRANSFER->value]);
@@ -213,7 +213,7 @@ class TransactionController extends Controller
             $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
         }
         if ('deposit' === $objectType) {
-            $collector->setTypes([TransactionType::DEPOSIT]);
+            $collector->setTypes([TransactionTypeEnum::DEPOSIT->value]);
         }
         if ('transfer' === $objectType || 'transfers' === $objectType) {
             $collector->setTypes([TransactionTypeEnum::TRANSFER->value]);

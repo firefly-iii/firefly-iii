@@ -75,7 +75,7 @@ class ConvertToDeposit implements ActionInterface
 
         app('log')->debug(sprintf('Convert journal #%d to deposit.', $journal['transaction_journal_id']));
         $type        = $object->transactionType->type;
-        if (TransactionType::DEPOSIT === $type) {
+        if (TransactionTypeEnum::DEPOSIT->value === $type) {
             app('log')->error(sprintf('Journal #%d is already a deposit (rule #%d).', $journal['transaction_journal_id'], $this->action->rule_id));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.is_already_deposit')));
 
@@ -95,7 +95,7 @@ class ConvertToDeposit implements ActionInterface
                 return false;
             }
 
-            event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionTypeEnum::WITHDRAWAL->value, TransactionType::DEPOSIT));
+            event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::DEPOSIT->value));
 
             return $res;
         }
@@ -111,7 +111,7 @@ class ConvertToDeposit implements ActionInterface
 
                 return false;
             }
-            event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionTypeEnum::TRANSFER->value, TransactionType::DEPOSIT));
+            event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionTypeEnum::TRANSFER->value, TransactionTypeEnum::DEPOSIT->value));
 
             return $res;
         }
@@ -168,7 +168,7 @@ class ConvertToDeposit implements ActionInterface
         ;
 
         // change transaction type of journal:
-        $newType         = TransactionType::whereType(TransactionType::DEPOSIT)->first();
+        $newType         = TransactionType::whereType(TransactionTypeEnum::DEPOSIT->value)->first();
 
         \DB::table('transaction_journals')
             ->where('id', '=', $journal->id)
@@ -249,7 +249,7 @@ class ConvertToDeposit implements ActionInterface
         ;
 
         // change transaction type of journal:
-        $newType         = TransactionType::whereType(TransactionType::DEPOSIT)->first();
+        $newType         = TransactionType::whereType(TransactionTypeEnum::DEPOSIT->value)->first();
 
         \DB::table('transaction_journals')
             ->where('id', '=', $journal->id)

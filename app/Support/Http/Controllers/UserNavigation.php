@@ -75,7 +75,7 @@ trait UserNavigation
             return false;
         }
         $type     = $journal->transactionType->type;
-        $editable = [TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::TRANSFER->value, TransactionType::DEPOSIT, TransactionType::RECONCILIATION];
+        $editable = [TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::TRANSFER->value, TransactionTypeEnum::DEPOSIT->value, TransactionType::RECONCILIATION];
 
         return in_array($type, $editable, true);
     }

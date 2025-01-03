@@ -102,7 +102,7 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->withoutCategory();
+        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::DEPOSIT->value])->withoutCategory();
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
@@ -164,7 +164,7 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->withoutCategory();
+        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::DEPOSIT->value])->withoutCategory();
 
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);

@@ -87,7 +87,7 @@ class ConvertToTransfer implements ActionInterface
 
             return false;
         }
-        if (TransactionType::DEPOSIT !== $type && TransactionTypeEnum::WITHDRAWAL->value !== $type) {
+        if (TransactionTypeEnum::DEPOSIT->value !== $type && TransactionTypeEnum::WITHDRAWAL->value !== $type) {
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.unsupported_transaction_type_transfer', ['type' => $type])));
 
             return false;
@@ -102,7 +102,7 @@ class ConvertToTransfer implements ActionInterface
             $expectedType = $this->getSourceType($journalId);
             // Withdrawal? Replace destination with account with same type as source.
         }
-        if (TransactionType::DEPOSIT === $type) {
+        if (TransactionTypeEnum::DEPOSIT->value === $type) {
             $expectedType = $this->getDestinationType($journalId);
             // Deposit? Replace source with account with same type as destination.
         }
@@ -154,7 +154,7 @@ class ConvertToTransfer implements ActionInterface
             return false;
         }
         if (false !== $res) {
-            event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::DEPOSIT, TransactionTypeEnum::TRANSFER->value));
+            event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::TRANSFER->value));
         }
 
         return $res;

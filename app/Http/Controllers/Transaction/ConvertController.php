@@ -332,7 +332,7 @@ class ConvertController extends Controller
         ];
 
         // also set the currency to the currency of the source account, in case you're converting a deposit into a transfer.
-        if (TransactionTypeEnum::TRANSFER->value === $transactionType->type && TransactionType::DEPOSIT === $journal->transactionType->type) {
+        if (TransactionTypeEnum::TRANSFER->value === $transactionType->type && TransactionTypeEnum::DEPOSIT->value === $journal->transactionType->type) {
             $source         = $this->accountRepository->find((int) $sourceId);
             $sourceCurrency = $this->accountRepository->getAccountCurrency($source);
             $dest           = $this->accountRepository->find((int) $destinationId);

@@ -237,7 +237,7 @@ trait TransactionValidation
 
         app('log')->debug(sprintf('Amount is %s', $transaction['amount']));
 
-        if (TransactionType::DEPOSIT === ucfirst($transactionType)) {
+        if (TransactionTypeEnum::DEPOSIT->value === ucfirst($transactionType)) {
             app('log')->debug(sprintf('Processing as a "%s"', $transactionType));
             // use case: deposit from liability account to an asset account
             // the foreign amount must be in the currency of the source

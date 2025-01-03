@@ -35,7 +35,7 @@ class TransactionTypeSeeder extends Seeder
     {
         $types = [
             TransactionType::WITHDRAWAL,
-            TransactionType::DEPOSIT,
+            TransactionTypeEnum::DEPOSIT->value,
             TransactionType::TRANSFER,
             TransactionType::OPENING_BALANCE,
             TransactionType::RECONCILIATION,

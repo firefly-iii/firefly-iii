@@ -212,7 +212,7 @@ class AccountTasker implements AccountTaskerInterface
         $collector = app(GroupCollectorInterface::class);
         $collector->setDestinationAccounts($accounts)->setRange($start, $end);
         $collector->excludeSourceAccounts($accounts);
-        $collector->setTypes([TransactionType::DEPOSIT, TransactionTypeEnum::TRANSFER->value])->withAccountInformation();
+        $collector->setTypes([TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::TRANSFER->value])->withAccountInformation();
         $report    = $this->groupIncomeBySource($collector->getExtractedJournals());
 
         // sort the result

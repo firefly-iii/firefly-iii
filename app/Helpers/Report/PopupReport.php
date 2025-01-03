@@ -143,7 +143,7 @@ class PopupReport implements PopupReportInterface
         $collector  = app(GroupCollectorInterface::class);
 
         $collector->setAccounts($attributes['accounts'])
-            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::TRANSFER->value, TransactionType::DEPOSIT])
+            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::TRANSFER->value, TransactionTypeEnum::DEPOSIT->value])
             ->withAccountInformation()
             ->withBudgetInformation()
             ->withCategoryInformation()
@@ -222,7 +222,7 @@ class PopupReport implements PopupReportInterface
             ->setSourceAccounts(new Collection([$account]))
             ->setDestinationAccounts($attributes['accounts'])
             ->setRange($attributes['startDate'], $attributes['endDate'])
-            ->setTypes([TransactionType::DEPOSIT, TransactionTypeEnum::TRANSFER->value])
+            ->setTypes([TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::TRANSFER->value])
             ->withAccountInformation()
             ->withBudgetInformation()
             ->withCategoryInformation()

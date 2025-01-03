@@ -84,7 +84,7 @@ class BoxController extends Controller
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)
-            ->setTypes([TransactionType::DEPOSIT])
+            ->setTypes([TransactionTypeEnum::DEPOSIT->value])
         ;
         $set       = $collector->getExtractedJournals();
 

@@ -111,7 +111,7 @@ class SetSourceAccount implements ActionInterface
 
         // if this is a deposit, the new source account must be a revenue account and may be created:
         // or it's a liability
-        if (TransactionType::DEPOSIT === $type) {
+        if (TransactionTypeEnum::DEPOSIT->value === $type) {
             $newAccount = $this->findDepositSourceAccount($accountName);
         }
 

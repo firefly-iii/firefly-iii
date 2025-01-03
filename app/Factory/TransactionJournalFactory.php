@@ -452,7 +452,7 @@ class TransactionJournalFactory
 
         return match ($type) {
             default                  => $this->getCurrency($currency, $source),
-            TransactionType::DEPOSIT => $this->getCurrency($currency, $destination),
+            TransactionTypeEnum::DEPOSIT->value => $this->getCurrency($currency, $destination),
         };
     }
 

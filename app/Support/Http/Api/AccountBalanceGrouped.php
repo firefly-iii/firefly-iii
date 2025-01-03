@@ -220,7 +220,7 @@ class AccountBalanceGrouped
         // deposit = incoming
         // transfer or reconcile or opening balance, and these accounts are the destination.
         if (
-            TransactionType::DEPOSIT === $journal['transaction_type_type']
+            TransactionTypeEnum::DEPOSIT->value === $journal['transaction_type_type']
 
             || (
                 (

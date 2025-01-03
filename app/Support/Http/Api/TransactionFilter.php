@@ -40,7 +40,7 @@ trait TransactionFilter
         $types  = [
             'all'             => [
                 TransactionTypeEnum::WITHDRAWAL->value,
-                TransactionType::DEPOSIT,
+                TransactionTypeEnum::DEPOSIT->value,
                 TransactionTypeEnum::TRANSFER->value,
                 TransactionType::OPENING_BALANCE,
                 TransactionType::RECONCILIATION,
@@ -49,9 +49,9 @@ trait TransactionFilter
             'withdrawals'     => [TransactionTypeEnum::WITHDRAWAL->value],
             'expense'         => [TransactionTypeEnum::WITHDRAWAL->value],
             'expenses'        => [TransactionTypeEnum::WITHDRAWAL->value],
-            'income'          => [TransactionType::DEPOSIT],
-            'deposit'         => [TransactionType::DEPOSIT],
-            'deposits'        => [TransactionType::DEPOSIT],
+            'income'          => [TransactionTypeEnum::DEPOSIT->value],
+            'deposit'         => [TransactionTypeEnum::DEPOSIT->value],
+            'deposits'        => [TransactionTypeEnum::DEPOSIT->value],
             'transfer'        => [TransactionTypeEnum::TRANSFER->value],
             'transfers'       => [TransactionTypeEnum::TRANSFER->value],
             'opening_balance' => [TransactionType::OPENING_BALANCE],
@@ -59,7 +59,7 @@ trait TransactionFilter
             'reconciliations' => [TransactionType::RECONCILIATION],
             'special'         => [TransactionType::OPENING_BALANCE, TransactionType::RECONCILIATION],
             'specials'        => [TransactionType::OPENING_BALANCE, TransactionType::RECONCILIATION],
-            'default'         => [TransactionTypeEnum::WITHDRAWAL->value, TransactionType::DEPOSIT, TransactionTypeEnum::TRANSFER->value],
+            'default'         => [TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::TRANSFER->value],
         ];
         $return = [];
         $parts  = explode(',', $type);

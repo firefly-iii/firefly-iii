@@ -104,7 +104,7 @@ class UpgradesVariousCurrencyInformation extends Command
     private function updateOtherJournalsCurrencies(): void
     {
         $set = $this->cliRepos->getAllJournals(
-            [TransactionTypeEnum::WITHDRAWAL->value, TransactionType::DEPOSIT, TransactionType::OPENING_BALANCE, TransactionType::RECONCILIATION]
+            [TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::DEPOSIT->value, TransactionType::OPENING_BALANCE, TransactionType::RECONCILIATION]
         );
 
         /** @var TransactionJournal $journal */
@@ -186,7 +186,7 @@ class UpgradesVariousCurrencyInformation extends Command
 
                 break;
 
-            case TransactionType::DEPOSIT:
+            case TransactionTypeEnum::DEPOSIT->value:
                 $lead = $journal->transactions()->where('amount', '>', 0)->first();
 
                 break;

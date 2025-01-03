@@ -242,7 +242,7 @@ class ReconcileController extends Controller
         foreach ($array as $journal) {
             $inverse    = false;
 
-            if (TransactionType::DEPOSIT === $journal['transaction_type_type']) {
+            if (TransactionTypeEnum::DEPOSIT->value === $journal['transaction_type_type']) {
                 $inverse = true;
             }
             // transfer to this account? then positive amount:
@@ -251,7 +251,7 @@ class ReconcileController extends Controller
             }
 
             // opening balance into account? then positive amount:
-            if (TransactionType::OPENING_BALANCE === $journal['transaction_type_type']
+            if (TransactionTypeEnum::OPENING_BALANCE->value === $journal['transaction_type_type']
                 && $account->id === $journal['destination_account_id']) {
                 $inverse = true;
             }

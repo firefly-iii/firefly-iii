@@ -80,12 +80,12 @@ class ConvertToWithdrawal implements ActionInterface
 
             return false;
         }
-        if (TransactionType::DEPOSIT !== $type && TransactionTypeEnum::TRANSFER->value !== $type) {
+        if (TransactionTypeEnum::DEPOSIT->value !== $type && TransactionTypeEnum::TRANSFER->value !== $type) {
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.unsupported_transaction_type_withdrawal', ['type' => $type])));
 
             return false;
         }
-        if (TransactionType::DEPOSIT === $type) {
+        if (TransactionTypeEnum::DEPOSIT->value === $type) {
             app('log')->debug('Going to transform a deposit to a withdrawal.');
 
             try {
@@ -97,7 +97,7 @@ class ConvertToWithdrawal implements ActionInterface
 
                 return false;
             }
-            event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::DEPOSIT, TransactionTypeEnum::WITHDRAWAL->value));
+            event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::WITHDRAWAL->value));
 
             return $res;
         }

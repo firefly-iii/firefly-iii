@@ -149,7 +149,7 @@ class UpdatedGroupEventHandler
                 ->where('amount', '<', 0)->update(['account_id' => $sourceAccount->id])
             ;
         }
-        if (TransactionTypeEnum::TRANSFER->value === $type || TransactionType::DEPOSIT === $type) {
+        if (TransactionTypeEnum::TRANSFER->value === $type || TransactionTypeEnum::DEPOSIT->value === $type) {
             // set all destination transactions to destination account:
             Transaction::whereIn('transaction_journal_id', $all)
                 ->where('amount', '>', 0)->update(['account_id' => $destAccount->id])

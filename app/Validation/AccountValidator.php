@@ -146,7 +146,7 @@ class AccountValidator
 
                 break;
 
-            case TransactionType::DEPOSIT:
+            case TransactionTypeEnum::DEPOSIT->value:
                 $result          = $this->validateDepositDestination($array);
 
                 break;
@@ -191,7 +191,7 @@ class AccountValidator
 
                 break;
 
-            case TransactionType::DEPOSIT:
+            case TransactionTypeEnum::DEPOSIT->value:
                 $result = $this->validateDepositSource($array);
 
                 break;
