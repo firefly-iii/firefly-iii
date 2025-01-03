@@ -74,7 +74,7 @@ class ConvertsDatesToUTC extends Command
      */
     public function handle(): int
     {
-        $this->friendlyWarning('Please do not use this command.');
+        $this->friendlyWarning('Please do not use this command right now.');
 
         return 0;
 
@@ -124,8 +124,8 @@ class ConvertsDatesToUTC extends Command
                 /** @var Carbon $date */
                 $date                   = Carbon::parse($item->{$field}, $item->{$timezoneField});
                 $date->setTimezone('UTC');
-                $item->{$field}         = $date->format('Y-m-d H:i:s');
-                $item->{$timezoneField} = 'UTC';
+                $item->{$field}         = $date->format('Y-m-d H:i:s'); // @phpstan-ignore-line
+                $item->{$timezoneField} = 'UTC'; // @phpstan-ignore-line
                 $item->save();
             }
         );

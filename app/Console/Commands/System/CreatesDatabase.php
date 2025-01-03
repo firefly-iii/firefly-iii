@@ -43,17 +43,17 @@ class CreatesDatabase extends Command
      */
     public function handle(): int
     {
-        if ('mysql' !== env('DB_CONNECTION', 'mysql')) {
-            $this->friendlyInfo(sprintf('CreateDB does not apply to "%s", skipped.', env('DB_CONNECTION')));
+        if ('mysql' !== config('database.default')) {
+            $this->friendlyInfo(sprintf('CreateDB does not apply to "%s", skipped.', config('database.default')));
 
             return 0;
         }
         // try to set up a raw connection:
         $exists  = false;
-        $dsn     = sprintf('mysql:host=%s;port=%d;charset=utf8mb4', env('DB_HOST', 'localhost'), env('DB_PORT', '3306'));
+        $dsn     = sprintf('mysql:host=%s;port=%d;charset=utf8mb4', config('database.mysql.host'), config('database.mysql.port'));
 
         if ('' !== env('DB_SOCKET', '')) {
-            $dsn = sprintf('mysql:unix_socket=%s;charset=utf8mb4', env('DB_SOCKET', ''));
+            $dsn = sprintf('mysql:unix_socket=%s;charset=utf8mb4', config('database.mysql.unix_socket'));
         }
         $this->friendlyLine(sprintf('DSN is %s', $dsn));
 
@@ -65,7 +65,7 @@ class CreatesDatabase extends Command
 
         // when it fails, display error
         try {
-            $pdo = new \PDO($dsn, env('DB_USERNAME'), env('DB_PASSWORD'), $options);
+            $pdo = new \PDO($dsn, config('database.mysql.username'), config('database.mysql.password'), $options);
         } catch (\PDOException $e) {
             $this->friendlyError(sprintf('Error when connecting to DB: %s', $e->getMessage()));
 
@@ -79,19 +79,19 @@ class CreatesDatabase extends Command
         // slightly more complex but less error-prone.
         foreach ($stmt as $row) {
             $name = $row['Database'] ?? false;
-            if ($name === env('DB_DATABASE')) {
+            if ($name === config('database.mysql.database')) {
                 $exists = true;
             }
         }
         if (false === $exists) {
-            $this->friendlyError(sprintf('Database "%s" does not exist.', env('DB_DATABASE')));
+            $this->friendlyError(sprintf('Database "%s" does not exist.', config('database.mysql.database')));
 
             // try to create it.
-            $pdo->exec(sprintf('CREATE DATABASE `%s` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;', env('DB_DATABASE')));
-            $this->friendlyInfo(sprintf('Created database "%s"', env('DB_DATABASE')));
+            $pdo->exec(sprintf('CREATE DATABASE `%s` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;', config('database.mysql.database')));
+            $this->friendlyInfo(sprintf('Created database "%s"', config('database.mysql.database')));
         }
         if (true === $exists) {
-            $this->friendlyInfo(sprintf('Database "%s" exists.', env('DB_DATABASE')));
+            $this->friendlyInfo(sprintf('Database "%s" exists.', config('database.mysql.database')));
         }
 
         return 0;

@@ -43,7 +43,7 @@ class CreatesFirstUser extends Command
      */
     public function handle(): int
     {
-        if ('testing' !== env('APP_ENV', 'local')) {
+        if ('testing' !== config('app.env')) {
             $this->friendlyError('This command only works in the testing environment.');
 
             return 1;
