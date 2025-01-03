@@ -314,6 +314,7 @@ jobs:
             git push origin $releaseName
             gh release create $releaseName -p --verify-tag \
               -t "Development release for $(date +'%Y-%m-%d')" \
+              --latest=false \
               -F output.txt
           fi
 
@@ -327,6 +328,7 @@ jobs:
             git push origin $releaseName
             gh release create $releaseName -p --verify-tag \
               -t "Branch release for $(date +'%Y-%m-%d')" \
+              --latest=false \
               -F output.txt
           fi
 
@@ -352,7 +354,18 @@ jobs:
             echo 'MAIN (real) release'
             git tag -a $releaseName -m "Here be changelog"
             git push origin $releaseName
-            gh release create $releaseName -F output.txt -t "$releaseName" --verify-tag
+
+            # do not tag as latest when alpha or beta.
+            if [[ "$version" == *alpha* ]] || [[ "$version" == *beta* ]]; then
+              echo 'Mark alpha or beta as NOT the latest.'
+              gh release create $releaseName -F output.txt -t "$releaseName" --verify-tag --latest=false
+            fi
+
+            # tag as latest when NOT alpha or beta.
+            if [[ "$version" != *alpha* ]] && [[ "$version" != *beta* ]]; then
+              echo 'Mark prod as the latest.'
+              gh release create $releaseName -F output.txt -t "$releaseName" --verify-tag
+            fi
 
             # add archive files to release
             gh release upload $releaseName $zipName
