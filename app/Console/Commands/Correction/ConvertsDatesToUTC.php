@@ -82,7 +82,7 @@ class ConvertsDatesToUTC extends Command
          * @var string $model
          * @var array  $fields
          */
-        foreach (AddTimezonesToDates::$models as $model => $fields) {
+        foreach (CorrectsTimezoneInformation::$models as $model => $fields) {
             $this->ConvertModeltoUTC($model, $fields);
         }
         // tell the system we are now in UTC mode.

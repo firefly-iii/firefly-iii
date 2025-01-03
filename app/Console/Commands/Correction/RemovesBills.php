@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Correction;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Console\Command;
@@ -42,7 +43,7 @@ class RemovesBills extends Command
     public function handle(): int
     {
         /** @var null|TransactionType $withdrawal */
-        $withdrawal = TransactionType::where('type', TransactionType::WITHDRAWAL)->first();
+        $withdrawal = TransactionType::where('type', TransactionTypeEnum::WITHDRAWAL->value)->first();
         if (null === $withdrawal) {
             return 0;
         }

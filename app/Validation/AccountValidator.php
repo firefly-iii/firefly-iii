@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Validation;
 
 use FireflyIII\Enums\AccountTypeEnum;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Models\UserGroup;
@@ -140,7 +141,7 @@ class AccountValidator
 
                 break;
 
-            case TransactionType::WITHDRAWAL:
+            case TransactionTypeEnum::WITHDRAWAL->value:
                 $result          = $this->validateWithdrawalDestination($array);
 
                 break;
@@ -185,7 +186,7 @@ class AccountValidator
 
                 break;
 
-            case TransactionType::WITHDRAWAL:
+            case TransactionTypeEnum::WITHDRAWAL->value:
                 $result = $this->validateWithdrawalSource($array);
 
                 break;

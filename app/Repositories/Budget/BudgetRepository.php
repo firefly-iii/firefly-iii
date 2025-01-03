@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
@@ -617,7 +618,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         $collector->setUser($this->user)
             ->setRange($start, $end)
             ->excludeDestinationAccounts($selection)
-            ->setTypes([TransactionType::WITHDRAWAL])
+            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value])
             ->setBudgets($this->getActiveBudgets())
         ;
 
@@ -679,7 +680,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         $collector->setUser($this->user)
             ->setRange($start, $end)
             ->excludeDestinationAccounts($selection)
-            ->setTypes([TransactionType::WITHDRAWAL])
+            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value])
             ->setBudget($budget)
         ;
 

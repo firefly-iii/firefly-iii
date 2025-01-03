@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Http\Controllers;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -232,10 +233,10 @@ trait AugumentData
         /** @var array $journal */
         foreach ($array as $journal) {
             $name           = '(no name)';
-            if (TransactionType::WITHDRAWAL === $journal['transaction_type_type']) {
+            if (TransactionTypeEnum::WITHDRAWAL->value === $journal['transaction_type_type']) {
                 $name = $journal['destination_account_name'];
             }
-            if (TransactionType::WITHDRAWAL !== $journal['transaction_type_type']) {
+            if (TransactionTypeEnum::WITHDRAWAL->value !== $journal['transaction_type_type']) {
                 $name = $journal['source_account_name'];
             }
 
@@ -255,7 +256,7 @@ trait AugumentData
         $collector = app(GroupCollectorInterface::class);
 
         $total     = $assets->merge($opposing);
-        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setAccounts($total);
+        $collector->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->setAccounts($total);
         $journals  = $collector->getExtractedJournals();
         $sum       = [
             'grand_sum'    => '0',

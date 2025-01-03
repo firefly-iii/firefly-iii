@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Http\Controllers;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
@@ -46,7 +47,7 @@ trait TransactionCalculation
         $collector->setAccounts($total)
             ->setRange($start, $end)
             ->withAccountInformation()
-            ->setTypes([TransactionType::WITHDRAWAL])
+            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value])
         ;
 
         return $collector->getExtractedJournals();
@@ -60,7 +61,7 @@ trait TransactionCalculation
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
 
-        $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
+        $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionType::TRANSFER])
             ->setTags($tags)->withAccountInformation()
         ;
 
@@ -74,7 +75,7 @@ trait TransactionCalculation
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
+        $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionType::TRANSFER])
             ->setBudgets($budgets)->withAccountInformation()
         ;
 
@@ -91,7 +92,7 @@ trait TransactionCalculation
         $collector
             ->setAccounts($accounts)
             ->setRange($start, $end)
-            ->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
+            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionType::TRANSFER])
             ->setCategories($categories)
             ->withAccountInformation()
         ;

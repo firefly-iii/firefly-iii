@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Report;
 
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
@@ -73,7 +74,7 @@ class PopupReport implements PopupReportInterface
         $collector  = app(GroupCollectorInterface::class);
         $collector
             ->setAccounts(new Collection([$account]))
-            ->setTypes([TransactionType::WITHDRAWAL])
+            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value])
             ->withAccountInformation()
             ->withCategoryInformation()
             ->setRange($attributes['startDate'], $attributes['endDate'])
@@ -115,7 +116,7 @@ class PopupReport implements PopupReportInterface
             $collector->setCurrency($currency);
         }
         if (null === $budget->id || 0 === $budget->id) {
-            $collector->setTypes([TransactionType::WITHDRAWAL])->withoutBudget();
+            $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->withoutBudget();
         }
         if (null !== $budget->id && 0 !== $budget->id) {
             $collector->setBudget($budget);
@@ -142,7 +143,7 @@ class PopupReport implements PopupReportInterface
         $collector  = app(GroupCollectorInterface::class);
 
         $collector->setAccounts($attributes['accounts'])
-            ->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER, TransactionType::DEPOSIT])
+            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionType::TRANSFER, TransactionType::DEPOSIT])
             ->withAccountInformation()
             ->withBudgetInformation()
             ->withCategoryInformation()
@@ -196,7 +197,7 @@ class PopupReport implements PopupReportInterface
             ->withAccountInformation()
             ->withBudgetInformation()
             ->withCategoryInformation()
-            ->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
+            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionType::TRANSFER])
         ;
 
         if (null !== $currency) {

@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Twig;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -76,7 +77,7 @@ class TransactionGroupTwig extends AbstractExtension
      */
     private function normalJournalArrayAmount(array $array): string
     {
-        $type       = $array['transaction_type_type'] ?? TransactionType::WITHDRAWAL;
+        $type       = $array['transaction_type_type'] ?? TransactionTypeEnum::WITHDRAWAL->value;
         $amount     = $array['amount'] ?? '0';
         $colored    = true;
         $sourceType = $array['source_account_type'] ?? 'invalid';
@@ -97,7 +98,7 @@ class TransactionGroupTwig extends AbstractExtension
     private function signAmount(string $amount, string $transactionType, string $sourceType): string
     {
         // withdrawals stay negative
-        if (TransactionType::WITHDRAWAL !== $transactionType) {
+        if (TransactionTypeEnum::WITHDRAWAL->value !== $transactionType) {
             $amount = bcmul($amount, '-1');
         }
 
@@ -119,7 +120,7 @@ class TransactionGroupTwig extends AbstractExtension
      */
     private function foreignJournalArrayAmount(array $array): string
     {
-        $type       = $array['transaction_type_type'] ?? TransactionType::WITHDRAWAL;
+        $type       = $array['transaction_type_type'] ?? TransactionTypeEnum::WITHDRAWAL->value;
         $amount     = $array['foreign_amount'] ?? '0';
         $colored    = true;
 

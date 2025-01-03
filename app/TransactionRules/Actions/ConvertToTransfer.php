@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnObject;
 use FireflyIII\Events\TriggeredAuditLog;
@@ -86,7 +87,7 @@ class ConvertToTransfer implements ActionInterface
 
             return false;
         }
-        if (TransactionType::DEPOSIT !== $type && TransactionType::WITHDRAWAL !== $type) {
+        if (TransactionType::DEPOSIT !== $type && TransactionTypeEnum::WITHDRAWAL->value !== $type) {
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.unsupported_transaction_type_transfer', ['type' => $type])));
 
             return false;
@@ -97,7 +98,7 @@ class ConvertToTransfer implements ActionInterface
         $repository   = app(AccountRepositoryInterface::class);
         $repository->setUser($user);
         $expectedType = null;
-        if (TransactionType::WITHDRAWAL === $type) {
+        if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
             $expectedType = $this->getSourceType($journalId);
             // Withdrawal? Replace destination with account with same type as source.
         }
@@ -122,7 +123,7 @@ class ConvertToTransfer implements ActionInterface
             return false;
         }
 
-        if (TransactionType::WITHDRAWAL === $type) {
+        if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
             app('log')->debug('Going to transform a withdrawal to a transfer.');
 
             try {
@@ -135,7 +136,7 @@ class ConvertToTransfer implements ActionInterface
                 return false;
             }
             if (false !== $res) {
-                event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::WITHDRAWAL, TransactionType::TRANSFER));
+                event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionTypeEnum::WITHDRAWAL->value, TransactionType::TRANSFER));
             }
 
             return $res;

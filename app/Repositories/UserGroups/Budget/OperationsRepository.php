@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\UserGroups\Budget;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionType;
@@ -45,7 +46,7 @@ class OperationsRepository implements OperationsRepositoryInterface
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setUserGroup($this->userGroup)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL]);
+        $collector->setUserGroup($this->userGroup)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }

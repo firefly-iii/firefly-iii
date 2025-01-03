@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Category;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
@@ -94,7 +95,7 @@ class NoCategoryController extends Controller
         $collector->setRange($start, $end)
             ->setLimit($pageSize)->setPage($page)->withoutCategory()
             ->withAccountInformation()->withBudgetInformation()
-            ->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER])
+            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionType::DEPOSIT, TransactionType::TRANSFER])
         ;
         $groups    = $collector->getPaginatedGroups();
         $groups->setPath(route('categories.no-category', [$start->format('Y-m-d'), $end->format('Y-m-d')]));
@@ -127,7 +128,7 @@ class NoCategoryController extends Controller
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withoutCategory()
             ->withAccountInformation()->withBudgetInformation()
-            ->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER])
+            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionType::DEPOSIT, TransactionType::TRANSFER])
         ;
         $groups    = $collector->getPaginatedGroups();
         $groups->setPath(route('categories.no-category.all'));

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\Account;
@@ -70,7 +71,7 @@ class SetSourceAccount implements ActionInterface
 
         // if this is a transfer or a withdrawal, the new source account must be an asset account or a default account, and it MUST exist:
         $newAccount       = $this->findAssetAccount($type, $accountName);
-        if ((TransactionType::WITHDRAWAL === $type || TransactionType::TRANSFER === $type) && null === $newAccount) {
+        if ((TransactionTypeEnum::WITHDRAWAL->value === $type || TransactionType::TRANSFER === $type) && null === $newAccount) {
             app('log')->error(
                 sprintf('Cant change source account of journal #%d because no asset account with name "%s" exists.', $object->id, $accountName)
             );

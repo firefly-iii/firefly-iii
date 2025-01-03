@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
@@ -121,7 +122,7 @@ class AccountTasker implements AccountTaskerInterface
 
         $collector->setSourceAccounts($accounts)->setRange($start, $end);
         $collector->excludeDestinationAccounts($accounts);
-        $collector->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])->withAccountInformation();
+        $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionType::TRANSFER])->withAccountInformation();
         $journals  = $collector->getExtractedJournals();
 
         $report    = $this->groupExpenseByDestination($journals);

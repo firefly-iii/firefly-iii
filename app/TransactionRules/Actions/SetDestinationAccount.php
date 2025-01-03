@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\Account;
@@ -116,7 +117,7 @@ class SetDestinationAccount implements ActionInterface
 
         // if this is a withdrawal, the new destination account must be a expense account and may be created:
         // or it is a liability, in which case it must be returned.
-        if (TransactionType::WITHDRAWAL === $type) {
+        if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
             $newAccount = $this->findWithdrawalDestinationAccount($accountName);
         }
 

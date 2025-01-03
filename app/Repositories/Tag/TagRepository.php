@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Tag;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Factory\TagFactory;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Attachment;
@@ -86,7 +87,7 @@ class TagRepository implements TagRepositoryInterface
         $collector = app(GroupCollectorInterface::class);
 
         $collector->setUser($this->user);
-        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setTag($tag);
+        $collector->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->setTag($tag);
 
         return $collector->getExtractedJournals();
     }
@@ -265,7 +266,7 @@ class TagRepository implements TagRepositoryInterface
                 'currency_name'                  => $journal['currency_name'],
                 'currency_symbol'                => $journal['currency_symbol'],
                 'currency_decimal_places'        => $journal['currency_decimal_places'],
-                TransactionType::WITHDRAWAL      => '0',
+                TransactionTypeEnum::WITHDRAWAL->value      => '0',
                 TransactionType::DEPOSIT         => '0',
                 TransactionType::TRANSFER        => '0',
                 TransactionType::RECONCILIATION  => '0',
@@ -275,7 +276,7 @@ class TagRepository implements TagRepositoryInterface
             // add amount to correct type:
             $amount                   = app('steam')->positive((string) $journal['amount']);
             $type                     = $journal['transaction_type_type'];
-            if (TransactionType::WITHDRAWAL === $type) {
+            if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
                 $amount = bcmul($amount, '-1');
             }
             $sums[$currencyId][$type] = bcadd($sums[$currencyId][$type], $amount);
@@ -287,7 +288,7 @@ class TagRepository implements TagRepositoryInterface
                     'currency_name'                  => $journal['foreign_currency_name'],
                     'currency_symbol'                => $journal['foreign_currency_symbol'],
                     'currency_decimal_places'        => $journal['foreign_currency_decimal_places'],
-                    TransactionType::WITHDRAWAL      => '0',
+                    TransactionTypeEnum::WITHDRAWAL->value      => '0',
                     TransactionType::DEPOSIT         => '0',
                     TransactionType::TRANSFER        => '0',
                     TransactionType::RECONCILIATION  => '0',
@@ -295,7 +296,7 @@ class TagRepository implements TagRepositoryInterface
                 ];
                 // add foreign amount to correct type:
                 $amount                          = app('steam')->positive((string) $journal['foreign_amount']);
-                if (TransactionType::WITHDRAWAL === $type) {
+                if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
                     $amount = bcmul($amount, '-1');
                 }
                 $sums[$foreignCurrencyId][$type] = bcadd($sums[$foreignCurrencyId][$type], $amount);

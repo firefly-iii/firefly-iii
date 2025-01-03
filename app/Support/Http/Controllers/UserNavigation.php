@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Http\Controllers;
 
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
@@ -74,7 +75,7 @@ trait UserNavigation
             return false;
         }
         $type     = $journal->transactionType->type;
-        $editable = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER, TransactionType::DEPOSIT, TransactionType::RECONCILIATION];
+        $editable = [TransactionTypeEnum::WITHDRAWAL->value, TransactionType::TRANSFER, TransactionType::DEPOSIT, TransactionType::RECONCILIATION];
 
         return in_array($type, $editable, true);
     }

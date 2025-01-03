@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Support;
 
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountMetaFactory;
 use FireflyIII\Factory\TagFactory;
@@ -359,7 +360,7 @@ trait JournalServiceTrait
 
     protected function storeBudget(TransactionJournal $journal, NullArrayObject $data): void
     {
-        if (TransactionType::WITHDRAWAL !== $journal->transactionType->type) {
+        if (TransactionTypeEnum::WITHDRAWAL->value !== $journal->transactionType->type) {
             $journal->budgets()->sync([]);
 
             return;

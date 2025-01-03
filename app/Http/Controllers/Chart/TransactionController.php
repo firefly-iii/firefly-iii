@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
@@ -66,7 +67,7 @@ class TransactionController extends Controller
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end);
         $collector->withBudgetInformation();
-        $collector->setTypes([TransactionType::WITHDRAWAL]);
+        $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
 
         $result    = $collector->getExtractedJournals();
         $data      = [];
@@ -109,7 +110,7 @@ class TransactionController extends Controller
         $collector->withCategoryInformation();
 
         if ('withdrawal' === $objectType) {
-            $collector->setTypes([TransactionType::WITHDRAWAL]);
+            $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
         }
         if ('deposit' === $objectType) {
             $collector->setTypes([TransactionType::DEPOSIT]);
@@ -159,7 +160,7 @@ class TransactionController extends Controller
         $collector->withAccountInformation();
 
         if ('withdrawal' === $objectType) {
-            $collector->setTypes([TransactionType::WITHDRAWAL]);
+            $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
         }
         if ('deposit' === $objectType) {
             $collector->setTypes([TransactionType::DEPOSIT]);
@@ -209,7 +210,7 @@ class TransactionController extends Controller
         $collector->withAccountInformation();
 
         if ('withdrawal' === $objectType) {
-            $collector->setTypes([TransactionType::WITHDRAWAL]);
+            $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
         }
         if ('deposit' === $objectType) {
             $collector->setTypes([TransactionType::DEPOSIT]);

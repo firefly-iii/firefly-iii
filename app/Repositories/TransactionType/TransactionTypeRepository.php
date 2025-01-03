@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\TransactionType;
 
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
 
@@ -40,10 +41,10 @@ class TransactionTypeRepository implements TransactionTypeRepositoryInterface
 
             return $type;
         }
-        $typeString ??= TransactionType::WITHDRAWAL;
+        $typeString ??= TransactionTypeEnum::WITHDRAWAL->value;
         $search = $this->findByType($typeString);
         if (null === $search) {
-            $search = $this->findByType(TransactionType::WITHDRAWAL);
+            $search = $this->findByType(TransactionTypeEnum::WITHDRAWAL->value);
         }
         app('log')->debug(sprintf('Tried to search for "%s", came up with "%s". Will return it.', $typeString, $search->type));
 

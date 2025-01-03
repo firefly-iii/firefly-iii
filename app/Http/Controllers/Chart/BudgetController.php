@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
@@ -388,7 +389,7 @@ class BudgetController extends Controller
             return response()->json($cache->get());
         }
         $collector->setRange($start, $end);
-        $collector->setTypes([TransactionType::WITHDRAWAL])->setBudget($budget)->withAccountInformation();
+        $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->setBudget($budget)->withAccountInformation();
         $journals      = $collector->getExtractedJournals();
         $result        = [];
         $chartData     = [];

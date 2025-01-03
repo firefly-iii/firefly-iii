@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Models\Recurrence;
@@ -243,7 +244,7 @@ class RecurrenceFormRequest extends FormRequest
 
         // switch on type to expand rules for source and destination accounts:
         $type       = strtolower($this->convertString('transaction_type'));
-        if (strtolower(TransactionType::WITHDRAWAL) === $type) {
+        if (strtolower(TransactionTypeEnum::WITHDRAWAL->value) === $type) {
             $rules['source_id']        = 'required|exists:accounts,id|belongsToUser:accounts';
             $rules['destination_name'] = 'min:1|max:255|nullable';
         }

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Http\Api;
 
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\TransactionType;
 
 /**
@@ -38,16 +39,16 @@ trait TransactionFilter
     {
         $types  = [
             'all'             => [
-                TransactionType::WITHDRAWAL,
+                TransactionTypeEnum::WITHDRAWAL->value,
                 TransactionType::DEPOSIT,
                 TransactionType::TRANSFER,
                 TransactionType::OPENING_BALANCE,
                 TransactionType::RECONCILIATION,
             ],
-            'withdrawal'      => [TransactionType::WITHDRAWAL],
-            'withdrawals'     => [TransactionType::WITHDRAWAL],
-            'expense'         => [TransactionType::WITHDRAWAL],
-            'expenses'        => [TransactionType::WITHDRAWAL],
+            'withdrawal'      => [TransactionTypeEnum::WITHDRAWAL->value],
+            'withdrawals'     => [TransactionTypeEnum::WITHDRAWAL->value],
+            'expense'         => [TransactionTypeEnum::WITHDRAWAL->value],
+            'expenses'        => [TransactionTypeEnum::WITHDRAWAL->value],
             'income'          => [TransactionType::DEPOSIT],
             'deposit'         => [TransactionType::DEPOSIT],
             'deposits'        => [TransactionType::DEPOSIT],
@@ -58,7 +59,7 @@ trait TransactionFilter
             'reconciliations' => [TransactionType::RECONCILIATION],
             'special'         => [TransactionType::OPENING_BALANCE, TransactionType::RECONCILIATION],
             'specials'        => [TransactionType::OPENING_BALANCE, TransactionType::RECONCILIATION],
-            'default'         => [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER],
+            'default'         => [TransactionTypeEnum::WITHDRAWAL->value, TransactionType::DEPOSIT, TransactionType::TRANSFER],
         ];
         $return = [];
         $parts  = explode(',', $type);

@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers\V2;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
@@ -315,7 +316,7 @@ class TransactionGroupTransformer extends AbstractTransformer
     private function transformTransaction(array $transaction): array
     {
         $transaction         = new NullArrayObject($transaction);
-        $type                = $this->stringFromArray($transaction, 'transaction_type_type', TransactionType::WITHDRAWAL);
+        $type                = $this->stringFromArray($transaction, 'transaction_type_type', TransactionTypeEnum::WITHDRAWAL->value);
         $journalId           = (int) $transaction['transaction_journal_id'];
         $meta                = new NullArrayObject($this->meta[$journalId] ?? []);
 

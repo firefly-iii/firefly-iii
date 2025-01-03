@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Transformers;
 
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
@@ -123,7 +124,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
         $metaFieldData = $this->groupRepos->getMetaFields((int) $row['transaction_journal_id'], $this->metaFields);
         $metaDateData  = $this->groupRepos->getMetaDateFields((int) $row['transaction_journal_id'], $this->metaDateFields);
-        $type          = $this->stringFromArray($transaction, 'transaction_type_type', TransactionType::WITHDRAWAL);
+        $type          = $this->stringFromArray($transaction, 'transaction_type_type', TransactionTypeEnum::WITHDRAWAL->value);
 
         $longitude     = null;
         $latitude      = null;

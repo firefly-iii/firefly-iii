@@ -1,6 +1,4 @@
 parameters:
-  scanFiles:
-    - ../_ide_helper_models.php
   universalObjectCratesClasses:
     - Illuminate\Database\Eloquent\Model
   # TODO: slowly remove these parameters and fix the issues found.
@@ -59,5 +57,5 @@ parameters:
 
   # The level 8 is the highest level. original was 5
   # 7 is more than enough, higher just leaves NULL things.
-  level: 7
+  level: 1
 

@@ -467,7 +467,7 @@ class JournalUpdateService
             array_key_exists('bill_id', $this->data)
                 || array_key_exists('bill_name', $this->data)
         )
-            && TransactionType::WITHDRAWAL === $type
+            && TransactionTypeEnum::WITHDRAWAL->value === $type
         ) {
             $billId                            = (int) ($this->data['bill_id'] ?? 0);
             $billName                          = (string) ($this->data['bill_name'] ?? '');

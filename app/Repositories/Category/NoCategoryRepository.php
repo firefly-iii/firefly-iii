@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Category;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Support\Report\Summarizer\TransactionSummarizer;
@@ -48,7 +49,7 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->withoutCategory();
+        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->withoutCategory();
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
@@ -145,7 +146,7 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface
     {
         /** @var GroupCollectorInterface $collector */
         $collector  = app(GroupCollectorInterface::class);
-        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->withoutCategory();
+        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->withoutCategory();
 
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);

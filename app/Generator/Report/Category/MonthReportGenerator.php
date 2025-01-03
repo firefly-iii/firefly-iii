@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Generator\Report\Category;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
@@ -138,7 +139,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
         /** @var GroupCollectorInterface $collector */
         $collector      = app(GroupCollectorInterface::class);
         $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
-            ->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
+            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionType::TRANSFER])
             ->setCategories($this->categories)->withAccountInformation()
         ;
 

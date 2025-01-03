@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
@@ -64,7 +65,7 @@ class SetDestinationToCashAccount implements ActionInterface
             return false;
         }
         $type        = $object->transactionType->type;
-        if (TransactionType::WITHDRAWAL !== $type) {
+        if (TransactionTypeEnum::WITHDRAWAL->value !== $type) {
             app('log')->error('Transaction must be withdrawal.');
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.not_withdrawal')));
 

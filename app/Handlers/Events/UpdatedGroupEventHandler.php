@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Events\UpdatedTransactionGroup;
@@ -142,7 +143,7 @@ class UpdatedGroupEventHandler
         $destAccount   = $first->transactions()->where('amount', '>', '0')->first()->account;
 
         $type          = $first->transactionType->type;
-        if (TransactionType::TRANSFER === $type || TransactionType::WITHDRAWAL === $type) {
+        if (TransactionType::TRANSFER === $type || TransactionTypeEnum::WITHDRAWAL->value === $type) {
             // set all source transactions to source account:
             Transaction::whereIn('transaction_journal_id', $all)
                 ->where('amount', '<', 0)->update(['account_id' => $sourceAccount->id])

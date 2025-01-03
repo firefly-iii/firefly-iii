@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
@@ -103,7 +104,7 @@ class UpgradesVariousCurrencyInformation extends Command
     private function updateOtherJournalsCurrencies(): void
     {
         $set = $this->cliRepos->getAllJournals(
-            [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::OPENING_BALANCE, TransactionType::RECONCILIATION]
+            [TransactionTypeEnum::WITHDRAWAL->value, TransactionType::DEPOSIT, TransactionType::OPENING_BALANCE, TransactionType::RECONCILIATION]
         );
 
         /** @var TransactionJournal $journal */
@@ -180,7 +181,7 @@ class UpgradesVariousCurrencyInformation extends Command
             default:
                 break;
 
-            case TransactionType::WITHDRAWAL:
+            case TransactionTypeEnum::WITHDRAWAL->value:
                 $lead = $journal->transactions()->where('amount', '<', 0)->first();
 
                 break;

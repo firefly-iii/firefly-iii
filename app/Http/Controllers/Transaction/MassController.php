@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Transaction;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -127,7 +128,7 @@ class MassController extends Controller
         $accountRepository   = app(AccountRepositoryInterface::class);
 
         // valid withdrawal sources:
-        $array               = array_keys(config(sprintf('firefly.source_dests.%s', TransactionType::WITHDRAWAL)));
+        $array               = array_keys(config(sprintf('firefly.source_dests.%s', TransactionTypeEnum::WITHDRAWAL->value)));
         $withdrawalSources   = $accountRepository->getAccountsByType($array);
 
         // valid deposit destinations:

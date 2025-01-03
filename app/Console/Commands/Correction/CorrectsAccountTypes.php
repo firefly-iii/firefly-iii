@@ -26,6 +26,7 @@ namespace FireflyIII\Console\Commands\Correction;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Enums\AccountTypeEnum;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Models\AccountType;
@@ -256,7 +257,7 @@ class CorrectsAccountTypes extends Command
     private function makeTransfer(TransactionJournal $journal): void
     {
         // from an asset to a liability should be a withdrawal:
-        $withdrawal = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
+        $withdrawal = TransactionType::whereType(TransactionTypeEnum::WITHDRAWAL->value)->first();
         $journal->transactionType()->associate($withdrawal);
         $journal->save();
         $message    = sprintf('Converted transaction #%d from a transfer to a withdrawal.', $journal->id);
@@ -286,7 +287,7 @@ class CorrectsAccountTypes extends Command
 
     private function shouldGoToExpenseAccount(string $transactionType, string $sourceType, string $destinationType): bool
     {
-        return TransactionType::WITHDRAWAL === $transactionType && AccountType::ASSET === $sourceType && AccountType::REVENUE === $destinationType;
+        return TransactionTypeEnum::WITHDRAWAL->value === $transactionType && AccountType::ASSET === $sourceType && AccountType::REVENUE === $destinationType;
     }
 
     private function makeExpenseDestination(TransactionJournal $journal, Transaction $destination): void

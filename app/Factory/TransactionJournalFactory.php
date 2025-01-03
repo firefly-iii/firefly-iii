@@ -166,7 +166,7 @@ class TransactionJournalFactory
         $currency              = $this->currencyRepository->findCurrency((int) $row['currency_id'], $row['currency_code']);
         $foreignCurrency       = $this->currencyRepository->findCurrencyNull($row['foreign_currency_id'], $row['foreign_currency_code']);
         $bill                  = $this->billRepository->findBill((int) $row['bill_id'], $row['bill_name']);
-        $billId                = TransactionType::WITHDRAWAL === $type->type && null !== $bill ? $bill->id : null;
+        $billId                = TransactionTypeEnum::WITHDRAWAL->value === $type->type && null !== $bill ? $bill->id : null;
         $description           = (string) $row['description'];
 
         // Manipulate basic fields

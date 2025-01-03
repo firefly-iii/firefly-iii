@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Exceptions\FireflyException;
@@ -73,7 +74,7 @@ class ConvertToWithdrawal implements ActionInterface
         }
 
         $type        = $object->transactionType->type;
-        if (TransactionType::WITHDRAWAL === $type) {
+        if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
             app('log')->error(sprintf('Journal #%d is already a withdrawal (rule #%d).', $journal['transaction_journal_id'], $this->action->rule_id));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.is_already_withdrawal')));
 
@@ -96,7 +97,7 @@ class ConvertToWithdrawal implements ActionInterface
 
                 return false;
             }
-            event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::DEPOSIT, TransactionType::WITHDRAWAL));
+            event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::DEPOSIT, TransactionTypeEnum::WITHDRAWAL->value));
 
             return $res;
         }
@@ -112,7 +113,7 @@ class ConvertToWithdrawal implements ActionInterface
 
             return false;
         }
-        event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::TRANSFER, TransactionType::WITHDRAWAL));
+        event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::TRANSFER, TransactionTypeEnum::WITHDRAWAL->value));
 
         return $res;
     }
@@ -161,7 +162,7 @@ class ConvertToWithdrawal implements ActionInterface
         ;
 
         // change transaction type of journal:
-        $newType         = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
+        $newType         = TransactionType::whereType(TransactionTypeEnum::WITHDRAWAL->value)->first();
         \DB::table('transaction_journals')
             ->where('id', '=', $journal->id)
             ->update(['transaction_type_id' => $newType->id])
@@ -240,7 +241,7 @@ class ConvertToWithdrawal implements ActionInterface
         ;
 
         // change transaction type of journal:
-        $newType         = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
+        $newType         = TransactionType::whereType(TransactionTypeEnum::WITHDRAWAL->value)->first();
         \DB::table('transaction_journals')
             ->where('id', '=', $journal->id)
             ->update(['transaction_type_id' => $newType->id])

@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Correction;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Console\Command;
@@ -44,7 +45,7 @@ class CorrectsTransferBudgets extends Command
         $set   = TransactionJournal::distinct()
             ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
             ->leftJoin('budget_transaction_journal', 'transaction_journals.id', '=', 'budget_transaction_journal.transaction_journal_id')
-            ->whereNotIn('transaction_types.type', [TransactionType::WITHDRAWAL])
+            ->whereNotIn('transaction_types.type', [TransactionTypeEnum::WITHDRAWAL->value])
             ->whereNotNull('budget_transaction_journal.budget_id')->get(['transaction_journals.*'])
         ;
         $count = 0;

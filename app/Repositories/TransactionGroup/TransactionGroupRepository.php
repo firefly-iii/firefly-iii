@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\TransactionGroup;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionGroupFactory;
@@ -250,10 +251,10 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         $type        = $journal->transactionType->type;
         $amount      = app('steam')->positive($transaction->amount);
         $return      = '';
-        if (TransactionType::WITHDRAWAL === $type) {
+        if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
             $return = app('amount')->formatAnything($currency, app('steam')->negative($amount));
         }
-        if (TransactionType::WITHDRAWAL !== $type) {
+        if (TransactionTypeEnum::WITHDRAWAL->value !== $type) {
             $return = app('amount')->formatAnything($currency, $amount);
         }
 
@@ -274,10 +275,10 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         $type        = $journal->transactionType->type;
         $amount      = app('steam')->positive($transaction->foreign_amount);
         $return      = '';
-        if (TransactionType::WITHDRAWAL === $type) {
+        if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
             $return = app('amount')->formatAnything($currency, app('steam')->negative($amount));
         }
-        if (TransactionType::WITHDRAWAL !== $type) {
+        if (TransactionTypeEnum::WITHDRAWAL->value !== $type) {
             $return = app('amount')->formatAnything($currency, $amount);
         }
 

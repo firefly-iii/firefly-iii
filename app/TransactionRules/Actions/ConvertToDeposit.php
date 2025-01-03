@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Exceptions\FireflyException;
@@ -81,7 +82,7 @@ class ConvertToDeposit implements ActionInterface
             return false;
         }
 
-        if (TransactionType::WITHDRAWAL === $type) {
+        if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
             app('log')->debug('Going to transform a withdrawal to a deposit.');
 
             try {
@@ -94,7 +95,7 @@ class ConvertToDeposit implements ActionInterface
                 return false;
             }
 
-            event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::WITHDRAWAL, TransactionType::DEPOSIT));
+            event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionTypeEnum::WITHDRAWAL->value, TransactionType::DEPOSIT));
 
             return $res;
         }
