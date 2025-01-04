@@ -69,5 +69,5 @@ parameters:
 
   # The level 8 is the highest level. original was 5
   # 7 is more than enough, higher just leaves NULL things.
-  level: 3
+  level: 4
 

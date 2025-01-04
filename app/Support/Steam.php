@@ -370,7 +370,7 @@ class Steam
         //            $return['native_balance'] = $return['balance'];
         //        }
 
-        if (!$hasCurrency && array_key_exists('balance', $return) && array_key_exists('native_balance', $return)) {
+        if (!$hasCurrency && array_key_exists('balance', $return)) {
             //            Log::debug('Account has no currency preference, dropping balance in favor of native balance.');
             $sum                      = bcadd($return['balance'], $return['native_balance']);
             //            Log::debug(sprintf('%s + %s = %s', $return['balance'], $return['native_balance'], $sum));

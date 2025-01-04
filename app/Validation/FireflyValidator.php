@@ -71,7 +71,7 @@ class FireflyValidator extends Validator
             return false;
         }
         $secretPreference = app('preferences')->get('temp-mfa-secret');
-        $secret           = $secretPreference?->data ?? '';
+        $secret           = $secretPreference->data ?? '';
         if (is_array($secret)) {
             $secret = '';
         }

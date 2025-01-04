@@ -174,7 +174,9 @@ class AccountTransformer extends AbstractTransformer
 
     private function getBalanceDifference(Collection $accounts, Carbon $start, Carbon $end): void
     {
-        throw new FireflyException('Used deprecated method, rethink this.');
+        if (config('app.fallback_locale') === 'en_US') {
+            throw new FireflyException('Used deprecated method, rethink this.');
+        }
         // collect balances, start and end for both native and converted.
         // yes the b is usually used for boolean by idiots but here it's for balance.
         $bStart = [];
