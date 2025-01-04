@@ -50,7 +50,7 @@ class UnknownUserLoginAttempt extends Notification
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function toArray(OwnerNotifiable $notifiable)
+    public function toArray(OwnerNotifiable $notifiable): array
     {
         return [
         ];
@@ -109,7 +109,7 @@ class UnknownUserLoginAttempt extends Notification
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function via(OwnerNotifiable $notifiable)
+    public function via(OwnerNotifiable $notifiable): array
     {
         return ReturnsAvailableChannels::returnChannels('owner');
     }

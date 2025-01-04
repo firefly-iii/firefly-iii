@@ -400,7 +400,7 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class);
     }
 
-    public function routeNotificationForPushover()
+    public function routeNotificationForPushover(): PushoverReceiver
     {
         $appToken  = (string) app('preferences')->getEncrypted('pushover_app_token', '')->data;
         $userToken = (string) app('preferences')->getEncrypted('pushover_user_token', '')->data;

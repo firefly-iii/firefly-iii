@@ -55,7 +55,7 @@ class OwnerNotifiable
         };
     }
 
-    public function routeNotificationForPushover()
+    public function routeNotificationForPushover(): PushoverReceiver
     {
         Log::debug('Return settings for routeNotificationForPushover');
         $pushoverAppToken  = (string) app('fireflyconfig')->getEncrypted('pushover_app_token', '')->data;

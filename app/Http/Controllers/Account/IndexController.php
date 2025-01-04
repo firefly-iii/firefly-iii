@@ -194,7 +194,7 @@ class IndexController extends Controller
         return view('accounts.index', compact('objectType', 'inactiveCount', 'subTitleIcon', 'subTitle', 'page', 'accounts'));
     }
 
-    private function subtract(array $startBalances, array $endBalances)
+    private function subtract(array $startBalances, array $endBalances): array
     {
         $result = [];
         foreach ($endBalances as $key => $value) {

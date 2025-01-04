@@ -195,7 +195,7 @@ class Preferences
         return $result;
     }
 
-    public function getEncrypted(string $name, $default = null): ?Preference
+    public function getEncrypted(string $name, mixed $default = null): ?Preference
     {
         $result = $this->get($name, $default);
         if (null === $result) {

@@ -50,7 +50,7 @@ class MFAUsedBackupCodeNotification extends Notification
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function toArray(User $notifiable)
+    public function toArray(User $notifiable): array
     {
         return [
         ];
@@ -59,7 +59,7 @@ class MFAUsedBackupCodeNotification extends Notification
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function toMail(User $notifiable)
+    public function toMail(User $notifiable): MailMessage
     {
         $subject   = (string) trans('email.used_backup_code_subject');
         $ip        = Request::ip();
@@ -94,7 +94,7 @@ class MFAUsedBackupCodeNotification extends Notification
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function toSlack(User $notifiable)
+    public function toSlack(User $notifiable): SlackMessage
     {
         $message = (string) trans('email.used_backup_code_slack', ['email' => $this->user->email]);
 
@@ -104,7 +104,7 @@ class MFAUsedBackupCodeNotification extends Notification
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function via(User $notifiable)
+    public function via(User $notifiable): array
     {
         return ReturnsAvailableChannels::returnChannels('user', $notifiable);
     }

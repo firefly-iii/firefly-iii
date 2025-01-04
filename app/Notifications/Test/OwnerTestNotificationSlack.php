@@ -41,7 +41,7 @@ class OwnerTestNotificationSlack extends Notification
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function toArray(OwnerNotifiable $notifiable)
+    public function toArray(OwnerNotifiable $notifiable): array
     {
         return [
         ];
@@ -50,7 +50,7 @@ class OwnerTestNotificationSlack extends Notification
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function toSlack(OwnerNotifiable $notifiable)
+    public function toSlack(OwnerNotifiable $notifiable): SlackMessage
     {
         return new SlackMessage()->content((string) trans('email.admin_test_subject'));
         // return new SlackMessage()->text((string) trans('email.admin_test_subject'))->to($url);
@@ -59,7 +59,7 @@ class OwnerTestNotificationSlack extends Notification
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function via(OwnerNotifiable $notifiable)
+    public function via(OwnerNotifiable $notifiable): array
     {
         return ['slack'];
     }

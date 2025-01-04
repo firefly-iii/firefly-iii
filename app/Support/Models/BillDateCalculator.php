@@ -117,7 +117,7 @@ class BillDateCalculator
             }
         }
         Log::debug('end of loop');
-        $simple             = $set->map(
+        $simple             = $set->map( // @phpstan-ignore-line
             static function (Carbon $date) {
                 return $date->format('Y-m-d');
             }

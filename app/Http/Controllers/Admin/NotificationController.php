@@ -31,10 +31,11 @@ use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\View\View;
 
 class NotificationController extends Controller
 {
-    public function index()
+    public function index(): View
     {
         Log::channel('audit')->info('User visits notifications index.');
         $title                          = (string) trans('firefly.administration');

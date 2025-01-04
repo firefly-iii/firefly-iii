@@ -40,7 +40,7 @@ class ReturnsSettings
         throw new FireflyException(sprintf('Cannot handle channel "%s"', $channel));
     }
 
-    private static function getNtfySettings(string $type, ?User $user)
+    private static function getNtfySettings(string $type, ?User $user): array
     {
         $settings = [
             'ntfy_server' => 'https://ntfy.sh',

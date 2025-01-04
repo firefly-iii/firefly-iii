@@ -43,7 +43,7 @@ class UserTestNotificationNtfy extends Notification
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function toArray(User $notifiable)
+    public function toArray(User $notifiable): array
     {
         return [
         ];
@@ -67,7 +67,7 @@ class UserTestNotificationNtfy extends Notification
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function via(User $user)
+    public function via(User $user): array
     {
         return [NtfyChannel::class];
     }

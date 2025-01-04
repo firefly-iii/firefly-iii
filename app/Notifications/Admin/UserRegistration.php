@@ -55,7 +55,7 @@ class UserRegistration extends Notification
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function toArray(OwnerNotifiable $notifiable)
+    public function toArray(OwnerNotifiable $notifiable): array
     {
         return [
         ];
@@ -64,7 +64,7 @@ class UserRegistration extends Notification
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function toMail(OwnerNotifiable $notifiable)
+    public function toMail(OwnerNotifiable $notifiable): MailMessage
     {
         $ip        = Request::ip();
         $host      = Steam::getHostName($ip);
@@ -107,7 +107,7 @@ class UserRegistration extends Notification
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function toSlack(OwnerNotifiable $notifiable)
+    public function toSlack(OwnerNotifiable $notifiable): SlackMessage
     {
         return new SlackMessage()->content((string) trans('email.admin_new_user_registered', ['email' => $this->user->email, 'id' => $this->user->id]));
     }
@@ -115,7 +115,7 @@ class UserRegistration extends Notification
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function via(OwnerNotifiable $notifiable)
+    public function via(OwnerNotifiable $notifiable): array
     {
         return ReturnsAvailableChannels::returnChannels('owner');
     }

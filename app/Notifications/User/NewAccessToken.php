@@ -45,7 +45,7 @@ class NewAccessToken extends Notification
 
     public function __construct() {}
 
-    public function toArray(User $notifiable)
+    public function toArray(User $notifiable): array
     {
         return [
         ];
@@ -54,7 +54,7 @@ class NewAccessToken extends Notification
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function toMail(User $notifiable)
+    public function toMail(User $notifiable): MailMessage
     {
         $ip        = Request::ip();
         $host      = Steam::getHostName($ip);
@@ -91,7 +91,7 @@ class NewAccessToken extends Notification
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function toSlack(User $notifiable)
+    public function toSlack(User $notifiable): SlackMessage
     {
         return new SlackMessage()->content((string) trans('email.access_token_created_body'));
     }
@@ -99,7 +99,7 @@ class NewAccessToken extends Notification
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function via(User $notifiable)
+    public function via(User $notifiable): array
     {
         return ReturnsAvailableChannels::returnChannels('user', $notifiable);
     }

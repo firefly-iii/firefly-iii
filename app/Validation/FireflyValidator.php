@@ -100,12 +100,9 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param mixed $attribute
-     * @param mixed $value
-     *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function validateBic($attribute, $value): bool
+    public function validateBic(mixed $attribute,mixed  $value): bool
     {
         $regex  = '/^[a-z]{6}[0-9a-z]{2}([0-9a-z]{3})?\z/i';
         $result = preg_match($regex, $value);
@@ -116,7 +113,7 @@ class FireflyValidator extends Validator
         return true;
     }
 
-    public function validateExistingMfaCode($attribute, $value): bool
+    public function validateExistingMfaCode(mixed $attribute, mixed $value): bool
     {
         if (!is_string($value) || 6 !== strlen($value)) {
             return false;

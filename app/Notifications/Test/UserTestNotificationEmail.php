@@ -39,13 +39,13 @@ class UserTestNotificationEmail extends Notification
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function toArray(User $notifiable)
+    public function toArray(User $notifiable): array
     {
         return [
         ];
     }
 
-    public function toMail(User $notifiable)
+    public function toMail(User $notifiable): MailMessage
     {
         $address = (string) $notifiable->email;
 
@@ -58,7 +58,7 @@ class UserTestNotificationEmail extends Notification
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function via(User $notifiable)
+    public function via(User $notifiable): array
     {
         return ['mail'];
     }

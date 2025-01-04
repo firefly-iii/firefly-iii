@@ -49,7 +49,7 @@ class MFAManyFailedAttemptsNotification extends Notification
         $this->count = $count;
     }
 
-    public function toArray(User $notifiable)
+    public function toArray(User $notifiable): array
     {
         return [
         ];
@@ -58,7 +58,7 @@ class MFAManyFailedAttemptsNotification extends Notification
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function toMail(User $notifiable)
+    public function toMail(User $notifiable): MailMessage
     {
         $subject   = (string) trans('email.mfa_many_failed_subject', ['count' => $this->count]);
         $ip        = Request::ip();
@@ -93,7 +93,7 @@ class MFAManyFailedAttemptsNotification extends Notification
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function toSlack(User $notifiable)
+    public function toSlack(User $notifiable): SlackMessage
     {
         $message = (string) trans('email.mfa_many_failed_slack', ['email' => $this->user->email, 'count' => $this->count]);
 
@@ -103,7 +103,7 @@ class MFAManyFailedAttemptsNotification extends Notification
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function via(User $notifiable)
+    public function via(User $notifiable): array
     {
         return ReturnsAvailableChannels::returnChannels('user', $notifiable);
     }

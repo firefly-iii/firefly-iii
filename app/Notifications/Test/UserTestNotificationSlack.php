@@ -41,7 +41,7 @@ class UserTestNotificationSlack extends Notification
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function toArray(User $user)
+    public function toArray(User $user): array
     {
         return [
         ];
@@ -50,7 +50,7 @@ class UserTestNotificationSlack extends Notification
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function toSlack(User $user)
+    public function toSlack(User $user): SlackMessage
     {
         return new SlackMessage()->content((string) trans('email.admin_test_subject'));
         // return new SlackMessage()->text((string) trans('email.admin_test_subject'))->to($url);
@@ -59,7 +59,7 @@ class UserTestNotificationSlack extends Notification
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function via(User $user)
+    public function via(User $user): array
     {
         return ['slack'];
     }

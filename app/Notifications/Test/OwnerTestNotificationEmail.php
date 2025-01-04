@@ -39,7 +39,7 @@ class OwnerTestNotificationEmail extends Notification
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function toArray(OwnerNotifiable $notifiable)
+    public function toArray(OwnerNotifiable $notifiable): array
     {
         return [
         ];
@@ -48,7 +48,7 @@ class OwnerTestNotificationEmail extends Notification
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function toMail(OwnerNotifiable $notifiable)
+    public function toMail(OwnerNotifiable $notifiable): MailMessage
     {
         $address = (string) config('firefly.site_owner');
 
@@ -61,7 +61,7 @@ class OwnerTestNotificationEmail extends Notification
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function via(OwnerNotifiable $notifiable)
+    public function via(OwnerNotifiable $notifiable): array
     {
         return ['mail'];
     }

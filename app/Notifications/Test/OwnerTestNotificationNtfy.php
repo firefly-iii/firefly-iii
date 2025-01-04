@@ -42,10 +42,8 @@ class OwnerTestNotificationNtfy extends Notification
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
-     *
-     * @param mixed $notifiable
      */
-    public function toArray($notifiable)
+    public function toArray(OwnerNotifiable $notifiable): array
     {
         return [
         ];
@@ -69,7 +67,7 @@ class OwnerTestNotificationNtfy extends Notification
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function via(OwnerNotifiable $notifiable)
+    public function via(OwnerNotifiable $notifiable): array
     {
         return [NtfyChannel::class];
     }

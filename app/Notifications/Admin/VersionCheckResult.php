@@ -52,7 +52,7 @@ class VersionCheckResult extends Notification
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function toArray(OwnerNotifiable $notifiable)
+    public function toArray(OwnerNotifiable $notifiable): array
     {
         return [
         ];
@@ -61,7 +61,7 @@ class VersionCheckResult extends Notification
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function toMail(OwnerNotifiable $notifiable)
+    public function toMail(OwnerNotifiable $notifiable): MailMessage
     {
         return (new MailMessage())
             ->markdown('emails.new-version', ['message' => $this->message])
@@ -99,7 +99,7 @@ class VersionCheckResult extends Notification
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function toSlack(OwnerNotifiable $notifiable)
+    public function toSlack(OwnerNotifiable $notifiable): SlackMessage
     {
         return new SlackMessage()->content($this->message)
             ->attachment(static function ($attachment): void {
@@ -111,7 +111,7 @@ class VersionCheckResult extends Notification
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function via(OwnerNotifiable $notifiable)
+    public function via(OwnerNotifiable $notifiable): array
     {
         return ReturnsAvailableChannels::returnChannels('owner');
     }
