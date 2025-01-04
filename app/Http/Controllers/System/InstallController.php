@@ -98,7 +98,7 @@ class InstallController extends Controller
         ];
 
         app('log')->debug(sprintf('Will now run commands. Request index is %d', $requestIndex));
-        $indexes      = array_values(array_keys($this->upgradeCommands));
+        $indexes      = array_keys($this->upgradeCommands);
         if (array_key_exists($requestIndex, $indexes)) {
             $command                    = $indexes[$requestIndex];
             $parameters                 = $this->upgradeCommands[$command];

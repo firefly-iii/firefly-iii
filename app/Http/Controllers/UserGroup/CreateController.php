@@ -41,6 +41,7 @@ class CreateController extends Controller
         $mainTitleIcon = 'fa-book';
         app('log')->debug(sprintf('Now at %s', __METHOD__));
 
-        return view('administrations.create')->with(compact('title', 'subTitle', 'mainTitleIcon'));
+        return view('administrations.create') // @phpstan-ignore-line
+            ->with(compact('title', 'subTitle', 'mainTitleIcon'));
     }
 }

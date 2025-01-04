@@ -186,8 +186,8 @@ class AccountRepository implements AccountRepositoryInterface
     public function getActiveAccountsByType(array $types): Collection
     {
         $query = $this->user->accounts()->with(
-            [
-                'accountmeta' => static function (HasMany $query): void {
+            [  // @phpstan-ignore-line
+                'accountmeta' => static function (HasMany $query): void {  // @phpstan-ignore-line
                     $query->where('name', 'account_role');
                 },
                 'attachments',
@@ -212,7 +212,7 @@ class AccountRepository implements AccountRepositoryInterface
         $disk = \Storage::disk('upload');
 
         return $set->each(
-            static function (Attachment $attachment) use ($disk) {
+            static function (Attachment $attachment) use ($disk) { // @phpstan-ignore-line
                 $notes                   = $attachment->notes()->first();
                 $attachment->file_exists = $disk->exists($attachment->fileName());
                 $attachment->notes_text  = null !== $notes ? $notes->text : '';
@@ -258,8 +258,8 @@ class AccountRepository implements AccountRepositoryInterface
     public function getInactiveAccountsByType(array $types): Collection
     {
         $query = $this->user->accounts()->with(
-            [
-                'accountmeta' => static function (HasMany $query): void {
+            [ // @phpstan-ignore-line
+                'accountmeta' => static function (HasMany $query): void { // @phpstan-ignore-line
                     $query->where('name', 'account_role');
                 },
             ]

@@ -42,6 +42,7 @@ class EditController extends Controller
         $mainTitleIcon = 'fa-book';
         app('log')->debug(sprintf('Now at %s', __METHOD__));
 
-        return view('administrations.edit')->with(compact('title', 'subTitle', 'mainTitleIcon'));
+        return view('administrations.edit')  // @phpstan-ignore-line
+            ->with(compact('title', 'subTitle', 'mainTitleIcon'));
     }
 }

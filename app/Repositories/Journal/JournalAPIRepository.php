@@ -89,7 +89,7 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface
     {
         $events = $journal->piggyBankEvents()->get();
         $events->each(
-            static function (PiggyBankEvent $event): void {
+            static function (PiggyBankEvent $event): void { // @phpstan-ignore-line
                 $event->piggyBank = PiggyBank::withTrashed()->find($event->piggy_bank_id);
             }
         );

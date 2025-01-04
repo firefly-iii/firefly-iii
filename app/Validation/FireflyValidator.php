@@ -823,7 +823,7 @@ class FireflyValidator extends Validator
         }
         $query->where('piggy_banks.name', $value);
 
-        return 0 === $query->count(['piggy_banks.*']);
+        return 0 === $query->count('piggy_banks.*');
     }
 
     /**

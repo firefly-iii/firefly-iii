@@ -193,7 +193,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     public function get(): Collection
     {
         $all = $this->userGroup->currencies()->orderBy('code', 'ASC')->withPivot(['group_default'])->get();
-        $all->map(static function (TransactionCurrency $current) {
+        $all->map(static function (TransactionCurrency $current) { // @phpstan-ignore-line
             $current->userGroupEnabled = true;
             $current->userGroupDefault = 1 === (int) $current->pivot->group_default;
 

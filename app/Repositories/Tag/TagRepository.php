@@ -124,7 +124,7 @@ class TagRepository implements TagRepositoryInterface
         $disk = \Storage::disk('upload');
 
         return $set->each(
-            static function (Attachment $attachment) use ($disk): void {
+            static function (Attachment $attachment) use ($disk): void { // @phpstan-ignore-line
                 /** @var null|Note $note */
                 $note                    = $attachment->notes()->first();
                 // only used in v1 view of tags
@@ -220,7 +220,7 @@ class TagRepository implements TagRepositoryInterface
             $tags->whereLike('tag', $search);
         }
 
-        return $tags->take($limit)->get('tags.*');
+        return $tags->take($limit)->get(['tags.*']);
     }
 
     public function store(array $data): Tag

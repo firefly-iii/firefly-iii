@@ -239,6 +239,8 @@ class RuleRepository implements RuleRepositoryInterface
             throw new FireflyException('No such rule group.');
         }
 
+        /** @var RuleGroup $ruleGroup */
+
         // start by creating a new rule:
         $rule                  = new Rule();
         $rule->user()->associate($this->user);

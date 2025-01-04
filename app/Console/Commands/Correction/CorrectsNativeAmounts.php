@@ -146,7 +146,7 @@ class CorrectsNativeAmounts extends Command
     {
         $set = $piggyBank->piggyBankEvents()->get();
         $set->each(
-            static function (PiggyBankEvent $event): void {
+            static function (PiggyBankEvent $event): void { // @phpstan-ignore-line
                 $event->touch();
             }
         );

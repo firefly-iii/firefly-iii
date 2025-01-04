@@ -268,6 +268,9 @@ class UserRepository implements UserRepositoryInterface
 
     public function inviteUser(null|Authenticatable|User $user, string $email): InvitedUser
     {
+        if(!($user instanceof User)) {
+            throw new FireflyException('User is not a User object.');
+        }
         $now                  = today(config('app.timezone'));
         $now->addDays(2);
         $invitee              = new InvitedUser();
