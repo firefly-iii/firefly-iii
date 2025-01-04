@@ -264,7 +264,9 @@ class ForcesDecimalSize extends Command
                 $pow     = 10 ** $currency->decimal_places;
                 $correct = bcdiv((string) round($value * $pow), (string) $pow, 12);
                 $this->friendlyInfo(sprintf('Account #%d has %s with value "%s", this has been corrected to "%s".', $account->id, $field, $value, $correct));
-                Account::find($account->id)->update([$field => $correct]);
+                /** @var Account|null $updateAccount */
+                $updateAccount = Account::find($account->id);
+                $updateAccount?->update([$field => $correct]);
             }
         }
     }
@@ -313,7 +315,9 @@ class ForcesDecimalSize extends Command
                 $pow     = 10 ** $currency->decimal_places;
                 $correct = bcdiv((string) round($value * $pow), (string) $pow, 12);
                 $this->friendlyWarning(sprintf('%s #%d has %s with value "%s", this has been corrected to "%s".', $table, $item->id, $field, $value, $correct));
-                $class::find($item->id)->update([$field => $correct]);
+                /** @var Model|null $model */
+                $model = $class::find($item->id);
+                $model?->update([$field => $correct]);
             }
         }
     }
@@ -365,7 +369,9 @@ class ForcesDecimalSize extends Command
                 $this->friendlyWarning(
                     sprintf('Piggy bank event #%d has %s with value "%s", this has been corrected to "%s".', $item->id, $field, $value, $correct)
                 );
-                PiggyBankEvent::find($item->id)->update([$field => $correct]);
+                /** @var PiggyBankEvent|null $event */
+                $event = PiggyBankEvent::find($item->id);
+                $event?->update([$field => $correct]);
             }
         }
     }
@@ -418,7 +424,9 @@ class ForcesDecimalSize extends Command
                 $this->friendlyWarning(
                     sprintf('Piggy bank repetition #%d has %s with value "%s", this has been corrected to "%s".', $item->id, $field, $value, $correct)
                 );
-                PiggyBankRepetition::find($item->id)->update([$field => $correct]);
+                /** @var PiggyBankRepetition|null $repetition */
+                $repetition = PiggyBankRepetition::find($item->id);
+                $repetition->update([$field => $correct]);
             }
         }
     }
@@ -467,7 +475,9 @@ class ForcesDecimalSize extends Command
                 $pow     = 10 ** $currency->decimal_places;
                 $correct = bcdiv((string) round($value * $pow), (string) $pow, 12);
                 $this->friendlyWarning(sprintf('Piggy bank #%d has %s with value "%s", this has been corrected to "%s".', $item->id, $field, $value, $correct));
-                PiggyBank::find($item->id)->update([$field => $correct]);
+                /** @var PiggyBank|null $piggyBank */
+                $piggyBank = PiggyBank::find($item->id);
+                $piggyBank?->update([$field => $correct]);
             }
         }
     }
@@ -500,7 +510,9 @@ class ForcesDecimalSize extends Command
             $pow     = (float) 10 ** $currency->decimal_places;
             $correct = bcdiv((string) round((float) $value * $pow), (string) $pow, 12);
             $this->friendlyWarning(sprintf('Transaction #%d has amount with value "%s", this has been corrected to "%s".', $item->id, $value, $correct));
-            Transaction::find($item->id)->update(['amount' => $correct]);
+            /** @var Transaction|null $transaction */
+            $transaction = Transaction::find($item->id);
+            $transaction?->update(['amount' => $correct]);
         }
 
         // select all transactions with this FOREIGN currency and issue.
@@ -530,7 +542,9 @@ class ForcesDecimalSize extends Command
             $this->friendlyWarning(
                 sprintf('Transaction #%d has foreign amount with value "%s", this has been corrected to "%s".', $item->id, $value, $correct)
             );
-            Transaction::find($item->id)->update(['foreign_amount' => $correct]);
+            /** @var Transaction|null $transaction */
+            $transaction = Transaction::find($item->id);
+            $transaction?->update(['foreign_amount' => $correct]);
         }
     }
 

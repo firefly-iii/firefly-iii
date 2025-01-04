@@ -37,7 +37,7 @@ return [
     |
     */
 
-    'stateful'   => explode(',', env('SANCTUM_STATEFUL_DOMAINS', '')),
+    'stateful'   => explode(',', (string) env('SANCTUM_STATEFUL_DOMAINS', '')),
 
     /*
     |--------------------------------------------------------------------------
