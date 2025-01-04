@@ -253,4 +253,8 @@ return [
         'destination_balance_lt'                  => ['alias' => false, 'needs_context' => true],
         'destination_balance_is'                  => ['alias' => false, 'needs_context' => true],
     ],
+    /**
+     * Which query parser to use - 'new' or 'legacy'
+     */
+    'query_parser'     => env('QUERY_PARSER_IMPLEMENTATION', 'legacy'),
 ];
