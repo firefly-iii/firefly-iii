@@ -49,7 +49,7 @@ class FireflyConfig
         return 1 === Configuration::where('name', $name)->count();
     }
 
-    public function getEncrypted(string $name, $default = null): ?Configuration
+    public function getEncrypted(string $name, mixed $default = null): ?Configuration
     {
         $result = $this->get($name, $default);
         if (null === $result) {
@@ -77,7 +77,7 @@ class FireflyConfig
      *
      * @throws FireflyException
      */
-    public function get(string $name, $default = null): ?Configuration
+    public function get(string $name, mixed $default = null): ?Configuration
     {
         $fullName = 'ff-config-'.$name;
         if (\Cache::has($fullName)) {
@@ -133,10 +133,7 @@ class FireflyConfig
         return $config;
     }
 
-    /**
-     * @param mixed $default
-     */
-    public function getFresh(string $name, $default = null): ?Configuration
+    public function getFresh(string $name, mixed $default = null): ?Configuration
     {
         $config = Configuration::where('name', $name)->first(['id', 'name', 'data']);
         if (null !== $config) {

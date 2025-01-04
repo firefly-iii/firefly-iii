@@ -34,7 +34,7 @@ use Illuminate\Support\MessageBag;
  */
 trait FormSupport
 {
-    public function multiSelect(string $name, ?array $list = null, $selected = null, ?array $options = null): string
+    public function multiSelect(string $name, ?array $list = null, mixed $selected = null, ?array $options = null): string
     {
         $list ??= [];
         $label    = $this->label($name, $options);

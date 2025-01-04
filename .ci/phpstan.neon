@@ -16,6 +16,8 @@ parameters:
     - '#Dynamic call to static method#' # all the Laravel ORM things depend on this.
     - identifier: varTag.nativeType
     - identifier: varTag.type
+    - identifier: missingType.iterableValue # not interesting enough to fix.
+    - identifier: missingType.generics # not interesting enough to fix.
 
     # phpstan can't handle this so we ignore them.
     - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\HasMany::before#'
@@ -69,5 +71,5 @@ parameters:
 
   # The level 8 is the highest level. original was 5
   # 7 is more than enough, higher just leaves NULL things.
-  level: 5
+  level: 6
 
