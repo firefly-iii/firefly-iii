@@ -258,7 +258,7 @@ class DebugController extends Controller
                 $return['build'] = trim((string) file_get_contents('/var/www/counter-main.txt'));
                 app('log')->debug(sprintf('build is now "%s"', $return['build']));
             }
-        } catch (\Exception $e) { // @phpstan-ignore-line
+        } catch (\Exception $e) {
             app('log')->debug('Could not check build counter, but thats ok.');
             app('log')->warning($e->getMessage());
         }
@@ -267,7 +267,7 @@ class DebugController extends Controller
             if (file_exists('/var/www/build-date-main.txt')) {
                 $return['build_date'] = trim((string) file_get_contents('/var/www/build-date-main.txt'));
             }
-        } catch (\Exception $e) { // @phpstan-ignore-line
+        } catch (\Exception $e) {
             app('log')->debug('Could not check build date, but thats ok.');
             app('log')->warning($e->getMessage());
         }

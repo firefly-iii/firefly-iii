@@ -52,7 +52,7 @@ class AdminEventHandler
 
         try {
             Notification::send(new OwnerNotifiable(), new UserInvitation($event->invitee));
-        } catch (\Exception $e) { // @phpstan-ignore-line
+        } catch (\Exception $e) {
             $message = $e->getMessage();
             if (str_contains($message, 'Bcc')) {
                 app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
@@ -74,7 +74,7 @@ class AdminEventHandler
         try {
             $owner = new OwnerNotifiable();
             Notification::send($owner, new UnknownUserLoginAttempt($event->address));
-        } catch (\Exception $e) { // @phpstan-ignore-line
+        } catch (\Exception $e) {
             $message = $e->getMessage();
             if (str_contains($message, 'Bcc')) {
                 app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
@@ -104,7 +104,7 @@ class AdminEventHandler
         try {
             $owner = new OwnerNotifiable();
             Notification::send($owner, new VersionCheckResult($event->message));
-        } catch (\Exception $e) {// @phpstan-ignore-line
+        } catch (\Exception $e) {
             $message = $e->getMessage();
             if (str_contains($message, 'Bcc')) {
                 app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
@@ -158,7 +158,7 @@ class AdminEventHandler
 
         try {
             Notification::send($event->owner, new $class());
-        } catch (\Exception $e) { // @phpstan-ignore-line
+        } catch (\Exception $e) {
             $message = $e->getMessage();
             if (str_contains($message, 'Bcc')) {
                 app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');

@@ -422,7 +422,7 @@ class TransactionJournalFactory
 
             return [$sourceAccount, $destinationAccount];
         }
-        if (null === $destinationAccount) { // @phpstan-ignore-line
+        if (null === $destinationAccount) {
             app('log')->debug('Destination account is NULL, source account is not.');
             $account = $this->accountRepository->getReconciliation($sourceAccount);
             app('log')->debug(sprintf('Will return account #%d ("%s") of type "%s"', $account->id, $account->name, $account->accountType->type));

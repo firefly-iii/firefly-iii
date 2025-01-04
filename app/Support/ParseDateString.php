@@ -123,7 +123,7 @@ class ParseDateString
     {
         $today = today(config('app.timezone'))->startOfDay();
 
-        return match ($keyword) { // @phpstan-ignore-line
+        return match ($keyword) {
             default                 => $today,
             'yesterday'             => $today->subDay(),
             'tomorrow'              => $today->addDay(),
@@ -144,7 +144,7 @@ class ParseDateString
 
         try {
             $result = Carbon::createFromFormat('Y-m-d', $date);
-        } catch (InvalidFormatException $e) { // @phpstan-ignore-line
+        } catch (InvalidFormatException $e) {
             Log::error(sprintf('parseDefaultDate("%s") ran into an error, but dont mind: %s', $date, $e->getMessage()));
         }
         if (false === $result) {

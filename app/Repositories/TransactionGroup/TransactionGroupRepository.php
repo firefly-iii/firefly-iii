@@ -156,7 +156,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
             $current['file_exists']   = true;
             $current['notes']         = $repository->getNoteText($attachment);
             // already determined that this attachable is a TransactionJournal.
-            $current['journal_title'] = $attachment->attachable->description; // @phpstan-ignore-line
+            $current['journal_title'] = $attachment->attachable->description;
             $result[$journalId][]     = $current;
         }
 
@@ -220,7 +220,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
                     'link'           => $entry->outward,
                     'group'          => $entry->destination->transaction_group_id,
                     'description'    => $entry->destination->description,
-                    'editable'       => 1 === (int) $entry->editable, // @phpstan-ignore-line
+                    'editable'       => 1 === (int) $entry->editable,
                     'amount'         => $amount,
                     'foreign_amount' => $foreignAmount,
                 ];
@@ -233,7 +233,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
                     'link'           => $entry->inward,
                     'group'          => $entry->source->transaction_group_id,
                     'description'    => $entry->source->description,
-                    'editable'       => 1 === (int) $entry->editable, // @phpstan-ignore-line
+                    'editable'       => 1 === (int) $entry->editable,
                     'amount'         => $amount,
                     'foreign_amount' => $foreignAmount,
                 ];

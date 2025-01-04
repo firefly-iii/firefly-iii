@@ -223,7 +223,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         // when both dates are set:
         return $budget->budgetlimits()
             ->where(
-                static function (Builder $q5) use ($start, $end): void { // @phpstan-ignore-line
+                static function (Builder $q5) use ($start, $end): void {
                     $q5->where(
                         static function (Builder $q1) use ($start, $end): void {
                             // budget limit ends within period

@@ -47,7 +47,7 @@ class BillEventHandler
 
             try {
                 Notification::send($bill->user, new BillReminder($bill, $event->field, $event->diff));
-            } catch (\Exception $e) { // @phpstan-ignore-line
+            } catch (\Exception $e) {
                 $message = $e->getMessage();
                 if (str_contains($message, 'Bcc')) {
                     app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');

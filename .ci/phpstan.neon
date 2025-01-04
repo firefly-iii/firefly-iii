@@ -10,7 +10,7 @@ parameters:
   universalObjectCratesClasses:
     - Illuminate\Database\Eloquent\Model
   # TODO: slowly remove these parameters and fix the issues found.
-  reportUnmatchedIgnoredErrors: false
+  reportUnmatchedIgnoredErrors: true
   ignoreErrors:
   # TODO: slowly remove these exceptions and fix the issues found.
     - '#Dynamic call to static method#' # all the Laravel ORM things depend on this.

@@ -155,7 +155,7 @@ class GroupCollector implements GroupCollectorInterface
     public function descriptionDoesNotEnd(array $array): GroupCollectorInterface
     {
         $this->query->where(
-            static function (EloquentBuilder $q) use ($array): void { // @phpstan-ignore-line
+            static function (EloquentBuilder $q) use ($array): void {
                 $q->where(
                     static function (EloquentBuilder $q1) use ($array): void {
                         foreach ($array as $word) {
@@ -182,7 +182,7 @@ class GroupCollector implements GroupCollectorInterface
     public function descriptionDoesNotStart(array $array): GroupCollectorInterface
     {
         $this->query->where(
-            static function (EloquentBuilder $q) use ($array): void { // @phpstan-ignore-line
+            static function (EloquentBuilder $q) use ($array): void {
                 $q->where(
                     static function (EloquentBuilder $q1) use ($array): void {
                         foreach ($array as $word) {
@@ -209,7 +209,7 @@ class GroupCollector implements GroupCollectorInterface
     public function descriptionEnds(array $array): GroupCollectorInterface
     {
         $this->query->where(
-            static function (EloquentBuilder $q) use ($array): void { // @phpstan-ignore-line
+            static function (EloquentBuilder $q) use ($array): void {
                 $q->where(
                     static function (EloquentBuilder $q1) use ($array): void {
                         foreach ($array as $word) {
@@ -235,7 +235,7 @@ class GroupCollector implements GroupCollectorInterface
     public function descriptionIs(string $value): GroupCollectorInterface
     {
         $this->query->where(
-            static function (EloquentBuilder $q) use ($value): void { // @phpstan-ignore-line
+            static function (EloquentBuilder $q) use ($value): void {
                 $q->where('transaction_journals.description', '=', $value);
                 $q->orWhere('transaction_groups.title', '=', $value);
             }
@@ -247,7 +247,7 @@ class GroupCollector implements GroupCollectorInterface
     public function descriptionIsNot(string $value): GroupCollectorInterface
     {
         $this->query->where(
-            static function (EloquentBuilder $q) use ($value): void { // @phpstan-ignore-line
+            static function (EloquentBuilder $q) use ($value): void {
                 $q->where('transaction_journals.description', '!=', $value);
                 $q->where(
                     static function (EloquentBuilder $q2) use ($value): void {
@@ -264,7 +264,7 @@ class GroupCollector implements GroupCollectorInterface
     public function descriptionStarts(array $array): GroupCollectorInterface
     {
         $this->query->where(
-            static function (EloquentBuilder $q) use ($array): void { // @phpstan-ignore-line
+            static function (EloquentBuilder $q) use ($array): void {
                 $q->where(
                     static function (EloquentBuilder $q1) use ($array): void {
                         foreach ($array as $word) {
@@ -320,7 +320,7 @@ class GroupCollector implements GroupCollectorInterface
     public function excludeCurrency(TransactionCurrency $currency): GroupCollectorInterface
     {
         $this->query->where(
-            static function (EloquentBuilder $q) use ($currency): void { // @phpstan-ignore-line
+            static function (EloquentBuilder $q) use ($currency): void {
                 $q->where('source.transaction_currency_id', '!=', $currency->id);
                 $q->where(
                     static function (EloquentBuilder $q2) use ($currency): void {
@@ -378,7 +378,7 @@ class GroupCollector implements GroupCollectorInterface
             return $this;
         }
         $this->query->where(
-            static function (EloquentBuilder $q) use ($array): void { // @phpstan-ignore-line
+            static function (EloquentBuilder $q) use ($array): void {
                 $q->where(
                     static function (EloquentBuilder $q1) use ($array): void {
                         foreach ($array as $word) {
@@ -515,7 +515,7 @@ class GroupCollector implements GroupCollectorInterface
                     'user_id'          => $augumentedJournal->user_id,
                     'user_group_id'    => $augumentedJournal->user_group_id,
                     // Field transaction_group_title was added by the query.
-                    'title'            => $augumentedJournal->transaction_group_title, // @phpstan-ignore-line
+                    'title'            => $augumentedJournal->transaction_group_title,
                     'created_at'       => new Carbon($augumentedJournal->group_created_at, config('app.timezone')),
                     'updated_at'       => new Carbon($augumentedJournal->group_updated_at, config('app.timezone')),
                     'transaction_type' => $parsedGroup['transaction_type_type'],
@@ -524,7 +524,7 @@ class GroupCollector implements GroupCollectorInterface
                     'transactions'     => [],
                 ];
                 // Field transaction_journal_id was added by the query.
-                $journalId                              = (int) $augumentedJournal->transaction_journal_id; // @phpstan-ignore-line
+                $journalId                              = (int) $augumentedJournal->transaction_journal_id;
                 $groupArray['transactions'][$journalId] = $parsedGroup;
                 $groups[$groupId]                       = $groupArray;
 
@@ -532,7 +532,7 @@ class GroupCollector implements GroupCollectorInterface
             }
             // or parse the rest.
             // Field transaction_journal_id was added by the query.
-            $journalId = (int) $augumentedJournal->transaction_journal_id; // @phpstan-ignore-line
+            $journalId = (int) $augumentedJournal->transaction_journal_id;
             if (array_key_exists($journalId, $groups[$groupId]['transactions'])) {
                 // append data to existing group + journal (for multiple tags or multiple attachments)
                 $groups[$groupId]['transactions'][$journalId] = $this->mergeTags($groups[$groupId]['transactions'][$journalId], $augumentedJournal);
@@ -865,7 +865,7 @@ class GroupCollector implements GroupCollectorInterface
     public function setCurrency(TransactionCurrency $currency): GroupCollectorInterface
     {
         $this->query->where(
-            static function (EloquentBuilder $q) use ($currency): void { // @phpstan-ignore-line
+            static function (EloquentBuilder $q) use ($currency): void {
                 $q->where('source.transaction_currency_id', $currency->id);
                 $q->orWhere('source.foreign_currency_id', $currency->id);
             }
@@ -952,7 +952,7 @@ class GroupCollector implements GroupCollectorInterface
             return $this;
         }
         $this->query->where(
-            static function (EloquentBuilder $q) use ($array): void { // @phpstan-ignore-line
+            static function (EloquentBuilder $q) use ($array): void {
                 $q->where(
                     static function (EloquentBuilder $q1) use ($array): void {
                         foreach ($array as $word) {

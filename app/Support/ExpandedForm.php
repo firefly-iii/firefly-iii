@@ -208,7 +208,7 @@ class ExpandedForm
         /** @var \Eloquent $entry */
         foreach ($set as $entry) {
             // All Eloquent models have an ID
-            $entryId              = $entry->id; // @phpstan-ignore-line
+            $entryId              = $entry->id;
             $current              = $entry->toArray();
             $title                = null;
             foreach ($fields as $field) {

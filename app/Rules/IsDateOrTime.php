@@ -55,7 +55,7 @@ class IsDateOrTime implements ValidationRule
                 $fail('validation.date_or_time')->translate();
 
                 return;
-            } catch (InvalidFormatException $e) { // @phpstan-ignore-line
+            } catch (InvalidFormatException $e) {
                 app('log')->error(sprintf('"%s" is of an invalid format: %s', $value, $e->getMessage()));
 
                 $fail('validation.date_or_time')->translate();

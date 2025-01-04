@@ -93,7 +93,7 @@ class Navigation
             return $this->calculator->nextDateByInterval($epoch, $periodicity, $skipInterval);
         } catch (IntervalException $exception) {
             Log::warning($exception->getMessage(), ['exception' => $exception]);
-        } catch (\Throwable $exception) { // @phpstan-ignore-line
+        } catch (\Throwable $exception) {
             Log::error($exception->getMessage(), ['exception' => $exception]);
         }
 
