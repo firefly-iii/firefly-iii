@@ -29,7 +29,6 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Console\Commands\VerifiesAccessToken;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -263,8 +262,8 @@ class ApplyRules extends Command
     private function verifyInputDates(): void
     {
         // parse start date.
-        $inputStart       = today(config('app.timezone'))->startOfMonth();
-        $startString      = $this->option('start_date');
+        $inputStart      = today(config('app.timezone'))->startOfMonth();
+        $startString     = $this->option('start_date');
         if (null === $startString) {
             /** @var JournalRepositoryInterface $repository */
             $repository = app(JournalRepositoryInterface::class);
@@ -279,8 +278,8 @@ class ApplyRules extends Command
         }
 
         // parse end date
-        $inputEnd         = today(config('app.timezone'));
-        $endString        = $this->option('end_date');
+        $inputEnd        = today(config('app.timezone'));
+        $endString       = $this->option('end_date');
         if (null !== $endString && '' !== $endString) {
             $inputEnd = Carbon::createFromFormat('Y-m-d', $endString);
         }
@@ -295,7 +294,7 @@ class ApplyRules extends Command
         }
 
         $this->startDate = $inputStart;
-        $this->endDate    = $inputEnd;
+        $this->endDate   = $inputEnd;
     }
 
     private function grabAllRules(): void

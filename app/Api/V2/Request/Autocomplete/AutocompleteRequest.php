@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V2\Request\Autocomplete;
 
 use FireflyIII\Enums\AccountTypeEnum;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;

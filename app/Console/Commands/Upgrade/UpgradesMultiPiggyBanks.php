@@ -23,7 +23,6 @@
 
 declare(strict_types=1);
 
-
 namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
