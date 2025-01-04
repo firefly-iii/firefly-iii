@@ -28,7 +28,7 @@ composer update --quiet
 rm -f .php-cs-fixer.cache
 PHP_CS_FIXER_IGNORE_ENV=true ./vendor/bin/php-cs-fixer fix \
     --config $SCRIPT_DIR/php-cs-fixer/.php-cs-fixer.php \
-    --format=txt \
+    --format=txt -v \
     --allow-risky=yes
 
 EXIT_CODE=$?

@@ -61,7 +61,7 @@ return $config->setRules(
         'comment_to_phpdoc'             => false, // breaks phpstan lines in combination with PHPStorm.
         'type_declaration_spaces'       => false,
         'cast_spaces'                   => false,
-        'single_line_comment_style'     => false, // do not overrule single line comment style.
+        'phpdoc_to_comment' => false, // do not overrule single line comment style, breaks phpstan.
 
         // complex rules
         'array_syntax'                  => ['syntax' => 'short'],
