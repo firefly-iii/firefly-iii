@@ -265,8 +265,8 @@ trait RecurrenceValidation
 
             return;
         }
-        $nthDay     = (int) ($parameters[0] ?? 0.0);
-        $dayOfWeek  = (int) ($parameters[1] ?? 0.0);
+        $nthDay     = (int) $parameters[0];
+        $dayOfWeek  = (int) $parameters[1];
         if ($nthDay < 1 || $nthDay > 5) {
             $validator->errors()->add(sprintf('repetitions.%d.moment', $index), (string) trans('validation.valid_recurrence_rep_moment'));
 

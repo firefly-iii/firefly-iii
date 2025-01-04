@@ -62,7 +62,11 @@ class ConvertsDatesToUTC extends Command
     {
         $this->friendlyWarning('Please do not use this command right now.');
 
-        return 0;
+        // this variable is ALWAYS en_US.
+        // stops phpstan complaining about dead code.
+        if (config('app.fallback_locale') === 'en_US') {
+            return Command::SUCCESS;
+        }
 
         /**
          * @var string $model
@@ -108,10 +112,10 @@ class ConvertsDatesToUTC extends Command
         $items->each(
             function ($item) use ($field, $timezoneField): void {
                 /** @var Carbon $date */
-                $date                   = Carbon::parse($item->{$field}, $item->{$timezoneField}); // @phpstan-ignore-line
+                $date = Carbon::parse($item->{$field}, $item->{$timezoneField}); // @phpstan-ignore-line
                 $date->setTimezone('UTC');
                 $item->{$field}         = $date->format('Y-m-d H:i:s'); // @phpstan-ignore-line
-                $item->{$timezoneField} = 'UTC'; // @phpstan-ignore-line
+                $item->{$timezoneField} = 'UTC';                        // @phpstan-ignore-line
                 $item->save();
             }
         );

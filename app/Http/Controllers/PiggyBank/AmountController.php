@@ -41,7 +41,6 @@ use Illuminate\View\View;
  */
 class AmountController extends Controller
 {
-    private AccountRepositoryInterface   $accountRepos;
     private PiggyBankRepositoryInterface $piggyRepos;
 
     /**
@@ -57,7 +56,6 @@ class AmountController extends Controller
                 app('view')->share('mainTitleIcon', 'fa-bullseye');
 
                 $this->piggyRepos   = app(PiggyBankRepositoryInterface::class);
-                $this->accountRepos = app(AccountRepositoryInterface::class);
 
                 return $next($request);
             }

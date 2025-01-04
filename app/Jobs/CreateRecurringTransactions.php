@@ -396,7 +396,7 @@ class CreateRecurringTransactions implements ShouldQueue
 
         // update recurring thing:
         $recurrence->latest_date    = $date;
-        $recurrence->latest_date_tz = $date?->format('e');
+        $recurrence->latest_date_tz = $date->format('e');
         $recurrence->save();
 
         return $group;
@@ -419,7 +419,7 @@ class CreateRecurringTransactions implements ShouldQueue
         /** @var RecurrenceTransaction $transaction */
         foreach ($transactions as $index => $transaction) {
             $single   = [
-                'type'                  => null === $transaction?->transactionType?->type ? strtolower($recurrence->transactionType->type) : strtolower($transaction->transactionType->type),
+                'type'                  => null === $transaction->transactionType->type ? strtolower($recurrence->transactionType->type) : strtolower($transaction->transactionType->type),
                 'date'                  => $date,
                 'user'                  => $recurrence->user_id,
                 'currency_id'           => $transaction->transaction_currency_id,

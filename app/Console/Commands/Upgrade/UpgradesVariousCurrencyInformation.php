@@ -240,7 +240,7 @@ class UpgradesVariousCurrencyInformation extends Command
     private function isMultiCurrency(Account $account): bool
     {
         $value = $this->accountRepos->getMetaValue($account, 'is_multi_currency');
-        if (false === $value || null === $value) {
+        if (null === $value) {
             return false;
         }
 

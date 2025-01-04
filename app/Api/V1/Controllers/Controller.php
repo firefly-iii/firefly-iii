@@ -116,7 +116,7 @@ abstract class Controller extends BaseController
             if (null !== $date) {
                 try {
                     $obj = Carbon::parse((string) $date);
-                } catch (InvalidDateException|InvalidFormatException $e) {
+                } catch (InvalidFormatException $e) {
                     // don't care
                     app('log')->warning(
                         sprintf(

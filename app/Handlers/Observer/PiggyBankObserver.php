@@ -71,9 +71,6 @@ class PiggyBankObserver
             return;
         }
         $userCurrency                    = app('amount')->getDefaultCurrencyByUserGroup($group);
-        if (null === $userCurrency) {
-            return;
-        }
         $piggyBank->native_target_amount = null;
         if ($piggyBank->transactionCurrency->id !== $userCurrency->id) {
             $converter                       = new ExchangeRateConverter();

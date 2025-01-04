@@ -41,7 +41,6 @@ use Illuminate\View\View;
  */
 class EditController extends Controller
 {
-    private AccountRepositoryInterface   $accountRepository;
     private AttachmentHelperInterface    $attachments;
     private PiggyBankRepositoryInterface $piggyRepos;
 
@@ -59,7 +58,6 @@ class EditController extends Controller
 
                 $this->attachments       = app(AttachmentHelperInterface::class);
                 $this->piggyRepos        = app(PiggyBankRepositoryInterface::class);
-                $this->accountRepository = app(AccountRepositoryInterface::class);
 
                 return $next($request);
             }
