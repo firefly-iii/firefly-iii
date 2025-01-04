@@ -40,13 +40,6 @@ class OwnerTestNotificationPushover extends Notification
 {
     use Queueable;
 
-    private OwnerNotifiable $owner;
-
-    public function __construct(OwnerNotifiable $owner)
-    {
-        $this->owner = $owner;
-    }
-
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */

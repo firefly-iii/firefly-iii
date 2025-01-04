@@ -40,10 +40,7 @@ use Illuminate\Support\Facades\Log;
 class ExchangeRateConverter
 {
     // use ConvertsExchangeRates;
-    private array $fallback        = [];
     private bool  $ignoreSettings  = false;
-    private bool  $isPrepared      = false;
-    private bool  $noPreparedRates = false;
     private array $prepared        = [];
     private int   $queryCount      = 0;
 
@@ -273,84 +270,6 @@ class ExchangeRateConverter
         $cache->store($euro->id);
 
         return $euro->id;
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    public function prepare(TransactionCurrency $from, TransactionCurrency $to, Carbon $start, Carbon $end): void
-    {
-        if (false === $this->enabled()) {
-            return;
-        }
-        Log::debug('prepare()');
-        $start->startOfDay();
-        $end->endOfDay();
-        Log::debug(sprintf('Preparing for %s to %s between %s and %s', $from->code, $to->code, $start->format('Y-m-d'), $end->format('Y-m-d')));
-        $set              = $this->userGroup
-            ->currencyExchangeRates()
-            ->where('from_currency_id', $from->id)
-            ->where('to_currency_id', $to->id)
-            ->where('date', '<=', $end->format('Y-m-d'))
-            ->where('date', '>=', $start->format('Y-m-d'))
-            ->orderBy('date', 'DESC')->get()
-        ;
-        ++$this->queryCount;
-        if (0 === $set->count()) {
-            Log::debug('No prepared rates found in this period, use the fallback');
-            $this->fallback($from, $to, $start);
-            $this->noPreparedRates = true;
-            $this->isPrepared      = true;
-            Log::debug('prepare DONE()');
-
-            return;
-        }
-        $this->isPrepared = true;
-
-        // so there is a fallback just in case. Now loop the set of rates we DO have.
-        $temp             = [];
-        $count            = 0;
-        foreach ($set as $rate) {
-            $date = $rate->date->format('Y-m-d');
-            $temp[$date] ??= [
-                $from->id => [
-                    $to->id => $rate->rate,
-                ],
-            ];
-            ++$count;
-        }
-        Log::debug(sprintf('Found %d rates in this period.', $count));
-        $currentStart     = clone $start;
-        while ($currentStart->lte($end)) {
-            $currentDate = $currentStart->format('Y-m-d');
-            $this->prepared[$currentDate] ??= [];
-            $fallback    = $temp[$currentDate][$from->id][$to->id] ?? $this->fallback[$from->id][$to->id] ?? '0';
-            if (0 === count($this->prepared[$currentDate]) && 0 !== bccomp('0', $fallback)) {
-                // fill from temp or fallback or from temp (see before)
-                $this->prepared[$currentDate][$from->id][$to->id] = $fallback;
-            }
-            $currentStart->addDay();
-        }
-    }
-
-    /**
-     * If there are no exchange rate in the "prepare" array, future searches for any exchange rate
-     * will result in nothing: otherwise the preparation had been unnecessary. So, to fix this Firefly III
-     * will set two fallback currency exchange rates, A > B and B > A using the regular getCurrencyRate method.
-     *
-     * This method in turn will fall back on the default exchange rate (if present) or on "1" if necessary.
-     *
-     * @throws FireflyException
-     */
-    private function fallback(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): void
-    {
-        Log::debug('fallback()');
-        $fallback                           = $this->getRate($from, $to, $date);
-        $fallback                           = 0 === bccomp('0', $fallback) ? '1' : $fallback;
-        $this->fallback[$from->id][$to->id] = $fallback;
-        $this->fallback[$to->id][$from->id] = bcdiv('1', $fallback);
-        Log::debug(sprintf('Fallback rate %s > %s = %s', $from->code, $to->code, $fallback));
-        Log::debug(sprintf('Fallback rate %s > %s = %s', $to->code, $from->code, bcdiv('1', $fallback)));
     }
 
     public function setIgnoreSettings(bool $ignoreSettings): void

@@ -36,13 +36,6 @@ class UserTestNotificationEmail extends Notification
 {
     use Queueable;
 
-    private User $user;
-
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
-
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */

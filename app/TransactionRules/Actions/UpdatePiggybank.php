@@ -38,7 +38,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class UpdatePiggybank
  */
-class UpdatePiggybank implements ActionInterface
+class UpdatePiggyBank implements ActionInterface
 {
     private RuleAction $action;
 

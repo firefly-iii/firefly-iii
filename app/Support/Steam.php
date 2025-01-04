@@ -55,22 +55,6 @@ class Steam
         return TransactionCurrency::find((int) $result->data);
     }
 
-    private function sumTransactions(array $transactions, string $key): string
-    {
-        $sum = '0';
-
-        /** @var array $transaction */
-        foreach ($transactions as $transaction) {
-            $value = (string) ($transaction[$key] ?? '0');
-            $value = '' === $value ? '0' : $value;
-            $sum   = bcadd($sum, $value);
-            // Log::debug(sprintf('Add value from "%s": %s', $key, $value));
-        }
-        Log::debug(sprintf('Sum of "%s"-fields is %s', $key, $sum));
-
-        return $sum;
-    }
-
     public function finalAccountBalanceInRange(Account $account, Carbon $start, Carbon $end, bool $convertToNative): array
     {
         // expand period.

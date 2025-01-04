@@ -209,7 +209,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
      */
     public function setAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end, string $amount): AvailableBudget
     {
-        /** @var AvailableBudget */
+        /** @var null|AvailableBudget */
         $availableBudget         = $this->user->availableBudgets()
             ->where('transaction_currency_id', $currency->id)
             ->where('start_date', $start->format('Y-m-d'))

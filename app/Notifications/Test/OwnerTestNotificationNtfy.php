@@ -40,13 +40,6 @@ class OwnerTestNotificationNtfy extends Notification
 {
     use Queueable;
 
-    public OwnerNotifiable $owner;
-
-    public function __construct(OwnerNotifiable $owner)
-    {
-        $this->owner = $owner;
-    }
-
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      *

@@ -45,13 +45,11 @@ class UserRegistration extends Notification
 {
     use Queueable;
 
-    private OwnerNotifiable $owner;
     private User            $user;
 
-    public function __construct(OwnerNotifiable $owner, User $user)
+    public function __construct( User $user)
     {
         $this->user  = $user;
-        $this->owner = $owner;
     }
 
     /**

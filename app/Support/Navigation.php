@@ -433,7 +433,7 @@ class Navigation
      */
     public function getViewRange(bool $correct): string
     {
-        $range = app('preferences')->get('viewRange', '1M')?->data ?? '1M';
+        $range = app('preferences')->get('viewRange', '1M')->data ?? '1M';
         if (is_array($range)) {
             $range = '1M';
         }

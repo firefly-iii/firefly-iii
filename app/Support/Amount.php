@@ -177,7 +177,7 @@ class Amount
             return $cache->get();
         }
 
-        /** @var TransactionCurrency $default */
+        /** @var TransactionCurrency|null $default */
         $default = $userGroup->currencies()->where('group_default', true)->first();
         if (null === $default) {
             $default = $this->getSystemCurrency();

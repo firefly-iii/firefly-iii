@@ -232,7 +232,7 @@ class UserEventHandler
             $owner = $event->owner;
 
             try {
-                Notification::send($owner, new AdminRegistrationNotification($event->owner, $event->user));
+                Notification::send($owner, new AdminRegistrationNotification($event->user));
             } catch (\Exception $e) { // @phpstan-ignore-line
                 $message = $e->getMessage();
                 if (str_contains($message, 'Bcc')) {
@@ -428,7 +428,7 @@ class UserEventHandler
         Log::debug(sprintf('Will send %s as a notification.', $class));
 
         try {
-            Notification::send($event->user, new $class($event->user));
+            Notification::send($event->user, new $class());
         } catch (\Exception $e) { // @phpstan-ignore-line
             $message = $e->getMessage();
             if (str_contains($message, 'Bcc')) {

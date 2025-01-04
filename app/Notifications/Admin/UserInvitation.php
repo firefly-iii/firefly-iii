@@ -46,12 +46,10 @@ class UserInvitation extends Notification
     use Queueable;
 
     private InvitedUser     $invitee;
-    private OwnerNotifiable $owner;
 
-    public function __construct(OwnerNotifiable $owner, InvitedUser $invitee)
+    public function __construct(InvitedUser $invitee)
     {
         $this->invitee = $invitee;
-        $this->owner   = $owner;
     }
 
     /**

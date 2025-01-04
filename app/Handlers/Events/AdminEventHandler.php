@@ -51,8 +51,7 @@ class AdminEventHandler
         }
 
         try {
-            $owner = new OwnerNotifiable();
-            Notification::send($owner, new UserInvitation($owner, $event->invitee));
+            Notification::send(new OwnerNotifiable(), new UserInvitation($event->invitee));
         } catch (\Exception $e) { // @phpstan-ignore-line
             $message = $e->getMessage();
             if (str_contains($message, 'Bcc')) {
@@ -158,7 +157,7 @@ class AdminEventHandler
         Log::debug(sprintf('Will send %s as a notification.', $class));
 
         try {
-            Notification::send($event->owner, new $class($event->owner));
+            Notification::send($event->owner, new $class());
         } catch (\Exception $e) { // @phpstan-ignore-line
             $message = $e->getMessage();
             if (str_contains($message, 'Bcc')) {
