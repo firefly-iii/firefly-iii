@@ -129,7 +129,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function find(int $categoryId): ?Category
     {
-        /** @var Category|null */
+        /** @var null|Category */
         return $this->user->categories()->find($categoryId);
     }
 
@@ -138,7 +138,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function findByName(string $name): ?Category
     {
-        /** @var Category|null */
+        /** @var null|Category */
         return $this->user->categories()->where('name', $name)->first(['categories.*']);
     }
 

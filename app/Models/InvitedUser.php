@@ -32,8 +32,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-/**
- */
 class InvitedUser extends Model
 {
     use ReturnsIntegerIdTrait;

@@ -90,8 +90,6 @@ class ShowController extends Controller
 
         /** @var Carbon $start */
         /** @var Carbon $end */
-
-
         if ($end->lt($start)) {
             [$start, $end] = [$end, $start];
         }

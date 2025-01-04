@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Correction;
 
-use Exception;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\TransactionGroup;
 use Illuminate\Console\Command;
@@ -39,7 +38,7 @@ class RemovesEmptyGroups extends Command
     /**
      * Execute the console command.
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function handle(): int
     {

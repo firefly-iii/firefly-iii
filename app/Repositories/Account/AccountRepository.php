@@ -36,7 +36,6 @@ use FireflyIII\Models\Location;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Services\Internal\Destroy\AccountDestroyService;
 use FireflyIII\Services\Internal\Update\AccountUpdateService;
 use FireflyIII\Support\Facades\Steam;
@@ -120,7 +119,7 @@ class AccountRepository implements AccountRepositoryInterface
             $dbQuery->whereIn('account_types.type', $types);
         }
 
-        /** @var Account|null */
+        /** @var null|Account */
         return $dbQuery->first(['accounts.*']);
     }
 
@@ -134,7 +133,7 @@ class AccountRepository implements AccountRepositoryInterface
             $query->whereIn('account_types.type', $types);
         }
 
-        /** @var Account|null */
+        /** @var null|Account */
         return $query->where('iban', $iban)->first(['accounts.*']);
     }
 
@@ -278,7 +277,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     public function getLocation(Account $account): ?Location
     {
-        /** @var Location|null */
+        /** @var null|Location */
         return $account->locations()->first();
     }
 
@@ -428,7 +427,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     public function find(int $accountId): ?Account
     {
-        /** @var Account|null */
+        /** @var null|Account */
         return $this->user->accounts()->find($accountId);
     }
 

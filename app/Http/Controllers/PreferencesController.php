@@ -29,7 +29,6 @@ use FireflyIII\Events\Test\UserTestNotificationChannel;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Requests\PreferencesRequest;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;

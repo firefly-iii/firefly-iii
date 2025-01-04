@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Http\Api;
 
 use FireflyIII\Enums\AccountTypeEnum;
-use FireflyIII\Models\AccountType;
 use Illuminate\Support\Collection;
 
 trait CollectsAccountsFromFilter

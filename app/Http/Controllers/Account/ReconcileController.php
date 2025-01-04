@@ -32,8 +32,6 @@ use FireflyIII\Factory\TransactionGroupFactory;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\ReconciliationStoreRequest;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Facades\Steam;

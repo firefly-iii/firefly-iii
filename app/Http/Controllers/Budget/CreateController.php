@@ -29,7 +29,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\BudgetFormStoreRequest;
-use FireflyIII\Models\AutoBudget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
@@ -74,7 +73,7 @@ class CreateController extends Controller
 
         // auto budget types
         $autoBudgetTypes   = [
-            0                                => (string) trans('firefly.auto_budget_none'),
+            0                                           => (string) trans('firefly.auto_budget_none'),
             AutoBudgetType::AUTO_BUDGET_RESET->value    => (string) trans('firefly.auto_budget_reset'),
             AutoBudgetType::AUTO_BUDGET_ROLLOVER->value => (string) trans('firefly.auto_budget_rollover'),
             AutoBudgetType::AUTO_BUDGET_ADJUSTED->value => (string) trans('firefly.auto_budget_adjusted'),

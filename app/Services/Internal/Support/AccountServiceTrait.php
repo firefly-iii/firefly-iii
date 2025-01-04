@@ -32,7 +32,6 @@ use FireflyIII\Factory\AccountMetaFactory;
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Factory\TransactionGroupFactory;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;

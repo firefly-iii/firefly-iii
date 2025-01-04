@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Facades;
 
-use FireflyIII\Models\Configuration;
 use Illuminate\Support\Facades\Facade;
 
 class FireflyConfig extends Facade

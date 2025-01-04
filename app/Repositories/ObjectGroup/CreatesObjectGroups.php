@@ -33,7 +33,7 @@ trait CreatesObjectGroups
 {
     protected function findObjectGroupById(int $groupId): ?ObjectGroup
     {
-        /** @var ObjectGroup|null */
+        /** @var null|ObjectGroup */
         return $this->user->objectGroups()->where('id', $groupId)->first();
     }
 
@@ -67,7 +67,7 @@ trait CreatesObjectGroups
 
     protected function findObjectGroup(string $title): ?ObjectGroup
     {
-        /** @var ObjectGroup|null */
+        /** @var null|ObjectGroup */
         return $this->user->objectGroups()->where('title', $title)->first();
     }
 }

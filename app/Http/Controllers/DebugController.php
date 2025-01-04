@@ -29,7 +29,6 @@ use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Middleware\IsDemoUser;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
@@ -67,6 +66,7 @@ class DebugController extends Controller
         if (!auth()->user()->hasRole('owner')) {
             throw new NotFoundHttpException();
         }
+
         /** @var iterable $routes */
         $routes = Route::getRoutes();
         $return = [];

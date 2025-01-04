@@ -35,10 +35,8 @@ use FireflyIII\Factory\TransactionJournalMetaFactory;
 use FireflyIII\Factory\TransactionTypeFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -238,8 +236,8 @@ class JournalUpdateService
     private function getSourceTransaction(): Transaction
     {
         if (null === $this->sourceTransaction) {
-            /** @var Transaction|null $result */
-            $result = $this->transactionJournal->transactions()->with(['account'])->where('amount', '<', 0)->first();
+            /** @var null|Transaction $result */
+            $result                  = $this->transactionJournal->transactions()->with(['account'])->where('amount', '<', 0)->first();
             $this->sourceTransaction = $result;
         }
         Log::debug(sprintf('getSourceTransaction: %s', $this->sourceTransaction->amount));
@@ -319,8 +317,8 @@ class JournalUpdateService
     private function getDestinationTransaction(): Transaction
     {
         if (null === $this->destinationTransaction) {
-            /** @var Transaction|null $result */
-            $result = $this->transactionJournal->transactions()->where('amount', '>', 0)->first();
+            /** @var null|Transaction $result */
+            $result                       = $this->transactionJournal->transactions()->where('amount', '>', 0)->first();
             $this->destinationTransaction = $result;
         }
 

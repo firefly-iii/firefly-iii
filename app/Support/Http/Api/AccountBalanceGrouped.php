@@ -28,7 +28,6 @@ use Carbon\Carbon;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 

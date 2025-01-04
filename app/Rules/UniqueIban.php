@@ -26,7 +26,6 @@ namespace FireflyIII\Rules;
 
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Contracts\Validation\ValidationRule;
 
@@ -127,7 +126,7 @@ class UniqueIban implements ValidationRule
             AccountTypeEnum::ASSET->value   => 0,
             AccountTypeEnum::EXPENSE->value => 0,
             AccountTypeEnum::REVENUE->value => 0,
-            'liabilities'        => 0,
+            'liabilities'                   => 0,
         ];
 
         if (in_array('expense', $this->expectedTypes, true) || in_array(AccountTypeEnum::EXPENSE->value, $this->expectedTypes, true)) {

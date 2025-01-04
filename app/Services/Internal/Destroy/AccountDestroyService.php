@@ -30,7 +30,6 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
 use Illuminate\Database\Eloquent\Builder;
 
 /**

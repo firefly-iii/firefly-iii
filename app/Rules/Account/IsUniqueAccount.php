@@ -42,6 +42,7 @@ class IsUniqueAccount implements ValidationRule, DataAwareRule
     public function setData(array $data): self // @phpstan-ignore-line
     {
         $this->data = $data;
+
         return $this;
     }
 

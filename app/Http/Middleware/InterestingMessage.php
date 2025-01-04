@@ -142,7 +142,8 @@ class InterestingMessage
         $message   = $request->get('message');
 
         /** @var User $user */
-        $user = auth()->user();
+        $user      = auth()->user();
+
         /** @var null|Account $account */
         $account   = $user->accounts()->withTrashed()->find($accountId);
 

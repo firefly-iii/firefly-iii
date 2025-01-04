@@ -30,7 +30,6 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
-use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Models\BillDateCalculator;
 use Illuminate\Support\Collection;
 

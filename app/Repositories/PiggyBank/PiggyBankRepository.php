@@ -55,9 +55,10 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         Log::channel('audit')->info('Delete all piggy banks through destroyAll');
 
         PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
-                        ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
-                        ->where('accounts.user_id', $this->user->id)
-                        ->delete();
+            ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
+            ->where('accounts.user_id', $this->user->id)
+            ->delete()
+        ;
     }
 
     public function findPiggyBank(?int $piggyBankId, ?string $piggyBankName): ?PiggyBank
@@ -313,7 +314,8 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
             throw new FireflyException('[b] Piggy bank repetitions are EOL.');
         }
         Log::warning('Piggy bank repetitions are EOL.');
-        /** @var PiggyBankRepetition|null */
+
+        /** @var null|PiggyBankRepetition */
         return $piggyBank->piggyBankRepetitions()->first();
     }
 

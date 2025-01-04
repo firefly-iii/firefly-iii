@@ -28,8 +28,6 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-/**
- */
 class AccountType extends Model
 {
     use ReturnsIntegerIdTrait;

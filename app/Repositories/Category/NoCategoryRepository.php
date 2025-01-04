@@ -27,7 +27,6 @@ namespace FireflyIII\Repositories\Category;
 use Carbon\Carbon;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Support\Report\Summarizer\TransactionSummarizer;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;

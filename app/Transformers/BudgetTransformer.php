@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 use FireflyIII\Enums\AutoBudgetType;
-use FireflyIII\Models\AutoBudget;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;

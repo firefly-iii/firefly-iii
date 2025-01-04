@@ -30,7 +30,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
 use Illuminate\Console\Command;
@@ -208,7 +207,7 @@ class UpgradesTransferCurrencies extends Command
 
     private function getSourceTransaction(TransactionJournal $transfer): ?Transaction
     {
-        /** @var Transaction|null */
+        /** @var null|Transaction */
         return $transfer->transactions()->where('amount', '<', 0)->first();
     }
 
@@ -244,7 +243,7 @@ class UpgradesTransferCurrencies extends Command
 
     private function getDestinationTransaction(TransactionJournal $transfer): ?Transaction
     {
-        /** @var Transaction|null */
+        /** @var null|Transaction */
         return $transfer->transactions()->where('amount', '>', 0)->first();
     }
 

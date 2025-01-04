@@ -31,7 +31,6 @@ use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Location;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Tag;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
@@ -101,19 +100,19 @@ class TagRepository implements TagRepositoryInterface
 
     public function find(int $tagId): ?Tag
     {
-        /** @var Tag|null */
+        /** @var null|Tag */
         return $this->user->tags()->find($tagId);
     }
 
     public function findByTag(string $tag): ?Tag
     {
-        /** @var Tag|null */
+        /** @var null|Tag */
         return $this->user->tags()->where('tag', $tag)->first();
     }
 
     public function firstUseDate(Tag $tag): ?Carbon
     {
-        /** @var Carbon|null */
+        /** @var null|Carbon */
         return $tag->transactionJournals()->orderBy('date', 'ASC')->first()?->date;
     }
 
@@ -181,7 +180,7 @@ class TagRepository implements TagRepositoryInterface
 
     public function lastUseDate(Tag $tag): ?Carbon
     {
-        /** @var Carbon|null */
+        /** @var null|Carbon */
         return $tag->transactionJournals()->orderBy('date', 'DESC')->first()?->date;
     }
 
@@ -190,13 +189,13 @@ class TagRepository implements TagRepositoryInterface
      */
     public function newestTag(): ?Tag
     {
-        /** @var Tag|null */
+        /** @var null|Tag */
         return $this->user->tags()->whereNotNull('date')->orderBy('date', 'DESC')->first();
     }
 
     public function oldestTag(): ?Tag
     {
-        /** @var Tag|null */
+        /** @var null|Tag */
         return $this->user->tags()->whereNotNull('date')->orderBy('date', 'ASC')->first();
     }
 
@@ -262,10 +261,10 @@ class TagRepository implements TagRepositoryInterface
             }
             $currencyId               = (int) $journal['currency_id'];
             $sums[$currencyId] ??= [
-                'currency_id'                    => $currencyId,
-                'currency_name'                  => $journal['currency_name'],
-                'currency_symbol'                => $journal['currency_symbol'],
-                'currency_decimal_places'        => $journal['currency_decimal_places'],
+                'currency_id'                               => $currencyId,
+                'currency_name'                             => $journal['currency_name'],
+                'currency_symbol'                           => $journal['currency_symbol'],
+                'currency_decimal_places'                   => $journal['currency_decimal_places'],
                 TransactionTypeEnum::WITHDRAWAL->value      => '0',
                 TransactionTypeEnum::DEPOSIT->value         => '0',
                 TransactionTypeEnum::TRANSFER->value        => '0',
@@ -284,10 +283,10 @@ class TagRepository implements TagRepositoryInterface
             $foreignCurrencyId        = $journal['foreign_currency_id'];
             if (null !== $foreignCurrencyId && 0 !== $foreignCurrencyId) {
                 $sums[$foreignCurrencyId] ??= [
-                    'currency_id'                    => $foreignCurrencyId,
-                    'currency_name'                  => $journal['foreign_currency_name'],
-                    'currency_symbol'                => $journal['foreign_currency_symbol'],
-                    'currency_decimal_places'        => $journal['foreign_currency_decimal_places'],
+                    'currency_id'                               => $foreignCurrencyId,
+                    'currency_name'                             => $journal['foreign_currency_name'],
+                    'currency_symbol'                           => $journal['foreign_currency_symbol'],
+                    'currency_decimal_places'                   => $journal['foreign_currency_decimal_places'],
                     TransactionTypeEnum::WITHDRAWAL->value      => '0',
                     TransactionTypeEnum::DEPOSIT->value         => '0',
                     TransactionTypeEnum::TRANSFER->value        => '0',
@@ -381,7 +380,7 @@ class TagRepository implements TagRepositoryInterface
 
     public function getLocation(Tag $tag): ?Location
     {
-        /** @var Location|null */
+        /** @var null|Location */
         return $tag->locations()->first();
     }
 }

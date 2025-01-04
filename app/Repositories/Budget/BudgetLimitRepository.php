@@ -285,7 +285,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         $currency->save();
 
         // find the budget:
-        /** @var Budget|null $budget */
+        /** @var null|Budget $budget */
         $budget                         = $this->user->budgets()->find((int) $data['budget_id']);
         if (null === $budget) {
             throw new FireflyException('200004: Budget does not exist.');
@@ -324,7 +324,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
 
     public function find(Budget $budget, TransactionCurrency $currency, Carbon $start, Carbon $end): ?BudgetLimit
     {
-        /** @var BudgetLimit|null */
+        /** @var null|BudgetLimit */
         return $budget->budgetlimits()
             ->where('transaction_currency_id', $currency->id)
             ->where('start_date', $start->format('Y-m-d'))

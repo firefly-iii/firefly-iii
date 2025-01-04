@@ -39,7 +39,6 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
 use FireflyIII\Services\Internal\Update\GroupUpdateService;
@@ -69,7 +68,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
      */
     public function find(int $groupId): ?TransactionGroup
     {
-        /** @var TransactionGroup|null */
+        /** @var null|TransactionGroup */
         return $this->user->transactionGroups()->find($groupId);
     }
 
@@ -291,7 +290,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         /** @var TransactionJournal $journal */
         $journal = $this->user->transactionJournals()->find($journalId);
 
-        /** @var Location|null */
+        /** @var null|Location */
         return $journal->locations()->first();
     }
 

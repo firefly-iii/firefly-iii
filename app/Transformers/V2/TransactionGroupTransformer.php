@@ -36,7 +36,6 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\NullArrayObject;
 use Illuminate\Support\Collection;
@@ -56,10 +55,10 @@ class TransactionGroupTransformer extends AbstractTransformer
 
     //    private array                 $currencies        = [];
     //    private array                 $transactionTypes  = [];
-        private array                 $meta              = [];
-        private array                 $notes             = [];
+    private array                 $meta         = [];
+    private array                 $notes        = [];
     //    private array                 $locations         = [];
-        private array                 $tags              = [];
+    private array                 $tags         = [];
     //    private array                 $amounts           = [];
     //    private array                 $foreignAmounts    = [];
     //    private array                 $journalCurrencies = [];

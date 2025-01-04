@@ -23,9 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Facades;
 
-use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\User;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
 
 class Amount extends Facade

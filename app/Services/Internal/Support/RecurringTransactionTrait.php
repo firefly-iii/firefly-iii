@@ -33,7 +33,6 @@ use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Factory\PiggyBankFactory;
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceMeta;

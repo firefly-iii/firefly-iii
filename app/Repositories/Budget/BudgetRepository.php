@@ -37,7 +37,6 @@ use FireflyIII\Models\Note;
 use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\BudgetDestroyService;
@@ -384,7 +383,7 @@ class BudgetRepository implements BudgetRepositoryInterface
 
     public function getAutoBudget(Budget $budget): ?AutoBudget
     {
-        /** @var AutoBudget|null */
+        /** @var null|AutoBudget */
         return $budget->autoBudgets()->first();
     }
 
@@ -443,7 +442,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function find(?int $budgetId = null): ?Budget
     {
-        /** @var Budget|null */
+        /** @var null|Budget */
         return $this->user->budgets()->find($budgetId);
     }
 
@@ -515,7 +514,8 @@ class BudgetRepository implements BudgetRepositoryInterface
             return null;
         }
         $query = sprintf('%%%s%%', $name);
-        /** @var Budget|null */
+
+        /** @var null|Budget */
         return $this->user->budgets()->whereLike('name', $query)->first();
     }
 

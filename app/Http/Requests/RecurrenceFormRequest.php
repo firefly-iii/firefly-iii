@@ -28,7 +28,6 @@ use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Models\Recurrence;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Rules\ValidRecurrenceRepetitionType;
 use FireflyIII\Rules\ValidRecurrenceRepetitionValue;

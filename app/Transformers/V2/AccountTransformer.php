@@ -56,7 +56,7 @@ class AccountTransformer extends AbstractTransformer
     public function collectMetaData(Collection $objects): Collection
     {
         $this->currencies         = [];
-        $this->balances = [];
+        $this->balances           = [];
         $this->accountMeta        = [];
         $this->accountTypes       = [];
         $this->fullTypes          = [];

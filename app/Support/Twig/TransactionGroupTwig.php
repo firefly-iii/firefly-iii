@@ -27,11 +27,9 @@ namespace FireflyIII\Support\Twig;
 use Carbon\Carbon;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
-use FireflyIII\Models\TransactionType;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -166,6 +164,7 @@ class TransactionGroupTwig extends AbstractExtension
     private function normalJournalObjectAmount(TransactionJournal $journal): string
     {
         $type       = $journal->transactionType->type;
+
         /** @var Transaction $first */
         $first      = $journal->transactions()->where('amount', '<', 0)->first();
         $currency   = $journal->transactionCurrency;

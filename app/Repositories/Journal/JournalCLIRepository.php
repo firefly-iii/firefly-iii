@@ -54,13 +54,14 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
      */
     public function getJournalBudgetId(TransactionJournal $journal): int
     {
-        $budget = $journal->budgets()->first();
+        $budget      = $journal->budgets()->first();
         if (null !== $budget) {
             return $budget->id;
         }
-        /** @var Transaction|null $transaction */
+
+        /** @var null|Transaction $transaction */
         $transaction = $journal->transactions()->first();
-        $budget = $transaction?->budgets()->first();
+        $budget      = $transaction?->budgets()->first();
         if (null !== $budget) {
             return $budget->id;
         }
@@ -73,13 +74,14 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
      */
     public function getJournalCategoryId(TransactionJournal $journal): int
     {
-        $category = $journal->categories()->first();
+        $category    = $journal->categories()->first();
         if (null !== $category) {
             return $category->id;
         }
-        /** @var Transaction|null $transaction */
+
+        /** @var null|Transaction $transaction */
         $transaction = $journal->transactions()->first();
-        $category = $transaction?->categories()->first();
+        $category    = $transaction?->categories()->first();
         if (null !== $category) {
             return $category->id;
         }

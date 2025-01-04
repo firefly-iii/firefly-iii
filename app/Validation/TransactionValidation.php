@@ -28,11 +28,9 @@ use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\Account\AccountRepository;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -62,8 +60,8 @@ trait TransactionValidation
         app('log')->debug(sprintf('Going to loop %d transaction(s)', count($transactions)));
 
         /**
-         * @var string|int $index
-         * @var array    $transaction
+         * @var int|string $index
+         * @var array      $transaction
          */
         foreach ($transactions as $index => $transaction) {
             $transaction['user']       = $user;
@@ -348,8 +346,8 @@ trait TransactionValidation
         $transactions = $this->getTransactionsArray($validator);
 
         /**
-         * @var string|int $index
-         * @var array    $transaction
+         * @var int|string $index
+         * @var array      $transaction
          */
         foreach ($transactions as $index => $transaction) {
             if (!is_int($index)) {

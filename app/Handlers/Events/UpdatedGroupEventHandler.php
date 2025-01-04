@@ -31,7 +31,6 @@ use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Services\Internal\Support\CreditRecalculateService;
 use FireflyIII\TransactionRules\Engine\RuleEngineInterface;

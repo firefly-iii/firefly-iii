@@ -34,7 +34,6 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -451,7 +450,7 @@ class TransactionJournalFactory
         app('log')->debug('Now in getCurrencyByAccount()');
 
         return match ($type) {
-            default                  => $this->getCurrency($currency, $source),
+            default                             => $this->getCurrency($currency, $source),
             TransactionTypeEnum::DEPOSIT->value => $this->getCurrency($currency, $destination),
         };
     }

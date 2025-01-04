@@ -106,6 +106,7 @@ class Amount
     /**
      * This method will properly format the given number, in color or "black and white",
      * as a currency, given two things: the currency required and the current locale.
+     *
      * @throws FireflyException
      */
     public function formatFlat(string $symbol, int $decimalPlaces, string $amount, ?bool $coloured = null): string
@@ -175,6 +176,7 @@ class Amount
         if ($cache->has()) {
             return $cache->get();
         }
+
         /** @var TransactionCurrency $default */
         $default = $userGroup->currencies()->where('group_default', true)->first();
         if (null === $default) {

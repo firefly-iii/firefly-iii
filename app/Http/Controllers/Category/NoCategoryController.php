@@ -29,7 +29,6 @@ use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use Illuminate\Contracts\View\Factory;
@@ -80,7 +79,6 @@ class NoCategoryController extends Controller
 
         /** @var Carbon $start */
         /** @var Carbon $end */
-
         $page      = (int) $request->get('page');
         $pageSize  = (int) app('preferences')->get('listPageSize', 50)->data;
         $subTitle  = trans(

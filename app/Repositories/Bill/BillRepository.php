@@ -142,7 +142,7 @@ class BillRepository implements BillRepositoryInterface
      */
     public function find(int $billId): ?Bill
     {
-        /** @var Bill|null */
+        /** @var null|Bill */
         return $this->user->bills()->find($billId);
     }
 
@@ -151,7 +151,7 @@ class BillRepository implements BillRepositoryInterface
      */
     public function findByName(string $name): ?Bill
     {
-        /** @var Bill|null */
+        /** @var null|Bill */
         return $this->user->bills()->where('name', $name)->first(['bills.*']);
     }
 

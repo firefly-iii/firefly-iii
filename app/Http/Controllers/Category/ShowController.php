@@ -79,7 +79,6 @@ class ShowController extends Controller
 
         /** @var Carbon $start */
         /** @var Carbon $end */
-
         $subTitleIcon = 'fa-bookmark';
         $page         = (int) $request->get('page');
         $attachments  = $this->repository->getAttachments($category);

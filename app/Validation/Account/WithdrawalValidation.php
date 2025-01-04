@@ -26,7 +26,6 @@ namespace FireflyIII\Validation\Account;
 
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 
 /**
  * Trait WithdrawalValidation

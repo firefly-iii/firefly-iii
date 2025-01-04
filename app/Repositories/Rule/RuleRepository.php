@@ -96,7 +96,7 @@ class RuleRepository implements RuleRepositoryInterface
      */
     public function getFirstRuleGroup(): RuleGroup
     {
-        /** @var RuleGroup|null */
+        /** @var null|RuleGroup */
         return $this->user->ruleGroups()->first();
     }
 
@@ -277,7 +277,7 @@ class RuleRepository implements RuleRepositoryInterface
 
     public function find(int $ruleId): ?Rule
     {
-        /** @var Rule|null */
+        /** @var null|Rule */
         return $this->user->rules()->find($ruleId);
     }
 

@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Binder;
 
 use FireflyIII\Enums\AccountTypeEnum;
-use FireflyIII\Models\AccountType;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;

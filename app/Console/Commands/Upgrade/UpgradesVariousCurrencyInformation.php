@@ -28,11 +28,9 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -175,7 +173,7 @@ class UpgradesVariousCurrencyInformation extends Command
      */
     private function getLeadTransaction(TransactionJournal $journal): ?Transaction
     {
-        /** @var Transaction|null $lead */
+        /** @var null|Transaction $lead */
         $lead = null;
 
         switch ($journal->transactionType->type) {
@@ -214,7 +212,8 @@ class UpgradesVariousCurrencyInformation extends Command
 
                 break;
         }
-        /** @var Transaction|null */
+
+        /** @var null|Transaction */
         return $lead;
     }
 

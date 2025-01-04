@@ -25,7 +25,6 @@ namespace FireflyIII\Rules;
 
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 use Illuminate\Contracts\Validation\ValidationRule;
 
 /**

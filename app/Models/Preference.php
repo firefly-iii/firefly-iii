@@ -30,8 +30,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-/**
- */
 class Preference extends Model
 {
     use ReturnsIntegerIdTrait;
@@ -90,6 +88,7 @@ class Preference extends Model
                 $preference->user_id       = (int) $user->id;
                 $preference->user_group_id = in_array($value, $items, true) ? $userGroupId : null;
                 $preference->save();
+
                 return $preference;
             }
         }

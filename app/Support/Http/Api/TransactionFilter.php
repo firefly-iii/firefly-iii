@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Http\Api;
 
 use FireflyIII\Enums\TransactionTypeEnum;
-use FireflyIII\Models\TransactionType;
 
 /**
  * Trait TransactionFilter

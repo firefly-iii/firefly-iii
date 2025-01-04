@@ -34,7 +34,6 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\Support\NullArrayObject;
 use Illuminate\Support\Collection;
@@ -247,7 +246,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
     private function getLocation(TransactionJournal $journal): ?Location
     {
-        /** @var Location|null */
+        /** @var null|Location */
         return $journal->locations()->first();
     }
 

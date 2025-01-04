@@ -41,8 +41,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * @method EloquentBuilder|static before()
- * @method EloquentBuilder|static after()
+ * @method        EloquentBuilder|static before()
+ * @method        EloquentBuilder|static after()
  * @method static EloquentBuilder|static query()
  */
 class TransactionJournal extends Model

@@ -185,7 +185,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function find(int $journalId): ?TransactionJournal
     {
-        /** @var TransactionJournal|null */
+        /** @var null|TransactionJournal */
         return $this->user->transactionJournals()->find($journalId);
     }
 

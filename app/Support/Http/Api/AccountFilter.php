@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Http\Api;
 
 use FireflyIII\Enums\AccountTypeEnum;
-use FireflyIII\Models\AccountType;
 
 /**
  * Trait AccountFilter
@@ -34,7 +33,7 @@ trait AccountFilter
 {
     protected array $types
         = [
-            'all'                        => [
+            'all'                                   => [
                 AccountTypeEnum::DEFAULT->value,
                 AccountTypeEnum::CASH->value,
                 AccountTypeEnum::ASSET->value,
@@ -48,14 +47,14 @@ trait AccountFilter
                 AccountTypeEnum::DEBT->value,
                 AccountTypeEnum::MORTGAGE->value,
             ],
-            'asset'                      => [AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value],
-            'cash'                       => [AccountTypeEnum::CASH->value],
-            'expense'                    => [AccountTypeEnum::EXPENSE->value, AccountTypeEnum::BENEFICIARY->value],
-            'revenue'                    => [AccountTypeEnum::REVENUE->value],
-            'special'                    => [AccountTypeEnum::CASH->value, AccountTypeEnum::INITIAL_BALANCE->value, AccountTypeEnum::IMPORT->value, AccountTypeEnum::RECONCILIATION->value],
-            'hidden'                     => [AccountTypeEnum::INITIAL_BALANCE->value, AccountTypeEnum::IMPORT->value, AccountTypeEnum::RECONCILIATION->value],
-            'liability'                  => [AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::CREDITCARD->value],
-            'liabilities'                => [AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::CREDITCARD->value],
+            'asset'                                 => [AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value],
+            'cash'                                  => [AccountTypeEnum::CASH->value],
+            'expense'                               => [AccountTypeEnum::EXPENSE->value, AccountTypeEnum::BENEFICIARY->value],
+            'revenue'                               => [AccountTypeEnum::REVENUE->value],
+            'special'                               => [AccountTypeEnum::CASH->value, AccountTypeEnum::INITIAL_BALANCE->value, AccountTypeEnum::IMPORT->value, AccountTypeEnum::RECONCILIATION->value],
+            'hidden'                                => [AccountTypeEnum::INITIAL_BALANCE->value, AccountTypeEnum::IMPORT->value, AccountTypeEnum::RECONCILIATION->value],
+            'liability'                             => [AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::CREDITCARD->value],
+            'liabilities'                           => [AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::CREDITCARD->value],
             AccountTypeEnum::DEFAULT->value         => [AccountTypeEnum::DEFAULT->value],
             AccountTypeEnum::CASH->value            => [AccountTypeEnum::CASH->value],
             AccountTypeEnum::ASSET->value           => [AccountTypeEnum::ASSET->value],
@@ -69,20 +68,20 @@ trait AccountFilter
             AccountTypeEnum::MORTGAGE->value        => [AccountTypeEnum::MORTGAGE->value],
             AccountTypeEnum::DEBT->value            => [AccountTypeEnum::DEBT->value],
             AccountTypeEnum::CREDITCARD->value      => [AccountTypeEnum::CREDITCARD->value],
-            'default account'            => [AccountTypeEnum::DEFAULT->value],
-            'cash account'               => [AccountTypeEnum::CASH->value],
-            'asset account'              => [AccountTypeEnum::ASSET->value],
-            'expense account'            => [AccountTypeEnum::EXPENSE->value],
-            'revenue account'            => [AccountTypeEnum::REVENUE->value],
-            'initial balance account'    => [AccountTypeEnum::INITIAL_BALANCE->value],
-            'reconciliation'             => [AccountTypeEnum::RECONCILIATION->value],
-            'loan'                       => [AccountTypeEnum::LOAN->value],
-            'mortgage'                   => [AccountTypeEnum::MORTGAGE->value],
-            'debt'                       => [AccountTypeEnum::DEBT->value],
-            'credit card'                => [AccountTypeEnum::CREDITCARD->value],
-            'credit-card'                => [AccountTypeEnum::CREDITCARD->value],
-            'creditcard'                 => [AccountTypeEnum::CREDITCARD->value],
-            'cc'                         => [AccountTypeEnum::CREDITCARD->value],
+            'default account'                       => [AccountTypeEnum::DEFAULT->value],
+            'cash account'                          => [AccountTypeEnum::CASH->value],
+            'asset account'                         => [AccountTypeEnum::ASSET->value],
+            'expense account'                       => [AccountTypeEnum::EXPENSE->value],
+            'revenue account'                       => [AccountTypeEnum::REVENUE->value],
+            'initial balance account'               => [AccountTypeEnum::INITIAL_BALANCE->value],
+            'reconciliation'                        => [AccountTypeEnum::RECONCILIATION->value],
+            'loan'                                  => [AccountTypeEnum::LOAN->value],
+            'mortgage'                              => [AccountTypeEnum::MORTGAGE->value],
+            'debt'                                  => [AccountTypeEnum::DEBT->value],
+            'credit card'                           => [AccountTypeEnum::CREDITCARD->value],
+            'credit-card'                           => [AccountTypeEnum::CREDITCARD->value],
+            'creditcard'                            => [AccountTypeEnum::CREDITCARD->value],
+            'cc'                                    => [AccountTypeEnum::CREDITCARD->value],
         ];
 
     /**

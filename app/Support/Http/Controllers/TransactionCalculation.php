@@ -27,7 +27,6 @@ namespace FireflyIII\Support\Http\Controllers;
 use Carbon\Carbon;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
-use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
 
 /**

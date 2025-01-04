@@ -31,8 +31,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\ExpressionLanguage\SyntaxError;
 
-/**
- */
 class RuleAction extends Model
 {
     use ReturnsIntegerIdTrait;
