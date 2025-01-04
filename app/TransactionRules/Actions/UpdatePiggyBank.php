@@ -1,7 +1,7 @@
 <?php
 
 /**
- * UpdatePiggybank.php
+ * UpdatePiggyBank.php
  * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -35,9 +35,6 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
 
-/**
- * Class UpdatePiggybank
- */
 class UpdatePiggyBank implements ActionInterface
 {
     private RuleAction $action;
@@ -54,7 +51,7 @@ class UpdatePiggyBank implements ActionInterface
     {
         $actionValue = $this->action->getValue($journal);
 
-        Log::debug(sprintf('Triggered rule action UpdatePiggybank on journal #%d', $journal['transaction_journal_id']));
+        Log::debug(sprintf('Triggered rule action UpdatePiggyBank on journal #%d', $journal['transaction_journal_id']));
 
         // refresh the transaction type.
         /** @var User $user */
