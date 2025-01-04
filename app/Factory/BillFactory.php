@@ -129,6 +129,7 @@ class BillFactory
 
     public function findByName(string $name): ?Bill
     {
+        /** @var Bill|null */
         return $this->user->bills()->whereLike('name', sprintf('%%%s%%', $name))->first();
     }
 

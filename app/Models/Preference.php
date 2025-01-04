@@ -79,6 +79,7 @@ class Preference extends Model
                 $preference = $user->preferences()->where('id', (int) $value)->first();
             }
             if (null !== $preference) {
+                /** @var Preference $preference */
                 return $preference;
             }
             $default     = config('firefly.default_preferences');
@@ -89,7 +90,6 @@ class Preference extends Model
                 $preference->user_id       = (int) $user->id;
                 $preference->user_group_id = in_array($value, $items, true) ? $userGroupId : null;
                 $preference->save();
-
                 return $preference;
             }
         }

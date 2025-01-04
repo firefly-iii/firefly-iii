@@ -67,6 +67,7 @@ class DebugController extends Controller
         if (!auth()->user()->hasRole('owner')) {
             throw new NotFoundHttpException();
         }
+        /** @var iterable $routes */
         $routes = Route::getRoutes();
         $return = [];
 

@@ -67,7 +67,7 @@ class CorrectsOpeningBalanceCurrencies extends Command
 
     private function getJournals(): Collection
     {
-        // @var Collection
+        /** @var Collection */
         return TransactionJournal::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
             ->whereNull('transaction_journals.deleted_at')
             ->where('transaction_types.type', TransactionTypeEnum::OPENING_BALANCE->value)->get(['transaction_journals.*'])

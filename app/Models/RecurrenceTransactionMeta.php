@@ -48,7 +48,6 @@ class RecurrenceTransactionMeta extends Model
 
     protected $fillable = ['rt_id', 'name', 'value'];
 
-    /** @var string The table to store the data in */
     protected $table    = 'rt_meta';
 
     public function recurrenceTransaction(): BelongsTo

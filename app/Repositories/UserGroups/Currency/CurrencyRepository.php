@@ -199,7 +199,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
 
             return $current;
         });
-
+        /** @var Collection */
         return $all;
     }
 

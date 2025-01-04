@@ -160,7 +160,7 @@ class AccountFactory
         app('log')->debug(sprintf('Now in AccountFactory::find("%s", "%s")', $accountName, $accountType));
         $type = AccountType::whereType($accountType)->first();
 
-        // @var Account|null
+        /** @var Account|null */
         return $this->user->accounts()->where('account_type_id', $type->id)->where('name', $accountName)->first();
     }
 

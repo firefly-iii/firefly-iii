@@ -69,6 +69,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
      */
     public function find(int $groupId): ?TransactionGroup
     {
+        /** @var TransactionGroup|null */
         return $this->user->transactionGroups()->find($groupId);
     }
 
@@ -290,6 +291,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         /** @var TransactionJournal $journal */
         $journal = $this->user->transactionJournals()->find($journalId);
 
+        /** @var Location|null */
         return $journal->locations()->first();
     }
 

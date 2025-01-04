@@ -203,6 +203,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
             )
         );
 
+        /** @var BudgetLimit|null */
         return $budget->budgetlimits()
             ->where('start_date', $start->format('Y-m-d'))
             ->where('end_date', $end->format('Y-m-d'))->first()

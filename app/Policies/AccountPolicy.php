@@ -42,8 +42,6 @@ class AccountPolicy
 
     /**
      * Everybody can do this, but selection should limit to user.
-     *
-     * @return true
      */
     public function viewAny(): bool
     {
@@ -54,8 +52,6 @@ class AccountPolicy
 
     /**
      * Everybody can do this, but selection should limit to user.
-     *
-     * @return true
      */
     public function viewUser(User $user, Account $account): bool
     {

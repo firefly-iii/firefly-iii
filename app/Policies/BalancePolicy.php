@@ -39,8 +39,6 @@ class BalancePolicy
 
     /**
      * Everybody can do this, but selection should limit to user.
-     *
-     * @return true
      */
     public function viewAny(): bool
     {

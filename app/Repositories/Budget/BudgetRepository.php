@@ -384,6 +384,7 @@ class BudgetRepository implements BudgetRepositoryInterface
 
     public function getAutoBudget(Budget $budget): ?AutoBudget
     {
+        /** @var AutoBudget|null */
         return $budget->autoBudgets()->first();
     }
 
@@ -442,6 +443,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function find(?int $budgetId = null): ?Budget
     {
+        /** @var Budget|null */
         return $this->user->budgets()->find($budgetId);
     }
 
@@ -513,7 +515,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             return null;
         }
         $query = sprintf('%%%s%%', $name);
-
+        /** @var Budget|null */
         return $this->user->budgets()->whereLike('name', $query)->first();
     }
 

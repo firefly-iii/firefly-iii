@@ -40,8 +40,6 @@ class AccountMeta extends Model
         ];
 
     protected $fillable = ['account_id', 'name', 'data'];
-
-    /** @var string The table to store the data in */
     protected $table    = 'account_meta';
 
     public function account(): BelongsTo

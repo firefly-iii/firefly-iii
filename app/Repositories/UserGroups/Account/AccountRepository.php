@@ -76,7 +76,7 @@ class AccountRepository implements AccountRepositoryInterface
             $dbQuery->whereIn('account_types.type', $types);
         }
 
-        // @var Account|null
+        /** @var Account|null */
         return $dbQuery->first(['accounts.*']);
     }
 
@@ -90,7 +90,7 @@ class AccountRepository implements AccountRepositoryInterface
             $query->whereIn('account_types.type', $types);
         }
 
-        // @var Account|null
+        /** @var Account|null */
         return $query->where('iban', $iban)->first(['accounts.*']);
     }
 
@@ -167,7 +167,7 @@ class AccountRepository implements AccountRepositoryInterface
         if (null === $account) {
             $account = $this->userGroup->accounts()->find($accountId);
         }
-
+        /** @var Account|null */
         return $account;
     }
 

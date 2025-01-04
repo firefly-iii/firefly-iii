@@ -120,7 +120,7 @@ class AccountRepository implements AccountRepositoryInterface
             $dbQuery->whereIn('account_types.type', $types);
         }
 
-        // @var Account|null
+        /** @var Account|null */
         return $dbQuery->first(['accounts.*']);
     }
 
@@ -134,7 +134,7 @@ class AccountRepository implements AccountRepositoryInterface
             $query->whereIn('account_types.type', $types);
         }
 
-        // @var Account|null
+        /** @var Account|null */
         return $query->where('iban', $iban)->first(['accounts.*']);
     }
 
@@ -278,7 +278,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     public function getLocation(Account $account): ?Location
     {
-        // @var Location|null
+        /** @var Location|null */
         return $account->locations()->first();
     }
 
@@ -428,6 +428,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     public function find(int $accountId): ?Account
     {
+        /** @var Account|null */
         return $this->user->accounts()->find($accountId);
     }
 

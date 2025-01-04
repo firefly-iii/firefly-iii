@@ -175,7 +175,7 @@ class UpgradesVariousCurrencyInformation extends Command
      */
     private function getLeadTransaction(TransactionJournal $journal): ?Transaction
     {
-        /** @var Transaction $lead */
+        /** @var Transaction|null $lead */
         $lead = null;
 
         switch ($journal->transactionType->type) {
@@ -214,7 +214,7 @@ class UpgradesVariousCurrencyInformation extends Command
 
                 break;
         }
-
+        /** @var Transaction|null */
         return $lead;
     }
 

@@ -42,7 +42,6 @@ class TransactionJournalLink extends Model
             'updated_at' => 'datetime',
         ];
 
-    /** @var string The table to store the data in */
     protected $table = 'journal_links';
 
     /**

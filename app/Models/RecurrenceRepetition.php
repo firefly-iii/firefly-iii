@@ -62,7 +62,6 @@ class RecurrenceRepetition extends Model
 
     protected $fillable                    = ['recurrence_id', 'weekend', 'repetition_type', 'repetition_moment', 'repetition_skip'];
 
-    /** @var string The table to store the data in */
     protected $table                       = 'recurrences_repetitions';
 
     public function recurrence(): BelongsTo

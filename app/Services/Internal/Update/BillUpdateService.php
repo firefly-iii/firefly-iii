@@ -250,6 +250,7 @@ class BillUpdateService
 
     private function getRuleTrigger(Rule $rule, string $key): ?RuleTrigger
     {
+        /** @var RuleTrigger|null */
         return $rule->ruleTriggers()->where('trigger_type', $key)->first();
     }
 }

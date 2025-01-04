@@ -101,18 +101,19 @@ class TagRepository implements TagRepositoryInterface
 
     public function find(int $tagId): ?Tag
     {
+        /** @var Tag|null */
         return $this->user->tags()->find($tagId);
     }
 
     public function findByTag(string $tag): ?Tag
     {
-        // @var Tag|null
+        /** @var Tag|null */
         return $this->user->tags()->where('tag', $tag)->first();
     }
 
     public function firstUseDate(Tag $tag): ?Carbon
     {
-        // @var Carbon|null
+        /** @var Carbon|null */
         return $tag->transactionJournals()->orderBy('date', 'ASC')->first()?->date;
     }
 
@@ -180,7 +181,7 @@ class TagRepository implements TagRepositoryInterface
 
     public function lastUseDate(Tag $tag): ?Carbon
     {
-        // @var Carbon|null
+        /** @var Carbon|null */
         return $tag->transactionJournals()->orderBy('date', 'DESC')->first()?->date;
     }
 
@@ -189,13 +190,13 @@ class TagRepository implements TagRepositoryInterface
      */
     public function newestTag(): ?Tag
     {
-        // @var Tag|null
+        /** @var Tag|null */
         return $this->user->tags()->whereNotNull('date')->orderBy('date', 'DESC')->first();
     }
 
     public function oldestTag(): ?Tag
     {
-        // @var Tag|null
+        /** @var Tag|null */
         return $this->user->tags()->whereNotNull('date')->orderBy('date', 'ASC')->first();
     }
 
@@ -380,7 +381,7 @@ class TagRepository implements TagRepositoryInterface
 
     public function getLocation(Tag $tag): ?Location
     {
-        // @var Location|null
+        /** @var Location|null */
         return $tag->locations()->first();
     }
 }

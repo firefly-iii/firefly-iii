@@ -41,7 +41,6 @@ class Configuration extends Model
             'deleted_at' => 'datetime',
         ];
 
-    /** @var string The table to store the data in */
     protected $table = 'configuration';
 
     /**

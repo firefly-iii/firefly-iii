@@ -208,11 +208,13 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
 
     public function find(int $ruleGroupId): ?RuleGroup
     {
+        /** @var RuleGroup|null */
         return $this->user->ruleGroups()->find($ruleGroupId);
     }
 
     public function findByTitle(string $title): ?RuleGroup
     {
+        /** @var RuleGroup|null */
         return $this->user->ruleGroups()->where('title', $title)->first();
     }
 

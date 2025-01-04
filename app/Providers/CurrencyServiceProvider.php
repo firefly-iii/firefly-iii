@@ -77,7 +77,7 @@ class CurrencyServiceProvider extends ServiceProvider
         $this->app->bind(
             ExchangeRateRepositoryInterface::class,
             static function (Application $app) {
-                // @var ExchangeRateRepository $repository
+                /** @var ExchangeRateRepository */
                 return app(ExchangeRateRepository::class);
             }
         );

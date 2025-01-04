@@ -81,18 +81,7 @@ class CorrectsTimezoneInformation extends Command
             TransactionJournal::class   => ['date'],
         ];
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Make sure all dates have a timezone.';
-
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature   = 'correction:timezones';
 
     /**

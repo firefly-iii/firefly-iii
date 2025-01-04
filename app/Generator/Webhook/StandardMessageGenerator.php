@@ -132,7 +132,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
                 return;
 
             case TransactionGroup::class:
-                // @var TransactionGroup $model
+                /** @var TransactionGroup $model */
                 $basicMessage['user_id'] = $model->user->id;
 
                 break;

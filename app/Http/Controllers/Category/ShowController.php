@@ -74,10 +74,12 @@ class ShowController extends Controller
      */
     public function show(Request $request, Category $category, ?Carbon $start = null, ?Carbon $end = null)
     {
-        // @var Carbon $start
         $start ??= session('start', today(config('app.timezone'))->startOfMonth());
-        // @var Carbon $end
         $end   ??= session('end', today(config('app.timezone'))->endOfMonth());
+
+        /** @var Carbon $start */
+        /** @var Carbon $end */
+
         $subTitleIcon = 'fa-bookmark';
         $page         = (int) $request->get('page');
         $attachments  = $this->repository->getAttachments($category);

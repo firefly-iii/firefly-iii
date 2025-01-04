@@ -55,23 +55,9 @@ class ConvertsDatesToUTC extends Command
 {
     use ShowsFriendlyMessages;
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Convert stored dates to UTC.';
-
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature   = 'correction:convert-to-utc';
 
-    /**
-     * Execute the console command.
-     */
     public function handle(): int
     {
         $this->friendlyWarning('Please do not use this command right now.');

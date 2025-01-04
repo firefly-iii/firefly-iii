@@ -60,7 +60,6 @@ class RecurrenceTransaction extends Model
             'description',
         ];
 
-    /** @var string The table to store the data in */
     protected $table = 'recurrences_transactions';
 
     public function destinationAccount(): BelongsTo

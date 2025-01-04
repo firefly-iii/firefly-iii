@@ -45,7 +45,6 @@ class TransactionJournalMeta extends Model
 
     protected $fillable = ['transaction_journal_id', 'name', 'data', 'hash'];
 
-    /** @var string The table to store the data in */
     protected $table    = 'journal_meta';
 
     /**

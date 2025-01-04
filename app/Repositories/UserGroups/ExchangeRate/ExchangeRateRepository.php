@@ -61,6 +61,7 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface
     #[\Override]
     public function getSpecificRateOnDate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): ?CurrencyExchangeRate
     {
+        /** @var CurrencyExchangeRate|null */
         return
             $this->userGroup->currencyExchangeRates()
                 ->where('from_currency_id', $from->id)

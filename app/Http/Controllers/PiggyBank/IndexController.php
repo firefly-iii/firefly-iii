@@ -179,8 +179,9 @@ class IndexController extends Controller
 
     private function mergeAccountsAndPiggies(array $piggyBanks, array $accounts): array
     {
-        // @var array $piggyBank
+        /** @var array $group */
         foreach ($piggyBanks as $group) {
+            /** @var array $piggyBank */
             foreach ($group['piggy_banks'] as $piggyBank) {
                 // loop all accounts in this piggy bank subtract the current amount from "left to save" in the $accounts array.
                 /** @var array $piggyAccount */

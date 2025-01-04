@@ -238,11 +238,9 @@ class JournalUpdateService
     private function getSourceTransaction(): Transaction
     {
         if (null === $this->sourceTransaction) {
-            $this->sourceTransaction = $this->transactionJournal->transactions()->with(['account'])->where(
-                'amount',
-                '<',
-                0
-            )->first();
+            /** @var Transaction|null $result */
+            $result = $this->transactionJournal->transactions()->with(['account'])->where('amount', '<', 0)->first();
+            $this->sourceTransaction = $result;
         }
         Log::debug(sprintf('getSourceTransaction: %s', $this->sourceTransaction->amount));
 
@@ -321,7 +319,9 @@ class JournalUpdateService
     private function getDestinationTransaction(): Transaction
     {
         if (null === $this->destinationTransaction) {
-            $this->destinationTransaction = $this->transactionJournal->transactions()->where('amount', '>', 0)->first();
+            /** @var Transaction|null $result */
+            $result = $this->transactionJournal->transactions()->where('amount', '>', 0)->first();
+            $this->destinationTransaction = $result;
         }
 
         return $this->destinationTransaction;

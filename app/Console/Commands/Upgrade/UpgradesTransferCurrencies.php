@@ -208,6 +208,7 @@ class UpgradesTransferCurrencies extends Command
 
     private function getSourceTransaction(TransactionJournal $transfer): ?Transaction
     {
+        /** @var Transaction|null */
         return $transfer->transactions()->where('amount', '<', 0)->first();
     }
 
@@ -243,6 +244,7 @@ class UpgradesTransferCurrencies extends Command
 
     private function getDestinationTransaction(TransactionJournal $transfer): ?Transaction
     {
+        /** @var Transaction|null */
         return $transfer->transactions()->where('amount', '>', 0)->first();
     }
 

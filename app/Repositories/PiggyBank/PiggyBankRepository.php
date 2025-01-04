@@ -313,7 +313,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
             throw new FireflyException('[b] Piggy bank repetitions are EOL.');
         }
         Log::warning('Piggy bank repetitions are EOL.');
-
+        /** @var PiggyBankRepetition|null */
         return $piggyBank->piggyBankRepetitions()->first();
     }
 

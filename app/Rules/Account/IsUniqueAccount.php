@@ -39,9 +39,10 @@ class IsUniqueAccount implements ValidationRule, DataAwareRule
     protected \Closure $fail;
 
     #[\Override]
-    public function setData(array $data): void
+    public function setData(array $data): self // @phpstan-ignore-line
     {
         $this->data = $data;
+        return $this;
     }
 
     #[\Override]
