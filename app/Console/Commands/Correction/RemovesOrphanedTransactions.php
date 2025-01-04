@@ -69,6 +69,7 @@ class RemovesOrphanedTransactions extends Command
         }
         $this->friendlyInfo(sprintf('Found %d orphaned journal(s).', $count));
         foreach ($set as $entry) {
+            /** @var TransactionJournal|null $journal */
             $journal = TransactionJournal::withTrashed()->find($entry->id);
             if (null !== $journal) {
                 $journal->delete();
@@ -130,6 +131,7 @@ class RemovesOrphanedTransactions extends Command
         /** @var Transaction $transaction */
         foreach ($set as $transaction) {
             // delete journals
+            /** @var TransactionJournal|null $journal */
             $journal = TransactionJournal::find($transaction->transaction_journal_id);
             if (null !== $journal) {
                 $journal->delete();

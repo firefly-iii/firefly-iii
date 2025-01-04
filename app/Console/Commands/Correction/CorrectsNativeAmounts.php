@@ -236,8 +236,9 @@ class CorrectsNativeAmounts extends Command
         TransactionObserver::$recalculate = false;
         foreach ($set as $item) {
             // here we are.
+            /** @var Transaction|null $transaction */
             $transaction = Transaction::find($item->id);
-            $transaction->touch();
+            $transaction?->touch();
         }
         TransactionObserver::$recalculate = true;
         Log::debug(sprintf('Recalculated %d transactions.', $set->count()));
