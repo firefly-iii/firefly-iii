@@ -57,6 +57,7 @@ class BillTransformer extends AbstractTransformer
      */
     public function collectMetaData(Collection $objects): Collection
     {
+        /** @var array<int, TransactionCurrency> $currencies */
         $currencies       = [];
         $bills            = [];
         $this->notes      = [];
@@ -140,25 +141,25 @@ class BillTransformer extends AbstractTransformer
                     app('log')->debug(sprintf('Foreign currency is #%d', $transaction['foreign_currency_id']));
                     $foreignCurrencyId     = (int) $transaction['foreign_currency_id'];
                     $currencies[$foreignCurrencyId] ??= TransactionCurrency::find($foreignCurrencyId);
-                    $foreignCurrencyCode   = $currencies[$foreignCurrencyId]->code;
-                    $foreignCurrencyName   = $currencies[$foreignCurrencyId]->name;
-                    $foreignCurrencySymbol = $currencies[$foreignCurrencyId]->symbol;
-                    $foreignCurrencyDp     = $currencies[$foreignCurrencyId]->decimal_places;
+                    $foreignCurrencyCode   = $currencies[$foreignCurrencyId]->code; // @phpstan-ignore property.notFound
+                    $foreignCurrencyName   = $currencies[$foreignCurrencyId]->name; // @phpstan-ignore property.notFound
+                    $foreignCurrencySymbol = $currencies[$foreignCurrencyId]->symbol; // @phpstan-ignore property.notFound
+                    $foreignCurrencyDp     = $currencies[$foreignCurrencyId]->decimal_places; // @phpstan-ignore property.notFound
                 }
 
                 $this->paidDates[$billId][] = [
                     'transaction_group_id'            => (string) $journal->id,
                     'transaction_journal_id'          => (string) $journal->transaction_group_id,
                     'date'                            => $journal->date->toAtomString(),
-                    'currency_id'                     => $currencies[$currencyId]->id,
-                    'currency_code'                   => $currencies[$currencyId]->code,
-                    'currency_name'                   => $currencies[$currencyId]->name,
-                    'currency_symbol'                 => $currencies[$currencyId]->symbol,
-                    'currency_decimal_places'         => $currencies[$currencyId]->decimal_places,
-                    'native_currency_id'              => $currencies[$currencyId]->id,
-                    'native_currency_code'            => $currencies[$currencyId]->code,
-                    'native_currency_symbol'          => $currencies[$currencyId]->symbol,
-                    'native_currency_decimal_places'  => $currencies[$currencyId]->decimal_places,
+                    'currency_id'                     => $currencies[$currencyId]->id, // @phpstan-ignore property.notFound
+                    'currency_code'                   => $currencies[$currencyId]->code, // @phpstan-ignore property.notFound
+                    'currency_name'                   => $currencies[$currencyId]->name, // @phpstan-ignore property.notFound
+                    'currency_symbol'                 => $currencies[$currencyId]->symbol, // @phpstan-ignore property.notFound
+                    'currency_decimal_places'         => $currencies[$currencyId]->decimal_places, // @phpstan-ignore property.notFound
+                    'native_currency_id'              => $currencies[$currencyId]->id, // @phpstan-ignore property.notFound
+                    'native_currency_code'            => $currencies[$currencyId]->code, // @phpstan-ignore property.notFound
+                    'native_currency_symbol'          => $currencies[$currencyId]->symbol, // @phpstan-ignore property.notFound
+                    'native_currency_decimal_places'  => $currencies[$currencyId]->decimal_places, // @phpstan-ignore property.notFound
                     'foreign_currency_id'             => $foreignCurrencyId,
                     'foreign_currency_code'           => $foreignCurrencyCode,
                     'foreign_currency_name'           => $foreignCurrencyName,
@@ -166,13 +167,8 @@ class BillTransformer extends AbstractTransformer
                     'foreign_currency_decimal_places' => $foreignCurrencyDp,
                     'amount'                          => $transaction['amount'],
                     'foreign_amount'                  => $transaction['foreign_amount'],
-                    'native_amount'                   => $this->converter->convert($currencies[$currencyId], $this->default, $journal->date, $transaction['amount']),
-                    'foreign_native_amount'           => '' === (string) $transaction['foreign_amount'] ? null : $this->converter->convert(
-                        $currencies[$foreignCurrencyId],
-                        $this->default,
-                        $journal->date,
-                        $transaction['foreign_amount']
-                    ),
+                    'native_amount'                   => null,
+                    'foreign_native_amount'           => null,
                 ];
             }
         }

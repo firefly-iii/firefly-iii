@@ -33,6 +33,7 @@ use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Location;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
@@ -523,6 +524,7 @@ class AccountRepository implements AccountRepositoryInterface
             ->first(['transaction_journals.id'])
         ;
         if (null !== $first) {
+            /** @var TransactionJournal|null */
             return TransactionJournal::find($first->id);
         }
 

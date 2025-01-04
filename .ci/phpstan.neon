@@ -18,6 +18,9 @@ parameters:
     - identifier: varTag.type
     - identifier: missingType.iterableValue # not interesting enough to fix.
     - identifier: missingType.generics # not interesting enough to fix.
+    - "#Parameter \\#[1-2] \\$num[1-2] of function bc[a-z]+ expects numeric-string, [a-z\\-|&]+ given#"
+    - '#expects view-string, string given#'
+    - '#expects view-string\|null, string given#'
 
     # phpstan can't handle this so we ignore them.
     - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\HasMany::before#'
@@ -71,5 +74,5 @@ parameters:
 
   # The level 8 is the highest level. original was 5
   # 7 is more than enough, higher just leaves NULL things.
-  level: 6
+  level: 7
 

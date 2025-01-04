@@ -118,7 +118,7 @@ class ShowController extends Controller
 
         if (null !== $array['nr_of_repetitions']) {
             $left = $array['nr_of_repetitions'] - $array['journal_count'];
-            $left = max(0, $left);
+            $left = (int) max(0, $left);
             // limit each repetition to X occurrences:
             foreach ($array['repetitions'] as $index => $repetition) {
                 $array['repetitions'][$index]['occurrences'] = array_slice($repetition['occurrences'], 0, $left);

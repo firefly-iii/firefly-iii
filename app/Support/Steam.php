@@ -129,6 +129,7 @@ class Steam
 
             // find currency of this entry.
             $currencies[$entry->transaction_currency_id] ??= TransactionCurrency::find($entry->transaction_currency_id);
+            /** @var TransactionCurrency $entryCurrency */
             $entryCurrency                      = $currencies[$entry->transaction_currency_id];
 
             Log::debug(sprintf('Processing transaction(s) on date %s', $carbon->format('Y-m-d H:i:s')));
