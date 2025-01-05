@@ -375,8 +375,10 @@ class GroupCollector implements GroupCollectorInterface
     public function excludeSearchWords(array $array): GroupCollectorInterface
     {
         if (0 === count($array)) {
+            Log::debug('No excluded search words provided, skipping.');
             return $this;
         }
+        Log::debug(sprintf('%d excluded search words provided.', count($array)));
         $this->query->where(
             static function (EloquentBuilder $q) use ($array): void {
                 $q->where(
@@ -949,8 +951,10 @@ class GroupCollector implements GroupCollectorInterface
     public function setSearchWords(array $array): GroupCollectorInterface
     {
         if (0 === count($array)) {
+            Log::debug('No words in array');
             return $this;
         }
+        Log::debug(sprintf('%d word(s) in array', count($array)));
         $this->query->where(
             static function (EloquentBuilder $q) use ($array): void {
                 $q->where(

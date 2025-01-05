@@ -83,7 +83,7 @@
             </div>
         </div>
     </div>
-    {% if query|length > 0 or excludedWords|length > 0 or operators|length > 0 %}
+    {% if query|length > 0 or words|length > 0 or excludedWords|length > 0 or operators|length > 0 %}
         <div class="row result_row">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="box search_box">
@@ -138,7 +138,7 @@
             </div>
         </div>
     {% endif %}
-    {% if query|length == 0 and excludedWords|length == 0 and operators|length == 0 %}
+    {% if query|length == 0 and excludedWords|length == 0 and words|length == 0 and operators|length == 0 %}
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="box">

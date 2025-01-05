@@ -35,6 +35,7 @@
     <php>
         <env name="APP_ENV" value="testing"/>
         <env name="APP_LOG_ENV" value="notice"/>
+        <env name="QUERY_PARSER_IMPLEMENTATION" value="new"/>
         <ini name="xdebug.mode" value="coverage"/>
     </php>
     <testsuites>

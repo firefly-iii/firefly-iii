@@ -146,7 +146,7 @@ class OperatorQuerySearch implements SearchInterface
      */
     public function parseQuery(string $query): void
     {
-        app('log')->debug(sprintf('Now in parseQuery(%s)', $query));
+        app('log')->debug(sprintf('Now in parseQuery("%s")', $query));
         /** @var QueryParserInterface $parser */
         $parser = app(QueryParserInterface::class);
         app('log')->debug(sprintf('Using %s as implementation for QueryParserInterface', get_class($parser)));
