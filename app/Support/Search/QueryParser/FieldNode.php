@@ -35,8 +35,8 @@ class FieldNode extends Node
 
     public function __construct(string $operator, string $value, bool $prohibited = false)
     {
-        $this->operator = $operator;
-        $this->value = $value;
+        $this->operator   = $operator;
+        $this->value      = $value;
         $this->prohibited = $prohibited;
     }
 

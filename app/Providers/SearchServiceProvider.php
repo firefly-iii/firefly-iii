@@ -51,8 +51,8 @@ class SearchServiceProvider extends ServiceProvider
             static function (): GdbotsQueryParser|QueryParser {
                 $implementation = config('search.query_parser');
 
-                return match($implementation) {
-                    'new' => app(QueryParser::class),
+                return match ($implementation) {
+                    'new'   => app(QueryParser::class),
                     default => app(GdbotsQueryParser::class),
                 };
             }

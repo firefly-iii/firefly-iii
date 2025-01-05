@@ -23,7 +23,7 @@
 declare(strict_types=1);
 
 return [
-    'operators' => [
+    'operators'        => [
         'user_action'                             => ['alias' => false, 'needs_context' => true],
         'account_id'                              => ['alias' => false, 'needs_context' => true],
         'reconciled'                              => ['alias' => false, 'needs_context' => false],

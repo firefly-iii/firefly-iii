@@ -35,13 +35,13 @@ class BillObserver
 {
     public function created(Bill $bill): void
     {
-//        Log::debug('Observe "created" of a bill.');
+        //        Log::debug('Observe "created" of a bill.');
         $this->updateNativeAmount($bill);
     }
 
     public function deleting(Bill $bill): void
     {
-//        app('log')->debug('Observe "deleting" of a bill.');
+        //        app('log')->debug('Observe "deleting" of a bill.');
         foreach ($bill->attachments()->get() as $attachment) {
             $attachment->delete();
         }
@@ -50,7 +50,7 @@ class BillObserver
 
     public function updated(Bill $bill): void
     {
-//        Log::debug('Observe "updated" of a bill.');
+        //        Log::debug('Observe "updated" of a bill.');
         $this->updateNativeAmount($bill);
     }
 

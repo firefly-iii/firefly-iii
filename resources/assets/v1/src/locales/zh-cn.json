@@ -21,7 +21,7 @@
         "apply_rules_checkbox": "\u5e94\u7528\u89c4\u5219",
         "fire_webhooks_checkbox": "\u89e6\u53d1 webhook",
         "no_budget_pointer": "\u60a8\u8fd8\u6ca1\u6709\u9884\u7b97\uff0c\u60a8\u5e94\u8be5\u5728<a href=\"budgets\">\u9884\u7b97\u9875\u9762<\/a>\u8fdb\u884c\u521b\u5efa\u3002\u9884\u7b97\u53ef\u4ee5\u5e2e\u52a9\u60a8\u8ffd\u8e2a\u652f\u51fa\u3002",
-        "no_bill_pointer": "You seem to have no subscription yet. You should create some on the <a href=\"subscriptions\">subscription<\/a>-page. Subscriptions can help you keep track of expenses.",
+        "no_bill_pointer": "\u60a8\u4f3c\u4e4e\u8fd8\u6ca1\u6709\u8ba2\u9605\u3002\u60a8\u5e94\u8be5\u5728 <a href=\"subscriptions\">\u8ba2\u9605<\/a>-\u9875\u9762\u4e0a\u521b\u5efa\u4e00\u4e9b\u3002\u8ba2\u9605\u53ef\u4ee5\u5e2e\u52a9\u60a8\u8ddf\u8e2a\u8d39\u7528\u3002",
         "source_account": "\u6765\u6e90\u8d26\u6237",
         "hidden_fields_preferences": "\u60a8\u53ef\u4ee5\u5728<a href=\"preferences\">\u504f\u597d\u8bbe\u5b9a<\/a>\u4e2d\u542f\u7528\u66f4\u591a\u4ea4\u6613\u9009\u9879\u3002",
         "destination_account": "\u76ee\u6807\u8d26\u6237",

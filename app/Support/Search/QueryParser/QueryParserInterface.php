@@ -28,7 +28,6 @@ namespace FireflyIII\Support\Search\QueryParser;
 interface QueryParserInterface
 {
     /**
-     * @return NodeGroup
      * @throws \LogicException
      * @throws \TypeError
      */

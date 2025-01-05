@@ -52,23 +52,22 @@ class QueryParser implements QueryParserInterface
     private string $query;
     private int    $position = 0;
 
-    /** @return NodeGroup */
     public function parse(string $query): NodeGroup
     {
         Log::debug(sprintf('Parsing query in QueryParser: "%s"', $query));
         $this->query    = $query;
         $this->position = 0;
+
         return $this->buildNodeGroup(false);
     }
 
-    /** @return NodeGroup */
     private function buildNodeGroup(bool $isSubquery, bool $prohibited = false): NodeGroup
     {
         $nodes      = [];
         $nodeResult = $this->buildNextNode($isSubquery);
 
-        while ($nodeResult->node !== null) {
-            $nodes[] = $nodeResult->node;
+        while (null !== $nodeResult->node) {
+            $nodes[]    = $nodeResult->node;
             if ($nodeResult->isSubqueryEnd) {
                 break;
             }
@@ -90,13 +89,15 @@ class QueryParser implements QueryParserInterface
 
             // If we're in a quoted string, we treat all characters except another quote as ordinary characters
             if ($inQuotes) {
-                if ($char !== '"') {
+                if ('"' !== $char) {
                     $tokenUnderConstruction .= $char;
-                    $this->position++;
+                    ++$this->position;
+
                     continue;
                 }
                 // char is "
-                $this->position++;
+                ++$this->position;
+
                 return new NodeResult(
                     $this->createNode($tokenUnderConstruction, $fieldName, $prohibited),
                     false
@@ -105,47 +106,53 @@ class QueryParser implements QueryParserInterface
 
             switch ($char) {
                 case '-':
-                    if ($tokenUnderConstruction === '') {
+                    if ('' === $tokenUnderConstruction) {
                         // A minus sign at the beginning of a token indicates prohibition
                         Log::debug('Indicate prohibition');
                         $prohibited = true;
                     }
-                    if ($tokenUnderConstruction !== '') {
+                    if ('' !== $tokenUnderConstruction) {
                         // In any other location, it's just a normal character
                         $tokenUnderConstruction .= $char;
                     }
+
                     break;
 
                 case '"':
-                    if ($tokenUnderConstruction === '') {
+                    if ('' === $tokenUnderConstruction) {
                         // A quote sign at the beginning of a token indicates the start of a quoted string
                         $inQuotes = true;
                     }
-                    if ($tokenUnderConstruction !== '') {
+                    if ('' !== $tokenUnderConstruction) {
                         // In any other location, it's just a normal character
                         $tokenUnderConstruction .= $char;
                     }
+
                     break;
 
                 case '(':
-                    if ($tokenUnderConstruction === '') {
+                    if ('' === $tokenUnderConstruction) {
                         // A left parentheses at the beginning of a token indicates the start of a subquery
-                        $this->position++;
-                        return new NodeResult($this->buildNodeGroup(true, $prohibited),
-                                              false
+                        ++$this->position;
+
+                        return new NodeResult(
+                            $this->buildNodeGroup(true, $prohibited),
+                            false
                         );
                     }
                     // In any other location, it's just a normal character
                     $tokenUnderConstruction .= $char;
+
                     break;
 
                 case ')':
                     // A right parentheses while in a subquery means the subquery ended,
                     // thus also signaling the end of any node currently being built
                     if ($isSubquery) {
-                        $this->position++;
+                        ++$this->position;
+
                         return new NodeResult(
-                            $tokenUnderConstruction !== ''
+                            '' !== $tokenUnderConstruction
                                 ? $this->createNode($tokenUnderConstruction, $fieldName, $prohibited)
                                 : null,
                             true
@@ -153,40 +160,44 @@ class QueryParser implements QueryParserInterface
                     }
                     // In any other location, it's just a normal character
                     $tokenUnderConstruction .= $char;
+
                     break;
 
 
                 case ':':
-                    if ($tokenUnderConstruction !== '') {
+                    if ('' !== $tokenUnderConstruction) {
                         // If we meet a colon with a left-hand side string, we know we're in a field and are about to set up the value
                         $fieldName              = $tokenUnderConstruction;
                         $tokenUnderConstruction = '';
                     }
-                    if ($tokenUnderConstruction === '') {
+                    if ('' === $tokenUnderConstruction) {
                         // In any other location, it's just a normal character
                         $tokenUnderConstruction .= $char;
                     }
+
                     break;
 
                 case ' ':
                     // A space indicates the end of a token construction if non-empty, otherwise it's just ignored
-                    if ($tokenUnderConstruction !== '') {
-                        $this->position++;
+                    if ('' !== $tokenUnderConstruction) {
+                        ++$this->position;
+
                         return new NodeResult(
                             $this->createNode($tokenUnderConstruction, $fieldName, $prohibited),
                             false
                         );
                     }
+
                     break;
 
                 default:
                     $tokenUnderConstruction .= $char;
             }
 
-            $this->position++;
+            ++$this->position;
         }
 
-        $finalNode = $tokenUnderConstruction !== '' || $fieldName !== ''
+        $finalNode              = '' !== $tokenUnderConstruction || '' !== $fieldName
             ? $this->createNode($tokenUnderConstruction, $fieldName, $prohibited)
             : null;
 
@@ -195,11 +206,13 @@ class QueryParser implements QueryParserInterface
 
     private function createNode(string $token, string $fieldName, bool $prohibited): Node
     {
-        if (strlen($fieldName) > 0) {
+        if ('' !== $fieldName) {
             Log::debug(sprintf('Create FieldNode %s:%s (%s)', $fieldName, $token, var_export($prohibited, true)));
+
             return new FieldNode(trim($fieldName), trim($token), $prohibited);
         }
         Log::debug(sprintf('Create StringNode "%s" (%s)', $token, var_export($prohibited, true)));
+
         return new StringNode(trim($token), $prohibited);
     }
 }

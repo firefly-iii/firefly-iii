@@ -34,7 +34,7 @@ class StringNode extends Node
 
     public function __construct(string $value, bool $prohibited = false)
     {
-        $this->value = $value;
+        $this->value      = $value;
         $this->prohibited = $prohibited;
     }
 
