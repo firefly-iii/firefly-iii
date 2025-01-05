@@ -37,11 +37,10 @@ class NodeGroup extends Node
 
     /**
      * @param Node[] $nodes
-     * @param bool $prohibited
      */
     public function __construct(array $nodes, bool $prohibited = false)
     {
-        $this->nodes = $nodes;
+        $this->nodes      = $nodes;
         $this->prohibited = $prohibited;
     }
 

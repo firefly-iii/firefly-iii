@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\unit\Support\Search\QueryParser;
 
 use FireflyIII\Support\Search\QueryParser\QueryParser;
 use FireflyIII\Support\Search\QueryParser\QueryParserInterface;
-
 
 /**
  * @group unit-test

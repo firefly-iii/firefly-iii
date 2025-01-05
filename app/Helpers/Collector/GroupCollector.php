@@ -376,6 +376,7 @@ class GroupCollector implements GroupCollectorInterface
     {
         if (0 === count($array)) {
             Log::debug('No excluded search words provided, skipping.');
+
             return $this;
         }
         Log::debug(sprintf('%d excluded search words provided.', count($array)));
@@ -952,6 +953,7 @@ class GroupCollector implements GroupCollectorInterface
     {
         if (0 === count($array)) {
             Log::debug('No words in array');
+
             return $this;
         }
         Log::debug(sprintf('%d word(s) in array', count($array)));

@@ -44,7 +44,6 @@ use FireflyIII\Support\Search\QueryParser\Node;
 use FireflyIII\Support\Search\QueryParser\FieldNode;
 use FireflyIII\Support\Search\QueryParser\StringNode;
 use FireflyIII\Support\Search\QueryParser\NodeGroup;
-
 use FireflyIII\Support\ParseDateString;
 use FireflyIII\User;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -147,6 +146,7 @@ class OperatorQuerySearch implements SearchInterface
     public function parseQuery(string $query): void
     {
         app('log')->debug(sprintf('Now in parseQuery("%s")', $query));
+
         /** @var QueryParserInterface $parser */
         $parser = app(QueryParserInterface::class);
         app('log')->debug(sprintf('Using %s as implementation for QueryParserInterface', get_class($parser)));
@@ -182,18 +182,22 @@ class OperatorQuerySearch implements SearchInterface
         switch (true) {
             case $node instanceof StringNode:
                 $this->handleStringNode($node, $flipProhibitedFlag);
+
                 break;
 
             case $node instanceof FieldNode:
                 $this->handleFieldNode($node, $flipProhibitedFlag);
+
                 break;
 
             case $node instanceof NodeGroup:
                 $this->handleNodeGroup($node, $flipProhibitedFlag);
+
                 break;
 
             default:
                 app('log')->error(sprintf('Cannot handle node %s', get_class($node)));
+
                 throw new FireflyException(sprintf('Firefly III search can\'t handle "%s"-nodes', get_class($node)));
         }
     }
@@ -207,19 +211,17 @@ class OperatorQuerySearch implements SearchInterface
         }
     }
 
-
-
     private function handleStringNode(StringNode $node, bool $flipProhibitedFlag): void
     {
-        $string = $node->getValue();
+        $string     = $node->getValue();
 
         $prohibited = $node->isProhibited($flipProhibitedFlag);
 
-        if($prohibited) {
+        if ($prohibited) {
             app('log')->debug(sprintf('Exclude string "%s" from search string', $string));
             $this->prohibitedWords[] = $string;
         }
-        if(!$prohibited) {
+        if (!$prohibited) {
             app('log')->debug(sprintf('Add string "%s" to search string', $string));
             $this->words[] = $string;
         }
@@ -230,39 +232,39 @@ class OperatorQuerySearch implements SearchInterface
      */
     private function handleFieldNode(FieldNode $node, bool $flipProhibitedFlag): void
     {
-        $operator = strtolower($node->getOperator());
-        $value = $node->getValue();
+        $operator   = strtolower($node->getOperator());
+        $value      = $node->getValue();
         $prohibited = $node->isProhibited($flipProhibitedFlag);
 
-        $context = config(sprintf('search.operators.%s.needs_context', $operator));
+        $context    = config(sprintf('search.operators.%s.needs_context', $operator));
 
         // is an operator that needs no context, and value is false, then prohibited = true.
         if ('false' === $value && in_array($operator, $this->validOperators, true) && false === $context && !$prohibited) {
             $prohibited = true;
-            $value = 'true';
+            $value      = 'true';
         }
         // if the operator is prohibited, but the value is false, do an uno reverse
         if ('false' === $value && $prohibited && in_array($operator, $this->validOperators, true) && false === $context) {
             $prohibited = false;
-            $value = 'true';
+            $value      = 'true';
         }
 
         // must be valid operator:
-        $inArray = in_array($operator, $this->validOperators, true);
+        $inArray    = in_array($operator, $this->validOperators, true);
         if ($inArray) {
             if ($this->updateCollector($operator, $value, $prohibited)) {
                 $this->operators->push([
-                    'type' => self::getRootOperator($operator),
-                    'value' => $value,
+                    'type'       => self::getRootOperator($operator),
+                    'value'      => $value,
                     'prohibited' => $prohibited,
                 ]);
                 app('log')->debug(sprintf('Added operator type "%s"', $operator));
             }
         }
-        if(!$inArray) {
+        if (!$inArray) {
             app('log')->debug(sprintf('Added INVALID operator type "%s"', $operator));
             $this->invalidOperators[] = [
-                'type' => $operator,
+                'type'  => $operator,
                 'value' => $value,
             ];
         }

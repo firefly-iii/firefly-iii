@@ -36,7 +36,7 @@
         "is_reconciled_fields_dropped": "\u041f\u043e\u0441\u043a\u043e\u043b\u044c\u043a\u0443 \u044d\u0442\u0430 \u0442\u0440\u0430\u043d\u0437\u0430\u043a\u0446\u0438\u044f \u0441\u0432\u0435\u0440\u0435\u043d\u0430, \u0432\u044b \u043d\u0435 \u0441\u043c\u043e\u0436\u0435\u0442\u0435 \u043e\u0431\u043d\u043e\u0432\u0438\u0442\u044c \u0441\u0447\u0435\u0442\u0430, \u043d\u0438 \u0441\u0443\u043c\u043c\u0443(\u044b).",
         "tags": "\u041c\u0435\u0442\u043a\u0438",
         "no_budget": "(\u0432\u043d\u0435 \u0431\u044e\u0434\u0436\u0435\u0442\u0430)",
-        "no_bill": "(no subscription)",
+        "no_bill": "(\u043d\u0435\u0442 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438)",
         "category": "\u041a\u0430\u0442\u0435\u0433\u043e\u0440\u0438\u044f",
         "attachments": "\u0412\u043b\u043e\u0436\u0435\u043d\u0438\u044f",
         "notes": "\u0417\u0430\u043c\u0435\u0442\u043a\u0438",
@@ -52,7 +52,7 @@
         "destination_account_reconciliation": "\u0412\u044b \u043d\u0435 \u043c\u043e\u0436\u0435\u0442\u0435 \u0440\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0441\u0447\u0451\u0442 \u043d\u0430\u0437\u043d\u0430\u0447\u0435\u043d\u0438\u044f \u0434\u043b\u044f \u0441\u0432\u0435\u0440\u044f\u0435\u043c\u043e\u0439 \u0442\u0440\u0430\u043d\u0437\u0430\u043a\u0446\u0438\u0438.",
         "source_account_reconciliation": "\u0412\u044b \u043d\u0435 \u043c\u043e\u0436\u0435\u0442\u0435 \u0440\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0441\u0447\u0451\u0442-\u0438\u0441\u0442\u043e\u0447\u043d\u0438\u043a \u0434\u043b\u044f \u0441\u0432\u0435\u0440\u044f\u0435\u043c\u043e\u0439 \u0442\u0440\u0430\u043d\u0437\u0430\u043a\u0446\u0438\u0438.",
         "budget": "\u0411\u044e\u0434\u0436\u0435\u0442",
-        "bill": "Subscription",
+        "bill": "\u041f\u043e\u0434\u043f\u0438\u0441\u043a\u0430",
         "you_create_withdrawal": "\u0412\u044b \u0441\u043e\u0437\u0434\u0430\u0451\u0442\u0435 \u0440\u0430\u0441\u0445\u043e\u0434.",
         "you_create_transfer": "\u0412\u044b \u0441\u043e\u0437\u0434\u0430\u0451\u0442\u0435 \u043f\u0435\u0440\u0435\u0432\u043e\u0434.",
         "you_create_deposit": "\u0412\u044b \u0441\u043e\u0437\u0434\u0430\u0451\u0442\u0435 \u0434\u043e\u0445\u043e\u0434.",
@@ -130,15 +130,15 @@
         "response": "\u041e\u0442\u0432\u0435\u0442",
         "visit_webhook_url": "\u041f\u043e\u0441\u0435\u0442\u0438\u0442\u044c URL \u0432\u0435\u0431\u0445\u0443\u043a\u0430",
         "reset_webhook_secret": "",
-        "header_exchange_rates": "Exchange rates",
+        "header_exchange_rates": "\u041a\u0443\u0440\u0441\u044b \u0432\u0430\u043b\u044e\u0442",
         "exchange_rates_intro": "Firefly III supports downloading and using exchange rates. Read more about this in <a href=\"https:\/\/docs.firefly-iii.org\/LOL_NOT_FINISHED_YET_TODO\">the documentation<\/a>.",
-        "exchange_rates_from_to": "Between {from} and {to} (and the other way around)",
+        "exchange_rates_from_to": "\u041c\u0435\u0436\u0434\u0443 {from} \u0438 {to} (\u0438 \u043d\u0430\u043e\u0431\u043e\u0440\u043e\u0442)",
         "exchange_rates_intro_rates": "Firefly III uses the following exchange rates. The inverse is automatically calculated when it is not provided. If no exchange rate exists for the date of the transaction, Firefly III will go back in time to find one. If none are present, the rate \"1\" will be used.",
-        "header_exchange_rates_rates": "Exchange rates",
-        "header_exchange_rates_table": "Table with exchange rates",
+        "header_exchange_rates_rates": "\u041a\u0443\u0440\u0441\u044b \u0432\u0430\u043b\u044e\u0442",
+        "header_exchange_rates_table": "\u0422\u0430\u0431\u043b\u0438\u0446\u0430 \u0441 \u043e\u0431\u043c\u0435\u043d\u043d\u044b\u043c\u0438 \u043a\u0443\u0440\u0441\u0430\u043c\u0438",
         "help_rate_form": "On this day, how many {to} will you get for one {from}?",
-        "add_new_rate": "Add a new exchange rate",
-        "save_new_rate": "Save new rate"
+        "add_new_rate": "\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u043d\u043e\u0432\u044b\u0439 \u043e\u0431\u043c\u0435\u043d\u043d\u044b\u0439 \u043a\u0443\u0440\u0441",
+        "save_new_rate": "\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c \u043d\u043e\u0432\u044b\u0439 \u0442\u0430\u0440\u0438\u0444"
     },
     "form": {
         "url": "\u0421\u0441\u044b\u043b\u043a\u0430",
@@ -158,7 +158,7 @@
         "webhook_delivery": "\u0414\u043e\u0441\u0442\u0430\u0432\u043a\u0430",
         "from_currency_to_currency": "{from} &rarr; {to}",
         "to_currency_from_currency": "{to} &rarr; {from}",
-        "rate": "Rate"
+        "rate": "\u041e\u0446\u0435\u043d\u0438\u0442\u044c"
     },
     "list": {
         "active": "\u0410\u043a\u0442\u0438\u0432\u0435\u043d?",

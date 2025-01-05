@@ -162,14 +162,14 @@
     },
     "list": {
         "active": "Aktiivinen?",
-        "trigger": "Trigger",
-        "response": "Response",
-        "delivery": "Delivery",
+        "trigger": "Ehto",
+        "response": "Vastaus",
+        "delivery": "Toimitus",
         "url": "URL",
-        "secret": "Secret"
+        "secret": "Salainen tunniste"
     },
     "config": {
         "html_language": "fi",
-        "date_time_fns": "MMMM do, yyyy @ HH:mm:ss"
+        "date_time_fns": "do MMMM yyyy @\u00a0HH:mm:ss"
     }
 }

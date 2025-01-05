@@ -41,17 +41,17 @@ class GdbotsQueryParser implements QueryParserInterface
     }
 
     /**
-     * @return NodeGroup
      * @throws FireflyException
      */
     public function parse(string $query): NodeGroup
     {
         try {
             $result = $this->parser->parse($query);
-            $nodes = array_map(
-                fn(GdbotsNode\Node $node) => $this->convertNode($node),
+            $nodes  = array_map(
+                fn (GdbotsNode\Node $node) => $this->convertNode($node),
                 $result->getNodes()
             );
+
             return new NodeGroup($nodes);
         } catch (\LogicException|\TypeError $e) {
             fwrite(STDERR, "Setting up GdbotsQueryParserTest\n");
@@ -78,9 +78,10 @@ class GdbotsQueryParser implements QueryParserInterface
 
             case $node instanceof GdbotsNode\Subquery:
                 Log::debug('Subquery');
+
                 return new NodeGroup(
                     array_map(
-                        fn(GdbotsNode\Node $subNode) => $this->convertNode($subNode),
+                        fn (GdbotsNode\Node $subNode) => $this->convertNode($subNode),
                         $node->getNodes()
                     )
                 );
