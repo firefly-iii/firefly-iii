@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Search\QueryParser;
 
+use Illuminate\Support\Facades\Log;
+
 /**
  * Represents a result from parsing a query node
  *
@@ -35,9 +37,8 @@ class NodeResult
 {
     public function __construct(
         public readonly ?Node $node,
-        public readonly bool $isSubqueryEnd
-    ) {
-    }
+        public readonly bool  $isSubqueryEnd
+    ) {}
 }
 
 
@@ -49,12 +50,13 @@ class NodeResult
 class QueryParser implements QueryParserInterface
 {
     private string $query;
-    private int $position = 0;
+    private int    $position = 0;
 
     /** @return NodeGroup */
     public function parse(string $query): NodeGroup
     {
-        $this->query = $query;
+        Log::debug(sprintf('Parsing query in QueryParser: "%s"', $query));
+        $this->query    = $query;
         $this->position = 0;
         return $this->buildNodeGroup(false);
     }
@@ -62,12 +64,12 @@ class QueryParser implements QueryParserInterface
     /** @return NodeGroup */
     private function buildNodeGroup(bool $isSubquery, bool $prohibited = false): NodeGroup
     {
-        $nodes = [];
+        $nodes      = [];
         $nodeResult = $this->buildNextNode($isSubquery);
 
         while ($nodeResult->node !== null) {
             $nodes[] = $nodeResult->node;
-            if($nodeResult->isSubqueryEnd) {
+            if ($nodeResult->isSubqueryEnd) {
                 break;
             }
             $nodeResult = $this->buildNextNode($isSubquery);
@@ -79,9 +81,9 @@ class QueryParser implements QueryParserInterface
     private function buildNextNode(bool $isSubquery): NodeResult
     {
         $tokenUnderConstruction = '';
-        $inQuotes = false;
-        $fieldName = '';
-        $prohibited = false;
+        $inQuotes               = false;
+        $fieldName              = '';
+        $prohibited             = false;
 
         while ($this->position < strlen($this->query)) {
             $char = $this->query[$this->position];
@@ -93,17 +95,19 @@ class QueryParser implements QueryParserInterface
                     $this->position++;
                     continue;
                 }
-                    $this->position++;
-                    return new NodeResult(
-                        $this->createNode($tokenUnderConstruction, $fieldName, $prohibited),
-                        false
-                    );
+                // char is "
+                $this->position++;
+                return new NodeResult(
+                    $this->createNode($tokenUnderConstruction, $fieldName, $prohibited),
+                    false
+                );
             }
 
             switch ($char) {
                 case '-':
                     if ($tokenUnderConstruction === '') {
                         // A minus sign at the beginning of a token indicates prohibition
+                        Log::debug('Indicate prohibition');
                         $prohibited = true;
                     }
                     if ($tokenUnderConstruction !== '') {
@@ -128,11 +132,11 @@ class QueryParser implements QueryParserInterface
                         // A left parentheses at the beginning of a token indicates the start of a subquery
                         $this->position++;
                         return new NodeResult($this->buildNodeGroup(true, $prohibited),
-                            false
+                                              false
                         );
                     }
-                        // In any other location, it's just a normal character
-                        $tokenUnderConstruction .= $char;
+                    // In any other location, it's just a normal character
+                    $tokenUnderConstruction .= $char;
                     break;
 
                 case ')':
@@ -142,8 +146,8 @@ class QueryParser implements QueryParserInterface
                         $this->position++;
                         return new NodeResult(
                             $tokenUnderConstruction !== ''
-                            ? $this->createNode($tokenUnderConstruction, $fieldName, $prohibited)
-                            : null,
+                                ? $this->createNode($tokenUnderConstruction, $fieldName, $prohibited)
+                                : null,
                             true
                         );
                     }
@@ -155,7 +159,7 @@ class QueryParser implements QueryParserInterface
                 case ':':
                     if ($tokenUnderConstruction !== '') {
                         // If we meet a colon with a left-hand side string, we know we're in a field and are about to set up the value
-                        $fieldName = $tokenUnderConstruction;
+                        $fieldName              = $tokenUnderConstruction;
                         $tokenUnderConstruction = '';
                     }
                     if ($tokenUnderConstruction === '') {
@@ -183,8 +187,8 @@ class QueryParser implements QueryParserInterface
         }
 
         $finalNode = $tokenUnderConstruction !== '' || $fieldName !== ''
-        ? $this->createNode($tokenUnderConstruction, $fieldName, $prohibited)
-        : null;
+            ? $this->createNode($tokenUnderConstruction, $fieldName, $prohibited)
+            : null;
 
         return new NodeResult($finalNode, true);
     }
@@ -192,8 +196,10 @@ class QueryParser implements QueryParserInterface
     private function createNode(string $token, string $fieldName, bool $prohibited): Node
     {
         if (strlen($fieldName) > 0) {
+            Log::debug(sprintf('Create FieldNode %s:%s (%s)', $fieldName, $token, var_export($prohibited, true)));
             return new FieldNode(trim($fieldName), trim($token), $prohibited);
         }
+        Log::debug(sprintf('Create StringNode "%s" (%s)', $token, var_export($prohibited, true)));
         return new StringNode(trim($token), $prohibited);
     }
 }

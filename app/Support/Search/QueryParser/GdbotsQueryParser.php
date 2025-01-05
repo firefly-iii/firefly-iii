@@ -29,6 +29,7 @@ use FireflyIII\Exceptions\FireflyException;
 use Gdbots\QueryParser\QueryParser as BaseQueryParser;
 use Gdbots\QueryParser\Node as GdbotsNode;
 use Gdbots\QueryParser\Enum\BoolOperator;
+use Illuminate\Support\Facades\Log;
 
 class GdbotsQueryParser implements QueryParserInterface
 {
@@ -63,9 +64,10 @@ class GdbotsQueryParser implements QueryParserInterface
 
     private function convertNode(GdbotsNode\Node $node): Node
     {
+
         switch (true) {
             case $node instanceof GdbotsNode\Word:
-                return new StringNode($node->getValue());
+                return new StringNode($node->getValue(), BoolOperator::PROHIBITED === $node->getBoolOperator());
 
             case $node instanceof GdbotsNode\Field:
                 return new FieldNode(
@@ -75,6 +77,7 @@ class GdbotsQueryParser implements QueryParserInterface
                 );
 
             case $node instanceof GdbotsNode\Subquery:
+                Log::debug('Subquery');
                 return new NodeGroup(
                     array_map(
                         fn(GdbotsNode\Node $subNode) => $this->convertNode($subNode),
@@ -90,7 +93,7 @@ class GdbotsQueryParser implements QueryParserInterface
             case $node instanceof GdbotsNode\Mention:
             case $node instanceof GdbotsNode\Emoticon:
             case $node instanceof GdbotsNode\Emoji:
-                return new StringNode((string) $node->getValue());
+                return new StringNode((string) $node->getValue(), BoolOperator::PROHIBITED === $node->getBoolOperator());
 
             default:
                 throw new FireflyException(

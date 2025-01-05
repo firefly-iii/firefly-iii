@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Search\QueryParser;
 
+use Illuminate\Support\Facades\Log;
+
 /**
  * Base class for all nodes
  */
@@ -45,8 +47,10 @@ abstract class Node
     public function isProhibited(bool $flipFlag): bool
     {
         if ($flipFlag) {
+            //Log::debug(sprintf('This %s is (flipped) now prohibited: %s',get_class($this), var_export(!$this->prohibited, true)));
             return !$this->prohibited;
         }
+        //Log::debug(sprintf('This %s is (not flipped) now prohibited: %s',get_class($this), var_export($this->prohibited, true)));
         return $this->prohibited;
 
     }
