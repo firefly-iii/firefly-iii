@@ -147,6 +147,7 @@ class OperatorQuerySearch implements SearchInterface
     public function parseQuery(string $query): void
     {
         app('log')->debug(sprintf('Now in parseQuery(%s)', $query));
+        /** @var QueryParserInterface $parser */
         $parser = app(QueryParserInterface::class);
         app('log')->debug(sprintf('Using %s as implementation for QueryParserInterface', get_class($parser)));
 
@@ -217,7 +218,8 @@ class OperatorQuerySearch implements SearchInterface
         if($prohibited) {
             app('log')->debug(sprintf('Exclude string "%s" from search string', $string));
             $this->prohibitedWords[] = $string;
-        } else {
+        }
+        if(!$prohibited) {
             app('log')->debug(sprintf('Add string "%s" to search string', $string));
             $this->words[] = $string;
         }
@@ -246,7 +248,8 @@ class OperatorQuerySearch implements SearchInterface
         }
 
         // must be valid operator:
-        if (in_array($operator, $this->validOperators, true)) {
+        $inArray = in_array($operator, $this->validOperators, true);
+        if ($inArray) {
             if ($this->updateCollector($operator, $value, $prohibited)) {
                 $this->operators->push([
                     'type' => self::getRootOperator($operator),
@@ -255,7 +258,8 @@ class OperatorQuerySearch implements SearchInterface
                 ]);
                 app('log')->debug(sprintf('Added operator type "%s"', $operator));
             }
-        } else {
+        }
+        if(!$inArray) {
             app('log')->debug(sprintf('Added INVALID operator type "%s"', $operator));
             $this->invalidOperators[] = [
                 'type' => $operator,

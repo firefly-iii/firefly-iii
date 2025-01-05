@@ -92,13 +92,12 @@ class QueryParser implements QueryParserInterface
                     $tokenUnderConstruction .= $char;
                     $this->position++;
                     continue;
-                } else {
+                }
                     $this->position++;
                     return new NodeResult(
                         $this->createNode($tokenUnderConstruction, $fieldName, $prohibited),
                         false
                     );
-                }
             }
 
             switch ($char) {
@@ -106,7 +105,8 @@ class QueryParser implements QueryParserInterface
                     if ($tokenUnderConstruction === '') {
                         // A minus sign at the beginning of a token indicates prohibition
                         $prohibited = true;
-                    } else {
+                    }
+                    if ($tokenUnderConstruction !== '') {
                         // In any other location, it's just a normal character
                         $tokenUnderConstruction .= $char;
                     }
@@ -116,7 +116,8 @@ class QueryParser implements QueryParserInterface
                     if ($tokenUnderConstruction === '') {
                         // A quote sign at the beginning of a token indicates the start of a quoted string
                         $inQuotes = true;
-                    } else {
+                    }
+                    if ($tokenUnderConstruction !== '') {
                         // In any other location, it's just a normal character
                         $tokenUnderConstruction .= $char;
                     }
@@ -129,10 +130,9 @@ class QueryParser implements QueryParserInterface
                         return new NodeResult($this->buildNodeGroup(true, $prohibited),
                             false
                         );
-                    } else {
+                    }
                         // In any other location, it's just a normal character
                         $tokenUnderConstruction .= $char;
-                    }
                     break;
 
                 case ')':
@@ -157,7 +157,8 @@ class QueryParser implements QueryParserInterface
                         // If we meet a colon with a left-hand side string, we know we're in a field and are about to set up the value
                         $fieldName = $tokenUnderConstruction;
                         $tokenUnderConstruction = '';
-                    } else {
+                    }
+                    if ($tokenUnderConstruction === '') {
                         // In any other location, it's just a normal character
                         $tokenUnderConstruction .= $char;
                     }
