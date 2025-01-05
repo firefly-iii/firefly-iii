@@ -40,9 +40,9 @@ use Illuminate\Support\Facades\Log;
 class ExchangeRateConverter
 {
     // use ConvertsExchangeRates;
-    private bool  $ignoreSettings  = false;
-    private array $prepared        = [];
-    private int   $queryCount      = 0;
+    private bool  $ignoreSettings = false;
+    private array $prepared       = [];
+    private int   $queryCount     = 0;
 
     private UserGroup $userGroup;
 

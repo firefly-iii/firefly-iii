@@ -251,10 +251,11 @@ trait AccountCollection
                 if (0 === $accountId) {
                     return false;
                 }
+
                 // in theory, this could lead to finding other users accounts.
-                /** @var Account|null $account */
-                $account = Account::find($accountId);
-                if(null === $account) {
+                /** @var null|Account $account */
+                $account   = Account::find($accountId);
+                if (null === $account) {
                     continue;
                 }
                 $balance   = Steam::finalAccountBalance($account, $transaction['date']);

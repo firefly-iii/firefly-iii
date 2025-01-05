@@ -174,7 +174,7 @@ class AccountTransformer extends AbstractTransformer
 
     private function getBalanceDifference(Collection $accounts, Carbon $start, Carbon $end): void
     {
-        if (config('app.fallback_locale') === 'en_US') {
+        if ('en_US' === config('app.fallback_locale')) {
             throw new FireflyException('Used deprecated method, rethink this.');
         }
         // collect balances, start and end for both native and converted.

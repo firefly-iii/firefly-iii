@@ -524,7 +524,7 @@ class AccountRepository implements AccountRepositoryInterface
             ->first(['transaction_journals.id'])
         ;
         if (null !== $first) {
-            /** @var TransactionJournal|null */
+            /** @var null|TransactionJournal */
             return TransactionJournal::find($first->id);
         }
 

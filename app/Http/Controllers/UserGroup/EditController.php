@@ -43,6 +43,7 @@ class EditController extends Controller
         app('log')->debug(sprintf('Now at %s', __METHOD__));
 
         return view('administrations.edit')  // @phpstan-ignore-line
-            ->with(compact('title', 'subTitle', 'mainTitleIcon'));
+            ->with(compact('title', 'subTitle', 'mainTitleIcon'))
+        ;
     }
 }

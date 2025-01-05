@@ -115,7 +115,7 @@ class PiggyBankTransformer extends AbstractTransformer
 
         // grab repetitions (for current amount):
         $repetitions         = PiggyBankRepetition::whereIn('piggy_bank_id', $piggyBanks)->get();
-        if (config('app.fallback_locale') === 'en_US') {
+        if ('en_US' === config('app.fallback_locale')) {
             throw new FireflyException('[d] Piggy bank repetitions are EOL.');
         }
 

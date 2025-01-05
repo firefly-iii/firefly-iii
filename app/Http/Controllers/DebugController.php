@@ -121,6 +121,7 @@ class DebugController extends Controller
                 echo sprintf('<h2>%s</h2>', $count);
             }
         }
+
         exit;
     }
 

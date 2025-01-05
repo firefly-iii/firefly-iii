@@ -256,15 +256,16 @@ class ForcesDecimalSize extends Command
         foreach ($result as $account) {
             /** @var string $field */
             foreach ($fields as $field) {
-                $value   = $account->{$field};
+                $value         = $account->{$field};
                 if (null === $value) {
                     continue;
                 }
                 // fix $field by rounding it down correctly.
-                $pow     = 10 ** $currency->decimal_places;
-                $correct = bcdiv((string) round($value * $pow), (string) $pow, 12);
+                $pow           = 10 ** $currency->decimal_places;
+                $correct       = bcdiv((string) round($value * $pow), (string) $pow, 12);
                 $this->friendlyInfo(sprintf('Account #%d has %s with value "%s", this has been corrected to "%s".', $account->id, $field, $value, $correct));
-                /** @var Account|null $updateAccount */
+
+                /** @var null|Account $updateAccount */
                 $updateAccount = Account::find($account->id);
                 $updateAccount?->update([$field => $correct]);
             }
@@ -315,8 +316,9 @@ class ForcesDecimalSize extends Command
                 $pow     = 10 ** $currency->decimal_places;
                 $correct = bcdiv((string) round($value * $pow), (string) $pow, 12);
                 $this->friendlyWarning(sprintf('%s #%d has %s with value "%s", this has been corrected to "%s".', $table, $item->id, $field, $value, $correct));
-                /** @var Model|null $model */
-                $model = $class::find($item->id);
+
+                /** @var null|Model $model */
+                $model   = $class::find($item->id);
                 $model?->update([$field => $correct]);
             }
         }
@@ -369,8 +371,9 @@ class ForcesDecimalSize extends Command
                 $this->friendlyWarning(
                     sprintf('Piggy bank event #%d has %s with value "%s", this has been corrected to "%s".', $item->id, $field, $value, $correct)
                 );
-                /** @var PiggyBankEvent|null $event */
-                $event = PiggyBankEvent::find($item->id);
+
+                /** @var null|PiggyBankEvent $event */
+                $event   = PiggyBankEvent::find($item->id);
                 $event?->update([$field => $correct]);
             }
         }
@@ -414,17 +417,18 @@ class ForcesDecimalSize extends Command
         foreach ($result as $item) {
             /** @var string $field */
             foreach ($fields as $field) {
-                $value   = $item->{$field};
+                $value      = $item->{$field};
                 if (null === $value) {
                     continue;
                 }
                 // fix $field by rounding it down correctly.
-                $pow     = 10 ** $currency->decimal_places;
-                $correct = bcdiv((string) round($value * $pow), (string) $pow, 12);
+                $pow        = 10 ** $currency->decimal_places;
+                $correct    = bcdiv((string) round($value * $pow), (string) $pow, 12);
                 $this->friendlyWarning(
                     sprintf('Piggy bank repetition #%d has %s with value "%s", this has been corrected to "%s".', $item->id, $field, $value, $correct)
                 );
-                /** @var PiggyBankRepetition|null $repetition */
+
+                /** @var null|PiggyBankRepetition $repetition */
                 $repetition = PiggyBankRepetition::find($item->id);
                 $repetition->update([$field => $correct]);
             }
@@ -467,15 +471,16 @@ class ForcesDecimalSize extends Command
         foreach ($result as $item) {
             /** @var string $field */
             foreach ($fields as $field) {
-                $value   = $item->{$field};
+                $value     = $item->{$field};
                 if (null === $value) {
                     continue;
                 }
                 // fix $field by rounding it down correctly.
-                $pow     = 10 ** $currency->decimal_places;
-                $correct = bcdiv((string) round($value * $pow), (string) $pow, 12);
+                $pow       = 10 ** $currency->decimal_places;
+                $correct   = bcdiv((string) round($value * $pow), (string) $pow, 12);
                 $this->friendlyWarning(sprintf('Piggy bank #%d has %s with value "%s", this has been corrected to "%s".', $item->id, $field, $value, $correct));
-                /** @var PiggyBank|null $piggyBank */
+
+                /** @var null|PiggyBank $piggyBank */
                 $piggyBank = PiggyBank::find($item->id);
                 $piggyBank?->update([$field => $correct]);
             }
@@ -502,15 +507,16 @@ class ForcesDecimalSize extends Command
 
         /** @var Transaction $item */
         foreach ($result as $item) {
-            $value   = $item->amount;
+            $value       = $item->amount;
             if ('' === $value) {
                 continue;
             }
             // fix $field by rounding it down correctly.
-            $pow     = (float) 10 ** $currency->decimal_places;
-            $correct = bcdiv((string) round((float) $value * $pow), (string) $pow, 12);
+            $pow         = (float) 10 ** $currency->decimal_places;
+            $correct     = bcdiv((string) round((float) $value * $pow), (string) $pow, 12);
             $this->friendlyWarning(sprintf('Transaction #%d has amount with value "%s", this has been corrected to "%s".', $item->id, $value, $correct));
-            /** @var Transaction|null $transaction */
+
+            /** @var null|Transaction $transaction */
             $transaction = Transaction::find($item->id);
             $transaction?->update(['amount' => $correct]);
         }
@@ -532,17 +538,18 @@ class ForcesDecimalSize extends Command
 
         /** @var Transaction $item */
         foreach ($result as $item) {
-            $value   = $item->foreign_amount;
+            $value       = $item->foreign_amount;
             if (null === $value) {
                 continue;
             }
             // fix $field by rounding it down correctly.
-            $pow     = (float) 10 ** $currency->decimal_places;
-            $correct = bcdiv((string) round((float) $value * $pow), (string) $pow, 12);
+            $pow         = (float) 10 ** $currency->decimal_places;
+            $correct     = bcdiv((string) round((float) $value * $pow), (string) $pow, 12);
             $this->friendlyWarning(
                 sprintf('Transaction #%d has foreign amount with value "%s", this has been corrected to "%s".', $item->id, $value, $correct)
             );
-            /** @var Transaction|null $transaction */
+
+            /** @var null|Transaction $transaction */
             $transaction = Transaction::find($item->id);
             $transaction?->update(['foreign_amount' => $correct]);
         }

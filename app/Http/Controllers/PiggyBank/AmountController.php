@@ -28,7 +28,6 @@ use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\PiggyBank;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
@@ -55,7 +54,7 @@ class AmountController extends Controller
                 app('view')->share('title', (string) trans('firefly.piggyBanks'));
                 app('view')->share('mainTitleIcon', 'fa-bullseye');
 
-                $this->piggyRepos   = app(PiggyBankRepositoryInterface::class);
+                $this->piggyRepos = app(PiggyBankRepositoryInterface::class);
 
                 return $next($request);
             }

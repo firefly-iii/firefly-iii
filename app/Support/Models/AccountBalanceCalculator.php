@@ -156,7 +156,7 @@ class AccountBalanceCalculator
          * @var array $currencies
          */
         foreach ($balances as $accountId => $currencies) {
-            /** @var Account|null $account */
+            /** @var null|Account $account */
             $account = Account::find($accountId);
             if (null === $account) {
                 Log::error(sprintf('Could not find account #%d, will not save account balance.', $accountId));
@@ -169,7 +169,7 @@ class AccountBalanceCalculator
              * @var array $balance
              */
             foreach ($currencies as $currencyId => $balance) {
-                /** @var TransactionCurrency|null $currency */
+                /** @var null|TransactionCurrency $currency */
                 $currency        = TransactionCurrency::find($currencyId);
                 if (null === $currency) {
                     Log::error(sprintf('Could not find currency #%d, will not save account balance.', $currencyId));
@@ -207,5 +207,4 @@ class AccountBalanceCalculator
         }
         $object->optimizedCalculation($accounts, $transactionJournal->date);
     }
-
 }

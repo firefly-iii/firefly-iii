@@ -8,7 +8,7 @@ on:
       - develop
 env:
   DB_CONNECTION: sqlite
-  APP_KEY: UfpBqqeXx7zpNodsC6yjYQcRfDdm4Bxh
+  APP_KEY: TestTestTestTestTestTestTestTest
 jobs:
   sonarcloud:
     name: SonarCloud
@@ -46,7 +46,9 @@ jobs:
         run: composer install --prefer-dist --no-interaction --no-progress --no-scripts
 
       - name: "Create database file"
-        run: touch storage/database/database.sqlite
+        run: |
+          touch storage/database/database.sqlite
+          wget -q https://github.com/firefly-iii/test-fixtures/raw/refs/heads/main/test-database.sqlite -O storage/database/database.sqlite
 
       - name: "Upgrades the database to the latest version"
         run: php artisan firefly-iii:upgrade-database
