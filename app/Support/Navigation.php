@@ -505,7 +505,7 @@ class Navigation
     {
         $format = 'Y-m-d';
         $diff   = $start->diffInMonths($end, true);
-        Log::debug(sprintf('preferredCarbonFormat(%s, %s) = %f', $start->format('Y-m-d'), $end->format('Y-m-d'), $diff));
+        //Log::debug(sprintf('preferredCarbonFormat(%s, %s) = %f', $start->format('Y-m-d'), $end->format('Y-m-d'), $diff));
         if ($diff >= 1.001) {
             //            Log::debug(sprintf('Return Y-m because %s', $diff));
             $format = 'Y-m';

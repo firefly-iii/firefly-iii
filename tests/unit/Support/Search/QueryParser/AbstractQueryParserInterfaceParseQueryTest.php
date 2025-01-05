@@ -15,7 +15,7 @@ abstract class AbstractQueryParserInterfaceParseQueryTest extends TestCase
 {
     abstract protected function createParser(): QueryParserInterface;
 
-    public function queryDataProvider(): array
+    public static function queryDataProvider(): array
     {
         return [
             'empty query' => [
