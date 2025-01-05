@@ -20,7 +20,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// Ignore this comment
+
 
 declare(strict_types=1);
 
@@ -36,7 +36,7 @@ return [
     'admin_test_body'                             => 'This is a test message from your Firefly III instance. It was sent to :email.',
     'admin_test_message'                          => 'This is a test message from your Firefly III instance over channel ":channel".',
 
-    // Ignore this comment
+
 
     // invite
     'invitation_created_subject'                  => 'An invitation has been created',
@@ -85,7 +85,7 @@ return [
     'registered_pw_reset_link'                    => 'Password reset:',
     'registered_doc_link'                         => 'Documentation:',
 
-    // Ignore this comment
+
 
     // new version
     'new_version_email_subject'                   => 'A new Firefly III version is available',
@@ -132,7 +132,7 @@ return [
     'error_headers'                               => 'The following headers may also be relevant:',
     'error_post'                                  => 'This was submitted by the user:',
 
-    // Ignore this comment
+
 
     // report new journals
     'new_journals_subject'                        => 'Firefly III has created a new transaction|Firefly III has created :count new transactions',
@@ -190,4 +190,4 @@ return [
     'mfa_many_failed_attempts_warning'            => 'If you did not do this, please contact your administrator immediately or check out the Firefly III documentation.',
 
 ];
-// Ignore this comment
+

@@ -20,7 +20,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// Ignore this comment
+
 
 declare(strict_types=1);
 
@@ -42,7 +42,7 @@ return [
     'stacktrace'              => 'Stack trace',
     'more_info'               => 'More information',
 
-    // Ignore this comment
+
 
     'collect_info'            => 'Please collect more information in the <code>storage/logs</code> directory where you will find log files. If you\'re running Docker, use <code>docker logs -f [container]</code>.',
     'collect_info_more'       => 'You can read more about collecting error information in <a href="https://docs.firefly-iii.org/how-to/general/debug/">the FAQ</a>.',

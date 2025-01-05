@@ -20,7 +20,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// Ignore this comment
+
 
 declare(strict_types=1);
 
@@ -66,7 +66,7 @@ return [
     'balance_difference'      => 'Balance difference',
     'menu'                    => 'Menu',
 
-    // Ignore this comment
+
 
     'repeat_freq'             => 'Repeats',
     'description'             => 'Description',
@@ -134,7 +134,7 @@ return [
     'account_at_bunq'         => 'Account with bunq',
     'file_name'               => 'File name',
 
-    // Ignore this comment
+
 
     'file_size'               => 'File size',
     'file_type'               => 'File type',
@@ -163,4 +163,4 @@ return [
     'url'                     => 'URL',
     'secret'                  => 'Secret',
 ];
-// Ignore this comment
+

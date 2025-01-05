@@ -22,7 +22,7 @@
 
 declare(strict_types=1);
 
-// Ignore this comment
+
 
 return [
     // general stuff:
@@ -336,7 +336,7 @@ return [
 
     // old
 
-    // Ignore this comment
+
 
     'search_modifier_date_on'                              => 'Transaction date is ":value"',
     'search_modifier_not_date_on'                          => 'Transaction date is not ":value"',
@@ -728,7 +728,7 @@ return [
     'search_modifier_not_source_balance_gt'                => 'Source account balance is less than or equal to ":value"',
 
 
-    // Ignore this comment
+
 
     // END
     'general_search_error'                                 => 'An error occurred while searching. Please check the log files for more information.',
@@ -1262,7 +1262,7 @@ return [
     'rule_trigger_not_source_balance_lt'                   => 'Source account balance is more than or equal to :trigger_value',
     'rule_trigger_not_source_balance_lte'                  => 'Source account balance is more than :trigger_value',
 
-    // Ignore this comment
+
 
     // actions
     // set, clear, add, remove, append/prepend
@@ -1653,7 +1653,7 @@ return [
     'multi_account_warning_deposit'                        => 'Keep in mind that the destination account of subsequent splits will be overruled by whatever is defined in the first split of the deposit.',
     'multi_account_warning_transfer'                       => 'Keep in mind that the source + destination account of subsequent splits will be overruled by whatever is defined in the first split of the transfer.',
 
-    // Ignore this comment
+
 
     // export data:
     'export_data_title'                                    => 'Export data from Firefly III',
@@ -2067,7 +2067,7 @@ return [
     'stored_category'                                      => 'Stored new category ":name"',
     'without_category_between'                             => 'Without category between :start and :end',
 
-    // Ignore this comment
+
 
     // transactions:
     'wait_loading_transaction'                             => 'Please wait for the form to load',
@@ -2311,7 +2311,7 @@ return [
     'classification'                                       => 'Classification',
     'store_transaction'                                    => 'Store transaction',
 
-    // Ignore this comment
+
 
     // reports:
     'report_default'                                       => 'Default financial report between :start and :end',
@@ -2418,7 +2418,7 @@ return [
     'sum_in_default_currency'                              => 'The sum will always be in your default currency.',
     'net_filtered_prefs'                                   => 'This chart will never include accounts that have the "Include in net worth"-option unchecked.',
 
-    // Ignore this comment
+
 
     // charts:
     'chart'                                                => 'Chart',
@@ -2521,7 +2521,7 @@ return [
     'total_amount'                                         => 'Total amount',
     'number_of_decimals'                                   => 'Number of decimals',
 
-    // Ignore this comment
+
 
     // administration
     'invite_is_already_redeemed'                           => 'The invite to ":address" has already been redeemed.',
@@ -2823,7 +2823,7 @@ return [
     'except_weekends'                                      => 'Except weekends',
     'recurrence_deleted'                                   => 'Recurring transaction ":title" deleted',
 
-    // Ignore this comment
+
 
     // new lines for summary controller.
     'box_balance_in_currency'                              => 'Balance (:currency)',
@@ -2891,4 +2891,4 @@ return [
     'disable_auto_convert'                                 => 'Disable currency conversion',
 ];
 
-// Ignore this comment
+

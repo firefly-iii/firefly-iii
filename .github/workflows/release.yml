@@ -58,15 +58,6 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           CROWDIN_PROJECT_NR: ${{ secrets.CROWDIN_PROJECT_NR }}
           CROWDIN_TOKEN: ${{ secrets.CROWDIN_TOKEN }}
-      - name: Cleanup translations
-        id: cleanup-transactions
-        uses: JC5/firefly-iii-dev@main
-        with:
-          action: 'ff3:crowdin-warning'
-          output: ''
-        env:
-          FIREFLY_III_ROOT: /github/workspace
-          GH_TOKEN: ''
       - name: Cleanup changelog
         id: cleanup-changelog
         uses: JC5/firefly-iii-dev@main

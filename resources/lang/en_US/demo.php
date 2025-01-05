@@ -20,7 +20,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// Ignore this comment
+
 
 declare(strict_types=1);
 
@@ -38,4 +38,4 @@ return [
     'profile-index'          => 'Keep in mind that the demo site resets every four hours. Your access may be revoked at any time. This happens automatically and is not a bug.',
 ];
 
-// Ignore this comment
+
