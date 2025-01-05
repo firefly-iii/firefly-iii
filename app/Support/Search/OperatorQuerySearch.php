@@ -174,7 +174,7 @@ class OperatorQuerySearch implements SearchInterface
      *
      * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      */
-    private function handleSearchNode(Node $node, $flipProhibitedFlag): void
+    private function handleSearchNode(Node $node, bool $flipProhibitedFlag): void
     {
         app('log')->debug(sprintf('Now in handleSearchNode(%s)', get_class($node)));
 
@@ -197,7 +197,7 @@ class OperatorQuerySearch implements SearchInterface
         }
     }
 
-    private function handleNodeGroup(NodeGroup $node, $flipProhibitedFlag): void
+    private function handleNodeGroup(NodeGroup $node, bool $flipProhibitedFlag): void
     {
         $prohibited = $node->isProhibited($flipProhibitedFlag);
 
@@ -208,9 +208,9 @@ class OperatorQuerySearch implements SearchInterface
 
 
 
-    private function handleStringNode(StringNode $node, $flipProhibitedFlag): void
+    private function handleStringNode(StringNode $node, bool $flipProhibitedFlag): void
     {
-        $string = (string) $node->getValue();
+        $string = $node->getValue();
 
         $prohibited = $node->isProhibited($flipProhibitedFlag);
 
@@ -226,7 +226,7 @@ class OperatorQuerySearch implements SearchInterface
     /**
      * @throws FireflyException
      */
-    private function handleFieldNode(FieldNode $node, $flipProhibitedFlag): void
+    private function handleFieldNode(FieldNode $node, bool $flipProhibitedFlag): void
     {
         $operator = strtolower($node->getOperator());
         $value = $node->getValue();
@@ -247,10 +247,10 @@ class OperatorQuerySearch implements SearchInterface
 
         // must be valid operator:
         if (in_array($operator, $this->validOperators, true)) {
-            if ($this->updateCollector($operator, (string)$value, $prohibited)) {
+            if ($this->updateCollector($operator, $value, $prohibited)) {
                 $this->operators->push([
                     'type' => self::getRootOperator($operator),
-                    'value' => (string)$value,
+                    'value' => $value,
                     'prohibited' => $prohibited,
                 ]);
                 app('log')->debug(sprintf('Added operator type "%s"', $operator));
@@ -259,7 +259,7 @@ class OperatorQuerySearch implements SearchInterface
             app('log')->debug(sprintf('Added INVALID operator type "%s"', $operator));
             $this->invalidOperators[] = [
                 'type' => $operator,
-                'value' => (string)$value,
+                'value' => $value,
             ];
         }
     }
