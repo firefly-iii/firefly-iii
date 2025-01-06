@@ -157,4 +157,3 @@ return [
     // create currency
     'currencies_create_code'                                          => 'This code should be ISO compliant (Google it for your new currency).',
 ];
-

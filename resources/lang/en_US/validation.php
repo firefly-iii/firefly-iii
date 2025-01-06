@@ -278,5 +278,3 @@ return [
     'administration_owner_rename'     => 'You can\'t rename your standard administration.',
     'existing_mfa_code'               => 'Please enter a valid code',
 ];
-
-

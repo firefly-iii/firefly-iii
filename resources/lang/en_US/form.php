@@ -278,4 +278,3 @@ return [
     'ntfy_user'                    => 'Ntfy username',
     'ntfy_pass'                    => 'Ntfy password',
 ];
-

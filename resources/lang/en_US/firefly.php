@@ -2890,5 +2890,3 @@ return [
     'enable_auto_convert'                                  => 'Enable currency conversion',
     'disable_auto_convert'                                 => 'Disable currency conversion',
 ];
-
-

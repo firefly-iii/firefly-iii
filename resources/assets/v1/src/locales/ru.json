@@ -170,6 +170,6 @@
     },
     "config": {
         "html_language": "ru",
-        "date_time_fns": "Do MMMM yyyy, @ HH:mm:ss"
+        "date_time_fns": "D MMMM yyyy, @ HH:mm:ss"
     }
 }

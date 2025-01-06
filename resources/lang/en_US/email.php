@@ -190,4 +190,3 @@ return [
     'mfa_many_failed_attempts_warning'            => 'If you did not do this, please contact your administrator immediately or check out the Firefly III documentation.',
 
 ];
-

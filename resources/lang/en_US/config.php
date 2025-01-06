@@ -71,5 +71,3 @@ return [
     'dow_6'                    => 'Saturday',
     'dow_7'                    => 'Sunday',
 ];
-
-
