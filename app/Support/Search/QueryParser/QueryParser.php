@@ -96,7 +96,7 @@ class QueryParser implements QueryParserInterface
                 case '-':
                     if ('' === $tokenUnderConstruction) {
                         // A minus sign at the beginning of a token indicates prohibition
-                        Log::debug('Indicate prohibition');
+                        // Log::debug('Indicate prohibition');
                         $prohibited = true;
                     }
                     if ('' !== $tokenUnderConstruction) {
@@ -196,6 +196,8 @@ class QueryParser implements QueryParserInterface
     {
         if ('' !== $fieldName) {
             Log::debug(sprintf('Create FieldNode %s:%s (%s)', $fieldName, $token, var_export($prohibited, true)));
+            $token = ltrim($token, ':"');
+            $token = rtrim($token, '"');
 
             return new FieldNode(trim($fieldName), trim($token), $prohibited);
         }
