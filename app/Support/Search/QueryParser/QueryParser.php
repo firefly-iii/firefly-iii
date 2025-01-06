@@ -27,19 +27,7 @@ namespace FireflyIII\Support\Search\QueryParser;
 
 use Illuminate\Support\Facades\Log;
 
-/**
- * Represents a result from parsing a query node
- *
- * Contains the parsed node and a flag indicating if this is the end of the query.
- * Used to handle subquery parsing and termination.
- */
-class NodeResult
-{
-    public function __construct(
-        public readonly ?Node $node,
-        public readonly bool  $isSubqueryEnd
-    ) {}
-}
+
 
 
 /**
