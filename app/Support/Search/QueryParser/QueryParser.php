@@ -27,9 +27,6 @@ namespace FireflyIII\Support\Search\QueryParser;
 
 use Illuminate\Support\Facades\Log;
 
-
-
-
 /**
  * Single-pass parser that processes query strings into structured nodes.
  * Scans each character once (O(n)) to build field searches, quoted strings,

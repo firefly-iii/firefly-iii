@@ -1,4 +1,5 @@
 <?php
+
 /*
  * NodeResult.php
  * Copyright (c) 2025 https://github.com/Sobuno
