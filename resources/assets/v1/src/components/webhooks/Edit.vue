@@ -124,7 +124,7 @@ export default {
     },
     downloadWebhook: function (id) {
       axios.get('./api/v1/webhooks/' + id).then(response => {
-        console.log(response.data.data.attributes);
+        // console.log(response.data.data.attributes);
         this.title = response.data.data.attributes.title;
         this.id = parseInt(response.data.data.id);
 

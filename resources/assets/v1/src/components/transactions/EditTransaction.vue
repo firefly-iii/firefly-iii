@@ -154,6 +154,10 @@
                                                     :transactionType="transactionType"
                                                     v-bind:title="$t('form.foreign_amount')"
                                     ></foreign-amount>
+                                    <reconciled v-show="isReconciled"
+                                        v-model="transaction.reconciled"
+                                        :error="transaction.errors.reconciled"
+                                    ></reconciled>
                                 </div>
                                 <div class="col-lg-4">
                                     <budget
@@ -455,6 +459,7 @@ export default {
                 transaction_journal_id: transaction.transaction_journal_id,
                 description: transaction.description,
                 date: transaction.date.substring(0, 16),
+                reconciled: transaction.reconciled,
                 amount: this.roundNumber(this.positiveAmount(transaction.amount), transaction.currency_decimal_places),
                 category: transaction.category_name,
                 errors: {
@@ -464,6 +469,7 @@ export default {
                     amount: [],
                     date: [],
                     budget_id: [],
+                    reconciled: [],
                     bill_id: [],
                     foreign_amount: [],
                     category: [],
@@ -540,7 +546,7 @@ export default {
             // }
         },
         convertData: function () {
-            console.log('start of convertData');
+            // console.log('start of convertData');
             let data = {
                 'apply_rules': this.applyRules,
                 'fire_webhooks': this.fireWebhooks,
@@ -578,7 +584,7 @@ export default {
             if ('deposit' === transactionType) {
                 currencyId = this.transactions[0].destination_account.currency_id;
             }
-            console.log('Overruled currency ID to ' + currencyId);
+            // console.log('Overruled currency ID to ' + currencyId);
 
             for (let key in this.transactions) {
                 if (this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
@@ -586,7 +592,7 @@ export default {
                 }
             }
             //console.log(data);
-            console.log('end of convertData');
+            // console.log('end of convertData');
             return data;
         },
         convertDataRow(row, index, transactionType, currencyId) {
@@ -615,7 +621,7 @@ export default {
             // }
 
             row.currency_id = currencyId;
-            console.log('Final currency ID = ' + currencyId);
+            // console.log('Final currency ID = ' + currencyId);
 
             date = row.date;
             if (index > 0) {
@@ -676,6 +682,8 @@ export default {
                 row.amount = String(row.amount).replace(',', '.');
             }
 
+            // console.log('Reconciled is ' + row.reconciled);
+
             currentArray =
                 {
                     transaction_journal_id: row.transaction_journal_id,
@@ -687,6 +695,8 @@ export default {
 
                     source_id: sourceId,
                     source_name: sourceName,
+
+                    reconciled: row.reconciled,
 
                     destination_id: destId,
                     destination_name: destName,
@@ -726,7 +736,7 @@ export default {
             if (parseInt(row.piggy_bank) > 0) {
                 currentArray.piggy_bank_id = parseInt(row.piggy_bank);
             }
-            if(this.isReconciled && !this.storeAsNew) {
+            if(this.isReconciled && !this.storeAsNew && true === row.reconciled) {
                 // drop content from array:
                 delete currentArray.source_id;
                 delete currentArray.source_name;
@@ -738,11 +748,14 @@ export default {
                 delete currentArray.currency_id;
                 currentArray.reconciled = true;
             }
+            if(true === row.isReconciled) {
+                this.isReconciled = false;
+            }
 
             return currentArray;
         },
         submit: function (e) {
-            console.log('Submit!');
+            // console.log('Submit!');
             let button = $(e.currentTarget);
             button.prop("disabled", true);
 
@@ -751,26 +764,26 @@ export default {
             let uri = './api/v1/transactions/' + groupId + '?_token=' + document.head.querySelector('meta[name="csrf-token"]').content;
             let method = 'PUT';
             if (this.storeAsNew) {
-                console.log('storeAsNew');
+                // console.log('storeAsNew');
                 // other links.
                 uri = './api/v1/transactions?_token=' + document.head.querySelector('meta[name="csrf-token"]').content;
                 method = 'POST';
             }
             const data = this.convertData();
-            console.log('POST!');
+            // console.log('POST!');
             axios({
                 method: method,
                 url: uri,
                 data: data,
             }).then(response => {
-                console.log('Response!');
+                // console.log('Response!');
                 if (0 === this.collectAttachmentData(response)) {
                     const title = response.data.data.attributes.group_title ?? response.data.data.attributes.transactions[0].description;
                     this.redirectUser(response.data.data.id, title);
                 }
                 button.removeAttr('disabled');
             }).catch(error => {
-                console.log('Error :(');
+                // console.log('Error :(');
                 // give user errors things back.
                 // something something render errors.
                 this.parseErrors(error.response.data);
@@ -779,11 +792,11 @@ export default {
             if (e) {
                 e.preventDefault();
             }
-            console.log('DONE with method.');
+            // console.log('DONE with method.');
         },
 
         redirectUser(groupId, title) {
-            console.log('Now in redirectUser');
+            // console.log('Now in redirectUser');
             if (this.returnAfter) {
                 this.setDefaultErrors();
                 // do message if update or new:
@@ -801,11 +814,11 @@ export default {
                     window.location.href = window.previousUrl + '?transaction_group_id=' + groupId + '&message=updated';
                 }
             }
-            console.log('End of redirectUser');
+            // console.log('End of redirectUser');
         },
 
         collectAttachmentData(response) {
-            console.log('Now incollectAttachmentData()');
+            // console.log('Now incollectAttachmentData()');
             let groupId = response.data.data.id;
 
             // array of all files to be uploaded:
@@ -837,7 +850,7 @@ export default {
                 }
             }
             let count = toBeUploaded.length;
-            console.log('Found ' + toBeUploaded.length + ' attachments.');
+            // console.log('Found ' + toBeUploaded.length + ' attachments.');
 
             // loop all uploads.
             for (const key in toBeUploaded) {
@@ -863,7 +876,7 @@ export default {
                     })(toBeUploaded[key], key, this);
                 }
             }
-            console.log('Done with collectAttachmentData()');
+            // console.log('Done with collectAttachmentData()');
             return count;
         },
 
@@ -963,6 +976,7 @@ export default {
                     foreign_amount: [],
                     category: [],
                     piggy_bank: [],
+                    reconciled: [],
                     tags: [],
                     // custom fields:
                     custom_errors: {
@@ -1060,6 +1074,7 @@ export default {
                             case 'budget_id':
                             case 'bill_id':
                             case 'description':
+                            case 'reconciled':
                             case 'tags':
                                 this.transactions[transactionIndex].errors[fieldName] = errors.errors[key];
                                 break;
@@ -1106,6 +1121,7 @@ export default {
                         bill_id: [],
                         foreign_amount: [],
                         category: [],
+                        reconciled: [],
                         piggy_bank: [],
                         tags: [],
                         // custom fields:

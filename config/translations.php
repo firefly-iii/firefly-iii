@@ -146,6 +146,7 @@ return [
                 'select_source_account',
                 'split_transaction_title',
                 'errors_submission',
+                'is_reconciled',
                 'split',
                 'single_split',
                 'transaction_stored_link',

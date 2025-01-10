@@ -31,6 +31,7 @@ import PiggyBank from "./components/transactions/PiggyBank";
 import Tags from "./components/transactions/Tags";
 import Category from "./components/transactions/Category";
 import Amount from "./components/transactions/Amount";
+import Reconciled from "./components/transactions/Reconciled";
 import ForeignAmountSelect from "./components/transactions/ForeignAmountSelect";
 import TransactionType from "./components/transactions/TransactionType";
 import AccountSelect from "./components/transactions/AccountSelect";
@@ -63,6 +64,7 @@ Vue.component('tags', Tags);
 Vue.component('category', Category);
 Vue.component('amount', Amount);
 Vue.component('foreign-amount', ForeignAmountSelect);
+Vue.component('reconciled', Reconciled);
 Vue.component('transaction-type', TransactionType);
 Vue.component('account-select', AccountSelect);
 

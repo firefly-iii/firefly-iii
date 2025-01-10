@@ -203,16 +203,16 @@ export default {
             return ('' === this.rates[index].rate && '' === this.rates[index].inverse) || this.updating;
         },
         updateRate: function (index) {
-            console.log('Update!');
-            console.log(this.rates[index].key);
+            // console.log('Update!');
+            // console.log(this.rates[index].key);
             let parts = this.spliceKey(this.rates[index].key);
             if (0 === parts.length) {
                 return;
             }
             if ('' !== this.rates[index].rate) {
                 // update rate
-                console.log('Rate is ' + this.rates[index].rate);
-                console.log('ID is ' + this.rates[index].rate_id);
+                // console.log('Rate is ' + this.rates[index].rate);
+                // console.log('ID is ' + this.rates[index].rate_id);
                 this.updating = true;
                 axios.put("./api/v2/exchange-rates/" + this.rates[index].rate_id, {rate: this.rates[index].rate})
                     .then(() => {
@@ -221,8 +221,8 @@ export default {
             }
             if ('' !== this.rates[index].inverse) {
                 // update inverse
-                console.log('Inverse is ' + this.rates[index].inverse);
-                console.log('Inverse ID is ' + this.rates[index].inverse_id);
+                // console.log('Inverse is ' + this.rates[index].inverse);
+                // console.log('Inverse ID is ' + this.rates[index].inverse_id);
                 this.updating = true;
                 axios.put("./api/v2/exchange-rates/" + this.rates[index].inverse_id, {rate: this.rates[index].inverse})
                     .then(() => {
@@ -231,12 +231,12 @@ export default {
             }
         },
         deleteRate: function (index) {
-            console.log(this.rates[index].key);
+            // console.log(this.rates[index].key);
             let parts = this.spliceKey(this.rates[index].key);
             if (0 === parts.length) {
                 return;
             }
-            console.log(parts);
+            // console.log(parts);
 
             // delete A to B
             axios.delete("./api/v2/exchange-rates/rates/" + parts.from + '/' + parts.to + '?date=' + format(parts.date, 'yyyy-MM-dd'));
@@ -271,7 +271,7 @@ export default {
                 }
             });
             axios.get("./api/v2/currencies/" + this.to_code).then((response) => {
-                console.log(response.data.data);
+                // console.log(response.data.data);
                 this.to = {
                     id: response.data.data.id,
                     code: response.data.data.attributes.code,
@@ -295,16 +295,16 @@ export default {
                         let rate_id = current.id;
                         let inverse_id = '0';
                         let key = from_code + '_' + to_code + '_' + format(date, 'yyyy-MM-dd');
-                        console.log('Key is now "' + key + '"');
+                        // console.log('Key is now "' + key + '"');
 
                         // perhaps the returned rate is actually the inverse rate.
                         if (from_code === this.to_code && to_code === this.from_code) {
-                            console.log('Inverse rate found!');
+                            // console.log('Inverse rate found!');
                             key = to_code + '_' + from_code + '_' + format(date, 'yyyy-MM-dd');
                             rate = '';
                             inverse = current.attributes.rate;
                             inverse_id = current.id;
-                            console.log('Key updated to "' + key + '"');
+                            // console.log('Key updated to "' + key + '"');
                         }
 
                         if (!this.tempRates.hasOwnProperty(key)) {
