@@ -66,7 +66,7 @@ class UpdatedGroupEventHandler
         $ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
         $ruleGroupRepository->setUser($updatedGroupEvent->transactionGroup->user);
 
-        $groups              = $ruleGroupRepository->getRuleGroupsWithRules('update-journal');
+        $groups              = $ruleGroupRepository->getRuleGroupsWithRules(['update-journal', 'store-or-update-journal']);
 
         // file rule engine.
         $newRuleEngine       = app(RuleEngineInterface::class);

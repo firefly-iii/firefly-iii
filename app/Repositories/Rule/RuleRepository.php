@@ -175,7 +175,7 @@ class RuleRepository implements RuleRepositoryInterface
         foreach ($collection as $rule) {
             /** @var RuleTrigger $ruleTrigger */
             foreach ($rule->ruleTriggers as $ruleTrigger) {
-                if ('user_action' === $ruleTrigger->trigger_type && 'store-journal' === $ruleTrigger->trigger_value) {
+                if ('user_action' === $ruleTrigger->trigger_type && in_array($ruleTrigger->trigger_value, ['store-journal','store-or-update-journal'], true)) {
                     $filtered->push($rule);
                 }
             }
@@ -201,7 +201,7 @@ class RuleRepository implements RuleRepositoryInterface
         foreach ($collection as $rule) {
             /** @var RuleTrigger $ruleTrigger */
             foreach ($rule->ruleTriggers as $ruleTrigger) {
-                if ('user_action' === $ruleTrigger->trigger_type && 'update-journal' === $ruleTrigger->trigger_value) {
+                if ('user_action' === $ruleTrigger->trigger_type && in_array($ruleTrigger->trigger_value, ['update-journal','store-or-update-journal'], true)) {
                     $filtered->push($rule);
                 }
             }
@@ -493,6 +493,9 @@ class RuleRepository implements RuleRepositoryInterface
         }
         if (array_key_exists('trigger', $data) && 'store-journal' === $data['trigger']) {
             $this->setRuleTrigger('store-journal', $rule);
+        }
+        if (array_key_exists('trigger', $data) && 'store-or-update-journal' === $data['trigger']) {
+            $this->setRuleTrigger('store-or-update-journal', $rule);
         }
         if (array_key_exists('triggers', $data)) {
             // delete triggers:

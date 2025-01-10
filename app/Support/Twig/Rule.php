@@ -46,9 +46,10 @@ class Rule extends AbstractExtension
             'allJournalTriggers',
             static function () {
                 return [
-                    'store-journal'     => (string) trans('firefly.rule_trigger_store_journal'),
-                    'update-journal'    => (string) trans('firefly.rule_trigger_update_journal'),
-                    'manual-activation' => (string) trans('firefly.rule_trigger_manual'),
+                    'store-journal'           => (string) trans('firefly.rule_trigger_store_journal'),
+                    'update-journal'          => (string) trans('firefly.rule_trigger_update_journal'),
+                    'store-or-update-journal' => (string) trans('firefly.rule_trigger_store_or_update_journal'),
+                    'manual-activation'       => (string) trans('firefly.rule_trigger_manual'),
                 ];
             }
         );

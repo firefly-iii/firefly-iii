@@ -66,7 +66,7 @@ class StoredGroupEventHandler
 
         // add the groups to the rule engine.
         // it should run the rules in the group and cancel the group if necessary.
-        $groups              = $ruleGroupRepository->getRuleGroupsWithRules('store-journal');
+        $groups              = $ruleGroupRepository->getRuleGroupsWithRules(['store-journal', 'store-or-update-journal']);
 
         // create and fire rule engine.
         $newRuleEngine       = app(RuleEngineInterface::class);

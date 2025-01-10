@@ -236,7 +236,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         return $group->rules()
             ->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
             ->where('rule_triggers.trigger_type', 'user_action')
-            ->where('rule_triggers.trigger_value', 'store-journal')
+            ->whereIn('rule_triggers.trigger_value', ['store-journal', 'store-or-update-journal'])
             ->where('rules.active', true)
             ->get(['rules.*'])
         ;
@@ -247,7 +247,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         return $group->rules()
             ->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
             ->where('rule_triggers.trigger_type', 'user_action')
-            ->where('rule_triggers.trigger_value', 'update-journal')
+            ->whereIn('rule_triggers.trigger_value', ['update-journal', 'store-or-update-journal'])
             ->where('rules.active', true)
             ->get(['rules.*'])
         ;
@@ -308,7 +308,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         return (int) $entry;
     }
 
-    public function getRuleGroupsWithRules(?string $filter): Collection
+    public function getRuleGroupsWithRules(?array $filter): Collection
     {
         $groups = $this->user->ruleGroups()
             ->orderBy('order', 'ASC')
@@ -330,23 +330,24 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         if (null === $filter) {
             return $groups;
         }
-        app('log')->debug(sprintf('Will filter getRuleGroupsWithRules on "%s".', $filter));
+        $implodedFilter = implode(',', $filter);
+        app('log')->debug(sprintf('Will filter getRuleGroupsWithRules on any of %s.', $implodedFilter));
 
         return $groups->map(
-            static function (RuleGroup $group) use ($filter) { // @phpstan-ignore-line
+            static function (RuleGroup $group) use ($filter, $implodedFilter) { // @phpstan-ignore-line
                 app('log')->debug(sprintf('Now filtering group #%d', $group->id));
                 // filter the rules in the rule group:
                 $group->rules = $group->rules->filter(
-                    static function (Rule $rule) use ($filter) {
+                    static function (Rule $rule) use ($filter, $implodedFilter) {
                         app('log')->debug(sprintf('Now filtering rule #%d', $rule->id));
                         foreach ($rule->ruleTriggers as $trigger) {
-                            if ('user_action' === $trigger->trigger_type && $filter === $trigger->trigger_value) {
-                                app('log')->debug(sprintf('Rule #%d triggers on %s, include it.', $rule->id, $filter));
+                            if ('user_action' === $trigger->trigger_type && in_array($trigger->trigger_value, $filter, true)) {
+                                app('log')->debug(sprintf('Rule #%d triggers on %s, include it.', $rule->id, $trigger->trigger_value));
 
                                 return true;
                             }
                         }
-                        app('log')->debug(sprintf('Rule #%d does not trigger on %s, do not include it.', $rule->id, $filter));
+                        app('log')->debug(sprintf('Rule #%d does not trigger on any of %s, do not include it.', $rule->id, $implodedFilter));
 
                         return false;
                     }
