@@ -1678,7 +1678,7 @@ return [
 
     // transaction index
     'is_reconciled_fields_dropped'                         => 'Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s) unless you remove the reconciliation flag.',
-    'is_reconciled' => 'Is reconciled',
+    'is_reconciled'                                        => 'Is reconciled',
     'title_expenses'                                       => 'Expenses',
     'title_withdrawal'                                     => 'Expenses',
     'title_revenue'                                        => 'Revenue / income',
