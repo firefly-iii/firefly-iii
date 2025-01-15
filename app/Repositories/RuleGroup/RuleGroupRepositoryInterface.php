@@ -71,7 +71,7 @@ interface RuleGroupRepositoryInterface
 
     public function getHighestOrderRuleGroup(): int;
 
-    public function getRuleGroupsWithRules(?string $filter): Collection;
+    public function getRuleGroupsWithRules(?array $filter): Collection;
 
     public function getRules(RuleGroup $group): Collection;
 
