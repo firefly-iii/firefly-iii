@@ -307,7 +307,7 @@ class AccountRepository implements AccountRepositoryInterface
         if (null === $transaction) {
             return null;
         }
-        if($convertToNative) {
+        if ($convertToNative) {
             return $transaction->native_amount ?? '0';
         }
 

@@ -59,35 +59,35 @@ class AccountTransformer extends AbstractTransformer
         $this->repository->setUser($account->user);
 
         // get account type:
-        $fullType           = $account->accountType->type;
-        $accountType        = (string) config(sprintf('firefly.shortNamesByFullName.%s', $fullType));
-        $liabilityType      = (string) config(sprintf('firefly.shortLiabilityNameByFullName.%s', $fullType));
-        $liabilityType      = '' === $liabilityType ? null : strtolower($liabilityType);
-        $liabilityDirection = $this->repository->getMetaValue($account, 'liability_direction');
-        $convertToNative    = Amount::convertToNative();
+        $fullType                                                     = $account->accountType->type;
+        $accountType                                                  = (string) config(sprintf('firefly.shortNamesByFullName.%s', $fullType));
+        $liabilityType                                                = (string) config(sprintf('firefly.shortLiabilityNameByFullName.%s', $fullType));
+        $liabilityType                                                = '' === $liabilityType ? null : strtolower($liabilityType);
+        $liabilityDirection                                           = $this->repository->getMetaValue($account, 'liability_direction');
+        $convertToNative                                              = Amount::convertToNative();
 
         // get account role (will only work if the type is asset).
-        $default     = Amount::getDefaultCurrency();
-        $accountRole = $this->getAccountRole($account, $accountType);
-        $date        = $this->getDate();
+        $default                                                      = Amount::getDefaultCurrency();
+        $accountRole                                                  = $this->getAccountRole($account, $accountType);
+        $date                                                         = $this->getDate();
         $date->endOfDay();
 
         [$currencyId, $currencyCode, $currencySymbol, $decimalPlaces] = $this->getCurrency($account, $default);
-        [$creditCardType, $monthlyPaymentDate] = $this->getCCInfo($account, $accountRole, $accountType);
+        [$creditCardType, $monthlyPaymentDate]                        = $this->getCCInfo($account, $accountRole, $accountType);
         [$openingBalance, $nativeOpeningBalance, $openingBalanceDate] = $this->getOpeningBalance($account, $accountType, $convertToNative);
-        [$interest, $interestPeriod] = $this->getInterest($account, $accountType);
+        [$interest, $interestPeriod]                                  = $this->getInterest($account, $accountType);
 
         if (!$convertToNative) {
             // reset default currency to NULL, not interesting.
             $default = null;
         }
 
-        $openingBalance  = app('steam')->bcround($openingBalance, $decimalPlaces);
-        $includeNetWorth = '0' !== $this->repository->getMetaValue($account, 'include_net_worth');
-        $longitude       = null;
-        $latitude        = null;
-        $zoomLevel       = null;
-        $location        = $this->repository->getLocation($account);
+        $openingBalance                                               = app('steam')->bcround($openingBalance, $decimalPlaces);
+        $includeNetWorth                                              = '0' !== $this->repository->getMetaValue($account, 'include_net_worth');
+        $longitude                                                    = null;
+        $latitude                                                     = null;
+        $zoomLevel                                                    = null;
+        $location                                                     = $this->repository->getLocation($account);
         if (null !== $location) {
             $longitude = $location->longitude;
             $latitude  = $location->latitude;
@@ -95,18 +95,18 @@ class AccountTransformer extends AbstractTransformer
         }
 
         // no order for some accounts:
-        $order = $account->order;
+        $order                                                        = $account->order;
         if (!in_array(strtolower($accountType), ['liability', 'liabilities', 'asset'], true)) {
             $order = null;
         }
         // balance, native balance, virtual balance, native virtual balance?
-        $finalBalance         = Steam::finalAccountBalance($account, $date);
-        if($convertToNative) {
+        $finalBalance                                                 = Steam::finalAccountBalance($account, $date);
+        if ($convertToNative) {
             $finalBalance['balance'] = $finalBalance[$currencyCode] ?? '0';
         }
 
-        $currentBalance       = app('steam')->bcround($finalBalance['balance'] ?? '0', $decimalPlaces);
-        $nativeCurrentBalance = $convertToNative ? app('steam')->bcround($finalBalance['native_balance'] ?? '0', $default->decimal_places) : null;
+        $currentBalance                                               = app('steam')->bcround($finalBalance['balance'] ?? '0', $decimalPlaces);
+        $nativeCurrentBalance                                         = $convertToNative ? app('steam')->bcround($finalBalance['native_balance'] ?? '0', $default->decimal_places) : null;
 
         return [
             'id'                             => (string) $account->id,
@@ -151,7 +151,7 @@ class AccountTransformer extends AbstractTransformer
             'links'                          => [
                 [
                     'rel' => 'self',
-                    'uri' => '/accounts/' . $account->id,
+                    'uri' => '/accounts/'.$account->id,
                 ],
             ],
         ];
@@ -182,7 +182,7 @@ class AccountTransformer extends AbstractTransformer
 
     private function getCurrency(Account $account, TransactionCurrency $default): array
     {
-        $currency = $this->repository->getAccountCurrency($account);
+        $currency       = $this->repository->getAccountCurrency($account);
 
         // only grab default when result is null:
         if (null === $currency) {
@@ -207,7 +207,7 @@ class AccountTransformer extends AbstractTransformer
         if (null !== $monthlyPaymentDate) {
             // try classic date:
             if (10 === strlen($monthlyPaymentDate)) {
-                $object = Carbon::createFromFormat('!Y-m-d', $monthlyPaymentDate, config('app.timezone'));
+                $object             = Carbon::createFromFormat('!Y-m-d', $monthlyPaymentDate, config('app.timezone'));
                 if (null === $object) {
                     $object = today(config('app.timezone'));
                 }
@@ -235,7 +235,7 @@ class AccountTransformer extends AbstractTransformer
             $openingBalanceDate   = $this->repository->getOpeningBalanceDate($account);
         }
         if (null !== $openingBalanceDate) {
-            $object = Carbon::createFromFormat('Y-m-d H:i:s', $openingBalanceDate, config('app.timezone'));
+            $object             = Carbon::createFromFormat('Y-m-d H:i:s', $openingBalanceDate, config('app.timezone'));
             if (null === $object) {
                 $object = today(config('app.timezone'));
             }
