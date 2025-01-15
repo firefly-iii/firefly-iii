@@ -119,7 +119,7 @@ class EditController extends Controller
         }
         $request->session()->forget('accounts.edit.fromUpdate');
 
-        $openingBalanceAmount = (string) $repository->getOpeningBalanceAmount($account);
+        $openingBalanceAmount = (string) $repository->getOpeningBalanceAmount($account, false);
         if ('0' === $openingBalanceAmount) {
             $openingBalanceAmount = '';
         }

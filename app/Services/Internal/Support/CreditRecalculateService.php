@@ -170,7 +170,7 @@ class CreditRecalculateService
                 $this->validateOpeningBalance($account, $openingBalance);
             }
         }
-        $startOfDebt    = $this->repository->getOpeningBalanceAmount($account) ?? '0';
+        $startOfDebt    = $this->repository->getOpeningBalanceAmount($account, false) ?? '0';
         $leftOfDebt     = app('steam')->positive($startOfDebt);
         //        Log::debug(sprintf('Start of debt is "%s", so initial left of debt is "%s"', app('steam')->bcround($startOfDebt, 2), app('steam')->bcround($leftOfDebt, 2)));
 
