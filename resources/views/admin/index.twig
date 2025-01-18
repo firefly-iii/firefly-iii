@@ -35,24 +35,6 @@
         <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
             <div class="box box-default">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'send_test_email'|_ }}</h3>
-                </div>
-                <form action="{{ route('admin.test-message') }}" method="post">
-                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                    <div class="box-body">
-                        <p>
-                            {{ trans('firefly.send_test_email_text', {email:email})|raw }}
-                        </p>
-                    </div>
-                    <div class="box-footer">
-                        <button type="submit" class="btn btn-success">
-                            <span class="fa fa-envelope"></span> {{ ('send_message')|_ }}
-                        </button>
-                    </div>
-                </form>
-            </div>
-            <div class="box box-default">
-                <div class="box-header with-border">
                     <h3 class="box-title">{{ 'admin_maintanance_title'|_ }}</h3>
                 </div>
                 <div class="box-body">

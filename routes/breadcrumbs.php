@@ -175,7 +175,7 @@ Breadcrumbs::for(
     'admin.index',
     static function (Generator $breadcrumbs): void {
         $breadcrumbs->parent('home');
-        $breadcrumbs->push(trans('firefly.administration'), route('admin.index'));
+        $breadcrumbs->push(trans('firefly.system_settings'), route('admin.index'));
     }
 );
 
