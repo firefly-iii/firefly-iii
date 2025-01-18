@@ -25,9 +25,11 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 use FireflyIII\Models\AvailableBudget;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\NoBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
 
 /**
  * Class AvailableBudgetTransformer
@@ -37,6 +39,8 @@ class AvailableBudgetTransformer extends AbstractTransformer
     private NoBudgetRepositoryInterface   $noBudgetRepository;
     private OperationsRepositoryInterface $opsRepository;
     private BudgetRepositoryInterface     $repository;
+    private TransactionCurrency           $default;
+    private bool $convertToNative;
 
     /**
      * CurrencyTransformer constructor.
@@ -46,6 +50,8 @@ class AvailableBudgetTransformer extends AbstractTransformer
         $this->repository         = app(BudgetRepositoryInterface::class);
         $this->opsRepository      = app(OperationsRepositoryInterface::class);
         $this->noBudgetRepository = app(NoBudgetRepositoryInterface::class);
+        $this->default            = Amount::getDefaultCurrency();
+        $this->convertToNative    = Amount::convertToNative();
     }
 
     /**
@@ -56,23 +62,32 @@ class AvailableBudgetTransformer extends AbstractTransformer
         $this->repository->setUser($availableBudget->user);
 
         $currency = $availableBudget->transactionCurrency;
+        $default = $this->default;
+        if(!$this->convertToNative) {
+            $default = null;
+        }
         $data     = [
-            'id'                      => (string) $availableBudget->id,
-            'created_at'              => $availableBudget->created_at->toAtomString(),
-            'updated_at'              => $availableBudget->updated_at->toAtomString(),
-            'currency_id'             => (string) $currency->id,
-            'currency_code'           => $currency->code,
-            'currency_symbol'         => $currency->symbol,
-            'currency_decimal_places' => $currency->decimal_places,
-            'amount'                  => app('steam')->bcround($availableBudget->amount, $currency->decimal_places),
-            'start'                   => $availableBudget->start_date->toAtomString(),
-            'end'                     => $availableBudget->end_date->endOfDay()->toAtomString(),
-            'spent_in_budgets'        => [],
-            'spent_no_budget'         => [],
-            'links'                   => [
+            'id'                             => (string) $availableBudget->id,
+            'created_at'                     => $availableBudget->created_at->toAtomString(),
+            'updated_at'                     => $availableBudget->updated_at->toAtomString(),
+            'currency_id'                    => (string) $currency->id,
+            'currency_code'                  => $currency->code,
+            'currency_symbol'                => $currency->symbol,
+            'currency_decimal_places'        => $currency->decimal_places,
+            'native_currency_id'             => null === $default ? null : (string) $default->id,
+            'native_currency_code'           => $default?->code,
+            'native_currency_symbol'         => $default?->symbol,
+            'native_currency_decimal_places' => $default?->decimal_places,
+            'amount'                         => app('steam')->bcround($availableBudget->amount, $currency->decimal_places),
+            'native_amount'                  => $this->convertToNative ? app('steam')->bcround($availableBudget->native_amount, $currency->decimal_places) : null,
+            'start'                          => $availableBudget->start_date->toAtomString(),
+            'end'                            => $availableBudget->end_date->endOfDay()->toAtomString(),
+            'spent_in_budgets'               => [],
+            'spent_no_budget'                => [],
+            'links'                          => [
                 [
                     'rel' => 'self',
-                    'uri' => '/available_budgets/'.$availableBudget->id,
+                    'uri' => '/available_budgets/' . $availableBudget->id,
                 ],
             ],
         ];

@@ -28,8 +28,10 @@ use Carbon\Carbon;
 use Carbon\CarbonInterface;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\ObjectGroup;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Models\BillDateCalculator;
 use Illuminate\Support\Collection;
 
@@ -40,14 +42,18 @@ class BillTransformer extends AbstractTransformer
 {
     private BillDateCalculator      $calculator;
     private BillRepositoryInterface $repository;
+    private TransactionCurrency     $default;
+    private bool                    $convertToNative;
 
     /**
      * BillTransformer constructor.
      */
     public function __construct()
     {
-        $this->repository = app(BillRepositoryInterface::class);
-        $this->calculator = app(BillDateCalculator::class);
+        $this->repository      = app(BillRepositoryInterface::class);
+        $this->calculator      = app(BillDateCalculator::class);
+        $this->default         = Amount::getDefaultCurrency();
+        $this->convertToNative = Amount::convertToNative();
     }
 
     /**
@@ -58,23 +64,23 @@ class BillTransformer extends AbstractTransformer
      */
     public function transform(Bill $bill): array
     {
-        $defaultCurrency   = $this->parameters->get('defaultCurrency') ?? app('amount')->getDefaultCurrency();
+        $default = $this->parameters->get('defaultCurrency') ?? $this->default;
 
-        $paidData          = $this->paidData($bill);
-        $lastPaidDate      = $this->getLastPaidDate($paidData);
-        $start             = $this->parameters->get('start') ?? today()->subYears(10);
-        $end               = $this->parameters->get('end') ?? today()->addYears(10);
-        $payDates          = $this->calculator->getPayDates($start, $end, $bill->date, $bill->repeat_freq, $bill->skip, $lastPaidDate);
-        $currency          = $bill->transactionCurrency;
-        $notes             = $this->repository->getNoteText($bill);
-        $notes             = '' === $notes ? null : $notes;
-        $objectGroupId     = null;
-        $objectGroupOrder  = null;
-        $objectGroupTitle  = null;
+        $paidData         = $this->paidData($bill);
+        $lastPaidDate     = $this->getLastPaidDate($paidData);
+        $start            = $this->parameters->get('start') ?? today()->subYears(10);
+        $end              = $this->parameters->get('end') ?? today()->addYears(10);
+        $payDates         = $this->calculator->getPayDates($start, $end, $bill->date, $bill->repeat_freq, $bill->skip, $lastPaidDate);
+        $currency         = $bill->transactionCurrency;
+        $notes            = $this->repository->getNoteText($bill);
+        $notes            = '' === $notes ? null : $notes;
+        $objectGroupId    = null;
+        $objectGroupOrder = null;
+        $objectGroupTitle = null;
         $this->repository->setUser($bill->user);
 
         /** @var null|ObjectGroup $objectGroup */
-        $objectGroup       = $bill->objectGroups->first();
+        $objectGroup = $bill->objectGroups->first();
         if (null !== $objectGroup) {
             $objectGroupId    = $objectGroup->id;
             $objectGroupOrder = $objectGroup->order;
@@ -84,7 +90,7 @@ class BillTransformer extends AbstractTransformer
         $paidDataFormatted = [];
         $payDatesFormatted = [];
         foreach ($paidData as $object) {
-            $date                = Carbon::createFromFormat('!Y-m-d', $object['date'], config('app.timezone'));
+            $date = Carbon::createFromFormat('!Y-m-d', $object['date'], config('app.timezone'));
             if (null === $date) {
                 $date = today(config('app.timezone'));
             }
@@ -93,24 +99,24 @@ class BillTransformer extends AbstractTransformer
         }
 
         foreach ($payDates as $string) {
-            $date                = Carbon::createFromFormat('!Y-m-d', $string, config('app.timezone'));
+            $date = Carbon::createFromFormat('!Y-m-d', $string, config('app.timezone'));
             if (null === $date) {
                 $date = today(config('app.timezone'));
             }
             $payDatesFormatted[] = $date->toAtomString();
         }
         // next expected match
-        $nem               = null;
-        $nemDate           = null;
-        $nemDiff           = trans('firefly.not_expected_period');
-        $firstPayDate      = $payDates[0] ?? null;
+        $nem          = null;
+        $nemDate      = null;
+        $nemDiff      = trans('firefly.not_expected_period');
+        $firstPayDate = $payDates[0] ?? null;
 
         if (null !== $firstPayDate) {
             $nemDate = Carbon::createFromFormat('!Y-m-d', $firstPayDate, config('app.timezone'));
             if (null === $nemDate) {
                 $nemDate = today(config('app.timezone'));
             }
-            $nem     = $nemDate->toAtomString();
+            $nem = $nemDate->toAtomString();
 
             // nullify again when it's outside the current view range.
             if (
@@ -131,7 +137,7 @@ class BillTransformer extends AbstractTransformer
 
             $current = $payDatesFormatted[0] ?? null;
             if (null !== $current && !$nemDate->isToday()) {
-                $temp2   = Carbon::createFromFormat('Y-m-d\TH:i:sP', $current);
+                $temp2 = Carbon::createFromFormat('Y-m-d\TH:i:sP', $current);
                 if (null === $temp2) {
                     $temp2 = today(config('app.timezone'));
                 }
@@ -141,18 +147,22 @@ class BillTransformer extends AbstractTransformer
         }
 
         return [
-            'id'                       => $bill->id,
-            'created_at'               => $bill->created_at->toAtomString(),
-            'updated_at'               => $bill->updated_at->toAtomString(),
-            'currency_id'              => (string) $bill->transaction_currency_id,
-            'currency_code'            => $currency->code,
-            'currency_symbol'          => $currency->symbol,
-            'currency_decimal_places'  => $currency->decimal_places,
+            'id'                             => $bill->id,
+            'created_at'                     => $bill->created_at->toAtomString(),
+            'updated_at'                     => $bill->updated_at->toAtomString(),
+            'currency_id'                    => (string) $bill->transaction_currency_id,
+            'currency_code'                  => $currency->code,
+            'currency_symbol'                => $currency->symbol,
+            'currency_decimal_places'        => $currency->decimal_places,
+            'native_currency_id'             => null === $default ? null : (string) $default->id,
+            'native_currency_code'           => $default?->code,
+            'native_currency_symbol'         => $default?->symbol,
+            'native_currency_decimal_places' => $default?->decimal_places,
             'name'                     => $bill->name,
             'amount_min'               => app('steam')->bcround($bill->amount_min, $currency->decimal_places),
             'amount_max'               => app('steam')->bcround($bill->amount_max, $currency->decimal_places),
-            'native_amount_min'        => app('steam')->bcround($bill->native_amount_min, $defaultCurrency->decimal_places),
-            'native_amount_max'        => app('steam')->bcround($bill->native_amount_max, $defaultCurrency->decimal_places),
+            'native_amount_min'        => $this->convertToNative ? app('steam')->bcround($bill->native_amount_min, $default->decimal_places) : null,
+            'native_amount_max'        => $this->convertToNative ? app('steam')->bcround($bill->native_amount_max, $default->decimal_places) : null,
             'date'                     => $bill->date->toAtomString(),
             'end_date'                 => $bill->end_date?->toAtomString(),
             'extension_date'           => $bill->extension_date?->toAtomString(),
@@ -173,7 +183,7 @@ class BillTransformer extends AbstractTransformer
             'links'                    => [
                 [
                     'rel' => 'self',
-                    'uri' => '/bills/'.$bill->id,
+                    'uri' => '/bills/' . $bill->id,
                 ],
             ],
         ];
@@ -195,13 +205,13 @@ class BillTransformer extends AbstractTransformer
         // 2023-07-18 this particular date is used to search for the last paid date.
         // 2023-07-18 the cloned $searchDate is used to grab the correct transactions.
         /** @var Carbon $start */
-        $start        = clone $this->parameters->get('start');
-        $searchStart  = clone $start;
+        $start       = clone $this->parameters->get('start');
+        $searchStart = clone $start;
         $start->subDay();
 
         /** @var Carbon $end */
-        $end          = clone $this->parameters->get('end');
-        $searchEnd    = clone $end;
+        $end       = clone $this->parameters->get('end');
+        $searchEnd = clone $end;
 
         // move the search dates to the start of the day.
         $searchStart->startOfDay();
@@ -211,7 +221,7 @@ class BillTransformer extends AbstractTransformer
         app('log')->debug(sprintf('Search parameters are: start: %s', $searchStart->format('Y-m-d')));
 
         // Get from database when bill was paid.
-        $set          = $this->repository->getPaidDatesInRange($bill, $searchStart, $searchEnd);
+        $set = $this->repository->getPaidDatesInRange($bill, $searchStart, $searchEnd);
         app('log')->debug(sprintf('Count %d entries in getPaidDatesInRange()', $set->count()));
 
         // Grab from array the most recent payment. If none exist, fall back to the start date and pretend *that* was the last paid date.
@@ -220,7 +230,7 @@ class BillTransformer extends AbstractTransformer
         app('log')->debug(sprintf('Result of lastPaidDate is %s', $lastPaidDate->format('Y-m-d')));
 
         // At this point the "next match" is exactly after the last time the bill was paid.
-        $result       = [];
+        $result = [];
         foreach ($set as $entry) {
             $result[] = [
                 'transaction_group_id'   => (string) $entry->transaction_group_id,

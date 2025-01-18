@@ -25,8 +25,10 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 use FireflyIII\Models\Category;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
 use Illuminate\Support\Collection;
 
 /**
@@ -36,14 +38,18 @@ class CategoryTransformer extends AbstractTransformer
 {
     private OperationsRepositoryInterface $opsRepository;
     private CategoryRepositoryInterface   $repository;
+    private TransactionCurrency           $default;
+    private bool                          $convertToNative;
 
     /**
      * CategoryTransformer constructor.
      */
     public function __construct()
     {
-        $this->opsRepository = app(OperationsRepositoryInterface::class);
-        $this->repository    = app(CategoryRepositoryInterface::class);
+        $this->opsRepository   = app(OperationsRepositoryInterface::class);
+        $this->repository      = app(CategoryRepositoryInterface::class);
+        $this->default         = Amount::getDefaultCurrency();
+        $this->convertToNative = Amount::convertToNative();
     }
 
     /**
@@ -62,20 +68,28 @@ class CategoryTransformer extends AbstractTransformer
             $earned = $this->beautify($this->opsRepository->sumIncome($start, $end, null, new Collection([$category])));
             $spent  = $this->beautify($this->opsRepository->sumExpenses($start, $end, null, new Collection([$category])));
         }
-        $notes  = $this->repository->getNoteText($category);
+        $default = $this->default;
+        if (!$this->convertToNative) {
+            $default = null;
+        }
+        $notes = $this->repository->getNoteText($category);
 
         return [
-            'id'         => $category->id,
-            'created_at' => $category->created_at->toAtomString(),
-            'updated_at' => $category->updated_at->toAtomString(),
-            'name'       => $category->name,
-            'notes'      => $notes,
-            'spent'      => $spent,
-            'earned'     => $earned,
-            'links'      => [
+            'id'                             => $category->id,
+            'created_at'                     => $category->created_at->toAtomString(),
+            'updated_at'                     => $category->updated_at->toAtomString(),
+            'name'                           => $category->name,
+            'notes'                          => $notes,
+            'native_currency_id'             => null === $default ? null : (string) $default->id,
+            'native_currency_code'           => $default?->code,
+            'native_currency_symbol'         => $default?->symbol,
+            'native_currency_decimal_places' => $default?->decimal_places,
+            'spent'                          => $spent,
+            'earned'                         => $earned,
+            'links'                          => [
                 [
                     'rel' => 'self',
-                    'uri' => '/categories/'.$category->id,
+                    'uri' => '/categories/' . $category->id,
                 ],
             ],
         ];
