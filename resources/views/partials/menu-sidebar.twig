@@ -189,7 +189,7 @@
         </li>
     {% endif %}
 
-    <li class="{{ activeRoutePartial('admin') }} {{ activeRoutePartial('profile') }} {{ activeRoutePartial('preferences') }} {{ activeRoutePartial('currencies') }} {{ activeRoutePartial('exchange-rates') }} treeview"
+    <li class="{{ activeRoutePartial('administrations') }} {{ activeRoutePartial('admin') }} {{ activeRoutePartial('profile') }} {{ activeRoutePartial('preferences') }} {{ activeRoutePartial('currencies') }} {{ activeRoutePartial('exchange-rates') }} treeview"
         id="option-menu">
         <a href="#">
             <em class="fa fa-sliders fa-fw"></em>
@@ -227,11 +227,17 @@
                 </a>
             </li>
             {% endif %}
+            <li class="{{ activeRoutePartial('administrations') }}">
+                <a class="{{ activeRoutePartial('administration') }}" href="{{ route('administrations.index') }}">
+                    <span class="fa fa-angle-right fa-fw"></span>
+                    <span>{{ 'administrations_index_menu'|_ }}</span>
+                </a>
+            </li>
             {% if hasRole('owner') %}
-                <li class="{{ activeRoutePartial('admin') }}">
-                    <a class="{{ activeRoutePartial('admin') }}" href="{{ route('admin.index') }}">
+                <li class="{{ activeRoutePartial('settings') }}">
+                    <a class="{{ activeRoutePartial('settings') }}" href="{{ route('admin.index') }}">
                         <span class="fa fa-angle-right fa-fw"></span>
-                        <span>{{ 'administration'|_ }}</span>
+                        <span>{{ 'system_settings'|_ }}</span>
                     </a>
                 </li>
             {% endif %}

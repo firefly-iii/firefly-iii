@@ -1369,7 +1369,7 @@ Route::group(
 
 // For the admin routes, the user must be logged in and have the role of 'owner'.
 Route::group(
-    ['middleware' => 'admin', 'namespace' => 'FireflyIII\Http\Controllers\Admin', 'prefix' => 'settings', 'as' => 'admin.'],
+    ['middleware' => 'admin', 'namespace' => 'FireflyIII\Http\Controllers\Admin', 'prefix' => 'settings', 'as' => 'settings.'],
     static function (): void {
         // admin home
         Route::get('', ['uses' => 'HomeController@index', 'as' => 'index']);
