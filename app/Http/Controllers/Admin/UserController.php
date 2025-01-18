@@ -55,7 +55,7 @@ class UserController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.administration'));
+                app('view')->share('title', (string) trans('firefly.system_settings'));
                 app('view')->share('mainTitleIcon', 'fa-hand-spock-o');
                 $this->repository = app(UserRepositoryInterface::class);
 
@@ -74,12 +74,12 @@ class UserController extends Controller
         if ($this->externalIdentity) {
             request()->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
 
-            return redirect(route('admin.users'));
+            return redirect(route('settings.users'));
         }
 
         $subTitle = (string) trans('firefly.delete_user', ['email' => $user->email]);
 
-        return view('admin.users.delete', compact('user', 'subTitle'));
+        return view('settings.users.delete', compact('user', 'subTitle'));
     }
 
     public function deleteInvite(InvitedUser $invitedUser): JsonResponse
@@ -108,12 +108,12 @@ class UserController extends Controller
         if ($this->externalIdentity) {
             request()->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
 
-            return redirect(route('admin.users'));
+            return redirect(route('settings.users'));
         }
         $this->repository->destroy($user);
         session()->flash('success', (string) trans('firefly.user_deleted'));
 
-        return redirect(route('admin.users'));
+        return redirect(route('settings.users'));
     }
 
     /**
@@ -186,7 +186,7 @@ class UserController extends Controller
         // event!
         event(new InvitationCreated($invitee));
 
-        return redirect(route('admin.users'));
+        return redirect(route('settings.users'));
     }
 
     /**
@@ -196,7 +196,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        $title         = (string) trans('firefly.administration');
+        $title         = (string) trans('firefly.system_settings');
         $mainTitleIcon = 'fa-hand-spock-o';
         $subTitle      = (string) trans('firefly.single_user_administration', ['email' => $user->email]);
         $subTitleIcon  = 'fa-user';
@@ -248,7 +248,7 @@ class UserController extends Controller
         if (1 === (int) $request->get('return_to_edit')) {
             session()->put('users.edit.fromUpdate', true);
 
-            $redirect = redirect(route('admin.users.edit', [$user->id]))->withInput(['return_to_edit' => 1]);
+            $redirect = redirect(route('settings.users.edit', [$user->id]))->withInput(['return_to_edit' => 1]);
         }
 
         // redirect to previous URL.

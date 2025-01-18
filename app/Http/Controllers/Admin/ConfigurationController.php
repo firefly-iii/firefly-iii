@@ -45,7 +45,7 @@ class ConfigurationController extends Controller
 
         $this->middleware(
             static function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.administration'));
+                app('view')->share('title', (string) trans('firefly.system_settings'));
                 app('view')->share('mainTitleIcon', 'fa-hand-spock-o');
 
                 return $next($request);
@@ -73,7 +73,7 @@ class ConfigurationController extends Controller
         $siteOwner      = config('firefly.site_owner');
 
         return view(
-            'admin.configuration.index',
+            'settings.configuration.index',
             compact('subTitle', 'subTitleIcon', 'singleUserMode', 'isDemoSite', 'siteOwner')
         );
     }
@@ -96,6 +96,6 @@ class ConfigurationController extends Controller
         session()->flash('success', (string) trans('firefly.configuration_updated'));
         app('preferences')->mark();
 
-        return redirect()->route('admin.configuration.index');
+        return redirect()->route('settings.configuration.index');
     }
 }

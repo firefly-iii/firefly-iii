@@ -38,7 +38,7 @@ class NotificationController extends Controller
     public function index(): View
     {
         Log::channel('audit')->info('User visits notifications index.');
-        $title                          = (string) trans('firefly.administration');
+        $title                          = (string) trans('firefly.system_settings');
         $mainTitleIcon                  = 'fa-hand-spock-o';
         $subTitle                       = (string) trans('firefly.title_owner_notifications');
         $subTitleIcon                   = 'envelope-o';
@@ -115,7 +115,7 @@ class NotificationController extends Controller
 
         session()->flash('success', (string) trans('firefly.notification_settings_saved'));
 
-        return redirect(route('admin.notification.index'));
+        return redirect(route('settings.notification.index'));
     }
 
     public function testNotification(Request $request): RedirectResponse
@@ -140,6 +140,6 @@ class NotificationController extends Controller
                 session()->flash('success', (string) trans('firefly.notification_test_executed', ['channel' => $channel]));
         }
 
-        return redirect(route('admin.notification.index'));
+        return redirect(route('settings.notification.index'));
     }
 }

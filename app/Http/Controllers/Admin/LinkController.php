@@ -51,7 +51,7 @@ class LinkController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.administration'));
+                app('view')->share('title', (string) trans('firefly.system_settings'));
                 app('view')->share('mainTitleIcon', 'fa-hand-spock-o');
                 $this->repository = app(LinkTypeRepositoryInterface::class);
 
@@ -91,7 +91,7 @@ class LinkController extends Controller
         if (false === $linkType->editable) {
             $request->session()->flash('error', (string) trans('firefly.cannot_edit_link_type', ['name' => e($linkType->name)]));
 
-            return redirect(route('admin.links.index'));
+            return redirect(route('settings.links.index'));
         }
 
         Log::channel('audit')->info(sprintf('User wants to delete link type #%d', $linkType->id));
@@ -142,7 +142,7 @@ class LinkController extends Controller
         if (false === $linkType->editable) {
             $request->session()->flash('error', (string) trans('firefly.cannot_edit_link_type', ['name' => e($linkType->name)]));
 
-            return redirect(route('admin.links.index'));
+            return redirect(route('settings.links.index'));
         }
         $subTitle     = (string) trans('firefly.edit_link_type', ['name' => $linkType->name]);
         $subTitleIcon = 'fa-link';
@@ -217,7 +217,7 @@ class LinkController extends Controller
             // set value so create routine will not overwrite URL:
             $request->session()->put('link-types.create.fromStore', true);
 
-            $redirect = redirect(route('admin.links.create'))->withInput();
+            $redirect = redirect(route('settings.links.create'))->withInput();
         }
 
         // redirect to previous URL.
@@ -234,7 +234,7 @@ class LinkController extends Controller
         if (false === $linkType->editable) {
             $request->session()->flash('error', (string) trans('firefly.cannot_edit_link_type', ['name' => e($linkType->name)]));
 
-            return redirect(route('admin.links.index'));
+            return redirect(route('settings.links.index'));
         }
 
         $data     = [
