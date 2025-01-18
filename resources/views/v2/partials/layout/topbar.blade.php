@@ -18,7 +18,7 @@
         <i class="fa-solid fa-gears"></i>
     </a>
     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-        <a href="{{ route('admin.index') }}" class="dropdown-item">
+        <a href="{{ route('settings.index') }}" class="dropdown-item">
             <em class="fa-regular fa-user me-2 fa-fw"></em>
             {{ __('firefly.system_settings') }}
         </a>

@@ -27,9 +27,9 @@
                                 <td>
                                     {% if linkType.editable %}
                                         <div class="btn-group btn-group-xs">
-                                            <a class="btn btn-default btn-xs" href="{{ route('admin.links.edit',linkType.id) }}"><span
+                                            <a class="btn btn-default btn-xs" href="{{ route('settings.links.edit',linkType.id) }}"><span
                                                     class="fa fa-fw fa-pencil"></span></a>
-                                            <a class="btn btn-danger btn-xs" href="{{ route('admin.links.delete',linkType.id) }}"><span
+                                            <a class="btn btn-danger btn-xs" href="{{ route('settings.links.delete',linkType.id) }}"><span
                                                     class="fa fa-fw fa-trash-o"></span></a>
                                         </div>
                                     {% endif %}
@@ -44,7 +44,7 @@
                                     {{ journalLinkTranslation('outward', linkType.outward) }}
                                 </td>
                                 <td data-value="{{ linkType.journalCount }}">
-                                    <a href="{{ route('admin.links.show', [linkType.id]) }}">{{ linkType.journalCount }}</a>
+                                    <a href="{{ route('settings.links.show', [linkType.id]) }}">{{ linkType.journalCount }}</a>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -52,7 +52,7 @@
                     </table>
                 </div>
                 <div class="box-footer">
-                    <a href="{{ route('admin.links.create') }}" class="btn btn-success">{{ 'create_new_link_type'|_ }}</a>
+                    <a href="{{ route('settings.links.create') }}" class="btn btn-success">{{ 'create_new_link_type'|_ }}</a>
                 </div>
             </div>
         </div>

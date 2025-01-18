@@ -5,7 +5,7 @@
 {% endblock %}
 {% block content %}
 
-    <form method="post" action="{{ route('admin.users.update',user.id) }}" class="form-horizontal"
+    <form method="post" action="{{ route('settings.users.update',user.id) }}" class="form-horizontal"
           accept-charset="UTF-8"
           enctype="multipart/form-data">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>

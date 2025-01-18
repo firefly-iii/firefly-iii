@@ -4,7 +4,7 @@
     {{ Breadcrumbs.render }}
 {% endblock %}
 {% block content %}
-    <form action="{{ route('admin.update-check.post') }}" method="post" id="store" class="form-horizontal">
+    <form action="{{ route('settings.update-check.post') }}" method="post" id="store" class="form-horizontal">
 
         <div class="row">
 
@@ -50,7 +50,7 @@
                             {{ 'admin_update_check_now_explain'|_ }}
                         </p>
                         <p>
-                            <a href="{{ route('admin.update-check.manual') }}" class="btn btn-info">{{ 'check_for_updates_button'|_ }}</a>
+                            <a href="{{ route('settings.update-check.manual') }}" class="btn btn-info">{{ 'check_for_updates_button'|_ }}</a>
                         </p>
                     </div>
                 </div>
@@ -69,7 +69,7 @@
 {% endblock %}
 {% block scripts %}
     <script type="text/javascript" nonce="{{ JS_NONCE }}">
-        var updateCheckUrl = '{{ route('admin.update-check.manual') }}';
+        var updateCheckUrl = '{{ route('settings.update-check.manual') }}';
     </script>
     <script type="text/javascript" src="v1/js/ff/admin/update/index.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 {% endblock %}

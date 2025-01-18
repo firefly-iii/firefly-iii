@@ -6,7 +6,7 @@
 
 {% block content %}
 
-    <form method="POST" action="{{ route('admin.users.destroy',user.id) }}" accept-charset="UTF-8" class="form-horizontal" id="destroy">
+    <form method="POST" action="{{ route('settings.users.destroy',user.id) }}" accept-charset="UTF-8" class="form-horizontal" id="destroy">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
 
         <div class="row">

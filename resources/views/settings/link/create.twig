@@ -6,7 +6,7 @@
 
 {% block content %}
 
-    <form method="POST" action="{{ route('admin.links.store') }}" accept-charset="UTF-8" class="form-horizontal">
+    <form method="POST" action="{{ route('settings.links.store') }}" accept-charset="UTF-8" class="form-horizontal">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">

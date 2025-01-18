@@ -6,7 +6,7 @@
 {% block content %}
     <div class="row">
         <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-            <form action="{{ route('admin.notification.post') }}" method="post">
+            <form action="{{ route('settings.notification.post') }}" method="post">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <div class="box box-default">
                     <div class="box-header with-border">
@@ -43,7 +43,7 @@
                 </div>
             </form>
         </div>
-        <form action="{{ route('admin.notification.test') }}" method="post">
+        <form action="{{ route('settings.notification.test') }}" method="post">
             <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <div class="box box-default">

@@ -7,7 +7,7 @@
     {% if allowInvites %}
         <div class="row">
             <div class="col-lg-6">
-                <form action="{{ route('admin.users.invite') }}" method="post">
+                <form action="{{ route('settings.users.invite') }}" method="post">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                     <div class="box box-primary">
                         <div class="box-header with-border">
@@ -54,15 +54,15 @@
                             <tr>
                                 <td class="hidden-xs" data-value="{{ user.id }}">
                                     <div class="btn-group btn-group-xs">
-                                        <a class="btn btn-default" href="{{ route('admin.users.edit',user.id) }}"><span
+                                        <a class="btn btn-default" href="{{ route('settings.users.edit',user.id) }}"><span
                                                 class="fa fa-pencil"></span></a>
-                                        <a class="btn btn-danger" href="{{ route('admin.users.delete',user.id) }}"><span
+                                        <a class="btn btn-danger" href="{{ route('settings.users.delete',user.id) }}"><span
                                                 class="fa fa-trash"></span></a>
                                     </div>
                                 </td>
                                 <td class="hidden-xs" data-value="{{ user.id }}">#{{ user.id }}</td>
                                 <td data-value="{{ user.email }}">
-                                    <a href="{{ route('admin.users.show',user.id) }}">{{ user.email }}</a></td>
+                                    <a href="{{ route('settings.users.show',user.id) }}">{{ user.email }}</a></td>
                                 <td class="hidden-xs" data-value="{{ user.created_at.format('Y-m-d H-i-s') }}">
                                     {{ user.created_at.isoFormat(monthAndDayFormat) }}
                                     {{ user.created_at.format('H:i') }}
@@ -137,7 +137,7 @@
                                 <tr>
                                     <td class="hidden-xs" data-value="{{ user.id }}">
                                         <div class="btn-group btn-group-xs">
-                                            <a class="btn btn-danger delete-invite" href="{{ route('admin.users.delete-invite', invitee.id) }}"><span
+                                            <a class="btn btn-danger delete-invite" href="{{ route('settings.users.delete-invite', invitee.id) }}"><span
                                                     class="fa fa-trash"></span></a>
                                         </div>
                                     </td>

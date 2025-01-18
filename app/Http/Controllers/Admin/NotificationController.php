@@ -71,7 +71,7 @@ class NotificationController extends Controller
         $forcedAvailability['pushover'] = '' !== $pushoverAppToken && '' !== $pushoverUserToken;
 
         return view(
-            'admin.notifications.index',
+            'settings.notifications.index',
             compact(
                 'title',
                 'subTitle',

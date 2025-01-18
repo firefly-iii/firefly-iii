@@ -6,7 +6,7 @@
 
 {% block content %}
 
-    <form method="post" action="{{ route('admin.links.update', linkType.id) }}" class="form-horizontal"
+    <form method="post" action="{{ route('settings.links.update', linkType.id) }}" class="form-horizontal"
           accept-charset="UTF-8"
           enctype="multipart/form-data">
         <input type="hidden" name="id" value="{{ linkType.id }}"/>

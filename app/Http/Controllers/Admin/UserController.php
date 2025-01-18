@@ -144,7 +144,7 @@ class UserController extends Controller
             'email_changed' => (string) trans('firefly.block_code_email_changed'),
         ];
 
-        return view('admin.users.edit', compact('user', 'canEditDetails', 'subTitle', 'subTitleIcon', 'codes', 'currentUser', 'isAdmin'));
+        return view('settings.users.edit', compact('user', 'canEditDetails', 'subTitle', 'subTitleIcon', 'codes', 'currentUser', 'isAdmin'));
     }
 
     /**
@@ -174,7 +174,7 @@ class UserController extends Controller
             }
         );
 
-        return view('admin.users.index', compact('subTitle', 'subTitleIcon', 'users', 'allowInvites', 'invitedUsers'));
+        return view('settings.users.index', compact('subTitle', 'subTitleIcon', 'users', 'allowInvites', 'invitedUsers'));
     }
 
     public function invite(InviteUserFormRequest $request): RedirectResponse
@@ -203,7 +203,7 @@ class UserController extends Controller
         $information   = $this->repository->getUserData($user);
 
         return view(
-            'admin.users.show',
+            'settings.users.show',
             compact(
                 'title',
                 'mainTitleIcon',

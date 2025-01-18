@@ -59,6 +59,6 @@ class HomeController extends Controller
             $email = $pref->data;
         }
 
-        return view('admin.index', compact('title', 'mainTitleIcon', 'email'));
+        return view('settings.index', compact('title', 'mainTitleIcon', 'email'));
     }
 }

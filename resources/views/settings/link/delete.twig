@@ -6,7 +6,7 @@
 
 {% block content %}
 
-    <form method="POST" action="{{ route('admin.links.destroy',linkType.id) }}" accept-charset="UTF-8"
+    <form method="POST" action="{{ route('settings.links.destroy',linkType.id) }}" accept-charset="UTF-8"
           class="form-horizontal" id="destroy">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <div class="row">
