@@ -758,22 +758,22 @@ class ExportDataGenerator
             $metaData            = $repository->getMetaFields($journal['transaction_journal_id'], $metaFields);
             $amount              = Steam::bcround(Steam::negative($journal['amount']), $journal['currency_decimal_places']);
             $foreignAmount       = null === $journal['foreign_amount'] ? null : Steam::bcround(Steam::negative($journal['foreign_amount']), $journal['foreign_currency_decimal_places']);
-            $nativeAmount        = null === $journal['native_amount'] ? null : Steam::bcround(Steam::negative($journal['native_amount'], $default->decimal_places));
-            $nativeForeignAmount = null === $journal['native_foreign_amount'] ? null : Steam::bcround(Steam::negative($journal['native_foreign_amount'], $default->decimal_places));
+            $nativeAmount        = null === $journal['native_amount'] ? null : Steam::bcround(Steam::negative($journal['native_amount']), $default->decimal_places);
+            $nativeForeignAmount = null === $journal['native_foreign_amount'] ? null : Steam::bcround(Steam::negative($journal['native_foreign_amount']), $default->decimal_places);
 
             if (TransactionTypeEnum::WITHDRAWAL->value !== $journal['transaction_type_type']) {
                 $amount              = Steam::bcround(Steam::positive($journal['amount']), $journal['currency_decimal_places']);
                 $foreignAmount       = null === $journal['foreign_amount'] ? null : Steam::bcround(Steam::positive($journal['foreign_amount']), $journal['foreign_currency_decimal_places']);
-                $nativeAmount        = null === $journal['native_amount'] ? null : Steam::bcround(Steam::positive($journal['native_amount'], $default->decimal_places));
-                $nativeForeignAmount = null === $journal['native_foreign_amount'] ? null : Steam::bcround(Steam::positive($journal['native_foreign_amount'], $default->decimal_places));
+                $nativeAmount        = null === $journal['native_amount'] ? null : Steam::bcround(Steam::positive($journal['native_amount']), $default->decimal_places);
+                $nativeForeignAmount = null === $journal['native_foreign_amount'] ? null : Steam::bcround(Steam::positive($journal['native_foreign_amount']), $default->decimal_places);
             }
 
             // opening balance depends on source account type.
             if (TransactionTypeEnum::OPENING_BALANCE->value === $journal['transaction_type_type'] && AccountTypeEnum::ASSET->value === $journal['source_account_type']) {
                 $amount              = Steam::bcround(Steam::negative($journal['amount']), $journal['currency_decimal_places']);
                 $foreignAmount       = null === $journal['foreign_amount'] ? null : Steam::bcround(Steam::negative($journal['foreign_amount']), $journal['foreign_currency_decimal_places']);
-                $nativeAmount        = null === $journal['native_amount'] ? null : Steam::bcround(Steam::negative($journal['native_amount'], $default->decimal_places));
-                $nativeForeignAmount = null === $journal['native_foreign_amount'] ? null : Steam::bcround(Steam::negative($journal['native_foreign_amount'], $default->decimal_places));
+                $nativeAmount        = null === $journal['native_amount'] ? null : Steam::bcround(Steam::negative($journal['native_amount']), $default->decimal_places);
+                $nativeForeignAmount = null === $journal['native_foreign_amount'] ? null : Steam::bcround(Steam::negative($journal['native_foreign_amount']), $default->decimal_places);
             }
 
             $records[]           = [

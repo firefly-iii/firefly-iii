@@ -77,7 +77,7 @@ class AccountTransformer extends AbstractTransformer
         $date                                                         = $this->getDate();
         $date->endOfDay();
 
-        [$currencyId, $currencyCode, $currencySymbol, $decimalPlaces] = $this->getCurrency($account, $default);
+        [$currencyId, $currencyCode, $currencySymbol, $decimalPlaces] = $this->getCurrency($account);
         [$creditCardType, $monthlyPaymentDate]                        = $this->getCCInfo($account, $accountRole, $accountType);
         [$openingBalance, $nativeOpeningBalance, $openingBalanceDate] = $this->getOpeningBalance($account, $accountType, $convertToNative);
         [$interest, $interestPeriod]                                  = $this->getInterest($account, $accountType);

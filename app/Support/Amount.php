@@ -155,13 +155,21 @@ class Amount
         return $user->currencies()->orderBy('code', 'ASC')->get();
     }
 
+    /**
+     * @deprecated
+     */
     public function getDefaultCurrency(): TransactionCurrency
+    {
+        return $this->getNativeCurrency();
+    }
+
+    public function getNativeCurrency(): TransactionCurrency
     {
         if (auth()->check()) {
             /** @var User $user */
             $user = auth()->user();
             if (null !== $user->userGroup) {
-                return $this->getDefaultCurrencyByUserGroup($user->userGroup);
+                return $this->getNativeCurrencyByUserGroup($user->userGroup);
             }
         }
 
