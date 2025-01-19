@@ -19,6 +19,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 5532](https://github.com/firefly-iii/firefly-iii/issues/5532) (Asset prices and exchange rates) reported by @svozniuk
 - [Issue 6314](https://github.com/firefly-iii/firefly-iii/issues/6314) (Currencies and exchange rates) reported by @JC5
 - [Issue 9586](https://github.com/firefly-iii/firefly-iii/issues/9586) (Non en_US translated string in sign-up mail) reported by @benni347
+- #9667
+- #9576
+- #9598
 
 ### Changed
 
@@ -26,6 +29,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 9501](https://github.com/firefly-iii/firefly-iii/issues/9501) (PHP8.4 support) reported by @JC5
 - Docker container no longer runs under root.
 - "Bills" are now called "subscriptions" to better reflect their purpose.
+- Rename "administration" to "settings" to prevent confusion with "financial administrations"
+- Rename 'default currency' to 'native currency'
+- Move native currency setting to financial administration edit screen to better reflect where it belongs
 
 ### Removed
 
