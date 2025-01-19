@@ -49,7 +49,7 @@ class BillFactory
         app('log')->debug(sprintf('Now in %s', __METHOD__), $data);
         $factory          = app(TransactionCurrencyFactory::class);
         $currency         = $factory->find((int) ($data['currency_id'] ?? null), (string) ($data['currency_code'] ?? null)) ??
-                    app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
+                    app('amount')->getNativeCurrencyByUserGroup($this->user->userGroup);
 
         try {
             $skip   = array_key_exists('skip', $data) ? $data['skip'] : 0;

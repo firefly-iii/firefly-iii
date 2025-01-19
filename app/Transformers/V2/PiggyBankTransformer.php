@@ -137,7 +137,7 @@ class PiggyBankTransformer extends AbstractTransformer
         }
 
         Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
-        $this->default       = app('amount')->getDefaultCurrencyByUserGroup(auth()->user()->userGroup);
+        $this->default       = app('amount')->getNativeCurrencyByUserGroup(auth()->user()->userGroup);
         $this->converter     = new ExchangeRateConverter();
 
         return $objects;

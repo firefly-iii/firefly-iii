@@ -63,7 +63,7 @@ class CorrectsCurrencies extends Command
         $repos           = app(CurrencyRepositoryInterface::class);
 
         // first check if the user has any default currency (not necessarily the case, so can be forced).
-        $defaultCurrency = app('amount')->getDefaultCurrencyByUserGroup($userGroup);
+        $defaultCurrency = app('amount')->getNativeCurrencyByUserGroup($userGroup);
 
         Log::debug(sprintf('Now correcting currencies for user group #%d', $userGroup->id));
         $found           = [$defaultCurrency->id];

@@ -107,7 +107,7 @@ trait RecurringTransactionTrait
             $currency        = $factory->find($array['currency_id'] ?? null, $array['currency_code'] ?? null);
             $foreignCurrency = $factory->find($array['foreign_currency_id'] ?? null, $array['foreign_currency_code'] ?? null);
             if (null === $currency) {
-                $currency = app('amount')->getDefaultCurrencyByUserGroup($recurrence->user->userGroup);
+                $currency = app('amount')->getNativeCurrencyByUserGroup($recurrence->user->userGroup);
             }
 
             app('log')->debug(

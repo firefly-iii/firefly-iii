@@ -132,6 +132,6 @@ class CorrectsOpeningBalanceCurrencies extends Command
         $repos = app(AccountRepositoryInterface::class);
         $repos->setUser($account->user);
 
-        return $repos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUserGroup($account->userGroup);
+        return $repos->getAccountCurrency($account) ?? app('amount')->getNativeCurrencyByUserGroup($account->userGroup);
     }
 }

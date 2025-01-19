@@ -48,7 +48,7 @@ class AutoBudgetObserver
         if (!Amount::convertToNative($autoBudget->budget->user)) {
             return;
         }
-        $userCurrency              = app('amount')->getDefaultCurrencyByUserGroup($autoBudget->budget->user->userGroup);
+        $userCurrency              = app('amount')->getNativeCurrencyByUserGroup($autoBudget->budget->user->userGroup);
         $autoBudget->native_amount = null;
         if ($autoBudget->transactionCurrency->id !== $userCurrency->id) {
             $converter                 = new ExchangeRateConverter();

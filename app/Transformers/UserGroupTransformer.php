@@ -106,7 +106,7 @@ class UserGroupTransformer extends AbstractTransformer
      */
     public function transform(UserGroup $userGroup): array
     {
-        $currency = Amount::getDefaultCurrencyByUserGroup($userGroup);
+        $currency = Amount::getNativeCurrencyByUserGroup($userGroup);
 
         return [
             'id'                             => $userGroup->id,

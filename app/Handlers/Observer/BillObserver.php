@@ -59,7 +59,7 @@ class BillObserver
         if (!Amount::convertToNative($bill->user)) {
             return;
         }
-        $userCurrency            = app('amount')->getDefaultCurrencyByUserGroup($bill->user->userGroup);
+        $userCurrency            = app('amount')->getNativeCurrencyByUserGroup($bill->user->userGroup);
         $bill->native_amount_min = null;
         $bill->native_amount_max = null;
         if ($bill->transactionCurrency->id !== $userCurrency->id) {

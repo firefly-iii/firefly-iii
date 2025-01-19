@@ -50,7 +50,7 @@ class AvailableBudgetObserver
 
             return;
         }
-        $userCurrency                   = app('amount')->getDefaultCurrencyByUserGroup($availableBudget->user->userGroup);
+        $userCurrency                   = app('amount')->getNativeCurrencyByUserGroup($availableBudget->user->userGroup);
         $availableBudget->native_amount = null;
         if ($availableBudget->transactionCurrency->id !== $userCurrency->id) {
             $converter                      = new ExchangeRateConverter();

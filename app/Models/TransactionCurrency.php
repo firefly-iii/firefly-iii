@@ -73,7 +73,7 @@ class TransactionCurrency extends Model
     public function refreshForUser(User $user): void
     {
         $current                = $user->userGroup->currencies()->where('transaction_currencies.id', $this->id)->first();
-        $native                 = app('amount')->getDefaultCurrencyByUserGroup($user->userGroup);
+        $native                 = app('amount')->getNativeCurrencyByUserGroup($user->userGroup);
         $this->userGroupNative  = $native->id === $this->id;
         $this->userGroupEnabled = null !== $current;
     }

@@ -396,7 +396,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         $autoBudget = $this->getAutoBudget($budget);
 
         // grab default currency:
-        $currency   = app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
+        $currency   = app('amount')->getNativeCurrencyByUserGroup($this->user->userGroup);
 
         if (null === $autoBudget) {
             // at this point it's a blind assumption auto_budget_type is 1 or 2.
@@ -782,7 +782,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             $currency = $repos->findByCode((string) $data['currency_code']);
         }
         if (null === $currency) {
-            $currency = app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
+            $currency = app('amount')->getNativeCurrencyByUserGroup($this->user->userGroup);
         }
 
         $autoBudget                          = new AutoBudget();

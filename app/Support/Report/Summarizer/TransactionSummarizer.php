@@ -45,7 +45,7 @@ class TransactionSummarizer
     public function setUser(User $user): void
     {
         $this->user            = $user;
-        $this->default         = Amount::getDefaultCurrencyByUserGroup($user->userGroup);
+        $this->default         = Amount::getNativeCurrencyByUserGroup($user->userGroup);
         $this->convertToNative = Amount::convertToNative($user);
     }
 
@@ -117,7 +117,7 @@ class TransactionSummarizer
         $idKey           = sprintf('%s_account_id', $direction);
         $nameKey         = sprintf('%s_account_name', $direction);
         $convertToNative = Amount::convertToNative($this->user);
-        $default         = Amount::getDefaultCurrencyByUserGroup($this->user->userGroup);
+        $default         = Amount::getNativeCurrencyByUserGroup($this->user->userGroup);
 
 
 

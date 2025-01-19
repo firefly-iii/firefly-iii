@@ -135,7 +135,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $journals          = array_reverse($journals, true);
         $dayBeforeBalance  = Steam::finalAccountBalance($account, $date);
         $startBalance      = $dayBeforeBalance['balance'];
-        $defaultCurrency   = app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
+        $defaultCurrency   = app('amount')->getNativeCurrencyByUserGroup($account->user->userGroup);
         $currency          = $accountRepository->getAccountCurrency($account) ?? $defaultCurrency;
 
         foreach ($journals as $index => $journal) {

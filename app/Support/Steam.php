@@ -75,7 +75,7 @@ class Steam
         $balances             = [];
         $formatted            = $start->format('Y-m-d');
         $startBalance         = $this->finalAccountBalance($account, $start);
-        $defaultCurrency      = app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
+        $defaultCurrency      = app('amount')->getNativeCurrencyByUserGroup($account->user->userGroup);
         $accountCurrency      = $this->getAccountCurrency($account);
         $hasCurrency          = null !== $accountCurrency;
         $currency             = $accountCurrency ?? $defaultCurrency;
@@ -305,7 +305,7 @@ class Steam
 
         Log::debug(sprintf('Now in finalAccountBalance(#%d, "%s", "%s")', $account->id, $account->name, $date->format('Y-m-d H:i:s')));
 
-        $native          = Amount::getDefaultCurrencyByUserGroup($account->user->userGroup);
+        $native          = Amount::getNativeCurrencyByUserGroup($account->user->userGroup);
         $convertToNative = Amount::convertToNative($account->user);
         $accountCurrency = $this->getAccountCurrency($account);
         $hasCurrency     = null !== $accountCurrency;

@@ -71,7 +71,7 @@ class TransactionObserver
         if (!Amount::convertToNative($transaction->transactionJournal->user)) {
             return;
         }
-        $userCurrency                       = app('amount')->getDefaultCurrencyByUserGroup($transaction->transactionJournal->user->userGroup);
+        $userCurrency                       = app('amount')->getNativeCurrencyByUserGroup($transaction->transactionJournal->user->userGroup);
         $transaction->native_amount         = null;
         $transaction->native_foreign_amount = null;
         // first normal amount

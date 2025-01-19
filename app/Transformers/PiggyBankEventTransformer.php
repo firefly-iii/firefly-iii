@@ -61,7 +61,7 @@ class PiggyBankEventTransformer extends AbstractTransformer
         $this->piggyRepos->setUser($account->user);
 
         // get associated currency or fall back to the default:
-        $currency  = $this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
+        $currency  = $this->repository->getAccountCurrency($account) ?? app('amount')->getNativeCurrencyByUserGroup($account->user->userGroup);
 
         // get associated journal and transaction, if any:
         $journalId = $event->transaction_journal_id;

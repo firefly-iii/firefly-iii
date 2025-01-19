@@ -53,7 +53,7 @@ class AccountTasker implements AccountTaskerInterface
 
         /** @var AccountRepositoryInterface $repository */
         $repository      = app(AccountRepositoryInterface::class);
-        $defaultCurrency = app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
+        $defaultCurrency = app('amount')->getNativeCurrencyByUserGroup($this->user->userGroup);
 
         $return          = [
             'accounts' => [],
@@ -143,7 +143,7 @@ class AccountTasker implements AccountTaskerInterface
      */
     private function groupExpenseByDestination(array $array): array
     {
-        $defaultCurrency = app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
+        $defaultCurrency = app('amount')->getNativeCurrencyByUserGroup($this->user->userGroup);
 
         /** @var CurrencyRepositoryInterface $currencyRepos */
         $currencyRepos   = app(CurrencyRepositoryInterface::class);
@@ -231,7 +231,7 @@ class AccountTasker implements AccountTaskerInterface
      */
     private function groupIncomeBySource(array $array): array
     {
-        $defaultCurrency = app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
+        $defaultCurrency = app('amount')->getNativeCurrencyByUserGroup($this->user->userGroup);
 
         /** @var CurrencyRepositoryInterface $currencyRepos */
         $currencyRepos   = app(CurrencyRepositoryInterface::class);

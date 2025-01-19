@@ -66,7 +66,7 @@ class UpgradesBudgetLimits extends Command
                     /** @var null|User $user */
                     $user = $budget->user;
                     if (null !== $user) {
-                        $currency                             = app('amount')->getDefaultCurrencyByUserGroup($user->userGroup);
+                        $currency                             = app('amount')->getNativeCurrencyByUserGroup($user->userGroup);
                         $budgetLimit->transaction_currency_id = $currency->id;
                         $budgetLimit->save();
                         $this->friendlyInfo(
