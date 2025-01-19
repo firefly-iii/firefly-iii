@@ -56,12 +56,6 @@
                                                         <span class="fa fa-fw fa-check-square-o"></span>
                                                         {{ 'enable_currency'|_ }}</a>
                                                 {% endif %}
-
-                                                {# Make currency default. #}
-                                                {% if currency.id != defaultCurrency.id %}
-                                                    <button data-code="{{ currency.code }}" class="make_default btn btn-default"><span
-                                                            class="fa fa-fw fa-star"></span> {{ 'make_default_currency'|_ }}</button>
-                                                {% endif %}
                                             </div>
                                         </td>
                                     <td>
@@ -70,7 +64,7 @@
                                         {% endif %}
                                             {{ currency.name }} ({{ currency.code }}) ({{ currency.symbol|raw }})
                                         {% if currency.id == defaultCurrency.id %}
-                                            <span class="label label-success" id="default-currency">{{ 'default_currency'|_ }}</span>
+                                            <span class="label label-success" id="default-currency">{{ 'native_currency_button'|_ }}</span>
                                         {% endif %}
                                         {% if currency.userGroupEnabled == false %}
 

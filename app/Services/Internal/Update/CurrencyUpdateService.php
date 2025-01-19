@@ -51,7 +51,7 @@ class CurrencyUpdateService
             $currency->decimal_places = $data['decimal_places'];
         }
         $currency->userGroupEnabled = null;
-        $currency->userGroupDefault = null;
+        $currency->userGroupNative = null;
         $currency->save();
 
         return $currency;
