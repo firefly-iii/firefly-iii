@@ -159,6 +159,7 @@ class InterestingMessage
         /** @var User $user */
         $user        = auth()->user();
 
+        /** @var UserGroup|null $userGroup */
         $userGroup   = UserGroup::find($userGroupId);
         $valid       = false;
         $memberships = $user->groupMemberships()->get();

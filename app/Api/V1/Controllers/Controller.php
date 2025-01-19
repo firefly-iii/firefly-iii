@@ -80,7 +80,7 @@ abstract class Controller extends BaseController
                 if (auth()->check()) {
                     $language              = Steam::getLanguage();
                     $this->convertToNative = Amount::convertToNative();
-                    $this->defaultCurrency = Amount::getDefaultCurrency();
+                    $this->defaultCurrency = Amount::getNativeCurrency();
                     app()->setLocale($language);
 
                 }

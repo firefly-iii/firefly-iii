@@ -38,7 +38,7 @@ class CreatesDatabase extends Command
 
     public function handle(): int
     {
-        if ('mysql' !== env('DB_CONNECTION')) {
+        if ('mysql' !== env('DB_CONNECTION')) { // @phpstan-ignore larastan.noEnvCallsOutsideOfConfig */
             $this->friendlyInfo(sprintf('CreateDB does not apply to "%s", skipped.', env('DB_CONNECTION')));
 
             return 0;
@@ -60,7 +60,7 @@ class CreatesDatabase extends Command
 
         // when it fails, display error
         try {
-            $pdo = new \PDO($dsn, env('DB_USERNAME'), env('DB_PASSWORD'), $options);
+            $pdo = new \PDO($dsn, (string) env('DB_USERNAME'), (string) env('DB_PASSWORD'), $options);
         } catch (\PDOException $e) {
             $this->friendlyError(sprintf('Error when connecting to DB: %s', $e->getMessage()));
 

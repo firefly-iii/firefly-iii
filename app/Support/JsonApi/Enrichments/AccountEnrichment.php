@@ -82,7 +82,7 @@ class AccountEnrichment implements EnrichmentInterface
         Log::debug(sprintf('Now doing account enrichment for %d account(s)', $collection->count()));
         // prep local fields
         $this->collection   = $collection;
-        $this->default      = app('amount')->getDefaultCurrency();
+        $this->default      = app('amount')->getNativeCurrency();
         $this->currencies   = [];
         $this->balances     = [];
         $this->objectGroups = [];

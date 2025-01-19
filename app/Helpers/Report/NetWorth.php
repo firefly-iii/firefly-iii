@@ -77,7 +77,7 @@ class NetWorth implements NetWorthInterface
             return $cache->get();
         }
         Log::debug(sprintf('Now in byAccounts("%s", "%s")', $ids, $date->format('Y-m-d H:i:s')));
-        $default         = Amount::getDefaultCurrency();
+        $default         = Amount::getNativeCurrency();
         $netWorth        = [];
         $balances        = Steam::finalAccountsBalance($accounts, $date);
 

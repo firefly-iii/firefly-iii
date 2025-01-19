@@ -69,7 +69,7 @@ class BillRepository implements BillRepositoryInterface
     {
         Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         $bills     = $this->getActiveBills();
-        $default   = app('amount')->getDefaultCurrency();
+        $default   = app('amount')->getNativeCurrency();
         $return    = [];
         $converter = new ExchangeRateConverter();
 
@@ -139,7 +139,7 @@ class BillRepository implements BillRepositoryInterface
         Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         $bills     = $this->getActiveBills();
         $return    = [];
-        $default   = app('amount')->getDefaultCurrency();
+        $default   = app('amount')->getNativeCurrency();
         $converter = new ExchangeRateConverter();
 
         /** @var Bill $bill */

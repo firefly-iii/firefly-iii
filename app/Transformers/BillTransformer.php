@@ -52,7 +52,7 @@ class BillTransformer extends AbstractTransformer
     {
         $this->repository      = app(BillRepositoryInterface::class);
         $this->calculator      = app(BillDateCalculator::class);
-        $this->default         = Amount::getDefaultCurrency();
+        $this->default         = Amount::getNativeCurrency();
         $this->convertToNative = Amount::convertToNative();
     }
 

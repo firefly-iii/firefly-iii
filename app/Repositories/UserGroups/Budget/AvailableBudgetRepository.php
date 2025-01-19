@@ -42,7 +42,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
         Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         $return           = [];
         $converter        = new ExchangeRateConverter();
-        $default          = app('amount')->getDefaultCurrency();
+        $default          = app('amount')->getNativeCurrency();
         $availableBudgets = $this->userGroup->availableBudgets()
             ->where('start_date', $start->format('Y-m-d'))
             ->where('end_date', $end->format('Y-m-d'))->get()

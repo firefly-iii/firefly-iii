@@ -156,7 +156,7 @@ class PiggyBankTransformer extends AbstractTransformer
         //        $this->piggyRepos->setUser($account->user);
 
         // get currency from account, or use default.
-        //        $currency = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUser($account->user);
+        //        $currency = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getNativeCurrencyByUser($account->user);
 
         // note
         //        $notes = $this->piggyRepos->getNoteText($piggyBank);

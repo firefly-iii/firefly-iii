@@ -275,7 +275,7 @@ class BillRepository implements BillRepositoryInterface
             ];
             $result[$currencyId]['sum']        = bcadd($result[$currencyId]['sum'], $transaction->amount);
             $result[$currencyId]['native_sum'] = bcadd($result[$currencyId]['native_sum'], $transaction->native_amount ?? '0');
-            if ($journal->foreign_currency_id === Amount::getDefaultCurrency()->id) {
+            if ($journal->foreign_currency_id === Amount::getNativeCurrency()->id) {
                 $result[$currencyId]['native_sum'] = bcadd($result[$currencyId]['native_sum'], $transaction->amount);
             }
             ++$result[$currencyId]['count'];
@@ -406,7 +406,7 @@ class BillRepository implements BillRepositoryInterface
             ];
             $result[$currencyId]['sum']        = bcadd($result[$currencyId]['sum'], $transaction->amount);
             $result[$currencyId]['native_sum'] = bcadd($result[$currencyId]['native_sum'], $transaction->native_amount ?? '0');
-            if ($journal->foreign_currency_id === Amount::getDefaultCurrency()->id) {
+            if ($journal->foreign_currency_id === Amount::getNativeCurrency()->id) {
                 $result[$currencyId]['native_sum'] = bcadd($result[$currencyId]['native_sum'], $transaction->amount);
             }
             ++$result[$currencyId]['count'];
@@ -530,7 +530,7 @@ class BillRepository implements BillRepositoryInterface
         $bills           = $this->getActiveBills();
         $return          = [];
         $convertToNative = Amount::convertToNative($this->user);
-        $default         = app('amount')->getDefaultCurrency();
+        $default         = app('amount')->getNativeCurrency();
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {
@@ -575,7 +575,7 @@ class BillRepository implements BillRepositoryInterface
         $bills           = $this->getActiveBills();
         $return          = [];
         $convertToNative = Amount::convertToNative($this->user);
-        $default         = app('amount')->getDefaultCurrency();
+        $default         = app('amount')->getNativeCurrency();
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {

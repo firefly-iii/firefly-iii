@@ -48,7 +48,7 @@ class CategoryTransformer extends AbstractTransformer
     {
         $this->opsRepository   = app(OperationsRepositoryInterface::class);
         $this->repository      = app(CategoryRepositoryInterface::class);
-        $this->default         = Amount::getDefaultCurrency();
+        $this->default         = Amount::getNativeCurrency();
         $this->convertToNative = Amount::convertToNative();
     }
 

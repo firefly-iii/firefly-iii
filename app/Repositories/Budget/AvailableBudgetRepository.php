@@ -142,7 +142,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
 
         // use native amount if necessary?
         $convertToNative  = Amount::convertToNative($this->user);
-        $default          = Amount::getDefaultCurrency();
+        $default          = Amount::getNativeCurrency();
 
         /** @var AvailableBudget $availableBudget */
         foreach ($availableBudgets as $availableBudget) {

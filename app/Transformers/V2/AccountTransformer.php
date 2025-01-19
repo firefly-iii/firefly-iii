@@ -135,7 +135,7 @@ class AccountTransformer extends AbstractTransformer
 
     private function getDefaultCurrency(): void
     {
-        $this->default = app('amount')->getDefaultCurrency();
+        $this->default = app('amount')->getNativeCurrency();
     }
 
     private function collectAccountMetaData(Collection $accounts): void

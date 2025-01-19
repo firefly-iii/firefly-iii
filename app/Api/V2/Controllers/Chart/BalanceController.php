@@ -62,7 +62,7 @@ class BalanceController extends Controller
                 $this->repository->setUserGroup($userGroup);
                 $this->collector->setUserGroup($userGroup);
                 $this->chartData  = new ChartData();
-                // $this->default    = app('amount')->getDefaultCurrency();
+                // $this->default    = app('amount')->getNativeCurrency();
 
                 return $next($request);
             }
@@ -87,7 +87,7 @@ class BalanceController extends Controller
 
         // prepare for currency conversion and data collection:
         /** @var TransactionCurrency $default */
-        $default         = app('amount')->getDefaultCurrency();
+        $default         = app('amount')->getNativeCurrency();
 
         // get journals for entire period:
 

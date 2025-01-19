@@ -70,7 +70,7 @@ class BillController extends Controller
         $start           = $request->getStart();
         $end             = $request->getEnd();
         $convertToNative = Amount::convertToNative();
-        $default         = Amount::getDefaultCurrency();
+        $default         = Amount::getNativeCurrency();
         $response        = [];
 
         // get all bills:
@@ -133,7 +133,7 @@ class BillController extends Controller
         $start           = $request->getStart();
         $end             = $request->getEnd();
         $convertToNative = Amount::convertToNative();
-        $default         = Amount::getDefaultCurrency();
+        $default         = Amount::getNativeCurrency();
         $response        = [];
 
         // collect all expenses in this period (regardless of type) by the given bills and accounts.

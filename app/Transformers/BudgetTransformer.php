@@ -51,7 +51,7 @@ class BudgetTransformer extends AbstractTransformer
         $this->opsRepository   = app(OperationsRepositoryInterface::class);
         $this->repository      = app(BudgetRepositoryInterface::class);
         $this->parameters      = new ParameterBag();
-        $this->default         = Amount::getDefaultCurrency();
+        $this->default         = Amount::getNativeCurrency();
         $this->convertToNative = Amount::convertToNative();
     }
 

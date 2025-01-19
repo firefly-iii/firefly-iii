@@ -355,7 +355,7 @@ class AccountRepository implements AccountRepositoryInterface
         if (AccountTypeEnum::ASSET->value !== $account->accountType->type) {
             throw new FireflyException(sprintf('%s is not an asset account.', $account->name));
         }
-        $currency = $this->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
+        $currency = $this->getAccountCurrency($account) ?? app('amount')->getNativeCurrency();
         $name     = trans('firefly.reconciliation_account_name', ['name' => $account->name, 'currency' => $currency->code]);
 
         /** @var AccountType $type */

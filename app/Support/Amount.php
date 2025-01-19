@@ -55,7 +55,7 @@ class Amount
     public function getAmountFromJournal(array $journal): string
     {
         $convertToNative = $this->convertToNative();
-        $currency        = $this->getDefaultCurrency();
+        $currency        = $this->getNativeCurrency();
         $field           = $convertToNative && $currency->id !== $journal['currency_id'] ? 'native_amount' : 'amount';
         $amount          = $journal[$field] ?? '0';
         // Log::debug(sprintf('Field is %s, amount is %s', $field, $amount));
@@ -86,7 +86,7 @@ class Amount
     public function getAmountFromJournalObject(TransactionJournal $journal): string
     {
         $convertToNative   = $this->convertToNative();
-        $currency          = $this->getDefaultCurrency();
+        $currency          = $this->getNativeCurrency();
         $field             = $convertToNative && $currency->id !== $journal->transaction_currency_id ? 'native_amount' : 'amount';
 
         /** @var null|Transaction $sourceTransaction */
@@ -193,7 +193,7 @@ class Amount
             return $cache->get();
         }
 
-        /** @var null|TransactionCurrency $default */
+        /** @var null|TransactionCurrency $native */
         $native = $userGroup->currencies()->where('group_default', true)->first();
         if (null === $native) {
             $native = $this->getSystemCurrency();

@@ -155,7 +155,7 @@ class QueryParser implements QueryParserInterface
                         $fieldName              = $tokenUnderConstruction;
                         $tokenUnderConstruction = '';
                     }
-                    if ('' === $tokenUnderConstruction) {
+                    if ('' === $tokenUnderConstruction) { // @phpstan-ignore-line
                         // In any other location, it's just a normal character
                         $tokenUnderConstruction .= $char;
                     }

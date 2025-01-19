@@ -63,7 +63,7 @@ class BudgetController extends Controller
                 $this->repository    = app(BudgetRepositoryInterface::class);
                 $this->blRepository  = app(BudgetLimitRepositoryInterface::class);
                 $this->opsRepository = app(OperationsRepositoryInterface::class);
-                $this->currency      = app('amount')->getDefaultCurrency();
+                $this->currency      = app('amount')->getNativeCurrency();
                 $userGroup           = $this->validateUserGroup($request);
                 $this->repository->setUserGroup($userGroup);
                 $this->opsRepository->setUserGroup($userGroup);

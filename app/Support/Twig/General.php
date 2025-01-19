@@ -69,7 +69,7 @@ class General extends AbstractExtension
                 $date            = session('end', today(config('app.timezone'))->endOfMonth());
                 $info            = Steam::finalAccountBalance($account, $date);
                 $currency        = Steam::getAccountCurrency($account);
-                $default         = Amount::getDefaultCurrency();
+                $default         = Amount::getNativeCurrency();
                 $convertToNative = Amount::convertToNative();
                 $useNative       = $convertToNative && $default->id !== $currency->id;
                 $strings         = [];

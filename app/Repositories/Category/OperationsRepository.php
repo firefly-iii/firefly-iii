@@ -364,7 +364,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         $collector->setCategories($categories);
         $journals        = $collector->getExtractedJournals();
         $convertToNative = Amount::convertToNative($this->user);
-        $default         = Amount::getDefaultCurrency();
+        $default         = Amount::getNativeCurrency();
         $array           = [];
 
         foreach ($journals as $journal) {

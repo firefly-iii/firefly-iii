@@ -82,7 +82,7 @@ class CategoryController extends Controller
         /** @var Carbon $end */
         $end        = $this->parameters->get('end');
         $accounts   = $this->accountRepos->getAccountsByType([AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value]);
-        $default    = app('amount')->getDefaultCurrency();
+        $default    = app('amount')->getNativeCurrency();
         $converter  = new ExchangeRateConverter();
         $currencies = [];
         $return     = [];

@@ -407,7 +407,7 @@ class Steam
 
             return [];
         }
-        $defaultCurrency = app('amount')->getDefaultCurrency();
+        $defaultCurrency = app('amount')->getNativeCurrency();
         if ($convertToNative) {
             if ($defaultCurrency->id === $currency?->id) {
                 Log::debug(sprintf('Unset "native_balance" and "%s" for account #%d', $defaultCurrency->code, $account->id));

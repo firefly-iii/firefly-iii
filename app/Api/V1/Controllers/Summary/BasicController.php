@@ -124,7 +124,7 @@ class BasicController extends Controller
     {
         // some config settings
         $convertToNative = Amount::convertToNative();
-        $default         = Amount::getDefaultCurrency();
+        $default         = Amount::getNativeCurrency();
         // prep some arrays:
         $incomes         = [];
         $expenses        = [];

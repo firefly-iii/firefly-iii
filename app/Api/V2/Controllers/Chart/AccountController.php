@@ -57,7 +57,7 @@ class AccountController extends Controller
                 $this->repository = app(AccountRepositoryInterface::class);
                 $this->repository->setUserGroup($this->validateUserGroup($request));
                 $this->chartData  = new ChartData();
-                $this->default    = app('amount')->getDefaultCurrency();
+                $this->default    = app('amount')->getNativeCurrency();
 
                 return $next($request);
             }

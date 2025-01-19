@@ -48,7 +48,7 @@ class AmountFormat extends AbstractExtension
         return new TwigFilter(
             'formatAmount',
             static function (string $string): string {
-                $currency = app('amount')->getDefaultCurrency();
+                $currency = app('amount')->getNativeCurrency();
 
                 return app('amount')->formatAnything($currency, $string, true);
             },
@@ -61,7 +61,7 @@ class AmountFormat extends AbstractExtension
         return new TwigFilter(
             'formatAmountPlain',
             static function (string $string): string {
-                $currency = app('amount')->getDefaultCurrency();
+                $currency = app('amount')->getNativeCurrency();
 
                 return app('amount')->formatAnything($currency, $string, false);
             },
@@ -93,7 +93,7 @@ class AmountFormat extends AbstractExtension
 
                 /** @var AccountRepositoryInterface $accountRepos */
                 $accountRepos = app(AccountRepositoryInterface::class);
-                $currency     = $accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
+                $currency     = $accountRepos->getAccountCurrency($account) ?? app('amount')->getNativeCurrency();
 
                 return app('amount')->formatAnything($currency, $amount, $coloured);
             },

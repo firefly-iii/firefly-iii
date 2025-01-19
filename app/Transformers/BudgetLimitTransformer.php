@@ -47,7 +47,7 @@ class BudgetLimitTransformer extends AbstractTransformer
 
     public function __construct()
     {
-        $this->default         = Amount::getDefaultCurrency();
+        $this->default         = Amount::getNativeCurrency();
         $this->convertToNative = Amount::convertToNative();
     }
 

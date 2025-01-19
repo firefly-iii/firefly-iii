@@ -66,7 +66,7 @@ trait ChartGeneration
         /** @var AccountRepositoryInterface $accountRepos */
         $accountRepos    = app(AccountRepositoryInterface::class);
 
-        $default         = app('amount')->getDefaultCurrency();
+        $default         = app('amount')->getNativeCurrency();
         $chartData       = [];
 
         /** @var Account $account */
