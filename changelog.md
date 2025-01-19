@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 6.2.0 - 2025-01-xx
+## 6.2.0 - 2025-01-19 (or later)
 
 ### Added
 
@@ -11,16 +11,16 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Notifications support Nfty, Pushover, Slack and Discord.
 - Many new security related notifications.
 - [Issue 5523](https://github.com/firefly-iii/firefly-iii/issues/5523) (Add comment on a budget for a given month) reported by @n-serrette
-- [Issue 8531](https://github.com/firefly-iii/firefly-iii/issues/8531) (Add `notes` to transaction audit report) reported by @clouserw
-- [Issue 8307](https://github.com/firefly-iii/firefly-iii/issues/8307) (Notification support for Ntfy (and other push notification tools)) reported by @ragnarkarlsson
-- [Issue 7945](https://github.com/firefly-iii/firefly-iii/issues/7945) ("Rules" that only trigger manually) reported by @SekoiaTree
-- [Issue 6760](https://github.com/firefly-iii/firefly-iii/issues/6760) (Add a new trigger for automated rules) reported by @Gsyltc
-- [Issue 6557](https://github.com/firefly-iii/firefly-iii/issues/6557) (Piggy Banks - Draw Funds from Multiple Accounts) reported by @BugPhobic
 - [Issue 5532](https://github.com/firefly-iii/firefly-iii/issues/5532) (Asset prices and exchange rates) reported by @svozniuk
 - [Issue 6314](https://github.com/firefly-iii/firefly-iii/issues/6314) (Currencies and exchange rates) reported by @JC5
-- [Issue 9586](https://github.com/firefly-iii/firefly-iii/issues/9586) (Non en_US translated string in sign-up mail) reported by @benni347
-- #9667
+- [Issue 6557](https://github.com/firefly-iii/firefly-iii/issues/6557) (Piggy Banks - Draw Funds from Multiple Accounts) reported by @BugPhobic
+- [Issue 6760](https://github.com/firefly-iii/firefly-iii/issues/6760) (Add a new trigger for automated rules) reported by @Gsyltc
+- [Issue 7945](https://github.com/firefly-iii/firefly-iii/issues/7945) ("Rules" that only trigger manually) reported by @SekoiaTree
+- [Issue 8307](https://github.com/firefly-iii/firefly-iii/issues/8307) (Notification support for Ntfy (and other push notification tools)) reported by @ragnarkarlsson
+- [Issue 8531](https://github.com/firefly-iii/firefly-iii/issues/8531) (Add `notes` to transaction audit report) reported by @clouserw
 - #9576
+- #9667
+- [Issue 9586](https://github.com/firefly-iii/firefly-iii/issues/9586) (Non en_US translated string in sign-up mail) reported by @benni347
 - #9598
 
 ### Changed
