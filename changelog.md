@@ -18,10 +18,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 7945](https://github.com/firefly-iii/firefly-iii/issues/7945) ("Rules" that only trigger manually) reported by @SekoiaTree
 - [Issue 8307](https://github.com/firefly-iii/firefly-iii/issues/8307) (Notification support for Ntfy (and other push notification tools)) reported by @ragnarkarlsson
 - [Issue 8531](https://github.com/firefly-iii/firefly-iii/issues/8531) (Add `notes` to transaction audit report) reported by @clouserw
-- #9576
-- #9667
+- [Discussion 9576](https://github.com/orgs/firefly-iii/discussions/9576) (How to Mark Reconciled Transactions as Unreconciled) started by @softpoint-arch
+- [Issue 9667](https://github.com/firefly-iii/firefly-iii/issues/9667) (Exported data only exports negative amounts?) reported by @electricmessiah
 - [Issue 9586](https://github.com/firefly-iii/firefly-iii/issues/9586) (Non en_US translated string in sign-up mail) reported by @benni347
-- #9598
+- [PR 9598](https://github.com/firefly-iii/firefly-iii/pull/9598) (New Query Parser for Search Engine and Rules) reported by @Sobuno
 
 ### Changed
 
