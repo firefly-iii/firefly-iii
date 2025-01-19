@@ -60,10 +60,10 @@ class CategoryTransformer extends AbstractTransformer
         $this->opsRepository->setUser($category->user);
         $this->repository->setUser($category->user);
 
-        $spent  = [];
-        $earned = [];
-        $start  = $this->parameters->get('start');
-        $end    = $this->parameters->get('end');
+        $spent   = [];
+        $earned  = [];
+        $start   = $this->parameters->get('start');
+        $end     = $this->parameters->get('end');
         if (null !== $start && null !== $end) {
             $earned = $this->beautify($this->opsRepository->sumIncome($start, $end, null, new Collection([$category])));
             $spent  = $this->beautify($this->opsRepository->sumExpenses($start, $end, null, new Collection([$category])));
@@ -72,7 +72,7 @@ class CategoryTransformer extends AbstractTransformer
         if (!$this->convertToNative) {
             $default = null;
         }
-        $notes = $this->repository->getNoteText($category);
+        $notes   = $this->repository->getNoteText($category);
 
         return [
             'id'                             => $category->id,
@@ -89,7 +89,7 @@ class CategoryTransformer extends AbstractTransformer
             'links'                          => [
                 [
                     'rel' => 'self',
-                    'uri' => '/categories/' . $category->id,
+                    'uri' => '/categories/'.$category->id,
                 ],
             ],
         ];

@@ -62,8 +62,8 @@ class AvailableBudgetTransformer extends AbstractTransformer
         $this->repository->setUser($availableBudget->user);
 
         $currency = $availableBudget->transactionCurrency;
-        $default = $this->default;
-        if(!$this->convertToNative) {
+        $default  = $this->default;
+        if (!$this->convertToNative) {
             $default = null;
         }
         $data     = [
@@ -87,7 +87,7 @@ class AvailableBudgetTransformer extends AbstractTransformer
             'links'                          => [
                 [
                     'rel' => 'self',
-                    'uri' => '/available_budgets/' . $availableBudget->id,
+                    'uri' => '/available_budgets/'.$availableBudget->id,
                 ],
             ],
         ];

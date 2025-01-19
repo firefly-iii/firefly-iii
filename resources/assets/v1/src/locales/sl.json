@@ -1,5 +1,11 @@
 {
     "firefly": {
+        "administrations_page_title": "Finan\u010dne administracije",
+        "administrations_index_menu": "Financial administrations",
+        "temp_administrations_introduction": "Firefly III will soon get the ability to manage multiple financial administrations. Right now, you only have the one. You can set the title of this administration and its native currency. This replaces the previous setting where you would set your \"default currency\". This setting is now tied to the financial administration and can be different per administration.",
+        "administration_currency_form_help": "It may take a long time for the page to load if you change the native currency because transaction may need to be converted to your (new) native currency.",
+        "administrations_page_edit_sub_title_js": "Edit financial administration \"{title}\"",
+        "table": "Tabela",
         "welcome_back": "Kaj vse se dogaja?",
         "flash_error": "Napaka!",
         "flash_warning": "Opozorilo!",
@@ -9,7 +15,7 @@
         "select_source_account": "Izberite ali vnesite veljavno ime izvornega ra\u010duna",
         "split_transaction_title": "Opis razdeljene transakcije",
         "errors_submission": "Nekaj je bilo narobe z va\u0161o oddajo. Preverite spodnje napake.",
-        "is_reconciled": "Is reconciled",
+        "is_reconciled": "Je usklajena",
         "split": "Razdeli",
         "single_split": "Razdeli",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transakcija \u0161t. #{ID} (\"{title}\")<\/a> je bila shranjena.",
@@ -34,7 +40,7 @@
         "submit": "Potrdite",
         "amount": "Znesek",
         "date": "Datum",
-        "is_reconciled_fields_dropped": "Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s) unless you remove the reconciliation flag.",
+        "is_reconciled_fields_dropped": "Ker je ta transakcija usklajena, ne boste mogli posodobiti ra\u010dunov niti zneskov.",
         "tags": "Oznake",
         "no_budget": "(brez prora\u010duna)",
         "no_bill": "(brez naro\u010dnin)",
@@ -145,6 +151,7 @@
         "url": "URL",
         "active": "Aktivno",
         "interest_date": "Datum obresti",
+        "administration_currency": "Native currency",
         "title": "Naslov",
         "date": "Datum",
         "book_date": "Datum knji\u017eenja",
@@ -162,7 +169,9 @@
         "rate": "Te\u010daj"
     },
     "list": {
+        "title": "Naslov",
         "active": "Aktiviran?",
+        "native_currency": "Native currency",
         "trigger": "Spro\u017eilec",
         "response": "Odziv",
         "delivery": "Dostava",

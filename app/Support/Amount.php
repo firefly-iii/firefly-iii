@@ -175,9 +175,10 @@ class Amount
     {
         return $this->getNativeCurrencyByUserGroup($userGroup);
     }
+
     public function getNativeCurrencyByUserGroup(UserGroup $userGroup): TransactionCurrency
     {
-        $cache   = new CacheProperties();
+        $cache  = new CacheProperties();
         $cache->addProperty('getNativeCurrencyByGroup');
         $cache->addProperty($userGroup->id);
         if ($cache->has()) {

@@ -58,6 +58,7 @@ class ShowController extends Controller
 
         return response()
             ->api($this->jsonApiObject(self::RESOURCE_KEY, $userGroup, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
 }

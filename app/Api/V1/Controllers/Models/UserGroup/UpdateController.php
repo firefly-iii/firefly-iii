@@ -1,4 +1,5 @@
 <?php
+
 /*
  * UpdateController.php
  * Copyright (c) 2025 james@firefly-iii.org.
@@ -51,20 +52,20 @@ class UpdateController extends Controller
         );
     }
 
-    public function update(UpdateRequest $request, UserGroup $userGroup): JsonResponse {
+    public function update(UpdateRequest $request, UserGroup $userGroup): JsonResponse
+    {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
-        $data         = $request->getData();
-        $userGroup      = $this->repository->update($userGroup, $data);
+        $data        = $request->getData();
+        $userGroup   = $this->repository->update($userGroup, $data);
         $userGroup->refresh();
         app('preferences')->mark();
 
-        $transformer  = new UserGroupTransformer();
+        $transformer = new UserGroupTransformer();
         $transformer->setParameters($this->parameters);
 
         return response()
             ->api($this->jsonApiObject(self::RESOURCE_KEY, $userGroup, $transformer))
             ->header('Content-Type', self::CONTENT_TYPE)
-            ;
+        ;
     }
-
 }

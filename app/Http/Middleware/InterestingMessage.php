@@ -93,6 +93,7 @@ class InterestingMessage
 
         return null !== $transactionGroupId && null !== $message;
     }
+
     private function userGroupMessage(Request $request): bool
     {
         // get parameters from request.
@@ -153,23 +154,24 @@ class InterestingMessage
     {
         // get parameters from request.
         $userGroupId = $request->get('user_group_id');
-        $message   = $request->get('message');
+        $message     = $request->get('message');
 
         /** @var User $user */
-        $user      = auth()->user();
+        $user        = auth()->user();
 
-        $userGroup = UserGroup::find($userGroupId);
-        $valid = false;
+        $userGroup   = UserGroup::find($userGroupId);
+        $valid       = false;
         $memberships = $user->groupMemberships()->get();
 
         /** @var GroupMembership $membership */
-        foreach($memberships as $membership) {
-            if($membership->userGroup->id === $userGroup->id) {
+        foreach ($memberships as $membership) {
+            if ($membership->userGroup->id === $userGroup->id) {
                 $valid = true;
+
                 break;
             }
         }
-        if(false === $valid) {
+        if (false === $valid) {
             return;
         }
 

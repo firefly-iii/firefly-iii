@@ -1,5 +1,11 @@
 {
     "firefly": {
+        "administrations_page_title": "Financial administrations",
+        "administrations_index_menu": "Financial administrations",
+        "temp_administrations_introduction": "Firefly III will soon get the ability to manage multiple financial administrations. Right now, you only have the one. You can set the title of this administration and its native currency. This replaces the previous setting where you would set your \"default currency\". This setting is now tied to the financial administration and can be different per administration.",
+        "administration_currency_form_help": "It may take a long time for the page to load if you change the native currency because transaction may need to be converted to your (new) native currency.",
+        "administrations_page_edit_sub_title_js": "Edit financial administration \"{title}\"",
+        "table": "\u8868\u683c",
         "welcome_back": "What's playing?",
         "flash_error": "\u932f\u8aa4\uff01",
         "flash_warning": "\u8b66\u544a\uff01",
@@ -145,6 +151,7 @@
         "url": "URL",
         "active": "\u555f\u7528",
         "interest_date": "\u5229\u7387\u65e5\u671f",
+        "administration_currency": "Native currency",
         "title": "\u6a19\u984c",
         "date": "\u65e5\u671f",
         "book_date": "\u767b\u8a18\u65e5\u671f",
@@ -162,7 +169,9 @@
         "rate": "Rate"
     },
     "list": {
+        "title": "\u6a19\u984c",
         "active": "\u662f\u5426\u555f\u7528\uff1f",
+        "native_currency": "Native currency",
         "trigger": "\u89f8\u767c\u5668",
         "response": "\u56de\u61c9",
         "delivery": "Delivery",
