@@ -55,7 +55,7 @@ class DateRequest extends FormRequest
         return [
             'start' => $start,
             'end'   => $end,
-            'date' => $this->getCarbonDate('date'),
+            'date'  => $this->getCarbonDate('date'),
         ];
     }
 

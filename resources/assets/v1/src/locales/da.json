@@ -1,5 +1,11 @@
 {
     "firefly": {
+        "administrations_page_title": "Financial administrations",
+        "administrations_index_menu": "Financial administrations",
+        "temp_administrations_introduction": "Firefly III will soon get the ability to manage multiple financial administrations. Right now, you only have the one. You can set the title of this administration and its native currency. This replaces the previous setting where you would set your \"default currency\". This setting is now tied to the financial administration and can be different per administration.",
+        "administration_currency_form_help": "It may take a long time for the page to load if you change the native currency because transaction may need to be converted to your (new) native currency.",
+        "administrations_page_edit_sub_title_js": "Edit financial administration \"{title}\"",
+        "table": "Tabel",
         "welcome_back": "Hvad spiller?",
         "flash_error": "Fejl!",
         "flash_warning": "Advarsel!",
@@ -145,6 +151,7 @@
         "url": "URL",
         "active": "Aktiv",
         "interest_date": "Rentedato",
+        "administration_currency": "Native currency",
         "title": "Titel",
         "date": "Dato",
         "book_date": "Bogf\u00f8ringsdato",
@@ -162,7 +169,9 @@
         "rate": "Rate"
     },
     "list": {
+        "title": "Titel",
         "active": "Aktiv?",
+        "native_currency": "Native currency",
         "trigger": "Udl\u00f8ser",
         "response": "Svar",
         "delivery": "Delivery",

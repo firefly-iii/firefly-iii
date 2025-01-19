@@ -1,5 +1,11 @@
 {
     "firefly": {
+        "administrations_page_title": "Financial administrations",
+        "administrations_index_menu": "Financial administrations",
+        "temp_administrations_introduction": "Firefly III will soon get the ability to manage multiple financial administrations. Right now, you only have the one. You can set the title of this administration and its native currency. This replaces the previous setting where you would set your \"default currency\". This setting is now tied to the financial administration and can be different per administration.",
+        "administration_currency_form_help": "It may take a long time for the page to load if you change the native currency because transaction may need to be converted to your (new) native currency.",
+        "administrations_page_edit_sub_title_js": "Edit financial administration \"{title}\"",
+        "table": "\u0422\u0430\u0431\u043b\u0438\u0446\u044f",
         "welcome_back": "\u0429\u043e \u0432 \u0433\u0430\u043c\u0430\u043d\u0446\u0456?",
         "flash_error": "\u041f\u043e\u043c\u0438\u043b\u043a\u0430!",
         "flash_warning": "\u0423\u0432\u0430\u0433\u0430!",
@@ -145,6 +151,7 @@
         "url": "URL-\u0430\u0434\u0440\u0435\u0441\u0430",
         "active": "\u0410\u043a\u0442\u0438\u0432\u043d\u043e",
         "interest_date": "\u0414\u0430\u0442\u0430 \u043d\u0430\u0440\u0430\u0445\u0443\u0432\u0430\u043d\u043d\u044f \u0432\u0456\u0434\u0441\u043e\u0442\u043a\u0456\u0432",
+        "administration_currency": "Native currency",
         "title": "\u041d\u0430\u0437\u0432\u0430",
         "date": "\u0414\u0430\u0442\u0430",
         "book_date": "\u0414\u0430\u0442\u0430 \u0431\u0440\u043e\u043d\u044e\u0432\u0430\u043d\u043d\u044f",
@@ -162,7 +169,9 @@
         "rate": "Rate"
     },
     "list": {
+        "title": "\u041d\u0430\u0437\u0432\u0430",
         "active": "\u0427\u0438 \u0430\u043a\u0442\u0438\u0432\u043d\u0438\u0439?",
+        "native_currency": "Native currency",
         "trigger": "\u0422\u0440\u0438\u0433\u0435\u0440",
         "response": "\u0412\u0456\u0434\u043f\u043e\u0432\u0456\u0434\u044c",
         "delivery": "\u0414\u043e\u0441\u0442\u0430\u0432\u043a\u0430",

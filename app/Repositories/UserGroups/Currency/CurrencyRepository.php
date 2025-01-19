@@ -180,11 +180,11 @@ class CurrencyRepository implements CurrencyRepositoryInterface
             $hasId                     = $local->contains(static function (TransactionCurrency $entry) use ($current) {
                 return $entry->id === $current->id;
             });
-            $isNative                 = $local->contains(static function (TransactionCurrency $entry) use ($current) {
+            $isNative                  = $local->contains(static function (TransactionCurrency $entry) use ($current) {
                 return 1 === (int) $entry->pivot->group_default && $entry->id === $current->id;
             });
             $current->userGroupEnabled = $hasId;
-            $current->userGroupNative = $isNative;
+            $current->userGroupNative  = $isNative;
 
             return $current;
         });
@@ -195,7 +195,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         $all = $this->userGroup->currencies()->orderBy('code', 'ASC')->withPivot(['group_default'])->get();
         $all->map(static function (TransactionCurrency $current) { // @phpstan-ignore-line
             $current->userGroupEnabled = true;
-            $current->userGroupNative = 1 === (int) $current->pivot->group_default;
+            $current->userGroupNative  = 1 === (int) $current->pivot->group_default;
 
             return $current;
         });

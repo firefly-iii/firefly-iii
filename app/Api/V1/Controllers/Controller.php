@@ -234,7 +234,7 @@ abstract class Controller extends BaseController
     final protected function jsonApiList(string $key, LengthAwarePaginator $paginator, AbstractTransformer $transformer): array
     {
         $manager  = new Manager();
-        $baseUrl  = sprintf('%s/api/v1/',request()->getSchemeAndHttpHost());
+        $baseUrl  = sprintf('%s/api/v1/', request()->getSchemeAndHttpHost());
 
         // TODO add stuff to path?
 

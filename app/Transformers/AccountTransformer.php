@@ -82,7 +82,7 @@ class AccountTransformer extends AbstractTransformer
         [$openingBalance, $nativeOpeningBalance, $openingBalanceDate] = $this->getOpeningBalance($account, $accountType, $convertToNative);
         [$interest, $interestPeriod]                                  = $this->getInterest($account, $accountType);
 
-        $default = $this->default;
+        $default                                                      = $this->default;
         if (!$this->convertToNative) {
             // reset default currency to NULL, not interesting.
             $default = null;

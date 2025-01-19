@@ -70,23 +70,23 @@ class BudgetTransformer extends AbstractTransformer
         }
 
         // info for auto budget.
-        $abType   = null;
-        $abAmount = null;
-        $abNative = null;
-        $abPeriod = null;
-        $notes    = $this->repository->getNoteText($budget);
+        $abType     = null;
+        $abAmount   = null;
+        $abNative   = null;
+        $abPeriod   = null;
+        $notes      = $this->repository->getNoteText($budget);
 
-        $types    = [
+        $types      = [
             AutoBudgetType::AUTO_BUDGET_RESET->value    => 'reset',
             AutoBudgetType::AUTO_BUDGET_ROLLOVER->value => 'rollover',
             AutoBudgetType::AUTO_BUDGET_ADJUSTED->value => 'adjusted',
         ];
-        $currency = $autoBudget?->transactionCurrency;
-        $default  = $this->default;
+        $currency   = $autoBudget?->transactionCurrency;
+        $default    = $this->default;
         if (!$this->convertToNative) {
             $default = null;
         }
-        if(null === $autoBudget) {
+        if (null === $autoBudget) {
             $currency = $default;
         }
         if (null !== $autoBudget) {
@@ -97,15 +97,15 @@ class BudgetTransformer extends AbstractTransformer
         }
 
         return [
-            'id'                 => (string) $budget->id,
-            'created_at'         => $budget->created_at->toAtomString(),
-            'updated_at'         => $budget->updated_at->toAtomString(),
-            'active'             => $budget->active,
-            'name'               => $budget->name,
-            'order'              => $budget->order,
-            'notes'              => $notes,
-            'auto_budget_type'   => $abType,
-            'auto_budget_period' => $abPeriod,
+            'id'                             => (string) $budget->id,
+            'created_at'                     => $budget->created_at->toAtomString(),
+            'updated_at'                     => $budget->updated_at->toAtomString(),
+            'active'                         => $budget->active,
+            'name'                           => $budget->name,
+            'order'                          => $budget->order,
+            'notes'                          => $notes,
+            'auto_budget_type'               => $abType,
+            'auto_budget_period'             => $abPeriod,
 
             'currency_id'                    => null === $autoBudget ? null : (string) $autoBudget->transactionCurrency->id,
             'currency_code'                  => $autoBudget?->transactionCurrency->code,
@@ -125,7 +125,7 @@ class BudgetTransformer extends AbstractTransformer
             'links'                          => [
                 [
                     'rel' => 'self',
-                    'uri' => '/budgets/' . $budget->id,
+                    'uri' => '/budgets/'.$budget->id,
                 ],
             ],
         ];

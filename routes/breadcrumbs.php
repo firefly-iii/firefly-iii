@@ -1350,21 +1350,21 @@ Breadcrumbs::for(
     }
 );
 
-//Breadcrumbs::for(
+// Breadcrumbs::for(
 //    'administrations.show',
 //    static function (Generator $breadcrumbs, UserGroup $userGroup): void {
 //        $breadcrumbs->parent('administrations.index');
 //        $breadcrumbs->push(limitStringLength($userGroup->title), route('administrations.show', [$userGroup->id]));
 //    }
-//);
+// );
 
-//Breadcrumbs::for(
+// Breadcrumbs::for(
 //    'administrations.create',
 //    static function (Generator $breadcrumbs): void {
 //        $breadcrumbs->parent('administrations.index');
 //        $breadcrumbs->push(trans('firefly.administrations_create_breadcrumb'), route('administrations.create'));
 //    }
-//);
+// );
 Breadcrumbs::for(
     'administrations.edit',
     static function (Generator $breadcrumbs, UserGroup $userGroup): void {

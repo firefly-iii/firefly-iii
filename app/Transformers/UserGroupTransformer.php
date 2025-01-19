@@ -83,13 +83,13 @@ class UserGroupTransformer extends AbstractTransformer
 
     private function mergeMemberships(): void
     {
-        $new = [];
+        $new               = [];
         foreach ($this->memberships as $groupId => $members) {
             $new[$groupId] ??= [];
 
             foreach ($members as $member) {
                 $mail                            = $member['user_email'];
-                $new[$groupId][$mail]            ??= [
+                $new[$groupId][$mail] ??= [
                     'user_id'    => $member['user_id'],
                     'user_email' => $member['user_email'],
                     'you'        => $member['you'],
@@ -107,6 +107,7 @@ class UserGroupTransformer extends AbstractTransformer
     public function transform(UserGroup $userGroup): array
     {
         $currency = Amount::getDefaultCurrencyByUserGroup($userGroup);
+
         return [
             'id'                             => $userGroup->id,
             'created_at'                     => $userGroup->created_at->toAtomString(),

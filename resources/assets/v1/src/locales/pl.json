@@ -1,5 +1,11 @@
 {
     "firefly": {
+        "administrations_page_title": "Financial administrations",
+        "administrations_index_menu": "Financial administrations",
+        "temp_administrations_introduction": "Firefly III will soon get the ability to manage multiple financial administrations. Right now, you only have the one. You can set the title of this administration and its native currency. This replaces the previous setting where you would set your \"default currency\". This setting is now tied to the financial administration and can be different per administration.",
+        "administration_currency_form_help": "It may take a long time for the page to load if you change the native currency because transaction may need to be converted to your (new) native currency.",
+        "administrations_page_edit_sub_title_js": "Edit financial administration \"{title}\"",
+        "table": "Tabela",
         "welcome_back": "Co jest grane?",
         "flash_error": "B\u0142\u0105d!",
         "flash_warning": "Ostrze\u017cenie!",
@@ -145,6 +151,7 @@
         "url": "URL",
         "active": "Aktywny",
         "interest_date": "Data odsetek",
+        "administration_currency": "Native currency",
         "title": "Tytu\u0142",
         "date": "Data",
         "book_date": "Data ksi\u0119gowania",
@@ -162,7 +169,9 @@
         "rate": "Rate"
     },
     "list": {
+        "title": "Tytu\u0142",
         "active": "Jest aktywny?",
+        "native_currency": "Native currency",
         "trigger": "Wyzwalacz",
         "response": "Odpowied\u017a",
         "delivery": "Dor\u0119czenie",

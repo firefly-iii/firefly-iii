@@ -66,7 +66,7 @@ class ShowController extends Controller
             $default = 1 === $group->pivot->group_default;
         }
         $currency->userGroupEnabled = $enabled;
-        $currency->userGroupNative = $default;
+        $currency->userGroupNative  = $default;
 
 
         $transformer                = new CurrencyTransformer();
