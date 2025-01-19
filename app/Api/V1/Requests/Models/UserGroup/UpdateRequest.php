@@ -1,7 +1,7 @@
 <?php
 
 /*
- * DateRequest.php
+ * UpdateRequest.php
  * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -22,52 +22,45 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Requests\Data;
+namespace FireflyIII\Api\V1\Requests\Models\UserGroup;
 
-use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\UserGroup;
+use FireflyIII\Rules\UserGroup\UniqueTitle;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Request class for end points that require date parameters.
- *
- * Class DateRequest
+ * Class UpdateRequest
  */
-class DateRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;
 
-    /**
-     * Get all data from the request.
-     */
-    public function getAll(): array
+    public function getData(): array
     {
-        $start = $this->getCarbonDate('start');
-        $end   = $this->getCarbonDate('end');
-        $start->startOfDay();
-        $end->endOfDay();
-        if ($start->diffInYears($end, true) > 5) {
-            throw new FireflyException('Date range out of range.');
-        }
-
-        return [
-            'start' => $start,
-            'end'   => $end,
-            'date' => $this->getCarbonDate('date'),
+        $fields = [
+            'title'         => ['title', 'convertString'],
+            'native_currency_id'   => ['native_currency_id', 'convertInteger'],
+            'native_currency_code' => ['native_currency_code', 'convertString'],
         ];
+
+        return $this->getAllData($fields);
     }
 
     /**
-     * The rules that the incoming request must be matched against.
+     * Rules for this request.
      */
     public function rules(): array
     {
+        /** @var UserGroup $userGroup */
+        $userGroup = $this->route()->parameter('userGroup');
+
         return [
-            'date'  => 'date|after:1900-01-01|before:2099-12-31',
-            'start' => 'date|after:1900-01-01|before:2099-12-31|before:end|required_with:end',
-            'end'   => 'date|after:1900-01-01|before:2099-12-31|after:start|required_with:start',
+            'title'                => ['required','min:1','max:255'],
+            'native_currency_id'   => 'exists:transaction_currencies,id',
+            'native_currency_code' => 'exists:transaction_currencies,code',
         ];
     }
 }

@@ -29,6 +29,7 @@ return [
     'icon'                    => 'Icon',
     'id'                      => 'ID',
     'create_date'             => 'Created at',
+    'native_currency'         => 'Native currency',
     'update_date'             => 'Updated at',
     'updated_at'              => 'Updated at',
     'balance_before'          => 'Balance before',

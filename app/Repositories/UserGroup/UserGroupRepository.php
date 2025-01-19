@@ -30,6 +30,7 @@ use FireflyIII\Factory\UserGroupFactory;
 use FireflyIII\Models\GroupMembership;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Models\UserRole;
+use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
@@ -49,7 +50,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface
         /** @var GroupMembership $membership */
         foreach ($memberships as $membership) {
             /** @var null|User $user */
-            $user  = $membership->user()->first();
+            $user = $membership->user()->first();
             if (null === $user) {
                 continue;
             }
@@ -78,8 +79,8 @@ class UserGroupRepository implements UserGroupRepositoryInterface
         // all users are now moved away from user group.
         // time to DESTROY all objects.
         // we have to do this one by one to trigger the necessary observers :(
-        $objects     = ['availableBudgets', 'bills', 'budgets', 'categories', 'currencyExchangeRates', 'objectGroups',
-            'recurrences', 'rules', 'ruleGroups', 'tags', 'transactionGroups', 'transactionJournals', 'piggyBanks', 'accounts', 'webhooks',
+        $objects = ['availableBudgets', 'bills', 'budgets', 'categories', 'currencyExchangeRates', 'objectGroups',
+                    'recurrences', 'rules', 'ruleGroups', 'tags', 'transactionGroups', 'transactionJournals', 'piggyBanks', 'accounts', 'webhooks',
         ];
         foreach ($objects as $object) {
             foreach ($userGroup->{$object}()->get() as $item) { // @phpstan-ignore-line
@@ -106,7 +107,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface
             /** @var null|UserGroup $group */
             $group = $membership->userGroup()->first();
             if (null !== $group) {
-                $groupId       = $group->id;
+                $groupId = $group->id;
                 if (in_array($groupId, array_keys($set), true)) {
                     continue;
                 }
@@ -131,14 +132,14 @@ class UserGroupRepository implements UserGroupRepositoryInterface
         while ($exists && $loop < 10) {
             $existingGroup = $this->findByName($groupName);
             if (null === $existingGroup) {
-                $exists        = false;
+                $exists = false;
 
                 /** @var null|UserGroup $existingGroup */
                 $existingGroup = $this->store(['user' => $user, 'title' => $groupName]);
             }
             if (null !== $existingGroup) {
                 // group already exists
-                $groupName = sprintf('%s-%s', $user->email, substr(sha1(rand(1000, 9999).microtime()), 0, 4));
+                $groupName = sprintf('%s-%s', $user->email, substr(sha1(rand(1000, 9999) . microtime()), 0, 4));
             }
             ++$loop;
         }
@@ -159,7 +160,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface
         $data['user'] = $this->user;
 
         /** @var UserGroupFactory $factory */
-        $factory      = app(UserGroupFactory::class);
+        $factory = app(UserGroupFactory::class);
 
         return $factory->create($data);
     }
@@ -186,7 +187,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface
         return $this->user->groupMemberships()->where('user_group_id', $groupId)->get();
     }
 
-    public function setUser(null|Authenticatable|User $user): void
+    public function setUser(null | Authenticatable | User $user): void
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
         if ($user instanceof User) {
@@ -198,6 +199,23 @@ class UserGroupRepository implements UserGroupRepositoryInterface
     {
         $userGroup->title = $data['title'];
         $userGroup->save();
+        $currency = null;
+        /** @var CurrencyRepositoryInterface $repository */
+        $repository = app(CurrencyRepositoryInterface::class);
+
+        if (array_key_exists('native_currency_code', $data)) {
+            $repository->setUser($this->user);
+            $currency = $repository->findByCode($data['native_currency_code']);
+        }
+
+        if (array_key_exists('native_currency_id', $data) && null === $currency) {
+            $repository->setUser($this->user);
+            $currency = $repository->find((int) $data['native_currency_id']);
+        }
+        if (null !== $currency) {
+            $repository->makeDefault($currency);
+        }
+
 
         return $userGroup;
     }
@@ -209,11 +227,11 @@ class UserGroupRepository implements UserGroupRepositoryInterface
      */
     public function updateMembership(UserGroup $userGroup, array $data): UserGroup
     {
-        $owner           = UserRole::whereTitle(UserRoleEnum::OWNER)->first();
+        $owner = UserRole::whereTitle(UserRoleEnum::OWNER)->first();
         app('log')->debug('in update membership');
 
         /** @var null|User $user */
-        $user            = null;
+        $user = null;
         if (array_key_exists('id', $data)) {
             /** @var null|User $user */
             $user = User::find($data['id']);
@@ -252,9 +270,8 @@ class UserGroupRepository implements UserGroupRepositoryInterface
         if ($membershipCount > 1) {
             // group has multiple members. How many are owner, except the user we're editing now?
             $ownerCount = $userGroup->groupMemberships()
-                ->where('user_role_id', $owner->id)
-                ->where('user_id', '!=', $user->id)->count()
-            ;
+                                    ->where('user_role_id', $owner->id)
+                                    ->where('user_id', '!=', $user->id)->count();
             // if there are no other owners and the current users does not get or keep the owner role, refuse.
             if (
                 0 === $ownerCount

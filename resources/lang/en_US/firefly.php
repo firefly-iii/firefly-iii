@@ -1477,9 +1477,9 @@ return [
 
     // Financial administrations
     'administration_index'                                 => 'Financial administration',
-    'administrations_index_menu'                           => 'Financial administration(s)',
     'administrations_breadcrumb'                           => 'Financial administrations',
-    'administrations_page_title'                           => 'Financial administrations',
+    'administrations_page_title' => 'Financial administrations',
+    'administrations_index_menu'                           => 'Financial administrations',
     'administrations_page_sub_title'                       => 'Overview',
     'create_administration'                                => 'Create new administration',
     'administration_owner'                                 => 'Administration owner: {{email}}',
@@ -1491,6 +1491,13 @@ return [
     'new_administration_created'                           => 'New financial administration "{{title}}" has been created',
     'edit_administration_breadcrumb'                       => 'Edit financial administration ":title"',
     'administrations_page_edit_sub_title'                  => 'Edit financial administration ":title"',
+    'administrations_page_edit_sub_title_js'                  => 'Edit financial administration "{title}"',
+    'temp_administrations_introduction' => 'Firefly III will soon get the ability to manage multiple financial administrations. Right now, you only have the one. You can set the title of this administration and its native currency. This replaces the previous setting where you would set your "default currency". This setting is now tied to the financial administration and can be different per administration.',
+    'temp_administrations_introduction_edit' =>'Currently, you can only set the "native currency" of the default financial administration. This replaces the "default currency" setting. This setting is now tied to the financial administration and can be different per administration.',
+    'administration_currency_form_help' => 'It may take a long time for the page to load if you change the native currency because transaction may need to be converted to your (new) native currency.',
+    'flash_administration_updated' => 'Administration ":title" has been updated',
+    'flash_administration_created' => 'Administration ":title" has been created',
+    'flash_administration_deleted' => 'Administration ":title" has been deleted',
 
     // roles
     'administration_role_owner'                            => 'Owner',

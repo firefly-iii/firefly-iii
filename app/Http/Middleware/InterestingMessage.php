@@ -26,9 +26,11 @@ namespace FireflyIII\Http\Middleware;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\GroupMembership;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\Models\Webhook;
 use FireflyIII\User;
 use Illuminate\Http\Request;
@@ -52,6 +54,10 @@ class InterestingMessage
         if ($this->groupMessage($request)) {
             app('preferences')->mark();
             $this->handleGroupMessage($request);
+        }
+        if ($this->userGroupMessage($request)) {
+            app('preferences')->mark();
+            $this->handleUserGroupMessage($request);
         }
         if ($this->accountMessage($request)) {
             app('preferences')->mark();
@@ -83,6 +89,14 @@ class InterestingMessage
     {
         // get parameters from request.
         $transactionGroupId = $request->get('transaction_group_id');
+        $message            = $request->get('message');
+
+        return null !== $transactionGroupId && null !== $message;
+    }
+    private function userGroupMessage(Request $request): bool
+    {
+        // get parameters from request.
+        $transactionGroupId = $request->get('user_group_id');
         $message            = $request->get('message');
 
         return null !== $transactionGroupId && null !== $message;
@@ -133,6 +147,42 @@ class InterestingMessage
         $message   = $request->get('message');
 
         return null !== $accountId && null !== $message;
+    }
+
+    private function handleUserGroupMessage(Request $request): void
+    {
+        // get parameters from request.
+        $userGroupId = $request->get('user_group_id');
+        $message   = $request->get('message');
+
+        /** @var User $user */
+        $user      = auth()->user();
+
+        $userGroup = UserGroup::find($userGroupId);
+        $valid = false;
+        $memberships = $user->groupMemberships()->get();
+
+        /** @var GroupMembership $membership */
+        foreach($memberships as $membership) {
+            if($membership->userGroup->id === $userGroup->id) {
+                $valid = true;
+                break;
+            }
+        }
+        if(false === $valid) {
+            return;
+        }
+
+
+        if ('deleted' === $message) {
+            session()->flash('success', (string) trans('firefly.flash_administration_deleted', ['title' => $userGroup->title]));
+        }
+        if ('created' === $message) {
+            session()->flash('success', (string) trans('firefly.flash_administration_created', ['title' => $userGroup->title]));
+        }
+        if ('updated' === $message) {
+            session()->flash('success', (string) trans('firefly.flash_administration_updated', ['title' => $userGroup->title]));
+        }
     }
 
     private function handleAccountMessage(Request $request): void

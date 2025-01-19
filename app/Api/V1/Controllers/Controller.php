@@ -30,12 +30,19 @@ use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
+use FireflyIII\Transformers\V2\AbstractTransformer;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Collection;
 use League\Fractal\Manager;
+use League\Fractal\Pagination\IlluminatePaginatorAdapter;
+use League\Fractal\Resource\Collection as FractalCollection;
+use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -222,5 +229,46 @@ abstract class Controller extends BaseController
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         return $manager;
+    }
+
+    final protected function jsonApiList(string $key, LengthAwarePaginator $paginator, AbstractTransformer $transformer): array
+    {
+        $manager  = new Manager();
+        $baseUrl  = sprintf('%s/api/v1/',request()->getSchemeAndHttpHost());
+
+        // TODO add stuff to path?
+
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $objects  = $paginator->getCollection();
+
+        // the transformer, at this point, needs to collect information that ALL items in the collection
+        // require, like meta-data and stuff like that, and save it for later.
+        $objects  = $transformer->collectMetaData($objects);
+        $paginator->setCollection($objects);
+
+        $resource = new FractalCollection($objects, $transformer, $key);
+        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
+
+        return $manager->createData($resource)->toArray();
+    }
+
+    /**
+     * Returns a JSON API object and returns it.
+     *
+     * @param array<int, mixed>|Model $object
+     */
+    final protected function jsonApiObject(string $key, array|Model $object, AbstractTransformer $transformer): array
+    {
+        // create some objects:
+        $manager  = new Manager();
+        $baseUrl  = sprintf('%s/api/v1', request()->getSchemeAndHttpHost());
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $transformer->collectMetaData(new Collection([$object]));
+
+        $resource = new Item($object, $transformer, $key);
+
+        return $manager->createData($resource)->toArray();
     }
 }

@@ -26,6 +26,7 @@ declare(strict_types=1);
 
 return [
     // new user:
+    'administration_currency'      => 'Native currency',
     'bank_name'                    => 'Bank name',
     'bank_balance'                 => 'Balance',
     'current_balance'              => 'Current balance',

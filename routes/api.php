@@ -527,6 +527,25 @@ Route::group(
     }
 );
 
+// User group API routes.
+Route::group(
+    [
+        'namespace' => 'FireflyIII\Api\V1\Controllers\Models\UserGroup',
+        'prefix'    => 'v1/user-groups',
+        'as'        => 'api.v1.user-groups.',
+    ],
+    static function (): void {
+        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
+        Route::get('{userGroup}', ['uses' => 'ShowController@show', 'as' => 'show']);
+        Route::put('{userGroup}', ['uses' => 'UpdateController@update', 'as' => 'update']);
+        //Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
+        //        Route::put('{userGroup}', ['uses' => 'UpdateController@update', 'as' => 'update']);
+        //        Route::post('{userGroup}/use', ['uses' => 'UpdateController@useUserGroup', 'as' => 'use']);
+        //        Route::put('{userGroup}/update-membership', ['uses' => 'UpdateController@updateMembership', 'as' => 'updateMembership']);
+        //        Route::delete('{userGroup}', ['uses' => 'DestroyController@destroy', 'as' => 'destroy']);
+    }
+);
+
 // Bills API routes:
 Route::group(
     [
