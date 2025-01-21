@@ -386,6 +386,18 @@ trait ConvertsDataTypes
         return (int) $string;
     }
 
+    protected function floatFromValue(?string $string): ?float
+    {
+        if (null === $string) {
+            return null;
+        }
+        if ('' === $string) {
+            return null;
+        }
+
+        return (float) $string;
+    }
+
     /**
      * Return integer value, or NULL when it's not set.
      */

@@ -177,6 +177,7 @@ return [
     'unique_existing_webhook'         => 'You already have another webhook with this combination of URL, trigger, response and delivery.',
     'same_account_type'               => 'Both accounts must be of the same account type',
     'same_account_currency'           => 'Both accounts must have the same currency setting',
+    'piggy_no_change_currency' => 'Because there are piggy banks linked to this account, you cannot change the currency of the account.',
 
 
 

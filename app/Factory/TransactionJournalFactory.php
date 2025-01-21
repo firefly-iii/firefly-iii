@@ -576,7 +576,7 @@ class TransactionJournalFactory
 
     private function storeLocation(TransactionJournal $journal, NullArrayObject $data): void
     {
-        if (true === $data['store_location']) {
+        if(null !== $data['longitude'] && null !== $data['latitude'] && null !== $data['zoom_level']) {
             $location             = new Location();
             $location->longitude  = $data['longitude'];
             $location->latitude   = $data['latitude'];

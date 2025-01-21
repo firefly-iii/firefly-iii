@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Transaction;
 
+use FireflyIII\Models\Location;
 use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsDateOrTime;
@@ -88,6 +89,11 @@ class StoreRequest extends FormRequest
 
                 'currency_id'           => $this->integerFromValue((string) $object['currency_id']),
                 'currency_code'         => $this->clearString((string) $object['currency_code']),
+
+                // location
+                'latitude'              => $this->floatFromValue((string) $object['latitude']),
+                'longitude'              => $this->floatFromValue((string) $object['longitude']),
+                'zoom_level'              => $this->integerFromValue((string) $object['zoom_level']),
 
                 // foreign currency info:
                 'foreign_currency_id'   => $this->integerFromValue((string) $object['foreign_currency_id']),
@@ -171,12 +177,17 @@ class StoreRequest extends FormRequest
     {
         app('log')->debug('Collect rules of TransactionStoreRequest');
         $validProtocols = config('firefly.valid_url_protocols');
-
+        $locationRules = Location::requestRules([]);
         return [
             // basic fields for group:
             'group_title'                          => 'min:1|max:1000|nullable',
             'error_if_duplicate_hash'              => [new IsBoolean()],
             'apply_rules'                          => [new IsBoolean()],
+
+            // location rules
+            'transactions.*.latitude' => $locationRules['latitude'],
+            'transactions.*.longitude' => $locationRules['longitude'],
+            'transactions.*.zoom_level' => $locationRules['zoom_level'],
 
             // transaction rules (in array for splits):
             'transactions.*.type'                  => 'required|in:withdrawal,deposit,transfer,opening-balance,reconciliation',
