@@ -95,6 +95,7 @@ class CategoryTransformer extends AbstractTransformer
         ];
     }
 
+
     private function beautify(array $array): array
     {
         $return = [];

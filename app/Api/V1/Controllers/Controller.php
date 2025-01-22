@@ -65,7 +65,7 @@ abstract class Controller extends BaseController
     protected array        $allowedSort;
     protected ParameterBag $parameters;
     protected bool        $convertToNative = false;
-    protected TransactionCurrency $defaultCurrency;
+    protected TransactionCurrency $nativeCurrency;
 
     /**
      * Controller constructor.
@@ -80,7 +80,7 @@ abstract class Controller extends BaseController
                 if (auth()->check()) {
                     $language              = Steam::getLanguage();
                     $this->convertToNative = Amount::convertToNative();
-                    $this->defaultCurrency = Amount::getNativeCurrency();
+                    $this->nativeCurrency = Amount::getNativeCurrency();
                     app()->setLocale($language);
 
                 }

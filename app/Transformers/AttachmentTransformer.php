@@ -56,6 +56,7 @@ class AttachmentTransformer extends AbstractTransformer
             'attachable_id'   => (string) $attachment->attachable_id,
             'attachable_type' => str_replace('FireflyIII\Models\\', '', $attachment->attachable_type),
             'md5'             => $attachment->md5,
+            'hash'             => $attachment->md5,
             'filename'        => $attachment->filename,
             'download_url'    => route('api.v1.attachments.download', [$attachment->id]),
             'upload_url'      => route('api.v1.attachments.upload', [$attachment->id]),

@@ -97,8 +97,8 @@ class AccountController extends Controller
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $currency     = $this->repository->getAccountCurrency($account) ?? $this->defaultCurrency;
-            $field        = $this->convertToNative && $currency->id !== $this->defaultCurrency->id ? 'native_balance' : 'balance';
+            $currency     = $this->repository->getAccountCurrency($account) ?? $this->nativeCurrency;
+            $field        = $this->convertToNative && $currency->id !== $this->nativeCurrency->id ? 'native_balance' : 'balance';
             $currentSet   = [
                 'label'                   => $account->name,
                 'currency_id'             => (string) $currency->id,

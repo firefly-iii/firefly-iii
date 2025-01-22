@@ -119,6 +119,7 @@ class BudgetTransformer extends AbstractTransformer
             'native_currency_decimal_places' => $default?->decimal_places,
 
             // amount and native amount if present.
+
             'auto_budget_amount'             => $abAmount,
             'native_auto_budget_amount'      => $abNative,
             'spent'                          => $spent, // always in native.

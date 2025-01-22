@@ -40,7 +40,7 @@ class AccountTransformer extends AbstractTransformer
 {
     protected AccountRepositoryInterface $repository;
     protected bool                       $convertToNative;
-    protected TransactionCurrency        $default;
+    protected TransactionCurrency        $native;
 
     /**
      * AccountTransformer constructor.
@@ -50,7 +50,7 @@ class AccountTransformer extends AbstractTransformer
         $this->parameters      = new ParameterBag();
         $this->repository      = app(AccountRepositoryInterface::class);
         $this->convertToNative = Amount::convertToNative();
-        $this->default         = Amount::getNativeCurrency();
+        $this->native         = Amount::getNativeCurrency();
     }
 
     /**
@@ -72,7 +72,7 @@ class AccountTransformer extends AbstractTransformer
         $convertToNative                                              = Amount::convertToNative();
 
         // get account role (will only work if the type is asset).
-        $default                                                      = Amount::getNativeCurrency();
+        $native                                                      = Amount::getNativeCurrency();
         $accountRole                                                  = $this->getAccountRole($account, $accountType);
         $date                                                         = $this->getDate();
         $date->endOfDay();
@@ -82,10 +82,10 @@ class AccountTransformer extends AbstractTransformer
         [$openingBalance, $nativeOpeningBalance, $openingBalanceDate] = $this->getOpeningBalance($account, $accountType, $convertToNative);
         [$interest, $interestPeriod]                                  = $this->getInterest($account, $accountType);
 
-        $default                                                      = $this->default;
+        $native                                                      = $this->native;
         if (!$this->convertToNative) {
-            // reset default currency to NULL, not interesting.
-            $default = null;
+            // reset native currency to NULL, not interesting.
+            $native = null;
         }
 
         $openingBalance                                               = app('steam')->bcround($openingBalance, $decimalPlaces);
@@ -112,7 +112,7 @@ class AccountTransformer extends AbstractTransformer
         }
 
         $currentBalance                                               = app('steam')->bcround($finalBalance['balance'] ?? '0', $decimalPlaces);
-        $nativeCurrentBalance                                         = $convertToNative ? app('steam')->bcround($finalBalance['native_balance'] ?? '0', $default->decimal_places) : null;
+        $nativeCurrentBalance                                         = $convertToNative ? app('steam')->bcround($finalBalance['native_balance'] ?? '0', $native->decimal_places) : null;
 
         return [
             'id'                             => (string) $account->id,
@@ -127,10 +127,10 @@ class AccountTransformer extends AbstractTransformer
             'currency_code'                  => $currencyCode,
             'currency_symbol'                => $currencySymbol,
             'currency_decimal_places'        => $decimalPlaces,
-            'native_currency_id'             => null === $default ? null : (string) $default->id,
-            'native_currency_code'           => $default?->code,
-            'native_currency_symbol'         => $default?->symbol,
-            'native_currency_decimal_places' => $default?->decimal_places,
+            'native_currency_id'             => null === $native ? null : (string) $native->id,
+            'native_currency_code'           => $native?->code,
+            'native_currency_symbol'         => $native?->symbol,
+            'native_currency_decimal_places' => $native?->decimal_places,
             'current_balance'                => $currentBalance,
             'native_current_balance'         => $nativeCurrentBalance,
             'current_balance_date'           => $date->toAtomString(),
@@ -141,7 +141,7 @@ class AccountTransformer extends AbstractTransformer
             'iban'                           => '' === $account->iban ? null : $account->iban,
             'bic'                            => $this->repository->getMetaValue($account, 'BIC'),
             'virtual_balance'                => app('steam')->bcround($account->virtual_balance, $decimalPlaces),
-            'native_virtual_balance'         => $this->convertToNative ? app('steam')->bcround($account->native_virtual_balance, $default->decimal_places) : null,
+            'native_virtual_balance'         => $this->convertToNative ? app('steam')->bcround($account->native_virtual_balance, $native->decimal_places) : null,
             'opening_balance'                => $openingBalance,
             'native_opening_balance'         => $nativeOpeningBalance,
             'opening_balance_date'           => $openingBalanceDate,
@@ -190,9 +190,9 @@ class AccountTransformer extends AbstractTransformer
     {
         $currency       = $this->repository->getAccountCurrency($account);
 
-        // only grab default when result is null:
+        // only grab native when result is null:
         if (null === $currency) {
-            $currency = $this->default;
+            $currency = $this->native;
         }
         $currencyId     = (string) $currency->id;
         $currencyCode   = $currency->code;

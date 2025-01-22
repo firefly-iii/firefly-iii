@@ -100,7 +100,7 @@ class UpdateController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/defaultCurrency
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/nativeCurrency
      *
      * Make the currency a default currency.
      *
