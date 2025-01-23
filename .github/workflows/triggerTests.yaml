@@ -1,0 +1,23 @@
+name: trigger Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  TriggerDeployment:
+    runs-on: ubuntu-latest
+    env:
+      SPOTIFY_TESTING_REPO_NAME: Ameerm98/FireflyIIITesting
+      UI_TESTING_WORKFLOW_ID: UITesting.yaml
+    steps:
+      - name: Trigger the Selenium testing workflow
+        run: |
+          curl -X POST \
+           -H "Authorization: Bearer ${{ secrets.ACCESS_TOKEN_GITHUB }}" \
+           -H "Accept: application/vnd.github.v3+json" \
+           -d "{\"ref\": \"main\", \"inputs\": {\"grid_url\": \"http://localhost:4444\", \"chrome_131_0\": true}}" \
+           https://api.github.com/repos/$SPOTIFY_TESTING_REPO_NAME/actions/workflows/$UI_TESTING_WORKFLOW_ID/dispatches
+
+
