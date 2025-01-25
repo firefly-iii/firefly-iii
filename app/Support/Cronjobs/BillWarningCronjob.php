@@ -48,14 +48,14 @@ class BillWarningCronjob extends AbstractCronjob
         $diffForHumans = today(config('app.timezone'))->diffForHumans(Carbon::createFromTimestamp($lastTime), null, true);
 
         if (0 === $lastTime) {
-            app('log')->info('The bill warning cron-job has never fired before.');
+            app('log')->info('The bill notification cron-job has never fired before.');
         }
         // less than half a day ago:
         if ($lastTime > 0 && $diff <= 43200) {
-            app('log')->info(sprintf('It has been %s since the bill warning cron-job has fired.', $diffForHumans));
+            app('log')->info(sprintf('It has been %s since the bill notification cron-job has fired.', $diffForHumans));
             if (false === $this->force) {
                 app('log')->info('The cron-job will not fire now.');
-                $this->message      = sprintf('It has been %s since the bill warning cron-job has fired. It will not fire now.', $diffForHumans);
+                $this->message      = sprintf('It has been %s since the bill notification cron-job has fired. It will not fire now.', $diffForHumans);
                 $this->jobFired     = false;
                 $this->jobErrored   = false;
                 $this->jobSucceeded = false;
@@ -63,11 +63,11 @@ class BillWarningCronjob extends AbstractCronjob
                 return;
             }
 
-            app('log')->info('Execution of the bill warning cron-job has been FORCED.');
+            app('log')->info('Execution of the bill notification cron-job has been FORCED.');
         }
 
         if ($lastTime > 0 && $diff > 43200) {
-            app('log')->info(sprintf('It has been %s since the bill warning cron-job has fired. It will fire now!', $diffForHumans));
+            app('log')->info(sprintf('It has been %s since the bill notification cron-job has fired. It will fire now!', $diffForHumans));
         }
 
         $this->fireWarnings();
@@ -77,7 +77,7 @@ class BillWarningCronjob extends AbstractCronjob
 
     private function fireWarnings(): void
     {
-        app('log')->info(sprintf('Will now fire bill warning job task for date "%s".', $this->date->format('Y-m-d H:i:s')));
+        app('log')->info(sprintf('Will now fire bill notification job task for date "%s".', $this->date->format('Y-m-d H:i:s')));
 
         /** @var WarnAboutBills $job */
         $job                = app(WarnAboutBills::class);
@@ -89,10 +89,10 @@ class BillWarningCronjob extends AbstractCronjob
         $this->jobFired     = true;
         $this->jobErrored   = false;
         $this->jobSucceeded = true;
-        $this->message      = 'Bill warning cron job fired successfully.';
+        $this->message      = 'Bill notification cron job fired successfully.';
 
         app('fireflyconfig')->set('last_bw_job', (int) $this->date->format('U'));
         app('log')->info(sprintf('Marked the last time this job has run as "%s" (%d)', $this->date->format('Y-m-d H:i:s'), (int) $this->date->format('U')));
-        app('log')->info('Done with bill warning cron job task.');
+        app('log')->info('Done with bill notification cron job task.');
     }
 }

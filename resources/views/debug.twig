@@ -13,7 +13,7 @@
 </p>
 <textarea rows="30" cols="100" name="debug_info" id="debug_info"
           style="font-family:Menlo, Monaco, Consolas, monospace;font-size:8pt;">
-Debug information generated at {{ now }} for Firefly III version **v{{ FF_VERSION }}**.
+Debug information generated at {{ now }} for Firefly III version **{% if not FF_IS_DEVELOP %}v{% endif %}{{ FF_VERSION }}**.
 
 {{ table|escape('html') }}
 </textarea>

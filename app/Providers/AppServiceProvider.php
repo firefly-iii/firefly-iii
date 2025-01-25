@@ -23,6 +23,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
+use Barryvdh\Debugbar\DataCollector\QueryCollector;
+use Barryvdh\Debugbar\Facades\Debugbar;
+use DebugBar\DebugBarException;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
@@ -48,6 +51,17 @@ class AppServiceProvider extends ServiceProvider
             $uuid    = (string) request()->header('X-Trace-Id');
             if ('' !== trim($uuid) && (1 === preg_match('/^[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}$/i', trim($uuid)))) {
                 $headers['X-Trace-Id'] = $uuid;
+            }
+
+            if(config('app.debug')) {
+                try {
+                    /** @var QueryCollector $collector */
+                    $collector = Debugbar::getCollector('queries');
+                    $info = $collector->collect();
+                    $headers['X-Debug-QueryCount'] = $info['nb_statements'] ?? 0;
+                } catch(DebugBarException $e) {
+                    // ignore error.
+                }
             }
 
             return response()

@@ -31,6 +31,7 @@ use FireflyIII\Http\Requests\PreferencesRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
@@ -93,35 +94,35 @@ class PreferencesController extends Controller
         /** @var array<int, int> $accountIds */
         $accountIds                     = $accounts->pluck('id')->toArray();
         $viewRange                      = app('navigation')->getViewRange(false);
-        $frontpageAccountsPref          = app('preferences')->get('frontpageAccounts', $accountIds);
+        $frontpageAccountsPref          = Preferences::get('frontpageAccounts', $accountIds);
         $frontpageAccounts              = $frontpageAccountsPref->data;
         if (!is_array($frontpageAccounts)) {
             $frontpageAccounts = $accountIds;
         }
         $language                       = app('steam')->getLanguage();
         $languages                      = config('firefly.languages');
-        $locale                         = app('preferences')->get('locale', config('firefly.default_locale', 'equal'))->data;
-        $listPageSize                   = app('preferences')->get('listPageSize', 50)->data;
-        $darkMode                       = app('preferences')->get('darkMode', 'browser')->data;
-        $customFiscalYear               = app('preferences')->get('customFiscalYear', 0)->data;
-        $fiscalYearStartStr             = app('preferences')->get('fiscalYearStart', '01-01')->data;
+        $locale                         = Preferences::get('locale', config('firefly.default_locale', 'equal'))->data;
+        $listPageSize                   = Preferences::get('listPageSize', 50)->data;
+        $darkMode                       = Preferences::get('darkMode', 'browser')->data;
+        $customFiscalYear               = Preferences::get('customFiscalYear', 0)->data;
+        $fiscalYearStartStr             = Preferences::get('fiscalYearStart', '01-01')->data;
         $convertToNative                = $this->convertToNative;
         if (is_array($fiscalYearStartStr)) {
             $fiscalYearStartStr = '01-01';
         }
         $fiscalYearStart                = sprintf('%s-%s', date('Y'), (string) $fiscalYearStartStr);
-        $tjOptionalFields               = app('preferences')->get('transaction_journal_optional_fields', [])->data;
+        $tjOptionalFields               = Preferences::get('transaction_journal_optional_fields', [])->data;
         $availableDarkModes             = config('firefly.available_dark_modes');
 
         // notifications settings
-        $slackUrl                       = app('preferences')->getEncrypted('slack_webhook_url', '')->data;
-        $pushoverAppToken               = (string) app('preferences')->getEncrypted('pushover_app_token', '')->data;
-        $pushoverUserToken              = (string) app('preferences')->getEncrypted('pushover_user_token', '')->data;
-        $ntfyServer                     = app('preferences')->getEncrypted('ntfy_server', 'https://ntfy.sh')->data;
-        $ntfyTopic                      = (string) app('preferences')->getEncrypted('ntfy_topic', '')->data;
-        $ntfyAuth                       = app('preferences')->get('ntfy_auth', false)->data;
-        $ntfyUser                       = app('preferences')->getEncrypted('ntfy_user', '')->data;
-        $ntfyPass                       = (string) app('preferences')->getEncrypted('ntfy_pass', '')->data;
+        $slackUrl                       = Preferences::getEncrypted('slack_webhook_url', '')->data;
+        $pushoverAppToken               = (string) Preferences::getEncrypted('pushover_app_token', '')->data;
+        $pushoverUserToken              = (string) Preferences::getEncrypted('pushover_user_token', '')->data;
+        $ntfyServer                     = Preferences::getEncrypted('ntfy_server', 'https://ntfy.sh')->data;
+        $ntfyTopic                      = (string) Preferences::getEncrypted('ntfy_topic', '')->data;
+        $ntfyAuth                       = Preferences::get('ntfy_auth', false)->data;
+        $ntfyUser                       = Preferences::getEncrypted('ntfy_user', '')->data;
+        $ntfyPass                       = (string) Preferences::getEncrypted('ntfy_pass', '')->data;
         $channels                       = config('notifications.channels');
         $forcedAvailability             = [];
 
@@ -131,7 +132,7 @@ class PreferencesController extends Controller
             if (true === $info['enabled']) {
                 $notifications[$key]
                     = [
-                        'enabled'      => true === app('preferences')->get(sprintf('notification_%s', $key), true)->data,
+                        'enabled'      => true === Preferences::get(sprintf('notification_%s', $key), true)->data,
                         'configurable' => $info['configurable'],
                     ];
             }
@@ -221,7 +222,7 @@ class PreferencesController extends Controller
             foreach ($request->get('frontpageAccounts') as $id) {
                 $frontpageAccounts[] = (int) $id;
             }
-            app('preferences')->set('frontpageAccounts', $frontpageAccounts);
+            Preferences::set('frontpageAccounts', $frontpageAccounts);
         }
 
         // extract notifications:
@@ -229,15 +230,15 @@ class PreferencesController extends Controller
         foreach (config('notifications.notifications.user') as $key => $info) {
             $key = sprintf('notification_%s', $key);
             if (array_key_exists($key, $all)) {
-                app('preferences')->set($key, true);
+                Preferences::set($key, true);
             }
             if (!array_key_exists($key, $all)) {
-                app('preferences')->set($key, false);
+                Preferences::set($key, false);
             }
         }
 
         // view range:
-        app('preferences')->set('viewRange', $request->get('viewRange'));
+        Preferences::set('viewRange', $request->get('viewRange'));
         // forget session values:
         session()->forget('start');
         session()->forget('end');
@@ -249,13 +250,13 @@ class PreferencesController extends Controller
             $variables = ['slack_webhook_url', 'pushover_app_token', 'pushover_user_token', 'ntfy_server', 'ntfy_topic', 'ntfy_user', 'ntfy_pass'];
             foreach ($variables as $variable) {
                 if ('' === $all[$variable]) {
-                    app('preferences')->delete($variable);
+                    Preferences::delete($variable);
                 }
                 if ('' !== $all[$variable]) {
-                    app('preferences')->setEncrypted($variable, $all[$variable]);
+                    Preferences::setEncrypted($variable, $all[$variable]);
                 }
             }
-            app('preferences')->set('ntfy_auth', $all['ntfy_auth'] ?? false);
+            Preferences::set('ntfy_auth', $all['ntfy_auth'] ?? false);
         }
 
         // convert native
@@ -265,30 +266,30 @@ class PreferencesController extends Controller
             Log::debug('User sets convertToNative to true.');
             event(new UserGroupChangedDefaultCurrency(auth()->user()->userGroup));
         }
-        app('preferences')->set('convert_to_native', $convertToNative);
+        Preferences::set('convert_to_native', $convertToNative);
 
         // custom fiscal year
         $customFiscalYear  = 1 === (int) $request->get('customFiscalYear');
         $string            = strtotime((string) $request->get('fiscalYearStart'));
         if (false !== $string) {
             $fiscalYearStart = date('m-d', $string);
-            app('preferences')->set('customFiscalYear', $customFiscalYear);
-            app('preferences')->set('fiscalYearStart', $fiscalYearStart);
+            Preferences::set('customFiscalYear', $customFiscalYear);
+            Preferences::set('fiscalYearStart', $fiscalYearStart);
         }
 
         // save page size:
-        app('preferences')->set('listPageSize', 50);
+        Preferences::set('listPageSize', 50);
         $listPageSize      = (int) $request->get('listPageSize');
         if ($listPageSize > 0 && $listPageSize < 1337) {
-            app('preferences')->set('listPageSize', $listPageSize);
+            Preferences::set('listPageSize', $listPageSize);
         }
 
         // language:
         /** @var Preference $currentLang */
-        $currentLang       = app('preferences')->get('language', 'en_US');
+        $currentLang       = Preferences::get('language', 'en_US');
         $lang              = $request->get('language');
         if (array_key_exists($lang, config('firefly.languages'))) {
-            app('preferences')->set('language', $lang);
+            Preferences::set('language', $lang);
         }
         if ($currentLang->data !== $lang) {
             // this string is untranslated on purpose.
@@ -299,7 +300,7 @@ class PreferencesController extends Controller
         if (!auth()->user()->hasRole('demo')) {
             $locale = (string) $request->get('locale');
             $locale = '' === $locale ? null : $locale;
-            app('preferences')->set('locale', $locale);
+            Preferences::set('locale', $locale);
         }
 
         // optional fields for transactions:
@@ -318,16 +319,16 @@ class PreferencesController extends Controller
             'location'           => array_key_exists('location', $setOptions),
             'links'              => array_key_exists('links', $setOptions),
         ];
-        app('preferences')->set('transaction_journal_optional_fields', $optionalTj);
+        Preferences::set('transaction_journal_optional_fields', $optionalTj);
 
         // dark mode
         $darkMode          = $request->get('darkMode') ?? 'browser';
         if (in_array($darkMode, config('firefly.available_dark_modes'), true)) {
-            app('preferences')->set('darkMode', $darkMode);
+            Preferences::set('darkMode', $darkMode);
         }
 
         session()->flash('success', (string) trans('firefly.saved_preferences'));
-        app('preferences')->mark();
+        Preferences::mark();
 
         return redirect(route('preferences.index'));
     }

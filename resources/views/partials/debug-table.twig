@@ -12,7 +12,7 @@
     {# Firefly III version #}
     <tr>
         <td>Firefly III</td>
-        <td>{% if FF_VERSION starts with 'develop' %}{{ FF_VERSION }}{% else %}{{ FF_VERSION }}{% endif %} / v{{ config('firefly.api_version') }} / {{ system.db_version }} (exp. {{ config('firefly.db_version') }})
+        <td>{% if FF_IS_DEVELOP %}<!-- .Z9JBCmw64Zkx1pQw -->{% endif %}{% if not FF_IS_DEVELOP %}v{% endif %}{{ FF_VERSION }} / <span>#</span>{{ system.db_version }} (expects <span>#</span>{{ config('firefly.db_version') }})
         </td>
     </tr>
     {# PHP version + settings #}
@@ -83,8 +83,8 @@
         <td>{{ config('logging.level') }}, {{ config('logging.default') }} / {{ app.audit_log_channel }}</td>
     </tr>
     <tr>
-        <td>Cache driver</td>
-        <td>{{ config('cache.default') }}</td>
+        <td>Cache driver, session driver</td>
+        <td>{{ config('cache.default') }}, {{ config('session.driver') }}</td>
     </tr>
     <tr>
         <td>Default language and locale</td>
@@ -92,7 +92,7 @@
     </tr>
     <tr>
         <td>Trusted proxies</td>
-        <td>{{ config('firefly.trusted_proxies')|escape }}</td>
+        <td><code>{{ config('firefly.trusted_proxies')|escape }}</code></td>
     </tr>
     <tr>
         <td>Login provider & user guard</td>
@@ -113,6 +113,10 @@
     <tr>
         <td>Mailer</td>
         <td>{{ config('mail.default') }}</td>
+    </tr>
+    <tr>
+        <td>Exchange rates</td>
+        <td>{% if config('cer.enabled') %}Enabled{% else %}Disabled{% endif %}, downloads {% if config('cer.download_enabled') %}enabled{% else %}disabled{% endif %}</td>
     </tr>
     </tbody>
 </table>
@@ -135,6 +139,10 @@
     <tr>
         <td>User flags</td>
         <td>{{ user.user_flags | raw }}</td>
+    </tr>
+    <tr>
+        <td>Convert to native currency?</td>
+        <td>{% if user.convert_to_native %}Enabled{% else %}Disabled{% endif %}</td>
     </tr>
     <tr>
         <td>Session start</td>

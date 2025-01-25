@@ -7,7 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
-- Multi-currency support. If you set `ENABLE_EXCHANGE_RATES=true` and optionally `ENABLE_EXTERNAL_RATES=true` Firefly III will try to calculate all foreign currencies back to your native currency. This is a work in progress, not all fields and all places will support this yet. Please check out the [documentation](https://docs.firefly-iii.org/explanation/financial-concepts/exchange-rates/).
+- Multi-currency support. If you set `ENABLE_EXCHANGE_RATES=true` and optionally `ENABLE_EXTERNAL_RATES=true` Firefly III will have the abbility to calculate all foreign currencies back to your native currency. This is a work in progress, not all fields and all places will support this yet. Please check out the [documentation](https://docs.firefly-iii.org/explanation/financial-concepts/exchange-rates/).
 - Notifications support Nfty, Pushover, Slack and Discord.
 - Many new security related notifications.
 - [Issue 5523](https://github.com/firefly-iii/firefly-iii/issues/5523) (Add comment on a budget for a given month) reported by @n-serrette
