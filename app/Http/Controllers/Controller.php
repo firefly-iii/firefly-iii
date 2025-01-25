@@ -95,17 +95,22 @@ abstract class Controller extends BaseController
 
         // share is alpha, is beta
         $isAlpha = false;
+        $isBeta = false;
+        $isDevelop = false;
         if (str_contains(config('firefly.version'), 'alpha')) {
             $isAlpha = true;
         }
+        if (str_contains(config('firefly.version'), 'develop') || str_contains(config('firefly.version'), 'branch')) {
+            $isDevelop = true;
+        }
 
-        $isBeta = false;
         if (str_contains(config('firefly.version'), 'beta')) {
             $isBeta = true;
         }
 
         View::share('FF_IS_ALPHA', $isAlpha);
         View::share('FF_IS_BETA', $isBeta);
+        View::share('FF_IS_DEVELOP', $isDevelop);
 
         $this->middleware(
             function ($request, $next): mixed {
