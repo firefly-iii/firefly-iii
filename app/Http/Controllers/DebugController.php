@@ -31,6 +31,9 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\Preferences;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use FireflyIII\Support\Models\AccountBalanceCalculator;
 use FireflyIII\User;
@@ -61,7 +64,7 @@ class DebugController extends Controller
         $this->middleware(IsDemoUser::class)->except(['displayError']);
     }
 
-    public function routes(): never
+    public function routes(Request $request): never
     {
         if (!auth()->user()->hasRole('owner')) {
             throw new NotFoundHttpException();
@@ -69,6 +72,45 @@ class DebugController extends Controller
 
         /** @var iterable $routes */
         $routes = Route::getRoutes();
+
+        if('true' === $request->get('api')) {
+            $collection = [];
+            $i = 0;
+
+            echo 'PATHS="';
+
+            /** @var \Illuminate\Routing\Route $route */
+            foreach ($routes as $route) {
+                $i++;
+                // skip API and other routes.
+                if (!str_starts_with($route->uri(), 'api/v1')
+                ) {
+                    continue;
+                }
+                // skip non GET routes
+                if (!in_array('GET', $route->methods(), true)) {
+                    continue;
+                }
+                // no name route:
+                if (null === $route->getName()) {
+                    var_dump($route);
+
+                    exit;
+                }
+
+                echo substr($route->uri(),3);
+                if(0 ===$i % 5) {
+                    echo '"<br>PATHS="${PATHS},';
+                }
+                if(0 !== $i % 5) {
+                    echo ',';
+                }
+            }
+            exit;
+        }
+
+
+
         $return = [];
 
         /** @var \Illuminate\Routing\Route $route */
@@ -153,7 +195,7 @@ class DebugController extends Controller
      */
     public function flush(Request $request)
     {
-        app('preferences')->mark();
+        Preferences::mark();
         $request->session()->forget(['start', 'end', '_previous', 'viewRange', 'range', 'is_custom_range', 'temp-mfa-secret', 'temp-mfa-codes']);
 
         Artisan::call('cache:clear');
@@ -223,8 +265,8 @@ class DebugController extends Controller
 
     private function getSystemInformation(): array
     {
-        $maxFileSize   = app('steam')->phpBytes((string) ini_get('upload_max_filesize'));
-        $maxPostSize   = app('steam')->phpBytes((string) ini_get('post_max_size'));
+        $maxFileSize   = Steam::phpBytes((string) ini_get('upload_max_filesize'));
+        $maxPostSize   = Steam::phpBytes((string) ini_get('post_max_size'));
         $drivers       = \DB::availableDrivers();
         $currentDriver = \DB::getDriverName();
 
@@ -314,7 +356,7 @@ class DebugController extends Controller
         ];
     }
 
-    private function getuserInfo(): array
+    private function getUserInfo(): array
     {
         $userFlags      = $this->getUserFlags();
 
@@ -324,7 +366,7 @@ class DebugController extends Controller
         // set languages, see what happens:
         $original       = setlocale(LC_ALL, '0');
         $localeAttempts = [];
-        $parts          = app('steam')->getLocaleArray(app('steam')->getLocale());
+        $parts          = Steam::getLocaleArray(Steam::getLocale());
         foreach ($parts as $code) {
             $code                  = trim($code);
             app('log')->debug(sprintf('Trying to set %s', $code));
@@ -338,10 +380,11 @@ class DebugController extends Controller
             'user_count'      => User::count(),
             'user_flags'      => $userFlags,
             'user_agent'      => $userAgent,
+            'convert_to_native' => Amount::convertToNative(),
             'locale_attempts' => $localeAttempts,
-            'locale'          => app('steam')->getLocale(),
-            'language'        => app('steam')->getLanguage(),
-            'view_range'      => app('preferences')->get('viewRange', '1M')->data,
+            'locale'          => Steam::getLocale(),
+            'language'        => Steam::getLanguage(),
+            'view_range'      => Preferences::get('viewRange', '1M')->data,
         ];
     }
 
