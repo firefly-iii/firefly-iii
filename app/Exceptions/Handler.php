@@ -124,7 +124,7 @@ class Handler extends ExceptionHandler
         if ($e instanceof BadRequestHttpException) {
             app('log')->debug('Return JSON BadRequestHttpException.');
 
-            return response()->json(['message' => $e->getMessage(), 'exception' => 'BadRequestHttpException'], 400);
+            return response()->json(['message' => $e->getMessage(), 'exception' => 'HttpException'], 400);
         }
 
         if ($e instanceof BadHttpHeaderException) {
@@ -156,7 +156,7 @@ class Handler extends ExceptionHandler
             app('log')->debug(sprintf('Return JSON %s.', get_class($e)));
 
             return response()->json(
-                ['message' => sprintf('Internal Firefly III Exception: %s', $e->getMessage()), 'exception' => get_class($e)],
+                ['message' => sprintf('Internal Firefly III Exception: %s', $e->getMessage()), 'exception' => 'UndisclosedException'],
                 $errorCode
             );
         }
