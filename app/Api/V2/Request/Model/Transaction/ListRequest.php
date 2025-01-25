@@ -84,8 +84,8 @@ class ListRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'start' => 'date',
-            'end'   => 'date|after:start',
+            'start' => 'date|after:1900-01-01|before:2099-12-31',
+            'end'   => 'date|after:start|after:1900-01-01|before:2099-12-31',
         ];
     }
 }

@@ -68,7 +68,7 @@ class CronRequest extends FormRequest
     {
         return [
             'force' => 'in:true,false',
-            'date'  => 'date',
+            'date'  => 'nullable|date|after:1900-01-01|before:2099-12-31',
         ];
     }
 }
