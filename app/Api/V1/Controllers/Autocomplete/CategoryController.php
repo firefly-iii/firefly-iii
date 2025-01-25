@@ -73,6 +73,6 @@ class CategoryController extends Controller
             }
         );
 
-        return response()->api($filtered);
+        return response()->api($filtered->toArray());
     }
 }

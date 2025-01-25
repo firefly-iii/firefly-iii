@@ -58,6 +58,7 @@ class AutocompleteRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'date' => 'date|after:1900-01-01|before:2099-12-31'
         ];
     }
 }

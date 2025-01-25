@@ -133,6 +133,13 @@ class Handler extends ExceptionHandler
 
             return response()->json(['message' => $e->getMessage(), 'exception' => 'BadHttpHeaderException'], $e->statusCode);
         }
+        if($e instanceof ValidationException && $expectsJson) {
+            $errorCode = 422;
+            return response()->json(
+                ['message' => sprintf('Validation exception: %s', $e->getMessage()), 'errors' => ['date' => 'Date is invalid']],
+                $errorCode
+            );
+        }
 
         if ($expectsJson) {
             $errorCode = 500;

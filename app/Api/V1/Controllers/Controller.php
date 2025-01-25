@@ -157,7 +157,15 @@ abstract class Controller extends BaseController
                 $value = null;
             }
             if (null !== $value) {
-                $bag->set($integer, (int) $value);
+                $value = (int) $value;
+                if ($value < 1) {
+                    $value = 1;
+                }
+                if ($value > 2 ** 16) {
+                    $value = 2 ** 16;
+                }
+
+                $bag->set($integer, $value);
             }
             if (null === $value
                 && 'limit' === $integer // @phpstan-ignore-line
