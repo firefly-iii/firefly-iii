@@ -72,6 +72,6 @@ class TransactionTypeController extends Controller
             ];
         }
 
-        return response()->json($array);
+        return response()->api($array);
     }
 }

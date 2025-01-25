@@ -86,7 +86,7 @@ class ConfigurationController extends Controller
             ];
         }
 
-        return response()->json($return);
+        return response()->api($return);
     }
 
     /**
@@ -142,7 +142,7 @@ class ConfigurationController extends Controller
             ];
         }
 
-        return response()->json(['data' => $data])->header('Content-Type', self::CONTENT_TYPE);
+        return response()->api(['data' => $data])->header('Content-Type', self::JSON_CONTENT_TYPE);
     }
 
     /**
@@ -173,6 +173,6 @@ class ConfigurationController extends Controller
             'editable' => true,
         ];
 
-        return response()->json(['data' => $data])->header('Content-Type', self::CONTENT_TYPE);
+        return response()->api(['data' => $data])->header('Content-Type', self::CONTENT_TYPE);
     }
 }

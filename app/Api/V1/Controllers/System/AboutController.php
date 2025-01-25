@@ -58,7 +58,7 @@ class AboutController extends Controller
                            'driver'      => $currentDriver,
                        ];
 
-        return response()->api(['data' => $data])->header('Content-Type', self::CONTENT_TYPE);
+        return response()->api(['data' => $data])->header('Content-Type', self::JSON_CONTENT_TYPE);
     }
 
     /**

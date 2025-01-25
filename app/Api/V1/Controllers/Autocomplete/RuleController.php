@@ -72,6 +72,6 @@ class RuleController extends Controller
             ];
         }
 
-        return response()->json($response);
+        return response()->api($response);
     }
 }

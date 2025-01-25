@@ -77,7 +77,7 @@ class CurrencyController extends Controller
             ];
         }
 
-        return response()->json($result);
+        return response()->api($result);
     }
 
     /**
@@ -103,6 +103,6 @@ class CurrencyController extends Controller
             ];
         }
 
-        return response()->json($result);
+        return response()->api($result);
     }
 }

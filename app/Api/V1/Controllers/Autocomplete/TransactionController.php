@@ -84,7 +84,7 @@ class TransactionController extends Controller
             ];
         }
 
-        return response()->json($array);
+        return response()->api($array);
     }
 
     /**
@@ -122,6 +122,6 @@ class TransactionController extends Controller
             ];
         }
 
-        return response()->json($array);
+        return response()->api($array);
     }
 }

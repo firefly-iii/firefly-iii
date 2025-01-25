@@ -75,6 +75,6 @@ class ObjectGroupController extends Controller
             ];
         }
 
-        return response()->json($return);
+        return response()->api($return);
     }
 }

@@ -41,6 +41,7 @@ use Illuminate\Http\JsonResponse;
 class AccountController extends Controller
 {
     use AccountFilter;
+    protected array $accepts = ['application/json'];
 
     /** @var array<int, string> */
     private array                      $balanceTypes;
@@ -123,6 +124,6 @@ class AccountController extends Controller
             }
         );
 
-        return response()->json($return);
+        return response()->api($return);
     }
 }

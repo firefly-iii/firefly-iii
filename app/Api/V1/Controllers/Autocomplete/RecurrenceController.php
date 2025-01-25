@@ -73,6 +73,6 @@ class RecurrenceController extends Controller
             ];
         }
 
-        return response()->json($response);
+        return response()->api($response);
     }
 }
