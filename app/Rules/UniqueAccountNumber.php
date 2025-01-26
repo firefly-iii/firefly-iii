@@ -79,6 +79,11 @@ class UniqueAccountNumber implements ValidationRule
         if (null === $this->expectedType) {
             return;
         }
+        if(is_array($value)) {
+            $fail('validation.generic_invalid')->translate();
+            return;
+        }
+        $value = (string) $value;
         $maxCounts = $this->getMaxOccurrences();
 
         foreach ($maxCounts as $type => $max) {

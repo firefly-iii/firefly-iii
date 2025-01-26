@@ -144,6 +144,7 @@ return [
     'numeric_native'                  => 'The native amount must be a number.',
     'numeric_destination'             => 'The destination amount must be a number.',
     'numeric_source'                  => 'The source amount must be a number.',
+    'generic_invalid'                  => 'This value is invalid.',
     'regex'                           => 'The :attribute format is invalid.',
     'required'                        => 'The :attribute field is required.',
     'required_if'                     => 'The :attribute field is required when :other is :value.',

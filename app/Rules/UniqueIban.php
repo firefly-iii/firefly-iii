@@ -94,6 +94,10 @@ class UniqueIban implements ValidationRule
         if (0 === count($this->expectedTypes)) {
             return true;
         }
+        if(is_array($value)) {
+            return false;
+        }
+        $value = (string) $value;
         $maxCounts = $this->getMaxOccurrences();
 
         foreach ($maxCounts as $type => $max) {

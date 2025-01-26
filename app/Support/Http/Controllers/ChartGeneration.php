@@ -90,7 +90,7 @@ trait ChartGeneration
                 $balance                       = $range[$format] ?? $previous;
                 $previous                      = $balance;
                 $currentStart->addDay();
-                $currentSet['entries'][$label] = $balance[$field];
+                $currentSet['entries'][$label] = $balance[$field] ?? '0';
             }
             $chartData[]  = $currentSet;
         }

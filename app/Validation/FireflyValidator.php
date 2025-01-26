@@ -38,6 +38,7 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Services\Password\Verifier;
 use FireflyIII\Support\ParseDateString;
 use FireflyIII\User;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
 use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;
@@ -66,7 +67,7 @@ class FireflyValidator extends Validator
         }
         $user             = auth()->user();
         if (null === $user) {
-            app('log')->error('No user during validate2faCode');
+            Log::error('No user during validate2faCode');
 
             return false;
         }
@@ -104,6 +105,9 @@ class FireflyValidator extends Validator
      */
     public function validateBic(mixed $attribute, mixed  $value): bool
     {
+        if(!is_string($value) || strlen($value) < 8) {
+            return false;
+        }
         $regex  = '/^[a-z]{6}[0-9a-z]{2}([0-9a-z]{3})?\z/i';
         $result = preg_match($regex, $value);
         if (false === $result || 0 === $result) {
@@ -120,7 +124,7 @@ class FireflyValidator extends Validator
         }
         $user   = auth()->user();
         if (null === $user) {
-            app('log')->error('No user during validate2faCode');
+            Log::error('No user during validate2faCode');
 
             return false;
         }
@@ -212,8 +216,8 @@ class FireflyValidator extends Validator
             $checksum = bcmod($iban, '97');
         } catch (\ValueError $e) { // @phpstan-ignore-line
             $message = sprintf('Could not validate IBAN check value "%s" (IBAN "%s")', $iban, $value);
-            app('log')->error($message);
-            app('log')->error($e->getTraceAsString());
+            Log::error($message);
+            Log::error($e->getTraceAsString());
 
             return false;
         }
@@ -427,7 +431,7 @@ class FireflyValidator extends Validator
             try {
                 $parser->parseDate($value);
             } catch (FireflyException $e) {
-                app('log')->error($e->getMessage());
+                Log::error($e->getMessage());
 
                 return false;
             }
@@ -467,41 +471,45 @@ class FireflyValidator extends Validator
      */
     public function validateUniqueAccountForUser($attribute, $value, $parameters): bool
     {
+        if(is_array($value)) {
+            Log::debug('$value is an array, always return false', $value);
+            return false;
+        }
         // because a user does not have to be logged in (tests and what-not).
         if (!auth()->check()) {
-            app('log')->debug('validateUniqueAccountForUser::anon');
+            Log::debug('validateUniqueAccountForUser::anon');
 
             return $this->validateAccountAnonymously();
         }
         if (array_key_exists('objectType', $this->data)) {
-            app('log')->debug('validateUniqueAccountForUser::typeString');
+            Log::debug('validateUniqueAccountForUser::typeString');
 
             return $this->validateByAccountTypeString($value, $parameters, $this->data['objectType']);
         }
-        if (array_key_exists('type', $this->data)) {
-            app('log')->debug('validateUniqueAccountForUser::typeString');
+        if (array_key_exists('type', $this->data) && !is_array($this->data['type'])) {
+            Log::debug('validateUniqueAccountForUser::typeString');
 
             return $this->validateByAccountTypeString($value, $parameters, (string) $this->data['type']);
         }
         if (array_key_exists('account_type_id', $this->data)) {
-            app('log')->debug('validateUniqueAccountForUser::typeId');
+            Log::debug('validateUniqueAccountForUser::typeId');
 
             return $this->validateByAccountTypeId($value, $parameters);
         }
         $parameterId = $parameters[0] ?? null;
         if (null !== $parameterId) {
-            app('log')->debug('validateUniqueAccountForUser::paramId');
+            Log::debug('validateUniqueAccountForUser::paramId');
 
             return $this->validateByParameterId((int) $parameterId, $value);
         }
         if (array_key_exists('id', $this->data)) {
-            app('log')->debug('validateUniqueAccountForUser::accountId');
+            Log::debug('validateUniqueAccountForUser::accountId');
 
             return $this->validateByAccountId($value);
         }
 
         // without type, just try to validate the name.
-        app('log')->debug('validateUniqueAccountForUser::accountName');
+        Log::debug('validateUniqueAccountForUser::accountName');
 
         return $this->validateByAccountName($value);
     }
@@ -642,11 +650,11 @@ class FireflyValidator extends Validator
         }
         $type      = $this->data['objectType'] ?? 'unknown';
         if ('expense' !== $type && 'revenue' !== $type) {
-            app('log')->warning(sprintf('Account number "%s" is not unique and account type "%s" cannot share its account number.', $value, $type));
+            Log::warning(sprintf('Account number "%s" is not unique and account type "%s" cannot share its account number.', $value, $type));
 
             return false;
         }
-        app('log')->debug(sprintf('Account number "%s" is not unique but account type "%s" may share its account number.', $value, $type));
+        Log::debug(sprintf('Account number "%s" is not unique but account type "%s" may share its account number.', $value, $type));
 
         // one other account with this account number.
         /** @var AccountMeta $entry */
@@ -654,11 +662,11 @@ class FireflyValidator extends Validator
             $otherAccount = $entry->account;
             $otherType    = (string) config(sprintf('firefly.shortNamesByFullName.%s', $otherAccount->accountType->type));
             if (('expense' === $otherType || 'revenue' === $otherType) && $otherType !== $type) {
-                app('log')->debug(sprintf('The other account with this account number is a "%s" so return true.', $otherType));
+                Log::debug(sprintf('The other account with this account number is a "%s" so return true.', $otherType));
 
                 return true;
             }
-            app('log')->debug(sprintf('The other account with this account number is a "%s" so return false.', $otherType));
+            Log::debug(sprintf('The other account with this account number is a "%s" so return false.', $otherType));
         }
 
         return false;
