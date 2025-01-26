@@ -50,7 +50,7 @@ class AccountTransformer extends AbstractTransformer
         $this->parameters      = new ParameterBag();
         $this->repository      = app(AccountRepositoryInterface::class);
         $this->convertToNative = Amount::convertToNative();
-        $this->native         = Amount::getNativeCurrency();
+        $this->native          = Amount::getNativeCurrency();
     }
 
     /**
@@ -72,7 +72,7 @@ class AccountTransformer extends AbstractTransformer
         $convertToNative                                              = Amount::convertToNative();
 
         // get account role (will only work if the type is asset).
-        $native                                                      = Amount::getNativeCurrency();
+        $native                                                       = Amount::getNativeCurrency();
         $accountRole                                                  = $this->getAccountRole($account, $accountType);
         $date                                                         = $this->getDate();
         $date->endOfDay();
@@ -82,7 +82,7 @@ class AccountTransformer extends AbstractTransformer
         [$openingBalance, $nativeOpeningBalance, $openingBalanceDate] = $this->getOpeningBalance($account, $accountType, $convertToNative);
         [$interest, $interestPeriod]                                  = $this->getInterest($account, $accountType);
 
-        $native                                                      = $this->native;
+        $native                                                       = $this->native;
         if (!$this->convertToNative) {
             // reset native currency to NULL, not interesting.
             $native = null;

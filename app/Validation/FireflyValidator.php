@@ -105,7 +105,7 @@ class FireflyValidator extends Validator
      */
     public function validateBic(mixed $attribute, mixed  $value): bool
     {
-        if(!is_string($value) || strlen($value) < 8) {
+        if (!is_string($value) || strlen($value) < 8) {
             return false;
         }
         $regex  = '/^[a-z]{6}[0-9a-z]{2}([0-9a-z]{3})?\z/i';
@@ -471,8 +471,9 @@ class FireflyValidator extends Validator
      */
     public function validateUniqueAccountForUser($attribute, $value, $parameters): bool
     {
-        if(is_array($value)) {
+        if (is_array($value)) {
             Log::debug('$value is an array, always return false', $value);
+
             return false;
         }
         // because a user does not have to be logged in (tests and what-not).

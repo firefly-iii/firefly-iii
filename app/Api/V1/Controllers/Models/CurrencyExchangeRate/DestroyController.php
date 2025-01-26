@@ -39,7 +39,7 @@ class DestroyController extends Controller
 {
     use ValidatesUserGroupTrait;
 
-    protected array $acceptedRoles = [UserRoleEnum::OWNER];
+    protected array $acceptedRoles   = [UserRoleEnum::OWNER];
 
     public const string RESOURCE_KEY = 'exchange-rates';
 
@@ -61,7 +61,7 @@ class DestroyController extends Controller
     public function destroy(DestroyRequest $request, TransactionCurrency $from, TransactionCurrency $to): JsonResponse
     {
         $date = $request->getDate();
-        if(null === $date) {
+        if (null === $date) {
             throw new ValidationException('Date is required');
         }
         $rate = $this->repository->getSpecificRateOnDate($from, $to, $date);

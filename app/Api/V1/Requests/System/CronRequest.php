@@ -58,7 +58,7 @@ class CronRequest extends FormRequest
             $data['date'] = $this->getCarbonDate('date');
         }
         // catch NULL.
-        if(null === $data['date']) {
+        if (null === $data['date']) {
             $data['date'] = today(config('app.timezone'));
         }
 

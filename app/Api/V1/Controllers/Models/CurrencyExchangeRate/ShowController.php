@@ -77,12 +77,12 @@ class ShowController extends Controller
 
     public function showSingle(CurrencyExchangeRate $exchangeRate): JsonResponse
     {
-        $transformer  = new ExchangeRateTransformer();
+        $transformer = new ExchangeRateTransformer();
         $transformer->setParameters($this->parameters);
 
         return response()
             ->api($this->jsonApiObject(self::RESOURCE_KEY, $exchangeRate, $transformer))
             ->header('Content-Type', self::CONTENT_TYPE)
-            ;
+        ;
     }
 }

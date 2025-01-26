@@ -361,6 +361,7 @@ trait ConvertsDataTypes
         $result = null;
 
         Log::debug(sprintf('Date string is "%s"', (string) $this->get($field)));
+
         try {
             $result = '' !== (string) $this->get($field) ? new Carbon((string) $this->get($field), config('app.timezone')) : null;
         } catch (InvalidFormatException $e) {

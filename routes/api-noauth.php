@@ -27,9 +27,9 @@ use FireflyIII\Http\Middleware\AcceptHeaders;
 
 Route::group(
     [
-        'namespace' => 'FireflyIII\Api\V1\Controllers\System',
-        'prefix'    => '',
-        'as'        => 'api.v1.cron.',
+        'namespace'  => 'FireflyIII\Api\V1\Controllers\System',
+        'prefix'     => '',
+        'as'         => 'api.v1.cron.',
         'middleware' => [AcceptHeaders::class],
     ],
     static function (): void {

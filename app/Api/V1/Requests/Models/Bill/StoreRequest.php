@@ -31,8 +31,6 @@ use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
-use TypeError;
-use ValueError;
 
 /**
  * Class StoreRequest
@@ -101,16 +99,17 @@ class StoreRequest extends FormRequest
                 $min    = $data['amount_min'] ?? '0';
                 $max    = $data['amount_max'] ?? '0';
 
-                if(is_array($min) || is_array($max)) {
+                if (is_array($min) || is_array($max)) {
                     $validator->errors()->add('amount_min', (string) trans('validation.generic_invalid'));
                     $validator->errors()->add('amount_max', (string) trans('validation.generic_invalid'));
-                    $min ='0';
+                    $min = '0';
                     $max = '0';
                 }
                 $result = false;
+
                 try {
                     $result = bccomp($min, $max);
-                } catch (ValueError $e) {
+                } catch (\ValueError $e) {
                     Log::error($e->getMessage());
                     $validator->errors()->add('amount_min', (string) trans('validation.generic_invalid'));
                     $validator->errors()->add('amount_max', (string) trans('validation.generic_invalid'));
@@ -122,9 +121,10 @@ class StoreRequest extends FormRequest
             }
         );
         $failed = false;
+
         try {
             $failed = $validator->fails();
-        } catch (TypeError $e) {
+        } catch (\TypeError $e) {
             Log::error($e->getMessage());
             $failed = false;
         }

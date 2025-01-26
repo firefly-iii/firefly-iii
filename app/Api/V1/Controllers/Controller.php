@@ -60,14 +60,14 @@ abstract class Controller extends BaseController
     use DispatchesJobs;
     use ValidatesRequests;
 
-    protected const string CONTENT_TYPE    = 'application/vnd.api+json';
+    protected const string CONTENT_TYPE      = 'application/vnd.api+json';
     protected const string JSON_CONTENT_TYPE = 'application/json';
 
     /** @var array<int, string> */
     protected array        $allowedSort;
     protected ParameterBag $parameters;
-    protected bool        $convertToNative = false;
-    protected array $accepts = ['application/json'];
+    protected bool        $convertToNative   = false;
+    protected array $accepts                 = ['application/json'];
     protected TransactionCurrency $nativeCurrency;
 
     /**
@@ -83,7 +83,7 @@ abstract class Controller extends BaseController
                 if (auth()->check()) {
                     $language              = Steam::getLanguage();
                     $this->convertToNative = Amount::convertToNative();
-                    $this->nativeCurrency = Amount::getNativeCurrency();
+                    $this->nativeCurrency  = Amount::getNativeCurrency();
                     app()->setLocale($language);
                 }
 

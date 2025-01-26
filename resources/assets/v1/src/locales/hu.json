@@ -151,7 +151,7 @@
         "url": "URL",
         "active": "Akt\u00edv",
         "interest_date": "Kamatfizet\u00e9si id\u0151pont",
-        "administration_currency": "Native currency",
+        "administration_currency": "Hazai p\u00e9nznem",
         "title": "C\u00edm",
         "date": "D\u00e1tum",
         "book_date": "K\u00f6nyvel\u00e9s d\u00e1tuma",
@@ -161,22 +161,22 @@
         "payment_date": "Fizet\u00e9s d\u00e1tuma",
         "invoice_date": "Sz\u00e1mla d\u00e1tuma",
         "internal_reference": "Bels\u0151 hivatkoz\u00e1s",
-        "webhook_response": "Response",
-        "webhook_trigger": "Trigger",
-        "webhook_delivery": "Delivery",
+        "webhook_response": "V\u00e1lasz",
+        "webhook_trigger": "Esem\u00e9nyind\u00edt\u00f3",
+        "webhook_delivery": "Sz\u00e1ll\u00edt\u00e1s",
         "from_currency_to_currency": "{from} &rarr; {to}",
         "to_currency_from_currency": "{to} &rarr; {from}",
-        "rate": "Rate"
+        "rate": "Ar\u00e1ny"
     },
     "list": {
         "title": "C\u00edm",
         "active": "Akt\u00edv?",
-        "native_currency": "Native currency",
-        "trigger": "Trigger",
-        "response": "Response",
-        "delivery": "Delivery",
+        "native_currency": "Hazai p\u00e9nznem",
+        "trigger": "Esem\u00e9nyind\u00edt\u00f3",
+        "response": "V\u00e1lasz",
+        "delivery": "Sz\u00e1ll\u00edt\u00e1s",
         "url": "URL",
-        "secret": "Secret"
+        "secret": "Titkos k\u00f3d"
     },
     "config": {
         "html_language": "hu",

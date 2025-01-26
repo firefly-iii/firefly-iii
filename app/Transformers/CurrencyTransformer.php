@@ -56,4 +56,3 @@ class CurrencyTransformer extends AbstractTransformer
         ];
     }
 }
-

@@ -73,15 +73,15 @@ class DebugController extends Controller
         /** @var iterable $routes */
         $routes = Route::getRoutes();
 
-        if('true' === $request->get('api')) {
+        if ('true' === $request->get('api')) {
             $collection = [];
-            $i = 0;
+            $i          = 0;
 
             echo 'PATHS="';
 
             /** @var \Illuminate\Routing\Route $route */
             foreach ($routes as $route) {
-                $i++;
+                ++$i;
                 // skip API and other routes.
                 if (!str_starts_with($route->uri(), 'api/v1')
                 ) {
@@ -98,14 +98,15 @@ class DebugController extends Controller
                     exit;
                 }
 
-                echo substr($route->uri(),3);
-                if(0 ===$i % 5) {
+                echo substr($route->uri(), 3);
+                if (0 === $i % 5) {
                     echo '"<br>PATHS="${PATHS},';
                 }
-                if(0 !== $i % 5) {
+                if (0 !== $i % 5) {
                     echo ',';
                 }
             }
+
             exit;
         }
 
@@ -376,15 +377,15 @@ class DebugController extends Controller
         setlocale(LC_ALL, (string) $original);
 
         return [
-            'user_id'         => auth()->user()->id,
-            'user_count'      => User::count(),
-            'user_flags'      => $userFlags,
-            'user_agent'      => $userAgent,
+            'user_id'           => auth()->user()->id,
+            'user_count'        => User::count(),
+            'user_flags'        => $userFlags,
+            'user_agent'        => $userAgent,
             'convert_to_native' => Amount::convertToNative(),
-            'locale_attempts' => $localeAttempts,
-            'locale'          => Steam::getLocale(),
-            'language'        => Steam::getLanguage(),
-            'view_range'      => Preferences::get('viewRange', '1M')->data,
+            'locale_attempts'   => $localeAttempts,
+            'locale'            => Steam::getLocale(),
+            'language'          => Steam::getLanguage(),
+            'view_range'        => Preferences::get('viewRange', '1M')->data,
         ];
     }
 

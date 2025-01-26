@@ -34,7 +34,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Rename 'default currency' to 'native currency'
 - Move native currency setting to financial administration edit screen to better reflect where it belongs
 - [Issue 9501](https://github.com/firefly-iii/firefly-iii/issues/9501) (PHP8.4 support) reported by @JC5
-- #9683
+- [Issue 9683](https://github.com/firefly-iii/firefly-iii/issues/9683) (500 viewing inactive liabilities) reported by @stuzer05
 
 ### Removed
 

@@ -1,10 +1,10 @@
 {
     "firefly": {
         "administrations_page_title": "Finan\u010dne administracije",
-        "administrations_index_menu": "Financial administrations",
-        "temp_administrations_introduction": "Firefly III will soon get the ability to manage multiple financial administrations. Right now, you only have the one. You can set the title of this administration and its native currency. This replaces the previous setting where you would set your \"default currency\". This setting is now tied to the financial administration and can be different per administration.",
-        "administration_currency_form_help": "It may take a long time for the page to load if you change the native currency because transaction may need to be converted to your (new) native currency.",
-        "administrations_page_edit_sub_title_js": "Edit financial administration \"{title}\"",
+        "administrations_index_menu": "Finan\u010dne administracije",
+        "temp_administrations_introduction": "Firefly III bo kmalu dobil mo\u017enost upravljanja ve\u010d finan\u010dnih administracij. Trenutno imate samo eno. Nastavite lahko naziv te administracije in njeno doma\u010do valuto. To nadome\u0161\u010da prej\u0161njo nastavitev, kjer bi nastavili svojo \"privzeto valuto\". Ta nastavitev je zdaj vezana na finan\u010dno administracijo in se lahko razlikuje glede na administracijo.",
+        "administration_currency_form_help": "\u010ce spremenite doma\u010do valuto, lahko traja dolgo \u010dasa, da se stran nalo\u017ei, ker bo transakcijo morda treba pretvoriti v va\u0161o (novo) doma\u010do valuto.",
+        "administrations_page_edit_sub_title_js": "Uredi finan\u010dno administracijo \"{title}\"",
         "table": "Tabela",
         "welcome_back": "Kaj vse se dogaja?",
         "flash_error": "Napaka!",
@@ -151,7 +151,7 @@
         "url": "URL",
         "active": "Aktivno",
         "interest_date": "Datum obresti",
-        "administration_currency": "Native currency",
+        "administration_currency": "Doma\u010da valuta",
         "title": "Naslov",
         "date": "Datum",
         "book_date": "Datum knji\u017eenja",
@@ -171,7 +171,7 @@
     "list": {
         "title": "Naslov",
         "active": "Aktiviran?",
-        "native_currency": "Native currency",
+        "native_currency": "Doma\u010da valuta",
         "trigger": "Spro\u017eilec",
         "response": "Odziv",
         "delivery": "Dostava",

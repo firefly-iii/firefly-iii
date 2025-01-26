@@ -106,7 +106,7 @@ class IndexController extends Controller
                 $account->interestPeriod    = (string) trans(sprintf('firefly.interest_calc_%s', $this->repository->getMetaValue($account, 'interest_period')));
                 $account->accountTypeString = (string) trans(sprintf('firefly.account_type_%s', $account->accountType->type));
                 $account->current_debt      = '0';
-                $account->currency            = $currency ?? $this->defaultCurrency;
+                $account->currency          = $currency ?? $this->defaultCurrency;
                 $account->iban              = implode(' ', str_split((string) $account->iban, 4));
             }
         );
