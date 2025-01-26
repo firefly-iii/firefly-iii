@@ -5,11 +5,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 6.2.0 - 2025-01-19 (or later)
 
+*This release comes with many changes, small and large. I expect you will run into issue, and I appreciate your feedback and your patience as I fix them. I've tested many things, but I'm 100% sure I've missed things. Please open [an issue here](https://github.com/firefly-iii/firefly-iii/issues/new?template=bug.yml) if you run into problems.
+
 ### Added
 
-- Multi-currency support. If you set `ENABLE_EXCHANGE_RATES=true` and optionally `ENABLE_EXTERNAL_RATES=true` Firefly III will have the abbility to calculate all foreign currencies back to your native currency. This is a work in progress, not all fields and all places will support this yet. Please check out the [documentation](https://docs.firefly-iii.org/explanation/financial-concepts/exchange-rates/).
-- Notifications support Nfty, Pushover, Slack and Discord.
-- Many new security related notifications.
+- Multi-currency support. If you set `ENABLE_EXCHANGE_RATES=true` and optionally `ENABLE_EXTERNAL_RATES=true` Firefly III will have the ability to calculate all foreign currencies back to your native currency. This is a work in progress, not all fields and all places will support this yet. Please check out the [documentation](https://docs.firefly-iii.org/explanation/financial-concepts/exchange-rates/).
+- There is notifications support for Nfty, Pushover, Slack and Discord.
+- There are many new security related notifications.
 - [Issue 5523](https://github.com/firefly-iii/firefly-iii/issues/5523) (Add comment on a budget for a given month) reported by @n-serrette
 - [Issue 5532](https://github.com/firefly-iii/firefly-iii/issues/5532) (Asset prices and exchange rates) reported by @svozniuk
 - [Issue 6314](https://github.com/firefly-iii/firefly-iii/issues/6314) (Currencies and exchange rates) reported by @JC5
@@ -26,12 +28,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 - Firefly III requires PHP 8.4.
-- [Issue 9501](https://github.com/firefly-iii/firefly-iii/issues/9501) (PHP8.4 support) reported by @JC5
 - Docker container no longer runs under root.
 - "Bills" are now called "subscriptions" to better reflect their purpose.
 - Rename "administration" to "settings" to prevent confusion with "financial administrations"
 - Rename 'default currency' to 'native currency'
 - Move native currency setting to financial administration edit screen to better reflect where it belongs
+- [Issue 9501](https://github.com/firefly-iii/firefly-iii/issues/9501) (PHP8.4 support) reported by @JC5
+- #9683
 
 ### Removed
 
@@ -45,7 +48,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### API
 
-- API changes related to new features are [documented](#).
+- API changes related to new features are [documented](https://api-docs.firefly-iii.org/).
+- New endpoint for multiple financial administrations ("user groups").
+- The change from "default currency" (user) to "native currency" (financial administration) is slowly being reflected in the API. Please report issues.
 
 ## 6.1.25 - 2024-12-19
 
