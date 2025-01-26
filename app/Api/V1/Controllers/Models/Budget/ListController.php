@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\Budget;
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Budget;
@@ -208,6 +209,8 @@ class ListController extends Controller
         $collector    = app(GroupCollectorInterface::class);
         $collector
             ->setUser($admin)
+            // withdrawals only
+            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value])
             // filter on budget.
             ->withoutBudget()
             // all info needed for the API:

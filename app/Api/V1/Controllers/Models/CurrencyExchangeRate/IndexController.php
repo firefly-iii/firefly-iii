@@ -1,8 +1,8 @@
 <?php
 
 /*
- * DestroyController.php
- * Copyright (c) 2024 james@firefly-iii.org.
+ * IndexController.php
+ * Copyright (c) 2025 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -22,21 +22,23 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V2\Controllers\Model\ExchangeRate;
+namespace FireflyIII\Api\V1\Controllers\Models\CurrencyExchangeRate;
 
 use FireflyIII\Api\V2\Controllers\Controller;
-use FireflyIII\Api\V2\Request\Model\ExchangeRate\UpdateRequest;
-use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Repositories\UserGroups\ExchangeRate\ExchangeRateRepositoryInterface;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\Transformers\V2\ExchangeRateTransformer;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Pagination\LengthAwarePaginator;
 
-class UpdateController extends Controller
+/**
+ * Class ShowController
+ */
+class IndexController extends Controller
 {
     use ValidatesUserGroupTrait;
 
-    public const string RESOURCE_KEY = 'exchange-rates';
+    public const string RESOURCE_KEY = 'exchange_rates';
 
     private ExchangeRateRepositoryInterface $repository;
 
@@ -53,16 +55,21 @@ class UpdateController extends Controller
         );
     }
 
-    public function update(UpdateRequest $request, CurrencyExchangeRate $exchangeRate): JsonResponse
+    public function index(): JsonResponse
     {
-        $date         = $request->getDate();
-        $rate         = $request->getRate();
-        $exchangeRate = $this->repository->updateExchangeRate($exchangeRate, $rate, $date);
-        $transformer  = new ExchangeRateTransformer();
-        $transformer->setParameters($this->parameters);
+        $piggies     = $this->repository->getAll();
+        $pageSize    = $this->parameters->get('limit');
+        $count       = $piggies->count();
+        $piggies     = $piggies->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $paginator   = new LengthAwarePaginator($piggies, $count, $pageSize, $this->parameters->get('page'));
+
+        var_dump('here we are');
+
+        $transformer = new ExchangeRateTransformer();
+        $transformer->setParameters($this->parameters); // give params to transformer
 
         return response()
-            ->api($this->jsonApiObject(self::RESOURCE_KEY, $exchangeRate, $transformer))
+            ->json($this->jsonApiList(self::RESOURCE_KEY, $paginator, $transformer))
             ->header('Content-Type', self::CONTENT_TYPE)
         ;
     }

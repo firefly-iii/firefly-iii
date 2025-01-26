@@ -99,34 +99,6 @@ class PreferencesController extends Controller
     }
 
     /**
-     * TODO This endpoint is not documented.
-     *
-     * Return a single preference by name.
-     *
-     * @param Collection<int, Preference> $collection
-     */
-    public function showList(Collection $collection): JsonResponse
-    {
-        $manager     = $this->getManager();
-        $count       = $collection->count();
-        $pageSize    = $this->parameters->get('limit');
-        $preferences = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
-
-        // make paginator:
-        $paginator   = new LengthAwarePaginator($preferences, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.preferences.show-list').$this->buildParams());
-
-        /** @var PreferenceTransformer $transformer */
-        $transformer = app(PreferenceTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource    = new FractalCollection($preferences, $transformer, self::RESOURCE_KEY);
-        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-    }
-
-    /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/preferences/storePreference
      *

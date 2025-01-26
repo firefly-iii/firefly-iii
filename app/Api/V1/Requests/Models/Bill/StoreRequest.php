@@ -31,6 +31,8 @@ use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
+use TypeError;
+use ValueError;
 
 /**
  * Class StoreRequest
@@ -95,16 +97,38 @@ class StoreRequest extends FormRequest
     {
         $validator->after(
             static function (Validator $validator): void {
-                $data = $validator->getData();
-                $min  = (string) ($data['amount_min'] ?? '0');
-                $max  = (string) ($data['amount_max'] ?? '0');
+                $data   = $validator->getData();
+                $min    = $data['amount_min'] ?? '0';
+                $max    = $data['amount_max'] ?? '0';
 
-                if (1 === bccomp($min, $max)) {
+                if(is_array($min) || is_array($max)) {
+                    $validator->errors()->add('amount_min', (string) trans('validation.generic_invalid'));
+                    $validator->errors()->add('amount_max', (string) trans('validation.generic_invalid'));
+                    $min ='0';
+                    $max = '0';
+                }
+                $result = false;
+                try {
+                    $result = bccomp($min, $max);
+                } catch (ValueError $e) {
+                    Log::error($e->getMessage());
+                    $validator->errors()->add('amount_min', (string) trans('validation.generic_invalid'));
+                    $validator->errors()->add('amount_max', (string) trans('validation.generic_invalid'));
+                }
+
+                if (1 === $result) {
                     $validator->errors()->add('amount_min', (string) trans('validation.amount_min_over_max'));
                 }
             }
         );
-        if ($validator->fails()) {
+        $failed = false;
+        try {
+            $failed = $validator->fails();
+        } catch (TypeError $e) {
+            Log::error($e->getMessage());
+            $failed = false;
+        }
+        if ($failed) {
             Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
         }
     }

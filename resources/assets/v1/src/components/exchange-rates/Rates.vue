@@ -183,7 +183,7 @@ export default {
             if(e) e.preventDefault();
             this.posting = true;
 
-            axios.post("./api/v2/exchange-rates", {
+            axios.post("./api/v1/exchange-rates", {
                 from: this.from_code,
                 to: this.to_code,
                 rate: this.newRate,
@@ -214,7 +214,7 @@ export default {
                 // console.log('Rate is ' + this.rates[index].rate);
                 // console.log('ID is ' + this.rates[index].rate_id);
                 this.updating = true;
-                axios.put("./api/v2/exchange-rates/" + this.rates[index].rate_id, {rate: this.rates[index].rate})
+                axios.put("./api/v1/exchange-rates/" + this.rates[index].rate_id, {rate: this.rates[index].rate})
                     .then(() => {
                         this.updating = false;
                     });
@@ -224,7 +224,7 @@ export default {
                 // console.log('Inverse is ' + this.rates[index].inverse);
                 // console.log('Inverse ID is ' + this.rates[index].inverse_id);
                 this.updating = true;
-                axios.put("./api/v2/exchange-rates/" + this.rates[index].inverse_id, {rate: this.rates[index].inverse})
+                axios.put("./api/v1/exchange-rates/" + this.rates[index].inverse_id, {rate: this.rates[index].inverse})
                     .then(() => {
                         this.updating = false;
                     });
@@ -239,9 +239,9 @@ export default {
             // console.log(parts);
 
             // delete A to B
-            axios.delete("./api/v2/exchange-rates/rates/" + parts.from + '/' + parts.to + '?date=' + format(parts.date, 'yyyy-MM-dd'));
+            axios.delete("./api/v1/exchange-rates/rates/" + parts.from + '/' + parts.to + '?date=' + format(parts.date, 'yyyy-MM-dd'));
             // delete B to A.
-            axios.delete("./api/v2/exchange-rates/rates/" + parts.to + '/' + parts.from + '?date=' + format(parts.date, 'yyyy-MM-dd'));
+            axios.delete("./api/v1/exchange-rates/rates/" + parts.to + '/' + parts.from + '?date=' + format(parts.date, 'yyyy-MM-dd'));
 
             this.rates.splice(index, 1);
         },
@@ -263,14 +263,14 @@ export default {
         },
         downloadCurrencies: function () {
             this.loading = true;
-            axios.get("./api/v2/currencies/" + this.from_code).then((response) => {
+            axios.get("./api/v1/currencies/" + this.from_code).then((response) => {
                 this.from = {
                     id: response.data.data.id,
                     code: response.data.data.attributes.code,
                     name: response.data.data.attributes.name,
                 }
             });
-            axios.get("./api/v2/currencies/" + this.to_code).then((response) => {
+            axios.get("./api/v1/currencies/" + this.to_code).then((response) => {
                 // console.log(response.data.data);
                 this.to = {
                     id: response.data.data.id,
@@ -283,7 +283,7 @@ export default {
             this.tempRates = {};
             this.rates = [];
             this.loading = true;
-            axios.get("./api/v2/exchange-rates/rates/" + this.from_code + '/' + this.to_code + '?page=' + page).then((response) => {
+            axios.get("./api/v1/exchange-rates/rates/" + this.from_code + '/' + this.to_code + '?page=' + page).then((response) => {
                 for (let i in response.data.data) {
                     if (response.data.data.hasOwnProperty(i)) {
                         let current = response.data.data[i];

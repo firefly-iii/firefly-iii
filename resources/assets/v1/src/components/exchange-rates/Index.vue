@@ -68,7 +68,7 @@ export default {
             this.downloadCurrencies(1);
         },
         downloadCurrencies: function (page) {
-            axios.get("./api/v2/currencies?enabled=1&page=" + page).then((response) => {
+            axios.get("./api/v1/currencies?enabled=1&page=" + page).then((response) => {
                 for (let i in response.data.data) {
                     if (response.data.data.hasOwnProperty(i)) {
                         let current = response.data.data[i];

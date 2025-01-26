@@ -22,12 +22,6 @@
 
 declare(strict_types=1);
 
-use FireflyIII\Api\V2\Controllers\JsonApi\AccountController;
-use LaravelJsonApi\Laravel\Facades\JsonApiRoute;
-use LaravelJsonApi\Laravel\Http\Controllers\JsonApiController;
-use LaravelJsonApi\Laravel\Routing\Relationships;
-use LaravelJsonApi\Laravel\Routing\ResourceRegistrar;
-
 /*
  *
  * ____    ____  ___      .______        ______    __    __  .___________. _______     _______.
@@ -97,27 +91,6 @@ Route::group(
         Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
         Route::get('{currency_code}', ['uses' => 'ShowController@show', 'as' => 'show']);
         //        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
-        //
-        //        Route::put('{userGroup}', ['uses' => 'UpdateController@update', 'as' => 'update']);
-        //        Route::post('{userGroup}/use', ['uses' => 'UpdateController@useUserGroup', 'as' => 'use']);
-        //        Route::put('{userGroup}/update-membership', ['uses' => 'UpdateController@updateMembership', 'as' => 'updateMembership']);
-        //        Route::delete('{userGroup}', ['uses' => 'DestroyController@destroy', 'as' => 'destroy']);
-    }
-);
-
-// exchange rates
-Route::group(
-    [
-        'namespace' => 'FireflyIII\Api\V2\Controllers\Model\ExchangeRate',
-        'prefix'    => 'v2/exchange-rates',
-        'as'        => 'api.v2.exchange-rates.',
-    ],
-    static function (): void {
-        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
-        Route::get('rates/{fromCurrencyCode}/{toCurrencyCode}', ['uses' => 'ShowController@show', 'as' => 'show']);
-        Route::delete('rates/{fromCurrencyCode}/{toCurrencyCode}', ['uses' => 'DestroyController@destroy', 'as' => 'destroy']);
-        Route::put('{userGroupExchangeRate}', ['uses' => 'UpdateController@update', 'as' => 'update']);
-        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
         //
         //        Route::put('{userGroup}', ['uses' => 'UpdateController@update', 'as' => 'update']);
         //        Route::post('{userGroup}/use', ['uses' => 'UpdateController@useUserGroup', 'as' => 'use']);
@@ -333,6 +306,23 @@ Route::group(
         Route::get('transactions', ['uses' => 'TransactionController@transactions', 'as' => 'transactions']);
         Route::get('transactions-with-id', ['uses' => 'TransactionController@transactionsWithID', 'as' => 'transactions-with-id']);
         Route::get('transaction-types', ['uses' => 'TransactionTypeController@transactionTypes', 'as' => 'transaction-types']);
+    }
+);
+
+// exchange rates
+Route::group(
+    [
+        'namespace' => 'FireflyIII\Api\V1\Controllers\Model\CurrencyExchangeRate',
+        'prefix'    => 'v1/exchange-rates',
+        'as'        => 'api.v1.exchange-rates.',
+    ],
+    static function (): void {
+        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
+        Route::get('rates/{fromCurrencyCode}/{toCurrencyCode}', ['uses' => 'ShowController@show', 'as' => 'show']);
+        Route::get('{userGroupExchangeRate}', ['uses' => 'ShowController@showSingle', 'as' => 'show.single']);
+        Route::delete('rates/{fromCurrencyCode}/{toCurrencyCode}', ['uses' => 'DestroyController@destroy', 'as' => 'destroy']);
+        Route::put('{userGroupExchangeRate}', ['uses' => 'UpdateController@update', 'as' => 'update']);
+        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
     }
 );
 
@@ -804,6 +794,7 @@ Route::group(
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
         Route::get('default', ['uses' => 'ShowController@showDefault', 'as' => 'show.default']);
+        Route::get('native', ['uses' => 'ShowController@showDefault', 'as' => 'show.native']);
         Route::get('{currency_code}', ['uses' => 'ShowController@show', 'as' => 'show']);
         Route::put('{currency_code}', ['uses' => 'UpdateController@update', 'as' => 'update']);
         Route::delete('{currency_code}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);

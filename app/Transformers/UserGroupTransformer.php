@@ -113,14 +113,14 @@ class UserGroupTransformer extends AbstractTransformer
             'created_at'                     => $userGroup->created_at->toAtomString(),
             'updated_at'                     => $userGroup->updated_at->toAtomString(),
             'in_use'                         => $this->inUse[$userGroup->id] ?? false,
-            'title'                          => $userGroup->title,
             'can_see_members'                => $this->membershipsVisible[$userGroup->id] ?? false,
-            'members'                        => array_values($this->memberships[$userGroup->id] ?? []),
+            'title'                          => $userGroup->title,
             'native_currency_id'             => (string) $currency->id,
             'native_currency_name'           => $currency->name,
             'native_currency_code'           => $currency->code,
             'native_currency_symbol'         => $currency->symbol,
             'native_currency_decimal_places' => $currency->decimal_places,
+            'members'                        => array_values($this->memberships[$userGroup->id] ?? []),
         ];
         // if the user has a specific role in this group, then collect the memberships.
     }

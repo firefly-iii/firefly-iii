@@ -38,6 +38,15 @@ class IsValidPositiveAmount implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
+        if(is_array($value)) {
+            $fail('validation.numeric')->translate();
+            $message = sprintf('IsValidPositiveAmount: "%s" is not a number.', json_encode($value));
+            Log::debug($message);
+            Log::channel('audit')->info($message);
+
+            return;
+        }
+
         $value = (string) $value;
         // must not be empty:
         if ($this->emptyString($value)) {
