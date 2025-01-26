@@ -53,17 +53,6 @@ class AppServiceProvider extends ServiceProvider
                 $headers['X-Trace-Id'] = $uuid;
             }
 
-            if (config('app.debug')) {
-                try {
-                    /** @var QueryCollector $collector */
-                    $collector                     = Debugbar::getCollector('queries');
-                    $info                          = $collector->collect();
-                    $headers['X-Debug-QueryCount'] = $info['nb_statements'] ?? 0;
-                } catch (DebugBarException $e) {
-                    // ignore error.
-                }
-            }
-
             return response()
                 ->json($value)
                 ->withHeaders($headers)
