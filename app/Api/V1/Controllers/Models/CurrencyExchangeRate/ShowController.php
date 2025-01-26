@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\CurrencyExchangeRate;
 
 use FireflyIII\Api\V2\Controllers\Controller;
+use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\UserGroups\ExchangeRate\ExchangeRateRepositoryInterface;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
@@ -72,5 +73,16 @@ class ShowController extends Controller
             ->json($this->jsonApiList(self::RESOURCE_KEY, $paginator, $transformer))
             ->header('Content-Type', self::CONTENT_TYPE)
         ;
+    }
+
+    public function showSingle(CurrencyExchangeRate $exchangeRate): JsonResponse
+    {
+        $transformer  = new ExchangeRateTransformer();
+        $transformer->setParameters($this->parameters);
+
+        return response()
+            ->api($this->jsonApiObject(self::RESOURCE_KEY, $exchangeRate, $transformer))
+            ->header('Content-Type', self::CONTENT_TYPE)
+            ;
     }
 }

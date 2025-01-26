@@ -2,7 +2,7 @@
 
 /*
  * DestroyRequest.php
- * Copyright (c) 2024 james@firefly-iii.org.
+ * Copyright (c) 2025 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -22,7 +22,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V2\Request\Model\ExchangeRate;
+namespace FireflyIII\Api\V1\Requests\Models\CurrencyExchangeRate;
 
 use Carbon\Carbon;
 use FireflyIII\Support\Request\ChecksLogin;
@@ -34,7 +34,7 @@ class DestroyRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
 
-    public function getDate(): Carbon
+    public function getDate(): ?Carbon
     {
         return $this->getCarbonDate('date');
     }

@@ -312,7 +312,7 @@ Route::group(
 // exchange rates
 Route::group(
     [
-        'namespace' => 'FireflyIII\Api\V1\Controllers\Model\CurrencyExchangeRate',
+        'namespace' => 'FireflyIII\Api\V1\Controllers\Models\CurrencyExchangeRate',
         'prefix'    => 'v1/exchange-rates',
         'as'        => 'api.v1.exchange-rates.',
     ],
@@ -321,6 +321,7 @@ Route::group(
         Route::get('rates/{fromCurrencyCode}/{toCurrencyCode}', ['uses' => 'ShowController@show', 'as' => 'show']);
         Route::get('{userGroupExchangeRate}', ['uses' => 'ShowController@showSingle', 'as' => 'show.single']);
         Route::delete('rates/{fromCurrencyCode}/{toCurrencyCode}', ['uses' => 'DestroyController@destroy', 'as' => 'destroy']);
+        Route::delete('{userGroupExchangeRate}', ['uses' => 'DestroyController@destroySingle', 'as' => 'destroy.single']);
         Route::put('{userGroupExchangeRate}', ['uses' => 'UpdateController@update', 'as' => 'update']);
         Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
     }

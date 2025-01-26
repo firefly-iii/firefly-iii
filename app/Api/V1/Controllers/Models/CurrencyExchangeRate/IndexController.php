@@ -38,7 +38,7 @@ class IndexController extends Controller
 {
     use ValidatesUserGroupTrait;
 
-    public const string RESOURCE_KEY = 'exchange_rates';
+    public const string RESOURCE_KEY = 'currency_exchange_rates';
 
     private ExchangeRateRepositoryInterface $repository;
 
@@ -62,9 +62,6 @@ class IndexController extends Controller
         $count       = $piggies->count();
         $piggies     = $piggies->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         $paginator   = new LengthAwarePaginator($piggies, $count, $pageSize, $this->parameters->get('page'));
-
-        var_dump('here we are');
-
         $transformer = new ExchangeRateTransformer();
         $transformer->setParameters($this->parameters); // give params to transformer
 

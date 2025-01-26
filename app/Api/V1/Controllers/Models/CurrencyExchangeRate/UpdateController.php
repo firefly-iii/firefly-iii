@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Models\CurrencyExchangeRate;
 
+use FireflyIII\Api\V1\Requests\Models\CurrencyExchangeRate\UpdateRequest;
 use FireflyIII\Api\V2\Controllers\Controller;
-use FireflyIII\Api\V2\Request\Model\ExchangeRate\UpdateRequest;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Repositories\UserGroups\ExchangeRate\ExchangeRateRepositoryInterface;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;

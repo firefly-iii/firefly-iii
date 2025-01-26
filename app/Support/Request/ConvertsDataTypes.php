@@ -30,6 +30,7 @@ use Carbon\Exceptions\InvalidFormatException;
 use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait ConvertsDataTypes
@@ -359,10 +360,12 @@ trait ConvertsDataTypes
     {
         $result = null;
 
+        Log::debug(sprintf('Date string is "%s"', (string) $this->get($field)));
         try {
             $result = '' !== (string) $this->get($field) ? new Carbon((string) $this->get($field), config('app.timezone')) : null;
         } catch (InvalidFormatException $e) {
             // @ignoreException
+            Log::debug(sprintf('Exception when parsing date "%s".', $this->get($field)));
         }
         if (null === $result) {
             app('log')->debug(sprintf('Exception when parsing date "%s".', $this->get($field)));

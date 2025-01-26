@@ -24,8 +24,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Models\CurrencyExchangeRate;
 
-use FireflyIII\Api\V2\Controllers\Controller;
-use FireflyIII\Api\V2\Request\Model\ExchangeRate\DestroyRequest;
+use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Api\V1\Requests\Models\CurrencyExchangeRate\DestroyRequest;
+use FireflyIII\Enums\UserRoleEnum;
+use FireflyIII\Exceptions\ValidationException;
+use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\UserGroups\ExchangeRate\ExchangeRateRepositoryInterface;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
@@ -35,6 +38,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class DestroyController extends Controller
 {
     use ValidatesUserGroupTrait;
+
+    protected array $acceptedRoles = [UserRoleEnum::OWNER];
 
     public const string RESOURCE_KEY = 'exchange-rates';
 
@@ -56,11 +61,21 @@ class DestroyController extends Controller
     public function destroy(DestroyRequest $request, TransactionCurrency $from, TransactionCurrency $to): JsonResponse
     {
         $date = $request->getDate();
+        if(null === $date) {
+            throw new ValidationException('Date is required');
+        }
         $rate = $this->repository->getSpecificRateOnDate($from, $to, $date);
         if (null === $rate) {
             throw new NotFoundHttpException();
         }
         $this->repository->deleteRate($rate);
+
+        return response()->json([], 204);
+    }
+
+    public function destroySingle(CurrencyExchangeRate $exchangeRate): JsonResponse
+    {
+        $this->repository->deleteRate($exchangeRate);
 
         return response()->json([], 204);
     }

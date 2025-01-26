@@ -1,8 +1,8 @@
 <?php
 
 /*
- * DestroyRequest.php
- * Copyright (c) 2024 james@firefly-iii.org.
+ * UpdateRequest.php
+ * Copyright (c) 2025 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -22,15 +22,14 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V2\Request\Model\ExchangeRate;
+namespace FireflyIII\Api\V1\Requests\Models\CurrencyExchangeRate;
 
 use Carbon\Carbon;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;
@@ -45,26 +44,14 @@ class StoreRequest extends FormRequest
         return (string) $this->get('rate');
     }
 
-    public function getFromCurrency(): TransactionCurrency
-    {
-        return TransactionCurrency::where('code', $this->get('from'))->first();
-    }
-
-    public function getToCurrency(): TransactionCurrency
-    {
-        return TransactionCurrency::where('code', $this->get('to'))->first();
-    }
-
     /**
      * The rules that the incoming request must be matched against.
      */
     public function rules(): array
     {
         return [
-            'date' => 'required|date|after:1900-01-01|before:2099-12-31',
-            'rate' => 'required|numeric|gt:0',
-            'from' => 'required|exists:transaction_currencies,code',
-            'to'   => 'required|exists:transaction_currencies,code',
+            'date'  => 'date|after:1900-01-01|before:2099-12-31',
+            'rate'  => 'required|numeric|gt:0',
         ];
     }
 }
