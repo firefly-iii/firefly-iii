@@ -82,6 +82,7 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
 
 
         server: {
+            cors: { origin: 'http://[::1]:5173' },
             watch: {
                 usePolling: true,
             },
