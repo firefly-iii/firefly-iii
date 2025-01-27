@@ -23,9 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
-use Barryvdh\Debugbar\DataCollector\QueryCollector;
-use Barryvdh\Debugbar\Facades\Debugbar;
-use DebugBar\DebugBarException;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
