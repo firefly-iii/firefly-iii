@@ -202,7 +202,7 @@ class Preferences
             return null;
         }
         if ('' === $result->data) {
-            Log::warning(sprintf('Empty encrypted preference found: "%s"', $name));
+            //Log::warning(sprintf('Empty encrypted preference found: "%s"', $name));
 
             return $result;
         }
@@ -214,7 +214,7 @@ class Preferences
                 Log::debug('Set data to NULL');
                 $result->data = null;
             }
-            Log::error(sprintf('Could not decrypt preference "%s": %s', $name, $e->getMessage()));
+            //Log::error(sprintf('Could not decrypt preference "%s": %s', $name, $e->getMessage()));
 
             return $result;
         }
@@ -226,7 +226,7 @@ class Preferences
     {
         $result = $this->getForUser($user, $name, $default);
         if ('' === $result->data) {
-            Log::warning(sprintf('Empty encrypted preference found: "%s"', $name));
+            //Log::warning(sprintf('Empty encrypted preference found: "%s"', $name));
 
             return $result;
         }
@@ -238,7 +238,7 @@ class Preferences
                 Log::debug('Set data to NULL');
                 $result->data = null;
             }
-            Log::error(sprintf('Could not decrypt preference "%s": %s', $name, $e->getMessage()));
+            //Log::error(sprintf('Could not decrypt preference "%s": %s', $name, $e->getMessage()));
 
             return $result;
         }
