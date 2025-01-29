@@ -21,7 +21,7 @@
                         {{ preFilled.first_date.format('Y-m-d') }}
                         {{ ExpandedForm.date('first_date',null, {helpText: trans('firefly.help_first_date'), min: preFilled.first_date}) }}
                         {{ ExpandedForm.select('repetition_type', [], null, {helpText: trans('firefly.change_date_other_options')}) }}
-                        {{ ExpandedForm.integer('skip',0) }}
+                        {{ ExpandedForm.integer('skip',0, {'helpText': trans('firefly.skip_help_text')}) }}
                         {{ ExpandedForm.select('weekend', weekendResponses, null, {helpText: trans('firefly.help_weekend')}) }}
                         {{ ExpandedForm.select('repetition_end', repetitionEnds) }}
                         {{ ExpandedForm.date('repeat_until',null) }}

@@ -28,7 +28,7 @@
                         {{ ExpandedForm.amountNoCurrency('amount_max',  bill.amount_max) }}
                         {{ ExpandedForm.date('date',bill.date.format('Y-m-d')) }}
                         {{ ExpandedForm.select('repeat_freq', periods, bill.repeat_freq) }}
-                        {{ ExpandedForm.integer('skip', bill.skip) }}
+                        {{ ExpandedForm.integer('skip', bill.skip, {'helpText': trans('firefly.skip_help_text')}) }}
                     </div>
                 </div>
 

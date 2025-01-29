@@ -22,7 +22,7 @@
                         {{ ExpandedForm.amountNoCurrency('amount_max') }}
                         {{ ExpandedForm.date('date',phpdate('Y-m-d')) }}
                         {{ ExpandedForm.select('repeat_freq',periods,'monthly') }}
-                        {{ ExpandedForm.integer('skip',0) }}
+                        {{ ExpandedForm.integer('skip',0, {'helpText': trans('firefly.skip_help_text')}) }}
                     </div>
                 </div>
 

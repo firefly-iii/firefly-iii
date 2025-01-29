@@ -23,7 +23,7 @@
                         {{ ExpandedForm.text('title', array.title) }}
                         {{ ExpandedForm.date('first_date',array.first_date, {helpText: trans('firefly.help_first_date_no_past')}) }}
                         {{ ExpandedForm.select('repetition_type', [], null, {helpText: trans('firefly.change_date_other_options')}) }}
-                        {{ ExpandedForm.integer('skip', array.repetitions[0].skip) }}
+                        {{ ExpandedForm.integer('skip', array.repetitions[0].skip, {'helpText': trans('firefly.skip_help_text')}) }}
                         {{ ExpandedForm.select('weekend', weekendResponses, array.repetitions[0].weekend, {helpText: trans('firefly.help_weekend')}) }}
                         {{ ExpandedForm.select('repetition_end', repetitionEnds, repetitionEnd) }}
                         {{ ExpandedForm.date('repeat_until',array.repeat_until) }}
