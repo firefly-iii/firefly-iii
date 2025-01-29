@@ -308,6 +308,23 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         return $sum;
     }
 
+    /**
+     * Get current amount saved in piggy bank.
+     */
+    public function getCurrentNativeAmount(PiggyBank $piggyBank, ?Account $account = null): string
+    {
+        $sum = '0';
+        foreach ($piggyBank->accounts as $current) {
+            if (null !== $account && $account->id !== $current->id) {
+                continue;
+            }
+            $amount = (string) $current->pivot->native_current_amount;
+            $amount = '' === $amount ? '0' : $amount;
+            $sum    = bcadd($sum, $amount);
+        }
+        return $sum;
+    }
+
     public function getRepetition(PiggyBank $piggyBank, bool $overrule = false): ?PiggyBankRepetition
     {
         if (false === $overrule) {

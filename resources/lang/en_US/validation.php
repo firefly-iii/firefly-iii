@@ -145,6 +145,7 @@ return [
     'numeric_destination'              => 'The destination amount must be a number.',
     'numeric_source'                   => 'The source amount must be a number.',
     'generic_invalid'                  => 'This value is invalid.',
+    'transaction_type_changed' => 'If you change the type of the transaction, make sure the correct source/destination accounts are set.',
     'regex'                            => 'The :attribute format is invalid.',
     'required'                         => 'The :attribute field is required.',
     'required_if'                      => 'The :attribute field is required when :other is :value.',

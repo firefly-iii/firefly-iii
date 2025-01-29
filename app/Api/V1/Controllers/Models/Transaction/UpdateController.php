@@ -72,13 +72,6 @@ class UpdateController extends Controller
     {
         app('log')->debug('Now in update routine for transaction group');
         $data             = $request->getAll();
-
-        // Fixes 8750.
-        $transactions     = $data['transactions'] ?? [];
-        foreach ($transactions as $index => $info) {
-            unset($data['transactions'][$index]['type']);
-        }
-
         $transactionGroup = $this->groupRepository->update($transactionGroup, $data);
         $manager          = $this->getManager();
 

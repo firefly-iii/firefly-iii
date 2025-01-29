@@ -27,6 +27,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -41,25 +42,37 @@ class FrontpageController extends Controller
      */
     public function piggyBanks(PiggyBankRepositoryInterface $repository): JsonResponse
     {
-        $set  = $repository->getPiggyBanks();
-        $info = [];
+        $set             = $repository->getPiggyBanks();
+        $info            = [];
+        $native          = Amount::getNativeCurrency();
+        $convertToNative = Amount::convertToNative();
+
 
         /** @var PiggyBank $piggyBank */
         foreach ($set as $piggyBank) {
-            $amount = $repository->getCurrentAmount($piggyBank);
+            $amount       = $repository->getCurrentAmount($piggyBank);
+            $nativeAmount = $repository->getCurrentNativeAmount($piggyBank);
             if (1 === bccomp($amount, '0')) {
                 // percentage!
-                $pct    = 0;
+                $pct = 0;
                 if (0 !== bccomp($piggyBank->target_amount, '0')) {
                     $pct = (int) bcmul(bcdiv($amount, $piggyBank->target_amount), '100');
                 }
 
-                $entry  = [
-                    'id'         => $piggyBank->id,
-                    'name'       => $piggyBank->name,
-                    'amount'     => $amount,
-                    'target'     => $piggyBank->target_amount,
-                    'percentage' => $pct,
+                $entry = [
+                    'id'                             => $piggyBank->id,
+                    'name'                           => $piggyBank->name,
+                    'amount'                         => $amount,
+                    'native_amount'                  => $nativeAmount,
+                    'target'                         => $piggyBank->target_amount,
+                    'native_target'                  => $piggyBank->native_target_amount,
+                    'percentage'                     => $pct,
+                    // currency:
+                    'currency_symbol'                => $piggyBank->transactionCurrency->symbol,
+                    'currency_decimal_places'        => $piggyBank->transactionCurrency->decimal_places,
+                    'native_currency_symbol'         => $native->symbol,
+                    'native_currency_decimal_places' => $native->decimal_places,
+
                 ];
 
                 $info[] = $entry;
@@ -74,11 +87,10 @@ class FrontpageController extends Controller
             }
         );
 
-
         $html = '';
         if (0 !== count($info)) {
             try {
-                $html = view('json.piggy-banks', compact('info'))->render();
+                $html = view('json.piggy-banks', compact('info', 'convertToNative', 'native'))->render();
             } catch (\Throwable $e) {
                 app('log')->error(sprintf('Cannot render json.piggy-banks: %s', $e->getMessage()));
                 app('log')->error($e->getTraceAsString());

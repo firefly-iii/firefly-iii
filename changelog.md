@@ -45,12 +45,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - [Issue 9532](https://github.com/firefly-iii/firefly-iii/issues/9532) (ReportSum Integrity Check fails due to empty foreign_amount) reported by @SircasticFox
 - [Issue 7288](https://github.com/firefly-iii/firefly-iii/issues/7288) (currentMonthStart/currentMonthEnd not working for no-budget view) reported by @bradsk88
+- #9704 
 
 ### API
 
 - API changes related to new features are [documented](https://api-docs.firefly-iii.org/).
 - New endpoint for multiple financial administrations ("user groups").
 - The change from "default currency" (user) to "native currency" (financial administration) is slowly being reflected in the API. Please report issues.
+- You can change the "transaction type" of an existing transaction if you submit a new `type` and the correct source and destination account names or IDs.
 
 ## 6.1.25 - 2024-12-19
 
