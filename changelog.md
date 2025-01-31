@@ -45,7 +45,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - [Issue 9532](https://github.com/firefly-iii/firefly-iii/issues/9532) (ReportSum Integrity Check fails due to empty foreign_amount) reported by @SircasticFox
 - [Issue 7288](https://github.com/firefly-iii/firefly-iii/issues/7288) (currentMonthStart/currentMonthEnd not working for no-budget view) reported by @bradsk88
-- #9704 
+- [Issue 9704](https://github.com/firefly-iii/firefly-iii/issues/9704) (Piggy banks widget displays only main currency for different currencies) reported by @vayakovlev 
 
 ### API
 

@@ -322,6 +322,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
             $amount = '' === $amount ? '0' : $amount;
             $sum    = bcadd($sum, $amount);
         }
+
         return $sum;
     }
 

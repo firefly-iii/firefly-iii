@@ -39,6 +39,7 @@ use Illuminate\Support\Collection;
 interface PiggyBankRepositoryInterface
 {
     public function addAmount(PiggyBank $piggyBank, Account $account, string $amount, ?TransactionJournal $journal = null): bool;
+
     public function getCurrentNativeAmount(PiggyBank $piggyBank, ?Account $account = null): string;
 
     public function addAmountToPiggyBank(PiggyBank $piggyBank, string $amount, TransactionJournal $journal): void;

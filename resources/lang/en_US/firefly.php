@@ -1860,7 +1860,7 @@ return [
     'remove_budgeted_amount'                                  => 'Remove budgeted amount in :currency',
 
     // bills:
-    'skip_help_text' => 'Use the skip field to create bi-monthly (skip = 1) or other custom intervals.',
+    'skip_help_text'                                          => 'Use the skip field to create bi-monthly (skip = 1) or other custom intervals.',
     'subscription'                                            => 'Subscription',
     'not_expected_period'                                     => 'Not expected this period',
     'subscriptions_in_group'                                  => 'Subscriptions in group "%{title}"',

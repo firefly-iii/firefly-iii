@@ -54,12 +54,12 @@ class FrontpageController extends Controller
             $nativeAmount = $repository->getCurrentNativeAmount($piggyBank);
             if (1 === bccomp($amount, '0')) {
                 // percentage!
-                $pct = 0;
+                $pct    = 0;
                 if (0 !== bccomp($piggyBank->target_amount, '0')) {
                     $pct = (int) bcmul(bcdiv($amount, $piggyBank->target_amount), '100');
                 }
 
-                $entry = [
+                $entry  = [
                     'id'                             => $piggyBank->id,
                     'name'                           => $piggyBank->name,
                     'amount'                         => $amount,
@@ -87,7 +87,7 @@ class FrontpageController extends Controller
             }
         );
 
-        $html = '';
+        $html            = '';
         if (0 !== count($info)) {
             try {
                 $html = view('json.piggy-banks', compact('info', 'convertToNative', 'native'))->render();

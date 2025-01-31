@@ -378,8 +378,8 @@ trait TransactionValidation
         $accountValidator = app(AccountValidator::class);
 
         // 2025-01-29 grab the transaction type from the update array.
-        $originalType = $this->getTransactionType($transactionGroup, []);
-        $transactionType = $transaction['type'] ?? $originalType;
+        $originalType     = $this->getTransactionType($transactionGroup, []);
+        $transactionType  = $transaction['type'] ?? $originalType;
         Log::debug(sprintf('Determined transaction type to be "%s"', $transactionType));
 
         // get the transaction type using the original transaction group:
@@ -410,9 +410,10 @@ trait TransactionValidation
                 $validator->errors()->add(sprintf('transactions.%d.source_number', $index), $accountValidator->sourceError);
 
                 // also add an error for the transaction type, if it is different.
-                if($originalType !== $transactionType) {
+                if ($originalType !== $transactionType) {
                     $validator->errors()->add(sprintf('transactions.%d.type', $index), (string) trans('validation.transaction_type_changed'));
                 }
+
                 return;
             }
             Log::debug('Source account info is valid.');
@@ -448,7 +449,7 @@ trait TransactionValidation
                 $validator->errors()->add(sprintf('transactions.%d.destination_id', $index), $accountValidator->destError);
                 $validator->errors()->add(sprintf('transactions.%d.destination_name', $index), $accountValidator->destError);
                 // also add an error for the transaction type, if it is different.
-                if($originalType !== $transactionType) {
+                if ($originalType !== $transactionType) {
                     $validator->errors()->add(sprintf('transactions.%d.type', $index), (string) trans('validation.transaction_type_changed'));
                 }
             }
