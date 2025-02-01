@@ -714,6 +714,9 @@ class GroupCollector implements GroupCollectorInterface
                 if (null === $transaction['amount']) {
                     throw new FireflyException(sprintf('Amount is NULL for a transaction in group #%d, please investigate.', $groudId));
                 }
+                $nativeAmount = (string) ('' === $transaction['native_amount'] ? '0' : $transaction['native_amount']);
+                $nativeForeignAmount = (string) ('' === $transaction['native_foreign_amount'] ? '0' : $transaction['native_foreign_amount']);
+                $foreignAmount = (string) ('' === $transaction['foreign_amount'] ? '0' : $transaction['foreign_amount']);
 
                 // set default:
                 if (!array_key_exists($currencyId, $groups[$groudId]['sums'])) {
@@ -724,9 +727,8 @@ class GroupCollector implements GroupCollectorInterface
                     $groups[$groudId]['sums'][$currencyId]['amount']                  = '0';
                     $groups[$groudId]['sums'][$currencyId]['native_amount']           = '0';
                 }
-                $transaction['native_amount']                           = null === $transaction['native_amount'] ? '0' : $transaction['native_amount'];
                 $groups[$groudId]['sums'][$currencyId]['amount']        = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], $transaction['amount']);
-                $groups[$groudId]['sums'][$currencyId]['native_amount'] = bcadd($groups[$groudId]['sums'][$currencyId]['native_amount'], $transaction['native_amount']);
+                $groups[$groudId]['sums'][$currencyId]['native_amount'] = bcadd($groups[$groudId]['sums'][$currencyId]['native_amount'], $nativeAmount);
 
                 if (null !== $transaction['foreign_amount'] && null !== $transaction['foreign_currency_id']) {
                     $currencyId                                             = (int) $transaction['foreign_currency_id'];
@@ -738,11 +740,10 @@ class GroupCollector implements GroupCollectorInterface
                         $groups[$groudId]['sums'][$currencyId]['currency_symbol']         = $transaction['foreign_currency_symbol'];
                         $groups[$groudId]['sums'][$currencyId]['currency_decimal_places'] = $transaction['foreign_currency_decimal_places'];
                         $groups[$groudId]['sums'][$currencyId]['amount']                  = '0';
-                        $groups[$groudId]['sums'][$currencyId]['save_amount']             = '0';
+                        $groups[$groudId]['sums'][$currencyId]['native_amount']             = '0';
                     }
-                    $transaction['native_foreign_amount']                   = null === $transaction['native_foreign_amount'] ? '0' : $transaction['native_foreign_amount'];
-                    $groups[$groudId]['sums'][$currencyId]['amount']        = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], $transaction['foreign_amount']);
-                    $groups[$groudId]['sums'][$currencyId]['native_amount'] = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], $transaction['native_foreign_amount']);
+                    $groups[$groudId]['sums'][$currencyId]['amount']        = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], $foreignAmount);
+                    $groups[$groudId]['sums'][$currencyId]['native_amount'] = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], $nativeForeignAmount);
                 }
             }
         }
