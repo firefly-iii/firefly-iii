@@ -264,6 +264,7 @@ class PreferencesController extends Controller
         if ($convertToNative && !$this->convertToNative) {
             // set to true!
             Log::debug('User sets convertToNative to true.');
+            Preferences::set('convert_to_native', $convertToNative);
             event(new UserGroupChangedDefaultCurrency(auth()->user()->userGroup));
         }
         Preferences::set('convert_to_native', $convertToNative);

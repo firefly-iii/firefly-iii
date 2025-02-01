@@ -203,11 +203,11 @@ trait PeriodOverview
             $currencySymbol                = $journal['currency_symbol'];
             $currencyDecimalPlaces         = $journal['currency_decimal_places'];
             $foreignCurrencyId             = $journal['foreign_currency_id'];
-            $amount                        = $journal['amount'];
+            $amount                        = $journal['amount'] ?? '0';
 
 
             if ($this->convertToNative && $currencyId !== $this->defaultCurrency->id && $foreignCurrencyId !== $this->defaultCurrency->id) {
-                $amount                = $journal['native_amount'];
+                $amount                = $journal['native_amount'] ?? '0';
                 $currencyId            = $this->defaultCurrency->id;
                 $currencyCode          = $this->defaultCurrency->code;
                 $currencyName          = $this->defaultCurrency->name;
@@ -220,7 +220,7 @@ trait PeriodOverview
                 $currencyName          = $journal['foreign_currency_name'];
                 $currencySymbol        = $journal['foreign_currency_symbol'];
                 $currencyDecimalPlaces = $journal['foreign_currency_decimal_places'];
-                $amount                = $journal['foreign_amount'];
+                $amount                = $journal['foreign_amount'] ?? '0';
             }
             $return[$currencyId] ??= [
                 'amount'                  => '0',
