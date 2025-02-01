@@ -111,8 +111,8 @@ class ReconcileController extends Controller
 
         $startDate       = clone $start;
         $startDate->subDay();
-        $startBalance    = Steam::finalAccountBalance($account, $startDate)['balance'];
-        $endBalance      = Steam::finalAccountBalance($account, $end)['balance'];
+        $startBalance    = Steam::bcround(Steam::finalAccountBalance($account, $startDate)['balance'], $currency->decimal_places);
+        $endBalance      = Steam::bcround(Steam::finalAccountBalance($account, $end)['balance'], $currency->decimal_places);
         $subTitleIcon    = config(sprintf('firefly.subIconsByIdentifier.%s', $account->accountType->type));
         $subTitle        = (string) trans('firefly.reconcile_account', ['account' => $account->name]);
 
