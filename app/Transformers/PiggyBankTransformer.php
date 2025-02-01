@@ -99,10 +99,8 @@ class PiggyBankTransformer extends AbstractTransformer
             'id'                      => (string) $piggyBank->id,
             'created_at'              => $piggyBank->created_at->toAtomString(),
             'updated_at'              => $piggyBank->updated_at->toAtomString(),
-            'accounts'                => $this->renderAccounts($piggyBank),
-            // 'account_id'              => (string)$piggyBank->account_id,
-            // 'account_name'            => $piggyBank->account->name,
             'name'                    => $piggyBank->name,
+            'accounts'                => $this->renderAccounts($piggyBank),
             'currency_id'             => (string) $currency->id,
             'currency_code'           => $currency->code,
             'currency_symbol'         => $currency->symbol,
@@ -137,6 +135,7 @@ class PiggyBankTransformer extends AbstractTransformer
                 'id'             => $account->id,
                 'name'           => $account->name,
                 'current_amount' => (string) $account->pivot->current_amount,
+                'native_current_amount'=> (string) $account->pivot->native_current_amount,
                 // TODO add balance, add left to save.
             ];
         }
