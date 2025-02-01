@@ -118,6 +118,10 @@
         <td>Exchange rates</td>
         <td>{% if config('cer.enabled') %}Enabled{% else %}Disabled{% endif %}, downloads {% if config('cer.download_enabled') %}enabled{% else %}disabled{% endif %}</td>
     </tr>
+    <tr>
+        <td>RB-column</td>
+        <td>{% if config('firefly.feature_flags.running_balance_column') %}Enabled{% else %}Disabled{% endif %}</td>
+    </tr>
     </tbody>
 </table>
 
@@ -139,6 +143,10 @@
     <tr>
         <td>User flags</td>
         <td>{{ user.user_flags | raw }}</td>
+    </tr>
+    <tr>
+        <td>Native currency</td>
+        <td>{{ user.native.code }}</td>
     </tr>
     <tr>
         <td>Convert to native currency?</td>

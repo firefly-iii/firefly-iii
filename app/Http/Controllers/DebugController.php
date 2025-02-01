@@ -381,6 +381,7 @@ class DebugController extends Controller
             'user_count'        => User::count(),
             'user_flags'        => $userFlags,
             'user_agent'        => $userAgent,
+            'native' => Amount::getNativeCurrency(),
             'convert_to_native' => Amount::convertToNative(),
             'locale_attempts'   => $localeAttempts,
             'locale'            => Steam::getLocale(),
