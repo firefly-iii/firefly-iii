@@ -84,7 +84,7 @@
                         {% endif %}
                     </td>
                     <td class="hidden-sm hidden-xs" style="text-align:right;">
-                        {% if null != piggy.target_amount %}
+                        {% if null != piggy.target_amount and 0 != piggy.target_amount %}
                             <span title="{{ 'target_amount'|_ }}">{{ formatAmountBySymbol(piggy.target_amount,piggy.currency_symbol,piggy.currency_decimal_places) }}</span>
                         {% endif %}
                     </td>

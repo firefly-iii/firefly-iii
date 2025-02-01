@@ -68,14 +68,16 @@ class AmountController extends Controller
      */
     public function add(PiggyBank $piggyBank)
     {
+        /** @var Carbon $date */
+        $date     = session('end', today(config('app.timezone')));
         $accounts   = [];
         $total      = '0';
         $totalSaved = $this->piggyRepos->getCurrentAmount($piggyBank);
-        $leftToSave = bcsub($piggyBank->target_amount, $totalSaved);
         foreach ($piggyBank->accounts as $account) {
-            $leftOnAccount = $this->piggyRepos->leftOnAccount($piggyBank, $account, today(config('app.timezone'))->endOfDay());
+            $leftOnAccount = $this->piggyRepos->leftOnAccount($piggyBank, $account, $date);
             $savedSoFar    = $this->piggyRepos->getCurrentAmount($piggyBank, $account);
-            $maxAmount     = 0 === bccomp($piggyBank->target_amount, '0') ? $leftToSave : min($leftOnAccount, $leftToSave);
+            $leftToSave    = bcsub($piggyBank->target_amount, $savedSoFar);
+            $maxAmount = 0 === bccomp($piggyBank->target_amount, '0') ? $leftOnAccount : min($leftOnAccount, $leftToSave);
             $accounts[]    = [
                 'account'         => $account,
                 'left_on_account' => $leftOnAccount,
@@ -105,12 +107,13 @@ class AmountController extends Controller
             $leftOnAccount = $this->piggyRepos->leftOnAccount($piggyBank, $account, $date);
             $savedSoFar    = $this->piggyRepos->getCurrentAmount($piggyBank, $account);
             $leftToSave    = bcsub($piggyBank->target_amount, $savedSoFar);
+            $maxAmount = 0 === bccomp($piggyBank->target_amount, '0') ? $leftOnAccount : min($leftOnAccount, $leftToSave);
             $accounts[]    = [
                 'account'         => $account,
                 'left_on_account' => $leftOnAccount,
                 'saved_so_far'    => $savedSoFar,
                 'left_to_save'    => $leftToSave,
-                'max_amount'      => 0 === bccomp($piggyBank->target_amount, '0') ? $leftOnAccount : min($leftOnAccount, $leftToSave),
+                'max_amount'      => $maxAmount,
             ];
             $total         = bcadd($total, $leftOnAccount);
         }
