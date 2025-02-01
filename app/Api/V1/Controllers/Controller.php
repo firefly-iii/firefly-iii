@@ -67,7 +67,7 @@ abstract class Controller extends BaseController
     protected array        $allowedSort;
     protected ParameterBag $parameters;
     protected bool        $convertToNative   = false;
-    protected array $accepts                 = ['application/json'];
+    protected array $accepts                 = ['application/json','application/vnd.api+json'];
     protected TransactionCurrency $nativeCurrency;
 
     /**

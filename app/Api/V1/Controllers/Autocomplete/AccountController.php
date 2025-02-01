@@ -41,7 +41,8 @@ use Illuminate\Http\JsonResponse;
 class AccountController extends Controller
 {
     use AccountFilter;
-    protected array $accepts = ['application/json'];
+    // this array only exists to test if the constructor will use it properly.
+    protected array $accepts = ['application/json', 'application/vnd.api+json'];
 
     /** @var array<int, string> */
     private array                      $balanceTypes;
