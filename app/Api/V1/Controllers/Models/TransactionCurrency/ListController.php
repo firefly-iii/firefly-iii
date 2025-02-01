@@ -236,7 +236,7 @@ class ListController extends Controller
         // get list of budgets. Count it and split it.
         /** @var RecurringRepositoryInterface $recurringRepos */
         $recurringRepos = app(RecurringRepositoryInterface::class);
-        $unfiltered     = $recurringRepos->getAll();
+        $unfiltered     = $recurringRepos->get();
 
         // filter selection
         $collection     = $unfiltered->filter(

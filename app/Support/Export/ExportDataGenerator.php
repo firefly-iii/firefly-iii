@@ -513,7 +513,7 @@ class ExportDataGenerator
             'currency_code', 'foreign_currency_code', 'source_name', 'source_type', 'destination_name', 'destination_type', 'amount', 'foreign_amount', 'category', 'budget', 'piggy_bank', 'tags',
         ];
         $records        = [];
-        $recurrences    = $recurringRepos->getAll();
+        $recurrences    = $recurringRepos->get();
 
         /** @var Recurrence $recurrence */
         foreach ($recurrences as $recurrence) {

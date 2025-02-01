@@ -93,7 +93,7 @@ class RecurringRepository implements RecurringRepositoryInterface
     }
 
     /**
-     * Returns all of the user's recurring transactions.
+     * Returns all the user's recurring transactions.
      */
     public function get(): Collection
     {
