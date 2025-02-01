@@ -120,7 +120,7 @@ class PreferencesController extends Controller
         $pushoverUserToken              = (string) Preferences::getEncrypted('pushover_user_token', '')->data;
         $ntfyServer                     = Preferences::getEncrypted('ntfy_server', 'https://ntfy.sh')->data;
         $ntfyTopic                      = (string) Preferences::getEncrypted('ntfy_topic', '')->data;
-        $ntfyAuth                       = Preferences::get('ntfy_auth', false)->data;
+        $ntfyAuth                       = '1' === Preferences::get('ntfy_auth', false)->data;
         $ntfyUser                       = Preferences::getEncrypted('ntfy_user', '')->data;
         $ntfyPass                       = (string) Preferences::getEncrypted('ntfy_pass', '')->data;
         $channels                       = config('notifications.channels');
