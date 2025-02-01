@@ -64,6 +64,7 @@ class BillObserver
         $bill->native_amount_max = null;
         if ($bill->transactionCurrency->id !== $userCurrency->id) {
             $converter               = new ExchangeRateConverter();
+            $converter->setUserGroup($bill->user->userGroup);
             $converter->setIgnoreSettings(true);
             $bill->native_amount_min = $converter->convert($bill->transactionCurrency, $userCurrency, today(), $bill->amount_min);
             $bill->native_amount_max = $converter->convert($bill->transactionCurrency, $userCurrency, today(), $bill->amount_max);

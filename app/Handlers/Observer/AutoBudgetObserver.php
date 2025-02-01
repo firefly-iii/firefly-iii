@@ -52,6 +52,7 @@ class AutoBudgetObserver
         $autoBudget->native_amount = null;
         if ($autoBudget->transactionCurrency->id !== $userCurrency->id) {
             $converter                 = new ExchangeRateConverter();
+            $converter->setUserGroup($autoBudget->budget->user->userGroup);
             $converter->setIgnoreSettings(true);
             $autoBudget->native_amount = $converter->convert($autoBudget->transactionCurrency, $userCurrency, today(), $autoBudget->amount);
         }

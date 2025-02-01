@@ -54,6 +54,7 @@ class BudgetLimitObserver
         $budgetLimit->native_amount = null;
         if ($budgetLimit->transactionCurrency->id !== $userCurrency->id) {
             $converter                  = new ExchangeRateConverter();
+            $converter->setUserGroup($budgetLimit->budget->user->userGroup);
             $converter->setIgnoreSettings(true);
             $budgetLimit->native_amount = $converter->convert($budgetLimit->transactionCurrency, $userCurrency, today(), $budgetLimit->amount);
         }

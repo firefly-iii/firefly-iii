@@ -52,6 +52,7 @@ class PiggyBankEventObserver
         $event->native_amount = null;
         if ($event->piggyBank->transactionCurrency->id !== $userCurrency->id) {
             $converter            = new ExchangeRateConverter();
+            $converter->setUserGroup($event->piggyBank->accounts()->first()->user->userGroup);
             $converter->setIgnoreSettings(true);
             $event->native_amount = $converter->convert($event->piggyBank->transactionCurrency, $userCurrency, today(), $event->amount);
         }
