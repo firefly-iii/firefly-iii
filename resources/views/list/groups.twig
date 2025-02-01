@@ -59,14 +59,26 @@
                 <td colspan="1" style="text-align:right;border-top:1px #aaa solid;">
                     {% for sum in group.sums %}
                         {% if group.transaction_type == 'Deposit' %}
-                            {{ formatAmountBySymbol(sum.amount*-1, sum.currency_symbol, sum.currency_decimal_places) }}(TODO NATIVE group 1){% if loop.index != group.sums|length %},{% endif %}
+                            {{ formatAmountBySymbol(sum.amount*-1, sum.currency_symbol, sum.currency_decimal_places) }}
+                            {% if convertToNative and 0 != sum.native_amount %}
+                                ({{ formatAmountBySymbol(sum.native_amount*-1, defaultCurrency.symbol, defaultCurrency.decimal_places) }})
+                            {% endif %}
+                            {% if loop.index != group.sums|length %},{% endif %}
 
                         {% elseif group.transaction_type == 'Transfer' %}
                             <span class="text-info money-transfer">
-                            {{ formatAmountBySymbol(sum.amount*-1, sum.currency_symbol, sum.currency_decimal_places, false) }}(TODO group 2 ){% if loop.index != group.sums|length %},{% endif %}
+                            {{ formatAmountBySymbol(sum.amount*-1, sum.currency_symbol, sum.currency_decimal_places, false) }}
+                                {% if convertToNative and 0 != sum.native_amount %}
+                                    ({{ formatAmountBySymbol(sum.native_amount*-1, defaultCurrency.symbol, defaultCurrency.decimal_places) }})
+                                {% endif %}
+                                {% if loop.index != group.sums|length %},{% endif %}
                             </span>
                         {% else %}
-                            {{ formatAmountBySymbol(sum.amount, sum.currency_symbol, sum.currency_decimal_places) }}(TODO NATIVE group 3){% if loop.index != group.sums|length %},{% endif %}
+                            {{ formatAmountBySymbol(sum.amount, sum.currency_symbol, sum.currency_decimal_places) }}
+                            {% if convertToNative and 0 != sum.native_amount %}
+                                ({{ formatAmountBySymbol(sum.native_amount*-1, defaultCurrency.symbol, defaultCurrency.decimal_places) }})
+                            {% endif %}
+                            {% if loop.index != group.sums|length %},{% endif %}
                         {% endif %}
                     {% endfor %}
                 </td>
