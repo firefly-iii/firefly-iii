@@ -132,10 +132,10 @@ class PiggyBankTransformer extends AbstractTransformer
         $return = [];
         foreach ($piggyBank->accounts()->get() as $account) {
             $return[] = [
-                'id'             => $account->id,
-                'name'           => $account->name,
-                'current_amount' => (string) $account->pivot->current_amount,
-                'native_current_amount'=> (string) $account->pivot->native_current_amount,
+                'id'                    => $account->id,
+                'name'                  => $account->name,
+                'current_amount'        => (string) $account->pivot->current_amount,
+                'native_current_amount' => (string) $account->pivot->native_current_amount,
                 // TODO add balance, add left to save.
             ];
         }

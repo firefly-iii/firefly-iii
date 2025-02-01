@@ -63,6 +63,7 @@ class PreferencesEventHandler
         if (Amount::convertToNative()) {
             Log::debug('Will now convert to native.');
             Artisan::call('correction:recalculate-native-amounts');
+
             return;
         }
         Log::debug('Will NOT convert to native.');

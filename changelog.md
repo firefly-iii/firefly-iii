@@ -9,14 +9,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #9714
-- #9717
-- #9719
-- #9720
-- #9721
-- #9722
-- #9723
-- #9726
+- [Issue 9714](https://github.com/firefly-iii/firefly-iii/issues/9714) (current transaction is aborted, commands ignored until end of transaction block) reported by @captainark
+- [Issue 9717](https://github.com/firefly-iii/firefly-iii/issues/9717) (API api/v1/accounts broken) reported by @brot
+- [Issue 9719](https://github.com/firefly-iii/firefly-iii/issues/9719) (A couple of TODOs left in resources/views/list/groups.twig) reported by @lostfocus
+- [Issue 9720](https://github.com/firefly-iii/firefly-iii/issues/9720) (Piggy Bank with no Target amount: unable to add money) reported by @maxsmooth
+- [Issue 9721](https://github.com/firefly-iii/firefly-iii/issues/9721) (Documentation on exchange-rates page leads to non-existent page) reported by @electrofloat
+- [Issue 9722](https://github.com/firefly-iii/firefly-iii/issues/9722) (Error 500 on tags page after enabling native currency) reported by @lostfocus
+- [Issue 9723](https://github.com/firefly-iii/firefly-iii/issues/9723) (Convert to native routine is not called when convert to native is activated) reported by @JC5
+- [Issue 9726](https://github.com/firefly-iii/firefly-iii/issues/9726) (Postgres cannot deal with "virtual_balance" column) reported by @dicksonleong
 
 ## 6.2.0 - 2025-01-31
 

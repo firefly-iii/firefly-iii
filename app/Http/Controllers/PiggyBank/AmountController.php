@@ -69,7 +69,7 @@ class AmountController extends Controller
     public function add(PiggyBank $piggyBank)
     {
         /** @var Carbon $date */
-        $date     = session('end', today(config('app.timezone')));
+        $date       = session('end', today(config('app.timezone')));
         $accounts   = [];
         $total      = '0';
         $totalSaved = $this->piggyRepos->getCurrentAmount($piggyBank);
@@ -77,7 +77,7 @@ class AmountController extends Controller
             $leftOnAccount = $this->piggyRepos->leftOnAccount($piggyBank, $account, $date);
             $savedSoFar    = $this->piggyRepos->getCurrentAmount($piggyBank, $account);
             $leftToSave    = bcsub($piggyBank->target_amount, $savedSoFar);
-            $maxAmount = 0 === bccomp($piggyBank->target_amount, '0') ? $leftOnAccount : min($leftOnAccount, $leftToSave);
+            $maxAmount     = 0 === bccomp($piggyBank->target_amount, '0') ? $leftOnAccount : min($leftOnAccount, $leftToSave);
             $accounts[]    = [
                 'account'         => $account,
                 'left_on_account' => $leftOnAccount,
@@ -107,7 +107,7 @@ class AmountController extends Controller
             $leftOnAccount = $this->piggyRepos->leftOnAccount($piggyBank, $account, $date);
             $savedSoFar    = $this->piggyRepos->getCurrentAmount($piggyBank, $account);
             $leftToSave    = bcsub($piggyBank->target_amount, $savedSoFar);
-            $maxAmount = 0 === bccomp($piggyBank->target_amount, '0') ? $leftOnAccount : min($leftOnAccount, $leftToSave);
+            $maxAmount     = 0 === bccomp($piggyBank->target_amount, '0') ? $leftOnAccount : min($leftOnAccount, $leftToSave);
             $accounts[]    = [
                 'account'         => $account,
                 'left_on_account' => $leftOnAccount,

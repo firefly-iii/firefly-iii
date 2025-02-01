@@ -138,7 +138,7 @@
         "visit_webhook_url": "Obi\u0161\u010dite URL webhooka",
         "reset_webhook_secret": "Ponastavi skrivno kodo webhooka",
         "header_exchange_rates": "Menjalni te\u010daji",
-        "exchange_rates_intro": "Firefly III podpira prenos in uporabo menjalnih te\u010dajev. Preberite ve\u010d o tem v <a href=\"https:\/\/docs.firefly-iii.org\/LOL_NOT_FINISHED_YET_TODO\">dokumentaciji<\/a>.",
+        "exchange_rates_intro": "Firefly III supports downloading and using exchange rates. Read more about this in <a href=\"https:\/\/docs.firefly-iii.org\/explanation\/financial-concepts\/exchange-rates\/\">the documentation<\/a>.",
         "exchange_rates_from_to": "Med {from} in {to} (in obratno)",
         "exchange_rates_intro_rates": "Firefly III uporablja naslednje menjalne te\u010daje. Obratna vrednost se samodejno izra\u010duna, \u010de ni na voljo. \u010ce na dan transakcije ni menjalnega te\u010daja, se bo Firefly III vrnil v preteklost, da bi ga na\u0161el. \u010ce jih ni, se uporabi te\u010daj \"1\".",
         "header_exchange_rates_rates": "Menjalni te\u010daji",

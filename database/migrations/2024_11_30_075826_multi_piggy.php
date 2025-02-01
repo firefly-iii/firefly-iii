@@ -29,7 +29,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
 return new class () extends Migration {
-
     /**
      * Run the migrations.
      */
@@ -132,14 +131,16 @@ return new class () extends Migration {
         Schema::dropIfExists('account_piggy_bank');
     }
 
-    protected static function hasForeign(string $table, string $column) {
+    protected static function hasForeign(string $table, string $column)
+    {
 
         $foreignKeysDefinitions = Schema::getForeignKeys($table);
-        foreach($foreignKeysDefinitions as $foreignKeyDefinition) {
-            if($foreignKeyDefinition['name'] === $column) {
+        foreach ($foreignKeysDefinitions as $foreignKeyDefinition) {
+            if ($foreignKeyDefinition['name'] === $column) {
                 return true;
             }
         }
+
         return false;
     }
 };

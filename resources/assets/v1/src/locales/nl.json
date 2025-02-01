@@ -138,7 +138,7 @@
         "visit_webhook_url": "Bezoek URL van webhook",
         "reset_webhook_secret": "Reset webhook-geheim",
         "header_exchange_rates": "Wisselkoersen",
-        "exchange_rates_intro": "Firefly III kan wisselkoersen downloaden en gebruiken. Lees hier meer over in <a href=\"https:\/\/docs.firefly-iii.org\/LOL_NOT_FINISHED_YET_TODO\">de documentatie<\/a>.",
+        "exchange_rates_intro": "Firefly III supports downloading and using exchange rates. Read more about this in <a href=\"https:\/\/docs.firefly-iii.org\/explanation\/financial-concepts\/exchange-rates\/\">the documentation<\/a>.",
         "exchange_rates_from_to": "Tussen {from} en {to} (en andersom)",
         "exchange_rates_intro_rates": "Firefly III gebruikt de volgende wisselkoersen. De inverse berekent zichzelf als deze niet is opgegeven. Als er geen wisselkoers bestaat voor de datum van de transactie, gaat Firefly III terug in de tijd om er een te vinden. Als er geen aanwezig is, zal de koers \"1\" gebruikt worden.",
         "header_exchange_rates_rates": "Wisselkoersen",

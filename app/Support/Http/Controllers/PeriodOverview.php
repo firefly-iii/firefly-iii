@@ -204,7 +204,7 @@ trait PeriodOverview
             $currencyDecimalPlaces         = $journal['currency_decimal_places'];
             $foreignCurrencyId             = $journal['foreign_currency_id'];
             $amount                        = $journal['amount'] ?? '0';
-            
+
             if ($this->convertToNative && $currencyId !== $this->defaultCurrency->id && $foreignCurrencyId !== $this->defaultCurrency->id) {
                 $amount                = $journal['native_amount'] ?? '0';
                 $currencyId            = $this->defaultCurrency->id;

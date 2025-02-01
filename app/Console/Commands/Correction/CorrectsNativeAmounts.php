@@ -54,7 +54,7 @@ class CorrectsNativeAmounts extends Command
 
     protected $description = 'Recalculate native amounts for all objects.';
 
-    protected $signature = 'correction:recalculate-native-amounts';
+    protected $signature   = 'correction:recalculate-native-amounts';
 
     /**
      * Execute the console command.
@@ -121,13 +121,13 @@ class CorrectsNativeAmounts extends Command
 
     private function recalculatePiggyBanks(UserGroup $userGroup, TransactionCurrency $currency): void
     {
-        $converter = new ExchangeRateConverter();
+        $converter  = new ExchangeRateConverter();
         $converter->setUserGroup($userGroup);
         $converter->setIgnoreSettings(true);
         $repository = app(PiggyBankRepositoryInterface::class);
         $repository->setUserGroup($userGroup);
-        $set = $repository->getPiggyBanks();
-        $set = $set->filter(
+        $set        = $repository->getPiggyBanks();
+        $set        = $set->filter(
             static function (PiggyBank $piggyBank) use ($currency) {
                 return $currency->id !== $piggyBank->transaction_currency_id;
             }
@@ -223,21 +223,22 @@ class CorrectsNativeAmounts extends Command
     {
         // custom query because of the potential size of this update.
         $set                              = DB::table('transactions')
-                                              ->join('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                              ->where('transaction_journals.user_group_id', $userGroup->id)
-                                              ->where(function (DatabaseBuilder $q1) use ($currency): void {
-                                                  $q1->where(function (DatabaseBuilder $q2) use ($currency): void {
-                                                      $q2->whereNot('transactions.transaction_currency_id', $currency->id)->whereNull('transactions.foreign_currency_id');
-                                                  })->orWhere(function (DatabaseBuilder $q3) use ($currency): void {
-                                                      $q3->whereNot('transactions.transaction_currency_id', $currency->id)->whereNot('transactions.foreign_currency_id', $currency->id);
-                                                  });
-                                              })
+            ->join('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->where('transaction_journals.user_group_id', $userGroup->id)
+            ->where(function (DatabaseBuilder $q1) use ($currency): void {
+                $q1->where(function (DatabaseBuilder $q2) use ($currency): void {
+                    $q2->whereNot('transactions.transaction_currency_id', $currency->id)->whereNull('transactions.foreign_currency_id');
+                })->orWhere(function (DatabaseBuilder $q3) use ($currency): void {
+                    $q3->whereNot('transactions.transaction_currency_id', $currency->id)->whereNot('transactions.foreign_currency_id', $currency->id);
+                });
+            })
 //            ->where(static function (DatabaseBuilder $q) use ($currency): void {
 //                $q->whereNot('transactions.transaction_currency_id', $currency->id)
 //                    ->whereNot('transactions.foreign_currency_id', $currency->id)
 //                ;
 //            })
-                                              ->get(['transactions.id']);
+            ->get(['transactions.id'])
+        ;
         TransactionObserver::$recalculate = false;
         foreach ($set as $item) {
             // here we are.
