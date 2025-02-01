@@ -1,12 +1,25 @@
 # Configuration for Label Actions - https://github.com/dessant/label-actions
 
 # The `feature` label is added to issues
+fixed:
+  issues:
+    # Post a comment, `{issue-author}` is an optional placeholder
+    comment: |
+      Hi there!
+
+      This is an automatic reply. `Share and enjoy`
+
+      This issue has been marked as fixed. The bug, feature or enhancement will become a part of Firefly III or the data importer in due course. Thanks for reporting!
+
+      A new version will be released in due time. Unfortunately, [I cannot give an estimate](https://docs.firefly-iii.org/references/faq/firefly-iii/general/#when-will-you-release-version-the-next-version), but [the roadmap](https://roadmap.firefly-iii.org/) is available for your reading pleasure.
+
+      Thank you for your contributions.
 feature:
   issues:
     # Post a comment, `{issue-author}` is an optional placeholder
     unlabel: feature
     comment: |
-      Hi there! 
+      Hi there!
 
       This is an automatic reply. `Share and enjoy`
 
@@ -20,13 +33,13 @@ epic:
   issues:
     # Post a comment, `{issue-author}` is an optional placeholder
     comment: |
-      Hi there! 
+      Hi there!
 
       This is an automatic reply. `Share and enjoy`
 
       This issue has been marked as an epic. In epics, large amounts of works are collected that will be part of a major new feature. If you have more ideas that could be a part of this epic, feel free to reply.
 
-      *However*, please be aware there is NO need to reply with "+1" or "me too" or "I need this too" or whatever. Such comments are not helpful, and do not influence [the roadmap](https://roadmap.firefly-iii.org/). Your comment may be :skull: deleted. 
+      *However*, please be aware there is NO need to reply with "+1" or "me too" or "I need this too" or whatever. Such comments are not helpful, and do not influence [the roadmap](https://roadmap.firefly-iii.org/). Your comment may be :skull: deleted.
 
       If you are merely interested in this epic's progress, you can subscribe to this issue to get updates.
 
@@ -37,7 +50,7 @@ enhancement:
   issues:
     # Post a comment, `{issue-author}` is an optional placeholder
     comment: |
-      Hi there! 
+      Hi there!
 
       This is an automatic reply. `Share and enjoy`
 
@@ -51,7 +64,7 @@ triage:
   issues:
     # Post a comment, `{issue-author}` is an optional placeholder
     comment: |
-      Hi there! 
+      Hi there!
 
       This is an automatic reply. `Share and enjoy`
 
@@ -62,7 +75,7 @@ triage:
 needs-moar-debug:
   issues:
     comment: |
-      Hi there! 
+      Hi there!
 
       This is an automatic reply. `Share and enjoy`
 
@@ -80,7 +93,7 @@ needs-moar-debug:
 needs-moar-logs:
   issues:
     comment: |
-      Hi there! 
+      Hi there!
 
       This is an automatic reply. `Share and enjoy`
 
@@ -96,7 +109,7 @@ needs-moar-logs:
 v2-layout-issue:
   issues:
     comment: |
-      Hi there! 
+      Hi there!
 
       This is an automatic reply. `Share and enjoy`
 
