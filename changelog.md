@@ -17,6 +17,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - #9732
 - #9736
 - #9738
+- #9744
 
 ### Added
 
