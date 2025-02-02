@@ -9,11 +9,9 @@ fixed:
 
       This is an automatic reply. `Share and enjoy`
 
-      This issue has been marked as fixed. The bug, feature or enhancement will become a part of Firefly III or the data importer in due course. Thanks for reporting!
+      This issue has been marked as fixed. Thanks for reporting! A new version will be released in due time. Unfortunately, [I cannot give an estimate](https://docs.firefly-iii.org/references/faq/firefly-iii/general/#when-will-you-release-version-the-next-version), but [the roadmap](https://roadmap.firefly-iii.org/) is available for your reading pleasure.
 
-      A new version will be released in due time. Unfortunately, [I cannot give an estimate](https://docs.firefly-iii.org/references/faq/firefly-iii/general/#when-will-you-release-version-the-next-version), but [the roadmap](https://roadmap.firefly-iii.org/) is available for your reading pleasure.
-
-      There is no need to close this issue. It will be closed automatically when the new version is released. You can subscribe to this issue to get updates.
+      There is no need to close the issue. It will be closed automatically.
 
       Thank you for your contributions.
 feature:
@@ -25,7 +23,7 @@ feature:
 
       This is an automatic reply. `Share and enjoy`
 
-      This issue has been marked as a feature request. The requested (new) feature will become a part of Firefly III or the data importer in due course.
+      This issue has been marked as a feature request.
 
       If you come across this issue, please be aware there is NO need to reply with "+1" or "me too" or "I need this too" or whatever. Such comments are not helpful, and do not influence [the roadmap](https://roadmap.firefly-iii.org/). Your comment may be :skull: deleted. You can subscribe to this issue to get updates.
 
@@ -56,7 +54,7 @@ enhancement:
 
       This is an automatic reply. `Share and enjoy`
 
-      This issue has been marked as an enhancement. The requested enhancement to an existing feature will become a part of Firefly III or the data importer in due course.
+      This issue has been marked as an enhancement.
 
       If you come across this issue, please be aware there is NO need to reply with "+1" or "me too" or "I need this too" or whatever. Such comments are not helpful, and do not influence [the roadmap](https://roadmap.firefly-iii.org/). Your comment may be :skull: deleted. You can subscribe to this issue to get updates.
 
