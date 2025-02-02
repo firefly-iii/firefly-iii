@@ -57,7 +57,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      */
     public function getCompleteSet(): Collection
     {
-        return TransactionCurrency::orderBy('code', 'ASC')->get();
+        return TransactionCurrency::where('enabled', true)->orderBy('code', 'ASC')->get();
     }
 
     /**
