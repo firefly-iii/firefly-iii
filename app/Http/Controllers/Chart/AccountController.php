@@ -35,7 +35,6 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
-use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\AugumentData;
 use FireflyIII\Support\Http\Controllers\ChartGeneration;
@@ -85,11 +84,11 @@ class AccountController extends Controller
         Log::debug('RevenueAccounts');
 
         /** @var Carbon $start */
-        $start         = clone session('start', today(config('app.timezone'))->startOfMonth());
+        $start = clone session('start', today(config('app.timezone'))->startOfMonth());
 
         /** @var Carbon $end */
-        $end           = clone session('end', today(config('app.timezone'))->endOfMonth());
-        $cache         = new CacheProperties();
+        $end   = clone session('end', today(config('app.timezone'))->endOfMonth());
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty($this->convertToNative);
@@ -100,13 +99,13 @@ class AccountController extends Controller
         $start->subDay();
 
         // prep some vars:
-        $currencies    = [];
-        $chartData     = [];
-        $tempData      = [];
+        $currencies = [];
+        $chartData  = [];
+        $tempData   = [];
 
         // grab all accounts and names
-        $accounts      = $this->accountRepository->getAccountsByType([AccountTypeEnum::EXPENSE->value]);
-        $accountNames  = $this->extractNames($accounts);
+        $accounts     = $this->accountRepository->getAccountsByType([AccountTypeEnum::EXPENSE->value]);
+        $accountNames = $this->extractNames($accounts);
 
         // grab all balances
         $startBalances = app('steam')->finalAccountsBalance($accounts, $start);
@@ -138,13 +137,13 @@ class AccountController extends Controller
                     continue;
                 }
                 // Log::debug(sprintf('Will process expense array "%s" with amount %s', $key, $endBalance));
-                $searchCode   = $this->convertToNative ? $this->defaultCurrency->code : $key;
+                $searchCode = $this->convertToNative ? $this->defaultCurrency->code : $key;
                 // Log::debug(sprintf('Search code is %s', $searchCode));
                 // see if there is an accompanying start amount.
                 // grab the difference and find the currency.
                 $startBalance = ($startBalances[$account->id][$key] ?? '0');
                 //                Log::debug(sprintf('Start balance is %s', $startBalance));
-                $diff         = bcsub($endBalance, $startBalance);
+                $diff                    = bcsub($endBalance, $startBalance);
                 $currencies[$searchCode] ??= $this->currencyRepository->findByCode($searchCode);
                 if (0 !== bccomp($diff, '0')) {
                     // store the values in a temporary array.
@@ -162,10 +161,10 @@ class AccountController extends Controller
         foreach ($currencies as $currency) {
             $newCurrencies[$currency->id] = $currency;
         }
-        $currencies    = $newCurrencies;
+        $currencies = $newCurrencies;
 
         // sort temp array by amount.
-        $amounts       = array_column($tempData, 'diff_float');
+        $amounts = array_column($tempData, 'diff_float');
         array_multisort($amounts, SORT_DESC, $tempData);
 
         // loop all found currencies and build the data array for the chart.
@@ -176,12 +175,12 @@ class AccountController extends Controller
         foreach ($currencies as $currencyId => $currency) {
             $dataSet
                                     = [
-                                        'label'           => (string) trans('firefly.spent'),
-                                        'type'            => 'bar',
-                                        'currency_symbol' => $currency->symbol,
-                                        'currency_code'   => $currency->code,
-                                        'entries'         => $this->expandNames($tempData),
-                                    ];
+                'label'           => (string) trans('firefly.spent'),
+                'type'            => 'bar',
+                'currency_symbol' => $currency->symbol,
+                'currency_code'   => $currency->code,
+                'entries'         => $this->expandNames($tempData),
+            ];
             $chartData[$currencyId] = $dataSet;
         }
 
@@ -192,7 +191,7 @@ class AccountController extends Controller
             $chartData[$currencyId]['entries'][$name] = (float) $entry['difference'];
         }
 
-        $data          = $this->generator->multiSet($chartData);
+        $data = $this->generator->multiSet($chartData);
         $cache->store($data);
 
         return response()->json($data);
@@ -214,7 +213,7 @@ class AccountController extends Controller
      */
     public function expenseBudget(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
-        $cache     = new CacheProperties();
+        $cache = new CacheProperties();
         $cache->addProperty($account->id);
         $cache->addProperty($start);
         $cache->addProperty($end);
@@ -233,9 +232,9 @@ class AccountController extends Controller
 
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $budgetId              = (int) $journal['budget_id'];
-            $key                   = sprintf('%d-%d', $budgetId, $journal['currency_id']);
-            $budgetIds[]           = $budgetId;
+            $budgetId    = (int) $journal['budget_id'];
+            $key         = sprintf('%d-%d', $budgetId, $journal['currency_id']);
+            $budgetIds[] = $budgetId;
             if (!array_key_exists($key, $result)) {
                 $result[$key] = [
                     'total'           => '0',
@@ -248,7 +247,7 @@ class AccountController extends Controller
             $result[$key]['total'] = bcadd($journal['amount'], $result[$key]['total']);
         }
 
-        $names     = $this->getBudgetNames($budgetIds);
+        $names = $this->getBudgetNames($budgetIds);
 
         foreach ($result as $row) {
             $budgetId          = $row['budget_id'];
@@ -257,7 +256,7 @@ class AccountController extends Controller
             $chartData[$label] = ['amount' => $row['total'], 'currency_symbol' => $row['currency_symbol'], 'currency_code' => $row['currency_code']];
         }
 
-        $data      = $this->generator->multiCurrencyPieChart($chartData);
+        $data = $this->generator->multiCurrencyPieChart($chartData);
         $cache->store($data);
 
         return response()->json($data);
@@ -279,7 +278,7 @@ class AccountController extends Controller
      */
     public function expenseCategory(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
-        $cache     = new CacheProperties();
+        $cache = new CacheProperties();
         $cache->addProperty($account->id);
         $cache->addProperty($start);
         $cache->addProperty($end);
@@ -297,7 +296,7 @@ class AccountController extends Controller
 
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $key                   = sprintf('%d-%d', $journal['category_id'], $journal['currency_id']);
+            $key = sprintf('%d-%d', $journal['category_id'], $journal['currency_id']);
             if (!array_key_exists($key, $result)) {
                 $result[$key] = [
                     'total'           => '0',
@@ -309,7 +308,7 @@ class AccountController extends Controller
             }
             $result[$key]['total'] = bcadd($journal['amount'], $result[$key]['total']);
         }
-        $names     = $this->getCategoryNames(array_keys($result));
+        $names = $this->getCategoryNames(array_keys($result));
 
         foreach ($result as $row) {
             $categoryId        = $row['category_id'];
@@ -318,7 +317,7 @@ class AccountController extends Controller
             $chartData[$label] = ['amount' => $row['total'], 'currency_symbol' => $row['currency_symbol'], 'currency_code' => $row['currency_code']];
         }
 
-        $data      = $this->generator->multiCurrencyPieChart($chartData);
+        $data = $this->generator->multiCurrencyPieChart($chartData);
         $cache->store($data);
 
         return response()->json($data);
@@ -331,9 +330,9 @@ class AccountController extends Controller
      *                                              */
     public function frontpage(AccountRepositoryInterface $repository): JsonResponse
     {
-        $start          = clone session('start', today(config('app.timezone'))->startOfMonth());
-        $end            = clone session('end', today(config('app.timezone'))->endOfMonth());
-        $defaultSet     = $repository->getAccountsByType([AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value])->pluck('id')->toArray();
+        $start      = clone session('start', today(config('app.timezone'))->startOfMonth());
+        $end        = clone session('end', today(config('app.timezone'))->endOfMonth());
+        $defaultSet = $repository->getAccountsByType([AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value])->pluck('id')->toArray();
         Log::debug('Default set is ', $defaultSet);
         $frontpage      = app('preferences')->get('frontpageAccounts', $defaultSet);
         $frontpageArray = !is_array($frontpage->data) ? [] : $frontpage->data;
@@ -342,7 +341,7 @@ class AccountController extends Controller
             app('preferences')->set('frontpageAccounts', $defaultSet);
             Log::debug('frontpage set is empty!');
         }
-        $accounts       = $repository->getAccountsById($frontpageArray);
+        $accounts = $repository->getAccountsById($frontpageArray);
 
         return response()->json($this->accountBalanceChart($accounts, $start, $end));
     }
@@ -363,7 +362,7 @@ class AccountController extends Controller
      */
     public function incomeCategory(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
-        $cache     = new CacheProperties();
+        $cache = new CacheProperties();
         $cache->addProperty($account->id);
         $cache->addProperty($start);
         $cache->addProperty($end);
@@ -383,7 +382,7 @@ class AccountController extends Controller
 
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $key                   = sprintf('%d-%d', $journal['category_id'], $journal['currency_id']);
+            $key = sprintf('%d-%d', $journal['category_id'], $journal['currency_id']);
             if (!array_key_exists($key, $result)) {
                 $result[$key] = [
                     'total'           => '0',
@@ -396,14 +395,14 @@ class AccountController extends Controller
             $result[$key]['total'] = bcadd($journal['amount'], $result[$key]['total']);
         }
 
-        $names     = $this->getCategoryNames(array_keys($result));
+        $names = $this->getCategoryNames(array_keys($result));
         foreach ($result as $row) {
             $categoryId        = $row['category_id'];
             $name              = $names[$categoryId] ?? '(unknown)';
             $label             = (string) trans('firefly.name_in_currency', ['name' => $name, 'currency' => $row['currency_name']]);
             $chartData[$label] = ['amount' => $row['total'], 'currency_symbol' => $row['currency_symbol'], 'currency_code' => $row['currency_code']];
         }
-        $data      = $this->generator->multiCurrencyPieChart($chartData);
+        $data = $this->generator->multiCurrencyPieChart($chartData);
         $cache->store($data);
 
         return response()->json($data);
@@ -418,23 +417,23 @@ class AccountController extends Controller
     {
         $start->startOfDay();
         $end->endOfDay();
-        Log::debug(sprintf('Now in period("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d')));
-        $chartData       = [];
-        $cache           = new CacheProperties();
+        Log::debug(sprintf('Now in period("%s", "%s")', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
+        $chartData = [];
+        $cache     = new CacheProperties();
         $cache->addProperty('chart.account.period');
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty($this->convertToNative);
         $cache->addProperty($account->id);
         if ($cache->has()) {
-            return response()->json($cache->get());
+            //return response()->json($cache->get());
         }
 
         // collect and filter balances for the entire period.
-        $step            = $this->calculateStep($start, $end);
+        $step = $this->calculateStep($start, $end);
         Log::debug(sprintf('Step is %s', $step));
-        $locale          = app('steam')->getLocale();
-        $return          = [];
+        $locale = app('steam')->getLocale();
+        $return = [];
 
         // fix for issue https://github.com/firefly-iii/firefly-iii/issues/8041
         // have to make sure this chart is always based on the balance at the END of the period.
@@ -444,8 +443,8 @@ class AccountController extends Controller
         $format          = (string) trans('config.month_and_day_js', [], $locale);
         $accountCurrency = $this->accountRepository->getAccountCurrency($account);
 
-        $range           = Steam::finalAccountBalanceInRange($account, $start, $end, $this->convertToNative);
-        $range           = Steam::filterAccountBalances($range, $account, $this->convertToNative, $accountCurrency);
+        $range = Steam::finalAccountBalanceInRange($account, $start, $end, $this->convertToNative);
+        $range = Steam::filterAccountBalances($range, $account, $this->convertToNative, $accountCurrency);
 
         // temp, get end balance.
         Log::debug('temp get end balance');
@@ -456,44 +455,49 @@ class AccountController extends Controller
         $accountCurrency ??= $this->defaultCurrency; // do this AFTER getting the balances.
         Log::debug('Start chart loop.');
 
-        $newRange        = [];
-        $expectedIndex   = 0;
+        $newRange      = [];
+        $expectedIndex = 0;
         Log::debug('Balances exist at:');
         foreach ($range as $key => $value) {
             $newRange[] = ['date' => $key, 'info' => $value];
-            Log::debug(sprintf(' - %s', $key));
+            Log::debug(sprintf('%d - %s (%s)', count($newRange) - 1, $key, json_encode($value)));
         }
-        $carbon          = Carbon::createFromFormat('Y-m-d', $newRange[0]['date']);
+        $carbon = Carbon::createFromFormat('Y-m-d', $newRange[0]['date'])->endOfDay();
+        Log::debug(sprintf('Start of loop, $carbon is %s', $carbon->format('Y-m-d H:i:s')));
         while ($end->gte($current)) {
             $momentBalance = $previous;
-            $theDate       = $current->format('Y-m-d');
+            // $theDate       = $current->format('Y-m-d');
+            Log::debug(sprintf('Now at %s, with momentBalance %s', $current->format('Y-m-d H:i:s'), json_encode($momentBalance)));
+
+            // loop over the array with balances, find one that is earlier or on the same day.
             while ($carbon->lte($current) && array_key_exists($expectedIndex, $newRange)) {
+                Log::debug(sprintf('[a] Expected index is %d, $carbon is %s, current is %s', $expectedIndex, $carbon->format('Y-m-d H:i:s'), $current->format('Y-m-d H:i:s')));
+
+                // grab the balance from that particular $expectedIndex
                 $momentBalance = $newRange[$expectedIndex]['info'];
-                Log::debug(sprintf('Expected index is %d!, date is %s, current is %s', $expectedIndex, $carbon->format('Y-m-d'), $current->format('Y-m-d')));
-                $carbon        = Carbon::createFromFormat('Y-m-d', $newRange[$expectedIndex]['date']);
                 ++$expectedIndex;
+
+                // make new carbon based on the next found date. this should stop the loop.
+                if (array_key_exists($expectedIndex, $newRange)) {
+                    $carbon = Carbon::createFromFormat('Y-m-d', $newRange[$expectedIndex]['date'])->endOfDay();
+                }
             }
-
-            $return        = $this->updateChartKeys($return, $momentBalance);
-            $previous      = $momentBalance;
-
-            Log::debug(sprintf('Now at %s', $theDate), $momentBalance);
-
+            Log::debug(sprintf('momentBalance is now %s', json_encode($momentBalance)));
+            $return   = $this->updateChartKeys($return, $momentBalance);
+            $previous = $momentBalance;
 
             // process each balance thing.
             foreach ($momentBalance as $key => $amount) {
                 $label                           = $current->isoFormat($format);
                 $return[$key]['entries'][$label] = $amount;
             }
-            $current       = app('navigation')->addPeriod($current, $step, 0);
+            $current = app('navigation')->addPeriod($current, $step, 0);
             // here too, to fix #8041, the data is corrected to the end of the period.
-            $current       = app('navigation')->endOfX($current, $step, null);
-            Log::debug(sprintf('Next moment is %s', $current->format('Y-m-d')));
-
+            $current = app('navigation')->endOfX($current, $step, null);
         }
         Log::debug('End of chart loop.');
         // second loop (yes) to create nice array with info! Yay!
-        $chartData       = [];
+        $chartData = [];
 
         foreach ($return as $key => $info) {
             if (3 === strlen($key)) {
@@ -516,7 +520,7 @@ class AccountController extends Controller
             $chartData[] = $info;
         }
 
-        $data            = $this->generator->multiSet($chartData);
+        $data = $this->generator->multiSet($chartData);
         $cache->store($data);
 
         return response()->json($data);
@@ -542,11 +546,11 @@ class AccountController extends Controller
     public function revenueAccounts(): JsonResponse
     {
         /** @var Carbon $start */
-        $start         = clone session('start', today(config('app.timezone'))->startOfMonth());
+        $start = clone session('start', today(config('app.timezone'))->startOfMonth());
 
         /** @var Carbon $end */
-        $end           = clone session('end', today(config('app.timezone'))->endOfMonth());
-        $cache         = new CacheProperties();
+        $end   = clone session('end', today(config('app.timezone'))->endOfMonth());
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty($this->convertToNative);
@@ -557,13 +561,13 @@ class AccountController extends Controller
         $start->subDay();
 
         // prep some vars:
-        $currencies    = [];
-        $chartData     = [];
-        $tempData      = [];
+        $currencies = [];
+        $chartData  = [];
+        $tempData   = [];
 
         // grab all accounts and names
-        $accounts      = $this->accountRepository->getAccountsByType([AccountTypeEnum::REVENUE->value]);
-        $accountNames  = $this->extractNames($accounts);
+        $accounts     = $this->accountRepository->getAccountsByType([AccountTypeEnum::REVENUE->value]);
+        $accountNames = $this->extractNames($accounts);
 
         // grab all balances
         $startBalances = app('steam')->finalAccountsBalance($accounts, $start);
@@ -596,13 +600,13 @@ class AccountController extends Controller
                     continue;
                 }
                 // Log::debug(sprintf('Will process expense array "%s" with amount %s', $key, $endBalance));
-                $searchCode   = $this->convertToNative ? $this->defaultCurrency->code : $key;
+                $searchCode = $this->convertToNative ? $this->defaultCurrency->code : $key;
                 // Log::debug(sprintf('Search code is %s', $searchCode));
                 // see if there is an accompanying start amount.
                 // grab the difference and find the currency.
                 $startBalance = ($startBalances[$account->id][$key] ?? '0');
                 // Log::debug(sprintf('Start balance is %s', $startBalance));
-                $diff         = bcsub($endBalance, $startBalance);
+                $diff                    = bcsub($endBalance, $startBalance);
                 $currencies[$searchCode] ??= $this->currencyRepository->findByCode($searchCode);
                 if (0 !== bccomp($diff, '0')) {
                     // store the values in a temporary array.
@@ -622,10 +626,10 @@ class AccountController extends Controller
         foreach ($currencies as $currency) {
             $newCurrencies[$currency->id] = $currency;
         }
-        $currencies    = $newCurrencies;
+        $currencies = $newCurrencies;
 
         // sort temp array by amount.
-        $amounts       = array_column($tempData, 'diff_float');
+        $amounts = array_column($tempData, 'diff_float');
         array_multisort($amounts, SORT_ASC, $tempData);
 
         // loop all found currencies and build the data array for the chart.
@@ -636,12 +640,12 @@ class AccountController extends Controller
         foreach ($currencies as $currencyId => $currency) {
             $dataSet
                                     = [
-                                        'label'           => (string) trans('firefly.earned'),
-                                        'type'            => 'bar',
-                                        'currency_symbol' => $currency->symbol,
-                                        'currency_code'   => $currency->code,
-                                        'entries'         => $this->expandNames($tempData),
-                                    ];
+                'label'           => (string) trans('firefly.earned'),
+                'type'            => 'bar',
+                'currency_symbol' => $currency->symbol,
+                'currency_code'   => $currency->code,
+                'entries'         => $this->expandNames($tempData),
+            ];
             $chartData[$currencyId] = $dataSet;
         }
 
@@ -652,7 +656,7 @@ class AccountController extends Controller
             $chartData[$currencyId]['entries'][$name] = bcmul($entry['difference'], '-1');
         }
 
-        $data          = $this->generator->multiSet($chartData);
+        $data = $this->generator->multiSet($chartData);
         $cache->store($data);
 
         return response()->json($data);

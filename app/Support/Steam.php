@@ -410,11 +410,11 @@ class Steam
         $defaultCurrency = app('amount')->getNativeCurrency();
         if ($convertToNative) {
             if ($defaultCurrency->id === $currency?->id) {
-                Log::debug(sprintf('Unset "native_balance" and "%s" for account #%d', $defaultCurrency->code, $account->id));
+                //Log::debug(sprintf('Unset "native_balance" and "%s" for account #%d', $defaultCurrency->code, $account->id));
                 unset($set['native_balance'], $set[$defaultCurrency->code]);
             }
             if (null !== $currency && $defaultCurrency->id !== $currency->id) {
-                Log::debug(sprintf('Unset balance for account #%d', $account->id));
+                //Log::debug(sprintf('Unset balance for account #%d', $account->id));
                 unset($set['balance']);
             }
 
@@ -426,13 +426,13 @@ class Steam
 
         if (!$convertToNative) {
             if (null === $currency) {
-                Log::debug(sprintf('Unset native_balance and make defaultCurrency balance the balance for account #%d', $account->id));
+                //Log::debug(sprintf('Unset native_balance and make defaultCurrency balance the balance for account #%d', $account->id));
                 $set['balance'] = $set[$defaultCurrency->code] ?? '0';
                 unset($set['native_balance'], $set[$defaultCurrency->code]);
             }
 
             if (null !== $currency) {
-                Log::debug(sprintf('Unset native_balance + defaultCurrency + currencyCode balance for account #%d', $account->id));
+                //Log::debug(sprintf('Unset native_balance + defaultCurrency + currencyCode balance for account #%d', $account->id));
                 unset($set['native_balance'], $set[$defaultCurrency->code], $set[$currency->code]);
             }
         }
