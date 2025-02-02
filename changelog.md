@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.2.2 - 2025-02-02
+
+> ⚠️ _This release comes with many changes, small and large. I expect you will run into issue, and I appreciate your feedback and your patience as I fix them. I've tested many things, but I'm 100% sure I've missed things. Please open [an issue here](https://github.com/firefly-iii/firefly-iii/issues/new?template=bug.yml) if you run into problems._
+
+### Fixed
+
+- #9713
+- #9727
+- #9729
+- #9730
+- #9731
+- #9732
+- #9736
+
+
 ## 6.2.1 - 2025-02-01
 
 > ⚠️ _This release comes with many changes, small and large. I expect you will run into issue, and I appreciate your feedback and your patience as I fix them. I've tested many things, but I'm 100% sure I've missed things. Please open [an issue here](https://github.com/firefly-iii/firefly-iii/issues/new?template=bug.yml) if you run into problems._
