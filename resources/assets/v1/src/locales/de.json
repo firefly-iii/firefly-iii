@@ -138,7 +138,7 @@
         "visit_webhook_url": "Webhook-URL besuchen",
         "reset_webhook_secret": "Webhook Secret zur\u00fccksetzen",
         "header_exchange_rates": "Wechselkurse",
-        "exchange_rates_intro": "Firefly III supports downloading and using exchange rates. Read more about this in <a href=\"https:\/\/docs.firefly-iii.org\/explanation\/financial-concepts\/exchange-rates\/\">the documentation<\/a>.",
+        "exchange_rates_intro": "Firefly III unterst\u00fctzt das Herunterladen und Verwenden von Wechselkursen. Lesen Sie mehr dar\u00fcber in <a href=\"https:\/\/docs.firefly-iii.org\/explanation\/financial-concepts\/exchange-rates\/\"> der Dokumentation<\/a>.",
         "exchange_rates_from_to": "Zwischen {from} und {to} (und umgekehrt)",
         "exchange_rates_intro_rates": "Firefly III verwendet die folgenden Wechselkurse. Der Kehrwert wird automatisch berechnet, wenn er nicht angegeben wurde. Wenn f\u00fcr das Datum der Transaktion kein Wechselkurs vorhanden ist, sucht Firefly III in der Vergangenheit nach einem Kurs. Wenn keine vorhanden sind, wird der Kurs \u201e1\u201c verwendet.",
         "header_exchange_rates_rates": "Wechselkurse",
