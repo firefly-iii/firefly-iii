@@ -57,6 +57,7 @@ export default {
     data() {
         return {
             currencies: [],
+            page: 1,
         };
     },
     mounted() {
@@ -65,6 +66,7 @@ export default {
     methods: {
         getCurrencies: function () {
             this.currencies = [];
+            // start with page one, loop for the rest.
             this.downloadCurrencies(1);
         },
         downloadCurrencies: function (page) {

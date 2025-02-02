@@ -57,11 +57,11 @@ class IndexController extends Controller
 
     public function index(): JsonResponse
     {
-        $piggies     = $this->repository->getAll();
+        $entries     = $this->repository->getAll();
         $pageSize    = $this->parameters->get('limit');
-        $count       = $piggies->count();
-        $piggies     = $piggies->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
-        $paginator   = new LengthAwarePaginator($piggies, $count, $pageSize, $this->parameters->get('page'));
+        $count       = $entries->count();
+        $entries     = $entries->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $paginator   = new LengthAwarePaginator($entries, $count, $pageSize, $this->parameters->get('page'));
         $transformer = new ExchangeRateTransformer();
         $transformer->setParameters($this->parameters); // give params to transformer
 

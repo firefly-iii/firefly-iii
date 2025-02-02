@@ -42,6 +42,27 @@
                         <h3 class="box-title">{{ $t('firefly.header_exchange_rates_table') }}</h3>
                     </div>
                     <div class="box-body no-padding">
+                        <nav v-if="totalPages > 1">
+                            <ul class="pagination">
+                                <li v-if="1 === this.page" class="page-item disabled" aria-disabled="true" :aria-label="$t('pagination.previous')">
+                                    <span class="page-link" aria-hidden="true">&lsaquo;</span>
+                                </li>
+                                <li class="page-item" v-if="1 !== this.page">
+                                    <a class="page-link" :href="'/exchange-rates/'+from_code+'/'+to_code+'?page=' + (this.page-1)" rel="prev" :aria-label="$t('pagination.next')">&lsaquo;</a>
+                                </li>
+                                <li v-for="item in this.totalPages" :class="item === page ? 'page-item active' : 'page-item'" aria-current="page">
+                                    <span v-if="item === page" class="page-link" v-text="item"></span>
+                                    <a v-if="item !== page" class="page-link" :href="'/exchange-rates/'+from_code+'/'+to_code+'?page=' + item" v-text="item"></a>
+                                </li>
+                                <li v-if="totalPages !== page" class="page-item">
+                                    <a class="page-link" :href="'/exchange-rates/'+from_code+'/'+to_code+'?page=' + (this.page+1)" rel="next" :aria-label="$t('pagination.next')">&rsaquo;</a>
+                                </li>
+                                <li v-if="totalPages === page" class="page-item disabled" aria-disabled="true" :aria-label="$t('pagination.next')">
+                                    <span class="page-link" aria-hidden="true">&rsaquo;</span>
+                                </li>
+                            </ul>
+                        </nav>
+
                         <table class="table table-responsive table-hover">
                             <thead>
                             <tr>
@@ -98,6 +119,28 @@
                             </tr>
                             </tbody>
                         </table>
+
+                        <nav v-if="totalPages > 1">
+                            <ul class="pagination">
+                                <li v-if="1 === this.page" class="page-item disabled" aria-disabled="true" :aria-label="$t('pagination.previous')">
+                                    <span class="page-link" aria-hidden="true">&lsaquo;</span>
+                                </li>
+                                <li class="page-item" v-if="1 !== this.page">
+                                    <a class="page-link" :href="'/exchange-rates/'+from_code+'/'+to_code+'?page=' + (this.page-1)" rel="prev" :aria-label="$t('pagination.next')">&lsaquo;</a>
+                                </li>
+                                <li v-for="item in this.totalPages" :class="item === page ? 'page-item active' : 'page-item'" aria-current="page">
+                                    <span v-if="item === page" class="page-link" v-text="item"></span>
+                                    <a v-if="item !== page" class="page-link" :href="'/exchange-rates/'+from_code+'/'+to_code+'?page=' + item" v-text="item"></a>
+                                </li>
+                                <li v-if="totalPages !== page" class="page-item">
+                                    <a class="page-link" :href="'/exchange-rates/'+from_code+'/'+to_code+'?page=' + (this.page+1)" rel="next" :aria-label="$t('pagination.next')">&rsaquo;</a>
+                                </li>
+                                <li v-if="totalPages === page" class="page-item disabled" aria-disabled="true" :aria-label="$t('pagination.next')">
+                                    <span class="page-link" aria-hidden="true">&rsaquo;</span>
+                                </li>
+                            </ul>
+                        </nav>
+
                     </div>
                 </div>
             </div>
@@ -167,6 +210,8 @@ export default {
             loading: true,
             posting: false,
             updating: false,
+            page: 1,
+            totalPages: 1,
         };
     },
     mounted() {
@@ -175,8 +220,16 @@ export default {
         let parts = window.location.href.split('/');
         this.from_code = parts[parts.length - 2].substring(0, 3);
         this.to_code = parts[parts.length - 1].substring(0, 3);
+
+        const params = new Proxy(new URLSearchParams(window.location.search), {
+            get: (searchParams, prop) => searchParams.get(prop),
+        });
+        this.page = parseInt(params.page ?? 1);
+
+
         this.downloadCurrencies();
-        this.downloadRates(1);
+        this.rates = [];
+        this.downloadRates(this.page);
     },
     methods: {
         submitRate: function(e) {
@@ -203,16 +256,11 @@ export default {
             return ('' === this.rates[index].rate && '' === this.rates[index].inverse) || this.updating;
         },
         updateRate: function (index) {
-            // console.log('Update!');
-            // console.log(this.rates[index].key);
             let parts = this.spliceKey(this.rates[index].key);
             if (0 === parts.length) {
                 return;
             }
             if ('' !== this.rates[index].rate) {
-                // update rate
-                // console.log('Rate is ' + this.rates[index].rate);
-                // console.log('ID is ' + this.rates[index].rate_id);
                 this.updating = true;
                 axios.put("./api/v1/exchange-rates/" + this.rates[index].rate_id, {rate: this.rates[index].rate})
                     .then(() => {
@@ -220,9 +268,6 @@ export default {
                     });
             }
             if ('' !== this.rates[index].inverse) {
-                // update inverse
-                // console.log('Inverse is ' + this.rates[index].inverse);
-                // console.log('Inverse ID is ' + this.rates[index].inverse_id);
                 this.updating = true;
                 axios.put("./api/v1/exchange-rates/" + this.rates[index].inverse_id, {rate: this.rates[index].inverse})
                     .then(() => {
@@ -281,7 +326,6 @@ export default {
         },
         downloadRates: function (page) {
             this.tempRates = {};
-            this.rates = [];
             this.loading = true;
             axios.get("./api/v1/exchange-rates/rates/" + this.from_code + '/' + this.to_code + '?page=' + page).then((response) => {
                 for (let i in response.data.data) {
@@ -334,13 +378,10 @@ export default {
 
                     }
                 }
-                if (parseInt(response.data.meta.pagination.current_page) < parseInt(response.data.meta.pagination.total_pages)) {
-                    this.downloadRates(page + 1);
-                }
-                if (parseInt(response.data.meta.pagination.current_page) === parseInt(response.data.meta.pagination.total_pages)) {
-                    this.loading = false;
-                    this.rates = Object.values(this.tempRates);
-                }
+                this.totalPages = parseInt(response.data.meta.pagination.total_pages);
+                this.loading = false;
+                this.rates = Object.values(this.tempRates);
+                console.log('Do not download more pages. Now on page ' + this.page + ' of ' + this.totalPages);
             });
         }
     },
