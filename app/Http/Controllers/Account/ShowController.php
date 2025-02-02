@@ -93,6 +93,11 @@ class ShowController extends Controller
         if ($end->lt($start)) {
             [$start, $end] = [$end, $start];
         }
+
+        // make sure dates are end of day and start of day:
+        $start->startOfDay();
+        $end->endOfDay();
+
         $location         = $this->repository->getLocation($account);
         $attachments      = $this->repository->getAttachments($account);
         $today            = today(config('app.timezone'));
@@ -180,6 +185,8 @@ class ShowController extends Controller
         $currency        = $this->repository->getAccountCurrency($account) ?? $this->defaultCurrency;
         $subTitle        = (string) trans('firefly.all_journals_for_account', ['name' => $account->name]);
         $periods         = new Collection();
+
+        $end->endOfDay();
 
         /** @var GroupCollectorInterface $collector */
         $collector       = app(GroupCollectorInterface::class);

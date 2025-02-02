@@ -54,6 +54,9 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $dayBefore   = clone $this->start;
         $dayBefore->subDay();
 
+        // move to end of day
+        $dayBefore->endOfDay();
+
         /** @var Account $account */
         foreach ($this->accounts as $account) {
             // balance the day before:

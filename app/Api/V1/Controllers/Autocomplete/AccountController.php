@@ -83,6 +83,9 @@ class AccountController extends Controller
         $return = [];
         $result = $this->repository->searchAccount((string) $query, $types, $this->parameters->get('limit'));
 
+        // set date to end-of-day for account balance.
+        $date->endOfDay();
+
         /** @var Account $account */
         foreach ($result as $account) {
             $nameWithBalance = $account->name;

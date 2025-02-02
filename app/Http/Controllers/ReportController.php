@@ -83,6 +83,8 @@ class ReportController extends Controller
             return view('error')->with('message', (string) trans('firefly.end_after_start_date'));
         }
         $this->repository->cleanupBudgets();
+        $start->startOfDay();
+        $end->endOfDay();
 
         app('view')->share(
             'subTitle',
@@ -114,6 +116,8 @@ class ReportController extends Controller
             return view('error')->with('message', (string) trans('firefly.end_after_start_date'));
         }
         $this->repository->cleanupBudgets();
+        $start->startOfDay();
+        $end->endOfDay();
 
         app('view')->share(
             'subTitle',
@@ -146,6 +150,8 @@ class ReportController extends Controller
             return view('error')->with('message', (string) trans('firefly.end_after_start_date'));
         }
         $this->repository->cleanupBudgets();
+        $start->startOfDay();
+        $end->endOfDay();
 
         app('view')->share(
             'subTitle',
@@ -179,6 +185,8 @@ class ReportController extends Controller
         }
 
         $this->repository->cleanupBudgets();
+        $start->startOfDay();
+        $end->endOfDay();
 
         app('view')->share(
             'subTitle',
@@ -211,6 +219,8 @@ class ReportController extends Controller
         }
 
         $this->repository->cleanupBudgets();
+        $start->startOfDay();
+        $end->endOfDay();
 
         app('view')->share(
             'subTitle',
@@ -367,6 +377,8 @@ class ReportController extends Controller
             return view('error')->with('message', (string) trans('firefly.end_after_start_date'));
         }
         $this->repository->cleanupBudgets();
+        $start->startOfDay();
+        $end->endOfDay();
 
         app('view')->share(
             'subTitle',

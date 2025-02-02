@@ -189,9 +189,10 @@ class ReconcileController extends Controller
         if ($end->lt($start)) {
             [$end, $start] = [$start, $end];
         }
+        $start->startOfDay();
+        $end->endOfDay();
         $startDate      = clone $start;
         $startDate->subDay();
-        $end->endOfDay();
 
         $currency       = $this->accountRepos->getAccountCurrency($account) ?? $this->defaultCurrency;
         $startBalance   = Steam::finalAccountBalance($account, $startDate)['balance'];

@@ -108,6 +108,9 @@ class ReconcileController extends Controller
         if ($end->lt($start)) {
             [$start, $end] = [$end, $start];
         }
+        // move dates to end of day and start of day:
+        $start->startOfDay();
+        $end->endOfDay();
 
         $startDate       = clone $start;
         $startDate->subDay();

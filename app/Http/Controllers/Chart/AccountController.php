@@ -416,6 +416,8 @@ class AccountController extends Controller
      */
     public function period(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
+        $start->startOfDay();
+        $end->endOfDay();
         Log::debug(sprintf('Now in period("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d')));
         $chartData       = [];
         $cache           = new CacheProperties();
@@ -442,11 +444,8 @@ class AccountController extends Controller
         $format          = (string) trans('config.month_and_day_js', [], $locale);
         $accountCurrency = $this->accountRepository->getAccountCurrency($account);
 
-        Log::debug('One');
         $range           = Steam::finalAccountBalanceInRange($account, $start, $end, $this->convertToNative);
-        Log::debug('Two');
         $range           = Steam::filterAccountBalances($range, $account, $this->convertToNative, $accountCurrency);
-        Log::debug('Three');
 
         // temp, get end balance.
         Log::debug('temp get end balance');

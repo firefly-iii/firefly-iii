@@ -31,6 +31,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Chart\ChartData;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Api\CleansChartData;
 use FireflyIII\Support\Http\Api\CollectsAccountsFromFilter;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
@@ -118,7 +119,7 @@ class AccountController extends Controller
             'native_entries'                 => [],
         ];
         $currentStart   = clone $params['start'];
-        $range          = app('steam')->finalAccountBalanceInRange($account, $params['start'], clone $params['end'], $this->convertToNative);
+        $range          = Steam::finalAccountBalanceInRange($account, $params['start'], clone $params['end'], $this->convertToNative);
 
         $previous       = array_values($range)[0]['balance'];
         $previousNative = array_values($range)[0]['native_balance'];
