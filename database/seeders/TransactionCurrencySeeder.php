@@ -42,6 +42,7 @@ class TransactionCurrencySeeder extends Seeder
         $currencies[] = ['code' => 'PLN', 'name' => 'Polish złoty', 'symbol' => 'zł', 'decimal_places' => 2];
         $currencies[] = ['code' => 'TRY', 'name' => 'Turkish lira', 'symbol' => '₺', 'decimal_places' => 2];
         $currencies[] = ['code' => 'DKK', 'name' => 'Dansk krone', 'symbol' => 'kr.', 'decimal_places' => 2];
+        $currencies[] = ['code' => 'ISK', 'name' => 'Íslensk króna', 'symbol' => 'kr.', 'decimal_places' => 2];
         $currencies[] = ['code' => 'NOK', 'name' => 'Norsk krone', 'symbol' => 'kr.', 'decimal_places' => 2];
         $currencies[] = ['code' => 'SEK', 'name' => 'Svensk krona', 'symbol' => 'kr.', 'decimal_places' => 2];
         $currencies[] = ['code' => 'RON', 'name' => 'Romanian leu', 'symbol' => 'lei', 'decimal_places' => 2];
