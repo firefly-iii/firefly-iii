@@ -16,6 +16,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - #9731
 - #9732
 - #9736
+- #9738
+
+### Added
+
+- #9743
 
 
 ## 6.2.1 - 2025-02-01
