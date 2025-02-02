@@ -108,6 +108,6 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface
     #[\Override]
     public function getAll(): Collection
     {
-        return $this->userGroup->currencyExchangeRates()->orderBy('date','ASC')->get();
+        return $this->userGroup->currencyExchangeRates()->orderBy('date', 'ASC')->get();
     }
 }
