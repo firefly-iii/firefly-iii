@@ -28,7 +28,7 @@
         "apply_rules_checkbox": "Zastosuj regu\u0142y",
         "fire_webhooks_checkbox": "Uruchom webhooki",
         "no_budget_pointer": "Wygl\u0105da na to, \u017ce nie masz jeszcze bud\u017cet\u00f3w. Powiniene\u015b utworzy\u0107 kilka na stronie <a href=\"budgets\">bud\u017cet\u00f3w<\/a>. Bud\u017cety mog\u0105 Ci pom\u00f3c \u015bledzi\u0107 wydatki.",
-        "no_bill_pointer": "You seem to have no subscription yet. You should create some on the <a href=\"subscriptions\">subscription<\/a>-page. Subscriptions can help you keep track of expenses.",
+        "no_bill_pointer": "Wygl\u0105da na to, \u017ce nie masz jeszcze subskrypcji. Powiniene\u015b utworzy\u0107 j\u0105 na stronie <a href=\"subscriptions\">subskrypcji<\/a>. Subskrypcje mog\u0105 pom\u00f3c Ci \u015bledzi\u0107 wydatki.",
         "source_account": "Konto \u017ar\u00f3d\u0142owe",
         "hidden_fields_preferences": "Mo\u017cesz w\u0142\u0105czy\u0107 wi\u0119cej opcji transakcji w swoich <a href=\"preferences\">ustawieniach<\/a>.",
         "destination_account": "Konto docelowe",
@@ -151,7 +151,7 @@
         "url": "URL",
         "active": "Aktywny",
         "interest_date": "Data odsetek",
-        "administration_currency": "Native currency",
+        "administration_currency": "Waluta natywna",
         "title": "Tytu\u0142",
         "date": "Data",
         "book_date": "Data ksi\u0119gowania",
@@ -166,7 +166,7 @@
         "webhook_delivery": "Dor\u0119czenie",
         "from_currency_to_currency": "{from} &rarr; {to}",
         "to_currency_from_currency": "{to} &rarr; {from}",
-        "rate": "Rate"
+        "rate": "Kurs"
     },
     "list": {
         "title": "Tytu\u0142",

@@ -9,19 +9,19 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #9713
-- #9727
-- #9729
-- #9730
-- #9731
-- #9732
-- #9736
-- #9738
-- #9744
+- [Issue 9713](https://github.com/firefly-iii/firefly-iii/issues/9713) (Many decimal points in amounts) reported by @memo-567
+- [Discussion 9727](https://github.com/orgs/firefly-iii/discussions/9727) (Odd behavior from graphs) started by @jbrandwi
+- [Issue 9729](https://github.com/firefly-iii/firefly-iii/issues/9729) (Type mismatch in transaction collector) reported by @electrofloat
+- [Issue 9730](https://github.com/firefly-iii/firefly-iii/issues/9730) (API: `PiggyBankAccountRead.id` should return string, returns int) reported by @dreautall
+- [Issue 9731](https://github.com/firefly-iii/firefly-iii/issues/9731) ($userGroup must not be accessed before initialization) reported by @Azmodeszer
+- [Issue 9732](https://github.com/firefly-iii/firefly-iii/issues/9732) (Editing dates of a piggy bank does not save) reported by @Simeam
+- [Issue 9736](https://github.com/firefly-iii/firefly-iii/issues/9736) (Wrong `finalAccountBalance` result) reported by @gthbusrr
+- [Issue 9738](https://github.com/firefly-iii/firefly-iii/issues/9738) (Missing pagination controls on exchange rate page) reported by @dicksonleong
+- [Discussion 9744](https://github.com/orgs/firefly-iii/discussions/9744) (Downloading exchange rates results in 404 error) started by @electrofloat
 
 ### Added
 
-- #9743
+- [PR 9743](https://github.com/firefly-iii/firefly-iii/pull/9743) (Feature nordic currencies) reported by @mansehr
 
 
 ## 6.2.1 - 2025-02-01
