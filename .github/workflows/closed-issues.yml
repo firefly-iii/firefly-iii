@@ -8,7 +8,7 @@ jobs:
   command_and_close:
     runs-on: ubuntu-latest
     steps:
-      - uses: aws-actions/closed-issue-message@v1
+      - uses: aws-actions/closed-issue-message@v2
         with:
           message: |
             Hi there! This is an automatic reply. `Share and enjoy`
