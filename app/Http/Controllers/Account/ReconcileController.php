@@ -113,7 +113,6 @@ class ReconcileController extends Controller
         $end->endOfDay();
 
         $startDate       = clone $start;
-        $startDate->subDay();
         $startBalance    = Steam::bcround(Steam::finalAccountBalance($account, $startDate)['balance'], $currency->decimal_places);
         $endBalance      = Steam::bcround(Steam::finalAccountBalance($account, $end)['balance'], $currency->decimal_places);
         $subTitleIcon    = config(sprintf('firefly.subIconsByIdentifier.%s', $account->accountType->type));
