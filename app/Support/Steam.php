@@ -97,95 +97,96 @@ class Steam
 
 
         // sums up the balance changes per day, for foreign, native and normal amounts.
-        $set = $account->transactions()
-                       ->leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                       ->where('transaction_journals.date', '>=', $start->format('Y-m-d H:i:s'))
-                       ->where('transaction_journals.date', '<=', $end->format('Y-m-d  H:i:s'))
-                       ->groupBy('transaction_journals.date')
-                       ->groupBy('transactions.transaction_currency_id')
-                       ->orderBy('transaction_journals.date', 'ASC')
-                       ->whereNull('transaction_journals.deleted_at')
-                       ->get(
-                           [ // @phpstan-ignore-line
-                             'transaction_journals.date',
-                             'transactions.transaction_currency_id',
-                             DB::raw('SUM(transactions.amount) AS sum_of_day'),
-                           ]
-                       );
+        $set                  = $account->transactions()
+            ->leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+            ->where('transaction_journals.date', '>=', $start->format('Y-m-d H:i:s'))
+            ->where('transaction_journals.date', '<=', $end->format('Y-m-d  H:i:s'))
+            ->groupBy('transaction_journals.date')
+            ->groupBy('transactions.transaction_currency_id')
+            ->orderBy('transaction_journals.date', 'ASC')
+            ->whereNull('transaction_journals.deleted_at')
+            ->get(
+                [ // @phpstan-ignore-line
+                    'transaction_journals.date',
+                    'transactions.transaction_currency_id',
+                    DB::raw('SUM(transactions.amount) AS sum_of_day'),
+                ]
+            )
+        ;
 
-        $currentBalance = $startBalance;
-        $converter = new ExchangeRateConverter();
+        $currentBalance       = $startBalance;
+        $converter            = new ExchangeRateConverter();
 
 
         /** @var Transaction $entry */
         foreach ($set as $entry) {
             // normal, native and foreign amount
-            $carbon          = new Carbon($entry->date, $entry->date_tz);
-            $sumOfDay        = (string) (null === $entry->sum_of_day ? '0' : $entry->sum_of_day);
+            $carbon                               = new Carbon($entry->date, $entry->date_tz);
+            $sumOfDay                             = (string) (null === $entry->sum_of_day ? '0' : $entry->sum_of_day);
 
             // find currency of this entry.
             $currencies[$entry->transaction_currency_id] ??= TransactionCurrency::find($entry->transaction_currency_id);
 
             /** @var TransactionCurrency $entryCurrency */
-            $entryCurrency                      = $currencies[$entry->transaction_currency_id];
+            $entryCurrency                        = $currencies[$entry->transaction_currency_id];
 
             Log::debug(sprintf('Processing transaction(s) on date %s', $carbon->format('Y-m-d H:i:s')));
-            $currentBalance[$entryCurrency->code] ??= '0';
+            $currentBalance[$entryCurrency->code]        ??= '0';
             $currentBalance[$entryCurrency->code] = bcadd($sumOfDay, $currentBalance[$entryCurrency->code]);
 
             // if not convert to native, add the amount to "balance" and "native_balance" alike:
-            if(!$convertToNative) {
-                $currentBalance['balance'] = bcadd($currentBalance['balance'], $sumOfDay);
+            if (!$convertToNative) {
+                $currentBalance['balance']        = bcadd($currentBalance['balance'], $sumOfDay);
                 $currentBalance['native_balance'] = bcadd($currentBalance['native_balance'], $sumOfDay);
             }
             // if convert to native add the converted amount to native balance.
-            if($convertToNative) {
-                $nativeSumOfDay = $converter->convert($entryCurrency, $defaultCurrency, $carbon, $sumOfDay);
+            if ($convertToNative) {
+                $nativeSumOfDay                   = $converter->convert($entryCurrency, $defaultCurrency, $carbon, $sumOfDay);
                 $currentBalance['native_balance'] = bcadd($currentBalance['native_balance'], $nativeSumOfDay);
                 // only add to "balance" if it has the correct currency code (the same as "native")
-                if($defaultCurrency->code === $entryCurrency->code) {
+                if ($defaultCurrency->code === $entryCurrency->code) {
                     $currentBalance['balance'] = bcadd($currentBalance['balance'], $sumOfDay);
                 }
             }
 
-//            // if convert to native, if NOT convert to native.
-//            if ($convertToNative) {
-//                // convert for this day to native
-//                $currentNative = '0'; // TODO
-//                //$currentBalance['native_balance']
-//
-////                Log::debug(sprintf('Amount is %s %s, foreign amount is %s, native amount is %s', $entryCurrency->code, $this->bcround($modified, 2), $this->bcround($foreignModified, 2), $this->bcround($nativeModified, 2)));
-////                // if the currency is the default currency add to native balance + currency balance
-////                if ($entry->transaction_currency_id === $defaultCurrency->id) {
-////                    Log::debug('Add amount to native.');
-////                    $currentBalance['native_balance'] = bcadd($currentBalance['native_balance'], $modified);
-////                }
-////
-////                // add to native balance.
-////                if ($entry->foreign_currency_id !== $defaultCurrency->id) {
-////                    // this check is not necessary, because if the foreign currency is the same as the default currency, the native amount is zero.
-////                    // so adding this would mean nothing.
-////                    $currentBalance['native_balance'] = bcadd($currentBalance['native_balance'], $nativeModified);
-////                }
-////                if ($entry->foreign_currency_id === $defaultCurrency->id) {
-////                    $currentBalance['native_balance'] = bcadd($currentBalance['native_balance'], $foreignModified);
-////                }
-////                // add to balance if is the same.
-////                if ($entry->transaction_currency_id === $accountCurrency?->id) {
-////                    $currentBalance['balance'] = bcadd($currentBalance['balance'], $modified);
-////                }
-////                // add currency balance
-////                $currentBalance[$entryCurrency->code] = bcadd($currentBalance[$entryCurrency->code] ?? '0', $modified);
-//            }
-//            if (!$convertToNative) {
-//                Log::debug(sprintf('Amount is %s %s, foreign amount is %s, native amount is %s', $entryCurrency->code, $modified, $foreignModified, $nativeModified));
-//                // add to balance, as expected.
-//                $currentBalance['balance'] = bcadd($currentBalance['balance'] ?? '0', $modified);
-//                // add to GBP, as expected.
-//                $currentBalance[$entryCurrency->code] = bcadd($currentBalance[$entryCurrency->code] ?? '0', $modified);
-//            }
+            //            // if convert to native, if NOT convert to native.
+            //            if ($convertToNative) {
+            //                // convert for this day to native
+            //                $currentNative = '0'; // TODO
+            //                //$currentBalance['native_balance']
+            //
+            // //                Log::debug(sprintf('Amount is %s %s, foreign amount is %s, native amount is %s', $entryCurrency->code, $this->bcround($modified, 2), $this->bcround($foreignModified, 2), $this->bcround($nativeModified, 2)));
+            // //                // if the currency is the default currency add to native balance + currency balance
+            // //                if ($entry->transaction_currency_id === $defaultCurrency->id) {
+            // //                    Log::debug('Add amount to native.');
+            // //                    $currentBalance['native_balance'] = bcadd($currentBalance['native_balance'], $modified);
+            // //                }
+            // //
+            // //                // add to native balance.
+            // //                if ($entry->foreign_currency_id !== $defaultCurrency->id) {
+            // //                    // this check is not necessary, because if the foreign currency is the same as the default currency, the native amount is zero.
+            // //                    // so adding this would mean nothing.
+            // //                    $currentBalance['native_balance'] = bcadd($currentBalance['native_balance'], $nativeModified);
+            // //                }
+            // //                if ($entry->foreign_currency_id === $defaultCurrency->id) {
+            // //                    $currentBalance['native_balance'] = bcadd($currentBalance['native_balance'], $foreignModified);
+            // //                }
+            // //                // add to balance if is the same.
+            // //                if ($entry->transaction_currency_id === $accountCurrency?->id) {
+            // //                    $currentBalance['balance'] = bcadd($currentBalance['balance'], $modified);
+            // //                }
+            // //                // add currency balance
+            // //                $currentBalance[$entryCurrency->code] = bcadd($currentBalance[$entryCurrency->code] ?? '0', $modified);
+            //            }
+            //            if (!$convertToNative) {
+            //                Log::debug(sprintf('Amount is %s %s, foreign amount is %s, native amount is %s', $entryCurrency->code, $modified, $foreignModified, $nativeModified));
+            //                // add to balance, as expected.
+            //                $currentBalance['balance'] = bcadd($currentBalance['balance'] ?? '0', $modified);
+            //                // add to GBP, as expected.
+            //                $currentBalance[$entryCurrency->code] = bcadd($currentBalance[$entryCurrency->code] ?? '0', $modified);
+            //            }
 
-            $balances[$carbon->format('Y-m-d')] = $currentBalance;
+            $balances[$carbon->format('Y-m-d')]   = $currentBalance;
             Log::debug('Updated entry', $currentBalance);
         }
         $cache->store($balances);
@@ -314,7 +315,7 @@ class Steam
      */
     public function finalAccountBalance(Account $account, Carbon $date): array
     {
-        $cache             = new CacheProperties();
+        $cache           = new CacheProperties();
         $cache->addProperty($account->id);
         $cache->addProperty($date);
         if ($cache->has()) {
@@ -323,27 +324,27 @@ class Steam
 
         Log::debug(sprintf('Now in finalAccountBalance(#%d, "%s", "%s")', $account->id, $account->name, $date->format('Y-m-d H:i:s')));
 
-        $native            = Amount::getNativeCurrencyByUserGroup($account->user->userGroup);
-        $convertToNative   = Amount::convertToNative($account->user);
-        $accountCurrency   = $this->getAccountCurrency($account);
-        $hasCurrency       = null !== $accountCurrency;
-        $currency          = $hasCurrency ? $accountCurrency : $native;
-        $return            = [
-            //'balance'        => '0',
+        $native          = Amount::getNativeCurrencyByUserGroup($account->user->userGroup);
+        $convertToNative = Amount::convertToNative($account->user);
+        $accountCurrency = $this->getAccountCurrency($account);
+        $hasCurrency     = null !== $accountCurrency;
+        $currency        = $hasCurrency ? $accountCurrency : $native;
+        $return          = [
+            // 'balance'        => '0',
             'native_balance' => '0',
         ];
         // balance(s) in other (all) currencies.
-        $array             = $account->transactions()
+        $array           = $account->transactions()
             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->leftJoin('transaction_currencies', 'transaction_currencies.id', '=', 'transactions.transaction_currency_id')
             ->where('transaction_journals.date', '<=', $date->format('Y-m-d H:i:s'))
             ->get(['transaction_currencies.code', 'transactions.amount'])->toArray()
         ;
-        $others            = $this->groupAndSumTransactions($array, 'code', 'amount');
+        $others          = $this->groupAndSumTransactions($array, 'code', 'amount');
         Log::debug('All balances are (joined)', $others);
         // if there is no request to convert, take this as "balance" and "native_balance".
         if (!$convertToNative) {
-            //$return['balance']        = $others[$currency->code] ?? '0';
+            // $return['balance']        = $others[$currency->code] ?? '0';
             $return['native_balance'] = $others[$currency->code] ?? '0';
             Log::debug(sprintf('Set balance + native_balance to %s', $return['native_balance']));
         }
@@ -355,9 +356,9 @@ class Steam
         }
 
         // either way, the balance is always combined with the virtual balance:
-        $virtualBalance    = (string) ('' === (string) $account->virtual_balance ? '0' : $account->virtual_balance);
-        //$return['balance'] = bcadd($return['balance'], $virtualBalance);
-        //Log::debug(sprintf('Virtual balance makes the total %s', $return['balance']));
+        $virtualBalance  = (string) ('' === (string) $account->virtual_balance ? '0' : $account->virtual_balance);
+        // $return['balance'] = bcadd($return['balance'], $virtualBalance);
+        // Log::debug(sprintf('Virtual balance makes the total %s', $return['balance']));
 
         if ($convertToNative) {
             // the native balance is combined with a converted virtual_balance:
@@ -384,7 +385,7 @@ class Steam
         //            $return['native_balance'] = $sum;
         //            unset($return['balance']);
         //        }
-        $final             = array_merge($return, $others);
+        $final           = array_merge($return, $others);
         //        // Log::debug('Return is', $final);
 
         $cache->store($final);
