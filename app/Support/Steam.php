@@ -329,7 +329,7 @@ class Steam
         $hasCurrency       = null !== $accountCurrency;
         $currency          = $hasCurrency ? $accountCurrency : $native;
         $return            = [
-            'balance'        => '0',
+            //'balance'        => '0',
             'native_balance' => '0',
         ];
         // balance(s) in other (all) currencies.
@@ -343,9 +343,9 @@ class Steam
         Log::debug('All balances are (joined)', $others);
         // if there is no request to convert, take this as "balance" and "native_balance".
         if (!$convertToNative) {
-            $return['balance']        = $others[$currency->code] ?? '0';
+            //$return['balance']        = $others[$currency->code] ?? '0';
             $return['native_balance'] = $others[$currency->code] ?? '0';
-            Log::debug(sprintf('Set balance + native_balance to %s', $return['balance']));
+            Log::debug(sprintf('Set balance + native_balance to %s', $return['native_balance']));
         }
         // if there is a request to convert, convert to "native_balance" and use "balance" for whichever amount is in the native currency.
         if ($convertToNative) {
@@ -356,8 +356,8 @@ class Steam
 
         // either way, the balance is always combined with the virtual balance:
         $virtualBalance    = (string) ('' === (string) $account->virtual_balance ? '0' : $account->virtual_balance);
-        $return['balance'] = bcadd($return['balance'], $virtualBalance);
-        Log::debug(sprintf('Virtual balance makes the total %s', $return['balance']));
+        //$return['balance'] = bcadd($return['balance'], $virtualBalance);
+        //Log::debug(sprintf('Virtual balance makes the total %s', $return['balance']));
 
         if ($convertToNative) {
             // the native balance is combined with a converted virtual_balance:
@@ -369,7 +369,7 @@ class Steam
         if (!$convertToNative) {
             // if not, also increase the native balance for consistency.
             $return['native_balance'] = bcadd($return['native_balance'], $virtualBalance);
-            Log::debug(sprintf('Virtual balance makes the (native) total %s', $return['balance']));
+            Log::debug(sprintf('Virtual balance makes the (native) total %s', $return['native_balance']));
         }
 
         // if the currency is the same as the native currency, set the native_balance to the balance for consistency.
