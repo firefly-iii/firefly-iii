@@ -100,7 +100,7 @@ class GroupCollector implements GroupCollectorInterface
             'category_id',
             'budget_id',
         ];
-        $this->stringFields         = ['amount', 'foreign_amount','native_amount','native_foreign_amount'];
+        $this->stringFields         = ['amount', 'foreign_amount', 'native_amount', 'native_foreign_amount'];
         $this->total                = 0;
         $this->fields               = [
             // group
