@@ -7,7 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #9327
+- [Issue 9327](https://github.com/firefly-iii/firefly-iii/issues/9327) (Add Link to Search-Page to the help file) reported by @nottheend
 - [Issue 9713](https://github.com/firefly-iii/firefly-iii/issues/9713) (Many decimal points in amounts) reported by @memo-567
 - [Issue 9736](https://github.com/firefly-iii/firefly-iii/issues/9736) (Wrong `finalAccountBalance` result) reported by @gthbusrr
 - #9737

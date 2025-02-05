@@ -36,7 +36,7 @@ class BudgetObserver
     {
         app('log')->debug('Observe "deleting" of a budget.');
 
-        $repository = app(AttachmentRepositoryInterface::class);
+        $repository   = app(AttachmentRepositoryInterface::class);
         $repository->setUser($budget->user);
 
         foreach ($budget->attachments()->get() as $attachment) {
