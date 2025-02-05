@@ -52,7 +52,7 @@ return new class () extends Migration {
             foreach ($fields as $field) {
                 Schema::table($table, static function (Blueprint $tableObject) use ($table, $field): void {
                     // add amount column
-                    if(!Schema::hasColumn($table, $field)) {
+                    if (!Schema::hasColumn($table, $field)) {
                         $tableObject->decimal($field, 32, 12)->nullable();
                     }
                 });
