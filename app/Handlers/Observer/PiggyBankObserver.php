@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Observer;
 
 use FireflyIII\Models\PiggyBank;
+use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Support\Facades\Log;
 
@@ -46,8 +47,11 @@ class PiggyBankObserver
     {
         app('log')->debug('Observe "deleting" of a piggy bank.');
 
+        $repository = app(AttachmentRepositoryInterface::class);
+        $repository->setUser($piggyBank->accounts()->first()->user);
+
         foreach ($piggyBank->attachments()->get() as $attachment) {
-            $attachment->delete();
+            $repository->destroy($attachment);
         }
 
         $piggyBank->piggyBankEvents()->delete();
