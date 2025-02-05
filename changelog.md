@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.2.4 - 2025-02-05
+
+> ⚠️ _Most pressing issues are fixed. Please open [an issue here](https://github.com/firefly-iii/firefly-iii/issues/new?template=bug.yml) if you run into problems._
+
+
+### Fixed
+
+- [Issue 9327](https://github.com/firefly-iii/firefly-iii/issues/9327) (Add Link to Search-Page to the help file) reported by @nottheend
+- [Issue 9713](https://github.com/firefly-iii/firefly-iii/issues/9713) (Many decimal points in amounts) reported by @memo-567
+- [Issue 9736](https://github.com/firefly-iii/firefly-iii/issues/9736) (Wrong `finalAccountBalance` result) reported by @gthbusrr
+- [Discussion 9737](https://github.com/orgs/firefly-iii/discussions/9737) (API returns 0 as current balance) started by @eps90
+- [Issue 9745](https://github.com/firefly-iii/firefly-iii/issues/9745) (Type mismatch in period overview) reported by @electrofloat
+- [Issue 9747](https://github.com/firefly-iii/firefly-iii/issues/9747) (Data entry issues with exchange rates) reported by @Azmodeszer
+- [Issue 9751](https://github.com/firefly-iii/firefly-iii/issues/9751) (Net worth changes since 6.2 update) reported by @ahmaddxb
+- [Issue 9754](https://github.com/firefly-iii/firefly-iii/issues/9754) (Deleting account - Attachments remain) reported by @memo-567
+- [Issue 9762](https://github.com/firefly-iii/firefly-iii/issues/9762) (Piggy bank show: start/target date not displayed) reported by @Simeam
+- Various other balance related fixes.
+- Hotfix for account charts.
+
 ## 6.2.3 - 2025-02-05
 
 > ⚠️ _Most pressing issues are fixed. Please open [an issue here](https://github.com/firefly-iii/firefly-iii/issues/new?template=bug.yml) if you run into problems._
