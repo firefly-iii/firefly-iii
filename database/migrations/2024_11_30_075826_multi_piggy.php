@@ -46,9 +46,7 @@ return new class () extends Migration {
         }
         Schema::table('piggy_banks', static function (Blueprint $table): void {
             // 2. make column nullable.
-            if (!Schema::hasColumn('piggy_banks', 'account_id')) {
-                $table->unsignedInteger('account_id')->nullable()->change();
-            }
+            $table->unsignedInteger('account_id')->nullable()->change();
         });
         Schema::table('piggy_banks', static function (Blueprint $table): void {
             // 3. add currency
