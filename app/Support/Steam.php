@@ -41,8 +41,8 @@ class Steam
 {
     public function getAccountCurrency(Account $account): ?TransactionCurrency
     {
-        $type   = $account->accountType->type;
-        $list   = config('firefly.valid_currency_account_types');
+        $type = $account->accountType->type;
+        $list = config('firefly.valid_currency_account_types');
 
         // return null if not in this list.
         if (!in_array($type, $list, true)) {
@@ -64,74 +64,73 @@ class Steam
         Log::debug(sprintf('finalAccountBalanceInRange(#%d, %s, %s)', $account->id, $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
 
         // set up cache
-        $cache                = new CacheProperties();
+        $cache = new CacheProperties();
         $cache->addProperty($account->id);
         $cache->addProperty('final-balance-in-range');
         $cache->addProperty($start);
         $cache->addProperty($end);
         if ($cache->has()) {
-            // return $cache->get();
+            return $cache->get();
         }
 
-        $balances             = [];
-        $formatted            = $start->format('Y-m-d');
-        $startBalance         = $this->finalAccountBalance($account, $start);
-        $defaultCurrency      = app('amount')->getNativeCurrencyByUserGroup($account->user->userGroup);
-        $accountCurrency      = $this->getAccountCurrency($account);
-        $hasCurrency          = null !== $accountCurrency;
-        $currency             = $accountCurrency ?? $defaultCurrency;
+        $balances        = [];
+        $formatted       = $start->format('Y-m-d');
+        $startBalance    = $this->finalAccountBalance($account, $start);
+        $nativeCurrency = app('amount')->getNativeCurrencyByUserGroup($account->user->userGroup);
+        $accountCurrency = $this->getAccountCurrency($account);
+        $hasCurrency     = null !== $accountCurrency;
+        $currency        = $accountCurrency ?? $nativeCurrency;
         Log::debug(sprintf('Currency is %s', $currency->code));
         if (!$hasCurrency) {
-            Log::debug(sprintf('Also set start balance in %s', $defaultCurrency->code));
-            $startBalance[$defaultCurrency->code] ??= '0';
+            Log::debug(sprintf('Also set start balance in %s', $nativeCurrency->code));
+            $startBalance[$nativeCurrency->code] ??= '0';
         }
-        $currencies           = [
+        $currencies = [
             $currency->id        => $currency,
-            $defaultCurrency->id => $defaultCurrency,
+            $nativeCurrency->id => $nativeCurrency,
         ];
 
 
         $startBalance[$currency->code] ??= '0';
-        $balances[$formatted] = $startBalance;
+        $balances[$formatted]          = $startBalance;
         Log::debug('Final start balance: ', $startBalance);
 
 
         // sums up the balance changes per day, for foreign, native and normal amounts.
-        $set                  = $account->transactions()
-            ->leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-            ->where('transaction_journals.date', '>=', $start->format('Y-m-d H:i:s'))
-            ->where('transaction_journals.date', '<=', $end->format('Y-m-d  H:i:s'))
-            ->groupBy('transaction_journals.date')
-            ->groupBy('transactions.transaction_currency_id')
-            ->orderBy('transaction_journals.date', 'ASC')
-            ->whereNull('transaction_journals.deleted_at')
-            ->get(
-                [ // @phpstan-ignore-line
-                    'transaction_journals.date',
-                    'transactions.transaction_currency_id',
-                    DB::raw('SUM(transactions.amount) AS sum_of_day'),
-                ]
-            )
-        ;
+        $set = $account->transactions()
+                       ->leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                       ->where('transaction_journals.date', '>=', $start->format('Y-m-d H:i:s'))
+                       ->where('transaction_journals.date', '<=', $end->format('Y-m-d  H:i:s'))
+                       ->groupBy('transaction_journals.date')
+                       ->groupBy('transactions.transaction_currency_id')
+                       ->orderBy('transaction_journals.date', 'ASC')
+                       ->whereNull('transaction_journals.deleted_at')
+                       ->get(
+                           [ // @phpstan-ignore-line
+                             'transaction_journals.date',
+                             'transactions.transaction_currency_id',
+                             DB::raw('SUM(transactions.amount) AS sum_of_day'),
+                           ]
+                       );
 
-        $currentBalance       = $startBalance;
-        $converter            = new ExchangeRateConverter();
+        $currentBalance = $startBalance;
+        $converter      = new ExchangeRateConverter();
 
 
         /** @var Transaction $entry */
         foreach ($set as $entry) {
             // normal, native and foreign amount
-            $carbon                               = new Carbon($entry->date, $entry->date_tz);
-            $sumOfDay                             = (string) (null === $entry->sum_of_day ? '0' : $entry->sum_of_day);
+            $carbon   = new Carbon($entry->date, $entry->date_tz);
+            $sumOfDay = (string) (null === $entry->sum_of_day ? '0' : $entry->sum_of_day);
 
             // find currency of this entry.
             $currencies[$entry->transaction_currency_id] ??= TransactionCurrency::find($entry->transaction_currency_id);
 
             /** @var TransactionCurrency $entryCurrency */
-            $entryCurrency                        = $currencies[$entry->transaction_currency_id];
+            $entryCurrency = $currencies[$entry->transaction_currency_id];
 
             Log::debug(sprintf('Processing transaction(s) on date %s', $carbon->format('Y-m-d H:i:s')));
-            $currentBalance[$entryCurrency->code]        ??= '0';
+            $currentBalance[$entryCurrency->code] ??= '0';
             $currentBalance[$entryCurrency->code] = bcadd($sumOfDay, $currentBalance[$entryCurrency->code]);
 
             // if not convert to native, add the amount to "balance" and "native_balance" alike:
@@ -141,10 +140,10 @@ class Steam
             }
             // if convert to native add the converted amount to native balance.
             if ($convertToNative) {
-                $nativeSumOfDay                   = $converter->convert($entryCurrency, $defaultCurrency, $carbon, $sumOfDay);
+                $nativeSumOfDay                   = $converter->convert($entryCurrency, $nativeCurrency, $carbon, $sumOfDay);
                 $currentBalance['native_balance'] = bcadd($currentBalance['native_balance'], $nativeSumOfDay);
                 // only add to "balance" if it has the correct currency code (the same as "native")
-                if ($defaultCurrency->code === $entryCurrency->code) {
+                if ($nativeCurrency->code === $entryCurrency->code) {
                     $currentBalance['balance'] = bcadd($currentBalance['balance'], $sumOfDay);
                 }
             }
@@ -186,7 +185,7 @@ class Steam
             //                $currentBalance[$entryCurrency->code] = bcadd($currentBalance[$entryCurrency->code] ?? '0', $modified);
             //            }
 
-            $balances[$carbon->format('Y-m-d')]   = $currentBalance;
+            $balances[$carbon->format('Y-m-d')] = $currentBalance;
             Log::debug('Updated entry', $currentBalance);
         }
         $cache->store($balances);
@@ -224,10 +223,10 @@ class Steam
         // Log::debug(sprintf('Trying bcround("%s",%d)', $number, $precision));
         if (str_contains($number, '.')) {
             if ('-' !== $number[0]) {
-                return bcadd($number, '0.'.str_repeat('0', $precision).'5', $precision);
+                return bcadd($number, '0.' . str_repeat('0', $precision) . '5', $precision);
             }
 
-            return bcsub($number, '0.'.str_repeat('0', $precision).'5', $precision);
+            return bcsub($number, '0.' . str_repeat('0', $precision) . '5', $precision);
         }
 
         return $number;
@@ -294,28 +293,18 @@ class Steam
 
     /**
      * Returns the balance of an account at exact moment given. Array with at least one value.
+     * Always returns:
+     * "native_balance": balance in the user's native balance.
+     * "EUR": balance in EUR (or whatever currencies the account has balance in)
      *
-     * "balance" the balance in whatever currency the account has, so the sum of all transaction that happen to have
-     * THAT currency.
-     * "native_balance" the balance according to the "native_amount" + "native_foreign_amount" fields.
-     * "ABC" the balance in this particular currency code (may repeat for each found currency).
+     * If the user has $convertToNative:
+     * "native_balance": balance in the user's native balance, with all amounts converted to native.
+     * "EUR": balance in EUR (or whatever currencies the account has balance in)
      *
-     * Het maakt niet uit of de native currency wel of niet gelijk is aan de account currency.
-     * Optelsom zou hetzelfde moeten zijn. Als het EUR is en de rekening ook is native_amount 0.
-     * Zo niet is amount 0 en native_amount het bedrag.
-     *
-     * Eerst een som van alle transacties in de native currency. Alle EUR bij elkaar opgeteld.
-     * Om te weten wat er nog meer op de rekening gebeurt, pak alles waar currency niet EUR is, en de foreign ook niet,
-     * en tel native_amount erbij op.
-     * Daarna pak je alle transacties waar currency niet EUR is, en de foreign wel, en tel foreign_amount erbij op.
-     *
-     * Wil je niks weten van native currencies, pak je:
-     *
-     * Eerst een som van alle transacties gegroepeerd op currency. Einde.
      */
     public function finalAccountBalance(Account $account, Carbon $date): array
     {
-        $cache           = new CacheProperties();
+        $cache = new CacheProperties();
         $cache->addProperty($account->id);
         $cache->addProperty($date);
         if ($cache->has()) {
@@ -330,17 +319,15 @@ class Steam
         $hasCurrency     = null !== $accountCurrency;
         $currency        = $hasCurrency ? $accountCurrency : $native;
         $return          = [
-            // 'balance'        => '0',
             'native_balance' => '0',
         ];
-        // balance(s) in other (all) currencies.
-        $array           = $account->transactions()
-            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-            ->leftJoin('transaction_currencies', 'transaction_currencies.id', '=', 'transactions.transaction_currency_id')
-            ->where('transaction_journals.date', '<=', $date->format('Y-m-d H:i:s'))
-            ->get(['transaction_currencies.code', 'transactions.amount'])->toArray()
-        ;
-        $others          = $this->groupAndSumTransactions($array, 'code', 'amount');
+        // balance(s) in all currencies.
+        $array  = $account->transactions()
+                          ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                          ->leftJoin('transaction_currencies', 'transaction_currencies.id', '=', 'transactions.transaction_currency_id')
+                          ->where('transaction_journals.date', '<=', $date->format('Y-m-d H:i:s'))
+                          ->get(['transaction_currencies.code', 'transactions.amount'])->toArray();
+        $others = $this->groupAndSumTransactions($array, 'code', 'amount');
         Log::debug('All balances are (joined)', $others);
         // if there is no request to convert, take this as "balance" and "native_balance".
         if (!$convertToNative) {
@@ -350,15 +337,12 @@ class Steam
         }
         // if there is a request to convert, convert to "native_balance" and use "balance" for whichever amount is in the native currency.
         if ($convertToNative) {
-            $return['balance']        = $others[$native->code] ?? '0';
             $return['native_balance'] = $this->convertAllBalances($others, $native, $date); // todo sum all and convert.
-            Log::debug(sprintf('Set balance to %s and native_balance to %s', $return['balance'], $return['native_balance']));
+            Log::debug(sprintf('Set native_balance to %s', $return['native_balance']));
         }
 
         // either way, the balance is always combined with the virtual balance:
-        $virtualBalance  = (string) ('' === (string) $account->virtual_balance ? '0' : $account->virtual_balance);
-        // $return['balance'] = bcadd($return['balance'], $virtualBalance);
-        // Log::debug(sprintf('Virtual balance makes the total %s', $return['balance']));
+        $virtualBalance = (string) ('' === (string) $account->virtual_balance ? '0' : $account->virtual_balance);
 
         if ($convertToNative) {
             // the native balance is combined with a converted virtual_balance:
@@ -372,28 +356,10 @@ class Steam
             $return['native_balance'] = bcadd($return['native_balance'], $virtualBalance);
             Log::debug(sprintf('Virtual balance makes the (native) total %s', $return['native_balance']));
         }
-
-        // if the currency is the same as the native currency, set the native_balance to the balance for consistency.
-        //        if($currency->id === $native->id) {
-        //            $return['native_balance'] = $return['balance'];
-        //        }
-
-        //        if (!$hasCurrency && array_key_exists('balance', $return)) {
-        //            //            Log::debug('Account has no currency preference, dropping balance in favor of native balance.');
-        //            $sum                      = bcadd($return['balance'], $return['native_balance']);
-        //            //            Log::debug(sprintf('%s + %s = %s', $return['balance'], $return['native_balance'], $sum));
-        //            $return['native_balance'] = $sum;
-        //            unset($return['balance']);
-        //        }
-        $final           = array_merge($return, $others);
-        //        // Log::debug('Return is', $final);
-
+        $final = array_merge($return, $others);
         $cache->store($final);
 
         return $final;
-
-        // return array_merge($return, $others);
-        // Log::debug('Return is', $final);
     }
 
     public function filterAccountBalances(array $total, Account $account, bool $convertToNative, ?TransactionCurrency $currency = null): array
@@ -496,15 +462,15 @@ class Steam
     {
         $list = [];
 
-        $set  = auth()->user()->transactions()
-            ->whereIn('transactions.account_id', $accounts)
-            ->groupBy(['transactions.account_id', 'transaction_journals.user_id'])
-            ->get(['transactions.account_id', \DB::raw('MAX(transaction_journals.date) AS max_date')]) // @phpstan-ignore-line
+        $set = auth()->user()->transactions()
+                     ->whereIn('transactions.account_id', $accounts)
+                     ->groupBy(['transactions.account_id', 'transaction_journals.user_id'])
+                     ->get(['transactions.account_id', \DB::raw('MAX(transaction_journals.date) AS max_date')]) // @phpstan-ignore-line
         ;
 
         /** @var Transaction $entry */
         foreach ($set as $entry) {
-            $date                           = new Carbon($entry->max_date, config('app.timezone'));
+            $date = new Carbon($entry->max_date, config('app.timezone'));
             $date->setTimezone(config('app.timezone'));
             $list[(int) $entry->account_id] = $date;
         }
@@ -579,9 +545,9 @@ class Steam
     public function getSafeUrl(string $unknownUrl, string $safeUrl): string
     {
         // Log::debug(sprintf('getSafeUrl(%s, %s)', $unknownUrl, $safeUrl));
-        $returnUrl      = $safeUrl;
-        $unknownHost    = parse_url($unknownUrl, PHP_URL_HOST);
-        $safeHost       = parse_url($safeUrl, PHP_URL_HOST);
+        $returnUrl   = $safeUrl;
+        $unknownHost = parse_url($unknownUrl, PHP_URL_HOST);
+        $safeHost    = parse_url($safeUrl, PHP_URL_HOST);
 
         if (null !== $unknownHost && $unknownHost === $safeHost) {
             $returnUrl = $unknownUrl;
@@ -618,7 +584,7 @@ class Steam
      */
     public function floatalize(string $value): string
     {
-        $value  = strtoupper($value);
+        $value = strtoupper($value);
         if (!str_contains($value, 'E')) {
             return $value;
         }
@@ -706,9 +672,9 @@ class Steam
             if (null === $currency) {
                 continue;
             }
-            $current  = $converter->convert($currency, $native, $date, $amount);
+            $current = $converter->convert($currency, $native, $date, $amount);
             Log::debug(sprintf('Convert %s %s to %s %s', $currency->code, $amount, $native->code, $current));
-            $total    = bcadd($current, $total);
+            $total = bcadd($current, $total);
         }
 
         return $total;
