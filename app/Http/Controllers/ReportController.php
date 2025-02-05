@@ -83,7 +83,7 @@ class ReportController extends Controller
             return view('error')->with('message', (string) trans('firefly.end_after_start_date'));
         }
         $this->repository->cleanupBudgets();
-        $start->startOfDay();
+        $start->endOfDay(); // end of day so the final balance is at the end of that day.
         $end->endOfDay();
 
         app('view')->share(
@@ -116,7 +116,7 @@ class ReportController extends Controller
             return view('error')->with('message', (string) trans('firefly.end_after_start_date'));
         }
         $this->repository->cleanupBudgets();
-        $start->startOfDay();
+        $start->endOfDay(); // end of day so the final balance is at the end of that day.
         $end->endOfDay();
 
         app('view')->share(
@@ -150,7 +150,7 @@ class ReportController extends Controller
             return view('error')->with('message', (string) trans('firefly.end_after_start_date'));
         }
         $this->repository->cleanupBudgets();
-        $start->startOfDay();
+        $start->endOfDay(); // end of day so the final balance is at the end of that day.
         $end->endOfDay();
 
         app('view')->share(
@@ -185,7 +185,7 @@ class ReportController extends Controller
         }
 
         $this->repository->cleanupBudgets();
-        $start->startOfDay();
+        $start->endOfDay(); // end of day so the final balance is at the end of that day.
         $end->endOfDay();
 
         app('view')->share(
@@ -219,7 +219,7 @@ class ReportController extends Controller
         }
 
         $this->repository->cleanupBudgets();
-        $start->startOfDay();
+        $start->endOfDay(); // end of day so the final balance is at the end of that day.
         $end->endOfDay();
 
         app('view')->share(
@@ -377,7 +377,7 @@ class ReportController extends Controller
             return view('error')->with('message', (string) trans('firefly.end_after_start_date'));
         }
         $this->repository->cleanupBudgets();
-        $start->startOfDay();
+        $start->endOfDay(); // end of day so the final balance is at the end of that day.
         $end->endOfDay();
 
         app('view')->share(

@@ -189,7 +189,7 @@ class ReconcileController extends Controller
         if ($end->lt($start)) {
             [$end, $start] = [$start, $end];
         }
-        $start->startOfDay();
+        $start->endOfDay();
         $end->endOfDay();
         $startDate      = clone $start;
         $startDate->subDay();
