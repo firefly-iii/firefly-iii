@@ -603,6 +603,7 @@ class AccountController extends Controller
                 }
                 // Log::debug(sprintf('Will process expense array "%s" with amount %s', $key, $endBalance));
                 $searchCode   = $this->convertToNative ? $this->defaultCurrency->code : $key;
+                $searchCode   = 3 !== strlen($searchCode) ? $this->defaultCurrency->code : $searchCode;
                 // Log::debug(sprintf('Search code is %s', $searchCode));
                 // see if there is an accompanying start amount.
                 // grab the difference and find the currency.
