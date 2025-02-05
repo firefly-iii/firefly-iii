@@ -33,15 +33,33 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12 col-xs-12" v-if="currencies.length < 2">
+                <div class="box box-default" v-for="currency in currencies" :key="currency.id">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ $t('firefly.not_enough_currencies') }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <p>
+                            {{ $t('firefly.not_enough_currencies_enabled') }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12 col-xs-12" v-if="currencies.length > 1">
                 <div class="box box-default" v-for="currency in currencies" :key="currency.id">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ currency.name }}</h3>
                     </div>
                     <div class="box-body">
-                        <ul v-if="currencies.length > 0">
+                        <ul v-if="currencies.length > 1">
                             <li v-for="sub in currencies" :key="sub.id" v-show="sub.id !== currency.id">
-                                <a :href="'exchange-rates/' + currency.code + '/' + sub.code" :title="$t('firefly.exchange_rates_from_to', {from: currency.name, to: sub.name})">{{ $t('firefly.exchange_rates_from_to', {from: currency.name, to: sub.name}) }}</a>
+                                <a :href="'exchange-rates/' + currency.code + '/' + sub.code"
+                                   :title="$t('firefly.exchange_rates_from_to', {from: currency.name, to: sub.name})">{{
+                                        $t('firefly.exchange_rates_from_to', {
+                                            from: currency.name,
+                                            to: sub.name
+                                        })
+                                    }}</a>
                             </li>
                         </ul>
                     </div>
@@ -74,12 +92,14 @@ export default {
                 for (let i in response.data.data) {
                     if (response.data.data.hasOwnProperty(i)) {
                         let current = response.data.data[i];
-                        let currency = {
-                            id: current.id,
-                            name: current.attributes.name,
-                            code: current.attributes.code,
-                        };
-                        this.currencies.push(currency);
+                        if (current.attributes.enabled) {
+                            let currency = {
+                                id: current.id,
+                                name: current.attributes.name,
+                                code: current.attributes.code,
+                            };
+                            this.currencies.push(currency);
+                        }
                     }
                 }
 

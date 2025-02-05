@@ -155,6 +155,8 @@ return [
                 'is_reconciled',
                 'split',
                 'single_split',
+                'not_enough_currencies',
+                'not_enough_currencies_enabled',
                 'transaction_stored_link',
                 'webhook_stored_link',
                 'webhook_updated_link',
