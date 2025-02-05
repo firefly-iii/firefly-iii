@@ -41,8 +41,6 @@ return new class () extends Migration {
             'piggy_banks'        => ['native_target_amount'], // works
             'transactions'       => ['native_amount', 'native_foreign_amount'], // works
 
-            // TODO button to recalculate all native amounts on selected pages?
-
         ];
 
     /**
@@ -52,9 +50,11 @@ return new class () extends Migration {
     {
         foreach ($this->tables as $table => $fields) {
             foreach ($fields as $field) {
-                Schema::table($table, static function (Blueprint $table) use ($field): void {
+                Schema::table($table, static function (Blueprint $tableObject) use ($table, $field): void {
                     // add amount column
-                    $table->decimal($field, 32, 12)->nullable();
+                    if (!Schema::hasColumn($table, $field)) {
+                        $tableObject->decimal($field, 32, 12)->nullable();
+                    }
                 });
             }
         }

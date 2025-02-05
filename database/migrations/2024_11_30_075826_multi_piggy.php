@@ -50,42 +50,70 @@ return new class () extends Migration {
         });
         Schema::table('piggy_banks', static function (Blueprint $table): void {
             // 3. add currency
-            $table->integer('transaction_currency_id', false, true)->after('account_id')->nullable();
-            $table->foreign('transaction_currency_id', 'unique_currency')->references('id')->on('transaction_currencies')->onDelete('cascade');
+            if (!Schema::hasColumn('piggy_banks', 'transaction_currency_id')) {
+                $table->integer('transaction_currency_id', false, true)->after('account_id')->nullable();
+            }
+            if (!self::hasForeign('piggy_banks', 'unique_currency')) {
+                $table->foreign('transaction_currency_id', 'unique_currency')->references('id')->on('transaction_currencies')->onDelete('cascade');
+            }
         });
         Schema::table('piggy_banks', static function (Blueprint $table): void {
             // 4. rename columns
-            $table->renameColumn('targetamount', 'target_amount');
-            $table->renameColumn('startdate', 'start_date');
-            $table->renameColumn('targetdate', 'target_date');
-            $table->renameColumn('startdate_tz', 'start_date_tz');
-            $table->renameColumn('targetdate_tz', 'target_date_tz');
+            if (Schema::hasColumn('piggy_banks', 'targetamount') && !Schema::hasColumn('piggy_banks', 'target_amount')) {
+                $table->renameColumn('targetamount', 'target_amount');
+            }
+            if (Schema::hasColumn('piggy_banks', 'startdate') && !Schema::hasColumn('piggy_banks', 'start_date')) {
+                $table->renameColumn('startdate', 'start_date');
+            }
+            if (Schema::hasColumn('piggy_banks', 'targetdate') && !Schema::hasColumn('piggy_banks', 'target_date')) {
+                $table->renameColumn('targetdate', 'target_date');
+            }
+            if (Schema::hasColumn('piggy_banks', 'targetdate') && !Schema::hasColumn('startdate_tz', 'start_date_tz')) {
+                $table->renameColumn('startdate_tz', 'start_date_tz');
+            }
+            if (Schema::hasColumn('piggy_banks', 'targetdate_tz') && !Schema::hasColumn('target_date_tz', 'start_date_tz')) {
+                $table->renameColumn('targetdate_tz', 'target_date_tz');
+            }
         });
         Schema::table('piggy_banks', static function (Blueprint $table): void {
             // 5. add new index
-            $table->foreign('account_id')->references('id')->on('accounts')->onDelete('set null');
+            if (!self::hasForeign('piggy_banks', 'piggy_banks_account_id_foreign')) {
+                $table->foreign('account_id')->references('id')->on('accounts')->onDelete('set null');
+            }
         });
 
         // rename some fields in piggy bank reps.
         Schema::table('piggy_bank_repetitions', static function (Blueprint $table): void {
             // 6. rename columns
-            $table->renameColumn('currentamount', 'current_amount');
-            $table->renameColumn('startdate', 'start_date');
-            $table->renameColumn('targetdate', 'target_date');
-            $table->renameColumn('startdate_tz', 'start_date_tz');
-            $table->renameColumn('targetdate_tz', 'target_date_tz');
+            if (Schema::hasColumn('piggy_bank_repetitions', 'currentamount') && !Schema::hasColumn('piggy_bank_repetitions', 'current_amount')) {
+                $table->renameColumn('currentamount', 'current_amount');
+            }
+            if (Schema::hasColumn('piggy_bank_repetitions', 'startdate') && !Schema::hasColumn('piggy_bank_repetitions', 'start_date')) {
+                $table->renameColumn('startdate', 'start_date');
+            }
+            if (Schema::hasColumn('piggy_bank_repetitions', 'targetdate') && !Schema::hasColumn('piggy_bank_repetitions', 'target_date')) {
+                $table->renameColumn('targetdate', 'target_date');
+            }
+            if (Schema::hasColumn('piggy_bank_repetitions', 'startdate_tz') && !Schema::hasColumn('piggy_bank_repetitions', 'start_date_tz')) {
+                $table->renameColumn('startdate_tz', 'start_date_tz');
+            }
+            if (Schema::hasColumn('piggy_bank_repetitions', 'targetdate_tz') && !Schema::hasColumn('piggy_bank_repetitions', 'target_date_tz')) {
+                $table->renameColumn('targetdate_tz', 'target_date_tz');
+            }
         });
 
         // create table account_piggy_bank
-        Schema::create('account_piggy_bank', static function (Blueprint $table): void {
-            $table->id();
-            $table->integer('account_id', false, true);
-            $table->integer('piggy_bank_id', false, true);
-            $table->decimal('current_amount', 32, 12)->default('0');
-            $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
-            $table->foreign('piggy_bank_id')->references('id')->on('piggy_banks')->onDelete('cascade');
-            $table->unique(['account_id', 'piggy_bank_id'], 'unique_piggy_save');
-        });
+        if (!Schema::hasTable('account_piggy_bank')) {
+            Schema::create('account_piggy_bank', static function (Blueprint $table): void {
+                $table->id();
+                $table->integer('account_id', false, true);
+                $table->integer('piggy_bank_id', false, true);
+                $table->decimal('current_amount', 32, 12)->default('0');
+                $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
+                $table->foreign('piggy_bank_id')->references('id')->on('piggy_banks')->onDelete('cascade');
+                $table->unique(['account_id', 'piggy_bank_id'], 'unique_piggy_save');
+            });
+        }
 
     }
 

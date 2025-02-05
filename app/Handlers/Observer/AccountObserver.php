@@ -26,6 +26,7 @@ namespace FireflyIII\Handlers\Observer;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\PiggyBank;
+use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
@@ -73,12 +74,15 @@ class AccountObserver
         //        app('log')->debug('Observe "deleting" of an account.');
         $account->accountMeta()->delete();
 
+        $repository = app(AttachmentRepositoryInterface::class);
+        $repository->setUser($account->user);
+
         /** @var PiggyBank $piggy */
         foreach ($account->piggyBanks()->get() as $piggy) {
             $piggy->accounts()->detach($account);
         }
         foreach ($account->attachments()->get() as $attachment) {
-            $attachment->delete();
+            $repository->destroy($attachment);
         }
         foreach ($account->transactions()->get() as $transaction) {
             $transaction->delete();

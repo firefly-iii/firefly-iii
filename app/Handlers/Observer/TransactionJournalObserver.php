@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Observer;
 
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 
 /**
  * Class TransactionJournalObserver
@@ -34,6 +35,10 @@ class TransactionJournalObserver
     {
         app('log')->debug('Observe "deleting" of a transaction journal.');
 
+        $repository = app(AttachmentRepositoryInterface::class);
+        $repository->setUser($transactionJournal->user);
+
+
         // to make sure the listener doesn't get back to use and loop
         TransactionJournal::withoutEvents(static function () use ($transactionJournal): void {
             foreach ($transactionJournal->transactions()->get() as $transaction) {
@@ -41,7 +46,7 @@ class TransactionJournalObserver
             }
         });
         foreach ($transactionJournal->attachments()->get() as $attachment) {
-            $attachment->delete();
+            $repository->destroy($attachment);
         }
         $transactionJournal->locations()->delete();
         $transactionJournal->sourceJournalLinks()->delete();

@@ -35,6 +35,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\AugumentData;
 use FireflyIII\Support\Http\Controllers\ChartGeneration;
@@ -108,8 +109,8 @@ class AccountController extends Controller
         $accountNames  = $this->extractNames($accounts);
 
         // grab all balances
-        $startBalances = app('steam')->finalAccountsBalance($accounts, $start);
-        $endBalances   = app('steam')->finalAccountsBalance($accounts, $end);
+        $startBalances = Steam::finalAccountsBalance($accounts, $start);
+        $endBalances   = Steam::finalAccountsBalance($accounts, $end);
 
         // loop the accounts, then check for balance and currency info.
         foreach ($accounts as $account) {
@@ -426,13 +427,13 @@ class AccountController extends Controller
         $cache->addProperty($this->convertToNative);
         $cache->addProperty($account->id);
         if ($cache->has()) {
-            // return response()->json($cache->get());
+            return response()->json($cache->get());
         }
 
         // collect and filter balances for the entire period.
         $step            = $this->calculateStep($start, $end);
         Log::debug(sprintf('Step is %s', $step));
-        $locale          = app('steam')->getLocale();
+        $locale          = Steam::getLocale();
         $return          = [];
 
         // fix for issue https://github.com/firefly-iii/firefly-iii/issues/8041
@@ -570,8 +571,8 @@ class AccountController extends Controller
         $accountNames  = $this->extractNames($accounts);
 
         // grab all balances
-        $startBalances = app('steam')->finalAccountsBalance($accounts, $start);
-        $endBalances   = app('steam')->finalAccountsBalance($accounts, $end);
+        $startBalances = Steam::finalAccountsBalance($accounts, $start);
+        $endBalances   = Steam::finalAccountsBalance($accounts, $end);
 
 
         // loop the accounts, then check for balance and currency info.

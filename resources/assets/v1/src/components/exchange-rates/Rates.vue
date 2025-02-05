@@ -97,10 +97,10 @@
                                     >
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control" min="0" v-model="rate.rate">
+                                    <input type="number" class="form-control" min="0" step="any" v-model="rate.rate">
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control" min="0" v-model="rate.inverse">
+                                    <input type="number" class="form-control" min="0" step="any" v-model="rate.inverse">
                                 </td>
                                 <td>
                                     <div class="btn-group">

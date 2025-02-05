@@ -733,7 +733,7 @@ return [
     // END
     'general_search_error'                                    => 'An error occurred while searching. Please check the log files for more information.',
     'search_box'                                              => 'Search',
-    'search_box_intro'                                        => 'Welcome to the search function of Firefly III. Enter your search query in the box. Make sure you check out the help file because the search is pretty advanced.',
+    'search_box_intro'                                        => 'Welcome to the search function of Firefly III. Enter your search query in the box. <a href="https://docs.firefly-iii.org/how-to/firefly-iii/features/search/">Make sure you check out the help file</a> because the search is pretty advanced.',
     'search_error'                                            => 'Error while searching',
     'search_searching'                                        => 'Searching ...',
     'search_results'                                          => 'Search results',
