@@ -28,6 +28,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
+use Illuminate\Support\Facades\Log;
 
 class ReturnsSettings
 {
@@ -42,6 +43,7 @@ class ReturnsSettings
 
     private static function getNtfySettings(string $type, ?User $user): array
     {
+        Log::debug(sprintf('Getting Ntfy settings for %s and user #%d', $type, $user?->id));
         $settings = [
             'ntfy_server' => 'https://ntfy.sh',
             'ntfy_topic'  => '',
@@ -56,6 +58,7 @@ class ReturnsSettings
             $settings['ntfy_auth']   = Preferences::getForUser($user, 'ntfy_auth', false)->data;
             $settings['ntfy_user']   = Preferences::getEncryptedForUser($user, 'ntfy_user', '')->data;
             $settings['ntfy_pass']   = Preferences::getEncryptedForUser($user, 'ntfy_pass', '')->data;
+            Log::debug(sprintf('Auth is %s, user = "%s"', var_export($settings['ntfy_auth'], true), $settings['ntfy_user']));
         }
         if ('owner' === $type) {
             $settings['ntfy_server'] = FireflyConfig::getEncrypted('ntfy_server', 'https://ntfy.sh')->data;
@@ -63,6 +66,7 @@ class ReturnsSettings
             $settings['ntfy_auth']   = FireflyConfig::get('ntfy_auth', false)->data;
             $settings['ntfy_user']   = FireflyConfig::getEncrypted('ntfy_user', '')->data;
             $settings['ntfy_pass']   = FireflyConfig::getEncrypted('ntfy_pass', '')->data;
+            Log::debug(sprintf('Auth is %s, user = "%s"', var_export($settings['ntfy_auth'], true), $settings['ntfy_user']));
         }
 
         // overrule config.
@@ -74,7 +78,9 @@ class ReturnsSettings
             config(['ntfy-notification-channel.authentication.enabled' => true]);
             config(['ntfy-notification-channel.authentication.username' => $settings['ntfy_user']]);
             config(['ntfy-notification-channel.authentication.password' => $settings['ntfy_pass']]);
+            Log::debug('Authentication enabled for Ntfy.');
         }
+        Log::debug('Return ntfy settings.');
 
         return $settings;
     }
