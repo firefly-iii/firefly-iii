@@ -57,7 +57,7 @@ class ExportsData extends Command
     {--export-tags : Create a file with all your tags and some meta data.}
     {--export-recurring : Create a file with all your recurring transactions and some meta data.}
     {--export-rules : Create a file with all your rules and some meta data.}
-    {--export-bills : Create a file with all your bills and some meta data.}
+    {--export-subscriptions : Create a file with all your subscriptions and some meta data.}
     {--export-piggies : Create a file with all your piggy banks and some meta data.}
     {--force : Force overwriting of previous exports if found.}';
     private AccountRepositoryInterface $accountRepository;
@@ -106,7 +106,7 @@ class ExportsData extends Command
         $exporter->setExportTags($options['export']['tags']);
         $exporter->setExportRecurring($options['export']['recurring']);
         $exporter->setExportRules($options['export']['rules']);
-        $exporter->setExportBills($options['export']['bills']);
+        $exporter->setExportBills($options['export']['subscriptions']);
         $exporter->setExportPiggies($options['export']['piggies']);
         $data       = $exporter->export();
         if (0 === count($data)) {
@@ -157,7 +157,7 @@ class ExportsData extends Command
                 'tags'         => $this->option('export-tags'),
                 'recurring'    => $this->option('export-recurring'),
                 'rules'        => $this->option('export-rules'),
-                'bills'        => $this->option('export-bills'),
+                'bills'        => $this->option('export-subscriptions'),
                 'piggies'      => $this->option('export-piggies'),
             ],
             'start'     => $start,
