@@ -41,10 +41,19 @@ use Illuminate\Support\Collection;
  */
 class UpdatedGroupEventHandler
 {
+    public function runAllHandlers(UpdatedTransactionGroup $event): void {
+        $this->unifyAccounts($event);
+        $this->processRules($event);
+        $this->recalculateCredit($event);
+        $this->triggerWebhooks($event);
+
+    }
+
+
     /**
      * This method will check all the rules when a journal is updated.
      */
-    public function processRules(UpdatedTransactionGroup $updatedGroupEvent): void
+    private function processRules(UpdatedTransactionGroup $updatedGroupEvent): void
     {
         if (false === $updatedGroupEvent->applyRules) {
             app('log')->info(sprintf('Will not run rules on group #%d', $updatedGroupEvent->transactionGroup->id));
@@ -76,7 +85,7 @@ class UpdatedGroupEventHandler
         $newRuleEngine->fire();
     }
 
-    public function recalculateCredit(UpdatedTransactionGroup $event): void
+    private function recalculateCredit(UpdatedTransactionGroup $event): void
     {
         $group  = $event->transactionGroup;
 
@@ -86,7 +95,7 @@ class UpdatedGroupEventHandler
         $object->recalculate();
     }
 
-    public function triggerWebhooks(UpdatedTransactionGroup $updatedGroupEvent): void
+    private function triggerWebhooks(UpdatedTransactionGroup $updatedGroupEvent): void
     {
         app('log')->debug(__METHOD__);
         $group  = $updatedGroupEvent->transactionGroup;
@@ -110,7 +119,7 @@ class UpdatedGroupEventHandler
     /**
      * This method will make sure all source / destination accounts are the same.
      */
-    public function unifyAccounts(UpdatedTransactionGroup $updatedGroupEvent): void
+    private function unifyAccounts(UpdatedTransactionGroup $updatedGroupEvent): void
     {
         $group         = $updatedGroupEvent->transactionGroup;
         if (1 === $group->transactionJournals->count()) {
