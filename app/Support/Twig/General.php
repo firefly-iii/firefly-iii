@@ -72,6 +72,7 @@ class General extends AbstractExtension
                 $default         = Amount::getNativeCurrency();
                 $convertToNative = Amount::convertToNative();
                 $useNative       = $convertToNative && $default->id !== $currency->id;
+                $currency = null === $currency ? $default : $currency;
                 $strings         = [];
                 foreach ($info as $key => $balance) {
                     if ('balance' === $key) {
