@@ -71,6 +71,7 @@ class QueryParser implements QueryParserInterface
 
         while ($this->position < strlen($this->query)) {
             $char = $this->query[$this->position];
+            //Log::debug(sprintf('Char #%d: %s', $this->position, $char));
 
             // If we're in a quoted string, we treat all characters except another quote as ordinary characters
             if ($inQuotes) {
@@ -150,15 +151,19 @@ class QueryParser implements QueryParserInterface
 
 
                 case ':':
-                    if ('' !== $tokenUnderConstruction) {
+                    $skipNext = false;
+                    if ('' === $tokenUnderConstruction) { // @phpstan-ignore-line
+                        // In any other location, it's just a normal character
+                        $tokenUnderConstruction .= $char;
+                        $skipNext = true;
+                    }
+                    if ('' !== $tokenUnderConstruction && !$skipNext) {
+                        Log::debug(sprintf('Turns out that "%s" is a field name. Reset the token.', $tokenUnderConstruction));
                         // If we meet a colon with a left-hand side string, we know we're in a field and are about to set up the value
                         $fieldName              = $tokenUnderConstruction;
                         $tokenUnderConstruction = '';
                     }
-                    if ('' === $tokenUnderConstruction) { // @phpstan-ignore-line
-                        // In any other location, it's just a normal character
-                        $tokenUnderConstruction .= $char;
-                    }
+
 
                     break;
 
