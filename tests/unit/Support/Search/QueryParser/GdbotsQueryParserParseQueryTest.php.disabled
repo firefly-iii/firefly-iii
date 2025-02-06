@@ -13,7 +13,6 @@ use FireflyIII\Support\Search\QueryParser\QueryParserInterface;
  * @group search
  *
  * @internal
- *
  * @coversNothing
  */
 final class GdbotsQueryParserParseQueryTest extends AbstractQueryParserInterfaceParseQueryTest
