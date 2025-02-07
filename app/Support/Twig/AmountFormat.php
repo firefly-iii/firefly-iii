@@ -26,6 +26,8 @@ namespace FireflyIII\Support\Twig;
 use FireflyIII\Models\Account as AccountModel;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
+use Illuminate\Support\Facades\Log;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -114,6 +116,11 @@ class AmountFormat extends AbstractExtension
 
                 /** @var TransactionCurrency $currency */
                 $currency = TransactionCurrency::whereCode($code)->first();
+                if(null === $currency) {
+                    Log::error(sprintf('Could not find currency with code "%s". Fallback to native currency.', $code));
+                    $currency = Amount::getNativeCurrency();
+                    Log::error(sprintf('Fallback currency is "%s".', $currency->code));
+                }
 
                 return app('amount')->formatAnything($currency, $amount, $coloured);
             },
