@@ -97,10 +97,16 @@
                     first pay date is in the past.
                     #}
                     {% if entry.paid_dates|length == 0 and entry.pay_dates|length > 0 and entry.active %}
-                        <td class="paid_in_period text-warning">
-                            {{ entry.next_expected_match_diff }}
-                            <!-- {{ trans('firefly.bill_expected_date', {date: entry.next_expected_match_diff }) }} -->
-                        </td>
+                        {% if entry.next_expected_match_diff == trans('firefly.not_expected_period') %} {# terrible code, you should sue me for this. #}
+                            <td class="paid_in_period text-muted">
+                                {{ entry.next_expected_match_diff }}
+                            </td>
+                        {% else %}
+                            <td class="paid_in_period text-warning">
+                                {{ entry.next_expected_match_diff }}
+                                <!-- {{ trans('firefly.bill_expected_date', {date: entry.next_expected_match_diff }) }} -->
+                            </td>
+                        {% endif %}
                         <td class="expected_in_period hidden-sm hidden-xs">
 
                             {% for date in entry.pay_dates %}
