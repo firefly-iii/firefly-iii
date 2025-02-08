@@ -407,6 +407,7 @@ trait MetaCollection
         $this->query->where('journal_meta.name', '=', 'internal_reference');
         $this->query->whereLike('journal_meta.data', sprintf('%%%s%%', $internalReference));
         $this->query->whereNull('journal_meta.deleted_at');
+
         return $this;
     }
 
@@ -419,6 +420,7 @@ trait MetaCollection
         $this->query->where('journal_meta.name', '=', 'internal_reference');
         $this->query->whereNotLike('journal_meta.data', sprintf('%%%s%%', $internalReference));
         $this->query->whereNull('journal_meta.deleted_at');
+
         return $this;
     }
 
@@ -431,6 +433,7 @@ trait MetaCollection
         $this->query->where('journal_meta.name', '=', 'internal_reference');
         $this->query->whereNotLike('journal_meta.data', sprintf('%%%s"', $internalReference));
         $this->query->whereNull('journal_meta.deleted_at');
+
         return $this;
     }
 
@@ -443,6 +446,7 @@ trait MetaCollection
         $this->query->where('journal_meta.name', '=', 'internal_reference');
         $this->query->whereLike('journal_meta.data', sprintf('"%s%%', $internalReference));
         $this->query->whereNull('journal_meta.deleted_at');
+
         return $this;
     }
 
@@ -455,6 +459,7 @@ trait MetaCollection
         $this->query->where('journal_meta.name', '=', 'internal_reference');
         $this->query->whereLike('journal_meta.data', sprintf('%%%s"', $internalReference));
         $this->query->whereNull('journal_meta.deleted_at');
+
         return $this;
     }
 
@@ -467,6 +472,7 @@ trait MetaCollection
         $this->query->where('journal_meta.name', '=', 'internal_reference');
         $this->query->whereLike('journal_meta.data', sprintf('"%s%%', $internalReference));
         $this->query->whereNull('journal_meta.deleted_at');
+
         return $this;
     }
 
@@ -699,6 +705,7 @@ trait MetaCollection
         $this->query->where('journal_meta.name', '=', 'external_id');
         $this->query->where('journal_meta.data', '=', sprintf('%s', json_encode($externalId)));
         $this->query->whereNull('journal_meta.deleted_at');
+
         return $this;
     }
 
@@ -708,6 +715,7 @@ trait MetaCollection
         $this->query->where('journal_meta.name', '=', 'external_url');
         $this->query->where('journal_meta.data', '=', json_encode($url));
         $this->query->whereNull('journal_meta.deleted_at');
+
         return $this;
     }
 
@@ -720,6 +728,7 @@ trait MetaCollection
         $this->query->where('journal_meta.name', '=', 'internal_reference');
         $this->query->where('journal_meta.data', '=', sprintf('%s', json_encode($internalReference)));
         $this->query->whereNull('journal_meta.deleted_at');
+
         return $this;
     }
 
@@ -729,6 +738,7 @@ trait MetaCollection
         $this->query->where('journal_meta.name', '=', 'recurrence_id');
         $this->query->where('journal_meta.data', '=', sprintf('%s', json_encode($recurringId)));
         $this->query->whereNull('journal_meta.deleted_at');
+
         return $this;
     }
 

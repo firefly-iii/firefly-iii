@@ -18,6 +18,8 @@
         "is_reconciled": "Is reconciled",
         "split": "\u00cemparte",
         "single_split": "\u00cemparte",
+        "not_enough_currencies": "Not enough currencies",
+        "not_enough_currencies_enabled": "If you have just one currency enabled, there is no need to add exchange rates.",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Tranzac\u021bia #{ID} (\"{title}\")<\/a> a fost stocat\u0103.",
         "webhook_stored_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID} (\"{title}\")<\/a> a fost stocat.",
         "webhook_updated_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID}<\/a> (\"{title}\") a fost actualizat.",

@@ -56,20 +56,23 @@ abstract class Node
 
     }
 
-    public function equals(Node $compare): bool
+    public function equals(self $compare): bool
     {
         if ($compare->isProhibited(false) !== $this->isProhibited(false)) {
             Log::debug('Return false because prohibited status is different');
+
             return false;
         }
         if ($compare instanceof NodeGroup) {
             if (count($compare->getNodes()) !== count($this->getNodes())) {
                 Log::debug(sprintf('Return false because node count is different. Original is %d, compare is %d', count($this->getNodes()), count($compare->getNodes())));
-//                var_dump($this);
-//                var_dump($compare);
-//                exit;
+
+                //                var_dump($this);
+                //                var_dump($compare);
+                //                exit;
                 return false;
             }
+
             /**
              * @var int  $index
              * @var Node $node
@@ -79,12 +82,16 @@ abstract class Node
                     Log::debug('Return false because nodes are different!');
                     var_dump($this);
                     var_dump($compare);
+
                     exit;
+
                     return false;
                 }
             }
+
             return true;
         }
+
         return true;
     }
 }

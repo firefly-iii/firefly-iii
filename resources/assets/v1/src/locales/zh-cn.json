@@ -18,6 +18,8 @@
         "is_reconciled": "\u5df2\u6838\u9500",
         "split": "\u62c6\u5206",
         "single_split": "\u62c6\u5206",
+        "not_enough_currencies": "Not enough currencies",
+        "not_enough_currencies_enabled": "If you have just one currency enabled, there is no need to add exchange rates.",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">\u4ea4\u6613 #{ID} (\u201c{title}\u201d)<\/a> \u5df2\u4fdd\u5b58\u3002",
         "webhook_stored_link": "<a href=\"webhooks\/show\/{ID}\">\u63a8\u9001 #{ID} (\"{title}\")<\/a> \u5df2\u4fdd\u5b58.",
         "webhook_updated_link": "<a href=\"webhooks\/show\/{ID}\">\u63a8\u9001 #{ID}<\/a> (\"{title}\") \u5df2\u66f4\u65b0.",

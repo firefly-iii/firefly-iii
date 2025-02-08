@@ -18,6 +18,8 @@
         "is_reconciled": "Is reconciled",
         "split": "\u0420\u043e\u0437\u0434\u0456\u043b\u0438\u0442\u0438",
         "single_split": "\u0420\u043e\u0437\u0434\u0456\u043b\u0438\u0442\u0438",
+        "not_enough_currencies": "Not enough currencies",
+        "not_enough_currencies_enabled": "If you have just one currency enabled, there is no need to add exchange rates.",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">\u0422\u0440\u0430\u043d\u0437\u0430\u043a\u0446\u0456\u044f #{ID} (\"{title}\")<\/a> \u0431\u0443\u043b\u0430 \u0437\u0431\u0435\u0440\u0435\u0436\u0435\u043d\u0430.",
         "webhook_stored_link": "<a href=\"webhooks\/show\/{ID}\">\u0412\u0435\u0431\u0445\u0443\u043a #{ID} (\"{title}\")<\/a> \u0431\u0443\u0432 \u0437\u0431\u0435\u0440\u0435\u0436\u0435\u043d\u0438\u0439.",
         "webhook_updated_link": "<a href=\"webhooks\/show\/{ID}\">\u0412\u0435\u0431\u0445\u0443\u043a #{ID}<\/a> (\"{title}\") \u0431\u0443\u0432 \u043e\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0439.",

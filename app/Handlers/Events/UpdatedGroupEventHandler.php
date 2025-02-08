@@ -41,14 +41,14 @@ use Illuminate\Support\Collection;
  */
 class UpdatedGroupEventHandler
 {
-    public function runAllHandlers(UpdatedTransactionGroup $event): void {
+    public function runAllHandlers(UpdatedTransactionGroup $event): void
+    {
         $this->unifyAccounts($event);
         $this->processRules($event);
         $this->recalculateCredit($event);
         $this->triggerWebhooks($event);
 
     }
-
 
     /**
      * This method will check all the rules when a journal is updated.

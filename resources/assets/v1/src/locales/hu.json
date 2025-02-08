@@ -18,6 +18,8 @@
         "is_reconciled": "Is reconciled",
         "split": "Feloszt\u00e1s",
         "single_split": "Feloszt\u00e1s",
+        "not_enough_currencies": "Not enough currencies",
+        "not_enough_currencies_enabled": "If you have just one currency enabled, there is no need to add exchange rates.",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID} (\"{title}\")<\/a> mentve.",
         "webhook_stored_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID} (\"{title}\")<\/a> elt\u00e1rolva.",
         "webhook_updated_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID}<\/a> (\"{title}\") friss\u00edtve.",

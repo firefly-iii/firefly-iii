@@ -18,6 +18,8 @@
         "is_reconciled": "Is reconciled",
         "split": "Dividir",
         "single_split": "Divis\u00e3o",
+        "not_enough_currencies": "Not enough currencies",
+        "not_enough_currencies_enabled": "If you have just one currency enabled, there is no need to add exchange rates.",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">A transa\u00e7\u00e3o #{ID} (\"{title}\")<\/a> foi guardada.",
         "webhook_stored_link": "<a href=\"transactions\/show\/{ID}\">Webhook #{ID} (\"{title}\")<\/a> foi guardado.",
         "webhook_updated_link": "<a href=\"transactions\/show\/{ID}\">Webhook #{ID} (\"{title}\")<\/a> foi guardado.",

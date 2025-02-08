@@ -18,6 +18,8 @@
         "is_reconciled": "Is afgestemd",
         "split": "Splitsen",
         "single_split": "Split",
+        "not_enough_currencies": "Not enough currencies",
+        "not_enough_currencies_enabled": "If you have just one currency enabled, there is no need to add exchange rates.",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transactie #{ID} (\"{title}\")<\/a> is opgeslagen.",
         "webhook_stored_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID} ({title})<\/a> is opgeslagen.",
         "webhook_updated_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID} ({title})<\/a> is ge\u00fcpdatet.",

@@ -125,7 +125,7 @@ class Steam
         foreach ($set as $entry) {
             // get date object
             $carbon                               = new Carbon($entry->date, $entry->date_tz);
-            $carbonKey = $carbon->format('Y-m-d');
+            $carbonKey                            = $carbon->format('Y-m-d');
             // make sure sum is a string:
             $sumOfDay                             = (string) (null === $entry->sum_of_day ? '0' : $entry->sum_of_day);
 
@@ -150,7 +150,7 @@ class Steam
                 $currentBalance['native_balance'] = bcadd($currentBalance['native_balance'], $nativeSumOfDay);
             }
             // just set it.
-            $balances[$carbonKey] = $currentBalance;
+            $balances[$carbonKey]                 = $currentBalance;
             Log::debug(sprintf('Updated entry [%s]', $carbonKey), $currentBalance);
         }
         $cache->store($balances);
@@ -274,8 +274,8 @@ class Steam
         $cache->addProperty($account->id);
         $cache->addProperty($date);
         if ($cache->has()) {
-//            Log::debug(sprintf('CACHED finalAccountBalance(#%d, %s)', $account->id, $date->format('Y-m-d H:i:s')));
-//            return $cache->get();
+            //            Log::debug(sprintf('CACHED finalAccountBalance(#%d, %s)', $account->id, $date->format('Y-m-d H:i:s')));
+            //            return $cache->get();
         }
         Log::debug(sprintf('finalAccountBalance(#%d, %s)', $account->id, $date->format('Y-m-d H:i:s')));
 

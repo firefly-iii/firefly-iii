@@ -18,6 +18,8 @@
         "is_reconciled": "Ist abgestimmt",
         "split": "Teilen",
         "single_split": "Teilen",
+        "not_enough_currencies": "Not enough currencies",
+        "not_enough_currencies_enabled": "If you have just one currency enabled, there is no need to add exchange rates.",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Buchung #{ID} (\"{title}\")<\/a> wurde gespeichert.",
         "webhook_stored_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID} (\"{title}\")<\/a> wurde gespeichert.",
         "webhook_updated_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID}<\/a> (\"{title}\") wurde aktualisiert.",

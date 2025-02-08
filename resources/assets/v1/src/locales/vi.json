@@ -18,6 +18,8 @@
         "is_reconciled": "Is reconciled",
         "split": "Chia ra",
         "single_split": "Chia ra",
+        "not_enough_currencies": "Not enough currencies",
+        "not_enough_currencies_enabled": "If you have just one currency enabled, there is no need to add exchange rates.",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Giao d\u1ecbch #{ID} (\"{title}\")<\/a> \u0111\u00e3 \u0111\u01b0\u1ee3c l\u01b0u tr\u1eef.",
         "webhook_stored_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID} (\"{title}\")<\/a> \u0111\u00e3 \u0111\u01b0\u1ee3c l\u01b0u tr\u1eef.",
         "webhook_updated_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID}<\/a> (\"{title}\") \u0111\u00e3 \u0111\u01b0\u1ee3c c\u1eadp nh\u1eadt.",

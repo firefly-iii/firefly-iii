@@ -116,7 +116,7 @@ class AmountFormat extends AbstractExtension
 
                 /** @var TransactionCurrency $currency */
                 $currency = TransactionCurrency::whereCode($code)->first();
-                if(null === $currency) {
+                if (null === $currency) {
                     Log::error(sprintf('Could not find currency with code "%s". Fallback to native currency.', $code));
                     $currency = Amount::getNativeCurrency();
                     Log::error(sprintf('Fallback currency is "%s".', $currency->code));

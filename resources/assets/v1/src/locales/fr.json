@@ -18,6 +18,8 @@
         "is_reconciled": "Est rapproch\u00e9",
         "split": "S\u00e9paration",
         "single_split": "S\u00e9paration unique",
+        "not_enough_currencies": "Not enough currencies",
+        "not_enough_currencies_enabled": "If you have just one currency enabled, there is no need to add exchange rates.",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">L'op\u00e9ration n\u00b0{ID} (\"{title}\")<\/a> a \u00e9t\u00e9 enregistr\u00e9e.",
         "webhook_stored_link": "<a href=\"webhooks\/show\/{ID}\">Le Webhook #{ID} (\"{title}\")<\/a> a \u00e9t\u00e9 enregistr\u00e9.",
         "webhook_updated_link": "<a href=\"webhooks\/show\/{ID}\">Le webhook #{ID}<\/a> (\"{title}\") a \u00e9t\u00e9 mis \u00e0 jour.",

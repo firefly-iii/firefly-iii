@@ -1474,8 +1474,8 @@ return [
     'help_rate_form'                                          => 'On this day, how many {to} will you get for one {from}?',
     'save_new_rate'                                           => 'Save new rate',
     'add_new_rate'                                            => 'Add a new exchange rate',
-    'not_enough_currencies' => 'Not enough currencies',
-    'not_enough_currencies_enabled' => 'If you have just one currency enabled, there is no need to add exchange rates.',
+    'not_enough_currencies'                                   => 'Not enough currencies',
+    'not_enough_currencies_enabled'                           => 'If you have just one currency enabled, there is no need to add exchange rates.',
 
     // Financial administrations
     'administration_index'                                    => 'Financial administration',

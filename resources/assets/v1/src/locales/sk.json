@@ -18,6 +18,8 @@
         "is_reconciled": "Is reconciled",
         "split": "Roz\u00fa\u010dtova\u0165",
         "single_split": "Roz\u00fa\u010dtova\u0165",
+        "not_enough_currencies": "Not enough currencies",
+        "not_enough_currencies_enabled": "If you have just one currency enabled, there is no need to add exchange rates.",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transakcia #{ID} (\"{title}\")<\/a> bola ulo\u017een\u00e1.",
         "webhook_stored_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID} (\"{title}\")<\/a> has been stored.",
         "webhook_updated_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID}<\/a> (\"{title}\") has been updated.",

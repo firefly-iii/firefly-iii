@@ -6196,16 +6196,16 @@
         },
         {
             "name": "spatie/laravel-html",
-            "version": "3.11.1",
+            "version": "3.11.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-html.git",
-                "reference": "167e5b8243103072155b562e5cc396c90a3c1055"
+                "reference": "248508f3ed50e6538707fc54a4b3b23fb53e8045"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-html/zipball/167e5b8243103072155b562e5cc396c90a3c1055",
-                "reference": "167e5b8243103072155b562e5cc396c90a3c1055",
+                "url": "https://api.github.com/repos/spatie/laravel-html/zipball/248508f3ed50e6538707fc54a4b3b23fb53e8045",
+                "reference": "248508f3ed50e6538707fc54a4b3b23fb53e8045",
                 "shasum": ""
             },
             "require": {
@@ -6262,7 +6262,7 @@
                 "spatie"
             ],
             "support": {
-                "source": "https://github.com/spatie/laravel-html/tree/3.11.1"
+                "source": "https://github.com/spatie/laravel-html/tree/3.11.2"
             },
             "funding": [
                 {
@@ -6270,7 +6270,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2024-10-18T14:37:21+00:00"
+            "time": "2025-02-05T08:27:24+00:00"
         },
         {
             "name": "spatie/laravel-ignition",
@@ -6365,27 +6365,27 @@
         },
         {
             "name": "spatie/laravel-package-tools",
-            "version": "1.18.3",
+            "version": "1.19.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-package-tools.git",
-                "reference": "ba67eee37d86ed775dab7dad58a7cbaf9a6cfe78"
+                "reference": "1c9c30ac6a6576b8d15c6c37b6cf23d748df2faa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-package-tools/zipball/ba67eee37d86ed775dab7dad58a7cbaf9a6cfe78",
-                "reference": "ba67eee37d86ed775dab7dad58a7cbaf9a6cfe78",
+                "url": "https://api.github.com/repos/spatie/laravel-package-tools/zipball/1c9c30ac6a6576b8d15c6c37b6cf23d748df2faa",
+                "reference": "1c9c30ac6a6576b8d15c6c37b6cf23d748df2faa",
                 "shasum": ""
             },
             "require": {
-                "illuminate/contracts": "^9.28|^10.0|^11.0",
+                "illuminate/contracts": "^9.28|^10.0|^11.0|^12.0",
                 "php": "^8.0"
             },
             "require-dev": {
                 "mockery/mockery": "^1.5",
-                "orchestra/testbench": "^7.7|^8.0|^9.0",
-                "pestphp/pest": "^1.22|^2",
-                "phpunit/phpunit": "^9.5.24|^10.5",
+                "orchestra/testbench": "^7.7|^8.0|^9.0|^10.0",
+                "pestphp/pest": "^1.23|^2.1|^3.1",
+                "phpunit/phpunit": "^9.5.24|^10.5|^11.5",
                 "spatie/pest-plugin-test-time": "^1.1|^2.2"
             },
             "type": "library",
@@ -6413,7 +6413,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-package-tools/issues",
-                "source": "https://github.com/spatie/laravel-package-tools/tree/1.18.3"
+                "source": "https://github.com/spatie/laravel-package-tools/tree/1.19.0"
             },
             "funding": [
                 {
@@ -6421,7 +6421,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-01-22T08:51:18+00:00"
+            "time": "2025-02-06T14:58:20+00:00"
         },
         {
             "name": "spatie/period",
@@ -10398,16 +10398,16 @@
         },
         {
             "name": "composer/class-map-generator",
-            "version": "1.5.0",
+            "version": "1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/class-map-generator.git",
-                "reference": "4b0a223cf5be7c9ee7e0ef1bc7db42b4a97c9915"
+                "reference": "ffe442c5974c44a9343e37a0abcb1cc37319f5b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/class-map-generator/zipball/4b0a223cf5be7c9ee7e0ef1bc7db42b4a97c9915",
-                "reference": "4b0a223cf5be7c9ee7e0ef1bc7db42b4a97c9915",
+                "url": "https://api.github.com/repos/composer/class-map-generator/zipball/ffe442c5974c44a9343e37a0abcb1cc37319f5b9",
+                "reference": "ffe442c5974c44a9343e37a0abcb1cc37319f5b9",
                 "shasum": ""
             },
             "require": {
@@ -10451,7 +10451,7 @@
             ],
             "support": {
                 "issues": "https://github.com/composer/class-map-generator/issues",
-                "source": "https://github.com/composer/class-map-generator/tree/1.5.0"
+                "source": "https://github.com/composer/class-map-generator/tree/1.6.0"
             },
             "funding": [
                 {
@@ -10467,7 +10467,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-11-25T16:11:06+00:00"
+            "time": "2025-02-05T10:05:34+00:00"
         },
         {
             "name": "composer/pcre",
@@ -10664,16 +10664,16 @@
         },
         {
             "name": "larastan/larastan",
-            "version": "v3.0.2",
+            "version": "v3.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/larastan/larastan.git",
-                "reference": "b2e24e1605cff1d1097ccb6fb8af3bbd1dfe1c6f"
+                "reference": "b394eba5805727423071fac9b53ea50dd7e920f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/larastan/larastan/zipball/b2e24e1605cff1d1097ccb6fb8af3bbd1dfe1c6f",
-                "reference": "b2e24e1605cff1d1097ccb6fb8af3bbd1dfe1c6f",
+                "url": "https://api.github.com/repos/larastan/larastan/zipball/b394eba5805727423071fac9b53ea50dd7e920f4",
+                "reference": "b394eba5805727423071fac9b53ea50dd7e920f4",
                 "shasum": ""
             },
             "require": {
@@ -10687,7 +10687,7 @@
                 "illuminate/support": "^11.15.0",
                 "php": "^8.2",
                 "phpmyadmin/sql-parser": "^5.9.0",
-                "phpstan/phpstan": "^2.0.2"
+                "phpstan/phpstan": "^2.1.3"
             },
             "require-dev": {
                 "doctrine/coding-standard": "^12.0",
@@ -10745,7 +10745,7 @@
             ],
             "support": {
                 "issues": "https://github.com/larastan/larastan/issues",
-                "source": "https://github.com/larastan/larastan/tree/v3.0.2"
+                "source": "https://github.com/larastan/larastan/tree/v3.0.4"
             },
             "funding": [
                 {
@@ -10753,7 +10753,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-11-26T23:15:21+00:00"
+            "time": "2025-02-06T21:03:36+00:00"
         },
         {
             "name": "laravel-json-api/testing",
@@ -11344,16 +11344,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.2",
+            "version": "2.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "7d08f569e582ade182a375c366cbd896eccadd3a"
+                "reference": "64ae44e48214f3deebdaeebf2694297a10a2bea9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/7d08f569e582ade182a375c366cbd896eccadd3a",
-                "reference": "7d08f569e582ade182a375c366cbd896eccadd3a",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/64ae44e48214f3deebdaeebf2694297a10a2bea9",
+                "reference": "64ae44e48214f3deebdaeebf2694297a10a2bea9",
                 "shasum": ""
             },
             "require": {
@@ -11398,7 +11398,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-01-21T14:54:06+00:00"
+            "time": "2025-02-07T15:05:24+00:00"
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",
@@ -11820,16 +11820,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "11.5.6",
+            "version": "11.5.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "3c3ae14c90f244cdda95028c3e469028e8d1c02c"
+                "reference": "e1cb706f019e2547039ca2c839898cd5f557ee5d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3c3ae14c90f244cdda95028c3e469028e8d1c02c",
-                "reference": "3c3ae14c90f244cdda95028c3e469028e8d1c02c",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/e1cb706f019e2547039ca2c839898cd5f557ee5d",
+                "reference": "e1cb706f019e2547039ca2c839898cd5f557ee5d",
                 "shasum": ""
             },
             "require": {
@@ -11901,7 +11901,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.5.6"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.5.7"
             },
             "funding": [
                 {
@@ -11917,7 +11917,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-01-31T07:03:30+00:00"
+            "time": "2025-02-06T16:10:05+00:00"
         },
         {
             "name": "sebastian/cli-parser",

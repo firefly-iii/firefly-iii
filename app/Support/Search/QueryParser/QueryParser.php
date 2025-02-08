@@ -71,7 +71,7 @@ class QueryParser implements QueryParserInterface
 
         while ($this->position < strlen($this->query)) {
             $char = $this->query[$this->position];
-            //Log::debug(sprintf('Char #%d: %s', $this->position, $char));
+            // Log::debug(sprintf('Char #%d: %s', $this->position, $char));
 
             // If we're in a quoted string, we treat all characters except another quote as ordinary characters
             if ($inQuotes) {

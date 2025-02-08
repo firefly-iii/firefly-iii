@@ -18,6 +18,8 @@
         "is_reconciled": "Is reconciled",
         "split": "B\u00f6l",
         "single_split": "B\u00f6l",
+        "not_enough_currencies": "Not enough currencies",
+        "not_enough_currencies_enabled": "If you have just one currency enabled, there is no need to add exchange rates.",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">\u0130\u015flem #{ID} (\"{title}\")<\/a> sakl\u0131 olmu\u015ftur.",
         "webhook_stored_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID} (\"{title}\")<\/a> has been stored.",
         "webhook_updated_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID}<\/a> (\"{title}\") has been updated.",

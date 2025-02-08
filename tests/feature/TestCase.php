@@ -1,4 +1,5 @@
 <?php
+
 /*
  * TestCase.php
  * Copyright (c) 2025 james@firefly-iii.org.
@@ -28,13 +29,14 @@ use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
-    //
     protected $seed = true;
-    protected function createUser(): User {
+
+    protected function createUser(): User
+    {
         return User::create(
             [
                 'email'    => 'james@firefly',
-                'password' => 'secret'
+                'password' => 'secret',
             ]
         );
 
