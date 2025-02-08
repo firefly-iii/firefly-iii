@@ -33,6 +33,7 @@ use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait ChartGeneration
@@ -69,8 +70,11 @@ trait ChartGeneration
         $default         = app('amount')->getNativeCurrency();
         $chartData       = [];
 
+        Log::debug(sprintf('Start of accountBalanceChart(list, %s, %s)', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
+
         /** @var Account $account */
         foreach ($accounts as $account) {
+            Log::debug(sprintf('Now at account #%d ("%s)', $account->id, $account->name));
             $currency     = $accountRepos->getAccountCurrency($account) ?? $default;
             $useNative    = $convertToNative && $default->id !== $currency->id;
             $field        = $useNative ? 'native_balance' : 'balance';
@@ -82,7 +86,7 @@ trait ChartGeneration
             ];
 
             $currentStart = clone $start;
-            $range        = Steam::finalAccountBalanceInRange($account, $start, clone $end, $this->convertToNative);
+            $range        = Steam::finalAccountBalanceInRange($account, clone $start, clone $end, $this->convertToNative);
             $previous     = array_values($range)[0];
             while ($currentStart <= $end) {
                 $format                        = $currentStart->format('Y-m-d');

@@ -345,6 +345,9 @@ class AccountController extends Controller
         }
         $accounts       = $repository->getAccountsById($frontpageArray);
 
+        // move to end of day for $end.
+        $end->endOfDay();
+
         return response()->json($this->accountBalanceChart($accounts, $start, $end));
     }
 

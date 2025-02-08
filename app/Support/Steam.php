@@ -59,8 +59,8 @@ class Steam
     public function finalAccountBalanceInRange(Account $account, Carbon $start, Carbon $end, bool $convertToNative): array
     {
         // expand period.
-        $start->subDay()->startOfDay();
-        $end->addDay()->endOfDay();
+        $start->subDay()->endOfDay(); // go to END of day to get the balance at the END of the day.
+        $end->addDay()->startOfDay(); // go to START of day to get the balance at the END of the previous day (see ahead).
         Log::debug(sprintf('finalAccountBalanceInRange(#%d, %s, %s)', $account->id, $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
 
         // set up cache
@@ -102,8 +102,8 @@ class Steam
         // sums up the balance changes per day.
         $set                  = $account->transactions()
             ->leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-            ->where('transaction_journals.date', '>=', $start->format('Y-m-d H:i:s'))
-            ->where('transaction_journals.date', '<=', $end->format('Y-m-d  H:i:s'))
+            ->where('transaction_journals.date', '>', $start->format('Y-m-d H:i:s'))
+            ->where('transaction_journals.date', '<', $end->format('Y-m-d  H:i:s'))
             ->groupBy('transaction_journals.date')
             ->groupBy('transactions.transaction_currency_id')
             ->orderBy('transaction_journals.date', 'ASC')
@@ -125,6 +125,7 @@ class Steam
         foreach ($set as $entry) {
             // get date object
             $carbon                               = new Carbon($entry->date, $entry->date_tz);
+            $carbonKey = $carbon->format('Y-m-d');
             // make sure sum is a string:
             $sumOfDay                             = (string) (null === $entry->sum_of_day ? '0' : $entry->sum_of_day);
 
@@ -135,7 +136,7 @@ class Steam
             /** @var TransactionCurrency $entryCurrency */
             $entryCurrency                        = $currencies[$entry->transaction_currency_id];
 
-            Log::debug(sprintf('Processing transaction(s) on date %s', $carbon->format('Y-m-d H:i:s')));
+            Log::debug(sprintf('Processing transaction(s) on moment %s', $carbon->format('Y-m-d H:i:s')));
             $currentBalance[$entryCurrency->code]        ??= '0';
             $currentBalance[$entryCurrency->code] = bcadd($sumOfDay, $currentBalance[$entryCurrency->code]);
 
@@ -148,9 +149,9 @@ class Steam
                 $nativeSumOfDay                   = $converter->convert($entryCurrency, $nativeCurrency, $carbon, $sumOfDay);
                 $currentBalance['native_balance'] = bcadd($currentBalance['native_balance'], $nativeSumOfDay);
             }
-            // add final $currentBalance array to the big one.
-            $balances[$carbon->format('Y-m-d')]   = $currentBalance;
-            Log::debug('Updated entry', $currentBalance);
+            // just set it.
+            $balances[$carbonKey] = $currentBalance;
+            Log::debug(sprintf('Updated entry [%s]', $carbonKey), $currentBalance);
         }
         $cache->store($balances);
         Log::debug('End of method');
@@ -268,14 +269,15 @@ class Steam
      */
     public function finalAccountBalance(Account $account, Carbon $date): array
     {
+
         $cache             = new CacheProperties();
         $cache->addProperty($account->id);
         $cache->addProperty($date);
         if ($cache->has()) {
-            return $cache->get();
+//            Log::debug(sprintf('CACHED finalAccountBalance(#%d, %s)', $account->id, $date->format('Y-m-d H:i:s')));
+//            return $cache->get();
         }
-
-        Log::debug(sprintf('Now in finalAccountBalance(#%d, "%s", "%s")', $account->id, $account->name, $date->format('Y-m-d H:i:s')));
+        Log::debug(sprintf('finalAccountBalance(#%d, %s)', $account->id, $date->format('Y-m-d H:i:s')));
 
         $native            = Amount::getNativeCurrencyByUserGroup($account->user->userGroup);
         $convertToNative   = Amount::convertToNative($account->user);
