@@ -59,8 +59,8 @@ class Steam
     public function finalAccountBalanceInRange(Account $account, Carbon $start, Carbon $end, bool $convertToNative): array
     {
         // expand period.
-        $start->subDay()->endOfDay(); // go to END of day to get the balance at the END of the day.
-        $end->addDay()->startOfDay(); // go to START of day to get the balance at the END of the previous day (see ahead).
+        $start->startOfDay();
+        $end->endOfDay();
         Log::debug(sprintf('finalAccountBalanceInRange(#%d, %s, %s)', $account->id, $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
 
         // set up cache
@@ -82,6 +82,7 @@ class Steam
         $currency             = $accountCurrency ?? $nativeCurrency;
         Log::debug(sprintf('Currency is %s', $currency->code));
 
+
         // set start balances:
         $startBalance[$currency->code] ??= '0';
         if ($hasCurrency) {
@@ -100,10 +101,11 @@ class Steam
         Log::debug('Final start balance: ', $startBalance);
 
         // sums up the balance changes per day.
+        Log::debug(sprintf('Date >= %s and <= %s', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
         $set                  = $account->transactions()
             ->leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-            ->where('transaction_journals.date', '>', $start->format('Y-m-d H:i:s'))
-            ->where('transaction_journals.date', '<', $end->format('Y-m-d  H:i:s'))
+            ->where('transaction_journals.date', '>=', $start->format('Y-m-d H:i:s'))
+            ->where('transaction_journals.date', '<=', $end->format('Y-m-d  H:i:s'))
             ->groupBy('transaction_journals.date')
             ->groupBy('transactions.transaction_currency_id')
             ->orderBy('transaction_journals.date', 'ASC')

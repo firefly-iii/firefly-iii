@@ -58,7 +58,7 @@ trait ChartGeneration
         if ($cache->has()) {
             return $cache->get();
         }
-        app('log')->debug('Regenerate chart.account.account-balance-chart from scratch.');
+        Log::debug('Regenerate chart.account.account-balance-chart from scratch.');
         $locale          = app('steam')->getLocale();
 
         /** @var GeneratorInterface $generator */
@@ -88,6 +88,7 @@ trait ChartGeneration
             $currentStart = clone $start;
             $range        = Steam::finalAccountBalanceInRange($account, clone $start, clone $end, $this->convertToNative);
             $previous     = array_values($range)[0];
+            Log::debug(sprintf('Start balance for account #%d ("%s) is', $account->id, $account->name), $previous);
             while ($currentStart <= $end) {
                 $format                        = $currentStart->format('Y-m-d');
                 $label                         = trim($currentStart->isoFormat((string) trans('config.month_and_day_js', [], $locale)));

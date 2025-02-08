@@ -88,6 +88,10 @@ class ExchangeRateConverter
 
             return '1';
         }
+        if($from->id === $to->id) {
+            Log::debug('ExchangeRateConverter: From and to are the same, return "1".');
+            return '1';
+        }
         $rate = $this->getRate($from, $to, $date);
 
         return '0' === $rate ? '1' : $rate;
@@ -103,7 +107,7 @@ class ExchangeRateConverter
 
         // find in cache
         if (null !== $res) {
-            Log::debug(sprintf('ExchangeRateConverter: Return cached rate from #%d to #%d on %s.', $from->id, $to->id, $date->format('Y-m-d')));
+            Log::debug(sprintf('ExchangeRateConverter: Return cached rate from %s to %s on %s.', $from->code, $to->code, $date->format('Y-m-d')));
 
             return $res;
         }
@@ -112,7 +116,7 @@ class ExchangeRateConverter
         $rate   = $this->getFromDB($from->id, $to->id, $date->format('Y-m-d'));
         if (null !== $rate) {
             Cache::forever($key, $rate);
-            Log::debug(sprintf('ExchangeRateConverter: Return DB rate from #%d to #%d on %s.', $from->id, $to->id, $date->format('Y-m-d')));
+            Log::debug(sprintf('ExchangeRateConverter: Return DB rate from %s to %s on %s.', $from->code, $to->code, $date->format('Y-m-d')));
 
             return $rate;
         }
@@ -122,7 +126,7 @@ class ExchangeRateConverter
         if (null !== $rate) {
             $rate = bcdiv('1', $rate);
             Cache::forever($key, $rate);
-            Log::debug(sprintf('ExchangeRateConverter: Return inverse DB rate from #%d to #%d on %s.', $from->id, $to->id, $date->format('Y-m-d')));
+            Log::debug(sprintf('ExchangeRateConverter: Return inverse DB rate from %s to %s on %s.', $from->code, $to->code, $date->format('Y-m-d')));
 
             return $rate;
         }
@@ -133,14 +137,14 @@ class ExchangeRateConverter
 
         // combined (if present), they can be used to calculate the necessary conversion rate.
         if (0 === bccomp('0', $first) || 0 === bccomp('0', $second)) {
-            Log::warning(sprintf('$first is "%s" and $second is "%s"', $first, $second));
+            Log::warning(sprintf('There is not enough information to convert %s to %s on date %d', $from->code, $to->code, $date->format('Y-m-d')));
 
             return '1';
         }
 
         $second = bcdiv('1', $second);
         $rate   = bcmul($first, $second);
-        Log::debug(sprintf('ExchangeRateConverter: Return DB rate from #%d to #%d on %s.', $from->id, $to->id, $date->format('Y-m-d')));
+        Log::debug(sprintf('ExchangeRateConverter: Return DB rate from %s to %s on %s.', $from->code, $to->code, $date->format('Y-m-d')));
         Cache::forever($key, $rate);
 
         return $rate;
@@ -154,6 +158,7 @@ class ExchangeRateConverter
     private function getFromDB(int $from, int $to, string $date): ?string
     {
         if ($from === $to) {
+            Log::debug('ExchangeRateConverter: From and to are the same, return "1".');
             return '1';
         }
         $key          = sprintf('cer-%d-%d-%s', $from, $to, $date);
@@ -173,7 +178,7 @@ class ExchangeRateConverter
             if ('' === $rate) {
                 return null;
             }
-            Log::debug(sprintf('ExchangeRateConverter: Found !cached! rate from #%d to #%d on %s.', $from, $to, $date));
+            Log::debug(sprintf('ExchangeRateConverter: Found cached rate from #%d to #%d on %s.', $from, $to, $date));
 
             return $rate;
         }
