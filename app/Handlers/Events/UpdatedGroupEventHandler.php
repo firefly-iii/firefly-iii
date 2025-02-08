@@ -119,7 +119,7 @@ class UpdatedGroupEventHandler
     /**
      * This method will make sure all source / destination accounts are the same.
      */
-    private function unifyAccounts(UpdatedTransactionGroup $updatedGroupEvent): void
+    public function unifyAccounts(UpdatedTransactionGroup $updatedGroupEvent): void
     {
         $group         = $updatedGroupEvent->transactionGroup;
         if (1 === $group->transactionJournals->count()) {
