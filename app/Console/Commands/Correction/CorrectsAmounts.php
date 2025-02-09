@@ -203,33 +203,36 @@ class CorrectsAmounts extends Command
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             $repository->setUser($journal->user);
-            $native = Amount::getNativeCurrencyByUserGroup($journal->userGroup);
-            /** @var Transaction|null $source */
-            $source = $journal->transactions()->where('amount', '<', 0)->first();
-            /** @var Transaction|null $destination */
-            $destination = $journal->transactions()->where('amount', '>', 0)->first();
+            $native         = Amount::getNativeCurrencyByUserGroup($journal->userGroup);
+
+            /** @var null|Transaction $source */
+            $source         = $journal->transactions()->where('amount', '<', 0)->first();
+
+            /** @var null|Transaction $destination */
+            $destination    = $journal->transactions()->where('amount', '>', 0)->first();
             if (null === $source || null === $destination) {
                 continue;
             }
             if (null === $source->foreign_currency_id || null === $destination->foreign_currency_id) {
                 continue;
             }
-            $sourceAccount = $source->account;
-            $destAccount   = $destination->account;
+            $sourceAccount  = $source->account;
+            $destAccount    = $destination->account;
             if (null === $sourceAccount || null === $destAccount) {
                 continue;
             }
             $sourceCurrency = $repository->getAccountCurrency($sourceAccount) ?? $native;
             $destCurrency   = $repository->getAccountCurrency($destAccount) ?? $native;
 
-            if($sourceCurrency->id === $destCurrency->id) {
+            if ($sourceCurrency->id === $destCurrency->id) {
                 Log::debug('Both accounts have the same currency. Removing foreign currency info.');
-                $source->foreign_currency_id = null;
-                $source->foreign_amount = null;
+                $source->foreign_currency_id      = null;
+                $source->foreign_amount           = null;
                 $source->save();
                 $destination->foreign_currency_id = null;
-                $destination->foreign_amount = null;
+                $destination->foreign_amount      = null;
                 $destination->save();
+
                 continue;
             }
 

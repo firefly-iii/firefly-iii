@@ -88,8 +88,9 @@ class ExchangeRateConverter
 
             return '1';
         }
-        if($from->id === $to->id) {
+        if ($from->id === $to->id) {
             Log::debug('ExchangeRateConverter: From and to are the same, return "1".');
+
             return '1';
         }
         $rate = $this->getRate($from, $to, $date);
@@ -159,6 +160,7 @@ class ExchangeRateConverter
     {
         if ($from === $to) {
             Log::debug('ExchangeRateConverter: From and to are the same, return "1".');
+
             return '1';
         }
         $key          = sprintf('cer-%d-%d-%s', $from, $to, $date);
