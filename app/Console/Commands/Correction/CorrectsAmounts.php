@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Correction;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\AutoBudget;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\Bill;
@@ -33,8 +34,14 @@ use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\RuleTrigger;
+use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class CorrectsAmounts extends Command
 {
@@ -45,6 +52,8 @@ class CorrectsAmounts extends Command
 
     public function handle(): int
     {
+        // transfers must not have foreign currency info if both accounts have the same currency.
+        $this->correctTransfers();
         // auto budgets must be positive
         $this->fixAutoBudgets();
         // available budgets must be positive
@@ -61,6 +70,7 @@ class CorrectsAmounts extends Command
         $this->fixRecurrences();
         // rule_triggers must be positive or zero (amount_less, amount_more, amount_is)
         $this->fixRuleTriggers();
+
 
         return 0;
     }
@@ -181,5 +191,61 @@ class CorrectsAmounts extends Command
         }
 
         return false;
+    }
+
+    private function correctTransfers(): void
+    {
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+        $type       = TransactionType::where('type', TransactionTypeEnum::TRANSFER->value)->first();
+        $journals   = TransactionJournal::where('transaction_type_id', $type->id)->get();
+
+        /** @var TransactionJournal $journal */
+        foreach ($journals as $journal) {
+            $repository->setUser($journal->user);
+            $native = Amount::getNativeCurrencyByUserGroup($journal->userGroup);
+            /** @var Transaction|null $source */
+            $source = $journal->transactions()->where('amount', '<', 0)->first();
+            /** @var Transaction|null $destination */
+            $destination = $journal->transactions()->where('amount', '>', 0)->first();
+            if (null === $source || null === $destination) {
+                continue;
+            }
+            if (null === $source->foreign_currency_id || null === $destination->foreign_currency_id) {
+                continue;
+            }
+            $sourceAccount = $source->account;
+            $destAccount   = $destination->account;
+            if (null === $sourceAccount || null === $destAccount) {
+                continue;
+            }
+            $sourceCurrency = $repository->getAccountCurrency($sourceAccount) ?? $native;
+            $destCurrency   = $repository->getAccountCurrency($destAccount) ?? $native;
+
+            if($sourceCurrency->id === $destCurrency->id) {
+                Log::debug('Both accounts have the same currency. Removing foreign currency info.');
+                $source->foreign_currency_id = null;
+                $source->foreign_amount = null;
+                $source->save();
+                $destination->foreign_currency_id = null;
+                $destination->foreign_amount = null;
+                $destination->save();
+                continue;
+            }
+
+            // validate source
+            if ($destCurrency->id !== $source->foreign_currency_id) {
+                Log::debug(sprintf('Journal #%d: Transaction #%d refers to "%s" but should refer to "%s".', $journal->id, $source->id, $source->foreignCurrency->code, $destCurrency->code));
+                $source->foreign_currency_id = $destCurrency->id;
+                $source->save();
+            }
+
+            // validate destination:
+            if ($sourceCurrency->id !== $destination->foreign_currency_id) {
+                Log::debug(sprintf('Journal #%d: Transaction #%d refers to "%s" but should refer to "%s".', $journal->id, $destination->id, $destination->foreignCurrency->code, $sourceCurrency->code));
+                $destination->foreign_currency_id = $sourceCurrency->id;
+                $destination->save();
+            }
+        }
     }
 }

@@ -137,7 +137,7 @@ class ExchangeRateConverter
 
         // combined (if present), they can be used to calculate the necessary conversion rate.
         if (0 === bccomp('0', $first) || 0 === bccomp('0', $second)) {
-            Log::warning(sprintf('There is not enough information to convert %s to %s on date %d', $from->code, $to->code, $date->format('Y-m-d')));
+            Log::warning(sprintf('There is not enough information to convert %s to %s on date %s', $from->code, $to->code, $date->format('Y-m-d')));
 
             return '1';
         }

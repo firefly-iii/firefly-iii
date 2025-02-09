@@ -111,6 +111,10 @@ class TransactionJournal extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function userGroup(): BelongsTo
+    {
+        return $this->belongsTo(UserGroup::class);
+    }
 
     public function attachments(): MorphMany
     {
