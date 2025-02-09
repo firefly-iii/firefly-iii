@@ -46,6 +46,7 @@ class TransactionJournalObserver
                 $transaction->delete();
             }
         });
+
         /** @var Attachment $attachment */
         foreach ($transactionJournal->attachments()->get() as $attachment) {
             $repository->destroy($attachment);

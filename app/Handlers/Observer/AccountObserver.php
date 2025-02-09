@@ -82,6 +82,7 @@ class AccountObserver
         foreach ($account->piggyBanks()->get() as $piggy) {
             $piggy->accounts()->detach($account);
         }
+
         /** @var Attachment $attachment */
         foreach ($account->attachments()->get() as $attachment) {
             $repository->destroy($attachment);
