@@ -77,8 +77,9 @@ trait ChartGeneration
             Log::debug(sprintf('Now at account #%d ("%s)', $account->id, $account->name));
             $currency     = $accountRepos->getAccountCurrency($account) ?? $default;
             $useNative    = $convertToNative && $default->id !== $currency->id;
-            $field        = $useNative ? 'native_balance' : 'balance';
+            $field        = $convertToNative ? 'native_balance' : 'balance';
             $currency     = $useNative ? $default : $currency;
+            Log::debug(sprintf('Will use field %s', $field));
             $currentSet   = [
                 'label'           => $account->name,
                 'currency_symbol' => $currency->symbol,

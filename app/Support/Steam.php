@@ -68,6 +68,7 @@ class Steam
         $cache->addProperty($account->id);
         $cache->addProperty('final-balance-in-range');
         $cache->addProperty($start);
+        $cache->addProperty($convertToNative);
         $cache->addProperty($end);
         if ($cache->has()) {
             return $cache->get();
