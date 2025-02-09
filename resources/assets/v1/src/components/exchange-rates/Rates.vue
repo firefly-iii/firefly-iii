@@ -381,7 +381,7 @@ export default {
                 this.totalPages = parseInt(response.data.meta.pagination.total_pages);
                 this.loading = false;
                 this.rates = Object.values(this.tempRates);
-                console.log('Do not download more pages. Now on page ' + this.page + ' of ' + this.totalPages);
+                // console.log('Do not download more pages. Now on page ' + this.page + ' of ' + this.totalPages);
             });
         }
     },

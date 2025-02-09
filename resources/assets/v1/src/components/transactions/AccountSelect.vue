@@ -36,7 +36,6 @@
             class="form-control"
             data-role="input"
             type="text"
-            v-on:keypress="handleEnter"
             v-on:submit.prevent>
         <span class="input-group-btn">
             <button
@@ -217,7 +216,7 @@ export default {
           }
         },
         selectedItem: function (e) {
-          // console.log('In SelectedItem()');
+          console.log('In SelectedItem()');
           if (typeof this.name === 'undefined') {
             // console.log('Is undefined');
             return;
@@ -239,12 +238,6 @@ export default {
           this.name = '';
           // some event?
           this.$emit('clear:value')
-        },
-        handleEnter: function (e) {
-          // TODO feels sloppy. Can be removed.
-          if (e.keyCode === 13) {
-            //e.preventDefault();
-          }
         }
       }
 }

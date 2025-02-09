@@ -113,6 +113,11 @@ class AccountController extends Controller
                 'currency_code'           => $useCurrency->code,
                 'currency_symbol'         => $useCurrency->symbol,
                 'currency_decimal_places' => $useCurrency->decimal_places,
+                'account_currency_id'             => (string) $currency->id,
+                'account_currency_name'           => $currency->name,
+                'account_currency_code'           => $currency->code,
+                'account_currency_symbol'         => $currency->symbol,
+                'account_currency_decimal_places' => $currency->decimal_places,
             ];
         }
 

@@ -155,8 +155,8 @@
                                                     v-bind:title="$t('form.foreign_amount')"
                                     ></foreign-amount>
                                     <reconciled v-show="isReconciled"
-                                        v-model="transaction.reconciled"
-                                        :error="transaction.errors.reconciled"
+                                                v-model="transaction.reconciled"
+                                                :error="transaction.errors.reconciled"
                                     ></reconciled>
                                 </div>
                                 <div class="col-lg-4">
@@ -322,6 +322,12 @@ export default {
                 currency_decimal_places: model.currency_decimal_places,
                 allowed_types: this.transactions[index].source_account.allowed_types
             };
+            if(model.hasOwnProperty('account_currency_id') && null !== model.account_currency_id) {
+                this.transactions[index].source_account.currency_id = model.account_currency_id;
+                this.transactions[index].source_account.currency_name = model.account_currency_name;
+                this.transactions[index].source_account.currency_code = model.account_currency_code;
+                this.transactions[index].source_account.currency_decimal_places = model.account_currency_decimal_places;
+            }
         },
         selectedDestinationAccount(index, model) {
             if (typeof model === 'string') {
@@ -341,6 +347,12 @@ export default {
                 currency_decimal_places: model.currency_decimal_places,
                 allowed_types: this.transactions[index].destination_account.allowed_types
             };
+            if(model.hasOwnProperty('account_currency_id') && null !== model.account_currency_id) {
+                this.transactions[index].destination_account.currency_id = model.account_currency_id;
+                this.transactions[index].destination_account.currency_name = model.account_currency_name;
+                this.transactions[index].destination_account.currency_code = model.account_currency_code;
+                this.transactions[index].destination_account.currency_decimal_places = model.account_currency_decimal_places;
+            }
         },
         clearSource(index) {
             // reset source account:
@@ -437,7 +449,7 @@ export default {
             //console.log('EditTransaction: processIncomingGroupRow()');
             this.setTransactionType(transaction.type);
 
-            if(true === transaction.reconciled) {
+            if (true === transaction.reconciled) {
                 this.isReconciled = true;
             }
 
@@ -528,7 +540,16 @@ export default {
                     allowed_types: window.expectedSourceTypes.destination[this.ucFirst(transaction.type)]
                 }
             };
-            if(null === transaction.foreign_amount) {
+            // if transaction type is transfer, the destination currency_id etc. MUST match the actual account currency info.
+            if ('transfer' === transaction.type && null !== transaction.foreign_currency_code) {
+                result.destination_account.currency_id = transaction.foreign_currency_id;
+                result.destination_account.currency_name = transaction.foreign_currency_name;
+                result.destination_account.currency_code = transaction.foreign_currency_code;
+                result.destination_account.currency_decimal_places = transaction.foreign_currency_decimal_places;
+            }
+
+
+            if (null === transaction.foreign_amount) {
                 result.foreign_amount.amount = '';
             }
             this.transactions.push(result);
@@ -736,7 +757,7 @@ export default {
             if (parseInt(row.piggy_bank) > 0) {
                 currentArray.piggy_bank_id = parseInt(row.piggy_bank);
             }
-            if(this.isReconciled && !this.storeAsNew && true === row.reconciled) {
+            if (this.isReconciled && !this.storeAsNew && true === row.reconciled) {
                 // drop content from array:
                 delete currentArray.source_id;
                 delete currentArray.source_name;
@@ -748,7 +769,7 @@ export default {
                 delete currentArray.currency_id;
                 currentArray.reconciled = true;
             }
-            if(true === row.isReconciled) {
+            if (true === row.isReconciled) {
                 this.isReconciled = false;
             }
 
@@ -801,10 +822,16 @@ export default {
                 this.setDefaultErrors();
                 // do message if update or new:
                 if (this.storeAsNew) {
-                    this.success_message = this.$t('firefly.transaction_new_stored_link', {ID: groupId, title: this.escapeHtml(title)});
+                    this.success_message = this.$t('firefly.transaction_new_stored_link', {
+                        ID: groupId,
+                        title: this.escapeHtml(title)
+                    });
                     this.error_message = '';
                 } else {
-                    this.success_message = this.$t('firefly.transaction_updated_link', {ID: groupId, title: this.escapeHtml(title)});
+                    this.success_message = this.$t('firefly.transaction_updated_link', {
+                        ID: groupId,
+                        title: this.escapeHtml(title)
+                    });
                     this.error_message = '';
                 }
             } else {

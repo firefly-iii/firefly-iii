@@ -922,6 +922,12 @@ export default {
                     allowed_types: this.transactions[index].source_account.allowed_types,
                     default_allowed_types: ['Asset account', 'Revenue account', 'Loan', 'Debt', 'Mortgage']
                 };
+                if(model.hasOwnProperty('account_currency_id') && null !== model.account_currency_id) {
+                    this.transactions[index].source_account.currency_id = model.account_currency_id;
+                    this.transactions[index].source_account.currency_name = model.account_currency_name;
+                    this.transactions[index].source_account.currency_code = model.account_currency_code;
+                    this.transactions[index].source_account.currency_decimal_places = model.account_currency_decimal_places;
+                }
 
                 // force types on destination selector.
                 this.transactions[index].destination_account.allowed_types = window.allowedOpposingTypes.source[model.type];
@@ -946,6 +952,12 @@ export default {
                     allowed_types: this.transactions[index].destination_account.allowed_types,
                     default_allowed_types: ['Asset account', 'Expense account', 'Loan', 'Debt', 'Mortgage']
                 };
+                if(model.hasOwnProperty('account_currency_id') && null !== model.account_currency_id) {
+                    this.transactions[index].destination_account.currency_id = model.account_currency_id;
+                    this.transactions[index].destination_account.currency_name = model.account_currency_name;
+                    this.transactions[index].destination_account.currency_code = model.account_currency_code;
+                    this.transactions[index].destination_account.currency_decimal_places = model.account_currency_decimal_places;
+                }
 
                 // force types on destination selector.
                 this.transactions[index].source_account.allowed_types = window.allowedOpposingTypes.destination[model.type];
