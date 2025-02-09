@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Observer;
 
+use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
@@ -46,6 +47,7 @@ class BillObserver
         $repository->setUser($bill->user);
 
         //        app('log')->debug('Observe "deleting" of a bill.');
+        /** @var Attachment $attachment */
         foreach ($bill->attachments()->get() as $attachment) {
             $repository->destroy($attachment);
         }

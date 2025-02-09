@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Observer;
 
+use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 
@@ -38,6 +39,7 @@ class CategoryObserver
         $repository = app(AttachmentRepositoryInterface::class);
         $repository->setUser($category->user);
 
+        /** @var Attachment $attachment */
         foreach ($category->attachments()->get() as $attachment) {
             $repository->destroy($attachment);
         }

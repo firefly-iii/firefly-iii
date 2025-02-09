@@ -259,7 +259,7 @@ class DebugController extends Controller
         $system = $this->getSystemInformation();
         $docker = $this->getBuildInfo();
         $app    = $this->getAppInfo();
-        $user   = $this->getuserInfo();
+        $user   = $this->getUserInfo();
 
         return (string) view('partials.debug-table', compact('system', 'docker', 'app', 'user'));
     }

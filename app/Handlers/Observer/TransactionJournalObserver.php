@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Observer;
 
+use FireflyIII\Models\Attachment;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 
@@ -45,6 +46,7 @@ class TransactionJournalObserver
                 $transaction->delete();
             }
         });
+        /** @var Attachment $attachment */
         foreach ($transactionJournal->attachments()->get() as $attachment) {
             $repository->destroy($attachment);
         }

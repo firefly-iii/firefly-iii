@@ -63,13 +63,9 @@ abstract class Node
 
             return false;
         }
-        if ($compare instanceof NodeGroup) {
+        if ($compare instanceof NodeGroup && $this instanceof NodeGroup) {
             if (count($compare->getNodes()) !== count($this->getNodes())) {
                 Log::debug(sprintf('Return false because node count is different. Original is %d, compare is %d', count($this->getNodes()), count($compare->getNodes())));
-
-                //                var_dump($this);
-                //                var_dump($compare);
-                //                exit;
                 return false;
             }
 
@@ -80,11 +76,6 @@ abstract class Node
             foreach ($this->getNodes() as $index => $node) {
                 if (false === $node->equals($compare->getNodes()[$index])) {
                     Log::debug('Return false because nodes are different!');
-                    var_dump($this);
-                    var_dump($compare);
-
-                    exit;
-
                     return false;
                 }
             }

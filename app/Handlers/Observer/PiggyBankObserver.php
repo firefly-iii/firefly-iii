@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Observer;
 
+use FireflyIII\Models\Attachment;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
@@ -50,6 +51,7 @@ class PiggyBankObserver
         $repository = app(AttachmentRepositoryInterface::class);
         $repository->setUser($piggyBank->accounts()->first()->user);
 
+        /** @var Attachment $attachment */
         foreach ($piggyBank->attachments()->get() as $attachment) {
             $repository->destroy($attachment);
         }

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Observer;
 
+use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 
@@ -38,6 +39,7 @@ class TagObserver
         $repository = app(AttachmentRepositoryInterface::class);
         $repository->setUser($tag->user);
 
+        /** @var Attachment $attachment */
         foreach ($tag->attachments()->get() as $attachment) {
             $repository->destroy($attachment);
         }

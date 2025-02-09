@@ -159,7 +159,7 @@ return new class () extends Migration {
         Schema::dropIfExists('account_piggy_bank');
     }
 
-    protected static function hasForeign(string $table, string $column)
+    protected static function hasForeign(string $table, string $column): bool
     {
 
         $foreignKeysDefinitions = Schema::getForeignKeys($table);

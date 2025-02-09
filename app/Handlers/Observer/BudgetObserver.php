@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Observer;
 
+use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
@@ -39,6 +40,7 @@ class BudgetObserver
         $repository   = app(AttachmentRepositoryInterface::class);
         $repository->setUser($budget->user);
 
+        /** @var Attachment $attachment */
         foreach ($budget->attachments()->get() as $attachment) {
             $repository->destroy($attachment);
         }

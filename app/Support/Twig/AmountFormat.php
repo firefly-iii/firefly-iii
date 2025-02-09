@@ -114,7 +114,7 @@ class AmountFormat extends AbstractExtension
             static function (string $amount, string $code, ?bool $coloured = null): string {
                 $coloured ??= true;
 
-                /** @var TransactionCurrency $currency */
+                /** @var TransactionCurrency|null $currency */
                 $currency = TransactionCurrency::whereCode($code)->first();
                 if (null === $currency) {
                     Log::error(sprintf('Could not find currency with code "%s". Fallback to native currency.', $code));
