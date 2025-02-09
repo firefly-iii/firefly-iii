@@ -27,6 +27,7 @@ namespace FireflyIII\Factory;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionGroup;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 
 /**
@@ -36,6 +37,7 @@ class TransactionGroupFactory
 {
     private TransactionJournalFactory $journalFactory;
     private User                      $user;
+    private UserGroup $userGroup;
 
     /**
      * TransactionGroupFactory constructor.
@@ -54,7 +56,8 @@ class TransactionGroupFactory
     public function create(array $data): TransactionGroup
     {
         app('log')->debug('Now in TransactionGroupFactory::create()');
-        $this->journalFactory->setUser($this->user);
+        $this->journalFactory->setUser($data['user']);
+        $this->journalFactory->setUserGroup($data['user_group']);
         $this->journalFactory->setErrorOnHash($data['error_if_duplicate_hash'] ?? false);
 
         try {
@@ -76,7 +79,7 @@ class TransactionGroupFactory
 
         $group        = new TransactionGroup();
         $group->user()->associate($this->user);
-        $group->userGroup()->associate($data['user_group'] ?? $this->user->userGroup);
+        $group->userGroup()->associate($data['user_group']);
         $group->title = $title;
         $group->save();
 
@@ -91,5 +94,9 @@ class TransactionGroupFactory
     public function setUser(User $user): void
     {
         $this->user = $user;
+    }
+
+    public function setUserGroup(UserGroup $userGroup): void {
+        $this->userGroup = $userGroup;
     }
 }

@@ -40,6 +40,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Services\Internal\Destroy\AccountDestroyService;
 use FireflyIII\Services\Internal\Update\AccountUpdateService;
 use FireflyIII\Support\Facades\Steam;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
@@ -51,7 +52,8 @@ use Illuminate\Support\Collection;
  */
 class AccountRepository implements AccountRepositoryInterface
 {
-    private User $user;
+    use UserGroupTrait;
+
 
     /**
      * Moved here from account CRUD.

@@ -43,6 +43,7 @@ use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
 use FireflyIII\Services\Internal\Update\GroupUpdateService;
 use FireflyIII\Support\NullArrayObject;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
@@ -53,7 +54,7 @@ use Illuminate\Support\Collection;
  */
 class TransactionGroupRepository implements TransactionGroupRepositoryInterface
 {
-    private User $user;
+    use UserGroupTrait;
 
     public function countAttachments(int $journalId): int
     {
@@ -161,13 +162,6 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         }
 
         return $result;
-    }
-
-    public function setUser(null|Authenticatable|User $user): void
-    {
-        if ($user instanceof User) {
-            $this->user = $user;
-        }
     }
 
     /**
@@ -408,7 +402,8 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
     {
         /** @var TransactionGroupFactory $factory */
         $factory = app(TransactionGroupFactory::class);
-        $factory->setUser($this->user);
+        $factory->setUser($data['user']);
+        $factory->setUserGroup($data['user_group']);
 
         try {
             return $factory->create($data);

@@ -36,6 +36,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Facades\Steam;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
@@ -48,7 +49,8 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 {
     use ModifiesPiggyBanks;
 
-    private User $user;
+    use UserGroupTrait;
+
 
     public function destroyAll(): void
     {

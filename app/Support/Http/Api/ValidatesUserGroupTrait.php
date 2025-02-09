@@ -38,6 +38,7 @@ use Illuminate\Support\Facades\Log;
  */
 trait ValidatesUserGroupTrait
 {
+    protected ?UserGroup $userGroup = null;
     /**
      * An "undocumented" filter
      *
@@ -98,7 +99,7 @@ trait ValidatesUserGroupTrait
         foreach ($roles as $role) {
             if ($user->hasRoleInGroupOrOwner($group, $role)) {
                 Log::debug(sprintf('validateUserGroup: User has role "%s" in group #%d, return the group.', $role->value, $groupId));
-
+                $this->userGroup = $group;
                 return $group;
             }
             Log::debug(sprintf('validateUserGroup: User does NOT have role "%s" in group #%d, continue searching.', $role->value, $groupId));

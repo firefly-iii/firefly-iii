@@ -34,6 +34,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -69,6 +70,7 @@ class TransactionJournalFactory
     private PiggyBankRepositoryInterface       $piggyRepository;
     private TransactionTypeRepositoryInterface $typeRepository;
     private User                               $user;
+    private UserGroup $userGroup;
 
     /**
      * Constructor.
@@ -176,8 +178,6 @@ class TransactionJournalFactory
         if (true === FireflyConfig::get('utc', false)->data) {
             $carbon->setTimezone('UTC');
         }
-        // $carbon->setTimezone('UTC');
-
         try {
             // validate source and destination using a new Validator.
             $this->validateAccounts($row);
@@ -228,7 +228,7 @@ class TransactionJournalFactory
         $journal               = TransactionJournal::create(
             [
                 'user_id'                 => $this->user->id,
-                'user_group_id'           => $this->user->user_group_id,
+                'user_group_id'           => $this->userGroup->id,
                 'transaction_type_id'     => $type->id,
                 'bill_id'                 => $billId,
                 'transaction_currency_id' => $currency->id,
@@ -244,7 +244,6 @@ class TransactionJournalFactory
 
         /** Create two transactions. */
         $transactionFactory    = app(TransactionFactory::class);
-        $transactionFactory->setUser($this->user);
         $transactionFactory->setJournal($journal);
         $transactionFactory->setAccount($sourceAccount);
         $transactionFactory->setCurrency($currency);
@@ -263,7 +262,6 @@ class TransactionJournalFactory
 
         /** @var TransactionFactory $transactionFactory */
         $transactionFactory    = app(TransactionFactory::class);
-        $transactionFactory->setUser($this->user);
         $transactionFactory->setJournal($journal);
         $transactionFactory->setAccount($destinationAccount);
         $transactionFactory->setAccountInformation($destInfo);
@@ -405,6 +403,7 @@ class TransactionJournalFactory
     public function setUser(User $user): void
     {
         $this->user = $user;
+        $this->userGroup = $user->userGroup;
         $this->currencyRepository->setUser($this->user);
         $this->tagFactory->setUser($user);
         $this->billRepository->setUser($this->user);
@@ -412,6 +411,17 @@ class TransactionJournalFactory
         $this->categoryRepository->setUser($this->user);
         $this->piggyRepository->setUser($this->user);
         $this->accountRepository->setUser($this->user);
+    }
+
+    public function setUserGroup(UserGroup $userGroup): void {
+        $this->userGroup = $userGroup;
+        $this->currencyRepository->setUserGroup($userGroup);
+        $this->tagFactory->setUserGroup($userGroup);
+        $this->billRepository->setUserGroup($userGroup);
+        $this->budgetRepository->setUserGroup($userGroup);
+        $this->categoryRepository->setUserGroup($userGroup);
+        $this->piggyRepository->setUserGroup($userGroup);
+        $this->accountRepository->setUserGroup($userGroup);
     }
 
     private function reconciliationSanityCheck(?Account $sourceAccount, ?Account $destinationAccount): array

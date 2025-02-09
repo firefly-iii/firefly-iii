@@ -33,6 +33,7 @@ use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Services\Internal\Destroy\CategoryDestroyService;
 use FireflyIII\Services\Internal\Update\CategoryUpdateService;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
@@ -43,7 +44,7 @@ use Illuminate\Support\Facades\Log;
  */
 class CategoryRepository implements CategoryRepositoryInterface
 {
-    private User $user;
+    use UserGroupTrait;
 
     public function categoryEndsWith(string $query, int $limit): Collection
     {

@@ -29,6 +29,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
@@ -136,6 +137,7 @@ interface PiggyBankRepositoryInterface
     public function setOrder(PiggyBank $piggyBank, int $newOrder): bool;
 
     public function setUser(null|Authenticatable|User $user): void;
+    public function setUserGroup(UserGroup $userGroup): void;
 
     /**
      * Store new piggy bank.

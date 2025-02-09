@@ -26,6 +26,7 @@ namespace FireflyIII\Factory;
 
 use FireflyIII\Models\Location;
 use FireflyIII\Models\Tag;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 
 /**
@@ -34,6 +35,7 @@ use FireflyIII\User;
 class TagFactory
 {
     private User $user;
+    private UserGroup $userGroup;
 
     public function findOrCreate(string $tag): ?Tag
     {
@@ -102,5 +104,11 @@ class TagFactory
     public function setUser(User $user): void
     {
         $this->user = $user;
+        $this->userGroup = $user->userGroup;
+    }
+
+    public function setUserGroup(UserGroup $userGroup): void
+    {
+        $this->userGroup = $userGroup;
     }
 }

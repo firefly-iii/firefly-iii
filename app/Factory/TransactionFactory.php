@@ -29,6 +29,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\Rules\UniqueIban;
 use FireflyIII\Services\Internal\Update\AccountUpdateService;
 use FireflyIII\User;
@@ -163,7 +164,7 @@ class TransactionFactory
         }
 
         app('log')->debug('Will update account with IBAN information.');
-        $service   = app(AccountUpdateService::class);
+        $service = app(AccountUpdateService::class);
         $service->update($this->account, ['iban' => $this->accountInformation['iban']]);
     }
 
@@ -215,13 +216,5 @@ class TransactionFactory
     public function setReconciled(bool $reconciled): void
     {
         $this->reconciled = $reconciled;
-    }
-
-    /**
-     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
-     */
-    public function setUser(User $user): void
-    {
-        // empty function.
     }
 }

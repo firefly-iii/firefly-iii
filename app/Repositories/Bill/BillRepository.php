@@ -38,6 +38,7 @@ use FireflyIII\Services\Internal\Destroy\BillDestroyService;
 use FireflyIII\Services\Internal\Update\BillUpdateService;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Query\JoinClause;
@@ -51,8 +52,7 @@ use Illuminate\Support\Facades\Log;
 class BillRepository implements BillRepositoryInterface
 {
     use CreatesObjectGroups;
-
-    private User $user;
+    use UserGroupTrait;
 
     public function billEndsWith(string $query, int $limit): Collection
     {
@@ -292,13 +292,6 @@ class BillRepository implements BillRepositoryInterface
         }
 
         return $result;
-    }
-
-    public function setUser(null|Authenticatable|User $user): void
-    {
-        if ($user instanceof User) {
-            $this->user = $user;
-        }
     }
 
     public function getPaginator(int $size): LengthAwarePaginator

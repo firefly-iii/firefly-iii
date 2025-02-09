@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
@@ -41,6 +42,8 @@ class TransactionController extends Controller
     private TransactionGroupRepositoryInterface $groupRepository;
     private JournalRepositoryInterface          $repository;
 
+    protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
+
     /**
      * TransactionController constructor.
      */
@@ -51,10 +54,12 @@ class TransactionController extends Controller
             function ($request, $next) {
                 /** @var User $user */
                 $user                  = auth()->user();
+                $userGroup        = $this->validateUserGroup($request);
                 $this->repository      = app(JournalRepositoryInterface::class);
                 $this->groupRepository = app(TransactionGroupRepositoryInterface::class);
                 $this->repository->setUser($user);
                 $this->groupRepository->setUser($user);
+                $this->groupRepository->setUserGroup($userGroup);
 
                 return $next($request);
             }

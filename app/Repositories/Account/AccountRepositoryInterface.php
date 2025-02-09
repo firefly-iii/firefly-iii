@@ -30,6 +30,7 @@ use FireflyIII\Models\Location;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
@@ -148,6 +149,7 @@ interface AccountRepositoryInterface
     public function searchAccountNr(string $query, array $types, int $limit): Collection;
 
     public function setUser(null|Authenticatable|User $user): void;
+    public function setUserGroup(UserGroup $userGroup): void;
 
     public function store(array $data): Account;
 

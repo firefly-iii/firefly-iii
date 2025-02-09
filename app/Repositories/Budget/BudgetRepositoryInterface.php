@@ -27,6 +27,7 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\AutoBudget;
 use FireflyIII\Models\Budget;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
@@ -39,6 +40,7 @@ interface BudgetRepositoryInterface
     public function budgetEndsWith(string $query, int $limit): Collection;
 
     public function budgetStartsWith(string $query, int $limit): Collection;
+    public function setUserGroup(UserGroup $userGroup): void;
 
     /**
      * Returns the amount that is budgeted in a period.
