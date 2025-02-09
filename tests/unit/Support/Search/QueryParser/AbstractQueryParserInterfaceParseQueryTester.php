@@ -11,7 +11,7 @@ use FireflyIII\Support\Search\QueryParser\NodeGroup;
 use FireflyIII\Support\Search\QueryParser\Node;
 use Tests\integration\TestCase;
 
-abstract class AbstractQueryParserInterfaceParseQueryTest extends TestCase
+abstract class AbstractQueryParserInterfaceParseQueryTester extends TestCase
 {
     abstract protected function createParser(): QueryParserInterface;
 

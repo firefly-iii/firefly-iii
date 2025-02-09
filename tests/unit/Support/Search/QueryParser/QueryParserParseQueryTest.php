@@ -16,7 +16,7 @@ use FireflyIII\Support\Search\QueryParser\QueryParserInterface;
  *
  * @coversNothing
  */
-final class QueryParserParseQueryTest extends AbstractQueryParserInterfaceParseQueryTest
+final class QueryParserParseQueryTest extends AbstractQueryParserInterfaceParseQueryTester
 {
     protected function createParser(): QueryParserInterface
     {
