@@ -168,14 +168,13 @@ class BudgetController extends Controller
         }
         $locale                                 = app('steam')->getLocale();
         $entries                                = [];
-        $amount                                 = $budgetLimit->amount;
+        $amount                                 = $budgetLimit->amount ?? '0';
         $budgetCollection                       = new Collection([$budget]);
         $currency                               = $budgetLimit->transactionCurrency;
         if ($this->convertToNative) {
-            $amount   = $budgetLimit->native_amount;
+            $amount   = $budgetLimit->native_amount ?? '0';
             $currency = $this->defaultCurrency;
         }
-
 
         while ($start <= $end) {
             $current          = clone $start;
