@@ -99,6 +99,7 @@ interface TransactionGroupRepositoryInterface
     public function getTags(int $journalId): array;
 
     public function setUser(null|Authenticatable|User $user): void;
+
     public function setUserGroup(UserGroup $userGroup): void;
 
     /**

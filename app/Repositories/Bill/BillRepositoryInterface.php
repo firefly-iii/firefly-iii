@@ -40,6 +40,7 @@ interface BillRepositoryInterface
     public function billEndsWith(string $query, int $limit): Collection;
 
     public function billStartsWith(string $query, int $limit): Collection;
+
     public function setUserGroup(UserGroup $userGroup): void;
 
     /**

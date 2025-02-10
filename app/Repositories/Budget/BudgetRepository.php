@@ -42,8 +42,6 @@ use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\BudgetDestroyService;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;

@@ -137,6 +137,7 @@ interface PiggyBankRepositoryInterface
     public function setOrder(PiggyBank $piggyBank, int $newOrder): bool;
 
     public function setUser(null|Authenticatable|User $user): void;
+
     public function setUserGroup(UserGroup $userGroup): void;
 
     /**

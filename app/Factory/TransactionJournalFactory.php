@@ -178,6 +178,7 @@ class TransactionJournalFactory
         if (true === FireflyConfig::get('utc', false)->data) {
             $carbon->setTimezone('UTC');
         }
+
         try {
             // validate source and destination using a new Validator.
             $this->validateAccounts($row);
@@ -402,7 +403,7 @@ class TransactionJournalFactory
      */
     public function setUser(User $user): void
     {
-        $this->user = $user;
+        $this->user      = $user;
         $this->userGroup = $user->userGroup;
         $this->currencyRepository->setUser($this->user);
         $this->tagFactory->setUser($user);
@@ -413,7 +414,8 @@ class TransactionJournalFactory
         $this->accountRepository->setUser($this->user);
     }
 
-    public function setUserGroup(UserGroup $userGroup): void {
+    public function setUserGroup(UserGroup $userGroup): void
+    {
         $this->userGroup = $userGroup;
         $this->currencyRepository->setUserGroup($userGroup);
         $this->tagFactory->setUserGroup($userGroup);

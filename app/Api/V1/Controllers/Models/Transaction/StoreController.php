@@ -62,8 +62,8 @@ class StoreController extends Controller
         $this->middleware(
             function ($request, $next) {
                 /** @var User $admin */
-                $admin     = auth()->user();
-                $userGroup = $this->validateUserGroup($request);
+                $admin                 = auth()->user();
+                $userGroup             = $this->validateUserGroup($request);
 
                 $this->groupRepository = app(TransactionGroupRepositoryInterface::class);
                 $this->groupRepository->setUser($admin);
@@ -107,35 +107,36 @@ class StoreController extends Controller
             throw new ValidationException($validator);
         }
         app('preferences')->mark();
-        $applyRules   = $data['apply_rules'] ?? true;
-        $fireWebhooks = $data['fire_webhooks'] ?? true;
+        $applyRules         = $data['apply_rules'] ?? true;
+        $fireWebhooks       = $data['fire_webhooks'] ?? true;
         event(new StoredTransactionGroup($transactionGroup, $applyRules, $fireWebhooks));
 
-        $manager = $this->getManager();
+        $manager            = $this->getManager();
 
         /** @var User $admin */
-        $admin = auth()->user();
+        $admin              = auth()->user();
 
         // use new group collector:
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector          = app(GroupCollectorInterface::class);
         $collector
             ->setUser($admin)
             ->setUserGroup($this->userGroup)
             // filter on transaction group.
             ->setTransactionGroup($transactionGroup)
             // all info needed for the API:
-            ->withAPIInformation();
+            ->withAPIInformation()
+        ;
 
-        $selectedGroup = $collector->getGroups()->first();
+        $selectedGroup      = $collector->getGroups()->first();
         if (null === $selectedGroup) {
             throw new FireflyException('200032: Cannot find transaction. Possibly, a rule deleted this transaction after its creation.');
         }
 
         /** @var TransactionGroupTransformer $transformer */
-        $transformer = app(TransactionGroupTransformer::class);
+        $transformer        = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);
-        $resource = new Item($selectedGroup, $transformer, 'transactions');
+        $resource           = new Item($selectedGroup, $transformer, 'transactions');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

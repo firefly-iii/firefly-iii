@@ -54,7 +54,6 @@ class AccountRepository implements AccountRepositoryInterface
 {
     use UserGroupTrait;
 
-
     /**
      * Moved here from account CRUD.
      */

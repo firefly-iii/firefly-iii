@@ -44,8 +44,6 @@ use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
 use FireflyIII\Services\Internal\Update\GroupUpdateService;
 use FireflyIII\Support\NullArrayObject;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 

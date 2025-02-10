@@ -54,7 +54,7 @@ class TransactionController extends Controller
             function ($request, $next) {
                 /** @var User $user */
                 $user                  = auth()->user();
-                $userGroup        = $this->validateUserGroup($request);
+                $userGroup             = $this->validateUserGroup($request);
                 $this->repository      = app(JournalRepositoryInterface::class);
                 $this->groupRepository = app(TransactionGroupRepositoryInterface::class);
                 $this->repository->setUser($user);

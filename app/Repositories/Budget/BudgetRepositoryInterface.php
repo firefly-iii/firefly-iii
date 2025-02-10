@@ -40,6 +40,7 @@ interface BudgetRepositoryInterface
     public function budgetEndsWith(string $query, int $limit): Collection;
 
     public function budgetStartsWith(string $query, int $limit): Collection;
+
     public function setUserGroup(UserGroup $userGroup): void;
 
     /**

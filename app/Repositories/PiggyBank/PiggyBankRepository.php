@@ -51,7 +51,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
     use UserGroupTrait;
 
-
     public function destroyAll(): void
     {
         Log::channel('audit')->info('Delete all piggy banks through destroyAll');

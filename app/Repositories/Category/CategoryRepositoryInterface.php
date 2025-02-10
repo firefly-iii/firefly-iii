@@ -88,6 +88,7 @@ interface CategoryRepositoryInterface
     public function searchCategory(string $query, int $limit): Collection;
 
     public function setUser(null|Authenticatable|User $user): void;
+
     public function setUserGroup(UserGroup $userGroup): void;
 
     /**
