@@ -258,7 +258,12 @@ trait AccountCollection
                 if (null === $account) {
                     continue;
                 }
-                $balance   = Steam::finalAccountBalance($account, $transaction['date']);
+                // the balance must be found BEFORE the transaction date.
+                // so sub one second. This is not perfect, but works well enough.
+                $date = clone $transaction['date'];
+                $date->subSecond();
+                Log::debug(sprintf('accountBalanceIs: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
+                $balance   = Steam::finalAccountBalance($account, $date);
                 $result    = bccomp($balance['balance'], $value);
                 Log::debug(sprintf('"%s" vs "%s" is %d', $balance['balance'], $value, $result));
 

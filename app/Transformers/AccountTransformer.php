@@ -31,6 +31,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -106,6 +107,7 @@ class AccountTransformer extends AbstractTransformer
             $order = null;
         }
         // balance, native balance, virtual balance, native virtual balance?
+        Log::debug(sprintf('transform: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
         $finalBalance                                                 = Steam::finalAccountBalance($account, $date);
         if ($convertToNative) {
             $finalBalance['balance'] = $finalBalance[$currencyCode] ?? '0';

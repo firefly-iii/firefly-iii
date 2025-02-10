@@ -39,6 +39,7 @@ use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 /**
@@ -113,7 +114,9 @@ class ReconcileController extends Controller
         $end->endOfDay();
 
         $startDate       = clone $start;
-        $startDate->subDay()->endOfDay();
+        $startDate->subDay()->endOfDay(); // this is correct, subday endofday ends at 23:59:59
+        Log::debug(sprintf('reconcile: Call finalAccountBalance with date/time "%s"', $startDate->toIso8601String()));
+        Log::debug(sprintf('reconcile2: Call finalAccountBalance with date/time "%s"', $end->toIso8601String()));
         $startBalance    = Steam::bcround(Steam::finalAccountBalance($account, $startDate)['balance'], $currency->decimal_places);
         $endBalance      = Steam::bcround(Steam::finalAccountBalance($account, $end)['balance'], $currency->decimal_places);
         $subTitleIcon    = config(sprintf('firefly.subIconsByIdentifier.%s', $account->accountType->type));

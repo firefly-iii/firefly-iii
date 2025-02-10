@@ -453,6 +453,7 @@ class AccountController extends Controller
 
         // temp, get end balance.
         Log::debug('temp get end balance');
+        Log::debug(sprintf('period: Call finalAccountBalance with date/time "%s"', $end->toIso8601String()));
         Steam::finalAccountBalance($account, $end);
         Log::debug('END temp get end balance done');
 

@@ -34,6 +34,7 @@ use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class AccountController
@@ -83,8 +84,8 @@ class AccountController extends Controller
         $return = [];
         $result = $this->repository->searchAccount((string) $query, $types, $this->parameters->get('limit'));
 
-        // set date to end-of-day for account balance.
-        $date->endOfDay();
+        // set date to subday + end-of-day for account balance. so it is at $date 23:59:59
+        $date->subDay()->endOfDay();
 
         /** @var Account $account */
         foreach ($result as $account) {
@@ -92,6 +93,7 @@ class AccountController extends Controller
             $currency        = $this->repository->getAccountCurrency($account) ?? $this->nativeCurrency;
             $useCurrency     = $currency;
             if (in_array($account->accountType->type, $this->balanceTypes, true)) {
+                Log::debug(sprintf('accounts: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
                 $balance         = Steam::finalAccountBalance($account, $date);
                 $key             = $this->convertToNative && $currency->id !== $this->nativeCurrency->id ? 'native_balance' : 'balance';
                 $useCurrency     = $this->convertToNative && $currency->id !== $this->nativeCurrency->id ? $this->nativeCurrency : $currency;

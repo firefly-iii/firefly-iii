@@ -43,6 +43,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 /**
@@ -223,7 +224,9 @@ class ConvertController extends Controller
         // group accounts:
         /** @var Account $account */
         foreach ($accountList as $account) {
-            $balance                     = Steam::finalAccountBalance($account, today()->endOfDay())['balance'];
+            $date = today()->endOfDay();
+            Log::debug(sprintf('getLiabilities: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
+            $balance                     = Steam::finalAccountBalance($account, $date)['balance'];
             $currency                    = $this->accountRepository->getAccountCurrency($account) ?? $this->defaultCurrency;
             $role                        = 'l_'.$account->accountType->type;
             $key                         = (string) trans('firefly.opt_group_'.$role);
@@ -245,7 +248,9 @@ class ConvertController extends Controller
         // group accounts:
         /** @var Account $account */
         foreach ($accountList as $account) {
-            $balance                     = Steam::finalAccountBalance($account, today()->endOfDay())['balance'];
+            $date = today()->endOfDay();
+            Log::debug(sprintf('getAssetAccounts: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
+            $balance                     = Steam::finalAccountBalance($account, $date)['balance'];
             $currency                    = $this->accountRepository->getAccountCurrency($account) ?? $this->defaultCurrency;
             $role                        = (string) $this->accountRepository->getMetaValue($account, 'account_role');
             if ('' === $role) {

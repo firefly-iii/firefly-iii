@@ -371,6 +371,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     public function leftOnAccount(PiggyBank $piggyBank, Account $account, Carbon $date): string
     {
         Log::debug(sprintf('leftOnAccount("%s","%s","%s")', $piggyBank->name, $account->name, $date->format('Y-m-d H:i:s')));
+        Log::debug(sprintf('leftOnAccount: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
         $balance = Steam::finalAccountBalance($account, $date)['balance'];
 
         Log::debug(sprintf('Balance is: %s', $balance));

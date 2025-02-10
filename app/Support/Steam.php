@@ -76,6 +76,7 @@ class Steam
 
         $balances             = [];
         $formatted            = $start->format('Y-m-d');
+        Log::debug(sprintf('finalAccountBalanceInRange: Call finalAccountBalance with date/time "%s"', $start->toIso8601String()));
         $startBalance         = $this->finalAccountBalance($account, $start);
         $nativeCurrency       = app('amount')->getNativeCurrencyByUserGroup($account->user->userGroup);
         $accountCurrency      = $this->getAccountCurrency($account);
@@ -164,6 +165,7 @@ class Steam
 
     public function finalAccountsBalance(Collection $accounts, Carbon $date): array
     {
+        Log::debug(sprintf('finalAccountsBalance: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
         $balances = [];
         foreach ($accounts as $account) {
             $balances[$account->id] = $this->finalAccountBalance($account, $date);
@@ -260,6 +262,8 @@ class Steam
     }
 
     /**
+     * Returns smaller than or equal to, so be careful with END OF DAY.
+     *
      * Returns the balance of an account at exact moment given. Array with at least one value.
      * Always returns:
      * "balance": balance in the account's currency OR user's native currency if the account has no currency
@@ -278,7 +282,7 @@ class Steam
         $cache->addProperty($date);
         if ($cache->has()) {
             //            Log::debug(sprintf('CACHED finalAccountBalance(#%d, %s)', $account->id, $date->format('Y-m-d H:i:s')));
-            //            return $cache->get();
+                        return $cache->get();
         }
         Log::debug(sprintf('finalAccountBalance(#%d, %s)', $account->id, $date->format('Y-m-d H:i:s')));
 

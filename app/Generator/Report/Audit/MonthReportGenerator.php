@@ -33,6 +33,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class MonthReportGenerator.
@@ -52,10 +53,9 @@ class MonthReportGenerator implements ReportGeneratorInterface
     {
         $auditData   = [];
         $dayBefore   = clone $this->start;
-        $dayBefore->subDay();
 
-        // move to end of day
-        $dayBefore->endOfDay();
+        // set date to subday + end-of-day for account balance. so it is at $date 23:59:59
+        $dayBefore->subDay()->endOfDay();
 
         /** @var Account $account */
         foreach ($this->accounts as $account) {
@@ -136,6 +136,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
         ;
         $journals          = $collector->getExtractedJournals();
         $journals          = array_reverse($journals, true);
+        Log::debug(sprintf('getAuditReport: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
         $dayBeforeBalance  = Steam::finalAccountBalance($account, $date);
         $startBalance      = $dayBeforeBalance['balance'];
         $defaultCurrency   = app('amount')->getNativeCurrencyByUserGroup($account->user->userGroup);
@@ -170,7 +171,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
             $journals[$index]['invoice_date']   = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'invoice_date');
         }
         $locale            = app('steam')->getLocale();
-
+        Log::debug(sprintf('getAuditReport end: Call finalAccountBalance with date/time "%s"', $this->end->toIso8601String()));
         return [
             'journals'         => $journals,
             'currency'         => $currency,

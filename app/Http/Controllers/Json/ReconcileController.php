@@ -195,6 +195,8 @@ class ReconcileController extends Controller
         $startDate->subDay();
 
         $currency       = $this->accountRepos->getAccountCurrency($account) ?? $this->defaultCurrency;
+        Log::debug(sprintf('transactions: Call finalAccountBalance with date/time "%s"', $startDate->toIso8601String()));
+        Log::debug(sprintf('transactions2: Call finalAccountBalance with date/time "%s"', $end->toIso8601String()));
         $startBalance   = Steam::bcround(Steam::finalAccountBalance($account, $startDate)['balance'], $currency->decimal_places);
         $endBalance     = Steam::bcround(Steam::finalAccountBalance($account, $end)['balance'], $currency->decimal_places);
 
