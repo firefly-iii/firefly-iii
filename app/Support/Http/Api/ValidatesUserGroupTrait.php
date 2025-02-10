@@ -61,7 +61,7 @@ trait ValidatesUserGroupTrait
         $user        = auth()->user();
         $groupId     = 0;
         if (!$request->has('user_group_id')) {
-            $groupId = $user->user_group_id;
+            $groupId = (int) $user->user_group_id;
             Log::debug(sprintf('validateUserGroup: no user group submitted, use default group #%d.', $groupId));
         }
         if ($request->has('user_group_id')) {
