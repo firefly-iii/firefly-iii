@@ -214,7 +214,6 @@ class OperationsRepository implements OperationsRepositoryInterface
         Log::debug(sprintf('Start of %s.', __METHOD__));
         // this collector excludes all transfers TO liabilities (which are also withdrawals)
         // because those expenses only become expenses once they move from the liability to the friend.
-
         // 2024-12-24 disable the exclusion for now.
 
         $repository = app(AccountRepositoryInterface::class);
@@ -245,7 +244,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         }
         if (null !== $currency) {
             Log::debug(sprintf('Limit to currency %s', $currency->code));
-            $collector->setNormalCurrency($currency);
+            $collector->setCurrency($currency);
         }
         $collector->setBudgets($budgets);
         $journals   = $collector->getExtractedJournals();

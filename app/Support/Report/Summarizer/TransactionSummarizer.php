@@ -51,6 +51,7 @@ class TransactionSummarizer
 
     public function groupByCurrencyId(array $journals, string $method = 'negative'): array
     {
+        Log::debug(sprintf('Now in groupByCurrencyId(array, "%s")', $method));
         $array = [];
         foreach ($journals as $journal) {
             $field                 = 'amount';
@@ -61,6 +62,10 @@ class TransactionSummarizer
             $currencySymbol        = $journal['currency_symbol'];
             $currencyCode          = $journal['currency_code'];
             $currencyDecimalPlaces = $journal['currency_decimal_places'];
+
+            // prepare foreign currency info:
+            $foreignCurrencyId = 0;
+
             if ($this->convertToNative) {
                 // if convert to native, use the native amount yes or no?
                 $useNative  = $this->default->id !== (int) $journal['currency_id'];
@@ -85,8 +90,18 @@ class TransactionSummarizer
                 }
             }
             if (!$this->convertToNative) {
-                // default to the normal amount, but also
+                Log::debug(sprintf('Journal #%d also includes foreign amount (foreign is %s)', $journal['transaction_journal_id'], $journal['foreign_currency_code']));
+                // use foreign amount?
+                $foreignCurrencyId            = (int) $journal['foreign_currency_id'];
+                if(0 !== $foreignCurrencyId) {
+                    $foreignCurrencyName          = $journal['foreign_currency_name'];
+                    $foreignCurrencySymbol        = $journal['foreign_currency_symbol'];
+                    $foreignCurrencyCode          = $journal['foreign_currency_code'];
+                    $foreignCurrencyDecimalPlaces = $journal['foreign_currency_decimal_places'];
+                }
             }
+
+            // first process normal amount
             $amount                = (string) ($journal[$field] ?? '0');
             $array[$currencyId] ??= [
                 'sum'                     => '0',
@@ -96,12 +111,34 @@ class TransactionSummarizer
                 'currency_code'           => $currencyCode,
                 'currency_decimal_places' => $currencyDecimalPlaces,
             ];
+
             if ('positive' === $method) {
                 $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->positive($amount));
             }
             if ('negative' === $method) {
                 $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->negative($amount));
             }
+
+            // then process foreign amount, if it exists.
+            if(0 !== $foreignCurrencyId) {
+                $amount                = (string) ($journal['foreign_amount'] ?? '0');
+                $array[$foreignCurrencyId] ??= [
+                    'sum'                     => '0',
+                    'currency_id'             => $foreignCurrencyId,
+                    'currency_name'           => $foreignCurrencyName,
+                    'currency_symbol'         => $foreignCurrencySymbol,
+                    'currency_code'           => $foreignCurrencyCode,
+                    'currency_decimal_places' => $foreignCurrencyDecimalPlaces,
+                ];
+
+                if ('positive' === $method) {
+                    $array[$foreignCurrencyId]['sum'] = bcadd($array[$foreignCurrencyId]['sum'], app('steam')->positive($amount));
+                }
+                if ('negative' === $method) {
+                    $array[$foreignCurrencyId]['sum'] = bcadd($array[$foreignCurrencyId]['sum'], app('steam')->negative($amount));
+                }
+            }
+            
             // $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->{$method}($amount));
             // Log::debug(sprintf('Journal #%d adds amount %s %s', $journal['transaction_journal_id'], $currencyCode, $amount));
         }
