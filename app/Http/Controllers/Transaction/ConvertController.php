@@ -224,7 +224,7 @@ class ConvertController extends Controller
         // group accounts:
         /** @var Account $account */
         foreach ($accountList as $account) {
-            $date = today()->endOfDay();
+            $date                        = today()->endOfDay();
             Log::debug(sprintf('getLiabilities: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
             $balance                     = Steam::finalAccountBalance($account, $date)['balance'];
             $currency                    = $this->accountRepository->getAccountCurrency($account) ?? $this->defaultCurrency;
@@ -248,7 +248,7 @@ class ConvertController extends Controller
         // group accounts:
         /** @var Account $account */
         foreach ($accountList as $account) {
-            $date = today()->endOfDay();
+            $date                        = today()->endOfDay();
             Log::debug(sprintf('getAssetAccounts: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
             $balance                     = Steam::finalAccountBalance($account, $date)['balance'];
             $currency                    = $this->accountRepository->getAccountCurrency($account) ?? $this->defaultCurrency;

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * NotificationsController.php
  * Copyright (c) 2025 james@firefly-iii.org.
@@ -25,8 +26,4 @@ namespace FireflyIII\Http\Controllers\Preferences;
 
 use FireflyIII\Http\Controllers\Controller;
 
-class NotificationsController extends Controller
-{
-
-
-}
+class NotificationsController extends Controller {}

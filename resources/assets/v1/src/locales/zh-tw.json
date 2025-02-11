@@ -6,7 +6,7 @@
         "administration_currency_form_help": "It may take a long time for the page to load if you change the native currency because transaction may need to be converted to your (new) native currency.",
         "administrations_page_edit_sub_title_js": "Edit financial administration \"{title}\"",
         "table": "\u8868\u683c",
-        "welcome_back": "What's playing?",
+        "welcome_back": "\u6b61\u8fce\u56de\u4f86\u7e7c\u7e8c\u7406\u8ca1\uff01",
         "flash_error": "\u932f\u8aa4\uff01",
         "flash_warning": "\u8b66\u544a\uff01",
         "flash_success": "\u6210\u529f\uff01",

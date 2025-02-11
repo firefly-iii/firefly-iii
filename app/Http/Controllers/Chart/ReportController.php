@@ -103,7 +103,7 @@ class ReportController extends Controller
             $balanceCurrent = clone $current;
             $balanceCurrent->subDay()->endOfDay(); // go to correct moment.
             Log::debug(sprintf('Call byAccounts("%s")', $balanceCurrent->format('Y-m-d H:i:s')));
-            $result = $helper->byAccounts($filtered, $balanceCurrent);
+            $result         = $helper->byAccounts($filtered, $balanceCurrent);
 
             // loop result, add to array.
             /** @var array $netWorthItem */

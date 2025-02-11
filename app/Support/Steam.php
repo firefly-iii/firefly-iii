@@ -282,7 +282,7 @@ class Steam
         $cache->addProperty($date);
         if ($cache->has()) {
             //            Log::debug(sprintf('CACHED finalAccountBalance(#%d, %s)', $account->id, $date->format('Y-m-d H:i:s')));
-                        return $cache->get();
+            return $cache->get();
         }
         Log::debug(sprintf('finalAccountBalance(#%d, %s)', $account->id, $date->format('Y-m-d H:i:s')));
 
