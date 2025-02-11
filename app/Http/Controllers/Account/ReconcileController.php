@@ -115,6 +115,7 @@ class ReconcileController extends Controller
 
         $startDate       = clone $start;
         $startDate->subDay()->endOfDay(); // this is correct, subday endofday ends at 23:59:59
+        // both are validated and are correct.
         Log::debug(sprintf('reconcile: Call finalAccountBalance with date/time "%s"', $startDate->toIso8601String()));
         Log::debug(sprintf('reconcile2: Call finalAccountBalance with date/time "%s"', $end->toIso8601String()));
         $startBalance    = Steam::bcround(Steam::finalAccountBalance($account, $startDate)['balance'], $currency->decimal_places);

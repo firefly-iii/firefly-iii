@@ -424,6 +424,7 @@ class AccountController extends Controller
     {
         $start->startOfDay();
         $end->endOfDay();
+        // TODO not sure if these date ranges will work as expected.
         Log::debug(sprintf('Now in period("%s", "%s")', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
         $chartData       = [];
         $cache           = new CacheProperties();
@@ -456,6 +457,7 @@ class AccountController extends Controller
         // temp, get end balance.
         Log::debug('temp get end balance');
         Log::debug(sprintf('period: Call finalAccountBalance with date/time "%s"', $end->toIso8601String()));
+        // correct
         Steam::finalAccountBalance($account, $end);
         Log::debug('END temp get end balance done');
 

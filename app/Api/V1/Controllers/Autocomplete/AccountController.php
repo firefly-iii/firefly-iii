@@ -93,6 +93,7 @@ class AccountController extends Controller
             $currency        = $this->repository->getAccountCurrency($account) ?? $this->nativeCurrency;
             $useCurrency     = $currency;
             if (in_array($account->accountType->type, $this->balanceTypes, true)) {
+                // this one is correct.
                 Log::debug(sprintf('accounts: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
                 $balance         = Steam::finalAccountBalance($account, $date);
                 $key             = $this->convertToNative && $currency->id !== $this->nativeCurrency->id ? 'native_balance' : 'balance';

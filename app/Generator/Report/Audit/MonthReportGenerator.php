@@ -136,6 +136,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
         ;
         $journals          = $collector->getExtractedJournals();
         $journals          = array_reverse($journals, true);
+        // this call is correct.
         Log::debug(sprintf('getAuditReport: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
         $dayBeforeBalance  = Steam::finalAccountBalance($account, $date);
         $startBalance      = $dayBeforeBalance['balance'];
@@ -171,6 +172,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
             $journals[$index]['invoice_date']   = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'invoice_date');
         }
         $locale            = app('steam')->getLocale();
+        // call is correct.
         Log::debug(sprintf('getAuditReport end: Call finalAccountBalance with date/time "%s"', $this->end->toIso8601String()));
         return [
             'journals'         => $journals,
