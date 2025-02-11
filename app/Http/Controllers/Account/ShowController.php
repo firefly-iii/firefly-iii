@@ -136,7 +136,7 @@ class ShowController extends Controller
 
         $groups->setPath(route('accounts.show', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]));
         $showAll          = false;
-        Log::debug(sprintf(show: 'Call finalAccountBalance with date/time "%s"', $end->toIso8601String()));
+        Log::debug(sprintf('show: Call finalAccountBalance with date/time "%s"', $end->toIso8601String()));
         $balances         = Steam::filterAccountBalance(Steam::finalAccountBalance($account, $end), $account, $this->convertToNative, $accountCurrency);
 
         return view(
