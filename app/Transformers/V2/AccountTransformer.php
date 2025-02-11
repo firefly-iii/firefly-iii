@@ -183,6 +183,8 @@ class AccountTransformer extends AbstractTransformer
         $bEnd   = [];
 
         try {
+            Log::debug(sprintf('v2 transformer: finalAccountsBalance("%s")', $start->format('Y-m-d H:i:s')));
+            Log::debug(sprintf('v2 transformer: finalAccountsBalance("%s")', $end->format('Y-m-d H:i:s')));
             $bStart = app('steam')->finalAccountsBalance($accounts, $start);
             $bEnd   = app('steam')->finalAccountsBalance($accounts, $end);
         } catch (FireflyException $e) {

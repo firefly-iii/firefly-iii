@@ -109,6 +109,8 @@ class AccountController extends Controller
         $accountNames  = $this->extractNames($accounts);
 
         // grab all balances
+        Log::debug(sprintf('expenseAccounts: finalAccountsBalance("%s")', $start->format('Y-m-d H:i:s')));
+        Log::debug(sprintf('expenseAccounts: finalAccountsBalance("%s")', $end->format('Y-m-d H:i:s')));
         $startBalances = Steam::finalAccountsBalance($accounts, $start);
         $endBalances   = Steam::finalAccountsBalance($accounts, $end);
 
@@ -576,6 +578,8 @@ class AccountController extends Controller
         $accountNames  = $this->extractNames($accounts);
 
         // grab all balances
+        Log::debug(sprintf('revAccounts: finalAccountsBalance("%s")', $start->format('Y-m-d H:i:s')));
+        Log::debug(sprintf('revAccounts: finalAccountsBalance("%s")', $end->format('Y-m-d H:i:s')));
         $startBalances = Steam::finalAccountsBalance($accounts, $start);
         $endBalances   = Steam::finalAccountsBalance($accounts, $end);
 

@@ -79,6 +79,7 @@ class NetWorth implements NetWorthInterface
         Log::debug(sprintf('Now in byAccounts("%s", "%s")', $ids, $date->format('Y-m-d H:i:s')));
         $default         = Amount::getNativeCurrency();
         $netWorth        = [];
+        Log::debug(sprintf('NetWorth: finalAccountsBalance("%s")', $date->format('Y-m-d H:i:s')));
         $balances        = Steam::finalAccountsBalance($accounts, $date);
 
         /** @var Account $account */
@@ -159,6 +160,7 @@ class NetWorth implements NetWorthInterface
          */
         $accounts = $this->getAccounts();
         $return   = [];
+        Log::debug(sprintf('SumNetWorth: finalAccountsBalance("%s")', $date->format('Y-m-d H:i:s')));
         $balances = Steam::finalAccountsBalance($accounts, $date);
         foreach ($accounts as $account) {
             $currency                     = $this->getRepository()->getAccountCurrency($account);

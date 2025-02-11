@@ -33,6 +33,7 @@ use FireflyIII\Support\Http\Controllers\BasicDataSupport;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 /**
@@ -90,9 +91,11 @@ class IndexController extends Controller
         $start->subDay();
 
         $ids           = $accounts->pluck('id')->toArray();
-        $startBalances = app('steam')->finalAccountsBalance($accounts, $start);
-        $endBalances   = app('steam')->finalAccountsBalance($accounts, $end);
-        $activities    = app('steam')->getLastActivities($ids);
+        Log::debug(sprintf('inactive start: finalAccountsBalance("%s")', $start->format('Y-m-d H:i:s')));
+        Log::debug(sprintf('inactive end: finalAccountsBalance("%s")', $end->format('Y-m-d H:i:s')));
+        $startBalances = Steam::finalAccountsBalance($accounts, $start);
+        $endBalances   = Steam::finalAccountsBalance($accounts, $end);
+        $activities    = Steam::getLastActivities($ids);
 
 
         $accounts->each(
@@ -102,7 +105,7 @@ class IndexController extends Controller
                 $account->startBalances     = Steam::filterAccountBalance($startBalances[$account->id] ?? [], $account, $this->convertToNative, $currency);
                 $account->endBalances       = Steam::filterAccountBalance($endBalances[$account->id] ?? [], $account, $this->convertToNative, $currency);
                 $account->differences       = $this->subtract($account->startBalances, $account->endBalances);
-                $account->interest          = app('steam')->bcround($this->repository->getMetaValue($account, 'interest'), 4);
+                $account->interest          = Steam::bcround($this->repository->getMetaValue($account, 'interest'), 4);
                 $account->interestPeriod    = (string) trans(sprintf('firefly.interest_calc_%s', $this->repository->getMetaValue($account, 'interest_period')));
                 $account->accountTypeString = (string) trans(sprintf('firefly.account_type_%s', $account->accountType->type));
                 $account->current_debt      = '0';
@@ -153,9 +156,11 @@ class IndexController extends Controller
         $start->subDay();
 
         $ids           = $accounts->pluck('id')->toArray();
-        $startBalances = app('steam')->finalAccountsBalance($accounts, $start);
-        $endBalances   = app('steam')->finalAccountsBalance($accounts, $end);
-        $activities    = app('steam')->getLastActivities($ids);
+        Log::debug(sprintf('index start: finalAccountsBalance("%s")', $start->format('Y-m-d H:i:s')));
+        Log::debug(sprintf('index end: finalAccountsBalance("%s")', $end->format('Y-m-d H:i:s')));
+        $startBalances = Steam::finalAccountsBalance($accounts, $start);
+        $endBalances   = Steam::finalAccountsBalance($accounts, $end);
+        $activities    = Steam::getLastActivities($ids);
 
 
         $accounts->each(
@@ -168,7 +173,7 @@ class IndexController extends Controller
                 $account->endBalances         = Steam::filterAccountBalance($endBalances[$account->id] ?? [], $account, $this->convertToNative, $currency);
                 $account->differences         = $this->subtract($account->startBalances, $account->endBalances);
                 $account->lastActivityDate    = $this->isInArrayDate($activities, $account->id);
-                $account->interest            = app('steam')->bcround($interest, 4);
+                $account->interest            = Steam::bcround($interest, 4);
                 $account->interestPeriod      = (string) trans(
                     sprintf('firefly.interest_calc_%s', $this->repository->getMetaValue($account, 'interest_period'))
                 );

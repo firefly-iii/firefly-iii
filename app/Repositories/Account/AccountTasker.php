@@ -29,9 +29,11 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class AccountTasker.
@@ -46,9 +48,11 @@ class AccountTasker implements AccountTaskerInterface
     public function getAccountReport(Collection $accounts, Carbon $start, Carbon $end): array
     {
         $yesterday       = clone $start;
-        $yesterday->subDay();
-        $startSet        = app('steam')->finalAccountsBalance($accounts, $yesterday);
-        $endSet          = app('steam')->finalAccountsBalance($accounts, $end);
+        $yesterday->subDay()->endOfDay();
+        Log::debug(sprintf('getAccountReport: finalAccountsBalance("%s")', $yesterday->format('Y-m-d H:i:s')));
+        Log::debug(sprintf('getAccountReport: finalAccountsBalance("%s")', $end->format('Y-m-d H:i:s')));
+        $startSet        = Steam::finalAccountsBalance($accounts, $yesterday);
+        $endSet          = Steam::finalAccountsBalance($accounts, $end);
         app('log')->debug('Start of accountreport');
 
         /** @var AccountRepositoryInterface $repository */
