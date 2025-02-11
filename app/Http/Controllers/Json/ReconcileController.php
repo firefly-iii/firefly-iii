@@ -202,9 +202,14 @@ class ReconcileController extends Controller
 
         // get the transactions
         $selectionStart = clone $start;
+        $selectionStart->startOfDay();
         $selectionStart->subDays(3);
         $selectionEnd   = clone $end;
+        $selectionEnd->endOfDay();
         $selectionEnd->addDays(3);
+
+        // to make sure the bar is in the right place:
+        $start->startOfDay();
 
         // grab transactions:
         /** @var GroupCollectorInterface $collector */
