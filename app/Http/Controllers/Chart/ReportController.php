@@ -100,7 +100,10 @@ class ReportController extends Controller
 
         while ($current < $end) {
             // get balances by date, grouped by currency.
-            $result = $helper->byAccounts($filtered, $current);
+            $balanceCurrent = clone $current;
+            $balanceCurrent->subDay()->endOfDay(); // go to correct moment.
+            Log::debug(sprintf('Call byAccounts("%s")', $balanceCurrent->format('Y-m-d H:i:s')));
+            $result = $helper->byAccounts($filtered, $balanceCurrent);
 
             // loop result, add to array.
             /** @var array $netWorthItem */

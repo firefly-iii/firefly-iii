@@ -48,12 +48,13 @@ class AccountTasker implements AccountTaskerInterface
     public function getAccountReport(Collection $accounts, Carbon $start, Carbon $end): array
     {
         $yesterday       = clone $start;
-        $yesterday->subDay()->endOfDay();
+        $yesterday->subDay()->endOfDay(); // exactly up until $start but NOT including.
+        $end->endOfDay(); // needs to be end of day to be correct.
         Log::debug(sprintf('getAccountReport: finalAccountsBalance("%s")', $yesterday->format('Y-m-d H:i:s')));
         Log::debug(sprintf('getAccountReport: finalAccountsBalance("%s")', $end->format('Y-m-d H:i:s')));
         $startSet        = Steam::finalAccountsBalance($accounts, $yesterday);
         $endSet          = Steam::finalAccountsBalance($accounts, $end);
-        app('log')->debug('Start of accountreport');
+        Log::debug('Start of accountreport');
 
         /** @var AccountRepositoryInterface $repository */
         $repository      = app(AccountRepositoryInterface::class);
@@ -94,10 +95,10 @@ class AccountTasker implements AccountTaskerInterface
             $entry['end_balance']                   = $endSet[$account->id]['balance'] ?? '0';
 
             // first journal exists, and is on start, then this is the actual opening balance:
-            if (null !== $first && $first->date->isSameDay($start) && TransactionTypeEnum::OPENING_BALANCE->value === $first->transactionType->type) {
-                app('log')->debug(sprintf('Date of first journal for %s is %s', $account->name, $first->date->format('Y-m-d')));
+            if (null !== $first && $first->date->isSameDay($yesterday) && TransactionTypeEnum::OPENING_BALANCE->value === $first->transactionType->type) {
+                Log::debug(sprintf('Date of first journal for %s is %s', $account->name, $first->date->format('Y-m-d')));
                 $entry['start_balance'] = $first->transactions()->where('account_id', $account->id)->first()->amount;
-                app('log')->debug(sprintf('Account %s was opened on %s, so opening balance is %f', $account->name, $start->format('Y-m-d'), $entry['start_balance']));
+                Log::debug(sprintf('Account %s was opened on %s, so opening balance is %f', $account->name, $yesterday->format('Y-m-d'), $entry['start_balance']));
             }
             $return['sums'][$currency->id]['start'] = bcadd($return['sums'][$currency->id]['start'], $entry['start_balance']);
             $return['sums'][$currency->id]['end']   = bcadd($return['sums'][$currency->id]['end'], $entry['end_balance']);
@@ -177,7 +178,7 @@ class AccountTasker implements AccountTaskerInterface
             ];
             $report['accounts'][$key]['sum'] = bcadd($report['accounts'][$key]['sum'], $journal['amount']);
 
-            app('log')->debug(sprintf('Sum for %s is now %s', $journal['destination_account_name'], $report['accounts'][$key]['sum']));
+            Log::debug(sprintf('Sum for %s is now %s', $journal['destination_account_name'], $report['accounts'][$key]['sum']));
 
             ++$report['accounts'][$key]['count'];
         }
