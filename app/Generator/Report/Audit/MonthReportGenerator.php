@@ -172,6 +172,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
         }
         $locale            = app('steam')->getLocale();
         Log::debug(sprintf('getAuditReport end: Call finalAccountBalance with date/time "%s"', $this->end->toIso8601String()));
+
         return [
             'journals'         => $journals,
             'currency'         => $currency,

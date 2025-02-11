@@ -182,6 +182,6 @@
     },
     "config": {
         "html_language": "ru",
-        "date_time_fns": "D MMMM yyyy, @ HH:mm:ss"
+        "date_time_fns": "d MMMM yyyy, @ HH:mm:ss"
     }
 }
