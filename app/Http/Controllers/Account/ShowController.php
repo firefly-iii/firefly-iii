@@ -121,12 +121,7 @@ class ShowController extends Controller
 
         /** @var GroupCollectorInterface $collector */
         $collector        = app(GroupCollectorInterface::class);
-        $collector
-            ->setAccounts(new Collection([$account]))
-            ->setLimit($pageSize)
-            ->setPage($page)->withAccountInformation()->withCategoryInformation()
-            ->setRange($start, $end)
-        ;
+        $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page)->withAccountInformation()->withCategoryInformation()->setRange($start, $end);
 
         // this search will not include transaction groups where this asset account (or liability)
         // is just part of ONE of the journals. To force this:
@@ -137,8 +132,13 @@ class ShowController extends Controller
         $groups->setPath(route('accounts.show', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]));
         $showAll          = false;
         // correct
-        Log::debug(sprintf('show: Call finalAccountBalance with date/time "%s"', $end->toIso8601String()));
-        $balances         = Steam::filterAccountBalance(Steam::finalAccountBalance($account, $end), $account, $this->convertToNative, $accountCurrency);
+        $now = today()->endOfDay();
+        if($now->gt($end) || $now->lt($start)) {
+            $now = $end;
+        }
+
+        Log::debug(sprintf('show: Call finalAccountBalance with date/time "%s"', $now->toIso8601String()));
+        $balances         = Steam::filterAccountBalance(Steam::finalAccountBalance($account, $now), $account, $this->convertToNative, $accountCurrency);
 
         return view(
             'accounts.show',

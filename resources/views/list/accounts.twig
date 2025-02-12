@@ -69,9 +69,13 @@
                     {% for key, balance in account.endBalances %}
                         <span title="{{ key }}">
                         {% if 'balance' == key %}
-                            {{ formatAmountBySymbol(balance, account.currency.symbol, account.currency.decimal_places)  }}
+                            {% if not convertToNative %}
+                                {{ formatAmountBySymbol(balance, account.currency.symbol, account.currency.decimal_places)  }}
+                            {% endif %}
                         {% elseif 'native_balance' == key %}
-                            {{ formatAmountBySymbol(balance, defaultCurrency.symbol, defaultCurrency.decimal_places)  }}
+                            {% if convertToNative %}
+                                {{ formatAmountBySymbol(balance, defaultCurrency.symbol, defaultCurrency.decimal_places)  }}
+                            {% endif %}
                         {% else %}
                             ({{ formatAmountByCode(balance, key)  }})
                         {% endif %}
