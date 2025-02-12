@@ -7,13 +7,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #9797
-- #9806
-- #9807
-- #9808
-- #9810
-- #9821
-- #9826
+- [Issue 9797](https://github.com/firefly-iii/firefly-iii/issues/9797) (All account charts show a horizontal line) reported by @avee87
+- [Issue 9806](https://github.com/firefly-iii/firefly-iii/issues/9806) (Exchange Rates table fails to load when language is not English) reported by @polter-rnd
+- [Issue 9807](https://github.com/firefly-iii/firefly-iii/issues/9807) (Start Date of Reconciliation Period Incorrectly Excludes Transactions for That Day) reported by @pwschattenberg
+- [Issue 9808](https://github.com/firefly-iii/firefly-iii/issues/9808) (Default financial report line graph shows a different balance than the text) reported by @mtaygur
+- [Issue 9810](https://github.com/firefly-iii/firefly-iii/issues/9810) (Foreign amount not taken into consideration for budget spent/leaving) reported by @M4xS0ch
+- [Issue 9821](https://github.com/firefly-iii/firefly-iii/issues/9821) (piggy events api 500 error) reported by @4e868df3
+- [Issue 9826](https://github.com/firefly-iii/firefly-iii/issues/9826) (Wrong account balance) reported by @fabienfitoussi
 
 ## 6.2.5 - 2025-02-08
 

@@ -132,8 +132,8 @@ class ShowController extends Controller
         $groups->setPath(route('accounts.show', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]));
         $showAll          = false;
         // correct
-        $now = today()->endOfDay();
-        if($now->gt($end) || $now->lt($start)) {
+        $now              = today()->endOfDay();
+        if ($now->gt($end) || $now->lt($start)) {
             $now = $end;
         }
 
