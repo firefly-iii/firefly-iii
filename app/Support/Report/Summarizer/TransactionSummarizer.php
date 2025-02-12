@@ -64,7 +64,7 @@ class TransactionSummarizer
             $currencyDecimalPlaces = $journal['currency_decimal_places'];
 
             // prepare foreign currency info:
-            $foreignCurrencyId = 0;
+            $foreignCurrencyId     = 0;
 
             if ($this->convertToNative) {
                 // if convert to native, use the native amount yes or no?
@@ -92,8 +92,8 @@ class TransactionSummarizer
             if (!$this->convertToNative) {
                 Log::debug(sprintf('Journal #%d also includes foreign amount (foreign is %s)', $journal['transaction_journal_id'], $journal['foreign_currency_code']));
                 // use foreign amount?
-                $foreignCurrencyId            = (int) $journal['foreign_currency_id'];
-                if(0 !== $foreignCurrencyId) {
+                $foreignCurrencyId = (int) $journal['foreign_currency_id'];
+                if (0 !== $foreignCurrencyId) {
                     $foreignCurrencyName          = $journal['foreign_currency_name'];
                     $foreignCurrencySymbol        = $journal['foreign_currency_symbol'];
                     $foreignCurrencyCode          = $journal['foreign_currency_code'];
@@ -120,8 +120,8 @@ class TransactionSummarizer
             }
 
             // then process foreign amount, if it exists.
-            if(0 !== $foreignCurrencyId) {
-                $amount                = (string) ($journal['foreign_amount'] ?? '0');
+            if (0 !== $foreignCurrencyId) {
+                $amount = (string) ($journal['foreign_amount'] ?? '0');
                 $array[$foreignCurrencyId] ??= [
                     'sum'                     => '0',
                     'currency_id'             => $foreignCurrencyId,
@@ -138,7 +138,7 @@ class TransactionSummarizer
                     $array[$foreignCurrencyId]['sum'] = bcadd($array[$foreignCurrencyId]['sum'], app('steam')->negative($amount));
                 }
             }
-            
+
             // $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->{$method}($amount));
             // Log::debug(sprintf('Journal #%d adds amount %s %s', $journal['transaction_journal_id'], $currencyCode, $amount));
         }

@@ -81,7 +81,7 @@ class Steam
          * Since we just did "startOfDay" we can do subDay()->endOfDay() to get the correct moment.
          * THAT will be the start balance.
          */
-        $request = clone $start;
+        $request              = clone $start;
         $request->subDay()->endOfDay();
         Log::debug(sprintf('finalAccountBalanceInRange: Call finalAccountBalance with date/time "%s"', $request->toIso8601String()));
         $startBalance         = $this->finalAccountBalance($account, $request);
@@ -162,7 +162,7 @@ class Steam
             if ($convertToNative) {
                 $nativeSumOfDay                   = $converter->convert($entryCurrency, $nativeCurrency, $carbon, $sumOfDay);
                 $currentBalance['native_balance'] = bcadd($currentBalance['native_balance'], $nativeSumOfDay);
-                if($currency->id === $entryCurrency->id) {
+                if ($currency->id === $entryCurrency->id) {
                     $currentBalance['balance'] = bcadd($currentBalance['balance'], $sumOfDay);
                 }
 
