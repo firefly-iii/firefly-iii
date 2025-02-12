@@ -76,8 +76,15 @@ class Steam
 
         $balances             = [];
         $formatted            = $start->format('Y-m-d');
-        Log::debug(sprintf('finalAccountBalanceInRange: Call finalAccountBalance with date/time "%s"', $start->toIso8601String()));
-        $startBalance         = $this->finalAccountBalance($account, $start);
+        /*
+         * To make sure the start balance is correct, we need to get the balance at the exact end of the previous day.
+         * Since we just did "startOfDay" we can do subDay()->endOfDay() to get the correct moment.
+         * THAT will be the start balance.
+         */
+        $request = clone $start;
+        $request->subDay()->endOfDay();
+        Log::debug(sprintf('finalAccountBalanceInRange: Call finalAccountBalance with date/time "%s"', $request->toIso8601String()));
+        $startBalance         = $this->finalAccountBalance($account, $request);
         $nativeCurrency       = app('amount')->getNativeCurrencyByUserGroup($account->user->userGroup);
         $accountCurrency      = $this->getAccountCurrency($account);
         $hasCurrency          = null !== $accountCurrency;
@@ -141,6 +148,8 @@ class Steam
             $entryCurrency                        = $currencies[$entry->transaction_currency_id];
 
             Log::debug(sprintf('Processing transaction(s) on moment %s', $carbon->format('Y-m-d H:i:s')));
+
+            // add amount to current balance in currency code.
             $currentBalance[$entryCurrency->code]        ??= '0';
             $currentBalance[$entryCurrency->code] = bcadd($sumOfDay, $currentBalance[$entryCurrency->code]);
 
@@ -149,9 +158,14 @@ class Steam
                 $currentBalance['balance'] = bcadd($currentBalance['balance'], $sumOfDay);
             }
             // if convert to native add the converted amount to "native_balance".
+            // if there is a request to convert, convert to "native_balance" and use "balance" for whichever amount is in the native currency.
             if ($convertToNative) {
                 $nativeSumOfDay                   = $converter->convert($entryCurrency, $nativeCurrency, $carbon, $sumOfDay);
                 $currentBalance['native_balance'] = bcadd($currentBalance['native_balance'], $nativeSumOfDay);
+                if($currency->id === $entryCurrency->id) {
+                    $currentBalance['balance'] = bcadd($currentBalance['balance'], $sumOfDay);
+                }
+
             }
             // just set it.
             $balances[$carbonKey]                 = $currentBalance;
@@ -361,8 +375,8 @@ class Steam
         $defaultCurrency = app('amount')->getNativeCurrency();
         if ($convertToNative) {
             if ($defaultCurrency->id === $currency?->id) {
-                Log::debug(sprintf('Unset "native_balance" and [%s] for account #%d', $defaultCurrency->code, $account->id));
-                unset($set['native_balance'], $set[$defaultCurrency->code]);
+                Log::debug(sprintf('Unset [%s] for account #%d (no longer unset "native_balance")', $defaultCurrency->code, $account->id));
+                unset($set[$defaultCurrency->code]);
             }
             // todo rethink this logic.
             if (null !== $currency && $defaultCurrency->id !== $currency->id) {
