@@ -54,7 +54,7 @@ class PiggyBankEventTransformer extends AbstractTransformer
     public function transform(PiggyBankEvent $event): array
     {
         // get account linked to piggy bank
-        $account   = $event->piggyBank->account;
+        $account   = $event->piggyBank->accounts()->first();
 
         // set up repositories.
         $this->repository->setUser($account->user);
