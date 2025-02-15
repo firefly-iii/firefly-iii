@@ -26,11 +26,13 @@ namespace FireflyIII\Console\Commands\Tools;
 
 use Carbon\Carbon;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
+use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Cronjobs\AutoBudgetCronjob;
 use FireflyIII\Support\Cronjobs\BillWarningCronjob;
 use FireflyIII\Support\Cronjobs\ExchangeRatesCronjob;
 use FireflyIII\Support\Cronjobs\RecurringCronjob;
+use FireflyIII\Support\Cronjobs\UpdateCheckCronjob;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -43,6 +45,7 @@ class Cron extends Command
     protected $signature   = 'firefly-iii:cron
         {--F|force : Force the cron job(s) to execute.}
         {--date= : Set the date in YYYY-MM-DD to make Firefly III think that\'s the current date.}
+        {--check-version : Check if there is a new Firefly III version. Other tasks will be skipped unless also requested.}
         {--download-cer : Download exchange rates. Other tasks will be skipped unless also requested.}
         {--create-recurring : Create recurring transactions. Other tasks will be skipped unless also requested.}
         {--create-auto-budgets : Create auto budgets. Other tasks will be skipped unless also requested.}
@@ -51,7 +54,11 @@ class Cron extends Command
 
     public function handle(): int
     {
-        $doAll = !$this->option('download-cer') && !$this->option('create-recurring') && !$this->option('create-auto-budgets') && !$this->option('send-bill-warnings');
+        $doAll = !$this->option('download-cer') &&
+                 !$this->option('create-recurring') &&
+                 !$this->option('create-auto-budgets') &&
+                 !$this->option('send-bill-warnings') &&
+                 !$this->option('check-version');
         $date  = null;
 
         try {
@@ -65,6 +72,17 @@ class Cron extends Command
         if (true === config('cer.download_enabled') && ($doAll || $this->option('download-cer'))) {
             try {
                 $this->exchangeRatesCronJob($force, $date);
+            } catch (FireflyException $e) {
+                app('log')->error($e->getMessage());
+                app('log')->error($e->getTraceAsString());
+                $this->friendlyError($e->getMessage());
+            }
+        }
+
+        // check for new version
+        if ($doAll || $this->option('check-version')) {
+            try {
+                $this->checkForUpdates($force);
             } catch (FireflyException $e) {
                 app('log')->error($e->getMessage());
                 app('log')->error($e->getTraceAsString());
@@ -202,6 +220,22 @@ class Cron extends Command
         }
         if ($autoBudget->jobSucceeded) {
             $this->friendlyPositive(sprintf('"Send bill warnings" cron ran with success: %s', $autoBudget->message));
+        }
+    }
+
+    private function checkForUpdates(bool $force): void {
+        $updateCheck = new UpdateCheckCronjob();
+        $updateCheck->setForce($force);
+        $updateCheck->fire();
+
+        if ($updateCheck->jobErrored) {
+            $this->friendlyError(sprintf('Error in "update check" cron: %s', $updateCheck->message));
+        }
+        if ($updateCheck->jobFired) {
+            $this->friendlyInfo(sprintf('"Update check" cron fired: %s', $updateCheck->message));
+        }
+        if ($updateCheck->jobSucceeded) {
+            $this->friendlyPositive(sprintf('"Update check" cron ran with success: %s', $updateCheck->message));
         }
     }
 }

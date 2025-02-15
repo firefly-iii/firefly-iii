@@ -37,7 +37,7 @@ class UpdateRequest implements UpdateRequestInterface
 {
     public function getUpdateInformation(string $channel): array
     {
-        app('log')->debug(sprintf('Now in getUpdateInformation(%s)', $channel));
+        Log::debug(sprintf('Now in getUpdateInformation(%s)', $channel));
         $information = [
             'level'   => 'error',
             'message' => (string) trans('firefly.unknown_error'),
@@ -46,8 +46,8 @@ class UpdateRequest implements UpdateRequestInterface
         // try to get array from update server:
         $updateInfo  = $this->contactServer($channel);
         if ('error' === $updateInfo['level']) {
-            app('log')->error('Update information contains an error.');
-            app('log')->error($updateInfo['message']);
+            Log::error('Update information contains an error.');
+            Log::error($updateInfo['message']);
             $information['message'] = $updateInfo['message'];
 
             return $information;
@@ -59,7 +59,7 @@ class UpdateRequest implements UpdateRequestInterface
 
     private function contactServer(string $channel): array
     {
-        app('log')->debug(sprintf('Now in contactServer(%s)', $channel));
+        Log::debug(sprintf('Now in contactServer(%s)', $channel));
         // always fall back to current version:
         $return            = [
             'version' => config('firefly.version'),
@@ -69,7 +69,7 @@ class UpdateRequest implements UpdateRequestInterface
         ];
 
         $url               = config('firefly.update_endpoint');
-        app('log')->debug(sprintf('Going to call %s', $url));
+        Log::debug(sprintf('Going to call %s', $url));
 
         try {
             $client  = new Client();
@@ -81,17 +81,17 @@ class UpdateRequest implements UpdateRequestInterface
             ];
             $res     = $client->request('GET', $url, $options);
         } catch (GuzzleException $e) {
-            app('log')->error('Ran into Guzzle error.');
-            app('log')->error($e->getMessage());
-            app('log')->error($e->getTraceAsString());
+            Log::error('Ran into Guzzle error.');
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             $return['message'] = sprintf('Guzzle: %s', strip_tags($e->getMessage()));
 
             return $return;
         }
 
         if (200 !== $res->getStatusCode()) {
-            app('log')->error(sprintf('Response status from server is %d.', $res->getStatusCode()));
-            app('log')->error((string) $res->getBody());
+            Log::error(sprintf('Response status from server is %d.', $res->getStatusCode()));
+            Log::error((string) $res->getBody());
             $return['message'] = sprintf('Error: %d', $res->getStatusCode());
 
             return $return;
@@ -101,16 +101,16 @@ class UpdateRequest implements UpdateRequestInterface
         try {
             $json = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
         } catch (\JsonException $e) {
-            app('log')->error('Body is not valid JSON');
-            app('log')->error($body);
+            Log::error('Body is not valid JSON');
+            Log::error($body);
             $return['message'] = 'Invalid JSON :(';
 
             return $return;
         }
 
         if (!array_key_exists($channel, $json['firefly_iii'])) {
-            app('log')->error(sprintf('No valid update channel "%s"', $channel));
-            app('log')->error($body);
+            Log::error(sprintf('No valid update channel "%s"', $channel));
+            Log::error($body);
             $return['message'] = sprintf('Unknown update channel "%s" :(', $channel);
         }
 
@@ -124,7 +124,7 @@ class UpdateRequest implements UpdateRequestInterface
         $return['level']   = 'success';
         $return['date']    = $date->startOfDay();
 
-        app('log')->info('Response from update server', $response);
+        Log::info('Response from update server', $response);
 
         return $return;
     }
@@ -134,7 +134,7 @@ class UpdateRequest implements UpdateRequestInterface
      */
     private function parseResult(array $information): array
     {
-        app('log')->debug('Now in parseResult()', $information);
+        Log::debug('Now in parseResult()', $information);
         $current  = (string) config('firefly.version');
         $latest   = (string) $information['version'];
 
@@ -148,7 +148,7 @@ class UpdateRequest implements UpdateRequestInterface
 
         $compare  = version_compare($latest, $current);
 
-        app('log')->debug(sprintf('Current version is "%s", latest is "%s", result is: %d', $current, $latest, $compare));
+        Log::debug(sprintf('Current version is "%s", latest is "%s", result is: %d', $current, $latest, $compare));
 
         // -1: you're running a newer version:
         if (-1 === $compare) {
@@ -206,7 +206,7 @@ class UpdateRequest implements UpdateRequestInterface
             'level'   => 'info',
             'message' => (string) trans('firefly.update_newer_version_alert', ['your_version' => $current, 'new_version' => $latest]),
         ];
-        app('log')->debug('User is running a newer version', $return);
+        Log::debug('User is running a newer version', $return);
 
         return $return;
     }
@@ -217,14 +217,14 @@ class UpdateRequest implements UpdateRequestInterface
             'level'   => 'info',
             'message' => (string) trans('firefly.update_current_version_alert', ['version' => $current]),
         ];
-        app('log')->debug('User is the current version.', $return);
+        Log::debug('User is the current version.', $return);
 
         return $return;
     }
 
     private function releasedNewAlpha(string $current, string $latest, Carbon $date): array
     {
-        app('log')->debug('New release is also a alpha!');
+        Log::debug('New release is also a alpha!');
         $message = (string) trans(
             'firefly.update_new_version_alert',
             [
@@ -242,7 +242,7 @@ class UpdateRequest implements UpdateRequestInterface
 
     private function releasedNewBeta(string $current, string $latest, Carbon $date): array
     {
-        app('log')->debug('New release is also a beta!');
+        Log::debug('New release is also a beta!');
         $message = (string) trans(
             'firefly.update_new_version_alert',
             [
@@ -260,7 +260,7 @@ class UpdateRequest implements UpdateRequestInterface
 
     private function releasedNewVersion(string $current, string $latest, Carbon $date): array
     {
-        app('log')->debug('New release is old enough.');
+        Log::debug('New release is old enough.');
         $message = (string) trans(
             'firefly.update_new_version_alert',
             [
@@ -269,7 +269,7 @@ class UpdateRequest implements UpdateRequestInterface
                 'date'         => $date->isoFormat((string) trans('config.month_and_day_js')),
             ]
         );
-        app('log')->debug('New release is here!', [$message]);
+        Log::debug('New release is here!', [$message]);
         event(new NewVersionAvailable($message));
 
         return [
