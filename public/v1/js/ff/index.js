@@ -39,6 +39,7 @@ function drawChart() {
     columnChart(accountExpenseUrl, 'expense-accounts-chart');
     columnChart(accountRevenueUrl, 'revenue-accounts-chart');
     getPiggyBanks();
+    console.log('Get all boxes');
     getAllBoxes();
 
     function getAllBoxes() {
@@ -60,7 +61,7 @@ function drawChart() {
 
             // net worth
             var net_worth = [];
-
+            var keepGreen = false;
 
             for (key in data) {
                 // balance
@@ -81,8 +82,8 @@ function drawChart() {
                 if (key.substring(0, 17) === 'left-to-spend-in-') {
                     left_to_spend_top.push(data[key].value_parsed);
                     left_to_spend_bottom.push(data[key].sub_title);
-                    if(parseFloat(data[key].monetary_value) < 0) {
-                        $('#box-left-to-spend-box').removeClass('bg-green-gradient').addClass('bg-red-gradient');
+                    if (parseFloat(data[key].monetary_value) > 0) {
+                        keepGreen = true;
                     }
                 }
 
@@ -90,6 +91,9 @@ function drawChart() {
                 if (key.substring(0, 13) === 'net-worth-in-') {
                     net_worth.push(data[key].value_parsed);
                 }
+            }
+            if(!keepGreen) {
+                $('#box-left-to-spend-box').removeClass('bg-green-gradient').addClass('bg-red-gradient')
             }
 
             // balance
