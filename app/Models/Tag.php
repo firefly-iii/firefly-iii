@@ -49,6 +49,8 @@ class Tag extends Model
             'zoomLevel'  => 'int',
             'latitude'   => 'float',
             'longitude'  => 'float',
+            'user_id'                => 'integer',
+            'user_group_id'                => 'integer',
         ];
 
     protected $fillable = ['user_id', 'user_group_id', 'tag', 'date', 'date_tz', 'description', 'tagMode'];

@@ -46,6 +46,8 @@ class Category extends Model
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
             'encrypted'  => 'boolean',
+            'user_id'                => 'integer',
+            'user_group_id'                => 'integer',
         ];
 
     protected $fillable = ['user_id', 'user_group_id', 'name'];

@@ -51,6 +51,7 @@ class Account extends Model
             'created_at'             => 'datetime',
             'updated_at'             => 'datetime',
             'user_id'                => 'integer',
+            'user_group_id'                => 'integer',
             'deleted_at'             => 'datetime',
             'active'                 => 'boolean',
             'encrypted'              => 'boolean',

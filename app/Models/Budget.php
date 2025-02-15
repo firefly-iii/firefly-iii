@@ -48,9 +48,11 @@ class Budget extends Model
             'deleted_at' => 'datetime',
             'active'     => 'boolean',
             'encrypted'  => 'boolean',
+            'user_id'                => 'integer',
+            'user_group_id'                => 'integer',
         ];
 
-    protected $fillable = ['user_id', 'name', 'active', 'order', 'user_group_id'];
+    protected $fillable = ['user_id','user_group_id', 'name', 'active', 'order', 'user_group_id'];
 
     protected $hidden   = ['encrypted'];
 

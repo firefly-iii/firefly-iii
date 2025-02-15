@@ -40,6 +40,8 @@ class Preference extends Model
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'data'       => 'array',
+            'user_id'                => 'integer',
+            'user_group_id'                => 'integer',
         ];
 
     protected $fillable = ['user_id', 'data', 'name', 'user_group_id'];

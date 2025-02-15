@@ -65,6 +65,8 @@ class TransactionJournal extends Model
             'tag_count'     => 'int',
             'encrypted'     => 'boolean',
             'completed'     => 'boolean',
+            'user_id'                => 'integer',
+            'user_group_id'                => 'integer',
         ];
 
     protected $fillable

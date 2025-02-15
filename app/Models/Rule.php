@@ -49,9 +49,11 @@ class Rule extends Model
             'stop_processing' => 'boolean',
             'id'              => 'int',
             'strict'          => 'boolean',
+            'user_id'                => 'integer',
+            'user_group_id'                => 'integer',
         ];
 
-    protected $fillable = ['rule_group_id', 'order', 'active', 'title', 'description', 'user_id', 'strict'];
+    protected $fillable = ['rule_group_id', 'order', 'active', 'title', 'description', 'user_id','user_group_id', 'strict'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).

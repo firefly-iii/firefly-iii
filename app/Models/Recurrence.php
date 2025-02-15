@@ -56,10 +56,12 @@ class Recurrence extends Model
             'repetitions'  => 'int',
             'active'       => 'bool',
             'apply_rules'  => 'bool',
+            'user_id'                => 'integer',
+            'user_group_id'                => 'integer',
         ];
 
     protected $fillable
-                     = ['user_id', 'transaction_type_id', 'title', 'description', 'first_date', 'first_date_tz', 'repeat_until', 'repeat_until_tz', 'latest_date', 'latest_date_tz', 'repetitions', 'apply_rules', 'active'];
+                     = ['user_id', 'user_group_id', 'transaction_type_id', 'title', 'description', 'first_date', 'first_date_tz', 'repeat_until', 'repeat_until_tz', 'latest_date', 'latest_date_tz', 'repetitions', 'apply_rules', 'active'];
 
     protected $table = 'recurrences';
 

@@ -42,9 +42,10 @@ class CurrencyExchangeRate extends Model
                         = [
             'created_at'       => 'datetime',
             'updated_at'       => 'datetime',
-            'user_id'          => 'int',
-            'from_currency_id' => 'int',
-            'to_currency_id'   => 'int',
+            'user_id'                => 'integer',
+            'user_group_id'                => 'integer',
+            'from_currency_id' => 'integer',
+            'to_currency_id'   => 'integer',
             'date'             => SeparateTimezoneCaster::class,
             'rate'             => 'string',
             'user_rate'        => 'string',
