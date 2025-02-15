@@ -94,6 +94,7 @@ class TransactionGroupFactory
     public function setUser(User $user): void
     {
         $this->user = $user;
+        $this->userGroup = $user->userGroup;
     }
 
     public function setUserGroup(UserGroup $userGroup): void
