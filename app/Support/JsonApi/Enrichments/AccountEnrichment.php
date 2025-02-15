@@ -25,14 +25,16 @@ declare(strict_types=1);
 namespace FireflyIII\Support\JsonApi\Enrichments;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\Support\Facades\Balance;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
+use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -44,27 +46,44 @@ use Illuminate\Support\Facades\Log;
  */
 class AccountEnrichment implements EnrichmentInterface
 {
-    private array                       $balances;
-    private Collection                  $collection;
-    private array                       $currencies;
-    private CurrencyRepositoryInterface $currencyRepository;
-    private TransactionCurrency         $default;
-    private ?Carbon                     $end;
-    private array                       $grouped;
-    private array                       $objectGroups;
-    private AccountRepositoryInterface  $repository;
-    private ?Carbon                     $start;
+//    private array                       $balances;
+//    private array                       $currencies;
+//    private CurrencyRepositoryInterface $currencyRepository;
+//    private TransactionCurrency         $default;
+//    private ?Carbon                     $end;
+//    private array                       $grouped;
+//    private array                       $objectGroups;
+//    private AccountRepositoryInterface  $repository;
+//    private ?Carbon                     $start;
+
+    private Collection $collection;
+
+    private bool                $convertToNative;
+    private User                $user;
+    private UserGroup           $userGroup;
+    private TransactionCurrency $native;
+    private array               $accountIds;
+    private array               $accountTypeIds;
+    private array               $accountTypes;
+    private array               $currencies;
+    private array               $meta;
 
     public function __construct()
     {
-        $this->repository         = app(AccountRepositoryInterface::class);
-        $this->currencyRepository = app(CurrencyRepositoryInterface::class);
-        $this->start              = null;
-        $this->end                = null;
+        $this->convertToNative = false;
+        $this->accountIds      = [];
+        $this->currencies      = [];
+        $this->accountTypeIds  = [];
+        $this->accountTypes    = [];
+        $this->meta            = [];
+//        $this->repository         = app(AccountRepositoryInterface::class);
+//        $this->currencyRepository = app(CurrencyRepositoryInterface::class);
+//        $this->start              = null;
+//        $this->end                = null;
     }
 
     #[\Override]
-    public function enrichSingle(Model $model): Account
+    public function enrichSingle(Model | array $model): Account | array
     {
         Log::debug(__METHOD__);
         $collection = new Collection([$model]);
@@ -80,20 +99,24 @@ class AccountEnrichment implements EnrichmentInterface
     public function enrich(Collection $collection): Collection
     {
         Log::debug(sprintf('Now doing account enrichment for %d account(s)', $collection->count()));
-        // prep local fields
-        $this->collection   = $collection;
-        $this->default      = app('amount')->getNativeCurrency();
-        $this->currencies   = [];
-        $this->balances     = [];
-        $this->objectGroups = [];
-        $this->grouped      = [];
 
-        // do everything here:
-        $this->getLastActivity();
-        $this->collectAccountTypes();
+        // prep local fields
+        $this->collection = $collection;
+        $this->collectAccountIds();
+        $this->getAccountTypes();
         $this->collectMetaData();
-        $this->getMetaBalances();
-        $this->getObjectGroups();
+//        $this->default      = app('amount')->getNativeCurrency();
+//        $this->currencies   = [];
+//        $this->balances     = [];
+//        $this->objectGroups = [];
+//        $this->grouped      = [];
+//
+//        // do everything here:
+//        $this->getLastActivity();
+//        $this->collectAccountTypes();
+//        $this->collectMetaData();
+//        $this->getMetaBalances();
+//        $this->getObjectGroups();
 
         //        $this->collection->transform(function (Account $account) {
         //            $account->user_array = ['id' => 1, 'bla bla' => 'bla'];
@@ -106,7 +129,48 @@ class AccountEnrichment implements EnrichmentInterface
         //            return $account;
         //        });
 
+        $this->appendCollectedData();
+
         return $this->collection;
+    }
+
+    private function getAccountTypes(): void
+    {
+        $types = AccountType::whereIn('id', $this->accountTypeIds)->get();
+        /** @var AccountType $type */
+        foreach ($types as $type) {
+            $this->accountTypes[(int) $type->id] = $type->type;
+        }
+    }
+
+    private function collectAccountIds(): void
+    {
+        /** @var Account $account */
+        foreach ($this->collection as $account) {
+            $this->accountIds[]     = (int) $account->id;
+            $this->accountTypeIds[] = (int) $account->account_type_id;
+        }
+        $this->accountIds     = array_unique($this->accountIds);
+        $this->accountTypeIds = array_unique($this->accountTypeIds);
+    }
+
+    private function appendCollectedData(): void
+    {
+
+        $accountTypes     = $this->accountTypes;
+        $meta             = $this->meta;
+        $this->collection = $this->collection->map(function (Account $item) use ($accountTypes, $meta) {
+            $item->full_account_type = $accountTypes[(int) $item->account_type_id] ?? null;
+            $meta = [];
+            if (array_key_exists((int) $item->id, $meta)) {
+                foreach ($meta[(int) $item->id] as $name => $value) {
+                    $meta[$name] = $value;
+                }
+            }
+            $item->meta              = $meta;
+
+            return $item;
+        });
     }
 
     /**
@@ -141,10 +205,33 @@ class AccountEnrichment implements EnrichmentInterface
 
     private function collectMetaData(): void
     {
-        $metaFields  = $this->repository->getMetaValues($this->collection, ['is_multi_currency', 'currency_id', 'account_role', 'account_number', 'liability_direction', 'interest', 'interest_period', 'current_debt']);
+        $set = AccountMeta
+            ::whereIn('name', ['is_multi_currency', 'currency_id', 'account_role', 'account_number', 'liability_direction', 'interest', 'interest_period', 'current_debt'])
+            ->whereIn('account_id', $this->accountIds)
+            ->get(['account_meta.id', 'account_meta.account_id', 'account_meta.name', 'account_meta.data'])->toArray();
+        /** @var array $entry */
+        foreach ($set as $entry) {
+            $this->meta[(int) $entry['account_id']][$entry['name']] = (string) $entry['data'];
+            if ('currency_id' === $entry['name']) {
+                $this->currencies[(int) $entry['data']] = true;
+            }
+        }
+        $currencies = TransactionCurrency::whereIn('id', array_keys($this->currencies))->get();
+        foreach ($currencies as $currency) {
+            $this->currencies[(int) $currency->id] = $currency;
+        }
+        foreach ($this->currencies as $id => $currency) {
+            if (true === $currency) {
+                throw new FireflyException(sprintf('Currency #%d not found.', $id));
+            }
+        }
+        return;
+
+
+        $metaFields  = $this->repository->getMetaValues($this->collection);
         $currencyIds = $metaFields->where('name', 'currency_id')->pluck('data')->toArray();
 
-        $currencies  = [];
+        $currencies = [];
         foreach ($this->currencyRepository->getByIds($currencyIds) as $currency) {
             $id              = $currency->id;
             $currencies[$id] = $currency;
@@ -174,8 +261,8 @@ class AccountEnrichment implements EnrichmentInterface
         $default        = $this->default;
 
         // get start and end, so the balance difference can be generated.
-        $start          = null;
-        $end            = null;
+        $start = null;
+        $end   = null;
         if (null !== $this->start) {
             $start = Balance::getAccountBalances($this->collection, $this->start);
         }
@@ -197,7 +284,7 @@ class AccountEnrichment implements EnrichmentInterface
                 'balance_difference'      => null,
             ];
             if (array_key_exists($account->id, $balances)) {
-                $set              = [];
+                $set = [];
                 foreach ($balances[$account->id] as $currencyId => $entry) {
                     $left  = $start[$account->id][$currencyId]['balance'] ?? null;
                     $right = $end[$account->id][$currencyId]['balance'] ?? null;
@@ -239,12 +326,11 @@ class AccountEnrichment implements EnrichmentInterface
 
     private function getObjectGroups(): void
     {
-        $set      = \DB::table('object_groupables')
-            ->where('object_groupable_type', Account::class)
-            ->whereIn('object_groupable_id', $this->collection->pluck('id')->toArray())
-            ->distinct()
-            ->get(['object_groupables.object_groupable_id', 'object_groupables.object_group_id'])
-        ;
+        $set = \DB::table('object_groupables')
+                  ->where('object_groupable_type', Account::class)
+                  ->whereIn('object_groupable_id', $this->collection->pluck('id')->toArray())
+                  ->distinct()
+                  ->get(['object_groupables.object_groupable_id', 'object_groupables.object_group_id']);
         // get the groups:
         $groupIds = $set->pluck('object_group_id')->toArray();
         $groups   = ObjectGroup::whereIn('id', $groupIds)->get();
@@ -278,4 +364,27 @@ class AccountEnrichment implements EnrichmentInterface
     {
         $this->start = $start;
     }
+
+    public function setUserGroup(UserGroup $userGroup): void
+    {
+        $this->userGroup = $userGroup;
+    }
+
+    public function setUser(User $user): void
+    {
+        $this->user      = $user;
+        $this->userGroup = $user->userGroup;
+    }
+
+    public function setConvertToNative(bool $convertToNative): void
+    {
+        $this->convertToNative = $convertToNative;
+    }
+
+    public function setNative(TransactionCurrency $native): void
+    {
+        $this->native = $native;
+    }
+
+
 }
