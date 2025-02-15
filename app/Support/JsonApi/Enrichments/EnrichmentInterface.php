@@ -31,5 +31,5 @@ interface EnrichmentInterface
 {
     public function enrich(Collection $collection): Collection;
 
-    public function enrichSingle(Model $model): Model;
+    public function enrichSingle(Model|array $model): Model|array;
 }

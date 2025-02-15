@@ -76,7 +76,7 @@ class TagFactory
         $longitude = 0.0 === (float) $data['longitude'] ? null : (float) $data['longitude']; // intentional float
         $array     = [
             'user_id'       => $this->user->id,
-            'user_group_id' => $this->user->user_group_id,
+            'user_group_id' => $this->userGroup->id,
             'tag'           => trim($data['tag']),
             'tagMode'       => 'nothing',
             'date'          => $data['date'],

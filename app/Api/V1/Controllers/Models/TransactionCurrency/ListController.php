@@ -42,6 +42,7 @@ use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Support\Http\Api\TransactionFilter;
+use FireflyIII\Support\JsonApi\Enrichments\TransactionGroupEnrichment;
 use FireflyIII\Transformers\AccountTransformer;
 use FireflyIII\Transformers\AvailableBudgetTransformer;
 use FireflyIII\Transformers\BillTransformer;
@@ -360,7 +361,11 @@ class ListController extends Controller
         }
         $paginator    = $collector->getPaginatedGroups();
         $paginator->setPath(route('api.v1.currencies.transactions', [$currency->code]).$this->buildParams());
-        $transactions = $paginator->getCollection();
+
+        // enrich
+        $enrichment = new TransactionGroupEnrichment();
+        $enrichment->setUser($admin);
+        $transactions = $enrichment->enrich($paginator->getCollection());
 
         /** @var TransactionGroupTransformer $transformer */
         $transformer  = app(TransactionGroupTransformer::class);

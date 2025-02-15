@@ -30,6 +30,7 @@ use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
+use FireflyIII\Support\JsonApi\Enrichments\TransactionGroupEnrichment;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -98,6 +99,11 @@ class UpdateController extends Controller
         if (null === $selectedGroup) {
             throw new NotFoundHttpException();
         }
+
+        // enrich
+        $enrichment = new TransactionGroupEnrichment();
+        $enrichment->setUser($admin);
+        $selectedGroup = $enrichment->enrichSingle($selectedGroup);
 
         /** @var TransactionGroupTransformer $transformer */
         $transformer      = app(TransactionGroupTransformer::class);

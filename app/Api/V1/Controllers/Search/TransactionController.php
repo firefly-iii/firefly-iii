@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Controllers\Search;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Support\JsonApi\Enrichments\TransactionGroupEnrichment;
 use FireflyIII\Support\Search\SearchInterface;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use Illuminate\Http\JsonResponse;
@@ -57,7 +58,11 @@ class TransactionController extends Controller
         $parameters   = ['search' => $fullQuery];
         $url          = route('api.v1.search.transactions').'?'.http_build_query($parameters);
         $groups->setPath($url);
-        $transactions = $groups->getCollection();
+
+        // enrich
+        $enrichment = new TransactionGroupEnrichment();
+        $enrichment->setUser(auth()->user());
+        $transactions = $enrichment->enrich($groups->getCollection());
 
         /** @var TransactionGroupTransformer $transformer */
         $transformer  = app(TransactionGroupTransformer::class);

@@ -59,7 +59,7 @@ class TestRequest extends FormRequest
 
     private function getAccounts(): array
     {
-        return $this->get('accounts');
+        return $this->get('accounts') ?? [];
     }
 
     public function rules(): array

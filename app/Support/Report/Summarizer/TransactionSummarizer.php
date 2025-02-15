@@ -65,6 +65,10 @@ class TransactionSummarizer
 
             // prepare foreign currency info:
             $foreignCurrencyId     = 0;
+            $foreignCurrencyName          = null;
+            $foreignCurrencySymbol        = null;
+            $foreignCurrencyCode          = null;
+            $foreignCurrencyDecimalPlaces = null;
 
             if ($this->convertToNative) {
                 // if convert to native, use the native amount yes or no?

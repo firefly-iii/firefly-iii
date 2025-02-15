@@ -30,6 +30,7 @@ use FireflyIII\Api\V1\Requests\Models\RuleGroup\TriggerRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
+use FireflyIII\Support\JsonApi\Enrichments\TransactionGroupEnrichment;
 use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
@@ -99,6 +100,11 @@ class TriggerController extends Controller
         // file the rule(s)
         $transactions = $ruleEngine->find();
         $count        = $transactions->count();
+
+        // enrich
+        $enrichment = new TransactionGroupEnrichment();
+        $enrichment->setUser($group->user);
+        $transactions = $enrichment->enrich($transactions);
 
         $paginator    = new LengthAwarePaginator($transactions, $count, 31337, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.rule-groups.test', [$group->id]).$this->buildParams());
