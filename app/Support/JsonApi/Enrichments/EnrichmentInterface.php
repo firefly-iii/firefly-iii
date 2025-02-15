@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\JsonApi\Enrichments;
 
+use FireflyIII\Models\UserGroup;
+use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
@@ -32,4 +34,11 @@ interface EnrichmentInterface
     public function enrich(Collection $collection): Collection;
 
     public function enrichSingle(Model|array $model): Model|array;
+
+    public function setUserGroup(UserGroup $userGroup): void;
+
+    public function setUser(User $user): void;
 }
+
+
+

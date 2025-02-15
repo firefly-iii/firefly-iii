@@ -29,7 +29,9 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
+use FireflyIII\Support\JsonApi\Enrichments\AccountEnrichment;
 use FireflyIII\Transformers\AccountTransformer;
+use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -88,8 +90,16 @@ class ShowController extends Controller
         $count       = $collection->count();
 
         // continue sort:
-
         $accounts    = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+
+        // enrich
+        /** @var User $admin */
+        $admin = auth()->user();
+        $enrichment = new AccountEnrichment();
+        $enrichment->setUser($admin);
+        $enrichment->setConvertToNative($this->convertToNative);
+        $enrichment->setNative($this->nativeCurrency);
+        $accounts = $enrichment->enrich($accounts);
 
         // make paginator:
         $paginator   = new LengthAwarePaginator($accounts, $count, $pageSize, $this->parameters->get('page'));
@@ -117,6 +127,16 @@ class ShowController extends Controller
         $this->repository->resetAccountOrder();
         $account->refresh();
         $manager     = $this->getManager();
+
+        // enrich
+        /** @var User $admin */
+        $admin = auth()->user();
+        $enrichment = new AccountEnrichment();
+        $enrichment->setUser($admin);
+        $enrichment->setConvertToNative($this->convertToNative);
+        $enrichment->setNative($this->nativeCurrency);
+        $account = $enrichment->enrichSingle($account);
+
 
         /** @var AccountTransformer $transformer */
         $transformer = app(AccountTransformer::class);

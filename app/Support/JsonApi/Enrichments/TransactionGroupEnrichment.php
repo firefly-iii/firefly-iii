@@ -29,6 +29,7 @@ use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Location;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Tag;
+use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Models\UserGroup;
@@ -80,7 +81,7 @@ class TransactionGroupEnrichment implements EnrichmentInterface
         return $this->collection;
     }
 
-    #[\Override] public function enrichSingle(Model|array $model): Model|array
+    #[\Override] public function enrichSingle(Model|array $model): TransactionGroup|array
     {
         Log::debug(__METHOD__);
         if(is_array($model)) {

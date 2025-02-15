@@ -42,6 +42,7 @@ use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Support\Http\Api\TransactionFilter;
+use FireflyIII\Support\JsonApi\Enrichments\AccountEnrichment;
 use FireflyIII\Support\JsonApi\Enrichments\TransactionGroupEnrichment;
 use FireflyIII\Transformers\AccountTransformer;
 use FireflyIII\Transformers\AvailableBudgetTransformer;
@@ -100,6 +101,15 @@ class ListController extends Controller
 
         $count             = $collection->count();
         $accounts          = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+
+        // enrich
+        /** @var User $admin */
+        $admin = auth()->user();
+        $enrichment = new AccountEnrichment();
+        $enrichment->setUser($admin);
+        $enrichment->setConvertToNative($this->convertToNative);
+        $enrichment->setNative($this->nativeCurrency);
+        $accounts = $enrichment->enrich($accounts);
 
         // make paginator:
         $paginator         = new LengthAwarePaginator($accounts, $count, $pageSize, $this->parameters->get('page'));
