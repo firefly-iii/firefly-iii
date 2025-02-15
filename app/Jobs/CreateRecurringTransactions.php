@@ -380,7 +380,7 @@ class CreateRecurringTransactions implements ShouldQueue
         }
 
         $array                      = [
-            'user'         => $recurrence->user_id,
+            'user'         => $recurrence->user,
             'group_title'  => $groupTitle,
             'transactions' => $this->getTransactionData($recurrence, $repetition, $date),
         ];
