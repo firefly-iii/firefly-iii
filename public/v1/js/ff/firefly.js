@@ -30,8 +30,16 @@ function parseToLocalDates() {
     "use strict";
     $('span.date-time').each(function () {
         var date = $(this).data('date');
-        var obj = moment.utc(date).local();
         var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        console.log('raw date is         "' + date + '"');
+        console.log('parse to utc() is   "' + moment.utc(date).format() + '"');
+        console.log('parse to zone(Z)    "' + moment.parseZone(date).format() + '" (should be the same)');
+        console.log('browser timezone is ' + timeZone);
+        var obj = moment.utc(date).local();
+
+        console.log('auto convert to timezone is:     "' + obj.format() + '"');
+        console.log('moment.js format is:             "'+date_time_js+'"');
+
         $(this).text(obj.format(date_time_js) + ' ('+ timeZone +')');
     });
 }
