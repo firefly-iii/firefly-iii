@@ -26,6 +26,7 @@ namespace FireflyIII\Repositories\Currency;
 use Carbon\Carbon;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
@@ -36,6 +37,7 @@ use Illuminate\Support\Collection;
 class CurrencyRepository implements CurrencyRepositoryInterface
 {
     private User $user;
+    private UserGroup $userGroup;
 
     #[\Override]
     public function find(int $currencyId): ?TransactionCurrency
@@ -110,6 +112,12 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     {
         if ($user instanceof User) {
             $this->user = $user;
+            $this->userGroup = $user->userGroup;
         }
+    }
+
+    #[\Override] public function setUserGroup(UserGroup $userGroup): void
+    {
+        $this->userGroup = $userGroup;
     }
 }
