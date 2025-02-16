@@ -47,7 +47,6 @@ class TransactionGroupTransformer extends AbstractTransformer
     private TransactionGroupRepositoryInterface $groupRepos;
     private array                               $metaDateFields;
     private array                               $metaFields;
-    private Collection $collection;
 
     /**
      * Constructor.
@@ -232,39 +231,12 @@ class TransactionGroupTransformer extends AbstractTransformer
         return null;
     }
 
-    private function getLocationById(int $journalId): ?Location
-    {
-        return $this->groupRepos->getLocation($journalId);
-    }
-
     private function getLocation(TransactionJournal $journal): ?Location
     {
         /** @var null|Location */
         return $journal->locations()->first();
     }
 
-    private function integerFromArray(array $array, string $key): ?int
-    {
-        if (array_key_exists($key, $array)) {
-            return (int) $array[$key];
-        }
-
-        return null;
-    }
-
-    private function dateFromArray(NullArrayObject $object, string $key): ?string
-    {
-        if (null === $object[$key]) {
-            return null;
-        }
-
-        return $object[$key]->toAtomString();
-    }
-
-    private function hasAttachments(int $journalId): bool
-    {
-        return $this->groupRepos->countAttachments($journalId) > 0;
-    }
 
     /**
      * @throws FireflyException

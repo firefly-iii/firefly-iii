@@ -117,6 +117,7 @@ class AccountEnrichment implements EnrichmentInterface
         $this->collectAccountIds();
         $this->getAccountTypes();
         $this->collectMetaData();
+        $this->collectNotes();
         $this->collectLocations();
         $this->collectOpeningBalances();
 //        $this->default      = app('amount')->getNativeCurrency();
@@ -254,36 +255,6 @@ class AccountEnrichment implements EnrichmentInterface
         Log::debug(sprintf('Enrich with %d locations(s)', count($this->locations)));
     }
 
-    /**
-     * TODO this method refers to a single-use method inside Steam that could be moved here.
-     */
-    private function getLastActivity(): void
-    {
-        $lastActivity = $this->repository->getLastActivity($this->collection);
-        foreach ($lastActivity as $row) {
-            $this->collection->where('id', $row['account_id'])->first()->last_activity = Carbon::parse($row['date_max'], config('app.timezone'));
-        }
-    }
-
-    /**
-     * TODO this method refers to a single-use method inside Steam that could be moved here.
-     */
-    private function collectAccountTypes(): void
-    {
-        $accountTypes = $this->repository->getAccountTypes($this->collection);
-        $types        = [];
-
-        /** @var AccountType $row */
-        foreach ($accountTypes as $row) {
-            $types[$row->id] = $row->type;
-        }
-        $this->collection->transform(function (Account $account) use ($types) {
-            $account->account_type_string = $types[$account->id];
-
-            return $account;
-        });
-    }
-
     private function collectMetaData(): void
     {
         $set = AccountMeta
@@ -306,144 +277,6 @@ class AccountEnrichment implements EnrichmentInterface
                 throw new FireflyException(sprintf('Currency #%d not found.', $id));
             }
         }
-        return;
-
-
-        $metaFields  = $this->repository->getMetaValues($this->collection);
-        $currencyIds = $metaFields->where('name', 'currency_id')->pluck('data')->toArray();
-
-        $currencies = [];
-        foreach ($this->currencyRepository->getByIds($currencyIds) as $currency) {
-            $id              = $currency->id;
-            $currencies[$id] = $currency;
-        }
-
-        $this->collection->transform(function (Account $account) use ($metaFields, $currencies) {
-            $set = $metaFields->where('account_id', $account->id);
-            foreach ($set as $entry) {
-                $account->{$entry->name} = $entry->data;
-                if ('currency_id' === $entry->name) {
-                    $id                               = (int) $entry->data;
-                    $account->currency_name           = $currencies[$id]?->name;
-                    $account->currency_code           = $currencies[$id]?->code;
-                    $account->currency_symbol         = $currencies[$id]?->symbol;
-                    $account->currency_decimal_places = $currencies[$id]?->decimal_places;
-                }
-            }
-
-            return $account;
-        });
-    }
-
-    private function getMetaBalances(): void
-    {
-        $this->balances = Balance::getAccountBalances($this->collection, today());
-        $balances       = $this->balances;
-        $default        = $this->default;
-
-        // get start and end, so the balance difference can be generated.
-        $start = null;
-        $end   = null;
-        if (null !== $this->start) {
-            $start = Balance::getAccountBalances($this->collection, $this->start);
-        }
-        if (null !== $this->end) {
-            $end = Balance::getAccountBalances($this->collection, $this->end);
-        }
-
-        $this->collection->transform(function (Account $account) use ($balances, $default, $start, $end) {
-            $converter = new ExchangeRateConverter();
-            $native    = [
-                'currency_id'             => $this->default->id,
-                'currency_name'           => $this->default->name,
-                'currency_code'           => $this->default->code,
-                'currency_symbol'         => $this->default->symbol,
-                'currency_decimal_places' => $this->default->decimal_places,
-                'balance'                 => '0',
-                'period_start_balance'    => null,
-                'period_end_balance'      => null,
-                'balance_difference'      => null,
-            ];
-            if (array_key_exists($account->id, $balances)) {
-                $set = [];
-                foreach ($balances[$account->id] as $currencyId => $entry) {
-                    $left  = $start[$account->id][$currencyId]['balance'] ?? null;
-                    $right = $end[$account->id][$currencyId]['balance'] ?? null;
-                    $diff  = null;
-                    if (null !== $left && null !== $right) {
-                        $diff = bcsub($right, $left);
-                    }
-
-                    $item  = [
-                        'currency_id'             => $entry['currency']->id,
-                        'currency_name'           => $entry['currency']->name,
-                        'currency_code'           => $entry['currency']->code,
-                        'currency_symbol'         => $entry['currency']->symbol,
-                        'currency_decimal_places' => $entry['currency']->decimal_places,
-                        'balance'                 => $entry['balance'],
-                        'period_start_balance'    => $left,
-                        'period_end_balance'      => $right,
-                        'balance_difference'      => $diff,
-                    ];
-                    $set[] = $item;
-                    if ($converter->enabled()) {
-                        $native['balance'] = bcadd($native['balance'], $converter->convert($entry['currency'], $default, today(), $entry['balance']));
-                        if (null !== $diff) {
-                            $native['period_start_balance'] = $converter->convert($entry['currency'], $default, today(), $item['period_start_balance']);
-                            $native['period_end_balance']   = $converter->convert($entry['currency'], $default, today(), $item['period_end_balance']);
-                            $native['balance_difference']   = bcsub($native['period_end_balance'], $native['period_start_balance']);
-                        }
-                    }
-                }
-                $account->balance = $set;
-                if ($converter->enabled()) {
-                    $account->native_balance = $native;
-                }
-            }
-
-            return $account;
-        });
-    }
-
-    private function getObjectGroups(): void
-    {
-        $set = \DB::table('object_groupables')
-                  ->where('object_groupable_type', Account::class)
-                  ->whereIn('object_groupable_id', $this->collection->pluck('id')->toArray())
-                  ->distinct()
-                  ->get(['object_groupables.object_groupable_id', 'object_groupables.object_group_id']);
-        // get the groups:
-        $groupIds = $set->pluck('object_group_id')->toArray();
-        $groups   = ObjectGroup::whereIn('id', $groupIds)->get();
-
-        /** @var ObjectGroup $group */
-        foreach ($groups as $group) {
-            $this->objectGroups[$group->id] = $group;
-        }
-
-        /** @var \stdClass $entry */
-        foreach ($set as $entry) {
-            $this->grouped[(int) $entry->object_groupable_id] = (int) $entry->object_group_id;
-        }
-        $this->collection->transform(function (Account $account) {
-            $account->object_group_id = $this->grouped[$account->id] ?? null;
-            if (null !== $account->object_group_id) {
-                $account->object_group_title = $this->objectGroups[$account->object_group_id]->title;
-                $account->object_group_order = $this->objectGroups[$account->object_group_id]->order;
-            }
-
-            return $account;
-        });
-    }
-
-    public function setEnd(?Carbon $end): void
-    {
-        $this->end = $end;
-    }
-
-    public function setStart(?Carbon $start): void
-    {
-        $this->start = $start;
     }
 
     public function setUserGroup(UserGroup $userGroup): void

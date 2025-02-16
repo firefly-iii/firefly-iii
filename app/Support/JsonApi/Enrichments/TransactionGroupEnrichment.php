@@ -179,7 +179,8 @@ class TransactionGroupEnrichment implements EnrichmentInterface
                                  ->whereIn('attachable_id', $this->journalIds)
                                  ->where('attachable_type', TransactionJournal::class)
                                  ->groupBy('attachable_id')
-                                 ->get(['attachable_id', DB::raw('COUNT(id) as nr_of_attachments')])->toArray();
+                                 ->get(['attachable_id', DB::raw('COUNT(id) as nr_of_attachments')]) // @phpstan-ignore-line
+                                 ->toArray();
         foreach ($attachments as $row) {
             $this->attachmentCount[(int) $row['attachable_id']] = (int) $row['nr_of_attachments'];
         }

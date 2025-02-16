@@ -138,26 +138,6 @@ class AccountDestroyService
         DB::table('recurrences_transactions')->where('destination_id', $account->id)->update(['destination_id' => $moveTo->id]);
     }
 
-    private function destroyJournals(Account $account): void
-    {
-        /** @var JournalDestroyService $service */
-        $service = app(JournalDestroyService::class);
-
-        app('log')->debug('Now trigger account delete response #'.$account->id);
-
-        /** @var Transaction $transaction */
-        foreach ($account->transactions()->get() as $transaction) {
-            app('log')->debug('Now at transaction #'.$transaction->id);
-
-            /** @var null|TransactionJournal $journal */
-            $journal = $transaction->transactionJournal()->first();
-            if (null !== $journal) {
-                app('log')->debug('Call for deletion of journal #'.$journal->id);
-                $service->destroy($journal);
-            }
-        }
-    }
-
     private function destroyRecurrences(Account $account): void
     {
         $recurrences    = RecurrenceTransaction::where(
