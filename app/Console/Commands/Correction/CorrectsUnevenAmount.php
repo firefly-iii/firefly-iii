@@ -30,6 +30,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\Models\AccountBalanceCalculator;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class CorrectsUnevenAmount extends Command
@@ -118,10 +119,10 @@ class CorrectsUnevenAmount extends Command
 
     private function fixUnevenAmounts(): void
     {
-        $journals = \DB::table('transactions')
+        $journals = DB::table('transactions')
             ->groupBy('transaction_journal_id')
             ->whereNull('deleted_at')
-            ->get(['transaction_journal_id', \DB::raw('SUM(amount) AS the_sum')])  // @phpstan-ignore-line
+            ->get(['transaction_journal_id', DB::raw('SUM(amount) AS the_sum')])  // @phpstan-ignore-line
         ;
 
         /** @var \stdClass $entry */
@@ -262,7 +263,7 @@ class CorrectsUnevenAmount extends Command
     private function matchCurrencies(): void
     {
         $journals = TransactionJournal::leftJoin('transactions', 'transaction_journals.id', 'transactions.transaction_journal_id')
-            ->where('transactions.transaction_currency_id', '!=', \DB::raw('transaction_journals.transaction_currency_id'))
+            ->where('transactions.transaction_currency_id', '!=', DB::raw('transaction_journals.transaction_currency_id'))
             ->get(['transaction_journals.*'])
         ;
 

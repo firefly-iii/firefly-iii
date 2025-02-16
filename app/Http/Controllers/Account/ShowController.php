@@ -29,6 +29,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\PeriodOverview;
@@ -80,6 +81,7 @@ class ShowController extends Controller
      *                                              */
     public function show(Request $request, Account $account, ?Carbon $start = null, ?Carbon $end = null)
     {
+
         $objectType       = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
 
         if (!$this->isEditableAccount($account)) {

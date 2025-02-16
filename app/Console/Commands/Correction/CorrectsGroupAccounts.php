@@ -30,6 +30,7 @@ use FireflyIII\Handlers\Events\UpdatedGroupEventHandler;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class CorrectsGroupAccounts extends Command
 {
@@ -45,7 +46,7 @@ class CorrectsGroupAccounts extends Command
     {
         $groups  = [];
         $res     = TransactionJournal::groupBy('transaction_group_id')
-            ->get(['transaction_group_id', \DB::raw('COUNT(transaction_group_id) as the_count')])// @phpstan-ignore-line
+            ->get(['transaction_group_id', DB::raw('COUNT(transaction_group_id) as the_count')])// @phpstan-ignore-line
         ;
 
         /** @var TransactionJournal $journal */

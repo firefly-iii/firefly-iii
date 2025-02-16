@@ -199,7 +199,7 @@ trait ModelInformation
         ++$index;
 
         // amount_exactly:
-        $journalTriggers[$index] = 'amount_exactly';
+        $journalTriggers[$index] = 'amount_is';
         $values[$index]          = $destination->amount;
         ++$index;
 
@@ -244,7 +244,7 @@ trait ModelInformation
         // notes (if)
         $notes                   = $journal->notes()->first();
         if (null !== $notes) {
-            $journalTriggers[$index] = 'notes_are';
+            $journalTriggers[$index] = 'notes_is';
             $values[$index]          = $notes->text;
         }
 

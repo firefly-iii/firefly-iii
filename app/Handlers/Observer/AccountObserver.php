@@ -26,11 +26,14 @@ namespace FireflyIII\Handlers\Observer;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Attachment;
-use FireflyIII\Models\PiggyBank;
+use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionGroup;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -53,7 +56,7 @@ class AccountObserver
         $repository   = app(AccountRepositoryInterface::class);
         $currency     = $repository->getAccountCurrency($account);
         if (null !== $currency && $currency->id !== $userCurrency->id && '' !== (string) $account->virtual_balance && 0 !== bccomp($account->virtual_balance, '0')) {
-            $converter                       = new ExchangeRateConverter();
+            $converter = new ExchangeRateConverter();
             $converter->setUserGroup($account->user->userGroup);
             $converter->setIgnoreSettings(true);
             $account->native_virtual_balance = $converter->convert($currency, $userCurrency, today(), $account->virtual_balance);
@@ -72,24 +75,31 @@ class AccountObserver
      */
     public function deleting(Account $account): void
     {
-        //        app('log')->debug('Observe "deleting" of an account.');
-        $account->accountMeta()->delete();
+        app('log')->debug('Observe "deleting" of an account.');
 
         $repository = app(AttachmentRepositoryInterface::class);
         $repository->setUser($account->user);
 
-        /** @var PiggyBank $piggy */
-        foreach ($account->piggyBanks()->get() as $piggy) {
-            $piggy->accounts()->detach($account);
-        }
+        DB::table('account_piggy_bank')->where('account_id', $account->id)->delete();
 
         /** @var Attachment $attachment */
         foreach ($account->attachments()->get() as $attachment) {
             $repository->destroy($attachment);
         }
-        foreach ($account->transactions()->get() as $transaction) {
-            $transaction->delete();
+
+        $journalIds = Transaction::where('account_id', $account->id)->get(['transactions.transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
+        $groupIds   = TransactionJournal::whereIn('id', $journalIds)->get(['transaction_journals.transaction_group_id'])->pluck('transaction_group_id')->toArray();
+        if (count($journalIds) > 0) {
+            Transaction::whereIn('transaction_journal_id', $journalIds)->delete();
+            TransactionJournal::whereIn('id', $journalIds)->delete();
         }
+        if (count($groupIds) > 0) {
+            TransactionGroup::whereIn('id', $groupIds)->delete();
+        }
+
+        Log::debug(sprintf('Delete %d journal(s)', count($journalIds)));
+        Log::debug(sprintf('Delete %d group(s)', count($groupIds)));
+
         $account->notes()->delete();
         $account->locations()->delete();
     }

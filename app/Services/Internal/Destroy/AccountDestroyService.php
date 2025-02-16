@@ -31,6 +31,7 @@ use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class AccountDestroyService
@@ -46,8 +47,6 @@ class AccountDestroyService
             $this->moveTransactions($account, $moveTo);
             $this->updateRecurrences($account, $moveTo);
         }
-        $this->destroyJournals($account);
-
         // delete recurring transactions with this account:
         if (null === $moveTo) {
             $this->destroyRecurrences($account);
@@ -59,6 +58,7 @@ class AccountDestroyService
         // delete account meta:
         $account->accountMeta()->delete();
         // delete account.
+        // at this point the account observer interferes and deletes most of the other stuff.
         $account->delete();
     }
 
@@ -134,8 +134,8 @@ class AccountDestroyService
 
     private function updateRecurrences(Account $account, Account $moveTo): void
     {
-        \DB::table('recurrences_transactions')->where('source_id', $account->id)->update(['source_id' => $moveTo->id]);
-        \DB::table('recurrences_transactions')->where('destination_id', $account->id)->update(['destination_id' => $moveTo->id]);
+        DB::table('recurrences_transactions')->where('source_id', $account->id)->update(['source_id' => $moveTo->id]);
+        DB::table('recurrences_transactions')->where('destination_id', $account->id)->update(['destination_id' => $moveTo->id]);
     }
 
     private function destroyJournals(Account $account): void
