@@ -28,6 +28,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\System\OAuthKeys;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -83,7 +84,7 @@ class Installer
         // Log::debug('Now in routine hasNoTables()');
 
         try {
-            \DB::table('users')->count();
+            DB::table('users')->whereNull('deleted_at')->count();
         } catch (QueryException $e) {
             $message = $e->getMessage();
             Log::error(sprintf('Error message trying to access users-table: %s', $message));

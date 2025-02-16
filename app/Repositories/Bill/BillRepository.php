@@ -42,6 +42,7 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -556,7 +557,7 @@ class BillRepository implements BillRepositoryInterface
         return $this->user->bills()
             ->where('active', true)
             ->orderBy('bills.name', 'ASC')
-            ->get(['bills.*', \DB::raw('((bills.amount_min + bills.amount_max) / 2) AS expectedAmount')]) // @phpstan-ignore-line
+            ->get(['bills.*', DB::raw('((bills.amount_min + bills.amount_max) / 2) AS expectedAmount')]) // @phpstan-ignore-line
         ;
     }
 

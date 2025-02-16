@@ -42,6 +42,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\View\View;
@@ -268,8 +269,8 @@ class DebugController extends Controller
     {
         $maxFileSize   = Steam::phpBytes((string) ini_get('upload_max_filesize'));
         $maxPostSize   = Steam::phpBytes((string) ini_get('post_max_size'));
-        $drivers       = \DB::availableDrivers();
-        $currentDriver = \DB::getDriverName();
+        $drivers       = DB::availableDrivers();
+        $currentDriver = DB::getDriverName();
 
         return [
             'db_version'      => app('fireflyconfig')->get('db_version', 1)->data,

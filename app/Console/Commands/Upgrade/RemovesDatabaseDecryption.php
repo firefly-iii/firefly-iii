@@ -29,6 +29,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Preference;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Facades\DB;
 
 class RemovesDatabaseDecryption extends Command
 {
@@ -101,7 +102,7 @@ class RemovesDatabaseDecryption extends Command
 
     private function decryptField(string $table, string $field): void
     {
-        $rows = \DB::table($table)->get(['id', $field]);
+        $rows = DB::table($table)->get(['id', $field]);
 
         /** @var \stdClass $row */
         foreach ($rows as $row) {
@@ -135,7 +136,7 @@ class RemovesDatabaseDecryption extends Command
         }
 
         if ($value !== $original) {
-            \DB::table($table)->where('id', $id)->update([$field => $value]);
+            DB::table($table)->where('id', $id)->update([$field => $value]);
         }
     }
 

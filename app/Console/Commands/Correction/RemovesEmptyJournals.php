@@ -29,6 +29,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
 
 class RemovesEmptyJournals extends Command
 {
@@ -56,7 +57,7 @@ class RemovesEmptyJournals extends Command
     {
         $set   = Transaction::whereNull('deleted_at')
             ->groupBy('transactions.transaction_journal_id')
-            ->get([\DB::raw('COUNT(transactions.transaction_journal_id) as the_count'), 'transaction_journal_id']) // @phpstan-ignore-line
+            ->get([DB::raw('COUNT(transactions.transaction_journal_id) as the_count'), 'transaction_journal_id']) // @phpstan-ignore-line
         ;
         $total = 0;
 

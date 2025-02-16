@@ -35,6 +35,7 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class UpgradesToGroups extends Command
 {
@@ -364,7 +365,7 @@ class UpgradesToGroups extends Command
 
     private function giveGroup(array $array): void
     {
-        $groupId = \DB::table('transaction_groups')->insertGetId(
+        $groupId = DB::table('transaction_groups')->insertGetId(
             [
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
@@ -372,7 +373,7 @@ class UpgradesToGroups extends Command
                 'user_id'    => $array['user_id'],
             ]
         );
-        \DB::table('transaction_journals')->where('id', $array['id'])->update(['transaction_group_id' => $groupId]);
+        DB::table('transaction_journals')->where('id', $array['id'])->update(['transaction_group_id' => $groupId]);
         ++$this->count;
     }
 

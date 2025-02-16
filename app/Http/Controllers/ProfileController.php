@@ -42,6 +42,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Laravel\Passport\ClientRepository;
 
@@ -139,7 +140,7 @@ class ProfileController extends Controller
         /** @var User $user */
         $user           = auth()->user();
         $isInternalAuth = $this->internalAuth;
-        $count          = \DB::table('oauth_clients')->where('personal_access_client', true)->whereNull('user_id')->count();
+        $count          = DB::table('oauth_clients')->where('personal_access_client', true)->whereNull('user_id')->count();
         $subTitle       = $user->email;
         $userId         = $user->id;
         $enabled2FA     = null !== $user->mfa_secret;

@@ -28,6 +28,10 @@ $(document).ready(function () {
         });
     }
     $('.submit-test').click(submitTest);
+
+    $.get('./api/v1/accounts?type=asset&page=1&limit=100', function (data) {
+        console.log('OK');
+    });
 });
 
 function submitTest(e) {
