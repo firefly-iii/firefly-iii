@@ -102,7 +102,7 @@ class BasicController extends Controller
         $balanceData  = $this->getBalanceInformation($start, $end);
         $billData     = $this->getBillInformation($start, $end);
         $spentData    = $this->getLeftToSpendInfo($start, $end);
-        $netWorthData = $this->getNetWorthInfo($start, $end);
+        $netWorthData = $this->getNetWorthInfo($end);
         //                $balanceData  = [];
         //                $billData     = [];
         //                $spentData    = [];
@@ -319,18 +319,12 @@ class BasicController extends Controller
         return $return;
     }
 
-    private function getNetWorthInfo(Carbon $start, Carbon $end): array
+    private function getNetWorthInfo(Carbon $end): array
     {
-
+        $end->endOfDay();
         /** @var User $user */
         $user           = auth()->user();
-        $date           = now(config('app.timezone'));
-        // start and end in the future? use $end
-        if ($this->notInDateRange($date, $start, $end)) {
-            /** @var Carbon $date */
-            $date = session('end', today(config('app.timezone'))->endOfMonth());
-        }
-        Log::debug(sprintf('getNetWorthInfo up until "%s".', $date->format('Y-m-d H:i:s')));
+        Log::debug(sprintf('getNetWorthInfo up until "%s".', $end->format('Y-m-d H:i:s')));
 
         /** @var NetWorthInterface $netWorthHelper */
         $netWorthHelper = app(NetWorthInterface::class);
@@ -346,7 +340,7 @@ class BasicController extends Controller
             }
         );
 
-        $netWorthSet    = $netWorthHelper->byAccounts($filtered, $date);
+        $netWorthSet    = $netWorthHelper->byAccounts($filtered, $end);
         $return         = [];
         foreach ($netWorthSet as $key => $data) {
             if ('native' === $key) {
