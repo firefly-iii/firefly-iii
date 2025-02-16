@@ -33,6 +33,7 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\ObjectGroup;
+use FireflyIII\Models\Preference;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
@@ -41,6 +42,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Models\Webhook;
+use FireflyIII\Support\Preferences;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
@@ -89,6 +91,7 @@ class CorrectsGroupInformation extends Command
             Category::class,
             ObjectGroup::class,
             CurrencyExchangeRate::class,
+            Preference::class,
             Recurrence::class,
             RuleGroup::class,
             Rule::class,

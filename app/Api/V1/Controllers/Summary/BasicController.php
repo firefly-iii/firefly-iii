@@ -321,7 +321,6 @@ class BasicController extends Controller
 
     private function getNetWorthInfo(Carbon $start, Carbon $end): array
     {
-        Log::debug('getNetWorthInfo');
 
         /** @var User $user */
         $user           = auth()->user();
@@ -331,6 +330,7 @@ class BasicController extends Controller
             /** @var Carbon $date */
             $date = session('end', today(config('app.timezone'))->endOfMonth());
         }
+        Log::debug(sprintf('getNetWorthInfo up until "%s".', $date->format('Y-m-d H:i:s')));
 
         /** @var NetWorthInterface $netWorthHelper */
         $netWorthHelper = app(NetWorthInterface::class);
@@ -370,6 +370,22 @@ class BasicController extends Controller
                 'sub_title'               => '',
             ];
         }
+        if(0 === count($return)) {
+            $return[] = [
+                'key'                     => sprintf('net-worth-in-%s', $this->nativeCurrency->code),
+                'title'                   => trans('firefly.box_net_worth_in_currency', ['currency' => $this->nativeCurrency->symbol]),
+                'monetary_value'          => '0',
+                'currency_id'             => (string) $this->nativeCurrency->id,
+                'currency_code'           => $this->nativeCurrency->code,
+                'currency_symbol'         => $this->nativeCurrency->symbol,
+                'currency_decimal_places' => $this->nativeCurrency->decimal_places,
+                'value_parsed'            => app('amount')->formatFlat($this->nativeCurrency->symbol, $this->nativeCurrency->decimal_places, '0', false),
+                'local_icon'              => 'line-chart',
+                'sub_title'               => '',
+            ];
+        }
+
+
         Log::debug('End of getNetWorthInfo');
 
         return $return;

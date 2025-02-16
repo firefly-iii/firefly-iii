@@ -176,7 +176,7 @@ return [
     ],
 
     // administration specific preferences
-    'admin_specific_prefs'         => ['frontpageAccounts', 'lastActivity'],
+    'admin_specific_prefs'         => [],
 
     // default user-related values
     'darkMode'                     => 'browser',
