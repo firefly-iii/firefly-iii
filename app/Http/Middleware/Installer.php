@@ -84,7 +84,7 @@ class Installer
         // Log::debug('Now in routine hasNoTables()');
 
         try {
-            DB::table('users')->whereNull('deleted_at')->count();
+            DB::table('users')->count();
         } catch (QueryException $e) {
             $message = $e->getMessage();
             Log::error(sprintf('Error message trying to access users-table: %s', $message));

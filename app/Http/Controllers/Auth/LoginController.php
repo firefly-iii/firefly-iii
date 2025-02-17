@@ -224,7 +224,7 @@ class LoginController extends Controller
     {
         Log::channel('audit')->info('Show login form (1.1).');
 
-        $count             = DB::table('users')->whereNull('deleted_at')->count();
+        $count             = DB::table('users')->count();
         $guard             = config('auth.defaults.guard');
         $title             = (string) trans('firefly.login_page_title');
 
