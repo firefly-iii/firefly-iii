@@ -40,11 +40,11 @@ class ObjectGroup extends Model
 
     protected $casts
                         = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'user_id'                => 'integer',
+            'created_at'                   => 'datetime',
+            'updated_at'                   => 'datetime',
+            'user_id'                      => 'integer',
             'user_group_id'                => 'integer',
-            'deleted_at' => 'datetime',
+            'deleted_at'                   => 'datetime',
         ];
     protected $fillable = ['title', 'order', 'user_id', 'user_group_id'];
 

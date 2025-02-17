@@ -144,7 +144,7 @@ class ListController extends Controller
         $paginator->setPath(route('api.v1.tags.transactions', [$tag->id]).$this->buildParams());
 
         // enrich
-        $enrichment = new TransactionGroupEnrichment();
+        $enrichment   = new TransactionGroupEnrichment();
         $enrichment->setUser($admin);
         $transactions = $enrichment->enrich($paginator->getCollection());
 

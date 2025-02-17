@@ -77,16 +77,16 @@ class ListController extends Controller
 
         $collection  = $piggyBank->accounts;
         $count       = $collection->count();
-        $accounts      = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $accounts    = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // enrich
         /** @var User $admin */
-        $admin = auth()->user();
-        $enrichment = new AccountEnrichment();
+        $admin       = auth()->user();
+        $enrichment  = new AccountEnrichment();
         $enrichment->setUser($admin);
         $enrichment->setConvertToNative($this->convertToNative);
         $enrichment->setNative($this->nativeCurrency);
-        $accounts = $enrichment->enrich($accounts);
+        $accounts    = $enrichment->enrich($accounts);
 
         // make paginator:
         $paginator   = new LengthAwarePaginator($accounts, $count, $pageSize, $this->parameters->get('page'));

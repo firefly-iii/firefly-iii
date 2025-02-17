@@ -94,12 +94,12 @@ class ShowController extends Controller
 
         // enrich
         /** @var User $admin */
-        $admin = auth()->user();
-        $enrichment = new AccountEnrichment();
+        $admin       = auth()->user();
+        $enrichment  = new AccountEnrichment();
         $enrichment->setUser($admin);
         $enrichment->setConvertToNative($this->convertToNative);
         $enrichment->setNative($this->nativeCurrency);
-        $accounts = $enrichment->enrich($accounts);
+        $accounts    = $enrichment->enrich($accounts);
 
         // make paginator:
         $paginator   = new LengthAwarePaginator($accounts, $count, $pageSize, $this->parameters->get('page'));
@@ -130,12 +130,12 @@ class ShowController extends Controller
 
         // enrich
         /** @var User $admin */
-        $admin = auth()->user();
-        $enrichment = new AccountEnrichment();
+        $admin       = auth()->user();
+        $enrichment  = new AccountEnrichment();
         $enrichment->setUser($admin);
         $enrichment->setConvertToNative($this->convertToNative);
         $enrichment->setNative($this->nativeCurrency);
-        $account = $enrichment->enrichSingle($account);
+        $account     = $enrichment->enrichSingle($account);
 
 
         /** @var AccountTransformer $transformer */

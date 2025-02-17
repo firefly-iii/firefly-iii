@@ -35,7 +35,6 @@ use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
@@ -89,7 +88,7 @@ class ShowController extends Controller
         $paginator->setPath(route('api.v1.transactions.index').$this->buildParams());
 
         // enrich
-        $enrichment = new TransactionGroupEnrichment();
+        $enrichment   = new TransactionGroupEnrichment();
         $enrichment->setUser($admin);
         $transactions = $enrichment->enrich($paginator->getCollection());
 
@@ -144,7 +143,7 @@ class ShowController extends Controller
         }
 
         // enrich
-        $enrichment = new TransactionGroupEnrichment();
+        $enrichment    = new TransactionGroupEnrichment();
         $enrichment->setUser($admin);
         $selectedGroup = $enrichment->enrichSingle($selectedGroup);
 

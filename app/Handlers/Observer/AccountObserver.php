@@ -56,7 +56,7 @@ class AccountObserver
         $repository   = app(AccountRepositoryInterface::class);
         $currency     = $repository->getAccountCurrency($account);
         if (null !== $currency && $currency->id !== $userCurrency->id && '' !== (string) $account->virtual_balance && 0 !== bccomp($account->virtual_balance, '0')) {
-            $converter = new ExchangeRateConverter();
+            $converter                       = new ExchangeRateConverter();
             $converter->setUserGroup($account->user->userGroup);
             $converter->setIgnoreSettings(true);
             $account->native_virtual_balance = $converter->convert($currency, $userCurrency, today(), $account->virtual_balance);

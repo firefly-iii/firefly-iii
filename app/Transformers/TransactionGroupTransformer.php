@@ -83,14 +83,14 @@ class TransactionGroupTransformer extends AbstractTransformer
         $first = new NullArrayObject(reset($group['transactions']));
 
         return [
-            'id'           => (int) $first['transaction_group_id'],
-            'created_at'   => $first['created_at']->toAtomString(),
-            'updated_at'   => $first['updated_at']->toAtomString(),
-            'user'         => (string) $data['user_id'],
+            'id'                 => (int) $first['transaction_group_id'],
+            'created_at'         => $first['created_at']->toAtomString(),
+            'updated_at'         => $first['updated_at']->toAtomString(),
+            'user'               => (string) $data['user_id'],
             'user_group'         => (string) $data['user_group_id'],
-            'group_title'  => $data['title'],
-            'transactions' => $this->transformTransactions($data),
-            'links'        => [
+            'group_title'        => $data['title'],
+            'transactions'       => $this->transformTransactions($data),
+            'links'              => [
                 [
                     'rel' => 'self',
                     'uri' => '/transactions/'.$first['transaction_group_id'],
@@ -116,12 +116,12 @@ class TransactionGroupTransformer extends AbstractTransformer
     private function transformTransaction(array $transaction): array
     {
         // amount:
-        $amount        = app('steam')->positive((string) ($transaction['amount'] ?? '0'));
-        $foreignAmount = null;
+        $amount          = app('steam')->positive((string) ($transaction['amount'] ?? '0'));
+        $foreignAmount   = null;
         if (null !== $transaction['foreign_amount'] && '' !== $transaction['foreign_amount'] && 0 !== bccomp('0', $transaction['foreign_amount'])) {
             $foreignAmount = app('steam')->positive($transaction['foreign_amount']);
         }
-        $type          = $this->stringFromArray($transaction, 'transaction_type_type', TransactionTypeEnum::WITHDRAWAL->value);
+        $type            = $this->stringFromArray($transaction, 'transaction_type_type', TransactionTypeEnum::WITHDRAWAL->value);
 
         // must be 0 (int) or NULL
         $recurrenceTotal = $transaction['meta']['recurrence_total'] ?? null;
@@ -236,7 +236,6 @@ class TransactionGroupTransformer extends AbstractTransformer
         /** @var null|Location */
         return $journal->locations()->first();
     }
-
 
     /**
      * @throws FireflyException

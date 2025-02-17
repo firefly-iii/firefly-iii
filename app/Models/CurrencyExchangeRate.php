@@ -40,15 +40,15 @@ class CurrencyExchangeRate extends Model
 
     protected $casts
                         = [
-            'created_at'       => 'datetime',
-            'updated_at'       => 'datetime',
-            'user_id'                => 'integer',
+            'created_at'                   => 'datetime',
+            'updated_at'                   => 'datetime',
+            'user_id'                      => 'integer',
             'user_group_id'                => 'integer',
-            'from_currency_id' => 'integer',
-            'to_currency_id'   => 'integer',
-            'date'             => SeparateTimezoneCaster::class,
-            'rate'             => 'string',
-            'user_rate'        => 'string',
+            'from_currency_id'             => 'integer',
+            'to_currency_id'               => 'integer',
+            'date'                         => SeparateTimezoneCaster::class,
+            'rate'                         => 'string',
+            'user_rate'                    => 'string',
         ];
     protected $fillable = ['user_id', 'from_currency_id', 'to_currency_id', 'date', 'date_tz', 'rate'];
 

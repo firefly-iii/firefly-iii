@@ -36,10 +36,10 @@ class GroupMembership extends Model
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;
 
-    protected $casts = [
-        'created_at'       => 'datetime',
-        'updated_at'       => 'datetime',
-        'user_id'                => 'integer',
+    protected $casts    = [
+        'created_at'                   => 'datetime',
+        'updated_at'                   => 'datetime',
+        'user_id'                      => 'integer',
         'user_group_id'                => 'integer',
     ];
 

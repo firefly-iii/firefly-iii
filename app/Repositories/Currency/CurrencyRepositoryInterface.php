@@ -68,5 +68,6 @@ interface CurrencyRepositoryInterface
     public function setExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date, float $rate): CurrencyExchangeRate;
 
     public function setUser(null|Authenticatable|User $user): void;
+
     public function setUserGroup(UserGroup $userGroup): void;
 }

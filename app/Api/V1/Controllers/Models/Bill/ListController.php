@@ -179,7 +179,7 @@ class ListController extends Controller
         $paginator->setPath(route('api.v1.bills.transactions', [$bill->id]).$this->buildParams());
 
         // enrich
-        $enrichment = new TransactionGroupEnrichment();
+        $enrichment   = new TransactionGroupEnrichment();
         $enrichment->setUser($admin);
         $transactions = $enrichment->enrich($paginator->getCollection());
 

@@ -43,16 +43,16 @@ class Budget extends Model
 
     protected $casts
                         = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'deleted_at' => 'datetime',
-            'active'     => 'boolean',
-            'encrypted'  => 'boolean',
-            'user_id'                => 'integer',
+            'created_at'                   => 'datetime',
+            'updated_at'                   => 'datetime',
+            'deleted_at'                   => 'datetime',
+            'active'                       => 'boolean',
+            'encrypted'                    => 'boolean',
+            'user_id'                      => 'integer',
             'user_group_id'                => 'integer',
         ];
 
-    protected $fillable = ['user_id','user_group_id', 'name', 'active', 'order', 'user_group_id'];
+    protected $fillable = ['user_id', 'user_group_id', 'name', 'active', 'order', 'user_group_id'];
 
     protected $hidden   = ['encrypted'];
 

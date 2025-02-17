@@ -61,7 +61,7 @@
         "destination_account_reconciliation": "\u60a8\u4e0d\u80fd\u7f16\u8f91\u5bf9\u8d26\u4ea4\u6613\u7684\u76ee\u6807\u8d26\u6237",
         "source_account_reconciliation": "\u60a8\u4e0d\u80fd\u7f16\u8f91\u5bf9\u8d26\u4ea4\u6613\u7684\u6765\u6e90\u8d26\u6237\u3002",
         "budget": "\u9884\u7b97",
-        "bill": "Subscription",
+        "bill": "\u8d26\u5355",
         "you_create_withdrawal": "\u60a8\u6b63\u5728\u521b\u5efa\u4e00\u7b14\u652f\u51fa",
         "you_create_transfer": "\u60a8\u6b63\u5728\u521b\u5efa\u4e00\u7b14\u8f6c\u8d26",
         "you_create_deposit": "\u60a8\u6b63\u5728\u521b\u5efa\u4e00\u7b14\u6536\u5165",

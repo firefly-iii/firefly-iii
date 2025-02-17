@@ -1,4 +1,5 @@
 <?php
+
 /*
  * UpdateCheckCronjob.php
  * Copyright (c) 2025 james@firefly-iii.org.
@@ -32,13 +33,14 @@ class UpdateCheckCronjob extends AbstractCronjob
 {
     use UpdateTrait;
 
-    #[\Override] public function fire(): void
+    #[\Override]
+    public function fire(): void
     {
         Log::debug('Now in checkForUpdates()');
 
         // should not check for updates:
-        $permission = app('fireflyconfig')->get('permission_update_check', -1);
-        $value      = (int) $permission->data;
+        $permission         = app('fireflyconfig')->get('permission_update_check', -1);
+        $value              = (int) $permission->data;
         if (1 !== $value) {
             Log::debug('Update check is not enabled.');
             // get stuff from job:
@@ -52,9 +54,9 @@ class UpdateCheckCronjob extends AbstractCronjob
 
         // TODO this is duplicate.
         /** @var Configuration $lastCheckTime */
-        $lastCheckTime = FireflyConfig::get('last_update_check', time());
-        $now           = time();
-        $diff          = $now - $lastCheckTime->data;
+        $lastCheckTime      = FireflyConfig::get('last_update_check', time());
+        $now                = time();
+        $diff               = $now - $lastCheckTime->data;
         Log::debug(sprintf('Last check time is %d, current time is %d, difference is %d', $lastCheckTime->data, $now, $diff));
         if ($diff < 604800 && false === $this->force) {
             // get stuff from job:
@@ -65,10 +67,10 @@ class UpdateCheckCronjob extends AbstractCronjob
 
             return;
         }
-                // last check time was more than a week ago.
+        // last check time was more than a week ago.
         Log::debug('Have not checked for a new version in a week!');
-        $release       = $this->getLatestRelease();
-        if('error' === $release['level']) {
+        $release            = $this->getLatestRelease();
+        if ('error' === $release['level']) {
             // get stuff from job:
             $this->jobFired     = true;
             $this->jobErrored   = true;

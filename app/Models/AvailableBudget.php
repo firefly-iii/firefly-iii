@@ -41,15 +41,15 @@ class AvailableBudget extends Model
 
     protected $casts
                         = [
-            'created_at'              => 'datetime',
-            'updated_at'              => 'datetime',
-            'deleted_at'              => 'datetime',
-            'start_date'              => 'date',
-            'end_date'                => 'date',
-            'transaction_currency_id' => 'int',
-            'amount'                  => 'string',
-            'native_amount'           => 'string',
-            'user_id'                => 'integer',
+            'created_at'                   => 'datetime',
+            'updated_at'                   => 'datetime',
+            'deleted_at'                   => 'datetime',
+            'start_date'                   => 'date',
+            'end_date'                     => 'date',
+            'transaction_currency_id'      => 'int',
+            'amount'                       => 'string',
+            'native_amount'                => 'string',
+            'user_id'                      => 'integer',
             'user_group_id'                => 'integer',
         ];
 

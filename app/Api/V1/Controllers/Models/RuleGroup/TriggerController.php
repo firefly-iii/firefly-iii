@@ -102,7 +102,7 @@ class TriggerController extends Controller
         $count        = $transactions->count();
 
         // enrich
-        $enrichment = new TransactionGroupEnrichment();
+        $enrichment   = new TransactionGroupEnrichment();
         $enrichment->setUser($group->user);
         $transactions = $enrichment->enrich($transactions);
 

@@ -135,9 +135,9 @@ class StoreController extends Controller
         }
 
         // enrich
-        $enrichment = new TransactionGroupEnrichment();
+        $enrichment         = new TransactionGroupEnrichment();
         $enrichment->setUser($admin);
-        $selectedGroup = $enrichment->enrichSingle($selectedGroup);
+        $selectedGroup      = $enrichment->enrichSingle($selectedGroup);
 
         /** @var TransactionGroupTransformer $transformer */
         $transformer        = app(TransactionGroupTransformer::class);

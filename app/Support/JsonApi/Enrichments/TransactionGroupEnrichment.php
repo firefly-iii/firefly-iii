@@ -1,4 +1,5 @@
 <?php
+
 /*
  * TransactionGroupEnrichment.php
  * Copyright (c) 2025 james@firefly-iii.org.
@@ -60,10 +61,11 @@ class TransactionGroupEnrichment implements EnrichmentInterface
         $this->metaData        = [];
         $this->locations       = [];
         $this->attachmentCount = [];
-        $this->dateFields      = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date',];
+        $this->dateFields      = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date'];
     }
 
-    #[\Override] public function enrich(Collection $collection): Collection
+    #[\Override]
+    public function enrich(Collection $collection): Collection
     {
         Log::debug(sprintf('Now doing account enrichment for %d transaction group(s)', $collection->count()));
         // prep local fields
@@ -81,14 +83,17 @@ class TransactionGroupEnrichment implements EnrichmentInterface
         return $this->collection;
     }
 
-    #[\Override] public function enrichSingle(Model|array $model): TransactionGroup|array
+    #[\Override]
+    public function enrichSingle(array|Model $model): array|TransactionGroup
     {
         Log::debug(__METHOD__);
-        if(is_array($model)) {
+        if (is_array($model)) {
             $collection = new Collection([$model]);
             $collection = $this->enrich($collection);
+
             return $collection->first();
         }
+
         throw new FireflyException('Cannot enrich single model.');
     }
 
@@ -117,9 +122,10 @@ class TransactionGroupEnrichment implements EnrichmentInterface
     private function collectNotes(): void
     {
         $notes = Note::query()->whereIn('noteable_id', $this->journalIds)
-                     ->whereNotNull('notes.text')
-                     ->where('notes.text', '!=', '')
-                     ->where('noteable_type', TransactionJournal::class)->get(['notes.noteable_id', 'notes.text'])->toArray();
+            ->whereNotNull('notes.text')
+            ->where('notes.text', '!=', '')
+            ->where('noteable_type', TransactionJournal::class)->get(['notes.noteable_id', 'notes.text'])->toArray()
+        ;
         foreach ($notes as $note) {
             $this->notes[(int) $note['noteable_id']] = (string) $note['text'];
         }
@@ -128,13 +134,13 @@ class TransactionGroupEnrichment implements EnrichmentInterface
 
     private function collectTags(): void
     {
-        $set = Tag::
-        leftJoin('tag_transaction_journal', 'tags.id', '=', 'tag_transaction_journal.tag_id')
-                  ->whereIn('tag_transaction_journal.transaction_journal_id', $this->journalIds)
-                  ->get(['tag_transaction_journal.transaction_journal_id', 'tags.tag'])->toArray();
+        $set = Tag::leftJoin('tag_transaction_journal', 'tags.id', '=', 'tag_transaction_journal.tag_id')
+            ->whereIn('tag_transaction_journal.transaction_journal_id', $this->journalIds)
+            ->get(['tag_transaction_journal.transaction_journal_id', 'tags.tag'])->toArray()
+        ;
         foreach ($set as $item) {
             $journalId                = $item['transaction_journal_id'];
-            $this->tags[$journalId]   ??= [];
+            $this->tags[$journalId] ??= [];
             $this->tags[$journalId][] = $item['tag'];
         }
     }
@@ -143,13 +149,14 @@ class TransactionGroupEnrichment implements EnrichmentInterface
     {
         $set = TransactionJournalMeta::whereIn('transaction_journal_id', $this->journalIds)->get(['transaction_journal_id', 'name', 'data'])->toArray();
         foreach ($set as $entry) {
-            $name = $entry['name'];
-            $data = (string) $entry['data'];
+            $name                                                          = $entry['name'];
+            $data                                                          = (string) $entry['data'];
             if ('' === $data) {
                 continue;
             }
             if (in_array($name, $this->dateFields, true)) {
                 $this->metaData[$entry['transaction_journal_id']][$name] = Carbon::parse($data);
+
                 continue;
             }
             $this->metaData[(int) $entry['transaction_journal_id']][$name] = $data;
@@ -159,14 +166,15 @@ class TransactionGroupEnrichment implements EnrichmentInterface
     private function collectLocations(): void
     {
         $locations = Location::query()->whereIn('locatable_id', $this->journalIds)
-                             ->where('locatable_type', TransactionJournal::class)->get(['locations.locatable_id', 'locations.latitude', 'locations.longitude', 'locations.zoom_level'])->toArray();
+            ->where('locatable_type', TransactionJournal::class)->get(['locations.locatable_id', 'locations.latitude', 'locations.longitude', 'locations.zoom_level'])->toArray()
+        ;
         foreach ($locations as $location) {
             $this->locations[(int) $location['locatable_id']]
                 = [
-                'latitude'   => (float) $location['latitude'],
-                'longitude'  => (float) $location['longitude'],
-                'zoom_level' => (int) $location['zoom_level'],
-            ];
+                    'latitude'   => (float) $location['latitude'],
+                    'longitude'  => (float) $location['longitude'],
+                    'zoom_level' => (int) $location['zoom_level'],
+                ];
         }
         Log::debug(sprintf('Enrich with %d locations(s)', count($this->locations)));
     }
@@ -174,19 +182,21 @@ class TransactionGroupEnrichment implements EnrichmentInterface
     private function collectAttachmentCount(): void
     {
         // select count(id) as nr_of_attachments, attachable_id from attachments
-        //group by attachable_id
+        // group by attachable_id
         $attachments = Attachment::query()
-                                 ->whereIn('attachable_id', $this->journalIds)
-                                 ->where('attachable_type', TransactionJournal::class)
-                                 ->groupBy('attachable_id')
-                                 ->get(['attachable_id', DB::raw('COUNT(id) as nr_of_attachments')]) // @phpstan-ignore-line
-                                 ->toArray();
+            ->whereIn('attachable_id', $this->journalIds)
+            ->where('attachable_type', TransactionJournal::class)
+            ->groupBy('attachable_id')
+            ->get(['attachable_id', DB::raw('COUNT(id) as nr_of_attachments')]) // @phpstan-ignore-line
+            ->toArray()
+        ;
         foreach ($attachments as $row) {
             $this->attachmentCount[(int) $row['attachable_id']] = (int) $row['nr_of_attachments'];
         }
     }
 
-    private function appendCollectedData(): void {
+    private function appendCollectedData(): void
+    {
         $notes            = $this->notes;
         $tags             = $this->tags;
         $metaData         = $this->metaData;
@@ -195,32 +205,33 @@ class TransactionGroupEnrichment implements EnrichmentInterface
 
         $this->collection = $this->collection->map(function (array $item) use ($notes, $tags, $metaData, $locations, $attachmentCount) {
             foreach ($item['transactions'] as $index => $transaction) {
-                $journalId                             = (int) $transaction['transaction_journal_id'];
+                $journalId                                        = (int) $transaction['transaction_journal_id'];
 
                 // attach notes if they exist:
-                $item['transactions'][$index]['notes'] = array_key_exists($journalId, $notes) ? $notes[$journalId] : null;
+                $item['transactions'][$index]['notes']            = array_key_exists($journalId, $notes) ? $notes[$journalId] : null;
 
                 // attach tags if they exist:
-                $item['transactions'][$index]['tags'] = array_key_exists($journalId, $tags) ? $tags[$journalId] : [];
+                $item['transactions'][$index]['tags']             = array_key_exists($journalId, $tags) ? $tags[$journalId] : [];
 
                 // attachment count
                 $item['transactions'][$index]['attachment_count'] = array_key_exists($journalId, $attachmentCount) ? $attachmentCount[$journalId] : 0;
 
                 // default location data
-                $item['transactions'][$index]['location'] = [
+                $item['transactions'][$index]['location']         = [
                     'latitude'   => null,
                     'longitude'  => null,
                     'zoom_level' => null,
                 ];
 
                 // append meta data
-                $item['transactions'][$index]['meta'] = [];
-                $item['transactions'][$index]['meta_date'] = [];
+                $item['transactions'][$index]['meta']             = [];
+                $item['transactions'][$index]['meta_date']        = [];
                 if (array_key_exists($journalId, $metaData)) {
                     // loop al meta data:
                     foreach ($metaData[$journalId] as $name => $value) {
                         if (in_array($name, $this->dateFields, true)) {
                             $item['transactions'][$index]['meta_date'][$name] = Carbon::parse($value);
+
                             continue;
                         }
                         $item['transactions'][$index]['meta'][$name] = $value;
@@ -232,9 +243,8 @@ class TransactionGroupEnrichment implements EnrichmentInterface
                     $item['transactions'][$index]['location'] = $locations[$journalId];
                 }
             }
+
             return $item;
         });
     }
-
-
 }

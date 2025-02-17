@@ -42,7 +42,6 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Models\Webhook;
-use FireflyIII\Support\Preferences;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;

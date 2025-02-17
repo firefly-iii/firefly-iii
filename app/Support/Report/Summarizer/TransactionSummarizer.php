@@ -54,17 +54,17 @@ class TransactionSummarizer
         Log::debug(sprintf('Now in groupByCurrencyId(array, "%s")', $method));
         $array = [];
         foreach ($journals as $journal) {
-            $field                 = 'amount';
+            $field                        = 'amount';
 
             // grab default currency information.
-            $currencyId            = (int) $journal['currency_id'];
-            $currencyName          = $journal['currency_name'];
-            $currencySymbol        = $journal['currency_symbol'];
-            $currencyCode          = $journal['currency_code'];
-            $currencyDecimalPlaces = $journal['currency_decimal_places'];
+            $currencyId                   = (int) $journal['currency_id'];
+            $currencyName                 = $journal['currency_name'];
+            $currencySymbol               = $journal['currency_symbol'];
+            $currencyCode                 = $journal['currency_code'];
+            $currencyDecimalPlaces        = $journal['currency_decimal_places'];
 
             // prepare foreign currency info:
-            $foreignCurrencyId     = 0;
+            $foreignCurrencyId            = 0;
             $foreignCurrencyName          = null;
             $foreignCurrencySymbol        = null;
             $foreignCurrencyCode          = null;
@@ -106,7 +106,7 @@ class TransactionSummarizer
             }
 
             // first process normal amount
-            $amount                = (string) ($journal[$field] ?? '0');
+            $amount                       = (string) ($journal[$field] ?? '0');
             $array[$currencyId] ??= [
                 'sum'                     => '0',
                 'currency_id'             => $currencyId,

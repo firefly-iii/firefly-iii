@@ -54,18 +54,18 @@ class TransactionJournal extends Model
 
     protected $casts
                       = [
-            'created_at'    => 'datetime',
-            'updated_at'    => 'datetime',
-            'deleted_at'    => 'datetime',
-            'date'          => SeparateTimezoneCaster::class,
-            'interest_date' => 'date',
-            'book_date'     => 'date',
-            'process_date'  => 'date',
-            'order'         => 'int',
-            'tag_count'     => 'int',
-            'encrypted'     => 'boolean',
-            'completed'     => 'boolean',
-            'user_id'                => 'integer',
+            'created_at'                   => 'datetime',
+            'updated_at'                   => 'datetime',
+            'deleted_at'                   => 'datetime',
+            'date'                         => SeparateTimezoneCaster::class,
+            'interest_date'                => 'date',
+            'book_date'                    => 'date',
+            'process_date'                 => 'date',
+            'order'                        => 'int',
+            'tag_count'                    => 'int',
+            'encrypted'                    => 'boolean',
+            'completed'                    => 'boolean',
+            'user_id'                      => 'integer',
             'user_group_id'                => 'integer',
         ];
 

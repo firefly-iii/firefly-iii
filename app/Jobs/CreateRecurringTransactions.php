@@ -380,10 +380,10 @@ class CreateRecurringTransactions implements ShouldQueue
         }
 
         $array                      = [
-            'user'         => $recurrence->user,
+            'user'               => $recurrence->user,
             'user_group'         => $recurrence->user->userGroup,
-            'group_title'  => $groupTitle,
-            'transactions' => $this->getTransactionData($recurrence, $repetition, $date),
+            'group_title'        => $groupTitle,
+            'transactions'       => $this->getTransactionData($recurrence, $repetition, $date),
         ];
 
         /** @var TransactionGroup $group */
@@ -423,7 +423,7 @@ class CreateRecurringTransactions implements ShouldQueue
                 'type'                  => null === $transaction?->transactionType?->type ? strtolower($recurrence->transactionType->type) : strtolower($transaction->transactionType->type), // @phpstan-ignore-line
                 'date'                  => $date,
                 'user'                  => $recurrence->user,
-                'user_group'         => $recurrence->user->userGroup,
+                'user_group'            => $recurrence->user->userGroup,
                 'currency_id'           => $transaction->transaction_currency_id,
                 'currency_code'         => null,
                 'description'           => $transaction->description,

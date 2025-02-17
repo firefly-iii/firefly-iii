@@ -104,12 +104,12 @@ class ListController extends Controller
 
         // enrich
         /** @var User $admin */
-        $admin = auth()->user();
-        $enrichment = new AccountEnrichment();
+        $admin             = auth()->user();
+        $enrichment        = new AccountEnrichment();
         $enrichment->setUser($admin);
         $enrichment->setConvertToNative($this->convertToNative);
         $enrichment->setNative($this->nativeCurrency);
-        $accounts = $enrichment->enrich($accounts);
+        $accounts          = $enrichment->enrich($accounts);
 
         // make paginator:
         $paginator         = new LengthAwarePaginator($accounts, $count, $pageSize, $this->parameters->get('page'));
@@ -373,7 +373,7 @@ class ListController extends Controller
         $paginator->setPath(route('api.v1.currencies.transactions', [$currency->code]).$this->buildParams());
 
         // enrich
-        $enrichment = new TransactionGroupEnrichment();
+        $enrichment   = new TransactionGroupEnrichment();
         $enrichment->setUser($admin);
         $transactions = $enrichment->enrich($paginator->getCollection());
 

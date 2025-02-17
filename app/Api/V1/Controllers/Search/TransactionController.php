@@ -60,7 +60,7 @@ class TransactionController extends Controller
         $groups->setPath($url);
 
         // enrich
-        $enrichment = new TransactionGroupEnrichment();
+        $enrichment   = new TransactionGroupEnrichment();
         $enrichment->setUser(auth()->user());
         $transactions = $enrichment->enrich($groups->getCollection());
 

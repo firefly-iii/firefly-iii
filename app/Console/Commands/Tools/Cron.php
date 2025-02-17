@@ -26,7 +26,6 @@ namespace FireflyIII\Console\Commands\Tools;
 
 use Carbon\Carbon;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
-use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Cronjobs\AutoBudgetCronjob;
 use FireflyIII\Support\Cronjobs\BillWarningCronjob;
@@ -54,11 +53,11 @@ class Cron extends Command
 
     public function handle(): int
     {
-        $doAll = !$this->option('download-cer') &&
-                 !$this->option('create-recurring') &&
-                 !$this->option('create-auto-budgets') &&
-                 !$this->option('send-bill-warnings') &&
-                 !$this->option('check-version');
+        $doAll = !$this->option('download-cer')
+                 && !$this->option('create-recurring')
+                 && !$this->option('create-auto-budgets')
+                 && !$this->option('send-bill-warnings')
+                 && !$this->option('check-version');
         $date  = null;
 
         try {
@@ -223,7 +222,8 @@ class Cron extends Command
         }
     }
 
-    private function checkForUpdates(bool $force): void {
+    private function checkForUpdates(bool $force): void
+    {
         $updateCheck = new UpdateCheckCronjob();
         $updateCheck->setForce($force);
         $updateCheck->fire();

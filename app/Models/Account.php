@@ -48,15 +48,15 @@ class Account extends Model
 
     protected $casts
                                      = [
-            'created_at'             => 'datetime',
-            'updated_at'             => 'datetime',
-            'user_id'                => 'integer',
+            'created_at'                   => 'datetime',
+            'updated_at'                   => 'datetime',
+            'user_id'                      => 'integer',
             'user_group_id'                => 'integer',
-            'deleted_at'             => 'datetime',
-            'active'                 => 'boolean',
-            'encrypted'              => 'boolean',
-            'virtual_balance'        => 'string',
-            'native_virtual_balance' => 'string',
+            'deleted_at'                   => 'datetime',
+            'active'                       => 'boolean',
+            'encrypted'                    => 'boolean',
+            'virtual_balance'              => 'string',
+            'native_virtual_balance'       => 'string',
         ];
 
     protected $fillable              = ['user_id', 'user_group_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban', 'native_virtual_balance'];

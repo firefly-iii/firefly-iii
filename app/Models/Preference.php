@@ -37,10 +37,10 @@ class Preference extends Model
 
     protected $casts
                         = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'data'       => 'array',
-            'user_id'                => 'integer',
+            'created_at'                   => 'datetime',
+            'updated_at'                   => 'datetime',
+            'data'                         => 'array',
+            'user_id'                      => 'integer',
             'user_group_id'                => 'integer',
         ];
 

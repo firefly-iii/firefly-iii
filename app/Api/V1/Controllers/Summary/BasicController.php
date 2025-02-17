@@ -322,6 +322,7 @@ class BasicController extends Controller
     private function getNetWorthInfo(Carbon $end): array
     {
         $end->endOfDay();
+
         /** @var User $user */
         $user           = auth()->user();
         Log::debug(sprintf('getNetWorthInfo up until "%s".', $end->format('Y-m-d H:i:s')));
@@ -364,7 +365,7 @@ class BasicController extends Controller
                 'sub_title'               => '',
             ];
         }
-        if(0 === count($return)) {
+        if (0 === count($return)) {
             $return[] = [
                 'key'                     => sprintf('net-worth-in-%s', $this->nativeCurrency->code),
                 'title'                   => trans('firefly.box_net_worth_in_currency', ['currency' => $this->nativeCurrency->symbol]),

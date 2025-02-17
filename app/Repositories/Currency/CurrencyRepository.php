@@ -111,12 +111,13 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     public function setUser(null|Authenticatable|User $user): void
     {
         if ($user instanceof User) {
-            $this->user = $user;
+            $this->user      = $user;
             $this->userGroup = $user->userGroup;
         }
     }
 
-    #[\Override] public function setUserGroup(UserGroup $userGroup): void
+    #[\Override]
+    public function setUserGroup(UserGroup $userGroup): void
     {
         $this->userGroup = $userGroup;
     }
