@@ -106,7 +106,7 @@ class ExportsData extends Command
         $exporter->setExportTags($options['export']['tags']);
         $exporter->setExportRecurring($options['export']['recurring']);
         $exporter->setExportRules($options['export']['rules']);
-        $exporter->setExportBills($options['export']['subscriptions']);
+        $exporter->setExportBills($options['export']['bills']);
         $exporter->setExportPiggies($options['export']['piggies']);
         $data       = $exporter->export();
         if (0 === count($data)) {
