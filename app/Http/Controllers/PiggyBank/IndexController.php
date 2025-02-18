@@ -146,7 +146,7 @@ class IndexController extends Controller
         $accountTransformer->setParameters($parameters);
 
         // enrich each account.
-        $enrichment = new AccountEnrichment();
+        $enrichment         = new AccountEnrichment();
         $enrichment->setUser(auth()->user());
         $enrichment->setConvertToNative($this->convertToNative);
         $enrichment->setNative($this->defaultCurrency);
