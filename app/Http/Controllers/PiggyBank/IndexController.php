@@ -31,6 +31,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\ObjectGroup\OrganisesObjectGroups;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use FireflyIII\Support\JsonApi\Enrichments\AccountEnrichment;
 use FireflyIII\Transformers\AccountTransformer;
 use FireflyIII\Transformers\PiggyBankTransformer;
 use Illuminate\Contracts\View\Factory;
@@ -87,13 +88,13 @@ class IndexController extends Controller
         $end                = session('end', today(config('app.timezone'))->endOfMonth());
 
         // transform piggies using the transformer:
-        $parameters         = new ParameterBag();
-        $parameters->set('end', $end);
+        //$parameters         = new ParameterBag();
+        //$parameters->set('end', $end);
 
 
-        /** @var AccountTransformer $accountTransformer */
-        $accountTransformer = app(AccountTransformer::class);
-        $accountTransformer->setParameters($parameters);
+        ///** @var AccountTransformer $accountTransformer */
+        //$accountTransformer = app(AccountTransformer::class);
+        //$accountTransformer->setParameters($parameters);
 
         // data
         $piggyBanks         = $this->groupPiggyBanks($collection);
@@ -144,6 +145,9 @@ class IndexController extends Controller
         $accountTransformer = app(AccountTransformer::class);
         $accountTransformer->setParameters($parameters);
 
+        // enrich each account.
+        $enrichment = new AccountEnrichment();
+
         $return             = [];
 
         /** @var PiggyBank $piggy */
@@ -152,6 +156,7 @@ class IndexController extends Controller
 
             /** @var Account $account */
             foreach ($accounts as $account) {
+                $account = $enrichment->enrichSingle($account);
                 $array     = $accountTransformer->transform($account);
                 $accountId = (int) $array['id'];
                 if (!array_key_exists($accountId, $return)) {

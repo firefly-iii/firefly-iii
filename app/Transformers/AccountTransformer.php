@@ -65,7 +65,7 @@ class AccountTransformer extends AbstractTransformer
         if(null === $account->meta) {
             $account->meta = [];
         }
-        
+
         // get account type:
         $accountType                                                  = (string) config(sprintf('firefly.shortNamesByFullName.%s', $account->full_account_type));
         $liabilityType                                                = (string) config(sprintf('firefly.shortLiabilityNameByFullName.%s', $account->full_account_type));
