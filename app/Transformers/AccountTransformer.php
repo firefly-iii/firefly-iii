@@ -62,7 +62,7 @@ class AccountTransformer extends AbstractTransformer
      */
     public function transform(Account $account): array
     {
-        if(null === $account->meta) {
+        if (null === $account->meta) {
             $account->meta = [];
         }
 

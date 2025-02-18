@@ -14,7 +14,16 @@ public/build
 # ignore v1 build files
 resources/assets/v1/node_modules
 resources/assets/v1/build
+public/v1/js/app.js*
+public/v1/js/app_vue.js*
+public/v1/js/create*
+public/v1/js/edit*
+public/v1/js/profile*
+public/v1/js/administrations
+public/v1/js/exchange-rates
+public/v1/js/webhooks
 
 # ignore v2 build files
 resources/assets/v2/node_modules
 resources/assets/v2/build
+public/v2/i18n
