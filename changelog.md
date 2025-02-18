@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.2.7 - 2025-02-19
+
+### Changed
+
+- Optimised Account and Transaction API endpoints, should be a lot faster
+- Optimized account deletion, should be a lot faster
+
+### Fixed
+
+- #9803
+- #9835
+- #9842
+- #9848
+- #9855
+
 ## 6.2.6 - 2025-02-13
 
 ### Fixed
