@@ -498,6 +498,8 @@ class AccountRepository implements AccountRepositoryInterface
             }
             $query->orderBy('accounts.active', 'DESC');
             $query->orderBy('accounts.name', 'ASC');
+            $query->orderBy('accounts.account_type_id', 'ASC');
+            $query->orderBy('accounts.id', 'ASC');
         }
 
         return $query->get(['accounts.*']);
