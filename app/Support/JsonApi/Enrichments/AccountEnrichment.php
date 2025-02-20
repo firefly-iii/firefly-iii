@@ -117,30 +117,6 @@ class AccountEnrichment implements EnrichmentInterface
         $this->collectNotes();
         $this->collectLocations();
         $this->collectOpeningBalances();
-        //        $this->default      = app('amount')->getNativeCurrency();
-        //        $this->currencies   = [];
-        //        $this->balances     = [];
-        //        $this->objectGroups = [];
-        //        $this->grouped      = [];
-        //
-        //        // do everything here:
-        //        $this->getLastActivity();
-        //        $this->collectAccountTypes();
-        //        $this->collectMetaData();
-        //        $this->getMetaBalances();
-        //        $this->getObjectGroups();
-
-        //        $this->collection->transform(function (Account $account) {
-        //            $account->user_array = ['id' => 1, 'bla bla' => 'bla'];
-        //            $account->balances   = collect([
-        //                ['balance_id' => 1, 'balance' => 5],
-        //                ['balance_id' => 2, 'balance' => 5],
-        //                ['balance_id' => 3, 'balance' => 5],
-        //            ]);
-        //
-        //            return $account;
-        //        });
-
         $this->appendCollectedData();
 
         return $this->collection;
@@ -275,7 +251,7 @@ class AccountEnrichment implements EnrichmentInterface
             $this->currencies[(int) $currency->id] = $currency;
         }
         foreach ($this->currencies as $id => $currency) {
-            if (true === $currency) {
+            if (true === $currency && 0 !== (int) $id) {
                 throw new FireflyException(sprintf('Currency #%d not found.', $id));
             }
         }
