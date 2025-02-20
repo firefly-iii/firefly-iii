@@ -103,7 +103,7 @@ class ShowController extends Controller
 
         foreach (array_keys($groupArray['transactions']) as $index) {
             $groupArray['transactions'][$index]['tags'] = $this->repository->getTagObjects(
-                $groupArray['transactions'][$index]['transaction_journal_id']
+                (int) $groupArray['transactions'][$index]['transaction_journal_id']
             );
         }
 
