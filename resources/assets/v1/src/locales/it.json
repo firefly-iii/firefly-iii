@@ -172,8 +172,8 @@
     },
     "list": {
         "title": "Titolo",
-        "active": "Attivo",
-        "native_currency": "Native currency",
+        "active": "\u00c8 attivo?",
+        "native_currency": "Valuta nativa",
         "trigger": "Trigger",
         "response": "Risposta",
         "delivery": "Consegna",
