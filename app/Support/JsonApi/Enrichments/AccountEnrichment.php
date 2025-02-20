@@ -250,8 +250,9 @@ class AccountEnrichment implements EnrichmentInterface
         foreach ($currencies as $currency) {
             $this->currencies[(int) $currency->id] = $currency;
         }
+        $this->currencies[0] = $this->native;
         foreach ($this->currencies as $id => $currency) {
-            if (true === $currency && 0 !== (int) $id) {
+            if (true === $currency) {
                 throw new FireflyException(sprintf('Currency #%d not found.', $id));
             }
         }
