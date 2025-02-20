@@ -234,7 +234,7 @@ class AccountEnrichment implements EnrichmentInterface
 
     private function collectMetaData(): void
     {
-        $set        = AccountMeta::whereIn('name', ['is_multi_currency', 'include_net_worth', 'currency_id', 'account_role', 'account_number', 'liability_direction', 'interest', 'interest_period', 'current_debt'])
+        $set                 = AccountMeta::whereIn('name', ['is_multi_currency', 'include_net_worth', 'currency_id', 'account_role', 'account_number', 'liability_direction', 'interest', 'interest_period', 'current_debt'])
             ->whereIn('account_id', $this->accountIds)
             ->get(['account_meta.id', 'account_meta.account_id', 'account_meta.name', 'account_meta.data'])->toArray()
         ;
@@ -246,7 +246,7 @@ class AccountEnrichment implements EnrichmentInterface
                 $this->currencies[(int) $entry['data']] = true;
             }
         }
-        $currencies = TransactionCurrency::whereIn('id', array_keys($this->currencies))->get();
+        $currencies          = TransactionCurrency::whereIn('id', array_keys($this->currencies))->get();
         foreach ($currencies as $currency) {
             $this->currencies[(int) $currency->id] = $currency;
         }
