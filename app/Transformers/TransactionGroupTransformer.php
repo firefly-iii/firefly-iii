@@ -131,7 +131,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
         return [
             'user'                            => (string) $transaction['user_id'],
-            'transaction_journal_id'          => $transaction['transaction_journal_id'],
+            'transaction_journal_id'          => (string) $transaction['transaction_journal_id'],
             'type'                            => strtolower($type),
             'date'                            => $transaction['date']->toAtomString(),
             'order'                           => $transaction['order'],
@@ -320,17 +320,17 @@ class TransactionGroupTransformer extends AbstractTransformer
 
         return [
             'user'                            => $journal->user_id,
-            'transaction_journal_id'          => $journal->id,
+            'transaction_journal_id'          => (string) $journal->id,
             'type'                            => strtolower($type),
             'date'                            => $journal->date->toAtomString(),
             'order'                           => $journal->order,
 
-            'currency_id'                     => $currency->id,
+            'currency_id'                     => (string) $currency->id,
             'currency_code'                   => $currency->code,
             'currency_symbol'                 => $currency->symbol,
             'currency_decimal_places'         => $currency->decimal_places,
 
-            'foreign_currency_id'             => $foreignCurrency['id'],
+            'foreign_currency_id'             => (string) $foreignCurrency['id'],
             'foreign_currency_code'           => $foreignCurrency['code'],
             'foreign_currency_symbol'         => $foreignCurrency['symbol'],
             'foreign_currency_decimal_places' => $foreignCurrency['decimal_places'],
@@ -340,23 +340,23 @@ class TransactionGroupTransformer extends AbstractTransformer
 
             'description'                     => $journal->description,
 
-            'source_id'                       => $source->account_id,
+            'source_id'                       => (string) $source->account_id,
             'source_name'                     => $source->account->name,
             'source_iban'                     => $source->account->iban,
             'source_type'                     => $source->account->accountType->type,
 
-            'destination_id'                  => $destination->account_id,
+            'destination_id'                  => (string) $destination->account_id,
             'destination_name'                => $destination->account->name,
             'destination_iban'                => $destination->account->iban,
             'destination_type'                => $destination->account->accountType->type,
 
-            'budget_id'                       => $budget['id'],
+            'budget_id'                       => (string) $budget['id'],
             'budget_name'                     => $budget['name'],
 
-            'category_id'                     => $category['id'],
+            'category_id'                     => (string) $category['id'],
             'category_name'                   => $category['name'],
 
-            'bill_id'                         => $bill['id'],
+            'bill_id'                         => (string) $bill['id'],
             'bill_name'                       => $bill['name'],
 
             'reconciled'                      => $source->reconciled,
