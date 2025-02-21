@@ -7,12 +7,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #9861
-- #9862
-- #9863
-- #9868
-- #9871
-- #9882
+- [Issue 9861](https://github.com/firefly-iii/firefly-iii/issues/9861) (lower piggy amount when full creates double audit log entry) reported by @4e868df3
+- [Issue 9862](https://github.com/firefly-iii/firefly-iii/issues/9862) (Can't retrieve all accounts with the same name via API) reported by @Toshik1978
+- [Issue 9863](https://github.com/firefly-iii/firefly-iii/issues/9863) (User preferences reset after restart) reported by @mico28
+- [Issue 9868](https://github.com/firefly-iii/firefly-iii/issues/9868) (API: `TransactionSplit` -> `transaction_journal_id` returns int, not String) reported by @dreautall
+- [Issue 9871](https://github.com/firefly-iii/firefly-iii/issues/9871) (include net worth is ignored in the API - from PICO developer) reported by @fate8383
+- [Issue 9882](https://github.com/firefly-iii/firefly-iii/issues/9882) (Reconciliation bug on Docker instance) reported by @benjaminteyssier
 
 ## 6.2.7 - 2025-02-19
 
