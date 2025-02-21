@@ -400,8 +400,8 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
     {
         /** @var TransactionGroupFactory $factory */
         $factory = app(TransactionGroupFactory::class);
-        $factory->setUser($data['user']);
-        $factory->setUserGroup($data['user_group']);
+        $factory->setUser($this->user);
+        $factory->setUserGroup($this->userGroup);
 
         try {
             return $factory->create($data);
