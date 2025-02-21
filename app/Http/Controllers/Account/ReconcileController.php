@@ -87,10 +87,10 @@ class ReconcileController extends Controller
 
             return redirect(route('accounts.index', [config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type))]));
         }
-        $currency        = $this->accountRepos->getAccountCurrency($account) ?? $this->defaultCurrency;
+        $currency = $this->accountRepos->getAccountCurrency($account) ?? $this->defaultCurrency;
 
         // no start or end:
-        $range           = app('navigation')->getViewRange(false);
+        $range = app('navigation')->getViewRange(false);
 
         // get start and end
 
@@ -99,7 +99,7 @@ class ReconcileController extends Controller
             $start = clone session('start', app('navigation')->startOfPeriod(new Carbon(), $range));
 
             /** @var Carbon $end */
-            $end   = clone session('end', app('navigation')->endOfPeriod(new Carbon(), $range));
+            $end = clone session('end', app('navigation')->endOfPeriod(new Carbon(), $range));
         }
         if (null === $end) {
             /** @var Carbon $end */
@@ -113,15 +113,15 @@ class ReconcileController extends Controller
         $start->startOfDay();
         $end->endOfDay();
 
-        $startDate       = clone $start;
+        $startDate = clone $start;
         $startDate->subDay()->endOfDay(); // this is correct, subday endofday ends at 23:59:59
         // both are validated and are correct.
         Log::debug(sprintf('reconcile: Call finalAccountBalance with date/time "%s"', $startDate->toIso8601String()));
         Log::debug(sprintf('reconcile2: Call finalAccountBalance with date/time "%s"', $end->toIso8601String()));
-        $startBalance    = Steam::bcround(Steam::finalAccountBalance($account, $startDate)['balance'], $currency->decimal_places);
-        $endBalance      = Steam::bcround(Steam::finalAccountBalance($account, $end)['balance'], $currency->decimal_places);
-        $subTitleIcon    = config(sprintf('firefly.subIconsByIdentifier.%s', $account->accountType->type));
-        $subTitle        = (string) trans('firefly.reconcile_account', ['account' => $account->name]);
+        $startBalance = Steam::bcround(Steam::finalAccountBalance($account, $startDate)['balance'], $currency->decimal_places);
+        $endBalance   = Steam::bcround(Steam::finalAccountBalance($account, $end)['balance'], $currency->decimal_places);
+        $subTitleIcon = config(sprintf('firefly.subIconsByIdentifier.%s', $account->accountType->type));
+        $subTitle     = (string) trans('firefly.reconcile_account', ['account' => $account->name]);
 
         // various links
         $transactionsUrl = route('accounts.reconcile.transactions', [$account->id, '%start%', '%end%']);
@@ -162,7 +162,7 @@ class ReconcileController extends Controller
         }
 
         app('log')->debug('In ReconcileController::submit()');
-        $data   = $request->getAll();
+        $data = $request->getAll();
 
         /** @var string $journalId */
         foreach ($data['journals'] as $journalId) {
@@ -217,19 +217,20 @@ class ReconcileController extends Controller
         }
 
         // title:
-        $description    = trans(
+        $description = trans(
             'firefly.reconciliation_transaction_title',
             [
                 'from' => $start->isoFormat($this->monthAndDayFormat),
                 'to'   => $end->isoFormat($this->monthAndDayFormat),
             ]
         );
-        $submission     = [
+        $submission  = [
             'user'         => auth()->user()->id,
             'group_title'  => null,
             'transactions' => [
                 [
-                    'user'                => auth()->user()->id,
+                    'user'                => auth()->user(),
+                    'user_group'          => auth()->user()->userGroup,
                     'type'                => strtolower(TransactionTypeEnum::RECONCILIATION->value),
                     'date'                => $end,
                     'order'               => 0,
@@ -246,10 +247,10 @@ class ReconcileController extends Controller
         ];
 
         /** @var TransactionGroupFactory $factory */
-        $factory        = app(TransactionGroupFactory::class);
+        $factory = app(TransactionGroupFactory::class);
 
         /** @var User $user */
-        $user           = auth()->user();
+        $user = auth()->user();
         $factory->setUser($user);
 
         try {

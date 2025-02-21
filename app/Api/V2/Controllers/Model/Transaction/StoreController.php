@@ -73,6 +73,7 @@ class StoreController extends Controller
         $userGroup          = $request->getUserGroup();
         $data['user_group'] = $userGroup;
 
+
         // overrule user group and see where we end up.
         // what happens when we refer to a budget that is not in this user group?
 

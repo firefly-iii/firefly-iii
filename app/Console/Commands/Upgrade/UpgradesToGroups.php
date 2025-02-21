@@ -238,7 +238,8 @@ class UpgradesToGroups extends Command
         return [
             'type'                => strtolower($journal->transactionType->type),
             'date'                => $journal->date,
-            'user'                => $journal->user_id,
+            'user'                => $journal->user,
+            'user_group'          => $journal->user->userGroup,
             'currency_id'         => $transaction->transaction_currency_id,
             'foreign_currency_id' => $transaction->foreign_currency_id,
             'amount'              => $transaction->amount,
