@@ -225,7 +225,7 @@ jobs:
             sudo chown -R runner:docker output.txt
             echo "Weekly development release of Firefly III with the latest fixes, translations and features. Docker users can find this release under the \`develop\` tag." >> output.txt
             echo "" >> output.txt
-            echo "This release was created on **$(date +'%Y-%m-%d')** and may contain unexpected bugs. Data loss is rare but is not impossible. The releases are signed, and you can verify them using the [Firefly III releases PGP key](https://docs.firefly-iii.org/explanation/more-information/signatures/)." >> output.txt
+            echo "This release was created on **$(date +'%Y-%m-%d %H:%M') ${TZ}** and may contain unexpected bugs. Data loss is rare but is not impossible. The releases are signed, and you can verify them using the [Firefly III releases PGP key](https://docs.firefly-iii.org/explanation/more-information/signatures/)." >> output.txt
             echo "" >> output.txt
             echo "* Please read the installation instructions for [Docker](https://docs.firefly-iii.org/how-to/firefly-iii/installation/docker/), [Portainer](https://docs.firefly-iii.org/how-to/firefly-iii/installation/portainer/), [Kubernetes](https://docs.firefly-iii.org/how-to/firefly-iii/installation/kubernetes/) or [self-managed servers](https://docs.firefly-iii.org/how-to/firefly-iii/installation/self-managed/)" >> output.txt
             echo "* Or read the upgrade instructions for [Docker](https://docs.firefly-iii.org/how-to/firefly-iii/upgrade/docker/), [Kubernetes](https://docs.firefly-iii.org/how-to/firefly-iii/upgrade/kubernetes/) or [self-managed servers](https://docs.firefly-iii.org/how-to/firefly-iii/upgrade/self-managed/)" >> output.txt
