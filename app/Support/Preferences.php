@@ -72,20 +72,32 @@ class Preferences
 
     public function getForUser(User $user, string $name, null|array|bool|int|string $default = null): ?Preference
     {
+        Log::debug(sprintf('getForUser(#%d, "%s")', $user->id, $name));
         // don't care about user group ID, except for some specific preferences.
         $userGroupId = $this->getUserGroupId($user, $name);
-        $preference  = Preference::where('user_group_id', $userGroupId)->where('user_id', $user->id)->where('name', $name)->first(['id', 'user_id', 'name', 'data', 'updated_at', 'created_at']);
+        $query       = Preference::where('user_id', $user->id)->where('name', $name);
+        if (null !== $userGroupId) {
+            Log::debug('Include user group ID in query');
+            $query->where('user_group_id', $userGroupId);
+        }
+
+        $preference  = $query->first(['id', 'user_id', 'user_group_id', 'name', 'data', 'updated_at', 'created_at']);
 
         if (null !== $preference && null === $preference->data) {
             $preference->delete();
             $preference = null;
+            Log::debug('Removed empty preference.');
         }
 
         if (null !== $preference) {
+            Log::debug(sprintf('Found preference #%d for user #%d: %s', $preference->id, $user->id, $name));
+
             return $preference;
         }
         // no preference found and default is null:
         if (null === $default) {
+            Log::debug('Return NULL, create no preference.');
+
             // return NULL
             return null;
         }
@@ -124,35 +136,40 @@ class Preferences
 
     public function setForUser(User $user, string $name, null|array|bool|int|string $value): Preference
     {
-        $fullName   = sprintf('preference%s%s', $user->id, $name);
-        $groupId    = $this->getUserGroupId($user, $name);
-        $groupId    = 0 === (int) $groupId ? null : (int) $groupId;
+        $fullName         = sprintf('preference%s%s', $user->id, $name);
+        $userGroupId      = $this->getUserGroupId($user, $name);
+        $userGroupId      = 0 === (int) $userGroupId ? null : (int) $userGroupId;
 
         Cache::forget($fullName);
 
-        /** @var null|Preference $pref */
-        $pref       = Preference::where('user_group_id', $groupId)->where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data', 'updated_at', 'created_at']);
+        $query            = Preference::where('user_id', $user->id)->where('name', $name);
+        if (null !== $userGroupId) {
+            Log::debug('Include user group ID in query');
+            $query->where('user_group_id', $userGroupId);
+        }
 
-        if (null !== $pref && null === $value) {
-            $pref->delete();
+        $preference       = $query->first(['id', 'user_id', 'user_group_id', 'name', 'data', 'updated_at', 'created_at']);
+
+        if (null !== $preference && null === $value) {
+            $preference->delete();
 
             return new Preference();
         }
         if (null === $value) {
             return new Preference();
         }
-        if (null === $pref) {
-            $pref                = new Preference();
-            $pref->user_id       = (int) $user->id;
-            $pref->user_group_id = $groupId;
-            $pref->name          = $name;
+        if (null === $preference) {
+            $preference                = new Preference();
+            $preference->user_id       = (int) $user->id;
+            $preference->user_group_id = $userGroupId;
+            $preference->name          = $name;
 
         }
-        $pref->data = $value;
-        $pref->save();
-        Cache::forever($fullName, $pref);
+        $preference->data = $value;
+        $preference->save();
+        Cache::forever($fullName, $preference);
 
-        return $pref;
+        return $preference;
     }
 
     public function beginsWith(User $user, string $search): Collection

@@ -92,7 +92,7 @@ class AccountTransformer extends AbstractTransformer
         $decimalPlaces                                                = (int) $account->meta['currency']?->decimal_places;
         $decimalPlaces                                                = 0 === $decimalPlaces ? 2 : $decimalPlaces;
         $openingBalance                                               = Steam::bcround($openingBalance, $decimalPlaces);
-        $includeNetWorth                                              = '0' !== ($account->meta['include_net_worth'] ?? null);
+        $includeNetWorth                                              = 1 === (int) ($account->meta['include_net_worth'] ?? 0);
         $longitude                                                    = $account->meta['location']['longitude'] ?? null;
         $latitude                                                     = $account->meta['location']['latitude'] ?? null;
         $zoomLevel                                                    = $account->meta['location']['zoom_level'] ?? null;

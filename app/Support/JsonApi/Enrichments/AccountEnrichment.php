@@ -117,30 +117,6 @@ class AccountEnrichment implements EnrichmentInterface
         $this->collectNotes();
         $this->collectLocations();
         $this->collectOpeningBalances();
-        //        $this->default      = app('amount')->getNativeCurrency();
-        //        $this->currencies   = [];
-        //        $this->balances     = [];
-        //        $this->objectGroups = [];
-        //        $this->grouped      = [];
-        //
-        //        // do everything here:
-        //        $this->getLastActivity();
-        //        $this->collectAccountTypes();
-        //        $this->collectMetaData();
-        //        $this->getMetaBalances();
-        //        $this->getObjectGroups();
-
-        //        $this->collection->transform(function (Account $account) {
-        //            $account->user_array = ['id' => 1, 'bla bla' => 'bla'];
-        //            $account->balances   = collect([
-        //                ['balance_id' => 1, 'balance' => 5],
-        //                ['balance_id' => 2, 'balance' => 5],
-        //                ['balance_id' => 3, 'balance' => 5],
-        //            ]);
-        //
-        //            return $account;
-        //        });
-
         $this->appendCollectedData();
 
         return $this->collection;
@@ -258,7 +234,7 @@ class AccountEnrichment implements EnrichmentInterface
 
     private function collectMetaData(): void
     {
-        $set        = AccountMeta::whereIn('name', ['is_multi_currency', 'currency_id', 'account_role', 'account_number', 'liability_direction', 'interest', 'interest_period', 'current_debt'])
+        $set                 = AccountMeta::whereIn('name', ['is_multi_currency', 'include_net_worth', 'currency_id', 'account_role', 'account_number', 'liability_direction', 'interest', 'interest_period', 'current_debt'])
             ->whereIn('account_id', $this->accountIds)
             ->get(['account_meta.id', 'account_meta.account_id', 'account_meta.name', 'account_meta.data'])->toArray()
         ;
@@ -270,10 +246,11 @@ class AccountEnrichment implements EnrichmentInterface
                 $this->currencies[(int) $entry['data']] = true;
             }
         }
-        $currencies = TransactionCurrency::whereIn('id', array_keys($this->currencies))->get();
+        $currencies          = TransactionCurrency::whereIn('id', array_keys($this->currencies))->get();
         foreach ($currencies as $currency) {
             $this->currencies[(int) $currency->id] = $currency;
         }
+        $this->currencies[0] = $this->native;
         foreach ($this->currencies as $id => $currency) {
             if (true === $currency) {
                 throw new FireflyException(sprintf('Currency #%d not found.', $id));

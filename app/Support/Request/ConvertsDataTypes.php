@@ -390,6 +390,25 @@ trait ConvertsDataTypes
         return (int) $string;
     }
 
+    protected function parseAccounts(mixed $array): array
+    {
+        if (!is_array($array)) {
+            return [];
+        }
+        $return = [];
+        foreach ($array as $entry) {
+            if (!is_array($entry)) {
+                continue;
+            }
+            $return[] = [
+                'account_id'     => $this->integerFromValue((string) ($entry['account_id'] ?? '0')),
+                'current_amount' => $this->clearString((string) ($entry['current_amount'] ?? '0')),
+            ];
+        }
+
+        return $return;
+    }
+
     protected function floatFromValue(?string $string): ?float
     {
         if (null === $string) {

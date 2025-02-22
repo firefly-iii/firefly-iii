@@ -229,7 +229,8 @@ class ReconcileController extends Controller
             'group_title'  => null,
             'transactions' => [
                 [
-                    'user'                => auth()->user()->id,
+                    'user'                => auth()->user(),
+                    'user_group'          => auth()->user()->userGroup,
                     'type'                => strtolower(TransactionTypeEnum::RECONCILIATION->value),
                     'date'                => $end,
                     'order'               => 0,

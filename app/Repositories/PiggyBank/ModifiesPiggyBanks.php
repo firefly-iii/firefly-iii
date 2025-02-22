@@ -222,7 +222,8 @@ trait ModifiesPiggyBanks
         // update the accounts
         $factory       = new PiggyBankFactory();
         $factory->user = $this->user;
-        $factory->linkToAccountIds($piggyBank, $data['accounts']);
+
+        $factory->linkToAccountIds($piggyBank, $data['accounts'] ?? []);
 
 
         // if the piggy bank is now smaller than the sum of the money saved,
@@ -233,8 +234,8 @@ trait ModifiesPiggyBanks
             $difference = bcsub($piggyBank->target_amount, $currentAmount);
 
             // an amount will be removed, create "negative" event:
-            Log::debug(sprintf('ChangedAmount: is triggered with difference "%s"', $difference));
-            event(new ChangedAmount($piggyBank, $difference, null, null));
+            //            Log::debug(sprintf('ChangedAmount: is triggered with difference "%s"', $difference));
+            //            event(new ChangedAmount($piggyBank, $difference, null, null));
 
             // question is, from which account(s) to remove the difference?
             // solution: just start from the top until there is no more money left to remove.
