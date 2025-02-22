@@ -225,10 +225,10 @@ class ReconcileController extends Controller
             ]
         );
         $submission     = [
-            'user'         => auth()->user(),
+            'user'               => auth()->user(),
             'user_group'         => auth()->user()->userGroup,
-            'group_title'  => null,
-            'transactions' => [
+            'group_title'        => null,
+            'transactions'       => [
                 [
                     'user'                => auth()->user(),
                     'user_group'          => auth()->user()->userGroup,
