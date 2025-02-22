@@ -239,7 +239,8 @@ trait AccountServiceTrait
         // submit to factory:
         $submission = [
             'group_title'  => null,
-            'user'         => $account->user_id,
+            'user'         => $account->user,
+            'user_group'   => $account->user->userGroup,
             'transactions' => [
                 [
                     'type'             => 'Opening balance',
@@ -460,11 +461,11 @@ trait AccountServiceTrait
         if (null === $currency) {
             $currency = app('amount')->getNativeCurrencyByUserGroup($account->user->userGroup);
         }
-
         // submit to factory:
         $submission = [
             'group_title'  => null,
-            'user'         => $account->user_id,
+            'user'         => $account->user,
+            'user_group'   => $account->user->userGroup,
             'transactions' => [
                 [
                     'type'             => 'Liability credit',
