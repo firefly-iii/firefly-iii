@@ -65,8 +65,6 @@ class StoreRequest extends FormRequest
         return $data;
     }
 
-
-
     /**
      * The rules that the incoming request must be matched against.
      */
