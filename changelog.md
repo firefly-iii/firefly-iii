@@ -13,6 +13,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 9868](https://github.com/firefly-iii/firefly-iii/issues/9868) (API: `TransactionSplit` -> `transaction_journal_id` returns int, not String) reported by @dreautall
 - [Issue 9871](https://github.com/firefly-iii/firefly-iii/issues/9871) (include net worth is ignored in the API - from PICO developer) reported by @fate8383
 - [Issue 9882](https://github.com/firefly-iii/firefly-iii/issues/9882) (Reconciliation bug on Docker instance) reported by @benjaminteyssier
+- #9884
+- #9887
 
 ## 6.2.7 - 2025-02-19
 
