@@ -222,7 +222,8 @@ trait ModifiesPiggyBanks
         // update the accounts
         $factory       = new PiggyBankFactory();
         $factory->user = $this->user;
-        $factory->linkToAccountIds($piggyBank, $data['accounts']);
+
+        $factory->linkToAccountIds($piggyBank, $data['accounts'] ?? []);
 
 
         // if the piggy bank is now smaller than the sum of the money saved,
