@@ -14,7 +14,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 9871](https://github.com/firefly-iii/firefly-iii/issues/9871) (include net worth is ignored in the API - from PICO developer) reported by @fate8383
 - [Issue 9882](https://github.com/firefly-iii/firefly-iii/issues/9882) (Reconciliation bug on Docker instance) reported by @benjaminteyssier
 - [Issue 9884](https://github.com/firefly-iii/firefly-iii/issues/9884) (Data import, currency #0 not found) reported by @ragnarkarlsson
-- #9885
+- [Issue 9885](https://github.com/firefly-iii/firefly-iii/issues/9885) (Invalid server configuration: missing required package) reported by @EricVanCaenenberghe
 - [Issue 9887](https://github.com/firefly-iii/firefly-iii/issues/9887) (Creating a Liability Account Throws TypeError in TransactionJournalFactory::setUser()) reported by @mikeashi
 
 ## 6.2.7 - 2025-02-19
