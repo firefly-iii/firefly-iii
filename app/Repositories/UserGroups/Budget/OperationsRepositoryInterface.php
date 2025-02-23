@@ -25,11 +25,12 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\UserGroups\Budget;
 
 use Carbon\Carbon;
-use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
  * Interface OperationsRepositoryInterface
+ *
+ * @deprecated
  */
 interface OperationsRepositoryInterface
 {
@@ -39,6 +40,4 @@ interface OperationsRepositoryInterface
      * as possible. Amounts are always negative.
      */
     public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $budgets = null): array;
-
-    public function setUser(User $user): void;
 }

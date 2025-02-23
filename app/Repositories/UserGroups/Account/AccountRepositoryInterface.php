@@ -27,11 +27,12 @@ namespace FireflyIII\Repositories\UserGroups\Account;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\UserGroup;
-use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
  * Interface AccountRepositoryInterface
+ *
+ * @deprecated
  */
 interface AccountRepositoryInterface
 {
@@ -81,10 +82,6 @@ interface AccountRepositoryInterface
     public function resetAccountOrder(): void;
 
     public function searchAccount(string $query, array $types, int $page, int $limit): Collection;
-
-    public function setUser(User $user): void;
-
-    public function setUserGroup(UserGroup $userGroup): void;
 
     public function update(Account $account, array $data): Account;
 }

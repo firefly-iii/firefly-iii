@@ -43,6 +43,8 @@ use Illuminate\Support\Facades\Log;
 
 /**
  * Class CurrencyRepository
+ *
+ * @deprecated
  */
 class CurrencyRepository implements CurrencyRepositoryInterface
 {

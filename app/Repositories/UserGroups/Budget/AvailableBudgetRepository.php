@@ -32,6 +32,8 @@ use Illuminate\Support\Facades\Log;
 
 /**
  * Class AvailableBudgetRepository
+ *
+ * @deprecated
  */
 class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
 {

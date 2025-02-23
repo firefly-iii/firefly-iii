@@ -28,6 +28,8 @@ use Illuminate\Support\Collection;
 
 /**
  * Interface PiggyBankRepositoryInterface
+ *
+ * @deprecated
  */
 interface PiggyBankRepositoryInterface
 {

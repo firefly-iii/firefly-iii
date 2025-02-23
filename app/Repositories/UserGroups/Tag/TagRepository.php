@@ -30,6 +30,8 @@ use Illuminate\Support\Collection;
 
 /**
  * Class TagRepository
+ *
+ * @deprecated
  */
 class TagRepository implements TagRepositoryInterface
 {

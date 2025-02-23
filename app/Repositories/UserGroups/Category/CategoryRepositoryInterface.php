@@ -26,6 +26,11 @@ namespace FireflyIII\Repositories\UserGroups\Category;
 
 use Illuminate\Support\Collection;
 
+/**
+ * Interface CategoryRepositoryInterface
+ *
+ * @deprecated
+ */
 interface CategoryRepositoryInterface
 {
     /**

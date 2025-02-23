@@ -26,11 +26,12 @@ namespace FireflyIII\Repositories\UserGroups\Bill;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Bill;
-use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
  * Interface BillRepositoryInterface
+ *
+ * @deprecated
  */
 interface BillRepositoryInterface
 {
@@ -58,8 +59,6 @@ interface BillRepositoryInterface
      * TODO duplicate of method in other bill repos
      */
     public function nextDateMatch(Bill $bill, Carbon $date): Carbon;
-
-    public function setUser(User $user): void;
 
     /**
      * Collect multi-currency of sum of bills already paid.

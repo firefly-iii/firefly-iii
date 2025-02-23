@@ -33,6 +33,8 @@ use Illuminate\Support\Collection;
 
 /**
  * Class OperationsRepository
+ *
+ * @deprecated
  */
 class OperationsRepository implements OperationsRepositoryInterface
 {

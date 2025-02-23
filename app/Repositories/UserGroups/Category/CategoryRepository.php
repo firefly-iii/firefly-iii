@@ -28,6 +28,11 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Support\Collection;
 
+/**
+ * Class CategoryRepository
+ *
+ * @deprecated
+ */
 class CategoryRepository implements CategoryRepositoryInterface
 {
     use UserGroupTrait;

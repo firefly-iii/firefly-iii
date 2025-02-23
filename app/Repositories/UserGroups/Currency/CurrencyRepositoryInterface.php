@@ -27,14 +27,16 @@ namespace FireflyIII\Repositories\UserGroups\Currency;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\UserGroup;
-use FireflyIII\User;
 use Illuminate\Support\Collection;
 
+/**
+ * Interface CurrencyRepositoryInterface
+ *
+ * @deprecated
+ */
 interface CurrencyRepositoryInterface
 {
     public function currencyInUse(TransactionCurrency $currency): bool;
-
-    public function getUserGroup(): UserGroup;
 
     /**
      * Currency is in use where exactly.
@@ -86,13 +88,13 @@ interface CurrencyRepositoryInterface
 
     public function getByIds(array $ids): Collection;
 
+    public function getUserGroup(): UserGroup;
+
     public function isFallbackCurrency(TransactionCurrency $currency): bool;
 
     public function makeDefault(TransactionCurrency $currency): void;
 
     public function searchCurrency(string $search, int $limit): Collection;
-
-    public function setUser(User $user): void;
 
     /**
      * @throws FireflyException
