@@ -29,6 +29,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Models\TransactionJournalMeta;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class JournalDestroyService
@@ -59,17 +60,17 @@ class JournalDestroyService
         }
 
         // delete all from 'budget_transaction_journal'
-        \DB::table('budget_transaction_journal')
+        DB::table('budget_transaction_journal')
             ->where('transaction_journal_id', $journal->id)->delete()
         ;
 
         // delete all from 'category_transaction_journal'
-        \DB::table('category_transaction_journal')
+        DB::table('category_transaction_journal')
             ->where('transaction_journal_id', $journal->id)->delete()
         ;
 
         // delete all from 'tag_transaction_journal'
-        \DB::table('tag_transaction_journal')
+        DB::table('tag_transaction_journal')
             ->where('transaction_journal_id', $journal->id)->delete()
         ;
 

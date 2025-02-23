@@ -28,6 +28,7 @@ use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class RemoveTag.
@@ -61,7 +62,7 @@ class RemoveTag implements ActionInterface
 
             return false;
         }
-        $count  = \DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal['transaction_journal_id'])->where('tag_id', $tag->id)->count();
+        $count  = DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal['transaction_journal_id'])->where('tag_id', $tag->id)->count();
         if (0 === $count) {
             app('log')->debug(
                 sprintf('RuleAction RemoveTag tried to remove tag "%s" from journal #%d but no such tag is linked.', $name, $journal['transaction_journal_id'])
@@ -72,7 +73,7 @@ class RemoveTag implements ActionInterface
         }
 
         app('log')->debug(sprintf('RuleAction RemoveTag removed tag #%d ("%s") from journal #%d.', $tag->id, $tag->tag, $journal['transaction_journal_id']));
-        \DB::table('tag_transaction_journal')
+        DB::table('tag_transaction_journal')
             ->where('transaction_journal_id', $journal['transaction_journal_id'])
             ->where('tag_id', $tag->id)
             ->delete()

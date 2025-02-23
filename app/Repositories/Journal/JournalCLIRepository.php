@@ -31,6 +31,7 @@ use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class JournalCLIRepository
@@ -180,7 +181,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface, UserGroupIn
         $query      = TransactionJournal::leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->groupBy('transaction_journals.id')
         ;
-        $result     = $query->get(['transaction_journals.id as id', \DB::raw('count(transactions.id) as transaction_count')]); // @phpstan-ignore-line
+        $result     = $query->get(['transaction_journals.id as id', DB::raw('count(transactions.id) as transaction_count')]); // @phpstan-ignore-line
         $journalIds = [];
 
         /** @var \stdClass $row */

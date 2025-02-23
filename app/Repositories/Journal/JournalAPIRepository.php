@@ -32,6 +32,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class JournalAPIRepository
@@ -61,8 +62,7 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface, UserGroupIn
     {
         $set  = $journal->attachments;
 
-        /** @var \Storage $disk */
-        $disk = \Storage::disk('upload');
+        $disk = Storage::disk('upload');
 
         return $set->each(
             static function (Attachment $attachment) use ($disk) {

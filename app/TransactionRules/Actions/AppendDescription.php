@@ -27,6 +27,7 @@ use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Traits\RefreshNotesTrait;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class AppendDescription.
@@ -51,7 +52,7 @@ class AppendDescription implements ActionInterface
         $this->refreshNotes($journal);
         $append      = $this->action->getValue($journal);
         $description = sprintf('%s %s', $journal['description'], $append);
-        \DB::table('transaction_journals')->where('id', $journal['transaction_journal_id'])->limit(1)->update(['description' => $description]);
+        DB::table('transaction_journals')->where('id', $journal['transaction_journal_id'])->limit(1)->update(['description' => $description]);
 
         // event for audit log entry
         /** @var TransactionJournal $object */

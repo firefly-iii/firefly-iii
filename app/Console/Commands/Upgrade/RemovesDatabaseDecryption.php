@@ -29,6 +29,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Preference;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 
 class RemovesDatabaseDecryption extends Command
@@ -152,7 +153,7 @@ class RemovesDatabaseDecryption extends Command
     private function tryDecrypt($value)
     {
         try {
-            $value = \Crypt::decrypt($value);
+            $value = Crypt::decrypt($value);
         } catch (DecryptException $e) {
             if ('The MAC is invalid.' === $e->getMessage()) {
                 throw new FireflyException($e->getMessage(), 0, $e);

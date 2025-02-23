@@ -47,6 +47,7 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class TransactionGroupRepository
@@ -294,7 +295,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
      */
     public function getMetaDateFields(int $journalId, array $fields): NullArrayObject
     {
-        $query  = \DB::table('journal_meta')
+        $query  = DB::table('journal_meta')
             ->where('transaction_journal_id', $journalId)
             ->whereIn('name', $fields)
             ->whereNull('deleted_at')
@@ -314,7 +315,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
      */
     public function getMetaFields(int $journalId, array $fields): NullArrayObject
     {
-        $query  = \DB::table('journal_meta')
+        $query  = DB::table('journal_meta')
             ->where('transaction_journal_id', $journalId)
             ->whereIn('name', $fields)
             ->whereNull('deleted_at')
@@ -383,7 +384,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
      */
     public function getTags(int $journalId): array
     {
-        $result = \DB::table('tag_transaction_journal')
+        $result = DB::table('tag_transaction_journal')
             ->leftJoin('tags', 'tag_transaction_journal.tag_id', '=', 'tags.id')
             ->where('tag_transaction_journal.transaction_journal_id', $journalId)
             ->orderBy('tags.tag', 'ASC')

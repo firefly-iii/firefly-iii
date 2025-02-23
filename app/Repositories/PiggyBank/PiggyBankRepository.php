@@ -40,6 +40,7 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class PiggyBankRepository.
@@ -111,8 +112,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
     {
         $set  = $piggyBank->attachments()->get();
 
-        /** @var \Storage $disk */
-        $disk = \Storage::disk('upload');
+        $disk = Storage::disk('upload');
 
         return $set->each(
             static function (Attachment $attachment) use ($disk) { // @phpstan-ignore-line

@@ -38,6 +38,7 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Services\Password\Verifier;
 use FireflyIII\Support\ParseDateString;
 use FireflyIII\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
@@ -95,7 +96,7 @@ class FireflyValidator extends Validator
         if (0 === (int) $value) {
             return true;
         }
-        $count = \DB::table($parameters[0])->where('user_id', auth()->user()->id)->where($field, $value)->count();
+        $count = DB::table($parameters[0])->where('user_id', auth()->user()->id)->where($field, $value)->count();
 
         return 1 === $count;
     }
@@ -269,7 +270,7 @@ class FireflyValidator extends Validator
         if (0 === (int) $value) {
             return true;
         }
-        $count = \DB::table($parameters[0])->where($field, $value)->count();
+        $count = DB::table($parameters[0])->where($field, $value)->count();
 
         return 1 === $count;
     }
@@ -686,7 +687,7 @@ class FireflyValidator extends Validator
      */
     public function validateUniqueCurrency(string $field, string $attribute, string $value): bool
     {
-        return 0 === \DB::table('transaction_currencies')->where($field, $value)->whereNull('deleted_at')->count();
+        return 0 === DB::table('transaction_currencies')->where($field, $value)->whereNull('deleted_at')->count();
     }
 
     public function validateUniqueCurrencyName(?string $attribute, ?string $value): bool
@@ -775,7 +776,7 @@ class FireflyValidator extends Validator
             $exclude = (int) $data['id'];
         }
         // get entries from table
-        $result          = \DB::table($table)->where('user_id', auth()->user()->id)->whereNull('deleted_at')
+        $result          = DB::table($table)->where('user_id', auth()->user()->id)->whereNull('deleted_at')
             ->where('id', '!=', $exclude)
             ->where($field, $value)
             ->first([$field])
@@ -798,7 +799,7 @@ class FireflyValidator extends Validator
     public function validateUniqueObjectGroup($attribute, $value, $parameters): bool
     {
         $exclude = $parameters[0] ?? null;
-        $query   = \DB::table('object_groups')
+        $query   = DB::table('object_groups')
             ->whereNull('object_groups.deleted_at')
             ->where('object_groups.user_id', auth()->user()->id)
             ->where('object_groups.title', $value)

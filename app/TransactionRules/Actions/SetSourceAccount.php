@@ -32,6 +32,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class SetSourceAccount.
@@ -117,7 +118,7 @@ class SetSourceAccount implements ActionInterface
         app('log')->debug(sprintf('New source account is #%d ("%s").', $newAccount->id, $newAccount->name));
 
         // update source transaction with new source account:
-        \DB::table('transactions')
+        DB::table('transactions')
             ->where('transaction_journal_id', '=', $object->id)
             ->where('amount', '<', 0)
             ->update(['account_id' => $newAccount->id])

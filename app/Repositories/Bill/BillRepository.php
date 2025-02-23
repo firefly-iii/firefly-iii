@@ -45,6 +45,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class BillRepository.
@@ -161,9 +162,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
     public function getAttachments(Bill $bill): Collection
     {
         $set  = $bill->attachments()->get();
-
-        /** @var \Storage $disk */
-        $disk = \Storage::disk('upload');
+        $disk = Storage::disk('upload');
 
         return $set->each(
             static function (Attachment $attachment) use ($disk) {  // @phpstan-ignore-line

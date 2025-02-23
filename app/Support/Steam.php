@@ -33,6 +33,7 @@ use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 /**
  * Class Steam.
@@ -467,7 +468,7 @@ class Steam
         $set  = auth()->user()->transactions()
             ->whereIn('transactions.account_id', $accounts)
             ->groupBy(['transactions.account_id', 'transaction_journals.user_id'])
-            ->get(['transactions.account_id', \DB::raw('MAX(transaction_journals.date) AS max_date')]) // @phpstan-ignore-line
+            ->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) AS max_date')]) // @phpstan-ignore-line
         ;
 
         /** @var Transaction $entry */
@@ -557,7 +558,7 @@ class Steam
 
         // URL must not lead to weird pages
         $forbiddenWords = ['jscript', 'json', 'debug', 'serviceworker', 'offline', 'delete', '/login', '/attachments/view'];
-        if (\Str::contains($returnUrl, $forbiddenWords)) {
+        if (Str::contains($returnUrl, $forbiddenWords)) {
             $returnUrl = $safeUrl;
         }
 

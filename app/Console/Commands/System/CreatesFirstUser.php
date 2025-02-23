@@ -28,6 +28,7 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class CreatesFirstUser extends Command
 {
@@ -61,11 +62,11 @@ class CreatesFirstUser extends Command
             'email'        => $this->argument('email'),
             'role'         => 'owner',
         ];
-        $password       = \Str::random(24);
+        $password       = Str::random(24);
         $user           = $this->repository->store($data);
         $user->password = Hash::make($password);
         $user->save();
-        $user->setRememberToken(\Str::random(60));
+        $user->setRememberToken(Str::random(60));
 
         $this->friendlyInfo(sprintf('Created new admin user (ID #%d) with email address "%s" and password "%s".', $user->id, $user->email, $password));
         $this->friendlyWarning('Change this password.');

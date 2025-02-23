@@ -29,6 +29,7 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class ObjectGroupRepository
@@ -64,7 +65,7 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface, UserGroup
 
         /** @var ObjectGroup $group */
         foreach ($all as $group) {
-            $count = \DB::table('object_groupables')->where('object_groupables.object_group_id', $group->id)->count();
+            $count = DB::table('object_groupables')->where('object_groupables.object_group_id', $group->id)->count();
             if (0 === $count) {
                 $group->delete();
             }

@@ -32,6 +32,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class SetDestinationAccount.
@@ -125,7 +126,7 @@ class SetDestinationAccount implements ActionInterface
         event(new TriggeredAuditLog($this->action->rule, $object, 'set_destination', null, $newAccount->name));
 
         // update destination transaction with new destination account:
-        \DB::table('transactions')
+        DB::table('transactions')
             ->where('transaction_journal_id', '=', $object->id)
             ->where('amount', '>', 0)
             ->update(['account_id' => $newAccount->id])

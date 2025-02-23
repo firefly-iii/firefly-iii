@@ -45,7 +45,9 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class BudgetRepository.
@@ -457,8 +459,8 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
 
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
-            \DB::table('budget_transaction')->where('budget_id', $budget->id)->delete();
-            \DB::table('budget_transaction_journal')->where('budget_id', $budget->id)->delete();
+            DB::table('budget_transaction')->where('budget_id', $budget->id)->delete();
+            DB::table('budget_transaction_journal')->where('budget_id', $budget->id)->delete();
             RecurrenceTransactionMeta::where('name', 'budget_id')->where('value', (string) $budget->id)->delete();
             RuleAction::where('action_type', 'set_budget')->where('action_value', (string) $budget->id)->delete();
             $budget->delete();
@@ -530,8 +532,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
     {
         $set  = $budget->attachments()->get();
 
-        /** @var \Storage $disk */
-        $disk = \Storage::disk('upload');
+        $disk = Storage::disk('upload');
 
         return $set->each(
             static function (Attachment $attachment) use ($disk) { // @phpstan-ignore-line

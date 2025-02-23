@@ -34,7 +34,9 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class TagRepository.
@@ -53,7 +55,7 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
      */
     public function destroy(Tag $tag): bool
     {
-        \DB::table('tag_transaction_journal')->where('tag_id', $tag->id)->delete();
+        DB::table('tag_transaction_journal')->where('tag_id', $tag->id)->delete();
         $tag->transactionJournals()->sync([]);
         $tag->delete();
 
@@ -70,7 +72,7 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
 
         /** @var Tag $tag */
         foreach ($tags as $tag) {
-            \DB::table('tag_transaction_journal')->where('tag_id', $tag->id)->delete();
+            DB::table('tag_transaction_journal')->where('tag_id', $tag->id)->delete();
             $tag->delete();
         }
     }
@@ -112,9 +114,7 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
     public function getAttachments(Tag $tag): Collection
     {
         $set  = $tag->attachments()->get();
-
-        /** @var \Storage $disk */
-        $disk = \Storage::disk('upload');
+        $disk = Storage::disk('upload');
 
         return $set->each(
             static function (Attachment $attachment) use ($disk): void { // @phpstan-ignore-line

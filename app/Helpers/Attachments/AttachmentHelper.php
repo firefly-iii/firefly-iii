@@ -31,6 +31,7 @@ use Illuminate\Contracts\Encryption\EncryptException;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\MessageBag;
@@ -70,7 +71,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         $encryptedData = (string) $this->uploadDisk->get(sprintf('at-%d.data', $attachment->id));
 
         try {
-            $unencryptedData = \Crypt::decrypt($encryptedData); // verified
+            $unencryptedData = Crypt::decrypt($encryptedData); // verified
         } catch (DecryptException $e) {
             Log::error(sprintf('Could not decrypt data of attachment #%d: %s', $attachment->id, $e->getMessage()));
             $unencryptedData = $encryptedData;

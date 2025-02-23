@@ -30,6 +30,7 @@ use FireflyIII\Models\Role;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
+use Illuminate\Support\Str;
 
 /**
  * Class RemoteUserProvider
@@ -72,7 +73,7 @@ class RemoteUserProvider implements UserProvider
                     'blocked'      => false,
                     'blocked_code' => null,
                     'email'        => $identifier,
-                    'password'     => bcrypt(\Str::random(64)),
+                    'password'     => bcrypt(Str::random(64)),
                 ]
             );
             // if this is the first user, give them admin as well.

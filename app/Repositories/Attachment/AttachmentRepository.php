@@ -32,6 +32,7 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\UnableToDeleteFile;
 
@@ -73,7 +74,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface, UserGroupIn
             $encryptedContent = (string) $disk->get($file);
 
             try {
-                $unencryptedContent = \Crypt::decrypt($encryptedContent); // verified
+                $unencryptedContent = Crypt::decrypt($encryptedContent); // verified
             } catch (DecryptException $e) {
                 app('log')->debug(sprintf('Could not decrypt attachment #%d but this is fine: %s', $attachment->id, $e->getMessage()));
                 $unencryptedContent = $encryptedContent;
