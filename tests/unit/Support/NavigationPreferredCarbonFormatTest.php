@@ -47,6 +47,15 @@ final class NavigationPreferredCarbonFormatTest extends TestCase
         $this->navigation = new Navigation();
     }
 
+    /**
+     * @dataProvider providePeriods
+     */
+    public function testGivenStartAndEndDatesWhenCallPreferredCarbonFormatThenReturnsTheExpectedFormatSuccessful(Carbon $start, Carbon $end, string $expected): void
+    {
+        $carbonFormat = $this->navigation->preferredCarbonFormat($start, $end);
+        self::assertSame($expected, $carbonFormat);
+    }
+
     public static function providePeriods(): iterable
     {
         return [
@@ -63,14 +72,5 @@ final class NavigationPreferredCarbonFormatTest extends TestCase
             '1 year'    => ['start' => Carbon::now(), 'end' => Carbon::now()->addYear(), 'expected' => 'Y-m'],
             '2 years'   => ['start' => Carbon::now(), 'end' => Carbon::now()->addYears(2), 'expected' => 'Y'],
         ];
-    }
-
-    /**
-     * @dataProvider providePeriods
-     */
-    public function testGivenStartAndEndDatesWhenCallPreferredCarbonFormatThenReturnsTheExpectedFormatSuccessful(Carbon $start, Carbon $end, string $expected): void
-    {
-        $carbonFormat = $this->navigation->preferredCarbonFormat($start, $end);
-        self::assertSame($expected, $carbonFormat);
     }
 }
