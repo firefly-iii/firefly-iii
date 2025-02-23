@@ -30,7 +30,7 @@ use FireflyIII\Factory\UserGroupFactory;
 use FireflyIII\Models\GroupMembership;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Models\UserRole;
-use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use FireflyIII\User;

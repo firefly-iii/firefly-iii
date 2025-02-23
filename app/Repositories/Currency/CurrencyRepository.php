@@ -60,6 +60,19 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
     {
         return TransactionCurrency::where('enabled', true)->orderBy('code', 'ASC')->get();
     }
+    public function get(): Collection
+    {
+        $all = $this->userGroup->currencies()->orderBy('code', 'ASC')->withPivot(['group_default'])->get();
+        $all->map(static function (TransactionCurrency $current) { // @phpstan-ignore-line
+            $current->userGroupEnabled = true;
+            $current->userGroupNative  = 1 === (int) $current->pivot->group_default;
+
+            return $current;
+        });
+
+        /** @var Collection */
+        return $all;
+    }
 
     /**
      * Get currency exchange rate.

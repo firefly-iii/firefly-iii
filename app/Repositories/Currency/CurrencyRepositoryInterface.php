@@ -51,6 +51,14 @@ interface CurrencyRepositoryInterface
     public function getCompleteSet(): Collection;
 
     /**
+     * Get the user group's currencies.
+     *
+     * @return Collection<TransactionCurrency>
+     */
+    public function get(): Collection;
+
+
+    /**
      * Get currency exchange rate.
      *
      * Used in the download exchange rate cron job. Needs the user object!

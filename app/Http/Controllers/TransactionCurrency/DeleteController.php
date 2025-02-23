@@ -27,7 +27,7 @@ namespace FireflyIII\Http\Controllers\TransactionCurrency;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;

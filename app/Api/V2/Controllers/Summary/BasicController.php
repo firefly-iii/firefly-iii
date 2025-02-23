@@ -39,7 +39,7 @@ use FireflyIII\Repositories\UserGroups\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Budget\AvailableBudgetRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Budget\OperationsRepositoryInterface;
-use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\Http\Api\SummaryBalanceGrouped;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
