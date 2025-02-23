@@ -28,10 +28,7 @@ use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Location;
 use FireflyIII\Models\TransactionGroup;
-use FireflyIII\Models\UserGroup;
 use FireflyIII\Support\NullArrayObject;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
@@ -97,10 +94,6 @@ interface TransactionGroupRepositoryInterface
      * Get the tags for a journal (by ID).
      */
     public function getTags(int $journalId): array;
-
-    public function setUser(null|Authenticatable|User $user): void;
-
-    public function setUserGroup(UserGroup $userGroup): void;
 
     /**
      * Create a new transaction group.

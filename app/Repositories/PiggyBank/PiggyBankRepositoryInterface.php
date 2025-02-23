@@ -29,9 +29,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\UserGroup;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
@@ -40,8 +37,6 @@ use Illuminate\Support\Collection;
 interface PiggyBankRepositoryInterface
 {
     public function addAmount(PiggyBank $piggyBank, Account $account, string $amount, ?TransactionJournal $journal = null): bool;
-
-    public function getCurrentNativeAmount(PiggyBank $piggyBank, ?Account $account = null): string;
 
     public function addAmountToPiggyBank(PiggyBank $piggyBank, string $amount, TransactionJournal $journal): void;
 
@@ -71,6 +66,8 @@ interface PiggyBankRepositoryInterface
      * Get current amount saved in piggy bank.
      */
     public function getCurrentAmount(PiggyBank $piggyBank, ?Account $account = null): string;
+
+    public function getCurrentNativeAmount(PiggyBank $piggyBank, ?Account $account = null): string;
 
     /**
      * Get all events.
@@ -135,10 +132,6 @@ interface PiggyBankRepositoryInterface
      * Set specific piggy bank to specific order.
      */
     public function setOrder(PiggyBank $piggyBank, int $newOrder): bool;
-
-    public function setUser(null|Authenticatable|User $user): void;
-
-    public function setUserGroup(UserGroup $userGroup): void;
 
     /**
      * Store new piggy bank.

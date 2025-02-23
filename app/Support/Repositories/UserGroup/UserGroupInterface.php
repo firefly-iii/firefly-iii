@@ -1,8 +1,8 @@
 <?php
 
-/**
- * AccountTaskerInterface.php
- * Copyright (c) 2019 james@firefly-iii.org
+/*
+ * UserGroupInterface.php
+ * Copyright (c) 2025 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -17,23 +17,29 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
+
 declare(strict_types=1);
 
-namespace FireflyIII\Repositories\Account;
+namespace FireflyIII\Support\Repositories\UserGroup;
 
-use Carbon\Carbon;
-use Illuminate\Support\Collection;
+use FireflyIII\Enums\UserRoleEnum;
+use FireflyIII\Models\UserGroup;
+use FireflyIII\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 
-/**
- * Interface AccountTaskerInterface.
- */
-interface AccountTaskerInterface
+interface UserGroupInterface
 {
-    public function getAccountReport(Collection $accounts, Carbon $start, Carbon $end): array;
+    public function getUserGroup(): ?UserGroup;
 
-    public function getExpenseReport(Carbon $start, Carbon $end, Collection $accounts): array;
+    public function getUser(): ?User;
 
-    public function getIncomeReport(Carbon $start, Carbon $end, Collection $accounts): array;
+    public function checkUserGroupAccess(UserRoleEnum $role): bool;
+
+    public function setUserGroup(UserGroup $userGroup): void;
+
+    public function setUser(null|Authenticatable|User $user): void;
+
+    public function setUserGroupById(int $userGroupId): void;
 }

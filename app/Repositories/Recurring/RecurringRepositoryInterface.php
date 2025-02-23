@@ -29,8 +29,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Models\RecurrenceTransaction;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
@@ -136,8 +134,6 @@ interface RecurringRepositoryInterface
     public function repetitionDescription(RecurrenceRepetition $repetition): string;
 
     public function searchRecurrence(string $query, int $limit): Collection;
-
-    public function setUser(null|Authenticatable|User $user): void;
 
     /**
      * Store a new recurring transaction.

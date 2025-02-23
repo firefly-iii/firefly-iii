@@ -27,8 +27,6 @@ use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\RuleTrigger;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
@@ -83,8 +81,6 @@ interface RuleRepositoryInterface
     public function searchRule(string $query, int $limit): Collection;
 
     public function setOrder(Rule $rule, int $newOrder): void;
-
-    public function setUser(null|Authenticatable|User $user): void;
 
     public function store(array $data): Rule;
 

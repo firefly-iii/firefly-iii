@@ -28,8 +28,6 @@ use Carbon\Carbon;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
@@ -67,8 +65,6 @@ interface BudgetLimitRepositoryInterface
     public function getNoteText(BudgetLimit $budgetLimit): string;
 
     public function setNoteText(BudgetLimit $budgetLimit, string $text): void;
-
-    public function setUser(null|Authenticatable|User $user): void;
 
     public function store(array $data): BudgetLimit;
 

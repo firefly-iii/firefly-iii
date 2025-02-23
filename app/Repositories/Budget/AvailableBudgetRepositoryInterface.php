@@ -27,8 +27,6 @@ namespace FireflyIII\Repositories\Budget;
 use Carbon\Carbon;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
@@ -85,8 +83,6 @@ interface AvailableBudgetRepositoryInterface
      * @deprecated
      */
     public function setAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end, string $amount): AvailableBudget;
-
-    public function setUser(null|Authenticatable|User $user): void;
 
     public function store(array $data): ?AvailableBudget;
 

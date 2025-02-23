@@ -40,9 +40,14 @@ trait UserGroupTrait
     protected ?User      $user      = null;
     protected ?UserGroup $userGroup = null;
 
-    public function getUserGroup(): UserGroup
+    public function getUserGroup(): ?UserGroup
     {
         return $this->userGroup;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
     }
 
     public function checkUserGroupAccess(UserRoleEnum $role): bool

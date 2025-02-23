@@ -25,8 +25,6 @@ namespace FireflyIII\Repositories\Attachment;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Attachment;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
@@ -46,8 +44,6 @@ interface AttachmentRepositoryInterface
      * Get attachment note text or empty string.
      */
     public function getNoteText(Attachment $attachment): ?string;
-
-    public function setUser(null|Authenticatable|User $user): void;
 
     /**
      * @throws FireflyException

@@ -26,8 +26,6 @@ namespace FireflyIII\Repositories\LinkType;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
@@ -71,8 +69,6 @@ interface LinkTypeRepositoryInterface
      * Return list of existing connections.
      */
     public function getLinks(TransactionJournal $journal): Collection;
-
-    public function setUser(null|Authenticatable|User $user): void;
 
     public function store(array $data): LinkType;
 

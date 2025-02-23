@@ -27,8 +27,6 @@ namespace FireflyIII\Repositories\Budget;
 use Carbon\Carbon;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
@@ -53,8 +51,6 @@ interface OperationsRepositoryInterface
      * as possible. Amounts are always negative.
      */
     public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $budgets = null): array;
-
-    public function setUser(null|Authenticatable|User $user): void;
 
     /**
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")

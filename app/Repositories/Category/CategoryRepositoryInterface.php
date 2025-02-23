@@ -26,9 +26,6 @@ namespace FireflyIII\Repositories\Category;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Category;
-use FireflyIII\Models\UserGroup;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
@@ -86,10 +83,6 @@ interface CategoryRepositoryInterface
     public function removeNotes(Category $category): void;
 
     public function searchCategory(string $query, int $limit): Collection;
-
-    public function setUser(null|Authenticatable|User $user): void;
-
-    public function setUserGroup(UserGroup $userGroup): void;
 
     /**
      * @throws FireflyException

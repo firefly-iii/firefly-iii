@@ -26,9 +26,6 @@ namespace FireflyIII\Repositories\Bill;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Bill;
-use FireflyIII\Models\UserGroup;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
@@ -40,8 +37,6 @@ interface BillRepositoryInterface
     public function billEndsWith(string $query, int $limit): Collection;
 
     public function billStartsWith(string $query, int $limit): Collection;
-
-    public function setUserGroup(UserGroup $userGroup): void;
 
     /**
      * Add correct order to bills.
@@ -140,8 +135,6 @@ interface BillRepositoryInterface
      * Set specific piggy bank to specific order.
      */
     public function setOrder(Bill $bill, int $order): void;
-
-    public function setUser(null|Authenticatable|User $user): void;
 
     /**
      * @throws FireflyException

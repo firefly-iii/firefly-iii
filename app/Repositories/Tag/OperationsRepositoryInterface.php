@@ -25,8 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Tag;
 
 use Carbon\Carbon;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
@@ -47,8 +45,6 @@ interface OperationsRepositoryInterface
      * as possible. Amounts are always positive.
      */
     public function listIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $tags = null): array;
-
-    public function setUser(null|Authenticatable|User $user): void;
 
     /**
      * Sum of withdrawal journals in period for a set of tags, grouped per currency. Amounts are always negative.

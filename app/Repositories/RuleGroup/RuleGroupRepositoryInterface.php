@@ -24,8 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\RuleGroup;
 
 use FireflyIII\Models\RuleGroup;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
@@ -87,8 +85,6 @@ interface RuleGroupRepositoryInterface
     public function searchRuleGroup(string $query, int $limit): Collection;
 
     public function setOrder(RuleGroup $ruleGroup, int $newOrder): void;
-
-    public function setUser(null|Authenticatable|User $user): void;
 
     public function store(array $data): RuleGroup;
 

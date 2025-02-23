@@ -26,8 +26,6 @@ namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
@@ -48,8 +46,6 @@ interface OperationsRepositoryInterface
      * as possible. Amounts are always positive.
      */
     public function listIncome(Carbon $start, Carbon $end, ?Collection $accounts = null): array;
-
-    public function setUser(null|Authenticatable|User $user): void;
 
     /**
      * Sum of withdrawal journals in period for a set of accounts, grouped per currency. Amounts are always negative.

@@ -26,8 +26,6 @@ namespace FireflyIII\Repositories\Journal;
 
 use Carbon\Carbon;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
@@ -80,6 +78,4 @@ interface JournalCLIRepositoryInterface
      * Return all tags as strings in an array.
      */
     public function getTags(TransactionJournal $journal): array;
-
-    public function setUser(null|Authenticatable|User $user): void;
 }

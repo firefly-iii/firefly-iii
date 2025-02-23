@@ -29,8 +29,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
@@ -97,8 +95,6 @@ interface JournalRepositoryInterface
      * Search in journal descriptions.
      */
     public function searchJournalDescriptions(string $search, int $limit): Collection;
-
-    public function setUser(null|Authenticatable|User $user): void;
 
     /**
      * TODO Maybe to account repository? Do this wen reconcile is API only.

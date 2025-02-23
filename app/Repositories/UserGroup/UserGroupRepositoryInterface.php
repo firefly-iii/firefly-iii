@@ -25,8 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\UserGroup;
 
 use FireflyIII\Models\UserGroup;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
@@ -43,8 +41,6 @@ interface UserGroupRepositoryInterface
     public function getById(int $id): ?UserGroup;
 
     public function getMembershipsFromGroupId(int $groupId): Collection;
-
-    public function setUser(null|Authenticatable|User $user): void;
 
     public function store(array $data): UserGroup;
 
