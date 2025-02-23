@@ -28,15 +28,17 @@ use Carbon\Carbon;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\CacheProperties;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
 
 /**
  * Class JournalCLIRepository
  */
-class JournalCLIRepository implements JournalCLIRepositoryInterface
+class JournalCLIRepository implements JournalCLIRepositoryInterface, UserGroupInterface
 {
+    use UserGroupTrait;
+
     /**
      * Get all transaction journals with a specific type, regardless of user.
      */
@@ -200,10 +202,5 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
     public function getTags(TransactionJournal $journal): array
     {
         return $journal->tags()->get()->pluck('tag')->toArray();
-    }
-
-    public function setUser(null|Authenticatable|User $user): void
-    {
-        // empty
     }
 }

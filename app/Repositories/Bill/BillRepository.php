@@ -38,6 +38,7 @@ use FireflyIII\Services\Internal\Destroy\BillDestroyService;
 use FireflyIII\Services\Internal\Update\BillUpdateService;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -48,7 +49,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class BillRepository.
  */
-class BillRepository implements BillRepositoryInterface
+class BillRepository implements BillRepositoryInterface, UserGroupInterface
 {
     use CreatesObjectGroups;
     use UserGroupTrait;

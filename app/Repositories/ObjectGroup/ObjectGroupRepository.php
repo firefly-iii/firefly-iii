@@ -26,16 +26,16 @@ namespace FireflyIII\Repositories\ObjectGroup;
 
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\PiggyBank;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
 
 /**
  * Class ObjectGroupRepository
  */
-class ObjectGroupRepository implements ObjectGroupRepositoryInterface
+class ObjectGroupRepository implements ObjectGroupRepositoryInterface, UserGroupInterface
 {
-    private User $user;
+    use UserGroupTrait;
 
     public function deleteAll(): void
     {
@@ -125,13 +125,6 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
         }
 
         return $dbQuery->take($limit)->get(['object_groups.*']);
-    }
-
-    public function setUser(null|Authenticatable|User $user): void
-    {
-        if ($user instanceof User) {
-            $this->user = $user;
-        }
     }
 
     public function update(ObjectGroup $objectGroup, array $data): ObjectGroup

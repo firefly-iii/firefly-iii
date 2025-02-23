@@ -703,8 +703,8 @@ class JournalUpdateService
         // find currency in data array
         $newForeignId    = $this->data['foreign_currency_id'] ?? null;
         $newForeignCode  = $this->data['foreign_currency_code'] ?? null;
-        $foreignCurrency = $this->currencyRepository->findCurrencyNull($newForeignId, $newForeignCode) ??
-                           $foreignCurrency;
+        $foreignCurrency = $this->currencyRepository->findCurrencyNull($newForeignId, $newForeignCode)
+                           ?? $foreignCurrency;
 
         // not the same as normal currency
         if (null !== $foreignCurrency && $foreignCurrency->id === $this->transactionJournal->transaction_currency_id) {

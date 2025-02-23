@@ -28,8 +28,8 @@ use FireflyIII\Factory\AttachmentFactory;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Note;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
@@ -38,10 +38,9 @@ use League\Flysystem\UnableToDeleteFile;
 /**
  * Class AttachmentRepository.
  */
-class AttachmentRepository implements AttachmentRepositoryInterface
+class AttachmentRepository implements AttachmentRepositoryInterface, UserGroupInterface
 {
-    /** @var User */
-    private $user;
+    use UserGroupTrait;
 
     /**
      * @throws \Exception
@@ -124,13 +123,6 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         }
 
         return $result;
-    }
-
-    public function setUser(null|Authenticatable|User $user): void
-    {
-        if ($user instanceof User) {
-            $this->user = $user;
-        }
     }
 
     public function update(Attachment $attachment, array $data): Attachment

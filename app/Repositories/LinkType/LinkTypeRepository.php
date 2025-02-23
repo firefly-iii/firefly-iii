@@ -28,16 +28,16 @@ use FireflyIII\Models\LinkType;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
 
 /**
  * Class LinkTypeRepository.
  */
-class LinkTypeRepository implements LinkTypeRepositoryInterface
+class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterface
 {
-    private User $user;
+    use UserGroupTrait;
 
     public function countJournals(LinkType $linkType): int
     {
@@ -155,13 +155,6 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
                 return null !== $link->source && null !== $link->destination;
             }
         );
-    }
-
-    public function setUser(null|Authenticatable|User $user): void
-    {
-        if ($user instanceof User) {
-            $this->user = $user;
-        }
     }
 
     public function store(array $data): LinkType

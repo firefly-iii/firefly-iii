@@ -28,8 +28,8 @@ use Carbon\Carbon;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\Facades\Amount;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -37,9 +37,9 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class AvailableBudgetRepository
  */
-class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
+class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, UserGroupInterface
 {
-    private User $user;
+    use UserGroupTrait;
 
     public function cleanup(): void
     {
@@ -228,13 +228,6 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
         $availableBudget->save();
 
         return $availableBudget;
-    }
-
-    public function setUser(null|Authenticatable|User $user): void
-    {
-        if ($user instanceof User) {
-            $this->user = $user;
-        }
     }
 
     public function store(array $data): ?AvailableBudget

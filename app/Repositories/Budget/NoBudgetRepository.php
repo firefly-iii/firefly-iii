@@ -29,17 +29,16 @@ use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\Report\Summarizer\TransactionSummarizer;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
 
 /**
  * Class NoBudgetRepository
  */
-class NoBudgetRepository implements NoBudgetRepositoryInterface
+class NoBudgetRepository implements NoBudgetRepositoryInterface, UserGroupInterface
 {
-    /** @var User */
-    private $user;
+    use UserGroupTrait;
 
     public function getNoBudgetPeriodReport(Collection $accounts, Carbon $start, Carbon $end): array
     {
@@ -78,13 +77,6 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
         }
 
         return $data;
-    }
-
-    public function setUser(null|Authenticatable|User $user): void
-    {
-        if ($user instanceof User) {
-            $this->user = $user;
-        }
     }
 
     public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?TransactionCurrency $currency = null): array

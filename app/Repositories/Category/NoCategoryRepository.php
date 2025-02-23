@@ -28,16 +28,16 @@ use Carbon\Carbon;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Support\Report\Summarizer\TransactionSummarizer;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
 
 /**
  * Class NoCategoryRepository
  */
-class NoCategoryRepository implements NoCategoryRepositoryInterface
+class NoCategoryRepository implements NoCategoryRepositoryInterface, UserGroupInterface
 {
-    private User $user;
+    use UserGroupTrait;
 
     /**
      * This method returns a list of all the withdrawal transaction journals (as arrays) set in that period
@@ -77,19 +77,12 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface
             $journalId  = (int) $journal['transaction_journal_id'];
             $array[$currencyId]['categories'][0]['transaction_journals'][$journalId]
                         = [
-                            'amount' => app('steam')->negative($journal['amount']),
-                            'date'   => $journal['date'],
-                        ];
+                           'amount' => app('steam')->negative($journal['amount']),
+                           'date'   => $journal['date'],
+                       ];
         }
 
         return $array;
-    }
-
-    public function setUser(null|Authenticatable|User $user): void
-    {
-        if ($user instanceof User) {
-            $this->user = $user;
-        }
     }
 
     /**
@@ -130,9 +123,9 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface
             $journalId  = (int) $journal['transaction_journal_id'];
             $array[$currencyId]['categories'][0]['transaction_journals'][$journalId]
                         = [
-                            'amount' => app('steam')->positive($journal['amount']),
-                            'date'   => $journal['date'],
-                        ];
+                           'amount' => app('steam')->positive($journal['amount']),
+                           'date'   => $journal['date'],
+                       ];
         }
 
         return $array;

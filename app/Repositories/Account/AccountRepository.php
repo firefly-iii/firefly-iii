@@ -33,24 +33,23 @@ use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Location;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Services\Internal\Destroy\AccountDestroyService;
 use FireflyIII\Services\Internal\Update\AccountUpdateService;
 use FireflyIII\Support\Facades\Steam;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class AccountRepository.
  */
-class AccountRepository implements AccountRepositoryInterface
+class AccountRepository implements AccountRepositoryInterface, UserGroupInterface
 {
     use UserGroupTrait;
 
@@ -210,8 +209,8 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $set  = $account->attachments()->get();
 
-        /** @var \Storage $disk */
-        $disk = \Storage::disk('upload');
+        /** @var Storage $disk */
+        $disk = Storage::disk('upload');
 
         return $set->each(
             static function (Attachment $attachment) use ($disk) { // @phpstan-ignore-line
@@ -237,13 +236,6 @@ class AccountRepository implements AccountRepositoryInterface
         $factory->setUser($this->user);
 
         return $factory->findOrCreate('Cash account', $type->type);
-    }
-
-    public function setUser(null|Authenticatable|User $user): void
-    {
-        if ($user instanceof User) {
-            $this->user = $user;
-        }
     }
 
     public function getCreditTransactionGroup(Account $account): ?TransactionGroup

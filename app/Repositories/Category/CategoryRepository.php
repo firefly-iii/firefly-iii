@@ -33,16 +33,15 @@ use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Services\Internal\Destroy\CategoryDestroyService;
 use FireflyIII\Services\Internal\Update\CategoryUpdateService;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
 /**
  * Class CategoryRepository.
  */
-class CategoryRepository implements CategoryRepositoryInterface
+class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterface
 {
     use UserGroupTrait;
 
@@ -166,13 +165,6 @@ class CategoryRepository implements CategoryRepositoryInterface
         }
 
         return $category;
-    }
-
-    public function setUser(null|Authenticatable|User $user): void
-    {
-        if ($user instanceof User) {
-            $this->user = $user;
-        }
     }
 
     public function removeNotes(Category $category): void

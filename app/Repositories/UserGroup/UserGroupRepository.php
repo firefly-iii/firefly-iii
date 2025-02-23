@@ -31,16 +31,17 @@ use FireflyIII\Models\GroupMembership;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Models\UserRole;
 use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
  * Class UserGroupRepository
  */
-class UserGroupRepository implements UserGroupRepositoryInterface
+class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInterface
 {
-    private User $user;
+    use UserGroupTrait;
 
     public function destroy(UserGroup $userGroup): void
     {
@@ -185,14 +186,6 @@ class UserGroupRepository implements UserGroupRepositoryInterface
     public function getMembershipsFromGroupId(int $groupId): Collection
     {
         return $this->user->groupMemberships()->where('user_group_id', $groupId)->get();
-    }
-
-    public function setUser(null|Authenticatable|User $user): void
-    {
-        app('log')->debug(sprintf('Now in %s', __METHOD__));
-        if ($user instanceof User) {
-            $this->user = $user;
-        }
     }
 
     public function update(UserGroup $userGroup, array $data): UserGroup

@@ -41,6 +41,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\BudgetDestroyService;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
@@ -49,7 +50,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class BudgetRepository.
  */
-class BudgetRepository implements BudgetRepositoryInterface
+class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
 {
     use UserGroupTrait;
 

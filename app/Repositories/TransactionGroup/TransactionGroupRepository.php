@@ -43,6 +43,7 @@ use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
 use FireflyIII\Services\Internal\Update\GroupUpdateService;
 use FireflyIII\Support\NullArrayObject;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -50,7 +51,7 @@ use Illuminate\Support\Collection;
 /**
  * Class TransactionGroupRepository
  */
-class TransactionGroupRepository implements TransactionGroupRepositoryInterface
+class TransactionGroupRepository implements TransactionGroupRepositoryInterface, UserGroupInterface
 {
     use UserGroupTrait;
 
