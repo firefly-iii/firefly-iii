@@ -50,6 +50,32 @@ use Tests\unit\Support\Calendar\Periodicity\YearlyTest;
  */
 final class CalculatorTest extends TestCase
 {
+    private static function convert(Periodicity $periodicity, array $intervals): array
+    {
+        $periodicityIntervals = [];
+
+        /** @var IntervalProvider $interval */
+        foreach ($intervals as $index => $interval) {
+            $calculator                                             = CalculatorProvider::from($periodicity, $interval);
+
+            $periodicityIntervals["#{$index} {$calculator->label}"] = [$calculator];
+        }
+
+        return $periodicityIntervals;
+    }
+
+    /**
+     * @dataProvider provideAllPeriodicity
+     *
+     * @throws IntervalException
+     */
+    public function testGivenADailyPeriodicityWhenCallTheNextDateByIntervalMethodThenReturnsTheExpectedDateSuccessful(CalculatorProvider $provider): void
+    {
+        $calculator = new Calculator();
+        $period     = $calculator->nextDateByInterval($provider->epoch(), $provider->periodicity);
+        self::assertSame($provider->expected()->toDateString(), $period->toDateString());
+    }
+
     public static function provideAllPeriodicity(): iterable
     {
         $intervals = [];
@@ -68,37 +94,6 @@ final class CalculatorTest extends TestCase
         }
     }
 
-    private static function convert(Periodicity $periodicity, array $intervals): array
-    {
-        $periodicityIntervals = [];
-
-        /** @var IntervalProvider $interval */
-        foreach ($intervals as $index => $interval) {
-            $calculator                                             = CalculatorProvider::from($periodicity, $interval);
-
-            $periodicityIntervals["#{$index} {$calculator->label}"] = [$calculator];
-        }
-
-        return $periodicityIntervals;
-    }
-
-    public static function provideSkippedIntervals(): iterable
-    {
-        return CalculatorProvider::providePeriodicityWithSkippedIntervals();
-    }
-
-    /**
-     * @dataProvider provideAllPeriodicity
-     *
-     * @throws IntervalException
-     */
-    public function testGivenADailyPeriodicityWhenCallTheNextDateByIntervalMethodThenReturnsTheExpectedDateSuccessful(CalculatorProvider $provider): void
-    {
-        $calculator = new Calculator();
-        $period     = $calculator->nextDateByInterval($provider->epoch(), $provider->periodicity);
-        self::assertSame($provider->expected()->toDateString(), $period->toDateString());
-    }
-
     /**
      * @dataProvider provideSkippedIntervals
      *
@@ -109,5 +104,10 @@ final class CalculatorTest extends TestCase
         $calculator = new Calculator();
         $period     = $calculator->nextDateByInterval($provider->epoch(), $provider->periodicity, $provider->skip);
         self::assertSame($provider->expected()->toDateString(), $period->toDateString());
+    }
+
+    public static function provideSkippedIntervals(): iterable
+    {
+        return CalculatorProvider::providePeriodicityWithSkippedIntervals();
     }
 }

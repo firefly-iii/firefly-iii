@@ -47,6 +47,15 @@ final class NavigationPreferredRangeFormatTest extends TestCase
         $this->navigation = new Navigation();
     }
 
+    /**
+     * @dataProvider providePeriods
+     */
+    public function testGivenStartAndEndDatesWhenCallPreferredRangeFormatThenReturnsTheExpectedFormatSuccessful(Carbon $start, Carbon $end, string $expected): void
+    {
+        $formatPeriod = $this->navigation->preferredRangeFormat($start, $end);
+        self::assertSame($expected, $formatPeriod);
+    }
+
     public static function providePeriods(): iterable
     {
         return [
@@ -63,14 +72,5 @@ final class NavigationPreferredRangeFormatTest extends TestCase
             '1 year'    => ['start' => Carbon::now(), 'end' => Carbon::now()->addYear(), 'expected' => '1M'],
             '2 years'   => ['start' => Carbon::now(), 'end' => Carbon::now()->addYears(2), 'expected' => '1Y'],
         ];
-    }
-
-    /**
-     * @dataProvider providePeriods
-     */
-    public function testGivenStartAndEndDatesWhenCallPreferredRangeFormatThenReturnsTheExpectedFormatSuccessful(Carbon $start, Carbon $end, string $expected): void
-    {
-        $formatPeriod = $this->navigation->preferredRangeFormat($start, $end);
-        self::assertSame($expected, $formatPeriod);
     }
 }

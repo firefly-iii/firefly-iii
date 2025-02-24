@@ -45,6 +45,17 @@ final class BillDateCalculatorTest extends TestCase
         $this->calculator = new BillDateCalculator();
     }
 
+    /**
+     * Stupid long method names I'm not going to do that.
+     *
+     * @dataProvider provideDates
+     */
+    public function testGivenSomeDataItWorks(Carbon $earliest, Carbon $latest, Carbon $billStart, string $period, int $skip, ?Carbon $lastPaid, array $expected): void
+    {
+        $result = $this->calculator->getPayDates($earliest, $latest, $billStart, $period, $skip, $lastPaid);
+        self::assertSame($expected, $result);
+    }
+
     public static function provideDates(): iterable
     {
         // Carbon $earliest, Carbon $latest, Carbon $billStart, string $period, int $skip, ?Carbon $lastPaid
@@ -65,16 +76,5 @@ final class BillDateCalculatorTest extends TestCase
             // yearly not due this month. Should jump to next year.
             '1Ya' => ['earliest' => Carbon::parse('2023-11-01'), 'latest' => Carbon::parse('2023-11-30'), 'billStart' => Carbon::parse('2021-05-01'), 'period' => 'yearly', 'skip' => 0, 'lastPaid' => Carbon::parse('2023-05-02'), 'expected' => ['2024-05-01']],
         ];
-    }
-
-    /**
-     * Stupid long method names I'm not going to do that.
-     *
-     * @dataProvider provideDates
-     */
-    public function testGivenSomeDataItWorks(Carbon $earliest, Carbon $latest, Carbon $billStart, string $period, int $skip, ?Carbon $lastPaid, array $expected): void
-    {
-        $result = $this->calculator->getPayDates($earliest, $latest, $billStart, $period, $skip, $lastPaid);
-        self::assertSame($expected, $result);
     }
 }

@@ -47,6 +47,15 @@ final class NavigationPreferredSqlFormatTest extends TestCase
         $this->navigation = new Navigation();
     }
 
+    /**
+     * @dataProvider provideDates
+     */
+    public function testGivenStartAndEndDatesWhenCallPreferredSqlFormatThenReturnsTheExpectedFormatSuccessful(Carbon $start, Carbon $end, string $expected): void
+    {
+        $formatPeriod = $this->navigation->preferredSqlFormat($start, $end);
+        self::assertSame($expected, $formatPeriod);
+    }
+
     public static function provideDates(): iterable
     {
         return [
@@ -63,14 +72,5 @@ final class NavigationPreferredSqlFormatTest extends TestCase
             '1 year'    => ['start' => Carbon::now(), 'end' => Carbon::now()->addYear(), 'expected' => '%Y-%m'],
             '2 years'   => ['start' => Carbon::now(), 'end' => Carbon::now()->addYears(2), 'expected' => '%Y'],
         ];
-    }
-
-    /**
-     * @dataProvider provideDates
-     */
-    public function testGivenStartAndEndDatesWhenCallPreferredSqlFormatThenReturnsTheExpectedFormatSuccessful(Carbon $start, Carbon $end, string $expected): void
-    {
-        $formatPeriod = $this->navigation->preferredSqlFormat($start, $end);
-        self::assertSame($expected, $formatPeriod);
     }
 }

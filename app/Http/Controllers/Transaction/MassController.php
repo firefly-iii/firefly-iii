@@ -141,8 +141,8 @@ class MassController extends Controller
         // reverse amounts
         foreach ($journals as $index => $journal) {
             $journals[$index]['amount']         = app('steam')->bcround(app('steam')->positive($journal['amount']), $journal['currency_decimal_places']);
-            $journals[$index]['foreign_amount'] = null === $journal['foreign_amount'] ?
-                null : app('steam')->positive($journal['foreign_amount']);
+            $journals[$index]['foreign_amount'] = null === $journal['foreign_amount']
+                ? null : app('steam')->positive($journal['foreign_amount']);
         }
 
         $this->rememberPreviousUrl('transactions.mass-edit.url');

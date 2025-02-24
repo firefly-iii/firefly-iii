@@ -47,6 +47,15 @@ final class NavigationPreferredEndOfPeriodTest extends TestCase
         $this->navigation = new Navigation();
     }
 
+    /**
+     * @dataProvider providePeriods
+     */
+    public function testGivenStartAndEndDatesWhenCallPreferredEndOfPeriodThenReturnsTheExpectedFormatSuccessful(Carbon $start, Carbon $end, string $expected): void
+    {
+        $formatPeriod = $this->navigation->preferredEndOfPeriod($start, $end);
+        self::assertSame($expected, $formatPeriod);
+    }
+
     public static function providePeriods(): iterable
     {
         return [
@@ -63,14 +72,5 @@ final class NavigationPreferredEndOfPeriodTest extends TestCase
             '1 year'    => ['start' => Carbon::now(), 'end' => Carbon::now()->addYear(), 'expected' => 'endOfMonth'],
             '2 years'   => ['start' => Carbon::now(), 'end' => Carbon::now()->addYears(2), 'expected' => 'endOfYear'],
         ];
-    }
-
-    /**
-     * @dataProvider providePeriods
-     */
-    public function testGivenStartAndEndDatesWhenCallPreferredEndOfPeriodThenReturnsTheExpectedFormatSuccessful(Carbon $start, Carbon $end, string $expected): void
-    {
-        $formatPeriod = $this->navigation->preferredEndOfPeriod($start, $end);
-        self::assertSame($expected, $formatPeriod);
     }
 }

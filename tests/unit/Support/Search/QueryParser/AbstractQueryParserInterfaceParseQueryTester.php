@@ -15,6 +15,20 @@ abstract class AbstractQueryParserInterfaceParseQueryTester extends TestCase
 {
     abstract protected function createParser(): QueryParserInterface;
 
+    /**
+     * @dataProvider queryDataProvider
+     *
+     * @param string $query    The query string to parse
+     * @param Node   $expected The expected parse result
+     */
+    public function testQueryParsing(string $query, Node $expected): void
+    {
+        $actual = $this->createParser()->parse($query);
+
+        self::assertObjectEquals($expected, $actual);
+
+    }
+
     public static function queryDataProvider(): iterable
     {
         return [
@@ -180,19 +194,5 @@ abstract class AbstractQueryParserInterfaceParseQueryTester extends TestCase
                 ]),
             ],
         ];
-    }
-
-    /**
-     * @dataProvider queryDataProvider
-     *
-     * @param string $query    The query string to parse
-     * @param Node   $expected The expected parse result
-     */
-    public function testQueryParsing(string $query, Node $expected): void
-    {
-        $actual = $this->createParser()->parse($query);
-
-        self::assertObjectEquals($expected, $actual);
-
     }
 }

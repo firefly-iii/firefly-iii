@@ -1,8 +1,8 @@
 {
     "firefly": {
-        "administrations_page_title": "Financial administrations",
-        "administrations_index_menu": "Financial administrations",
-        "temp_administrations_introduction": "Firefly III will soon get the ability to manage multiple financial administrations. Right now, you only have the one. You can set the title of this administration and its native currency. This replaces the previous setting where you would set your \"default currency\". This setting is now tied to the financial administration and can be different per administration.",
+        "administrations_page_title": "\u8d22\u52a1\u7ba1\u7406",
+        "administrations_index_menu": "\u8d22\u52a1\u7ba1\u7406",
+        "temp_administrations_introduction": "Firefly III \u4e0d\u4e45\u5c06\u80fd\u591f\u7ba1\u7406\u591a\u4e2a\u8d22\u52a1\u7ba1\u7406\u3002 \u73b0\u5728\uff0c\u4f60\u53ea\u80fd\u6709\u4e00\u4e2a\u8d22\u52a1\u7ba1\u7406\u3002\u4f60\u53ef\u4ee5\u8bbe\u7f6e\u8fd9\u4e2a\u8d22\u52a1\u7ba1\u7406\u7684\u6807\u9898\u53ca\u5176\u5f53\u5730\u8d27\u5e01\u3002 \u8fd9\u5c06\u53d6\u4ee3\u60a8\u5148\u524d\u8bbe\u7f6e\u7684\u201c\u9ed8\u8ba4\u8d27\u5e01\u201d\u3002 \u8fd9\u79cd\u8bbe\u7f6e\u73b0\u5728\u4e0e\u8d22\u52a1\u7ba1\u7406\u6302\u94a9\uff0c\u6bcf\u4e2a\u7ba1\u7406\u53ef\u4ee5\u6709\u4e0d\u540c\u7684\u8bbe\u7f6e\u3002",
         "administration_currency_form_help": "It may take a long time for the page to load if you change the native currency because transaction may need to be converted to your (new) native currency.",
         "administrations_page_edit_sub_title_js": "Edit financial administration \"{title}\"",
         "table": "\u8868\u683c",
@@ -19,7 +19,7 @@
         "split": "\u62c6\u5206",
         "single_split": "\u62c6\u5206",
         "not_enough_currencies": "Not enough currencies",
-        "not_enough_currencies_enabled": "If you have just one currency enabled, there is no need to add exchange rates.",
+        "not_enough_currencies_enabled": "\u5982\u679c\u60a8\u53ea\u542f\u7528\u4e86\u4e00\u79cd\u8d27\u5e01\uff0c\u5c31\u4e0d\u9700\u8981\u6dfb\u52a0\u6c47\u7387\u3002",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">\u4ea4\u6613 #{ID} (\u201c{title}\u201d)<\/a> \u5df2\u4fdd\u5b58\u3002",
         "webhook_stored_link": "<a href=\"webhooks\/show\/{ID}\">\u63a8\u9001 #{ID} (\"{title}\")<\/a> \u5df2\u4fdd\u5b58.",
         "webhook_updated_link": "<a href=\"webhooks\/show\/{ID}\">\u63a8\u9001 #{ID}<\/a> (\"{title}\") \u5df2\u66f4\u65b0.",
@@ -45,7 +45,7 @@
         "is_reconciled_fields_dropped": "Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s) unless you remove the reconciliation flag.",
         "tags": "\u6807\u7b7e",
         "no_budget": "(\u65e0\u9884\u7b97)",
-        "no_bill": "(no subscription)",
+        "no_bill": "(\u65e0\u8ba2\u9605)",
         "category": "\u5206\u7c7b",
         "attachments": "\u9644\u4ef6",
         "notes": "\u5907\u6ce8",
@@ -146,8 +146,8 @@
         "header_exchange_rates_rates": "\u6c47\u7387",
         "header_exchange_rates_table": "Table with exchange rates",
         "help_rate_form": "On this day, how many {to} will you get for one {from}?",
-        "add_new_rate": "Add a new exchange rate",
-        "save_new_rate": "Save new rate"
+        "add_new_rate": "\u6dfb\u52a0\u65b0\u6c47\u7387",
+        "save_new_rate": "\u4fdd\u5b58\u65b0\u6c47\u7387"
     },
     "form": {
         "url": "\u7f51\u5740",
@@ -182,6 +182,6 @@
     },
     "config": {
         "html_language": "zh-cn",
-        "date_time_fns": "YYYY\u5e74M\u6708D\u65e5 HH:mm:ss"
+        "date_time_fns": "yyyy\u5e74M\u6708d\u65e5 HH:mm:ss"
     }
 }

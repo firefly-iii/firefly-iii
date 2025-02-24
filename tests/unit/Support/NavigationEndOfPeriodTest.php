@@ -47,6 +47,15 @@ final class NavigationEndOfPeriodTest extends TestCase
         $this->navigation = new Navigation();
     }
 
+    /**
+     * @dataProvider        provideDates
+     */
+    public function testGivenADateAndFrequencyWhenCalculateTheDateThenReturnsTheExpectedDateSuccessful(string $frequency, Carbon $from, Carbon $expected): void
+    {
+        $period = clone $this->navigation->endOfPeriod($from, $frequency);
+        self::assertSame($expected->toDateString(), $period->toDateString());
+    }
+
     public static function provideDates(): iterable
     {
         return [
@@ -78,24 +87,6 @@ final class NavigationEndOfPeriodTest extends TestCase
         ];
     }
 
-    public static function provideUnknownFrequencies(): iterable
-    {
-        return [
-            '1day'    => ['frequency' => '1day', 'from' => Carbon::now(), 'expected' => Carbon::now()],
-            'unknown' => ['frequency' => 'unknown', 'from' => Carbon::now(), 'expected' => Carbon::now()->startOfDay()],
-            'empty'   => ['frequency' => '', 'from' => Carbon::now(), 'expected' => Carbon::now()->startOfDay()],
-        ];
-    }
-
-    /**
-     * @dataProvider        provideDates
-     */
-    public function testGivenADateAndFrequencyWhenCalculateTheDateThenReturnsTheExpectedDateSuccessful(string $frequency, Carbon $from, Carbon $expected): void
-    {
-        $period = clone $this->navigation->endOfPeriod($from, $frequency);
-        self::assertSame($expected->toDateString(), $period->toDateString());
-    }
-
     /**
      * @dataProvider provideUnknownFrequencies
      */
@@ -108,5 +99,14 @@ final class NavigationEndOfPeriodTest extends TestCase
         $expectedMessage = sprintf('Cannot do endOfPeriod for $repeat_freq "%s"', $frequency);
 
         Log::shouldHaveReceived('error', [$expectedMessage]);
+    }
+
+    public static function provideUnknownFrequencies(): iterable
+    {
+        return [
+            '1day'    => ['frequency' => '1day', 'from' => Carbon::now(), 'expected' => Carbon::now()],
+            'unknown' => ['frequency' => 'unknown', 'from' => Carbon::now(), 'expected' => Carbon::now()->startOfDay()],
+            'empty'   => ['frequency' => '', 'from' => Carbon::now(), 'expected' => Carbon::now()->startOfDay()],
+        ];
     }
 }

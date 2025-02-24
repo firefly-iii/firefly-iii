@@ -29,16 +29,6 @@ use Tests\integration\TestCase;
 
 abstract class IntervalTestCase extends TestCase
 {
-    public static function provider(): iterable
-    {
-        $intervals = static::provideIntervals();
-
-        /** @var IntervalProvider $interval */
-        foreach ($intervals as $interval) {
-            yield "{$interval->label}" => [$interval];
-        }
-    }
-
     abstract public static function provideIntervals(): array;
 
     /**
@@ -48,6 +38,16 @@ abstract class IntervalTestCase extends TestCase
     {
         $period = static::factory()->nextDate($provider->epoch);
         self::assertSame($provider->expected->toDateString(), $period->toDateString());
+    }
+
+    public static function provider(): iterable
+    {
+        $intervals = static::provideIntervals();
+
+        /** @var IntervalProvider $interval */
+        foreach ($intervals as $interval) {
+            yield "{$interval->label}" => [$interval];
+        }
     }
 
     abstract public static function factory(): Interval;
