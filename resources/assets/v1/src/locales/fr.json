@@ -45,7 +45,7 @@
         "is_reconciled_fields_dropped": "Comme cette op\u00e9ration est rapproch\u00e9e, vous ne pourrez pas modifier les comptes, ni le(s) montant(s) \u00e0 moins de retirer l'indicateur de r\u00e9conciliation.",
         "tags": "Tags",
         "no_budget": "(pas de budget)",
-        "no_bill": "(no subscription)",
+        "no_bill": "(aucun abonnement)",
         "category": "Cat\u00e9gorie",
         "attachments": "Pi\u00e8ces jointes",
         "notes": "Notes",
@@ -168,7 +168,7 @@
         "webhook_delivery": "Distribution",
         "from_currency_to_currency": "{from} &rarr; {to}",
         "to_currency_from_currency": "{to} &rarr; {from}",
-        "rate": "Rate"
+        "rate": "Taux"
     },
     "list": {
         "title": "Titre",
