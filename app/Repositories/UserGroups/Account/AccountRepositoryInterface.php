@@ -74,7 +74,6 @@ interface AccountRepositoryInterface
 
     public function getObjectGroups(Collection $accounts): array;
 
-    public function getUserGroup(): UserGroup;
 
     /**
      * Reset order types of the mentioned accounts.

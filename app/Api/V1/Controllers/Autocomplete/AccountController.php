@@ -85,7 +85,7 @@ class AccountController extends Controller
         $result = $this->repository->searchAccount((string) $query, $types, $this->parameters->get('limit'));
 
         // set date to subday + end-of-day for account balance. so it is at $date 23:59:59
-        $date->subDay()->endOfDay();
+        $date->endOfDay();
 
         /** @var Account $account */
         foreach ($result as $account) {
