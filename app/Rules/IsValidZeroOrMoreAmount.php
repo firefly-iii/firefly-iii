@@ -31,6 +31,14 @@ use Illuminate\Support\Facades\Log;
 
 class IsValidZeroOrMoreAmount implements ValidationRule
 {
+    private bool $nullable = false;
+
+    public function __construct(bool $nullable = false)
+    {
+        $this->nullable = $nullable;
+    }
+
+
     use ValidatesAmountsTrait;
 
     /**
@@ -38,6 +46,9 @@ class IsValidZeroOrMoreAmount implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
+        if (true === $this->nullable && null === $value) {
+            return;
+        }
         $value = (string) $value;
         // must not be empty:
         if ($this->emptyString($value)) {

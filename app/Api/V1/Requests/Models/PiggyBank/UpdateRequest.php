@@ -82,7 +82,7 @@ class UpdateRequest extends FormRequest
             'accounts'                  => 'required',
             'accounts.*'                => 'array|required',
             'accounts.*.account_id'     => ['required', 'numeric', 'belongsToUser:accounts,id'],
-            'accounts.*.current_amount' => ['numeric', new IsValidZeroOrMoreAmount()],
+            'accounts.*.current_amount' => ['numeric','nullable', new IsValidZeroOrMoreAmount(true)],
             'object_group_id'           => 'numeric|belongsToUser:object_groups,id',
             'object_group_title'        => ['min:1', 'max:255'],
             'transaction_currency_id'   => 'exists:transaction_currencies,id|nullable',
