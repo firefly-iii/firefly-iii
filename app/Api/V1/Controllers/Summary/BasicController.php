@@ -213,7 +213,7 @@ class BasicController extends Controller
                 'sub_title'               => '',
             ];
         }
-        if(0 === count($return)) {
+        if (0 === count($return)) {
             $currency = $this->nativeCurrency;
             // create objects for big array.
             $return[] = [
@@ -309,10 +309,10 @@ class BasicController extends Controller
         }
         app('log')->debug(sprintf('Done with getBillInformation("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d-')));
 
-        if(0 === count($return)) {
+        if (0 === count($return)) {
             $currency = $this->nativeCurrency;
-            unset($info);
-            unset($amount);
+            unset($info, $amount);
+
             $return[] = [
                 'key'                     => sprintf('bills-paid-in-%s', $currency->code),
                 'title'                   => trans('firefly.box_bill_paid_in_currency', ['currency' => $currency->symbol]),
@@ -387,9 +387,9 @@ class BasicController extends Controller
                 ),
             ];
         }
-        if(0 === count($return)) {
+        if (0 === count($return)) {
             $currency = $this->nativeCurrency;
-            $return[]        = [
+            $return[] = [
                 'key'                     => sprintf('left-to-spend-in-%s', $currency->code),
                 'title'                   => trans('firefly.box_left_to_spend_in_currency', ['currency' => $currency->symbol]),
                 'monetary_value'          => '0',
