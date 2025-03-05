@@ -60,6 +60,7 @@ class ActionExpressionLanguageProvider implements ExpressionFunctionProviderInte
 
             ExpressionFunction::fromPhp('substr'),
             ExpressionFunction::fromPhp('strlen'),
+            ExpressionFunction::fromPhp('strpos'),
         ];
     }
 }
