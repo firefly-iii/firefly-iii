@@ -65,6 +65,12 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         return true;
     }
 
+    #[\Override]
+    public function getAccountBalances(Account $account): Collection
+    {
+        return $account->accountBalances;
+    }
+
     /**
      * Find account with same name OR same IBAN or both, but not the same type or ID.
      */

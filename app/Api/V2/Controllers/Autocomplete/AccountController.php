@@ -69,7 +69,7 @@ class AccountController extends Controller
     public function accounts(AutocompleteRequest $request): JsonResponse
     {
         $params = $request->getParameters();
-        $result = $this->repository->searchAccount($params['query'], $params['account_types'], $params['page'], $params['size']);
+        $result = $this->repository->searchAccount($params['query'], $params['account_types'], $params['size']);
         $return = [];
 
         /** @var Account $account */

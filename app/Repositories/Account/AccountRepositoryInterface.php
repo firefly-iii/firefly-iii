@@ -52,6 +52,7 @@ interface AccountRepositoryInterface
      * Moved here from account CRUD.
      */
     public function count(array $types): int;
+    public function getAccountBalances(Account $account): Collection;
 
     /**
      * Moved here from account CRUD.
