@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V2\Controllers\Model\PiggyBank;
 
 use FireflyIII\Api\V2\Controllers\Controller;
-use FireflyIII\Repositories\UserGroups\PiggyBank\PiggyBankRepositoryInterface;
+use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\Transformers\V2\PiggyBankTransformer;
 use Illuminate\Http\JsonResponse;

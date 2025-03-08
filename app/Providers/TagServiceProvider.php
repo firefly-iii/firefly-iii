@@ -27,8 +27,6 @@ use FireflyIII\Repositories\Tag\OperationsRepository;
 use FireflyIII\Repositories\Tag\OperationsRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepository;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
-use FireflyIII\Repositories\UserGroups\Tag\TagRepository as UserGroupTagRepository;
-use FireflyIII\Repositories\UserGroups\Tag\TagRepositoryInterface as UserGroupTagRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -52,20 +50,6 @@ class TagServiceProvider extends ServiceProvider
             static function (Application $app) {
                 /** @var TagRepository $repository */
                 $repository = app(TagRepository::class);
-
-                if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
-                    $repository->setUser(auth()->user());
-                }
-
-                return $repository;
-            }
-        );
-
-        $this->app->bind(
-            UserGroupTagRepositoryInterface::class,
-            static function (Application $app) {
-                /** @var UserGroupTagRepository $repository */
-                $repository = app(UserGroupTagRepository::class);
 
                 if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
                     $repository->setUser(auth()->user());

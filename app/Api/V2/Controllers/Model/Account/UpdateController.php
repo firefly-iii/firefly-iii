@@ -27,7 +27,7 @@ namespace FireflyIII\Api\V2\Controllers\Model\Account;
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Model\Account\UpdateRequest;
 use FireflyIII\Models\Account;
-use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Transformers\V2\AccountTransformer;
 use Illuminate\Http\JsonResponse;
 

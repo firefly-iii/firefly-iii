@@ -27,7 +27,7 @@ namespace FireflyIII\Api\V2\Controllers\Autocomplete;
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Autocomplete\AutocompleteRequest;
 use FireflyIII\Models\Category;
-use FireflyIII\Repositories\UserGroups\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 
 /**

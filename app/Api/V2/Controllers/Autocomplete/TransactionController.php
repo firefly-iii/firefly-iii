@@ -27,7 +27,7 @@ namespace FireflyIII\Api\V2\Controllers\Autocomplete;
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Autocomplete\AutocompleteRequest;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\UserGroups\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 
 /**
