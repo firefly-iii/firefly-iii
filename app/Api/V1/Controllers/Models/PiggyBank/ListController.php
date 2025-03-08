@@ -84,7 +84,6 @@ class ListController extends Controller
         $admin       = auth()->user();
         $enrichment  = new AccountEnrichment();
         $enrichment->setUser($admin);
-        $enrichment->setConvertToNative($this->convertToNative);
         $enrichment->setNative($this->nativeCurrency);
         $accounts    = $enrichment->enrich($accounts);
 

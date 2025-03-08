@@ -46,14 +46,13 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
         $converter        = new ExchangeRateConverter();
         $default          = app('amount')->getNativeCurrency();
         $availableBudgets = $this->userGroup->availableBudgets()
-            ->where('start_date', $start->format('Y-m-d'))
-            ->where('end_date', $end->format('Y-m-d'))->get()
-        ;
+                                            ->where('start_date', $start->format('Y-m-d'))
+                                            ->where('end_date', $end->format('Y-m-d'))->get();
 
         /** @var AvailableBudget $availableBudget */
         foreach ($availableBudgets as $availableBudget) {
             $currencyId                           = $availableBudget->transaction_currency_id;
-            $return[$currencyId] ??= [
+            $return[$currencyId]                  ??= [
                 'currency_id'                    => $currencyId,
                 'currency_code'                  => $availableBudget->transactionCurrency->code,
                 'currency_symbol'                => $availableBudget->transactionCurrency->symbol,

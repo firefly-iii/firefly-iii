@@ -45,7 +45,6 @@ use FireflyIII\Support\Repositories\Recurring\CalculateXOccurrencesSince;
 use FireflyIII\Support\Repositories\Recurring\FiltersWeekends;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
-use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -68,9 +67,9 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
         // if not, loop set and try to read the recurrence_date. If it matches start or end, return it as well.
         $set
             = TransactionJournalMeta::where(static function (Builder $q1) use ($recurrence): void {
-                $q1->where('name', 'recurrence_id');
-                $q1->where('data', json_encode((string) $recurrence->id));
-            })->get(['journal_meta.transaction_journal_id']);
+            $q1->where('name', 'recurrence_id');
+            $q1->where('data', json_encode((string) $recurrence->id));
+        })->get(['journal_meta.transaction_journal_id']);
 
         // there are X journals made for this recurrence. Any of them meant for today?
         foreach ($set as $journalMeta) {
@@ -80,9 +79,8 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
                 $q2->where('name', 'recurrence_date');
                 $q2->where('data', json_encode($string));
             })
-                ->where('transaction_journal_id', $journalMeta->transaction_journal_id)
-                ->count()
-            ;
+                                           ->where('transaction_journal_id', $journalMeta->transaction_journal_id)
+                                           ->count();
             if ($count > 0) {
                 app('log')->debug(sprintf('Looks like journal #%d was already created', $journalMeta->transaction_journal_id));
 
@@ -99,12 +97,11 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
     public function get(): Collection
     {
         return $this->user->recurrences()
-            ->with(['TransactionCurrency', 'TransactionType', 'RecurrenceRepetitions', 'RecurrenceTransactions'])
-            ->orderBy('active', 'DESC')
-            ->orderBy('transaction_type_id', 'ASC')
-            ->orderBy('title', 'ASC')
-            ->get()
-        ;
+                          ->with(['TransactionCurrency', 'TransactionType', 'RecurrenceRepetitions', 'RecurrenceTransactions'])
+                          ->orderBy('active', 'DESC')
+                          ->orderBy('transaction_type_id', 'ASC')
+                          ->orderBy('title', 'ASC')
+                          ->get();
     }
 
     /**
@@ -130,10 +127,9 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
     {
         // grab ALL recurring transactions:
         return Recurrence::with(['TransactionCurrency', 'TransactionType', 'RecurrenceRepetitions', 'RecurrenceTransactions'])
-            ->orderBy('active', 'DESC')
-            ->orderBy('title', 'ASC')
-            ->get()
-        ;
+                         ->orderBy('active', 'DESC')
+                         ->orderBy('title', 'ASC')
+                         ->get();
     }
 
     public function getBillId(RecurrenceTransaction $recTransaction): ?int
@@ -208,11 +204,10 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
     {
         Log::debug(sprintf('Now in getJournalCount(#%d, "%s", "%s")', $recurrence->id, $start?->format('Y-m-d H:i:s'), $end?->format('Y-m-d H:i:s')));
         $query = TransactionJournal::leftJoin('journal_meta', 'journal_meta.transaction_journal_id', '=', 'transaction_journals.id')
-            ->where('transaction_journals.user_id', $recurrence->user_id)
-            ->whereNull('transaction_journals.deleted_at')
-            ->where('journal_meta.name', 'recurrence_id')
-            ->where('journal_meta.data', '"'.$recurrence->id.'"')
-        ;
+                                   ->where('transaction_journals.user_id', $recurrence->user_id)
+                                   ->whereNull('transaction_journals.deleted_at')
+                                   ->where('journal_meta.name', 'recurrence_id')
+                                   ->where('journal_meta.data', '"' . $recurrence->id . '"');
         if (null !== $start) {
             $query->where('transaction_journals.date', '>=', $start->format('Y-m-d 00:00:00'));
         }
@@ -231,11 +226,10 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
     public function getJournalIds(Recurrence $recurrence): array
     {
         return TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
-            ->where('transaction_journals.user_id', $this->user->id)
-            ->where('journal_meta.name', '=', 'recurrence_id')
-            ->where('journal_meta.data', '=', json_encode((string) $recurrence->id))
-            ->get(['journal_meta.transaction_journal_id'])->pluck('transaction_journal_id')->toArray()
-        ;
+                                     ->where('transaction_journals.user_id', $this->user->id)
+                                     ->where('journal_meta.name', '=', 'recurrence_id')
+                                     ->where('journal_meta.data', '=', json_encode((string) $recurrence->id))
+                                     ->get(['journal_meta.transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
     }
 
     /**
@@ -283,24 +277,22 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
     public function getTransactionPaginator(Recurrence $recurrence, int $page, int $pageSize): LengthAwarePaginator
     {
         $journalMeta = TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
-            ->whereNull('transaction_journals.deleted_at')
-            ->where('transaction_journals.user_id', $this->user->id)
-            ->where('name', 'recurrence_id')
-            ->where('data', json_encode((string) $recurrence->id))
-            ->get()->pluck('transaction_journal_id')->toArray()
-        ;
+                                             ->whereNull('transaction_journals.deleted_at')
+                                             ->where('transaction_journals.user_id', $this->user->id)
+                                             ->where('name', 'recurrence_id')
+                                             ->where('data', json_encode((string) $recurrence->id))
+                                             ->get()->pluck('transaction_journal_id')->toArray();
         $search      = [];
         foreach ($journalMeta as $journalId) {
             $search[] = (int) $journalId;
         }
 
         /** @var GroupCollectorInterface $collector */
-        $collector   = app(GroupCollectorInterface::class);
+        $collector = app(GroupCollectorInterface::class);
 
         $collector->setUser($recurrence->user);
         $collector->withCategoryInformation()->withBudgetInformation()->setLimit($pageSize)->setPage($page)
-            ->withAccountInformation()
-        ;
+                  ->withAccountInformation();
         $collector->setJournalIds($search);
 
         return $collector->getPaginatedGroups();
@@ -309,12 +301,11 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
     public function getTransactions(Recurrence $recurrence): Collection
     {
         $journalMeta = TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
-            ->whereNull('transaction_journals.deleted_at')
-            ->where('transaction_journals.user_id', $this->user->id)
-            ->where('name', 'recurrence_id')
-            ->where('data', json_encode((string) $recurrence->id))
-            ->get()->pluck('transaction_journal_id')->toArray()
-        ;
+                                             ->whereNull('transaction_journals.deleted_at')
+                                             ->where('transaction_journals.user_id', $this->user->id)
+                                             ->where('name', 'recurrence_id')
+                                             ->where('data', json_encode((string) $recurrence->id))
+                                             ->get()->pluck('transaction_journal_id')->toArray();
         $search      = [];
 
         foreach ($journalMeta as $journalId) {
@@ -325,7 +316,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
         }
 
         /** @var GroupCollectorInterface $collector */
-        $collector   = app(GroupCollectorInterface::class);
+        $collector = app(GroupCollectorInterface::class);
 
         $collector->setUser($recurrence->user);
         $collector->withCategoryInformation()->withBudgetInformation()->withAccountInformation();
@@ -468,21 +459,21 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
             );
         }
         if ('ndom' === $repetition->repetition_type) {
-            $parts     = explode(',', $repetition->repetition_moment);
+            $parts = explode(',', $repetition->repetition_moment);
             // first part is number of week, second is weekday.
             $dayOfWeek = trans(sprintf('config.dow_%s', $parts[1]), [], $language);
 
             return (string) trans('firefly.recurring_ndom', ['weekday' => $dayOfWeek, 'dayOfMonth' => $parts[0]], $language);
         }
         if ('yearly' === $repetition->repetition_type) {
-            $today       = today(config('app.timezone'))->endOfYear();
-            $repDate     = Carbon::createFromFormat('Y-m-d', $repetition->repetition_moment);
+            $today   = today(config('app.timezone'))->endOfYear();
+            $repDate = Carbon::createFromFormat('Y-m-d', $repetition->repetition_moment);
             if (null === $repDate) {
                 $repDate = clone $today;
             }
             $diffInYears = (int) $today->diffInYears($repDate, true);
             $repDate->addYears($diffInYears); // technically not necessary.
-            $string      = $repDate->isoFormat((string) trans('config.month_and_day_no_year_js'));
+            $string = $repDate->isoFormat((string) trans('config.month_and_day_no_year_js'));
 
             return (string) trans('firefly.recurring_yearly', ['date' => $string], $language);
         }
@@ -497,8 +488,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
             $search->whereLike('recurrences.title', sprintf('%%%s%%', $query));
         }
         $search
-            ->orderBy('recurrences.title', 'ASC')
-        ;
+            ->orderBy('recurrences.title', 'ASC');
 
         return $search->take($limit)->get(['id', 'title', 'description']);
     }
@@ -544,7 +534,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
         $occurrences = [];
         $mutator     = clone $start;
         $mutator->startOfDay();
-        $skipMod     = $repetition->repetition_skip + 1;
+        $skipMod = $repetition->repetition_skip + 1;
         app('log')->debug(sprintf('Calculating occurrences for rep type "%s"', $repetition->repetition_type));
         app('log')->debug(sprintf('Mutator is now: %s', $mutator->format('Y-m-d')));
 

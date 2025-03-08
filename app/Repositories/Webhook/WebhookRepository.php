@@ -67,23 +67,21 @@ class WebhookRepository implements WebhookRepositoryInterface, UserGroupInterfac
     public function getMessages(Webhook $webhook): Collection
     {
         return $webhook->webhookMessages()
-            ->orderBy('created_at', 'DESC')
-            ->get(['webhook_messages.*'])
-        ;
+                       ->orderBy('created_at', 'DESC')
+                       ->get(['webhook_messages.*']);
     }
 
     public function getReadyMessages(Webhook $webhook): Collection
     {
         return $webhook->webhookMessages()
-            ->where('webhook_messages.sent', 0)
-            ->where('webhook_messages.errored', 0)
-            ->get(['webhook_messages.*'])
-            ->filter(
-                static function (WebhookMessage $message) { // @phpstan-ignore-line
-                    return $message->webhookAttempts()->count() <= 2;
-                }
-            )->splice(0, 3)
-        ;
+                       ->where('webhook_messages.sent', 0)
+                       ->where('webhook_messages.errored', 0)
+                       ->get(['webhook_messages.*'])
+                       ->filter(
+                           static function (WebhookMessage $message) { // @phpstan-ignore-line
+                               return $message->webhookAttempts()->count() <= 2;
+                           }
+                       )->splice(0, 3);
     }
 
     public function store(array $data): Webhook

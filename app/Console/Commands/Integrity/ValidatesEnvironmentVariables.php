@@ -76,7 +76,7 @@ class ValidatesEnvironmentVariables extends Command
 
     private function validateGuard(): void
     {
-        $guard = env('AUTHENTICATION_GUARD', 'web');
+        $guard = config('auth.defaults.guard');
         if ('web' !== $guard && 'remote_user_guard' !== $guard) {
             $this->friendlyError(sprintf('AUTHENTICATION_GUARD "%s" is not a valid guard for Firefly III.', $guard));
             $this->friendlyError('Please check your .env file and make sure you use a valid setting.');
@@ -87,7 +87,7 @@ class ValidatesEnvironmentVariables extends Command
 
     private function validateStaticToken(): void
     {
-        $token = (string) env('STATIC_CRON_TOKEN', '');
+        $token = (string) config('firefly.static_cron_token');
         if (0 !== strlen($token) && 32 !== strlen($token)) {
             $this->friendlyError('STATIC_CRON_TOKEN must be empty or a 32-character string.');
             $this->friendlyError('Please check your .env file and make sure you use a valid setting.');

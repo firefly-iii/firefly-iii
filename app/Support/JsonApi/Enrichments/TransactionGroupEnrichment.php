@@ -47,8 +47,8 @@ class TransactionGroupEnrichment implements EnrichmentInterface
     private array      $tags;
     private array      $locations;
     private array      $journalIds;
-    private User       $user;
-    private UserGroup  $userGroup;
+    private User       $user; // @phpstan-ignore-line
+    private UserGroup  $userGroup; // @phpstan-ignore-line
     private array      $metaData;
     private array      $dateFields;
     private array      $attachmentCount;

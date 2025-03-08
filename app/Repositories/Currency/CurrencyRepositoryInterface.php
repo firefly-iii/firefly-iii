@@ -46,25 +46,23 @@ use Illuminate\Support\Collection;
  */
 interface CurrencyRepositoryInterface
 {
-    public function find(int $currencyId): ?TransactionCurrency;
-    public function searchCurrency(string $search, int $limit): Collection;
-    public function isFallbackCurrency(TransactionCurrency $currency): bool;
-    public function getAll(): Collection;
-    public function store(array $data): TransactionCurrency;
-    public function makeDefault(TransactionCurrency $currency): void;
-    public function destroy(TransactionCurrency $currency): bool;
-    public function enable(TransactionCurrency $currency): void;
-    public function disable(TransactionCurrency $currency): void;
-    public function update(TransactionCurrency $currency, array $data): TransactionCurrency;
+    /**
+     * @throws FireflyException
+     */
+    public function currencyInUse(TransactionCurrency $currency): bool;
 
     /**
      * @throws FireflyException
      */
-    public function currencyInUse(TransactionCurrency $currency);
-    /**
-     * @throws FireflyException
-     */
     public function currencyInUseAt(TransactionCurrency $currency): ?string;
+
+    public function destroy(TransactionCurrency $currency): bool;
+
+    public function disable(TransactionCurrency $currency): void;
+
+    public function enable(TransactionCurrency $currency): void;
+
+    public function find(int $currencyId): ?TransactionCurrency;
 
     /**
      * Find by currency code, return NULL if unfound.
@@ -72,6 +70,21 @@ interface CurrencyRepositoryInterface
      * Used in the download exchange rates cron job. Does not require user object.
      */
     public function findByCode(string $currencyCode): ?TransactionCurrency;
+
+    public function findByName(string $name): ?TransactionCurrency;
+
+    public function findCurrency(?int $currencyId, ?string $currencyCode): TransactionCurrency;
+
+    public function findCurrencyNull(?int $currencyId, ?string $currencyCode): ?TransactionCurrency;
+
+    /**
+     * Get the user group's currencies.
+     *
+     * @return Collection<TransactionCurrency>
+     */
+    public function get(): Collection;
+
+    public function getAll(): Collection;
 
     /**
      * Returns the complete set of transactions but needs
@@ -82,19 +95,17 @@ interface CurrencyRepositoryInterface
     public function getCompleteSet(): Collection;
 
     /**
-     * Get the user group's currencies.
-     *
-     * @return Collection<TransactionCurrency>
-     */
-    public function get(): Collection;
-
-
-    /**
      * Get currency exchange rate.
      *
      * Used in the download exchange rate cron job. Needs the user object!
      */
     public function getExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date): ?CurrencyExchangeRate;
+
+    public function isFallbackCurrency(TransactionCurrency $currency): bool;
+
+    public function makeDefault(TransactionCurrency $currency): void;
+
+    public function searchCurrency(string $search, int $limit): Collection;
 
     /**
      * Set currency exchange rate.
@@ -102,4 +113,8 @@ interface CurrencyRepositoryInterface
      * Used in download exchange rate cron job. Needs the user object!
      */
     public function setExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date, float $rate): CurrencyExchangeRate;
+
+    public function store(array $data): TransactionCurrency;
+
+    public function update(TransactionCurrency $currency, array $data): TransactionCurrency;
 }

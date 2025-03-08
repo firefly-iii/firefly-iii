@@ -62,9 +62,8 @@ class BillRepository implements BillRepositoryInterface
     public function getBills(): Collection
     {
         return $this->userGroup->bills()
-            ->orderBy('bills.name', 'ASC')
-            ->get(['bills.*'])
-        ;
+                               ->orderBy('bills.name', 'ASC')
+                               ->get(['bills.*']);
     }
 
     public function sumPaidInRange(Carbon $start, Carbon $end): array
@@ -102,13 +101,13 @@ class BillRepository implements BillRepositoryInterface
                 /** @var null|Transaction $sourceTransaction */
                 $sourceTransaction = $transactionJournal->transactions()->where('amount', '<', 0)->first();
                 if (null !== $sourceTransaction) {
-                    $amount                            = $sourceTransaction->amount;
+                    $amount = $sourceTransaction->amount;
                     if ((int) $sourceTransaction->foreign_currency_id === $currency->id) {
                         // use foreign amount instead!
                         $amount = (string) $sourceTransaction->foreign_amount;
                     }
                     // convert to native currency
-                    $nativeAmount                      = $amount;
+                    $nativeAmount = $amount;
                     if ($currencyId !== $default->id) {
                         // get rate and convert.
                         $nativeAmount = $converter->convert($currency, $default, $transactionJournal->date, $amount);
@@ -130,10 +129,9 @@ class BillRepository implements BillRepositoryInterface
     public function getActiveBills(): Collection
     {
         return $this->userGroup->bills()
-            ->where('active', true)
-            ->orderBy('bills.name', 'ASC')
-            ->get(['bills.*'])
-        ;
+                               ->where('active', true)
+                               ->orderBy('bills.name', 'ASC')
+                               ->get(['bills.*']);
     }
 
     public function sumUnpaidInRange(Carbon $start, Carbon $end): array
@@ -155,7 +153,7 @@ class BillRepository implements BillRepositoryInterface
                 $currencyId                        = $bill->transaction_currency_id;
                 $average                           = bcdiv(bcadd($bill->amount_max, $bill->amount_min), '2');
                 $nativeAverage                     = $converter->convert($currency, $default, $start, $average);
-                $return[$currencyId] ??= [
+                $return[$currencyId]               ??= [
                     'currency_id'                    => (string) $currency->id,
                     'currency_name'                  => $currency->name,
                     'currency_symbol'                => $currency->symbol,
@@ -202,7 +200,7 @@ class BillRepository implements BillRepositoryInterface
 
             // app('log')->debug(sprintf('Currentstart (%s) has become %s.', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
 
-            $currentStart      = clone $nextExpectedMatch;
+            $currentStart = clone $nextExpectedMatch;
         }
 
         return $set;

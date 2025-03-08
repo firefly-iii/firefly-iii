@@ -26,7 +26,6 @@ namespace FireflyIII\Repositories\UserGroups\Account;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Models\UserGroup;
 use Illuminate\Support\Collection;
 
 /**

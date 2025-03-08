@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
 
@@ -58,13 +59,13 @@ class OperationsRepository implements OperationsRepositoryInterface
             $collector->setBudgets($this->getBudgets());
         }
         $collector->withBudgetInformation()->withAccountInformation()->withCategoryInformation();
-        $journals  = $collector->getExtractedJournals();
-        $array     = [];
+        $journals = $collector->getExtractedJournals();
+        $array    = [];
 
         foreach ($journals as $journal) {
-            $currencyId                                                                   = (int) $journal['currency_id'];
-            $budgetId                                                                     = (int) $journal['budget_id'];
-            $budgetName                                                                   = (string) $journal['budget_name'];
+            $currencyId = (int) $journal['currency_id'];
+            $budgetId   = (int) $journal['budget_id'];
+            $budgetName = (string) $journal['budget_name'];
 
             // catch "no budget" entries.
             if (0 === $budgetId) {
@@ -72,7 +73,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             }
 
             // info about the currency:
-            $array[$currencyId]                       ??= [
+            $array[$currencyId] ??= [
                 'budgets'                 => [],
                 'currency_id'             => $currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -90,8 +91,8 @@ class OperationsRepository implements OperationsRepositoryInterface
 
             // add journal to array:
             // only a subset of the fields.
-            $journalId                                                                    = (int) $journal['transaction_journal_id'];
-            $final                                                                        = [
+            $journalId = (int) $journal['transaction_journal_id'];
+            $final     = [
                 'amount'                          => app('steam')->negative($journal['amount']),
                 'currency_id'                     => $journal['currency_id'],
                 'foreign_amount'                  => null,

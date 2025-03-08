@@ -52,7 +52,6 @@ interface AccountRepositoryInterface
      * Moved here from account CRUD.
      */
     public function count(array $types): int;
-    public function getAccountBalances(Account $account): Collection;
 
     /**
      * Moved here from account CRUD.
@@ -71,6 +70,8 @@ interface AccountRepositoryInterface
     public function findByIbanNull(string $iban, array $types): ?Account;
 
     public function findByName(string $name, array $types): ?Account;
+
+    public function getAccountBalances(Account $account): Collection;
 
     public function getAccountCurrency(Account $account): ?TransactionCurrency;
 
