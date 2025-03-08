@@ -30,7 +30,7 @@ use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Exceptions\ValidationException;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Repositories\UserGroups\ExchangeRate\ExchangeRateRepositoryInterface;
+use FireflyIII\Repositories\ExchangeRate\ExchangeRateRepositoryInterface;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;

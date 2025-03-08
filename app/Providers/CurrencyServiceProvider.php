@@ -27,8 +27,6 @@ use FireflyIII\Repositories\Currency\CurrencyRepository;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepository as GroupCurrencyRepository;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface as GroupCurrencyRepositoryInterface;
-use FireflyIII\Repositories\UserGroups\ExchangeRate\ExchangeRateRepository;
-use FireflyIII\Repositories\UserGroups\ExchangeRate\ExchangeRateRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -74,12 +72,5 @@ class CurrencyServiceProvider extends ServiceProvider
             }
         );
 
-        $this->app->bind(
-            ExchangeRateRepositoryInterface::class,
-            static function (Application $app) {
-                /** @var ExchangeRateRepository */
-                return app(ExchangeRateRepository::class);
-            }
-        );
     }
 }

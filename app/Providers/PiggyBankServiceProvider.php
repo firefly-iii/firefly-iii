@@ -25,8 +25,6 @@ namespace FireflyIII\Providers;
 
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepository;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
-use FireflyIII\Repositories\UserGroups\PiggyBank\PiggyBankRepository as AdminPiggyBankRepository;
-use FireflyIII\Repositories\UserGroups\PiggyBank\PiggyBankRepositoryInterface as AdminPiggyBankRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -50,19 +48,6 @@ class PiggyBankServiceProvider extends ServiceProvider
             static function (Application $app) {
                 /** @var PiggyBankRepository $repository */
                 $repository = app(PiggyBankRepository::class);
-                if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
-                    $repository->setUser(auth()->user());
-                }
-
-                return $repository;
-            }
-        );
-
-        $this->app->bind(
-            AdminPiggyBankRepositoryInterface::class,
-            static function (Application $app) {
-                /** @var AdminPiggyBankRepository $repository */
-                $repository = app(AdminPiggyBankRepository::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
                     $repository->setUser(auth()->user());
                 }
