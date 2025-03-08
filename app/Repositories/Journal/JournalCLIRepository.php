@@ -32,6 +32,7 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use stdClass;
 
 /**
  * Class JournalCLIRepository
@@ -46,10 +47,9 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface, UserGroupIn
     public function getAllJournals(array $types): Collection
     {
         return TransactionJournal::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-            ->whereIn('transaction_types.type', $types)
-            ->with(['user', 'transactionType', 'transactionCurrency', 'transactions', 'transactions.account'])
-            ->get(['transaction_journals.*'])
-        ;
+                                 ->whereIn('transaction_types.type', $types)
+                                 ->with(['user', 'transactionType', 'transactionCurrency', 'transactions', 'transactions.account'])
+                                 ->get(['transaction_journals.*']);
     }
 
     /**
@@ -57,7 +57,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface, UserGroupIn
      */
     public function getJournalBudgetId(TransactionJournal $journal): int
     {
-        $budget      = $journal->budgets()->first();
+        $budget = $journal->budgets()->first();
         if (null !== $budget) {
             return $budget->id;
         }
@@ -77,7 +77,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface, UserGroupIn
      */
     public function getJournalCategoryId(TransactionJournal $journal): int
     {
-        $category    = $journal->categories()->first();
+        $category = $journal->categories()->first();
         if (null !== $category) {
             return $category->id;
         }
@@ -129,7 +129,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface, UserGroupIn
      */
     public function getMetaField(TransactionJournal $journal, string $field): ?string
     {
-        $cache  = new CacheProperties();
+        $cache = new CacheProperties();
         $cache->addProperty('journal-meta-updated');
         $cache->addProperty($journal->id);
         $cache->addProperty($field);
@@ -138,12 +138,12 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface, UserGroupIn
             return $cache->get();
         }
 
-        $entry  = $journal->transactionJournalMeta()->where('name', $field)->first();
+        $entry = $journal->transactionJournalMeta()->where('name', $field)->first();
         if (null === $entry) {
             return null;
         }
 
-        $value  = $entry->data;
+        $value = $entry->data;
 
         if (is_array($value)) {
             $return = implode(',', $value);
@@ -179,12 +179,11 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface, UserGroupIn
     public function getSplitJournals(): Collection
     {
         $query      = TransactionJournal::leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-            ->groupBy('transaction_journals.id')
-        ;
+                                        ->groupBy('transaction_journals.id');
         $result     = $query->get(['transaction_journals.id as id', DB::raw('count(transactions.id) as transaction_count')]); // @phpstan-ignore-line
         $journalIds = [];
 
-        /** @var \stdClass $row */
+        /** @var stdClass $row */
         foreach ($result as $row) {
             if ((int) $row->transaction_count > 2) {
                 $journalIds[] = (int) $row->id;
@@ -193,8 +192,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface, UserGroupIn
         $journalIds = array_unique($journalIds);
 
         return TransactionJournal::with(['transactions'])
-            ->whereIn('id', $journalIds)->get()
-        ;
+                                 ->whereIn('id', $journalIds)->get();
     }
 
     /**

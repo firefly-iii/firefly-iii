@@ -53,10 +53,9 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface, UserGroup
     public function get(): Collection
     {
         return $this->user->objectGroups()
-            ->with(['piggyBanks', 'bills'])
-            ->orderBy('order', 'ASC')
-            ->orderBy('title', 'ASC')->get()
-        ;
+                          ->with(['piggyBanks', 'bills'])
+                          ->orderBy('order', 'ASC')
+                          ->orderBy('title', 'ASC')->get();
     }
 
     public function deleteEmpty(): void
@@ -149,18 +148,16 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface, UserGroup
 
         if ($newOrder > $oldOrder) {
             $this->user->objectGroups()->where('object_groups.order', '<=', $newOrder)->where('object_groups.order', '>', $oldOrder)
-                ->where('object_groups.id', '!=', $objectGroup->id)
-                ->decrement('object_groups.order')
-            ;
+                       ->where('object_groups.id', '!=', $objectGroup->id)
+                       ->decrement('object_groups.order');
 
             $objectGroup->order = $newOrder;
             $objectGroup->save();
         }
         if ($newOrder < $oldOrder) {
             $this->user->objectGroups()->where('object_groups.order', '>=', $newOrder)->where('object_groups.order', '<', $oldOrder)
-                ->where('object_groups.id', '!=', $objectGroup->id)
-                ->increment('object_groups.order')
-            ;
+                       ->where('object_groups.id', '!=', $objectGroup->id)
+                       ->increment('object_groups.order');
 
             $objectGroup->order = $newOrder;
             $objectGroup->save();

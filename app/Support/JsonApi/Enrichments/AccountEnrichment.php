@@ -49,19 +49,9 @@ use Illuminate\Support\Facades\Log;
  */
 class AccountEnrichment implements EnrichmentInterface
 {
-    //    private array                       $balances;
-    //    private array                       $currencies;
-    //    private CurrencyRepositoryInterface $currencyRepository;
-    //    private TransactionCurrency         $default;
-    //    private ?Carbon                     $end;
-    //    private array                       $grouped;
-    //    private array                       $objectGroups;
-    //    private AccountRepositoryInterface  $repository;
-    //    private ?Carbon                     $start;
 
     private Collection $collection;
 
-    private bool                $convertToNative;
     private User                $user;
     private UserGroup           $userGroup;
     private TransactionCurrency $native;
@@ -76,7 +66,6 @@ class AccountEnrichment implements EnrichmentInterface
 
     public function __construct()
     {
-        $this->convertToNative = false;
         $this->accountIds      = [];
         $this->openingBalances = [];
         $this->currencies      = [];
@@ -197,7 +186,10 @@ class AccountEnrichment implements EnrichmentInterface
         // use new group collector:
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setUser($this->user)->setAccounts($this->collection)
+        $collector
+            ->setUser($this->user)
+            ->setUserGroup($this->userGroup)
+            ->setAccounts($this->collection)
             ->withAccountInformation()
             ->setTypes([TransactionTypeEnum::OPENING_BALANCE->value])
         ;
@@ -267,11 +259,6 @@ class AccountEnrichment implements EnrichmentInterface
     {
         $this->user      = $user;
         $this->userGroup = $user->userGroup;
-    }
-
-    public function setConvertToNative(bool $convertToNative): void
-    {
-        $this->convertToNative = $convertToNative;
     }
 
     public function setNative(TransactionCurrency $native): void

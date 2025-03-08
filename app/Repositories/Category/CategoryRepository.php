@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Category;
 
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Models\Attachment;
@@ -150,7 +151,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
     public function store(array $data): Category
     {
         /** @var CategoryFactory $factory */
-        $factory  = app(CategoryFactory::class);
+        $factory = app(CategoryFactory::class);
         $factory->setUser($this->user);
 
         $category = $factory->findOrCreate(null, $data['name']);
@@ -176,7 +177,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
 
     public function updateNotes(Category $category, string $notes): void
     {
-        $dbNote       = $category->notes()->first();
+        $dbNote = $category->notes()->first();
         if (null === $dbNote) {
             $dbNote = new Note();
             $dbNote->noteable()->associate($category);
@@ -222,10 +223,9 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
     private function getFirstTransactionDate(Category $category): ?Carbon
     {
         // check transactions:
-        $query           = $category->transactions()
-            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-            ->orderBy('transaction_journals.date', 'ASC')
-        ;
+        $query = $category->transactions()
+                          ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                          ->orderBy('transaction_journals.date', 'ASC');
 
         $lastTransaction = $query->first(['transaction_journals.*']);
         if (null !== $lastTransaction) {
@@ -237,7 +237,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
 
     public function getAttachments(Category $category): Collection
     {
-        $set  = $category->attachments()->get();
+        $set = $category->attachments()->get();
 
         $disk = Storage::disk('upload');
 
@@ -271,7 +271,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function lastUseDate(Category $category, Collection $accounts): ?Carbon
     {
@@ -297,7 +297,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
 
     private function getLastJournalDate(Category $category, Collection $accounts): ?Carbon
     {
-        $query  = $category->transactionJournals()->orderBy('date', 'DESC');
+        $query = $category->transactionJournals()->orderBy('date', 'DESC');
 
         if ($accounts->count() > 0) {
             $query->leftJoin('transactions as t', 't.transaction_journal_id', '=', 'transaction_journals.id');
@@ -314,15 +314,14 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function getLastTransactionDate(Category $category, Collection $accounts): ?Carbon
     {
         // check transactions:
-        $query           = $category->transactions()
-            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-            ->orderBy('transaction_journals.date', 'DESC')
-        ;
+        $query = $category->transactions()
+                          ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                          ->orderBy('transaction_journals.date', 'DESC');
         if ($accounts->count() > 0) {
             // filter journals:
             $query->whereIn('transactions.account_id', $accounts->pluck('id')->toArray());
@@ -347,7 +346,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function update(Category $category, array $data): Category
     {

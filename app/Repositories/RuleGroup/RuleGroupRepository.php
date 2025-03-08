@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\RuleGroup;
 
+use Exception;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleGroup;
@@ -47,8 +48,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
             ->orderBy('order', 'ASC')
             ->orderBy('active', 'DESC')
             ->orderBy('title', 'ASC')
-            ->get(['rule_groups.id'])
-        ;
+            ->get(['rule_groups.id']);
         $index = 1;
 
         /** @var RuleGroup $ruleGroup */
@@ -72,7 +72,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function destroy(RuleGroup $ruleGroup, ?RuleGroup $moveTo): bool
     {
@@ -105,8 +105,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
             ->whereNull('deleted_at')
             ->orderBy('order', 'ASC')
             ->orderBy('title', 'DESC')
-            ->get()
-        ;
+            ->get();
         $count = 1;
 
         /** @var RuleGroup $entry */
@@ -128,11 +127,10 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
     public function resetRuleOrder(RuleGroup $ruleGroup): bool
     {
         $set   = $ruleGroup->rules()
-            ->orderBy('order', 'ASC')
-            ->orderBy('title', 'DESC')
-            ->orderBy('updated_at', 'DESC')
-            ->get(['rules.*'])
-        ;
+                           ->orderBy('order', 'ASC')
+                           ->orderBy('title', 'DESC')
+                           ->orderBy('updated_at', 'DESC')
+                           ->get(['rules.*']);
         $count = 1;
 
         /** @var Rule $entry */
@@ -154,11 +152,10 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
     private function resetRuleActionOrder(Rule $rule): void
     {
         $actions = $rule->ruleActions()
-            ->orderBy('order', 'ASC')
-            ->orderBy('active', 'DESC')
-            ->orderBy('action_type', 'ASC')
-            ->get()
-        ;
+                        ->orderBy('order', 'ASC')
+                        ->orderBy('active', 'DESC')
+                        ->orderBy('action_type', 'ASC')
+                        ->get();
         $index   = 1;
 
         /** @var RuleAction $action */
@@ -175,11 +172,10 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
     private function resetRuleTriggerOrder(Rule $rule): void
     {
         $triggers = $rule->ruleTriggers()
-            ->orderBy('order', 'ASC')
-            ->orderBy('active', 'DESC')
-            ->orderBy('trigger_type', 'ASC')
-            ->get()
-        ;
+                         ->orderBy('order', 'ASC')
+                         ->orderBy('active', 'DESC')
+                         ->orderBy('trigger_type', 'ASC')
+                         ->get();
         $index    = 1;
 
         /** @var RuleTrigger $trigger */
@@ -226,51 +222,47 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
     public function getActiveRules(RuleGroup $group): Collection
     {
         return $group->rules()
-            ->where('rules.active', true)
-            ->get(['rules.*'])
-        ;
+                     ->where('rules.active', true)
+                     ->get(['rules.*']);
     }
 
     public function getActiveStoreRules(RuleGroup $group): Collection
     {
         return $group->rules()
-            ->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
-            ->where('rule_triggers.trigger_type', 'user_action')
-            ->where('rule_triggers.trigger_value', 'store-journal')
-            ->where('rules.active', true)
-            ->get(['rules.*'])
-        ;
+                     ->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
+                     ->where('rule_triggers.trigger_type', 'user_action')
+                     ->where('rule_triggers.trigger_value', 'store-journal')
+                     ->where('rules.active', true)
+                     ->get(['rules.*']);
     }
 
     public function getActiveUpdateRules(RuleGroup $group): Collection
     {
         return $group->rules()
-            ->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
-            ->where('rule_triggers.trigger_type', 'user_action')
-            ->where('rule_triggers.trigger_value', 'update-journal')
-            ->where('rules.active', true)
-            ->get(['rules.*'])
-        ;
+                     ->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
+                     ->where('rule_triggers.trigger_type', 'user_action')
+                     ->where('rule_triggers.trigger_value', 'update-journal')
+                     ->where('rules.active', true)
+                     ->get(['rules.*']);
     }
 
     public function getAllRuleGroupsWithRules(?string $filter): Collection
     {
         $groups = $this->user->ruleGroups()
-            ->orderBy('order', 'ASC')
-            ->with(
-                [ // @phpstan-ignore-line
-                    'rules'              => static function (HasMany $query): void {
-                        $query->orderBy('order', 'ASC');
-                    },
-                    'rules.ruleTriggers' => static function (HasMany $query): void {
-                        $query->orderBy('order', 'ASC');
-                    },
-                    'rules.ruleActions'  => static function (HasMany $query): void {
-                        $query->orderBy('order', 'ASC');
-                    },
-                ]
-            )->get()
-        ;
+                             ->orderBy('order', 'ASC')
+                             ->with(
+                                 [ // @phpstan-ignore-line
+                                   'rules'              => static function (HasMany $query): void {
+                                       $query->orderBy('order', 'ASC');
+                                   },
+                                   'rules.ruleTriggers' => static function (HasMany $query): void {
+                                       $query->orderBy('order', 'ASC');
+                                   },
+                                   'rules.ruleActions'  => static function (HasMany $query): void {
+                                       $query->orderBy('order', 'ASC');
+                                   },
+                                 ]
+                             )->get();
         if (null === $filter) {
             return $groups;
         }
@@ -311,22 +303,21 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
     public function getRuleGroupsWithRules(?string $filter): Collection
     {
         $groups = $this->user->ruleGroups()
-            ->orderBy('order', 'ASC')
-            ->where('active', true)
-            ->with(
-                [ // @phpstan-ignore-line
-                    'rules'              => static function (HasMany $query): void {
-                        $query->orderBy('order', 'ASC');
-                    },
-                    'rules.ruleTriggers' => static function (HasMany $query): void {
-                        $query->orderBy('order', 'ASC');
-                    },
-                    'rules.ruleActions'  => static function (HasMany $query): void {
-                        $query->orderBy('order', 'ASC');
-                    },
-                ]
-            )->get()
-        ;
+                             ->orderBy('order', 'ASC')
+                             ->where('active', true)
+                             ->with(
+                                 [ // @phpstan-ignore-line
+                                   'rules'              => static function (HasMany $query): void {
+                                       $query->orderBy('order', 'ASC');
+                                   },
+                                   'rules.ruleTriggers' => static function (HasMany $query): void {
+                                       $query->orderBy('order', 'ASC');
+                                   },
+                                   'rules.ruleActions'  => static function (HasMany $query): void {
+                                       $query->orderBy('order', 'ASC');
+                                   },
+                                 ]
+                             )->get();
         if (null === $filter) {
             return $groups;
         }
@@ -360,8 +351,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
     public function getRules(RuleGroup $group): Collection
     {
         return $group->rules()
-            ->get(['rules.*'])
-        ;
+                     ->get(['rules.*']);
     }
 
     public function maxOrder(): int
@@ -376,8 +366,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
             $search->whereLike('rule_groups.title', sprintf('%%%s%%', $query));
         }
         $search->orderBy('rule_groups.order', 'ASC')
-            ->orderBy('rule_groups.title', 'ASC')
-        ;
+               ->orderBy('rule_groups.title', 'ASC');
 
         return $search->take($limit)->get(['id', 'title', 'description']);
     }
@@ -405,13 +394,12 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
 
     public function setOrder(RuleGroup $ruleGroup, int $newOrder): void
     {
-        $oldOrder         = $ruleGroup->order;
+        $oldOrder = $ruleGroup->order;
 
         if ($newOrder > $oldOrder) {
             $this->user->ruleGroups()->where('rule_groups.order', '<=', $newOrder)->where('rule_groups.order', '>', $oldOrder)
-                ->where('rule_groups.id', '!=', $ruleGroup->id)
-                ->decrement('order')
-            ;
+                       ->where('rule_groups.id', '!=', $ruleGroup->id)
+                       ->decrement('order');
             $ruleGroup->order = $newOrder;
             app('log')->debug(sprintf('Order of group #%d ("%s") is now %d', $ruleGroup->id, $ruleGroup->title, $newOrder));
             $ruleGroup->save();
@@ -420,9 +408,8 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
         }
 
         $this->user->ruleGroups()->where('rule_groups.order', '>=', $newOrder)->where('rule_groups.order', '<', $oldOrder)
-            ->where('rule_groups.id', '!=', $ruleGroup->id)
-            ->increment('order')
-        ;
+                   ->where('rule_groups.id', '!=', $ruleGroup->id)
+                   ->increment('order');
         $ruleGroup->order = $newOrder;
         app('log')->debug(sprintf('Order of group #%d ("%s") is now %d', $ruleGroup->id, $ruleGroup->title, $newOrder));
         $ruleGroup->save();

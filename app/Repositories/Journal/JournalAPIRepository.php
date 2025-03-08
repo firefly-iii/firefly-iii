@@ -47,10 +47,9 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface, UserGroupIn
     public function findTransaction(int $transactionId): ?Transaction
     {
         return Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-            ->where('transaction_journals.user_id', $this->user->id)
-            ->where('transactions.id', $transactionId)
-            ->first(['transactions.*'])
-        ;
+                          ->where('transaction_journals.user_id', $this->user->id)
+                          ->where('transactions.id', $transactionId)
+                          ->first(['transactions.*']);
     }
 
     /**
@@ -60,7 +59,7 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface, UserGroupIn
      */
     public function getAttachments(TransactionJournal $journal): Collection
     {
-        $set  = $journal->attachments;
+        $set = $journal->attachments;
 
         $disk = Storage::disk('upload');
 

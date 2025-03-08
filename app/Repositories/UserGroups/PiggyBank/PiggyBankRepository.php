@@ -40,14 +40,13 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     public function getPiggyBanks(): Collection
     {
         return PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
-            ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
-            ->where('accounts.user_group_id', $this->userGroup->id)
-            ->with(
-                [
-                    'objectGroups',
-                ]
-            )
-            ->orderBy('piggy_banks.order', 'ASC')->distinct()->get(['piggy_banks.*'])
-        ;
+                        ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
+                        ->where('accounts.user_group_id', $this->userGroup->id)
+                        ->with(
+                            [
+                                'objectGroups',
+                            ]
+                        )
+                        ->orderBy('piggy_banks.order', 'ASC')->distinct()->get(['piggy_banks.*']);
     }
 }

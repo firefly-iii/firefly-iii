@@ -26,7 +26,6 @@ namespace FireflyIII\Repositories\UserGroups\Currency;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Models\UserGroup;
 use Illuminate\Support\Collection;
 
 /**

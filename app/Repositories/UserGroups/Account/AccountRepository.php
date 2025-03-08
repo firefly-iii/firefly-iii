@@ -37,6 +37,8 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Override;
+use stdClass;
 
 /**
  * Class AccountRepository
@@ -47,7 +49,7 @@ class AccountRepository implements AccountRepositoryInterface
 {
     use UserGroupTrait;
 
-    #[\Override]
+    #[Override]
     public function countAccounts(array $types): int
     {
         $query = $this->userGroup->accounts();
@@ -70,8 +72,7 @@ class AccountRepository implements AccountRepositoryInterface
                     $q1->where('account_meta.name', '=', 'account_number');
                     $q1->where('account_meta.data', '=', $json);
                 }
-            )
-        ;
+            );
 
         if (0 !== count($types)) {
             $dbQuery->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
@@ -98,7 +99,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     public function findByName(string $name, array $types): ?Account
     {
-        $query   = $this->userGroup->accounts();
+        $query = $this->userGroup->accounts();
 
         if (0 !== count($types)) {
             $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
@@ -120,7 +121,7 @@ class AccountRepository implements AccountRepositoryInterface
         return $account;
     }
 
-    #[\Override]
+    #[Override]
     public function getAccountBalances(Account $account): Collection
     {
         return $account->accountBalances;
@@ -128,8 +129,8 @@ class AccountRepository implements AccountRepositoryInterface
 
     public function getAccountCurrency(Account $account): ?TransactionCurrency
     {
-        $type       = $account->accountType->type;
-        $list       = config('firefly.valid_currency_account_types');
+        $type = $account->accountType->type;
+        $list = config('firefly.valid_currency_account_types');
 
         // return null if not in this list.
         if (!in_array($type, $list, true)) {
@@ -174,13 +175,12 @@ class AccountRepository implements AccountRepositoryInterface
         return $account;
     }
 
-    #[\Override]
+    #[Override]
     public function getAccountTypes(Collection $accounts): Collection
     {
         return AccountType::leftJoin('accounts', 'accounts.account_type_id', '=', 'account_types.id')
-            ->whereIn('accounts.id', $accounts->pluck('id')->toArray())
-            ->get(['accounts.id', 'account_types.type'])
-        ;
+                          ->whereIn('accounts.id', $accounts->pluck('id')->toArray())
+                          ->get(['accounts.id', 'account_types.type']);
     }
 
     public function getAccountsById(array $accountIds): Collection
@@ -197,7 +197,7 @@ class AccountRepository implements AccountRepositoryInterface
         return $query->get(['accounts.*']);
     }
 
-    #[\Override]
+    #[Override]
     public function getAccountsInOrder(array $types, array $sort, int $startRow, int $endRow): Collection
     {
         $query = $this->userGroup->accounts();
@@ -237,17 +237,17 @@ class AccountRepository implements AccountRepositoryInterface
         return $query->get(['accounts.*']);
     }
 
-    #[\Override]
+    #[Override]
     public function getLastActivity(Collection $accounts): array
     {
         return Transaction::whereIn('account_id', $accounts->pluck('id')->toArray())
-            ->leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
-            ->groupBy('transactions.account_id')
-            ->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) as date_max')])->toArray() // @phpstan-ignore-line
-        ;
+                          ->leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
+                          ->groupBy('transactions.account_id')
+                          ->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) as date_max')])->toArray() // @phpstan-ignore-line
+            ;
     }
 
-    #[\Override]
+    #[Override]
     public function getMetaValues(Collection $accounts, array $fields): Collection
     {
         $query = AccountMeta::whereIn('account_id', $accounts->pluck('id')->toArray());
@@ -258,23 +258,22 @@ class AccountRepository implements AccountRepositoryInterface
         return $query->get(['account_meta.id', 'account_meta.account_id', 'account_meta.name', 'account_meta.data']);
     }
 
-    #[\Override]
+    #[Override]
     public function getObjectGroups(Collection $accounts): array
     {
         $groupIds = [];
         $return   = [];
         $set      = DB::table('object_groupables')->where('object_groupable_type', Account::class)
-            ->whereIn('object_groupable_id', $accounts->pluck('id')->toArray())->get()
-        ;
+                      ->whereIn('object_groupable_id', $accounts->pluck('id')->toArray())->get();
 
-        /** @var \stdClass $row */
+        /** @var stdClass $row */
         foreach ($set as $row) {
             $groupIds[] = $row->object_group_id;
         }
         $groupIds = array_unique($groupIds);
         $groups   = ObjectGroup::whereIn('id', $groupIds)->get();
 
-        /** @var \stdClass $row */
+        /** @var stdClass $row */
         foreach ($set as $row) {
             if (!array_key_exists($row->object_groupable_id, $return)) {
                 /** @var null|ObjectGroup $group */
@@ -312,18 +311,17 @@ class AccountRepository implements AccountRepositoryInterface
             }
         }
         // reset the rest to zero.
-        $all  = [AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::CREDITCARD->value, AccountTypeEnum::MORTGAGE->value];
+        $all = [AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::CREDITCARD->value, AccountTypeEnum::MORTGAGE->value];
         $this->user->accounts()->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-            ->whereNotIn('account_types.type', $all)
-            ->update(['order' => 0])
-        ;
+                   ->whereNotIn('account_types.type', $all)
+                   ->update(['order' => 0]);
     }
 
     public function getAccountsByType(array $types, ?array $sort = [], ?array $filters = []): Collection
     {
-        $sortable        = ['name', 'active']; // TODO yes this is a duplicate array.
-        $res             = array_intersect([AccountTypeEnum::ASSET->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value], $types);
-        $query           = $this->userGroup->accounts();
+        $sortable = ['name', 'active']; // TODO yes this is a duplicate array.
+        $res      = array_intersect([AccountTypeEnum::ASSET->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value], $types);
+        $query    = $this->userGroup->accounts();
         if (0 !== count($types)) {
             $query->accountTypeIn($types);
         }
@@ -370,7 +368,7 @@ class AccountRepository implements AccountRepositoryInterface
         return $query->get(['accounts.*']);
     }
 
-    #[\Override]
+    #[Override]
     public function update(Account $account, array $data): Account
     {
         /** @var AccountUpdateService $service */
@@ -383,13 +381,12 @@ class AccountRepository implements AccountRepositoryInterface
     {
         // search by group, not by user
         $dbQuery = $this->userGroup->accounts()
-            ->where('active', true)
-            ->orderBy('accounts.updated_at', 'ASC')
-            ->orderBy('accounts.order', 'ASC')
-            ->orderBy('accounts.account_type_id', 'ASC')
-            ->orderBy('accounts.name', 'ASC')
-            ->with(['accountType'])
-        ;
+                                   ->where('active', true)
+                                   ->orderBy('accounts.updated_at', 'ASC')
+                                   ->orderBy('accounts.order', 'ASC')
+                                   ->orderBy('accounts.account_type_id', 'ASC')
+                                   ->orderBy('accounts.name', 'ASC')
+                                   ->with(['accountType']);
 
         // split query on spaces just in case:
         if ('' !== trim($query)) {
