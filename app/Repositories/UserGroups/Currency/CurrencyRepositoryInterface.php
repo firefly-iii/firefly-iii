@@ -88,8 +88,6 @@ interface CurrencyRepositoryInterface
 
     public function getByIds(array $ids): Collection;
 
-    public function getUserGroup(): UserGroup;
-
     public function isFallbackCurrency(TransactionCurrency $currency): bool;
 
     public function makeDefault(TransactionCurrency $currency): void;

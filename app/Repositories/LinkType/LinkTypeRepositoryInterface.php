@@ -23,13 +23,25 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\LinkType;
 
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
+use FireflyIII\Models\UserGroup;
+use FireflyIII\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
  * Interface LinkTypeRepositoryInterface.
+ *
+ * @method setUserGroup(UserGroup $group)
+ * @method getUserGroup()
+ * @method getUser()
+ * @method checkUserGroupAccess(UserRoleEnum $role)
+ * @method setUser(null|Authenticatable|User $user)
+ * @method setUserGroupById(int $userGroupId)
+ *
  */
 interface LinkTypeRepositoryInterface
 {

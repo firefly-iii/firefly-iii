@@ -24,17 +24,47 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Currency;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\UserRoleEnum;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Models\UserGroup;
+use FireflyIII\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
  * Interface CurrencyRepositoryInterface.
+ *
+ * @method setUserGroup(UserGroup $group)
+ * @method getUserGroup()
+ * @method getUser()
+ * @method checkUserGroupAccess(UserRoleEnum $role)
+ * @method setUser(null|Authenticatable|User $user)
+ * @method setUserGroupById(int $userGroupId)
+ *
  */
 interface CurrencyRepositoryInterface
 {
     public function find(int $currencyId): ?TransactionCurrency;
     public function searchCurrency(string $search, int $limit): Collection;
+    public function isFallbackCurrency(TransactionCurrency $currency): bool;
+    public function getAll(): Collection;
+    public function store(array $data): TransactionCurrency;
+    public function makeDefault(TransactionCurrency $currency): void;
+    public function destroy(TransactionCurrency $currency): bool;
+    public function enable(TransactionCurrency $currency): void;
+    public function disable(TransactionCurrency $currency): void;
+    public function update(TransactionCurrency $currency, array $data): TransactionCurrency;
+
+    /**
+     * @throws FireflyException
+     */
+    public function currencyInUse(TransactionCurrency $currency);
+    /**
+     * @throws FireflyException
+     */
+    public function currencyInUseAt(TransactionCurrency $currency): ?string;
 
     /**
      * Find by currency code, return NULL if unfound.
