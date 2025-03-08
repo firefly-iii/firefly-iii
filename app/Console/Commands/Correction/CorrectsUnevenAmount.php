@@ -122,8 +122,7 @@ class CorrectsUnevenAmount extends Command
         $journals = DB::table('transactions')
             ->groupBy('transaction_journal_id')
             ->whereNull('deleted_at')
-            ->get(['transaction_journal_id', DB::raw('SUM(amount) AS the_sum')])  // @phpstan-ignore-line
-        ;
+            ->get(['transaction_journal_id', DB::raw('SUM(amount) AS the_sum')]);
 
         /** @var \stdClass $entry */
         foreach ($journals as $entry) {

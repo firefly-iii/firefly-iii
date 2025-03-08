@@ -67,7 +67,7 @@ class IndexController extends Controller
         $types             = $request->getAccountTypes();
         $sorting           = $request->getSortInstructions('accounts');
         $filters           = $request->getFilterInstructions('accounts');
-        $accounts          = $this->repository->getAccountsByType($types, $sorting, $filters);
+        $accounts          = $this->repository->getAccountsByType($types, $sorting);
         $pageSize          = $this->parameters->get('limit');
         $count             = $accounts->count();
 
