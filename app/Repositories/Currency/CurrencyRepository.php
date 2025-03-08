@@ -38,6 +38,16 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
 {
     use UserGroupTrait;
 
+    public function searchCurrency(string $search, int $limit): Collection
+    {
+        $query = TransactionCurrency::where('enabled', true);
+        if ('' !== $search) {
+            $query->whereLike('name', sprintf('%%%s%%', $search));
+        }
+
+        return $query->take($limit)->get();
+    }
+
     #[\Override]
     public function find(int $currencyId): ?TransactionCurrency
     {
