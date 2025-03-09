@@ -33,10 +33,13 @@ trait ValidatesBulkTransactionQuery
     {
         $data = $validator->getData();
         // assumption is all validation has already taken place and the query key exists.
-        $json = json_decode($data['query'], true, 8, JSON_THROW_ON_ERROR);
+        $query  =$data['query'] ?? '[]';
+        $json = json_decode($query, true, 8, JSON_THROW_ON_ERROR);
 
-        if (array_key_exists('account_id', $json['where'])
-            && array_key_exists('account_id', $json['update'])
+        if (
+            array_key_exists('where', $json) &&
+            array_key_exists('update', $json) &&
+            array_key_exists('account_id', $json['where']) && array_key_exists('account_id', $json['update'])
         ) {
             // find both accounts, must be same type.
             // already validated: belongs to this user.
