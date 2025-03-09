@@ -71,6 +71,8 @@ interface AccountRepositoryInterface
 
     public function findByName(string $name, array $types): ?Account;
 
+    public function periodCollection(Account $account, Carbon $start, Carbon $end): array;
+
     public function getAccountBalances(Account $account): Collection;
 
     public function getAccountCurrency(Account $account): ?TransactionCurrency;
