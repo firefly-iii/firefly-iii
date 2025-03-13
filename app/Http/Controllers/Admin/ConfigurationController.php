@@ -26,6 +26,7 @@ namespace FireflyIII\Http\Controllers\Admin;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Http\Requests\ConfigurationRequest;
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log;
@@ -68,8 +69,8 @@ class ConfigurationController extends Controller
 
         // all available configuration and their default value in case
         // they don't exist yet.
-        $singleUserMode = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
-        $isDemoSite     = app('fireflyconfig')->get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
+        $singleUserMode = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
+        $isDemoSite     = FireflyConfig::get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
         $siteOwner      = config('firefly.site_owner');
 
         return view(
@@ -89,8 +90,8 @@ class ConfigurationController extends Controller
         Log::channel('audit')->info('User updates global configuration.', $data);
 
         // store config values
-        app('fireflyconfig')->set('single_user_mode', $data['single_user_mode']);
-        app('fireflyconfig')->set('is_demo_site', $data['is_demo_site']);
+        FireflyConfig::set('single_user_mode', $data['single_user_mode']);
+        FireflyConfig::set('is_demo_site', $data['is_demo_site']);
 
         // flash message
         session()->flash('success', (string) trans('firefly.configuration_updated'));
