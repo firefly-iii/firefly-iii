@@ -28,7 +28,7 @@ use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\GroupMembership;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Support\Facades\Amount;
-use FireflyIII\Transformers\V2\AbstractTransformer;
+use FireflyIII\Transformers\AbstractTransformer;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 

@@ -36,6 +36,7 @@ use Illuminate\Support\Facades\Log;
 
 /**
  * Class AccountTransformer
+ * @deprecated
  */
 class AccountTransformer extends AbstractTransformer
 {

@@ -29,7 +29,7 @@ use FireflyIII\Api\V2\Request\UserGroup\UpdateMembershipRequest;
 use FireflyIII\Api\V2\Request\UserGroup\UpdateRequest;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\UserGroup\UserGroupRepositoryInterface;
-use FireflyIII\Transformers\V2\UserGroupTransformer;
+use FireflyIII\Transformers\UserGroupTransformer;
 use Illuminate\Http\JsonResponse;
 
 /**

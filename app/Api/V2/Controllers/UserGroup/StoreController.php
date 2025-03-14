@@ -27,7 +27,7 @@ namespace FireflyIII\Api\V2\Controllers\UserGroup;
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\UserGroup\StoreRequest;
 use FireflyIII\Repositories\UserGroup\UserGroupRepositoryInterface;
-use FireflyIII\Transformers\V2\UserGroupTransformer;
+use FireflyIII\Transformers\UserGroupTransformer;
 use Illuminate\Http\JsonResponse;
 
 /**

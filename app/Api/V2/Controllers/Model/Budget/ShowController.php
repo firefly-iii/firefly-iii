@@ -28,7 +28,7 @@ use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Generic\DateRequest;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Transformers\V2\BudgetTransformer;
+use FireflyIII\Transformers\BudgetTransformer;
 use Illuminate\Http\JsonResponse;
 
 /**

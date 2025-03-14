@@ -1,8 +1,7 @@
 <?php
-
 /*
- * AccountTransformer.php
- * Copyright (c) 2022 james@firefly-iii.org
+ * ExchangeRateTransformer.php
+ * Copyright (c) 2025 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -17,20 +16,16 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
 declare(strict_types=1);
 
-namespace FireflyIII\Transformers\V2;
+namespace FireflyIII\Transformers;
 
 use FireflyIII\Models\CurrencyExchangeRate;
 use Illuminate\Support\Collection;
 
-/**
- * Class AccountTransformer
- * @deprecated
- */
 class ExchangeRateTransformer extends AbstractTransformer
 {
     /**

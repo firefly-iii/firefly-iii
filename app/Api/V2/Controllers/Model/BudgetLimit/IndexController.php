@@ -27,7 +27,7 @@ namespace FireflyIII\Api\V2\Controllers\Model\BudgetLimit;
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
-use FireflyIII\Transformers\V2\BudgetLimitTransformer;
+use FireflyIII\Transformers\BudgetLimitTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 

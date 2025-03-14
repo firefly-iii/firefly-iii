@@ -28,7 +28,7 @@ use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Model\TransactionCurrency\IndexRequest;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use FireflyIII\Transformers\V2\CurrencyTransformer;
+use FireflyIII\Transformers\CurrencyTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 

@@ -28,7 +28,7 @@ use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use FireflyIII\Transformers\V2\CurrencyTransformer;
+use FireflyIII\Transformers\CurrencyTransformer;
 use Illuminate\Http\JsonResponse;
 
 /**

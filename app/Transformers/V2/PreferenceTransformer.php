@@ -29,6 +29,7 @@ use Illuminate\Support\Collection;
 
 /**
  * Class PreferenceTransformer
+ * @deprecated
  */
 class PreferenceTransformer extends AbstractTransformer
 {

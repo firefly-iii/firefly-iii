@@ -26,7 +26,7 @@ namespace FireflyIII\Api\V2\Controllers\Model\Transaction;
 
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Models\TransactionGroup;
-use FireflyIII\Transformers\V2\TransactionGroupTransformer;
+use FireflyIII\Transformers\TransactionGroupTransformer;
 use Illuminate\Http\JsonResponse;
 
 class ShowController extends Controller
