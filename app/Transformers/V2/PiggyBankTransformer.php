@@ -41,6 +41,7 @@ use Illuminate\Support\Facades\Log;
 
 /**
  * Class PiggyBankTransformer
+ * @deprecated
  */
 class PiggyBankTransformer extends AbstractTransformer
 {

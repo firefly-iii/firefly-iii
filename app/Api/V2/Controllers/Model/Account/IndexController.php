@@ -28,7 +28,7 @@ use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Model\Account\IndexRequest;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Transformers\V2\AccountTransformer;
+use FireflyIII\Transformers\AccountTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Log;

@@ -29,7 +29,7 @@ use FireflyIII\Api\V2\Request\Model\Transaction\ListRequest;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Support\Http\Api\TransactionFilter;
-use FireflyIII\Transformers\V2\TransactionGroupTransformer;
+use FireflyIII\Transformers\TransactionGroupTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 
