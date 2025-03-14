@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\User;
 
-use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\GroupMembership;
@@ -35,7 +34,6 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Override;
 
 /**
  * Class UserRepository.
@@ -46,17 +44,17 @@ class UserRepository implements UserRepositoryInterface
      * This updates the users email address and records some things so it can be confirmed or undone later.
      * The user is blocked until the change is confirmed.
      *
-     * @throws Exception
+     * @throws \Exception
      *
      * @see updateEmail
      */
     public function changeEmail(User $user, string $newEmail): bool
     {
-        $oldEmail = $user->email;
+        $oldEmail           = $user->email;
 
         // save old email as pref
         app('preferences')->setForUser($user, 'previous_email_latest', $oldEmail);
-        app('preferences')->setForUser($user, 'previous_email_' . date('Y-m-d-H-i-s'), $oldEmail);
+        app('preferences')->setForUser($user, 'previous_email_'.date('Y-m-d-H-i-s'), $oldEmail);
 
         // set undo and confirm token:
         app('preferences')->setForUser($user, 'email_change_undo_token', bin2hex(random_bytes(16)));
@@ -101,7 +99,7 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function destroy(User $user): bool
     {
@@ -173,7 +171,7 @@ class UserRepository implements UserRepositoryInterface
     public function getRolesInGroup(User $user, int $groupId): array
     {
         /** @var null|UserGroup $group */
-        $group = UserGroup::find($groupId);
+        $group       = UserGroup::find($groupId);
         if (null === $group) {
             throw new FireflyException(sprintf('Could not find group #%d', $groupId));
         }
@@ -199,7 +197,7 @@ class UserRepository implements UserRepositoryInterface
      */
     public function getUserData(User $user): array
     {
-        $return = [];
+        $return                        = [];
 
         // two factor:
         $return['has_2fa']             = null !== $user->mfa_secret;
@@ -215,11 +213,12 @@ class UserRepository implements UserRepositoryInterface
         $return['categories']          = $user->categories()->count();
         $return['budgets']             = $user->budgets()->count();
         $return['budgets_with_limits'] = BudgetLimit::distinct()
-                                                    ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
-                                                    ->where('amount', '>', 0)
-                                                    ->whereNull('budgets.deleted_at')
-                                                    ->where('budgets.user_id', $user->id)
-                                                    ->count('budget_limits.budget_id');
+            ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
+            ->where('amount', '>', 0)
+            ->whereNull('budgets.deleted_at')
+            ->where('budgets.user_id', $user->id)
+            ->count('budget_limits.budget_id')
+        ;
         $return['rule_groups']         = $user->ruleGroups()->count();
         $return['rules']               = $user->rules()->count();
         $return['tags']                = $user->tags()->count();
@@ -227,7 +226,7 @@ class UserRepository implements UserRepositoryInterface
         return $return;
     }
 
-    public function hasRole(null | Authenticatable | User $user, string $role): bool
+    public function hasRole(null|Authenticatable|User $user, string $role): bool
     {
         if (null === $user) {
             return false;
@@ -244,7 +243,7 @@ class UserRepository implements UserRepositoryInterface
         return false;
     }
 
-    #[Override]
+    #[\Override]
     public function getUserGroups(User $user): Collection
     {
         $memberships = $user->groupMemberships()->get();
@@ -256,7 +255,7 @@ class UserRepository implements UserRepositoryInterface
             /** @var null|UserGroup $group */
             $group = $membership->userGroup()->first();
             if (null !== $group) {
-                $groupId = $group->id;
+                $groupId       = $group->id;
                 if (in_array($groupId, array_keys($set), true)) {
                     continue;
                 }
@@ -268,14 +267,14 @@ class UserRepository implements UserRepositoryInterface
         return $collection;
     }
 
-    public function inviteUser(null | Authenticatable | User $user, string $email): InvitedUser
+    public function inviteUser(null|Authenticatable|User $user, string $email): InvitedUser
     {
         if (!$user instanceof User) {
             throw new FireflyException('User is not a User object.');
         }
-        $now = today(config('app.timezone'));
+        $now                  = today(config('app.timezone'));
         $now->addDays(2);
-        $invitee = new InvitedUser();
+        $invitee              = new InvitedUser();
         $invitee->user()->associate($user);
         $invitee->invite_code = Str::random(64);
         $invitee->email       = $email;
@@ -386,11 +385,11 @@ class UserRepository implements UserRepositoryInterface
         if ('' === $newEmail) {
             return true;
         }
-        $oldEmail = $user->email;
+        $oldEmail    = $user->email;
 
         // save old email as pref
         app('preferences')->setForUser($user, 'admin_previous_email_latest', $oldEmail);
-        app('preferences')->setForUser($user, 'admin_previous_email_' . date('Y-m-d-H-i-s'), $oldEmail);
+        app('preferences')->setForUser($user, 'admin_previous_email_'.date('Y-m-d-H-i-s'), $oldEmail);
 
         $user->email = $newEmail;
         $user->save();

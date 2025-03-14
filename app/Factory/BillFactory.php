@@ -55,8 +55,8 @@ class BillFactory
             $skip   = array_key_exists('skip', $data) ? $data['skip'] : 0;
             $active = array_key_exists('active', $data) ? $data['active'] : 0;
 
-            $data['extension_date'] = $data['extension_date'] ?? null;
-            $data['end_date']       = $data['end_date'] ?? null;
+            $data['extension_date'] ??= null;
+            $data['end_date']       ??= null;
 
             /** @var Bill $bill */
             $bill   = Bill::create(

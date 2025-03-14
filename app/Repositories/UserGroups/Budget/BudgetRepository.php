@@ -39,16 +39,18 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function getActiveBudgets(): Collection
     {
         return $this->userGroup->budgets()->where('active', true)
-                               ->orderBy('order', 'ASC')
-                               ->orderBy('name', 'ASC')
-                               ->get();
+            ->orderBy('order', 'ASC')
+            ->orderBy('name', 'ASC')
+            ->get()
+        ;
     }
 
     public function getBudgets(): Collection
     {
         return $this->userGroup->budgets()
-                               ->orderBy('order', 'ASC')
-                               ->orderBy('name', 'ASC')
-                               ->get();
+            ->orderBy('order', 'ASC')
+            ->orderBy('name', 'ASC')
+            ->get()
+        ;
     }
 }

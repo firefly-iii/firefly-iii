@@ -42,7 +42,6 @@ use Illuminate\Support\Collection;
  * @method checkUserGroupAccess(UserRoleEnum $role)
  * @method setUser(null|Authenticatable|User $user)
  * @method setUserGroupById(int $userGroupId)
- *
  */
 interface OperationsRepositoryInterface
 {

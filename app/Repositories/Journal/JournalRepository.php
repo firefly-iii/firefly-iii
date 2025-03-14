@@ -67,7 +67,8 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
             ->transactionJournals()
             ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
             ->whereIn('transaction_types.type', $types)
-            ->get(['transaction_journals.*']);
+            ->get(['transaction_journals.*'])
+        ;
     }
 
     /**
@@ -101,7 +102,7 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
      */
     public function getJournalTotal(TransactionJournal $journal): string
     {
-        $cache = new CacheProperties();
+        $cache  = new CacheProperties();
         $cache->addProperty($journal->id);
         $cache->addProperty('amount-positive');
         if ($cache->has()) {
@@ -150,7 +151,8 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
             return new Carbon($cache->get());
         }
         $entry = TransactionJournalMeta::where('transaction_journal_id', $journalId)
-                                       ->where('name', $field)->first();
+            ->where('name', $field)->first()
+        ;
         if (null === $entry) {
             return null;
         }
@@ -193,7 +195,8 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
     public function searchJournalDescriptions(string $search, int $limit): Collection
     {
         $query = $this->user->transactionJournals()
-                            ->orderBy('date', 'DESC');
+            ->orderBy('date', 'DESC')
+        ;
         if ('' !== $search) {
             $query->whereLike('description', sprintf('%%%s%%', $search));
         }

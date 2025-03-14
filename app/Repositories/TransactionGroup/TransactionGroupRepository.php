@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\TransactionGroup;
 
 use Carbon\Carbon;
-use Exception;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
@@ -141,21 +140,22 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
     {
         $repository = app(AttachmentRepositoryInterface::class);
         $repository->setUser($this->user);
-        $journals = $group->transactionJournals->pluck('id')->toArray();
-        $set      = Attachment::whereIn('attachable_id', $journals)
-                              ->where('attachable_type', TransactionJournal::class)
-                              ->where('uploaded', true)
-                              ->whereNull('deleted_at')->get();
+        $journals   = $group->transactionJournals->pluck('id')->toArray();
+        $set        = Attachment::whereIn('attachable_id', $journals)
+            ->where('attachable_type', TransactionJournal::class)
+            ->where('uploaded', true)
+            ->whereNull('deleted_at')->get()
+        ;
 
-        $result = [];
+        $result     = [];
 
         /** @var Attachment $attachment */
         foreach ($set as $attachment) {
-            $journalId              = $attachment->attachable_id;
-            $result[$journalId]     ??= [];
-            $current                = $attachment->toArray();
-            $current['file_exists'] = true;
-            $current['notes']       = $repository->getNoteText($attachment);
+            $journalId                = $attachment->attachable_id;
+            $result[$journalId] ??= [];
+            $current                  = $attachment->toArray();
+            $current['file_exists']   = true;
+            $current['notes']         = $repository->getNoteText($attachment);
             // already determined that this attachable is a TransactionJournal.
             $current['journal_title'] = $attachment->attachable->description;
             $result[$journalId][]     = $current;
@@ -171,8 +171,9 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
     {
         /** @var null|Note $note */
         $note = Note::where('noteable_id', $journalId)
-                    ->where('noteable_type', TransactionJournal::class)
-                    ->first();
+            ->where('noteable_type', TransactionJournal::class)
+            ->first()
+        ;
         if (null === $note) {
             return null;
         }
@@ -193,13 +194,14 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
                 $q->orWhereIn('destination_id', $journals);
             }
         )
-                                          ->with(['source', 'destination', 'source.transactions'])
-                                          ->leftJoin('link_types', 'link_types.id', '=', 'journal_links.link_type_id')
-                                          ->get(['journal_links.*', 'link_types.inward', 'link_types.outward', 'link_types.editable']);
+            ->with(['source', 'destination', 'source.transactions'])
+            ->leftJoin('link_types', 'link_types.id', '=', 'journal_links.link_type_id')
+            ->get(['journal_links.*', 'link_types.inward', 'link_types.outward', 'link_types.editable'])
+        ;
 
         /** @var TransactionJournalLink $entry */
         foreach ($set as $entry) {
-            $journalId          = in_array($entry->source_id, $journals, true) ? $entry->source_id : $entry->destination_id;
+            $journalId = in_array($entry->source_id, $journals, true) ? $entry->source_id : $entry->destination_id;
             $return[$journalId] ??= [];
 
             // phpstan: the editable field is provided by the query.
@@ -263,10 +265,10 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
         if (0 === bccomp('0', $transaction->foreign_amount)) {
             return '';
         }
-        $currency = $transaction->foreignCurrency;
-        $type     = $journal->transactionType->type;
-        $amount   = app('steam')->positive($transaction->foreign_amount);
-        $return   = '';
+        $currency    = $transaction->foreignCurrency;
+        $type        = $journal->transactionType->type;
+        $amount      = app('steam')->positive($transaction->foreign_amount);
+        $return      = '';
         if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
             $return = app('amount')->formatAnything($currency, app('steam')->negative($amount));
         }
@@ -289,15 +291,16 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
     /**
      * Return object with all found meta field things as Carbon objects.
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function getMetaDateFields(int $journalId, array $fields): NullArrayObject
     {
         $query  = DB::table('journal_meta')
-                    ->where('transaction_journal_id', $journalId)
-                    ->whereIn('name', $fields)
-                    ->whereNull('deleted_at')
-                    ->get(['name', 'data']);
+            ->where('transaction_journal_id', $journalId)
+            ->whereIn('name', $fields)
+            ->whereNull('deleted_at')
+            ->get(['name', 'data'])
+        ;
         $return = [];
 
         foreach ($query as $row) {
@@ -313,10 +316,11 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
     public function getMetaFields(int $journalId, array $fields): NullArrayObject
     {
         $query  = DB::table('journal_meta')
-                    ->where('transaction_journal_id', $journalId)
-                    ->whereIn('name', $fields)
-                    ->whereNull('deleted_at')
-                    ->get(['name', 'data']);
+            ->where('transaction_journal_id', $journalId)
+            ->whereIn('name', $fields)
+            ->whereNull('deleted_at')
+            ->get(['name', 'data'])
+        ;
         $return = [];
 
         foreach ($query as $row) {
@@ -337,8 +341,9 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
         $journals = $group->transactionJournals->pluck('id')->toArray();
         $currency = app('amount')->getNativeCurrencyByUserGroup($this->user->userGroup);
         $data     = PiggyBankEvent::whereIn('transaction_journal_id', $journals)
-                                  ->with('piggyBank', 'piggyBank.account')
-                                  ->get(['piggy_bank_events.*']);
+            ->with('piggyBank', 'piggyBank.account')
+            ->get(['piggy_bank_events.*'])
+        ;
 
         /** @var PiggyBankEvent $row */
         foreach ($data as $row) {
@@ -346,13 +351,14 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
                 continue;
             }
             // get currency preference.
-            $currencyPreference = AccountMeta::where('account_id', $row->piggyBank->account_id)
-                                             ->where('name', 'currency_id')
-                                             ->first();
+            $currencyPreference   = AccountMeta::where('account_id', $row->piggyBank->account_id)
+                ->where('name', 'currency_id')
+                ->first()
+            ;
             if (null !== $currencyPreference) {
                 $currency = TransactionCurrency::where('id', $currencyPreference->data)->first();
             }
-            $journalId          = $row->transaction_journal_id;
+            $journalId            = $row->transaction_journal_id;
             $return[$journalId] ??= [];
 
             $return[$journalId][] = [
@@ -379,10 +385,11 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
     public function getTags(int $journalId): array
     {
         $result = DB::table('tag_transaction_journal')
-                    ->leftJoin('tags', 'tag_transaction_journal.tag_id', '=', 'tags.id')
-                    ->where('tag_transaction_journal.transaction_journal_id', $journalId)
-                    ->orderBy('tags.tag', 'ASC')
-                    ->get(['tags.tag']);
+            ->leftJoin('tags', 'tag_transaction_journal.tag_id', '=', 'tags.id')
+            ->where('tag_transaction_journal.transaction_journal_id', $journalId)
+            ->orderBy('tags.tag', 'ASC')
+            ->get(['tags.tag'])
+        ;
 
         return $result->pluck('tag')->toArray();
     }

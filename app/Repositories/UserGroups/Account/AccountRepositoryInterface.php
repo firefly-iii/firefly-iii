@@ -73,7 +73,6 @@ interface AccountRepositoryInterface
 
     public function getObjectGroups(Collection $accounts): array;
 
-
     /**
      * Reset order types of the mentioned accounts.
      */

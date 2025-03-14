@@ -1,4 +1,5 @@
 <?php
+
 /*
  * ExchangeRateRepositoryInterface.php
  * Copyright (c) 2025 james@firefly-iii.org.
@@ -31,7 +32,6 @@ use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
-
 
 /**
  * Interface ExchangeRateRepositoryInterface

@@ -45,17 +45,17 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface, UserGroupInterf
         $carbonFormat = app('navigation')->preferredCarbonFormat($start, $end);
 
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector    = app(GroupCollectorInterface::class);
 
         $collector->setAccounts($accounts)->setRange($start, $end);
         $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
         $collector->withoutBudget();
-        $journals = $collector->getExtractedJournals();
-        $data     = [];
+        $journals     = $collector->getExtractedJournals();
+        $data         = [];
 
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $currencyId = (int) $journal['currency_id'];
+            $currencyId                          = (int) $journal['currency_id'];
 
             $data[$currencyId] ??= [
                 'id'                      => 0,
@@ -68,7 +68,7 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface, UserGroupInterf
                 'currency_decimal_places' => $journal['currency_decimal_places'],
                 'entries'                 => [],
             ];
-            $date              = $journal['date']->format($carbonFormat);
+            $date                                = $journal['date']->format($carbonFormat);
 
             if (!array_key_exists($date, $data[$currencyId]['entries'])) {
                 $data[$currencyId]['entries'][$date] = '0';
@@ -82,7 +82,7 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface, UserGroupInterf
     public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?TransactionCurrency $currency = null): array
     {
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector  = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
 
         if (null !== $accounts && $accounts->count() > 0) {

@@ -83,7 +83,7 @@ class ShowController extends Controller
     public function show(Request $request, Account $account, ?Carbon $start = null, ?Carbon $end = null)
     {
 
-        $objectType = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
+        $objectType       = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
 
         if (!$this->isEditableAccount($account)) {
             return $this->redirectAccountToAccount($account);
@@ -130,18 +130,20 @@ class ShowController extends Controller
         }
         Log::debug('Collect transactions');
         Timer::start('collection');
+
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector        = app(GroupCollectorInterface::class);
         $collector
             ->setAccounts(new Collection([$account]))
             ->setLimit($pageSize)
             ->setPage($page)
             ->withAPIInformation()
-            ->setRange($start, $end);
+            ->setRange($start, $end)
+        ;
         // this search will not include transaction groups where this asset account (or liability)
         // is just part of ONE of the journals. To force this:
         $collector->setExpandGroupSearch(true);
-        $groups = $collector->getPaginatedGroups();
+        $groups           = $collector->getPaginatedGroups();
 
         Log::debug('End collect transactions');
         Timer::stop('collection');
@@ -149,21 +151,21 @@ class ShowController extends Controller
         // enrich data in arrays.
 
         // enrich
-//        $enrichment   = new TransactionGroupEnrichment();
-//        $enrichment->setUser(auth()->user());
-//        $groups->setCollection($enrichment->enrich($groups->getCollection()));
+        //        $enrichment   = new TransactionGroupEnrichment();
+        //        $enrichment->setUser(auth()->user());
+        //        $groups->setCollection($enrichment->enrich($groups->getCollection()));
 
 
         $groups->setPath(route('accounts.show', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]));
-        $showAll = false;
+        $showAll          = false;
         // correct
-        $now = today()->endOfDay();
+        $now              = today()->endOfDay();
         if ($now->gt($end) || $now->lt($start)) {
             $now = $end;
         }
 
         Log::debug(sprintf('show: Call finalAccountBalance with date/time "%s"', $now->toIso8601String()));
-        $balances = Steam::filterAccountBalance(Steam::finalAccountBalance($account, $now), $account, $this->convertToNative, $accountCurrency);
+        $balances         = Steam::filterAccountBalance(Steam::finalAccountBalance($account, $now), $account, $this->convertToNative, $accountCurrency);
 
         return view(
             'accounts.show',
@@ -207,7 +209,7 @@ class ShowController extends Controller
         $today           = today(config('app.timezone'));
         $accountCurrency = $this->repository->getAccountCurrency($account);
         $start           = $this->repository->oldestJournalDate($account) ?? today(config('app.timezone'))->startOfMonth();
-        $subTitleIcon    = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
+        $subTitleIcon    = config('firefly.subIconsByIdentifier.'.$account->accountType->type);
         $page            = (int) $request->get('page');
         $pageSize        = (int) app('preferences')->get('listPageSize', 50)->data;
         $currency        = $this->repository->getAccountCurrency($account) ?? $this->defaultCurrency;
@@ -217,20 +219,20 @@ class ShowController extends Controller
         $end->endOfDay();
 
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector       = app(GroupCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page)->withAccountInformation()->withCategoryInformation();
 
         // this search will not include transaction groups where this asset account (or liability)
         // is just part of ONE of the journals. To force this:
         $collector->setExpandGroupSearch(true);
 
-        $groups = $collector->getPaginatedGroups();
+        $groups          = $collector->getPaginatedGroups();
         $groups->setPath(route('accounts.show.all', [$account->id]));
-        $chartUrl = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
-        $showAll  = true;
+        $chartUrl        = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
+        $showAll         = true;
         // correct
         Log::debug(sprintf('showAll: Call finalAccountBalance with date/time "%s"', $end->toIso8601String()));
-        $balances = Steam::filterAccountBalance(Steam::finalAccountBalance($account, $end), $account, $this->convertToNative, $accountCurrency);
+        $balances        = Steam::filterAccountBalance(Steam::finalAccountBalance($account, $end), $account, $this->convertToNative, $accountCurrency);
 
         return view(
             'accounts.show',

@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\JsonApi\Enrichments;
 
-use Carbon\Carbon;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
@@ -49,7 +48,6 @@ use Illuminate\Support\Facades\Log;
  */
 class AccountEnrichment implements EnrichmentInterface
 {
-
     private Collection $collection;
 
     private User                $user;

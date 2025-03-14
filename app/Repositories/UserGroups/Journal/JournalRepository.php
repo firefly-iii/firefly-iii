@@ -40,7 +40,8 @@ class JournalRepository implements JournalRepositoryInterface
     public function searchJournalDescriptions(array $query, int $limit): Collection
     {
         $search = $this->userGroup->transactionJournals()
-                                  ->orderBy('date', 'DESC');
+            ->orderBy('date', 'DESC')
+        ;
         if (count($query) > 0) {
             // split query on spaces just in case:
             $search->where(function (EloquentBuilder $q) use ($query): void {

@@ -42,7 +42,7 @@ class TransactionTypeRepository implements TransactionTypeRepositoryInterface
             return $type;
         }
         $typeString ??= TransactionTypeEnum::WITHDRAWAL->value;
-        $search     = $this->findByType($typeString);
+        $search = $this->findByType($typeString);
         if (null === $search) {
             $search = $this->findByType(TransactionTypeEnum::WITHDRAWAL->value);
         }

@@ -47,9 +47,9 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
     public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $tags = null): array
     {
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector      = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
-        $tagIds = [];
+        $tagIds         = [];
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
@@ -66,7 +66,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         $array          = [];
         $listedJournals = [];
         foreach ($journals as $journal) {
-            $currencyId         = (int) $journal['currency_id'];
+            $currencyId = (int) $journal['currency_id'];
             $array[$currencyId] ??= [
                 'tags'                    => [],
                 'currency_id'             => $currencyId,
@@ -78,9 +78,9 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
 
             // may have multiple tags:
             foreach ($journal['tags'] as $tag) {
-                $tagId     = (int) $tag['id'];
-                $tagName   = (string) $tag['name'];
-                $journalId = (int) $journal['transaction_journal_id'];
+                $tagId                                                                  = (int) $tag['id'];
+                $tagName                                                                = (string) $tag['name'];
+                $journalId                                                              = (int) $journal['transaction_journal_id'];
                 if (!in_array($tagId, $tagIds, true)) {
                     continue;
                 }
@@ -89,7 +89,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
                 if (in_array($journalId, $listedJournals, true)) {
                     continue;
                 }
-                $listedJournals[]                   = $journalId;
+                $listedJournals[]                                                       = $journalId;
                 $array[$currencyId]['tags'][$tagId] ??= [
                     'id'                   => $tagId,
                     'name'                 => $tagName,
@@ -130,9 +130,9 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
     public function listIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $tags = null): array
     {
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector      = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::DEPOSIT->value]);
-        $tagIds = [];
+        $tagIds         = [];
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
@@ -150,7 +150,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         $listedJournals = [];
 
         foreach ($journals as $journal) {
-            $currencyId         = (int) $journal['currency_id'];
+            $currencyId = (int) $journal['currency_id'];
             $array[$currencyId] ??= [
                 'tags'                    => [],
                 'currency_id'             => $currencyId,
@@ -162,9 +162,9 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
 
             // may have multiple tags:
             foreach ($journal['tags'] as $tag) {
-                $tagId     = (int) $tag['id'];
-                $tagName   = (string) $tag['name'];
-                $journalId = (int) $journal['transaction_journal_id'];
+                $tagId                                                                  = (int) $tag['id'];
+                $tagName                                                                = (string) $tag['name'];
+                $journalId                                                              = (int) $journal['transaction_journal_id'];
 
                 if (!in_array($tagId, $tagIds, true)) {
                     continue;
@@ -173,9 +173,9 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
                 if (in_array($journalId, $listedJournals, true)) {
                     continue;
                 }
-                $listedJournals[] = $journalId;
+                $listedJournals[]                                                       = $journalId;
 
-                $array[$currencyId]['tags'][$tagId]                                     ??= [
+                $array[$currencyId]['tags'][$tagId] ??= [
                     'id'                   => $tagId,
                     'name'                 => $tagName,
                     'transaction_journals' => [],

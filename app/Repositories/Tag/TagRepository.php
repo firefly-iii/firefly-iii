@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Tag;
 
 use Carbon\Carbon;
-use Exception;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Factory\TagFactory;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
@@ -52,7 +51,7 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function destroy(Tag $tag): bool
     {
@@ -120,7 +119,7 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
         return $set->each(
             static function (Attachment $attachment) use ($disk): void { // @phpstan-ignore-line
                 /** @var null|Note $note */
-                $note = $attachment->notes()->first();
+                $note                    = $attachment->notes()->first();
                 // only used in v1 view of tags
                 $attachment->file_exists = $disk->exists($attachment->fileName());
                 $attachment->notes_text  = null === $note ? '' : $note->text;
@@ -131,7 +130,7 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
     public function getTagsInYear(?int $year): array
     {
         // get all tags in the year (if present):
-        $tagQuery = $this->user->tags()->with(['locations', 'attachments'])->orderBy('tags.tag');
+        $tagQuery   = $this->user->tags()->with(['locations', 'attachments'])->orderBy('tags.tag');
 
         // add date range (or not):
         if (null === $year) {
@@ -141,7 +140,7 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
 
         if (null !== $year) {
             app('log')->debug(sprintf('Get tags with year %s.', $year));
-            $tagQuery->where('tags.date', '>=', $year . '-01-01 00:00:00')->where('tags.date', '<=', $year . '-12-31 23:59:59');
+            $tagQuery->where('tags.date', '>=', $year.'-01-01 00:00:00')->where('tags.date', '<=', $year.'-12-31 23:59:59');
         }
         $collection = $tagQuery->get();
         $return     = [];
@@ -236,13 +235,13 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
         }
 
         $collector->setTag($tag)->withAccountInformation();
-        $journals = $collector->getExtractedJournals();
+        $journals  = $collector->getExtractedJournals();
 
-        $sums = [];
+        $sums      = [];
 
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $found = false;
+            $found                    = false;
 
             /** @var array $localTag */
             foreach ($journal['tags'] as $localTag) {
@@ -253,7 +252,7 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
             if (false === $found) {
                 continue;
             }
-            $currencyId        = (int) $journal['currency_id'];
+            $currencyId               = (int) $journal['currency_id'];
             $sums[$currencyId] ??= [
                 'currency_id'                               => $currencyId,
                 'currency_name'                             => $journal['currency_name'],
@@ -267,14 +266,14 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
             ];
 
             // add amount to correct type:
-            $amount = app('steam')->positive((string) $journal['amount']);
-            $type   = $journal['transaction_type_type'];
+            $amount                   = app('steam')->positive((string) $journal['amount']);
+            $type                     = $journal['transaction_type_type'];
             if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
                 $amount = bcmul($amount, '-1');
             }
             $sums[$currencyId][$type] = bcadd($sums[$currencyId][$type], $amount);
 
-            $foreignCurrencyId = $journal['foreign_currency_id'];
+            $foreignCurrencyId        = $journal['foreign_currency_id'];
             if (null !== $foreignCurrencyId && 0 !== $foreignCurrencyId) {
                 $sums[$foreignCurrencyId] ??= [
                     'currency_id'                               => $foreignCurrencyId,
@@ -288,7 +287,7 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
                     TransactionTypeEnum::OPENING_BALANCE->value => '0',
                 ];
                 // add foreign amount to correct type:
-                $amount = app('steam')->positive((string) $journal['foreign_amount']);
+                $amount                          = app('steam')->positive((string) $journal['foreign_amount']);
                 if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
                     $amount = bcmul($amount, '-1');
                 }
@@ -353,7 +352,7 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
 
             // otherwise, update or create.
             if (!(null === $data['latitude'] && null === $data['longitude'] && null === $data['zoom_level'])) {
-                $location = $this->getLocation($tag);
+                $location             = $this->getLocation($tag);
                 if (null === $location) {
                     $location = new Location();
                     $location->locatable()->associate($tag);

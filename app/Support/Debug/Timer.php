@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Timer.php
  * Copyright (c) 2025 james@firefly-iii.org.
@@ -42,5 +43,4 @@ class Timer
         unset(self::$times[$title]);
         Log::debug(sprintf('Timer "%s" took %f seconds', $title, $diff));
     }
-
 }

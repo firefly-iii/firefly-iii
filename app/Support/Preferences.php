@@ -72,7 +72,7 @@ class Preferences
 
     public function getForUser(User $user, string $name, null|array|bool|int|string $default = null): ?Preference
     {
-        //Log::debug(sprintf('getForUser(#%d, "%s")', $user->id, $name));
+        // Log::debug(sprintf('getForUser(#%d, "%s")', $user->id, $name));
         // don't care about user group ID, except for some specific preferences.
         $userGroupId = $this->getUserGroupId($user, $name);
         $query       = Preference::where('user_id', $user->id)->where('name', $name);
@@ -90,7 +90,7 @@ class Preferences
         }
 
         if (null !== $preference) {
-            //Log::debug(sprintf('Found preference #%d for user #%d: %s', $preference->id, $user->id, $name));
+            // Log::debug(sprintf('Found preference #%d for user #%d: %s', $preference->id, $user->id, $name));
 
             return $preference;
         }

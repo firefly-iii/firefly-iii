@@ -52,8 +52,8 @@ class AcceptHeaders
         // if bad 'Content-Type' header, refuse service.
 
         // some routes are exempt from this.
-        $exempt = [
-            'api.v1.data.bulk.transactions'
+        $exempt       = [
+            'api.v1.data.bulk.transactions',
         ];
 
         if (('POST' === $method || 'PUT' === $method) && !$request->hasHeader('Content-Type') && !in_array($request->route()->getName(), $exempt, true)) {

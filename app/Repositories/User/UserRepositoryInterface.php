@@ -40,7 +40,6 @@ use Illuminate\Support\Collection;
  * @method checkUserGroupAccess(UserRoleEnum $role)
  * @method setUser(null|Authenticatable|User $user)
  * @method setUserGroupById(int $userGroupId)
- *
  */
 interface UserRepositoryInterface
 {
@@ -106,9 +105,9 @@ interface UserRepositoryInterface
 
     public function getUserGroups(User $user): Collection;
 
-    public function hasRole(null | Authenticatable | User $user, string $role): bool;
+    public function hasRole(null|Authenticatable|User $user, string $role): bool;
 
-    public function inviteUser(null | Authenticatable | User $user, string $email): InvitedUser;
+    public function inviteUser(null|Authenticatable|User $user, string $email): InvitedUser;
 
     public function redeemCode(string $code): void;
 

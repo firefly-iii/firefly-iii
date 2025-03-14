@@ -52,12 +52,12 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface, UserGroupIn
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        $journals = $collector->getExtractedJournals();
-        $array    = [];
+        $journals  = $collector->getExtractedJournals();
+        $array     = [];
 
         foreach ($journals as $journal) {
-            $currencyId         = (int) $journal['currency_id'];
-            $array[$currencyId] ??= [
+            $currencyId = (int) $journal['currency_id'];
+            $array[$currencyId]                  ??= [
                 'categories'              => [],
                 'currency_id'             => $currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -74,12 +74,12 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface, UserGroupIn
 
             // add journal to array:
             // only a subset of the fields.
-            $journalId = (int) $journal['transaction_journal_id'];
+            $journalId  = (int) $journal['transaction_journal_id'];
             $array[$currencyId]['categories'][0]['transaction_journals'][$journalId]
-                       = [
-                'amount' => app('steam')->negative($journal['amount']),
-                'date'   => $journal['date'],
-            ];
+                        = [
+                           'amount' => app('steam')->negative($journal['amount']),
+                           'date'   => $journal['date'],
+                       ];
         }
 
         return $array;
@@ -98,12 +98,12 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface, UserGroupIn
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        $journals = $collector->getExtractedJournals();
-        $array    = [];
+        $journals  = $collector->getExtractedJournals();
+        $array     = [];
 
         foreach ($journals as $journal) {
-            $currencyId         = (int) $journal['currency_id'];
-            $array[$currencyId] ??= [
+            $currencyId = (int) $journal['currency_id'];
+            $array[$currencyId]                  ??= [
                 'categories'              => [],
                 'currency_id'             => $currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -120,12 +120,12 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface, UserGroupIn
             ];
             // add journal to array:
             // only a subset of the fields.
-            $journalId = (int) $journal['transaction_journal_id'];
+            $journalId  = (int) $journal['transaction_journal_id'];
             $array[$currencyId]['categories'][0]['transaction_journals'][$journalId]
-                       = [
-                'amount' => app('steam')->positive($journal['amount']),
-                'date'   => $journal['date'],
-            ];
+                        = [
+                           'amount' => app('steam')->positive($journal['amount']),
+                           'date'   => $journal['date'],
+                       ];
         }
 
         return $array;
@@ -137,7 +137,7 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface, UserGroupIn
     public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null): array
     {
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector  = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->withoutCategory();
 
         if (null !== $accounts && $accounts->count() > 0) {
@@ -161,12 +161,12 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface, UserGroupIn
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        $journals = $collector->getExtractedJournals();
-        $array    = [];
+        $journals  = $collector->getExtractedJournals();
+        $array     = [];
 
         foreach ($journals as $journal) {
             $currencyId                = (int) $journal['currency_id'];
-            $array[$currencyId]        ??= [
+            $array[$currencyId] ??= [
                 'sum'                     => '0',
                 'currency_id'             => $currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -189,12 +189,12 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface, UserGroupIn
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        $journals = $collector->getExtractedJournals();
-        $array    = [];
+        $journals  = $collector->getExtractedJournals();
+        $array     = [];
 
         foreach ($journals as $journal) {
             $currencyId                = (int) $journal['currency_id'];
-            $array[$currencyId]        ??= [
+            $array[$currencyId] ??= [
                 'sum'                     => '0',
                 'currency_id'             => $currencyId,
                 'currency_name'           => $journal['currency_name'],
