@@ -29,6 +29,7 @@ use Illuminate\Support\Collection;
 
 /**
  * Class AccountTransformer
+ *
  * @deprecated
  */
 class ExchangeRateTransformer extends AbstractTransformer

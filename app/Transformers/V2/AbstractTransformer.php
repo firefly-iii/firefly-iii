@@ -30,6 +30,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class AbstractTransformer
+ *
  * @deprecated
  */
 abstract class AbstractTransformer extends TransformerAbstract

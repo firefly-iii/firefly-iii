@@ -680,7 +680,8 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
 
                 // fields
                 'transaction_journals.date', 'transaction_types.type', 'transaction_journals.transaction_currency_id', 'transactions.amount'])
-            ->toArray();
+            ->toArray()
+        ;
 
     }
 }

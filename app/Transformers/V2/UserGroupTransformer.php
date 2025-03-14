@@ -32,6 +32,7 @@ use Illuminate\Support\Collection;
 
 /**
  * Class UserGroupTransformer
+ *
  * @deprecated
  */
 class UserGroupTransformer extends AbstractTransformer

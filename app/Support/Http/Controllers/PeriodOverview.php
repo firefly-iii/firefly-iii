@@ -109,14 +109,14 @@ trait PeriodOverview
             [$transactions, $transferredIn]   = $this->filterTransfers('in', $transactions, $currentDate['start'], $currentDate['end']);
             $entries[]
                                               = [
-                    'title'              => $title,
-                    'route'              => route('accounts.show', [$account->id, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
-                    'total_transactions' => count($spent) + count($earned) + count($transferredAway) + count($transferredIn),
-                    'spent'              => $this->groupByCurrency($spent),
-                    'earned'             => $this->groupByCurrency($earned),
-                    'transferred_away'   => $this->groupByCurrency($transferredAway),
-                    'transferred_in'     => $this->groupByCurrency($transferredIn),
-                ];
+                                                  'title'              => $title,
+                                                  'route'              => route('accounts.show', [$account->id, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
+                                                  'total_transactions' => count($spent) + count($earned) + count($transferredAway) + count($transferredIn),
+                                                  'spent'              => $this->groupByCurrency($spent),
+                                                  'earned'             => $this->groupByCurrency($earned),
+                                                  'transferred_away'   => $this->groupByCurrency($transferredAway),
+                                                  'transferred_in'     => $this->groupByCurrency($transferredIn),
+                                              ];
         }
         $cache->store($entries);
         Timer::stop('account-period-total');
@@ -603,13 +603,13 @@ trait PeriodOverview
             }
             $entries[]
                          = [
-                    'title'              => $title,
-                    'route'              => route('transactions.index', [$transactionType, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
-                    'total_transactions' => count($spent) + count($earned) + count($transferred),
-                    'spent'              => $this->groupByCurrency($spent),
-                    'earned'             => $this->groupByCurrency($earned),
-                    'transferred'        => $this->groupByCurrency($transferred),
-                ];
+                             'title'              => $title,
+                             'route'              => route('transactions.index', [$transactionType, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
+                             'total_transactions' => count($spent) + count($earned) + count($transferred),
+                             'spent'              => $this->groupByCurrency($spent),
+                             'earned'             => $this->groupByCurrency($earned),
+                             'transferred'        => $this->groupByCurrency($transferred),
+                         ];
         }
 
         return $entries;

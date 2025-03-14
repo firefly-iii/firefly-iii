@@ -43,6 +43,7 @@ use Illuminate\Support\Facades\DB;
 
 /**
  * Class TransactionGroupTransformer
+ *
  * @deprecated
  */
 class TransactionGroupTransformer extends AbstractTransformer
