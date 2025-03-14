@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.2.10 - 2025-03-15
+
+### Added
+
+- #9903
+
+### Changed
+
+- #9972
+- Greatly improved speed of account overview
+- Better validation of environment variables
+
+### Fixed
+
+- #9895
+- #9906
+- #9908
+- #9914
+- #9941
+- #9948
+- #9954
+- #9970
+- #9876
+
+### API
+
+- #9902
+
+
 ## 6.2.9 - 2025-02-22
 
 ### Fixed
