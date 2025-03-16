@@ -49,9 +49,6 @@ jobs:
           git checkout --track $BRANCH_TO_PULL
           git pull
           echo "Current branch is $(git branch --show-current)"
-
-          echo 'Add test change'
-          echo $(date) > temp-file.txt
         env:
           version: ${{ github.event_name == 'schedule' && 'develop' || github.event.inputs.version }}
       - name: Configure Git
