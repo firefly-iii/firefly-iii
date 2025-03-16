@@ -22,9 +22,17 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
       - name: Switch branch
         run: |
           if [[ "develop" == "$version" ]]; then
+            echo "The branch is 'develop'"
             git checkout --track origin/develop
             git pull
           elif [[ "$version" == branch* ]]; then
@@ -33,6 +41,7 @@ jobs:
             git checkout --track origin/$PULLBRANCH
             git pull
           else
+            echo "The branch is 'main'"
             git config user.name github-actions
             git config user.email 41898282+github-actions[bot]@users.noreply.github.com
             git checkout --track origin/develop
@@ -134,18 +143,14 @@ jobs:
           composer update --no-dev --no-scripts --no-plugins -q
           sudo chown -R runner:docker resources/lang
           .ci/phpcs.sh || true
-      - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v6
-        with:
-          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-          passphrase: ${{ secrets.PASSPHRASE }}
       - name: Release
         run: |
           # do some configuration
           sudo timedatectl set-timezone Europe/Amsterdam
-          git config user.name github-actions
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git config user.name JC5
+          git config user.email release@firefly-iii.org
           git config advice.addIgnoredFile false
+          git config push.autoSetupRemote true
 
           # set some variables
           releaseName=$version
@@ -193,13 +198,20 @@ jobs:
           done
           echo "Will use tag and release name $releaseName."
 
+          # create a new branch to store the difference in.
+          BRANCHNAME=release-$(date +'%s')
+          git checkout -b $BRANCHNAME
+
           # add all content, except output.txt (this contains the changelog and/or the download instructions)
           echo 'Add all and reset output.txt'
           git add -A
           if test -f "output.txt"; then
             git reset output.txt
           fi
-          git commit -m "Auto commit for release '$version' on $(date +'%Y-%m-%d')" || true
+
+          # push to a new branch.
+
+          git commit -m "🤖 Auto commit for release '$version' on $(date +'%Y-%m-%d')" || true
           git push
 
           # zip and tar everything
@@ -298,9 +310,19 @@ jobs:
 
           # create a development release:
           if [[ "develop" == "$version" ]]; then
+
+            # create PR and merge it right away into develop.
+            gh pr create -B develop -H $BRANCHNAME --title '🤖 Automatic PR to merge all changes into the develop branch.' --body '🤖 Created by GitHub action'
+            gh pr merge -b '🤖 Automatically merge the PR into the develop branch.' -d --rebase
+
+            # pull the changes from the develop branch.
+            git checkout develop
+            git merge origin/develop
+            git pull
+
             # create the release:
-            echo "Create develop release."
-            git tag -a $releaseName -m "Development release '$version' on $(date +'%Y-%m-%d')"
+            echo "Create develop release under tag '$releaseName'."
+            git tag -a $releaseName -m "🤖 Development release '$version' on $(date +'%Y-%m-%d')"
 
             git push origin $releaseName
             gh release create $releaseName -p --verify-tag \
