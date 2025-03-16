@@ -29,33 +29,36 @@ jobs:
           passphrase: ${{ secrets.PASSPHRASE }}
           git_user_signingkey: true
           git_commit_gpgsign: true
-      - name: Switch branch
-        run: |
-          if [[ "develop" == "$version" ]]; then
-            echo "The branch is 'develop'"
-            git checkout --track origin/develop
-            git pull
-          elif [[ "$version" == branch* ]]; then
-            PULLBRANCH=${version:7}
-            echo "The branch is '$PULLBRANCH' ($version)"
-            git checkout --track origin/$PULLBRANCH
-            git pull
-          else
-            echo "The branch is 'main'"
-            git config user.name github-actions
-            git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-            git checkout --track origin/develop
-            git pull
-            git checkout main
-            git merge develop
-          fi
-        env:
-          version: ${{ github.event_name == 'schedule' && 'develop' || github.event.inputs.version }}
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ github.event.inputs.phpversion }}
           extensions: mbstring, intl, zip, bcmath
+      - name: Switch and pull
+        run: |
+          #
+          # Always check out origin/develop, unless its a branch release.
+          #
+          BRANCH_TO_PULL=origin/develop
+          if [[ "$version" == branch* ]]; then
+            BRANCH_TO_PULL=origin/$version
+          fi
+
+          echo "Version is '$version', check out '$BRANCH_TO_PULL'-branch"
+
+          git checkout --track $BRANCH_TO_PULL
+          git pull
+          echo "Current branch is $(git branch --show-current)"
+        env:
+          version: ${{ github.event_name == 'schedule' && 'develop' || github.event.inputs.version }}
+      - name: Configure Git
+        run: |
+          # do some configuration
+          sudo timedatectl set-timezone Europe/Amsterdam
+          git config user.name JC5
+          git config user.email release@firefly-iii.org
+          git config advice.addIgnoredFile false
+          git config push.autoSetupRemote true
       - name: crowdin action
         uses: crowdin/github-action@v2
         with:
@@ -143,24 +146,14 @@ jobs:
           composer update --no-dev --no-scripts --no-plugins -q
           sudo chown -R runner:docker resources/lang
           .ci/phpcs.sh || true
-      - name: Release
+      - name: Calculate variables
         run: |
-          # do some configuration
-          sudo timedatectl set-timezone Europe/Amsterdam
-          git config user.name JC5
-          git config user.email release@firefly-iii.org
-          git config advice.addIgnoredFile false
-          git config push.autoSetupRemote true
 
           # set some variables
           releaseName=$version
           originalName=$version
           zipName=FireflyIII-$version.zip
           tarName=FireflyIII-$version.tar.gz
-
-          # update composer (again)
-          composer update --no-dev --no-scripts --no-plugins
-          composer dump-autoload
 
           # if this is a develop build, slightly different variable names.
           if [[ "develop" == "$version" ]]; then
@@ -196,42 +189,48 @@ jobs:
              tagFound=false
             fi
           done
-          echo "Will use tag and release name $releaseName."
+
+          # set some variables
+          echo "Release name is $releaseName."
+          echo "Original name is $originalName."
+          echo "Zip name is $zipName."
+          echo "Tar name is $tarName."
 
           # create a new branch to store the difference in.
-          BRANCHNAME=release-$(date +'%s')
-          git checkout -b $BRANCHNAME
+          BRANCH_NAME=release-$(date +'%s')
+          git checkout -b $BRANCH_NAME
 
+          echo "Temporary branch name is '$BRANCH_NAME'."
+
+          # share variables with next step.
+          echo "releaseName=$releaseName" >> "$GITHUB_ENV"
+          echo "originalName=$originalName" >> "$GITHUB_ENV"
+          echo "zipName=$zipName" >> "$GITHUB_ENV"
+          echo "tarName=$tarName" >> "$GITHUB_ENV"
+          echo "BRANCH_NAME=$BRANCH_NAME" >> "$GITHUB_ENV"
+        env:
+          version: ${{ github.event_name == 'schedule' && 'develop' || github.event.inputs.version }}
+      - name: Commit all changes
+        run: |
           # add all content, except output.txt (this contains the changelog and/or the download instructions)
           echo 'Add all and reset output.txt'
           git add -A
           if test -f "output.txt"; then
+            echo 'output.txt exists, reset it.'
             git reset output.txt
           fi
 
           # push to a new branch.
-
+          echo "Auto commit on branch '$(git branch --show-current)'."
           git commit -m "🤖 Auto commit for release '$version' on $(date +'%Y-%m-%d')" || true
           git push
-
-          # zip and tar everything
-          echo 'Zip and tar...'
-          zip -rq $zipName . -x "*.git*" "*.ci*" "*.github*" "*node_modules*" "*output.txt*" "*Procfile*" "*crowdin.yml*" "*sonar-project.properties*"
-          touch $tarName
-          tar --exclude=$tarName --exclude=$zipName --exclude='./.git' --exclude='./.ci' --exclude='./.github' --exclude='./node_modules' --exclude='./output.txt' --exclude='./Procfile' --exclude='../crowdin.yml' --exclude='./sonar-project.properties' -czf $tarName .
-
-          # add sha256 sum
-          echo 'Sha sum ...'
-          sha256sum -b $zipName > $zipName.sha256
-          sha256sum -b $tarName > $tarName.sha256
-
-          # add signatures:
-          gpg --armor --detach-sign $zipName
-          gpg --armor --detach-sign $tarName
-
+        env:
+          version: ${{ github.event_name == 'schedule' && 'develop' || github.event.inputs.version }}
+      - name: Describe new release
+        run: |
           # describe the development release.
           if [[ "develop" == "$version" ]]; then
-            echo 'Develop release.'
+            echo 'Describe the latest develop release'
             rm -f output.txt
             touch output.txt
             sudo chown -R runner:docker output.txt
@@ -246,7 +245,7 @@ jobs:
           fi
           # describe a branch release
           if [[ "$version" == branch* ]]; then
-            echo 'Branch release.'
+            echo 'Describe a branch release'
             rm -f output.txt
             touch output.txt
             sudo chown -R runner:docker output.txt
@@ -261,7 +260,8 @@ jobs:
           fi
           # describe the main release
           if [[ "develop" != "$version" ]] && [[ "$version" != branch* ]] && [[ "$version" != *alpha* ]] && [[ "$version" != *beta* ]]; then
-            echo 'Main release.'
+            echo 'Describe the latest release'
+            touch output.txt
             sudo chown -R runner:docker output.txt
             echo '' >> output.txt
             echo '### Instructions' >> output.txt
@@ -274,7 +274,7 @@ jobs:
 
           # describe alpha release
           if [[ "$version" == *alpha* ]]; then
-            echo 'ALPHA release.'
+            echo 'Describe an ALPHA release'
             rm -f output.txt
             touch output.txt
             sudo chown -R runner:docker output.txt
@@ -292,7 +292,7 @@ jobs:
 
           # describe beta release
           if [[ "$version" == *beta* ]]; then
-            echo 'BETA release.'
+            echo 'Describe a BETA release'
             rm -f output.txt
             touch output.txt
             sudo chown -R runner:docker output.txt
@@ -307,14 +307,79 @@ jobs:
             echo "* The releases are signed, and you can verify them using the [Firefly III releases PGP key](https://docs.firefly-iii.org/explanation/more-information/signatures/)." >> output.txt
 
           fi
+        env:
+          version: ${{ github.event_name == 'schedule' && 'develop' || github.event.inputs.version }}
+      - name: Merge all into working branch
+        run: |
+          MERGE_INTO=develop
+            if [[ "$version" == branch* ]]; then
+                MERGE_INTO=$version
+            fi
+
+          echo "Merge all changes from $BRANCH_NAME back into '$MERGE_INTO' using a PR"
+          PR_URL=$(gh pr create -B $MERGE_INTO -H $BRANCH_NAME --title "🤖 Automatic PR to merge all changes into the '$MERGE_INTO' branch." --body '🤖 Created by GitHub action')
+          echo "PR URL is '$PR_URL'"
+          IFS='/' read -ra parts <<< "$PR_URL"
+          PR_NR=$(printf %s\\n "${parts[@]:(-1)}")
+          echo "PR number is '$PR_NR'"
+          gh pr merge $PR_NR -b "🤖 Automatically merge the PR into the $MERGE_INTO branch." -d --merge
+
+          # pull the changes from the $MERGE_INTO branch.
+          git checkout $MERGE_INTO
+          git merge origin/$MERGE_INTO
+          git pull
+          git status
+          echo "Current branch '$(git branch --show-current)'."
+
+          if [[ "develop" != "$version" ]] && [[ "$version" != branch* ]]; then
+            git checkout main
+            git merge origin/main
+            git pull
+            git status
+
+            echo "Also merge everything into main since this is a release."
+            echo 'create PR'
+            PR_URL=$(gh pr create -B main -H develop --title "🤖 Automatic PR to merge all changes into the main branch." --body "🤖 Created by GitHub action")
+            echo "PR URL is '$PR_URL'"
+
+            IFS='/' read -ra parts <<< "$PR_URL"
+            PR_NR=$(printf %s\\n "${parts[@]:(-1)}")
+            echo "PR number is '$PR_NR'"
+
+            echo 'Merge PR'
+            gh pr merge $PR_NR -b "🤖 Automatically merge the PR into the main branch." --merge
+            git checkout main
+            git merge origin/main
+            git pull
+            git status
+            echo "Current branch '$(git branch --show-current)'."
+
+          fi
+          echo "DONE!"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          version: ${{ github.event_name == 'schedule' && 'develop' || github.event.inputs.version }}
+      - name: Create archives
+        run: |
+          echo "Create zip file $zipName"
+          zip -rq $zipName . -x "*.git*" "*.ci*" "*.github*" "*node_modules*" "*output.txt*" "*Procfile*" "*crowdin.yml*" "*sonar-project.properties*"
+          touch $tarName
+
+          echo "Create tar file $tarName"
+          tar --exclude=$tarName --exclude=$zipName --exclude='./.git' --exclude='./.ci' --exclude='./.github' --exclude='./node_modules' --exclude='./output.txt' --exclude='./Procfile' --exclude='../crowdin.yml' --exclude='./sonar-project.properties' -czf $tarName .
+          # add sha256 sum
+          echo 'Sha sum ...'
+          sha256sum -b $zipName > $zipName.sha256
+          sha256sum -b $tarName > $tarName.sha256
+
+          # add signatures:
+          gpg --armor --detach-sign $zipName
+          gpg --armor --detach-sign $tarName
+      - name: Create release
+        run: |
 
           # create a development release:
           if [[ "develop" == "$version" ]]; then
-
-            # create PR and merge it right away into develop.
-            gh pr create -B develop -H $BRANCHNAME --title '🤖 Automatic PR to merge all changes into the develop branch.' --body '🤖 Created by GitHub action'
-            gh pr merge -b '🤖 Automatically merge the PR into the develop branch.' -d --rebase
-
             # pull the changes from the develop branch.
             git checkout develop
             git merge origin/develop
@@ -323,49 +388,44 @@ jobs:
             # create the release:
             echo "Create develop release under tag '$releaseName'."
             git tag -a $releaseName -m "🤖 Development release '$version' on $(date +'%Y-%m-%d')"
-
             git push origin $releaseName
+
             gh release create $releaseName -p --verify-tag \
               -t "Development release for $(date +'%Y-%m-%d')" \
               --latest=false \
               -F output.txt
+
           fi
 
           # create a branch release:
           if [[ "$version" == branch* ]]; then
 
+            # pull the changes from the branch-* branch.
+            git checkout $version
+            git merge origin/$version
+            git pull
+
             # create the release:
             echo "Create branch release."
             git tag -a $releaseName -m "Branch release '$version' on $(date +'%Y-%m-%d')"
-
             git push origin $releaseName
+
             gh release create $releaseName -p --verify-tag \
               -t "Branch release for $(date +'%Y-%m-%d')" \
               --latest=false \
               -F output.txt
+
           fi
 
-          # create a development (nightly) release:
-          if [[ "develop" == "$version" ]] || [[ "$version" == branch* ]]; then
-            # add zip file to release.
-            gh release upload $releaseName $zipName
-            gh release upload $releaseName $tarName
+          # Create a production release.
+          if [[ "develop" != "$version" ]] && [[ "$version" != branch* ]]; then
+            git checkout main
+            git merge origin/main
+            git pull
+            git status
 
-            # add sha256 sum to release
-            gh release upload $releaseName $zipName.sha256
-            gh release upload $releaseName $tarName.sha256
-
-            # add signatures to release
-            gh release upload $releaseName $zipName.asc
-            gh release upload $releaseName $tarName.asc
-
-            # get current HEAD and add as file to the release
-            HEAD=$(git rev-parse HEAD)
-            echo $HEAD > HEAD.txt
-            gh release upload $releaseName HEAD.txt
-          else
-            echo 'MAIN (real) release'
-            git tag -a $releaseName -m "Here be changelog"
+            echo "Create prod release."
+            git tag -a $releaseName -m "Release $version"
             git push origin $releaseName
 
             # do not tag as latest when alpha or beta.
@@ -377,39 +437,38 @@ jobs:
             # tag as latest when NOT alpha or beta.
             if [[ "$version" != *alpha* ]] && [[ "$version" != *beta* ]]; then
               echo 'Mark prod as the latest.'
-              gh release create $releaseName -F output.txt -t "$releaseName" --verify-tag
+              gh release create $releaseName -F output.txt -t "$releaseName" --verify-tag --latest=true
             fi
-
-            # add archive files to release
-            gh release upload $releaseName $zipName
-            gh release upload $releaseName $tarName
-
-            # add sha256 sums to release
-            gh release upload $releaseName $zipName.sha256
-            gh release upload $releaseName $tarName.sha256
-
-            # add signatures to release
-            gh release upload $releaseName $zipName.asc
-            gh release upload $releaseName $tarName.asc
-
-            # get current HEAD and add as file to the release
-            HEAD=$(git rev-parse HEAD)
-            echo $HEAD > HEAD.txt
-            gh release upload $releaseName HEAD.txt
-
-            # remove all temporary files
-            rm -f output.txt
-            rm -f HEAD.txt
-            rm -f $zipName
-            rm -f $zipName.sha256
-            rm -f $tarName
-            rm -f $tarName.sha256
-
-            # merge main back into develop
-            git checkout develop
-            git merge main
-            git push
           fi
+        env:
+          GH_TOKEN: ${{ github.token }}
+          version: ${{ github.event_name == 'schedule' && 'develop' || github.event.inputs.version }}
+      - name: Upload artifacts
+        run: |
+          # add zip file to release.
+          gh release upload $releaseName $zipName
+          gh release upload $releaseName $tarName
+
+          # add sha256 sum to release
+          gh release upload $releaseName $zipName.sha256
+          gh release upload $releaseName $tarName.sha256
+
+          # add signatures to release
+          gh release upload $releaseName $zipName.asc
+          gh release upload $releaseName $tarName.asc
+
+          # get current HEAD and add as file to the release
+          HEAD=$(git rev-parse HEAD)
+          echo $HEAD > HEAD.txt
+          gh release upload $releaseName HEAD.txt
+
+          # remove all temporary files
+          rm -f output.txt
+          rm -f HEAD.txt
+          rm -f $zipName
+          rm -f $zipName.sha256
+          rm -f $tarName
+          rm -f $tarName.sha256
         env:
           GH_TOKEN: ${{ github.token }}
           version: ${{ github.event_name == 'schedule' && 'develop' || github.event.inputs.version }}
