@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 6.2.10 - 2025-03-15
+## 6.2.10 - 2025-03-22
 
 ### Added
 
@@ -17,6 +17,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
+- #9770
 - [Issue 9895](https://github.com/firefly-iii/firefly-iii/issues/9895) (Account Balance not updating in Transaction tab) reported by @StoicaRemus
 - [Issue 9906](https://github.com/firefly-iii/firefly-iii/issues/9906) (404 Not Found when deleting rule group) reported by @EnochPrime
 - [Issue 9908](https://github.com/firefly-iii/firefly-iii/issues/9908) (HTTP 500 on tags) reported by @wuvs
@@ -26,6 +27,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 9954](https://github.com/firefly-iii/firefly-iii/issues/9954) (Creating Bills via API is broken (optional fields are required)) reported by @jsegido
 - [Discussion 9970](https://github.com/orgs/firefly-iii/discussions/9970) (Category report with tags?) started by @luddeluddis
 - [Issue 9876](https://github.com/firefly-iii/firefly-iii/issues/9876) (data/bulkUpdateTransactions POST should not requires Content-Type header in request as request body must be empty) reported by @bouil
+- #10007
 
 ### API
 
