@@ -138,6 +138,7 @@ class AccountController extends Controller
             }
         );
         Timer::stop(sprintf('AC accounts "%s"', $query));
+
         return response()->api($return);
     }
 }

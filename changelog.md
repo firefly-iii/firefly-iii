@@ -17,7 +17,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #9770
+- [Issue 9770](https://github.com/firefly-iii/firefly-iii/issues/9770) (User ntfy notification forbidden 403) reported by @qck4fun
 - [Issue 9895](https://github.com/firefly-iii/firefly-iii/issues/9895) (Account Balance not updating in Transaction tab) reported by @StoicaRemus
 - [Issue 9906](https://github.com/firefly-iii/firefly-iii/issues/9906) (404 Not Found when deleting rule group) reported by @EnochPrime
 - [Issue 9908](https://github.com/firefly-iii/firefly-iii/issues/9908) (HTTP 500 on tags) reported by @wuvs
@@ -27,7 +27,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 9954](https://github.com/firefly-iii/firefly-iii/issues/9954) (Creating Bills via API is broken (optional fields are required)) reported by @jsegido
 - [Discussion 9970](https://github.com/orgs/firefly-iii/discussions/9970) (Category report with tags?) started by @luddeluddis
 - [Issue 9876](https://github.com/firefly-iii/firefly-iii/issues/9876) (data/bulkUpdateTransactions POST should not requires Content-Type header in request as request body must be empty) reported by @bouil
-- #10007
+- [Issue 10007](https://github.com/firefly-iii/firefly-iii/issues/10007) (Wrong currency showed in dashboard for "Subscriptions to pay" when subscription paid with different currency) reported by @Astro1247
 
 ### API
 
