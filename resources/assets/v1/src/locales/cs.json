@@ -51,7 +51,7 @@
         "notes": "Pozn\u00e1mky",
         "external_url": "Extern\u00ed URL adresa",
         "update_transaction": "Aktualizovat transakci",
-        "after_update_create_another": "After updating, return here to continue editing.",
+        "after_update_create_another": "Po aktualizaci se vr\u00e1tit sem pro pokra\u010dov\u00e1n\u00ed v \u00faprav\u00e1ch.",
         "store_as_new": "Store as a new transaction instead of updating.",
         "split_title_help": "Pokud vytvo\u0159\u00edte roz\u00fa\u010dtov\u00e1n\u00ed, je t\u0159eba, aby zde byl celkov\u00fd popis pro v\u0161echna roz\u00fa\u010dtov\u00e1n\u00ed dan\u00e9 transakce.",
         "none_in_select_list": "(\u017e\u00e1dn\u00e9)",
