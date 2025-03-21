@@ -542,14 +542,35 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
 
             /** @var TransactionJournal $transactionJournal */
             foreach ($set as $transactionJournal) {
-                $setAmount = bcadd($setAmount, Amount::getAmountFromJournalObject($transactionJournal));
+                // grab currency from transaction.
+                $transactionCurrency = $transactionJournal->transactionCurrency;
+                $return[(int) $transactionCurrency->id] ??= [
+                    'id'             => (string) $transactionCurrency->id,
+                    'name'           => $transactionCurrency->name,
+                    'symbol'         => $transactionCurrency->symbol,
+                    'code'           => $transactionCurrency->code,
+                    'decimal_places' => $transactionCurrency->decimal_places,
+                    'sum'            => '0',
+                ];
+
+                // get currency from transaction as well.
+                $return[(int) $transactionCurrency->id]['sum'] = bcadd($return[(int) $transactionCurrency->id]['sum'], Amount::getAmountFromJournalObject($transactionJournal));
+                //$setAmount = bcadd($setAmount, Amount::getAmountFromJournalObject($transactionJournal));
             }
             // Log::debug(sprintf('Bill #%d ("%s") with %d transaction(s) and sum %s %s', $bill->id, $bill->name, $set->count(), $currency->code, $setAmount));
-            $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $setAmount);
+            //$return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $setAmount);
             // Log::debug(sprintf('Total sum is now %s', $return[$currency->id]['sum']));
         }
+        // remove empty sets
+        $final = [];
+        foreach($return as $entry) {
+            if(0 === bccomp($entry['sum'], '0')) {
+                continue;
+            }
+            $final[] = $entry;
+        }
 
-        return $return;
+        return $final;
     }
 
     public function getActiveBills(): Collection
