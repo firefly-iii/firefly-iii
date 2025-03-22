@@ -229,6 +229,7 @@ jobs:
       - name: Describe new release
         run: |
           # describe the development release.
+          chown runner:docker output.txt
           ls -la
           touch output.txt
           exit 1
