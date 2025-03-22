@@ -204,13 +204,8 @@ jobs:
       - name: Commit all changes
         run: |
           # add all content, except output.txt (this contains the changelog and/or the download instructions)
-          echo 'Add all and reset output.txt'
+          echo 'Add all'
           git add -A
-          if test -f "output.txt"; then
-            echo 'output.txt exists, reset it.'
-            git reset output.txt
-          fi
-
           # push to a new branch.
           echo "Auto commit on branch '$(git branch --show-current)'."
           git commit -m "🤖 Auto commit for release '$version' on $(date +'%Y-%m-%d')" || true
@@ -228,11 +223,8 @@ jobs:
           GH_TOKEN: ""
       - name: Describe new release
         run: |
+
           # describe the development release.
-          sudo chown runner:docker output.txt
-          ls -la
-          touch output.txt
-          exit 1
           if [[ "develop" == "$version" ]]; then
             echo 'Describe the latest develop release'
             rm -f output.txt
@@ -265,8 +257,8 @@ jobs:
           # describe the main release
           if [[ "develop" != "$version" ]] && [[ "$version" != branch* ]] && [[ "$version" != *alpha* ]] && [[ "$version" != *beta* ]]; then
             echo 'Describe the latest release'
-            touch output.txt
             sudo chown -R runner:docker output.txt
+            touch output.txt
             echo '' >> output.txt
             echo '### Instructions' >> output.txt
             echo '' >> output.txt
