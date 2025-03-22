@@ -229,6 +229,9 @@ jobs:
       - name: Describe new release
         run: |
           # describe the development release.
+          ls -la
+          touch output.txt
+          exit 1
           if [[ "develop" == "$version" ]]; then
             echo 'Describe the latest develop release'
             rm -f output.txt
