@@ -88,15 +88,6 @@ jobs:
         env:
           FIREFLY_III_ROOT: /github/workspace
           GH_TOKEN: ''
-      - name: Extract changelog
-        id: extract-changelog
-        uses: JC5/firefly-iii-dev@main
-        with:
-          action: 'ff3:extract-changelog'
-          output: 'output'
-        env:
-          FIREFLY_III_ROOT: /github/workspace
-          GH_TOKEN: ""
       - name: Replace version
         id: replace-version
         uses: JC5/firefly-iii-dev@main
@@ -226,6 +217,15 @@ jobs:
           git push
         env:
           version: ${{ github.event_name == 'schedule' && 'develop' || github.event.inputs.version }}
+      - name: Extract changelog
+        id: extract-changelog
+        uses: JC5/firefly-iii-dev@main
+        with:
+          action: 'ff3:extract-changelog'
+          output: 'output'
+        env:
+          FIREFLY_III_ROOT: /github/workspace
+          GH_TOKEN: ""
       - name: Describe new release
         run: |
           # describe the development release.
