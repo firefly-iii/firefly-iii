@@ -27,7 +27,7 @@ namespace FireflyIII\Api\V2\Controllers\Autocomplete;
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Autocomplete\AutocompleteRequest;
 use FireflyIII\Models\Tag;
-use FireflyIII\Repositories\UserGroups\Tag\TagRepositoryInterface;
+use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -59,7 +59,7 @@ class TagController extends Controller
     public function tags(AutocompleteRequest $request): JsonResponse
     {
         $queryParameters = $request->getParameters();
-        $result          = $this->repository->searchTag($queryParameters['query'], $queryParameters['size']);
+        $result          = $this->repository->searchTag($queryParameters['query']);
         $filtered        = $result->map(
             static function (Tag $item) {
                 return [

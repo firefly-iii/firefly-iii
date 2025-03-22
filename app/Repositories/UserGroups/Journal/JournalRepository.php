@@ -30,6 +30,8 @@ use Illuminate\Support\Collection;
 
 /**
  * Class JournalRepository
+ *
+ * @deprecated
  */
 class JournalRepository implements JournalRepositoryInterface
 {

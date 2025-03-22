@@ -29,6 +29,7 @@ use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class SetCategory.
@@ -94,8 +95,8 @@ class SetCategory implements ActionInterface
             return false;
         }
 
-        \DB::table('category_transaction_journal')->where('transaction_journal_id', '=', $journal['transaction_journal_id'])->delete();
-        \DB::table('category_transaction_journal')->insert(['transaction_journal_id' => $journal['transaction_journal_id'], 'category_id' => $category->id]);
+        DB::table('category_transaction_journal')->where('transaction_journal_id', '=', $journal['transaction_journal_id'])->delete();
+        DB::table('category_transaction_journal')->insert(['transaction_journal_id' => $journal['transaction_journal_id'], 'category_id' => $category->id]);
 
         /** @var TransactionJournal $object */
         $object          = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);

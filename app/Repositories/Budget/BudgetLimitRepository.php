@@ -31,8 +31,8 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -40,9 +40,9 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class BudgetLimitRepository
  */
-class BudgetLimitRepository implements BudgetLimitRepositoryInterface
+class BudgetLimitRepository implements BudgetLimitRepositoryInterface, UserGroupInterface
 {
-    private User $user;
+    use UserGroupTrait;
 
     /**
      * Tells you which amount has been budgeted (for the given budgets)
@@ -260,13 +260,6 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
     public function getNoteText(BudgetLimit $budgetLimit): string
     {
         return (string) $budgetLimit->notes()->first()?->text;
-    }
-
-    public function setUser(null|Authenticatable|User $user): void
-    {
-        if ($user instanceof User) {
-            $this->user = $user;
-        }
     }
 
     /**

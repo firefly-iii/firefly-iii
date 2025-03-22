@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\TransactionGroup;
 
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Location;
@@ -36,6 +37,13 @@ use Illuminate\Support\Collection;
 
 /**
  * Interface TransactionGroupRepositoryInterface
+ *
+ * @method setUserGroup(UserGroup $group)
+ * @method getUserGroup()
+ * @method getUser()
+ * @method checkUserGroupAccess(UserRoleEnum $role)
+ * @method setUser(null|Authenticatable|User $user)
+ * @method setUserGroupById(int $userGroupId)
  */
 interface TransactionGroupRepositoryInterface
 {
@@ -97,10 +105,6 @@ interface TransactionGroupRepositoryInterface
      * Get the tags for a journal (by ID).
      */
     public function getTags(int $journalId): array;
-
-    public function setUser(null|Authenticatable|User $user): void;
-
-    public function setUserGroup(UserGroup $userGroup): void;
 
     /**
      * Create a new transaction group.

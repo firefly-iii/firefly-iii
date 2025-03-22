@@ -27,16 +27,17 @@ namespace FireflyIII\Repositories\Webhook;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Models\WebhookAttempt;
 use FireflyIII\Models\WebhookMessage;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 /**
  * Class WebhookRepository
  */
-class WebhookRepository implements WebhookRepositoryInterface
+class WebhookRepository implements WebhookRepositoryInterface, UserGroupInterface
 {
-    private User $user;
+    use UserGroupTrait;
 
     public function all(): Collection
     {
@@ -85,16 +86,9 @@ class WebhookRepository implements WebhookRepositoryInterface
         ;
     }
 
-    public function setUser(null|Authenticatable|User $user): void
-    {
-        if ($user instanceof User) {
-            $this->user = $user;
-        }
-    }
-
     public function store(array $data): Webhook
     {
-        $secret   = \Str::random(24);
+        $secret   = Str::random(24);
         $fullData = [
             'user_id'       => $this->user->id,
             'user_group_id' => $this->user->user_group_id,
@@ -120,7 +114,7 @@ class WebhookRepository implements WebhookRepositoryInterface
         $webhook->url      = $data['url'] ?? $webhook->url;
 
         if (true === $data['secret']) {
-            $secret          = \Str::random(24);
+            $secret          = Str::random(24);
             $webhook->secret = $secret;
         }
 

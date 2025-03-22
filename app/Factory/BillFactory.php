@@ -48,12 +48,15 @@ class BillFactory
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__), $data);
         $factory          = app(TransactionCurrencyFactory::class);
-        $currency         = $factory->find((int) ($data['currency_id'] ?? null), (string) ($data['currency_code'] ?? null)) ??
-                    app('amount')->getNativeCurrencyByUserGroup($this->user->userGroup);
+        $currency         = $factory->find((int) ($data['currency_id'] ?? null), (string) ($data['currency_code'] ?? null))
+                    ?? app('amount')->getNativeCurrencyByUserGroup($this->user->userGroup);
 
         try {
             $skip   = array_key_exists('skip', $data) ? $data['skip'] : 0;
             $active = array_key_exists('active', $data) ? $data['active'] : 0;
+
+            $data['extension_date'] ??= null;
+            $data['end_date']       ??= null;
 
             /** @var Bill $bill */
             $bill   = Bill::create(

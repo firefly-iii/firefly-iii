@@ -33,8 +33,6 @@ use FireflyIII\Repositories\Journal\JournalRepository;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepository;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
-use FireflyIII\Repositories\UserGroups\Journal\JournalRepository as GroupJournalRepository;
-use FireflyIII\Repositories\UserGroups\Journal\JournalRepositoryInterface as GroupJournalRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -68,19 +66,6 @@ class JournalServiceProvider extends ServiceProvider
             static function (Application $app) {
                 /** @var JournalRepositoryInterface $repository */
                 $repository = app(JournalRepository::class);
-                if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
-                    $repository->setUser(auth()->user());
-                }
-
-                return $repository;
-            }
-        );
-
-        $this->app->bind(
-            GroupJournalRepositoryInterface::class,
-            static function (Application $app) {
-                /** @var GroupJournalRepositoryInterface $repository */
-                $repository = app(GroupJournalRepository::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
                     $repository->setUser(auth()->user());
                 }

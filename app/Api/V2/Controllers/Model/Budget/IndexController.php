@@ -26,7 +26,7 @@ namespace FireflyIII\Api\V2\Controllers\Model\Budget;
 
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Transformers\V2\BudgetTransformer;
+use FireflyIII\Transformers\BudgetTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 

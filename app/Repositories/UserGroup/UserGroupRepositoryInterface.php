@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\UserGroup;
 
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -31,6 +32,13 @@ use Illuminate\Support\Collection;
 
 /**
  * Interface UserGroupRepositoryInterface
+ *
+ * @method setUserGroup(UserGroup $group)
+ * @method getUserGroup()
+ * @method getUser()
+ * @method checkUserGroupAccess(UserRoleEnum $role)
+ * @method setUser(null|Authenticatable|User $user)
+ * @method setUserGroupById(int $userGroupId)
  */
 interface UserGroupRepositoryInterface
 {
@@ -43,8 +51,6 @@ interface UserGroupRepositoryInterface
     public function getById(int $id): ?UserGroup;
 
     public function getMembershipsFromGroupId(int $groupId): Collection;
-
-    public function setUser(null|Authenticatable|User $user): void;
 
     public function store(array $data): UserGroup;
 

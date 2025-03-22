@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Location;
@@ -37,6 +38,13 @@ use Illuminate\Support\Collection;
 
 /**
  * Interface AccountRepositoryInterface.
+ *
+ * @method setUserGroup(UserGroup $group)
+ * @method getUserGroup()
+ * @method getUser()
+ * @method checkUserGroupAccess(UserRoleEnum $role)
+ * @method setUser(null|Authenticatable|User $user)
+ * @method setUserGroupById(int $userGroupId)
  */
 interface AccountRepositoryInterface
 {
@@ -62,6 +70,10 @@ interface AccountRepositoryInterface
     public function findByIbanNull(string $iban, array $types): ?Account;
 
     public function findByName(string $name, array $types): ?Account;
+
+    public function periodCollection(Account $account, Carbon $start, Carbon $end): array;
+
+    public function getAccountBalances(Account $account): Collection;
 
     public function getAccountCurrency(Account $account): ?TransactionCurrency;
 
@@ -147,10 +159,6 @@ interface AccountRepositoryInterface
     public function searchAccount(string $query, array $types, int $limit): Collection;
 
     public function searchAccountNr(string $query, array $types, int $limit): Collection;
-
-    public function setUser(null|Authenticatable|User $user): void;
-
-    public function setUserGroup(UserGroup $userGroup): void;
 
     public function store(array $data): Account;
 

@@ -23,14 +23,23 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Attachment;
 
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Attachment;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
  * Interface AttachmentRepositoryInterface.
+ *
+ * @method setUserGroup(UserGroup $group)
+ * @method getUserGroup()
+ * @method getUser()
+ * @method checkUserGroupAccess(UserRoleEnum $role)
+ * @method setUser(null|Authenticatable|User $user)
+ * @method setUserGroupById(int $userGroupId)
  */
 interface AttachmentRepositoryInterface
 {
@@ -46,8 +55,6 @@ interface AttachmentRepositoryInterface
      * Get attachment note text or empty string.
      */
     public function getNoteText(Attachment $attachment): ?string;
-
-    public function setUser(null|Authenticatable|User $user): void;
 
     /**
      * @throws FireflyException

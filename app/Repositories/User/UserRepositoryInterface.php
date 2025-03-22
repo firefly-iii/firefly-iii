@@ -23,14 +23,23 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\User;
 
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\InvitedUser;
 use FireflyIII\Models\Role;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
  * Interface UserRepositoryInterface.
+ *
+ * @method setUserGroup(UserGroup $group)
+ * @method getUserGroup()
+ * @method getUser()
+ * @method checkUserGroupAccess(UserRoleEnum $role)
+ * @method setUser(null|Authenticatable|User $user)
+ * @method setUserGroupById(int $userGroupId)
  */
 interface UserRepositoryInterface
 {

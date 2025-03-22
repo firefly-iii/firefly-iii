@@ -25,8 +25,8 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V2\Controllers\Model\Currency;
 
 use FireflyIII\Api\V2\Controllers\Controller;
-use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
-use FireflyIII\Transformers\V2\CurrencyTransformer;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Transformers\CurrencyTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 

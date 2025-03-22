@@ -29,6 +29,8 @@ use Illuminate\Support\Collection;
 
 /**
  * Class CurrencyTransformer
+ *
+ * @deprecated
  */
 class CurrencyTransformer extends AbstractTransformer
 {

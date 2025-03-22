@@ -29,17 +29,22 @@ use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
 use Illuminate\Support\Collection;
 
+/**
+ * Interface ExchangeRateRepositoryInterface
+ *
+ * @deprecated
+ */
 interface ExchangeRateRepositoryInterface
 {
-    public function getRates(TransactionCurrency $from, TransactionCurrency $to): Collection;
+    public function deleteRate(CurrencyExchangeRate $rate): void;
 
     public function getAll(): Collection;
 
+    public function getRates(TransactionCurrency $from, TransactionCurrency $to): Collection;
+
     public function getSpecificRateOnDate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): ?CurrencyExchangeRate;
 
-    public function deleteRate(CurrencyExchangeRate $rate): void;
+    public function storeExchangeRate(TransactionCurrency $from, TransactionCurrency $to, string $rate, Carbon $date): CurrencyExchangeRate;
 
     public function updateExchangeRate(CurrencyExchangeRate $object, string $rate, ?Carbon $date = null): CurrencyExchangeRate;
-
-    public function storeExchangeRate(TransactionCurrency $from, TransactionCurrency $to, string $rate, Carbon $date): CurrencyExchangeRate;
 }

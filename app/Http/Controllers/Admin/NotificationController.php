@@ -28,6 +28,7 @@ use FireflyIII\Events\Test\OwnerTestNotificationChannel;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\NotificationRequest;
 use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -44,14 +45,14 @@ class NotificationController extends Controller
         $subTitleIcon                   = 'envelope-o';
 
         // notification settings:
-        $slackUrl                       = app('fireflyconfig')->getEncrypted('slack_webhook_url', '')->data;
-        $pushoverAppToken               = app('fireflyconfig')->getEncrypted('pushover_app_token', '')->data;
-        $pushoverUserToken              = app('fireflyconfig')->getEncrypted('pushover_user_token', '')->data;
-        $ntfyServer                     = app('fireflyconfig')->getEncrypted('ntfy_server', 'https://ntfy.sh')->data;
-        $ntfyTopic                      = app('fireflyconfig')->getEncrypted('ntfy_topic', '')->data;
-        $ntfyAuth                       = app('fireflyconfig')->get('ntfy_auth', false)->data;
-        $ntfyUser                       = app('fireflyconfig')->getEncrypted('ntfy_user', '')->data;
-        $ntfyPass                       = app('fireflyconfig')->getEncrypted('ntfy_pass', '')->data;
+        $slackUrl                       = FireflyConfig::getEncrypted('slack_webhook_url', '')->data;
+        $pushoverAppToken               = FireflyConfig::getEncrypted('pushover_app_token', '')->data;
+        $pushoverUserToken              = FireflyConfig::getEncrypted('pushover_user_token', '')->data;
+        $ntfyServer                     = FireflyConfig::getEncrypted('ntfy_server', 'https://ntfy.sh')->data;
+        $ntfyTopic                      = FireflyConfig::getEncrypted('ntfy_topic', '')->data;
+        $ntfyAuth                       = FireflyConfig::get('ntfy_auth', false)->data;
+        $ntfyUser                       = FireflyConfig::getEncrypted('ntfy_user', '')->data;
+        $ntfyPass                       = FireflyConfig::getEncrypted('ntfy_pass', '')->data;
         $channels                       = config('notifications.channels');
         $forcedAvailability             = [];
 
@@ -59,7 +60,7 @@ class NotificationController extends Controller
         $notifications                  = [];
         foreach (config('notifications.notifications.owner') as $key => $info) {
             if (true === $info['enabled']) {
-                $notifications[$key] = app('fireflyconfig')->get(sprintf('notification_%s', $key), true)->data;
+                $notifications[$key] = FireflyConfig::get(sprintf('notification_%s', $key), true)->data;
             }
         }
 
@@ -98,19 +99,19 @@ class NotificationController extends Controller
 
         foreach (config('notifications.notifications.owner') as $key => $info) {
             if (array_key_exists($key, $all)) {
-                app('fireflyconfig')->set(sprintf('notification_%s', $key), $all[$key]);
+                FireflyConfig::set(sprintf('notification_%s', $key), $all[$key]);
             }
         }
         $variables = ['slack_webhook_url', 'pushover_app_token', 'pushover_user_token', 'ntfy_server', 'ntfy_topic', 'ntfy_user', 'ntfy_pass'];
         foreach ($variables as $variable) {
             if ('' === $all[$variable]) {
-                app('fireflyconfig')->delete($variable);
+                FireflyConfig::delete($variable);
             }
             if ('' !== $all[$variable]) {
-                app('fireflyconfig')->setEncrypted($variable, $all[$variable]);
+                FireflyConfig::setEncrypted($variable, $all[$variable]);
             }
         }
-        app('fireflyconfig')->set('ntfy_auth', $all['ntfy_auth'] ?? false);
+        FireflyConfig::set('ntfy_auth', $all['ntfy_auth'] ?? false);
 
 
         session()->flash('success', (string) trans('firefly.notification_settings_saved'));

@@ -40,6 +40,8 @@ use Illuminate\Support\Facades\Log;
 
 /**
  * Class BillTransformer
+ *
+ * @deprecated
  */
 class BillTransformer extends AbstractTransformer
 {

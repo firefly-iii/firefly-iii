@@ -24,13 +24,22 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\ObjectGroup;
 
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\ObjectGroup;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
  * Interface ObjectGroupRepositoryInterface
+ *
+ * @method setUserGroup(UserGroup $group)
+ * @method getUserGroup()
+ * @method getUser()
+ * @method checkUserGroupAccess(UserRoleEnum $role)
+ * @method setUser(null|Authenticatable|User $user)
+ * @method setUserGroupById(int $userGroupId)
  */
 interface ObjectGroupRepositoryInterface
 {
@@ -60,8 +69,6 @@ interface ObjectGroupRepositoryInterface
     public function search(string $query, int $limit): Collection;
 
     public function setOrder(ObjectGroup $objectGroup, int $newOrder): ObjectGroup;
-
-    public function setUser(null|Authenticatable|User $user): void;
 
     public function update(ObjectGroup $objectGroup, array $data): ObjectGroup;
 }

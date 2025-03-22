@@ -27,6 +27,7 @@ use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class ClearBudget.
@@ -55,7 +56,7 @@ class ClearBudget implements ActionInterface
             return false;
         }
 
-        \DB::table('budget_transaction_journal')->where('transaction_journal_id', '=', $journal['transaction_journal_id'])->delete();
+        DB::table('budget_transaction_journal')->where('transaction_journal_id', '=', $journal['transaction_journal_id'])->delete();
 
         event(new TriggeredAuditLog($this->action->rule, $object, 'clear_budget', $budget->name, null));
 

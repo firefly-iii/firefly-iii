@@ -28,6 +28,8 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\Attachment;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Storage;
 
 class ScansAttachments extends Command
 {
@@ -43,7 +45,7 @@ class ScansAttachments extends Command
     public function handle(): int
     {
         $attachments = Attachment::get();
-        $disk        = \Storage::disk('upload');
+        $disk        = Storage::disk('upload');
 
         /** @var Attachment $attachment */
         foreach ($attachments as $attachment) {
@@ -56,7 +58,7 @@ class ScansAttachments extends Command
             }
 
             try {
-                $decryptedContent = \Crypt::decrypt($encryptedContent); // verified
+                $decryptedContent = Crypt::decrypt($encryptedContent); // verified
             } catch (DecryptException $e) {
                 app('log')->error(sprintf('Could not decrypt data of attachment #%d: %s', $attachment->id, $e->getMessage()));
                 $decryptedContent = $encryptedContent;

@@ -30,8 +30,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface as AdminAccountRepositoryInterface;
-use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
@@ -48,12 +47,10 @@ use Illuminate\Support\Facades\Log;
  */
 class NetWorth implements NetWorthInterface
 {
-    private AccountRepositoryInterface      $accountRepository;
-    private AdminAccountRepositoryInterface $adminAccountRepository;
-
+    private AccountRepositoryInterface  $accountRepository;
     private CurrencyRepositoryInterface $currencyRepos;
-    private User                        $user;
-    private ?UserGroup                  $userGroup;
+    private User                        $user; // @phpstan-ignore-line
+    private ?UserGroup                  $userGroup; // @phpstan-ignore-line
 
     /**
      * This method collects the user's net worth in ALL the user's currencies
@@ -85,7 +82,7 @@ class NetWorth implements NetWorthInterface
         /** @var Account $account */
         foreach ($accounts as $account) {
             Log::debug(sprintf('Now at account #%d ("%s")', $account->id, $account->name));
-            $currency                           = $this->getRepository()->getAccountCurrency($account) ?? $default;
+            $currency                           = $this->accountRepository->getAccountCurrency($account) ?? $default;
             $useNative                          = $convertToNative && $default->id !== $currency->id;
             $currency                           = $useNative ? $default : $currency;
             $currencyCode                       = $currency->code;
@@ -118,36 +115,23 @@ class NetWorth implements NetWorthInterface
         return $netWorth;
     }
 
-    private function getRepository(): AccountRepositoryInterface|AdminAccountRepositoryInterface
-    {
-        if (null === $this->userGroup) {
-            return $this->accountRepository;
-        }
-
-        return $this->adminAccountRepository;
-    }
-
     public function setUser(null|Authenticatable|User $user): void
     {
         if (!$user instanceof User) {
             return;
         }
-        $this->user              = $user;
-        $this->userGroup         = null;
-
-        // make repository:
-        $this->accountRepository = app(AccountRepositoryInterface::class);
-        $this->accountRepository->setUser($this->user);
-
-        $this->currencyRepos     = app(CurrencyRepositoryInterface::class);
-        $this->currencyRepos->setUser($this->user);
+        $this->user = $user;
+        $this->setUserGroup($user->userGroup);
     }
 
     public function setUserGroup(UserGroup $userGroup): void
     {
-        $this->userGroup              = $userGroup;
-        $this->adminAccountRepository = app(AdminAccountRepositoryInterface::class);
-        $this->adminAccountRepository->setUserGroup($userGroup);
+        $this->userGroup         = $userGroup;
+        $this->accountRepository = app(AccountRepositoryInterface::class);
+        $this->accountRepository->setUserGroup($userGroup);
+
+        $this->currencyRepos     = app(CurrencyRepositoryInterface::class);
+        $this->currencyRepos->setUserGroup($this->userGroup);
     }
 
     /**
@@ -163,7 +147,7 @@ class NetWorth implements NetWorthInterface
         Log::debug(sprintf('SumNetWorth: finalAccountsBalance("%s")', $date->format('Y-m-d H:i:s')));
         $balances = Steam::finalAccountsBalance($accounts, $date);
         foreach ($accounts as $account) {
-            $currency                     = $this->getRepository()->getAccountCurrency($account);
+            $currency                     = $this->accountRepository->getAccountCurrency($account);
             $balance                      = $balances[$account->id]['balance'] ?? '0';
 
             // always subtract virtual balance.
@@ -188,14 +172,14 @@ class NetWorth implements NetWorthInterface
 
     private function getAccounts(): Collection
     {
-        $accounts = $this->getRepository()->getAccountsByType(
+        $accounts = $this->accountRepository->getAccountsByType(
             [AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value]
         );
         $filtered = new Collection();
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            if (1 === (int) $this->getRepository()->getMetaValue($account, 'include_net_worth')) {
+            if (1 === (int) $this->accountRepository->getMetaValue($account, 'include_net_worth')) {
                 $filtered->push($account);
             }
         }

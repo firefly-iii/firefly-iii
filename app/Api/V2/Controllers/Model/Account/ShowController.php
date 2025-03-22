@@ -27,8 +27,8 @@ namespace FireflyIII\Api\V2\Controllers\Model\Account;
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\Account;
-use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
-use FireflyIII\Transformers\V2\AccountTransformer;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Transformers\AccountTransformer;
 use Illuminate\Http\JsonResponse;
 
 /**

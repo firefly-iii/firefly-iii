@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Category;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\UserGroup;
@@ -33,6 +34,13 @@ use Illuminate\Support\Collection;
 
 /**
  * Interface CategoryRepositoryInterface.
+ *
+ * @method setUserGroup(UserGroup $group)
+ * @method getUserGroup()
+ * @method getUser()
+ * @method checkUserGroupAccess(UserRoleEnum $role)
+ * @method setUser(null|Authenticatable|User $user)
+ * @method setUserGroupById(int $userGroupId)
  */
 interface CategoryRepositoryInterface
 {
@@ -86,10 +94,6 @@ interface CategoryRepositoryInterface
     public function removeNotes(Category $category): void;
 
     public function searchCategory(string $query, int $limit): Collection;
-
-    public function setUser(null|Authenticatable|User $user): void;
-
-    public function setUserGroup(UserGroup $userGroup): void;
 
     /**
      * @throws FireflyException

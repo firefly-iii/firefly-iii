@@ -29,7 +29,6 @@ use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface as UserGroupAccountRepositoryInterface;
 use FireflyIII\User;
 use FireflyIII\Validation\Account\DepositValidation;
 use FireflyIII\Validation\Account\LiabilityValidation;
@@ -58,22 +57,19 @@ class AccountValidator
     private AccountRepositoryInterface          $accountRepository;
     private array                               $combinations;
     private string                              $transactionType;
-    private bool                                $useUserGroupRepository = false;
-    private UserGroupAccountRepositoryInterface $userGroupAccountRepository;
 
     /**
      * AccountValidator constructor.
      */
     public function __construct()
     {
-        $this->createMode                 = false;
-        $this->destError                  = 'No error yet.';
-        $this->sourceError                = 'No error yet.';
-        $this->combinations               = config('firefly.source_dests');
-        $this->source                     = null;
-        $this->destination                = null;
-        $this->accountRepository          = app(AccountRepositoryInterface::class);
-        $this->userGroupAccountRepository = app(UserGroupAccountRepositoryInterface::class);
+        $this->createMode        = false;
+        $this->destError         = 'No error yet.';
+        $this->sourceError       = 'No error yet.';
+        $this->combinations      = config('firefly.source_dests');
+        $this->source            = null;
+        $this->destination       = null;
+        $this->accountRepository = app(AccountRepositoryInterface::class);
     }
 
     public function getSource(): ?Account
@@ -112,13 +108,11 @@ class AccountValidator
     public function setUser(User $user): void
     {
         $this->accountRepository->setUser($user);
-        $this->useUserGroupRepository = false;
     }
 
     public function setUserGroup(UserGroup $userGroup): void
     {
-        $this->userGroupAccountRepository->setUserGroup($userGroup);
-        $this->useUserGroupRepository = true;
+        $this->accountRepository->setUserGroup($userGroup);
     }
 
     public function validateDestination(array $array): bool
@@ -265,7 +259,7 @@ class AccountValidator
 
         // find by ID
         if (null !== $accountId && $accountId > 0) {
-            $first       = $this->getRepository()->find($accountId);
+            $first       = $this->accountRepository->find($accountId);
             $accountType = null === $first ? 'invalid' : $first->accountType->type;
             $check       = in_array($accountType, $validTypes, true);
             $check       = $inverse ? !$check : $check; // reverse the validation check if necessary.
@@ -278,7 +272,7 @@ class AccountValidator
 
         // find by iban
         if (null !== $accountIban && '' !== (string) $accountIban) {
-            $first       = $this->getRepository()->findByIbanNull($accountIban, $validTypes);
+            $first       = $this->accountRepository->findByIbanNull($accountIban, $validTypes);
             $accountType = null === $first ? 'invalid' : $first->accountType->type;
             $check       = in_array($accountType, $validTypes, true);
             $check       = $inverse ? !$check : $check; // reverse the validation check if necessary.
@@ -291,7 +285,7 @@ class AccountValidator
 
         // find by number
         if (null !== $accountNumber && '' !== (string) $accountNumber) {
-            $first       = $this->getRepository()->findByAccountNumber($accountNumber, $validTypes);
+            $first       = $this->accountRepository->findByAccountNumber($accountNumber, $validTypes);
             $accountType = null === $first ? 'invalid' : $first->accountType->type;
             $check       = in_array($accountType, $validTypes, true);
             $check       = $inverse ? !$check : $check; // reverse the validation check if necessary.
@@ -304,7 +298,7 @@ class AccountValidator
 
         // find by name:
         if ('' !== (string) $accountName) {
-            $first = $this->getRepository()->findByName($accountName, $validTypes);
+            $first = $this->accountRepository->findByName($accountName, $validTypes);
             if (null !== $first) {
                 app('log')->debug(sprintf('Name: Found %s account #%d ("%s", IBAN "%s")', $first->accountType->type, $first->id, $first->name, $first->iban ?? 'no iban'));
 
@@ -314,14 +308,5 @@ class AccountValidator
         app('log')->debug('Found nothing!');
 
         return null;
-    }
-
-    private function getRepository(): AccountRepositoryInterface|UserGroupAccountRepositoryInterface
-    {
-        if ($this->useUserGroupRepository) {
-            return $this->userGroupAccountRepository;
-        }
-
-        return $this->accountRepository;
     }
 }

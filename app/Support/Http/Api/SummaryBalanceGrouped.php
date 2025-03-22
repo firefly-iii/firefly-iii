@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Http\Api;
 
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Facades\Log;
 
 class SummaryBalanceGrouped

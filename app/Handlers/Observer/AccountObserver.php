@@ -30,7 +30,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
-use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Support\Facades\DB;
@@ -88,7 +88,8 @@ class AccountObserver
         }
 
         $journalIds = Transaction::where('account_id', $account->id)->get(['transactions.transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
-        $groupIds   = TransactionJournal::whereIn('id', $journalIds)->get(['transaction_journals.transaction_group_id'])->pluck('transaction_group_id')->toArray();
+        $groupIds   = TransactionJournal::whereIn('id', $journalIds)->get(['transaction_journals.transaction_group_id'])->pluck('transaction_group_id')->toArray(); // @phpstan-ignore-line
+
         if (count($journalIds) > 0) {
             Transaction::whereIn('transaction_journal_id', $journalIds)->delete();
             TransactionJournal::whereIn('id', $journalIds)->delete();

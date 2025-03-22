@@ -27,7 +27,7 @@ namespace FireflyIII\Support\Request;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use Carbon\Exceptions\InvalidFormatException;
-use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -400,9 +400,19 @@ trait ConvertsDataTypes
             if (!is_array($entry)) {
                 continue;
             }
+            $amount   = null;
+            if (array_key_exists('current_amount', $entry)) {
+                $amount = $this->clearString((string) ($entry['current_amount'] ?? '0'));
+                if (null === $entry['current_amount']) {
+                    $amount = null;
+                }
+            }
+            if (!array_key_exists('current_amount', $entry)) {
+                $amount = null;
+            }
             $return[] = [
                 'account_id'     => $this->integerFromValue((string) ($entry['account_id'] ?? '0')),
-                'current_amount' => $this->clearString((string) ($entry['current_amount'] ?? '0')),
+                'current_amount' => $amount,
             ];
         }
 

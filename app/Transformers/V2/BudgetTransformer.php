@@ -30,6 +30,8 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class BudgetTransformer
+ *
+ * @deprecated
  */
 class BudgetTransformer extends AbstractTransformer
 {

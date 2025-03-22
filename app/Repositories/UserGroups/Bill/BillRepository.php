@@ -36,6 +36,8 @@ use Illuminate\Support\Facades\Log;
 
 /**
  * Class BillRepository
+ *
+ * @deprecated
  */
 class BillRepository implements BillRepositoryInterface
 {

@@ -40,6 +40,8 @@ use Illuminate\Support\Facades\DB;
 
 /**
  * Class AccountRepository
+ *
+ * @deprecated
  */
 class AccountRepository implements AccountRepositoryInterface
 {

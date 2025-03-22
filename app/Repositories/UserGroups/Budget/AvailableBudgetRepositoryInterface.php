@@ -25,14 +25,13 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\UserGroups\Budget;
 
 use Carbon\Carbon;
-use FireflyIII\User;
 
 /**
  * Interface AvailableBudgetRepositoryInterface
+ *
+ * @deprecated
  */
 interface AvailableBudgetRepositoryInterface
 {
     public function getAvailableBudgetWithCurrency(Carbon $start, Carbon $end): array;
-
-    public function setUser(User $user): void;
 }

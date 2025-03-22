@@ -27,6 +27,7 @@ use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Traits\RefreshNotesTrait;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class SetDescription.
@@ -57,7 +58,7 @@ class SetDescription implements ActionInterface
         // replace newlines.
         $after  = str_replace(["\r", "\n", "\t", "\036", "\025"], '', $after);
 
-        \DB::table('transaction_journals')
+        DB::table('transaction_journals')
             ->where('id', '=', $journal['transaction_journal_id'])
             ->update(['description' => $after])
         ;

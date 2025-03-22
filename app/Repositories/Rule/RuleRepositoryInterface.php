@@ -23,16 +23,25 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Rule;
 
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\RuleTrigger;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
  * Interface RuleRepositoryInterface.
+ *
+ * @method setUserGroup(UserGroup $group)
+ * @method getUserGroup()
+ * @method getUser()
+ * @method checkUserGroupAccess(UserRoleEnum $role)
+ * @method setUser(null|Authenticatable|User $user)
+ * @method setUserGroupById(int $userGroupId)
  */
 interface RuleRepositoryInterface
 {
@@ -83,8 +92,6 @@ interface RuleRepositoryInterface
     public function searchRule(string $query, int $limit): Collection;
 
     public function setOrder(Rule $rule, int $newOrder): void;
-
-    public function setUser(null|Authenticatable|User $user): void;
 
     public function store(array $data): Rule;
 

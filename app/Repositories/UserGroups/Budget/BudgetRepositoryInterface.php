@@ -24,20 +24,16 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\UserGroups\Budget;
 
-use FireflyIII\Models\UserGroup;
-use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
  * Interface BudgetRepositoryInterface
+ *
+ * @deprecated
  */
 interface BudgetRepositoryInterface
 {
     public function getActiveBudgets(): Collection;
 
     public function getBudgets(): Collection;
-
-    public function setUser(User $user): void;
-
-    public function setUserGroup(UserGroup $userGroup): void;
 }

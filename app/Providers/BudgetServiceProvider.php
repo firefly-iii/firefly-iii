@@ -33,12 +33,6 @@ use FireflyIII\Repositories\Budget\NoBudgetRepository;
 use FireflyIII\Repositories\Budget\NoBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepository;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
-use FireflyIII\Repositories\UserGroups\Budget\AvailableBudgetRepository as AdminAbRepository;
-use FireflyIII\Repositories\UserGroups\Budget\AvailableBudgetRepositoryInterface as AdminAbRepositoryInterface;
-use FireflyIII\Repositories\UserGroups\Budget\BudgetRepository as AdminBudgetRepository;
-use FireflyIII\Repositories\UserGroups\Budget\BudgetRepositoryInterface as AdminBudgetRepositoryInterface;
-use FireflyIII\Repositories\UserGroups\Budget\OperationsRepository as AdminOperationsRepository;
-use FireflyIII\Repositories\UserGroups\Budget\OperationsRepositoryInterface as AdminOperationsRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -73,39 +67,12 @@ class BudgetServiceProvider extends ServiceProvider
             }
         );
 
-        $this->app->bind(
-            AdminBudgetRepositoryInterface::class,
-            static function (Application $app) {
-                /** @var AdminBudgetRepositoryInterface $repository */
-                $repository = app(AdminBudgetRepository::class);
-                if ($app->auth->check()) { // @phpstan-ignore-line
-                    $repository->setUser(auth()->user());
-                }
-
-                return $repository;
-            }
-        );
-
         // available budget repos
         $this->app->bind(
             AvailableBudgetRepositoryInterface::class,
             static function (Application $app) {
                 /** @var AvailableBudgetRepositoryInterface $repository */
                 $repository = app(AvailableBudgetRepository::class);
-                if ($app->auth->check()) { // @phpstan-ignore-line
-                    $repository->setUser(auth()->user());
-                }
-
-                return $repository;
-            }
-        );
-
-        // available budget repos
-        $this->app->bind(
-            AdminAbRepositoryInterface::class,
-            static function (Application $app) {
-                /** @var AdminAbRepositoryInterface $repository */
-                $repository = app(AdminAbRepository::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
                 }
@@ -148,18 +115,6 @@ class BudgetServiceProvider extends ServiceProvider
             static function (Application $app) {
                 /** @var OperationsRepositoryInterface $repository */
                 $repository = app(OperationsRepository::class);
-                if ($app->auth->check()) { // @phpstan-ignore-line
-                    $repository->setUser(auth()->user());
-                }
-
-                return $repository;
-            }
-        );
-        $this->app->bind(
-            AdminOperationsRepositoryInterface::class,
-            static function (Application $app) {
-                /** @var AdminOperationsRepositoryInterface $repository */
-                $repository = app(AdminOperationsRepository::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
                 }

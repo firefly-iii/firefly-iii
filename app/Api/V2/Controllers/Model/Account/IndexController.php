@@ -27,8 +27,8 @@ namespace FireflyIII\Api\V2\Controllers\Model\Account;
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Model\Account\IndexRequest;
 use FireflyIII\Enums\UserRoleEnum;
-use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
-use FireflyIII\Transformers\V2\AccountTransformer;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Transformers\AccountTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Log;
@@ -67,7 +67,7 @@ class IndexController extends Controller
         $types             = $request->getAccountTypes();
         $sorting           = $request->getSortInstructions('accounts');
         $filters           = $request->getFilterInstructions('accounts');
-        $accounts          = $this->repository->getAccountsByType($types, $sorting, $filters);
+        $accounts          = $this->repository->getAccountsByType($types, $sorting);
         $pageSize          = $this->parameters->get('limit');
         $count             = $accounts->count();
 

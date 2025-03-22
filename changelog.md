@@ -3,6 +3,37 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.2.10 - 2025-03-22
+
+### Added
+
+- [PR 9903](https://github.com/firefly-iii/firefly-iii/pull/9903) (Add support for PHP function `strpos` in expressions) reported by @lompi
+
+### Changed
+
+- [Issue 9972](https://github.com/firefly-iii/firefly-iii/issues/9972) (Important optimization improvement: enable opcache) reported by @jgoclawski
+- Greatly improved speed of account overview
+- Better validation of environment variables
+
+### Fixed
+
+- [Issue 9770](https://github.com/firefly-iii/firefly-iii/issues/9770) (User ntfy notification forbidden 403) reported by @qck4fun
+- [Issue 9895](https://github.com/firefly-iii/firefly-iii/issues/9895) (Account Balance not updating in Transaction tab) reported by @StoicaRemus
+- [Issue 9906](https://github.com/firefly-iii/firefly-iii/issues/9906) (404 Not Found when deleting rule group) reported by @EnochPrime
+- [Issue 9908](https://github.com/firefly-iii/firefly-iii/issues/9908) (HTTP 500 on tags) reported by @wuvs
+- [Issue 9914](https://github.com/firefly-iii/firefly-iii/issues/9914) (adding money to piggy bank via API broken) reported by @4e868df3
+- [Issue 9941](https://github.com/firefly-iii/firefly-iii/issues/9941) (has_any_subscription search filter not valid) reported by @PhilWun
+- [Issue 9948](https://github.com/firefly-iii/firefly-iii/issues/9948) (typo in docker example env file) reported by @amenekowo
+- [Issue 9954](https://github.com/firefly-iii/firefly-iii/issues/9954) (Creating Bills via API is broken (optional fields are required)) reported by @jsegido
+- [Discussion 9970](https://github.com/orgs/firefly-iii/discussions/9970) (Category report with tags?) started by @luddeluddis
+- [Issue 9876](https://github.com/firefly-iii/firefly-iii/issues/9876) (data/bulkUpdateTransactions POST should not requires Content-Type header in request as request body must be empty) reported by @bouil
+- [Issue 10007](https://github.com/firefly-iii/firefly-iii/issues/10007) (Wrong currency showed in dashboard for "Subscriptions to pay" when subscription paid with different currency) reported by @Astro1247
+
+### API
+
+- [Issue 9902](https://github.com/firefly-iii/firefly-iii/issues/9902) (BIC number no longer returned by the /accounts API endpoint) reported by @dawid-czarnecki
+
+
 ## 6.2.9 - 2025-02-22
 
 ### Fixed

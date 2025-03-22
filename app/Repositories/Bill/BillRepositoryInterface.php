@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Bill;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\UserGroup;
@@ -34,14 +35,19 @@ use Illuminate\Support\Collection;
 
 /**
  * Interface BillRepositoryInterface.
+ *
+ * @method setUserGroup(UserGroup $group)
+ * @method getUserGroup()
+ * @method getUser()
+ * @method checkUserGroupAccess(UserRoleEnum $role)
+ * @method setUser(null|Authenticatable|User $user)
+ * @method setUserGroupById(int $userGroupId)
  */
 interface BillRepositoryInterface
 {
     public function billEndsWith(string $query, int $limit): Collection;
 
     public function billStartsWith(string $query, int $limit): Collection;
-
-    public function setUserGroup(UserGroup $userGroup): void;
 
     /**
      * Add correct order to bills.
@@ -140,8 +146,6 @@ interface BillRepositoryInterface
      * Set specific piggy bank to specific order.
      */
     public function setOrder(Bill $bill, int $order): void;
-
-    public function setUser(null|Authenticatable|User $user): void;
 
     /**
      * @throws FireflyException

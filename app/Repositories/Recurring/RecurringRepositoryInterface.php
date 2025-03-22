@@ -25,10 +25,12 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Recurring;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Models\RecurrenceTransaction;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -36,6 +38,13 @@ use Illuminate\Support\Collection;
 
 /**
  * Interface RecurringRepositoryInterface
+ *
+ * @method setUserGroup(UserGroup $group)
+ * @method getUserGroup()
+ * @method getUser()
+ * @method checkUserGroupAccess(UserRoleEnum $role)
+ * @method setUser(null|Authenticatable|User $user)
+ * @method setUserGroupById(int $userGroupId)
  */
 interface RecurringRepositoryInterface
 {
@@ -136,8 +145,6 @@ interface RecurringRepositoryInterface
     public function repetitionDescription(RecurrenceRepetition $repetition): string;
 
     public function searchRecurrence(string $query, int $limit): Collection;
-
-    public function setUser(null|Authenticatable|User $user): void;
 
     /**
      * Store a new recurring transaction.

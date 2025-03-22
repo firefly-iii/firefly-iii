@@ -35,6 +35,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class ConvertToTransfer
@@ -209,7 +210,7 @@ class ConvertToTransfer implements ActionInterface
         }
 
         // update destination transaction:
-        \DB::table('transactions')
+        DB::table('transactions')
             ->where('transaction_journal_id', '=', $journal->id)
             ->where('amount', '>', 0)
             ->update(['account_id' => $opposing->id])
@@ -218,7 +219,7 @@ class ConvertToTransfer implements ActionInterface
         // change transaction type of journal:
         $newType       = TransactionType::whereType(TransactionTypeEnum::TRANSFER->value)->first();
 
-        \DB::table('transaction_journals')
+        DB::table('transaction_journals')
             ->where('id', '=', $journal->id)
             ->update(['transaction_type_id' => $newType->id, 'bill_id' => null])
         ;
@@ -264,7 +265,7 @@ class ConvertToTransfer implements ActionInterface
         }
 
         // update source transaction:
-        \DB::table('transactions')
+        DB::table('transactions')
             ->where('transaction_journal_id', '=', $journal->id)
             ->where('amount', '<', 0)
             ->update(['account_id' => $opposing->id])
@@ -273,7 +274,7 @@ class ConvertToTransfer implements ActionInterface
         // change transaction type of journal:
         $newType     = TransactionType::whereType(TransactionTypeEnum::TRANSFER->value)->first();
 
-        \DB::table('transaction_journals')
+        DB::table('transaction_journals')
             ->where('id', '=', $journal->id)
             ->update(['transaction_type_id' => $newType->id, 'bill_id' => null])
         ;

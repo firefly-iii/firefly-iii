@@ -24,14 +24,23 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Journal;
 
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
  * Interface JournalAPIRepositoryInterface
+ *
+ * @method setUserGroup(UserGroup $group)
+ * @method getUserGroup()
+ * @method getUser()
+ * @method checkUserGroupAccess(UserRoleEnum $role)
+ * @method setUser(null|Authenticatable|User $user)
+ * @method setUserGroupById(int $userGroupId)
  */
 interface JournalAPIRepositoryInterface
 {
@@ -54,6 +63,4 @@ interface JournalAPIRepositoryInterface
      * Get all piggy bank events for a journal.
      */
     public function getPiggyBankEvents(TransactionJournal $journal): Collection;
-
-    public function setUser(null|Authenticatable|User $user): void;
 }

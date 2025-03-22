@@ -36,6 +36,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class ConvertToDeposit
@@ -154,14 +155,14 @@ class ConvertToDeposit implements ActionInterface
         app('log')->debug(sprintf('ConvertToDeposit. Action value is "%s", new opposing name is "%s"', $actionValue, $opposingAccount->name));
 
         // update the source transaction and put in the new revenue ID.
-        \DB::table('transactions')
+        DB::table('transactions')
             ->where('transaction_journal_id', '=', $journal->id)
             ->where('amount', '<', 0)
             ->update(['account_id' => $opposingAccount->id])
         ;
 
         // update the destination transaction and put in the original source account ID.
-        \DB::table('transactions')
+        DB::table('transactions')
             ->where('transaction_journal_id', '=', $journal->id)
             ->where('amount', '>', 0)
             ->update(['account_id' => $sourceAccount->id])
@@ -170,7 +171,7 @@ class ConvertToDeposit implements ActionInterface
         // change transaction type of journal:
         $newType         = TransactionType::whereType(TransactionTypeEnum::DEPOSIT->value)->first();
 
-        \DB::table('transaction_journals')
+        DB::table('transaction_journals')
             ->where('id', '=', $journal->id)
             ->update(['transaction_type_id' => $newType->id, 'bill_id' => null])
         ;
@@ -242,7 +243,7 @@ class ConvertToDeposit implements ActionInterface
         app('log')->debug(sprintf('ConvertToDeposit. Action value is "%s", revenue name is "%s"', $actionValue, $opposingAccount->name));
 
         // update source transaction(s) to be revenue account
-        \DB::table('transactions')
+        DB::table('transactions')
             ->where('transaction_journal_id', '=', $journal->id)
             ->where('amount', '<', 0)
             ->update(['account_id' => $opposingAccount->id])
@@ -251,7 +252,7 @@ class ConvertToDeposit implements ActionInterface
         // change transaction type of journal:
         $newType         = TransactionType::whereType(TransactionTypeEnum::DEPOSIT->value)->first();
 
-        \DB::table('transaction_journals')
+        DB::table('transaction_journals')
             ->where('id', '=', $journal->id)
             ->update(['transaction_type_id' => $newType->id, 'bill_id' => null])
         ;

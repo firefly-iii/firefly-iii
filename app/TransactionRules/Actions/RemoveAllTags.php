@@ -27,6 +27,7 @@ use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class RemoveAllTags.
@@ -45,8 +46,8 @@ class RemoveAllTags implements ActionInterface
 
     public function actOnArray(array $journal): bool
     {
-        \DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal['transaction_journal_id'])->delete();
-        $count  = \DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal['transaction_journal_id'])->count();
+        DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal['transaction_journal_id'])->delete();
+        $count  = DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal['transaction_journal_id'])->count();
         if (0 === $count) {
             app('log')->debug(sprintf('RuleAction RemoveAllTags, journal #%d has no tags.', $journal['transaction_journal_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_tags_to_remove')));

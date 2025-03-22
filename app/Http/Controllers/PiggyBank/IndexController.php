@@ -148,7 +148,6 @@ class IndexController extends Controller
         // enrich each account.
         $enrichment         = new AccountEnrichment();
         $enrichment->setUser(auth()->user());
-        $enrichment->setConvertToNative($this->convertToNative);
         $enrichment->setNative($this->defaultCurrency);
         $return             = [];
 
@@ -158,6 +157,7 @@ class IndexController extends Controller
 
             /** @var Account $account */
             foreach ($accounts as $account) {
+                /** @var Account $account */
                 $account   = $enrichment->enrichSingle($account);
                 $array     = $accountTransformer->transform($account);
                 $accountId = (int) $array['id'];

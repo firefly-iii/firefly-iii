@@ -30,6 +30,7 @@ use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Debug\Timer;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\User;
@@ -82,10 +83,11 @@ class AccountController extends Controller
         $query  = $data['query'];
         $date   = $data['date'] ?? today(config('app.timezone'));
         $return = [];
+        Timer::start(sprintf('AC accounts "%s"', $query));
         $result = $this->repository->searchAccount((string) $query, $types, $this->parameters->get('limit'));
 
         // set date to subday + end-of-day for account balance. so it is at $date 23:59:59
-        $date->subDay()->endOfDay();
+        $date->endOfDay();
 
         /** @var Account $account */
         foreach ($result as $account) {
@@ -135,6 +137,7 @@ class AccountController extends Controller
                 return $posA - $posB;
             }
         );
+        Timer::stop(sprintf('AC accounts "%s"', $query));
 
         return response()->api($return);
     }

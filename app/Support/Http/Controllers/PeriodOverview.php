@@ -31,8 +31,10 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Debug\Timer;
 use Illuminate\Support\Collection;
 
 /**
@@ -65,6 +67,7 @@ use Illuminate\Support\Collection;
 trait PeriodOverview
 {
     protected JournalRepositoryInterface $journalRepos;
+    protected AccountRepositoryInterface $accountRepository;
 
     /**
      * This method returns "period entries", so nov-2015, dec-2015, etc etc (this depends on the users session range)
@@ -75,11 +78,13 @@ trait PeriodOverview
      */
     protected function getAccountPeriodOverview(Account $account, Carbon $start, Carbon $end): array
     {
-        $range         = app('navigation')->getViewRange(true);
-        [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
+        Timer::start('account-period-total');
+        $this->accountRepository = app(AccountRepositoryInterface::class);
+        $range                   = app('navigation')->getViewRange(true);
+        [$start, $end]           = $end < $start ? [$end, $start] : [$start, $end];
 
         // properties for cache
-        $cache         = new CacheProperties();
+        $cache                   = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('account-show-period-entries');
@@ -89,55 +94,78 @@ trait PeriodOverview
         }
 
         /** @var array $dates */
-        $dates         = app('navigation')->blockPeriods($start, $end, $range);
-        $entries       = [];
+        $dates                   = app('navigation')->blockPeriods($start, $end, $range);
+        $entries                 = [];
 
-        // collect all expenses in this period:
-        /** @var GroupCollectorInterface $collector */
-        $collector     = app(GroupCollectorInterface::class);
-        $collector->setAccounts(new Collection([$account]));
-        $collector->setRange($start, $end);
-        $collector->setTypes([TransactionTypeEnum::DEPOSIT->value]);
-        $earnedSet     = $collector->getExtractedJournals();
-
-        // collect all income in this period:
-        /** @var GroupCollectorInterface $collector */
-        $collector     = app(GroupCollectorInterface::class);
-        $collector->setAccounts(new Collection([$account]));
-        $collector->setRange($start, $end);
-        $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
-        $spentSet      = $collector->getExtractedJournals();
-
-        // collect all transfers in this period:
-        /** @var GroupCollectorInterface $collector */
-        $collector     = app(GroupCollectorInterface::class);
-        $collector->setAccounts(new Collection([$account]));
-        $collector->setRange($start, $end);
-        $collector->setTypes([TransactionTypeEnum::TRANSFER->value]);
-        $transferSet   = $collector->getExtractedJournals();
+        // run a custom query because doing this with the collector is MEGA slow.
+        $transactions            = $this->accountRepository->periodCollection($account, $start, $end);
 
         // loop dates
         foreach ($dates as $currentDate) {
-            $title           = app('navigation')->periodShow($currentDate['start'], $currentDate['period']);
-            $earned          = $this->filterJournalsByDate($earnedSet, $currentDate['start'], $currentDate['end']);
-            $spent           = $this->filterJournalsByDate($spentSet, $currentDate['start'], $currentDate['end']);
-            $transferredAway = $this->filterTransferredAway($account, $this->filterJournalsByDate($transferSet, $currentDate['start'], $currentDate['end']));
-            $transferredIn   = $this->filterTransferredIn($account, $this->filterJournalsByDate($transferSet, $currentDate['start'], $currentDate['end']));
+            $title                            = app('navigation')->periodShow($currentDate['start'], $currentDate['period']);
+            [$transactions, $spent]           = $this->filterTransactionsByType(TransactionTypeEnum::WITHDRAWAL, $transactions, $currentDate['start'], $currentDate['end']);
+            [$transactions, $earned]          = $this->filterTransactionsByType(TransactionTypeEnum::DEPOSIT, $transactions, $currentDate['start'], $currentDate['end']);
+            [$transactions, $transferredAway] = $this->filterTransfers('away', $transactions, $currentDate['start'], $currentDate['end']);
+            [$transactions, $transferredIn]   = $this->filterTransfers('in', $transactions, $currentDate['start'], $currentDate['end']);
             $entries[]
-                             = [
-                                 'title'              => $title,
-                                 'route'              => route('accounts.show', [$account->id, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
-
-                                 'total_transactions' => count($spent) + count($earned) + count($transferredAway) + count($transferredIn),
-                                 'spent'              => $this->groupByCurrency($spent),
-                                 'earned'             => $this->groupByCurrency($earned),
-                                 'transferred_away'   => $this->groupByCurrency($transferredAway),
-                                 'transferred_in'     => $this->groupByCurrency($transferredIn),
-                             ];
+                                              = [
+                                                  'title'              => $title,
+                                                  'route'              => route('accounts.show', [$account->id, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
+                                                  'total_transactions' => count($spent) + count($earned) + count($transferredAway) + count($transferredIn),
+                                                  'spent'              => $this->groupByCurrency($spent),
+                                                  'earned'             => $this->groupByCurrency($earned),
+                                                  'transferred_away'   => $this->groupByCurrency($transferredAway),
+                                                  'transferred_in'     => $this->groupByCurrency($transferredIn),
+                                              ];
         }
         $cache->store($entries);
+        Timer::stop('account-period-total');
 
         return $entries;
+    }
+
+    private function filterTransfers(string $direction, array $transactions, Carbon $start, Carbon $end): array
+    {
+        $result = [];
+
+        /**
+         * @var int   $index
+         * @var array $item
+         */
+        foreach ($transactions as $index => $item) {
+            $date = Carbon::parse($item['date']);
+            if ($date >= $start && $date <= $end) {
+                if ('away' === $direction && -1 === bccomp($item['amount'], '0')) {
+                    $result[] = $item;
+                    unset($transactions[$index]);
+                }
+                if ('in' === $direction && 1 === bccomp($item['amount'], '0')) {
+                    $result[] = $item;
+                    unset($transactions[$index]);
+                }
+            }
+        }
+
+        return [$transactions, $result];
+    }
+
+    private function filterTransactionsByType(TransactionTypeEnum $type, array $transactions, Carbon $start, Carbon $end): array
+    {
+        $result = [];
+
+        /**
+         * @var int   $index
+         * @var array $item
+         */
+        foreach ($transactions as $index => $item) {
+            $date = Carbon::parse($item['date']);
+            if ($item['type'] === $type->value && $date >= $start && $date <= $end) {
+                $result[] = $item;
+                unset($transactions[$index]);
+            }
+        }
+
+        return [$transactions, $result];
     }
 
     /**

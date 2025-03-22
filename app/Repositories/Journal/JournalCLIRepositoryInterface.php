@@ -25,13 +25,22 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Journal;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
  * Interface JournalCLIRepositoryInterface
+ *
+ * @method setUserGroup(UserGroup $group)
+ * @method getUserGroup()
+ * @method getUser()
+ * @method checkUserGroupAccess(UserRoleEnum $role)
+ * @method setUser(null|Authenticatable|User $user)
+ * @method setUserGroupById(int $userGroupId)
  */
 interface JournalCLIRepositoryInterface
 {
@@ -80,6 +89,4 @@ interface JournalCLIRepositoryInterface
      * Return all tags as strings in an array.
      */
     public function getTags(TransactionJournal $journal): array;
-
-    public function setUser(null|Authenticatable|User $user): void;
 }

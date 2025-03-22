@@ -32,7 +32,11 @@
                             <td style="width:33%;">{{ 'earned'|_ }}</td>
                             <td style="text-align: right;">
                                 <span title="{{ entry.count }}">
-                                    {{ formatAmountBySymbol(entry.amount*-1, entry.currency_symbol, entry.currency_decimal_places) }}
+                                    {% if entry.amount < 0 %}
+                                        {{ formatAmountBySymbol(entry.amount*-1, entry.currency_symbol, entry.currency_decimal_places) }}
+                                    {% else %}
+                                        {{ formatAmountBySymbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places) }}
+                                    {% endif %}
                                 </span>
                             </td>
                         </tr>
@@ -58,7 +62,11 @@
                             <td style="width:33%;">{{ 'transferred_away'|_ }}</td>
                             <td style="text-align: right;">
                                 <span title="{{ entry.count }}">
-                                    {{ formatAmountBySymbol(entry.amount*-1, entry.currency_symbol, entry.currency_decimal_places) }}
+                                    {% if entry.amount < 0 %}
+                                        {{ formatAmountBySymbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places) }}
+                                    {% else %}
+                                        {{ formatAmountBySymbol(entry.amount*-1, entry.currency_symbol, entry.currency_decimal_places) }}
+                                    {% endif %}
                                 </span>
                             </td>
                         </tr>
@@ -71,7 +79,11 @@
                             <td style="width:33%;">{{ 'transferred_in'|_ }}</td>
                             <td style="text-align: right;">
                                 <span title="{{ entry.count }}">
-                                    {{ formatAmountBySymbol(entry.amount*-1, entry.currency_symbol, entry.currency_decimal_places) }}
+                                    {% if entry.amount < 0 %}
+                                        {{ formatAmountBySymbol(entry.amount*-1, entry.currency_symbol, entry.currency_decimal_places) }}
+                                    {% else %}
+                                        {{ formatAmountBySymbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places) }}
+                                    {% endif %}
                                 </span>
                             </td>
                         </tr>

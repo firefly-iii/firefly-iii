@@ -29,6 +29,8 @@ use Illuminate\Support\Collection;
 
 /**
  * Class BudgetRepository
+ *
+ * @deprecated
  */
 class BudgetRepository implements BudgetRepositoryInterface
 {

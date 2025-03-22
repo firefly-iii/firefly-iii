@@ -46,6 +46,15 @@ final class NavigationPreferredCarbonFormatByPeriodTest extends TestCase
         $this->navigation = new Navigation();
     }
 
+    /**
+     * @dataProvider providePeriods
+     */
+    public function testGivenAPeriodWhenCallPreferredCarbonFormatByPeriodThenReturnsExpectedFormat(string $period, string $expected): void
+    {
+        $formatPeriod = $this->navigation->preferredCarbonFormatByPeriod($period);
+        self::assertSame($expected, $formatPeriod);
+    }
+
     public static function providePeriods(): iterable
     {
         return [
@@ -56,14 +65,5 @@ final class NavigationPreferredCarbonFormatByPeriodTest extends TestCase
             'half-yearly' => ['period' => '6M', 'expected' => '\QQ,Y'],
             'yearly'      => ['period' => '1Y', 'expected' => 'Y'],
         ];
-    }
-
-    /**
-     * @dataProvider providePeriods
-     */
-    public function testGivenAPeriodWhenCallPreferredCarbonFormatByPeriodThenReturnsExpectedFormat(string $period, string $expected): void
-    {
-        $formatPeriod = $this->navigation->preferredCarbonFormatByPeriod($period);
-        self::assertSame($expected, $formatPeriod);
     }
 }

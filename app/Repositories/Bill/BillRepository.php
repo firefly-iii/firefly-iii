@@ -38,17 +38,19 @@ use FireflyIII\Services\Internal\Destroy\BillDestroyService;
 use FireflyIII\Services\Internal\Update\BillUpdateService;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class BillRepository.
  */
-class BillRepository implements BillRepositoryInterface
+class BillRepository implements BillRepositoryInterface, UserGroupInterface
 {
     use CreatesObjectGroups;
     use UserGroupTrait;
@@ -160,9 +162,7 @@ class BillRepository implements BillRepositoryInterface
     public function getAttachments(Bill $bill): Collection
     {
         $set  = $bill->attachments()->get();
-
-        /** @var \Storage $disk */
-        $disk = \Storage::disk('upload');
+        $disk = Storage::disk('upload');
 
         return $set->each(
             static function (Attachment $attachment) use ($disk) {  // @phpstan-ignore-line
@@ -528,8 +528,8 @@ class BillRepository implements BillRepositoryInterface
         foreach ($bills as $bill) {
 
             /** @var Collection $set */
-            $set                          = $bill->transactionJournals()->after($start)->before($end)->get(['transaction_journals.*']);
-            $currency                     = $convertToNative && $bill->transactionCurrency->id !== $default->id ? $default : $bill->transactionCurrency;
+            $set       = $bill->transactionJournals()->after($start)->before($end)->get(['transaction_journals.*']);
+            $currency  = $convertToNative && $bill->transactionCurrency->id !== $default->id ? $default : $bill->transactionCurrency;
             $return[(int) $currency->id] ??= [
                 'id'             => (string) $currency->id,
                 'name'           => $currency->name,
@@ -538,18 +538,39 @@ class BillRepository implements BillRepositoryInterface
                 'decimal_places' => $currency->decimal_places,
                 'sum'            => '0',
             ];
-            $setAmount                    = '0';
+            $setAmount = '0';
 
             /** @var TransactionJournal $transactionJournal */
             foreach ($set as $transactionJournal) {
-                $setAmount = bcadd($setAmount, Amount::getAmountFromJournalObject($transactionJournal));
+                // grab currency from transaction.
+                $transactionCurrency                           = $transactionJournal->transactionCurrency;
+                $return[(int) $transactionCurrency->id] ??= [
+                    'id'             => (string) $transactionCurrency->id,
+                    'name'           => $transactionCurrency->name,
+                    'symbol'         => $transactionCurrency->symbol,
+                    'code'           => $transactionCurrency->code,
+                    'decimal_places' => $transactionCurrency->decimal_places,
+                    'sum'            => '0',
+                ];
+
+                // get currency from transaction as well.
+                $return[(int) $transactionCurrency->id]['sum'] = bcadd($return[(int) $transactionCurrency->id]['sum'], Amount::getAmountFromJournalObject($transactionJournal));
+                // $setAmount = bcadd($setAmount, Amount::getAmountFromJournalObject($transactionJournal));
             }
             // Log::debug(sprintf('Bill #%d ("%s") with %d transaction(s) and sum %s %s', $bill->id, $bill->name, $set->count(), $currency->code, $setAmount));
-            $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $setAmount);
+            // $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $setAmount);
             // Log::debug(sprintf('Total sum is now %s', $return[$currency->id]['sum']));
         }
+        // remove empty sets
+        $final           = [];
+        foreach ($return as $entry) {
+            if (0 === bccomp($entry['sum'], '0')) {
+                continue;
+            }
+            $final[] = $entry;
+        }
 
-        return $return;
+        return $final;
     }
 
     public function getActiveBills(): Collection

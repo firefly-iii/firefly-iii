@@ -30,6 +30,7 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\User;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class LinkToBill.
@@ -58,7 +59,7 @@ class LinkToBill implements ActionInterface
         $bill       = $repository->findByName($billName);
 
         if (null !== $bill && TransactionTypeEnum::WITHDRAWAL->value === $journal['transaction_type_type']) {
-            $count  = \DB::table('transaction_journals')->where('id', '=', $journal['transaction_journal_id'])
+            $count  = DB::table('transaction_journals')->where('id', '=', $journal['transaction_journal_id'])
                 ->where('bill_id', $bill->id)->count()
             ;
             if (0 !== $count) {
@@ -74,7 +75,7 @@ class LinkToBill implements ActionInterface
                 return false;
             }
 
-            \DB::table('transaction_journals')
+            DB::table('transaction_journals')
                 ->where('id', '=', $journal['transaction_journal_id'])
                 ->update(['bill_id' => $bill->id])
             ;

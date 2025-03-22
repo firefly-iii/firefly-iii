@@ -30,7 +30,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountBalance;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
@@ -69,7 +69,7 @@ class AccountController extends Controller
     public function accounts(AutocompleteRequest $request): JsonResponse
     {
         $params = $request->getParameters();
-        $result = $this->repository->searchAccount($params['query'], $params['account_types'], $params['page'], $params['size']);
+        $result = $this->repository->searchAccount($params['query'], $params['account_types'], $params['size']);
         $return = [];
 
         /** @var Account $account */

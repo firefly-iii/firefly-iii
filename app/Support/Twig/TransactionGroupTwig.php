@@ -30,6 +30,7 @@ use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
+use Illuminate\Support\Facades\DB;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -225,7 +226,7 @@ class TransactionGroupTwig extends AbstractExtension
         return new TwigFunction(
             'journalHasMeta',
             static function (int $journalId, string $metaField) {
-                $count = \DB::table('journal_meta')
+                $count = DB::table('journal_meta')
                     ->where('name', $metaField)
                     ->where('transaction_journal_id', $journalId)
                     ->whereNull('deleted_at')
@@ -243,7 +244,7 @@ class TransactionGroupTwig extends AbstractExtension
             'journalGetMetaDate',
             static function (int $journalId, string $metaField) {
                 /** @var null|TransactionJournalMeta $entry */
-                $entry = \DB::table('journal_meta')
+                $entry = DB::table('journal_meta')
                     ->where('name', $metaField)
                     ->where('transaction_journal_id', $journalId)
                     ->whereNull('deleted_at')
@@ -264,7 +265,7 @@ class TransactionGroupTwig extends AbstractExtension
             'journalGetMetaField',
             static function (int $journalId, string $metaField) {
                 /** @var null|TransactionJournalMeta $entry */
-                $entry = \DB::table('journal_meta')
+                $entry = DB::table('journal_meta')
                     ->where('name', $metaField)
                     ->where('transaction_journal_id', $journalId)
                     ->whereNull('deleted_at')

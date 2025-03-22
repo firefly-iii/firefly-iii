@@ -30,6 +30,8 @@ use Illuminate\Support\Collection;
 
 /**
  * Class PiggyBankRepository
+ *
+ * @deprecated
  */
 class PiggyBankRepository implements PiggyBankRepositoryInterface
 {

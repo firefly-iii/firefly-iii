@@ -26,6 +26,7 @@ namespace FireflyIII\TransactionRules\Actions;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class PrependDescription.
@@ -47,7 +48,7 @@ class PrependDescription implements ActionInterface
     {
         $before = $journal['description'];
         $after  = sprintf('%s%s', $this->action->getValue($journal), $journal['description']);
-        \DB::table('transaction_journals')->where('id', $journal['transaction_journal_id'])->limit(1)->update(['description' => $after]);
+        DB::table('transaction_journals')->where('id', $journal['transaction_journal_id'])->limit(1)->update(['description' => $after]);
 
         // journal
         /** @var TransactionJournal $object */

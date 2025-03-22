@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Webhook;
 
+use FireflyIII\Enums\UserRoleEnum;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Models\WebhookAttempt;
 use FireflyIII\Models\WebhookMessage;
@@ -33,6 +35,13 @@ use Illuminate\Support\Collection;
 
 /**
  * Interface WebhookRepositoryInterface
+ *
+ * @method setUserGroup(UserGroup $group)
+ * @method getUserGroup()
+ * @method getUser()
+ * @method checkUserGroupAccess(UserRoleEnum $role)
+ * @method setUser(null|Authenticatable|User $user)
+ * @method setUserGroupById(int $userGroupId)
  */
 interface WebhookRepositoryInterface
 {
@@ -52,8 +61,6 @@ interface WebhookRepositoryInterface
     public function getMessages(Webhook $webhook): Collection;
 
     public function getReadyMessages(Webhook $webhook): Collection;
-
-    public function setUser(null|Authenticatable|User $user): void;
 
     public function store(array $data): Webhook;
 

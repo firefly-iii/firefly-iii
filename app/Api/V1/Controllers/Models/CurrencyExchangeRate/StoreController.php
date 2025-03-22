@@ -26,9 +26,9 @@ namespace FireflyIII\Api\V1\Controllers\Models\CurrencyExchangeRate;
 
 use FireflyIII\Api\V1\Requests\Models\CurrencyExchangeRate\StoreRequest;
 use FireflyIII\Api\V2\Controllers\Controller;
-use FireflyIII\Repositories\UserGroups\ExchangeRate\ExchangeRateRepositoryInterface;
+use FireflyIII\Repositories\ExchangeRate\ExchangeRateRepositoryInterface;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
-use FireflyIII\Transformers\V2\ExchangeRateTransformer;
+use FireflyIII\Transformers\ExchangeRateTransformer;
 use Illuminate\Http\JsonResponse;
 
 class StoreController extends Controller

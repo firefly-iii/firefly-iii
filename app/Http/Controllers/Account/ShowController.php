@@ -29,10 +29,11 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Debug\Timer;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\PeriodOverview;
+use FireflyIII\Support\JsonApi\Enrichments\TransactionGroupEnrichment;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -114,22 +115,46 @@ class ShowController extends Controller
         $subTitle         = (string) trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
         $chartUrl         = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
         $firstTransaction = $this->repository->oldestJournalDate($account) ?? $start;
+
+        Log::debug('Start period overview');
+        Timer::start('period-overview');
+
         $periods          = $this->getAccountPeriodOverview($account, $firstTransaction, $end);
+
+        Log::debug('End period overview');
+        Timer::stop('period-overview');
 
         // if layout = v2, overrule the page title.
         if ('v1' !== config('view.layout')) {
             $subTitle = (string) trans('firefly.all_journals_for_account', ['name' => $account->name]);
         }
+        Log::debug('Collect transactions');
+        Timer::start('collection');
 
         /** @var GroupCollectorInterface $collector */
         $collector        = app(GroupCollectorInterface::class);
-        $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page)->withAccountInformation()->withCategoryInformation()->setRange($start, $end);
-
+        $collector
+            ->setAccounts(new Collection([$account]))
+            ->setLimit($pageSize)
+            ->setPage($page)
+            ->withAPIInformation()
+            ->setRange($start, $end)
+        ;
         // this search will not include transaction groups where this asset account (or liability)
         // is just part of ONE of the journals. To force this:
         $collector->setExpandGroupSearch(true);
-
         $groups           = $collector->getPaginatedGroups();
+
+        Log::debug('End collect transactions');
+        Timer::stop('collection');
+
+        // enrich data in arrays.
+
+        // enrich
+        //        $enrichment   = new TransactionGroupEnrichment();
+        //        $enrichment->setUser(auth()->user());
+        //        $groups->setCollection($enrichment->enrich($groups->getCollection()));
+
 
         $groups->setPath(route('accounts.show', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]));
         $showAll          = false;

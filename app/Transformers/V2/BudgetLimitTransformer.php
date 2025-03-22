@@ -30,6 +30,8 @@ use League\Fractal\Resource\Item;
 
 /**
  * Class BudgetLimitTransformer
+ *
+ * @deprecated
  */
 class BudgetLimitTransformer extends AbstractTransformer
 {

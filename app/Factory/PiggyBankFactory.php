@@ -227,12 +227,12 @@ class PiggyBankFactory
         // TODO this is a tedious check. Feels like a hack.
         $toBeLinked = [];
         foreach ($piggyBank->accounts as $account) {
+            Log::debug(sprintf('Checking account #%d', $account->id));
             foreach ($accounts as $info) {
-                if ($account->id === $info['account_id']) {
-                    if (array_key_exists($account->id, $accounts)) {
-                        $toBeLinked[$account->id] = ['current_amount' => $account->pivot->current_amount ?? '0'];
-                        Log::debug(sprintf('Prefilled for account #%d with amount %s', $account->id, $account->pivot->current_amount ?? '0'));
-                    }
+                Log::debug(sprintf('  Checking other account #%d', $info['account_id']));
+                if ((int) $account->id === (int) $info['account_id']) {
+                    $toBeLinked[$account->id] = ['current_amount' => $account->pivot->current_amount ?? '0'];
+                    Log::debug(sprintf('Prefilled for account #%d with amount %s', $account->id, $account->pivot->current_amount ?? '0'));
                 }
             }
         }
@@ -244,9 +244,13 @@ class PiggyBankFactory
             if (null === $account) {
                 continue;
             }
-            if (array_key_exists('current_amount', $info)) {
+            if (array_key_exists('current_amount', $info) && null !== $info['current_amount']) {
                 $toBeLinked[$account->id] = ['current_amount' => $info['current_amount']];
-                Log::debug(sprintf('Will link account #%d with amount %s', $account->id, $account->pivot->current_amount ?? '0'));
+                Log::debug(sprintf('[a] Will link account #%d with amount %s', $account->id, $info['current_amount']));
+            }
+            if (array_key_exists('current_amount', $info) && null === $info['current_amount']) {
+                $toBeLinked[$account->id] = ['current_amount' => $toBeLinked[$account->id]['current_amount'] ?? '0'];
+                Log::debug(sprintf('[b] Will link account #%d with amount %s', $account->id, $toBeLinked[$account->id]['current_amount'] ?? '0'));
             }
             if (!array_key_exists('current_amount', $info)) {
                 $toBeLinked[$account->id] ??= [];

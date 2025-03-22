@@ -29,18 +29,17 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use FireflyIII\Support\Search\OperatorQuerySearch;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
  * Class RuleRepository.
  */
-class RuleRepository implements RuleRepositoryInterface
+class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
 {
-    /** @var User */
-    private $user;
+    use UserGroupTrait;
 
     /**
      * @throws \Exception
@@ -310,13 +309,6 @@ class RuleRepository implements RuleRepositoryInterface
         $groupRepository->resetRuleOrder($ruleGroup);
 
         return true;
-    }
-
-    public function setUser(null|Authenticatable|User $user): void
-    {
-        if ($user instanceof User) {
-            $this->user = $user;
-        }
     }
 
     public function setOrder(Rule $rule, int $newOrder): void

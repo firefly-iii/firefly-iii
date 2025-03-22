@@ -25,10 +25,10 @@ namespace FireflyIII\Providers;
 
 use FireflyIII\Repositories\Currency\CurrencyRepository;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepository as GroupCurrencyRepository;
-use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface as GroupCurrencyRepositoryInterface;
-use FireflyIII\Repositories\UserGroups\ExchangeRate\ExchangeRateRepository;
-use FireflyIII\Repositories\UserGroups\ExchangeRate\ExchangeRateRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepository as GroupCurrencyRepository;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface as GroupCurrencyRepositoryInterface;
+use FireflyIII\Repositories\ExchangeRate\ExchangeRateRepository;
+use FireflyIII\Repositories\ExchangeRate\ExchangeRateRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -77,9 +77,16 @@ class CurrencyServiceProvider extends ServiceProvider
         $this->app->bind(
             ExchangeRateRepositoryInterface::class,
             static function (Application $app) {
-                /** @var ExchangeRateRepository */
-                return app(ExchangeRateRepository::class);
+                /** @var ExchangeRateRepository $repository */
+                $repository = app(ExchangeRateRepository::class);
+                // phpstan does not get the reference to auth
+                if ($app->auth->check()) { // @phpstan-ignore-line
+                    $repository->setUserGroup(auth()->user()->userGroup);
+                }
+
+                return $repository;
             }
         );
+
     }
 }

@@ -73,6 +73,7 @@ use FireflyIII\TransactionRules\Engine\SearchRuleEngine;
 use FireflyIII\TransactionRules\Expressions\ActionExpressionLanguageProvider;
 use FireflyIII\Validation\FireflyValidator;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
@@ -88,7 +89,7 @@ class FireflyServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        \Validator::resolver(
+        Validator::resolver(
             static function ($translator, $data, $rules, $messages) {
                 return new FireflyValidator($translator, $data, $rules, $messages);
             }

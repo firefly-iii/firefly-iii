@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\AutoBudget;
 use FireflyIII\Models\Budget;
@@ -34,14 +35,19 @@ use Illuminate\Support\Collection;
 
 /**
  * Interface BudgetRepositoryInterface.
+ *
+ * @method setUserGroup(UserGroup $group)
+ * @method getUserGroup()
+ * @method getUser()
+ * @method checkUserGroupAccess(UserRoleEnum $role)
+ * @method setUser(null|Authenticatable|User $user)
+ * @method setUserGroupById(int $userGroupId)
  */
 interface BudgetRepositoryInterface
 {
     public function budgetEndsWith(string $query, int $limit): Collection;
 
     public function budgetStartsWith(string $query, int $limit): Collection;
-
-    public function setUserGroup(UserGroup $userGroup): void;
 
     /**
      * Returns the amount that is budgeted in a period.
@@ -101,8 +107,6 @@ interface BudgetRepositoryInterface
     public function searchBudget(string $query, int $limit): Collection;
 
     public function setBudgetOrder(Budget $budget, int $order): void;
-
-    public function setUser(null|Authenticatable|User $user): void;
 
     /**
      * Used in the v2 API to calculate the amount of money spent in all active budgets.

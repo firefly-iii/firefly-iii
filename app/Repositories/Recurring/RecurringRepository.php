@@ -43,8 +43,8 @@ use FireflyIII\Support\Repositories\Recurring\CalculateRangeOccurrences;
 use FireflyIII\Support\Repositories\Recurring\CalculateXOccurrences;
 use FireflyIII\Support\Repositories\Recurring\CalculateXOccurrencesSince;
 use FireflyIII\Support\Repositories\Recurring\FiltersWeekends;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -53,14 +53,14 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class RecurringRepository
  */
-class RecurringRepository implements RecurringRepositoryInterface
+class RecurringRepository implements RecurringRepositoryInterface, UserGroupInterface
 {
     use CalculateRangeOccurrences;
     use CalculateXOccurrences;
     use CalculateXOccurrencesSince;
     use FiltersWeekends;
 
-    private User $user;
+    use UserGroupTrait;
 
     public function createdPreviously(Recurrence $recurrence, Carbon $date): bool
     {
@@ -303,13 +303,6 @@ class RecurringRepository implements RecurringRepositoryInterface
         $collector->setJournalIds($search);
 
         return $collector->getPaginatedGroups();
-    }
-
-    public function setUser(null|Authenticatable|User $user): void
-    {
-        if ($user instanceof User) {
-            $this->user = $user;
-        }
     }
 
     public function getTransactions(Recurrence $recurrence): Collection

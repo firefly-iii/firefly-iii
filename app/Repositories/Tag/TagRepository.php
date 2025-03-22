@@ -31,17 +31,19 @@ use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Location;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Tag;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class TagRepository.
  */
-class TagRepository implements TagRepositoryInterface
+class TagRepository implements TagRepositoryInterface, UserGroupInterface
 {
-    private User $user;
+    use UserGroupTrait;
 
     public function count(): int
     {
@@ -53,7 +55,7 @@ class TagRepository implements TagRepositoryInterface
      */
     public function destroy(Tag $tag): bool
     {
-        \DB::table('tag_transaction_journal')->where('tag_id', $tag->id)->delete();
+        DB::table('tag_transaction_journal')->where('tag_id', $tag->id)->delete();
         $tag->transactionJournals()->sync([]);
         $tag->delete();
 
@@ -70,7 +72,7 @@ class TagRepository implements TagRepositoryInterface
 
         /** @var Tag $tag */
         foreach ($tags as $tag) {
-            \DB::table('tag_transaction_journal')->where('tag_id', $tag->id)->delete();
+            DB::table('tag_transaction_journal')->where('tag_id', $tag->id)->delete();
             $tag->delete();
         }
     }
@@ -89,13 +91,6 @@ class TagRepository implements TagRepositoryInterface
         $collector->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->setTag($tag);
 
         return $collector->getExtractedJournals();
-    }
-
-    public function setUser(null|Authenticatable|User $user): void
-    {
-        if ($user instanceof User) {
-            $this->user = $user;
-        }
     }
 
     public function find(int $tagId): ?Tag
@@ -119,9 +114,7 @@ class TagRepository implements TagRepositoryInterface
     public function getAttachments(Tag $tag): Collection
     {
         $set  = $tag->attachments()->get();
-
-        /** @var \Storage $disk */
-        $disk = \Storage::disk('upload');
+        $disk = Storage::disk('upload');
 
         return $set->each(
             static function (Attachment $attachment) use ($disk): void { // @phpstan-ignore-line

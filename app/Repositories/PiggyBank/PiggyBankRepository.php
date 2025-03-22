@@ -36,16 +36,16 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Facades\Steam;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class PiggyBankRepository.
  */
-class PiggyBankRepository implements PiggyBankRepositoryInterface
+class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInterface
 {
     use ModifiesPiggyBanks;
 
@@ -112,8 +112,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     {
         $set  = $piggyBank->attachments()->get();
 
-        /** @var \Storage $disk */
-        $disk = \Storage::disk('upload');
+        $disk = Storage::disk('upload');
 
         return $set->each(
             static function (Attachment $attachment) use ($disk) { // @phpstan-ignore-line
@@ -124,6 +123,24 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
                 return $attachment;
             }
         );
+    }
+
+    /**
+     * Get current amount saved in piggy bank.
+     */
+    public function getCurrentNativeAmount(PiggyBank $piggyBank, ?Account $account = null): string
+    {
+        $sum = '0';
+        foreach ($piggyBank->accounts as $current) {
+            if (null !== $account && $account->id !== $current->id) {
+                continue;
+            }
+            $amount = (string) $current->pivot->native_current_amount;
+            $amount = '' === $amount ? '0' : $amount;
+            $sum    = bcadd($sum, $amount);
+        }
+
+        return $sum;
     }
 
     public function getEvents(PiggyBank $piggyBank): Collection
@@ -242,11 +259,23 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         return (string) $amount;
     }
 
-    public function setUser(null|Authenticatable|User $user): void
+    /**
+     * Get current amount saved in piggy bank.
+     */
+    public function getCurrentAmount(PiggyBank $piggyBank, ?Account $account = null): string
     {
-        if ($user instanceof User) {
-            $this->user = $user;
+        $sum = '0';
+        foreach ($piggyBank->accounts as $current) {
+            if (null !== $account && $account->id !== $current->id) {
+                continue;
+            }
+            $amount = (string) $current->pivot->current_amount;
+            $amount = '' === $amount ? '0' : $amount;
+            $sum    = bcadd($sum, $amount);
         }
+        // Log::debug(sprintf('Current amount in piggy bank #%d ("%s") is %s', $piggyBank->id, $piggyBank->name, $sum));
+
+        return $sum;
     }
 
     /**
@@ -278,9 +307,17 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
     public function getPiggyBanks(): Collection
     {
-        return PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
+        $query = PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
             ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
-            ->where('accounts.user_id', $this->user->id)
+        ;
+        if (null === $this->user) {
+            $query->where('accounts.user_group_id', $this->userGroup->id);
+        }
+        if (null !== $this->user) {
+            $query->where('accounts.user_id', $this->user->id);
+        }
+
+        return $query
             ->with(
                 [
                     'objectGroups',
@@ -288,43 +325,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
             )
             ->orderBy('piggy_banks.order', 'ASC')->distinct()->get(['piggy_banks.*'])
         ;
-    }
-
-    /**
-     * Get current amount saved in piggy bank.
-     */
-    public function getCurrentAmount(PiggyBank $piggyBank, ?Account $account = null): string
-    {
-        $sum = '0';
-        foreach ($piggyBank->accounts as $current) {
-            if (null !== $account && $account->id !== $current->id) {
-                continue;
-            }
-            $amount = (string) $current->pivot->current_amount;
-            $amount = '' === $amount ? '0' : $amount;
-            $sum    = bcadd($sum, $amount);
-        }
-        // Log::debug(sprintf('Current amount in piggy bank #%d ("%s") is %s', $piggyBank->id, $piggyBank->name, $sum));
-
-        return $sum;
-    }
-
-    /**
-     * Get current amount saved in piggy bank.
-     */
-    public function getCurrentNativeAmount(PiggyBank $piggyBank, ?Account $account = null): string
-    {
-        $sum = '0';
-        foreach ($piggyBank->accounts as $current) {
-            if (null !== $account && $account->id !== $current->id) {
-                continue;
-            }
-            $amount = (string) $current->pivot->native_current_amount;
-            $amount = '' === $amount ? '0' : $amount;
-            $sum    = bcadd($sum, $amount);
-        }
-
-        return $sum;
     }
 
     public function getRepetition(PiggyBank $piggyBank, bool $overrule = false): ?PiggyBankRepetition

@@ -33,24 +33,23 @@ use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Location;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Services\Internal\Destroy\AccountDestroyService;
 use FireflyIII\Services\Internal\Update\AccountUpdateService;
 use FireflyIII\Support\Facades\Steam;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class AccountRepository.
  */
-class AccountRepository implements AccountRepositoryInterface
+class AccountRepository implements AccountRepositoryInterface, UserGroupInterface
 {
     use UserGroupTrait;
 
@@ -163,6 +162,12 @@ class AccountRepository implements AccountRepositoryInterface
         return $account;
     }
 
+    #[\Override]
+    public function getAccountBalances(Account $account): Collection
+    {
+        return $account->accountBalances;
+    }
+
     /**
      * Return account type or null if not found.
      */
@@ -210,8 +215,8 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $set  = $account->attachments()->get();
 
-        /** @var \Storage $disk */
-        $disk = \Storage::disk('upload');
+        /** @var Storage $disk */
+        $disk = Storage::disk('upload');
 
         return $set->each(
             static function (Attachment $attachment) use ($disk) { // @phpstan-ignore-line
@@ -237,13 +242,6 @@ class AccountRepository implements AccountRepositoryInterface
         $factory->setUser($this->user);
 
         return $factory->findOrCreate('Cash account', $type->type);
-    }
-
-    public function setUser(null|Authenticatable|User $user): void
-    {
-        if ($user instanceof User) {
-            $this->user = $user;
-        }
     }
 
     public function getCreditTransactionGroup(Account $account): ?TransactionGroup
@@ -653,5 +651,37 @@ class AccountRepository implements AccountRepositoryInterface
         $factory->setUser($this->user);
 
         return $factory->create($data);
+    }
+
+    #[\Override]
+    public function periodCollection(Account $account, Carbon $start, Carbon $end): array
+    {
+        return $account->transactions()
+            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+            ->leftJoin('transaction_currencies', 'transaction_currencies.id', '=', 'transactions.transaction_currency_id')
+            ->leftJoin('transaction_currencies as foreign_currencies', 'foreign_currencies.id', '=', 'transactions.foreign_currency_id')
+            ->where('transaction_journals.date', '>=', $start)
+            ->where('transaction_journals.date', '<=', $end)
+            ->get([
+                // currencies
+                'transaction_currencies.id as currency_id',
+                'transaction_currencies.code as currency_code',
+                'transaction_currencies.name as currency_name',
+                'transaction_currencies.symbol as currency_symbol',
+                'transaction_currencies.decimal_places as currency_decimal_places',
+
+                // foreign
+                'foreign_currencies.id as foreign_currency_id',
+                'foreign_currencies.code as foreign_currency_code',
+                'foreign_currencies.name as foreign_currency_name',
+                'foreign_currencies.symbol as foreign_currency_symbol',
+                'foreign_currencies.decimal_places as foreign_decimal_places',
+
+                // fields
+                'transaction_journals.date', 'transaction_types.type', 'transaction_journals.transaction_currency_id', 'transactions.amount'])
+            ->toArray()
+        ;
+
     }
 }

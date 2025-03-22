@@ -28,19 +28,19 @@ use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
-use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Facades\Steam;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
 /**
  * Class AccountTasker.
  */
-class AccountTasker implements AccountTaskerInterface
+class AccountTasker implements AccountTaskerInterface, UserGroupInterface
 {
-    private User $user;
+    use UserGroupTrait;
 
     /**
      * @throws FireflyException
@@ -49,7 +49,7 @@ class AccountTasker implements AccountTaskerInterface
     {
         $yesterday       = clone $start;
         $yesterday->subDay()->endOfDay(); // exactly up until $start but NOT including.
-        $end->endOfDay(); // needs to be end of day to be correct.
+        $end->endOfDay();                 // needs to be end of day to be correct.
         Log::debug(sprintf('getAccountReport: finalAccountsBalance("%s")', $yesterday->format('Y-m-d H:i:s')));
         Log::debug(sprintf('getAccountReport: finalAccountsBalance("%s")', $end->format('Y-m-d H:i:s')));
         $startSet        = Steam::finalAccountsBalance($accounts, $yesterday);
@@ -288,12 +288,5 @@ class AccountTasker implements AccountTaskerInterface
         }
 
         return $report;
-    }
-
-    public function setUser(null|Authenticatable|User $user): void
-    {
-        if ($user instanceof User) {
-            $this->user = $user;
-        }
     }
 }

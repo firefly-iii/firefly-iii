@@ -26,6 +26,11 @@ namespace FireflyIII\Repositories\UserGroups\Tag;
 
 use Illuminate\Support\Collection;
 
+/**
+ * Interface TagRepositoryInterface
+ *
+ * @deprecated
+ */
 interface TagRepositoryInterface
 {
     /**

@@ -37,7 +37,7 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
-use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -185,8 +185,8 @@ class BasicController extends Controller
                 'currency_decimal_places' => $currency->decimal_places,
                 'value_parsed'            => app('amount')->formatAnything($currency, $sums[$currencyId] ?? '0', false),
                 'local_icon'              => 'balance-scale',
-                'sub_title'               => app('amount')->formatAnything($currency, $expenses[$currencyId] ?? '0', false).
-                                             ' + '.app('amount')->formatAnything($currency, $incomes[$currencyId] ?? '0', false),
+                'sub_title'               => app('amount')->formatAnything($currency, $expenses[$currencyId] ?? '0', false)
+                                             .' + '.app('amount')->formatAnything($currency, $incomes[$currencyId] ?? '0', false),
             ];
             $return[] = [
                 'key'                     => sprintf('spent-in-%s', $currency->code),
@@ -209,6 +209,47 @@ class BasicController extends Controller
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
                 'value_parsed'            => app('amount')->formatAnything($currency, $incomes[$currencyId] ?? '0', false),
+                'local_icon'              => 'balance-scale',
+                'sub_title'               => '',
+            ];
+        }
+        if (0 === count($return)) {
+            $currency = $this->nativeCurrency;
+            // create objects for big array.
+            $return[] = [
+                'key'                     => sprintf('balance-in-%s', $currency->code),
+                'title'                   => trans('firefly.box_balance_in_currency', ['currency' => $currency->symbol]),
+                'monetary_value'          => '0',
+                'currency_id'             => (string) $currency->id,
+                'currency_code'           => $currency->code,
+                'currency_symbol'         => $currency->symbol,
+                'currency_decimal_places' => $currency->decimal_places,
+                'value_parsed'            => app('amount')->formatAnything($currency, '0', false),
+                'local_icon'              => 'balance-scale',
+                'sub_title'               => app('amount')->formatAnything($currency, '0', false)
+                    .' + '.app('amount')->formatAnything($currency, '0', false),
+            ];
+            $return[] = [
+                'key'                     => sprintf('spent-in-%s', $currency->code),
+                'title'                   => trans('firefly.box_spent_in_currency', ['currency' => $currency->symbol]),
+                'monetary_value'          => '0',
+                'currency_id'             => (string) $currency->id,
+                'currency_code'           => $currency->code,
+                'currency_symbol'         => $currency->symbol,
+                'currency_decimal_places' => $currency->decimal_places,
+                'value_parsed'            => app('amount')->formatAnything($currency, '0', false),
+                'local_icon'              => 'balance-scale',
+                'sub_title'               => '',
+            ];
+            $return[] = [
+                'key'                     => sprintf('earned-in-%s', $currency->code),
+                'title'                   => trans('firefly.box_earned_in_currency', ['currency' => $currency->symbol]),
+                'monetary_value'          => '0',
+                'currency_id'             => (string) $currency->id,
+                'currency_code'           => $currency->code,
+                'currency_symbol'         => $currency->symbol,
+                'currency_decimal_places' => $currency->decimal_places,
+                'value_parsed'            => app('amount')->formatAnything($currency, '0', false),
                 'local_icon'              => 'balance-scale',
                 'sub_title'               => '',
             ];
@@ -268,6 +309,37 @@ class BasicController extends Controller
         }
         app('log')->debug(sprintf('Done with getBillInformation("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d-')));
 
+        if (0 === count($return)) {
+            $currency = $this->nativeCurrency;
+            unset($info, $amount);
+
+            $return[] = [
+                'key'                     => sprintf('bills-paid-in-%s', $currency->code),
+                'title'                   => trans('firefly.box_bill_paid_in_currency', ['currency' => $currency->symbol]),
+                'monetary_value'          => '0',
+                'currency_id'             => (string) $currency->id,
+                'currency_code'           => $currency->code,
+                'currency_symbol'         => $currency->symbol,
+                'currency_decimal_places' => $currency->decimal_places,
+                'value_parsed'            => app('amount')->formatFlat($currency->symbol, $currency->decimal_places, '0', false),
+                'local_icon'              => 'check',
+                'sub_title'               => '',
+            ];
+            $return[] = [
+                'key'                     => sprintf('bills-unpaid-in-%s', $currency->code),
+                'title'                   => trans('firefly.box_bill_unpaid_in_currency', ['currency' => $currency->symbol]),
+                'monetary_value'          => '0',
+                'currency_id'             => (string) $currency->id,
+                'currency_code'           => $currency->code,
+                'currency_symbol'         => $currency->symbol,
+                'currency_decimal_places' => $currency->decimal_places,
+                'value_parsed'            => app('amount')->formatFlat($currency->symbol, $currency->decimal_places, '0', false),
+                'local_icon'              => 'calendar-o',
+                'sub_title'               => '',
+            ];
+        }
+
+
         return $return;
     }
 
@@ -311,6 +383,26 @@ class BasicController extends Controller
                     $row['currency_symbol'],
                     $row['currency_decimal_places'],
                     $perDay,
+                    false
+                ),
+            ];
+        }
+        if (0 === count($return)) {
+            $currency = $this->nativeCurrency;
+            $return[] = [
+                'key'                     => sprintf('left-to-spend-in-%s', $currency->code),
+                'title'                   => trans('firefly.box_left_to_spend_in_currency', ['currency' => $currency->symbol]),
+                'monetary_value'          => '0',
+                'currency_id'             => (string) $currency->id,
+                'currency_code'           => $currency->code,
+                'currency_symbol'         => $currency->symbol,
+                'currency_decimal_places' => $currency->decimal_places,
+                'value_parsed'            => app('amount')->formatFlat($currency->symbol, $currency->decimal_places, '0', false),
+                'local_icon'              => 'money',
+                'sub_title'               => app('amount')->formatFlat(
+                    $currency->symbol,
+                    $currency->decimal_places,
+                    '0',
                     false
                 ),
             ];

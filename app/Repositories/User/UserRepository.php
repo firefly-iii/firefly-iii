@@ -33,6 +33,7 @@ use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 /**
  * Class UserRepository.
@@ -275,7 +276,7 @@ class UserRepository implements UserRepositoryInterface
         $now->addDays(2);
         $invitee              = new InvitedUser();
         $invitee->user()->associate($user);
-        $invitee->invite_code = \Str::random(64);
+        $invitee->invite_code = Str::random(64);
         $invitee->email       = $email;
         $invitee->redeemed    = false;
         $invitee->expires     = $now;
@@ -310,7 +311,7 @@ class UserRepository implements UserRepositoryInterface
                 'blocked'      => $data['blocked'] ?? false,
                 'blocked_code' => $data['blocked_code'] ?? null,
                 'email'        => $data['email'],
-                'password'     => \Str::random(24),
+                'password'     => Str::random(24),
             ]
         );
         $role = $data['role'] ?? '';

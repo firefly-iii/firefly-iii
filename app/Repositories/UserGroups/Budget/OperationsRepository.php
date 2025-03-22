@@ -28,11 +28,14 @@ use Carbon\Carbon;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
 
 /**
  * Class OperationsRepository
+ *
+ * @deprecated
  */
 class OperationsRepository implements OperationsRepositoryInterface
 {

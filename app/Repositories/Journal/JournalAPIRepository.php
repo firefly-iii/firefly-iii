@@ -29,16 +29,17 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class JournalAPIRepository
  */
-class JournalAPIRepository implements JournalAPIRepositoryInterface
+class JournalAPIRepository implements JournalAPIRepositoryInterface, UserGroupInterface
 {
-    private User $user;
+    use UserGroupTrait;
 
     /**
      * Returns transaction by ID. Used to validate attachments.
@@ -61,8 +62,7 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface
     {
         $set  = $journal->attachments;
 
-        /** @var \Storage $disk */
-        $disk = \Storage::disk('upload');
+        $disk = Storage::disk('upload');
 
         return $set->each(
             static function (Attachment $attachment) use ($disk) {
@@ -95,12 +95,5 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface
         );
 
         return $events;
-    }
-
-    public function setUser(null|Authenticatable|User $user): void
-    {
-        if ($user instanceof User) {
-            $this->user = $user;
-        }
     }
 }

@@ -29,7 +29,7 @@ use FireflyIII\Api\V2\Request\Chart\ChartRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Chart\ChartData;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Api\CleansChartData;

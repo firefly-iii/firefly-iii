@@ -28,7 +28,7 @@ use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Model\Transaction\InfiniteListRequest;
 use FireflyIII\Api\V2\Request\Model\Transaction\ListRequest;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
-use FireflyIII\Transformers\V2\TransactionGroupTransformer;
+use FireflyIII\Transformers\TransactionGroupTransformer;
 use Illuminate\Http\JsonResponse;
 
 /**

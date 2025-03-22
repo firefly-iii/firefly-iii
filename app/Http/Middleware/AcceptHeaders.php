@@ -50,13 +50,19 @@ class AcceptHeaders
             throw new BadHttpHeaderException(sprintf('Accept header "%s" is not something this server can provide.', $request->header('Accept')));
         }
         // if bad 'Content-Type' header, refuse service.
-        if (('POST' === $method || 'PUT' === $method) && !$request->hasHeader('Content-Type')) {
+
+        // some routes are exempt from this.
+        $exempt       = [
+            'api.v1.data.bulk.transactions',
+        ];
+
+        if (('POST' === $method || 'PUT' === $method) && !$request->hasHeader('Content-Type') && !in_array($request->route()->getName(), $exempt, true)) {
             $error             = new BadHttpHeaderException('Content-Type header cannot be empty.');
             $error->statusCode = 415;
 
             throw $error;
         }
-        if (('POST' === $method || 'PUT' === $method) && !$this->acceptsHeader($submitted, $contentTypes)) {
+        if (('POST' === $method || 'PUT' === $method) && !$this->acceptsHeader($submitted, $contentTypes) && !in_array($request->route()->getName(), $exempt, true)) {
             $error             = new BadHttpHeaderException(sprintf('Content-Type cannot be "%s"', $submitted));
             $error->statusCode = 415;
 
