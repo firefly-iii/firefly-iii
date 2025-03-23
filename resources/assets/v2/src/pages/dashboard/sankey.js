@@ -33,7 +33,7 @@ let currencies = [];
 let afterPromises = false;
 let chart = null;
 let transactions = [];
-let autoConversion = false;
+let convertToNative = false;
 let translations = {
     category: null,
     unknown_category: null,
@@ -83,37 +83,37 @@ function getObjectName(type, name, direction, code) {
 
     // category 4x
     if ('category' === type && null !== name && 'in' === direction) {
-        return translations.category + ' "' + name + '" (' + translations.in + (autoConversion ? ', ' + code + ')' : ')');
+        return translations.category + ' "' + name + '" (' + translations.in + (convertToNative ? ', ' + code + ')' : ')');
     }
     if ('category' === type && null === name && 'in' === direction) {
-        return translations.unknown_category + ' (' + translations.in + (autoConversion ? ', ' + code + ')' : ')');
+        return translations.unknown_category + ' (' + translations.in + (convertToNative ? ', ' + code + ')' : ')');
     }
     if ('category' === type && null !== name && 'out' === direction) {
-        return translations.category + ' "' + name + '" (' + translations.out + (autoConversion ? ', ' + code + ')' : ')');
+        return translations.category + ' "' + name + '" (' + translations.out + (convertToNative ? ', ' + code + ')' : ')');
     }
     if ('category' === type && null === name && 'out' === direction) {
-        return translations.unknown_category + ' (' + translations.out + (autoConversion ? ', ' + code + ')' : ')');
+        return translations.unknown_category + ' (' + translations.out + (convertToNative ? ', ' + code + ')' : ')');
     }
     // account 4x
     if ('account' === type && null === name && 'in' === direction) {
-        return translations.unknown_source + (autoConversion ? ' (' + code + ')' : '');
+        return translations.unknown_source + (convertToNative ? ' (' + code + ')' : '');
     }
     if ('account' === type && null !== name && 'in' === direction) {
-        return translations.revenue_account + '"' + name + '"' + (autoConversion ? ' (' + code + ')' : '');
+        return translations.revenue_account + '"' + name + '"' + (convertToNative ? ' (' + code + ')' : '');
     }
     if ('account' === type && null === name && 'out' === direction) {
-        return translations.unknown_dest + (autoConversion ? ' (' + code + ')' : '');
+        return translations.unknown_dest + (convertToNative ? ' (' + code + ')' : '');
     }
     if ('account' === type && null !== name && 'out' === direction) {
-        return translations.expense_account + ' "' + name + '"' + (autoConversion ? ' (' + code + ')' : '');
+        return translations.expense_account + ' "' + name + '"' + (convertToNative ? ' (' + code + ')' : '');
     }
 
     // budget 2x
     if ('budget' === type && null !== name) {
-        return translations.budget + ' "' + name + '"' + (autoConversion ? ' (' + code + ')' : '');
+        return translations.budget + ' "' + name + '"' + (convertToNative ? ' (' + code + ')' : '');
     }
     if ('budget' === type && null === name) {
-        return translations.unknown_budget + (autoConversion ? ' (' + code + ')' : '');
+        return translations.unknown_budget + (convertToNative ? ' (' + code + ')' : '');
     }
     console.error('Cannot handle: type:"' + type + '", dir: "' + direction + '"');
 }
@@ -121,25 +121,25 @@ function getObjectName(type, name, direction, code) {
 function getLabelName(type, name, code) {
     // category
     if ('category' === type && null !== name) {
-        return translations.category + ' "' + name + '"' + (autoConversion ? ' (' + code + ')' : '');
+        return translations.category + ' "' + name + '"' + (convertToNative ? ' (' + code + ')' : '');
     }
     if ('category' === type && null === name) {
-        return translations.unknown_category + (autoConversion ? ' (' + code + ')' : '');
+        return translations.unknown_category + (convertToNative ? ' (' + code + ')' : '');
     }
     // account
     if ('account' === type && null === name) {
-        return translations.unknown_account + (autoConversion ? ' (' + code + ')' : '');
+        return translations.unknown_account + (convertToNative ? ' (' + code + ')' : '');
     }
     if ('account' === type && null !== name) {
-        return name + (autoConversion ? ' (' + code + ')' : '');
+        return name + (convertToNative ? ' (' + code + ')' : '');
     }
 
     // budget 2x
     if ('budget' === type && null !== name) {
-        return translations.budget + ' "' + name + '"' + (autoConversion ? ' (' + code + ')' : '');
+        return translations.budget + ' "' + name + '"' + (convertToNative ? ' (' + code + ')' : '');
     }
     if ('budget' === type && null === name) {
-        return translations.unknown_budget + (autoConversion ? ' (' + code + ')' : '');
+        return translations.unknown_budget + (convertToNative ? ' (' + code + ')' : '');
     }
     console.error('Cannot handle: type:"' + type + '"');
 }
@@ -147,7 +147,7 @@ function getLabelName(type, name, code) {
 
 export default () => ({
     loading: false,
-    autoConversion: false,
+    convertToNative: false,
     generateOptions() {
         let options = getDefaultChartSettings('sankey');
 
@@ -164,8 +164,8 @@ export default () => ({
                     if (group.attributes.transactions.hasOwnProperty(ii)) {
                         // properties of the transaction, used in the generation of the chart:
                         let transaction = group.attributes.transactions[ii];
-                        let currencyCode = this.autoConversion ? transaction.native_currency_code : transaction.currency_code;
-                        let amount = this.autoConversion ? parseFloat(transaction.native_amount) : parseFloat(transaction.amount);
+                        let currencyCode = this.convertToNative ? transaction.native_currency_code : transaction.currency_code;
+                        let amount = this.convertToNative ? parseFloat(transaction.native_amount) : parseFloat(transaction.amount);
                         let flowKey;
 
                         /*
@@ -194,7 +194,7 @@ export default () => ({
                             if (!amounts.hasOwnProperty(flowKey)) {
                                 amounts[flowKey] = {
                                     from: category,
-                                    to: translations.all_money + (this.autoConversion ? ' (' + currencyCode + ')' : ''),
+                                    to: translations.all_money + (this.convertToNative ? ' (' + currencyCode + ')' : ''),
                                     amount: 0
                                 };
                             }
@@ -214,7 +214,7 @@ export default () => ({
 
                             if (!amounts.hasOwnProperty(flowKey)) {
                                 amounts[flowKey] = {
-                                    from: translations.all_money + (this.autoConversion ? ' (' + currencyCode + ')' : ''),
+                                    from: translations.all_money + (this.convertToNative ? ' (' + currencyCode + ')' : ''),
                                     to: budget,
                                     amount: 0
                                 };
@@ -348,9 +348,9 @@ export default () => ({
     init() {
         // console.log('sankey init');
         transactions = [];
-        Promise.all([getVariable('autoConversion', false)]).then((values) => {
-            this.autoConversion = values[0];
-            autoConversion = values[0];
+        Promise.all([getVariable('convertToNative', false)]).then((values) => {
+            this.convertToNative = values[0];
+            convertToNative = values[0];
                 // some translations:
                 translations.all_money = i18next.t('firefly.all_money');
                 translations.category = i18next.t('firefly.category');
@@ -378,12 +378,12 @@ export default () => ({
             this.transactions = [];
             this.loadChart();
         });
-        window.store.observe('autoConversion', (newValue) => {
+        window.store.observe('convertToNative', (newValue) => {
             if (!afterPromises) {
                 return;
             }
-            // console.log('sankey observe autoConversion');
-            this.autoConversion = newValue;
+            // console.log('sankey observe convertToNative');
+            this.convertToNative = newValue;
             this.loadChart();
         });
     },

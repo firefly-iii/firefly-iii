@@ -32,7 +32,7 @@ let afterPromises = false;
 
 export default () => ({
     loading: false,
-    autoConversion: false,
+    convertToNative: false,
     generateOptions(data) {
         currencies = [];
         let options = getDefaultChartSettings('column');
@@ -44,7 +44,7 @@ export default () => ({
                 let current = data[i];
                 let code = current.currency_code;
                 // only use native code when doing auto conversion.
-                if (this.autoConversion) {
+                if (this.convertToNative) {
                     code = current.native_currency_code;
                 }
 
@@ -65,7 +65,7 @@ export default () => ({
                 let yAxis = 'y';
                 let current = data[i];
                 let code = current.currency_code;
-                if (this.autoConversion) {
+                if (this.convertToNative) {
                     code = current.native_currency_code;
                 }
 
@@ -77,7 +77,7 @@ export default () => ({
                             // this series' currency matches this column's currency.
                             amount = parseFloat(current.amount);
                             yAxis = 'y' + current.currency_code;
-                            if (this.autoConversion) {
+                            if (this.convertToNative) {
                                 amount = parseFloat(current.native_amount);
                                 yAxis = 'y' + current.native_currency_code;
                             }
@@ -183,8 +183,8 @@ export default () => ({
     },
     init() {
         // console.log('categories init');
-        Promise.all([getVariable('autoConversion', false),]).then((values) => {
-            this.autoConversion = values[0];
+        Promise.all([getVariable('convertToNative', false),]).then((values) => {
+            this.convertToNative = values[0];
             afterPromises = true;
             this.loadChart();
         });
@@ -195,11 +195,11 @@ export default () => ({
             this.chartData = null;
             this.loadChart();
         });
-        window.store.observe('autoConversion', (newValue) => {
+        window.store.observe('convertToNative', (newValue) => {
             if (!afterPromises) {
                 return;
             }
-            this.autoConversion = newValue;
+            this.convertToNative = newValue;
             this.loadChart();
         });
     },

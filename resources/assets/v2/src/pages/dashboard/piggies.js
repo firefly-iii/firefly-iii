@@ -29,7 +29,7 @@ const PIGGY_CACHE_KEY = 'ds_pg_data';
 
 export default () => ({
     loading: false,
-    autoConversion: false,
+    convertToNative: false,
     sankeyGrouping: 'account',
     piggies: [],
     getFreshData() {
@@ -96,14 +96,14 @@ export default () => ({
                     id: current.id,
                     name: current.attributes.name,
                     percentage: parseInt(current.attributes.percentage),
-                    amount: this.autoConversion ? current.attributes.native_current_amount : current.attributes.current_amount,
+                    amount: this.convertToNative ? current.attributes.native_current_amount : current.attributes.current_amount,
                     // left to save
-                    left_to_save: this.autoConversion ? current.attributes.native_left_to_save : current.attributes.left_to_save,
+                    left_to_save: this.convertToNative ? current.attributes.native_left_to_save : current.attributes.left_to_save,
                     // target amount
-                    target_amount: this.autoConversion ? current.attributes.native_target_amount : current.attributes.target_amount,
+                    target_amount: this.convertToNative ? current.attributes.native_target_amount : current.attributes.target_amount,
                     // save per month
-                    save_per_month: this.autoConversion ? current.attributes.native_save_per_month : current.attributes.save_per_month,
-                    currency_code: this.autoConversion ? current.attributes.native_currency_code : current.attributes.currency_code,
+                    save_per_month: this.convertToNative ? current.attributes.native_save_per_month : current.attributes.save_per_month,
+                    currency_code: this.convertToNative ? current.attributes.native_currency_code : current.attributes.currency_code,
 
                 };
                 dataSet[groupName].piggies.push(piggy);
@@ -129,10 +129,10 @@ export default () => ({
     init() {
         // console.log('piggies init');
         apiData = [];
-        Promise.all([getVariable('autoConversion', false)]).then((values) => {
+        Promise.all([getVariable('convertToNative', false)]).then((values) => {
 
             afterPromises = true;
-            this.autoConversion = values[0];
+            this.convertToNative = values[0];
             this.loadPiggyBanks();
 
         });
@@ -144,12 +144,12 @@ export default () => ({
             apiData = [];
             this.loadPiggyBanks();
         });
-        window.store.observe('autoConversion', (newValue) => {
+        window.store.observe('convertToNative', (newValue) => {
             if (!afterPromises) {
                 return;
             }
-            // console.log('piggies observe autoConversion');
-            this.autoConversion = newValue;
+            // console.log('piggies observe convertToNative');
+            this.convertToNative = newValue;
             this.loadPiggyBanks();
         });
     },

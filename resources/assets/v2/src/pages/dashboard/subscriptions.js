@@ -79,7 +79,7 @@ function downloadSubscriptions(params) {
                             paid: current.attributes.paid_dates.length > 0,
                         };
                         // set variables
-                        bill.expected_amount = params.autoConversion ? formatMoney(bill.native_amount, bill.native_currency_code) :
+                        bill.expected_amount = params.convertToNative ? formatMoney(bill.native_amount, bill.native_currency_code) :
                             formatMoney(bill.amount, bill.currency_code);
                         bill.expected_times = i18next.t('firefly.subscr_expected_x_times', {
                             times: current.attributes.pay_dates.length,
@@ -92,22 +92,22 @@ function downloadSubscriptions(params) {
                                 const currentPayment = current.attributes.paid_dates[iii];
                                 let percentage = 100;
                                 // math: -100+(paid/expected)*100
-                                if (params.autoConversion) {
+                                if (params.convertToNative) {
                                     percentage = Math.round(-100 + ((parseFloat(currentPayment.native_amount) * -1) / parseFloat(bill.native_amount)) * 100);
                                 }
-                                if (!params.autoConversion) {
+                                if (!params.convertToNative) {
                                     percentage = Math.round(-100 + ((parseFloat(currentPayment.amount) * -1) / parseFloat(bill.amount)) * 100);
                                 }
 
                                 let currentTransaction = {
-                                    amount: params.autoConversion ? formatMoney(currentPayment.native_amount, currentPayment.native_currency_code) : formatMoney(currentPayment.amount, currentPayment.currency_code),
+                                    amount: params.convertToNative ? formatMoney(currentPayment.native_amount, currentPayment.native_currency_code) : formatMoney(currentPayment.amount, currentPayment.currency_code),
                                     percentage: percentage,
                                     date: format(new Date(currentPayment.date), 'PP'),
                                     foreign_amount: null,
                                 };
                                 if (null !== currentPayment.foreign_currency_code) {
-                                    currentTransaction.foreign_amount = params.autoConversion ? currentPayment.foreign_native_amount : currentPayment.foreign_amount;
-                                    currentTransaction.foreign_currency_code = params.autoConversion ? currentPayment.native_currency_code : currentPayment.foreign_currency_code;
+                                    currentTransaction.foreign_amount = params.convertToNative ? currentPayment.foreign_native_amount : currentPayment.foreign_amount;
+                                    currentTransaction.foreign_currency_code = params.convertToNative ? currentPayment.native_currency_code : currentPayment.foreign_currency_code;
                                 }
 
                                 bill.transactions.push(currentTransaction);
@@ -178,7 +178,7 @@ function downloadSubscriptions(params) {
 
 export default () => ({
     loading: false,
-    autoConversion: false,
+    convertToNative: false,
     subscriptions: [],
     startSubscriptions() {
         this.loading = true;
@@ -198,7 +198,7 @@ export default () => ({
         let params = {
             start: format(start, 'y-MM-dd'),
             end: format(end, 'y-MM-dd'),
-            autoConversion: this.autoConversion,
+            convertToNative: this.convertToNative,
             page: 1
         };
         downloadSubscriptions(params).then(() => {
@@ -226,9 +226,9 @@ export default () => ({
     drawPieChart(groupId, groupTitle, data) {
         let id = '#pie_' + groupId + '_' + data.currency_code;
         //console.log(data);
-        const unpaidAmount = this.autoConversion ? data.native_unpaid : data.unpaid;
-        const paidAmount = this.autoConversion ? data.native_paid : data.paid;
-        const currencyCode = this.autoConversion ? data.native_currency_code : data.currency_code;
+        const unpaidAmount = this.convertToNative ? data.native_unpaid : data.unpaid;
+        const paidAmount = this.convertToNative ? data.native_paid : data.paid;
+        const currencyCode = this.convertToNative ? data.native_currency_code : data.currency_code;
         const chartData = {
             labels: [
                 i18next.t('firefly.paid'),
@@ -267,8 +267,8 @@ export default () => ({
     },
 
     init() {
-        Promise.all([getVariable('autoConversion', false)]).then((values) => {
-            this.autoConversion = values[0];
+        Promise.all([getVariable('convertToNative', false)]).then((values) => {
+            this.convertToNative = values[0];
             afterPromises = true;
 
             if (false === this.loading) {
@@ -285,11 +285,11 @@ export default () => ({
                 this.startSubscriptions();
             }
         });
-        window.store.observe('autoConversion', (newValue) => {
+        window.store.observe('convertToNative', (newValue) => {
             if (!afterPromises) {
                 return;
             }
-            this.autoConversion = newValue;
+            this.convertToNative = newValue;
             if (false === this.loading) {
                 this.startSubscriptions();
             }

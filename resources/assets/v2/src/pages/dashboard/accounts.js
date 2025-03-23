@@ -39,12 +39,12 @@ export default () => ({
     loading: false,
     loadingAccounts: false,
     accountList: [],
-    autoConversion: false,
-    autoConversionAvailable: false,
+    convertToNative: false,
+    convertToNativeAvailable: false,
     chartOptions: null,
-    switchAutoConversion() {
-        this.autoConversion = !this.autoConversion;
-        setVariable('autoConversion', this.autoConversion);
+    switchconvertToNative() {
+        this.convertToNative = !this.convertToNative;
+        setVariable('convertToNative', this.convertToNative);
     },
     localCacheKey(type) {
         return 'ds_accounts_' + type;
@@ -90,13 +90,13 @@ export default () => ({
                 dataset.label = current.label;
 
                 // use the "native" currency code and use the "native_entries" as array
-                if (this.autoConversion) {
+                if (this.convertToNative) {
                     currencies.push(current.native_currency_code);
                     dataset.currency_code = current.native_currency_code;
                     collection = Object.values(current.native_entries);
                     yAxis = 'y' + current.native_currency_code;
                 }
-                if (!this.autoConversion) {
+                if (!this.convertToNative) {
                     yAxis = 'y' + current.currency_code;
                     dataset.currency_code = current.currency_code;
                     currencies.push(current.currency_code);
@@ -266,12 +266,12 @@ export default () => ({
 
     init() {
         // console.log('accounts init');
-        Promise.all([getVariable('viewRange', '1M'), getVariable('autoConversion', false), getVariable('language', 'en_US'),
+        Promise.all([getVariable('viewRange', '1M'), getVariable('convertToNative', false), getVariable('language', 'en_US'),
             getConfiguration('cer.enabled', false)
         ]).then((values) => {
             //console.log('accounts after promises');
-            this.autoConversion = values[1] && values[3];
-            this.autoConversionAvailable = values[3];
+            this.convertToNative = values[1] && values[3];
+            this.convertToNativeAvailable = values[3];
             afterPromises = true;
 
             // main dashboard chart:
@@ -289,11 +289,11 @@ export default () => ({
             this.loadChart();
             this.loadAccounts();
         });
-        window.store.observe('autoConversion', () => {
+        window.store.observe('convertToNative', () => {
             if (!afterPromises) {
                 return;
             }
-            // console.log('accounts observe autoconversion');
+            // console.log('accounts observe convertToNative');
             this.loadChart();
             this.loadAccounts();
         });
