@@ -102,7 +102,7 @@ class BasicController extends Controller
 
         // balance information:
         $balanceData  = $this->getBalanceInformation($start, $end);
-        $billData     = $this->getBillInformation($start, $end);
+        $billData     = $this->getSubscriptionInformation($start, $end);
         $spentData    = $this->getLeftToSpendInfo($start, $end);
         $netWorthData = $this->getNetWorthInfo($end);
         //                $balanceData  = [];
@@ -324,15 +324,69 @@ class BasicController extends Controller
         return $return;
     }
 
-    private function getBillInformation(Carbon $start, Carbon $end): array
+    private function getSubscriptionInformation(Carbon $start, Carbon $end): array
     {
-        app('log')->debug(sprintf('Now in getBillInformation("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d-')));
+        Log::debug(sprintf('Now in getBillInformation("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d-')));
         /*
          * Since both this method and the chart use the exact same data, we can suffice
          * with calling the one method in the bill repository that will get this amount.
          */
         $paidAmount   = $this->billRepository->sumPaidInRange($start, $end);
         $unpaidAmount = $this->billRepository->sumUnpaidInRange($start, $end);
+        $currencies = [
+            $this->nativeCurrency->id => $this->nativeCurrency,
+        ];
+
+        if($this->convertToNative) {
+            $converter = new ExchangeRateConverter();
+            $newPaidAmount = [[
+                'id' => $this->nativeCurrency->id,
+                'name' => $this->nativeCurrency->name,
+                'symbol' => $this->nativeCurrency->symbol,
+                'code' => $this->nativeCurrency->code,
+                'decimal_places' => $this->nativeCurrency->decimal_places,
+                'sum' => '0'
+            ]];
+
+            $newUnpaidAmount = [[
+                'id' => $this->nativeCurrency->id,
+                'name' => $this->nativeCurrency->name,
+                'symbol' => $this->nativeCurrency->symbol,
+                'code' => $this->nativeCurrency->code,
+                'decimal_places' => $this->nativeCurrency->decimal_places,
+                'sum' => '0'
+            ]];
+            foreach([$paidAmount, $unpaidAmount] as $index => $array) {
+                foreach($array as $item) {
+                    $currencyId = (int)$item['id'];
+                    if(0 === $index) {
+                        // paid amount
+                        if($currencyId === $this->nativeCurrency->id) {
+                            $newPaidAmount[0]['sum'] = bcadd($newPaidAmount[0]['sum'], $item['sum']);
+                            continue;
+                        }
+                        $currencies[$currencyId] ??= $this->currencyRepos->find($currencyId);
+                        $convertedAmount = $converter->convert($currencies[$currencyId], $this->nativeCurrency, $start, $item['sum']);
+                        $newPaidAmount[0]['sum'] = bcadd($newPaidAmount[0]['sum'], $convertedAmount);
+                        continue;
+                    }
+                    // unpaid amount
+                    if($currencyId === $this->nativeCurrency->id) {
+                        $newUnpaidAmount[0]['sum'] = bcadd($newUnpaidAmount[0]['sum'], $item['sum']);
+                        continue;
+                    }
+                    $currencies[$currencyId] ??= $this->currencyRepos->find($currencyId);
+                    $convertedAmount = $converter->convert($currencies[$currencyId], $this->nativeCurrency, $start, $item['sum']);
+                    $newUnpaidAmount[0]['sum'] = bcadd($newUnpaidAmount[0]['sum'], $convertedAmount);
+                }
+            }
+            $paidAmount = $newPaidAmount;
+            $unpaidAmount = $newUnpaidAmount;
+        }
+
+//        var_dump($paidAmount);
+//        var_dump($unpaidAmount);
+//        exit;
 
         $return = [];
 
@@ -373,7 +427,7 @@ class BasicController extends Controller
                 'sub_title'               => '',
             ];
         }
-        app('log')->debug(sprintf('Done with getBillInformation("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d-')));
+        Log::debug(sprintf('Done with getBillInformation("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d-')));
 
         if (0 === count($return)) {
             $currency = $this->nativeCurrency;
