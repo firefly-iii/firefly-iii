@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import {getVariable} from "../../store/get-variable.js";
-import Get from "../../api/v2/model/piggy-bank/get.js";
+import Get from "../../api/v1/model/piggy-bank/get.js";
 import {getCacheKey} from "../../support/get-cache-key.js";
 import {format} from "date-fns";
 import i18next from "i18next";

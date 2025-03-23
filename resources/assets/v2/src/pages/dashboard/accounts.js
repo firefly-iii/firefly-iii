@@ -20,9 +20,9 @@
 
 import {getVariable} from "../../store/get-variable.js";
 import {setVariable} from "../../store/set-variable.js";
-import Dashboard from "../../api/v2/chart/account/dashboard.js";
+import Dashboard from "../../api/v1/chart/account/dashboard.js";
 import formatMoney from "../../util/format-money.js";
-import Get from "../../api/v2/model/account/get.js";
+import Get from "../../api/v1/model/account/get.js";
 import {Chart} from 'chart.js';
 import {getDefaultChartSettings} from "../../support/default-chart-settings.js";
 import {getCacheKey} from "../../support/get-cache-key.js";

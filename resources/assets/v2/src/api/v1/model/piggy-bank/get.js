@@ -1,6 +1,6 @@
 /*
- * load-budgets.js
- * Copyright (c) 2024 james@firefly-iii.org
+ * get.js
+ * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -19,28 +19,17 @@
  */
 
 
-import Get from "../../../api/v1/model/budget/get.js";
+import {api} from "../../../../boot/axios";
 
-export function loadBudgets() {
-    let params = {
-        page: 1, limit: 1337
-    };
-    let getter = new Get();
-    return getter.list(params).then((response) => {
-        let returnData = [{
-            id: 0, name: '(no budget)',
-        }];
+export default class Get {
 
-        for (let i in response.data.data) {
-            if (response.data.data.hasOwnProperty(i)) {
-                let current = response.data.data[i];
-                let obj = {
-                    id: current.id, name: current.attributes.name,
-                };
-                returnData.push(obj);
-            }
-        }
-        return returnData;
-    });
+    /**
+     *
+     * @param params
+     * @returns {Promise<AxiosResponse<any>>}
+     */
+    list(params) {
+        return api.get('/api/v1/piggy-banks', {params: params});
+    }
 
 }

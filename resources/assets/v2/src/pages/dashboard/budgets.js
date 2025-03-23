@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import {getVariable} from "../../store/get-variable.js";
-import Dashboard from "../../api/v2/chart/budget/dashboard.js";
+import Dashboard from "../../api/v1/chart/budget/dashboard.js";
 import {getDefaultChartSettings} from "../../support/default-chart-settings.js";
 import formatMoney from "../../util/format-money.js";
 import {Chart} from 'chart.js';

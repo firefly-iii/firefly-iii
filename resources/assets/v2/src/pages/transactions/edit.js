@@ -21,7 +21,7 @@
 import '../../boot/bootstrap.js';
 import dates from '../../pages/shared/dates.js';
 import formatMoney from "../../util/format-money.js";
-import Get from "../../api/v2/model/transaction/get.js";
+import Get from "../../api/v1/model/transaction/get.js";
 import {parseDownloadedSplits} from "./shared/parse-downloaded-splits.js";
 import {addAutocomplete, getUrls} from "./shared/add-autocomplete.js";
 import {
@@ -40,7 +40,7 @@ import Tags from "bootstrap5-tags";
 import i18next from "i18next";
 import {defaultErrorSet} from "./shared/create-empty-split.js";
 import {parseFromEntries} from "./shared/parse-from-entries.js";
-import Put from "../../api/v2/model/transaction/put.js";
+import Put from "../../api/v1/model/transaction/put.js";
 import {processAttachments} from "./shared/process-attachments.js";
 import {spliceErrorsIntoTransactions} from "./shared/splice-errors-into-transactions.js";
 

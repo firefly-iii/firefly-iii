@@ -21,7 +21,7 @@
 import '../../boot/bootstrap.js';
 import dates from "../shared/dates.js";
 import i18next from "i18next";
-import Get from "../../api/v2/model/transaction/get.js";
+import Get from "../../api/v1/model/transaction/get.js";
 import {parseDownloadedSplits} from "./shared/parse-downloaded-splits.js";
 import {format} from "date-fns";
 import formatMoney from "../../util/format-money.js";

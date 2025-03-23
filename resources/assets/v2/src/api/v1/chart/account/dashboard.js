@@ -1,6 +1,6 @@
 /*
- * load-budgets.js
- * Copyright (c) 2024 james@firefly-iii.org
+ * overview.js
+ * Copyright (c) 2022 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -18,29 +18,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import {api} from "../../../../boot/axios";
+import {format} from "date-fns";
 
-import Get from "../../../api/v1/model/budget/get.js";
+export default class Dashboard {
+    dashboard(start, end) {
+        let startStr = format(start, 'y-MM-dd');
+        let endStr = format(end, 'y-MM-dd');
+        return api.get('/api/v1/chart/account/dashboard', {params: {filter: {start: startStr, end: endStr}}});
+    }
 
-export function loadBudgets() {
-    let params = {
-        page: 1, limit: 1337
-    };
-    let getter = new Get();
-    return getter.list(params).then((response) => {
-        let returnData = [{
-            id: 0, name: '(no budget)',
-        }];
-
-        for (let i in response.data.data) {
-            if (response.data.data.hasOwnProperty(i)) {
-                let current = response.data.data[i];
-                let obj = {
-                    id: current.id, name: current.attributes.name,
-                };
-                returnData.push(obj);
-            }
-        }
-        return returnData;
-    });
-
+    expense(start, end) {
+        let startStr = format(start, 'y-MM-dd');
+        let endStr = format(end, 'y-MM-dd');
+        return api.get('/api/v1/chart/account/expense-dashboard', {params: {start: startStr, end: endStr}});
+    }
 }

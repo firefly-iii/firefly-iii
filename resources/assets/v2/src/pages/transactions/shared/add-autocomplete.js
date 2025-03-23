@@ -22,10 +22,10 @@ import Autocomplete from "bootstrap5-autocomplete";
 
 export function getUrls() {
     return {
-        description: '/api/v2/autocomplete/transaction-descriptions',
-        account: '/api/v2/autocomplete/accounts',
-        category: '/api/v2/autocomplete/categories',
-        tag: '/api/v2/autocomplete/tags',
+        description: '/api/v1/autocomplete/transaction-descriptions',
+        account: '/api/v1/autocomplete/accounts',
+        category: '/api/v1/autocomplete/categories',
+        tag: '/api/v1/autocomplete/tags',
     }
 }
 

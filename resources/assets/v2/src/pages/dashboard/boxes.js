@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import Summary from "../../api/v2/summary/index.js";
+import Summary from "../../api/v1/summary/index.js";
 import {format} from "date-fns";
 import {getVariable} from "../../store/get-variable.js";
 import formatMoney from "../../util/format-money.js";

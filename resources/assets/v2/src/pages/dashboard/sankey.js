@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import {getVariable} from "../../store/get-variable.js";
-import Get from "../../api/v2/model/transaction/get.js";
+import Get from "../../api/v1/model/transaction/get.js";
 import {getDefaultChartSettings} from "../../support/default-chart-settings.js";
 import {Chart} from 'chart.js';
 import {Flow, SankeyController} from 'chartjs-chart-sankey';

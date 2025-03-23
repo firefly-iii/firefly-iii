@@ -23,7 +23,7 @@ import dates from '../../pages/shared/dates.js';
 import {createEmptySplit, defaultErrorSet} from "./shared/create-empty-split.js";
 import {parseFromEntries} from "./shared/parse-from-entries.js";
 import formatMoney from "../../util/format-money.js";
-import Post from "../../api/v2/model/transaction/post.js";
+import Post from "../../api/v1/model/transaction/post.js";
 import {loadCurrencies} from "./shared/load-currencies.js";
 import {loadBudgets} from "./shared/load-budgets.js";
 import {loadPiggyBanks} from "./shared/load-piggy-banks.js";

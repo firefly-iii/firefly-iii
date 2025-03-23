@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import {getVariable} from "../../store/get-variable.js";
-import Get from "../../api/v2/model/subscription/get.js";
+import Get from "../../api/v1/model/subscription/get.js";
 import {format} from "date-fns";
 import {getCacheKey} from "../../support/get-cache-key.js";
 import {Chart} from "chart.js";

@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {api} from "../../../boot/axios";
+import {api} from "../../../../boot/axios";
 import format from "date-fns/format";
 
 export default class Get {
