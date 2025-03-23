@@ -260,6 +260,8 @@ jobs:
             sudo chown -R runner:docker output.txt
             touch output.txt
             echo '' >> output.txt
+            echo "Welcome to release $version of Firefly III. It contains the the latest fixes, translations and features. Docker users can find this release under the \`latest\` tag." >> output.txt
+            echo '' >> output.txt
             echo '### Instructions' >> output.txt
             echo '' >> output.txt
             echo "* Installation instructions for [Docker](https://docs.firefly-iii.org/how-to/firefly-iii/installation/docker/), [Portainer](https://docs.firefly-iii.org/how-to/firefly-iii/installation/portainer/), [Kubernetes](https://docs.firefly-iii.org/how-to/firefly-iii/installation/kubernetes/) or [self-managed servers](https://docs.firefly-iii.org/how-to/firefly-iii/installation/self-managed/)" >> output.txt
