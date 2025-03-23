@@ -339,6 +339,7 @@ return [
         'en_US',
         'es_ES',
         'ca_ES',
+        'fa_IR',
         'fi_FI',
         'fr_FR',
         'hu_HU',
