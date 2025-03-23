@@ -163,7 +163,7 @@ class BasicController extends Controller
                     'sum'                     => '0',
                 ],
             ];
-            $newIncomes = [
+            $newIncomes  = [
                 $default->id => [
                     'currency_id'             => $default->id,
                     'currency_code'           => $default->code,
@@ -172,7 +172,7 @@ class BasicController extends Controller
                     'sum'                     => '0',
                 ],
             ];
-            $sums  = [
+            $sums        = [
                 $default->id => [
                     'currency_id'             => $default->id,
                     'currency_code'           => $default->code,
@@ -184,7 +184,7 @@ class BasicController extends Controller
 
             $converter = new ExchangeRateConverter();
             // loop over income and expenses
-            foreach([$expenses, $incomes] as $index => $array) {
+            foreach ([$expenses, $incomes] as $index => $array) {
 
                 // loop over either one.
                 foreach ($array as $entry) {
@@ -194,10 +194,10 @@ class BasicController extends Controller
                         $sums[$default->id]['sum'] = bcadd($entry['sum'], $sums[$default->id]['sum']);
 
                         // don't forget to add it to newExpenses and newIncome
-                        if(0 === $index) {
+                        if (0 === $index) {
                             $newExpenses[$default->id]['sum'] = bcadd($newExpenses[$default->id]['sum'], $entry['sum']);
                         }
-                        if(1 === $index) {
+                        if (1 === $index) {
                             $newIncomes[$default->id]['sum'] = bcadd($newIncomes[$default->id]['sum'], $entry['sum']);
                         }
 
@@ -207,22 +207,22 @@ class BasicController extends Controller
                     $currencies[$entry['currency_id']] ??= $this->currencyRepos->find($entry['currency_id']);
                     $convertedSum                      = $converter->convert($currencies[$entry['currency_id']], $default, $start, $entry['sum']);
                     $sums[$default->id]['sum']         = bcadd($sums[$default->id]['sum'], $convertedSum);
-                    if(0 === $index) {
+                    if (0 === $index) {
                         $newExpenses[$default->id]['sum'] = bcadd($newExpenses[$default->id]['sum'], $convertedSum);
                     }
-                    if(1 === $index) {
+                    if (1 === $index) {
                         $newIncomes[$default->id]['sum'] = bcadd($newIncomes[$default->id]['sum'], $convertedSum);
                     }
                 }
             }
-            $incomes = $newIncomes;
+            $incomes  = $newIncomes;
             $expenses = $newExpenses;
         }
-        if(!$convertToNative) {
-            foreach([$expenses, $incomes] as $array) {
+        if (!$convertToNative) {
+            foreach ([$expenses, $incomes] as $array) {
                 foreach ($array as $entry) {
-                    $currencyId = $entry['currency_id'];
-                    $sums[$currencyId] ??= [
+                    $currencyId               = $entry['currency_id'];
+                    $sums[$currencyId]        ??= [
                         'currency_id'             => $entry['currency_id'],
                         'currency_code'           => $entry['currency_code'],
                         'currency_symbol'         => $entry['currency_symbol'],
@@ -333,54 +333,54 @@ class BasicController extends Controller
          */
         $paidAmount   = $this->billRepository->sumPaidInRange($start, $end);
         $unpaidAmount = $this->billRepository->sumUnpaidInRange($start, $end);
-        $currencies = [
+        $currencies   = [
             $this->nativeCurrency->id => $this->nativeCurrency,
         ];
 
-        if($this->convertToNative) {
-            $converter = new ExchangeRateConverter();
+        if ($this->convertToNative) {
+            $converter     = new ExchangeRateConverter();
             $newPaidAmount = [[
-                'id' => $this->nativeCurrency->id,
-                'name' => $this->nativeCurrency->name,
-                'symbol' => $this->nativeCurrency->symbol,
-                'code' => $this->nativeCurrency->code,
-                'decimal_places' => $this->nativeCurrency->decimal_places,
-                'sum' => '0'
-            ]];
+                                  'id'             => $this->nativeCurrency->id,
+                                  'name'           => $this->nativeCurrency->name,
+                                  'symbol'         => $this->nativeCurrency->symbol,
+                                  'code'           => $this->nativeCurrency->code,
+                                  'decimal_places' => $this->nativeCurrency->decimal_places,
+                                  'sum'            => '0',
+                              ]];
 
             $newUnpaidAmount = [[
-                'id' => $this->nativeCurrency->id,
-                'name' => $this->nativeCurrency->name,
-                'symbol' => $this->nativeCurrency->symbol,
-                'code' => $this->nativeCurrency->code,
-                'decimal_places' => $this->nativeCurrency->decimal_places,
-                'sum' => '0'
-            ]];
-            foreach([$paidAmount, $unpaidAmount] as $index => $array) {
-                foreach($array as $item) {
-                    $currencyId = (int)$item['id'];
-                    if(0 === $index) {
+                                    'id'             => $this->nativeCurrency->id,
+                                    'name'           => $this->nativeCurrency->name,
+                                    'symbol'         => $this->nativeCurrency->symbol,
+                                    'code'           => $this->nativeCurrency->code,
+                                    'decimal_places' => $this->nativeCurrency->decimal_places,
+                                    'sum'            => '0',
+                                ]];
+            foreach ([$paidAmount, $unpaidAmount] as $index => $array) {
+                foreach ($array as $item) {
+                    $currencyId = (int) $item['id'];
+                    if (0 === $index) {
                         // paid amount
-                        if($currencyId === $this->nativeCurrency->id) {
+                        if ($currencyId === $this->nativeCurrency->id) {
                             $newPaidAmount[0]['sum'] = bcadd($newPaidAmount[0]['sum'], $item['sum']);
                             continue;
                         }
                         $currencies[$currencyId] ??= $this->currencyRepos->find($currencyId);
-                        $convertedAmount = $converter->convert($currencies[$currencyId], $this->nativeCurrency, $start, $item['sum']);
+                        $convertedAmount         = $converter->convert($currencies[$currencyId], $this->nativeCurrency, $start, $item['sum']);
                         $newPaidAmount[0]['sum'] = bcadd($newPaidAmount[0]['sum'], $convertedAmount);
                         continue;
                     }
                     // unpaid amount
-                    if($currencyId === $this->nativeCurrency->id) {
+                    if ($currencyId === $this->nativeCurrency->id) {
                         $newUnpaidAmount[0]['sum'] = bcadd($newUnpaidAmount[0]['sum'], $item['sum']);
                         continue;
                     }
-                    $currencies[$currencyId] ??= $this->currencyRepos->find($currencyId);
-                    $convertedAmount = $converter->convert($currencies[$currencyId], $this->nativeCurrency, $start, $item['sum']);
+                    $currencies[$currencyId]   ??= $this->currencyRepos->find($currencyId);
+                    $convertedAmount           = $converter->convert($currencies[$currencyId], $this->nativeCurrency, $start, $item['sum']);
                     $newUnpaidAmount[0]['sum'] = bcadd($newUnpaidAmount[0]['sum'], $convertedAmount);
                 }
             }
-            $paidAmount = $newPaidAmount;
+            $paidAmount   = $newPaidAmount;
             $unpaidAmount = $newUnpaidAmount;
         }
 

@@ -138,7 +138,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
             ->where('end_date', $end->format('Y-m-d'))->get()
         ;
 
-        Log::debug(sprintf('Found %d available budgets', $availableBudgets->count()));
+        Log::debug(sprintf('Found %d available budgets (already converted)', $availableBudgets->count()));
 
         // use native amount if necessary?
         $convertToNative  = Amount::convertToNative($this->user);
