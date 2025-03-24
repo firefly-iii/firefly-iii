@@ -135,7 +135,7 @@
         "attempt_content_help": "These are all the unsuccessful attempts of this webhook message to submit to the configured URL. After some time, Firefly III will stop trying.",
         "no_attempts": "There are no unsuccessful attempts. That's a good thing!",
         "webhook_attempt_at": "Attempt at {moment}",
-        "logs": "Logs",
+        "logs": "Log",
         "response": "Response",
         "visit_webhook_url": "Visit webhook URL",
         "reset_webhook_secret": "Reset webhook secret",

@@ -141,13 +141,13 @@
         "reset_webhook_secret": "Restablecer secreto del webhook",
         "header_exchange_rates": "Exchange rates",
         "exchange_rates_intro": "Firefly III supports downloading and using exchange rates. Read more about this in <a href=\"https:\/\/docs.firefly-iii.org\/explanation\/financial-concepts\/exchange-rates\/\">the documentation<\/a>.",
-        "exchange_rates_from_to": "Between {from} and {to} (and the other way around)",
-        "exchange_rates_intro_rates": "Firefly III uses the following exchange rates. The inverse is automatically calculated when it is not provided. If no exchange rate exists for the date of the transaction, Firefly III will go back in time to find one. If none are present, the rate \"1\" will be used.",
+        "exchange_rates_from_to": "Entre {from} y {to} (y viceversa)",
+        "exchange_rates_intro_rates": "Firefly III utiliza los siguientes tipos de cambio. El inverso se calcula autom\u00e1ticamente cuando no se proporciona. Si no existe un tipo de cambio para la fecha de la transacci\u00f3n, Firefly III retroceder\u00e1 en el tiempo para encontrar uno. Si no hay ninguno presente, se usar\u00e1 la tasa \"1\".",
         "header_exchange_rates_rates": "Exchange rates",
-        "header_exchange_rates_table": "Table with exchange rates",
-        "help_rate_form": "On this day, how many {to} will you get for one {from}?",
-        "add_new_rate": "Add a new exchange rate",
-        "save_new_rate": "Save new rate"
+        "header_exchange_rates_table": "Tabla con tipos de cambio",
+        "help_rate_form": "En este d\u00eda, \u00bfcu\u00e1nto {to} conseguir\u00e1s por un {from}?",
+        "add_new_rate": "Agregar un nuevo tipo de cambio",
+        "save_new_rate": "Guardar nuevo tipo de cambio"
     },
     "form": {
         "url": "URL",
@@ -182,6 +182,6 @@
     },
     "config": {
         "html_language": "es",
-        "date_time_fns": "El MMMM hacer, yyyy a las HH:mm:ss"
+        "date_time_fns": "'El' d 'de' MMMM 'de' yyyy 'a las' HH:mm:ss"
     }
 }
