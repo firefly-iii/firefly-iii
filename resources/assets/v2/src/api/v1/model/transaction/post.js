@@ -22,7 +22,7 @@ import {api} from "../../../../boot/axios";
 
 export default class Post {
     post(submission) {
-        let url = '/api/v2/transactions';
+        let url = '/api/v1/transactions';
         return api.post(url, submission);
     }
 }

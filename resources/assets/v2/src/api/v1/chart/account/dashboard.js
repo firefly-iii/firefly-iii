@@ -25,7 +25,7 @@ export default class Dashboard {
     dashboard(start, end) {
         let startStr = format(start, 'y-MM-dd');
         let endStr = format(end, 'y-MM-dd');
-        return api.get('/api/v1/chart/account/dashboard', {params: {filter: {start: startStr, end: endStr}}});
+        return api.get('/api/v1/chart/account/dashboard', {params: {fix: true, start: startStr, end: endStr}});
     }
 
     expense(start, end) {

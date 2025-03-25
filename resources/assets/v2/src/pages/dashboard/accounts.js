@@ -42,7 +42,7 @@ export default () => ({
     convertToNative: false,
     convertToNativeAvailable: false,
     chartOptions: null,
-    switchconvertToNative() {
+    switchConvertToNative() {
         this.convertToNative = !this.convertToNative;
         setVariable('convertToNative', this.convertToNative);
     },
@@ -90,18 +90,18 @@ export default () => ({
                 dataset.label = current.label;
 
                 // use the "native" currency code and use the "native_entries" as array
-                if (this.convertToNative) {
-                    currencies.push(current.native_currency_code);
-                    dataset.currency_code = current.native_currency_code;
-                    collection = Object.values(current.native_entries);
-                    yAxis = 'y' + current.native_currency_code;
-                }
-                if (!this.convertToNative) {
+                // if (this.convertToNative) {
+                //     currencies.push(current.native_currency_code);
+                //     dataset.currency_code = current.native_currency_code;
+                //     collection = Object.values(current.native_entries);
+                //     yAxis = 'y' + current.native_currency_code;
+                // }
+                // if (!this.convertToNative) {
                     yAxis = 'y' + current.currency_code;
                     dataset.currency_code = current.currency_code;
                     currencies.push(current.currency_code);
                     collection = Object.values(current.entries);
-                }
+                // }
                 dataset.yAxisID = yAxis;
                 dataset.data = collection;
 
@@ -217,12 +217,12 @@ export default () => ({
                                 for (let iii = 0; iii < current.attributes.transactions.length; iii++) {
                                     let currentTransaction = current.attributes.transactions[iii];
                                     //console.log(currentTransaction);
-                                    let nativeAmountRaw = 'withdrawal' === currentTransaction.type ? parseFloat(currentTransaction.native_amount) * -1 : parseFloat(currentTransaction.native_amount);
+                                    //let nativeAmountRaw = 'withdrawal' === currentTransaction.type ? parseFloat(currentTransaction.native_amount) * -1 : parseFloat(currentTransaction.native_amount);
                                     let amountRaw = 'withdrawal' === currentTransaction.type ? parseFloat(currentTransaction.amount) * -1 : parseFloat(currentTransaction.amount);
 
                                     // if transfer and source is this account, multiply again
                                     if('transfer' === currentTransaction.type && parseInt(currentTransaction.source_id) === accountId) { //
-                                        nativeAmountRaw = nativeAmountRaw * -1;
+                                        // nativeAmountRaw = nativeAmountRaw * -1;
                                         amountRaw = amountRaw * -1;
                                     }
 
@@ -232,8 +232,8 @@ export default () => ({
                                         type: currentTransaction.type,
                                         amount_raw: amountRaw,
                                         amount: formatMoney(amountRaw, currentTransaction.currency_code),
-                                        native_amount_raw: nativeAmountRaw,
-                                        native_amount: formatMoney(nativeAmountRaw, currentTransaction.native_currency_code),
+                                        // native_amount_raw: nativeAmountRaw,
+                                        // native_amount: formatMoney(nativeAmountRaw, currentTransaction.native_currency_code),
                                     });
                                 }
                                 groups.push(group);
@@ -244,7 +244,7 @@ export default () => ({
                                 order: parent.attributes.order,
                                 id: parent.id,
                                 balance: parent.attributes.balance,
-                                native_balance: parent.attributes.native_balance,
+                                //native_balance: parent.attributes.native_balance,
                                 groups: groups,
                             });
                             // console.log(parent.attributes);

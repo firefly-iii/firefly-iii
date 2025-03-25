@@ -76,116 +76,56 @@ export default () => ({
                     continue;
                 }
                 let key = current.key;
-                // native (auto conversion):
-                if (this.convertToNative) {
-                    console.error('convertToNative does not work in boxes.');
-                    if (key.startsWith('balance-in-native')) {
-                        this.balanceBox.amounts.push(formatMoney(current.value, current.currency_code));
-                        // prep subtitles (for later)
-                        if (!subtitles.hasOwnProperty(current.currency_code)) {
-                            subtitles[current.currency_code] = '';
-                        }
-                        continue;
-                    }
-                    // spent info is used in subtitle:
-                    if (key.startsWith('spent-in-native')) {
-                        // prep subtitles (for later)
-                        if (!subtitles.hasOwnProperty(current.currency_code)) {
-                            subtitles[current.currency_code] = '';
-                        }
-                        // append the amount spent.
-                        subtitles[current.currency_code] =
-                            subtitles[current.currency_code] +
-                            formatMoney(current.value, current.currency_code);
-                        continue;
-                    }
-                    // earned info is used in subtitle:
-                    if (key.startsWith('earned-in-native')) {
-                        // prep subtitles (for later)
-                        if (!subtitles.hasOwnProperty(current.currency_code)) {
-                            subtitles[current.currency_code] = '';
-                        }
-                        // prepend the amount earned.
-                        subtitles[current.currency_code] =
-                            formatMoney(current.value, current.currency_code) + ' + ' +
-                            subtitles[current.currency_code];
-                        continue;
-                    }
-
-                    if (key.startsWith('bills-unpaid-in-native')) {
-                        this.billBox.unpaid.push(formatMoney(current.value, current.currency_code));
-                        continue;
-                    }
-                    if (key.startsWith('bills-paid-in-native')) {
-                        this.billBox.paid.push(formatMoney(current.value, current.currency_code));
-                        continue;
-                    }
-                    if (key.startsWith('left-to-spend-in-native')) {
-                        this.leftBox.left.push(formatMoney(current.value, current.currency_code));
-                        continue;
-                    }
-                    if (key.startsWith('left-per-day-to-spend-in-native')) { // per day
-                        this.leftBox.perDay.push(formatMoney(current.value, current.currency_code));
-                        continue;
-                    }
-                    if (key.startsWith('net-worth-in-native')) {
-                        this.netBox.net.push(formatMoney(current.value, current.currency_code));
-                        continue;
-                    }
+                console.log('NOT NATIVE');
+                if (key.startsWith('balance-in-')) {
+                    this.balanceBox.amounts.push(formatMoney(current.monetary_value, current.currency_code));
+                    continue;
                 }
-                // not native
-                if (!this.convertToNative && !key.endsWith('native')) {
-                    console.log('NOT NATIVE');
-                    if (key.startsWith('balance-in-')) {
-                        this.balanceBox.amounts.push(formatMoney(current.monetary_value	, current.currency_code));
-                        continue;
+                // spent info is used in subtitle:
+                if (key.startsWith('spent-in-')) {
+                    // prep subtitles (for later)
+                    if (!subtitles.hasOwnProperty(current.currency_code)) {
+                        subtitles[current.currency_code] = '';
                     }
-                    // spent info is used in subtitle:
-                    if (key.startsWith('spent-in-')) {
-                        // prep subtitles (for later)
-                        if (!subtitles.hasOwnProperty(current.currency_code)) {
-                            subtitles[current.currency_code] = '';
-                        }
-                        // append the amount spent.
-                        subtitles[current.currency_code] =
-                            subtitles[current.currency_code] +
-                            formatMoney(current.monetary_value	, current.currency_code);
-                        continue;
+                    // append the amount spent.
+                    subtitles[current.currency_code] =
+                        subtitles[current.currency_code] +
+                        formatMoney(current.monetary_value, current.currency_code);
+                    continue;
+                }
+                // earned info is used in subtitle:
+                if (key.startsWith('earned-in-')) {
+                    // prep subtitles (for later)
+                    if (!subtitles.hasOwnProperty(current.currency_code)) {
+                        subtitles[current.currency_code] = '';
                     }
-                    // earned info is used in subtitle:
-                    if (key.startsWith('earned-in-')) {
-                        // prep subtitles (for later)
-                        if (!subtitles.hasOwnProperty(current.currency_code)) {
-                            subtitles[current.currency_code] = '';
-                        }
-                        // prepend the amount earned.
-                        subtitles[current.currency_code] =
-                            formatMoney(current.monetary_value	, current.currency_code) + ' + ' +
-                            subtitles[current.currency_code];
-                        continue;
-                    }
+                    // prepend the amount earned.
+                    subtitles[current.currency_code] =
+                        formatMoney(current.monetary_value, current.currency_code) + ' + ' +
+                        subtitles[current.currency_code];
+                    continue;
+                }
 
 
-                    if (key.startsWith('bills-unpaid-in-')) {
-                        this.billBox.unpaid.push(formatMoney(current.monetary_value	, current.currency_code));
-                        continue;
-                    }
-                    if (key.startsWith('bills-paid-in-')) {
-                        this.billBox.paid.push(formatMoney(current.monetary_value	, current.currency_code));
-                        continue;
-                    }
-                    if (key.startsWith('left-to-spend-in-')) {
-                        this.leftBox.left.push(formatMoney(current.monetary_value	, current.currency_code));
-                        continue;
-                    }
-                    if (key.startsWith('left-per-day-to-spend-in-')) {
-                        this.leftBox.perDay.push(formatMoney(current.monetary_value	, current.currency_code));
-                        continue;
-                    }
-                    if (key.startsWith('net-worth-in-')) {
-                        this.netBox.net.push(formatMoney(current.monetary_value	, current.currency_code));
+                if (key.startsWith('bills-unpaid-in-')) {
+                    this.billBox.unpaid.push(formatMoney(current.monetary_value, current.currency_code));
+                    continue;
+                }
+                if (key.startsWith('bills-paid-in-')) {
+                    this.billBox.paid.push(formatMoney(current.monetary_value, current.currency_code));
+                    continue;
+                }
+                if (key.startsWith('left-to-spend-in-')) {
+                    this.leftBox.left.push(formatMoney(current.monetary_value, current.currency_code));
+                    continue;
+                }
+                if (key.startsWith('left-per-day-to-spend-in-')) {
+                    this.leftBox.perDay.push(formatMoney(current.monetary_value, current.currency_code));
+                    continue;
+                }
+                if (key.startsWith('net-worth-in-')) {
+                    this.netBox.net.push(formatMoney(current.monetary_value, current.currency_code));
 
-                    }
                 }
             }
         }

@@ -37,6 +37,18 @@ export default class Get {
         return api.get('/api/v1/accounts/' + identifier, {params: params});
     }
 
+
+    /**
+     *
+     * @param identifier
+     * @param params
+     * @returns {Promise<AxiosResponse<any>>}
+     */
+    show(identifier, params) {
+        return api.get('/api/v1/accounts/' + identifier, {params: params});
+    }
+
+
     /**
      *
      * @param identifier

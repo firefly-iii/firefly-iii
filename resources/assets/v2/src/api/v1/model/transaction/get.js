@@ -29,12 +29,9 @@ export default class Get {
      * @returns {Promise<AxiosResponse<any>>}
      */
     list(params) {
-        return api.get('/api/v2/transactions', {params: params});
-    }
-    infiniteList(params) {
-        return api.get('/api/v2/infinite/transactions', {params: params});
+        return api.get('/api/v1/transactions', {params: params});
     }
     show(id, params){
-        return api.get('/api/v2/transactions/' + id, {params: params});
+        return api.get('/api/v1/transactions/' + id, {params: params});
     }
 }

@@ -12,14 +12,14 @@
             <template x-if="convertToNativeAvailable">
                 <div class="card-footer text-end">
                     <template x-if="convertToNative">
-                        <button type="button" @click="switchconvertToNative"
+                        <button type="button" @click="switchConvertToNative"
                                 class="btn btn-outline-info btm-sm">
                                                     <span
                                                         class="fa-solid fa-comments-dollar"></span> {{ __('firefly.disable_auto_convert')  }}
                         </button>
                     </template>
                     <template x-if="!convertToNative">
-                        <button type="button" @click="switchconvertToNative"
+                        <button type="button" @click="switchConvertToNative"
                                 class="btn btn-outline-info btm-sm">
                                                     <span
                                                         class="fa-solid fa-comments-dollar"></span> {{ __('firefly.enable_auto_convert')  }}

@@ -22,7 +22,7 @@ import {api} from "../../../../boot/axios";
 
 export default class Put {
     put(submission, params) {
-        let url = '/api/v2/transactions/' + parseInt(params.id);
+        let url = '/api/v1/transactions/' + parseInt(params.id);
         return api.put(url, submission);
     }
 }
