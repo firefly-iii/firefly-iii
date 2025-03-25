@@ -184,6 +184,7 @@ return [
         'currencyPreference' => 'EUR',
         'language'           => 'en_US',
         'locale'             => 'equal',
+        'convertToNative' => false,
     ],
     'default_currency'             => 'EUR',
     'default_language'             => envNonEmpty('DEFAULT_LANGUAGE', 'en_US'),

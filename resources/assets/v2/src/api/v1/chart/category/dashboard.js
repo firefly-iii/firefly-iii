@@ -1,5 +1,5 @@
 /*
- * list.js
+ * overview.js
  * Copyright (c) 2022 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -18,32 +18,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {api} from "../../../boot/axios";
-import format from "date-fns/format";
+import {api} from "../../../../boot/axios";
+import {format} from "date-fns";
 
-export default class Get {
-
-    /**
-     *
-     * @param identifier
-     * @param date
-     * @returns {Promise<AxiosResponse<any>>}
-     */
-    get(identifier, date) {
-        let params = {date: format(date, 'y-MM-dd').slice(0, 10)};
-        if (!date) {
-            return api.get('/api/v1/accounts/' + identifier);
-        }
-        return api.get('/api/v1/accounts/' + identifier, {params: params});
-    }
-
-    /**
-     *
-     * @param identifier
-     * @param page
-     * @returns {Promise<AxiosResponse<any>>}
-     */
-    transactions(identifier, page) {
-        return api.get('/api/v1/accounts/' + identifier + '/transactions', {params: {page: page}});
+export default class Dashboard {
+    dashboard(start, end) {
+        let startStr = format(start, 'y-MM-dd');
+        let endStr = format(end, 'y-MM-dd');
+        return api.get('/api/v1/chart/category/dashboard', {params: {start: startStr, end: endStr}});
     }
 }

@@ -1,6 +1,6 @@
 /*
- * overview.js
- * Copyright (c) 2022 james@firefly-iii.org
+ * get.js
+ * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -18,19 +18,25 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {api} from "../../../../boot/axios";
-import {format} from "date-fns";
 
-export default class Dashboard {
-    dashboard(start, end) {
-        let startStr = format(start, 'y-MM-dd');
-        let endStr = format(end, 'y-MM-dd');
-        return api.get('/api/v2/chart/account/dashboard', {params: {start: startStr, end: endStr}});
+import {api} from "../../../../boot/axios";
+
+export default class Get {
+
+    /**
+     *
+     * @param params
+     * @returns {Promise<AxiosResponse<any>>}
+     */
+    list(params) {
+        return api.get('/api/v1/subscriptions', {params: params});
     }
 
-    expense(start, end) {
-        let startStr = format(start, 'y-MM-dd');
-        let endStr = format(end, 'y-MM-dd');
-        return api.get('/api/v2/chart/account/expense-dashboard', {params: {start: startStr, end: endStr}});
+    paid(params) {
+        return api.get('/api/v1/subscriptions/sum/paid', {params: params});
+    }
+
+    unpaid(params) {
+        return api.get('/api/v1/subscriptions/sum/unpaid', {params: params});
     }
 }

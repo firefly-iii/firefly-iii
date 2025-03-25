@@ -24,8 +24,8 @@ import i18next from "i18next";
 import {format} from "date-fns";
 import formatMoney from "../../util/format-money.js";
 
-import Get from "../../api/v2/model/account/get.js";
-import Put from "../../api/v2/model/account/put.js";
+import Get from "../../api/v1/model/account/get.js";
+import Put from "../../api/v1/model/account/put.js";
 import AccountRenderer from "../../support/renderers/AccountRenderer.js";
 import {showInternalsButton} from "../../support/page-settings/show-internals-button.js";
 import {showWizardButton} from "../../support/page-settings/show-wizard-button.js";

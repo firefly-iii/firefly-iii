@@ -49,7 +49,7 @@ class TransactionSummarizer
         $this->convertToNative = Amount::convertToNative($user);
     }
 
-    public function groupByCurrencyId(array $journals, string $method = 'negative'): array
+    public function groupByCurrencyId(array $journals, string $method = 'negative', bool $includeForeign = true): array
     {
         Log::debug(sprintf('Now in groupByCurrencyId(array, "%s")', $method));
         $array = [];
@@ -94,10 +94,10 @@ class TransactionSummarizer
                 }
             }
             if (!$this->convertToNative) {
-                Log::debug(sprintf('Journal #%d also includes foreign amount (foreign is %s)', $journal['transaction_journal_id'], $journal['foreign_currency_code']));
                 // use foreign amount?
                 $foreignCurrencyId = (int) $journal['foreign_currency_id'];
                 if (0 !== $foreignCurrencyId) {
+                    Log::debug(sprintf('Journal #%d also includes foreign amount (foreign is "%s")', $journal['transaction_journal_id'], $journal['foreign_currency_code']));
                     $foreignCurrencyName          = $journal['foreign_currency_name'];
                     $foreignCurrencySymbol        = $journal['foreign_currency_symbol'];
                     $foreignCurrencyCode          = $journal['foreign_currency_code'];
@@ -124,7 +124,7 @@ class TransactionSummarizer
             }
 
             // then process foreign amount, if it exists.
-            if (0 !== $foreignCurrencyId) {
+            if (0 !== $foreignCurrencyId && true === $includeForeign) {
                 $amount = (string) ($journal['foreign_amount'] ?? '0');
                 $array[$foreignCurrencyId] ??= [
                     'sum'                     => '0',

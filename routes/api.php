@@ -337,8 +337,32 @@ Route::group(
     ],
     static function (): void {
         Route::get('overview', ['uses' => 'AccountController@overview', 'as' => 'overview']);
+        Route::get('dashboard', ['uses' => 'AccountController@dashboard', 'as' => 'dashboard']);
     }
 );
+
+Route::group(
+    [
+        'namespace' => 'FireflyIII\Api\V1\Controllers\Chart',
+        'prefix'    => 'v1/chart/budget',
+        'as'        => 'api.v1.chart.budget.',
+    ],
+    static function (): void {
+         Route::get('dashboard', ['uses' => 'BudgetController@dashboard', 'as' => 'dashboard']);
+    }
+);
+
+Route::group(
+    [
+        'namespace' => 'FireflyIII\Api\V1\Controllers\Chart',
+        'prefix'    => 'v1/chart/category',
+        'as'        => 'api.v1.chart.category.',
+    ],
+    static function (): void {
+        Route::get('dashboard', ['uses' => 'CategoryController@dashboard', 'as' => 'dashboard']);
+    }
+);
+
 
 // DATA ROUTES
 // Export data API routes
@@ -351,6 +375,7 @@ Route::group(
     static function (): void {
         Route::get('accounts', ['uses' => 'ExportController@accounts', 'as' => 'accounts']);
         Route::get('bills', ['uses' => 'ExportController@bills', 'as' => 'bills']);
+        Route::get('subscriptions', ['uses' => 'ExportController@bills', 'as' => 'subscriptions']);
         Route::get('budgets', ['uses' => 'ExportController@budgets', 'as' => 'budgets']);
         Route::get('categories', ['uses' => 'ExportController@categories', 'as' => 'categories']);
         Route::get('piggy-banks', ['uses' => 'ExportController@piggyBanks', 'as' => 'piggy-banks']);
@@ -543,6 +568,24 @@ Route::group(
         'namespace' => 'FireflyIII\Api\V1\Controllers\Models\Bill',
         'prefix'    => 'v1/bills',
         'as'        => 'api.v1.bills.',
+    ],
+    static function (): void {
+        Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
+        Route::get('{bill}', ['uses' => 'ShowController@show', 'as' => 'show']);
+        Route::put('{bill}', ['uses' => 'UpdateController@update', 'as' => 'update']);
+        Route::delete('{bill}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
+
+        Route::get('{bill}/attachments', ['uses' => 'ListController@attachments', 'as' => 'attachments']);
+        Route::get('{bill}/rules', ['uses' => 'ListController@rules', 'as' => 'rules']);
+        Route::get('{bill}/transactions', ['uses' => 'ListController@transactions', 'as' => 'transactions']);
+    }
+);
+Route::group(
+    [
+        'namespace' => 'FireflyIII\Api\V1\Controllers\Models\Bill',
+        'prefix'    => 'v1/subscriptions',
+        'as'        => 'api.v1.subscriptions.',
     ],
     static function (): void {
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);

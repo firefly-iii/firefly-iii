@@ -1,6 +1,6 @@
 /*
- * overview.js
- * Copyright (c) 2022 james@firefly-iii.org
+ * post.js
+ * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -19,18 +19,10 @@
  */
 
 import {api} from "../../../../boot/axios";
-import {format} from "date-fns";
 
-export default class Dashboard {
-    dashboard(start, end) {
-        let startStr = format(start, 'y-MM-dd');
-        let endStr = format(end, 'y-MM-dd');
-        return api.get('/api/v2/chart/account/dashboard', {params: {start: startStr, end: endStr}});
-    }
-
-    expense(start, end) {
-        let startStr = format(start, 'y-MM-dd');
-        let endStr = format(end, 'y-MM-dd');
-        return api.get('/api/v2/chart/account/expense-dashboard', {params: {start: startStr, end: endStr}});
+export default class Put {
+    put(submission, params) {
+        let url = '/api/v1/transactions/' + parseInt(params.id);
+        return api.put(url, submission);
     }
 }

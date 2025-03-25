@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import Get from "../../../api/v2/model/piggy-bank/get.js";
+import Get from "../../../api/v1/model/piggy-bank/get.js";
 
 export function loadPiggyBanks() {
     let params = {

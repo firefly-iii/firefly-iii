@@ -75,7 +75,7 @@
                                     <ul class="list-unstyled list-no-margin">
                                     <template x-for="transaction in group.transactions">
                                         <li>
-                                            @include('partials.elements.amount', ['autoConversion' => true,'type' => 'transaction.type','amount' => 'transaction.amount','native' => 'transaction.native_amount'])
+                                            @include('partials.elements.amount', ['convertToNative' => true,'type' => 'transaction.type','amount' => 'transaction.amount','native' => 'transaction.native_amount'])
                                         </li>
                                     </template>
                                     </ul>

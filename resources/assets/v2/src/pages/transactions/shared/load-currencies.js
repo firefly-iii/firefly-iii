@@ -19,7 +19,7 @@
  */
 
 
-import Get from "../../../api/v2/model/currency/get.js";
+import Get from "../../../api/v1/model/currency/get.js";
 
 export function loadCurrencies() {
     let params = {
