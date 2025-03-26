@@ -45,8 +45,8 @@ class UpdateCheckCronjob extends AbstractCronjob
             Log::debug('Update check is not enabled.');
             // get stuff from job:
             $this->jobFired     = false;
-            $this->jobErrored   = true;
-            $this->jobSucceeded = false;
+            $this->jobErrored   = false;
+            $this->jobSucceeded = true;
             $this->message      = 'The update check is not enabled.';
 
             return;
@@ -61,8 +61,8 @@ class UpdateCheckCronjob extends AbstractCronjob
         if ($diff < 604800 && false === $this->force) {
             // get stuff from job:
             $this->jobFired     = false;
-            $this->jobErrored   = true;
-            $this->jobSucceeded = false;
+            $this->jobErrored   = false;
+            $this->jobSucceeded = true;
             $this->message      = sprintf('Checked for updates less than a week ago (on %s).', date('Y-m-d H:i:s', $lastCheckTime->data));
 
             return;
