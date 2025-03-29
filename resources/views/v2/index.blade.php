@@ -59,7 +59,7 @@
                     </div>
                     <div class="modal-body">
                         <p>
-                            Body
+                            Buttons.
                         </p>
                     </div>
                     <div class="modal-footer">
