@@ -1,6 +1,6 @@
 /*
- * show-internals-button.js
- * Copyright (c) 2024 james@firefly-iii.org.
+ * list.js
+ * Copyright (c) 2022 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -15,11 +15,22 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see https://www.gnu.org/licenses/.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import {api} from "../../../../boot/axios";
+import format from "date-fns/format";
 
-export function showInternalsButton() {
-    // console.log('showInternalsButton');
-    document.querySelector('.toggle-page-internals').classList.remove('d-none');
+export default class Put {
+
+    /**
+     *
+     * @param identifier
+     * @param params
+     * @returns {Promise<AxiosResponse<any>>}
+     */
+    put(identifier, params) {
+        return api.put('/api/v2/accounts/' + identifier, params);
+    }
+
 }
