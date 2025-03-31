@@ -78,7 +78,7 @@ return [
         'running_balance_column' => env('USE_RUNNING_BALANCE', false),
         // see cer.php for exchange rates feature flag.
     ],
-    'version'                      => 'develop/2025-03-24',
+    'version'                      => 'develop/2025-03-31',
     'api_version'                  => '2.1.0', // field is no longer used.
     'db_version'                   => 25,
 
@@ -184,7 +184,7 @@ return [
         'currencyPreference' => 'EUR',
         'language'           => 'en_US',
         'locale'             => 'equal',
-        'convertToNative' => false,
+        'convertToNative'    => false,
     ],
     'default_currency'             => 'EUR',
     'default_language'             => envNonEmpty('DEFAULT_LANGUAGE', 'en_US'),
