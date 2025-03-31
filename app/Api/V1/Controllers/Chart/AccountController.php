@@ -70,7 +70,6 @@ class AccountController extends Controller
         );
     }
 
-
     /**
      * TODO fix documentation
      *
@@ -164,17 +163,16 @@ class AccountController extends Controller
         return response()->json($chartData);
     }
 
-
     /**
      * @throws FireflyException
      */
     private function renderAccountData(array $params, Account $account): void
     {
-        $currency       = $this->repository->getAccountCurrency($account);
+        $currency     = $this->repository->getAccountCurrency($account);
         if (null === $currency) {
             $currency = $this->default;
         }
-        $currentSet     = [
+        $currentSet   = [
             'label'                          => $account->name,
 
             // the currency that belongs to the account.
@@ -190,18 +188,18 @@ class AccountController extends Controller
             'period'                         => '1D',
             'entries'                        => [],
         ];
-        $currentStart   = clone $params['start'];
-        $range          = Steam::finalAccountBalanceInRange($account, $params['start'], clone $params['end'], $this->convertToNative);
+        $currentStart = clone $params['start'];
+        $range        = Steam::finalAccountBalanceInRange($account, $params['start'], clone $params['end'], $this->convertToNative);
 
-        $previous       = array_values($range)[0]['balance'];
+        $previous     = array_values($range)[0]['balance'];
         while ($currentStart <= $params['end']) {
-            $format                               = $currentStart->format('Y-m-d');
-            $label                                = $currentStart->toAtomString();
-            $balance                              = array_key_exists($format, $range) ? $range[$format]['balance'] : $previous;
-            $previous                             = $balance;
+            $format                        = $currentStart->format('Y-m-d');
+            $label                         = $currentStart->toAtomString();
+            $balance                       = array_key_exists($format, $range) ? $range[$format]['balance'] : $previous;
+            $previous                      = $balance;
 
             $currentStart->addDay();
-            $currentSet['entries'][$label]        = $balance;
+            $currentSet['entries'][$label] = $balance;
         }
         $this->chartData->add($currentSet);
     }
