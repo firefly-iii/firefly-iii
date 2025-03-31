@@ -75,7 +75,7 @@ class CategoryController extends Controller
     public function dashboard(DateRequest $request): JsonResponse
     {
         /** @var Carbon $start */
-        $start = $this->parameters->get('start');
+        $start      = $this->parameters->get('start');
 
         /** @var Carbon $end */
         $end        = $this->parameters->get('end');
@@ -85,11 +85,11 @@ class CategoryController extends Controller
 
         // get journals for entire period:
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector  = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)->withAccountInformation();
         $collector->setXorAccounts($accounts)->withCategoryInformation();
         $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::RECONCILIATION->value]);
-        $journals = $collector->getExtractedJournals();
+        $journals   = $collector->getExtractedJournals();
 
         /** @var array $journal */
         foreach ($journals as $journal) {
@@ -114,9 +114,9 @@ class CategoryController extends Controller
             ];
 
             // add monies
-            $return[$key]['amount'] = bcadd($return[$key]['amount'], $amount);
+            $return[$key]['amount']  = bcadd($return[$key]['amount'], $amount);
         }
-        $return = array_values($return);
+        $return     = array_values($return);
 
         // order by amount
         usort($return, static function (array $a, array $b) {

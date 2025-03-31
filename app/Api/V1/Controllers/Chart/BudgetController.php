@@ -49,7 +49,7 @@ class BudgetController extends Controller
     use CleansChartData;
     use ValidatesUserGroupTrait;
 
-    protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
+    protected array $acceptedRoles                      = [UserRoleEnum::READ_ONLY];
 
     protected OperationsRepositoryInterface $opsRepository;
     private BudgetLimitRepositoryInterface  $blRepository;
@@ -80,13 +80,13 @@ class BudgetController extends Controller
      */
     public function dashboard(DateRequest $request): JsonResponse
     {
-        $params = $request->getAll();
+        $params  = $request->getAll();
 
         /** @var Carbon $start */
-        $start = $params['start'];
+        $start   = $params['start'];
 
         /** @var Carbon $end */
-        $end = $params['end'];
+        $end     = $params['end'];
 
         // code from FrontpageChartGenerator, but not in separate class
         $budgets = $this->repository->getActiveBudgets();
@@ -188,7 +188,7 @@ class BudgetController extends Controller
                 'left'                    => '0',
                 'overspent'               => '0',
             ];
-            $currentBudgetArray            = $block['budgets'][$budgetId];
+            $currentBudgetArray = $block['budgets'][$budgetId];
 
             // var_dump($return);
             /** @var array $journal */
@@ -229,7 +229,7 @@ class BudgetController extends Controller
     private function processLimit(Budget $budget, BudgetLimit $limit): array
     {
         Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
-        $end = clone $limit->end_date;
+        $end             = clone $limit->end_date;
         $end->endOfDay();
         $spent           = $this->opsRepository->listExpenses($limit->start_date, $end, null, new Collection([$budget]));
         $limitCurrencyId = $limit->transaction_currency_id;
@@ -243,7 +243,7 @@ class BudgetController extends Controller
                 $filtered[$currencyId] = $entry;
             }
         }
-        $result = $this->processExpenses($budget->id, $filtered, $limit->start_date, $end);
+        $result          = $this->processExpenses($budget->id, $filtered, $limit->start_date, $end);
         if (1 === count($result)) {
             $compare = bccomp($limit->amount, app('steam')->positive($result[$limitCurrencyId]['spent']));
             if (1 === $compare) {
