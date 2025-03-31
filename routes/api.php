@@ -348,7 +348,7 @@ Route::group(
         'as'        => 'api.v1.chart.budget.',
     ],
     static function (): void {
-         Route::get('dashboard', ['uses' => 'BudgetController@dashboard', 'as' => 'dashboard']);
+        Route::get('dashboard', ['uses' => 'BudgetController@dashboard', 'as' => 'dashboard']);
     }
 );
 
