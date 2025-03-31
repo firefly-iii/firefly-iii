@@ -84,7 +84,7 @@
         "bacon/bacon-qr-code": "^2",
         "diglactic/laravel-breadcrumbs": "^10",
         "gdbots/query-parser": "^3.0",
-        "guzzlehttp/guzzle": "^7.8",
+        "guzzlehttp/guzzle": "^7.9",
         "jc5/google2fa-laravel": "^2.0",
         "jc5/recovery": "^2",
         "laravel-notification-channels/pushover": "^4.0",
