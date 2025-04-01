@@ -246,7 +246,7 @@ trait PeriodOverview
                 $currencyCode          = $journal['foreign_currency_code'];
                 $currencyName          = $journal['foreign_currency_name'];
                 $currencySymbol        = $journal['foreign_currency_symbol'];
-                $currencyDecimalPlaces = $journal['foreign_decimal_places'];
+                $currencyDecimalPlaces = $journal['foreign_currency_decimal_places'];
                 $amount                = $journal['foreign_amount'] ?? '0';
             }
             $return[$currencyId] ??= [
