@@ -731,6 +731,7 @@ class ExportDataGenerator
      */
     private function exportTransactions(): string
     {
+        Log::debug('Will now export transactions.');
         // TODO better place for keys?
         $header     = ['user_id', 'group_id', 'journal_id', 'created_at', 'updated_at', 'group_title', 'type', 'currency_code', 'amount', 'foreign_currency_code', 'foreign_amount', 'native_currency_code', 'native_amount', 'native_foreign_amount', 'description', 'date', 'source_name', 'source_iban', 'source_type', 'destination_name', 'destination_iban', 'destination_type', 'reconciled', 'category', 'budget', 'bill', 'tags', 'notes'];
 
