@@ -32,6 +32,7 @@ use FireflyIII\Support\Export\ExportDataGenerator;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response as LaravelResponse;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 /**
@@ -71,6 +72,7 @@ class IndexController extends Controller
 
             return redirect(route('export.index'));
         }
+        Log::debug('Will export from the UI.');
 
         /** @var ExportDataGenerator $generator */
         $generator = app(ExportDataGenerator::class);
@@ -83,6 +85,7 @@ class IndexController extends Controller
         $firstDate->subYear();
         $journal   = $this->journalRepository->firstNull();
         if (null !== $journal) {
+            Log::debug('First journal is NULL, using today() - 1 year.');
             $firstDate = clone $journal->date;
         }
         $generator->setStart($firstDate);
