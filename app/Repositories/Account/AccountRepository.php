@@ -676,7 +676,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
                 'foreign_currencies.code as foreign_currency_code',
                 'foreign_currencies.name as foreign_currency_name',
                 'foreign_currencies.symbol as foreign_currency_symbol',
-                'foreign_currencies.decimal_places as foreign_decimal_places',
+                'foreign_currencies.decimal_places as foreign_currency_decimal_places',
 
                 // fields
                 'transaction_journals.date', 'transaction_types.type', 'transaction_journals.transaction_currency_id', 'transactions.amount'])
