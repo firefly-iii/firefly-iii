@@ -26,6 +26,7 @@ namespace FireflyIII\Notifications\User;
 
 use FireflyIII\Notifications\ReturnsAvailableChannels;
 use FireflyIII\Notifications\ReturnsSettings;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\User;
 use Illuminate\Bus\Queueable;
@@ -101,6 +102,11 @@ class NewAccessToken extends Notification
      */
     public function via(User $notifiable): array
     {
-        return ReturnsAvailableChannels::returnChannels('user', $notifiable);
+        $channels = ReturnsAvailableChannels::returnChannels('user', $notifiable);
+        $isDemoSite  = FireflyConfig::get('is_demo_site');
+        if(true === $isDemoSite) {
+            return array_diff($channels, ['mail']);
+        }
+        return $channels;
     }
 }

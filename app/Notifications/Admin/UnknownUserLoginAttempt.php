@@ -27,6 +27,7 @@ namespace FireflyIII\Notifications\Admin;
 use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\Notifications\ReturnsAvailableChannels;
 use FireflyIII\Notifications\ReturnsSettings;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -111,6 +112,11 @@ class UnknownUserLoginAttempt extends Notification
      */
     public function via(OwnerNotifiable $notifiable): array
     {
-        return ReturnsAvailableChannels::returnChannels('owner');
+        $channels = ReturnsAvailableChannels::returnChannels('owner');
+        $isDemoSite  = FireflyConfig::get('is_demo_site');
+        if(true === $isDemoSite) {
+            return array_diff($channels, ['mail']);
+        }
+        return $channels;
     }
 }
