@@ -55,6 +55,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
+            $collector->excludeDestinationAccounts($accounts); // to exclude withdrawals to liabilities.
         }
         if (null !== $categories && $categories->count() > 0) {
             $collector->setCategories($categories);
@@ -132,6 +133,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::DEPOSIT->value]);
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
+            $collector->excludeSourceAccounts($accounts); // to prevent income from liabilities.
         }
         if (null !== $categories && $categories->count() > 0) {
             $collector->setCategories($categories);
