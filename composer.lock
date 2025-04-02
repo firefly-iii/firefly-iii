@@ -3711,16 +3711,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "3.8.6",
+            "version": "3.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CarbonPHP/carbon.git",
-                "reference": "ff2f20cf83bd4d503720632ce8a426dc747bf7fd"
+                "reference": "6d16a8a015166fe54e22c042e0805c5363aef50d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CarbonPHP/carbon/zipball/ff2f20cf83bd4d503720632ce8a426dc747bf7fd",
-                "reference": "ff2f20cf83bd4d503720632ce8a426dc747bf7fd",
+                "url": "https://api.github.com/repos/CarbonPHP/carbon/zipball/6d16a8a015166fe54e22c042e0805c5363aef50d",
+                "reference": "6d16a8a015166fe54e22c042e0805c5363aef50d",
                 "shasum": ""
             },
             "require": {
@@ -3813,7 +3813,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-02-20T17:33:38+00:00"
+            "time": "2025-03-27T12:57:33+00:00"
         },
         {
             "name": "nette/schema",
@@ -9681,16 +9681,16 @@
         },
         {
             "name": "verifiedjoseph/ntfy-php-library",
-            "version": "v4.7.0",
+            "version": "v4.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/VerifiedJoseph/ntfy-php-library.git",
-                "reference": "c84d4dd7074d4cd89bfc1c10b1aa7f2568105412"
+                "reference": "b191721dfed447a94f220a89dd372861d4c41115"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/VerifiedJoseph/ntfy-php-library/zipball/c84d4dd7074d4cd89bfc1c10b1aa7f2568105412",
-                "reference": "c84d4dd7074d4cd89bfc1c10b1aa7f2568105412",
+                "url": "https://api.github.com/repos/VerifiedJoseph/ntfy-php-library/zipball/b191721dfed447a94f220a89dd372861d4c41115",
+                "reference": "b191721dfed447a94f220a89dd372861d4c41115",
                 "shasum": ""
             },
             "require": {
@@ -9729,9 +9729,9 @@
             ],
             "support": {
                 "issues": "https://github.com/VerifiedJoseph/ntfy-php-library/issues",
-                "source": "https://github.com/VerifiedJoseph/ntfy-php-library/tree/v4.7.0"
+                "source": "https://github.com/VerifiedJoseph/ntfy-php-library/tree/v4.7.1"
             },
-            "time": "2024-12-10T10:48:38+00:00"
+            "time": "2025-04-01T14:02:04+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
