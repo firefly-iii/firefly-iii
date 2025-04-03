@@ -113,7 +113,7 @@ class UnknownUserLoginAttempt extends Notification
     public function via(OwnerNotifiable $notifiable): array
     {
         $channels   = ReturnsAvailableChannels::returnChannels('owner');
-        $isDemoSite = FireflyConfig::get('is_demo_site');
+        $isDemoSite = FireflyConfig::get('is_demo_site',false)->data;
         if (true === $isDemoSite) {
             return array_diff($channels, ['mail']);
         }

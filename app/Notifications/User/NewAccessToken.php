@@ -103,7 +103,7 @@ class NewAccessToken extends Notification
     public function via(User $notifiable): array
     {
         $channels   = ReturnsAvailableChannels::returnChannels('user', $notifiable);
-        $isDemoSite = FireflyConfig::get('is_demo_site');
+        $isDemoSite = FireflyConfig::get('is_demo_site',false)->data
         if (true === $isDemoSite) {
             return array_diff($channels, ['mail']);
         }

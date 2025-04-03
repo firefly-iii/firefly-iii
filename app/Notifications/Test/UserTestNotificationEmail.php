@@ -61,7 +61,7 @@ class UserTestNotificationEmail extends Notification
      */
     public function via(User $notifiable): array
     {
-        $isDemoSite = FireflyConfig::get('is_demo_site');
+        $isDemoSite = FireflyConfig::get('is_demo_site',false)->data
         if (true === $isDemoSite) {
             return [];
         }
