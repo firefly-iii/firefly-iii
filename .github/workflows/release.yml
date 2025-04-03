@@ -59,7 +59,28 @@ jobs:
           git config user.email release@firefly-iii.org
           git config advice.addIgnoredFile false
           git config push.autoSetupRemote true
-      - name: crowdin action
+      - name: Lint PHP
+        run: |
+          php_lint_file()
+          {
+              local php_file="$1"
+              php -l "$php_file" &> /dev/null
+              if [ "$?" -ne 0 ]
+              then
+                  echo -e "[FAIL] $php_file"
+                  return 1
+              fi
+          }
+
+          export -f php_lint_file
+
+          find . -path ./vendor -prune -o -name '*.php' | parallel -j 4 php_lint_file {}
+
+          if [ "$?" -ne 0 ]
+          then
+              exit 1
+          fi
+      - name: Crowdin action
         uses: crowdin/github-action@v2
         with:
           upload_sources: true
