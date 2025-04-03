@@ -64,7 +64,7 @@ class OwnerTestNotificationEmail extends Notification
      */
     public function via(OwnerNotifiable $notifiable): array
     {
-        $isDemoSite = FireflyConfig::get('is_demo_site',false)->data;
+        $isDemoSite = FireflyConfig::get('is_demo_site', false)->data;
         if (true === $isDemoSite) {
             return [];
         }
