@@ -3472,22 +3472,22 @@
         },
         {
             "name": "mailersend/laravel-driver",
-            "version": "v2.8.0",
+            "version": "v2.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mailersend/mailersend-laravel-driver.git",
-                "reference": "b28fde8f6ec0cd5406100abf05f7899935e71652"
+                "reference": "a34e2db5d63d2421b055d8271066d204479a8b6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mailersend/mailersend-laravel-driver/zipball/b28fde8f6ec0cd5406100abf05f7899935e71652",
-                "reference": "b28fde8f6ec0cd5406100abf05f7899935e71652",
+                "url": "https://api.github.com/repos/mailersend/mailersend-laravel-driver/zipball/a34e2db5d63d2421b055d8271066d204479a8b6a",
+                "reference": "a34e2db5d63d2421b055d8271066d204479a8b6a",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "illuminate/support": "^9.0 || ^10.0  || ^11.0 || ^12.0",
-                "mailersend/mailersend": "^0.8.0 || ^0.23.0 || ^0.24.0 || ^0.30.0",
+                "mailersend/mailersend": "^0.31.0",
                 "nyholm/psr7": "^1.5",
                 "php": ">=8.0",
                 "php-http/guzzle7-adapter": "^1.0",
@@ -3535,22 +3535,22 @@
             ],
             "support": {
                 "issues": "https://github.com/mailersend/mailersend-laravel-driver/issues",
-                "source": "https://github.com/mailersend/mailersend-laravel-driver/tree/v2.8.0"
+                "source": "https://github.com/mailersend/mailersend-laravel-driver/tree/v2.9.0"
             },
-            "time": "2025-03-06T16:55:40+00:00"
+            "time": "2025-04-04T10:38:10+00:00"
         },
         {
             "name": "mailersend/mailersend",
-            "version": "v0.30.0",
+            "version": "v0.31.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mailersend/mailersend-php.git",
-                "reference": "7ac40e50fa914a506c58d13c82dbf0d3bf0a6487"
+                "reference": "513ff83ee768526055ad52987cde401ea7218c67"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mailersend/mailersend-php/zipball/7ac40e50fa914a506c58d13c82dbf0d3bf0a6487",
-                "reference": "7ac40e50fa914a506c58d13c82dbf0d3bf0a6487",
+                "url": "https://api.github.com/repos/mailersend/mailersend-php/zipball/513ff83ee768526055ad52987cde401ea7218c67",
+                "reference": "513ff83ee768526055ad52987cde401ea7218c67",
                 "shasum": ""
             },
             "require": {
@@ -3602,9 +3602,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mailersend/mailersend-php/issues",
-                "source": "https://github.com/mailersend/mailersend-php/tree/v0.30.0"
+                "source": "https://github.com/mailersend/mailersend-php/tree/v0.31.0"
             },
-            "time": "2025-03-06T15:45:57+00:00"
+            "time": "2025-04-03T12:16:11+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -3965,38 +3965,39 @@
         },
         {
             "name": "nunomaduro/collision",
-            "version": "v8.7.0",
+            "version": "v8.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nunomaduro/collision.git",
-                "reference": "586cb8181a257a2152b6a855ca8d9598878a1a26"
+                "reference": "4cf9f3b47afff38b139fb79ce54fc71799022ce8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nunomaduro/collision/zipball/586cb8181a257a2152b6a855ca8d9598878a1a26",
-                "reference": "586cb8181a257a2152b6a855ca8d9598878a1a26",
+                "url": "https://api.github.com/repos/nunomaduro/collision/zipball/4cf9f3b47afff38b139fb79ce54fc71799022ce8",
+                "reference": "4cf9f3b47afff38b139fb79ce54fc71799022ce8",
                 "shasum": ""
             },
             "require": {
-                "filp/whoops": "^2.17.0",
+                "filp/whoops": "^2.18.0",
                 "nunomaduro/termwind": "^2.3.0",
                 "php": "^8.2.0",
-                "symfony/console": "^7.2.1"
+                "symfony/console": "^7.2.5"
             },
             "conflict": {
-                "laravel/framework": "<11.39.1 || >=13.0.0",
-                "phpunit/phpunit": "<11.5.3 || >=12.0.0"
+                "laravel/framework": "<11.44.2 || >=13.0.0",
+                "phpunit/phpunit": "<11.5.15 || >=13.0.0"
             },
             "require-dev": {
-                "larastan/larastan": "^2.10.0",
-                "laravel/framework": "^11.44.2",
+                "brianium/paratest": "^7.8.3",
+                "larastan/larastan": "^3.2",
+                "laravel/framework": "^11.44.2 || ^12.6",
                 "laravel/pint": "^1.21.2",
                 "laravel/sail": "^1.41.0",
                 "laravel/sanctum": "^4.0.8",
                 "laravel/tinker": "^2.10.1",
-                "orchestra/testbench-core": "^9.12.0",
-                "pestphp/pest": "^3.7.4",
-                "sebastian/environment": "^6.1.0 || ^7.2.0"
+                "orchestra/testbench-core": "^9.12.0 || ^10.1",
+                "pestphp/pest": "^3.8.0",
+                "sebastian/environment": "^7.2.0 || ^8.0"
             },
             "type": "library",
             "extra": {
@@ -4059,7 +4060,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2025-03-14T22:37:40+00:00"
+            "time": "2025-04-03T14:33:09+00:00"
         },
         {
             "name": "nunomaduro/termwind",
@@ -10586,16 +10587,16 @@
         },
         {
             "name": "iamcal/sql-parser",
-            "version": "v0.5",
+            "version": "v0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iamcal/SQLParser.git",
-                "reference": "644fd994de3b54e5d833aecf406150aa3b66ca88"
+                "reference": "947083e2dca211a6f12fb1beb67a01e387de9b62"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iamcal/SQLParser/zipball/644fd994de3b54e5d833aecf406150aa3b66ca88",
-                "reference": "644fd994de3b54e5d833aecf406150aa3b66ca88",
+                "url": "https://api.github.com/repos/iamcal/SQLParser/zipball/947083e2dca211a6f12fb1beb67a01e387de9b62",
+                "reference": "947083e2dca211a6f12fb1beb67a01e387de9b62",
                 "shasum": ""
             },
             "require-dev": {
@@ -10621,46 +10622,46 @@
             "description": "MySQL schema parser",
             "support": {
                 "issues": "https://github.com/iamcal/SQLParser/issues",
-                "source": "https://github.com/iamcal/SQLParser/tree/v0.5"
+                "source": "https://github.com/iamcal/SQLParser/tree/v0.6"
             },
-            "time": "2024-03-22T22:46:32+00:00"
+            "time": "2025-03-17T16:59:46+00:00"
         },
         {
             "name": "larastan/larastan",
-            "version": "v3.2.0",
+            "version": "v3.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/larastan/larastan.git",
-                "reference": "d84d5a3b6536a586899ad6855a3e098473703690"
+                "reference": "58bee8be51daf12d78ed0a909be3b205607d2f27"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/larastan/larastan/zipball/d84d5a3b6536a586899ad6855a3e098473703690",
-                "reference": "d84d5a3b6536a586899ad6855a3e098473703690",
+                "url": "https://api.github.com/repos/larastan/larastan/zipball/58bee8be51daf12d78ed0a909be3b205607d2f27",
+                "reference": "58bee8be51daf12d78ed0a909be3b205607d2f27",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "iamcal/sql-parser": "^0.5.0",
-                "illuminate/console": "^11.41.3 || ^12.0",
-                "illuminate/container": "^11.41.3 || ^12.0",
-                "illuminate/contracts": "^11.41.3 || ^12.0",
-                "illuminate/database": "^11.41.3 || ^12.0",
-                "illuminate/http": "^11.41.3 || ^12.0",
-                "illuminate/pipeline": "^11.41.3 || ^12.0",
-                "illuminate/support": "^11.41.3 || ^12.0",
+                "iamcal/sql-parser": "^0.6.0",
+                "illuminate/console": "^11.44.2 || ^12.4.1",
+                "illuminate/container": "^11.44.2 || ^12.4.1",
+                "illuminate/contracts": "^11.44.2 || ^12.4.1",
+                "illuminate/database": "^11.44.2 || ^12.4.1",
+                "illuminate/http": "^11.44.2 || ^12.4.1",
+                "illuminate/pipeline": "^11.44.2 || ^12.4.1",
+                "illuminate/support": "^11.44.2 || ^12.4.1",
                 "php": "^8.2",
-                "phpstan/phpstan": "^2.1.3"
+                "phpstan/phpstan": "^2.1.11"
             },
             "require-dev": {
                 "doctrine/coding-standard": "^12.0",
-                "laravel/framework": "^11.41.3 || ^12.0",
-                "mockery/mockery": "^1.6",
-                "nikic/php-parser": "^5.3",
-                "orchestra/canvas": "^v9.1.3 || ^10.0",
-                "orchestra/testbench-core": "^9.5.2 || ^10.0",
-                "phpstan/phpstan-deprecation-rules": "^2.0.0",
-                "phpunit/phpunit": "^10.5.35 || ^11.3.6"
+                "laravel/framework": "^11.44.2 || ^12.7.2",
+                "mockery/mockery": "^1.6.12",
+                "nikic/php-parser": "^5.4",
+                "orchestra/canvas": "^v9.2.2 || ^10.0.1",
+                "orchestra/testbench-core": "^9.12.0 || ^10.1",
+                "phpstan/phpstan-deprecation-rules": "^2.0.1",
+                "phpunit/phpunit": "^10.5.35 || ^11.5.15"
             },
             "suggest": {
                 "orchestra/testbench": "Using Larastan for analysing a package needs Testbench"
@@ -10708,15 +10709,19 @@
             ],
             "support": {
                 "issues": "https://github.com/larastan/larastan/issues",
-                "source": "https://github.com/larastan/larastan/tree/v3.2.0"
+                "source": "https://github.com/larastan/larastan/tree/v3.3.1"
             },
             "funding": [
                 {
                     "url": "https://github.com/canvural",
                     "type": "github"
+                },
+                {
+                    "url": "https://github.com/nunomaduro",
+                    "type": "github"
                 }
             ],
-            "time": "2025-03-14T21:54:26+00:00"
+            "time": "2025-04-03T20:08:04+00:00"
         },
         {
             "name": "laravel-json-api/testing",
