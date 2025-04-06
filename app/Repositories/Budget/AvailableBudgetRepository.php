@@ -149,8 +149,9 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
             $currencyId          = $convertToNative && $availableBudget->transaction_currency_id !== $default->id ? $default->id : $availableBudget->transaction_currency_id;
             $field               = $convertToNative && $availableBudget->transaction_currency_id !== $default->id ? 'native_amount' : 'amount';
             $return[$currencyId] ??= '0';
-            $return[$currencyId] = bcadd($return[$currencyId], $availableBudget->{$field});
-            Log::debug(sprintf('Add #%d %s (%s) for a total of %s', $currencyId, $availableBudget->{$field}, $field, $return[$currencyId]));
+            $amount = '' === (string) $availableBudget->{$field} ? '0' : (string) $availableBudget->{$field};
+            $return[$currencyId] = bcadd($return[$currencyId],  $amount);
+            Log::debug(sprintf('Add #%d %s (%s) for a total of %s', $currencyId, $amount, $field, $return[$currencyId]));
         }
 
         return $return;
