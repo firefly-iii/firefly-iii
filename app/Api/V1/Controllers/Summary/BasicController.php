@@ -483,6 +483,11 @@ class BasicController extends Controller
             // either an amount was budgeted or 0 is available.
             $currencyId      = $row['currency_id'];
             $amount          = (string) ($available[$currencyId] ?? '0');
+            if(0 === bccomp($amount,'0')) {
+                // #9858 skip over currencies with no available budget.
+                continue;
+            }
+            continue;
             $spentInCurrency = $row['sum'];
             $leftToSpend     = bcadd($amount, $spentInCurrency);
             $perDay          = '0';
@@ -495,6 +500,7 @@ class BasicController extends Controller
             $return[]        = [
                 'key'                     => sprintf('left-to-spend-in-%s', $row['currency_code']),
                 'title'                   => trans('firefly.box_left_to_spend_in_currency', ['currency' => $row['currency_symbol']]),
+                'no_available_budgets' => false,
                 'monetary_value'          => $leftToSpend,
                 'currency_id'             => (string) $row['currency_id'],
                 'currency_code'           => $row['currency_code'],
@@ -516,6 +522,7 @@ class BasicController extends Controller
                 'key'                     => sprintf('left-to-spend-in-%s', $currency->code),
                 'title'                   => trans('firefly.box_left_to_spend_in_currency', ['currency' => $currency->symbol]),
                 'monetary_value'          => '0',
+                'no_available_budgets' => true,
                 'currency_id'             => (string) $currency->id,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
