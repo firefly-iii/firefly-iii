@@ -487,7 +487,6 @@ class BasicController extends Controller
                 // #9858 skip over currencies with no available budget.
                 continue;
             }
-            continue;
             $spentInCurrency = $row['sum'];
             $leftToSpend     = bcadd($amount, $spentInCurrency);
             $perDay          = '0';
