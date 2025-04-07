@@ -80,10 +80,17 @@ function drawChart() {
 
                 // left to spend
                 if (key.substring(0, 17) === 'left-to-spend-in-') {
-                    left_to_spend_top.push(data[key].value_parsed);
-                    left_to_spend_bottom.push(data[key].sub_title);
-                    if (parseFloat(data[key].monetary_value) > 0) {
+                    if(true === data[key].no_available_budgets) {
+                        left_to_spend_top.push('---');
+                        left_to_spend_bottom.push('---');
                         keepGreen = true;
+                    }
+                    if(false === data[key].no_available_budgets) {
+                        left_to_spend_top.push(data[key].value_parsed);
+                        left_to_spend_bottom.push(data[key].sub_title);
+                        if (parseFloat(data[key].monetary_value) > 0) {
+                            keepGreen = true;
+                        }
                     }
                 }
 
