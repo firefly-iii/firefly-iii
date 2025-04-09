@@ -64,8 +64,8 @@ return [
 
     // unknown user login attempt
     'unknown_user_subject'                        => 'An unknown user tried to log in',
-    'unknown_user_body'                           => 'An unknown user tried to log in to Firefly III. The email address they used was ":address".',
-    'unknown_user_message'                        => 'The email address they used was ":address".',
+    'unknown_user_body'                           => 'An unknown user (:ip) tried to log in to Firefly III. The email address they used was ":address".',
+    'unknown_user_message'                        => 'The email address they (:ip) used was ":address".',
 
     // known user login attempt
     'failed_login_subject'                        => 'Firefly III detected a failed login attempt',
