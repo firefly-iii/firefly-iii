@@ -247,6 +247,6 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         }
         $summarizer = new TransactionSummarizer($this->user);
 
-        return $summarizer->groupByCurrencyId($journals);
+        return $summarizer->groupByCurrencyId($journals,'negative', false);
     }
 }

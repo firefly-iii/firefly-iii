@@ -99,7 +99,6 @@ class BasicController extends Controller
         $start        = $dates['start'];
         $end          = $dates['end'];
         $code         = $request->get('currency_code');
-
         // balance information:
         $balanceData  = $this->getBalanceInformation($start, $end);
         $billData     = $this->getSubscriptionInformation($start, $end);
@@ -471,6 +470,7 @@ class BasicController extends Controller
      */
     private function getLeftToSpendInfo(Carbon $start, Carbon $end): array
     {
+
         Log::debug(sprintf('Now in getLeftToSpendInfo("%s", "%s")', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
         $return    = [];
         $today     = today(config('app.timezone'));
@@ -478,10 +478,33 @@ class BasicController extends Controller
         $budgets   = $this->budgetRepository->getActiveBudgets();
         $spent     = $this->opsRepository->sumExpenses($start, $end, null, $budgets);
         $days      = (int) $today->diffInDays($end, true) + 1;
-
+        $currencies = [];
+        // first, create an entry for each entry in the "available" array.
+        /** @var array $availableBudget */
+        foreach($available as $currencyId =>  $availableBudget) {
+            $currencies[$currencyId] ??= $this->currencyRepos->find($currencyId);
+            $return[$currencyId]        = [
+                'key'                     => sprintf('left-to-spend-in-%s', $currencies[$currencyId]->code),
+                'title'                   => trans('firefly.box_left_to_spend_in_currency', ['currency' => $currencies[$currencyId]->symbol]),
+                'no_available_budgets' => false,
+                'monetary_value'          => $availableBudget,
+                'currency_id'             => (string) $currencies[$currencyId]->id,
+                'currency_code'           => $currencies[$currencyId]->code,
+                'currency_symbol'         => $currencies[$currencyId]->symbol,
+                'currency_decimal_places' => $currencies[$currencyId]->decimal_places,
+                'value_parsed'            => app('amount')->formatFlat($currencies[$currencyId]->symbol, $currencies[$currencyId]->decimal_places, $availableBudget, false),
+                'local_icon'              => 'money',
+                'sub_title'               => app('amount')->formatFlat(
+                    $currencies[$currencyId]->symbol,
+                    $currencies[$currencyId]->decimal_places,
+                    $availableBudget,
+                    false
+                ),
+            ];
+        }
         foreach ($spent as $row) {
             // either an amount was budgeted or 0 is available.
-            $currencyId      = $row['currency_id'];
+            $currencyId      = (int) $row['currency_id'];
             $amount          = (string) ($available[$currencyId] ?? '0');
             if(0 === bccomp($amount,'0')) {
                 // #9858 skip over currencies with no available budget.
@@ -496,7 +519,7 @@ class BasicController extends Controller
 
             Log::debug(sprintf('Spent %s %s', $row['currency_code'], $row['sum']));
 
-            $return[]        = [
+            $return[$currencyId]        = [
                 'key'                     => sprintf('left-to-spend-in-%s', $row['currency_code']),
                 'title'                   => trans('firefly.box_left_to_spend_in_currency', ['currency' => $row['currency_symbol']]),
                 'no_available_budgets' => false,
@@ -517,7 +540,7 @@ class BasicController extends Controller
         }
         if (0 === count($return)) {
             $currency = $this->nativeCurrency;
-            $return[] = [
+            $return[$currency->id] = [
                 'key'                     => sprintf('left-to-spend-in-%s', $currency->code),
                 'title'                   => trans('firefly.box_left_to_spend_in_currency', ['currency' => $currency->symbol]),
                 'monetary_value'          => '0',
@@ -537,7 +560,7 @@ class BasicController extends Controller
             ];
         }
 
-        return $return;
+        return array_values($return);
     }
 
     private function getNetWorthInfo(Carbon $end): array
