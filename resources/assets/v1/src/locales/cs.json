@@ -103,7 +103,7 @@
         "profile_oauth_confidential": "Soukrom\u00e1 aplikace",
         "profile_oauth_confidential_help": "Po\u017eadovat aby se klienti autorizovali. Soukrom\u00e9 aplikace mohou bezpe\u010dn\u011b pracovat s p\u0159\u00edstupov\u00fdmi \u00fadaji bez toho aby je zve\u0159ejnily. Ve\u0159ejn\u00e9 aplikace, nativn\u00ed nebo JavaScriptov\u00e9 SPA, toho schopn\u00e9 nejsou.",
         "multi_account_warning_unknown": "Depending on the type of transaction you create, the source and\/or destination account of subsequent splits may be overruled by whatever is defined in the first split of the transaction.",
-        "multi_account_warning_withdrawal": "Zdrojov\u00fd \u00fa\u010del v\u0161ech n\u00e1sleduj\u00edc\u00edch rozd\u011blen\u00ed je ovl\u00e1dan\u00fd zdrojov\u00fdm \u00fa\u010dtem prvn\u00edho rozd\u011blen\u00ed transakce.",
+        "multi_account_warning_withdrawal": "Zdrojov\u00fd \u00fa\u010det cel\u00e9 transakce je ovl\u00e1dan\u00fd prvn\u00edm rozd\u011blen\u00edm.",
         "multi_account_warning_deposit": "C\u00edlov\u00fd \u00fa\u010del v\u0161ech n\u00e1sleduj\u00edc\u00edch rozd\u011blen\u00ed je ovl\u00e1dan\u00fd c\u00edlov\u00fdm \u00fa\u010dtem prvn\u00edho rozd\u011blen\u00ed transakce.",
         "multi_account_warning_transfer": "Zdrojov\u00fd i c\u00edlov\u00fd \u00fa\u010det v\u0161ech n\u00e1sleduj\u00edc\u00edch rozd\u011blen\u00ed jsou ovl\u00e1d\u00e1ny zdrojov\u00fdm a c\u00edlov\u00fdm \u00fa\u010dtem prvn\u00edho rozd\u011blen\u00ed transakce.",
         "webhook_trigger_STORE_TRANSACTION": "Po vytvo\u0159en\u00ed transakce",
