@@ -141,7 +141,7 @@
         "reset_webhook_secret": "\u91cd\u7f6e webhook \u5bc6\u94a5",
         "header_exchange_rates": "\u6c47\u7387",
         "exchange_rates_intro": "Frefly III \u652f\u6301\u4e0b\u8f7d\u548c\u4f7f\u7528\u6c47\u7387\u3002\u8bf7\u5728 <a href=\"https:\/\/docs.firefly-iii.org\/explanation\/financial-concepts\/exchange-rates\/\">\u8fd9\u4efd\u6587\u6863<\/a>\u4e2d\u9605\u8bfb\u66f4\u591a\u3002",
-        "exchange_rates_from_to": "\u4ece {from} \u5230 {to} \u7684\uff08\u4ee5\u53ca\u53cd\u5411\uff09",
+        "exchange_rates_from_to": "\u4ece {from} \u5230 {to} \u7684\u6c47\u7387\uff08\u4ee5\u53ca\u53cd\u5411\uff09",
         "exchange_rates_intro_rates": "Firefly III \u91c7\u7528\u4ee5\u4e0b\u6c47\u7387\u3002\u5982\u679c\u6ca1\u6709\u63d0\u4f9b\u53cd\u5411\u6c47\u7387\u5219\u81ea\u52a8\u8ba1\u7b97\u3002 \u5982\u679c\u4ea4\u6613\u65e5\u671f\u4e0d\u5b58\u5728\u6c47\u7387\uff0cFifrefly III \u5c06\u5bfb\u627e\u524d\u4e00\u4e2a\u53ef\u7528\u65e5\u671f\u7684\u6c47\u7387\u3002 \u5982\u679c\u6ca1\u6709\uff0c\u5c06\u6309\u6c47\u7387\u4e3a 1 \u8fdb\u884c\u8ba1\u7b97\u3002",
         "header_exchange_rates_rates": "\u6c47\u7387",
         "header_exchange_rates_table": "\u6c47\u7387\u8868",
