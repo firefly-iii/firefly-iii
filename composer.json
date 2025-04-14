@@ -123,7 +123,7 @@
         "phpstan/phpstan": "^2",
         "phpstan/phpstan-deprecation-rules": "^2",
         "phpstan/phpstan-strict-rules": "^2",
-        "phpunit/phpunit": "^11"
+        "phpunit/phpunit": "^12"
     },
     "suggest": {},
     "autoload": {
