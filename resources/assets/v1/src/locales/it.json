@@ -2,6 +2,7 @@
     "firefly": {
         "administrations_page_title": "Amministrazioni finanziarie",
         "administrations_index_menu": "Amministrazioni finanziarie",
+        "expires_at": "Expires at",
         "temp_administrations_introduction": "Firefly III avr\u00e0 presto la possibilit\u00e0 di gestire pi\u00f9 amministrazioni finanziarie. In questo momento, hai solo il titolo. Puoi impostare il titolo di questa amministrazione e la sua valuta nativa. Questo sostituisce l'impostazione precedente, in cui si impostava la \"valuta predefinita\". Questa situazione \u00e8 ora legata all'amministrazione finanziaria e pu\u00f2 essere diversa per amministrazione.",
         "administration_currency_form_help": "Se modifichi la valuta nativa, il caricamento della pagina potrebbe richiedere molto tempo, poich\u00e9 potrebbe essere necessario convertire la transazione nella (nuova) valuta nativa.",
         "administrations_page_edit_sub_title_js": "Modifica amministrazione finanziaria \"{title}\"",

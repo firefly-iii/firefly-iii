@@ -2,6 +2,7 @@
     "firefly": {
         "administrations_page_title": "\u0424\u0456\u043d\u0430\u043d\u0441\u043e\u0432\u0456 \u0430\u0434\u043c\u0456\u043d\u0456\u0441\u0442\u0440\u0430\u0446\u0456\u0457",
         "administrations_index_menu": "\u0424\u0456\u043d\u0430\u043d\u0441\u043e\u0432\u0456 \u0430\u0434\u043c\u0456\u043d\u0456\u0441\u0442\u0440\u0430\u0446\u0456\u0457",
+        "expires_at": "Expires at",
         "temp_administrations_introduction": "Firefly III will soon get the ability to manage multiple financial administrations. Right now, you only have the one. You can set the title of this administration and its native currency. This replaces the previous setting where you would set your \"default currency\". This setting is now tied to the financial administration and can be different per administration.",
         "administration_currency_form_help": "It may take a long time for the page to load if you change the native currency because transaction may need to be converted to your (new) native currency.",
         "administrations_page_edit_sub_title_js": "Edit financial administration \"{title}\"",
