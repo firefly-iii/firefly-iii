@@ -250,7 +250,7 @@ class AccountValidator
      */
     protected function findExistingAccount(array $validTypes, array $data, bool $inverse = false): ?Account
     {
-        app('log')->debug('Now in findExistingAccount', $data);
+        app('log')->debug('Now in findExistingAccount', [$validTypes, $data]);
         app('log')->debug('The search will be reversed!');
         $accountId     = array_key_exists('id', $data) ? $data['id'] : null;
         $accountIban   = array_key_exists('iban', $data) ? $data['iban'] : null;
