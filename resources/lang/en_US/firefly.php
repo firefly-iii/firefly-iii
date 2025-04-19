@@ -2447,6 +2447,7 @@ return [
     'min-amount'                                              => 'Minimum amount',
     'journal-amount'                                          => 'Current subscription entry',
     'name'                                                    => 'Name',
+    'expires_at' => 'Expires at',
     'date'                                                    => 'Date',
     'date_and_time'                                           => 'Date and time',
     'time'                                                    => 'Time',
