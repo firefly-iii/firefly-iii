@@ -47,6 +47,7 @@
             <thead>
             <tr>
               <th scope="col">{{ $t('firefly.name') }}</th>
+              <th scope="col">{{ $t('firefly.expires_at') }}</th>
               <th scope="col"></th>
             </tr>
             </thead>
@@ -56,6 +57,10 @@
               <!-- Client Name -->
               <td style="vertical-align: middle;">
                 {{ token.name }}
+              </td>
+                <!-- expires at -->
+              <td style="vertical-align: middle;">
+                {{ new Date(token.expires_at).toLocaleString() }}
               </td>
 
               <!-- Delete Button -->
@@ -232,7 +237,7 @@ export default {
     },
 
     /**
-     * Get all of the available scopes.
+     * Get all the available scopes.
      */
     getScopes() {
       axios.get('./oauth/scopes')
