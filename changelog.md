@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.2.11 - 2025-04-21
+
+### Added
+
+- Support for Persian (`fa_IR`)
+- Add expiry details for personal access tokens
+
+### Changed
+
+- #10039
+- Update currency list and update exchange rates
+
+### Fixed
+
+- #9398
+- #9858
+- #10015
+- #10025
+- #10068
+- #10069
+- #10114
+- #10150
+
 ## 6.2.10 - 2025-03-22
 
 ### Added
