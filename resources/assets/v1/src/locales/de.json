@@ -2,7 +2,7 @@
     "firefly": {
         "administrations_page_title": "Finanzverwaltungen",
         "administrations_index_menu": "Finanzverwaltung",
-        "expires_at": "Expires at",
+        "expires_at": "G\u00fcltig bis",
         "temp_administrations_introduction": "Firefly III wird bald die M\u00f6glichkeit erhalten, mehrere Finanzverwaltungen zu verwalten. Im Moment verf\u00fcgen Sie nur \u00fcber eine. Sie k\u00f6nnen den Titel dieser Verwaltung und ihre eigene W\u00e4hrung festlegen. Dies ersetzt die bisherige Einstellung, bei der Sie Ihre \u201eStandardw\u00e4hrung\u201c festlegen konnten. Diese Einstellung ist jetzt an die Finanzverwaltung gebunden und kann f\u00fcr jede Verwaltung unterschiedlich sein.",
         "administration_currency_form_help": "Es kann l\u00e4nger dauern, bis die Seite geladen ist, wenn Sie die Landesw\u00e4hrung \u00e4ndern, da die Buchungen m\u00f6glicherweise in Ihre (neue) Landesw\u00e4hrung umgerechnet werden m\u00fcssen.",
         "administrations_page_edit_sub_title_js": "Finanzverwaltung \u201e{title}\u201c bearbeiten",
