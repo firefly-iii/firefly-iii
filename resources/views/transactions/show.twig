@@ -19,8 +19,11 @@
                             {# edit + delete #}
                             <li><a href="{{ route('transactions.edit', [transactionGroup.id]) }}"><span
                                         class="fa fa-pencil"></span> {{ 'edit'|_ }}</a></li>
+                            {% if groupArray.transactions[0].type != 'reconciliation' and groupArray.transactions[0].type != 'opening balance' and groupArray.transactions[0].type != 'liability credit' %}
                             <li><a href="{{ route('transactions.delete', [transactionGroup.id]) }}"><span
                                         class="fa fa-trash"></span> {{ 'delete'|_ }}</a></li>
+                            {% endif %}
+                            {% if groupArray.transactions[0].type != 'reconciliation' and groupArray.transactions[0].type != 'opening balance' and groupArray.transactions[0].type != 'liability credit' %}
                             <li role="separator" class="divider"></li>
 
                             {# convert to different type #}
@@ -42,6 +45,7 @@
                                             class="fa fa-exchange"></span> {{ 'convert_to_transfer'|_ }}</a></li>
                             {% endif %}
 
+
                             {#  clone #}
                             {% if groupArray.transactions[0].type != 'opening balance' and groupArray.transactions[0].type != 'reconciliation' %}
                                 <li role="separator" class="divider"></li>
@@ -49,6 +53,7 @@
                                             class="fa fa-copy"></span> {{ 'clone'|_ }}</a></li>
                                 <li><a href="#" class="clone-transaction-and-edit" data-id="{{ transactionGroup.id }}"><span
                                             class="fa fa-copy"></span> {{ 'clone_and_edit'|_ }}</a></li>
+                            {% endif %}
                             {% endif %}
 
                         </ul>
@@ -223,12 +228,15 @@
                                 {# edit + delete #}
                                 <li><a href="{{ route('transactions.edit', [transactionGroup.id]) }}"><span
                                             class="fa fa-pencil"></span> {{ 'edit'|_ }}</a></li>
+                                {% if groupArray.transactions[0].type != 'reconciliation' and groupArray.transactions[0].type != 'opening balance' and groupArray.transactions[0].type != 'liability credit' %}
                                 <li><a href="{{ route('transactions.delete', [transactionGroup.id]) }}"><span
                                             class="fa fa-trash"></span> {{ 'delete'|_ }}</a></li>
+                                {% endif %}
                                 {% if journal.reconciled %}
                                 <li><a class="reconcile-button" href="{{ route('transactions.unreconcile', [journal.transaction_journal_id]) }}"><span
                                             class="fa fa-history"></span> {{ 'unreconcile'|_ }}</a></li>
                                 {% endif %}
+                                {% if groupArray.transactions[0].type != 'reconciliation' and groupArray.transactions[0].type != 'opening balance' and groupArray.transactions[0].type != 'liability credit' %}
                                 <li role="separator" class="divider"></li>
 
                                 {# convert to different type #}
@@ -273,6 +281,7 @@
                                     <a href="{{ route('recurring.create-from-journal', [journal.transaction_journal_id]) }}"><span
                                             class="fa fa-fw fa-paint-brush"></span>{{ 'create_recurring_from_transaction'|_ }}
                                     </a></li>
+                                {% endif %}
                             </ul>
                         </div>
                     </div>
