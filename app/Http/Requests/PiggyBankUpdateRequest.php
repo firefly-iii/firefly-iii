@@ -53,6 +53,7 @@ class PiggyBankUpdateRequest extends FormRequest
             'start_date'         => $this->getCarbonDate('start_date'),
             'target_amount'      => trim($this->convertString('target_amount')),
             'target_date'        => $this->getCarbonDate('target_date'),
+            'transaction_currency_id' => $this->convertInteger('transaction_currency_id'),
             'notes'              => $this->stringWithNewlines('notes'),
             'object_group_title' => $this->convertString('object_group'),
         ];
@@ -75,15 +76,16 @@ class PiggyBankUpdateRequest extends FormRequest
         $piggy = $this->route()->parameter('piggyBank');
 
         return [
-            'name'          => sprintf('required|min:1|max:255|uniquePiggyBankForUser:%d', $piggy->id),
-            'accounts'      => 'required|array',
-            'accounts.*'    => 'required|belongsToUser:accounts',
-            'target_amount' => ['nullable', new IsValidPositiveAmount()],
-            'start_date'    => 'date',
-            'target_date'   => 'date|nullable',
-            'order'         => 'integer|max:32768|min:1',
-            'object_group'  => 'min:0|max:255',
-            'notes'         => 'min:1|max:32768|nullable',
+            'name'                    => sprintf('required|min:1|max:255|uniquePiggyBankForUser:%d', $piggy->id),
+            'accounts'                => 'required|array',
+            'accounts.*'              => 'required|belongsToUser:accounts',
+            'target_amount'           => ['nullable', new IsValidPositiveAmount()],
+            'start_date'              => 'date',
+            'transaction_currency_id' => 'exists:transaction_currencies,id',
+            'target_date'             => 'date|nullable',
+            'order'                   => 'integer|max:32768|min:1',
+            'object_group'            => 'min:0|max:255',
+            'notes'                   => 'min:1|max:32768|nullable',
         ];
     }
 
@@ -108,7 +110,7 @@ class PiggyBankUpdateRequest extends FormRequest
                             if ($accountCurrency->id !== $currency->id && 'true' !== $isMultiCurrency) {
                                 $validator->errors()->add('accounts', trans('validation.invalid_account_currency'));
                             }
-                            $type            = $account->accountType->type;
+                            $type = $account->accountType->type;
                             if (!in_array($type, $types, true)) {
                                 $validator->errors()->add('accounts', trans('validation.invalid_account_type'));
                             }
