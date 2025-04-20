@@ -7,11 +7,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #9755
-- #9867
-- #9878
-- #10068
-- #10162
+- [Issue 9755](https://github.com/firefly-iii/firefly-iii/issues/9755) (Unable to create transactions with non-native currency accounts when "display amounts in native currency" is enabled) reported by @dicksonleong
+- [Issue 9867](https://github.com/firefly-iii/firefly-iii/issues/9867) (Transactions from Jan 31 being counted in February) reported by @edbingo
+- [Issue 9878](https://github.com/firefly-iii/firefly-iii/issues/9878) (Piggy bank currency - wrong setting displayed or setting not saved) reported by @dethegeek
+- [Issue 10068](https://github.com/firefly-iii/firefly-iii/issues/10068) (Export Data isn't exporting all transactions in the data) reported by @firsttiger
+- [Discussion 10162](https://github.com/orgs/firefly-iii/discussions/10162) (Reverse proxy and `X-Forwarded-Prefix` header) started by @frenchu
 
 ## 6.2.11 - 2025-04-21
 
