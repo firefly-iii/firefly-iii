@@ -79,6 +79,7 @@ class EditController extends Controller
 
         $preFilled    = [
             'name'          => $piggyBank->name,
+            'transaction_currency_id' => (int) $piggyBank->transaction_currency_id,
             'target_amount' => app('steam')->bcround($piggyBank->target_amount, $piggyBank->transactionCurrency->decimal_places),
             'target_date'   => $targetDate,
             'start_date'    => $startDate,
