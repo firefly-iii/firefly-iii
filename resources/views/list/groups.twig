@@ -295,6 +295,7 @@
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">
                                 <li><a href="{{ route('transactions.edit', [group.id]) }}"><span
                                             class="fa fa-fw fa-pencil"></span> {{ 'edit'|_ }}</a></li>
+                                {% if transaction.transaction_type_type != 'Reconciliation' and transaction.transaction_type_type != 'Opening balance' and transaction.transaction_type_type != 'Liability credit' %}
                                 <li><a href="{{ route('transactions.delete', [group.id]) }}"><span
                                             class="fa fa-fw fa-trash"></span> {{ 'delete'|_ }}</a></li>
                                 <li><a href="#" data-id="{{ group.id }}" class="clone-transaction"><span
@@ -305,6 +306,7 @@
                                     <a href="{{ route('rules.create-from-journal', [transaction.transaction_journal_id]) }}"><span
                                             class="fa fa-fw fa-random"></span> {{ 'create_rule_from_transaction'|_ }}
                                     </a></li>
+                                {% endif %}
                             </ul>
                         </div>
                     </td>
@@ -316,12 +318,14 @@
                     </td>
                 {% endif %}
                 <td style="{{ style|raw }}" class="hidden-xs">
+                    {% if transaction.transaction_type_type != 'Reconciliation' and transaction.transaction_type_type != 'Opening balance' and transaction.transaction_type_type != 'Liability credit' %}
                     <div class="pull-right">
                         <input id="list_{{ transaction.transaction_journal_id }}"
                                value="{{ transaction.transaction_journal_id }}"
                                name="journals[{{ transaction.transaction_journal_id }}]"
                                type="checkbox" class="mass-select form-check-inline"
                                data-value="{{ transaction.transaction_journal_id }}"/>
+                        {% endif %}
                     </div>
                 </td>
             </tr>
