@@ -280,7 +280,7 @@ trait JournalServiceTrait
             }
             // 2025-04-19 sanity check on IBAN.
             $validator = new UniqueIban(null, $preferredType);
-            if('' !== (string) $data['iban'] && !$validator->passes('iban', $data['iban'])) {
+            if ('' !== (string) $data['iban'] && !$validator->passes('iban', $data['iban'])) {
                 Log::warning(sprintf('IBAN "%s" is already in use, quietly ignore it.', $data['iban']));
                 $data['iban'] = null;
             }
@@ -289,7 +289,7 @@ trait JournalServiceTrait
 
             // $data['name'] = $data['name'] ?? '(no name)';
 
-            $account = $this->accountRepository->store(
+            $account   = $this->accountRepository->store(
                 [
                     'account_type_id'   => null,
                     'account_type_name' => $preferredType,
