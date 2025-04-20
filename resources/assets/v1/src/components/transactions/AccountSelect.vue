@@ -216,7 +216,7 @@ export default {
           }
         },
         selectedItem: function (e) {
-          console.log('In SelectedItem()');
+          // console.log('In SelectedItem()');
           if (typeof this.name === 'undefined') {
             // console.log('Is undefined');
             return;

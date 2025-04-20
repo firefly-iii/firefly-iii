@@ -137,7 +137,6 @@ export default {
                 // lock dropdown list on currencyID of destination.
                 for (const key in this.currencies) {
                     if (this.currencies.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-
                         if (
                             parseInt(this.currencies[key].id) === parseInt(this.destination.currency_id)
                         ) {

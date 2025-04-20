@@ -31,6 +31,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
@@ -223,6 +224,8 @@ trait ModifiesPiggyBanks
         $factory       = new PiggyBankFactory();
         $factory->user = $this->user;
 
+        // the piggy bank currency is set or updated FIRST, if it exists.
+
         $factory->linkToAccountIds($piggyBank, $data['accounts'] ?? []);
 
 
@@ -280,6 +283,13 @@ trait ModifiesPiggyBanks
         if (array_key_exists('name', $data) && '' !== $data['name']) {
             $piggyBank->name = $data['name'];
         }
+        if (array_key_exists('transaction_currency_id', $data) && is_int($data['transaction_currency_id'])) {
+            $currency = TransactionCurrency::find($data['transaction_currency_id']);
+            if (null !== $currency) {
+                $piggyBank->transaction_currency_id = $currency->id;
+            }
+        }
+
         if (array_key_exists('target_amount', $data) && '' !== $data['target_amount']) {
             $piggyBank->target_amount = $data['target_amount'];
         }

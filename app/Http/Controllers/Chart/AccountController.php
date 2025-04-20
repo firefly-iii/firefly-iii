@@ -82,13 +82,16 @@ class AccountController extends Controller
      */
     public function expenseAccounts(): JsonResponse
     {
-        Log::debug('RevenueAccounts');
+        Log::debug('ExpenseAccounts');
 
         /** @var Carbon $start */
         $start         = clone session('start', today(config('app.timezone'))->startOfMonth());
 
         /** @var Carbon $end */
         $end           = clone session('end', today(config('app.timezone'))->endOfMonth());
+        $start->startOfDay();
+        $end->endOfDay();
+
         $cache         = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
@@ -97,7 +100,6 @@ class AccountController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get());
         }
-        $start->subDay();
 
         // prep some vars:
         $currencies    = [];
@@ -557,6 +559,10 @@ class AccountController extends Controller
 
         /** @var Carbon $end */
         $end           = clone session('end', today(config('app.timezone'))->endOfMonth());
+
+        $start->startOfDay();
+        $end->endOfDay();
+
         $cache         = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
@@ -565,7 +571,6 @@ class AccountController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get());
         }
-        $start->subDay();
 
         // prep some vars:
         $currencies    = [];

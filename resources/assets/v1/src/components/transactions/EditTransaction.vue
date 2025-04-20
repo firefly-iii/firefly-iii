@@ -540,12 +540,18 @@ export default {
                     allowed_types: window.expectedSourceTypes.destination[this.ucFirst(transaction.type)]
                 }
             };
+            // console.log('Destination currency id is ' + result.destination_account.currency_id);
             // if transaction type is transfer, the destination currency_id etc. MUST match the actual account currency info.
-            if ('transfer' === transaction.type && null !== transaction.foreign_currency_code) {
+            // OR if the transaction type is a withdrawal, and the destination account is a liability account, same as above.
+            if (
+                ('transfer' === transaction.type && null !== transaction.foreign_currency_code) ||
+                ('withdrawal' === transaction.type && ['Loan', 'Debt', 'Mortgage'].includes(transaction.destination_type) && null !== transaction.foreign_currency_code)
+            ) {
                 result.destination_account.currency_id = transaction.foreign_currency_id;
                 result.destination_account.currency_name = transaction.foreign_currency_name;
                 result.destination_account.currency_code = transaction.foreign_currency_code;
                 result.destination_account.currency_decimal_places = transaction.foreign_currency_decimal_places;
+                // console.log('Set destination currency_id to ' + result.destination_account.currency_id);
             }
 
 

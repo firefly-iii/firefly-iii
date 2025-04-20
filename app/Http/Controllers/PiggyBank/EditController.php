@@ -78,13 +78,14 @@ class EditController extends Controller
         $startDate    = $piggyBank->start_date?->format('Y-m-d');
 
         $preFilled    = [
-            'name'          => $piggyBank->name,
-            'target_amount' => app('steam')->bcround($piggyBank->target_amount, $piggyBank->transactionCurrency->decimal_places),
-            'target_date'   => $targetDate,
-            'start_date'    => $startDate,
-            'accounts'      => [],
-            'object_group'  => null !== $piggyBank->objectGroups->first() ? $piggyBank->objectGroups->first()->title : '',
-            'notes'         => null === $note ? '' : $note->text,
+            'name'                    => $piggyBank->name,
+            'transaction_currency_id' => (int) $piggyBank->transaction_currency_id,
+            'target_amount'           => app('steam')->bcround($piggyBank->target_amount, $piggyBank->transactionCurrency->decimal_places),
+            'target_date'             => $targetDate,
+            'start_date'              => $startDate,
+            'accounts'                => [],
+            'object_group'            => null !== $piggyBank->objectGroups->first() ? $piggyBank->objectGroups->first()->title : '',
+            'notes'                   => null === $note ? '' : $note->text,
         ];
         foreach ($piggyBank->accounts as $account) {
             $preFilled['accounts'][] = $account->id;
