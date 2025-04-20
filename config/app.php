@@ -114,11 +114,11 @@ use TwigBridge\Facade\Twig;
 use TwigBridge\ServiceProvider;
 
 return [
-    'name'           => envNonEmpty('APP_NAME', 'Firefly III'),
-    'env'          => envNonEmpty('APP_ENV', 'production'),
-    'debug'          => env('APP_DEBUG', false),
-    'url'         => envNonEmpty('APP_URL', 'http://localhost'),
-    'timezone'      => envNonEmpty('TZ','UTC'),
+    'name'            => envNonEmpty('APP_NAME', 'Firefly III'),
+    'env'             => envNonEmpty('APP_ENV', 'production'),
+    'debug'           => env('APP_DEBUG', false),
+    'url'             => envNonEmpty('APP_URL', 'http://localhost'),
+    'timezone'        => envNonEmpty('TZ', 'UTC'),
     'locale'          => envNonEmpty('DEFAULT_LANGUAGE', 'en_US'),
     'fallback_locale' => 'en_US',
     'key'             => env('APP_KEY'),
