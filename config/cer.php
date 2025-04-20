@@ -28,48 +28,53 @@ return [
     'download_enabled' => env('ENABLE_EXTERNAL_RATES', false),
 
     // if currencies are added, default rates must be added as well!
-    // last exchange rate update: 2024-12-30
     // source: https://www.xe.com/currencyconverter/
-    'date'             => '2024-12-30',
+    'date'             => '2025-04-15',
 
     // all rates are from EUR to $currency:
     'rates'            => [
         // europa
         'EUR' => 1,
         'HUF' => 410.79798,
-        'GBP' => 0.82858703,
-        'UAH' => 43.485934,
-        'PLN' => 4.2708542,
-        'TRY' => 36.804124,
+        'GBP' => 0.86003261,
+        'UAH' => 46.867455,
+        'PLN' => 4.2802098,
+        'TRY' => 43.180054,
         'DKK' => 7.4591,
-        'RON' => 4.9768699,
+        'RON' => 7.4648336,
 
         // Americas
-        'USD' => 1.0430046,
-        'BRL' => 6.4639113,
-        'CAD' => 1.5006908,
-        'MXN' => 21.249542,
+        'USD' => 1.1349044,
+        'BRL' => 6.6458518,
+        'CAD' => 1.575105,
+        'MXN' => 22.805278,
 
         // Oceania currencies
-        'IDR' => 16860.057,
-        'AUD' => 1.6705648,
-        'NZD' => 1.8436945,
+        'IDR' => 19070.382,
+        'AUD' => 1.787202,
+        'NZD' => 1.9191078,
 
         // africa
-        'EGP' => 53.038174,
-        'MAD' => 10.521629,
-        'ZAR' => 19.460263,
+        'EGP' => 57.874172,
+        'MAD' => 10.549438,
+        'ZAR' => 21.444356,
 
         // asia
-        'JPY' => 164.74767,
-        'RMB' => 7.6138994,
-        'CNY' => 7.6138994,
-        'RUB' => 108.56771,
-        'INR' => 89.157391,
+        'JPY' => 162.47195,
+        'RMB' => 8.2849977,
+        'CNY' => 8.2849977,
+        'RUB' => 93.34423,
+        'INR' => 97.572815,
 
         // int
-        'ILS' => 3.8428028,
-        'CHF' => 0.94044969,
+        'ILS' => 4.1801786,
+        'CHF' => 0.92683126,
         'HRK' => 7.5345, // replaced by EUR
+
+        'ISK' => 145.10532,
+        'NOK' => 11.980824,
+        'SEK' => 11.08809,
+        'HKD' => 8.8046322,
+        'CZK' => 25.092213,
     ],
 ];

@@ -2,6 +2,7 @@
     "firefly": {
         "administrations_page_title": "Ustawienia finansowe",
         "administrations_index_menu": "Ustawienia finansowe",
+        "expires_at": "Expires at",
         "temp_administrations_introduction": "Firefly III wkr\u00f3tce uzyska mo\u017cliwo\u015b\u0107 zarz\u0105dzania wieloma ustawieniami finansowymi. W tej chwili jest tylko jedno domy\u015blne ustawienie. Mo\u017cesz ustawi\u0107 jego tytu\u0142 i natywn\u0105 walut\u0119. To zast\u0119puje poprzednie ustawienia, w kt\u00f3rym mo\u017cna by\u0142o ustawi\u0107 \"domy\u015bln\u0105 walut\u0119\". Jest ona obecnie powi\u0105zana z wybranym ustawieniem finansowym i mo\u017ce by\u0107 zmienione w tej zak\u0142adce.",
         "administration_currency_form_help": "Wczytywanie strony mo\u017ce zaj\u0105\u0107 du\u017co czasu, je\u015bli zmienisz natywn\u0105 walut\u0119, poniewa\u017c transakcja mo\u017ce wymaga\u0107 przewalutowania na (now\u0105) natywn\u0105 walut\u0119.",
         "administrations_page_edit_sub_title_js": "Edytuj ustawienia finansowe \"{title}\"",

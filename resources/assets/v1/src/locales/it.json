@@ -2,6 +2,7 @@
     "firefly": {
         "administrations_page_title": "Amministrazioni finanziarie",
         "administrations_index_menu": "Amministrazioni finanziarie",
+        "expires_at": "Expires at",
         "temp_administrations_introduction": "Firefly III avr\u00e0 presto la possibilit\u00e0 di gestire pi\u00f9 amministrazioni finanziarie. In questo momento, hai solo il titolo. Puoi impostare il titolo di questa amministrazione e la sua valuta nativa. Questo sostituisce l'impostazione precedente, in cui si impostava la \"valuta predefinita\". Questa situazione \u00e8 ora legata all'amministrazione finanziaria e pu\u00f2 essere diversa per amministrazione.",
         "administration_currency_form_help": "Se modifichi la valuta nativa, il caricamento della pagina potrebbe richiedere molto tempo, poich\u00e9 potrebbe essere necessario convertire la transazione nella (nuova) valuta nativa.",
         "administrations_page_edit_sub_title_js": "Modifica amministrazione finanziaria \"{title}\"",
@@ -30,7 +31,7 @@
         "apply_rules_checkbox": "Applica le regole",
         "fire_webhooks_checkbox": "Esegui webhook",
         "no_budget_pointer": "Sembra che tu non abbia ancora dei budget. Dovresti crearne alcuni nella pagina dei <a href=\"budgets\">budget<\/a>. I budget possono aiutarti a tenere traccia delle spese.",
-        "no_bill_pointer": "Sembra che tu non abbia ancora un abbonamento. Dovresti crearne alcuni sulla pagina <a href=\"subscriptions\">abbonamento<\/a>. Gli abbonamenti possono aiutarti a tenere traccia delle spese.",
+        "no_bill_pointer": "Sembra che tu non abbia ancora un pagamento ricorrente. Dovresti crearne alcuni sulla pagina <a href=\"subscriptions\">pagamenti ricorrenti<\/a>. I pagamenti ricorrenti possono aiutarti a tenere traccia delle spese.",
         "source_account": "Conto di origine",
         "hidden_fields_preferences": "Puoi abilitare maggiori opzioni per le transazioni nelle tue <a href=\"preferences\">impostazioni<\/a>.",
         "destination_account": "Conto destinazione",

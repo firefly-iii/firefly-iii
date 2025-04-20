@@ -139,6 +139,7 @@ return [
             'firefly' => [
                 'administrations_page_title',
                 'administrations_index_menu',
+                'expires_at',
                 'temp_administrations_introduction',
                 'administration_currency_form_help',
                 'administrations_page_edit_sub_title_js',
@@ -339,6 +340,7 @@ return [
         'en_US',
         'es_ES',
         'ca_ES',
+        'fa_IR',
         'fi_FI',
         'fr_FR',
         'hu_HU',

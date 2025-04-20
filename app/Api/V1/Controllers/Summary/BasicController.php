@@ -39,6 +39,8 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Http\Api\ExchangeRateConverter;
+use FireflyIII\Support\Report\Summarizer\TransactionSummarizer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
@@ -97,10 +99,9 @@ class BasicController extends Controller
         $start        = $dates['start'];
         $end          = $dates['end'];
         $code         = $request->get('currency_code');
-
         // balance information:
         $balanceData  = $this->getBalanceInformation($start, $end);
-        $billData     = $this->getBillInformation($start, $end);
+        $billData     = $this->getSubscriptionInformation($start, $end);
         $spentData    = $this->getLeftToSpendInfo($start, $end);
         $netWorthData = $this->getNetWorthInfo($end);
         //                $balanceData  = [];
@@ -122,6 +123,7 @@ class BasicController extends Controller
 
     private function getBalanceInformation(Carbon $start, Carbon $end): array
     {
+        Log::debug('getBalanceInformation');
         // some config settings
         $convertToNative = Amount::convertToNative();
         $default         = Amount::getNativeCurrency();
@@ -130,47 +132,110 @@ class BasicController extends Controller
         $expenses        = [];
         $sums            = [];
         $return          = [];
+        $currencies      = [
+            $default->id => $default,
+        ];
 
         // collect income of user using the new group collector.
         /** @var GroupCollectorInterface $collector */
         $collector       = app(GroupCollectorInterface::class);
-        $collector->setRange($start, $end)->setPage($this->parameters->get('page'))->setTypes([TransactionTypeEnum::DEPOSIT->value]);
+        $summarizer      = new TransactionSummarizer();
+        $set             = $collector->setRange($start, $end)->setTypes([TransactionTypeEnum::DEPOSIT->value])->getExtractedJournals();
+        $incomes         = $summarizer->groupByCurrencyId($set, 'positive', false);
 
-        $set             = $collector->getExtractedJournals();
 
-        /** @var array $journal */
-        foreach ($set as $journal) {
-            $currencyId           = $convertToNative ? $default->id : (int) $journal['currency_id'];
-            $amount               = Amount::getAmountFromJournal($journal);
-            $incomes[$currencyId] ??= '0';
-            $incomes[$currencyId] = bcadd(
-                $incomes[$currencyId],
-                bcmul($amount, '-1')
-            );
-            $sums[$currencyId]    ??= '0';
-            $sums[$currencyId]    = bcadd($sums[$currencyId], bcmul($amount, '-1'));
-        }
-
+        // collect expenses of user.
         // collect expenses of user using the new group collector.
         /** @var GroupCollectorInterface $collector */
         $collector       = app(GroupCollectorInterface::class);
-        $collector->setRange($start, $end)->setPage($this->parameters->get('page'))->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
-        $set             = $collector->getExtractedJournals();
+        $set             = $collector->setRange($start, $end)->setPage($this->parameters->get('page'))->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->getExtractedJournals();
+        $expenses        = $summarizer->groupByCurrencyId($set, 'negative', false);
 
-        /** @var array $journal */
-        foreach ($set as $journal) {
-            $currencyId            = $convertToNative ? $default->id : (int) $journal['currency_id'];
-            $amount                = Amount::getAmountFromJournal($journal);
-            $expenses[$currencyId] ??= '0';
-            $expenses[$currencyId] = bcadd($expenses[$currencyId], $amount);
-            $sums[$currencyId]     ??= '0';
-            $sums[$currencyId]     = bcadd($sums[$currencyId], $amount);
+        // if convert to native, do so right now.
+        if ($convertToNative) {
+            $newExpenses = [
+                $default->id => [
+                    'currency_id'             => $default->id,
+                    'currency_code'           => $default->code,
+                    'currency_symbol'         => $default->symbol,
+                    'currency_decimal_places' => $default->decimal_places,
+                    'sum'                     => '0',
+                ],
+            ];
+            $newIncomes  = [
+                $default->id => [
+                    'currency_id'             => $default->id,
+                    'currency_code'           => $default->code,
+                    'currency_symbol'         => $default->symbol,
+                    'currency_decimal_places' => $default->decimal_places,
+                    'sum'                     => '0',
+                ],
+            ];
+            $sums        = [
+                $default->id => [
+                    'currency_id'             => $default->id,
+                    'currency_code'           => $default->code,
+                    'currency_symbol'         => $default->symbol,
+                    'currency_decimal_places' => $default->decimal_places,
+                    'sum'                     => '0',
+                ],
+            ];
+
+            $converter   = new ExchangeRateConverter();
+            // loop over income and expenses
+            foreach ([$expenses, $incomes] as $index => $array) {
+
+                // loop over either one.
+                foreach ($array as $entry) {
+
+                    // if it is the native currency already.
+                    if ($entry['currency_id'] === $default->id) {
+                        $sums[$default->id]['sum'] = bcadd($entry['sum'], $sums[$default->id]['sum']);
+
+                        // don't forget to add it to newExpenses and newIncome
+                        if (0 === $index) {
+                            $newExpenses[$default->id]['sum'] = bcadd($newExpenses[$default->id]['sum'], $entry['sum']);
+                        }
+                        if (1 === $index) {
+                            $newIncomes[$default->id]['sum'] = bcadd($newIncomes[$default->id]['sum'], $entry['sum']);
+                        }
+
+                        continue;
+                    }
+
+                    $currencies[$entry['currency_id']] ??= $this->currencyRepos->find($entry['currency_id']);
+                    $convertedSum              = $converter->convert($currencies[$entry['currency_id']], $default, $start, $entry['sum']);
+                    $sums[$default->id]['sum'] = bcadd($sums[$default->id]['sum'], $convertedSum);
+                    if (0 === $index) {
+                        $newExpenses[$default->id]['sum'] = bcadd($newExpenses[$default->id]['sum'], $convertedSum);
+                    }
+                    if (1 === $index) {
+                        $newIncomes[$default->id]['sum'] = bcadd($newIncomes[$default->id]['sum'], $convertedSum);
+                    }
+                }
+            }
+            $incomes     = $newIncomes;
+            $expenses    = $newExpenses;
         }
-
+        if (!$convertToNative) {
+            foreach ([$expenses, $incomes] as $array) {
+                foreach ($array as $entry) {
+                    $currencyId               = $entry['currency_id'];
+                    $sums[$currencyId] ??= [
+                        'currency_id'             => $entry['currency_id'],
+                        'currency_code'           => $entry['currency_code'],
+                        'currency_symbol'         => $entry['currency_symbol'],
+                        'currency_decimal_places' => $entry['currency_decimal_places'],
+                        'sum'                     => '0',
+                    ];
+                    $sums[$currencyId]['sum'] = bcadd($sums[$currencyId]['sum'], $entry['sum']);
+                }
+            }
+        }
         // format amounts:
         $keys            = array_keys($sums);
         foreach ($keys as $currencyId) {
-            $currency = $this->currencyRepos->find($currencyId);
+            $currency = $currencies[$currencyId] ?? $this->currencyRepos->find($currencyId);
             if (null === $currency) {
                 continue;
             }
@@ -178,37 +243,37 @@ class BasicController extends Controller
             $return[] = [
                 'key'                     => sprintf('balance-in-%s', $currency->code),
                 'title'                   => trans('firefly.box_balance_in_currency', ['currency' => $currency->symbol]),
-                'monetary_value'          => $sums[$currencyId] ?? '0',
+                'monetary_value'          => $sums[$currencyId]['sum'] ?? '0',
                 'currency_id'             => (string) $currency->id,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
-                'value_parsed'            => app('amount')->formatAnything($currency, $sums[$currencyId] ?? '0', false),
+                'value_parsed'            => app('amount')->formatAnything($currency, $sums[$currencyId]['sum'] ?? '0', false),
                 'local_icon'              => 'balance-scale',
-                'sub_title'               => app('amount')->formatAnything($currency, $expenses[$currencyId] ?? '0', false)
-                                             .' + '.app('amount')->formatAnything($currency, $incomes[$currencyId] ?? '0', false),
+                'sub_title'               => app('amount')->formatAnything($currency, $expenses[$currencyId]['sum'] ?? '0', false)
+                                             .' + '.app('amount')->formatAnything($currency, $incomes[$currencyId]['sum'] ?? '0', false),
             ];
             $return[] = [
                 'key'                     => sprintf('spent-in-%s', $currency->code),
                 'title'                   => trans('firefly.box_spent_in_currency', ['currency' => $currency->symbol]),
-                'monetary_value'          => $expenses[$currencyId] ?? '0',
+                'monetary_value'          => $expenses[$currencyId]['sum'] ?? '0',
                 'currency_id'             => (string) $currency->id,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
-                'value_parsed'            => app('amount')->formatAnything($currency, $expenses[$currencyId] ?? '0', false),
+                'value_parsed'            => app('amount')->formatAnything($currency, $expenses[$currencyId]['sum'] ?? '0', false),
                 'local_icon'              => 'balance-scale',
                 'sub_title'               => '',
             ];
             $return[] = [
                 'key'                     => sprintf('earned-in-%s', $currency->code),
                 'title'                   => trans('firefly.box_earned_in_currency', ['currency' => $currency->symbol]),
-                'monetary_value'          => $incomes[$currencyId] ?? '0',
+                'monetary_value'          => $incomes[$currencyId]['sum'] ?? '0',
                 'currency_id'             => (string) $currency->id,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
-                'value_parsed'            => app('amount')->formatAnything($currency, $incomes[$currencyId] ?? '0', false),
+                'value_parsed'            => app('amount')->formatAnything($currency, $incomes[$currencyId]['sum'] ?? '0', false),
                 'local_icon'              => 'balance-scale',
                 'sub_title'               => '',
             ];
@@ -227,7 +292,7 @@ class BasicController extends Controller
                 'value_parsed'            => app('amount')->formatAnything($currency, '0', false),
                 'local_icon'              => 'balance-scale',
                 'sub_title'               => app('amount')->formatAnything($currency, '0', false)
-                    .' + '.app('amount')->formatAnything($currency, '0', false),
+                                             .' + '.app('amount')->formatAnything($currency, '0', false),
             ];
             $return[] = [
                 'key'                     => sprintf('spent-in-%s', $currency->code),
@@ -258,15 +323,72 @@ class BasicController extends Controller
         return $return;
     }
 
-    private function getBillInformation(Carbon $start, Carbon $end): array
+    private function getSubscriptionInformation(Carbon $start, Carbon $end): array
     {
-        app('log')->debug(sprintf('Now in getBillInformation("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d-')));
+        Log::debug(sprintf('Now in getBillInformation("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d-')));
         /*
          * Since both this method and the chart use the exact same data, we can suffice
          * with calling the one method in the bill repository that will get this amount.
          */
         $paidAmount   = $this->billRepository->sumPaidInRange($start, $end);
         $unpaidAmount = $this->billRepository->sumUnpaidInRange($start, $end);
+        $currencies   = [
+            $this->nativeCurrency->id => $this->nativeCurrency,
+        ];
+
+        if ($this->convertToNative) {
+            $converter       = new ExchangeRateConverter();
+            $newPaidAmount   = [[
+                'id'             => $this->nativeCurrency->id,
+                'name'           => $this->nativeCurrency->name,
+                'symbol'         => $this->nativeCurrency->symbol,
+                'code'           => $this->nativeCurrency->code,
+                'decimal_places' => $this->nativeCurrency->decimal_places,
+                'sum'            => '0',
+            ]];
+
+            $newUnpaidAmount = [[
+                'id'             => $this->nativeCurrency->id,
+                'name'           => $this->nativeCurrency->name,
+                'symbol'         => $this->nativeCurrency->symbol,
+                'code'           => $this->nativeCurrency->code,
+                'decimal_places' => $this->nativeCurrency->decimal_places,
+                'sum'            => '0',
+            ]];
+            foreach ([$paidAmount, $unpaidAmount] as $index => $array) {
+                foreach ($array as $item) {
+                    $currencyId                = (int) $item['id'];
+                    if (0 === $index) {
+                        // paid amount
+                        if ($currencyId === $this->nativeCurrency->id) {
+                            $newPaidAmount[0]['sum'] = bcadd($newPaidAmount[0]['sum'], $item['sum']);
+
+                            continue;
+                        }
+                        $currencies[$currencyId] ??= $this->currencyRepos->find($currencyId);
+                        $convertedAmount         = $converter->convert($currencies[$currencyId], $this->nativeCurrency, $start, $item['sum']);
+                        $newPaidAmount[0]['sum'] = bcadd($newPaidAmount[0]['sum'], $convertedAmount);
+
+                        continue;
+                    }
+                    // unpaid amount
+                    if ($currencyId === $this->nativeCurrency->id) {
+                        $newUnpaidAmount[0]['sum'] = bcadd($newUnpaidAmount[0]['sum'], $item['sum']);
+
+                        continue;
+                    }
+                    $currencies[$currencyId] ??= $this->currencyRepos->find($currencyId);
+                    $convertedAmount           = $converter->convert($currencies[$currencyId], $this->nativeCurrency, $start, $item['sum']);
+                    $newUnpaidAmount[0]['sum'] = bcadd($newUnpaidAmount[0]['sum'], $convertedAmount);
+                }
+            }
+            $paidAmount      = $newPaidAmount;
+            $unpaidAmount    = $newUnpaidAmount;
+        }
+
+        //        var_dump($paidAmount);
+        //        var_dump($unpaidAmount);
+        //        exit;
 
         $return       = [];
 
@@ -307,7 +429,7 @@ class BasicController extends Controller
                 'sub_title'               => '',
             ];
         }
-        app('log')->debug(sprintf('Done with getBillInformation("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d-')));
+        Log::debug(sprintf('Done with getBillInformation("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d-')));
 
         if (0 === count($return)) {
             $currency = $this->nativeCurrency;
@@ -348,30 +470,60 @@ class BasicController extends Controller
      */
     private function getLeftToSpendInfo(Carbon $start, Carbon $end): array
     {
-        Log::debug(sprintf('Now in getLeftToSpendInfo("%s", "%s")', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
-        $return    = [];
-        $today     = today(config('app.timezone'));
-        $available = $this->abRepository->getAvailableBudgetWithCurrency($start, $end);
-        $budgets   = $this->budgetRepository->getActiveBudgets();
-        $spent     = $this->opsRepository->sumExpenses($start, $end, null, $budgets);
-        $days      = (int) $today->diffInDays($end, true) + 1;
 
+        Log::debug(sprintf('Now in getLeftToSpendInfo("%s", "%s")', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
+        $return     = [];
+        $today      = today(config('app.timezone'));
+        $available  = $this->abRepository->getAvailableBudgetWithCurrency($start, $end);
+        $budgets    = $this->budgetRepository->getActiveBudgets();
+        $spent      = $this->opsRepository->sumExpenses($start, $end, null, $budgets);
+        $days       = (int) $today->diffInDays($end, true) + 1;
+        $currencies = [];
+
+        // first, create an entry for each entry in the "available" array.
+        /** @var array $availableBudget */
+        foreach ($available as $currencyId =>  $availableBudget) {
+            $currencies[$currencyId] ??= $this->currencyRepos->find($currencyId);
+            $return[$currencyId] = [
+                'key'                     => sprintf('left-to-spend-in-%s', $currencies[$currencyId]->code),
+                'title'                   => trans('firefly.box_left_to_spend_in_currency', ['currency' => $currencies[$currencyId]->symbol]),
+                'no_available_budgets'    => false,
+                'monetary_value'          => $availableBudget,
+                'currency_id'             => (string) $currencies[$currencyId]->id,
+                'currency_code'           => $currencies[$currencyId]->code,
+                'currency_symbol'         => $currencies[$currencyId]->symbol,
+                'currency_decimal_places' => $currencies[$currencyId]->decimal_places,
+                'value_parsed'            => app('amount')->formatFlat($currencies[$currencyId]->symbol, $currencies[$currencyId]->decimal_places, $availableBudget, false),
+                'local_icon'              => 'money',
+                'sub_title'               => app('amount')->formatFlat(
+                    $currencies[$currencyId]->symbol,
+                    $currencies[$currencyId]->decimal_places,
+                    $availableBudget,
+                    false
+                ),
+            ];
+        }
         foreach ($spent as $row) {
             // either an amount was budgeted or 0 is available.
-            $currencyId      = $row['currency_id'];
-            $amount          = (string) ($available[$currencyId] ?? '0');
-            $spentInCurrency = $row['sum'];
-            $leftToSpend     = bcadd($amount, $spentInCurrency);
-            $perDay          = '0';
+            $currencyId          = (int) $row['currency_id'];
+            $amount              = (string) ($available[$currencyId] ?? '0');
+            if (0 === bccomp($amount, '0')) {
+                // #9858 skip over currencies with no available budget.
+                continue;
+            }
+            $spentInCurrency     = $row['sum'];
+            $leftToSpend         = bcadd($amount, $spentInCurrency);
+            $perDay              = '0';
             if (0 !== $days && bccomp($leftToSpend, '0') > -1) {
                 $perDay = bcdiv($leftToSpend, (string) $days);
             }
 
             Log::debug(sprintf('Spent %s %s', $row['currency_code'], $row['sum']));
 
-            $return[]        = [
+            $return[$currencyId] = [
                 'key'                     => sprintf('left-to-spend-in-%s', $row['currency_code']),
                 'title'                   => trans('firefly.box_left_to_spend_in_currency', ['currency' => $row['currency_symbol']]),
+                'no_available_budgets'    => false,
                 'monetary_value'          => $leftToSpend,
                 'currency_id'             => (string) $row['currency_id'],
                 'currency_code'           => $row['currency_code'],
@@ -388,11 +540,12 @@ class BasicController extends Controller
             ];
         }
         if (0 === count($return)) {
-            $currency = $this->nativeCurrency;
-            $return[] = [
+            $currency              = $this->nativeCurrency;
+            $return[$currency->id] = [
                 'key'                     => sprintf('left-to-spend-in-%s', $currency->code),
                 'title'                   => trans('firefly.box_left_to_spend_in_currency', ['currency' => $currency->symbol]),
                 'monetary_value'          => '0',
+                'no_available_budgets'    => true,
                 'currency_id'             => (string) $currency->id,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
@@ -408,7 +561,7 @@ class BasicController extends Controller
             ];
         }
 
-        return $return;
+        return array_values($return);
     }
 
     private function getNetWorthInfo(Carbon $end): array

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Notifications\Test;
 
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -60,6 +61,11 @@ class UserTestNotificationEmail extends Notification
      */
     public function via(User $notifiable): array
     {
+        $isDemoSite = FireflyConfig::get('is_demo_site', false)->data;
+        if (true === $isDemoSite) {
+            return [];
+        }
+
         return ['mail'];
     }
 }

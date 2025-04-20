@@ -1,5 +1,5 @@
-@if($autoConversion)
-    <template x-if="autoConversion">
+@if($convertToNative)
+    <template x-if="convertToNative">
     <span>
     <template x-if="{{ $native }}_raw < 0">
         <span class="text-danger">
@@ -20,7 +20,7 @@
     </template>
         </span>
     </template>
-    <template x-if="!autoConversion">
+    <template x-if="!convertToNative">
     <span>
     <template x-if="{{ $amount }}_raw < 0">
 

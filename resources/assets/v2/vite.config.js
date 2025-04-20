@@ -36,8 +36,8 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
     let https = null;
     if (command === 'serve') {
         https = {
-            key: fs.readFileSync(`/sites/vm/tls-certificates/wildcard.sd.internal.key`),
-            cert: fs.readFileSync(`/sites/vm/tls-certificates/wildcard.sd.internal.crt`),
+            key: fs.readFileSync(`/vagrant/tls-certificates/wildcard.sd.internal.key`),
+            cert: fs.readFileSync(`/vagrant/tls-certificates/wildcard.sd.internal.crt`),
         };
     }
 
@@ -82,11 +82,13 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
 
 
         server: {
-            origin: 'http://127.0.0.1:8000',
+            cors: true,
+            origin: 'https://firefly.sd.internal:5173',
             watch: {
                 usePolling: true,
             },
-            host: '10.0.0.15',
+            port: 5173,
+            host: true,
             // hmr: {
             //     protocol: 'wss',
             // },

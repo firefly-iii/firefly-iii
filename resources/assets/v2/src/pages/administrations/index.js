@@ -23,11 +23,9 @@ import dates from "../shared/dates.js";
 import i18next from "i18next";
 import {format} from "date-fns";
 
-import '@ag-grid-community/styles/ag-grid.css';
-import '@ag-grid-community/styles/ag-theme-alpine.css';
 import '../../css/grid-ff3-theme.css';
-import Get from "../../api/v2/model/user-group/get.js";
-import Post from "../../api/v2/model/user-group/post.js";
+import Get from "../../api/v1/model/user-group/get.js";
+import Post from "../../api/v1/model/user-group/post.js";
 
 let index = function () {
     return {

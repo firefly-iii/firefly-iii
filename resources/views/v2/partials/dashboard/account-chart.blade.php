@@ -9,17 +9,17 @@
             <div class="card-body p-0" style="position: relative;height:400px;">
                 <canvas id="account-chart"></canvas>
             </div>
-            <template x-if="autoConversionAvailable">
+            <template x-if="convertToNativeAvailable">
                 <div class="card-footer text-end">
-                    <template x-if="autoConversion">
-                        <button type="button" @click="switchAutoConversion"
+                    <template x-if="convertToNative">
+                        <button type="button" @click="switchConvertToNative"
                                 class="btn btn-outline-info btm-sm">
                                                     <span
                                                         class="fa-solid fa-comments-dollar"></span> {{ __('firefly.disable_auto_convert')  }}
                         </button>
                     </template>
-                    <template x-if="!autoConversion">
-                        <button type="button" @click="switchAutoConversion"
+                    <template x-if="!convertToNative">
+                        <button type="button" @click="switchConvertToNative"
                                 class="btn btn-outline-info btm-sm">
                                                     <span
                                                         class="fa-solid fa-comments-dollar"></span> {{ __('firefly.enable_auto_convert')  }}

@@ -27,6 +27,7 @@ namespace FireflyIII\Notifications\Admin;
 use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\Notifications\ReturnsAvailableChannels;
 use FireflyIII\Notifications\ReturnsSettings;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -79,9 +80,10 @@ class UnknownUserLoginAttempt extends Notification
     {
         $settings = ReturnsSettings::getSettings('ntfy', 'owner', null);
         $message  = new Message();
+        $ip       = Request::ip();
         $message->topic($settings['ntfy_topic']);
         $message->title((string) trans('email.unknown_user_subject'));
-        $message->body((string) trans('email.unknown_user_message', ['address' => $this->address]));
+        $message->body((string) trans('email.unknown_user_message', ['address' => $this->address, 'ip' => $ip]));
 
         return $message;
     }
@@ -91,7 +93,9 @@ class UnknownUserLoginAttempt extends Notification
      */
     public function toPushover(OwnerNotifiable $notifiable): PushoverMessage
     {
-        return PushoverMessage::create((string) trans('email.unknown_user_message', ['address' => $this->address]))
+        $ip = Request::ip();
+
+        return PushoverMessage::create((string) trans('email.unknown_user_message', ['address' => $this->address, 'ip' => $ip]))
             ->title((string) trans('email.unknown_user_subject'))
         ;
     }
@@ -101,8 +105,10 @@ class UnknownUserLoginAttempt extends Notification
      */
     public function toSlack(OwnerNotifiable $notifiable): SlackMessage
     {
+        $ip = Request::ip();
+
         return new SlackMessage()->content(
-            (string) trans('email.unknown_user_body', ['address' => $this->address])
+            (string) trans('email.unknown_user_body', ['address' => $this->address, 'ip' => $ip])
         );
     }
 
@@ -111,6 +117,12 @@ class UnknownUserLoginAttempt extends Notification
      */
     public function via(OwnerNotifiable $notifiable): array
     {
-        return ReturnsAvailableChannels::returnChannels('owner');
+        $channels   = ReturnsAvailableChannels::returnChannels('owner');
+        $isDemoSite = FireflyConfig::get('is_demo_site', false)->data;
+        if (true === $isDemoSite) {
+            return array_diff($channels, ['mail']);
+        }
+
+        return $channels;
     }
 }

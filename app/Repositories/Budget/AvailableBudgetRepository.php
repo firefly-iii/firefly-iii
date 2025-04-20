@@ -138,7 +138,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
             ->where('end_date', $end->format('Y-m-d'))->get()
         ;
 
-        Log::debug(sprintf('Found %d available budgets', $availableBudgets->count()));
+        Log::debug(sprintf('Found %d available budgets (already converted)', $availableBudgets->count()));
 
         // use native amount if necessary?
         $convertToNative  = Amount::convertToNative($this->user);
@@ -149,8 +149,9 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
             $currencyId          = $convertToNative && $availableBudget->transaction_currency_id !== $default->id ? $default->id : $availableBudget->transaction_currency_id;
             $field               = $convertToNative && $availableBudget->transaction_currency_id !== $default->id ? 'native_amount' : 'amount';
             $return[$currencyId] ??= '0';
-            $return[$currencyId] = bcadd($return[$currencyId], $availableBudget->{$field});
-            Log::debug(sprintf('Add #%d %s (%s) for a total of %s', $currencyId, $availableBudget->{$field}, $field, $return[$currencyId]));
+            $amount              = '' === (string) $availableBudget->{$field} ? '0' : (string) $availableBudget->{$field};
+            $return[$currencyId] = bcadd($return[$currencyId], $amount);
+            Log::debug(sprintf('Add #%d %s (%s) for a total of %s', $currencyId, $amount, $field, $return[$currencyId]));
         }
 
         return $return;

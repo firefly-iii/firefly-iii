@@ -19,7 +19,7 @@
  */
 
 
-import Get from "../../../api/v2/model/budget/get.js";
+import Get from "../../../api/v1/model/budget/get.js";
 
 export function loadBudgets() {
     let params = {

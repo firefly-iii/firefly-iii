@@ -16,7 +16,8 @@ The different alpha and beta builds will be compiled from their corresponding ta
 ### Minor Release Support Matrix
 | Version                          | Supported          |
 |----------------------------------|--------------------|
-| Firefly III v6.1.x               | :white_check_mark: |
+| Firefly III v6.2.x               | :white_check_mark: |
+| Firefly III v6.1.x               | :x:                |
 | Firefly III v6.0.x               | :x:                |
 | Firefly III v5.8.x               | :x:                |
 | Firefly III v5.7.x               | :x:                |

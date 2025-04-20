@@ -20,6 +20,6 @@
 
 
 export function showInternalsButton() {
-    console.log('showInternalsButton');
+    // console.log('showInternalsButton');
     document.querySelector('.toggle-page-internals').classList.remove('d-none');
 }

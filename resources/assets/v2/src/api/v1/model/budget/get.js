@@ -1,6 +1,6 @@
 /*
- * post.js
- * Copyright (c) 2024 james@firefly-iii.org
+ * list.js
+ * Copyright (c) 2022 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -18,16 +18,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {api} from "../../../boot/axios";
+import {api} from "../../../../boot/axios";
+import format from "date-fns/format";
 
-export default class Post {
-    post(fileName, attachableType, attachableId) {
-        let url = '/api/v1/attachments';
-        return api.post(url, {filename: fileName, attachable_type: attachableType, attachable_id: attachableId});
+export default class Get {
+
+    /**
+     *
+     * @param params
+     * @returns {Promise<AxiosResponse<any>>}
+     */
+    list(params) {
+        return api.get('/api/v2/budgets', {params: params});
     }
 
-    upload(id, data) {
-        let url = './api/v1/attachments/' + id + '/upload';
-        return axios.post(url, data);
-    }
 }

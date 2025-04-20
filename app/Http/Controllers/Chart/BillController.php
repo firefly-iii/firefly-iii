@@ -179,7 +179,7 @@ class BillController extends Controller
             }
             $amount                         = bcmul($journal['amount'], '-1');
             if ($this->convertToNative && $currencyId !== $journal['currency_id']) {
-                $amount = bcmul($journal['native_amount'], '-1');
+                $amount = bcmul($journal['native_amount'] ?? '0', '-1');
             }
             if ($this->convertToNative && $currencyId === $journal['foreign_currency_id']) {
                 $amount = bcmul($journal['foreign_amount'], '-1');

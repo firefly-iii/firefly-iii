@@ -27,13 +27,16 @@ namespace FireflyIII\Api\V1\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Data\DateRequest;
+use FireflyIII\Api\V1\Requests\Chart\ChartRequest;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Chart\ChartData;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Api\ApiSupport;
+use FireflyIII\Support\Http\Api\CollectsAccountsFromFilter;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
@@ -43,8 +46,10 @@ use Illuminate\Http\JsonResponse;
 class AccountController extends Controller
 {
     use ApiSupport;
+    use CollectsAccountsFromFilter;
 
     private AccountRepositoryInterface $repository;
+    private ChartData                  $chartData;
 
     /**
      * AccountController constructor.
@@ -56,12 +61,36 @@ class AccountController extends Controller
             function ($request, $next) {
                 /** @var User $user */
                 $user             = auth()->user();
+                $this->chartData  = new ChartData();
                 $this->repository = app(AccountRepositoryInterface::class);
                 $this->repository->setUser($user);
 
                 return $next($request);
             }
         );
+    }
+
+    /**
+     * TODO fix documentation
+     *
+     * @throws FireflyException
+     */
+    public function dashboard(ChartRequest $request): JsonResponse
+    {
+        $queryParameters = $request->getParameters();
+        $accounts        = $this->getAccountList($queryParameters);
+
+        // move date to end of day
+        $queryParameters['start']->startOfDay();
+        $queryParameters['end']->endOfDay();
+
+        // loop each account, and collect info:
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $this->renderAccountData($queryParameters, $account);
+        }
+
+        return response()->json($this->chartData->render());
     }
 
     /**
@@ -132,5 +161,46 @@ class AccountController extends Controller
         }
 
         return response()->json($chartData);
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    private function renderAccountData(array $params, Account $account): void
+    {
+        $currency     = $this->repository->getAccountCurrency($account);
+        if (null === $currency) {
+            $currency = $this->default;
+        }
+        $currentSet   = [
+            'label'                          => $account->name,
+
+            // the currency that belongs to the account.
+            'currency_id'                    => (string) $currency->id,
+            'currency_code'                  => $currency->code,
+            'currency_symbol'                => $currency->symbol,
+            'currency_decimal_places'        => $currency->decimal_places,
+
+            // the default currency of the user (could be the same!)
+            'date'                           => $params['start']->toAtomString(),
+            'start'                          => $params['start']->toAtomString(),
+            'end'                            => $params['end']->toAtomString(),
+            'period'                         => '1D',
+            'entries'                        => [],
+        ];
+        $currentStart = clone $params['start'];
+        $range        = Steam::finalAccountBalanceInRange($account, $params['start'], clone $params['end'], $this->convertToNative);
+
+        $previous     = array_values($range)[0]['balance'];
+        while ($currentStart <= $params['end']) {
+            $format                        = $currentStart->format('Y-m-d');
+            $label                         = $currentStart->toAtomString();
+            $balance                       = array_key_exists($format, $range) ? $range[$format]['balance'] : $previous;
+            $previous                      = $balance;
+
+            $currentStart->addDay();
+            $currentSet['entries'][$label] = $balance;
+        }
+        $this->chartData->add($currentSet);
     }
 }

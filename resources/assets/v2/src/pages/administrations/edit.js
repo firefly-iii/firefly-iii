@@ -20,10 +20,10 @@
 
 import '../../boot/bootstrap.js';
 import dates from "../shared/dates.js";
-import Post from "../../api/v2/model/user-group/post.js";
+import Post from "../../api/v1/model/user-group/post.js";
 import i18next from "i18next";
-import Get from "../../api/v2/model/user-group/get.js";
-import Put from "../../api/v2/model/user-group/put.js";
+import Get from "../../api/v1/model/user-group/get.js";
+import Put from "../../api/v1/model/user-group/put.js";
 
 
 let administrations = function () {

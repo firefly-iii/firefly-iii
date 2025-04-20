@@ -37,14 +37,19 @@ return [
 
     'mailers'  => [
         'smtp'       => [
-            'transport'   => 'smtp',
-            'host'        => envNonEmpty('MAIL_HOST', 'smtp.mailtrap.io'),
-            'port'        => (int) env('MAIL_PORT', 2525),
-            'encryption'  => envNonEmpty('MAIL_ENCRYPTION', 'tls'),
-            'username'    => envNonEmpty('MAIL_USERNAME', 'user@example.com'),
-            'password'    => envNonEmpty('MAIL_PASSWORD', 'password'),
-            'timeout'     => null,
-            'verify_peer' => null !== env('MAIL_ENCRYPTION'),
+            'transport'         => 'smtp',
+            'host'              => envNonEmpty('MAIL_HOST', 'smtp.mailtrap.io'),
+            'port'              => (int) env('MAIL_PORT', 2525),
+            'encryption'        => envNonEmpty('MAIL_ENCRYPTION', 'tls'),
+            'username'          => envNonEmpty('MAIL_USERNAME', 'user@example.com'),
+            'password'          => envNonEmpty('MAIL_PASSWORD', 'password'),
+            'timeout'           => null,
+            'scheme'            => env('MAIL_SCHEME'),
+            'url'               => env('MAIL_URL'),
+            'local_domain'      => env('MAIL_EHLO_DOMAIN', parse_url(env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
+            'verify_peer'       => env('MAIL_VERIFY_PEER', true),
+            'allow_self_signed' => env('MAIL_ALLOW_SELF_SIGNED', false),
+            'verify_peer_name'  => env('MAIL_VERIFY_PEER_NAME', true),
         ],
         'mailersend' => [
             'transport' => 'mailersend',

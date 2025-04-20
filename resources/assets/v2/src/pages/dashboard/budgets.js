@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import {getVariable} from "../../store/get-variable.js";
-import Dashboard from "../../api/v2/chart/budget/dashboard.js";
+import Dashboard from "../../api/v1/chart/budget/dashboard.js";
 import {getDefaultChartSettings} from "../../support/default-chart-settings.js";
 import formatMoney from "../../util/format-money.js";
 import {Chart} from 'chart.js';
@@ -34,7 +34,7 @@ let afterPromises = false;
 
 export default () => ({
     loading: false,
-    autoConversion: false,
+    convertToNative: false,
     loadChart() {
         if (true === this.loading) {
             return;
@@ -134,7 +134,7 @@ export default () => ({
                 //         // convert to EUR yes no?
                 let label = current.label + ' (' + current.currency_code + ')';
                 options.data.labels.push(label);
-                if (this.autoConversion) {
+                if (this.convertToNative) {
                     currencies.push(current.native_currency_code);
                     // series 0: spent
                     options.data.datasets[0].data.push(parseFloat(current.native_entries.spent) * -1);
@@ -143,7 +143,7 @@ export default () => ({
                     // series 2: overspent
                     options.data.datasets[2].data.push(parseFloat(current.native_entries.overspent));
                 }
-                if (!this.autoConversion) {
+                if (!this.convertToNative) {
                     currencies.push(current.currency_code);
                     // series 0: spent
                     options.data.datasets[0].data.push(parseFloat(current.entries.spent) * -1);
@@ -172,8 +172,8 @@ export default () => ({
 
 
     init() {
-        Promise.all([getVariable('autoConversion', false)]).then((values) => {
-            this.autoConversion = values[0];
+        Promise.all([getVariable('convertToNative', false)]).then((values) => {
+            this.convertToNative = values[0];
             afterPromises = true;
             if (false === this.loading) {
                 this.loadChart();
@@ -189,12 +189,12 @@ export default () => ({
                 this.loadChart();
             }
         });
-        window.store.observe('autoConversion', (newValue) => {
+        window.store.observe('convertToNative', (newValue) => {
             if (!afterPromises) {
                 return;
             }
-            // console.log('boxes observe autoConversion');
-            this.autoConversion = newValue;
+            // console.log('boxes observe convertToNative');
+            this.convertToNative = newValue;
             if (false === this.loading) {
                 this.loadChart();
             }

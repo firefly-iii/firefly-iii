@@ -10,7 +10,7 @@
                 <div class="progress-bar" role="progressbar" aria-valuenow="{{ entry.percentage }}" aria-valuemin="0" aria-valuemax="100"
                      style="width: {{ entry.percentage }}%;">
                     {% if entry.percentage >=20 %}
-                        {% if convertToNative %}
+                        {% if convertToNative and 0 != avg.native_amount %}
                             {{ formatAmountBySymbol(entry.native_amount, entry.native_currency_symbol, entry.native_currency_decimal_places, false) }}
                             ({{ formatAmountBySymbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places, false) }})
                         {% else %}
@@ -20,7 +20,7 @@
                 </div>
                 {% if entry.percentage < 20 %}
                     &nbsp;
-                    {% if convertToNative %}
+                    {% if convertToNative and 0 != avg.native_amount %}
                         {{ formatAmountBySymbol(entry.native_amount, entry.native_currency_symbol, entry.native_currency_decimal_places, false) }}
                         ({{ formatAmountBySymbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places, false) }})
                     {% else %}

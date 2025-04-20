@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.2.11 - 2025-04-21
+
+### Added
+
+- Support for Persian (`fa_IR`)
+- Add expiry details for personal access tokens
+
+### Changed
+
+- [PR 10039](https://github.com/firefly-iii/firefly-iii/pull/10039) (update check: consider cron succesfull when disabled or too frequent) reported by @ovv
+- Update currency list and update exchange rates
+
+### Fixed
+
+- [Issue 9398](https://github.com/firefly-iii/firefly-iii/issues/9398) (Expand email settings to allow self-signed certificates) reported by @SoulSeekkor
+- [Issue 9858](https://github.com/firefly-iii/firefly-iii/issues/9858) (Homepage "left to spend" count two times an expense with "foreign amount") reported by @M4xS0ch
+- [Issue 10015](https://github.com/firefly-iii/firefly-iii/issues/10015) ("It looks like this IBAN is already in use." when editing asset account.) reported by @wolph
+- [Issue 10025](https://github.com/firefly-iii/firefly-iii/issues/10025) (Liabilities not counted in income and expenses) reported by @BhasherBEL
+- [Issue 10068](https://github.com/firefly-iii/firefly-iii/issues/10068) (Export Data isn't exporting all transactions in the data) reported by @firsttiger
+- [Issue 10069](https://github.com/firefly-iii/firefly-iii/issues/10069) (Undefined array key "foreign_currency_decimal_places") reported by @akong-carbon6
+- [Issue 10114](https://github.com/firefly-iii/firefly-iii/issues/10114) (Budget for foreign currency not getting updated when a transaction refers to it) reported by @srikakulamts
+- [Issue 10150](https://github.com/firefly-iii/firefly-iii/issues/10150) (Mass deletion of initial balance throws 404 and doesn't delete) reported by @Tyler-Angell
+
 ## 6.2.10 - 2025-03-22
 
 ### Added

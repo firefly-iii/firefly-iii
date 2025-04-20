@@ -69,10 +69,14 @@ class TransactionCurrencySeeder extends Seeder
         $currencies[] = ['code' => 'RUB', 'name' => 'Russian ruble', 'symbol' => '₽', 'decimal_places' => 2];
         $currencies[] = ['code' => 'INR', 'name' => 'Indian rupee', 'symbol' => '₹', 'decimal_places' => 2];
 
-        // PLEASE ADD NEW CURRENCIES BELOW THIS LINE
+        // ALL NEW CURRENCIES BELOW THIS LINE
         $currencies[] = ['code' => 'ILS', 'name' => 'Israeli new shekel', 'symbol' => '₪', 'decimal_places' => 2];
         $currencies[] = ['code' => 'CHF', 'name' => 'Swiss franc', 'symbol' => 'CHF', 'decimal_places' => 2];
         $currencies[] = ['code' => 'HRK', 'name' => 'Croatian kuna', 'symbol' => 'kn', 'decimal_places' => 2];
+        $currencies[] = ['code' => 'HKD', 'name' => 'Hong Kong dollar', 'symbol' => 'HK$', 'decimal_places' => 2];
+        $currencies[] = ['code' => 'CHF', 'name' => 'Swiss franc', 'symbol' => 'CHF', 'decimal_places' => 2];
+        $currencies[] = ['code' => 'NOK', 'name' => 'Norwegian krone', 'symbol' => 'kr.', 'decimal_places' => 2];
+        $currencies[] = ['code' => 'CZK', 'name' => 'Czech koruna', 'symbol' => 'Kč', 'decimal_places' => 2];
 
         foreach ($currencies as $currency) {
             if (null === TransactionCurrency::where('code', $currency['code'])->first()) {
