@@ -314,6 +314,7 @@
                                         {% endif %}
                                     </td>
                                     <td class="hidden-sm hidden-xs spent" data-id="{{ budget.id }}" style="text-align:right;">
+
                                         {% for spentInfo in budget.spent %}
                                             {{ formatAmountBySymbol(spentInfo.spent, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }}
                                             {% if 0 == activeDaysPassed %}

@@ -167,7 +167,10 @@
                                     <td style="width:33%;">{{ 'spent'|_ }}</td>
                                     <td>
                                         {% if convertToNative %}
-                                            {{ formatAmountBySymbol(limit.spent, defaultCurrency.symbol, defaultCurrency.decimal_places) }}
+                                            {{ formatAmountBySymbol(limit.spent, limit.transactionCurrency.symbol, limit.transactionCurrency.decimal_places) }}
+                                            {% if limit.native_spent %}
+                                                ({{ formatAmountBySymbol(limit.native_spent, defaultCurrency.symbol, defaultCurrency.decimal_places) }})
+                                            {% endif %}
                                         {% else %}
                                             {{ formatAmountBySymbol(limit.spent, limit.transactionCurrency.symbol, limit.transactionCurrency.decimal_places) }}
                                         {% endif %}
@@ -215,7 +218,7 @@
         {% if budgetLimit.id %}
         budgetLimitID = {{ budgetLimit.id }};
         var budgetChartUrl = '{{ route('chart.budget.budget-limit', [budget.id, budgetLimit.id] ) }}';
-        var currencySymbol = '{{ budgetLimit.transactionCurrency.symbol }}';
+        var currencySymbol = '{{ currencySymbol }}';
         var expenseCategoryUrl = '{{ route('chart.budget.expense-category', [budget.id, budgetLimit.id]) }}';
         var expenseAssetUrl = '{{ route('chart.budget.expense-asset', [budget.id, budgetLimit.id]) }}';
         var expenseExpenseUrl = '{{ route('chart.budget.expense-expense', [budget.id, budgetLimit.id]) }}';
