@@ -31,6 +31,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Report\Summarizer\TransactionSummarizer;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
@@ -201,9 +202,10 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         Carbon               $end,
         ?Collection          $accounts = null,
         ?Collection          $budgets = null,
-        ?TransactionCurrency $currency = null
+        ?TransactionCurrency $currency = null,
+        bool $convertToNative = false
     ): array {
-        Log::debug(sprintf('Start of %s.', __METHOD__));
+        Log::debug(sprintf('Start of %s(date, date, array, array, "%s", "%s").', __METHOD__, $currency?->code, var_export($convertToNative, true)));
         // this collector excludes all transfers TO liabilities (which are also withdrawals)
         // because those expenses only become expenses once they move from the liability to the friend.
         // 2024-12-24 disable the exclusion for now.
@@ -235,8 +237,8 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
             $budgets = $this->getBudgets();
         }
         if (null !== $currency) {
-            Log::debug(sprintf('Limit to currency %s', $currency->code));
-            $collector->setCurrency($currency);
+            Log::debug(sprintf('Limit to normal currency %s', $currency->code));
+            $collector->setNormalCurrency($currency);
         }
         $collector->setBudgets($budgets);
         $journals   = $collector->getExtractedJournals();
@@ -246,6 +248,8 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
             Log::debug('STOP looking for transactions in the foreign currency.');
         }
         $summarizer = new TransactionSummarizer($this->user);
+        // 2025-04-21 overrule "convertToNative" because in this particular view, we never want to do this.
+        $summarizer->setConvertToNative($convertToNative);
 
         return $summarizer->groupByCurrencyId($journals, 'negative', false);
     }

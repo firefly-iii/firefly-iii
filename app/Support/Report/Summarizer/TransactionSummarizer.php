@@ -51,7 +51,7 @@ class TransactionSummarizer
 
     public function groupByCurrencyId(array $journals, string $method = 'negative', bool $includeForeign = true): array
     {
-        Log::debug(sprintf('Now in groupByCurrencyId(array, "%s")', $method));
+        Log::debug(sprintf('Now in groupByCurrencyId([%d journals], "%s")', count($journals), $method));
         $array = [];
         foreach ($journals as $journal) {
             $field                        = 'amount';
@@ -71,6 +71,7 @@ class TransactionSummarizer
             $foreignCurrencyDecimalPlaces = null;
 
             if ($this->convertToNative) {
+                Log::debug('convertToNative is true.');
                 // if convert to native, use the native amount yes or no?
                 $useNative  = $this->default->id !== (int) $journal['currency_id'];
                 $useForeign = $this->default->id === (int) $journal['foreign_currency_id'];
@@ -94,6 +95,7 @@ class TransactionSummarizer
                 }
             }
             if (!$this->convertToNative) {
+                Log::debug('convertToNative is false.');
                 // use foreign amount?
                 $foreignCurrencyId = (int) $journal['foreign_currency_id'];
                 if (0 !== $foreignCurrencyId) {
@@ -224,4 +226,12 @@ class TransactionSummarizer
 
         return $array;
     }
+
+    public function setConvertToNative(bool $convertToNative): void
+    {
+        Log::debug(sprintf('Overrule convertToNative to become %s', var_export($convertToNative, true)));
+        $this->convertToNative = $convertToNative;
+    }
+
+
 }

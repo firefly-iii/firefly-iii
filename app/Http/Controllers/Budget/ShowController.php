@@ -175,6 +175,7 @@ class ShowController extends Controller
             throw new FireflyException('This budget limit is not part of this budget.');
         }
 
+        $currencySymbol = $budgetLimit->transactionCurrency->symbol;
         $page        = (int) $request->get('page');
         $pageSize    = (int) app('preferences')->get('listPageSize', 50)->data;
         $subTitle    = trans(
@@ -186,6 +187,9 @@ class ShowController extends Controller
                 'currency' => $budgetLimit->transactionCurrency->name,
             ]
         );
+        if($this->convertToNative) {
+            $currencySymbol = $this->defaultCurrency->symbol;
+        }
 
         // collector:
         /** @var GroupCollectorInterface $collector */
@@ -203,6 +207,6 @@ class ShowController extends Controller
         $attachments = $this->repository->getAttachments($budget);
         $limits      = $this->getLimits($budget, $start, $end);
 
-        return view('budgets.show', compact('limits', 'attachments', 'budget', 'budgetLimit', 'groups', 'subTitle'));
+        return view('budgets.show', compact('limits', 'attachments', 'budget', 'budgetLimit', 'groups', 'subTitle', 'currencySymbol'));
     }
 }

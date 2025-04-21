@@ -164,7 +164,7 @@ class BudgetController extends Controller
         $cache->addProperty($budget->id);
 
         if ($cache->has()) {
-            return response()->json($cache->get());
+             return response()->json($cache->get());
         }
         $locale                                 = app('steam')->getLocale();
         $entries                                = [];
@@ -172,13 +172,13 @@ class BudgetController extends Controller
         $budgetCollection                       = new Collection([$budget]);
         $currency                               = $budgetLimit->transactionCurrency;
         if ($this->convertToNative) {
-            $amount   = $budgetLimit->native_amount ?? '0';
+            $amount   = $budgetLimit->native_amount ?? $amount;
             $currency = $this->defaultCurrency;
         }
 
         while ($start <= $end) {
             $current          = clone $start;
-            $expenses         = $this->opsRepository->sumExpenses($current, $current, null, $budgetCollection, $budgetLimit->transactionCurrency);
+            $expenses         = $this->opsRepository->sumExpenses($current, $current, null, $budgetCollection, $budgetLimit->transactionCurrency, $this->convertToNative);
             $spent            = $expenses[$currency->id]['sum'] ?? '0';
             $amount           = bcadd($amount, $spent);
             $format           = $start->isoFormat((string) trans('config.month_and_day_js', [], $locale));
@@ -191,6 +191,7 @@ class BudgetController extends Controller
         $data['datasets'][0]['currency_symbol'] = $currency->symbol;
         $data['datasets'][0]['currency_code']   = $currency->code;
         $cache->store($data);
+        //var_dump($data);exit;
 
         return response()->json($data);
     }
@@ -214,7 +215,7 @@ class BudgetController extends Controller
         if (null !== $budgetLimit) {
             $start = $budgetLimit->start_date;
             $end   = $budgetLimit->end_date;
-            $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date)->setCurrency($budgetLimit->transactionCurrency);
+            $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date)->setNormalCurrency($budgetLimit->transactionCurrency);
         }
         $cache->addProperty($start);
         $cache->addProperty($end);
@@ -296,7 +297,7 @@ class BudgetController extends Controller
         if (null !== $budgetLimit) {
             $start = $budgetLimit->start_date;
             $end   = $budgetLimit->end_date;
-            $collector->setCurrency($budgetLimit->transactionCurrency);
+            $collector->setNormalCurrency($budgetLimit->transactionCurrency);
         }
         $cache->addProperty($start);
         $cache->addProperty($end);
@@ -378,7 +379,7 @@ class BudgetController extends Controller
         if (null !== $budgetLimit) {
             $start = $budgetLimit->start_date;
             $end   = $budgetLimit->end_date;
-            $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date)->setCurrency($budgetLimit->transactionCurrency);
+            $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date)->setNormalCurrency($budgetLimit->transactionCurrency);
         }
         $cache->addProperty($start);
         $cache->addProperty($end);
