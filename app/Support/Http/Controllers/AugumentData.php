@@ -169,6 +169,7 @@ trait AugumentData
     protected function getLimits(Budget $budget, Carbon $start, Carbon $end): Collection // get data + augment with info
     {
         Log::debug('In getLimits');
+
         /** @var OperationsRepositoryInterface $opsRepository */
         $opsRepository    = app(OperationsRepositoryInterface::class);
 
@@ -185,7 +186,7 @@ trait AugumentData
         $cache->addProperty('get-limits');
 
         if ($cache->has()) {
-             return $cache->get();
+            return $cache->get();
         }
 
         $set              = $blRepository->getBudgetLimits($budget, $start, $end);
@@ -194,32 +195,33 @@ trait AugumentData
 
         // merge sets based on a key, in case of convert to native
         $limits           = new Collection();
+
         /** @var BudgetLimit $entry */
         foreach ($set as $entry) {
             Log::debug(sprintf('Now at budget limit #%d', $entry->id));
-            $currency     = $entry->transactionCurrency;
+            $currency            = $entry->transactionCurrency;
             if ($this->convertToNative) {
                 // the sumExpenses method already handles this.
-                 $currency = $this->defaultCurrency;
+                $currency = $this->defaultCurrency;
             }
 
             // clone because these objects change each other.
-            $currentStart = clone $entry->start_date;
-            $currentEnd   = null === $entry->end_date ? null : clone $entry->end_date;
+            $currentStart        = clone $entry->start_date;
+            $currentEnd          = null === $entry->end_date ? null : clone $entry->end_date;
 
             if (null === $currentEnd) {
                 $currentEnd = clone $currentStart;
                 $currentEnd->addMonth();
             }
             // native amount.
-            $expenses     = $opsRepository->sumExpenses($currentStart, $currentEnd, null, $budgetCollection, $entry->transactionCurrency, $this->convertToNative);
-            $spent        = $expenses[$currency->id]['sum'] ?? '0';
+            $expenses            = $opsRepository->sumExpenses($currentStart, $currentEnd, null, $budgetCollection, $entry->transactionCurrency, $this->convertToNative);
+            $spent               = $expenses[$currency->id]['sum'] ?? '0';
             $entry->native_spent = $spent;
 
             // normal amount:
-            $expenses     = $opsRepository->sumExpenses($currentStart, $currentEnd, null, $budgetCollection, $entry->transactionCurrency, false);
-            $spent        = $expenses[$entry->transactionCurrency->id]['sum'] ?? '0';
-            $entry->spent = $spent;
+            $expenses            = $opsRepository->sumExpenses($currentStart, $currentEnd, null, $budgetCollection, $entry->transactionCurrency, false);
+            $spent               = $expenses[$entry->transactionCurrency->id]['sum'] ?? '0';
+            $entry->spent        = $spent;
 
             $limits->push($entry);
         }

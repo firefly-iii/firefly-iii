@@ -176,9 +176,9 @@ class ShowController extends Controller
         }
 
         $currencySymbol = $budgetLimit->transactionCurrency->symbol;
-        $page        = (int) $request->get('page');
-        $pageSize    = (int) app('preferences')->get('listPageSize', 50)->data;
-        $subTitle    = trans(
+        $page           = (int) $request->get('page');
+        $pageSize       = (int) app('preferences')->get('listPageSize', 50)->data;
+        $subTitle       = trans(
             'firefly.budget_in_period',
             [
                 'name'     => $budget->name,
@@ -187,25 +187,25 @@ class ShowController extends Controller
                 'currency' => $budgetLimit->transactionCurrency->name,
             ]
         );
-        if($this->convertToNative) {
+        if ($this->convertToNative) {
             $currencySymbol = $this->defaultCurrency->symbol;
         }
 
         // collector:
         /** @var GroupCollectorInterface $collector */
-        $collector   = app(GroupCollectorInterface::class);
+        $collector      = app(GroupCollectorInterface::class);
 
         $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date)->withAccountInformation()
             ->setBudget($budget)->setLimit($pageSize)->setPage($page)->withBudgetInformation()->withCategoryInformation()
         ;
-        $groups      = $collector->getPaginatedGroups();
+        $groups         = $collector->getPaginatedGroups();
         $groups->setPath(route('budgets.show.limit', [$budget->id, $budgetLimit->id]));
 
         /** @var Carbon $start */
-        $start       = session('first', today(config('app.timezone'))->startOfYear());
-        $end         = today(config('app.timezone'));
-        $attachments = $this->repository->getAttachments($budget);
-        $limits      = $this->getLimits($budget, $start, $end);
+        $start          = session('first', today(config('app.timezone'))->startOfYear());
+        $end            = today(config('app.timezone'));
+        $attachments    = $this->repository->getAttachments($budget);
+        $limits         = $this->getLimits($budget, $start, $end);
 
         return view('budgets.show', compact('limits', 'attachments', 'budget', 'budgetLimit', 'groups', 'subTitle', 'currencySymbol'));
     }

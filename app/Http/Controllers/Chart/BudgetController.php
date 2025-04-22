@@ -164,7 +164,7 @@ class BudgetController extends Controller
         $cache->addProperty($budget->id);
 
         if ($cache->has()) {
-             return response()->json($cache->get());
+            return response()->json($cache->get());
         }
         $locale                                 = app('steam')->getLocale();
         $entries                                = [];
@@ -191,7 +191,7 @@ class BudgetController extends Controller
         $data['datasets'][0]['currency_symbol'] = $currency->symbol;
         $data['datasets'][0]['currency_code']   = $currency->code;
         $cache->store($data);
-        //var_dump($data);exit;
+        // var_dump($data);exit;
 
         return response()->json($data);
     }

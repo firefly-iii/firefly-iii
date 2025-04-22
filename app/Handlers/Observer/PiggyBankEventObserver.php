@@ -45,9 +45,10 @@ class PiggyBankEventObserver
 
     private function updateNativeAmount(PiggyBankEvent $event): void
     {
-        $user = $event->piggyBank->accounts()->first()?->user;
-        if(null === $user) {
+        $user                 = $event->piggyBank->accounts()->first()?->user;
+        if (null === $user) {
             Log::warning('Piggy bank seems to have no accounts. Break.');
+
             return;
         }
         if (!Amount::convertToNative($user)) {

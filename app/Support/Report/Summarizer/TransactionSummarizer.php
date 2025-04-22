@@ -232,6 +232,4 @@ class TransactionSummarizer
         Log::debug(sprintf('Overrule convertToNative to become %s', var_export($convertToNative, true)));
         $this->convertToNative = $convertToNative;
     }
-
-
 }
