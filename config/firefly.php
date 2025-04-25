@@ -156,7 +156,7 @@ return [
         'sv_SE' => ['name_locale' => 'Svenska', 'name_english' => 'Swedish'],
         //        // 'tlh_AA' => ['name_locale' => 'tlhIngan Hol', 'name_english' => 'Klingon'],
         'tr_TR' => ['name_locale' => 'Türkçe', 'name_english' => 'Turkish'],
-        'uk_UA' => ['name_locale' => 'Ukranian', 'name_english' => 'Ukranian'],
+        'uk_UA' => ['name_locale' => 'Українська', 'name_english' => 'Ukrainian'],
         'vi_VN' => ['name_locale' => 'Tiếng Việt', 'name_english' => 'Vietnamese'],
         'zh_TW' => ['name_locale' => 'Chinese Traditional', 'name_english' => 'Chinese Traditional'],
         'zh_CN' => ['name_locale' => 'Chinese Simplified', 'name_english' => 'Chinese Simplified'],
