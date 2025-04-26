@@ -43,6 +43,7 @@ return [
     'recurring_transaction'   => 'Recurring transaction',
     'next_due'                => 'Next due',
     'transaction_type'        => 'Type',
+    'running_balance'        => 'Running balance',
     'lastActivity'            => 'Last activity',
     'balanceDiff'             => 'Balance difference',
     'other_meta_data'         => 'Other meta data',
