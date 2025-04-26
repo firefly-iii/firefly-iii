@@ -256,7 +256,19 @@
                 {% if config('firefly.feature_flags.running_balance_column') %}
                 <td>
                     {% if null == transaction.balance_dirty or false == transaction.balance_dirty %}
-                    {{ formatAmountBySymbol(transaction.balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                        {% if transaction.transaction_type_type == 'Deposit' %}
+                            {{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                        {% elseif transaction.transaction_type_type == 'Withdrawal' %}
+                            {{ formatAmountBySymbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                        {% elseif transaction.transaction_type_type == 'Opening balance' %}
+                            {% if transaction.source_account_type == 'Initial balance account' %}
+                                {{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                            {% else %}
+                                {{ formatAmountBySymbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                            {% endif %}
+                        {% else %}
+                            &nbsp;
+                        {% endif %}
                     {% endif %}
                 </td>
                 {% endif %}

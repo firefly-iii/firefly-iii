@@ -101,7 +101,7 @@ class GroupCollector implements GroupCollectorInterface
             'category_id',
             'budget_id',
         ];
-        $this->stringFields         = ['amount', 'foreign_amount', 'native_amount', 'native_foreign_amount', 'balance_after'];
+        $this->stringFields         = ['amount', 'foreign_amount', 'native_amount', 'native_foreign_amount','source_balance_after','destination_balance_after'];
         $this->total                = 0;
         $this->fields               = [
             // group
@@ -132,7 +132,7 @@ class GroupCollector implements GroupCollectorInterface
 
             // currency info:
             'source.amount as amount',
-            'source.balance_after as balance_after',
+            'source.balance_after as source_balance_after',
             'source.balance_dirty as balance_dirty',
             'source.native_amount as native_amount',
             'source.transaction_currency_id as currency_id',
@@ -152,6 +152,7 @@ class GroupCollector implements GroupCollectorInterface
 
             // destination account info (always present)
             'destination.account_id as destination_account_id',
+            'destination.balance_after as destination_balance_after',
         ];
     }
 
