@@ -82,7 +82,7 @@ class GroupCollector implements GroupCollectorInterface
         $this->hasJoinedAttTables   = false;
         $this->expandGroupSearch    = false;
         $this->hasJoinedMetaTables  = false;
-        $this->booleanFields = ['balance_dirty'];
+        $this->booleanFields        = ['balance_dirty'];
         $this->integerFields        = [
             'transaction_group_id',
             'user_id',
@@ -101,7 +101,7 @@ class GroupCollector implements GroupCollectorInterface
             'category_id',
             'budget_id',
         ];
-        $this->stringFields         = ['amount', 'foreign_amount', 'native_amount', 'native_foreign_amount','balance_after'];
+        $this->stringFields         = ['amount', 'foreign_amount', 'native_amount', 'native_foreign_amount', 'balance_after'];
         $this->total                = 0;
         $this->fields               = [
             // group
@@ -600,7 +600,7 @@ class GroupCollector implements GroupCollectorInterface
         $result                  = $this->convertToInteger($result);
 
         // convert to boolean
-        $result = $this->convertToBoolean($result);
+        $result                  = $this->convertToBoolean($result);
 
         // convert back to strings because SQLite is dumb like that.
         $result                  = $this->convertToStrings($result);

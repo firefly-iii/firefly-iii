@@ -105,10 +105,10 @@ class BasicController extends Controller
         $billData     = $this->getSubscriptionInformation($start, $end);
         $spentData    = $this->getLeftToSpendInfo($start, $end);
         $netWorthData = $this->getNetWorthInfo($end);
-//                        $balanceData  = [];
-//                        $billData     = [];
+        //                        $balanceData  = [];
+        //                        $billData     = [];
         //                $spentData    = [];
-//                        $netWorthData = [];
+        //                        $netWorthData = [];
         $total        = array_merge($balanceData, $billData, $spentData, $netWorthData);
 
         // give new keys
@@ -543,7 +543,7 @@ class BasicController extends Controller
         unset($leftToSpend);
         if (0 === count($return)) {
             // a small trick to get every expense in this period, regardless of budget.
-            $spent      = $this->opsRepository->sumExpenses($start, $end, null, new Collection());
+            $spent = $this->opsRepository->sumExpenses($start, $end, null, new Collection());
             foreach ($spent as $row) {
                 // either an amount was budgeted or 0 is available.
                 $currencyId          = (int) $row['currency_id'];
@@ -575,28 +575,28 @@ class BasicController extends Controller
                 ];
             }
 
-//            $amount = '0';
-//            // $days
-//            // fill in by money spent, just count it.
-//            $currency              = $this->nativeCurrency;
-//            $return[$currency->id] = [
-//                'key'                     => sprintf('left-to-spend-in-%s', $currency->code),
-//                'title'                   => trans('firefly.box_left_to_spend_in_currency', ['currency' => $currency->symbol]),
-//                'monetary_value'          => '0',
-//                'no_available_budgets'    => true,
-//                'currency_id'             => (string) $currency->id,
-//                'currency_code'           => $currency->code,
-//                'currency_symbol'         => $currency->symbol,
-//                'currency_decimal_places' => $currency->decimal_places,
-//                'value_parsed'            => app('amount')->formatFlat($currency->symbol, $currency->decimal_places, '0', false),
-//                'local_icon'              => 'money',
-//                'sub_title'               => app('amount')->formatFlat(
-//                    $currency->symbol,
-//                    $currency->decimal_places,
-//                    '0',
-//                    false
-//                ),
-//            ];
+            //            $amount = '0';
+            //            // $days
+            //            // fill in by money spent, just count it.
+            //            $currency              = $this->nativeCurrency;
+            //            $return[$currency->id] = [
+            //                'key'                     => sprintf('left-to-spend-in-%s', $currency->code),
+            //                'title'                   => trans('firefly.box_left_to_spend_in_currency', ['currency' => $currency->symbol]),
+            //                'monetary_value'          => '0',
+            //                'no_available_budgets'    => true,
+            //                'currency_id'             => (string) $currency->id,
+            //                'currency_code'           => $currency->code,
+            //                'currency_symbol'         => $currency->symbol,
+            //                'currency_decimal_places' => $currency->decimal_places,
+            //                'value_parsed'            => app('amount')->formatFlat($currency->symbol, $currency->decimal_places, '0', false),
+            //                'local_icon'              => 'money',
+            //                'sub_title'               => app('amount')->formatFlat(
+            //                    $currency->symbol,
+            //                    $currency->decimal_places,
+            //                    '0',
+            //                    false
+            //                ),
+            //            ];
         }
 
         return array_values($return);
