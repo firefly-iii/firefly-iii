@@ -994,7 +994,7 @@ Breadcrumbs::for(
     'rules.edit',
     static function (Generator $breadcrumbs, Rule $rule): void {
         $breadcrumbs->parent('rules.index');
-        $breadcrumbs->push(trans('firefly.edit_rule', ['title' => $rule->title]), route('rules.edit', [$rule]));
+        $breadcrumbs->push(trans('firefly.edit_rule', ['nr' => $rule->order, 'title' => $rule->title]), route('rules.edit', [$rule]));
     }
 );
 Breadcrumbs::for(
