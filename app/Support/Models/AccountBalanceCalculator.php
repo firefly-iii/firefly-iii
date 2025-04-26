@@ -89,6 +89,7 @@ class AccountBalanceCalculator
         }
 
         $set      = $query->get(['transactions.id', 'transactions.balance_dirty', 'transactions.transaction_currency_id', 'transaction_journals.date', 'transactions.account_id', 'transactions.amount']);
+        Log::debug(sprintf('Counted %d transaction(s)', $set->count()));
 
         // the balance value is an array.
         // first entry is the balance, second is the date.
