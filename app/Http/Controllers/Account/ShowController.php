@@ -145,6 +145,7 @@ class ShowController extends Controller
         $collector->setExpandGroupSearch(true);
         $groups           = $collector->getPaginatedGroups();
 
+
         Log::debug('End collect transactions');
         Timer::stop('collection');
 
