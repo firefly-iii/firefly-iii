@@ -802,7 +802,7 @@ return [
     'action_value'                                            => 'Action value',
     'stop_executing_other_actions'                            => 'Stop executing other actions',
     'add_rule_action'                                         => 'Add new action',
-    'edit_rule'                                               => 'Edit rule ":title"',
+    'edit_rule'                                               => 'Edit rule #:nr ":title"',
     'delete_rule'                                             => 'Delete rule ":title"',
     'update_rule'                                             => 'Update rule',
     'test_rule_triggers'                                      => 'See matching transactions',

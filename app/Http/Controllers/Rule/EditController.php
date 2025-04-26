@@ -135,7 +135,7 @@ class EditController extends Controller
 
         // get rule trigger for update / store-journal:
         $primaryTrigger = $this->ruleRepos->getPrimaryTrigger($rule);
-        $subTitle       = (string) trans('firefly.edit_rule', ['title' => $rule->title]);
+        $subTitle       = (string) trans('firefly.edit_rule', ['nr' => $rule->order,'title' => $rule->title]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('rules.edit.fromUpdate')) {
