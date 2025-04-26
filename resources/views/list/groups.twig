@@ -266,6 +266,12 @@
                             {% else %}
                                 {{ formatAmountBySymbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}
                             {% endif %}
+                        {% elseif transaction.transaction_type_type == 'Transfer' %}
+                            {% if account.id == transaction.source_account_id %}
+                                {{ formatAmountBySymbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                            {% else %}
+                                {{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                            {% endif %}
                         {% else %}
                             &nbsp;
                         {% endif %}
