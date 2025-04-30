@@ -1,0 +1,21 @@
+name: Signed Commit Check
+
+on: [pull_request]
+
+jobs:
+  verify-signature:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Verify signed commits
+        run: |
+          COMMITS=$(git log --format="%H" origin/${{ github.base_ref }}..HEAD)
+          for COMMIT in $COMMITS; do
+            echo "Checking commit $COMMIT"
+            if ! git verify-commit $COMMIT > /dev/null 2>&1; then
+              echo "::error:: ❌ Unsigned commit found: $COMMIT"
+              exit 1
+            fi
+          done
