@@ -1,3 +1,1 @@
-<?php
-$AWS_SECRET_ACCESS_KEY = "AKIAIOSFODNN7EXAMPLE";
-?>
+"<?php \$key = 'sk_test_badsecret123'; ?>" 
