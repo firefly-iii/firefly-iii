@@ -1,17 +1,12 @@
 rules:
-  - id: detect-raw-sql
-    patterns:
-      - pattern: DB::select("$SQL")
-    message: Raw SQL detected. Use parameterized queries.
-    severity: ERROR
+  - id: hardcoded-secret-detection
+    pattern: $SECRET = "$VALUE"
+    message: "Potential hardcoded secret detected"
     languages: [php]
-    metadata:
-      category: security
-      owasp: A1: Injection
-  - id: detect-secrets
-    pattern: $SECRET = "<...secret...>"
-    message: Possible hardcoded secret.
     severity: WARNING
+
+  - id: raw-sql-detection
+    pattern: DB::select("SELECT * FROM users WHERE name = '$USER'")
+    message: "Raw SQL detected — use parameterized queries to prevent SQL injection"
     languages: [php]
-    metadata:
-      category: security
+    severity: ERROR
