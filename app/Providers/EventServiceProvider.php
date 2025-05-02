@@ -176,7 +176,7 @@ class EventServiceProvider extends ServiceProvider
                 'FireflyIII\Handlers\Events\UpdatedGroupEventHandler@runAllHandlers',
             ],
             DestroyedTransactionGroup::class       => [
-                'FireflyIII\Handlers\Events\DestroyedGroupEventHandler@triggerWebhooks',
+                'FireflyIII\Handlers\Events\DestroyedGroupEventHandler@runAllHandlers',
             ],
             // API related events:
             AccessTokenCreated::class              => [

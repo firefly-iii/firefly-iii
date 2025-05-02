@@ -33,8 +33,10 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Services\Internal\Support\CreditRecalculateService;
+use FireflyIII\Support\Models\AccountBalanceCalculator;
 use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class UpdatedGroupEventHandler
@@ -47,6 +49,7 @@ class UpdatedGroupEventHandler
         $this->processRules($event);
         $this->recalculateCredit($event);
         $this->triggerWebhooks($event);
+        $this->updateRunningBalance($event);
 
     }
 
@@ -56,29 +59,29 @@ class UpdatedGroupEventHandler
     private function processRules(UpdatedTransactionGroup $updatedGroupEvent): void
     {
         if (false === $updatedGroupEvent->applyRules) {
-            app('log')->info(sprintf('Will not run rules on group #%d', $updatedGroupEvent->transactionGroup->id));
+            Log::info(sprintf('Will not run rules on group #%d', $updatedGroupEvent->transactionGroup->id));
 
             return;
         }
 
-        $journals            = $updatedGroupEvent->transactionGroup->transactionJournals;
-        $array               = [];
+        $journals = $updatedGroupEvent->transactionGroup->transactionJournals;
+        $array    = [];
 
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             $array[] = $journal->id;
         }
-        $journalIds          = implode(',', $array);
-        app('log')->debug(sprintf('Add local operator for journal(s): %s', $journalIds));
+        $journalIds = implode(',', $array);
+        Log::debug(sprintf('Add local operator for journal(s): %s', $journalIds));
 
         // collect rules:
         $ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
         $ruleGroupRepository->setUser($updatedGroupEvent->transactionGroup->user);
 
-        $groups              = $ruleGroupRepository->getRuleGroupsWithRules('update-journal');
+        $groups = $ruleGroupRepository->getRuleGroupsWithRules('update-journal');
 
         // file rule engine.
-        $newRuleEngine       = app(RuleEngineInterface::class);
+        $newRuleEngine = app(RuleEngineInterface::class);
         $newRuleEngine->setUser($updatedGroupEvent->transactionGroup->user);
         $newRuleEngine->addOperator(['type' => 'journal_id', 'value' => $journalIds]);
         $newRuleEngine->setRuleGroups($groups);
@@ -87,7 +90,7 @@ class UpdatedGroupEventHandler
 
     private function recalculateCredit(UpdatedTransactionGroup $event): void
     {
-        $group  = $event->transactionGroup;
+        $group = $event->transactionGroup;
 
         /** @var CreditRecalculateService $object */
         $object = app(CreditRecalculateService::class);
@@ -97,14 +100,14 @@ class UpdatedGroupEventHandler
 
     private function triggerWebhooks(UpdatedTransactionGroup $updatedGroupEvent): void
     {
-        app('log')->debug(__METHOD__);
-        $group  = $updatedGroupEvent->transactionGroup;
+        Log::debug(__METHOD__);
+        $group = $updatedGroupEvent->transactionGroup;
         if (false === $updatedGroupEvent->fireWebhooks) {
-            app('log')->info(sprintf('Will not fire webhooks for transaction group #%d', $group->id));
+            Log::info(sprintf('Will not fire webhooks for transaction group #%d', $group->id));
 
             return;
         }
-        $user   = $group->user;
+        $user = $group->user;
 
         /** @var MessageGeneratorInterface $engine */
         $engine = app(MessageGeneratorInterface::class);
@@ -121,47 +124,53 @@ class UpdatedGroupEventHandler
      */
     public function unifyAccounts(UpdatedTransactionGroup $updatedGroupEvent): void
     {
-        $group         = $updatedGroupEvent->transactionGroup;
+        $group = $updatedGroupEvent->transactionGroup;
         if (1 === $group->transactionJournals->count()) {
             return;
         }
 
         // first journal:
         /** @var null|TransactionJournal $first */
-        $first         = $group->transactionJournals()
-            ->orderBy('transaction_journals.date', 'DESC')
-            ->orderBy('transaction_journals.order', 'ASC')
-            ->orderBy('transaction_journals.id', 'DESC')
-            ->orderBy('transaction_journals.description', 'DESC')
-            ->first()
-        ;
+        $first = $group->transactionJournals()
+                       ->orderBy('transaction_journals.date', 'DESC')
+                       ->orderBy('transaction_journals.order', 'ASC')
+                       ->orderBy('transaction_journals.id', 'DESC')
+                       ->orderBy('transaction_journals.description', 'DESC')
+                       ->first();
 
         if (null === $first) {
-            app('log')->warning(sprintf('Group #%d has no transaction journals.', $group->id));
+            Log::warning(sprintf('Group #%d has no transaction journals.', $group->id));
 
             return;
         }
 
-        $all           = $group->transactionJournals()->get()->pluck('id')->toArray();
+        $all = $group->transactionJournals()->get()->pluck('id')->toArray();
 
         /** @var Account $sourceAccount */
         $sourceAccount = $first->transactions()->where('amount', '<', '0')->first()->account;
 
         /** @var Account $destAccount */
-        $destAccount   = $first->transactions()->where('amount', '>', '0')->first()->account;
+        $destAccount = $first->transactions()->where('amount', '>', '0')->first()->account;
 
-        $type          = $first->transactionType->type;
+        $type = $first->transactionType->type;
         if (TransactionTypeEnum::TRANSFER->value === $type || TransactionTypeEnum::WITHDRAWAL->value === $type) {
             // set all source transactions to source account:
             Transaction::whereIn('transaction_journal_id', $all)
-                ->where('amount', '<', 0)->update(['account_id' => $sourceAccount->id])
-            ;
+                       ->where('amount', '<', 0)->update(['account_id' => $sourceAccount->id]);
         }
         if (TransactionTypeEnum::TRANSFER->value === $type || TransactionTypeEnum::DEPOSIT->value === $type) {
             // set all destination transactions to destination account:
             Transaction::whereIn('transaction_journal_id', $all)
-                ->where('amount', '>', 0)->update(['account_id' => $destAccount->id])
-            ;
+                       ->where('amount', '>', 0)->update(['account_id' => $destAccount->id]);
+        }
+    }
+
+    private function updateRunningBalance(UpdatedTransactionGroup $event): void
+    {
+        Log::debug(__METHOD__);
+        $group = $event->transactionGroup;
+        foreach ($group->transactionJournals as $journal) {
+            AccountBalanceCalculator::recalculateForJournal($journal);
         }
     }
 }

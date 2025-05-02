@@ -27,15 +27,24 @@ namespace FireflyIII\Handlers\Events;
 use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Events\RequestedSendWebhookMessages;
+use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
+use FireflyIII\Support\Models\AccountBalanceCalculator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class DestroyedGroupEventHandler
  */
 class DestroyedGroupEventHandler
 {
-    public function triggerWebhooks(DestroyedTransactionGroup $destroyedGroupEvent): void
+    public function runAllHandlers(DestroyedTransactionGroup $event): void
+    {
+        $this->triggerWebhooks($event);
+        $this->updateRunningBalance($event);
+    }
+
+    private function triggerWebhooks(DestroyedTransactionGroup $destroyedGroupEvent): void
     {
         app('log')->debug('DestroyedTransactionGroup:triggerWebhooks');
         $group  = $destroyedGroupEvent->transactionGroup;
@@ -49,5 +58,14 @@ class DestroyedGroupEventHandler
         $engine->generateMessages();
 
         event(new RequestedSendWebhookMessages());
+    }
+
+    private function updateRunningBalance(DestroyedTransactionGroup $event): void
+    {
+        Log::debug(__METHOD__);
+        $group = $event->transactionGroup;
+        foreach ($group->transactionJournals as $journal) {
+            AccountBalanceCalculator::recalculateForJournal($journal);
+        }
     }
 }
