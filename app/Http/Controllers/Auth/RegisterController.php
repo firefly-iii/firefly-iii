@@ -175,7 +175,7 @@ class RegisterController extends Controller
      *
      * @throws FireflyException
      */
-    public function showRegistrationForm(?Request $request = null)
+    public function showRegistrationForm(Request $request)
     {
         $isDemoSite        = app('fireflyconfig')->get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
         $pageTitle         = (string) trans('firefly.register_page_title');

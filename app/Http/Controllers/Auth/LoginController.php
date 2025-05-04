@@ -220,7 +220,7 @@ class LoginController extends Controller
      *
      * @throws FireflyException
      */
-    public function showLoginForm(?Request $request = null)
+    public function showLoginForm(Request $request)
     {
         Log::channel('audit')->info('Show login form (1.1).');
 
