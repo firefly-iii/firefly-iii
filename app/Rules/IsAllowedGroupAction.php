@@ -35,14 +35,10 @@ use Illuminate\Support\Facades\Log;
 class IsAllowedGroupAction implements ValidationRule
 {
     private array                        $acceptedRoles;
-    private string $className;
-    private string $methodName;
-    private UserGroupRepositoryInterface $repository;
+    private readonly UserGroupRepositoryInterface $repository;
 
-    public function __construct(string $className, string $methodName)
+    public function __construct(private readonly string $className, private readonly string $methodName)
     {
-        $this->className     = $className;
-        $this->methodName    = $methodName;
         // you need these roles to do anything with any endpoint.
         $this->acceptedRoles = [UserRoleEnum::OWNER, UserRoleEnum::FULL];
         $this->repository    = app(UserGroupRepositoryInterface::class);

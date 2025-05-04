@@ -150,11 +150,11 @@ class ShowController extends Controller
                     'decimal_places' => $transaction['currency_decimal_places'],
                 ];
             }
-            $amounts[$symbol]['amount'] = bcadd($amounts[$symbol]['amount'], $transaction['amount']);
+            $amounts[$symbol]['amount'] = bcadd($amounts[$symbol]['amount'], (string) $transaction['amount']);
             if (null !== $transaction['foreign_amount'] && '' !== $transaction['foreign_amount']
                 && 0 !== bccomp(
                     '0',
-                    $transaction['foreign_amount']
+                    (string) $transaction['foreign_amount']
                 )) {
                 // same for foreign currency:
                 $foreignSymbol                     = $transaction['foreign_currency_symbol'];
@@ -167,7 +167,7 @@ class ShowController extends Controller
                 }
                 $amounts[$foreignSymbol]['amount'] = bcadd(
                     $amounts[$foreignSymbol]['amount'],
-                    $transaction['foreign_amount']
+                    (string) $transaction['foreign_amount']
                 );
             }
         }

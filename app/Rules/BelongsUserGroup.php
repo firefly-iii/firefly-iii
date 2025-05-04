@@ -42,14 +42,11 @@ use Illuminate\Contracts\Validation\ValidationRule;
  */
 class BelongsUserGroup implements ValidationRule
 {
-    private UserGroup $userGroup;
-
     /**
      * Create a new rule instance.
      */
-    public function __construct(UserGroup $userGroup)
+    public function __construct(private readonly UserGroup $userGroup)
     {
-        $this->userGroup = $userGroup;
     }
 
     public function validate(string $attribute, mixed $value, \Closure $fail): void

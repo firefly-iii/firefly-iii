@@ -215,7 +215,7 @@ class CategoryController extends Controller
                 $date                                 = $journal['date']->isoFormat($format);
                 $chartData[$outKey]['entries'][$date] ??= '0';
 
-                $chartData[$outKey]['entries'][$date] = bcadd($amount, $chartData[$outKey]['entries'][$date]);
+                $chartData[$outKey]['entries'][$date] = bcadd((string) $amount, $chartData[$outKey]['entries'][$date]);
             }
 
             $inSet        = $income[$currencyId]['categories'][$categoryId] ?? ['transaction_journals' => []];
@@ -223,7 +223,7 @@ class CategoryController extends Controller
                 $amount                              = app('steam')->positive($journal['amount']);
                 $date                                = $journal['date']->isoFormat($format);
                 $chartData[$inKey]['entries'][$date] ??= '0';
-                $chartData[$inKey]['entries'][$date] = bcadd($amount, $chartData[$inKey]['entries'][$date]);
+                $chartData[$inKey]['entries'][$date] = bcadd((string) $amount, $chartData[$inKey]['entries'][$date]);
             }
         }
 

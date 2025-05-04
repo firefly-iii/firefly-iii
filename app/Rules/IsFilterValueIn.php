@@ -28,13 +28,8 @@ use Illuminate\Contracts\Validation\ValidationRule;
 
 class IsFilterValueIn implements ValidationRule
 {
-    private string $key;
-    private array  $values;
-
-    public function __construct(string $key, array $values)
+    public function __construct(private readonly string $key, private readonly array $values)
     {
-        $this->key    = $key;
-        $this->values = $values;
     }
 
     /**

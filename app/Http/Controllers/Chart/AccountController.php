@@ -250,7 +250,7 @@ class AccountController extends Controller
                     'currency_code'   => $journal['currency_code'],
                 ];
             }
-            $result[$key]['total'] = bcadd($journal['amount'], $result[$key]['total']);
+            $result[$key]['total'] = bcadd((string) $journal['amount'], $result[$key]['total']);
         }
 
         $names     = $this->getBudgetNames($budgetIds);
@@ -312,7 +312,7 @@ class AccountController extends Controller
                     'currency_code'   => $journal['currency_code'],
                 ];
             }
-            $result[$key]['total'] = bcadd($journal['amount'], $result[$key]['total']);
+            $result[$key]['total'] = bcadd((string) $journal['amount'], $result[$key]['total']);
         }
         $names     = $this->getCategoryNames(array_keys($result));
 
@@ -401,7 +401,7 @@ class AccountController extends Controller
                     'currency_code'   => $journal['currency_code'],
                 ];
             }
-            $result[$key]['total'] = bcadd($journal['amount'], $result[$key]['total']);
+            $result[$key]['total'] = bcadd((string) $journal['amount'], $result[$key]['total']);
         }
 
         $names     = $this->getCategoryNames(array_keys($result));

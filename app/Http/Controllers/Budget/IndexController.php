@@ -269,7 +269,7 @@ class IndexController extends Controller
                                                           'currency_symbol'         => $spent['currency_symbol'],
                                                           'currency_decimal_places' => $spent['currency_decimal_places'],
                                                       ];
-                $sums['spent'][$currencyId]['amount'] = bcadd($sums['spent'][$currencyId]['amount'], $spent['spent']);
+                $sums['spent'][$currencyId]['amount'] = bcadd($sums['spent'][$currencyId]['amount'], (string) $spent['spent']);
             }
 
             /** @var array $budgeted */
@@ -282,7 +282,7 @@ class IndexController extends Controller
                                                              'currency_symbol'         => $budgeted['currency_symbol'],
                                                              'currency_decimal_places' => $budgeted['currency_decimal_places'],
                                                          ];
-                $sums['budgeted'][$currencyId]['amount'] = bcadd($sums['budgeted'][$currencyId]['amount'], $budgeted['amount']);
+                $sums['budgeted'][$currencyId]['amount'] = bcadd($sums['budgeted'][$currencyId]['amount'], (string) $budgeted['amount']);
 
                 // also calculate how much left from budgeted:
                 $sums['left'][$currencyId]

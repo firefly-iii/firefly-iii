@@ -34,27 +34,22 @@ use Illuminate\Contracts\Validation\ValidationRule;
  */
 class UniqueAccountNumber implements ValidationRule
 {
-    private ?Account $account;
-    private ?string  $expectedType;
-
     /**
      * Create a new rule instance.
      */
-    public function __construct(?Account $account, ?string $expectedType)
+    public function __construct(private readonly ?Account $account, private ?string $expectedType)
     {
         app('log')
             ->debug('Constructed UniqueAccountNumber')
         ;
-        $this->account      = $account;
-        $this->expectedType = $expectedType;
         // a very basic fix to make sure we get the correct account type:
-        if ('expense' === $expectedType) {
+        if ('expense' === $this->expectedType) {
             $this->expectedType = AccountTypeEnum::EXPENSE->value;
         }
-        if ('revenue' === $expectedType) {
+        if ('revenue' === $this->expectedType) {
             $this->expectedType = AccountTypeEnum::REVENUE->value;
         }
-        if ('asset' === $expectedType) {
+        if ('asset' === $this->expectedType) {
             $this->expectedType = AccountTypeEnum::ASSET->value;
         }
         app('log')->debug(sprintf('Expected type is "%s"', $this->expectedType));

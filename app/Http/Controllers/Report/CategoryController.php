@@ -107,11 +107,11 @@ class CategoryController extends Controller
                                                                                                                  ];
                     $report[$sourceAccountId]['currencies'][$currencyId]['categories'][$category['id']]['spent'] = bcadd(
                         $report[$sourceAccountId]['currencies'][$currencyId]['categories'][$category['id']]['spent'],
-                        $journal['amount']
+                        (string) $journal['amount']
                     );
                     $report[$sourceAccountId]['currencies'][$currencyId]['categories'][$category['id']]['sum']   = bcadd(
                         $report[$sourceAccountId]['currencies'][$currencyId]['categories'][$category['id']]['sum'],
-                        $journal['amount']
+                        (string) $journal['amount']
                     );
                 }
             }
@@ -140,11 +140,11 @@ class CategoryController extends Controller
                                                                                                                 ];
                     $report[$destinationId]['currencies'][$currencyId]['categories'][$category['id']]['earned'] = bcadd(
                         $report[$destinationId]['currencies'][$currencyId]['categories'][$category['id']]['earned'],
-                        $journal['amount']
+                        (string) $journal['amount']
                     );
                     $report[$destinationId]['currencies'][$currencyId]['categories'][$category['id']]['sum']    = bcadd(
                         $report[$destinationId]['currencies'][$currencyId]['categories'][$category['id']]['sum'],
-                        $journal['amount']
+                        (string) $journal['amount']
                     );
                 }
             }
@@ -202,14 +202,14 @@ class CategoryController extends Controller
                     ];
                     $report[$sourceAccountId]['currencies'][$currencyId]['spent'] = bcadd(
                         $report[$sourceAccountId]['currencies'][$currencyId]['spent'],
-                        $journal['amount']
+                        (string) $journal['amount']
                     );
                     $report[$sourceAccountId]['currencies'][$currencyId]['sum']   = bcadd(
                         $report[$sourceAccountId]['currencies'][$currencyId]['sum'],
-                        $journal['amount']
+                        (string) $journal['amount']
                     );
-                    $sums[$currencyId]['spent_sum']                               = bcadd($sums[$currencyId]['spent_sum'], $journal['amount']);
-                    $sums[$currencyId]['total_sum']                               = bcadd($sums[$currencyId]['total_sum'], $journal['amount']);
+                    $sums[$currencyId]['spent_sum']                               = bcadd($sums[$currencyId]['spent_sum'], (string) $journal['amount']);
+                    $sums[$currencyId]['total_sum']                               = bcadd($sums[$currencyId]['total_sum'], (string) $journal['amount']);
                 }
             }
         }
@@ -240,14 +240,14 @@ class CategoryController extends Controller
                     ];
                     $report[$destinationAccountId]['currencies'][$currencyId]['earned'] = bcadd(
                         $report[$destinationAccountId]['currencies'][$currencyId]['earned'],
-                        $journal['amount']
+                        (string) $journal['amount']
                     );
                     $report[$destinationAccountId]['currencies'][$currencyId]['sum']    = bcadd(
                         $report[$destinationAccountId]['currencies'][$currencyId]['sum'],
-                        $journal['amount']
+                        (string) $journal['amount']
                     );
-                    $sums[$currencyId]['earned_sum']                                    = bcadd($sums[$currencyId]['earned_sum'], $journal['amount']);
-                    $sums[$currencyId]['total_sum']                                     = bcadd($sums[$currencyId]['total_sum'], $journal['amount']);
+                    $sums[$currencyId]['earned_sum']                                    = bcadd($sums[$currencyId]['earned_sum'], (string) $journal['amount']);
+                    $sums[$currencyId]['total_sum']                                     = bcadd($sums[$currencyId]['total_sum'], (string) $journal['amount']);
                 }
             }
         }
@@ -282,7 +282,7 @@ class CategoryController extends Controller
                         'currency_decimal_places'  => $currency['currency_decimal_places'],
                     ];
                     ++$result[$key]['transactions'];
-                    $result[$key]['sum']       = bcadd($journal['amount'], $result[$key]['sum']);
+                    $result[$key]['sum']       = bcadd((string) $journal['amount'], $result[$key]['sum']);
                     $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string) $result[$key]['transactions']);
                     $result[$key]['avg_float'] = (float) $result[$key]['avg']; // intentional float
                 }
@@ -332,7 +332,7 @@ class CategoryController extends Controller
                         'currency_decimal_places' => $currency['currency_decimal_places'],
                     ];
                     ++$result[$key]['transactions'];
-                    $result[$key]['sum']       = bcadd($journal['amount'], $result[$key]['sum']);
+                    $result[$key]['sum']       = bcadd((string) $journal['amount'], $result[$key]['sum']);
                     $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string) $result[$key]['transactions']);
                     $result[$key]['avg_float'] = (float) $result[$key]['avg'];
                 }
@@ -405,15 +405,15 @@ class CategoryController extends Controller
                     ];
                     $report[$categoryId]['currencies'][$currencyId]['spent'] = bcadd(
                         $report[$categoryId]['currencies'][$currencyId]['spent'],
-                        $journal['amount']
+                        (string) $journal['amount']
                     );
                     $report[$categoryId]['currencies'][$currencyId]['sum']   = bcadd(
                         $report[$categoryId]['currencies'][$currencyId]['sum'],
-                        $journal['amount']
+                        (string) $journal['amount']
                     );
 
-                    $sums[$currencyId]['spent_sum']                          = bcadd($sums[$currencyId]['spent_sum'], $journal['amount']);
-                    $sums[$currencyId]['total_sum']                          = bcadd($sums[$currencyId]['total_sum'], $journal['amount']);
+                    $sums[$currencyId]['spent_sum']                          = bcadd($sums[$currencyId]['spent_sum'], (string) $journal['amount']);
+                    $sums[$currencyId]['total_sum']                          = bcadd($sums[$currencyId]['total_sum'], (string) $journal['amount']);
                 }
             }
         }
@@ -447,15 +447,15 @@ class CategoryController extends Controller
                     ];
                     $report[$categoryId]['currencies'][$currencyId]['earned'] = bcadd(
                         $report[$categoryId]['currencies'][$currencyId]['earned'],
-                        $journal['amount']
+                        (string) $journal['amount']
                     );
                     $report[$categoryId]['currencies'][$currencyId]['sum']    = bcadd(
                         $report[$categoryId]['currencies'][$currencyId]['sum'],
-                        $journal['amount']
+                        (string) $journal['amount']
                     );
 
-                    $sums[$currencyId]['earned_sum']                          = bcadd($sums[$currencyId]['earned_sum'], $journal['amount']);
-                    $sums[$currencyId]['total_sum']                           = bcadd($sums[$currencyId]['total_sum'], $journal['amount']);
+                    $sums[$currencyId]['earned_sum']                          = bcadd($sums[$currencyId]['earned_sum'], (string) $journal['amount']);
+                    $sums[$currencyId]['total_sum']                           = bcadd($sums[$currencyId]['total_sum'], (string) $journal['amount']);
                 }
             }
         }
@@ -514,8 +514,8 @@ class CategoryController extends Controller
                     foreach ($categoryRow['transaction_journals'] as $journal) {
                         $date                         = $journal['date']->format($format);
                         $data[$key]['entries'][$date] ??= '0';
-                        $data[$key]['entries'][$date] = bcadd($data[$key]['entries'][$date], $journal['amount']);
-                        $data[$key]['sum']            = bcadd($data[$key]['sum'], $journal['amount']);
+                        $data[$key]['entries'][$date] = bcadd($data[$key]['entries'][$date], (string) $journal['amount']);
+                        $data[$key]['sum']            = bcadd($data[$key]['sum'], (string) $journal['amount']);
                     }
                 }
             }
@@ -588,8 +588,8 @@ class CategoryController extends Controller
                     foreach ($categoryRow['transaction_journals'] as $journal) {
                         $date                         = $journal['date']->format($format);
                         $data[$key]['entries'][$date] ??= '0';
-                        $data[$key]['entries'][$date] = bcadd($data[$key]['entries'][$date], $journal['amount']);
-                        $data[$key]['sum']            = bcadd($data[$key]['sum'], $journal['amount']);
+                        $data[$key]['entries'][$date] = bcadd($data[$key]['entries'][$date], (string) $journal['amount']);
+                        $data[$key]['sum']            = bcadd($data[$key]['sum'], (string) $journal['amount']);
                     }
                 }
             }

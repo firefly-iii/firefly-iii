@@ -58,7 +58,7 @@ class SelectTransactionsRequest extends FormRequest
     public function withValidator(Validator $validator): void
     {
         if ($validator->fails()) {
-            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+            Log::channel('audit')->error(sprintf('Validation errors in %s', self::class), $validator->errors()->toArray());
         }
     }
 }

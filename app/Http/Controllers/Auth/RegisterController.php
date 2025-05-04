@@ -121,7 +121,7 @@ class RegisterController extends Controller
 
         try {
             $singleUserMode = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
-        } catch (ContainerExceptionInterface|NotFoundExceptionInterface $e) {
+        } catch (ContainerExceptionInterface|NotFoundExceptionInterface) {
             $singleUserMode = true;
         }
         $userCount         = User::count();
@@ -175,7 +175,7 @@ class RegisterController extends Controller
      *
      * @throws FireflyException
      */
-    public function showRegistrationForm(Request $request)
+    public function showRegistrationForm(?Request $request = null)
     {
         $isDemoSite        = app('fireflyconfig')->get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
         $pageTitle         = (string) trans('firefly.register_page_title');

@@ -83,7 +83,7 @@ class CategoryReportController extends Controller
                         'currency_code'   => $currency['currency_code'],
                     ];
                     $amount                   = app('steam')->positive($journal['amount']);
-                    $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'], (string) $amount);
                 }
             }
         }
@@ -110,7 +110,7 @@ class CategoryReportController extends Controller
                 ];
                 foreach ($category['transaction_journals'] as $journal) {
                     $amount                   = app('steam')->positive($journal['amount']);
-                    $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'], (string) $amount);
                 }
             }
         }
@@ -138,7 +138,7 @@ class CategoryReportController extends Controller
                 ];
                 foreach ($category['transaction_journals'] as $journal) {
                     $amount                   = app('steam')->positive($journal['amount']);
-                    $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'], (string) $amount);
                 }
             }
         }
@@ -166,7 +166,7 @@ class CategoryReportController extends Controller
                         'currency_code'   => $currency['currency_code'],
                     ];
                     $amount                   = app('steam')->positive($journal['amount']);
-                    $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'], (string) $amount);
                 }
             }
         }
@@ -194,7 +194,7 @@ class CategoryReportController extends Controller
                         'currency_code'   => $currency['currency_code'],
                     ];
                     $amount                   = app('steam')->positive($journal['amount']);
-                    $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'], (string) $amount);
                 }
             }
         }
@@ -233,7 +233,7 @@ class CategoryReportController extends Controller
                     $key                                   = $journal['date']->isoFormat($format);
                     $amount                                = app('steam')->positive($journal['amount']);
                     $chartData[$spentKey]['entries'][$key] ??= '0';
-                    $chartData[$spentKey]['entries'][$key] = bcadd($chartData[$spentKey]['entries'][$key], $amount);
+                    $chartData[$spentKey]['entries'][$key] = bcadd($chartData[$spentKey]['entries'][$key], (string) $amount);
                 }
             }
         }
@@ -260,7 +260,7 @@ class CategoryReportController extends Controller
                     $key                                   = $journal['date']->isoFormat($format);
                     $amount                                = app('steam')->positive($journal['amount']);
                     $chartData[$spentKey]['entries'][$key] ??= '0';
-                    $chartData[$spentKey]['entries'][$key] = bcadd($chartData[$spentKey]['entries'][$key], $amount);
+                    $chartData[$spentKey]['entries'][$key] = bcadd($chartData[$spentKey]['entries'][$key], (string) $amount);
                 }
             }
         }
@@ -308,7 +308,7 @@ class CategoryReportController extends Controller
                         'currency_code'   => $currency['currency_code'],
                     ];
                     $amount                   = app('steam')->positive($journal['amount']);
-                    $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'], (string) $amount);
                 }
             }
         }
@@ -336,7 +336,7 @@ class CategoryReportController extends Controller
                         'currency_code'   => $currency['currency_code'],
                     ];
                     $amount                   = app('steam')->positive($journal['amount']);
-                    $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'], (string) $amount);
                 }
             }
         }

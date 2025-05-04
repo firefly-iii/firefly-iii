@@ -47,7 +47,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
  */
 class IsValidAttachmentModel implements ValidationRule
 {
-    private string $model;
+    private readonly string $model;
 
     /**
      * IsValidAttachmentModel constructor.

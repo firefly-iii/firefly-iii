@@ -89,7 +89,7 @@ trait UserGroupTrait
             return;
         }
 
-        throw new FireflyException(sprintf('Object is of class %s, not User.', get_class($user)));
+        throw new FireflyException(sprintf('Object is of class %s, not User.', $user::class));
     }
 
     /**

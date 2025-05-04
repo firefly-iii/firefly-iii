@@ -402,7 +402,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
                 'currency_code'           => $currencyCode,
                 'currency_decimal_places' => $currencyDecimalPlaces,
             ];
-            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->positive($amount));
+            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], (string) app('steam')->positive($amount));
         }
 
         return $array;
@@ -439,7 +439,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
                 'currency_code'           => $journal['currency_code'],
                 'currency_decimal_places' => $journal['currency_decimal_places'],
             ];
-            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->positive($journal['amount']));
+            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], (string) app('steam')->positive($journal['amount']));
         }
 
         return $array;

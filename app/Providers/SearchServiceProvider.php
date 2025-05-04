@@ -44,6 +44,7 @@ class SearchServiceProvider extends ServiceProvider
     /**
      * Register the application services.
      */
+    #[\Override]
     public function register(): void
     {
         $this->app->bind(

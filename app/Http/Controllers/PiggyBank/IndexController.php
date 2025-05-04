@@ -195,10 +195,10 @@ class IndexController extends Controller
                 foreach ($piggyBank['accounts'] as $piggyAccount) {
                     $accountId = $piggyAccount['id'];
                     if (array_key_exists($accountId, $accounts)) {
-                        $accounts[$accountId]['left']    = bcsub($accounts[$accountId]['left'], $piggyAccount['current_amount']);
-                        $accounts[$accountId]['saved']   = bcadd($accounts[$accountId]['saved'], $piggyAccount['current_amount']);
-                        $accounts[$accountId]['target']  = bcadd($accounts[$accountId]['target'], $piggyBank['target_amount']);
-                        $accounts[$accountId]['to_save'] = bcadd($accounts[$accountId]['to_save'], bcsub($piggyBank['target_amount'], $piggyAccount['current_amount']));
+                        $accounts[$accountId]['left']    = bcsub((string) $accounts[$accountId]['left'], (string) $piggyAccount['current_amount']);
+                        $accounts[$accountId]['saved']   = bcadd((string) $accounts[$accountId]['saved'], (string) $piggyAccount['current_amount']);
+                        $accounts[$accountId]['target']  = bcadd((string) $accounts[$accountId]['target'], (string) $piggyBank['target_amount']);
+                        $accounts[$accountId]['to_save'] = bcadd((string) $accounts[$accountId]['to_save'], bcsub((string) $piggyBank['target_amount'], (string) $piggyAccount['current_amount']));
                     }
                 }
             }

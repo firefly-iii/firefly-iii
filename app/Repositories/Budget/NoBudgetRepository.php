@@ -73,7 +73,7 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface, UserGroupInterf
             if (!array_key_exists($date, $data[$currencyId]['entries'])) {
                 $data[$currencyId]['entries'][$date] = '0';
             }
-            $data[$currencyId]['entries'][$date] = bcadd($data[$currencyId]['entries'][$date], $journal['amount']);
+            $data[$currencyId]['entries'][$date] = bcadd($data[$currencyId]['entries'][$date], (string) $journal['amount']);
         }
 
         return $data;

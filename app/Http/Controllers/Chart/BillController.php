@@ -177,12 +177,12 @@ class BillController extends Controller
             if (!array_key_exists($date, $chartData[2]['entries'])) {
                 $chartData[2]['entries'][$date] = '0';
             }
-            $amount                         = bcmul($journal['amount'], '-1');
+            $amount                         = bcmul((string) $journal['amount'], '-1');
             if ($this->convertToNative && $currencyId !== $journal['currency_id']) {
                 $amount = bcmul($journal['native_amount'] ?? '0', '-1');
             }
             if ($this->convertToNative && $currencyId === $journal['foreign_currency_id']) {
-                $amount = bcmul($journal['foreign_amount'], '-1');
+                $amount = bcmul((string) $journal['foreign_amount'], '-1');
             }
 
             $chartData[2]['entries'][$date] = bcadd($chartData[2]['entries'][$date], $amount);  // amount of journal

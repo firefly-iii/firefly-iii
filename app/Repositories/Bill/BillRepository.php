@@ -272,10 +272,10 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
             ];
-            $result[$currencyId]['sum']        = bcadd($result[$currencyId]['sum'], $transaction->amount);
+            $result[$currencyId]['sum']        = bcadd($result[$currencyId]['sum'], (string) $transaction->amount);
             $result[$currencyId]['native_sum'] = bcadd($result[$currencyId]['native_sum'], $transaction->native_amount ?? '0');
             if ($journal->foreign_currency_id === Amount::getNativeCurrency()->id) {
-                $result[$currencyId]['native_sum'] = bcadd($result[$currencyId]['native_sum'], $transaction->amount);
+                $result[$currencyId]['native_sum'] = bcadd($result[$currencyId]['native_sum'], (string) $transaction->amount);
             }
             ++$result[$currencyId]['count'];
         }
@@ -286,8 +286,8 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
          * @var array $arr
          */
         foreach ($result as $currencyId => $arr) {
-            $result[$currencyId]['avg']        = bcdiv($arr['sum'], (string) $arr['count']);
-            $result[$currencyId]['native_avg'] = bcdiv($arr['native_sum'], (string) $arr['count']);
+            $result[$currencyId]['avg']        = bcdiv((string) $arr['sum'], (string) $arr['count']);
+            $result[$currencyId]['native_avg'] = bcdiv((string) $arr['native_sum'], (string) $arr['count']);
         }
 
         return $result;
@@ -396,10 +396,10 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
             ];
-            $result[$currencyId]['sum']        = bcadd($result[$currencyId]['sum'], $transaction->amount);
+            $result[$currencyId]['sum']        = bcadd($result[$currencyId]['sum'], (string) $transaction->amount);
             $result[$currencyId]['native_sum'] = bcadd($result[$currencyId]['native_sum'], $transaction->native_amount ?? '0');
             if ($journal->foreign_currency_id === Amount::getNativeCurrency()->id) {
-                $result[$currencyId]['native_sum'] = bcadd($result[$currencyId]['native_sum'], $transaction->amount);
+                $result[$currencyId]['native_sum'] = bcadd($result[$currencyId]['native_sum'], (string) $transaction->amount);
             }
             ++$result[$currencyId]['count'];
         }
@@ -410,8 +410,8 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
          * @var array $arr
          */
         foreach ($result as $currencyId => $arr) {
-            $result[$currencyId]['avg']        = bcdiv($arr['sum'], (string) $arr['count']);
-            $result[$currencyId]['native_avg'] = bcdiv($arr['native_sum'], (string) $arr['count']);
+            $result[$currencyId]['avg']        = bcdiv((string) $arr['sum'], (string) $arr['count']);
+            $result[$currencyId]['native_avg'] = bcdiv((string) $arr['native_sum'], (string) $arr['count']);
         }
 
         return $result;

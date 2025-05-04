@@ -50,7 +50,7 @@ class NetWorth implements NetWorthInterface
     private AccountRepositoryInterface  $accountRepository;
     private CurrencyRepositoryInterface $currencyRepos;
     private User                        $user; // @phpstan-ignore-line
-    private ?UserGroup                  $userGroup; // @phpstan-ignore-line
+    private ?UserGroup                  $userGroup = null; // @phpstan-ignore-line
 
     /**
      * This method collects the user's net worth in ALL the user's currencies
@@ -94,8 +94,8 @@ class NetWorth implements NetWorthInterface
             }
             Log::debug(sprintf('Balance is %s, native balance is %s', $balance, $nativeBalance));
             // always subtract virtual balance again.
-            $balance                            = '' !== (string) $account->virtual_balance ? bcsub($balance, $account->virtual_balance) : $balance;
-            $nativeBalance                      = '' !== (string) $account->native_virtual_balance ? bcsub($nativeBalance, $account->native_virtual_balance) : $nativeBalance;
+            $balance                            = '' !== (string) $account->virtual_balance ? bcsub($balance, (string) $account->virtual_balance) : $balance;
+            $nativeBalance                      = '' !== (string) $account->native_virtual_balance ? bcsub($nativeBalance, (string) $account->native_virtual_balance) : $nativeBalance;
             $amountToUse                        = $useNative ? $nativeBalance : $balance;
             Log::debug(sprintf('Will use %s %s', $currencyCode, $amountToUse));
 
@@ -108,7 +108,7 @@ class NetWorth implements NetWorthInterface
                 'currency_decimal_places' => $currency->decimal_places,
             ];
 
-            $netWorth[$currencyCode]['balance'] = bcadd($amountToUse, $netWorth[$currencyCode]['balance']);
+            $netWorth[$currencyCode]['balance'] = bcadd((string) $amountToUse, $netWorth[$currencyCode]['balance']);
         }
         $cache->store($netWorth);
 
@@ -153,7 +153,7 @@ class NetWorth implements NetWorthInterface
             // always subtract virtual balance.
             $virtualBalance               = $account->virtual_balance;
             if ('' !== $virtualBalance) {
-                $balance = bcsub($balance, $virtualBalance);
+                $balance = bcsub($balance, (string) $virtualBalance);
             }
 
             $return[$currency->id] ??= [
@@ -164,7 +164,7 @@ class NetWorth implements NetWorthInterface
                 'decimal_places' => $currency->decimal_places,
                 'sum'            => '0',
             ];
-            $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $balance);
+            $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], (string) $balance);
         }
 
         return $return;

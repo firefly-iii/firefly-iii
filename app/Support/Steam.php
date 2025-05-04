@@ -139,7 +139,7 @@ class Steam
             $carbon                               = new Carbon($entry->date, $entry->date_tz);
             $carbonKey                            = $carbon->format('Y-m-d');
             // make sure sum is a string:
-            $sumOfDay                             = (string) (null === $entry->sum_of_day ? '0' : $entry->sum_of_day);
+            $sumOfDay                             = (string) ($entry->sum_of_day ?? '0');
 
             // find currency of this entry, does not have to exist.
             $currencies[$entry->transaction_currency_id] ??= TransactionCurrency::find($entry->transaction_currency_id);
@@ -152,19 +152,19 @@ class Steam
 
             // add amount to current balance in currency code.
             $currentBalance[$entryCurrency->code]        ??= '0';
-            $currentBalance[$entryCurrency->code] = bcadd($sumOfDay, $currentBalance[$entryCurrency->code]);
+            $currentBalance[$entryCurrency->code] = bcadd($sumOfDay, (string) $currentBalance[$entryCurrency->code]);
 
             // if not convert to native, add the amount to "balance", do nothing else.
             if (!$convertToNative) {
-                $currentBalance['balance'] = bcadd($currentBalance['balance'], $sumOfDay);
+                $currentBalance['balance'] = bcadd((string) $currentBalance['balance'], $sumOfDay);
             }
             // if convert to native add the converted amount to "native_balance".
             // if there is a request to convert, convert to "native_balance" and use "balance" for whichever amount is in the native currency.
             if ($convertToNative) {
                 $nativeSumOfDay                   = $converter->convert($entryCurrency, $nativeCurrency, $carbon, $sumOfDay);
-                $currentBalance['native_balance'] = bcadd($currentBalance['native_balance'], $nativeSumOfDay);
+                $currentBalance['native_balance'] = bcadd((string) $currentBalance['native_balance'], $nativeSumOfDay);
                 if ($currency->id === $entryCurrency->id) {
-                    $currentBalance['balance'] = bcadd($currentBalance['balance'], $sumOfDay);
+                    $currentBalance['balance'] = bcadd((string) $currentBalance['balance'], $sumOfDay);
                 }
 
             }
@@ -434,7 +434,7 @@ class Steam
 
         foreach ($array as $item) {
             $groupKey          = $item[$group] ?? 'unknown';
-            $return[$groupKey] = bcadd($return[$groupKey] ?? '0', $item[$field]);
+            $return[$groupKey] = bcadd($return[$groupKey] ?? '0', (string) $item[$field]);
         }
 
         return $return;

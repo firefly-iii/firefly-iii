@@ -38,21 +38,12 @@ class MailError extends Job implements ShouldQueue
     use InteractsWithQueue;
     use SerializesModels;
 
-    protected string $destination;
-    protected array  $exception;
-    protected string $ipAddress;
-    protected array  $userData;
-
     /**
      * MailError constructor.
      */
-    public function __construct(array $userData, string $destination, string $ipAddress, array $exceptionData)
+    public function __construct(protected array $userData, protected string $destination, protected string $ipAddress, protected array $exception)
     {
-        $this->userData    = $userData;
-        $this->destination = $destination;
-        $this->ipAddress   = $ipAddress;
-        $this->exception   = $exceptionData;
-        $debug             = $exceptionData;
+        $debug             = $this->exception;
         unset($debug['stackTrace'], $debug['headers']);
 
         app('log')->error(sprintf('Exception is: %s', \Safe\json_encode($debug)));

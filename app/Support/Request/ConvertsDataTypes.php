@@ -250,7 +250,7 @@ trait ConvertsDataTypes
         if ('' === $value) {
             return null;
         }
-        if (10 === strlen($value)) {
+        if (10 === strlen((string) $value)) {
             // probably a date format.
             try {
                 $carbon = Carbon::createFromFormat('Y-m-d', $value);
@@ -313,7 +313,7 @@ trait ConvertsDataTypes
 
         try {
             $carbon = new Carbon($string, config('app.timezone'));
-        } catch (InvalidFormatException $e) {
+        } catch (InvalidFormatException) {
             // @ignoreException
         }
         if (null === $carbon) {
@@ -364,7 +364,7 @@ trait ConvertsDataTypes
 
         try {
             $result = '' !== (string) $this->get($field) ? new Carbon((string) $this->get($field), config('app.timezone')) : null;
-        } catch (InvalidFormatException $e) {
+        } catch (InvalidFormatException) {
             // @ignoreException
             Log::debug(sprintf('Exception when parsing date "%s".', $this->get($field)));
         }

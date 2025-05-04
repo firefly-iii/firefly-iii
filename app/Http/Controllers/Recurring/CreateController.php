@@ -152,7 +152,7 @@ class CreateController extends Controller
         ];
 
         // fill prefilled with journal info
-        $type              = strtolower($journal->transactionType->type);
+        $type              = strtolower((string) $journal->transactionType->type);
 
         /** @var Transaction $source */
         $source            = $journal->transactions()->where('amount', '<', 0)->first();

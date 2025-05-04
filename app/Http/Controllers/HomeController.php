@@ -75,7 +75,7 @@ class HomeController extends Controller
         try {
             $stringEnd = e((string) $request->get('end'));
             $end       = Carbon::createFromFormat('Y-m-d', $stringEnd);
-        } catch (InvalidFormatException $e) {
+        } catch (InvalidFormatException) {
             app('log')->error(sprintf('End could not parse date string "%s" so ignore it.', $stringEnd));
             $end = Carbon::now()->endOfMonth();
         }

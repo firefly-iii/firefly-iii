@@ -243,8 +243,8 @@ class IndexController extends Controller
                     'period'                  => $entry['period'],
                     'per_period'              => '0',
                 ];
-                $totals[$currencyId]['avg']        = bcadd($totals[$currencyId]['avg'], $entry['avg']);
-                $totals[$currencyId]['per_period'] = bcadd($totals[$currencyId]['per_period'], $entry['per_period']);
+                $totals[$currencyId]['avg']        = bcadd($totals[$currencyId]['avg'], (string) $entry['avg']);
+                $totals[$currencyId]['per_period'] = bcadd($totals[$currencyId]['per_period'], (string) $entry['per_period']);
             }
         }
 

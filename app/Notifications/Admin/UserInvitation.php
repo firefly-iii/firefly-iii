@@ -45,11 +45,8 @@ class UserInvitation extends Notification
 {
     use Queueable;
 
-    private InvitedUser     $invitee;
-
-    public function __construct(InvitedUser $invitee)
+    public function __construct(private InvitedUser $invitee)
     {
-        $this->invitee = $invitee;
     }
 
     /**
@@ -72,7 +69,7 @@ class UserInvitation extends Notification
         $time      = now(config('app.timezone'))->isoFormat((string) trans('config.date_time_js'));
 
 
-        return (new MailMessage())
+        return new MailMessage()
             ->markdown('emails.invitation-created', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email, 'ip' => $ip, 'host' => $host, 'userAgent' => $userAgent, 'time' => $time])
             ->subject((string) trans('email.invitation_created_subject'))
         ;

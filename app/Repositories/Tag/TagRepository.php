@@ -269,9 +269,9 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
             $amount                   = app('steam')->positive((string) $journal['amount']);
             $type                     = $journal['transaction_type_type'];
             if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
-                $amount = bcmul($amount, '-1');
+                $amount = bcmul((string) $amount, '-1');
             }
-            $sums[$currencyId][$type] = bcadd($sums[$currencyId][$type], $amount);
+            $sums[$currencyId][$type] = bcadd((string) $sums[$currencyId][$type], (string) $amount);
 
             $foreignCurrencyId        = $journal['foreign_currency_id'];
             if (null !== $foreignCurrencyId && 0 !== $foreignCurrencyId) {
@@ -289,9 +289,9 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
                 // add foreign amount to correct type:
                 $amount                          = app('steam')->positive((string) $journal['foreign_amount']);
                 if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
-                    $amount = bcmul($amount, '-1');
+                    $amount = bcmul((string) $amount, '-1');
                 }
-                $sums[$foreignCurrencyId][$type] = bcadd($sums[$foreignCurrencyId][$type], $amount);
+                $sums[$foreignCurrencyId][$type] = bcadd((string) $sums[$foreignCurrencyId][$type], (string) $amount);
             }
         }
 

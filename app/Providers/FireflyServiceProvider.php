@@ -90,9 +90,7 @@ class FireflyServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Validator::resolver(
-            static function ($translator, $data, $rules, $messages) {
-                return new FireflyValidator($translator, $data, $rules, $messages);
-            }
+            static fn($translator, $data, $rules, $messages) => new FireflyValidator($translator, $data, $rules, $messages)
         );
     }
 
@@ -101,78 +99,57 @@ class FireflyServiceProvider extends ServiceProvider
      *
      * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
+    #[\Override]
     public function register(): void
     {
         $this->app->bind(
             'preferences',
-            static function () {
-                return new Preferences();
-            }
+            static fn() => new Preferences()
         );
 
         $this->app->bind(
             'fireflyconfig',
-            static function () {
-                return new FireflyConfig();
-            }
+            static fn() => new FireflyConfig()
         );
         $this->app->bind(
             'navigation',
-            static function () {
-                return new Navigation();
-            }
+            static fn() => new Navigation()
         );
         $this->app->bind(
             'amount',
-            static function () {
-                return new Amount();
-            }
+            static fn() => new Amount()
         );
 
         $this->app->bind(
             'steam',
-            static function () {
-                return new Steam();
-            }
+            static fn() => new Steam()
         );
         $this->app->bind(
             'balance',
-            static function () {
-                return new Balance();
-            }
+            static fn() => new Balance()
         );
         $this->app->bind(
             'expandedform',
-            static function () {
-                return new ExpandedForm();
-            }
+            static fn() => new ExpandedForm()
         );
 
         $this->app->bind(
             'accountform',
-            static function () {
-                return new AccountForm();
-            }
+            static fn() => new AccountForm()
         );
         $this->app->bind(
             'currencyform',
-            static function () {
-                return new CurrencyForm();
-            }
+            static fn() => new CurrencyForm()
         );
 
         $this->app->bind(
             'piggybankform',
-            static function () {
-                return new PiggyBankForm();
-            }
+            static fn() => new PiggyBankForm()
         );
 
         $this->app->bind(
             'ruleform',
-            static function () {
-                return new RuleForm();
-            }
+            static fn() => new RuleForm()
         );
 
         // chart generator:

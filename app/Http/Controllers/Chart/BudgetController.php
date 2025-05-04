@@ -110,7 +110,7 @@ class BudgetController extends Controller
             /** @var Carbon $loopEnd */
             $loopEnd                = app('navigation')->endOfPeriod($loopStart, $step);
             $spent                  = $this->opsRepository->sumExpenses($loopStart, $loopEnd, null, $collection); // this method already converts to native.
-            $label                  = trim(app('navigation')->periodShow($loopStart, $step));
+            $label                  = trim((string) app('navigation')->periodShow($loopStart, $step));
 
             foreach ($spent as $row) {
                 $currencyId                               = $row['currency_id'];
@@ -133,7 +133,7 @@ class BudgetController extends Controller
                 'entries'         => $defaultEntries,
             ];
             foreach ($currency['spent'] as $label => $spent) {
-                $chartData[$currencyId]['entries'][$label] = bcmul($spent, '-1');
+                $chartData[$currencyId]['entries'][$label] = bcmul((string) $spent, '-1');
             }
         }
         $data           = $this->generator->multiSet(array_values($chartData));
@@ -180,7 +180,7 @@ class BudgetController extends Controller
             $current          = clone $start;
             $expenses         = $this->opsRepository->sumExpenses($current, $current, null, $budgetCollection, $budgetLimit->transactionCurrency, $this->convertToNative);
             $spent            = $expenses[$currency->id]['sum'] ?? '0';
-            $amount           = bcadd($amount, $spent);
+            $amount           = bcadd((string) $amount, $spent);
             $format           = $start->isoFormat((string) trans('config.month_and_day_js', [], $locale));
             $entries[$format] = $amount;
 
@@ -257,7 +257,7 @@ class BudgetController extends Controller
                 'currency_code'   => $code,
                 'currency_name'   => $name,
             ];
-            $result[$key]['amount'] = bcadd($amount, $result[$key]['amount']);
+            $result[$key]['amount'] = bcadd((string) $amount, $result[$key]['amount']);
         }
 
         $names         = $this->getAccountNames(array_keys($result));
@@ -341,7 +341,7 @@ class BudgetController extends Controller
                 'currency_code'   => $code,
                 'currency_name'   => $name,
             ];
-            $result[$key]['amount'] = bcadd($amount, $result[$key]['amount']);
+            $result[$key]['amount'] = bcadd((string) $amount, $result[$key]['amount']);
         }
 
         $names         = $this->getCategoryNames(array_keys($result));
@@ -424,7 +424,7 @@ class BudgetController extends Controller
                 'currency_code'   => $code,
                 'currency_name'   => $name,
             ];
-            $result[$key]['amount'] = bcadd($amount, $result[$key]['amount']);
+            $result[$key]['amount'] = bcadd((string) $amount, $result[$key]['amount']);
         }
 
         $names         = $this->getAccountNames(array_keys($result));

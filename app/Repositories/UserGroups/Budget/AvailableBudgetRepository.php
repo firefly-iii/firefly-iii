@@ -68,7 +68,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
                 'native_amount'                  => '0',
             ];
             $nativeAmount                         = $converter->convert($availableBudget->transactionCurrency, $default, $availableBudget->start_date, $availableBudget->amount);
-            $return[$currencyId]['amount']        = bcadd($return[$currencyId]['amount'], $availableBudget->amount);
+            $return[$currencyId]['amount']        = bcadd($return[$currencyId]['amount'], (string) $availableBudget->amount);
             $return[$currencyId]['native_amount'] = bcadd($return[$currencyId]['native_amount'], $nativeAmount);
         }
         $converter->summarize();

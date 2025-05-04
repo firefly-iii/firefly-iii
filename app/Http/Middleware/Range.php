@@ -102,7 +102,7 @@ class Range
         $language          = app('steam')->getLanguage();
         $locale            = app('steam')->getLocale();
         \App::setLocale($language);
-        Carbon::setLocale(substr($locale, 0, 2));
+        Carbon::setLocale(substr((string) $locale, 0, 2));
 
         $localeArray       = app('steam')->getLocaleArray($locale);
 

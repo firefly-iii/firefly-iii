@@ -48,16 +48,12 @@ class AuthServiceProvider extends ServiceProvider
     {
         Auth::provider(
             'remote_user_provider',
-            static function ($app, array $config) {
-                return new RemoteUserProvider();
-            }
+            static fn($app, array $config) => new RemoteUserProvider()
         );
 
         Auth::extend(
             'remote_user_guard',
-            static function ($app, string $name, array $config) {
-                return new RemoteUserGuard(Auth::createUserProvider($config['provider']), $app);
-            }
+            static fn($app, string $name, array $config) => new RemoteUserGuard(Auth::createUserProvider($config['provider']), $app)
         );
 
         Passport::tokensExpireIn(now()->addDays(14));

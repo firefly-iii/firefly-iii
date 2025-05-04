@@ -42,15 +42,8 @@ class BillReminder extends Notification
 {
     use Queueable;
 
-    private Bill   $bill;
-    private int    $diff;
-    private string $field;
-
-    public function __construct(Bill $bill, string $field, int $diff)
+    public function __construct(private Bill $bill, private string $field, private int $diff)
     {
-        $this->bill  = $bill;
-        $this->field = $field;
-        $this->diff  = $diff;
     }
 
     /**
@@ -67,7 +60,7 @@ class BillReminder extends Notification
      */
     public function toMail(User $notifiable): MailMessage
     {
-        return (new MailMessage())
+        return new MailMessage()
             ->markdown('emails.bill-warning', ['field' => $this->field, 'diff' => $this->diff, 'bill' => $this->bill])
             ->subject($this->getSubject())
         ;

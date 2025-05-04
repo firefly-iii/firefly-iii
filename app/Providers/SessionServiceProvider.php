@@ -34,6 +34,7 @@ class SessionServiceProvider extends BaseSessionServiceProvider
     /**
      * Register the service provider.
      */
+    #[\Override]
     public function register(): void
     {
         $this->registerSessionManager();

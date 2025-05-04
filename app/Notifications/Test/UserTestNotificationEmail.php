@@ -50,7 +50,7 @@ class UserTestNotificationEmail extends Notification
     {
         $address = (string) $notifiable->email;
 
-        return (new MailMessage())
+        return new MailMessage()
             ->markdown('emails.admin-test', ['email' => $address])
             ->subject((string) trans('email.admin_test_subject'))
         ;

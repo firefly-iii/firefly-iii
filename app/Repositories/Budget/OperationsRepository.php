@@ -57,7 +57,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
             $diff   = (int) $limit->start_date->diffInDays($limit->end_date, true);
             $diff   = 0 === $diff ? 1 : $diff;
             $amount = $limit->amount;
-            $perDay = bcdiv($amount, (string) $diff);
+            $perDay = bcdiv((string) $amount, (string) $diff);
             $total  = bcadd($total, $perDay);
             ++$count;
             app('log')->debug(sprintf('Found %d budget limits. Per day is %s, total is %s', $count, $perDay, $total));
@@ -110,7 +110,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
                 'entries'                 => [],
             ];
             $date                         = $journal['date']->format($carbonFormat);
-            $data[$key]['entries'][$date] = bcadd($data[$key]['entries'][$date] ?? '0', $journal['amount']);
+            $data[$key]['entries'][$date] = bcadd($data[$key]['entries'][$date] ?? '0', (string) $journal['amount']);
         }
 
         return $data;

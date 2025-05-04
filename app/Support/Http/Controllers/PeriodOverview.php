@@ -135,11 +135,11 @@ trait PeriodOverview
         foreach ($transactions as $index => $item) {
             $date = Carbon::parse($item['date']);
             if ($date >= $start && $date <= $end) {
-                if ('away' === $direction && -1 === bccomp($item['amount'], '0')) {
+                if ('away' === $direction && -1 === bccomp((string) $item['amount'], '0')) {
                     $result[] = $item;
                     unset($transactions[$index]);
                 }
-                if ('in' === $direction && 1 === bccomp($item['amount'], '0')) {
+                if ('in' === $direction && 1 === bccomp((string) $item['amount'], '0')) {
                     $result[] = $item;
                     unset($transactions[$index]);
                 }

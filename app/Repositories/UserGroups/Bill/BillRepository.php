@@ -117,8 +117,8 @@ class BillRepository implements BillRepositoryInterface
                         // ignore conversion, use foreign amount
                         $nativeAmount = (string) $sourceTransaction->foreign_amount;
                     }
-                    $return[$currencyId]['sum']        = bcadd($return[$currencyId]['sum'], $amount);
-                    $return[$currencyId]['native_sum'] = bcadd($return[$currencyId]['native_sum'], $nativeAmount);
+                    $return[$currencyId]['sum']        = bcadd($return[$currencyId]['sum'], (string) $amount);
+                    $return[$currencyId]['native_sum'] = bcadd($return[$currencyId]['native_sum'], (string) $nativeAmount);
                 }
             }
         }
@@ -153,7 +153,7 @@ class BillRepository implements BillRepositoryInterface
             if ($total > 0) {
                 $currency                          = $bill->transactionCurrency;
                 $currencyId                        = $bill->transaction_currency_id;
-                $average                           = bcdiv(bcadd($bill->amount_max, $bill->amount_min), '2');
+                $average                           = bcdiv(bcadd((string) $bill->amount_max, (string) $bill->amount_min), '2');
                 $nativeAverage                     = $converter->convert($currency, $default, $start, $average);
                 $return[$currencyId] ??= [
                     'currency_id'                    => (string) $currency->id,

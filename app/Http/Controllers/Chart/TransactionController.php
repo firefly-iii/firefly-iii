@@ -81,7 +81,7 @@ class TransactionController extends Controller
                 'currency_symbol' => $journal['currency_symbol'],
                 'currency_code'   => $journal['currency_code'],
             ];
-            $data[$title]['amount'] = bcadd($data[$title]['amount'], $journal['amount']);
+            $data[$title]['amount'] = bcadd($data[$title]['amount'], (string) $journal['amount']);
         }
         $chart     = $this->generator->multiCurrencyPieChart($data);
         $cache->store($chart);
@@ -131,7 +131,7 @@ class TransactionController extends Controller
                 'currency_symbol' => $journal['currency_symbol'],
                 'currency_code'   => $journal['currency_code'],
             ];
-            $data[$title]['amount'] = bcadd($data[$title]['amount'], $journal['amount']);
+            $data[$title]['amount'] = bcadd($data[$title]['amount'], (string) $journal['amount']);
         }
         $chart     = $this->generator->multiCurrencyPieChart($data);
         $cache->store($chart);
@@ -181,7 +181,7 @@ class TransactionController extends Controller
                 'currency_symbol' => $journal['currency_symbol'],
                 'currency_code'   => $journal['currency_code'],
             ];
-            $data[$title]['amount'] = bcadd($data[$title]['amount'], $journal['amount']);
+            $data[$title]['amount'] = bcadd($data[$title]['amount'], (string) $journal['amount']);
         }
         $chart     = $this->generator->multiCurrencyPieChart($data);
         $cache->store($chart);
@@ -231,7 +231,7 @@ class TransactionController extends Controller
                 'currency_symbol' => $journal['currency_symbol'],
                 'currency_code'   => $journal['currency_code'],
             ];
-            $data[$title]['amount'] = bcadd($data[$title]['amount'], $journal['amount']);
+            $data[$title]['amount'] = bcadd($data[$title]['amount'], (string) $journal['amount']);
         }
         $chart     = $this->generator->multiCurrencyPieChart($data);
         $cache->store($chart);

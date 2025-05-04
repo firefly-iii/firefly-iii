@@ -110,7 +110,7 @@ trait AugumentData
         $grouped    = $accounts->groupBy('id')->toArray();
         $return     = [];
         foreach ($accountIds as $combinedId) {
-            $parts     = explode('-', $combinedId);
+            $parts     = explode('-', (string) $combinedId);
             $accountId = (int) $parts[0];
             if (array_key_exists($accountId, $grouped)) {
                 $return[$accountId] = $grouped[$accountId][0]['name'];
@@ -152,7 +152,7 @@ trait AugumentData
         $grouped    = $categories->groupBy('id')->toArray();
         $return     = [];
         foreach ($categoryIds as $combinedId) {
-            $parts      = explode('-', $combinedId);
+            $parts      = explode('-', (string) $combinedId);
             $categoryId = (int) $parts[0];
             if (array_key_exists($categoryId, $grouped)) {
                 $return[$categoryId] = $grouped[$categoryId][0]['name'];
@@ -249,7 +249,7 @@ trait AugumentData
             }
 
             $grouped[$name] ??= '0';
-            $grouped[$name] = bcadd($journal['amount'], $grouped[$name]);
+            $grouped[$name] = bcadd((string) $journal['amount'], $grouped[$name]);
         }
 
         return $grouped;
@@ -287,8 +287,8 @@ trait AugumentData
             }
 
             // add amount
-            $sum['per_currency'][$currencyId]['sum'] = bcadd($sum['per_currency'][$currencyId]['sum'], $journal['amount']);
-            $sum['grand_sum']                        = bcadd($sum['grand_sum'], $journal['amount']);
+            $sum['per_currency'][$currencyId]['sum'] = bcadd($sum['per_currency'][$currencyId]['sum'], (string) $journal['amount']);
+            $sum['grand_sum']                        = bcadd($sum['grand_sum'], (string) $journal['amount']);
         }
 
         return $sum;

@@ -36,7 +36,7 @@ use Illuminate\Support\Facades\Log;
  */
 class Navigation
 {
-    private Calculator $calculator;
+    private readonly Calculator $calculator;
 
     public function __construct(?Calculator $calculator = null)
     {
@@ -442,25 +442,13 @@ class Navigation
             return $range;
         }
 
-        switch ($range) {
-            default:
-                return $range;
-
-            case 'last7':
-                return '1W';
-
-            case 'last30':
-            case 'MTD':
-                return '1M';
-
-            case 'last90':
-            case 'QTD':
-                return '3M';
-
-            case 'last365':
-            case 'YTD':
-                return '1Y';
-        }
+        return match ($range) {
+            'last7' => '1W',
+            'last30', 'MTD' => '1M',
+            'last90', 'QTD' => '3M',
+            'last365', 'YTD' => '1Y',
+            default => $range,
+        };
     }
 
     /**

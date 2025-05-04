@@ -89,7 +89,7 @@ class LoginController extends Controller
 
         try {
             $this->validateLogin($request);
-        } catch (ValidationException $e) {
+        } catch (ValidationException) {
             // basic validation exception.
             // report the failed login to the user if the count is 2 or 5.
             // TODO here be warning.
@@ -220,7 +220,7 @@ class LoginController extends Controller
      *
      * @throws FireflyException
      */
-    public function showLoginForm(Request $request)
+    public function showLoginForm(?Request $request = null)
     {
         Log::channel('audit')->info('Show login form (1.1).');
 
