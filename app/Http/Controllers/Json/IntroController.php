@@ -41,7 +41,7 @@ class IntroController extends Controller
     public function getIntroSteps(string $route, ?string $specificPage = null): JsonResponse
     {
         app('log')->debug(sprintf('getIntroSteps for route "%s" and page "%s"', $route, $specificPage));
-        $specificPage ??= '';
+        $specificPage  ??= '';
         $steps         = $this->getBasicSteps($route);
         $specificSteps = $this->getSpecificSteps($route, $specificPage);
         if (0 === count($specificSteps)) {
@@ -55,8 +55,8 @@ class IntroController extends Controller
             // remove last step:
             array_pop($steps);
             // merge arrays and add last step again
-            $steps    = array_merge($steps, $specificSteps);
-            $steps[]  = $lastStep;
+            $steps   = array_merge($steps, $specificSteps);
+            $steps[] = $lastStep;
         }
         if (!$this->hasOutroStep($route)) {
             $steps = array_merge($steps, $specificSteps);
@@ -77,7 +77,7 @@ class IntroController extends Controller
             return false;
         }
 
-        $hasStep  = array_key_exists('outro', $elements);
+        $hasStep = array_key_exists('outro', $elements);
 
         app('log')->debug('Elements is array', $elements);
         app('log')->debug('Keys is', array_keys($elements));
@@ -94,10 +94,10 @@ class IntroController extends Controller
     public function postEnable(string $route, ?string $specialPage = null): JsonResponse
     {
         $specialPage ??= '';
-        $route = str_replace('.', '_', $route);
-        $key   = 'shown_demo_'.$route;
+        $route       = str_replace('.', '_', $route);
+        $key         = sprintf('shown_demo_%s', $route);
         if ('' !== $specialPage) {
-            $key .= '_'.$specialPage;
+            $key = sprintf('%s_%s', $key, $specialPage);
         }
         app('log')->debug(sprintf('Going to mark the following route as NOT done: %s with special "%s" (%s)', $route, $specialPage, $key));
         app('preferences')->set($key, false);
@@ -114,9 +114,9 @@ class IntroController extends Controller
     public function postFinished(string $route, ?string $specialPage = null): JsonResponse
     {
         $specialPage ??= '';
-        $key = 'shown_demo_'.$route;
+        $key         = sprintf('shown_demo_%s', $route);
         if ('' !== $specialPage) {
-            $key .= '_'.$specialPage;
+            $key = sprintf('%s_%s', $key, $specialPage);
         }
         app('log')->debug(sprintf('Going to mark the following route as done: %s with special "%s" (%s)', $route, $specialPage, $key));
         app('preferences')->set($key, true);
