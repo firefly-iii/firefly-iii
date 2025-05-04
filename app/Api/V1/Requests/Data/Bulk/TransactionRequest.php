@@ -32,6 +32,7 @@ use FireflyIII\Validation\Api\Data\Bulk\ValidatesBulkTransactionQuery;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
+
 use function Safe\json_decode;
 
 /**
