@@ -36,8 +36,8 @@ use FireflyIII\User;
 class TransactionGroupFactory
 {
     private readonly TransactionJournalFactory $journalFactory;
-    private User                      $user;
-    private UserGroup $userGroup;
+    private User                               $user;
+    private UserGroup                          $userGroup;
 
     /**
      * TransactionGroupFactory constructor.

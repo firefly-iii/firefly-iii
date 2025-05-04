@@ -34,28 +34,6 @@ abstract class Node
 {
     protected bool $prohibited;
 
-    /**
-     * Returns the prohibited status of the node, optionally inverted based on flipFlag
-     *
-     * Flipping is used when a node is inside a NodeGroup that has a prohibited status itself, causing inversion of the
-     * query parts inside
-     *
-     * @param bool $flipFlag When true, inverts the prohibited status
-     *
-     * @return bool The (potentially inverted) prohibited status
-     */
-    public function isProhibited(bool $flipFlag): bool
-    {
-        if ($flipFlag) {
-            // Log::debug(sprintf('This %s is (flipped) now prohibited: %s',get_class($this), var_export(!$this->prohibited, true)));
-            return !$this->prohibited;
-        }
-
-        // Log::debug(sprintf('This %s is (not flipped) now prohibited: %s',get_class($this), var_export($this->prohibited, true)));
-        return $this->prohibited;
-
-    }
-
     public function equals(self $compare): bool
     {
         if ($compare->isProhibited(false) !== $this->isProhibited(false)) {
@@ -86,5 +64,27 @@ abstract class Node
         }
 
         return true;
+    }
+
+    /**
+     * Returns the prohibited status of the node, optionally inverted based on flipFlag
+     *
+     * Flipping is used when a node is inside a NodeGroup that has a prohibited status itself, causing inversion of the
+     * query parts inside
+     *
+     * @param bool $flipFlag When true, inverts the prohibited status
+     *
+     * @return bool The (potentially inverted) prohibited status
+     */
+    public function isProhibited(bool $flipFlag): bool
+    {
+        if ($flipFlag) {
+            // Log::debug(sprintf('This %s is (flipped) now prohibited: %s',get_class($this), var_export(!$this->prohibited, true)));
+            return !$this->prohibited;
+        }
+
+        // Log::debug(sprintf('This %s is (not flipped) now prohibited: %s',get_class($this), var_export($this->prohibited, true)));
+        return $this->prohibited;
+
     }
 }

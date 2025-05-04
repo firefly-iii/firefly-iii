@@ -35,7 +35,6 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
-use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\AugumentData;
 use FireflyIII\Support\Http\Controllers\ChartGeneration;
@@ -535,6 +534,17 @@ class AccountController extends Controller
         return response()->json($data);
     }
 
+    private function updateChartKeys(array $array, array $balances): array
+    {
+        foreach (array_keys($balances) as $key) {
+            $array[$key] ??= [
+                'key' => $key,
+            ];
+        }
+
+        return $array;
+    }
+
     /**
      * Shows the balances for a given set of dates and accounts.
      *
@@ -675,16 +685,5 @@ class AccountController extends Controller
         $cache->store($data);
 
         return response()->json($data);
-    }
-
-    private function updateChartKeys(array $array, array $balances): array
-    {
-        foreach (array_keys($balances) as $key) {
-            $array[$key] ??= [
-                'key' => $key,
-            ];
-        }
-
-        return $array;
     }
 }

@@ -106,31 +106,6 @@ class AmountFormat extends AbstractExtension
     }
 
     /**
-     * Use the code to format a currency.
-     */
-    protected function formatAmountByCode(): TwigFunction
-    {
-        // formatAmountByCode
-        return new TwigFunction(
-            'formatAmountByCode',
-            static function (string $amount, string $code, ?bool $coloured = null): string {
-                $coloured ??= true;
-
-                /** @var null|TransactionCurrency $currency */
-                $currency = TransactionCurrency::whereCode($code)->first();
-                if (null === $currency) {
-                    Log::error(sprintf('Could not find currency with code "%s". Fallback to native currency.', $code));
-                    $currency = Amount::getNativeCurrency();
-                    Log::error(sprintf('Fallback currency is "%s".', $currency->code));
-                }
-
-                return app('amount')->formatAnything($currency, $amount, $coloured);
-            },
-            ['is_safe' => ['html']]
-        );
-    }
-
-    /**
      * Will format the amount by the currency related to the given account.
      */
     protected function formatAmountBySymbol(): TwigFunction
@@ -159,6 +134,31 @@ class AmountFormat extends AbstractExtension
             'formatAmountByCurrency',
             static function (TransactionCurrency $currency, string $amount, ?bool $coloured = null): string {
                 $coloured ??= true;
+
+                return app('amount')->formatAnything($currency, $amount, $coloured);
+            },
+            ['is_safe' => ['html']]
+        );
+    }
+
+    /**
+     * Use the code to format a currency.
+     */
+    protected function formatAmountByCode(): TwigFunction
+    {
+        // formatAmountByCode
+        return new TwigFunction(
+            'formatAmountByCode',
+            static function (string $amount, string $code, ?bool $coloured = null): string {
+                $coloured ??= true;
+
+                /** @var null|TransactionCurrency $currency */
+                $currency = TransactionCurrency::whereCode($code)->first();
+                if (null === $currency) {
+                    Log::error(sprintf('Could not find currency with code "%s". Fallback to native currency.', $code));
+                    $currency = Amount::getNativeCurrency();
+                    Log::error(sprintf('Fallback currency is "%s".', $currency->code));
+                }
 
                 return app('amount')->formatAnything($currency, $amount, $coloured);
             },

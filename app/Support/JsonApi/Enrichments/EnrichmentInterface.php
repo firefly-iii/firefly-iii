@@ -35,7 +35,7 @@ interface EnrichmentInterface
 
     public function enrichSingle(array|Model $model): array|Model;
 
-    public function setUserGroup(UserGroup $userGroup): void;
-
     public function setUser(User $user): void;
+
+    public function setUserGroup(UserGroup $userGroup): void;
 }

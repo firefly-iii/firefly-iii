@@ -44,21 +44,21 @@ class Bill extends Model
 
     protected $casts
                       = [
-            'created_at'             => 'datetime',
-            'updated_at'             => 'datetime',
-            'deleted_at'             => 'datetime',
-            'date'                   => SeparateTimezoneCaster::class,
-            'end_date'               => SeparateTimezoneCaster::class,
-            'extension_date'         => SeparateTimezoneCaster::class,
-            'skip'                   => 'int',
-            'automatch'              => 'boolean',
-            'active'                 => 'boolean',
-            'name_encrypted'         => 'boolean',
-            'match_encrypted'        => 'boolean',
-            'amount_min'             => 'string',
-            'amount_max'             => 'string',
-            'native_amount_min'      => 'string',
-            'native_amount_max'      => 'string',
+            'created_at'        => 'datetime',
+            'updated_at'        => 'datetime',
+            'deleted_at'        => 'datetime',
+            'date'              => SeparateTimezoneCaster::class,
+            'end_date'          => SeparateTimezoneCaster::class,
+            'extension_date'    => SeparateTimezoneCaster::class,
+            'skip'              => 'int',
+            'automatch'         => 'boolean',
+            'active'            => 'boolean',
+            'name_encrypted'    => 'boolean',
+            'match_encrypted'   => 'boolean',
+            'amount_min'        => 'string',
+            'amount_max'        => 'string',
+            'native_amount_min' => 'string',
+            'native_amount_max' => 'string',
         ];
 
     protected $fillable

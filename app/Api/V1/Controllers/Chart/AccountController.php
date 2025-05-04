@@ -26,8 +26,8 @@ namespace FireflyIII\Api\V1\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\Data\DateRequest;
 use FireflyIII\Api\V1\Requests\Chart\ChartRequest;
+use FireflyIII\Api\V1\Requests\Data\DateRequest;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
@@ -48,8 +48,8 @@ class AccountController extends Controller
     use ApiSupport;
     use CollectsAccountsFromFilter;
 
-    private AccountRepositoryInterface $repository;
     private ChartData                  $chartData;
+    private AccountRepositoryInterface $repository;
 
     /**
      * AccountController constructor.
@@ -91,6 +91,47 @@ class AccountController extends Controller
         }
 
         return response()->json($this->chartData->render());
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    private function renderAccountData(array $params, Account $account): void
+    {
+        $currency     = $this->repository->getAccountCurrency($account);
+        if (null === $currency) {
+            $currency = $this->default;
+        }
+        $currentSet   = [
+            'label'                   => $account->name,
+
+            // the currency that belongs to the account.
+            'currency_id'             => (string) $currency->id,
+            'currency_code'           => $currency->code,
+            'currency_symbol'         => $currency->symbol,
+            'currency_decimal_places' => $currency->decimal_places,
+
+            // the default currency of the user (could be the same!)
+            'date'                    => $params['start']->toAtomString(),
+            'start'                   => $params['start']->toAtomString(),
+            'end'                     => $params['end']->toAtomString(),
+            'period'                  => '1D',
+            'entries'                 => [],
+        ];
+        $currentStart = clone $params['start'];
+        $range        = Steam::finalAccountBalanceInRange($account, $params['start'], clone $params['end'], $this->convertToNative);
+
+        $previous     = array_values($range)[0]['balance'];
+        while ($currentStart <= $params['end']) {
+            $format                        = $currentStart->format('Y-m-d');
+            $label                         = $currentStart->toAtomString();
+            $balance                       = array_key_exists($format, $range) ? $range[$format]['balance'] : $previous;
+            $previous                      = $balance;
+
+            $currentStart->addDay();
+            $currentSet['entries'][$label] = $balance;
+        }
+        $this->chartData->add($currentSet);
     }
 
     /**
@@ -161,46 +202,5 @@ class AccountController extends Controller
         }
 
         return response()->json($chartData);
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    private function renderAccountData(array $params, Account $account): void
-    {
-        $currency     = $this->repository->getAccountCurrency($account);
-        if (null === $currency) {
-            $currency = $this->default;
-        }
-        $currentSet   = [
-            'label'                          => $account->name,
-
-            // the currency that belongs to the account.
-            'currency_id'                    => (string) $currency->id,
-            'currency_code'                  => $currency->code,
-            'currency_symbol'                => $currency->symbol,
-            'currency_decimal_places'        => $currency->decimal_places,
-
-            // the default currency of the user (could be the same!)
-            'date'                           => $params['start']->toAtomString(),
-            'start'                          => $params['start']->toAtomString(),
-            'end'                            => $params['end']->toAtomString(),
-            'period'                         => '1D',
-            'entries'                        => [],
-        ];
-        $currentStart = clone $params['start'];
-        $range        = Steam::finalAccountBalanceInRange($account, $params['start'], clone $params['end'], $this->convertToNative);
-
-        $previous     = array_values($range)[0]['balance'];
-        while ($currentStart <= $params['end']) {
-            $format                        = $currentStart->format('Y-m-d');
-            $label                         = $currentStart->toAtomString();
-            $balance                       = array_key_exists($format, $range) ? $range[$format]['balance'] : $previous;
-            $previous                      = $balance;
-
-            $currentStart->addDay();
-            $currentSet['entries'][$label] = $balance;
-        }
-        $this->chartData->add($currentSet);
     }
 }

@@ -29,7 +29,7 @@ use Symfony\Component\ExpressionLanguage\SyntaxError;
 
 class ActionExpression
 {
-    private static array       $NAMES
+    private static array                $NAMES
         = [
             //        'transaction_group_id',
             //        'user_id',

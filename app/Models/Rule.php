@@ -41,16 +41,16 @@ class Rule extends Model
 
     protected $casts
                         = [
-            'created_at'                   => 'datetime',
-            'updated_at'                   => 'datetime',
-            'deleted_at'                   => 'datetime',
-            'active'                       => 'boolean',
-            'order'                        => 'int',
-            'stop_processing'              => 'boolean',
-            'id'                           => 'int',
-            'strict'                       => 'boolean',
-            'user_id'                      => 'integer',
-            'user_group_id'                => 'integer',
+            'created_at'      => 'datetime',
+            'updated_at'      => 'datetime',
+            'deleted_at'      => 'datetime',
+            'active'          => 'boolean',
+            'order'           => 'int',
+            'stop_processing' => 'boolean',
+            'id'              => 'int',
+            'strict'          => 'boolean',
+            'user_id'         => 'integer',
+            'user_group_id'   => 'integer',
         ];
 
     protected $fillable = ['rule_group_id', 'order', 'active', 'title', 'description', 'user_id', 'user_group_id', 'strict'];

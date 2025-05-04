@@ -37,14 +37,14 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
-use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use FireflyIII\Support\Search\QueryParser\QueryParserInterface;
-use FireflyIII\Support\Search\QueryParser\Node;
-use FireflyIII\Support\Search\QueryParser\FieldNode;
-use FireflyIII\Support\Search\QueryParser\StringNode;
-use FireflyIII\Support\Search\QueryParser\NodeGroup;
+use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\ParseDateString;
+use FireflyIII\Support\Search\QueryParser\FieldNode;
+use FireflyIII\Support\Search\QueryParser\Node;
+use FireflyIII\Support\Search\QueryParser\NodeGroup;
+use FireflyIII\Support\Search\QueryParser\QueryParserInterface;
+use FireflyIII\Support\Search\QueryParser\StringNode;
 use FireflyIII\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -56,26 +56,26 @@ use Illuminate\Support\Collection;
  */
 class OperatorQuerySearch implements SearchInterface
 {
-    protected Carbon                    $date;
+    protected Carbon                             $date;
     private readonly AccountRepositoryInterface  $accountRepository;
     private readonly BillRepositoryInterface     $billRepository;
     private readonly BudgetRepositoryInterface   $budgetRepository;
     private readonly CategoryRepositoryInterface $categoryRepository;
-    private GroupCollectorInterface     $collector;
+    private GroupCollectorInterface              $collector;
     private readonly CurrencyRepositoryInterface $currencyRepository;
-    private array                       $excludeTags;
-    private array                       $includeAnyTags;
+    private array                                $excludeTags;
+    private array                                $includeAnyTags;
     // added to fix #8632
-    private array                  $includeTags;
-    private array                  $invalidOperators;
-    private int                    $limit;
+    private array                           $includeTags;
+    private array                           $invalidOperators;
+    private int                             $limit;
     private readonly Collection             $operators;
-    private int                    $page;
-    private array                  $prohibitedWords;
+    private int                             $page;
+    private array                           $prohibitedWords;
     private readonly float                  $startTime;
     private readonly TagRepositoryInterface $tagRepository;
     private readonly array                  $validOperators;
-    private array                  $words;
+    private array                           $words;
 
     /**
      * OperatorQuerySearch constructor.
@@ -120,16 +120,6 @@ class OperatorQuerySearch implements SearchInterface
     public function getWordsAsString(): string
     {
         return implode(' ', $this->words);
-    }
-
-    public function getWords(): array
-    {
-        return $this->words;
-    }
-
-    public function getExcludedWords(): array
-    {
-        return $this->prohibitedWords;
     }
 
     /**
@@ -199,15 +189,6 @@ class OperatorQuerySearch implements SearchInterface
                 app('log')->error(sprintf('Cannot handle node %s', $node::class));
 
                 throw new FireflyException(sprintf('Firefly III search can\'t handle "%s"-nodes', $node::class));
-        }
-    }
-
-    private function handleNodeGroup(NodeGroup $node, bool $flipProhibitedFlag): void
-    {
-        $prohibited = $node->isProhibited($flipProhibitedFlag);
-
-        foreach ($node->getNodes() as $subNode) {
-            $this->handleSearchNode($subNode, $prohibited);
         }
     }
 
@@ -2775,6 +2756,15 @@ class OperatorQuerySearch implements SearchInterface
         }
     }
 
+    private function handleNodeGroup(NodeGroup $node, bool $flipProhibitedFlag): void
+    {
+        $prohibited = $node->isProhibited($flipProhibitedFlag);
+
+        foreach ($node->getNodes() as $subNode) {
+            $this->handleSearchNode($subNode, $prohibited);
+        }
+    }
+
     public function searchTime(): float
     {
         return microtime(true) - $this->startTime;
@@ -2833,6 +2823,16 @@ class OperatorQuerySearch implements SearchInterface
             }
             $this->collector->setTags($collection);
         }
+    }
+
+    public function getWords(): array
+    {
+        return $this->words;
+    }
+
+    public function getExcludedWords(): array
+    {
+        return $this->prohibitedWords;
     }
 
     public function setDate(Carbon $date): void

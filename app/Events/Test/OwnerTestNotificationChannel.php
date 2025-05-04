@@ -31,7 +31,7 @@ class OwnerTestNotificationChannel
 {
     use SerializesModels;
 
-    public string          $channel;
+    public string $channel;
 
     /**
      * Create a new event instance.

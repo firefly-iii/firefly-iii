@@ -36,6 +36,89 @@ use Illuminate\Support\Facades\Log;
  */
 trait AccountCollection
 {
+    #[\Override]
+    public function accountBalanceIs(string $direction, string $operator, string $value): GroupCollectorInterface
+    {
+        Log::warning(sprintf('GroupCollector will be SLOW: accountBalanceIs: "%s" "%s" "%s"', $direction, $operator, $value));
+
+        /**
+         * @param int   $index
+         * @param array $object
+         *
+         * @return bool
+         */
+        $filter              = static function (array $object) use ($direction, $operator, $value): bool {
+            /** @var array $transaction */
+            foreach ($object['transactions'] as $transaction) {
+                $key       = sprintf('%s_account_id', $direction);
+                $accountId = $transaction[$key] ?? 0;
+                if (0 === $accountId) {
+                    return false;
+                }
+
+                // in theory, this could lead to finding other users accounts.
+                /** @var null|Account $account */
+                $account   = Account::find($accountId);
+                if (null === $account) {
+                    continue;
+                }
+                // the balance must be found BEFORE the transaction date.
+                // so sub one second. This is not perfect, but works well enough.
+                $date      = clone $transaction['date'];
+                $date->subSecond();
+                Log::debug(sprintf('accountBalanceIs: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
+                $balance   = Steam::finalAccountBalance($account, $date);
+                $result    = bccomp((string) $balance['balance'], $value);
+                Log::debug(sprintf('"%s" vs "%s" is %d', $balance['balance'], $value, $result));
+
+                switch ($operator) {
+                    default:
+                        Log::error(sprintf('GroupCollector: accountBalanceIs: unknown operator "%s"', $operator));
+
+                        return false;
+
+                    case '==':
+                        Log::debug('Expect result to be 0 (equal)');
+
+                        return 0 === $result;
+
+                    case '!=':
+                        Log::debug('Expect result to be -1 or 1 (not equal)');
+
+                        return 0 !== $result;
+
+                    case '>':
+                        Log::debug('Expect result to be 1 (greater then)');
+
+                        return 1 === $result;
+
+                    case '>=':
+                        Log::debug('Expect result to be 0 or 1 (greater then or equal)');
+
+                        return -1 !== $result;
+
+                    case '<':
+                        Log::debug('Expect result to be -1 (less than)');
+
+                        return -1 === $result;
+
+                    case '<=':
+                        Log::debug('Expect result to be -1 or 0 (less than or equal)');
+
+                        return 1 !== $result;
+                }
+                // if($balance['balance'] $operator $value) {
+
+                // }
+            }
+
+            return false;
+        };
+        $this->postFilters[] = $filter;
+
+        return $this;
+    }
+
     /**
      * These accounts must not be included.
      */
@@ -228,89 +311,6 @@ trait AccountCollection
             $this->fields[]       = 'dest_account_type.type as destination_account_type';
             $this->hasAccountInfo = true;
         }
-
-        return $this;
-    }
-
-    #[\Override]
-    public function accountBalanceIs(string $direction, string $operator, string $value): GroupCollectorInterface
-    {
-        Log::warning(sprintf('GroupCollector will be SLOW: accountBalanceIs: "%s" "%s" "%s"', $direction, $operator, $value));
-
-        /**
-         * @param int   $index
-         * @param array $object
-         *
-         * @return bool
-         */
-        $filter              = static function (array $object) use ($direction, $operator, $value): bool {
-            /** @var array $transaction */
-            foreach ($object['transactions'] as $transaction) {
-                $key       = sprintf('%s_account_id', $direction);
-                $accountId = $transaction[$key] ?? 0;
-                if (0 === $accountId) {
-                    return false;
-                }
-
-                // in theory, this could lead to finding other users accounts.
-                /** @var null|Account $account */
-                $account   = Account::find($accountId);
-                if (null === $account) {
-                    continue;
-                }
-                // the balance must be found BEFORE the transaction date.
-                // so sub one second. This is not perfect, but works well enough.
-                $date      = clone $transaction['date'];
-                $date->subSecond();
-                Log::debug(sprintf('accountBalanceIs: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
-                $balance   = Steam::finalAccountBalance($account, $date);
-                $result    = bccomp((string) $balance['balance'], $value);
-                Log::debug(sprintf('"%s" vs "%s" is %d', $balance['balance'], $value, $result));
-
-                switch ($operator) {
-                    default:
-                        Log::error(sprintf('GroupCollector: accountBalanceIs: unknown operator "%s"', $operator));
-
-                        return false;
-
-                    case '==':
-                        Log::debug('Expect result to be 0 (equal)');
-
-                        return 0 === $result;
-
-                    case '!=':
-                        Log::debug('Expect result to be -1 or 1 (not equal)');
-
-                        return 0 !== $result;
-
-                    case '>':
-                        Log::debug('Expect result to be 1 (greater then)');
-
-                        return 1 === $result;
-
-                    case '>=':
-                        Log::debug('Expect result to be 0 or 1 (greater then or equal)');
-
-                        return -1 !== $result;
-
-                    case '<':
-                        Log::debug('Expect result to be -1 (less than)');
-
-                        return -1 === $result;
-
-                    case '<=':
-                        Log::debug('Expect result to be -1 or 0 (less than or equal)');
-
-                        return 1 !== $result;
-                }
-                // if($balance['balance'] $operator $value) {
-
-                // }
-            }
-
-            return false;
-        };
-        $this->postFilters[] = $filter;
 
         return $this;
     }

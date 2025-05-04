@@ -326,6 +326,18 @@ trait ConvertsDataTypes
         return $carbon;
     }
 
+    protected function floatFromValue(?string $string): ?float
+    {
+        if (null === $string) {
+            return null;
+        }
+        if ('' === $string) {
+            return null;
+        }
+
+        return (float) $string;
+    }
+
     /**
      * Returns all data in the request, or omits the field if not set,
      * according to the config from the request. This is the way.
@@ -376,18 +388,20 @@ trait ConvertsDataTypes
     }
 
     /**
-     * Parse to integer
+     * Return integer value, or NULL when it's not set.
      */
-    protected function integerFromValue(?string $string): ?int
+    protected function nullableInteger(string $field): ?int
     {
-        if (null === $string) {
-            return null;
-        }
-        if ('' === $string) {
+        if (false === $this->has($field)) {
             return null;
         }
 
-        return (int) $string;
+        $value = (string) $this->get($field);
+        if ('' === $value) {
+            return null;
+        }
+
+        return (int) $value;
     }
 
     protected function parseAccounts(mixed $array): array
@@ -419,7 +433,10 @@ trait ConvertsDataTypes
         return $return;
     }
 
-    protected function floatFromValue(?string $string): ?float
+    /**
+     * Parse to integer
+     */
+    protected function integerFromValue(?string $string): ?int
     {
         if (null === $string) {
             return null;
@@ -428,23 +445,6 @@ trait ConvertsDataTypes
             return null;
         }
 
-        return (float) $string;
-    }
-
-    /**
-     * Return integer value, or NULL when it's not set.
-     */
-    protected function nullableInteger(string $field): ?int
-    {
-        if (false === $this->has($field)) {
-            return null;
-        }
-
-        $value = (string) $this->get($field);
-        if ('' === $value) {
-            return null;
-        }
-
-        return (int) $value;
+        return (int) $string;
     }
 }

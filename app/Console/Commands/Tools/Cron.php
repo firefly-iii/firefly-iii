@@ -150,6 +150,23 @@ class Cron extends Command
         }
     }
 
+    private function checkForUpdates(bool $force): void
+    {
+        $updateCheck = new UpdateCheckCronjob();
+        $updateCheck->setForce($force);
+        $updateCheck->fire();
+
+        if ($updateCheck->jobErrored) {
+            $this->friendlyError(sprintf('Error in "update check" cron: %s', $updateCheck->message));
+        }
+        if ($updateCheck->jobFired) {
+            $this->friendlyInfo(sprintf('"Update check" cron fired: %s', $updateCheck->message));
+        }
+        if ($updateCheck->jobSucceeded) {
+            $this->friendlyPositive(sprintf('"Update check" cron ran with success: %s', $updateCheck->message));
+        }
+    }
+
     /**
      * @throws FireflyException
      */
@@ -219,23 +236,6 @@ class Cron extends Command
         }
         if ($autoBudget->jobSucceeded) {
             $this->friendlyPositive(sprintf('"Send bill warnings" cron ran with success: %s', $autoBudget->message));
-        }
-    }
-
-    private function checkForUpdates(bool $force): void
-    {
-        $updateCheck = new UpdateCheckCronjob();
-        $updateCheck->setForce($force);
-        $updateCheck->fire();
-
-        if ($updateCheck->jobErrored) {
-            $this->friendlyError(sprintf('Error in "update check" cron: %s', $updateCheck->message));
-        }
-        if ($updateCheck->jobFired) {
-            $this->friendlyInfo(sprintf('"Update check" cron fired: %s', $updateCheck->message));
-        }
-        if ($updateCheck->jobSucceeded) {
-            $this->friendlyPositive(sprintf('"Update check" cron ran with success: %s', $updateCheck->message));
         }
     }
 }

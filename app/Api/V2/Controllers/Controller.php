@@ -33,7 +33,6 @@ use FireflyIII\Transformers\AbstractTransformer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Support\Collection;
 use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
@@ -56,8 +55,8 @@ class Controller extends BaseController
 
     protected const string CONTENT_TYPE     = 'application/vnd.api+json';
     protected array        $acceptedRoles   = [UserRoleEnum::READ_ONLY];
-    protected ParameterBag $parameters;
     protected bool         $convertToNative = false;
+    protected ParameterBag $parameters;
 
     public function __construct()
     {

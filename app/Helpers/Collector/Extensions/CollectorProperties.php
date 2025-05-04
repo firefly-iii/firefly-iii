@@ -37,6 +37,7 @@ trait CollectorProperties
 
     /** @var array<int, string> */
     public array    $sorting;
+    private array   $booleanFields;
     private ?int    $endRow;
     private bool    $expandGroupSearch;
     private array   $fields;
@@ -55,7 +56,6 @@ trait CollectorProperties
     private HasMany $query;
     private ?int    $startRow;
     private array   $stringFields;
-    private array   $booleanFields;
     /*
      * This array is used to collect ALL tags the user may search for (using 'setTags').
      * This way the user can call 'setTags' multiple times and get a joined result.

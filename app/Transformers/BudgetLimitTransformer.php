@@ -41,9 +41,8 @@ class BudgetLimitTransformer extends AbstractTransformer
         = [
             'budget',
         ];
-
-    protected TransactionCurrency $default;
     protected bool                $convertToNative;
+    protected TransactionCurrency $default;
 
     public function __construct()
     {

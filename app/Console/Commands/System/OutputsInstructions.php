@@ -172,6 +172,13 @@ class OutputsInstructions extends Command
         }
     }
 
+    private function donationText(): void
+    {
+        $this->boxed('Did you know you can support the development of Firefly III?');
+        $this->boxed('You can donate in many ways, like GitHub Sponsors or Patreon.');
+        $this->boxed('For more information, please visit https://bit.ly/donate-to-Firefly-III');
+    }
+
     /**
      * Render instructions.
      */
@@ -224,12 +231,5 @@ class OutputsInstructions extends Command
         $this->donationText();
         $this->boxed('');
         $this->showLine();
-    }
-
-    private function donationText(): void
-    {
-        $this->boxed('Did you know you can support the development of Firefly III?');
-        $this->boxed('You can donate in many ways, like GitHub Sponsors or Patreon.');
-        $this->boxed('For more information, please visit https://bit.ly/donate-to-Firefly-III');
     }
 }

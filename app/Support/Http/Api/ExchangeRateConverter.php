@@ -53,11 +53,6 @@ class ExchangeRateConverter
         }
     }
 
-    public function setUserGroup(UserGroup $userGroup): void
-    {
-        $this->userGroup = $userGroup;
-    }
-
     /**
      * @throws FireflyException
      */
@@ -282,6 +277,11 @@ class ExchangeRateConverter
     public function setIgnoreSettings(bool $ignoreSettings): void
     {
         $this->ignoreSettings = $ignoreSettings;
+    }
+
+    public function setUserGroup(UserGroup $userGroup): void
+    {
+        $this->userGroup = $userGroup;
     }
 
     public function summarize(): void

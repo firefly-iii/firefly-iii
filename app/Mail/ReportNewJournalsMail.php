@@ -40,7 +40,8 @@ class ReportNewJournalsMail extends Mailable
 {
     use Queueable;
     use SerializesModels;
-    public array      $transformed;
+
+    public array $transformed;
 
     /**
      * ConfirmEmailChangeMail constructor.

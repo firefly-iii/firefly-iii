@@ -37,12 +37,6 @@ class BudgetLimitObserver
         $this->updateNativeAmount($budgetLimit);
     }
 
-    public function updated(BudgetLimit $budgetLimit): void
-    {
-        Log::debug('Observe "updated" of a budget limit.');
-        $this->updateNativeAmount($budgetLimit);
-    }
-
     private function updateNativeAmount(BudgetLimit $budgetLimit): void
     {
         if (!Amount::convertToNative($budgetLimit->budget->user)) {
@@ -60,5 +54,11 @@ class BudgetLimitObserver
         }
         $budgetLimit->saveQuietly();
         Log::debug('Budget limit native amounts are updated.');
+    }
+
+    public function updated(BudgetLimit $budgetLimit): void
+    {
+        Log::debug('Observe "updated" of a budget limit.');
+        $this->updateNativeAmount($budgetLimit);
     }
 }

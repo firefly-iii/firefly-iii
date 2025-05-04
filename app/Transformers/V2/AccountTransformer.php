@@ -44,13 +44,13 @@ class AccountTransformer extends AbstractTransformer
     private array               $accountMeta;
     private array               $accountTypes;
     private array               $balanceDifferences;
+    private array               $balances;
     private array               $convertedBalances;
     private array               $currencies;
     private TransactionCurrency $default;
     private array               $fullTypes;
     private array               $lastActivity;
     private array               $objectGroups;
-    private array $balances;
 
     /**
      * This method collects meta-data for one or all accounts in the transformer's collection.

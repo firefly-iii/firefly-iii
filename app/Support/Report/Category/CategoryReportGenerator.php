@@ -35,12 +35,12 @@ use Illuminate\Support\Collection;
  */
 class CategoryReportGenerator
 {
-    private Collection                    $accounts;
-    private Carbon                        $end;
+    private Collection                             $accounts;
+    private Carbon                                 $end;
     private readonly NoCategoryRepositoryInterface $noCatRepository;
     private readonly OperationsRepositoryInterface $opsRepository;
-    private array                         $report;
-    private Carbon                        $start;
+    private array                                  $report;
+    private Carbon                                 $start;
 
     /**
      * CategoryReportGenerator constructor.

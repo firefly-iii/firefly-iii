@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Deprecated;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -35,13 +36,13 @@ class AutoBudget extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    #[\Deprecated] /** @deprecated  */
+    #[\Deprecated] /** @deprecated */
     public const int AUTO_BUDGET_ADJUSTED = 3;
 
-    #[\Deprecated] /** @deprecated  */
+    #[\Deprecated] /** @deprecated */
     public const int AUTO_BUDGET_RESET    = 1;
 
-    #[\Deprecated] /** @deprecated  */
+    #[\Deprecated] /** @deprecated */
     public const int AUTO_BUDGET_ROLLOVER = 2;
     protected $casts
                                           = [

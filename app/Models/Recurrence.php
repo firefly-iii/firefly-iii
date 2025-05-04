@@ -44,20 +44,20 @@ class Recurrence extends Model
 
     protected $casts
                      = [
-            'created_at'                   => 'datetime',
-            'updated_at'                   => 'datetime',
-            'deleted_at'                   => 'datetime',
-            'title'                        => 'string',
-            'id'                           => 'int',
-            'description'                  => 'string',
-            'first_date'                   => SeparateTimezoneCaster::class,
-            'repeat_until'                 => SeparateTimezoneCaster::class,
-            'latest_date'                  => SeparateTimezoneCaster::class,
-            'repetitions'                  => 'int',
-            'active'                       => 'bool',
-            'apply_rules'                  => 'bool',
-            'user_id'                      => 'integer',
-            'user_group_id'                => 'integer',
+            'created_at'    => 'datetime',
+            'updated_at'    => 'datetime',
+            'deleted_at'    => 'datetime',
+            'title'         => 'string',
+            'id'            => 'int',
+            'description'   => 'string',
+            'first_date'    => SeparateTimezoneCaster::class,
+            'repeat_until'  => SeparateTimezoneCaster::class,
+            'latest_date'   => SeparateTimezoneCaster::class,
+            'repetitions'   => 'int',
+            'active'        => 'bool',
+            'apply_rules'   => 'bool',
+            'user_id'       => 'integer',
+            'user_group_id' => 'integer',
         ];
 
     protected $fillable

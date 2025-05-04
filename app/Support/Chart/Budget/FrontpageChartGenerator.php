@@ -39,14 +39,14 @@ use Illuminate\Support\Facades\Log;
  */
 class FrontpageChartGenerator
 {
-    protected OperationsRepositoryInterface $opsRepository;
-    private readonly BudgetLimitRepositoryInterface  $blRepository;
-    private readonly BudgetRepositoryInterface       $budgetRepository;
-    private Carbon                          $end;
-    private string                          $monthAndDayFormat;
-    private Carbon                          $start;
-    public bool                             $convertToNative = false;
-    public TransactionCurrency              $default;
+    public bool                                     $convertToNative = false;
+    public TransactionCurrency                      $default;
+    protected OperationsRepositoryInterface         $opsRepository;
+    private readonly BudgetLimitRepositoryInterface $blRepository;
+    private readonly BudgetRepositoryInterface      $budgetRepository;
+    private Carbon                                  $end;
+    private string                                  $monthAndDayFormat;
+    private Carbon                                  $start;
 
     /**
      * FrontpageChartGenerator constructor.
@@ -120,8 +120,8 @@ class FrontpageChartGenerator
         foreach ($spent as $entry) {
             $title                      = sprintf('%s (%s)', $budget->name, $entry['currency_name']);
             $data[0]['entries'][$title] = bcmul((string) $entry['sum'], '-1'); // spent
-            $data[1]['entries'][$title] = 0;                          // left to spend
-            $data[2]['entries'][$title] = 0;                          // overspent
+            $data[1]['entries'][$title] = 0;                                   // left to spend
+            $data[2]['entries'][$title] = 0;                                   // overspent
         }
 
         return $data;
@@ -209,7 +209,7 @@ class FrontpageChartGenerator
         $data[1]['entries'][$title] ??= '0';
         $data[2]['entries'][$title] ??= '0';
 
-        $data[0]['entries'][$title] = bcadd((string) $data[0]['entries'][$title], 1 === bccomp($sumSpent, $amount) ? $amount : $sumSpent);                              // spent
+        $data[0]['entries'][$title] = bcadd((string) $data[0]['entries'][$title], 1 === bccomp($sumSpent, $amount) ? $amount : $sumSpent);                                       // spent
         $data[1]['entries'][$title] = bcadd((string) $data[1]['entries'][$title], 1 === bccomp($amount, $sumSpent) ? bcadd((string) $entry['sum'], $amount) : '0');              // left to spent
         $data[2]['entries'][$title] = bcadd((string) $data[2]['entries'][$title], 1 === bccomp($amount, $sumSpent) ? '0' : bcmul(bcadd((string) $entry['sum'], $amount), '-1')); // overspent
 

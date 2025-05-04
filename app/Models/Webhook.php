@@ -44,12 +44,12 @@ class Webhook extends Model
 
     protected $casts
                         = [
-            'active'                       => 'boolean',
-            'trigger'                      => 'integer',
-            'response'                     => 'integer',
-            'delivery'                     => 'integer',
-            'user_id'                      => 'integer',
-            'user_group_id'                => 'integer',
+            'active'        => 'boolean',
+            'trigger'       => 'integer',
+            'response'      => 'integer',
+            'delivery'      => 'integer',
+            'user_id'       => 'integer',
+            'user_group_id' => 'integer',
         ];
     protected $fillable = ['active', 'trigger', 'response', 'delivery', 'user_id', 'user_group_id', 'url', 'title', 'secret'];
 

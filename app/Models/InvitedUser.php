@@ -39,10 +39,10 @@ class InvitedUser extends Model
 
     protected $casts
                         = [
-            'expires'                      => SeparateTimezoneCaster::class,
-            'redeemed'                     => 'boolean',
-            'user_id'                      => 'integer',
-            'user_group_id'                => 'integer',
+            'expires'       => SeparateTimezoneCaster::class,
+            'redeemed'      => 'boolean',
+            'user_id'       => 'integer',
+            'user_group_id' => 'integer',
         ];
     protected $fillable = ['user_group_id', 'user_id', 'email', 'invite_code', 'expires', 'expires_tz', 'redeemed'];
 

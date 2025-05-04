@@ -31,9 +31,9 @@ use Illuminate\Support\Facades\Log;
 
 class TransactionSummarizer
 {
-    private User                $user;
-    private TransactionCurrency $default;
     private bool                $convertToNative = false;
+    private TransactionCurrency $default;
+    private User                $user;
 
     public function __construct(?User $user = null)
     {
@@ -161,9 +161,6 @@ class TransactionSummarizer
         $nameKey         = sprintf('%s_account_name', $direction);
         $convertToNative = Amount::convertToNative($this->user);
         $default         = Amount::getNativeCurrencyByUserGroup($this->user->userGroup);
-
-
-
 
 
         Log::debug(sprintf('groupByDirection(array, %s, %s).', $direction, $method));

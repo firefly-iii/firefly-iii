@@ -34,7 +34,7 @@ use FireflyIII\User;
  */
 class TagFactory
 {
-    private User $user;
+    private User      $user;
     private UserGroup $userGroup;
 
     public function findOrCreate(string $tag): ?Tag

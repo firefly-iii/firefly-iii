@@ -662,10 +662,10 @@ trait AccountServiceTrait
 
         // submit to factory:
         $submission = [
-            'group_title'   => null,
-            'user'          => $account->user,
-            'user_group'    => $account->user->userGroup,
-            'transactions'  => [
+            'group_title'  => null,
+            'user'         => $account->user,
+            'user_group'   => $account->user->userGroup,
+            'transactions' => [
                 [
                     'type'             => 'Opening balance',
                     'date'             => $openingBalanceDate,

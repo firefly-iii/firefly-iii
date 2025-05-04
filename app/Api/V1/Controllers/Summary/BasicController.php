@@ -483,7 +483,7 @@ class BasicController extends Controller
 
         // first, create an entry for each entry in the "available" array.
         /** @var array $availableBudget */
-        foreach ($available as $currencyId =>  $availableBudget) {
+        foreach ($available as $currencyId => $availableBudget) {
             $currencies[$currencyId] ??= $this->currencyRepos->find($currencyId);
             $return[$currencyId] = [
                 'key'                     => sprintf('left-to-spend-in-%s', $currencies[$currencyId]->code),

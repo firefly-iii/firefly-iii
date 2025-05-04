@@ -54,6 +54,55 @@ class UpdatedGroupEventHandler
     }
 
     /**
+     * This method will make sure all source / destination accounts are the same.
+     */
+    public function unifyAccounts(UpdatedTransactionGroup $updatedGroupEvent): void
+    {
+        $group         = $updatedGroupEvent->transactionGroup;
+        if (1 === $group->transactionJournals->count()) {
+            return;
+        }
+
+        // first journal:
+        /** @var null|TransactionJournal $first */
+        $first         = $group->transactionJournals()
+            ->orderBy('transaction_journals.date', 'DESC')
+            ->orderBy('transaction_journals.order', 'ASC')
+            ->orderBy('transaction_journals.id', 'DESC')
+            ->orderBy('transaction_journals.description', 'DESC')
+            ->first()
+        ;
+
+        if (null === $first) {
+            Log::warning(sprintf('Group #%d has no transaction journals.', $group->id));
+
+            return;
+        }
+
+        $all           = $group->transactionJournals()->get()->pluck('id')->toArray();
+
+        /** @var Account $sourceAccount */
+        $sourceAccount = $first->transactions()->where('amount', '<', '0')->first()->account;
+
+        /** @var Account $destAccount */
+        $destAccount   = $first->transactions()->where('amount', '>', '0')->first()->account;
+
+        $type          = $first->transactionType->type;
+        if (TransactionTypeEnum::TRANSFER->value === $type || TransactionTypeEnum::WITHDRAWAL->value === $type) {
+            // set all source transactions to source account:
+            Transaction::whereIn('transaction_journal_id', $all)
+                ->where('amount', '<', 0)->update(['account_id' => $sourceAccount->id])
+            ;
+        }
+        if (TransactionTypeEnum::TRANSFER->value === $type || TransactionTypeEnum::DEPOSIT->value === $type) {
+            // set all destination transactions to destination account:
+            Transaction::whereIn('transaction_journal_id', $all)
+                ->where('amount', '>', 0)->update(['account_id' => $destAccount->id])
+            ;
+        }
+    }
+
+    /**
      * This method will check all the rules when a journal is updated.
      */
     private function processRules(UpdatedTransactionGroup $updatedGroupEvent): void
@@ -117,55 +166,6 @@ class UpdatedGroupEventHandler
         $engine->generateMessages();
 
         event(new RequestedSendWebhookMessages());
-    }
-
-    /**
-     * This method will make sure all source / destination accounts are the same.
-     */
-    public function unifyAccounts(UpdatedTransactionGroup $updatedGroupEvent): void
-    {
-        $group         = $updatedGroupEvent->transactionGroup;
-        if (1 === $group->transactionJournals->count()) {
-            return;
-        }
-
-        // first journal:
-        /** @var null|TransactionJournal $first */
-        $first         = $group->transactionJournals()
-            ->orderBy('transaction_journals.date', 'DESC')
-            ->orderBy('transaction_journals.order', 'ASC')
-            ->orderBy('transaction_journals.id', 'DESC')
-            ->orderBy('transaction_journals.description', 'DESC')
-            ->first()
-        ;
-
-        if (null === $first) {
-            Log::warning(sprintf('Group #%d has no transaction journals.', $group->id));
-
-            return;
-        }
-
-        $all           = $group->transactionJournals()->get()->pluck('id')->toArray();
-
-        /** @var Account $sourceAccount */
-        $sourceAccount = $first->transactions()->where('amount', '<', '0')->first()->account;
-
-        /** @var Account $destAccount */
-        $destAccount   = $first->transactions()->where('amount', '>', '0')->first()->account;
-
-        $type          = $first->transactionType->type;
-        if (TransactionTypeEnum::TRANSFER->value === $type || TransactionTypeEnum::WITHDRAWAL->value === $type) {
-            // set all source transactions to source account:
-            Transaction::whereIn('transaction_journal_id', $all)
-                ->where('amount', '<', 0)->update(['account_id' => $sourceAccount->id])
-            ;
-        }
-        if (TransactionTypeEnum::TRANSFER->value === $type || TransactionTypeEnum::DEPOSIT->value === $type) {
-            // set all destination transactions to destination account:
-            Transaction::whereIn('transaction_journal_id', $all)
-                ->where('amount', '>', 0)->update(['account_id' => $destAccount->id])
-            ;
-        }
     }
 
     private function updateRunningBalance(UpdatedTransactionGroup $event): void

@@ -51,13 +51,12 @@ abstract class Controller extends BaseController
 
     // fails on PHP < 8.4
     public protected(set) string $name;
-
-    protected string $dateTimeFormat;
-    protected string $monthAndDayFormat;
-    protected bool $convertToNative = false;
+    protected bool                 $convertToNative = false;
+    protected string               $dateTimeFormat;
     protected ?TransactionCurrency $defaultCurrency;
-    protected string $monthFormat;
-    protected string $redirectUrl = '/';
+    protected string               $monthAndDayFormat;
+    protected string               $monthFormat;
+    protected string               $redirectUrl     = '/';
 
     /**
      * Controller constructor.
@@ -94,8 +93,8 @@ abstract class Controller extends BaseController
         View::share('uploadSize', $uploadSize);
 
         // share is alpha, is beta
-        $isAlpha = false;
-        $isBeta = false;
+        $isAlpha   = false;
+        $isBeta    = false;
         $isDevelop = false;
         if (str_contains((string) config('firefly.version'), 'alpha')) {
             $isAlpha = true;
@@ -120,16 +119,16 @@ abstract class Controller extends BaseController
                 $this->monthAndDayFormat = (string) trans('config.month_and_day_js', [], $locale);
                 $this->dateTimeFormat    = (string) trans('config.date_time_js', [], $locale);
                 $darkMode                = 'browser';
-                $this->defaultCurrency   =null;
+                $this->defaultCurrency   = null;
                 // get shown-intro-preference:
                 if (auth()->check()) {
-                    $this->defaultCurrency   = Amount::getNativeCurrency();
-                    $language  = Steam::getLanguage();
-                    $locale    = Steam::getLocale();
-                    $darkMode  = app('preferences')->get('darkMode', 'browser')->data;
-                    $this->convertToNative =Amount::convertToNative();
-                    $page      = $this->getPageName();
-                    $shownDemo = $this->hasSeenDemo();
+                    $this->defaultCurrency = Amount::getNativeCurrency();
+                    $language              = Steam::getLanguage();
+                    $locale                = Steam::getLocale();
+                    $darkMode              = app('preferences')->get('darkMode', 'browser')->data;
+                    $this->convertToNative = Amount::convertToNative();
+                    $page                  = $this->getPageName();
+                    $shownDemo             = $this->hasSeenDemo();
                     View::share('language', $language);
                     View::share('locale', $locale);
                     View::share('convertToNative', $this->convertToNative);
