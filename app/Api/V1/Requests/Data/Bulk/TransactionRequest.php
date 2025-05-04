@@ -32,6 +32,7 @@ use FireflyIII\Validation\Api\Data\Bulk\ValidatesBulkTransactionQuery;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
+use function Safe\json_decode;
 
 /**
  * Class TransactionRequest
@@ -48,7 +49,7 @@ class TransactionRequest extends FormRequest
 
         try {
             $data = [
-                'query' => \Safe\json_decode($this->get('query'), true, 8, JSON_THROW_ON_ERROR),
+                'query' => json_decode($this->get('query'), true, 8, JSON_THROW_ON_ERROR),
             ];
         } catch (\JsonException $e) {
             // dont really care. the validation should catch invalid json.
