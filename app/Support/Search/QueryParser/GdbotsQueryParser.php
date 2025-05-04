@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\Log;
 
 class GdbotsQueryParser implements QueryParserInterface
 {
-    private BaseQueryParser $parser;
+    private readonly BaseQueryParser $parser;
 
     public function __construct()
     {
@@ -98,7 +98,7 @@ class GdbotsQueryParser implements QueryParserInterface
 
             default:
                 throw new FireflyException(
-                    sprintf('Unsupported node type: %s', get_class($node))
+                    sprintf('Unsupported node type: %s', $node::class)
                 );
         }
     }

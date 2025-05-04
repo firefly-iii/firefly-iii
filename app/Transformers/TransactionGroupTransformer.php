@@ -44,9 +44,9 @@ use Illuminate\Support\Facades\Log;
  */
 class TransactionGroupTransformer extends AbstractTransformer
 {
-    private TransactionGroupRepositoryInterface $groupRepos;
-    private array                               $metaDateFields;
-    private array                               $metaFields;
+    private readonly TransactionGroupRepositoryInterface $groupRepos;
+    private readonly array                               $metaDateFields;
+    private readonly array                               $metaFields;
 
     /**
      * Constructor.

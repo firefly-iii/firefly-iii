@@ -44,11 +44,11 @@ use Illuminate\Support\Facades\Log;
  */
 class SearchRuleEngine implements RuleEngineInterface
 {
-    private Collection $groups;
+    private readonly Collection $groups;
     private array      $operators;
     private bool       $refreshTriggers;
     private array      $resultCount;
-    private Collection $rules;
+    private readonly Collection $rules;
     private User       $user;
 
     public function __construct()

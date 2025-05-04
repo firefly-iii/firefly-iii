@@ -30,13 +30,8 @@ namespace FireflyIII\Support\Search\QueryParser;
  */
 class FieldNode extends Node
 {
-    private string $operator;
-    private string $value;
-
-    public function __construct(string $operator, string $value, bool $prohibited = false)
+    public function __construct(private readonly string $operator, private readonly string $value, bool $prohibited = false)
     {
-        $this->operator   = $operator;
-        $this->value      = $value;
         $this->prohibited = $prohibited;
     }
 

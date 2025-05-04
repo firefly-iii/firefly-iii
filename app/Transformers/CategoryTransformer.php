@@ -36,10 +36,10 @@ use Illuminate\Support\Collection;
  */
 class CategoryTransformer extends AbstractTransformer
 {
-    private OperationsRepositoryInterface $opsRepository;
-    private CategoryRepositoryInterface   $repository;
-    private TransactionCurrency           $default;
-    private bool                          $convertToNative;
+    private readonly OperationsRepositoryInterface $opsRepository;
+    private readonly CategoryRepositoryInterface   $repository;
+    private readonly TransactionCurrency           $default;
+    private readonly bool                          $convertToNative;
 
     /**
      * CategoryTransformer constructor.

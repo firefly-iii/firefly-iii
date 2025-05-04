@@ -35,8 +35,8 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
  */
 class PiggyBankTransformer extends AbstractTransformer
 {
-    private AccountRepositoryInterface   $accountRepos;
-    private PiggyBankRepositoryInterface $piggyRepos;
+    private readonly AccountRepositoryInterface   $accountRepos;
+    private readonly PiggyBankRepositoryInterface $piggyRepos;
 
     /**
      * PiggyBankTransformer constructor.

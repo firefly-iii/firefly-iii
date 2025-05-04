@@ -45,16 +45,12 @@ class ActionExpressionLanguageProvider implements ExpressionFunctionProviderInte
         return [
             new ExpressionFunction(
                 'constant2',
-                static function ($str): string {
-                    return sprintf('(is_string(%1$s) ? strtolower(%1$s) : %1$s)', $str.'!');
-                },
+                static fn($str): string => sprintf('(is_string(%1$s) ? strtolower(%1$s) : %1$s)', $str.'!'),
                 $function
             ),
             new ExpressionFunction(
                 'constant',
-                static function ($str): string {
-                    return sprintf('(is_string(%1$s) ? strtolower(%1$s) : %1$s)', $str.'!');
-                },
+                static fn($str): string => sprintf('(is_string(%1$s) ? strtolower(%1$s) : %1$s)', $str.'!'),
                 $function
             ),
 

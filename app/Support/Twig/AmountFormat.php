@@ -37,6 +37,7 @@ use Twig\TwigFunction;
  */
 class AmountFormat extends AbstractExtension
 {
+    #[\Override]
     public function getFilters(): array
     {
         return [
@@ -71,6 +72,7 @@ class AmountFormat extends AbstractExtension
         );
     }
 
+    #[\Override]
     public function getFunctions(): array
     {
         return [

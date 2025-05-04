@@ -39,6 +39,7 @@ use Twig\TwigFunction;
  */
 class TransactionGroupTwig extends AbstractExtension
 {
+    #[\Override]
     public function getFunctions(): array
     {
         return [
