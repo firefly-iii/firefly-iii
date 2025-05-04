@@ -61,13 +61,11 @@ class CategoryController extends Controller
         $queryParameters = $request->getParameters();
         $result          = $this->repository->searchCategory($queryParameters['query'], $queryParameters['size']);
         $filtered        = $result->map(
-            static function (Category $item) {
-                return [
-                    'id'    => (string) $item->id,
-                    'title' => $item->name,
-                    'meta'  => [],
-                ];
-            }
+            static fn(Category $item) => [
+                'id'    => (string) $item->id,
+                'title' => $item->name,
+                'meta'  => [],
+            ]
         );
 
         return response()->json($filtered);

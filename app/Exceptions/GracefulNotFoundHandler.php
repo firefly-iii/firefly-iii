@@ -49,6 +49,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
      *
      * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      */
+    #[\Override]
     public function render($request, \Throwable $e): Response
     {
         $route = $request->route();

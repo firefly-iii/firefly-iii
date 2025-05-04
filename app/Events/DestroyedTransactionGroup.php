@@ -34,14 +34,11 @@ class DestroyedTransactionGroup extends Event
 {
     use SerializesModels;
 
-    public TransactionGroup $transactionGroup;
-
     /**
      * Create a new event instance.
      */
-    public function __construct(TransactionGroup $transactionGroup)
+    public function __construct(public TransactionGroup $transactionGroup)
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
-        $this->transactionGroup = $transactionGroup;
     }
 }

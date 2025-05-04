@@ -30,10 +30,7 @@ class UnknownUserAttemptedLogin
 {
     use SerializesModels;
 
-    public string $address;
-
-    public function __construct(string $address)
+    public function __construct(public string $address)
     {
-        $this->address = $address;
     }
 }

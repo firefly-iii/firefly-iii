@@ -34,14 +34,7 @@ class WarnUserAboutBill extends Event
 {
     use SerializesModels;
 
-    public Bill   $bill;
-    public int    $diff;
-    public string $field;
-
-    public function __construct(Bill $bill, string $field, int $diff)
+    public function __construct(public Bill $bill, public string $field, public int $diff)
     {
-        $this->bill  = $bill;
-        $this->field = $field;
-        $this->diff  = $diff;
     }
 }

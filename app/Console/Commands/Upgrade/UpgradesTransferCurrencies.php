@@ -46,12 +46,12 @@ class UpgradesTransferCurrencies extends Command
     private JournalCLIRepositoryInterface $cliRepos;
     private int                           $count;
 
-    private ?Account             $destinationAccount;
-    private ?TransactionCurrency $destinationCurrency;
-    private ?Transaction         $destinationTransaction;
-    private ?Account             $sourceAccount;
-    private ?TransactionCurrency $sourceCurrency;
-    private ?Transaction         $sourceTransaction;
+    private ?Account             $destinationAccount = null;
+    private ?TransactionCurrency $destinationCurrency = null;
+    private ?Transaction         $destinationTransaction = null;
+    private ?Account             $sourceAccount = null;
+    private ?TransactionCurrency $sourceCurrency = null;
+    private ?Transaction         $sourceTransaction = null;
 
     /**
      * Execute the console command.

@@ -119,9 +119,7 @@ class CategoryController extends Controller
         $return     = array_values($return);
 
         // order by amount
-        usort($return, static function (array $a, array $b) {
-            return (float) $a['amount'] < (float) $b['amount'] ? 1 : -1;
-        });
+        usort($return, static fn(array $a, array $b) => (float) $a['amount'] < (float) $b['amount'] ? 1 : -1);
 
         return response()->json($this->clean($return));
     }

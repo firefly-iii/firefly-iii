@@ -34,13 +34,10 @@ class DetectedNewIPAddress extends Event
 {
     use SerializesModels;
 
-    public User $user;
-
     /**
      * Create a new event instance. This event is triggered when a new user registers.
      */
-    public function __construct(User $user)
+    public function __construct(public User $user)
     {
-        $this->user = $user;
     }
 }

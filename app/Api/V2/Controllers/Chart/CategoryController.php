@@ -134,9 +134,7 @@ class CategoryController extends Controller
         $return     = array_values($return);
 
         // order by native amount
-        usort($return, static function (array $a, array $b) {
-            return (float) $a['native_amount'] < (float) $b['native_amount'] ? 1 : -1;
-        });
+        usort($return, static fn(array $a, array $b) => (float) $a['native_amount'] < (float) $b['native_amount'] ? 1 : -1);
         $converter->summarize();
 
         return response()->json($this->clean($return));

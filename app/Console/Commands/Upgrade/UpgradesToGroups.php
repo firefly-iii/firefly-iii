@@ -179,9 +179,7 @@ class UpgradesToGroups extends Command
     private function getDestinationTransactions(TransactionJournal $journal): Collection
     {
         return $journal->transactions->filter(
-            static function (Transaction $transaction) {
-                return $transaction->amount > 0;
-            }
+            static fn(Transaction $transaction) => $transaction->amount > 0
         );
     }
 

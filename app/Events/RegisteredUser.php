@@ -35,15 +35,10 @@ class RegisteredUser extends Event
 {
     use SerializesModels;
 
-    public OwnerNotifiable $owner;
-    public User            $user;
-
     /**
      * Create a new event instance. This event is triggered when a new user registers.
      */
-    public function __construct(OwnerNotifiable $owner, User $user)
+    public function __construct(public OwnerNotifiable $owner, public User $user)
     {
-        $this->user  = $user;
-        $this->owner = $owner;
     }
 }

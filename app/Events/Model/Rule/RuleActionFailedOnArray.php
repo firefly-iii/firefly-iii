@@ -34,15 +34,8 @@ class RuleActionFailedOnArray
 {
     use SerializesModels;
 
-    public string     $error;
-    public array      $journal;
-    public RuleAction $ruleAction;
-
-    public function __construct(RuleAction $ruleAction, array $journal, string $error)
+    public function __construct(public RuleAction $ruleAction, public array $journal, public string $error)
     {
         app('log')->debug('Created new RuleActionFailedOnArray');
-        $this->ruleAction = $ruleAction;
-        $this->journal    = $journal;
-        $this->error      = $error;
     }
 }

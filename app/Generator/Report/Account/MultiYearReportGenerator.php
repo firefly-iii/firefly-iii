@@ -31,6 +31,7 @@ class MultiYearReportGenerator extends MonthReportGenerator
     /**
      * Returns the preferred period.
      */
+    #[\Override]
     protected function preferredPeriod(): string
     {
         return 'year';

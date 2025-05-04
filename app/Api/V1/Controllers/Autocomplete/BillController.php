@@ -65,13 +65,11 @@ class BillController extends Controller
         $data     = $request->getData();
         $result   = $this->repository->searchBill($data['query'], $this->parameters->get('limit'));
         $filtered = $result->map(
-            static function (Bill $item) {
-                return [
-                    'id'     => (string) $item->id,
-                    'name'   => $item->name,
-                    'active' => $item->active,
-                ];
-            }
+            static fn(Bill $item) => [
+                'id'     => (string) $item->id,
+                'name'   => $item->name,
+                'active' => $item->active,
+            ]
         );
 
         return response()->api($filtered->toArray());

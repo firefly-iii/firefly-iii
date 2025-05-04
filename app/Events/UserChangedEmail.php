@@ -34,17 +34,10 @@ class UserChangedEmail extends Event
 {
     use SerializesModels;
 
-    public string $newEmail;
-    public string $oldEmail;
-    public User   $user;
-
     /**
      * UserChangedEmail constructor.
      */
-    public function __construct(User $user, string $newEmail, string $oldEmail)
+    public function __construct(public User $user, public string $newEmail, public string $oldEmail)
     {
-        $this->user     = $user;
-        $this->oldEmail = $oldEmail;
-        $this->newEmail = $newEmail;
     }
 }
