@@ -39,9 +39,7 @@ class RequestedNewPassword extends Mailable
     /**
      * RequestedNewPassword constructor.
      */
-    public function __construct(public string $url)
-    {
-    }
+    public function __construct(public string $url) {}
 
     /**
      * Build the message.

@@ -45,9 +45,7 @@ class ConvertToTransfer implements ActionInterface
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(private readonly RuleAction $action)
-    {
-    }
+    public function __construct(private readonly RuleAction $action) {}
 
     /**
      * @SuppressWarnings("PHPMD.ExcessiveMethodLength")

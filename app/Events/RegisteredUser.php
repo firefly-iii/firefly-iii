@@ -38,7 +38,5 @@ class RegisteredUser extends Event
     /**
      * Create a new event instance. This event is triggered when a new user registers.
      */
-    public function __construct(public OwnerNotifiable $owner, public User $user)
-    {
-    }
+    public function __construct(public OwnerNotifiable $owner, public User $user) {}
 }

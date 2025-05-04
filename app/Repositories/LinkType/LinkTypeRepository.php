@@ -151,7 +151,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
         $merged  = $outward->merge($inward);
 
         return $merged->filter(
-            static fn(TransactionJournalLink $link) => null !== $link->source && null !== $link->destination
+            static fn (TransactionJournalLink $link) => null !== $link->source && null !== $link->destination
         );
     }
 

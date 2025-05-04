@@ -76,7 +76,7 @@ class CacheProperties
 
     private function hash(): void
     {
-        $content = '';
+        $content    = '';
         foreach ($this->properties as $property) {
             try {
                 $content = sprintf('%s%s', $content, \Safe\json_encode($property, JSON_THROW_ON_ERROR));

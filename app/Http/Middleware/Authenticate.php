@@ -43,9 +43,7 @@ class Authenticate
          * The authentication factory instance.
          */
         protected Auth $auth
-    )
-    {
-    }
+    ) {}
 
     /**
      * Handle an incoming request.

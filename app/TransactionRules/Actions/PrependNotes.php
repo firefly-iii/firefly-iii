@@ -37,9 +37,7 @@ class PrependNotes implements ActionInterface
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(private readonly RuleAction $action)
-    {
-    }
+    public function __construct(private readonly RuleAction $action) {}
 
     public function actOnArray(array $journal): bool
     {

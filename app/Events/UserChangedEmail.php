@@ -37,7 +37,5 @@ class UserChangedEmail extends Event
     /**
      * UserChangedEmail constructor.
      */
-    public function __construct(public User $user, public string $newEmail, public string $oldEmail)
-    {
-    }
+    public function __construct(public User $user, public string $newEmail, public string $oldEmail) {}
 }

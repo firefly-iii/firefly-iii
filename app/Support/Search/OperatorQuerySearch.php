@@ -2009,7 +2009,7 @@ class OperatorQuerySearch implements SearchInterface
         }
         app('log')->debug(sprintf('Found %d accounts, will filter.', $accounts->count()));
         $filtered        = $accounts->filter(
-            static fn(Account $account) => $stringMethod(strtolower($account->name), strtolower($value))
+            static fn (Account $account) => $stringMethod(strtolower($account->name), strtolower($value))
         );
 
         if (0 === $filtered->count()) {

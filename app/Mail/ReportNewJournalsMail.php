@@ -45,9 +45,7 @@ class ReportNewJournalsMail extends Mailable
     /**
      * ConfirmEmailChangeMail constructor.
      */
-    public function __construct(public Collection $groups)
-    {
-    }
+    public function __construct(public Collection $groups) {}
 
     /**
      * Build the message.

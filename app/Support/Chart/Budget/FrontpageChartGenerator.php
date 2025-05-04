@@ -203,7 +203,7 @@ class FrontpageChartGenerator
             $amount = $limit->native_amount;
             Log::debug(sprintf('Amount is now "%s".', $amount));
         }
-        $amount ??= '0';
+        $amount                     ??= '0';
         $sumSpent                   = bcmul((string) $entry['sum'], '-1'); // spent
         $data[0]['entries'][$title] ??= '0';
         $data[1]['entries'][$title] ??= '0';

@@ -138,7 +138,7 @@ class General extends AbstractExtension
     {
         return new TwigFilter(
             'mimeIcon',
-            static fn(string $string): string => match ($string) {
+            static fn (string $string): string => match ($string) {
                 'application/pdf' => 'fa-file-pdf-o',
                 'image/png', 'image/jpeg', 'image/svg+xml', 'image/heic', 'image/heic-sequence', 'application/vnd.oasis.opendocument.image' => 'fa-file-image-o',
                 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.openxmlformats-officedocument.wordprocessingml.template', 'application/x-iwork-pages-sffpages', 'application/vnd.sun.xml.writer', 'application/vnd.sun.xml.writer.template', 'application/vnd.sun.xml.writer.global', 'application/vnd.stardivision.writer', 'application/vnd.stardivision.writer-global', 'application/vnd.oasis.opendocument.text', 'application/vnd.oasis.opendocument.text-template', 'application/vnd.oasis.opendocument.text-web', 'application/vnd.oasis.opendocument.text-master' => 'fa-file-word-o',
@@ -146,7 +146,7 @@ class General extends AbstractExtension
                 'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/vnd.openxmlformats-officedocument.presentationml.template', 'application/vnd.openxmlformats-officedocument.presentationml.slideshow', 'application/vnd.sun.xml.impress', 'application/vnd.sun.xml.impress.template', 'application/vnd.stardivision.impress', 'application/vnd.oasis.opendocument.presentation', 'application/vnd.oasis.opendocument.presentation-template' => 'fa-file-powerpoint-o',
                 'application/vnd.sun.xml.draw', 'application/vnd.sun.xml.draw.template', 'application/vnd.stardivision.draw', 'application/vnd.oasis.opendocument.chart' => 'fa-paint-brush',
                 'application/vnd.oasis.opendocument.graphics', 'application/vnd.oasis.opendocument.graphics-template', 'application/vnd.sun.xml.math', 'application/vnd.stardivision.math', 'application/vnd.oasis.opendocument.formula', 'application/vnd.oasis.opendocument.database' => 'fa-calculator',
-                default => 'fa-file-o',
+                default           => 'fa-file-o',
             },
             ['is_safe' => ['html']]
         );
@@ -211,7 +211,7 @@ class General extends AbstractExtension
     {
         return new TwigFunction(
             'phpdate',
-            static fn(string $str): string => \Safe\date($str)
+            static fn (string $str): string => \Safe\date($str)
         );
     }
 
@@ -373,7 +373,7 @@ class General extends AbstractExtension
     {
         return new TwigFunction(
             'carbonize',
-            static fn(string $date): Carbon => new Carbon($date, config('app.timezone'))
+            static fn (string $date): Carbon => new Carbon($date, config('app.timezone'))
         );
     }
 }

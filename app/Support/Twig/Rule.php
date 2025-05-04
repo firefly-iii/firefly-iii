@@ -45,7 +45,7 @@ class Rule extends AbstractExtension
     {
         return new TwigFunction(
             'allJournalTriggers',
-            static fn() => [
+            static fn () => [
                 'store-journal'     => (string) trans('firefly.rule_trigger_store_journal'),
                 'update-journal'    => (string) trans('firefly.rule_trigger_update_journal'),
                 'manual-activation' => (string) trans('firefly.rule_trigger_manual'),

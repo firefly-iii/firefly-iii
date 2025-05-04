@@ -65,7 +65,7 @@ class CategoryController extends Controller
         $data     = $request->getData();
         $result   = $this->repository->searchCategory($data['query'], $this->parameters->get('limit'));
         $filtered = $result->map(
-            static fn(Category $item) => [
+            static fn (Category $item) => [
                 'id'   => (string) $item->id,
                 'name' => $item->name,
             ]

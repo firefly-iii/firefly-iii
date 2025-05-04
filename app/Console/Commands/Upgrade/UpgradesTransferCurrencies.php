@@ -38,20 +38,20 @@ class UpgradesTransferCurrencies extends Command
 {
     use ShowsFriendlyMessages;
 
-    public const string CONFIG_NAME = '480_transfer_currencies';
-    protected $description          = 'Updates transfer currency information.';
-    protected $signature            = 'upgrade:480-transfer-currencies {--F|force : Force the execution of this command.}';
+    public const string CONFIG_NAME                      = '480_transfer_currencies';
+    protected $description                               = 'Updates transfer currency information.';
+    protected $signature                                 = 'upgrade:480-transfer-currencies {--F|force : Force the execution of this command.}';
     private array                         $accountCurrencies;
     private AccountRepositoryInterface    $accountRepos;
     private JournalCLIRepositoryInterface $cliRepos;
     private int                           $count;
 
-    private ?Account             $destinationAccount = null;
-    private ?TransactionCurrency $destinationCurrency = null;
+    private ?Account             $destinationAccount     = null;
+    private ?TransactionCurrency $destinationCurrency    = null;
     private ?Transaction         $destinationTransaction = null;
-    private ?Account             $sourceAccount = null;
-    private ?TransactionCurrency $sourceCurrency = null;
-    private ?Transaction         $sourceTransaction = null;
+    private ?Account             $sourceAccount          = null;
+    private ?TransactionCurrency $sourceCurrency         = null;
+    private ?Transaction         $sourceTransaction      = null;
 
     /**
      * Execute the console command.

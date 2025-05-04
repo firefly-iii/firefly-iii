@@ -43,7 +43,7 @@ class MailError extends Job implements ShouldQueue
      */
     public function __construct(protected array $userData, protected string $destination, protected string $ipAddress, protected array $exception)
     {
-        $debug             = $this->exception;
+        $debug = $this->exception;
         unset($debug['stackTrace'], $debug['headers']);
 
         app('log')->error(sprintf('Exception is: %s', \Safe\json_encode($debug)));

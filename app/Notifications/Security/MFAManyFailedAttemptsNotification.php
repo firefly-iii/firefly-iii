@@ -40,9 +40,7 @@ class MFAManyFailedAttemptsNotification extends Notification
 {
     use Queueable;
 
-    public function __construct(private User $user, private int $count)
-    {
-    }
+    public function __construct(private User $user, private int $count) {}
 
     public function toArray(User $notifiable): array
     {

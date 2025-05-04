@@ -31,7 +31,5 @@ class Updated
 {
     use SerializesModels;
 
-    public function __construct(public Account $account)
-    {
-    }
+    public function __construct(public Account $account) {}
 }

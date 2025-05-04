@@ -82,7 +82,7 @@ class FrontpageController extends Controller
         // sort by current percentage (lowest at the top)
         uasort(
             $info,
-            static fn(array $a, array $b) => $a['percentage'] <=> $b['percentage']
+            static fn (array $a, array $b) => $a['percentage'] <=> $b['percentage']
         );
 
         $html            = '';

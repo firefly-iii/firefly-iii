@@ -45,7 +45,7 @@ class SecureHeaders
         // generate and share nonce.
         $nonce              = base64_encode(random_bytes(16));
         Vite::useCspNonce($nonce);
-        if (class_exists(\Barryvdh\Debugbar\Facades\Debugbar::class)) {
+        if (class_exists(Debugbar::class)) {
             Debugbar::getJavascriptRenderer()->setCspNonce($nonce);
         }
         app('view')->share('JS_NONCE', $nonce);

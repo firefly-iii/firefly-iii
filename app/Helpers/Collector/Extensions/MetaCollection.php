@@ -34,6 +34,7 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use FireflyIII\Models\TransactionJournal;
 
 /**
  * Trait MetaCollection
@@ -492,7 +493,7 @@ trait MetaCollection
                 'notes',
                 static function (JoinClause $join): void {
                     $join->on('notes.noteable_id', '=', 'transaction_journals.id');
-                    $join->where('notes.noteable_type', '=', \FireflyIII\Models\TransactionJournal::class);
+                    $join->where('notes.noteable_type', '=', TransactionJournal::class);
                     $join->whereNull('notes.deleted_at');
                 }
             );

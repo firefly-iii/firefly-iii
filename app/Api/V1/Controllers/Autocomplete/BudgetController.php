@@ -65,7 +65,7 @@ class BudgetController extends Controller
         $data     = $request->getData();
         $result   = $this->repository->searchBudget($data['query'], $this->parameters->get('limit'));
         $filtered = $result->map(
-            static fn(Budget $item) => [
+            static fn (Budget $item) => [
                 'id'   => (string) $item->id,
                 'name' => $item->name,
             ]

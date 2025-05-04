@@ -45,9 +45,7 @@ class UserRegistration extends Notification
 {
     use Queueable;
 
-    public function __construct(private User $user)
-    {
-    }
+    public function __construct(private User $user) {}
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

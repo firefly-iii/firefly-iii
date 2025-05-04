@@ -61,7 +61,7 @@ class TagController extends Controller
         $queryParameters = $request->getParameters();
         $result          = $this->repository->searchTag($queryParameters['query']);
         $filtered        = $result->map(
-            static fn(Tag $item) => [
+            static fn (Tag $item) => [
                 'id'    => (string) $item->id,
                 'title' => $item->tag,
                 'value' => (string) $item->id,

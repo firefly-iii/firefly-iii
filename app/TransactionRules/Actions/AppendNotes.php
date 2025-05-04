@@ -40,9 +40,7 @@ class AppendNotes implements ActionInterface
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(private RuleAction $action)
-    {
-    }
+    public function __construct(private RuleAction $action) {}
 
     public function actOnArray(array $journal): bool
     {

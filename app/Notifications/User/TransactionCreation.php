@@ -36,9 +36,7 @@ class TransactionCreation extends Notification
 {
     use Queueable;
 
-    public function __construct(private array $collection)
-    {
-    }
+    public function __construct(private array $collection) {}
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
