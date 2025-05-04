@@ -73,7 +73,7 @@ class VersionCheckEventHandler
         $diff          = $now - $lastCheckTime->data;
         Log::debug(sprintf('Last check time is %d, current time is %d, difference is %d', $lastCheckTime->data, $now, $diff));
         if ($diff < 604800) {
-            Log::debug(sprintf('Checked for updates less than a week ago (on %s).', date('Y-m-d H:i:s', $lastCheckTime->data)));
+            Log::debug(sprintf('Checked for updates less than a week ago (on %s).', \Safe\date('Y-m-d H:i:s', $lastCheckTime->data)));
 
             return;
         }
@@ -105,7 +105,7 @@ class VersionCheckEventHandler
         $diff          = $now - $lastCheckTime->data;
         Log::debug(sprintf('Last warning time is %d, current time is %d, difference is %d', $lastCheckTime->data, $now, $diff));
         if ($diff < 604800 * 4) {
-            Log::debug(sprintf('Warned about updates less than four weeks ago (on %s).', date('Y-m-d H:i:s', $lastCheckTime->data)));
+            Log::debug(sprintf('Warned about updates less than four weeks ago (on %s).', \Safe\date('Y-m-d H:i:s', $lastCheckTime->data)));
 
             return;
         }

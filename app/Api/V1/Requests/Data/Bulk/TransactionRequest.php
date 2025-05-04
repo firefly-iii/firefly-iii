@@ -48,7 +48,7 @@ class TransactionRequest extends FormRequest
 
         try {
             $data = [
-                'query' => json_decode($this->get('query'), true, 8, JSON_THROW_ON_ERROR),
+                'query' => \Safe\json_decode($this->get('query'), true, 8, JSON_THROW_ON_ERROR),
             ];
         } catch (\JsonException $e) {
             // dont really care. the validation should catch invalid json.

@@ -264,7 +264,7 @@ class RecurrenceTransformer extends AbstractTransformer
                     break;
 
                 case 'tags':
-                    $array['tags'] = json_decode($transactionMeta->value);
+                    $array['tags'] = \Safe\json_decode($transactionMeta->value);
 
                     break;
 

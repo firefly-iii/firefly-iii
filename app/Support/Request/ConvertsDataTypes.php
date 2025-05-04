@@ -125,7 +125,7 @@ trait ConvertsDataTypes
         $string = str_replace($this->characters, "\x20", $string);
 
         // clear zalgo text (TODO also in API v2)
-        $string = preg_replace('/(\pM{2})\pM+/u', '\1', $string);
+        $string = \Safe\preg_replace('/(\pM{2})\pM+/u', '\1', $string);
 
         return trim((string) $string);
     }

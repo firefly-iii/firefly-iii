@@ -81,15 +81,15 @@ abstract class Controller extends BaseController
 
         // overrule v2 layout back to v1.
         if ('true' === request()->get('force_default_layout') && 'v2' === config('view.layout')) {
-            View::getFinder()->setPaths([realpath(base_path('resources/views'))]); // @phpstan-ignore-line
+            View::getFinder()->setPaths([\Safe\realpath(base_path('resources/views'))]); // @phpstan-ignore-line
         }
 
         View::share('authGuard', $authGuard);
         View::share('logoutUrl', $logoutUrl);
 
         // upload size
-        $maxFileSize = Steam::phpBytes((string) ini_get('upload_max_filesize'));
-        $maxPostSize = Steam::phpBytes((string) ini_get('post_max_size'));
+        $maxFileSize = Steam::phpBytes((string) \Safe\ini_get('upload_max_filesize'));
+        $maxPostSize = Steam::phpBytes((string) \Safe\ini_get('post_max_size'));
         $uploadSize  = min($maxFileSize, $maxPostSize);
         View::share('uploadSize', $uploadSize);
 

@@ -69,7 +69,7 @@ class RemoteUserGuard implements Guard
 
         if (function_exists('apache_request_headers')) {
             Log::debug('Use apache_request_headers to find user ID.');
-            $userID = request()->server($header) ?? apache_request_headers()[$header] ?? null;
+            $userID = request()->server($header) ?? \Safe\apache_request_headers()[$header] ?? null;
         }
 
         if (null === $userID || '' === $userID) {
@@ -87,7 +87,7 @@ class RemoteUserGuard implements Guard
         $header        = config('auth.guard_email');
 
         if (null !== $header) {
-            $emailAddress = (string) (request()->server($header) ?? apache_request_headers()[$header] ?? null);
+            $emailAddress = (string) (request()->server($header) ?? \Safe\apache_request_headers()[$header] ?? null);
             $preference   = app('preferences')->getForUser($retrievedUser, 'remote_guard_alt_email');
 
             if ('' !== $emailAddress && null === $preference && $emailAddress !== $userID) {

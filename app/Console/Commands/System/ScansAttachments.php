@@ -63,15 +63,15 @@ class ScansAttachments extends Command
                 app('log')->error(sprintf('Could not decrypt data of attachment #%d: %s', $attachment->id, $e->getMessage()));
                 $decryptedContent = $encryptedContent;
             }
-            $tempFileName     = tempnam(sys_get_temp_dir(), 'FireflyIII');
+            $tempFileName     = \Safe\tempnam(sys_get_temp_dir(), 'FireflyIII');
             if (false === $tempFileName) {
                 app('log')->error(sprintf('Could not create temporary file for attachment #%d', $attachment->id));
 
                 exit(1);
             }
-            file_put_contents($tempFileName, $decryptedContent);
-            $attachment->md5  = (string) md5_file($tempFileName);
-            $attachment->mime = (string) mime_content_type($tempFileName);
+            \Safe\file_put_contents($tempFileName, $decryptedContent);
+            $attachment->md5  = (string) \Safe\md5_file($tempFileName);
+            $attachment->mime = (string) \Safe\mime_content_type($tempFileName);
             $attachment->save();
             $this->friendlyInfo(sprintf('Fixed attachment #%d', $attachment->id));
         }

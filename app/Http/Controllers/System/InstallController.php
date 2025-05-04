@@ -169,7 +169,7 @@ class InstallController extends Controller
             return;
         }
 
-        file_put_contents($publicKey, (string) $key->getPublicKey());
-        file_put_contents($privateKey, $key->toString('PKCS1'));
+        \Safe\file_put_contents($publicKey, (string) $key->getPublicKey());
+        \Safe\file_put_contents($privateKey, $key->toString('PKCS1'));
     }
 }

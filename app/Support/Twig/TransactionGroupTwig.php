@@ -254,7 +254,7 @@ class TransactionGroupTwig extends AbstractExtension
                     return today(config('app.timezone'));
                 }
 
-                return new Carbon(json_decode($entry->data, false));
+                return new Carbon(\Safe\json_decode($entry->data, false));
             }
         );
     }
@@ -275,7 +275,7 @@ class TransactionGroupTwig extends AbstractExtension
                     return '';
                 }
 
-                return json_decode($entry->data, true);
+                return \Safe\json_decode($entry->data, true);
             }
         );
     }

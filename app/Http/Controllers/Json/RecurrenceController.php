@@ -153,7 +153,7 @@ class RecurrenceController extends Controller
      */
     public function suggest(Request $request): JsonResponse
     {
-        $string      = '' === (string) $request->get('date') ? date('Y-m-d') : (string) $request->get('date');
+        $string      = '' === (string) $request->get('date') ? \Safe\date('Y-m-d') : (string) $request->get('date');
         $today       = today(config('app.timezone'))->startOfDay();
 
         try {

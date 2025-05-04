@@ -130,7 +130,7 @@ class ForcesDecimalSize extends Command
         // if sqlite, add function?
         if ('sqlite' === (string) config('database.default')) {
             DB::connection()->getPdo()->sqliteCreateFunction('REGEXP', static function ($pattern, $value) {
-                mb_regex_encoding('UTF-8');
+                \Safe\mb_regex_encoding('UTF-8');
                 $pattern = trim($pattern, '"');
 
                 return (false !== mb_ereg($pattern, (string) $value)) ? 1 : 0;
@@ -234,7 +234,7 @@ class ForcesDecimalSize extends Command
         /** @var Builder $query */
         $query             = Account::leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
             ->where('account_meta.name', 'currency_id')
-            ->where('account_meta.data', json_encode((string) $currency->id))
+            ->where('account_meta.data', \Safe\json_encode((string) $currency->id))
         ;
         $query->where(static function (Builder $q) use ($fields, $currency, $operator, $cast, $regularExpression): void {
             foreach ($fields as $field) {
@@ -338,7 +338,7 @@ class ForcesDecimalSize extends Command
             ->leftJoin('accounts', 'piggy_banks.account_id', '=', 'accounts.id')
             ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
             ->where('account_meta.name', 'currency_id')
-            ->where('account_meta.data', json_encode((string) $currency->id))
+            ->where('account_meta.data', \Safe\json_encode((string) $currency->id))
             ->where(static function (Builder $q) use ($fields, $currency, $cast, $operator, $regularExpression): void {
                 foreach ($fields as $field) {
                     $q->orWhere(
@@ -394,7 +394,7 @@ class ForcesDecimalSize extends Command
             ->leftJoin('accounts', 'piggy_banks.account_id', '=', 'accounts.id')
             ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
             ->where('account_meta.name', 'currency_id')
-            ->where('account_meta.data', json_encode((string) $currency->id))
+            ->where('account_meta.data', \Safe\json_encode((string) $currency->id))
             ->where(static function (Builder $q) use ($fields, $currency, $operator, $cast, $regularExpression): void {
                 foreach ($fields as $field) {
                     $q->orWhere(
@@ -448,7 +448,7 @@ class ForcesDecimalSize extends Command
         $query             = PiggyBank::leftJoin('accounts', 'piggy_banks.account_id', '=', 'accounts.id')
             ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
             ->where('account_meta.name', 'currency_id')
-            ->where('account_meta.data', json_encode((string) $currency->id))
+            ->where('account_meta.data', \Safe\json_encode((string) $currency->id))
             ->where(static function (Builder $q) use ($fields, $currency, $operator, $cast, $regularExpression): void {
                 foreach ($fields as $field) {
                     $q->orWhere(

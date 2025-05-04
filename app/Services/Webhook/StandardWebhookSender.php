@@ -80,7 +80,7 @@ class StandardWebhookSender implements WebhookSenderInterface
         app('log')->debug(sprintf('Trying to send webhook message #%d', $this->message->id));
 
         try {
-            $json = json_encode($this->message->message, JSON_THROW_ON_ERROR);
+            $json = \Safe\json_encode($this->message->message, JSON_THROW_ON_ERROR);
         } catch (\JsonException $e) {
             app('log')->error('Did not send message because of a JSON error.');
             app('log')->error($e->getMessage());

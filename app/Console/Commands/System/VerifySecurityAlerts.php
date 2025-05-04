@@ -57,7 +57,7 @@ class VerifySecurityAlerts extends Command
             return 0;
         }
         $content = $disk->get('alerts.json');
-        $json    = json_decode($content, true, 10);
+        $json    = \Safe\json_decode($content, true, 10);
 
         /** @var array $array */
         foreach ($json as $array) {
