@@ -40,9 +40,7 @@ class OAuthTokenCreatedMail extends Mailable
     /**
      * OAuthTokenCreatedMail constructor.
      */
-    public function __construct(public Client $client)
-    {
-    }
+    public function __construct(public Client $client) {}
 
     /**
      * Build the message.

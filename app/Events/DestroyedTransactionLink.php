@@ -37,7 +37,5 @@ class DestroyedTransactionLink extends Event
     /**
      * DestroyedTransactionLink constructor.
      */
-    public function __construct(private TransactionJournalLink $link)
-    {
-    }
+    public function __construct(private TransactionJournalLink $link) {}
 }

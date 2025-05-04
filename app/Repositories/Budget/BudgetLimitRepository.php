@@ -127,7 +127,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface, UserGroup
     public function getAllBudgetLimitsByCurrency(TransactionCurrency $currency, ?Carbon $start = null, ?Carbon $end = null): Collection
     {
         return $this->getAllBudgetLimits($start, $end)->filter(
-            static fn(BudgetLimit $budgetLimit) => $budgetLimit->transaction_currency_id === $currency->id
+            static fn (BudgetLimit $budgetLimit) => $budgetLimit->transaction_currency_id === $currency->id
         );
     }
 

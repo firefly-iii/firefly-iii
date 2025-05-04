@@ -34,7 +34,7 @@ readonly class CalculatorProvider
 
     private function __construct(public IntervalProvider $intervalProvider, public Periodicity $periodicity, public int $skip = 0)
     {
-        $this->label            = "{$this->periodicity->name} {$this->intervalProvider->label}";
+        $this->label = "{$this->periodicity->name} {$this->intervalProvider->label}";
     }
 
     public static function providePeriodicityWithSkippedIntervals(): \Generator

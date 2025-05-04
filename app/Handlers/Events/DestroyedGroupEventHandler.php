@@ -27,7 +27,6 @@ namespace FireflyIII\Handlers\Events;
 use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Events\RequestedSendWebhookMessages;
-use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
 use FireflyIII\Support\Models\AccountBalanceCalculator;
 use Illuminate\Support\Collection;

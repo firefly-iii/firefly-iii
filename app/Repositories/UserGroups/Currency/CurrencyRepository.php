@@ -179,8 +179,8 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         $local = $this->get();
 
         return $all->map(static function (TransactionCurrency $current) use ($local) {
-            $hasId                     = $local->contains(static fn(TransactionCurrency $entry) => $entry->id === $current->id);
-            $isNative                  = $local->contains(static fn(TransactionCurrency $entry) => 1 === (int) $entry->pivot->group_default && $entry->id === $current->id);
+            $hasId                     = $local->contains(static fn (TransactionCurrency $entry) => $entry->id === $current->id);
+            $isNative                  = $local->contains(static fn (TransactionCurrency $entry) => 1 === (int) $entry->pivot->group_default && $entry->id === $current->id);
             $current->userGroupEnabled = $hasId;
             $current->userGroupNative  = $isNative;
 

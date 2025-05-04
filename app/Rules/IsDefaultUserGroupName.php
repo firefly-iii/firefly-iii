@@ -34,9 +34,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
  */
 class IsDefaultUserGroupName implements ValidationRule
 {
-    public function __construct(private readonly UserGroup $userGroup)
-    {
-    }
+    public function __construct(private readonly UserGroup $userGroup) {}
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

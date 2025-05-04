@@ -40,9 +40,7 @@ class BillWarningMail extends Mailable
     /**
      * ConfirmEmailChangeMail constructor.
      */
-    public function __construct(public Bill $bill, public string $field, public int $diff)
-    {
-    }
+    public function __construct(public Bill $bill, public string $field, public int $diff) {}
 
     /**
      * Build the message.

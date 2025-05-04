@@ -33,9 +33,7 @@ class IsValidZeroOrMoreAmount implements ValidationRule
 {
     use ValidatesAmountsTrait;
 
-    public function __construct(private bool $nullable = false)
-    {
-    }
+    public function __construct(private bool $nullable = false) {}
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

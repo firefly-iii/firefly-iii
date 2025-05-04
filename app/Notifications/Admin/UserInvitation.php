@@ -45,9 +45,7 @@ class UserInvitation extends Notification
 {
     use Queueable;
 
-    public function __construct(private InvitedUser $invitee)
-    {
-    }
+    public function __construct(private InvitedUser $invitee) {}
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

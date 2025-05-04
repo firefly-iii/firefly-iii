@@ -166,7 +166,7 @@ class ShowController extends Controller
             /** @var AttachmentTransformer $transformer */
             $transformer = app(AttachmentTransformer::class);
             $attachments = $collection->each(
-                static fn(Attachment $attachment) => $transformer->transform($attachment)
+                static fn (Attachment $attachment) => $transformer->transform($attachment)
             );
         }
 

@@ -45,9 +45,7 @@ class BelongsUserGroup implements ValidationRule
     /**
      * Create a new rule instance.
      */
-    public function __construct(private readonly UserGroup $userGroup)
-    {
-    }
+    public function __construct(private readonly UserGroup $userGroup) {}
 
     public function validate(string $attribute, mixed $value, \Closure $fail): void
     {

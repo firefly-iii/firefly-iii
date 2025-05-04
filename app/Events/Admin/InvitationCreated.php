@@ -41,7 +41,5 @@ class InvitationCreated extends Event
     /**
      * Create a new event instance.
      */
-    public function __construct(public InvitedUser $invitee)
-    {
-    }
+    public function __construct(public InvitedUser $invitee) {}
 }

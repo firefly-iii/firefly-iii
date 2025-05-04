@@ -43,9 +43,7 @@ class UserNewPassword extends Notification
 {
     use Queueable;
 
-    public function __construct(private string $url)
-    {
-    }
+    public function __construct(private string $url) {}
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

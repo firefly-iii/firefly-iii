@@ -79,9 +79,9 @@ class WebhookRepository implements WebhookRepositoryInterface, UserGroupInterfac
             ->where('webhook_messages.errored', 0)
             ->get(['webhook_messages.*'])
             ->filter(
-                static fn(WebhookMessage $message) =>
+                static fn (WebhookMessage $message)
                     // @phpstan-ignore-line
-                    $message->webhookAttempts()->count() <= 2
+                    => $message->webhookAttempts()->count() <= 2
             )->splice(0, 3)
         ;
     }

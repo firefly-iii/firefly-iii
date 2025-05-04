@@ -35,7 +35,5 @@ class Created extends Event
 {
     use SerializesModels;
 
-    public function __construct(public BudgetLimit $budgetLimit)
-    {
-    }
+    public function __construct(public BudgetLimit $budgetLimit) {}
 }

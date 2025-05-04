@@ -32,6 +32,6 @@ readonly class IntervalProvider
 
     public function __construct(public Carbon $epoch, public Carbon $expected)
     {
-        $this->label    = "given {$this->epoch->toDateString()} expects {$this->expected->toDateString()}";
+        $this->label = "given {$this->epoch->toDateString()} expects {$this->expected->toDateString()}";
     }
 }

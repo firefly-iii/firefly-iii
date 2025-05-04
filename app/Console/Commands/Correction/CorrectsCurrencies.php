@@ -115,7 +115,7 @@ class CorrectsCurrencies extends Command
         $found           = array_values(
             array_filter(
                 $found,
-                static fn(int $currencyId) => 0 !== $currencyId
+                static fn (int $currencyId) => 0 !== $currencyId
             )
         );
 

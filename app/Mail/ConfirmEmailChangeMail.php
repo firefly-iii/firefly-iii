@@ -40,9 +40,7 @@ class ConfirmEmailChangeMail extends Mailable
     /**
      * ConfirmEmailChangeMail constructor.
      */
-    public function __construct(public string $newEmail, public string $oldEmail, public string $url)
-    {
-    }
+    public function __construct(public string $newEmail, public string $oldEmail, public string $url) {}
 
     /**
      * Build the message.

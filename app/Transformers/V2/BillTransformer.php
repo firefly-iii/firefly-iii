@@ -325,7 +325,7 @@ class BillTransformer extends AbstractTransformer
             }
         }
         $simple       = $set->map( // @phpstan-ignore-line
-            static fn(Carbon $date) => $date->toAtomString()
+            static fn (Carbon $date) => $date->toAtomString()
         );
 
         return $simple->toArray();

@@ -42,9 +42,7 @@ class VersionCheckResult extends Notification
 {
     use Queueable;
 
-    public function __construct(private string $message)
-    {
-    }
+    public function __construct(private string $message) {}
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

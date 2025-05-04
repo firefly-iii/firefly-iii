@@ -28,9 +28,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 
 class IsFilterValueIn implements ValidationRule
 {
-    public function __construct(private readonly string $key, private readonly array $values)
-    {
-    }
+    public function __construct(private readonly string $key, private readonly array $values) {}
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

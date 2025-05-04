@@ -149,7 +149,7 @@ class AccountRepository implements AccountRepositoryInterface
     public function getMetaValue(Account $account, string $field): ?string
     {
         $result = $account->accountMeta->filter(
-            static fn(AccountMeta $meta) => strtolower($meta->name) === strtolower($field)
+            static fn (AccountMeta $meta) => strtolower($meta->name) === strtolower($field)
         );
         if (0 === $result->count()) {
             return null;

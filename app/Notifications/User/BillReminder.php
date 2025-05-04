@@ -42,9 +42,7 @@ class BillReminder extends Notification
 {
     use Queueable;
 
-    public function __construct(private Bill $bill, private string $field, private int $diff)
-    {
-    }
+    public function __construct(private Bill $bill, private string $field, private int $diff) {}
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

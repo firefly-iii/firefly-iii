@@ -38,7 +38,7 @@ class Translation extends AbstractExtension
         return [
             new TwigFilter(
                 '_',
-                static fn($name) => (string) trans(sprintf('firefly.%s', $name)),
+                static fn ($name) => (string) trans(sprintf('firefly.%s', $name)),
                 ['is_safe' => ['html']]
             ),
         ];
