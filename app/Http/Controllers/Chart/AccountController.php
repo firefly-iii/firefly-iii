@@ -511,7 +511,7 @@ class AccountController extends Controller
         foreach ($return as $key => $info) {
             if ('balance' !== $key && 'native_balance' !== $key) {
                 // assume it's a currency:
-                $setCurrency             = $this->currencyRepository->findByCode($key);
+                $setCurrency             = $this->currencyRepository->findByCode((string) $key);
                 $info['currency_symbol'] = $setCurrency->symbol;
                 $info['currency_code']   = $setCurrency->code;
                 $info['label']           = sprintf('%s (%s)', $account->name, $setCurrency->symbol);
