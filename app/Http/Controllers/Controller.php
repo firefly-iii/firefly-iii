@@ -32,6 +32,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\View;
 use Route;
 
@@ -80,6 +81,8 @@ abstract class Controller extends BaseController
 
         // overrule v2 layout back to v1.
         if ('true' === request()->get('force_default_layout') && 'v2' === config('view.layout')) {
+            //config('view.layout','v1');
+            Config::set('view.layout', 'v1');
             View::getFinder()->setPaths([\Safe\realpath(base_path('resources/views'))]); // @phpstan-ignore-line
         }
 
