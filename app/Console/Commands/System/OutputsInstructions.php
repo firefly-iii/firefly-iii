@@ -147,10 +147,7 @@ class OutputsInstructions extends Command
      */
     private function showLine(): void
     {
-        $line = '+';
-        $line .= str_repeat('-', 78);
-        $line .= '+';
-        $this->line($line);
+        $this->line(sprintf('+%s+', str_repeat('-', 78)));
     }
 
     /**
