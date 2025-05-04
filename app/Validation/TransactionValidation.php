@@ -593,7 +593,7 @@ trait TransactionValidation
         /** @var null|TransactionJournal $journal */
         $journal = TransactionJournal::with(['transactionType'])->find($journalId);
         if (null !== $journal) {
-            return strtolower($journal->transactionType->type);
+            return strtolower((string) $journal->transactionType->type);
         }
 
         return 'invalid';

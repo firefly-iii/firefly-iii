@@ -234,7 +234,7 @@ class UpgradesToGroups extends Command
         $categoryId     = $this->getTransactionCategory($transaction, $opposingTr) ?? $categoryId;
 
         return [
-            'type'                => strtolower($journal->transactionType->type),
+            'type'                => strtolower((string) $journal->transactionType->type),
             'date'                => $journal->date,
             'user'                => $journal->user,
             'user_group'          => $journal->user->userGroup,

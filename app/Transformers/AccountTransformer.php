@@ -201,7 +201,7 @@ class AccountTransformer extends AbstractTransformer
                 }
                 $monthlyPaymentDate = $object->toAtomString();
             }
-            if (10 !== strlen($monthlyPaymentDate)) {
+            if (10 !== strlen((string) $monthlyPaymentDate)) {
                 $monthlyPaymentDate = Carbon::parse($monthlyPaymentDate, config('app.timezone'))->toAtomString();
             }
         }

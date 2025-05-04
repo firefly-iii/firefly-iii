@@ -492,7 +492,7 @@ trait MetaCollection
                 'notes',
                 static function (JoinClause $join): void {
                     $join->on('notes.noteable_id', '=', 'transaction_journals.id');
-                    $join->where('notes.noteable_type', '=', 'FireflyIII\Models\TransactionJournal');
+                    $join->where('notes.noteable_type', '=', \FireflyIII\Models\TransactionJournal::class);
                     $join->whereNull('notes.deleted_at');
                 }
             );
@@ -601,8 +601,8 @@ trait MetaCollection
                     return false;
                 }
                 foreach ($transaction['tags'] as $tag) {
-                    Log::debug(sprintf('"%s" versus', strtolower($tag['name'])), $list);
-                    if (in_array(strtolower($tag['name']), $list, true)) {
+                    Log::debug(sprintf('"%s" versus', strtolower((string) $tag['name'])), $list);
+                    if (in_array(strtolower((string) $tag['name']), $list, true)) {
                         app('log')->debug(sprintf('Transaction has tag "%s" so count++.', $tag['name']));
                         ++$foundTagCount;
                         $journalId = $transaction['transaction_journal_id'];
@@ -779,8 +779,8 @@ trait MetaCollection
             Log::debug(sprintf('Now in setTags(%s) filter', implode(', ', $list)));
             foreach ($object['transactions'] as $transaction) {
                 foreach ($transaction['tags'] as $tag) {
-                    Log::debug(sprintf('"%s" versus', strtolower($tag['name'])), $list);
-                    if (in_array(strtolower($tag['name']), $list, true)) {
+                    Log::debug(sprintf('"%s" versus', strtolower((string) $tag['name'])), $list);
+                    if (in_array(strtolower((string) $tag['name']), $list, true)) {
                         app('log')->debug(sprintf('Transaction has tag "%s" so return true.', $tag['name']));
 
                         return true;
@@ -811,8 +811,8 @@ trait MetaCollection
             foreach ($object['transactions'] as $transaction) {
                 app('log')->debug(sprintf('Transaction has %d tag(s)', count($transaction['tags'])));
                 foreach ($transaction['tags'] as $tag) {
-                    Log::debug(sprintf('"%s" versus', strtolower($tag['name'])), $list);
-                    if (in_array(strtolower($tag['name']), $list, true)) {
+                    Log::debug(sprintf('"%s" versus', strtolower((string) $tag['name'])), $list);
+                    if (in_array(strtolower((string) $tag['name']), $list, true)) {
                         app('log')->debug(sprintf('Transaction has tag "%s", but should not have it, return false.', $tag['name']));
 
                         return false;

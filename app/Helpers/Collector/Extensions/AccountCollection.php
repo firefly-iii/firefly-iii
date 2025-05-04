@@ -264,7 +264,7 @@ trait AccountCollection
                 $date->subSecond();
                 Log::debug(sprintf('accountBalanceIs: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
                 $balance   = Steam::finalAccountBalance($account, $date);
-                $result    = bccomp($balance['balance'], $value);
+                $result    = bccomp((string) $balance['balance'], $value);
                 Log::debug(sprintf('"%s" vs "%s" is %d', $balance['balance'], $value, $result));
 
                 switch ($operator) {

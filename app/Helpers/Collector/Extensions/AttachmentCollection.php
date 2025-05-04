@@ -51,8 +51,8 @@ trait AttachmentCollection
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
                 foreach ($transaction['attachments'] as $attachment) {
-                    $result = str_contains(strtolower($attachment['filename']), strtolower($name)) || str_contains(
-                        strtolower($attachment['title']),
+                    $result = str_contains(strtolower((string) $attachment['filename']), strtolower($name)) || str_contains(
+                        strtolower((string) $attachment['title']),
                         strtolower($name)
                     );
                     if (true === $result) {
@@ -131,8 +131,8 @@ trait AttachmentCollection
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
                 foreach ($transaction['attachments'] as $attachment) {
-                    $result = !str_contains(strtolower($attachment['filename']), strtolower($name)) && !str_contains(
-                        strtolower($attachment['title']),
+                    $result = !str_contains(strtolower((string) $attachment['filename']), strtolower($name)) && !str_contains(
+                        strtolower((string) $attachment['title']),
                         strtolower($name)
                     );
                     if (true === $result) {
@@ -166,8 +166,8 @@ trait AttachmentCollection
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
                 foreach ($transaction['attachments'] as $attachment) {
-                    $result = !str_ends_with(strtolower($attachment['filename']), strtolower($name)) && !str_ends_with(
-                        strtolower($attachment['title']),
+                    $result = !str_ends_with(strtolower((string) $attachment['filename']), strtolower($name)) && !str_ends_with(
+                        strtolower((string) $attachment['title']),
                         strtolower($name)
                     );
                     if (true === $result) {
@@ -201,8 +201,8 @@ trait AttachmentCollection
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
                 foreach ($transaction['attachments'] as $attachment) {
-                    $result = !str_starts_with(strtolower($attachment['filename']), strtolower($name)) && !str_starts_with(
-                        strtolower($attachment['title']),
+                    $result = !str_starts_with(strtolower((string) $attachment['filename']), strtolower($name)) && !str_starts_with(
+                        strtolower((string) $attachment['title']),
                         strtolower($name)
                     );
                     if (true === $result) {
@@ -227,8 +227,8 @@ trait AttachmentCollection
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
                 foreach ($transaction['attachments'] as $attachment) {
-                    $result = str_ends_with(strtolower($attachment['filename']), strtolower($name)) || str_ends_with(
-                        strtolower($attachment['title']),
+                    $result = str_ends_with(strtolower((string) $attachment['filename']), strtolower($name)) || str_ends_with(
+                        strtolower((string) $attachment['title']),
                         strtolower($name)
                     );
                     if (true === $result) {
@@ -299,8 +299,8 @@ trait AttachmentCollection
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
                 foreach ($transaction['attachments'] as $attachment) {
-                    $result = str_starts_with(strtolower($attachment['filename']), strtolower($name)) || str_starts_with(
-                        strtolower($attachment['title']),
+                    $result = str_starts_with(strtolower((string) $attachment['filename']), strtolower($name)) || str_starts_with(
+                        strtolower((string) $attachment['title']),
                         strtolower($name)
                     );
                     if (true === $result) {

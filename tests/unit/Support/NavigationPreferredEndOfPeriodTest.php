@@ -39,7 +39,7 @@ use Tests\integration\TestCase;
  */
 final class NavigationPreferredEndOfPeriodTest extends TestCase
 {
-    private Navigation $navigation;
+    private readonly Navigation $navigation;
 
     public function __construct(string $name)
     {

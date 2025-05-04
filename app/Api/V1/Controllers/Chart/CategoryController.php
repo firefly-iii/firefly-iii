@@ -96,7 +96,7 @@ class CategoryController extends Controller
             $currencyId              = (int) $journal['currency_id'];
             $currency                = $currencies[$currencyId] ?? $this->currencyRepos->find($currencyId);
             $currencies[$currencyId] = $currency;
-            $categoryName            = null === $journal['category_name'] ? (string) trans('firefly.no_category') : $journal['category_name'];
+            $categoryName            = $journal['category_name'] ?? (string) trans('firefly.no_category');
             $amount                  = app('steam')->positive($journal['amount']);
             $key                     = sprintf('%s-%s', $categoryName, $currency->code);
             // create arrays
@@ -114,7 +114,7 @@ class CategoryController extends Controller
             ];
 
             // add monies
-            $return[$key]['amount']  = bcadd($return[$key]['amount'], $amount);
+            $return[$key]['amount']  = bcadd($return[$key]['amount'], (string) $amount);
         }
         $return     = array_values($return);
 

@@ -174,8 +174,8 @@ class BasicController extends Controller
          * @var array $info
          */
         foreach ($paidAmount as $info) {
-            $amount       = bcmul($info['sum'], '-1');
-            $nativeAmount = bcmul($info['native_sum'], '-1');
+            $amount       = bcmul((string) $info['sum'], '-1');
+            $nativeAmount = bcmul((string) $info['native_sum'], '-1');
             $return[]     = [
                 'key'                     => sprintf('bills-paid-in-%s', $info['currency_code']),
                 'value'                   => $amount,
@@ -198,8 +198,8 @@ class BasicController extends Controller
          * @var array $info
          */
         foreach ($unpaidAmount as $info) {
-            $amount       = bcmul($info['sum'], '-1');
-            $nativeAmount = bcmul($info['native_sum'], '-1');
+            $amount       = bcmul((string) $info['sum'], '-1');
+            $nativeAmount = bcmul((string) $info['native_sum'], '-1');
             $return[]     = [
                 'key'                     => sprintf('bills-unpaid-in-%s', $info['currency_code']),
                 'value'                   => $amount,
@@ -279,8 +279,8 @@ class BasicController extends Controller
                     if ((int) $journal['foreign_currency_id'] === $default->id) {
                         $amountNative = $journal['foreign_amount'];
                     }
-                    $spent                   = bcadd($spent, $amount);
-                    $spentNative             = bcadd($spentNative, $amountNative);
+                    $spent                   = bcadd($spent, (string) $amount);
+                    $spentNative             = bcadd($spentNative, (string) $amountNative);
                 }
                 app('log')->debug(sprintf('Total spent in budget "%s" is %s', $budget['name'], $spent));
             }

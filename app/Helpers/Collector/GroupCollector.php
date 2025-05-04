@@ -593,7 +593,7 @@ class GroupCollector implements GroupCollectorInterface
         if (array_key_exists('meta_name', $result) && in_array($result['meta_name'], $dates, true)) {
             $name = $result['meta_name'];
             if (array_key_exists('meta_data', $result) && '' !== (string) $result['meta_data']) {
-                $result[$name] = Carbon::createFromFormat('!Y-m-d', substr(\Safe\json_decode($result['meta_data']), 0, 10));
+                $result[$name] = Carbon::createFromFormat('!Y-m-d', substr((string) \Safe\json_decode($result['meta_data']), 0, 10));
             }
         }
 
@@ -743,8 +743,8 @@ class GroupCollector implements GroupCollectorInterface
                     $groups[$groudId]['sums'][$currencyId]['amount']                  = '0';
                     $groups[$groudId]['sums'][$currencyId]['native_amount']           = '0';
                 }
-                $groups[$groudId]['sums'][$currencyId]['amount']        = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], $transaction['amount']);
-                $groups[$groudId]['sums'][$currencyId]['native_amount'] = bcadd($groups[$groudId]['sums'][$currencyId]['native_amount'], $nativeAmount);
+                $groups[$groudId]['sums'][$currencyId]['amount']        = bcadd((string) $groups[$groudId]['sums'][$currencyId]['amount'], $transaction['amount']);
+                $groups[$groudId]['sums'][$currencyId]['native_amount'] = bcadd((string) $groups[$groudId]['sums'][$currencyId]['native_amount'], $nativeAmount);
 
                 if (null !== $transaction['foreign_amount'] && null !== $transaction['foreign_currency_id']) {
                     $currencyId                                             = (int) $transaction['foreign_currency_id'];
@@ -758,7 +758,7 @@ class GroupCollector implements GroupCollectorInterface
                         $groups[$groudId]['sums'][$currencyId]['amount']                  = '0';
                         $groups[$groudId]['sums'][$currencyId]['native_amount']           = '0';
                     }
-                    $groups[$groudId]['sums'][$currencyId]['amount']        = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], $foreignAmount);
+                    $groups[$groudId]['sums'][$currencyId]['amount']        = bcadd((string) $groups[$groudId]['sums'][$currencyId]['amount'], $foreignAmount);
                     $groups[$groudId]['sums'][$currencyId]['native_amount'] = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], $nativeForeignAmount);
                 }
             }

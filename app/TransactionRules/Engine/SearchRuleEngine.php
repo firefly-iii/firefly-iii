@@ -109,8 +109,8 @@ class SearchRuleEngine implements RuleEngineInterface
                 continue;
             }
             $contextSearch = $ruleTrigger->trigger_type;
-            if (str_starts_with($ruleTrigger->trigger_type, '-')) {
-                $contextSearch = substr($ruleTrigger->trigger_type, 1);
+            if (str_starts_with((string) $ruleTrigger->trigger_type, '-')) {
+                $contextSearch = substr((string) $ruleTrigger->trigger_type, 1);
             }
 
             // if the trigger needs no context, value is different:

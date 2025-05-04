@@ -218,7 +218,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
             return redirect(route('accounts.index', ['asset']));
         }
 
-        return redirect(route('transactions.index', [strtolower($type)]));
+        return redirect(route('transactions.index', [strtolower((string) $type)]));
     }
 
     /**

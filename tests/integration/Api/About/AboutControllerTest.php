@@ -40,6 +40,7 @@ final class AboutControllerTest extends TestCase
     use RefreshDatabase;
     private $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

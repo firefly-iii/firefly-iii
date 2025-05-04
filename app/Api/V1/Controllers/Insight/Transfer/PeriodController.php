@@ -75,7 +75,7 @@ class PeriodController extends Controller
                 'currency_id'      => (string) $currencyId,
                 'currency_code'    => $currencyCode,
             ];
-            $response[$currencyId]['difference']       = bcadd($response[$currencyId]['difference'], app('steam')->positive($journal[$field]));
+            $response[$currencyId]['difference']       = bcadd($response[$currencyId]['difference'], (string) app('steam')->positive($journal[$field]));
             $response[$currencyId]['difference_float'] = (float) $response[$currencyId]['difference'];
 
         }

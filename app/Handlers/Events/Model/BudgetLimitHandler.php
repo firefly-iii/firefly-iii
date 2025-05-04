@@ -194,12 +194,12 @@ class BudgetLimitHandler
             // if both equal each other, amount from this BL must be added to the AB
             if ($limitPeriod->equals($abPeriod)) {
                 Log::debug('This budget limit is equal to the available budget period.');
-                $newAmount = bcadd($newAmount, $budgetLimit->amount);
+                $newAmount = bcadd($newAmount, (string) $budgetLimit->amount);
             }
             // if budget limit period is inside AB period, it can be added in full.
             if (!$limitPeriod->equals($abPeriod) && $abPeriod->contains($limitPeriod)) {
                 Log::debug('This budget limit is smaller than the available budget period.');
-                $newAmount = bcadd($newAmount, $budgetLimit->amount);
+                $newAmount = bcadd($newAmount, (string) $budgetLimit->amount);
             }
             if (!$limitPeriod->equals($abPeriod) && !$abPeriod->contains($limitPeriod) && $abPeriod->overlapsWith($limitPeriod)) {
                 Log::debug('This budget limit is something else entirely!');
