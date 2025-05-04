@@ -50,7 +50,7 @@ class Configuration extends Model
      */
     public function getDataAttribute($value)
     {
-        return json_decode($value);
+        return \Safe\json_decode($value);
     }
 
     /**
@@ -58,6 +58,6 @@ class Configuration extends Model
      */
     public function setDataAttribute($value): void
     {
-        $this->attributes['data'] = json_encode($value);
+        $this->attributes['data'] = \Safe\json_encode($value);
     }
 }

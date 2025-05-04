@@ -270,8 +270,8 @@ class Steam
         ];
 
         // clear zalgo text
-        $string = preg_replace('/(\pM{2})\pM+/u', '\1', $string);
-        $string = preg_replace('/\s+/', '', $string);
+        $string = \Safe\preg_replace('/(\pM{2})\pM+/u', '\1', $string);
+        $string = \Safe\preg_replace('/\s+/', '', $string);
 
         return str_replace($search, '', $string);
     }
@@ -549,8 +549,8 @@ class Steam
     {
         // Log::debug(sprintf('getSafeUrl(%s, %s)', $unknownUrl, $safeUrl));
         $returnUrl      = $safeUrl;
-        $unknownHost    = parse_url($unknownUrl, PHP_URL_HOST);
-        $safeHost       = parse_url($safeUrl, PHP_URL_HOST);
+        $unknownHost    = \Safe\parse_url($unknownUrl, PHP_URL_HOST);
+        $safeHost       = \Safe\parse_url($safeUrl, PHP_URL_HOST);
 
         if (null !== $unknownHost && $unknownHost === $safeHost) {
             $returnUrl = $unknownUrl;

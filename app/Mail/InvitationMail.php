@@ -49,7 +49,7 @@ class InvitationMail extends Mailable
         $this->invitee = $invitee;
         $this->admin   = $admin;
         $this->url     = $url;
-        $this->host    = (string) parse_url($url, PHP_URL_HOST);
+        $this->host    = (string) \Safe\parse_url($url, PHP_URL_HOST);
     }
 
     /**

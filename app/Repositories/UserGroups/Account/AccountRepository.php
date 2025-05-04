@@ -66,7 +66,7 @@ class AccountRepository implements AccountRepositoryInterface
             ->where('accounts.active', true)
             ->where(
                 static function (EloquentBuilder $q1) use ($number): void {
-                    $json = json_encode($number);
+                    $json = \Safe\json_encode($number);
                     $q1->where('account_meta.name', '=', 'account_number');
                     $q1->where('account_meta.data', '=', $json);
                 }

@@ -63,7 +63,7 @@ class UpdateCheckCronjob extends AbstractCronjob
             $this->jobFired     = false;
             $this->jobErrored   = false;
             $this->jobSucceeded = true;
-            $this->message      = sprintf('Checked for updates less than a week ago (on %s).', date('Y-m-d H:i:s', $lastCheckTime->data));
+            $this->message      = sprintf('Checked for updates less than a week ago (on %s).', \Safe\date('Y-m-d H:i:s', $lastCheckTime->data));
 
             return;
         }

@@ -78,7 +78,7 @@ class CacheProperties
         $content    = '';
         foreach ($this->properties as $property) {
             try {
-                $content .= json_encode($property, JSON_THROW_ON_ERROR);
+                $content .= \Safe\json_encode($property, JSON_THROW_ON_ERROR);
             } catch (\JsonException $e) {
                 // @ignoreException
                 $content .= hash('sha256', (string) time());

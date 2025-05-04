@@ -224,7 +224,7 @@ class Handler extends ExceptionHandler
         $data        = [
             'class'        => get_class($e),
             'errorMessage' => $e->getMessage(),
-            'time'         => date('r'),
+            'time'         => \Safe\date('r'),
             'stackTrace'   => $e->getTraceAsString(),
             'file'         => $e->getFile(),
             'line'         => $e->getLine(),
@@ -235,7 +235,7 @@ class Handler extends ExceptionHandler
             'json'         => request()->acceptsJson(),
             'method'       => request()->method(),
             'headers'      => $headers,
-            'post'         => 'POST' === request()->method() ? json_encode(request()->all()) : '',
+            'post'         => 'POST' === request()->method() ? \Safe\json_encode(request()->all()) : '',
         ];
 
         // create job that will mail.
@@ -283,8 +283,8 @@ class Handler extends ExceptionHandler
         }
         $safe         = route('index');
         $previous     = $exception->redirectTo;
-        $previousHost = parse_url($previous, PHP_URL_HOST);
-        $safeHost     = parse_url($safe, PHP_URL_HOST);
+        $previousHost = \Safe\parse_url($previous, PHP_URL_HOST);
+        $safeHost     = \Safe\parse_url($safe, PHP_URL_HOST);
 
         return null !== $previousHost && $previousHost === $safeHost ? $previous : $safe;
     }

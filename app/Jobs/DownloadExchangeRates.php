@@ -113,7 +113,7 @@ class DownloadExchangeRates implements ShouldQueue
             return;
         }
         $body       = (string) $res->getBody();
-        $json       = json_decode($body, true);
+        $json       = \Safe\json_decode($body, true);
         if (false === $json || null === $json) {
             app('log')->warning(sprintf('Trying to grab "%s" resulted in bad JSON.', $url));
 

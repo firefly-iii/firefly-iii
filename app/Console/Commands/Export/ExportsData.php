@@ -273,7 +273,7 @@ class ExportsData extends Command
      */
     private function exportData(array $options, array $data): void
     {
-        $date = date('Y_m_d');
+        $date = \Safe\date('Y_m_d');
         foreach ($data as $key => $content) {
             $file = sprintf('%s%s_%s.csv', $options['directory'], $date, $key);
             if (false === $options['force'] && file_exists($file)) {
@@ -283,7 +283,7 @@ class ExportsData extends Command
                 $this->friendlyWarning(sprintf('File "%s" exists already but will be replaced.', $file));
             }
             // continue to write to file.
-            file_put_contents($file, $content);
+            \Safe\file_put_contents($file, $content);
             $this->friendlyPositive(sprintf('Wrote %s-export to file "%s".', $key, $file));
         }
     }
