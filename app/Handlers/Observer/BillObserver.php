@@ -41,25 +41,6 @@ class BillObserver
         $this->updateNativeAmount($bill);
     }
 
-    public function deleting(Bill $bill): void
-    {
-        $repository = app(AttachmentRepositoryInterface::class);
-        $repository->setUser($bill->user);
-
-        //        app('log')->debug('Observe "deleting" of a bill.');
-        /** @var Attachment $attachment */
-        foreach ($bill->attachments()->get() as $attachment) {
-            $repository->destroy($attachment);
-        }
-        $bill->notes()->delete();
-    }
-
-    public function updated(Bill $bill): void
-    {
-        //        Log::debug('Observe "updated" of a bill.');
-        $this->updateNativeAmount($bill);
-    }
-
     private function updateNativeAmount(Bill $bill): void
     {
         if (!Amount::convertToNative($bill->user)) {
@@ -77,5 +58,24 @@ class BillObserver
         }
         $bill->saveQuietly();
         Log::debug('Bill native amounts are updated.');
+    }
+
+    public function deleting(Bill $bill): void
+    {
+        $repository = app(AttachmentRepositoryInterface::class);
+        $repository->setUser($bill->user);
+
+        //        app('log')->debug('Observe "deleting" of a bill.');
+        /** @var Attachment $attachment */
+        foreach ($bill->attachments()->get() as $attachment) {
+            $repository->destroy($attachment);
+        }
+        $bill->notes()->delete();
+    }
+
+    public function updated(Bill $bill): void
+    {
+        //        Log::debug('Observe "updated" of a bill.');
+        $this->updateNativeAmount($bill);
     }
 }

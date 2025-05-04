@@ -121,6 +121,16 @@ class IndexController extends Controller
         return view('accounts.index', compact('objectType', 'inactivePage', 'subTitleIcon', 'subTitle', 'page', 'accounts'));
     }
 
+    private function subtract(array $startBalances, array $endBalances): array
+    {
+        $result = [];
+        foreach ($endBalances as $key => $value) {
+            $result[$key] = bcsub((string) $value, $startBalances[$key] ?? '0');
+        }
+
+        return $result;
+    }
+
     /**
      * Show list of accounts.
      *
@@ -198,15 +208,5 @@ class IndexController extends Controller
         app('log')->debug(sprintf('Count of accounts after LAP (2): %d', $accounts->getCollection()->count()));
 
         return view('accounts.index', compact('objectType', 'inactiveCount', 'subTitleIcon', 'subTitle', 'page', 'accounts'));
-    }
-
-    private function subtract(array $startBalances, array $endBalances): array
-    {
-        $result = [];
-        foreach ($endBalances as $key => $value) {
-            $result[$key] = bcsub((string) $value, $startBalances[$key] ?? '0');
-        }
-
-        return $result;
     }
 }

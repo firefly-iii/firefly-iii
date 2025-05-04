@@ -26,9 +26,9 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Search\QueryParser;
 
 use FireflyIII\Exceptions\FireflyException;
-use Gdbots\QueryParser\QueryParser as BaseQueryParser;
-use Gdbots\QueryParser\Node as GdbotsNode;
 use Gdbots\QueryParser\Enum\BoolOperator;
+use Gdbots\QueryParser\Node as GdbotsNode;
+use Gdbots\QueryParser\QueryParser as BaseQueryParser;
 use Illuminate\Support\Facades\Log;
 
 class GdbotsQueryParser implements QueryParserInterface

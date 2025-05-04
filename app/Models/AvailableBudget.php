@@ -41,16 +41,16 @@ class AvailableBudget extends Model
 
     protected $casts
                         = [
-            'created_at'                   => 'datetime',
-            'updated_at'                   => 'datetime',
-            'deleted_at'                   => 'datetime',
-            'start_date'                   => 'date',
-            'end_date'                     => 'date',
-            'transaction_currency_id'      => 'int',
-            'amount'                       => 'string',
-            'native_amount'                => 'string',
-            'user_id'                      => 'integer',
-            'user_group_id'                => 'integer',
+            'created_at'              => 'datetime',
+            'updated_at'              => 'datetime',
+            'deleted_at'              => 'datetime',
+            'start_date'              => 'date',
+            'end_date'                => 'date',
+            'transaction_currency_id' => 'int',
+            'amount'                  => 'string',
+            'native_amount'           => 'string',
+            'user_id'                 => 'integer',
+            'user_group_id'           => 'integer',
         ];
 
     protected $fillable = ['user_id', 'user_group_id', 'transaction_currency_id', 'amount', 'start_date', 'end_date', 'start_date_tz', 'end_date_tz', 'native_amount'];
@@ -95,10 +95,11 @@ class AvailableBudget extends Model
         );
     }
 
-    protected function transactionCurrencyId(): Attribute
+    protected function endDate(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int) $value,
+            get: fn (string $value) => Carbon::parse($value),
+            set: fn (Carbon $value) => $value->format('Y-m-d'),
         );
     }
 
@@ -110,11 +111,10 @@ class AvailableBudget extends Model
         );
     }
 
-    protected function endDate(): Attribute
+    protected function transactionCurrencyId(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => Carbon::parse($value),
-            set: fn (Carbon $value) => $value->format('Y-m-d'),
+            get: static fn ($value) => (int) $value,
         );
     }
 }

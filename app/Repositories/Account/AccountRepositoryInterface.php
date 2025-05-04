@@ -71,8 +71,6 @@ interface AccountRepositoryInterface
 
     public function findByName(string $name, array $types): ?Account;
 
-    public function periodCollection(Account $account, Carbon $start, Carbon $end): array;
-
     public function getAccountBalances(Account $account): Collection;
 
     public function getAccountCurrency(Account $account): ?TransactionCurrency;
@@ -150,6 +148,8 @@ interface AccountRepositoryInterface
      * Returns the date of the very first transaction in this account.
      */
     public function oldestJournalDate(Account $account): ?Carbon;
+
+    public function periodCollection(Account $account, Carbon $start, Carbon $end): array;
 
     /**
      * Reset order types of the mentioned accounts.

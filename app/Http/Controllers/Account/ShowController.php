@@ -33,7 +33,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Debug\Timer;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\PeriodOverview;
-use FireflyIII\Support\JsonApi\Enrichments\TransactionGroupEnrichment;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;

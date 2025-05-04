@@ -143,9 +143,9 @@ class BillTransformer extends AbstractTransformer
                     app('log')->debug(sprintf('Foreign currency is #%d', $transaction['foreign_currency_id']));
                     $foreignCurrencyId     = (int) $transaction['foreign_currency_id'];
                     $currencies[$foreignCurrencyId] ??= TransactionCurrency::find($foreignCurrencyId);
-                    $foreignCurrencyCode   = $currencies[$foreignCurrencyId]->code; // @phpstan-ignore property.notFound
-                    $foreignCurrencyName   = $currencies[$foreignCurrencyId]->name; // @phpstan-ignore property.notFound
-                    $foreignCurrencySymbol = $currencies[$foreignCurrencyId]->symbol; // @phpstan-ignore property.notFound
+                    $foreignCurrencyCode   = $currencies[$foreignCurrencyId]->code;           // @phpstan-ignore property.notFound
+                    $foreignCurrencyName   = $currencies[$foreignCurrencyId]->name;           // @phpstan-ignore property.notFound
+                    $foreignCurrencySymbol = $currencies[$foreignCurrencyId]->symbol;         // @phpstan-ignore property.notFound
                     $foreignCurrencyDp     = $currencies[$foreignCurrencyId]->decimal_places; // @phpstan-ignore property.notFound
                 }
 

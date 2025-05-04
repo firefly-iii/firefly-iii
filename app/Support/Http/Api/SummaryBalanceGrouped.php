@@ -30,12 +30,12 @@ use Illuminate\Support\Facades\Log;
 
 class SummaryBalanceGrouped
 {
-    private const string SUM                     = 'sum';
-    private array                       $amounts = [];
-    private array                       $currencies;
+    private const string SUM                              = 'sum';
+    private array                                $amounts = [];
+    private array                                $currencies;
     private readonly CurrencyRepositoryInterface $currencyRepository;
-    private TransactionCurrency         $default;
-    private array                       $keys;
+    private TransactionCurrency                  $default;
+    private array                                $keys;
 
     public function __construct()
     {

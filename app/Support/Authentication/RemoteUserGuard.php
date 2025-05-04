@@ -38,8 +38,8 @@ use Illuminate\Support\Facades\Log;
  */
 class RemoteUserGuard implements Guard
 {
-    protected Application  $application;
-    protected ?User        $user;
+    protected Application $application;
+    protected ?User       $user;
 
     /**
      * Create a new authentication guard.

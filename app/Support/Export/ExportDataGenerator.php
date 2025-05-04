@@ -587,6 +587,14 @@ class ExportDataGenerator
     }
 
     /**
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
+     */
+    public function get(string $key, mixed $default = null): mixed
+    {
+        return null;
+    }
+
+    /**
      * @throws CannotInsertRecord
      * @throws Exception
      * @throws FireflyException
@@ -715,14 +723,6 @@ class ExportDataGenerator
         }
 
         return $string;
-    }
-
-    /**
-     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
-     */
-    public function get(string $key, mixed $default = null): mixed
-    {
-        return null;
     }
 
     /**

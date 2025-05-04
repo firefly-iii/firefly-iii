@@ -140,6 +140,29 @@ class UpdatePiggyBank implements ActionInterface
         return $repository->findByName($name);
     }
 
+    private function getAccounts(TransactionJournal $journal): array
+    {
+        return [
+            'source'      => $journal->transactions()->where('amount', '<', '0')->first()?->account,
+            'destination' => $journal->transactions()->where('amount', '>', '0')->first()?->account,
+        ];
+    }
+
+    private function isConnected(PiggyBank $piggyBank, ?Account $link): bool
+    {
+        if (null === $link) {
+            return false;
+        }
+        foreach ($piggyBank->accounts as $account) {
+            if ($account->id === $link->id) {
+                return true;
+            }
+        }
+        Log::debug(sprintf('Piggy bank is not connected to account #%d "%s"', $link->id, $link->name));
+
+        return false;
+    }
+
     private function removeAmount(PiggyBank $piggyBank, array $array, TransactionJournal $journal, Account $account, string $amount): void
     {
         $repository = app(PiggyBankRepositoryInterface::class);
@@ -207,28 +230,5 @@ class UpdatePiggyBank implements ActionInterface
         Log::debug(sprintf('Will now add %s to piggy bank.', $amount));
 
         $repository->addAmount($piggyBank, $account, $amount, $journal);
-    }
-
-    private function getAccounts(TransactionJournal $journal): array
-    {
-        return [
-            'source'      => $journal->transactions()->where('amount', '<', '0')->first()?->account,
-            'destination' => $journal->transactions()->where('amount', '>', '0')->first()?->account,
-        ];
-    }
-
-    private function isConnected(PiggyBank $piggyBank, ?Account $link): bool
-    {
-        if (null === $link) {
-            return false;
-        }
-        foreach ($piggyBank->accounts as $account) {
-            if ($account->id === $link->id) {
-                return true;
-            }
-        }
-        Log::debug(sprintf('Piggy bank is not connected to account #%d "%s"', $link->id, $link->name));
-
-        return false;
     }
 }

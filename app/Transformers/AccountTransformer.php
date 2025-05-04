@@ -40,9 +40,9 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class AccountTransformer extends AbstractTransformer
 {
-    protected AccountRepositoryInterface $repository;
     protected bool                       $convertToNative;
     protected TransactionCurrency        $native;
+    protected AccountRepositoryInterface $repository;
 
     /**
      * AccountTransformer constructor.

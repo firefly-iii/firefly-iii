@@ -40,21 +40,154 @@ use Illuminate\Support\Str;
  */
 class Steam
 {
-    public function getAccountCurrency(Account $account): ?TransactionCurrency
+    /**
+     * https://stackoverflow.com/questions/1642614/how-to-ceil-floor-and-round-bcmath-numbers
+     */
+    public function bcround(?string $number, int $precision = 0): string
     {
-        $type   = $account->accountType->type;
-        $list   = config('firefly.valid_currency_account_types');
-
-        // return null if not in this list.
-        if (!in_array($type, $list, true)) {
-            return null;
+        if (null === $number) {
+            return '0';
         }
-        $result = $account->accountMeta()->where('name', 'currency_id')->first();
-        if (null === $result) {
-            return null;
+        if ('' === trim($number)) {
+            return '0';
+        }
+        // if the number contains "E", it's in scientific notation, so we need to convert it to a normal number first.
+        if (false !== stripos($number, 'e')) {
+            $number = sprintf('%.12f', $number);
         }
 
-        return TransactionCurrency::find((int) $result->data);
+        // Log::debug(sprintf('Trying bcround("%s",%d)', $number, $precision));
+        if (str_contains($number, '.')) {
+            if ('-' !== $number[0]) {
+                return bcadd($number, '0.'.str_repeat('0', $precision).'5', $precision);
+            }
+
+            return bcsub($number, '0.'.str_repeat('0', $precision).'5', $precision);
+        }
+
+        return $number;
+    }
+
+    public function filterAccountBalances(array $total, Account $account, bool $convertToNative, ?TransactionCurrency $currency = null): array
+    {
+        Log::debug(sprintf('filterAccountBalances(#%d)', $account->id));
+        $return = [];
+        foreach ($total as $key => $value) {
+            $return[$key] = $this->filterAccountBalance($value, $account, $convertToNative, $currency);
+        }
+        Log::debug(sprintf('end of filterAccountBalances(#%d)', $account->id));
+
+        return $return;
+    }
+
+    public function filterAccountBalance(array $set, Account $account, bool $convertToNative, ?TransactionCurrency $currency = null): array
+    {
+        Log::debug(sprintf('filterAccountBalance(#%d)', $account->id), $set);
+        if (0 === count($set)) {
+            Log::debug(sprintf('Return empty array for account #%d', $account->id));
+
+            return [];
+        }
+        $defaultCurrency = app('amount')->getNativeCurrency();
+        if ($convertToNative) {
+            if ($defaultCurrency->id === $currency?->id) {
+                Log::debug(sprintf('Unset [%s] for account #%d (no longer unset "native_balance")', $defaultCurrency->code, $account->id));
+                unset($set[$defaultCurrency->code]);
+            }
+            // todo rethink this logic.
+            if (null !== $currency && $defaultCurrency->id !== $currency->id) {
+                Log::debug(sprintf('Unset balance for account #%d', $account->id));
+                unset($set['balance']);
+            }
+
+            if (null === $currency) {
+                Log::debug(sprintf('Unset balance for account #%d', $account->id));
+                unset($set['balance']);
+            }
+        }
+
+        if (!$convertToNative) {
+            if (null === $currency) {
+                Log::debug(sprintf('Unset native_balance and make defaultCurrency balance the balance for account #%d', $account->id));
+                $set['balance'] = $set[$defaultCurrency->code] ?? '0';
+                unset($set[$defaultCurrency->code]);
+            }
+
+            if (null !== $currency) {
+                Log::debug(sprintf('Unset [%s] + [%s] balance for account #%d', $defaultCurrency->code, $currency->code, $account->id));
+                unset($set[$defaultCurrency->code], $set[$currency->code]);
+            }
+        }
+
+        // put specific value first in array.
+        if (array_key_exists('native_balance', $set)) {
+            $set = ['native_balance' => $set['native_balance']] + $set;
+        }
+        if (array_key_exists('balance', $set)) {
+            $set = ['balance' => $set['balance']] + $set;
+        }
+        Log::debug(sprintf('Return #%d', $account->id), $set);
+
+        return $set;
+    }
+
+    public function filterSpaces(string $string): string
+    {
+        $search = [
+            "\u{0001}", // start of heading
+            "\u{0002}", // start of text
+            "\u{0003}", // end of text
+            "\u{0004}", // end of transmission
+            "\u{0005}", // enquiry
+            "\u{0006}", // ACK
+            "\u{0007}", // BEL
+            "\u{0008}", // backspace
+            "\u{000E}", // shift out
+            "\u{000F}", // shift in
+            "\u{0010}", // data link escape
+            "\u{0011}", // DC1
+            "\u{0012}", // DC2
+            "\u{0013}", // DC3
+            "\u{0014}", // DC4
+            "\u{0015}", // NAK
+            "\u{0016}", // SYN
+            "\u{0017}", // ETB
+            "\u{0018}", // CAN
+            "\u{0019}", // EM
+            "\u{001A}", // SUB
+            "\u{001B}", // escape
+            "\u{001C}", // file separator
+            "\u{001D}", // group separator
+            "\u{001E}", // record separator
+            "\u{001F}", // unit separator
+            "\u{007F}", // DEL
+            "\u{00A0}", // non-breaking space
+            "\u{1680}", // ogham space mark
+            "\u{180E}", // mongolian vowel separator
+            "\u{2000}", // en quad
+            "\u{2001}", // em quad
+            "\u{2002}", // en space
+            "\u{2003}", // em space
+            "\u{2004}", // three-per-em space
+            "\u{2005}", // four-per-em space
+            "\u{2006}", // six-per-em space
+            "\u{2007}", // figure space
+            "\u{2008}", // punctuation space
+            "\u{2009}", // thin space
+            "\u{200A}", // hair space
+            "\u{200B}", // zero width space
+            "\u{202F}", // narrow no-break space
+            "\u{3000}", // ideographic space
+            "\u{FEFF}", // zero width no -break space
+            "\x20", // plain old normal space,
+            ' ',
+        ];
+
+        // clear zalgo text
+        $string = \Safe\preg_replace('/(\pM{2})\pM+/u', '\1', $string);
+        $string = \Safe\preg_replace('/\s+/', '', $string);
+
+        return str_replace($search, '', $string);
     }
 
     public function finalAccountBalanceInRange(Account $account, Carbon $start, Carbon $end, bool $convertToNative): array
@@ -178,104 +311,6 @@ class Steam
         return $balances;
     }
 
-    public function finalAccountsBalance(Collection $accounts, Carbon $date): array
-    {
-        Log::debug(sprintf('finalAccountsBalance: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
-        $balances = [];
-        foreach ($accounts as $account) {
-            $balances[$account->id] = $this->finalAccountBalance($account, $date);
-        }
-
-        return $balances;
-    }
-
-    /**
-     * https://stackoverflow.com/questions/1642614/how-to-ceil-floor-and-round-bcmath-numbers
-     */
-    public function bcround(?string $number, int $precision = 0): string
-    {
-        if (null === $number) {
-            return '0';
-        }
-        if ('' === trim($number)) {
-            return '0';
-        }
-        // if the number contains "E", it's in scientific notation, so we need to convert it to a normal number first.
-        if (false !== stripos($number, 'e')) {
-            $number = sprintf('%.12f', $number);
-        }
-
-        // Log::debug(sprintf('Trying bcround("%s",%d)', $number, $precision));
-        if (str_contains($number, '.')) {
-            if ('-' !== $number[0]) {
-                return bcadd($number, '0.'.str_repeat('0', $precision).'5', $precision);
-            }
-
-            return bcsub($number, '0.'.str_repeat('0', $precision).'5', $precision);
-        }
-
-        return $number;
-    }
-
-    public function filterSpaces(string $string): string
-    {
-        $search = [
-            "\u{0001}", // start of heading
-            "\u{0002}", // start of text
-            "\u{0003}", // end of text
-            "\u{0004}", // end of transmission
-            "\u{0005}", // enquiry
-            "\u{0006}", // ACK
-            "\u{0007}", // BEL
-            "\u{0008}", // backspace
-            "\u{000E}", // shift out
-            "\u{000F}", // shift in
-            "\u{0010}", // data link escape
-            "\u{0011}", // DC1
-            "\u{0012}", // DC2
-            "\u{0013}", // DC3
-            "\u{0014}", // DC4
-            "\u{0015}", // NAK
-            "\u{0016}", // SYN
-            "\u{0017}", // ETB
-            "\u{0018}", // CAN
-            "\u{0019}", // EM
-            "\u{001A}", // SUB
-            "\u{001B}", // escape
-            "\u{001C}", // file separator
-            "\u{001D}", // group separator
-            "\u{001E}", // record separator
-            "\u{001F}", // unit separator
-            "\u{007F}", // DEL
-            "\u{00A0}", // non-breaking space
-            "\u{1680}", // ogham space mark
-            "\u{180E}", // mongolian vowel separator
-            "\u{2000}", // en quad
-            "\u{2001}", // em quad
-            "\u{2002}", // en space
-            "\u{2003}", // em space
-            "\u{2004}", // three-per-em space
-            "\u{2005}", // four-per-em space
-            "\u{2006}", // six-per-em space
-            "\u{2007}", // figure space
-            "\u{2008}", // punctuation space
-            "\u{2009}", // thin space
-            "\u{200A}", // hair space
-            "\u{200B}", // zero width space
-            "\u{202F}", // narrow no-break space
-            "\u{3000}", // ideographic space
-            "\u{FEFF}", // zero width no -break space
-            "\x20", // plain old normal space,
-            ' ',
-        ];
-
-        // clear zalgo text
-        $string = \Safe\preg_replace('/(\pM{2})\pM+/u', '\1', $string);
-        $string = \Safe\preg_replace('/\s+/', '', $string);
-
-        return str_replace($search, '', $string);
-    }
-
     /**
      * Returns smaller than or equal to, so be careful with END OF DAY.
      *
@@ -365,67 +400,21 @@ class Steam
         return $final;
     }
 
-    public function filterAccountBalances(array $total, Account $account, bool $convertToNative, ?TransactionCurrency $currency = null): array
+    public function getAccountCurrency(Account $account): ?TransactionCurrency
     {
-        Log::debug(sprintf('filterAccountBalances(#%d)', $account->id));
-        $return = [];
-        foreach ($total as $key => $value) {
-            $return[$key] = $this->filterAccountBalance($value, $account, $convertToNative, $currency);
+        $type   = $account->accountType->type;
+        $list   = config('firefly.valid_currency_account_types');
+
+        // return null if not in this list.
+        if (!in_array($type, $list, true)) {
+            return null;
         }
-        Log::debug(sprintf('end of filterAccountBalances(#%d)', $account->id));
-
-        return $return;
-    }
-
-    public function filterAccountBalance(array $set, Account $account, bool $convertToNative, ?TransactionCurrency $currency = null): array
-    {
-        Log::debug(sprintf('filterAccountBalance(#%d)', $account->id), $set);
-        if (0 === count($set)) {
-            Log::debug(sprintf('Return empty array for account #%d', $account->id));
-
-            return [];
-        }
-        $defaultCurrency = app('amount')->getNativeCurrency();
-        if ($convertToNative) {
-            if ($defaultCurrency->id === $currency?->id) {
-                Log::debug(sprintf('Unset [%s] for account #%d (no longer unset "native_balance")', $defaultCurrency->code, $account->id));
-                unset($set[$defaultCurrency->code]);
-            }
-            // todo rethink this logic.
-            if (null !== $currency && $defaultCurrency->id !== $currency->id) {
-                Log::debug(sprintf('Unset balance for account #%d', $account->id));
-                unset($set['balance']);
-            }
-
-            if (null === $currency) {
-                Log::debug(sprintf('Unset balance for account #%d', $account->id));
-                unset($set['balance']);
-            }
+        $result = $account->accountMeta()->where('name', 'currency_id')->first();
+        if (null === $result) {
+            return null;
         }
 
-        if (!$convertToNative) {
-            if (null === $currency) {
-                Log::debug(sprintf('Unset native_balance and make defaultCurrency balance the balance for account #%d', $account->id));
-                $set['balance'] = $set[$defaultCurrency->code] ?? '0';
-                unset($set[$defaultCurrency->code]);
-            }
-
-            if (null !== $currency) {
-                Log::debug(sprintf('Unset [%s] + [%s] balance for account #%d', $defaultCurrency->code, $currency->code, $account->id));
-                unset($set[$defaultCurrency->code], $set[$currency->code]);
-            }
-        }
-
-        // put specific value first in array.
-        if (array_key_exists('native_balance', $set)) {
-            $set = ['native_balance' => $set['native_balance']] + $set;
-        }
-        if (array_key_exists('balance', $set)) {
-            $set = ['balance' => $set['balance']] + $set;
-        }
-        Log::debug(sprintf('Return #%d', $account->id), $set);
-
-        return $set;
+        return TransactionCurrency::find((int) $result->data);
     }
 
     private function groupAndSumTransactions(array $array, string $group, string $field): array
@@ -438,6 +427,34 @@ class Steam
         }
 
         return $return;
+    }
+
+    private function convertAllBalances(array $others, TransactionCurrency $native, Carbon $date): string
+    {
+        $total     = '0';
+        $converter = new ExchangeRateConverter();
+        foreach ($others as $key => $amount) {
+            $currency = TransactionCurrency::where('code', $key)->first();
+            if (null === $currency) {
+                continue;
+            }
+            $current  = $converter->convert($currency, $native, $date, $amount);
+            Log::debug(sprintf('Convert %s %s to %s %s', $currency->code, $amount, $native->code, $current));
+            $total    = bcadd($current, $total);
+        }
+
+        return $total;
+    }
+
+    public function finalAccountsBalance(Collection $accounts, Carbon $date): array
+    {
+        Log::debug(sprintf('finalAccountsBalance: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
+        $balances = [];
+        foreach ($accounts as $account) {
+            $balances[$account->id] = $this->finalAccountBalance($account, $date);
+        }
+
+        return $balances;
     }
 
     /**
@@ -664,22 +681,5 @@ class Steam
         }
 
         return $amount;
-    }
-
-    private function convertAllBalances(array $others, TransactionCurrency $native, Carbon $date): string
-    {
-        $total     = '0';
-        $converter = new ExchangeRateConverter();
-        foreach ($others as $key => $amount) {
-            $currency = TransactionCurrency::where('code', $key)->first();
-            if (null === $currency) {
-                continue;
-            }
-            $current  = $converter->convert($currency, $native, $date, $amount);
-            Log::debug(sprintf('Convert %s %s to %s %s', $currency->code, $amount, $native->code, $current));
-            $total    = bcadd($current, $total);
-        }
-
-        return $total;
     }
 }

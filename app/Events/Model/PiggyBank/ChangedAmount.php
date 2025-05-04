@@ -37,8 +37,8 @@ class ChangedAmount extends Event
 {
     use SerializesModels;
 
-    public string              $amount;
-    public PiggyBank           $piggyBank;
+    public string    $amount;
+    public PiggyBank $piggyBank;
 
     /**
      * Create a new event instance.

@@ -31,15 +31,15 @@ use Illuminate\Contracts\Auth\Authenticatable;
 
 interface UserGroupInterface
 {
-    public function getUserGroup(): ?UserGroup;
+    public function checkUserGroupAccess(UserRoleEnum $role): bool;
 
     public function getUser(): ?User;
 
-    public function checkUserGroupAccess(UserRoleEnum $role): bool;
-
-    public function setUserGroup(UserGroup $userGroup): void;
+    public function getUserGroup(): ?UserGroup;
 
     public function setUser(null|Authenticatable|User $user): void;
+
+    public function setUserGroup(UserGroup $userGroup): void;
 
     public function setUserGroupById(int $userGroupId): void;
 }

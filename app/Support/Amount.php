@@ -49,61 +49,6 @@ class Amount
     }
 
     /**
-     * Experimental function to see if we can quickly and quietly get the amount from a journal.
-     * This depends on the user's default currency and the wish to have it converted.
-     */
-    public function getAmountFromJournal(array $journal): string
-    {
-        $convertToNative = $this->convertToNative();
-        $currency        = $this->getNativeCurrency();
-        $field           = $convertToNative && $currency->id !== $journal['currency_id'] ? 'native_amount' : 'amount';
-        $amount          = $journal[$field] ?? '0';
-        // Log::debug(sprintf('Field is %s, amount is %s', $field, $amount));
-        // fallback, the transaction has a foreign amount in $currency.
-        if ($convertToNative && null !== $journal['foreign_amount'] && $currency->id === (int) $journal['foreign_currency_id']) {
-            $amount = $journal['foreign_amount'];
-            // Log::debug(sprintf('Overruled, amount is now %s', $amount));
-        }
-
-        return (string) $amount;
-    }
-
-    public function convertToNative(?User $user = null): bool
-    {
-        if (null === $user) {
-            return true === Preferences::get('convert_to_native', false)->data && true === config('cer.enabled');
-            //            Log::debug(sprintf('convertToNative [a]: %s', var_export($result, true)));
-        }
-
-        return true === Preferences::getForUser($user, 'convert_to_native', false)->data && true === config('cer.enabled');
-        // Log::debug(sprintf('convertToNative [b]: %s', var_export($result, true)));
-    }
-
-    /**
-     * Experimental function to see if we can quickly and quietly get the amount from a journal.
-     * This depends on the user's default currency and the wish to have it converted.
-     */
-    public function getAmountFromJournalObject(TransactionJournal $journal): string
-    {
-        $convertToNative   = $this->convertToNative();
-        $currency          = $this->getNativeCurrency();
-        $field             = $convertToNative && $currency->id !== $journal->transaction_currency_id ? 'native_amount' : 'amount';
-
-        /** @var null|Transaction $sourceTransaction */
-        $sourceTransaction = $journal->transactions()->where('amount', '<', 0)->first();
-        if (null === $sourceTransaction) {
-            return '0';
-        }
-        $amount            = $sourceTransaction->{$field} ?? '0';
-        if ((int) $sourceTransaction->foreign_currency_id === $currency->id) {
-            // use foreign amount instead!
-            $amount = (string) $sourceTransaction->foreign_amount; // hard coded to be foreign amount.
-        }
-
-        return $amount;
-    }
-
-    /**
      * This method will properly format the given number, in color or "black and white",
      * as a currency, given two things: the currency required and the current locale.
      *
@@ -147,20 +92,35 @@ class Amount
         return TransactionCurrency::orderBy('code', 'ASC')->get();
     }
 
-    public function getCurrencies(): Collection
+    /**
+     * Experimental function to see if we can quickly and quietly get the amount from a journal.
+     * This depends on the user's default currency and the wish to have it converted.
+     */
+    public function getAmountFromJournal(array $journal): string
     {
-        /** @var User $user */
-        $user = auth()->user();
+        $convertToNative = $this->convertToNative();
+        $currency        = $this->getNativeCurrency();
+        $field           = $convertToNative && $currency->id !== $journal['currency_id'] ? 'native_amount' : 'amount';
+        $amount          = $journal[$field] ?? '0';
+        // Log::debug(sprintf('Field is %s, amount is %s', $field, $amount));
+        // fallback, the transaction has a foreign amount in $currency.
+        if ($convertToNative && null !== $journal['foreign_amount'] && $currency->id === (int) $journal['foreign_currency_id']) {
+            $amount = $journal['foreign_amount'];
+            // Log::debug(sprintf('Overruled, amount is now %s', $amount));
+        }
 
-        return $user->currencies()->orderBy('code', 'ASC')->get();
+        return (string) $amount;
     }
 
-    /**
-     * @deprecated
-     */
-    public function getDefaultCurrency(): TransactionCurrency
+    public function convertToNative(?User $user = null): bool
     {
-        return $this->getNativeCurrency();
+        if (null === $user) {
+            return true === Preferences::get('convert_to_native', false)->data && true === config('cer.enabled');
+            //            Log::debug(sprintf('convertToNative [a]: %s', var_export($result, true)));
+        }
+
+        return true === Preferences::getForUser($user, 'convert_to_native', false)->data && true === config('cer.enabled');
+        // Log::debug(sprintf('convertToNative [b]: %s', var_export($result, true)));
     }
 
     public function getNativeCurrency(): TransactionCurrency
@@ -174,14 +134,6 @@ class Amount
         }
 
         return $this->getSystemCurrency();
-    }
-
-    /**
-     * @deprecated
-     */
-    public function getDefaultCurrencyByUserGroup(UserGroup $userGroup): TransactionCurrency
-    {
-        return $this->getNativeCurrencyByUserGroup($userGroup);
     }
 
     public function getNativeCurrencyByUserGroup(UserGroup $userGroup): TransactionCurrency
@@ -211,11 +163,59 @@ class Amount
     }
 
     /**
+     * Experimental function to see if we can quickly and quietly get the amount from a journal.
+     * This depends on the user's default currency and the wish to have it converted.
+     */
+    public function getAmountFromJournalObject(TransactionJournal $journal): string
+    {
+        $convertToNative   = $this->convertToNative();
+        $currency          = $this->getNativeCurrency();
+        $field             = $convertToNative && $currency->id !== $journal->transaction_currency_id ? 'native_amount' : 'amount';
+
+        /** @var null|Transaction $sourceTransaction */
+        $sourceTransaction = $journal->transactions()->where('amount', '<', 0)->first();
+        if (null === $sourceTransaction) {
+            return '0';
+        }
+        $amount            = $sourceTransaction->{$field} ?? '0';
+        if ((int) $sourceTransaction->foreign_currency_id === $currency->id) {
+            // use foreign amount instead!
+            $amount = (string) $sourceTransaction->foreign_amount; // hard coded to be foreign amount.
+        }
+
+        return $amount;
+    }
+
+    public function getCurrencies(): Collection
+    {
+        /** @var User $user */
+        $user = auth()->user();
+
+        return $user->currencies()->orderBy('code', 'ASC')->get();
+    }
+
+    /**
+     * @deprecated
+     */
+    public function getDefaultCurrency(): TransactionCurrency
+    {
+        return $this->getNativeCurrency();
+    }
+
+    /**
      * @deprecated use getDefaultCurrencyByUserGroup instead
      */
     public function getDefaultCurrencyByUser(User $user): TransactionCurrency
     {
         return $this->getDefaultCurrencyByUserGroup($user->userGroup);
+    }
+
+    /**
+     * @deprecated
+     */
+    public function getDefaultCurrencyByUserGroup(UserGroup $userGroup): TransactionCurrency
+    {
+        return $this->getNativeCurrencyByUserGroup($userGroup);
     }
 
     /**

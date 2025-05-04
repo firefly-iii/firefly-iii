@@ -287,11 +287,11 @@ class IndexController extends Controller
                 // also calculate how much left from budgeted:
                 $sums['left'][$currencyId]
                                                          ??= [
-                                                             'amount'                  => '0',
-                                                             'currency_id'             => $budgeted['currency_id'],
-                                                             'currency_symbol'         => $budgeted['currency_symbol'],
-                                                             'currency_decimal_places' => $budgeted['currency_decimal_places'],
-                                                         ];
+                        'amount'                  => '0',
+                        'currency_id'             => $budgeted['currency_id'],
+                        'currency_symbol'         => $budgeted['currency_symbol'],
+                        'currency_decimal_places' => $budgeted['currency_decimal_places'],
+                    ];
             }
         }
 

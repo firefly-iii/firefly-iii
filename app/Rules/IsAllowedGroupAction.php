@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\Log;
 
 class IsAllowedGroupAction implements ValidationRule
 {
-    private array                        $acceptedRoles;
+    private array                                 $acceptedRoles;
     private readonly UserGroupRepositoryInterface $repository;
 
     public function __construct(private readonly string $className, private readonly string $methodName)

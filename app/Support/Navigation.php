@@ -443,11 +443,11 @@ class Navigation
         }
 
         return match ($range) {
-            'last7' => '1W',
-            'last30', 'MTD' => '1M',
-            'last90', 'QTD' => '3M',
+            'last7'          => '1W',
+            'last30', 'MTD'  => '1M',
+            'last90', 'QTD'  => '3M',
             'last365', 'YTD' => '1Y',
-            default => $range,
+            default          => $range,
         };
     }
 

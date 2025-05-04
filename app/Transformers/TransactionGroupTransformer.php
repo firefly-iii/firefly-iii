@@ -83,14 +83,14 @@ class TransactionGroupTransformer extends AbstractTransformer
         $first = new NullArrayObject(reset($group['transactions']));
 
         return [
-            'id'                 => (int) $first['transaction_group_id'],
-            'created_at'         => $first['created_at']->toAtomString(),
-            'updated_at'         => $first['updated_at']->toAtomString(),
-            'user'               => (string) $data['user_id'],
-            'user_group'         => (string) $data['user_group_id'],
-            'group_title'        => $data['title'],
-            'transactions'       => $this->transformTransactions($data),
-            'links'              => [
+            'id'           => (int) $first['transaction_group_id'],
+            'created_at'   => $first['created_at']->toAtomString(),
+            'updated_at'   => $first['updated_at']->toAtomString(),
+            'user'         => (string) $data['user_id'],
+            'user_group'   => (string) $data['user_group_id'],
+            'group_title'  => $data['title'],
+            'transactions' => $this->transformTransactions($data),
+            'links'        => [
                 [
                     'rel' => 'self',
                     'uri' => '/transactions/'.$first['transaction_group_id'],
@@ -229,12 +229,6 @@ class TransactionGroupTransformer extends AbstractTransformer
         }
 
         return null;
-    }
-
-    private function getLocation(TransactionJournal $journal): ?Location
-    {
-        /** @var null|Location */
-        return $journal->locations()->first();
     }
 
     /**
@@ -525,5 +519,11 @@ class TransactionGroupTransformer extends AbstractTransformer
         $array['name'] = $bill->name;
 
         return $array;
+    }
+
+    private function getLocation(TransactionJournal $journal): ?Location
+    {
+        /** @var null|Location */
+        return $journal->locations()->first();
     }
 }

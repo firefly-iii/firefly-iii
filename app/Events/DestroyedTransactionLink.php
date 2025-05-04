@@ -32,7 +32,9 @@ use Illuminate\Queue\SerializesModels;
  */
 class DestroyedTransactionLink extends Event
 {
-    use SerializesModels; // @phpstan-ignore-line
+    use SerializesModels;
+
+    // @phpstan-ignore-line
 
     /**
      * DestroyedTransactionLink constructor.

@@ -104,7 +104,7 @@ class FireflyValidator extends Validator
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function validateBic(mixed $attribute, mixed  $value): bool
+    public function validateBic(mixed $attribute, mixed $value): bool
     {
         if (!is_string($value) || strlen($value) < 8) {
             return false;
@@ -857,8 +857,7 @@ class FireflyValidator extends Validator
                 ->where('trigger', $trigger)
                 ->where('response', $response)
                 ->where('delivery', $delivery)
-                ->where('url', $url)->count()
-            ;
+                ->where('url', $url)->count();
         }
 
         return false;

@@ -36,16 +36,16 @@ use Illuminate\Support\Facades\Log;
  */
 class AccountBalanceGrouped
 {
-    private array                 $accountIds;
-    private string                $carbonFormat;
+    private array                          $accountIds;
+    private string                         $carbonFormat;
     private readonly ExchangeRateConverter $converter;
-    private array                 $currencies = [];
-    private array                 $data       = [];
-    private TransactionCurrency   $default;
-    private Carbon                $end;
-    private array                 $journals   = [];
-    private string                $preferredRange;
-    private Carbon                $start;
+    private array                          $currencies = [];
+    private array                          $data       = [];
+    private TransactionCurrency            $default;
+    private Carbon                         $end;
+    private array                          $journals   = [];
+    private string                         $preferredRange;
+    private Carbon                         $start;
 
     public function __construct()
     {

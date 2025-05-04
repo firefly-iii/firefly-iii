@@ -40,16 +40,6 @@ trait UserGroupTrait
     protected ?User      $user      = null;
     protected ?UserGroup $userGroup = null;
 
-    public function getUserGroup(): ?UserGroup
-    {
-        return $this->userGroup;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
     public function checkUserGroupAccess(UserRoleEnum $role): bool
     {
         $result = $this->user->hasRoleInGroupOrOwner($this->userGroup, $role);
@@ -63,15 +53,9 @@ trait UserGroupTrait
         return false;
     }
 
-    /**
-     * TODO This method does not check if the user has access to this particular user group.
-     */
-    public function setUserGroup(UserGroup $userGroup): void
+    public function getUser(): ?User
     {
-        if (null === $this->user) {
-            Log::warning(sprintf('User is not set in repository %s', static::class));
-        }
-        $this->userGroup = $userGroup;
+        return $this->user;
     }
 
     /**
@@ -90,6 +74,22 @@ trait UserGroupTrait
         }
 
         throw new FireflyException(sprintf('Object is of class %s, not User.', $user::class));
+    }
+
+    public function getUserGroup(): ?UserGroup
+    {
+        return $this->userGroup;
+    }
+
+    /**
+     * TODO This method does not check if the user has access to this particular user group.
+     */
+    public function setUserGroup(UserGroup $userGroup): void
+    {
+        if (null === $this->user) {
+            Log::warning(sprintf('User is not set in repository %s', static::class));
+        }
+        $this->userGroup = $userGroup;
     }
 
     /**

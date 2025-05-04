@@ -32,18 +32,18 @@ class RecalculatesRunningBalance extends Command
     use ShowsFriendlyMessages;
 
     /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature   = 'firefly-iii:refresh-running-balance {--F|force : Force the execution of this command.}';
-
-    /**
      * The console command description.
      *
      * @var string
      */
     protected $description = 'Refreshes all running balances. May take a long time to run if forced.';
+
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature   = 'firefly-iii:refresh-running-balance {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.

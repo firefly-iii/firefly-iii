@@ -39,9 +39,9 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use FireflyIII\Services\Internal\Support\JournalServiceTrait;
 use FireflyIII\Support\Facades\FireflyConfig;
@@ -70,7 +70,7 @@ class TransactionJournalFactory
     private PiggyBankRepositoryInterface       $piggyRepository;
     private TransactionTypeRepositoryInterface $typeRepository;
     private User                               $user;
-    private UserGroup $userGroup;
+    private UserGroup                          $userGroup;
 
     /**
      * Constructor.
@@ -414,18 +414,6 @@ class TransactionJournalFactory
         $this->accountRepository->setUser($this->user);
     }
 
-    public function setUserGroup(UserGroup $userGroup): void
-    {
-        $this->userGroup = $userGroup;
-        $this->currencyRepository->setUserGroup($userGroup);
-        $this->tagFactory->setUserGroup($userGroup);
-        $this->billRepository->setUserGroup($userGroup);
-        $this->budgetRepository->setUserGroup($userGroup);
-        $this->categoryRepository->setUserGroup($userGroup);
-        $this->piggyRepository->setUserGroup($userGroup);
-        $this->accountRepository->setUserGroup($userGroup);
-    }
-
     private function reconciliationSanityCheck(?Account $sourceAccount, ?Account $destinationAccount): array
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
@@ -604,5 +592,17 @@ class TransactionJournalFactory
         if (true === $errorOnHash) {
             app('log')->info('Will trigger duplication alert for this journal.');
         }
+    }
+
+    public function setUserGroup(UserGroup $userGroup): void
+    {
+        $this->userGroup = $userGroup;
+        $this->currencyRepository->setUserGroup($userGroup);
+        $this->tagFactory->setUserGroup($userGroup);
+        $this->billRepository->setUserGroup($userGroup);
+        $this->budgetRepository->setUserGroup($userGroup);
+        $this->categoryRepository->setUserGroup($userGroup);
+        $this->piggyRepository->setUserGroup($userGroup);
+        $this->accountRepository->setUserGroup($userGroup);
     }
 }

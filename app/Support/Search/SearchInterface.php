@@ -33,6 +33,8 @@ use Illuminate\Support\Collection;
  */
 interface SearchInterface
 {
+    public function getExcludedWords(): array;
+
     public function getInvalidOperators(): array;
 
     public function getModifiers(): Collection;
@@ -42,8 +44,6 @@ interface SearchInterface
     public function getWords(): array;
 
     public function getWordsAsString(): string;
-
-    public function getExcludedWords(): array;
 
     public function hasModifiers(): bool;
 

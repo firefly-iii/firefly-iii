@@ -42,15 +42,15 @@ class Tag extends Model
 
     protected $casts
                         = [
-            'created_at'                   => 'datetime',
-            'updated_at'                   => 'datetime',
-            'deleted_at'                   => 'datetime',
-            'date'                         => SeparateTimezoneCaster::class,
-            'zoomLevel'                    => 'int',
-            'latitude'                     => 'float',
-            'longitude'                    => 'float',
-            'user_id'                      => 'integer',
-            'user_group_id'                => 'integer',
+            'created_at'    => 'datetime',
+            'updated_at'    => 'datetime',
+            'deleted_at'    => 'datetime',
+            'date'          => SeparateTimezoneCaster::class,
+            'zoomLevel'     => 'int',
+            'latitude'      => 'float',
+            'longitude'     => 'float',
+            'user_id'       => 'integer',
+            'user_group_id' => 'integer',
         ];
 
     protected $fillable = ['user_id', 'user_group_id', 'tag', 'date', 'date_tz', 'description', 'tagMode'];

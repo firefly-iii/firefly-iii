@@ -53,14 +53,14 @@ class TransactionGroupTransformer extends AbstractTransformer
     private array                 $currencies   = [];
     private TransactionCurrency   $default; // collection of all currencies for this transformer.
     private array                 $journals     = [];
-    private array                 $objects      = [];
+    private array $meta                         = [];
 
     //    private array                 $currencies        = [];
     //    private array                 $transactionTypes  = [];
-    private array                 $meta         = [];
-    private array                 $notes        = [];
+    private array $notes                        = [];
+    private array                 $objects      = [];
     //    private array                 $locations         = [];
-    private array                 $tags         = [];
+    private array $tags                         = [];
     //    private array                 $amounts           = [];
     //    private array                 $foreignAmounts    = [];
     //    private array                 $journalCurrencies = [];

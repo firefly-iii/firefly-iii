@@ -900,16 +900,6 @@ class GroupCollector implements GroupCollectorInterface
         return $this;
     }
 
-    /**
-     * Limit results to a specific currency, only normal one.
-     */
-    public function setNormalCurrency(TransactionCurrency $currency): GroupCollectorInterface
-    {
-        $this->query->where('source.transaction_currency_id', $currency->id);
-
-        return $this;
-    }
-
     public function setEndRow(int $endRow): self
     {
         $this->endRow = $endRow;
@@ -953,6 +943,16 @@ class GroupCollector implements GroupCollectorInterface
 
             $this->query->whereIn('transaction_journals.id', $integerIDs);
         }
+
+        return $this;
+    }
+
+    /**
+     * Limit results to a specific currency, only normal one.
+     */
+    public function setNormalCurrency(TransactionCurrency $currency): GroupCollectorInterface
+    {
+        $this->query->where('source.transaction_currency_id', $currency->id);
 
         return $this;
     }
@@ -1168,8 +1168,7 @@ class GroupCollector implements GroupCollectorInterface
             // include budget ID + name (if any)
             ->withBudgetInformation()
             // include bill ID + name (if any)
-            ->withBillInformation()
-        ;
+            ->withBillInformation();
 
         return $this;
     }

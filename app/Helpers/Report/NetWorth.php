@@ -49,7 +49,7 @@ class NetWorth implements NetWorthInterface
 {
     private AccountRepositoryInterface  $accountRepository;
     private CurrencyRepositoryInterface $currencyRepos;
-    private User                        $user; // @phpstan-ignore-line
+    private User                        $user;             // @phpstan-ignore-line
     private ?UserGroup                  $userGroup = null; // @phpstan-ignore-line
 
     /**

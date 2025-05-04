@@ -41,6 +41,8 @@ use Illuminate\Support\Collection;
  */
 interface GroupCollectorInterface
 {
+    public function accountBalanceIs(string $direction, string $operator, string $value): self;
+
     /**
      * Get transactions with a specific amount.
      */
@@ -458,11 +460,6 @@ interface GroupCollectorInterface
     public function setCurrency(TransactionCurrency $currency): self;
 
     /**
-     * Limit results to a specific currency, either foreign or normal one.
-     */
-    public function setNormalCurrency(TransactionCurrency $currency): self;
-
-    /**
      * Set destination accounts.
      */
     public function setDestinationAccounts(Collection $accounts): self;
@@ -525,6 +522,11 @@ interface GroupCollectorInterface
      * Set the start and end time of the results to return, based on meta data.
      */
     public function setMetaDateRange(Carbon $start, Carbon $end, string $field): self;
+
+    /**
+     * Limit results to a specific currency, either foreign or normal one.
+     */
+    public function setNormalCurrency(TransactionCurrency $currency): self;
 
     /**
      * Define which accounts can NOT be part of the source and destination transactions.
@@ -737,6 +739,4 @@ interface GroupCollectorInterface
     public function yearIs(string $year): self;
 
     public function yearIsNot(string $year): self;
-
-    public function accountBalanceIs(string $direction, string $operator, string $value): self;
 }

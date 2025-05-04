@@ -41,9 +41,9 @@ use Illuminate\Support\Collection;
 class BillTransformer extends AbstractTransformer
 {
     private readonly BillDateCalculator      $calculator;
-    private readonly BillRepositoryInterface $repository;
-    private readonly TransactionCurrency     $default;
     private readonly bool                    $convertToNative;
+    private readonly TransactionCurrency     $default;
+    private readonly BillRepositoryInterface $repository;
 
     /**
      * BillTransformer constructor.

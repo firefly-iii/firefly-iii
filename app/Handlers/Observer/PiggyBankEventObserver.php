@@ -37,12 +37,6 @@ class PiggyBankEventObserver
         $this->updateNativeAmount($event);
     }
 
-    public function updated(PiggyBankEvent $event): void
-    {
-        Log::debug('Observe "updated" of a piggy bank event.');
-        $this->updateNativeAmount($event);
-    }
-
     private function updateNativeAmount(PiggyBankEvent $event): void
     {
         $user                 = $event->piggyBank->accounts()->first()?->user;
@@ -64,5 +58,11 @@ class PiggyBankEventObserver
         }
         $event->saveQuietly();
         Log::debug('Piggy bank event native amount is updated.');
+    }
+
+    public function updated(PiggyBankEvent $event): void
+    {
+        Log::debug('Observe "updated" of a piggy bank event.');
+        $this->updateNativeAmount($event);
     }
 }
