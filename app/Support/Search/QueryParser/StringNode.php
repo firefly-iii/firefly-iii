@@ -30,11 +30,8 @@ namespace FireflyIII\Support\Search\QueryParser;
  */
 class StringNode extends Node
 {
-    private string $value;
-
-    public function __construct(string $value, bool $prohibited = false)
+    public function __construct(private readonly string $value, bool $prohibited = false)
     {
-        $this->value      = $value;
         $this->prohibited = $prohibited;
     }
 

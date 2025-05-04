@@ -34,14 +34,11 @@ class NewVersionAvailable extends Event
 {
     use SerializesModels;
 
-    public string $message;
-
     /**
      * Create a new event instance. This event is triggered when a new version is available.
      */
-    public function __construct(string $message)
+    public function __construct(public string $message)
     {
         Log::debug(__METHOD__);
-        $this->message = $message;
     }
 }

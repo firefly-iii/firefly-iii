@@ -101,7 +101,7 @@ class AccountBalanceCalculator
 
             // before and after are easy:
             $before = $balances[$entry->account_id][$entry->transaction_currency_id][0];
-            $after  = bcadd($before, $entry->amount);
+            $after  = bcadd($before, (string) $entry->amount);
             if (true === $entry->balance_dirty || $accounts->count() > 0) {
                 // update the transaction:
                 $entry->balance_before = $before;

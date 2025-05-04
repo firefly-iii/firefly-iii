@@ -37,6 +37,7 @@ class StartFireflySession extends StartSession
      *
      * @param Session $session
      */
+    #[\Override]
     protected function storeCurrentUrl(Request $request, $session): void
     {
         $url     = $request->fullUrl();

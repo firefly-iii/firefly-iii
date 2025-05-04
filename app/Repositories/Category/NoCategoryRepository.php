@@ -174,7 +174,7 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface, UserGroupIn
                 'currency_code'           => $journal['currency_code'],
                 'currency_decimal_places' => $journal['currency_decimal_places'],
             ];
-            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->positive($journal['amount']));
+            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], (string) app('steam')->positive($journal['amount']));
         }
 
         return $array;
@@ -202,7 +202,7 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface, UserGroupIn
                 'currency_code'           => $journal['currency_code'],
                 'currency_decimal_places' => $journal['currency_decimal_places'],
             ];
-            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->positive($journal['amount']));
+            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], (string) app('steam')->positive($journal['amount']));
         }
 
         return $array;

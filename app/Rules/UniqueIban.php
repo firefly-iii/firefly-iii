@@ -34,15 +34,13 @@ use Illuminate\Contracts\Validation\ValidationRule;
  */
 class UniqueIban implements ValidationRule
 {
-    private ?Account $account;
     private array    $expectedTypes;
 
     /**
      * Create a new rule instance.
      */
-    public function __construct(?Account $account, ?string $expectedType)
+    public function __construct(private readonly ?Account $account, ?string $expectedType)
     {
-        $this->account       = $account;
         $this->expectedTypes = [];
         if (null === $expectedType) {
             return;

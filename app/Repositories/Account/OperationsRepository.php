@@ -361,12 +361,12 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         ];
 
         // source account? money goes out!
-        $return[$sourceKey]['out']        = bcadd($return[$sourceKey]['out'], app('steam')->negative($amount));
-        $return[$sourceKey]['difference'] = bcadd($return[$sourceKey]['out'], $return[$sourceKey]['in']);
+        $return[$sourceKey]['out']        = bcadd((string) $return[$sourceKey]['out'], (string) app('steam')->negative($amount));
+        $return[$sourceKey]['difference'] = bcadd($return[$sourceKey]['out'], (string) $return[$sourceKey]['in']);
 
         // destination  account? money comes in:
-        $return[$destKey]['in']           = bcadd($return[$destKey]['in'], $amount);
-        $return[$destKey]['difference']   = bcadd($return[$destKey]['out'], $return[$destKey]['in']);
+        $return[$destKey]['in']           = bcadd((string) $return[$destKey]['in'], (string) $amount);
+        $return[$destKey]['difference']   = bcadd((string) $return[$destKey]['out'], $return[$destKey]['in']);
 
         // foreign currency
         if (null !== $journal['foreign_currency_id'] && null !== $journal['foreign_amount']) {
@@ -404,12 +404,12 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
                 'currency_code'    => $journal['foreign_currency_code'],
             ];
             // source account? money goes out! (same as above)
-            $return[$sourceKey]['out']        = bcadd($return[$sourceKey]['out'], app('steam')->negative($amount));
-            $return[$sourceKey]['difference'] = bcadd($return[$sourceKey]['out'], $return[$sourceKey]['in']);
+            $return[$sourceKey]['out']        = bcadd((string) $return[$sourceKey]['out'], (string) app('steam')->negative($amount));
+            $return[$sourceKey]['difference'] = bcadd($return[$sourceKey]['out'], (string) $return[$sourceKey]['in']);
 
             // destination  account? money comes in:
-            $return[$destKey]['in']           = bcadd($return[$destKey]['in'], $amount);
-            $return[$destKey]['difference']   = bcadd($return[$destKey]['out'], $return[$destKey]['in']);
+            $return[$destKey]['in']           = bcadd((string) $return[$destKey]['in'], (string) $amount);
+            $return[$destKey]['difference']   = bcadd((string) $return[$destKey]['out'], $return[$destKey]['in']);
         }
 
         return $return;

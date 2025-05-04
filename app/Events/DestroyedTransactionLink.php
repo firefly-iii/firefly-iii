@@ -32,15 +32,12 @@ use Illuminate\Queue\SerializesModels;
  */
 class DestroyedTransactionLink extends Event
 {
-    use SerializesModels;
-
-    private TransactionJournalLink $link; // @phpstan-ignore-line
+    use SerializesModels; // @phpstan-ignore-line
 
     /**
      * DestroyedTransactionLink constructor.
      */
-    public function __construct(TransactionJournalLink $link)
+    public function __construct(private TransactionJournalLink $link)
     {
-        $this->link = $link;
     }
 }

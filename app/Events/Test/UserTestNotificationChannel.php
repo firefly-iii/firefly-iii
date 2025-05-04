@@ -32,15 +32,13 @@ class UserTestNotificationChannel
     use SerializesModels;
 
     public string $channel;
-    public User   $user;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(string $channel, User $user)
+    public function __construct(string $channel, public User $user)
     {
         app('log')->debug(sprintf('Triggered UserTestNotificationChannel("%s")', $channel));
-        $this->user    = $user;
         $this->channel = $channel;
     }
 }

@@ -173,7 +173,7 @@ class MassController extends Controller
             try {
                 $this->updateJournal($integer, $request);
                 ++$count;
-            } catch (FireflyException $e) {
+            } catch (FireflyException) {
                 // @ignoreException
             }
         }

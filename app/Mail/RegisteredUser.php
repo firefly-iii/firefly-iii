@@ -37,14 +37,11 @@ class RegisteredUser extends Mailable
     use Queueable;
     use SerializesModels;
 
-    public string $address;
-
     /**
      * Create a new message instance.
      */
-    public function __construct(string $address)
+    public function __construct(public string $address)
     {
-        $this->address = $address;
     }
 
     /**

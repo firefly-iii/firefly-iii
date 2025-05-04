@@ -37,6 +37,7 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * Define the routes for the application.
      */
+    #[\Override]
     public function boot(): void
     {
         $this->routes(function (): void {

@@ -94,7 +94,7 @@ class ShowController extends Controller
         // transform dates back to Carbon objects and expand information
         foreach ($array['repetitions'] as $index => $repetition) {
             foreach ($repetition['occurrences'] as $item => $occurrence) {
-                $date                                               = (new Carbon($occurrence))->startOfDay();
+                $date                                               = new Carbon($occurrence)->startOfDay();
                 $set                                                = [
                     'date'  => $date,
                     'fired' => $this->recurring->createdPreviously($recurrence, $date)

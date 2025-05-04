@@ -185,7 +185,7 @@ class AttachmentHelper implements AttachmentHelperInterface
             return false;
         }
 
-        Log::debug(sprintf('Now in saveAttachmentsForModel for model %s', get_class($model)));
+        Log::debug(sprintf('Now in saveAttachmentsForModel for model %s', $model::class));
         if (is_array($files)) {
             Log::debug('$files is an array.');
 
@@ -335,7 +335,7 @@ class AttachmentHelper implements AttachmentHelperInterface
     {
         $md5    = \Safe\md5_file($file->getRealPath());
         $name   = $file->getClientOriginalName();
-        $class  = get_class($model);
+        $class  = $model::class;
         $count  = 0;
         // ignore lines about polymorphic calls.
         if ($model instanceof PiggyBank) {

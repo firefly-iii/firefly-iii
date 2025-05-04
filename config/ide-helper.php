@@ -114,8 +114,8 @@ return [
     */
 
     'extra'                       => [
-        'Eloquent' => ['Illuminate\Database\Eloquent\Builder', 'Illuminate\Database\Query\Builder'],
-        'Session'  => ['Illuminate\Session\Store'],
+        'Eloquent' => [\Illuminate\Database\Eloquent\Builder::class, \Illuminate\Database\Query\Builder::class],
+        'Session'  => [\Illuminate\Session\Store::class],
     ],
 
     'magic'                       => [

@@ -75,7 +75,7 @@ trait FormSupport
         $options['class']        = 'form-control';
         $options['id']           = 'ffInput_'.$name;
         $options['autocomplete'] = 'off';
-        $options['placeholder']  = ucfirst($label);
+        $options['placeholder']  = ucfirst((string) $label);
 
         return $options;
     }

@@ -37,7 +37,7 @@ use Tests\integration\TestCase;
  */
 final class BillDateCalculatorTest extends TestCase
 {
-    private BillDateCalculator $calculator;
+    private readonly BillDateCalculator $calculator;
 
     public function __construct(string $name)
     {

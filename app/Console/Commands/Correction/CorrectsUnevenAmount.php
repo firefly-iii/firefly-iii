@@ -184,7 +184,7 @@ class CorrectsUnevenAmount extends Command
             return;
         }
 
-        $amount              = bcmul('-1', $source->amount);
+        $amount              = bcmul('-1', (string) $source->amount);
 
         // fix amount of destination:
         /** @var null|Transaction $destination */
@@ -249,9 +249,9 @@ class CorrectsUnevenAmount extends Command
         //        Log::debug(sprintf('[c] %s', var_export($source->transaction_currency_id === $destination->foreign_currency_id,true)));
         //        Log::debug(sprintf('[d] %s', var_export((int) $destination->transaction_currency_id ===(int)  $source->foreign_currency_id, true)));
 
-        if (0 === bccomp(app('steam')->positive($source->amount), app('steam')->positive($destination->foreign_amount))
+        if (0 === bccomp((string) app('steam')->positive($source->amount), (string) app('steam')->positive($destination->foreign_amount))
             && $source->transaction_currency_id === $destination->foreign_currency_id
-            && 0 === bccomp(app('steam')->positive($destination->amount), app('steam')->positive($source->foreign_amount))
+            && 0 === bccomp((string) app('steam')->positive($destination->amount), (string) app('steam')->positive($source->foreign_amount))
             && (int) $destination->transaction_currency_id === (int) $source->foreign_currency_id
         ) {
             return true;

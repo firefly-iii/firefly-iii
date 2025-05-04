@@ -94,9 +94,9 @@ class EditController extends Controller
         $hasLocation          = null !== $location;
         $locations            = [
             'location' => [
-                'latitude'     => null !== old('location_latitude') ? old('location_latitude') : $latitude,
-                'longitude'    => null !== old('location_longitude') ? old('location_longitude') : $longitude,
-                'zoom_level'   => null !== old('location_zoom_level') ? old('location_zoom_level') : $zoomLevel,
+                'latitude'     => old('location_latitude') ?? $latitude,
+                'longitude'    => old('location_longitude') ?? $longitude,
+                'zoom_level'   => old('location_zoom_level') ?? $zoomLevel,
                 'has_location' => $hasLocation || 'true' === old('location_has_location'),
             ],
         ];
@@ -138,7 +138,7 @@ class EditController extends Controller
 
         // code to handle active-checkboxes
         $hasOldInput          = null !== $request->old('_token');
-        $virtualBalance       = null === $account->virtual_balance ? '0' : $account->virtual_balance;
+        $virtualBalance       = $account->virtual_balance ?? '0';
         $preFilled            = [
             'account_number'          => $repository->getMetaValue($account, 'account_number'),
             'account_role'            => $repository->getMetaValue($account, 'account_role'),

@@ -41,7 +41,7 @@ class TransactionFactory
     private Account              $account;
     private array                $accountInformation;
     private TransactionCurrency  $currency;
-    private ?TransactionCurrency $foreignCurrency;
+    private ?TransactionCurrency $foreignCurrency = null;
     private TransactionJournal   $journal;
     private bool                 $reconciled;
 

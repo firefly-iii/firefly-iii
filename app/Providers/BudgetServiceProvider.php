@@ -51,6 +51,7 @@ class BudgetServiceProvider extends ServiceProvider
      *
      * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
+    #[\Override]
     public function register(): void
     {
         // reference to auth is not understood by phpstan.

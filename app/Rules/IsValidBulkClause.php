@@ -64,7 +64,7 @@ class IsValidBulkClause implements ValidationRule
     {
         try {
             $array = \Safe\json_decode($value, true, 8, JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
+        } catch (\JsonException) {
             $this->error = (string) trans('validation.json');
 
             return false;

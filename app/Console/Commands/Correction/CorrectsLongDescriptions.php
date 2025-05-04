@@ -48,8 +48,8 @@ class CorrectsLongDescriptions extends Command
 
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
-            if (strlen($journal->description) > self::MAX_LENGTH) {
-                $journal->description = substr($journal->description, 0, self::MAX_LENGTH);
+            if (strlen((string) $journal->description) > self::MAX_LENGTH) {
+                $journal->description = substr((string) $journal->description, 0, self::MAX_LENGTH);
                 $journal->save();
                 $this->friendlyWarning(sprintf('Truncated description of transaction journal #%d', $journal->id));
                 ++$count;
@@ -61,7 +61,7 @@ class CorrectsLongDescriptions extends Command
         /** @var TransactionGroup $group */
         foreach ($groups as $group) {
             if (strlen((string) $group->title) > self::MAX_LENGTH) {
-                $group->title = substr($group->title, 0, self::MAX_LENGTH);
+                $group->title = substr((string) $group->title, 0, self::MAX_LENGTH);
                 $group->save();
                 $this->friendlyWarning(sprintf('Truncated description of transaction group #%d', $group->id));
                 ++$count;

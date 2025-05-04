@@ -32,7 +32,7 @@ use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
  */
 class AttachmentTransformer extends AbstractTransformer
 {
-    private AttachmentRepositoryInterface $repository;
+    private readonly AttachmentRepositoryInterface $repository;
 
     /**
      * BillTransformer constructor.

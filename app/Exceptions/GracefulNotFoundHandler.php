@@ -49,6 +49,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
      *
      * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      */
+    #[\Override]
     public function render($request, \Throwable $e): Response
     {
         $route = $request->route();
@@ -217,7 +218,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
             return redirect(route('accounts.index', ['asset']));
         }
 
-        return redirect(route('transactions.index', [strtolower($type)]));
+        return redirect(route('transactions.index', [strtolower((string) $type)]));
     }
 
     /**

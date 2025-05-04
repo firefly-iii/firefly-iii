@@ -57,24 +57,24 @@ use Illuminate\Support\Collection;
 class OperatorQuerySearch implements SearchInterface
 {
     protected Carbon                    $date;
-    private AccountRepositoryInterface  $accountRepository;
-    private BillRepositoryInterface     $billRepository;
-    private BudgetRepositoryInterface   $budgetRepository;
-    private CategoryRepositoryInterface $categoryRepository;
+    private readonly AccountRepositoryInterface  $accountRepository;
+    private readonly BillRepositoryInterface     $billRepository;
+    private readonly BudgetRepositoryInterface   $budgetRepository;
+    private readonly CategoryRepositoryInterface $categoryRepository;
     private GroupCollectorInterface     $collector;
-    private CurrencyRepositoryInterface $currencyRepository;
+    private readonly CurrencyRepositoryInterface $currencyRepository;
     private array                       $excludeTags;
     private array                       $includeAnyTags;
     // added to fix #8632
     private array                  $includeTags;
     private array                  $invalidOperators;
     private int                    $limit;
-    private Collection             $operators;
+    private readonly Collection             $operators;
     private int                    $page;
     private array                  $prohibitedWords;
-    private float                  $startTime;
-    private TagRepositoryInterface $tagRepository;
-    private array                  $validOperators;
+    private readonly float                  $startTime;
+    private readonly TagRepositoryInterface $tagRepository;
+    private readonly array                  $validOperators;
     private array                  $words;
 
     /**
@@ -149,7 +149,7 @@ class OperatorQuerySearch implements SearchInterface
 
         /** @var QueryParserInterface $parser */
         $parser = app(QueryParserInterface::class);
-        app('log')->debug(sprintf('Using %s as implementation for QueryParserInterface', get_class($parser)));
+        app('log')->debug(sprintf('Using %s as implementation for QueryParserInterface', $parser::class));
 
         try {
             $parsedQuery = $parser->parse($query);
@@ -177,7 +177,7 @@ class OperatorQuerySearch implements SearchInterface
      */
     private function handleSearchNode(Node $node, bool $flipProhibitedFlag): void
     {
-        app('log')->debug(sprintf('Now in handleSearchNode(%s)', get_class($node)));
+        app('log')->debug(sprintf('Now in handleSearchNode(%s)', $node::class));
 
         switch (true) {
             case $node instanceof StringNode:
@@ -196,9 +196,9 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             default:
-                app('log')->error(sprintf('Cannot handle node %s', get_class($node)));
+                app('log')->error(sprintf('Cannot handle node %s', $node::class));
 
-                throw new FireflyException(sprintf('Firefly III search can\'t handle "%s"-nodes', get_class($node)));
+                throw new FireflyException(sprintf('Firefly III search can\'t handle "%s"-nodes', $node::class));
         }
     }
 
@@ -2009,9 +2009,7 @@ class OperatorQuerySearch implements SearchInterface
         }
         app('log')->debug(sprintf('Found %d accounts, will filter.', $accounts->count()));
         $filtered        = $accounts->filter(
-            static function (Account $account) use ($value, $stringMethod) {
-                return $stringMethod(strtolower($account->name), strtolower($value));
-            }
+            static fn(Account $account) => $stringMethod(strtolower($account->name), strtolower($value))
         );
 
         if (0 === $filtered->count()) {
@@ -2095,7 +2093,7 @@ class OperatorQuerySearch implements SearchInterface
 
                 /** @var AccountMeta $meta */
                 foreach ($account->accountMeta as $meta) {
-                    if ('account_number' === $meta->name && $stringMethod(strtolower($meta->data), strtolower($value))) {
+                    if ('account_number' === $meta->name && $stringMethod(strtolower((string) $meta->data), strtolower($value))) {
                         $accountNrMatch = true;
                     }
                 }
@@ -2146,7 +2144,7 @@ class OperatorQuerySearch implements SearchInterface
 
         try {
             $parsedDate = $parser->parseDate($value);
-        } catch (FireflyException $e) {
+        } catch (FireflyException) {
             app('log')->debug(sprintf('Could not parse date "%s", will return empty array.', $value));
             $this->invalidOperators[] = [
                 'type'  => $type,

@@ -36,16 +36,15 @@ use Illuminate\Http\Request;
 class Authenticate
 {
     /**
-     * The authentication factory instance.
-     */
-    protected Auth $auth;
-
-    /**
      * Create a new middleware instance.
      */
-    public function __construct(Auth $auth)
+    public function __construct(
+        /**
+         * The authentication factory instance.
+         */
+        protected Auth $auth
+    )
     {
-        $this->auth = $auth;
     }
 
     /**

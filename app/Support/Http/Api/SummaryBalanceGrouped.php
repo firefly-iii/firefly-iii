@@ -33,7 +33,7 @@ class SummaryBalanceGrouped
     private const string SUM                     = 'sum';
     private array                       $amounts = [];
     private array                       $currencies;
-    private CurrencyRepositoryInterface $currencyRepository;
+    private readonly CurrencyRepositoryInterface $currencyRepository;
     private TransactionCurrency         $default;
     private array                       $keys;
 
@@ -109,7 +109,7 @@ class SummaryBalanceGrouped
         foreach ($journals as $journal) {
             // transaction info:
             $currencyId                            = (int) $journal['currency_id'];
-            $amount                                = bcmul($journal['amount'], $multiplier);
+            $amount                                = bcmul((string) $journal['amount'], $multiplier);
             $currency                              = $this->currencies[$currencyId] ?? TransactionCurrency::find($currencyId);
             $this->currencies[$currencyId]         = $currency;
             $nativeAmount                          = $converter->convert($currency, $this->default, $journal['date'], $amount);
@@ -125,10 +125,10 @@ class SummaryBalanceGrouped
             $this->amounts[self::SUM]['native']    ??= '0';
 
             // add values:
-            $this->amounts[$key][$currencyId]      = bcadd($this->amounts[$key][$currencyId], $amount);
-            $this->amounts[self::SUM][$currencyId] = bcadd($this->amounts[self::SUM][$currencyId], $amount);
-            $this->amounts[$key]['native']         = bcadd($this->amounts[$key]['native'], $nativeAmount);
-            $this->amounts[self::SUM]['native']    = bcadd($this->amounts[self::SUM]['native'], $nativeAmount);
+            $this->amounts[$key][$currencyId]      = bcadd((string) $this->amounts[$key][$currencyId], $amount);
+            $this->amounts[self::SUM][$currencyId] = bcadd((string) $this->amounts[self::SUM][$currencyId], $amount);
+            $this->amounts[$key]['native']         = bcadd((string) $this->amounts[$key]['native'], (string) $nativeAmount);
+            $this->amounts[self::SUM]['native']    = bcadd((string) $this->amounts[self::SUM]['native'], (string) $nativeAmount);
         }
         $converter->summarize();
     }

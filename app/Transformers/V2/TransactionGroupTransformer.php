@@ -219,7 +219,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
             /** @var Transaction $transaction */
             foreach ($journal->transactions as $transaction) {
-                if (-1 === bccomp($transaction->amount, '0')) {
+                if (-1 === bccomp((string) $transaction->amount, '0')) {
                     // only collect source account info
                     $account                                    = $transaction->account;
                     $this->accountTypes[$account->account_type_id] ??= $account->accountType->type;
@@ -349,7 +349,7 @@ class TransactionGroupTransformer extends AbstractTransformer
             'user'                            => (string) $transaction['user_id'],
             'user_group'                      => (string) $transaction['user_group_id'],
             'transaction_journal_id'          => (string) $transaction['transaction_journal_id'],
-            'type'                            => strtolower($type),
+            'type'                            => strtolower((string) $type),
             'date'                            => $transaction['date']->toAtomString(),
             'order'                           => $transaction['order'],
             'amount'                          => $amount,

@@ -34,23 +34,12 @@ class TriggeredAuditLog extends Event
 {
     use SerializesModels;
 
-    public mixed  $after;
-    public Model  $auditable;
-    public mixed  $before;
-    public Model  $changer;
-    public string $field;
-
     /**
      * Create a new event instance.
      *
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
-    public function __construct(Model $changer, Model $auditable, string $field, mixed $before, mixed $after)
+    public function __construct(public Model $changer, public Model $auditable, public string $field, public mixed $before, public mixed $after)
     {
-        $this->changer   = $changer;
-        $this->auditable = $auditable;
-        $this->field     = $field;
-        $this->before    = $before;
-        $this->after     = $after;
     }
 }

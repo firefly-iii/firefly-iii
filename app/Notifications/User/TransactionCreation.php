@@ -36,11 +36,8 @@ class TransactionCreation extends Notification
 {
     use Queueable;
 
-    private array $collection;
-
-    public function __construct(array $collection)
+    public function __construct(private array $collection)
     {
-        $this->collection = $collection;
     }
 
     /**
@@ -57,7 +54,7 @@ class TransactionCreation extends Notification
      */
     public function toMail(User $notifiable): MailMessage
     {
-        return (new MailMessage())
+        return new MailMessage()
             ->markdown('emails.report-new-journals', ['transformed' => $this->collection])
             ->subject(trans_choice('email.new_journals_subject', count($this->collection)))
         ;

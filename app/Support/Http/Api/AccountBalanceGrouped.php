@@ -38,7 +38,7 @@ class AccountBalanceGrouped
 {
     private array                 $accountIds;
     private string                $carbonFormat;
-    private ExchangeRateConverter $converter;
+    private readonly ExchangeRateConverter $converter;
     private array                 $currencies = [];
     private array                 $data       = [];
     private TransactionCurrency   $default;
@@ -157,7 +157,7 @@ class AccountBalanceGrouped
 
         // get conversion rate
         $rate                                            = $this->getRate($currency, $journal['date']);
-        $amountConverted                                 = bcmul($amount, $rate);
+        $amountConverted                                 = bcmul((string) $amount, $rate);
 
         // perhaps transaction already has the foreign amount in the native currency.
         if ((int) $journal['foreign_currency_id'] === $this->default->id) {
@@ -166,11 +166,11 @@ class AccountBalanceGrouped
         }
 
         // add normal entry
-        $this->data[$currencyId][$period][$key]          = bcadd($this->data[$currencyId][$period][$key], $amount);
+        $this->data[$currencyId][$period][$key]          = bcadd((string) $this->data[$currencyId][$period][$key], (string) $amount);
 
         // add converted entry
         $convertedKey                                    = sprintf('native_%s', $key);
-        $this->data[$currencyId][$period][$convertedKey] = bcadd($this->data[$currencyId][$period][$convertedKey], $amountConverted);
+        $this->data[$currencyId][$period][$convertedKey] = bcadd((string) $this->data[$currencyId][$period][$convertedKey], (string) $amountConverted);
     }
 
     private function findCurrency(int $currencyId): TransactionCurrency

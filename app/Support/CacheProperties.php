@@ -80,7 +80,7 @@ class CacheProperties
         foreach ($this->properties as $property) {
             try {
                 $content = sprintf('%s%s', $content, \Safe\json_encode($property, JSON_THROW_ON_ERROR));
-            } catch (\JsonException $e) {
+            } catch (\JsonException) {
                 // @ignoreException
                 $content = sprintf('%s%s', $content, hash('sha256', (string) time()));
             }

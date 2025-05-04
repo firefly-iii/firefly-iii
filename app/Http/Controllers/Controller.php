@@ -97,14 +97,14 @@ abstract class Controller extends BaseController
         $isAlpha = false;
         $isBeta = false;
         $isDevelop = false;
-        if (str_contains(config('firefly.version'), 'alpha')) {
+        if (str_contains((string) config('firefly.version'), 'alpha')) {
             $isAlpha = true;
         }
-        if (str_contains(config('firefly.version'), 'develop') || str_contains(config('firefly.version'), 'branch')) {
+        if (str_contains((string) config('firefly.version'), 'develop') || str_contains((string) config('firefly.version'), 'branch')) {
             $isDevelop = true;
         }
 
-        if (str_contains(config('firefly.version'), 'beta')) {
+        if (str_contains((string) config('firefly.version'), 'beta')) {
             $isBeta = true;
         }
 

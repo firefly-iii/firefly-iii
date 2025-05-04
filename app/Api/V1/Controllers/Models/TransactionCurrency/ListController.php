@@ -177,9 +177,7 @@ class ListController extends Controller
 
         // filter and paginate list:
         $collection  = $unfiltered->filter(
-            static function (Bill $bill) use ($currency) {
-                return $bill->transaction_currency_id === $currency->id;
-            }
+            static fn(Bill $bill) => $bill->transaction_currency_id === $currency->id
         );
         $count       = $collection->count();
         $bills       = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);

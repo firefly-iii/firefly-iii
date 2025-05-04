@@ -32,15 +32,12 @@ use Illuminate\Queue\SerializesModels;
 class MFABackupFewLeft extends Event
 {
     use SerializesModels;
-
-    public int  $count;
     public User $user;
 
-    public function __construct(null|Authenticatable|User $user, int $count)
+    public function __construct(null|Authenticatable|User $user, public int $count)
     {
         if ($user instanceof User) {
             $this->user = $user;
         }
-        $this->count = $count;
     }
 }

@@ -50,7 +50,7 @@ class TransactionGroupEnrichment implements EnrichmentInterface
     private User       $user; // @phpstan-ignore-line
     private UserGroup  $userGroup; // @phpstan-ignore-line
     private array      $metaData;
-    private array      $dateFields;
+    private readonly array      $dateFields;
     private array      $attachmentCount;
 
     public function __construct()

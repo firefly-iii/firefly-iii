@@ -92,9 +92,9 @@ class BoxController extends Controller
             $currencyId           = $this->convertToNative && $this->defaultCurrency->id !== (int) $journal['currency_id'] ? $this->defaultCurrency->id : (int) $journal['currency_id'];
             $amount               = Amount::getAmountFromJournal($journal);
             $incomes[$currencyId] ??= '0';
-            $incomes[$currencyId] = bcadd($incomes[$currencyId], app('steam')->positive($amount));
+            $incomes[$currencyId] = bcadd($incomes[$currencyId], (string) app('steam')->positive($amount));
             $sums[$currencyId]    ??= '0';
-            $sums[$currencyId]    = bcadd($sums[$currencyId], app('steam')->positive($amount));
+            $sums[$currencyId]    = bcadd($sums[$currencyId], (string) app('steam')->positive($amount));
         }
 
         // collect expenses

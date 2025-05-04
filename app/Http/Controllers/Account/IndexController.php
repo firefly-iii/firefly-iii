@@ -204,7 +204,7 @@ class IndexController extends Controller
     {
         $result = [];
         foreach ($endBalances as $key => $value) {
-            $result[$key] = bcsub($value, $startBalances[$key] ?? '0');
+            $result[$key] = bcsub((string) $value, $startBalances[$key] ?? '0');
         }
 
         return $result;

@@ -128,9 +128,7 @@ class CorrectsNativeAmounts extends Command
         $repository->setUserGroup($userGroup);
         $set        = $repository->getPiggyBanks();
         $set        = $set->filter(
-            static function (PiggyBank $piggyBank) use ($currency) {
-                return $currency->id !== $piggyBank->transaction_currency_id;
-            }
+            static fn(PiggyBank $piggyBank) => $currency->id !== $piggyBank->transaction_currency_id
         );
         foreach ($set as $piggyBank) {
             $piggyBank->encrypted = false;

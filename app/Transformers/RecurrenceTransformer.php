@@ -42,11 +42,11 @@ use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
  */
 class RecurrenceTransformer extends AbstractTransformer
 {
-    private BillRepositoryInterface      $billRepos;
-    private BudgetRepositoryInterface    $budgetRepos;
-    private CategoryFactory              $factory;
-    private PiggyBankRepositoryInterface $piggyRepos;
-    private RecurringRepositoryInterface $repository;
+    private readonly BillRepositoryInterface      $billRepos;
+    private readonly BudgetRepositoryInterface    $budgetRepos;
+    private readonly CategoryFactory              $factory;
+    private readonly PiggyBankRepositoryInterface $piggyRepos;
+    private readonly RecurringRepositoryInterface $repository;
 
     /**
      * RecurrenceTransformer constructor.

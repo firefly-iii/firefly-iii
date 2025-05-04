@@ -35,14 +35,11 @@ class SetAmount implements ActionInterface
 {
     use RefreshNotesTrait;
 
-    private RuleAction $action;
-
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(RuleAction $action)
+    public function __construct(private RuleAction $action)
     {
-        $this->action = $action;
     }
 
     public function actOnArray(array $journal): bool

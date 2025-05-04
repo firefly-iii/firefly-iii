@@ -238,7 +238,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         app('log')->debug(sprintf('Will add/remove %f to piggy bank #%d ("%s")', $amount, $piggyBank->id, $piggyBank->name));
 
         // if the amount is positive, make sure it fits in piggy bank:
-        if (1 === bccomp($amount, '0') && -1 === bccomp($room, $amount)) {
+        if (1 === bccomp($amount, '0') && -1 === bccomp((string) $room, $amount)) {
             // amount is positive and $room is smaller than $amount
             app('log')->debug(sprintf('Room in piggy bank for extra money is %f', $room));
             app('log')->debug(sprintf('There is NO room to add %f to piggy bank #%d ("%s")', $amount, $piggyBank->id, $piggyBank->name));
@@ -349,7 +349,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
             $now             = today(config('app.timezone'));
             $startDate       = null !== $piggyBank->start_date && $piggyBank->start_date->gte($now) ? $piggyBank->start_date : $now;
             $diffInMonths    = (int) $startDate->diffInMonths($piggyBank->target_date);
-            $remainingAmount = bcsub($piggyBank->target_amount, $currentAmount);
+            $remainingAmount = bcsub((string) $piggyBank->target_amount, $currentAmount);
 
             // more than 1 month to go and still need money to save:
             if ($diffInMonths > 0 && 1 === bccomp($remainingAmount, '0')) {
@@ -382,7 +382,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         /** @var PiggyBank $current */
         foreach ($piggies as $current) {
             $amount  = $this->getCurrentAmount($current, $account);
-            $balance = bcsub($balance, $amount);
+            $balance = bcsub((string) $balance, $amount);
             Log::debug(sprintf('Piggy bank: #%d with amount %s, balance is now %s', $current->id, $amount, $balance));
         }
         Log::debug(sprintf('Final balance is: %s', $balance));

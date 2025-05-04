@@ -69,6 +69,7 @@ class Handler extends ExceptionHandler
     /**
      * Register the exception handling callbacks for the application.
      */
+    #[\Override]
     public function register(): void {}
 
     /**
@@ -82,6 +83,7 @@ class Handler extends ExceptionHandler
      * @SuppressWarnings("PHPMD.NPathComplexity")
      * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      */
+    #[\Override]
     public function render($request, \Throwable $e): Response
     {
         $expectsJson = $request->expectsJson();
@@ -149,12 +151,12 @@ class Handler extends ExceptionHandler
 
             $isDebug   = (bool) config('app.debug', false);
             if ($isDebug) {
-                app('log')->debug(sprintf('Return JSON %s with debug.', get_class($e)));
+                app('log')->debug(sprintf('Return JSON %s with debug.', $e::class));
 
                 return response()->json(
                     [
                         'message'   => $e->getMessage(),
-                        'exception' => get_class($e),
+                        'exception' => $e::class,
                         'line'      => $e->getLine(),
                         'file'      => $e->getFile(),
                         'trace'     => $e->getTrace(),
@@ -162,7 +164,7 @@ class Handler extends ExceptionHandler
                     $errorCode
                 );
             }
-            app('log')->debug(sprintf('Return JSON %s.', get_class($e)));
+            app('log')->debug(sprintf('Return JSON %s.', $e::class));
 
             return response()->json(
                 ['message' => sprintf('Internal Firefly III Exception: %s', $e->getMessage()), 'exception' => 'UndisclosedException'],
@@ -192,7 +194,7 @@ class Handler extends ExceptionHandler
             return response()->view('errors.FireflyException', ['exception' => $e, 'debug' => $isDebug], 500);
         }
 
-        app('log')->debug(sprintf('Error "%s" has no Firefly III treatment, parent will handle.', get_class($e)));
+        app('log')->debug(sprintf('Error "%s" has no Firefly III treatment, parent will handle.', $e::class));
 
         return parent::render($request, $e);
     }
@@ -202,6 +204,7 @@ class Handler extends ExceptionHandler
      *
      * @throws \Throwable
      */
+    #[\Override]
     public function report(\Throwable $e): void
     {
         $doMailError = (bool) config('firefly.send_error_message');
@@ -222,7 +225,7 @@ class Handler extends ExceptionHandler
         $headers     = request()->headers->all();
 
         $data        = [
-            'class'        => get_class($e),
+            'class'        => $e::class,
             'errorMessage' => $e->getMessage(),
             'time'         => \Safe\date('r'),
             'stackTrace'   => $e->getTraceAsString(),
@@ -250,9 +253,7 @@ class Handler extends ExceptionHandler
     {
         return null !== Arr::first(
             $this->dontReport,
-            static function ($type) use ($e) {
-                return $e instanceof $type;
-            }
+            static fn($type) => $e instanceof $type
         );
     }
 
@@ -261,6 +262,7 @@ class Handler extends ExceptionHandler
      *
      * @param Request $request
      */
+    #[\Override]
     protected function invalid($request, LaravelValidationException $exception): \Illuminate\Http\Response|JsonResponse|RedirectResponse
     {
         // protect against open redirect when submitting invalid forms.

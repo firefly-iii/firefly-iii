@@ -90,7 +90,7 @@ class DoubleController extends Controller
                     'currency_decimal_places' => $currency['currency_decimal_places'],
                 ];
                 ++$result[$key]['transactions'];
-                $result[$key]['sum']       = bcadd($journal['amount'], $result[$key]['sum']);
+                $result[$key]['sum']       = bcadd((string) $journal['amount'], $result[$key]['sum']);
                 $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string) $result[$key]['transactions']);
                 $result[$key]['avg_float'] = (float) $result[$key]['avg'];
             }
@@ -140,7 +140,7 @@ class DoubleController extends Controller
                     'currency_decimal_places'  => $currency['currency_decimal_places'],
                 ];
                 ++$result[$key]['transactions'];
-                $result[$key]['sum']       = bcadd($journal['amount'], $result[$key]['sum']);
+                $result[$key]['sum']       = bcadd((string) $journal['amount'], $result[$key]['sum']);
                 $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string) $result[$key]['transactions']);
                 $result[$key]['avg_float'] = (float) $result[$key]['avg'];
             }
@@ -219,10 +219,10 @@ class DoubleController extends Controller
                 $report[$objectName]['dest_iban'] = $destIban;
 
                 // add amounts:
-                $report[$objectName]['spent']     = bcadd($report[$objectName]['spent'], $journal['amount']);
-                $report[$objectName]['sum']       = bcadd($report[$objectName]['sum'], $journal['amount']);
-                $sums[$currencyId]['spent']       = bcadd($sums[$currencyId]['spent'], $journal['amount']);
-                $sums[$currencyId]['sum']         = bcadd($sums[$currencyId]['sum'], $journal['amount']);
+                $report[$objectName]['spent']     = bcadd($report[$objectName]['spent'], (string) $journal['amount']);
+                $report[$objectName]['sum']       = bcadd($report[$objectName]['sum'], (string) $journal['amount']);
+                $sums[$currencyId]['spent']       = bcadd($sums[$currencyId]['spent'], (string) $journal['amount']);
+                $sums[$currencyId]['sum']         = bcadd($sums[$currencyId]['sum'], (string) $journal['amount']);
             }
         }
 
@@ -268,10 +268,10 @@ class DoubleController extends Controller
                 $report[$objectName]['source_iban'] = $sourceIban;
 
                 // add amounts:
-                $report[$objectName]['earned']      = bcadd($report[$objectName]['earned'], $journal['amount']);
-                $report[$objectName]['sum']         = bcadd($report[$objectName]['sum'], $journal['amount']);
-                $sums[$currencyId]['earned']        = bcadd($sums[$currencyId]['earned'], $journal['amount']);
-                $sums[$currencyId]['sum']           = bcadd($sums[$currencyId]['sum'], $journal['amount']);
+                $report[$objectName]['earned']      = bcadd($report[$objectName]['earned'], (string) $journal['amount']);
+                $report[$objectName]['sum']         = bcadd($report[$objectName]['sum'], (string) $journal['amount']);
+                $sums[$currencyId]['earned']        = bcadd($sums[$currencyId]['earned'], (string) $journal['amount']);
+                $sums[$currencyId]['sum']           = bcadd($sums[$currencyId]['sum'], (string) $journal['amount']);
             }
         }
 
@@ -342,10 +342,10 @@ class DoubleController extends Controller
                 ];
                 // set name
                 // add amounts:
-                $report[$objectName]['spent'] = bcadd($report[$objectName]['spent'], $journal['amount']);
-                $report[$objectName]['sum']   = bcadd($report[$objectName]['sum'], $journal['amount']);
-                $sums[$currencyId]['spent']   = bcadd($sums[$currencyId]['spent'], $journal['amount']);
-                $sums[$currencyId]['sum']     = bcadd($sums[$currencyId]['sum'], $journal['amount']);
+                $report[$objectName]['spent'] = bcadd($report[$objectName]['spent'], (string) $journal['amount']);
+                $report[$objectName]['sum']   = bcadd($report[$objectName]['sum'], (string) $journal['amount']);
+                $sums[$currencyId]['spent']   = bcadd($sums[$currencyId]['spent'], (string) $journal['amount']);
+                $sums[$currencyId]['sum']     = bcadd($sums[$currencyId]['sum'], (string) $journal['amount']);
             }
         }
 
@@ -381,10 +381,10 @@ class DoubleController extends Controller
                 ];
 
                 // add amounts:
-                $report[$objectName]['earned'] = bcadd($report[$objectName]['earned'], $journal['amount']);
-                $report[$objectName]['sum']    = bcadd($report[$objectName]['sum'], $journal['amount']);
-                $sums[$currencyId]['earned']   = bcadd($sums[$currencyId]['earned'], $journal['amount']);
-                $sums[$currencyId]['sum']      = bcadd($sums[$currencyId]['sum'], $journal['amount']);
+                $report[$objectName]['earned'] = bcadd($report[$objectName]['earned'], (string) $journal['amount']);
+                $report[$objectName]['sum']    = bcadd($report[$objectName]['sum'], (string) $journal['amount']);
+                $sums[$currencyId]['earned']   = bcadd($sums[$currencyId]['earned'], (string) $journal['amount']);
+                $sums[$currencyId]['sum']      = bcadd($sums[$currencyId]['sum'], (string) $journal['amount']);
             }
         }
 

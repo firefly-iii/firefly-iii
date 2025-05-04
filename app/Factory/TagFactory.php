@@ -77,7 +77,7 @@ class TagFactory
         $array     = [
             'user_id'       => $this->user->id,
             'user_group_id' => $this->userGroup->id,
-            'tag'           => trim($data['tag']),
+            'tag'           => trim((string) $data['tag']),
             'tagMode'       => 'nothing',
             'date'          => $data['date'],
             'description'   => $data['description'],

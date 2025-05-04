@@ -159,7 +159,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
                 }
             }
 
-            $newBalance                         = bcadd($startBalance, $transactionAmount);
+            $newBalance                         = bcadd((string) $startBalance, (string) $transactionAmount);
             $journals[$index]['balance_after']  = $newBalance;
             $startBalance                       = $newBalance;
 

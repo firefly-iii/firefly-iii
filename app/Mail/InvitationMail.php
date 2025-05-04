@@ -35,21 +35,14 @@ class InvitationMail extends Mailable
 {
     use Queueable;
     use SerializesModels;
-
-    public string $admin;
     public string $host;
-    public string $invitee;
-    public string $url;
 
     /**
      * OAuthTokenCreatedMail constructor.
      */
-    public function __construct(string $invitee, string $admin, string $url)
+    public function __construct(public string $invitee, public string $admin, public string $url)
     {
-        $this->invitee = $invitee;
-        $this->admin   = $admin;
-        $this->url     = $url;
-        $this->host    = (string) \Safe\parse_url($url, PHP_URL_HOST);
+        $this->host    = (string) \Safe\parse_url($this->url, PHP_URL_HOST);
     }
 
     /**

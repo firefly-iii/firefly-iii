@@ -156,9 +156,7 @@ class CreateRecurringTransactions implements ShouldQueue
     private function filterRecurrences(Collection $recurrences): Collection
     {
         return $recurrences->filter(
-            function (Recurrence $recurrence) {
-                return $this->validRecurrence($recurrence);
-            }
+            fn(Recurrence $recurrence) => $this->validRecurrence($recurrence)
         );
     }
 
@@ -420,7 +418,7 @@ class CreateRecurringTransactions implements ShouldQueue
         /** @var RecurrenceTransaction $transaction */
         foreach ($transactions as $index => $transaction) {
             $single   = [
-                'type'                  => null === $transaction?->transactionType?->type ? strtolower($recurrence->transactionType->type) : strtolower($transaction->transactionType->type), // @phpstan-ignore-line
+                'type'                  => null === $transaction?->transactionType?->type ? strtolower((string) $recurrence->transactionType->type) : strtolower($transaction->transactionType->type), // @phpstan-ignore-line
                 'date'                  => $date,
                 'user'                  => $recurrence->user,
                 'user_group'            => $recurrence->user->userGroup,

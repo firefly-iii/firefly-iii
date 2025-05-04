@@ -205,11 +205,11 @@ class BudgetLimitController extends Controller
             // add some extra metadata:
             $spentArr                        = $this->opsRepository->sumExpenses($limit->start_date, $limit->end_date, null, new Collection([$budget]), $currency);
             $array['spent']                  = $spentArr[$currency->id]['sum'] ?? '0';
-            $array['left_formatted']         = app('amount')->formatAnything($limit->transactionCurrency, bcadd($array['spent'], $array['amount']));
+            $array['left_formatted']         = app('amount')->formatAnything($limit->transactionCurrency, bcadd($array['spent'], (string) $array['amount']));
             $array['amount_formatted']       = app('amount')->formatAnything($limit->transactionCurrency, $limit['amount']);
             $array['days_left']              = (string) $this->activeDaysLeft($start, $end);
             // left per day:
-            $array['left_per_day']           = 0 === bccomp('0', $array['days_left']) ? bcadd($array['spent'], $array['amount']) : bcdiv(bcadd($array['spent'], $array['amount']), $array['days_left']);
+            $array['left_per_day']           = 0 === bccomp('0', $array['days_left']) ? bcadd((string) $array['spent'], (string) $array['amount']) : bcdiv(bcadd((string) $array['spent'], (string) $array['amount']), $array['days_left']);
 
             // left per day formatted.
             $array['left_per_day_formatted'] = app('amount')->formatAnything($limit->transactionCurrency, $array['left_per_day']);
@@ -269,10 +269,10 @@ class BudgetLimitController extends Controller
         );
         $daysLeft                        = $this->activeDaysLeft($limit->start_date, $limit->end_date);
         $array['spent']                  = $spentArr[$budgetLimit->transactionCurrency->id]['sum'] ?? '0';
-        $array['left_formatted']         = app('amount')->formatAnything($limit->transactionCurrency, bcadd($array['spent'], $array['amount']));
+        $array['left_formatted']         = app('amount')->formatAnything($limit->transactionCurrency, bcadd($array['spent'], (string) $array['amount']));
         $array['amount_formatted']       = app('amount')->formatAnything($limit->transactionCurrency, $limit['amount']);
         $array['days_left']              = (string) $daysLeft;
-        $array['left_per_day']           = 0 === $daysLeft ? bcadd($array['spent'], $array['amount']) : bcdiv(bcadd($array['spent'], $array['amount']), $array['days_left']);
+        $array['left_per_day']           = 0 === $daysLeft ? bcadd((string) $array['spent'], (string) $array['amount']) : bcdiv(bcadd((string) $array['spent'], (string) $array['amount']), $array['days_left']);
 
         // left per day formatted.
         $array['amount']                 = app('steam')->bcround($limit['amount'], $limit->transactionCurrency->decimal_places);

@@ -40,8 +40,8 @@ use Illuminate\Support\Facades\Log;
 class FrontpageChartGenerator
 {
     protected OperationsRepositoryInterface $opsRepository;
-    private BudgetLimitRepositoryInterface  $blRepository;
-    private BudgetRepositoryInterface       $budgetRepository;
+    private readonly BudgetLimitRepositoryInterface  $blRepository;
+    private readonly BudgetRepositoryInterface       $budgetRepository;
     private Carbon                          $end;
     private string                          $monthAndDayFormat;
     private Carbon                          $start;
@@ -119,7 +119,7 @@ class FrontpageChartGenerator
         /** @var array $entry */
         foreach ($spent as $entry) {
             $title                      = sprintf('%s (%s)', $budget->name, $entry['currency_name']);
-            $data[0]['entries'][$title] = bcmul($entry['sum'], '-1'); // spent
+            $data[0]['entries'][$title] = bcmul((string) $entry['sum'], '-1'); // spent
             $data[1]['entries'][$title] = 0;                          // left to spend
             $data[2]['entries'][$title] = 0;                          // overspent
         }
@@ -203,15 +203,15 @@ class FrontpageChartGenerator
             $amount = $limit->native_amount;
             Log::debug(sprintf('Amount is now "%s".', $amount));
         }
-        $amount                     = null === $amount ? '0' : $amount;
-        $sumSpent                   = bcmul($entry['sum'], '-1'); // spent
+        $amount ??= '0';
+        $sumSpent                   = bcmul((string) $entry['sum'], '-1'); // spent
         $data[0]['entries'][$title] ??= '0';
         $data[1]['entries'][$title] ??= '0';
         $data[2]['entries'][$title] ??= '0';
 
-        $data[0]['entries'][$title] = bcadd($data[0]['entries'][$title], 1 === bccomp($sumSpent, $amount) ? $amount : $sumSpent);                              // spent
-        $data[1]['entries'][$title] = bcadd($data[1]['entries'][$title], 1 === bccomp($amount, $sumSpent) ? bcadd($entry['sum'], $amount) : '0');              // left to spent
-        $data[2]['entries'][$title] = bcadd($data[2]['entries'][$title], 1 === bccomp($amount, $sumSpent) ? '0' : bcmul(bcadd($entry['sum'], $amount), '-1')); // overspent
+        $data[0]['entries'][$title] = bcadd((string) $data[0]['entries'][$title], 1 === bccomp($sumSpent, $amount) ? $amount : $sumSpent);                              // spent
+        $data[1]['entries'][$title] = bcadd((string) $data[1]['entries'][$title], 1 === bccomp($amount, $sumSpent) ? bcadd((string) $entry['sum'], $amount) : '0');              // left to spent
+        $data[2]['entries'][$title] = bcadd((string) $data[2]['entries'][$title], 1 === bccomp($amount, $sumSpent) ? '0' : bcmul(bcadd((string) $entry['sum'], $amount), '-1')); // overspent
 
         Log::debug(sprintf('Amount [spent]     is now %s.', $data[0]['entries'][$title]));
         Log::debug(sprintf('Amount [left]      is now %s.', $data[1]['entries'][$title]));

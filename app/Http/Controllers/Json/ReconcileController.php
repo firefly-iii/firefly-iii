@@ -160,15 +160,15 @@ class ReconcileController extends Controller
         }
         if ($account->id === $journal['destination_account_id']) {
             if ($currency->id === $journal['currency_id']) {
-                $toAdd = bcmul($journal['amount'], '-1');
+                $toAdd = bcmul((string) $journal['amount'], '-1');
             }
             if (null !== $journal['foreign_currency_id'] && $journal['foreign_currency_id'] === $currency->id) {
-                $toAdd = bcmul($journal['foreign_amount'], '-1');
+                $toAdd = bcmul((string) $journal['foreign_amount'], '-1');
             }
         }
 
         app('log')->debug(sprintf('Going to add %s to %s', $toAdd, $amount));
-        $amount = bcadd($amount, $toAdd);
+        $amount = bcadd($amount, (string) $toAdd);
         app('log')->debug(sprintf('Result is %s', $amount));
 
         return $amount;

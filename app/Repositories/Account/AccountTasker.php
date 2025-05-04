@@ -100,7 +100,7 @@ class AccountTasker implements AccountTaskerInterface, UserGroupInterface
                 $entry['start_balance'] = $first->transactions()->where('account_id', $account->id)->first()->amount;
                 Log::debug(sprintf('Account %s was opened on %s, so opening balance is %f', $account->name, $yesterday->format('Y-m-d'), $entry['start_balance']));
             }
-            $return['sums'][$currency->id]['start'] = bcadd($return['sums'][$currency->id]['start'], $entry['start_balance']);
+            $return['sums'][$currency->id]['start'] = bcadd($return['sums'][$currency->id]['start'], (string) $entry['start_balance']);
             $return['sums'][$currency->id]['end']   = bcadd($return['sums'][$currency->id]['end'], $entry['end_balance']);
             $return['accounts'][$id]                = $entry;
         }
@@ -176,7 +176,7 @@ class AccountTasker implements AccountTaskerInterface, UserGroupInterface
                 'currency_code'           => $currencies[$currencyId]->code,
                 'currency_decimal_places' => $currencies[$currencyId]->decimal_places,
             ];
-            $report['accounts'][$key]['sum'] = bcadd($report['accounts'][$key]['sum'], $journal['amount']);
+            $report['accounts'][$key]['sum'] = bcadd($report['accounts'][$key]['sum'], (string) $journal['amount']);
 
             Log::debug(sprintf('Sum for %s is now %s', $journal['destination_account_name'], $report['accounts'][$key]['sum']));
 
@@ -266,7 +266,7 @@ class AccountTasker implements AccountTaskerInterface, UserGroupInterface
                     'currency_decimal_places' => $currencies[$currencyId]->decimal_places,
                 ];
             }
-            $report['accounts'][$key]['sum'] = bcadd($report['accounts'][$key]['sum'], bcmul($journal['amount'], '-1'));
+            $report['accounts'][$key]['sum'] = bcadd($report['accounts'][$key]['sum'], bcmul((string) $journal['amount'], '-1'));
             ++$report['accounts'][$key]['count'];
         }
 

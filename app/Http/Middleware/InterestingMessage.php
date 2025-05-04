@@ -130,12 +130,12 @@ class InterestingMessage
             session()->flash('success', (string) trans('firefly.stored_journal', ['description' => $title]));
         }
         if ('updated' === $message) {
-            $type = strtolower($journal->transactionType->type);
+            $type = strtolower((string) $journal->transactionType->type);
             session()->flash('success_url', route('transactions.show', [$transactionGroupId]));
             session()->flash('success', (string) trans(sprintf('firefly.updated_%s', $type), ['description' => $title]));
         }
         if ('no_change' === $message) {
-            $type = strtolower($journal->transactionType->type);
+            $type = strtolower((string) $journal->transactionType->type);
             session()->flash('warning_url', route('transactions.show', [$transactionGroupId]));
             session()->flash('warning', (string) trans(sprintf('firefly.no_changes_%s', $type), ['description' => $title]));
         }

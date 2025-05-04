@@ -122,10 +122,10 @@ class Amount
         $result  = (string) $fmt->format((float) $rounded); // intentional float
 
         if (true === $coloured) {
-            if (1 === bccomp($rounded, '0')) {
+            if (1 === bccomp((string) $rounded, '0')) {
                 return sprintf('<span class="text-success money-positive">%s</span>', $result);
             }
-            if (-1 === bccomp($rounded, '0')) {
+            if (-1 === bccomp((string) $rounded, '0')) {
                 return sprintf('<span class="text-danger money-negative">%s</span>', $result);
             }
 

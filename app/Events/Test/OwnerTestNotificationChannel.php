@@ -32,15 +32,13 @@ class OwnerTestNotificationChannel
     use SerializesModels;
 
     public string          $channel;
-    public OwnerNotifiable $owner;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(string $channel, OwnerNotifiable $owner)
+    public function __construct(string $channel, public OwnerNotifiable $owner)
     {
         app('log')->debug(sprintf('Triggered OwnerTestNotificationChannel("%s")', $channel));
-        $this->owner   = $owner;
         $this->channel = $channel;
     }
 }

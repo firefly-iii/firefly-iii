@@ -100,7 +100,7 @@ class CorrectsRecurringTransactions extends Command
         $destination = $transaction->destinationAccount;
         $type        = $recurrence->transactionType;
         $link        = config(sprintf('firefly.account_to_transaction.%s.%s', $source->accountType->type, $destination->accountType->type));
-        if (null !== $link && strtolower($type->type) !== strtolower($link)) {
+        if (null !== $link && strtolower((string) $type->type) !== strtolower($link)) {
             $this->friendlyWarning(
                 sprintf('Recurring transaction #%d should be a "%s" but is a "%s" and will be corrected.', $recurrence->id, $link, $type->type)
             );

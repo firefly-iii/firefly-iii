@@ -43,6 +43,7 @@ use Twig\TwigFunction;
  */
 class General extends AbstractExtension
 {
+    #[\Override]
     public function getFilters(): array
     {
         return [
@@ -74,7 +75,7 @@ class General extends AbstractExtension
                 $default         = Amount::getNativeCurrency();
                 $convertToNative = Amount::convertToNative();
                 $useNative       = $convertToNative && $default->id !== $currency->id;
-                $currency        = null === $currency ? $default : $currency;
+                $currency ??= $default;
                 $strings         = [];
                 foreach ($info as $key => $balance) {
                     if ('balance' === $key) {
@@ -137,77 +138,15 @@ class General extends AbstractExtension
     {
         return new TwigFilter(
             'mimeIcon',
-            static function (string $string): string {
-                switch ($string) {
-                    default:
-                        return 'fa-file-o';
-
-                    case 'application/pdf':
-                        return 'fa-file-pdf-o';
-
-                        // image
-                    case 'image/png':
-                    case 'image/jpeg':
-                    case 'image/svg+xml':
-                    case 'image/heic':
-                    case 'image/heic-sequence':
-                    case 'application/vnd.oasis.opendocument.image':
-                        return 'fa-file-image-o';
-
-                        // MS word
-                    case 'application/msword':
-                    case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-                    case 'application/vnd.openxmlformats-officedocument.wordprocessingml.template':
-                    case 'application/x-iwork-pages-sffpages':
-                    case 'application/vnd.sun.xml.writer':
-                    case 'application/vnd.sun.xml.writer.template':
-                    case 'application/vnd.sun.xml.writer.global':
-                    case 'application/vnd.stardivision.writer':
-                    case 'application/vnd.stardivision.writer-global':
-                    case 'application/vnd.oasis.opendocument.text':
-                    case 'application/vnd.oasis.opendocument.text-template':
-                    case 'application/vnd.oasis.opendocument.text-web':
-                    case 'application/vnd.oasis.opendocument.text-master':
-                        return 'fa-file-word-o';
-
-                        // MS excel
-                    case 'application/vnd.ms-excel':
-                    case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-                    case 'application/vnd.openxmlformats-officedocument.spreadsheetml.template':
-                    case 'application/vnd.sun.xml.calc':
-                    case 'application/vnd.sun.xml.calc.template':
-                    case 'application/vnd.stardivision.calc':
-                    case 'application/vnd.oasis.opendocument.spreadsheet':
-                    case 'application/vnd.oasis.opendocument.spreadsheet-template':
-                        return 'fa-file-excel-o';
-
-                        // MS powerpoint
-                    case 'application/vnd.ms-powerpoint':
-                    case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
-                    case 'application/vnd.openxmlformats-officedocument.presentationml.template':
-                    case 'application/vnd.openxmlformats-officedocument.presentationml.slideshow':
-                    case 'application/vnd.sun.xml.impress':
-                    case 'application/vnd.sun.xml.impress.template':
-                    case 'application/vnd.stardivision.impress':
-                    case 'application/vnd.oasis.opendocument.presentation':
-                    case 'application/vnd.oasis.opendocument.presentation-template':
-                        return 'fa-file-powerpoint-o';
-
-                        // calc
-                    case 'application/vnd.sun.xml.draw':
-                    case 'application/vnd.sun.xml.draw.template':
-                    case 'application/vnd.stardivision.draw':
-                    case 'application/vnd.oasis.opendocument.chart':
-                        return 'fa-paint-brush';
-
-                    case 'application/vnd.oasis.opendocument.graphics':
-                    case 'application/vnd.oasis.opendocument.graphics-template':
-                    case 'application/vnd.sun.xml.math':
-                    case 'application/vnd.stardivision.math':
-                    case 'application/vnd.oasis.opendocument.formula':
-                    case 'application/vnd.oasis.opendocument.database':
-                        return 'fa-calculator';
-                }
+            static fn(string $string): string => match ($string) {
+                'application/pdf' => 'fa-file-pdf-o',
+                'image/png', 'image/jpeg', 'image/svg+xml', 'image/heic', 'image/heic-sequence', 'application/vnd.oasis.opendocument.image' => 'fa-file-image-o',
+                'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.openxmlformats-officedocument.wordprocessingml.template', 'application/x-iwork-pages-sffpages', 'application/vnd.sun.xml.writer', 'application/vnd.sun.xml.writer.template', 'application/vnd.sun.xml.writer.global', 'application/vnd.stardivision.writer', 'application/vnd.stardivision.writer-global', 'application/vnd.oasis.opendocument.text', 'application/vnd.oasis.opendocument.text-template', 'application/vnd.oasis.opendocument.text-web', 'application/vnd.oasis.opendocument.text-master' => 'fa-file-word-o',
+                'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.spreadsheetml.template', 'application/vnd.sun.xml.calc', 'application/vnd.sun.xml.calc.template', 'application/vnd.stardivision.calc', 'application/vnd.oasis.opendocument.spreadsheet', 'application/vnd.oasis.opendocument.spreadsheet-template' => 'fa-file-excel-o',
+                'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/vnd.openxmlformats-officedocument.presentationml.template', 'application/vnd.openxmlformats-officedocument.presentationml.slideshow', 'application/vnd.sun.xml.impress', 'application/vnd.sun.xml.impress.template', 'application/vnd.stardivision.impress', 'application/vnd.oasis.opendocument.presentation', 'application/vnd.oasis.opendocument.presentation-template' => 'fa-file-powerpoint-o',
+                'application/vnd.sun.xml.draw', 'application/vnd.sun.xml.draw.template', 'application/vnd.stardivision.draw', 'application/vnd.oasis.opendocument.chart' => 'fa-paint-brush',
+                'application/vnd.oasis.opendocument.graphics', 'application/vnd.oasis.opendocument.graphics-template', 'application/vnd.sun.xml.math', 'application/vnd.stardivision.math', 'application/vnd.oasis.opendocument.formula', 'application/vnd.oasis.opendocument.database' => 'fa-calculator',
+                default => 'fa-file-o',
             },
             ['is_safe' => ['html']]
         );
@@ -248,6 +187,7 @@ class General extends AbstractExtension
         );
     }
 
+    #[\Override]
     public function getFunctions(): array
     {
         return [
@@ -271,9 +211,7 @@ class General extends AbstractExtension
     {
         return new TwigFunction(
             'phpdate',
-            static function (string $str): string {
-                return \Safe\date($str);
-            }
+            static fn(string $str): string => \Safe\date($str)
         );
     }
 
@@ -333,8 +271,8 @@ class General extends AbstractExtension
 
                 if ($objectType === $activeObjectType
                     && false !== stripos(
-                        \Route::getCurrentRoute()->getName(),
-                        $route
+                        (string) \Route::getCurrentRoute()->getName(),
+                        (string) $route
                     )) {
                     return 'active';
                 }
@@ -435,9 +373,7 @@ class General extends AbstractExtension
     {
         return new TwigFunction(
             'carbonize',
-            static function (string $date): Carbon {
-                return new Carbon($date, config('app.timezone'));
-            }
+            static fn(string $date): Carbon => new Carbon($date, config('app.timezone'))
         );
     }
 }

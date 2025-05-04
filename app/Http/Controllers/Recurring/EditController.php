@@ -135,7 +135,7 @@ class EditController extends Controller
 
         $hasOldInput                      = null !== $request->old('_token');
         $preFilled                        = [
-            'transaction_type'          => strtolower($recurrence->transactionType->type),
+            'transaction_type'          => strtolower((string) $recurrence->transactionType->type),
             'active'                    => $hasOldInput ? (bool) $request->old('active') : $recurrence->active,
             'apply_rules'               => $hasOldInput ? (bool) $request->old('apply_rules') : $recurrence->apply_rules,
             'deposit_source_id'         => $array['transactions'][0]['source_id'],

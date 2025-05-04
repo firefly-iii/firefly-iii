@@ -32,15 +32,11 @@ namespace FireflyIII\Support\Search\QueryParser;
  */
 class NodeGroup extends Node
 {
-    /** @var Node[] */
-    private array $nodes;
-
     /**
      * @param Node[] $nodes
      */
-    public function __construct(array $nodes, bool $prohibited = false)
+    public function __construct(private readonly array $nodes, bool $prohibited = false)
     {
-        $this->nodes      = $nodes;
         $this->prohibited = $prohibited;
     }
 

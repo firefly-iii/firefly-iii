@@ -160,7 +160,7 @@ class TagController extends Controller
                         'currency_id'      => (string) $currencyId,
                         'currency_code'    => $journal['currency_code'],
                     ];
-                    $response[$key]['difference']       = bcadd($response[$key]['difference'], $journal['amount']);
+                    $response[$key]['difference']       = bcadd((string) $response[$key]['difference'], (string) $journal['amount']);
                     $response[$key]['difference_float'] = (float) $response[$key]['difference']; // float but on purpose.
                 }
 
@@ -172,7 +172,7 @@ class TagController extends Controller
                         'currency_id'      => (string) $foreignCurrencyId,
                         'currency_code'    => $journal['foreign_currency_code'],
                     ];
-                    $response[$foreignKey]['difference']       = bcadd($response[$foreignKey]['difference'], $journal['foreign_amount']);
+                    $response[$foreignKey]['difference']       = bcadd((string) $response[$foreignKey]['difference'], (string) $journal['foreign_amount']);
                     $response[$foreignKey]['difference_float'] = (float) $response[$foreignKey]['difference']; // float but on purpose.
                 }
             }

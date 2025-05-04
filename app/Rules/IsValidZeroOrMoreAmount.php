@@ -32,11 +32,9 @@ use Illuminate\Support\Facades\Log;
 class IsValidZeroOrMoreAmount implements ValidationRule
 {
     use ValidatesAmountsTrait;
-    private bool $nullable = false;
 
-    public function __construct(bool $nullable = false)
+    public function __construct(private bool $nullable = false)
     {
-        $this->nullable = $nullable;
     }
 
     /**

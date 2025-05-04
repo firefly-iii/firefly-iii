@@ -90,9 +90,7 @@ class PiggyBankController extends Controller
         $chartData              = [];
         while ($oldest <= $today) {
             $filtered          = $set->filter(
-                static function (PiggyBankEvent $event) use ($oldest) {
-                    return $event->date->lte($oldest);
-                }
+                static fn(PiggyBankEvent $event) => $event->date->lte($oldest)
             );
             $currentSum        = $filtered->sum('amount');
             $label             = $oldest->isoFormat((string) trans('config.month_and_day_js', [], $locale));
@@ -100,9 +98,7 @@ class PiggyBankController extends Controller
             $oldest            = app('navigation')->addPeriod($oldest, $step, 0);
         }
         $finalFiltered          = $set->filter(
-            static function (PiggyBankEvent $event) use ($today) {
-                return $event->date->lte($today);
-            }
+            static fn(PiggyBankEvent $event) => $event->date->lte($today)
         );
         $finalSum               = $finalFiltered->sum('amount');
         $finalLabel             = $today->isoFormat((string) trans('config.month_and_day_js', [], $locale));
