@@ -153,10 +153,10 @@ class UniqueIban implements ValidationRule
         }
         $query
                     = auth()->user()
-                ->accounts()
-                ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                ->where('accounts.iban', $iban)
-                ->whereIn('account_types.type', $typesArray)
+                        ->accounts()
+                        ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+                        ->where('accounts.iban', $iban)
+                        ->whereIn('account_types.type', $typesArray)
         ;
 
         if (null !== $this->account) {

@@ -857,7 +857,8 @@ class FireflyValidator extends Validator
                 ->where('trigger', $trigger)
                 ->where('response', $response)
                 ->where('delivery', $delivery)
-                ->where('url', $url)->count();
+                ->where('url', $url)->count()
+            ;
         }
 
         return false;
