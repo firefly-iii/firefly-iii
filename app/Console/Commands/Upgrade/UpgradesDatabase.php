@@ -23,6 +23,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
+
 use Illuminate\Support\Facades\Log;
 use Safe\Exceptions\InfoException;
 

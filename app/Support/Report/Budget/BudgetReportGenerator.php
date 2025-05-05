@@ -213,16 +213,16 @@ class BudgetReportGenerator
         // make sum information:
         $this->report['sums'][$currencyId]
                                                                        ??= [
-                                                            'budgeted'                => '0',
-                                                            'spent'                   => '0',
-                                                            'left'                    => '0',
-                                                            'overspent'               => '0',
-                                                            'currency_id'             => $currencyId,
-                                                            'currency_code'           => $limitCurrency->code,
-                                                            'currency_name'           => $limitCurrency->name,
-                                                            'currency_symbol'         => $limitCurrency->symbol,
-                                                            'currency_decimal_places' => $limitCurrency->decimal_places,
-                                                        ];
+                                                                           'budgeted'                => '0',
+                                                                           'spent'                   => '0',
+                                                                           'left'                    => '0',
+                                                                           'overspent'               => '0',
+                                                                           'currency_id'             => $currencyId,
+                                                                           'currency_code'           => $limitCurrency->code,
+                                                                           'currency_name'           => $limitCurrency->name,
+                                                                           'currency_symbol'         => $limitCurrency->symbol,
+                                                                           'currency_decimal_places' => $limitCurrency->decimal_places,
+                                                                       ];
         $this->report['sums'][$currencyId]['budgeted']  = bcadd((string) $this->report['sums'][$currencyId]['budgeted'], $limit->amount);
         $this->report['sums'][$currencyId]['spent']     = bcadd((string) $this->report['sums'][$currencyId]['spent'], $spent);
         $this->report['sums'][$currencyId]['left']      = bcadd((string) $this->report['sums'][$currencyId]['left'], bcadd($limit->amount, $spent));
