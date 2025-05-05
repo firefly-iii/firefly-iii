@@ -51,29 +51,35 @@ class ReturnsAvailableChannels
     {
 
         $channels          = ['mail'];
-        $slackUrl          = app('fireflyconfig')->getEncrypted('slack_webhook_url', '')->data;
-        if (UrlValidator::isValidWebhookURL($slackUrl)) {
-            $channels[] = 'slack';
+        if(true === config('notifications.channels.slack.enabled', false)) {
+            $slackUrl = app('fireflyconfig')->getEncrypted('slack_webhook_url', '')->data;
+            if (UrlValidator::isValidWebhookURL($slackUrl)) {
+                $channels[] = 'slack';
+            }
         }
 
-        // validate presence of of Ntfy settings.
-        if ('' !== (string) app('fireflyconfig')->getEncrypted('ntfy_topic', '')->data) {
-            Log::debug('Enabled ntfy.');
-            $channels[] = NtfyChannel::class;
-        }
-        if ('' === (string) app('fireflyconfig')->getEncrypted('ntfy_topic', '')->data) {
-            Log::warning('No topic name for Ntfy, channel is disabled.');
+        if(true === config('notifications.channels.ntfy.enabled', false)) {
+            // validate presence of of Ntfy settings.
+            if ('' !== (string) app('fireflyconfig')->getEncrypted('ntfy_topic', '')->data) {
+                Log::debug('Enabled ntfy.');
+                $channels[] = NtfyChannel::class;
+            }
+            if ('' === (string) app('fireflyconfig')->getEncrypted('ntfy_topic', '')->data) {
+                Log::warning('No topic name for Ntfy, channel is disabled.');
+            }
         }
 
         // pushover
-        $pushoverAppToken  = (string) app('fireflyconfig')->getEncrypted('pushover_app_token', '')->data;
-        $pushoverUserToken = (string) app('fireflyconfig')->getEncrypted('pushover_user_token', '')->data;
-        if ('' === $pushoverAppToken || '' === $pushoverUserToken) {
-            Log::warning('[b] No Pushover token, channel is disabled.');
-        }
-        if ('' !== $pushoverAppToken && '' !== $pushoverUserToken) {
-            Log::debug('Enabled pushover.');
-            $channels[] = PushoverChannel::class;
+        if(true === config('notifications.channels.pushover.enabled', false)) {
+            $pushoverAppToken  = (string) app('fireflyconfig')->getEncrypted('pushover_app_token', '')->data;
+            $pushoverUserToken = (string) app('fireflyconfig')->getEncrypted('pushover_user_token', '')->data;
+            if ('' === $pushoverAppToken || '' === $pushoverUserToken) {
+                Log::warning('[b] No Pushover token, channel is disabled.');
+            }
+            if ('' !== $pushoverAppToken && '' !== $pushoverUserToken) {
+                Log::debug('Enabled pushover.');
+                $channels[] = PushoverChannel::class;
+            }
         }
 
         Log::debug(sprintf('Final channel set in ReturnsAvailableChannels: %s ', implode(', ', $channels)));
@@ -85,30 +91,37 @@ class ReturnsAvailableChannels
     {
         Log::debug(sprintf('Checking channels for user #%d', $user->id));
         $channels          = ['mail'];
-        $slackUrl          = (string) app('preferences')->getEncryptedForUser($user, 'slack_webhook_url', '')->data;
-        if (UrlValidator::isValidWebhookURL($slackUrl)) {
-            $channels[] = 'slack';
+
+        if(true === config('notifications.channels.slack.enabled', false)) {
+            $slackUrl = (string) app('preferences')->getEncryptedForUser($user, 'slack_webhook_url', '')->data;
+            if (UrlValidator::isValidWebhookURL($slackUrl)) {
+                $channels[] = 'slack';
+            }
         }
 
         // validate presence of of Ntfy settings.
-        $ntfyTopic         = (string) app('preferences')->getEncryptedForUser($user, 'ntfy_topic', '')->data;
-        if ('' !== $ntfyTopic) {
-            Log::debug(sprintf('Enabled ntfy, "%s"', $ntfyTopic));
-            $channels[] = NtfyChannel::class;
-        }
-        if ('' === (string) app('preferences')->getEncryptedForUser($user, 'ntfy_topic', '')->data) {
-            Log::warning('No topic name for Ntfy, channel is disabled.');
+        if(true === config('notifications.channels.nfy.enabled', false)) {
+            $ntfyTopic = (string) app('preferences')->getEncryptedForUser($user, 'ntfy_topic', '')->data;
+            if ('' !== $ntfyTopic) {
+                Log::debug(sprintf('Enabled ntfy, "%s"', $ntfyTopic));
+                $channels[] = NtfyChannel::class;
+            }
+            if ('' === (string) app('preferences')->getEncryptedForUser($user, 'ntfy_topic', '')->data) {
+                Log::warning('No topic name for Ntfy, channel is disabled.');
+            }
         }
 
         // pushover
-        $pushoverAppToken  = (string) app('preferences')->getEncryptedForUser($user, 'pushover_app_token', '')->data;
-        $pushoverUserToken = (string) app('preferences')->getEncryptedForUser($user, 'pushover_user_token', '')->data;
-        if ('' === $pushoverAppToken || '' === $pushoverUserToken) {
-            Log::warning('[b] No Pushover token, channel is disabled.');
-        }
-        if ('' !== $pushoverAppToken && '' !== $pushoverUserToken) {
-            Log::debug('Enabled pushover.');
-            $channels[] = PushoverChannel::class;
+        if(true === config('notifications.channels.slack.enabled', false)) {
+            $pushoverAppToken  = (string) app('preferences')->getEncryptedForUser($user, 'pushover_app_token', '')->data;
+            $pushoverUserToken = (string) app('preferences')->getEncryptedForUser($user, 'pushover_user_token', '')->data;
+            if ('' === $pushoverAppToken || '' === $pushoverUserToken) {
+                Log::warning('[b] No Pushover token, channel is disabled.');
+            }
+            if ('' !== $pushoverAppToken && '' !== $pushoverUserToken) {
+                Log::debug('Enabled pushover.');
+                $channels[] = PushoverChannel::class;
+            }
         }
 
         Log::debug(sprintf('Final channel set in ReturnsAvailableChannels (user): %s ', implode(', ', $channels)));
