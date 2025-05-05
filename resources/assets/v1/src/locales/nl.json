@@ -2,7 +2,7 @@
     "firefly": {
         "administrations_page_title": "Grootboeken",
         "administrations_index_menu": "Grootboeken",
-        "expires_at": "Expires at",
+        "expires_at": "Verloopt op",
         "temp_administrations_introduction": "Firefly III krijgt binnenkort het vermogen om meerdere grootboeken te beheren. Op dit moment kan dat nog niet. Je kan de titel van dit grootboek instellen en de basisvaluta. Dit vervangt de voorgaande manier waarop je je \"standaardvaluta\" zou instellen. Deze instelling is nu gekoppeld aan dit grootboek, en kan per grootboek verschillend zijn.",
         "administration_currency_form_help": "Het wijzigen van deze instelling betekent dat heel veel transacties omgerekend moeten worden naar je nieuwe basisvaluta en dat kan lang duren.",
         "administrations_page_edit_sub_title_js": "Wijzig grootboek \"{title}\"",
