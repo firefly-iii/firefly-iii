@@ -1,0 +1,23 @@
+name: DAST Security Testing
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  dast:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run OWASP ZAP
+        run: |
+          docker pull owasp/zap2docker-stable
+          docker run -u zap --rm -v $(pwd):/zap/wrk:rw owasp/zap2docker-stable zap-full-scan.py -t http://localhost:8080
+
+      - name: Run Nikto
+        run: |
+          docker pull sullo/nikto
+          docker run --rm sullo/nikto -h http://localhost:8080
