@@ -1,12 +1,12 @@
 name: DAST Scanning for Firefly App
 
-# This workflow will run on every push
+# This workflow will run on every push to main, develop, and feature branches
 on:
   push:
     branches:
       - main
       - develop
-      - "feature/*" # Run this on all branches. You can replace '*' with specific branches if required.
+      - "feature/*" # Run this on all feature branches
 
 jobs:
   scan:
@@ -16,28 +16,33 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Install OWASP ZAP
-      - name: Set up OWASP ZAP
+      # Install Java runtime (required by ZAP)
+      - name: Install Java
         run: |
           sudo apt-get update
-          sudo apt-get install -y default-jre # Install Java Runtime (needed by ZAP)
-          wget https://github.com/zaproxy/zaproxy/releases/download/v2.11.0/ZAP_2.11.0_linux.tar.gz # Corrected version link
+          sudo apt-get install -y default-jre
+
+      # Install OWASP ZAP
+      - name: Install OWASP ZAP
+        run: |
+          wget https://github.com/zaproxy/zaproxy/releases/download/v2.11.0/ZAP_2.11.0_linux.tar.gz
           tar -xvzf ZAP_2.11.0_linux.tar.gz
           cd ZAP_2.11.0
           ./zap.sh & # Start ZAP in the background
           sleep 30 # Give ZAP some time to initialize
 
+      # Run OWASP ZAP quick scan
       - name: Run OWASP ZAP scan
         run: |
-          zap-cli quick-scan --url http://localhost:8080
+          zap-cli quick-scan --url http://localhost:8080 # Ensure your app is running on localhost:8080 for ZAP to scan
 
-      # Run Burp Suite Scan
-      - name: Set up Burp Suite (Docker)
+      # Set up Burp Suite (optional step for additional scanning)
+      - name: Set up Burp Suite
         run: |
-          docker pull portswigger/burp-suite
-          docker run -d --name burp -p 8080:8080 portswigger/burp-suite
+          docker pull ports/swigger/burp-suite
+          docker run -d -p 8080:8080 ports/swigger/burp-suite
 
+      # Run Burp Suite scan (optional)
       - name: Run Burp Suite scan
         run: |
-          # Ensure the app is ready for Burp Suite to start scanning
           docker exec -i burp /bin/bash -c "scan --target http://localhost:8080"
