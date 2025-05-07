@@ -1,6 +1,5 @@
 name: DAST Scanning for Firefly App
 
-# This workflow will run on every push to main, develop, and feature branches
 on:
   push:
     branches:
@@ -22,7 +21,13 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y default-jre
 
-      # Install Docker if not installed (it may be installed already in Ubuntu GitHub runner)
+      # Remove old Docker and containerd
+      - name: Remove conflicting packages
+        run: |
+          sudo apt-get remove -y containerd containerd.io
+          sudo apt-get update
+
+      # Install Docker
       - name: Install Docker
         run: |
           sudo apt-get install -y docker.io
