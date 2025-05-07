@@ -25,9 +25,9 @@ jobs:
       # Install OWASP ZAP (updated with the latest release)
       - name: Install OWASP ZAP
         run: |
-          wget https://github.com/zaproxy/zaproxy/releases/download/w2025-05-05/ZAP_WEEKLY_D-2025-05-05.tar.gz
-          tar -xvzf ZAP_WEEKLY_D-2025-05-05.tar.gz
-          cd ZAP_WEEKLY_D-2025-05-05
+          wget https://github.com/zaproxy/zaproxy/releases/download/v2.11.0/ZAP_2.11.0_linux.tar.gz
+          tar -xvzf ZAP_2.11.0_linux.tar.gz
+          cd ZAP_2.11.0
           ./zap.sh & 
           sleep 30
 
