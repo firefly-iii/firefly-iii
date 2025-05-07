@@ -1,23 +1,36 @@
-name: DAST Security Testing
+name: DAST Scanning for Firefly App
 
+# This workflow will run on every push
 on:
   push:
     branches:
-      - develop
+      - "*" # Run this on all branches. You can replace '*' with specific branches if required.
 
 jobs:
-  dast:
+  scan:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Run OWASP ZAP
+      # Run OWASP ZAP scan
+      - name: Set up OWASP ZAP
         run: |
-          docker pull owasp/zap2docker-stable
-          docker run -u zap --rm -v $(pwd):/zap/wrk:rw owasp/zap2docker-stable zap-full-scan.py -t http://localhost:8080
+          sudo apt-get install zaproxy
+          zap-cli start
 
-      - name: Run Nikto
+      - name: Run OWASP ZAP scan
         run: |
-          docker pull sullo/nikto
-          docker run --rm sullo/nikto -h http://localhost:8080
+          zap-cli quick-scan --url http://localhost:8080
+
+      # Run Burp Suite Scan
+      - name: Set up Burp Suite
+        run: |
+          docker pull ports/swigger/burp-suite
+          docker run -d -p 8080:8080 ports/swigger/burp-suite
+
+      - name: Run Burp Suite scan
+        run: |
+          # Example, can be customized with Burp Suite API commands
+          docker exec -i burp /bin/bash -c "scan --target http://localhost:8080"
