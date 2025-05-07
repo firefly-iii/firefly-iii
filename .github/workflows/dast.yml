@@ -22,12 +22,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y default-jre
 
-      # Install OWASP ZAP
+      # Install OWASP ZAP (updated with the latest release)
       - name: Install OWASP ZAP
         run: |
-          wget https://github.com/zaproxy/zaproxy/releases/download/v2.10.0/ZAP_2.10.0_linux.tar.gz
-          tar -xvzf ZAP_2.10.0_linux.tar.gz
-          cd ZAP_2.10.0
+          wget https://github.com/zaproxy/zaproxy/releases/download/w2025-05-05/ZAP_WEEKLY_D-2025-05-05.tar.gz
+          tar -xvzf ZAP_WEEKLY_D-2025-05-05.tar.gz
+          cd ZAP_WEEKLY_D-2025-05-05
           ./zap.sh & 
           sleep 30
 
