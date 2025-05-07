@@ -4,7 +4,9 @@ name: DAST Scanning for Firefly App
 on:
   push:
     branches:
-      - "*" # Run this on all branches. You can replace '*' with specific branches if required.
+      - main
+      - develop
+      - "feature/*" # Run this on all branches. You can replace '*' with specific branches if required.
 
 jobs:
   scan:
@@ -17,20 +19,22 @@ jobs:
       # Run OWASP ZAP scan
       - name: Set up OWASP ZAP
         run: |
-          sudo apt-get install zaproxy
-          zap-cli start
+          sudo apt-get update
+          sudo apt-get install -y zaproxy
+          zaproxy & # Start ZAP in the background
+          sleep 30 # Give ZAP some time to initialize
 
       - name: Run OWASP ZAP scan
         run: |
           zap-cli quick-scan --url http://localhost:8080
 
       # Run Burp Suite Scan
-      - name: Set up Burp Suite
+      - name: Set up Burp Suite (Docker)
         run: |
-          docker pull ports/swigger/burp-suite
-          docker run -d -p 8080:8080 ports/swigger/burp-suite
+          docker pull portswigger/burp-suite
+          docker run -d --name burp -p 8080:8080 portswigger/burp-suite
 
       - name: Run Burp Suite scan
         run: |
-          # Example, can be customized with Burp Suite API commands
+          # Ensure the app is ready for Burp Suite to start scanning
           docker exec -i burp /bin/bash -c "scan --target http://localhost:8080"
