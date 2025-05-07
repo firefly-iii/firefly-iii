@@ -22,16 +22,18 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y default-jre
 
-      # Install OWASP ZAP (updated with the latest release)
-      - name: Install OWASP ZAP
+      # Install Docker if not installed (it may be installed already in Ubuntu GitHub runner)
+      - name: Install Docker
         run: |
-          wget https://github.com/zaproxy/zaproxy/releases/download/v2.11.0/ZAP_2.11.0_linux.tar.gz
-          tar -xvzf ZAP_2.11.0_linux.tar.gz
-          cd ZAP_2.11.0
-          ./zap.sh & 
-          sleep 30
+          sudo apt-get install -y docker.io
 
-      # Give ZAP some time to initialize
+      # Run ZAP with Docker
+      - name: Run OWASP ZAP with Docker
+        run: |
+          docker pull owasp/zap2docker-stable
+          docker run -d -p 8080:8080 owasp/zap2docker-stable zap.sh -daemon -port 8080
+          sleep 30  # Allow time for ZAP to start
+
       # Run OWASP ZAP quick scan
       - name: Run OWASP ZAP scan
         run: |
