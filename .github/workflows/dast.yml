@@ -26,7 +26,7 @@ jobs:
           ZAP_API_KEY: ${{ secrets.ZAP_API_KEY }} # If you have an API key for ZAP
 
       - name: Upload ZAP Report
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: zap-report
           path: zap_report.html
