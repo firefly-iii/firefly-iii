@@ -1,0 +1,30 @@
+name: DAST - Wapiti
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - release
+
+jobs:
+  wapiti:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Install Wapiti
+        run: |
+          sudo apt-get update
+          sudo apt-get install wapiti
+
+      - name: Run Wapiti Scan
+        run: |
+          wapiti -u https://demo.firefly-iii.org -o wapiti_report.html
+
+      - name: Upload Wapiti Report
+        uses: actions/upload-artifact@v2
+        with:
+          name: wapiti-report
+          path: wapiti_report.html

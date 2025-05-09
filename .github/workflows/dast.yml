@@ -1,68 +1,32 @@
-name: DAST Scanning for Firefly App
+name: DAST - OWASP ZAP
 
 on:
-  push:
+  pull_request:
     branches:
-      - main
       - develop
-      - "feature/*" # Run this on all feature branches
+      - release
 
 jobs:
-  scan:
+  zap-scan:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Install Java runtime (required by ZAP)
-      - name: Install Java
+      - name: Install OWASP ZAP
         run: |
           sudo apt-get update
-          sudo apt-get install -y default-jre
+          sudo apt-get install zaproxy
 
-      # Remove old Docker and containerd
-      - name: Remove conflicting packages
+      - name: Start ZAP and run scan
         run: |
-          sudo apt-get remove -y containerd containerd.io
-          sudo apt-get update
+          zap-baseline.py -t https://demo.firefly-iii.org -r zap_report.html
+        env:
+          ZAP_API_KEY: ${{ secrets.ZAP_API_KEY }} # If you have an API key for ZAP
 
-      # Install Docker
-      - name: Install Docker
-        run: |
-          sudo apt-get install -y docker.io
-
-      # Run ZAP with Docker
-      - name: Run OWASP ZAP with Docker
-        run: |
-          docker pull owasp/zap2docker-stable
-          docker run -d --name zap-container -p 8080:8080 owasp/zap2docker-stable zap.sh -daemon -port 8080
-          sleep 30  # Allow time for ZAP to start
-
-      # Run OWASP ZAP scan
-      - name: Run OWASP ZAP scan
-        run: |
-          zap-cli quick-scan --url http://localhost:8080 # Ensure your app is running on localhost:8080 for ZAP to scan
-
-      # Clean up ZAP container after scan
-      - name: Clean up ZAP container
-        run: |
-          docker stop zap-container
-          docker rm zap-container
-
-      # Set up Burp Suite (optional step for additional scanning)
-      - name: Set up Burp Suite
-        run: |
-          docker pull ports/swigger/burp-suite
-          docker run -d --name burp-container -p 8081:8080 ports/swigger/burp-suite
-
-      # Run Burp Suite scan (optional)
-      - name: Run Burp Suite scan
-        run: |
-          docker exec -i burp-container /bin/bash -c "scan --target http://localhost:8081"
-
-      # Clean up Burp container after scan
-      - name: Clean up Burp container
-        run: |
-          docker stop burp-container
-          docker rm burp-container
+      - name: Upload ZAP Report
+        uses: actions/upload-artifact@v2
+        with:
+          name: zap-report
+          path: zap_report.html
