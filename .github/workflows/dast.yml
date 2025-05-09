@@ -1,0 +1,32 @@
+name: DAST - OWASP ZAP
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - release
+
+jobs:
+  zap-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install OWASP ZAP
+        run: |
+          sudo apt-get update
+          sudo apt-get install zaproxy
+
+      - name: Start ZAP and run scan
+        run: |
+          zap-baseline.py -t https://demo.firefly-iii.org -r zap_report.html
+        env:
+          ZAP_API_KEY: ${{ secrets.ZAP_API_KEY }} # If you have an API key for ZAP
+
+      - name: Upload ZAP Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: zap-report
+          path: zap_report.html
