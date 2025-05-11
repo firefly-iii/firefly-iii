@@ -44,6 +44,9 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use function \Safe\date;
+use function \Safe\json_encode;
+use function \Safe\parse_url;
 
 /**
  * Class Handler
@@ -227,7 +230,7 @@ class Handler extends ExceptionHandler
         $data        = [
             'class'        => $e::class,
             'errorMessage' => $e->getMessage(),
-            'time'         => \Safe\date('r'),
+            'time'         => date('r'),
             'stackTrace'   => $e->getTraceAsString(),
             'file'         => $e->getFile(),
             'line'         => $e->getLine(),
@@ -238,7 +241,7 @@ class Handler extends ExceptionHandler
             'json'         => request()->acceptsJson(),
             'method'       => request()->method(),
             'headers'      => $headers,
-            'post'         => 'POST' === request()->method() ? \Safe\json_encode(request()->all()) : '',
+            'post'         => 'POST' === request()->method() ? json_encode(request()->all()) : '',
         ];
 
         // create job that will mail.
@@ -285,8 +288,8 @@ class Handler extends ExceptionHandler
         }
         $safe         = route('index');
         $previous     = $exception->redirectTo;
-        $previousHost = \Safe\parse_url($previous, PHP_URL_HOST);
-        $safeHost     = \Safe\parse_url($safe, PHP_URL_HOST);
+        $previousHost = parse_url($previous, PHP_URL_HOST);
+        $safeHost     = parse_url($safe, PHP_URL_HOST);
 
         return null !== $previousHost && $previousHost === $safeHost ? $previous : $safe;
     }
