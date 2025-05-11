@@ -143,7 +143,7 @@ class ReportFormRequest extends FormRequest
             // validate as date
             // if regex for YYYY-MM-DD:
             $pattern = '/^(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][\d]|3[01])$/';
-            $result  = preg_match($pattern, $string);
+            $result  = \Safe\preg_match($pattern, $string);
             if (false !== $result && 0 !== $result) {
                 try {
                     $date = new Carbon($parts[1]);
@@ -181,7 +181,7 @@ class ReportFormRequest extends FormRequest
             // validate as date
             // if regex for YYYY-MM-DD:
             $pattern = '/^(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][\d]|3[01])$/';
-            $result  = preg_match($pattern, $string);
+            $result  = \Safe\preg_match($pattern, $string);
             if (false !== $result && 0 !== $result) {
                 try {
                     $date = new Carbon($parts[0]);

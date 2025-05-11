@@ -593,7 +593,7 @@ class GroupCollector implements GroupCollectorInterface
         if (array_key_exists('meta_name', $result) && in_array($result['meta_name'], $dates, true)) {
             $name = $result['meta_name'];
             if (array_key_exists('meta_data', $result) && '' !== (string) $result['meta_data']) {
-                $result[$name] = Carbon::createFromFormat('!Y-m-d', substr((string) json_decode($result['meta_data']), 0, 10));
+                $result[$name] = Carbon::createFromFormat('!Y-m-d', substr((string) \Safe\json_decode($result['meta_data']), 0, 10));
             }
         }
 

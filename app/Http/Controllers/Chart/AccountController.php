@@ -468,14 +468,14 @@ class AccountController extends Controller
         Log::debug('Balances exist at:');
         foreach ($range as $key => $value) {
             $newRange[] = ['date' => $key, 'info' => $value];
-            Log::debug(sprintf('%d - %s (%s)', count($newRange) - 1, $key, json_encode($value)));
+            Log::debug(sprintf('%d - %s (%s)', count($newRange) - 1, $key, \Safe\json_encode($value)));
         }
         $carbon          = Carbon::createFromFormat('Y-m-d', $newRange[0]['date'])->endOfDay();
         Log::debug(sprintf('Start of loop, $carbon is %s', $carbon->format('Y-m-d H:i:s')));
         while ($end->gte($current)) {
             $momentBalance = $previous;
             // $theDate       = $current->format('Y-m-d');
-            Log::debug(sprintf('Now at %s, with momentBalance %s', $current->format('Y-m-d H:i:s'), json_encode($momentBalance)));
+            Log::debug(sprintf('Now at %s, with momentBalance %s', $current->format('Y-m-d H:i:s'), \Safe\json_encode($momentBalance)));
 
             // loop over the array with balances, find one that is earlier or on the same day.
             while ($carbon->lte($current) && array_key_exists($expectedIndex, $newRange)) {
@@ -490,7 +490,7 @@ class AccountController extends Controller
                     $carbon = Carbon::createFromFormat('Y-m-d', $newRange[$expectedIndex]['date'])->endOfDay();
                 }
             }
-            Log::debug(sprintf('momentBalance is now %s', json_encode($momentBalance)));
+            Log::debug(sprintf('momentBalance is now %s', \Safe\json_encode($momentBalance)));
             $return        = $this->updateChartKeys($return, $momentBalance);
             $previous      = $momentBalance;
 
