@@ -44,9 +44,10 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use function \Safe\date;
-use function \Safe\json_encode;
-use function \Safe\parse_url;
+
+use function Safe\date;
+use function Safe\json_encode;
+use function Safe\parse_url;
 
 /**
  * Class Handler
