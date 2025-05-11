@@ -133,7 +133,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
                 return $searchResult;
             }
         }
-        app('log')->debug('Found nothing');
+        app('log')->debug('Found no bill in findBill()');
 
         return null;
     }

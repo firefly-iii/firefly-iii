@@ -305,7 +305,7 @@ class AccountValidator
                 return $first;
             }
         }
-        app('log')->debug('Found nothing!');
+        app('log')->debug('Found nothing in findExistingAccount()');
 
         return null;
     }
