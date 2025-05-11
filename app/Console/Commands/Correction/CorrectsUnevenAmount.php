@@ -51,6 +51,8 @@ class CorrectsUnevenAmount extends Command
         // convert transfers with foreign currency info where the amount is NOT uneven (it should be)
         $this->convertOldStyleTransfers();
 
+        // convert old-style transactions between assets and liabilities.
+        $this->convertOldStyleTransactions();
 
         $this->fixUnevenAmounts();
         $this->matchCurrencies();
@@ -324,5 +326,68 @@ class CorrectsUnevenAmount extends Command
         }
         Log::debug('Not between asset and liability, return FALSE');
         return false;
+    }
+
+    private function convertOldStyleTransactions(): void
+    {
+        Log::debug('convertOldStyleTransactions()');
+        $count        = 0;
+        $transactions = Transaction::distinct()
+                                   ->leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
+                                   ->leftJoin('transaction_types', 'transaction_types.id', 'transaction_journals.transaction_type_id')
+                                   ->leftJoin('accounts', 'accounts.id', 'transactions.account_id')
+                                   ->leftJoin('account_types', 'account_types.id', 'accounts.account_type_id')
+                                   ->whereNot('transaction_types.type', TransactionTypeEnum::TRANSFER->value)
+                                   ->whereNotNull('foreign_currency_id')
+                                   ->whereNotNull('foreign_amount')
+                                   ->whereIn('account_types.type', [AccountTypeEnum::ASSET->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::LOAN->value])
+                                   ->get(['transactions.transaction_journal_id']);
+
+        Log::debug(sprintf('Found %d potential journal(s)', $transactions->count()));
+
+        /** @var Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            /** @var null|TransactionJournal $journal */
+            $journal = TransactionJournal::find($transaction->transaction_journal_id);
+            if (null === $journal) {
+                Log::debug('Found no journal, continue.');
+
+                continue;
+            }
+            if (!$this->isBetweenAssetAndLiability($journal)) {
+                Log::debug('Not between asset and liability, continue.');
+
+                continue;
+            }
+            Log::debug(sprintf('Potential fix for #%d', $journal->id));
+            $source      = $journal->transactions()->where('amount', '<', 0)->first();
+            $destination = $journal->transactions()->where('amount', '>', 0)->first();
+            if (null === $source || null === $destination) {
+                Log::debug('Either transaction is NULL, continue.');
+
+                continue;
+            }
+            if (0 === bccomp($source->amount, $source->foreign_amount) && 0 === bccomp($source->foreign_amount, $source->amount)) {
+                Log::debug('Already fixed, continue.');
+
+                continue;
+            }
+            Log::debug('Ready to swap data between transactions.');
+            $destination->foreign_currency_id     = $source->transaction_currency_id;
+            $destination->foreign_amount          = app('steam')->positive($source->amount);
+            $destination->transaction_currency_id = $source->foreign_currency_id;
+            $destination->amount                  = app('steam')->positive($source->foreign_amount);
+            $destination->balance_dirty           = true;
+            $source->balance_dirty                = true;
+            $destination->save();
+            $source->save();
+            $this->friendlyWarning(sprintf('Corrected foreign amounts of transaction #%d.', $journal->id));
+            ++$count;
+        }
+        if (0 === $count) {
+            return;
+        }
+
+        $this->friendlyPositive(sprintf('Fixed %d journal(s) with unbalanced amounts.', $count));
     }
 }
