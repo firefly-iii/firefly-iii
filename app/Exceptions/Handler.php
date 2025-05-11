@@ -45,12 +45,11 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-
 // temp
 /**
  * Class Handler
  */
-class Handler extends   ExceptionHandler
+class Handler extends ExceptionHandler
 {
     /**
      * @var array<int, class-string<\Throwable>>
