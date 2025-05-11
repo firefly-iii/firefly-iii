@@ -50,15 +50,15 @@ class ReturnsAvailableChannels
     private static function returnOwnerChannels(): array
     {
 
-        $channels          = ['mail'];
-        if(true === config('notifications.channels.slack.enabled', false)) {
+        $channels = ['mail'];
+        if (true === config('notifications.channels.slack.enabled', false)) {
             $slackUrl = app('fireflyconfig')->getEncrypted('slack_webhook_url', '')->data;
             if (UrlValidator::isValidWebhookURL($slackUrl)) {
                 $channels[] = 'slack';
             }
         }
 
-        if(true === config('notifications.channels.ntfy.enabled', false)) {
+        if (true === config('notifications.channels.ntfy.enabled', false)) {
             // validate presence of of Ntfy settings.
             if ('' !== (string) app('fireflyconfig')->getEncrypted('ntfy_topic', '')->data) {
                 Log::debug('Enabled ntfy.');
@@ -70,7 +70,7 @@ class ReturnsAvailableChannels
         }
 
         // pushover
-        if(true === config('notifications.channels.pushover.enabled', false)) {
+        if (true === config('notifications.channels.pushover.enabled', false)) {
             $pushoverAppToken  = (string) app('fireflyconfig')->getEncrypted('pushover_app_token', '')->data;
             $pushoverUserToken = (string) app('fireflyconfig')->getEncrypted('pushover_user_token', '')->data;
             if ('' === $pushoverAppToken || '' === $pushoverUserToken) {
@@ -90,9 +90,9 @@ class ReturnsAvailableChannels
     private static function returnUserChannels(User $user): array
     {
         Log::debug(sprintf('Checking channels for user #%d', $user->id));
-        $channels          = ['mail'];
+        $channels = ['mail'];
 
-        if(true === config('notifications.channels.slack.enabled', false)) {
+        if (true === config('notifications.channels.slack.enabled', false)) {
             $slackUrl = (string) app('preferences')->getEncryptedForUser($user, 'slack_webhook_url', '')->data;
             if (UrlValidator::isValidWebhookURL($slackUrl)) {
                 $channels[] = 'slack';
@@ -100,7 +100,7 @@ class ReturnsAvailableChannels
         }
 
         // validate presence of of Ntfy settings.
-        if(true === config('notifications.channels.nfy.enabled', false)) {
+        if (true === config('notifications.channels.nfy.enabled', false)) {
             $ntfyTopic = (string) app('preferences')->getEncryptedForUser($user, 'ntfy_topic', '')->data;
             if ('' !== $ntfyTopic) {
                 Log::debug(sprintf('Enabled ntfy, "%s"', $ntfyTopic));
@@ -112,7 +112,7 @@ class ReturnsAvailableChannels
         }
 
         // pushover
-        if(true === config('notifications.channels.slack.enabled', false)) {
+        if (true === config('notifications.channels.slack.enabled', false)) {
             $pushoverAppToken  = (string) app('preferences')->getEncryptedForUser($user, 'pushover_app_token', '')->data;
             $pushoverUserToken = (string) app('preferences')->getEncryptedForUser($user, 'pushover_user_token', '')->data;
             if ('' === $pushoverAppToken || '' === $pushoverUserToken) {

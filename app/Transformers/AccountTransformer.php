@@ -152,7 +152,7 @@ class AccountTransformer extends AbstractTransformer
             'longitude'                      => $longitude,
             'latitude'                       => $latitude,
             'zoom_level'                     => $zoomLevel,
-            'last_activity' => array_key_exists('last_activity', $account->meta) ? $account->meta['last_activity']->toAtomString() : null,
+            'last_activity'                  => array_key_exists('last_activity', $account->meta) ? $account->meta['last_activity']->toAtomString() : null,
             'links'                          => [
                 [
                     'rel' => 'self',

@@ -234,7 +234,7 @@ trait TransactionValidation
             return;
         }
         Log::debug(sprintf('Source account expects #%d: %s', $sourceCurrency->id, $sourceCurrency->code));
-        Log::debug(sprintf('Destination account expects #%d: %s', $destinationCurrency->id,  $destinationCurrency->code));
+        Log::debug(sprintf('Destination account expects #%d: %s', $destinationCurrency->id, $destinationCurrency->code));
 
         Log::debug(sprintf('Amount is %s', $transaction['amount']));
 
