@@ -326,7 +326,6 @@ class CorrectsUnevenAmount extends Command
             Log::debug('Destination is a liability account, source is an asset account, return TRUE.');
             return true;
         }
-        Log::debug('Not between asset and liability, return FALSE');
         return false;
     }
 
@@ -361,6 +360,8 @@ class CorrectsUnevenAmount extends Command
             }
             $source      = $journal->transactions()->where('amount', '<', 0)->first();
             $destination = $journal->transactions()->where('amount', '>', 0)->first();
+            $sourceAccount = $source->account;
+            $destAccount   = $destination->account;
             if (null === $source || null === $destination) {
                 Log::debug('Either transaction is NULL, continue.');
 
@@ -372,15 +373,16 @@ class CorrectsUnevenAmount extends Command
                 continue;
             }
             Log::debug('Ready to swap data between transactions.');
-            $destination->foreign_currency_id     = $source->transaction_currency_id;
-            $destination->foreign_amount          = app('steam')->positive($source->amount);
-            $destination->transaction_currency_id = $source->foreign_currency_id;
-            $destination->amount                  = app('steam')->positive($source->foreign_amount);
-            $destination->balance_dirty           = true;
-            $source->balance_dirty                = true;
-            $destination->save();
-            $source->save();
-            $this->friendlyWarning(sprintf('Corrected foreign amounts of transaction #%d.', $journal->id));
+//            // only fix the destination transaction
+//            $destination->foreign_currency_id     = $source->transaction_currency_id;
+//            $destination->foreign_amount          = app('steam')->positive($source->amount);
+//            $destination->transaction_currency_id = $source->foreign_currency_id;
+//            $destination->amount                  = app('steam')->positive($source->foreign_amount);
+//            $destination->balance_dirty           = true;
+//            $source->balance_dirty                = true;
+//            $destination->save();
+//            $source->save();
+//            $this->friendlyWarning(sprintf('Corrected foreign amounts of transaction #%d.', $journal->id));
             ++$count;
         }
         if (0 === $count) {
