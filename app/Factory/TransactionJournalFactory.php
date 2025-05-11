@@ -170,6 +170,7 @@ class TransactionJournalFactory
         Log::debug('Find currency or return default.');
         $currency = $this->currencyRepository->findCurrency((int) $row['currency_id'], $row['currency_code']);
         Log::debug('Find foreign currency or return NULL.');
+
         $foreignCurrency = $this->currencyRepository->findCurrencyNull($row['foreign_currency_id'], $row['foreign_currency_code']);
         $bill            = $this->billRepository->findBill((int) $row['bill_id'], $row['bill_name']);
         $billId          = TransactionTypeEnum::WITHDRAWAL->value === $type->type && null !== $bill ? $bill->id : null;
@@ -217,6 +218,7 @@ class TransactionJournalFactory
         $sourceAccount      = $this->getAccount($type->type, 'source', $sourceInfo);
         $destinationAccount = $this->getAccount($type->type, 'destination', $destInfo);
         Log::debug('Done with getAccount(2x)');
+
 
         // this is the moment for a reconciliation sanity check (again).
         if (TransactionTypeEnum::RECONCILIATION->value === $type->type) {
@@ -282,8 +284,8 @@ class TransactionJournalFactory
         // see the currency they expect to see.
         $amount        = (string) $row['amount'];
         $foreignAmount = (string) $row['foreign_amount'];
-        if (null !== $foreignCurrency && $foreignCurrency->id !== $currency->id
-            && TransactionTypeEnum::TRANSFER->value === $type->type
+        if (null !== $foreignCurrency && $foreignCurrency->id !== $currency->id &&
+            (TransactionTypeEnum::TRANSFER->value === $type->type || $this->isBetweenAssetAndLiability($sourceAccount, $destinationAccount))
         ) {
             $transactionFactory->setCurrency($foreignCurrency);
             $transactionFactory->setForeignCurrency($currency);
@@ -623,22 +625,19 @@ class TransactionJournalFactory
 
     private function isBetweenAssetAndLiability(Account $source, Account $destination): bool
     {
-        if (null === $source || null === $destination) {
-            Log::warning('Either is false, stop.');
-            return false;
-        }
         $sourceTypes = [AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value];
 
         // source is liability, destination is asset
-        if (in_array($source->accountType->type, $sourceTypes, true) && AccountTypeEnum::ASSET->value === $destination->accountType->type) {
+        if(in_array($source->accountType->type, $sourceTypes, true) && AccountTypeEnum::ASSET->value === $destination->accountType->type) {
             Log::debug('Source is a liability account, destination is an asset account, return TRUE.');
             return true;
         }
         // source is asset, destination is liability
-        if (in_array($destination->accountType->type, $sourceTypes, true) && AccountTypeEnum::ASSET->value === $source->accountType->type) {
+        if(in_array($destination->accountType->type, $sourceTypes, true) && AccountTypeEnum::ASSET->value === $source->accountType->type) {
             Log::debug('Destination is a liability account, source is an asset account, return TRUE.');
             return true;
         }
+        Log::debug('Not between asset and liability, return FALSE');
         return false;
     }
 }
