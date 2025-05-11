@@ -167,7 +167,7 @@ class RemovesDatabaseDecryption extends Command
     {
         // try to json_decrypt the value.
         try {
-            $newValue = \Safe\json_decode($value, true, 512, JSON_THROW_ON_ERROR) ?? $value;
+            $newValue = json_decode($value, true, 512, JSON_THROW_ON_ERROR) ?? $value;
         } catch (\JsonException $e) {
             $message = sprintf('Could not JSON decode preference row #%d: %s. This does not have to be a problem.', $id, $e->getMessage());
             $this->friendlyError($message);

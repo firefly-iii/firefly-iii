@@ -71,7 +71,7 @@ class AcceptHeaders
 
         // throw bad request if trace id is not a UUID
         $uuid         = $request->header('X-Trace-Id');
-        if (is_string($uuid) && '' !== trim($uuid) && (1 !== \Safe\preg_match('/^[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}$/i', trim($uuid)))) {
+        if (is_string($uuid) && '' !== trim($uuid) && (1 !== preg_match('/^[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}$/i', trim($uuid)))) {
             throw new BadRequestHttpException('Bad X-Trace-Id header.');
         }
 

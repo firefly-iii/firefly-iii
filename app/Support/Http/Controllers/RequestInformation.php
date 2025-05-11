@@ -46,7 +46,7 @@ trait RequestInformation
     final protected function getDomain(): string // get request info
     {
         $url   = url()->to('/');
-        $parts = \Safe\parse_url($url);
+        $parts = parse_url($url);
 
         return $parts['host'] ?? '';
     }

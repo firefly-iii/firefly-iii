@@ -106,8 +106,8 @@ trait CreateStuff
 
         Log::alert('NO OAuth keys were found. They have been created.');
 
-        \Safe\file_put_contents($publicKey, (string) $key->getPublicKey());
-        \Safe\file_put_contents($privateKey, $key->toString('PKCS1'));
+        file_put_contents($publicKey, (string) $key->getPublicKey());
+        file_put_contents($privateKey, $key->toString('PKCS1'));
     }
 
     /**

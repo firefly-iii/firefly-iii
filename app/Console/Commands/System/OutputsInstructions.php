@@ -111,8 +111,8 @@ class OutputsInstructions extends Command
      */
     private function showLogo(): void
     {
-        $today  = \Safe\date('m-d');
-        $month  = \Safe\date('m');
+        $today  = date('m-d');
+        $month  = date('m');
         // variation in colors and effects just because I can!
         // default is Ukraine flag:
         $colors = ['blue', 'blue', 'blue', 'yellow', 'yellow', 'yellow', 'default', 'default'];

@@ -46,7 +46,7 @@ class Sha3SignatureGenerator implements SignatureGeneratorInterface
         $json      = '';
 
         try {
-            $json = \Safe\json_encode($message->message, JSON_THROW_ON_ERROR);
+            $json = json_encode($message->message, JSON_THROW_ON_ERROR);
         } catch (\JsonException $e) {
             app('log')->error('Could not generate hash.');
             app('log')->error(sprintf('JSON value: %s', $json));

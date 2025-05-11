@@ -323,7 +323,7 @@ class TransactionJournalFactory
         unset($dataRow['import_hash_v2'], $dataRow['original_source']);
 
         try {
-            $json = \Safe\json_encode($dataRow, JSON_THROW_ON_ERROR);
+            $json = json_encode($dataRow, JSON_THROW_ON_ERROR);
         } catch (\JsonException $e) {
             Log::error(sprintf('Could not encode dataRow: %s', $e->getMessage()));
             $json = microtime();
@@ -352,7 +352,7 @@ class TransactionJournalFactory
             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
             ->whereNotNull('transaction_journals.id')
             ->where('transaction_journals.user_id', $this->user->id)
-            ->where('data', \Safe\json_encode($hash, JSON_THROW_ON_ERROR))
+            ->where('data', json_encode($hash, JSON_THROW_ON_ERROR))
             ->with(['transactionJournal', 'transactionJournal.transactionGroup'])
             ->first(['journal_meta.*'])
         ;

@@ -366,8 +366,8 @@ class UpgradesToGroups extends Command
     {
         $groupId = DB::table('transaction_groups')->insertGetId(
             [
-                'created_at' => \Safe\date('Y-m-d H:i:s'),
-                'updated_at' => \Safe\date('Y-m-d H:i:s'),
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
                 'title'      => null,
                 'user_id'    => $array['user_id'],
             ]
