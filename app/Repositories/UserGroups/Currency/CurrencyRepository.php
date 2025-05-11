@@ -65,17 +65,17 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      */
     public function currencyInUseAt(TransactionCurrency $currency): ?string
     {
-        app('log')->debug(sprintf('Now in currencyInUse() for #%d ("%s")', $currency->id, $currency->code));
+        Log::debug(sprintf('Now in currencyInUse() for #%d ("%s")', $currency->id, $currency->code));
         $countJournals    = $this->countJournals($currency);
         if ($countJournals > 0) {
-            app('log')->info(sprintf('Count journals is %d, return true.', $countJournals));
+            Log::info(sprintf('Count journals is %d, return true.', $countJournals));
 
             return 'journals';
         }
 
         // is the only currency left
         if (1 === $this->getAll()->count()) {
-            app('log')->info('Is the last currency in the system, return true. ');
+            Log::info('Is the last currency in the system, return true. ');
 
             return 'last_left';
         }
@@ -83,7 +83,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         // is being used in accounts:
         $meta             = AccountMeta::where('name', 'currency_id')->where('data', \Safe\json_encode((string) $currency->id))->count();
         if ($meta > 0) {
-            app('log')->info(sprintf('Used in %d accounts as currency_id, return true. ', $meta));
+            Log::info(sprintf('Used in %d accounts as currency_id, return true. ', $meta));
 
             return 'account_meta';
         }
@@ -91,7 +91,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         // second search using integer check.
         $meta             = AccountMeta::where('name', 'currency_id')->where('data', \Safe\json_encode((int) $currency->id))->count();
         if ($meta > 0) {
-            app('log')->info(sprintf('Used in %d accounts as currency_id, return true. ', $meta));
+            Log::info(sprintf('Used in %d accounts as currency_id, return true. ', $meta));
 
             return 'account_meta';
         }
@@ -99,7 +99,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         // is being used in bills:
         $bills            = Bill::where('transaction_currency_id', $currency->id)->count();
         if ($bills > 0) {
-            app('log')->info(sprintf('Used in %d bills as currency, return true. ', $bills));
+            Log::info(sprintf('Used in %d bills as currency, return true. ', $bills));
 
             return 'bills';
         }
@@ -109,7 +109,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         $recurringForeign = RecurrenceTransaction::where('foreign_currency_id', $currency->id)->count();
 
         if ($recurringAmount > 0 || $recurringForeign > 0) {
-            app('log')->info(sprintf('Used in %d recurring transactions as (foreign) currency id, return true. ', $recurringAmount + $recurringForeign));
+            Log::info(sprintf('Used in %d recurring transactions as (foreign) currency id, return true. ', $recurringAmount + $recurringForeign));
 
             return 'recurring';
         }
@@ -120,7 +120,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
             ->where('account_meta.name', 'currency_id')->where('account_meta.data', \Safe\json_encode($currency->id))->count()
         ;
         if ($meta > 0) {
-            app('log')->info(sprintf('Used in %d accounts as currency_id, return true. ', $meta));
+            Log::info(sprintf('Used in %d accounts as currency_id, return true. ', $meta));
 
             return 'account_meta';
         }
@@ -128,7 +128,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         // is being used in available budgets
         $availableBudgets = AvailableBudget::where('transaction_currency_id', $currency->id)->count();
         if ($availableBudgets > 0) {
-            app('log')->info(sprintf('Used in %d available budgets as currency, return true. ', $availableBudgets));
+            Log::info(sprintf('Used in %d available budgets as currency, return true. ', $availableBudgets));
 
             return 'available_budgets';
         }
@@ -136,7 +136,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         // is being used in budget limits
         $budgetLimit      = BudgetLimit::where('transaction_currency_id', $currency->id)->count();
         if ($budgetLimit > 0) {
-            app('log')->info(sprintf('Used in %d budget limits as currency, return true. ', $budgetLimit));
+            Log::info(sprintf('Used in %d budget limits as currency, return true. ', $budgetLimit));
 
             return 'budget_limits';
         }
@@ -144,7 +144,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         // is the default currency for the user or the system
         $count            = $this->userGroup->currencies()->where('transaction_currencies.id', $currency->id)->wherePivot('group_default', 1)->count();
         if ($count > 0) {
-            app('log')->info('Is the default currency of the user, return true.');
+            Log::info('Is the default currency of the user, return true.');
 
             return 'current_default';
         }
@@ -152,12 +152,12 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         // is the default currency for the user or the system
         $count            = $this->userGroup->currencies()->where('transaction_currencies.id', $currency->id)->wherePivot('group_default', 1)->count();
         if ($count > 0) {
-            app('log')->info('Is the default currency of the user group, return true.');
+            Log::info('Is the default currency of the user group, return true.');
 
             return 'current_default';
         }
 
-        app('log')->debug('Currency is not used, return false.');
+        Log::debug('Currency is not used, return false.');
 
         return null;
     }
@@ -240,15 +240,15 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         $result = $this->findCurrencyNull($currencyId, $currencyCode);
 
         if (null === $result) {
-            app('log')->debug('Grabbing default currency for this user...');
+            Log::debug('Grabbing default currency for this user...');
 
             /** @var null|TransactionCurrency $result */
             $result = app('amount')->getNativeCurrencyByUserGroup($this->user->userGroup);
         }
 
-        app('log')->debug(sprintf('Final result: %s', $result->code));
+        Log::debug(sprintf('Final result: %s', $result->code));
         if (false === $result->enabled) {
-            app('log')->debug(sprintf('Also enabled currency %s', $result->code));
+            Log::debug(sprintf('Also enabled currency %s', $result->code));
             $this->enable($result);
         }
 
@@ -260,14 +260,14 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      */
     public function findCurrencyNull(?int $currencyId, ?string $currencyCode): ?TransactionCurrency
     {
-        app('log')->debug('Now in findCurrencyNull()');
+        Log::debug(sprintf('Now in findCurrencyNull("%s", "%s")', $currencyId, $currencyCode));
         $result = $this->find((int) $currencyId);
         if (null === $result) {
-            app('log')->debug(sprintf('Searching for currency with code %s...', $currencyCode));
+            Log::debug(sprintf('Searching for currency with code "%s"...', $currencyCode));
             $result = $this->findByCode((string) $currencyCode);
         }
         if (null !== $result && false === $result->enabled) {
-            app('log')->debug(sprintf('Also enabled currency %s', $result->code));
+            Log::debug(sprintf('Also enabled currency %s', $result->code));
             $this->enable($result);
         }
 
@@ -335,7 +335,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
 
     public function update(TransactionCurrency $currency, array $data): TransactionCurrency
     {
-        app('log')->debug('Now in update()');
+        Log::debug('Now in update()');
         // can be true, false, null
         $enabled = array_key_exists('enabled', $data) ? $data['enabled'] : null;
         // can be true, false, but method only responds to "true".
@@ -351,12 +351,12 @@ class CurrencyRepository implements CurrencyRepositoryInterface
 
         // currency is enabled, must be disabled.
         if (false === $enabled) {
-            app('log')->debug(sprintf('Disabled currency %s for user #%d', $currency->code, $this->userGroup->id));
+            Log::debug(sprintf('Disabled currency %s for user #%d', $currency->code, $this->userGroup->id));
             $this->userGroup->currencies()->detach($currency->id);
         }
         // currency must be enabled
         if (true === $enabled) {
-            app('log')->debug(sprintf('Enabled currency %s for user #%d', $currency->code, $this->userGroup->id));
+            Log::debug(sprintf('Enabled currency %s for user #%d', $currency->code, $this->userGroup->id));
             $this->userGroup->currencies()->detach($currency->id);
             $this->userGroup->currencies()->syncWithoutDetaching([$currency->id => ['group_default' => false]]);
         }
@@ -375,7 +375,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     public function makeDefault(TransactionCurrency $currency): void
     {
         $current = app('amount')->getNativeCurrencyByUserGroup($this->userGroup);
-        app('log')->debug(sprintf('Enabled + made default currency %s for user #%d', $currency->code, $this->userGroup->id));
+        Log::debug(sprintf('Enabled + made default currency %s for user #%d', $currency->code, $this->userGroup->id));
         $this->userGroup->currencies()->detach($currency->id);
         foreach ($this->userGroup->currencies()->get() as $item) {
             $this->userGroup->currencies()->updateExistingPivot($item->id, ['group_default' => false]);

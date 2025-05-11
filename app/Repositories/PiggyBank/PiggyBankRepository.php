@@ -82,7 +82,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
                 return $searchResult;
             }
         }
-        app('log')->debug('Found nothing');
+        app('log')->debug('Found no piggy bank.');
 
         return null;
     }
