@@ -163,7 +163,9 @@ class IndexController extends Controller
 
         /** @var Carbon $end */
         $end           = clone session('end', today(config('app.timezone'))->endOfMonth());
-        $start->subDay();
+
+        // 2025-05-11 removed this so start is exactly the start of the month.
+        // $start->subDay();
 
         $ids           = $accounts->pluck('id')->toArray();
         Log::debug(sprintf('index start: finalAccountsBalance("%s")', $start->format('Y-m-d H:i:s')));
