@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Correction;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -37,8 +38,8 @@ class CorrectsUnevenAmount extends Command
 {
     use ShowsFriendlyMessages;
 
-    protected $description = 'Fix journals with uneven amounts.';
-    protected $signature   = 'correction:uneven-amounts';
+    protected   $description = 'Fix journals with uneven amounts.';
+    protected   $signature   = 'correction:uneven-amounts';
     private int $count;
 
     /**
@@ -47,7 +48,10 @@ class CorrectsUnevenAmount extends Command
     public function handle(): int
     {
         $this->count = 0;
+        // convert transfers with foreign currency info where the amount is NOT uneven (it should be)
         $this->convertOldStyleTransfers();
+
+
         $this->fixUnevenAmounts();
         $this->matchCurrencies();
         if (true === config('firefly.feature_flags.running_balance_column')) {
@@ -64,12 +68,11 @@ class CorrectsUnevenAmount extends Command
         Log::debug('convertOldStyleTransfers()');
         // select transactions with a foreign amount and a foreign currency. and it's a transfer. and they are different.
         $transactions = Transaction::distinct()
-            ->leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
-            ->leftJoin('transaction_types', 'transaction_types.id', 'transaction_journals.transaction_type_id')
-            ->where('transaction_types.type', TransactionTypeEnum::TRANSFER->value)
-            ->whereNotNull('foreign_currency_id')
-            ->whereNotNull('foreign_amount')->get(['transactions.transaction_journal_id'])
-        ;
+                                   ->leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
+                                   ->leftJoin('transaction_types', 'transaction_types.id', 'transaction_journals.transaction_type_id')
+                                   ->where('transaction_types.type', TransactionTypeEnum::TRANSFER->value)
+                                   ->whereNotNull('foreign_currency_id')
+                                   ->whereNotNull('foreign_amount')->get(['transactions.transaction_journal_id']);
         $count        = 0;
 
         Log::debug(sprintf('Found %d potential journal(s)', $transactions->count()));
@@ -77,7 +80,7 @@ class CorrectsUnevenAmount extends Command
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
             /** @var null|TransactionJournal $journal */
-            $journal     = TransactionJournal::find($transaction->transaction_journal_id);
+            $journal = TransactionJournal::find($transaction->transaction_journal_id);
             if (null === $journal) {
                 Log::debug('Found no journal, continue.');
 
@@ -94,7 +97,7 @@ class CorrectsUnevenAmount extends Command
             $destination = $journal->transactions()->where('amount', '>', 0)->first();
 
             /** @var null|Transaction $source */
-            $source      = $journal->transactions()->where('amount', '<', 0)->first();
+            $source = $journal->transactions()->where('amount', '<', 0)->first();
             if (null === $destination || null === $source) {
                 Log::debug('Source or destination transaction is NULL, continue.');
 
@@ -119,11 +122,11 @@ class CorrectsUnevenAmount extends Command
 
     private function fixUnevenAmounts(): void
     {
+        Log::debug('fixUnevenAmounts()');
         $journals = DB::table('transactions')
-            ->groupBy('transaction_journal_id')
-            ->whereNull('deleted_at')
-            ->get(['transaction_journal_id', DB::raw('SUM(amount) AS the_sum')])
-        ;
+                      ->groupBy('transaction_journal_id')
+                      ->whereNull('deleted_at')
+                      ->get(['transaction_journal_id', DB::raw('SUM(amount) AS the_sum')]);
 
         /** @var \stdClass $entry */
         foreach ($journals as $entry) {
@@ -161,13 +164,13 @@ class CorrectsUnevenAmount extends Command
     private function fixJournal(int $param): void
     {
         // one of the transactions is bad.
-        $journal             = TransactionJournal::find($param);
+        $journal = TransactionJournal::find($param);
         if (null === $journal) {
             return;
         }
 
         /** @var null|Transaction $source */
-        $source              = $journal->transactions()->where('amount', '<', 0)->first();
+        $source = $journal->transactions()->where('amount', '<', 0)->first();
 
         if (null === $source) {
             $this->friendlyError(
@@ -184,11 +187,11 @@ class CorrectsUnevenAmount extends Command
             return;
         }
 
-        $amount              = bcmul('-1', (string) $source->amount);
+        $amount = bcmul('-1', (string) $source->amount);
 
         // fix amount of destination:
         /** @var null|Transaction $destination */
-        $destination         = $journal->transactions()->where('amount', '>', 0)->first();
+        $destination = $journal->transactions()->where('amount', '>', 0)->first();
 
         if (null === $destination) {
             $this->friendlyError(
@@ -207,13 +210,13 @@ class CorrectsUnevenAmount extends Command
         }
 
         // may still be able to salvage this journal if it is a transfer with foreign currency info
-        if ($this->isForeignCurrencyTransfer($journal)) {
+        if ($this->isForeignCurrencyTransfer($journal) || $this->isBetweenAssetAndLiability($journal)) {
             Log::debug(sprintf('Can skip foreign currency transfer #%d.', $journal->id));
 
             return;
         }
 
-        $message             = sprintf('Sum of journal #%d is not zero, journal is broken and now fixed.', $journal->id);
+        $message = sprintf('Sum of journal #%d is not zero, journal is broken and now fixed.', $journal->id);
 
         $this->friendlyWarning($message);
         app('log')->warning($message);
@@ -221,7 +224,7 @@ class CorrectsUnevenAmount extends Command
         $destination->amount = $amount;
         $destination->save();
 
-        $message             = sprintf('Corrected amount in transaction journal #%d', $param);
+        $message = sprintf('Corrected amount in transaction journal #%d', $param);
         $this->friendlyInfo($message);
         ++$this->count;
     }
@@ -236,7 +239,7 @@ class CorrectsUnevenAmount extends Command
         $destination = $journal->transactions()->where('amount', '>', 0)->first();
 
         /** @var Transaction $source */
-        $source      = $journal->transactions()->where('amount', '<', 0)->first();
+        $source = $journal->transactions()->where('amount', '<', 0)->first();
 
         // safety catch on NULL should not be necessary, we just had that catch.
         // source amount = dest foreign amount
@@ -263,11 +266,10 @@ class CorrectsUnevenAmount extends Command
     private function matchCurrencies(): void
     {
         $journals = TransactionJournal::leftJoin('transactions', 'transaction_journals.id', 'transactions.transaction_journal_id')
-            ->where('transactions.transaction_currency_id', '!=', DB::raw('transaction_journals.transaction_currency_id'))
-            ->get(['transaction_journals.*'])
-        ;
+                                      ->where('transactions.transaction_currency_id', '!=', DB::raw('transaction_journals.transaction_currency_id'))
+                                      ->get(['transaction_journals.*']);
 
-        $count    = 0;
+        $count = 0;
 
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
@@ -284,5 +286,43 @@ class CorrectsUnevenAmount extends Command
         }
 
         $this->friendlyPositive(sprintf('Fixed %d journal(s) with mismatched currencies.', $journals->count()));
+    }
+
+    private function isBetweenAssetAndLiability(TransactionJournal $journal): bool
+    {
+        /** @var Transaction $sourceTransaction */
+        $sourceTransaction = $journal->transactions()->where('amount', '<', 0)->first();
+        /** @var Transaction $destinationTransaction */
+        $destinationTransaction = $journal->transactions()->where('amount', '>', 0)->first();
+        if (null === $sourceTransaction || null === $destinationTransaction) {
+            Log::warning('Either transaction is false, stop.');
+            return false;
+        }
+        if (null === $sourceTransaction->foreign_amount || null === $destinationTransaction->foreign_amount) {
+            Log::warning('Either foreign amount is false, stop.');
+            return false;
+        }
+
+        $source      = $sourceTransaction->account;
+        $destination = $destinationTransaction->account;
+
+        if (null === $source || null === $destination) {
+            Log::warning('Either is false, stop.');
+            return false;
+        }
+        $sourceTypes = [AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value];
+
+        // source is liability, destination is asset
+        if (in_array($source->accountType->type, $sourceTypes, true) && AccountTypeEnum::ASSET->value === $destination->accountType->type) {
+            Log::debug('Source is a liability account, destination is an asset account, return TRUE.');
+            return true;
+        }
+        // source is asset, destination is liability
+        if (in_array($destination->accountType->type, $sourceTypes, true) && AccountTypeEnum::ASSET->value === $source->accountType->type) {
+            Log::debug('Destination is a liability account, source is an asset account, return TRUE.');
+            return true;
+        }
+        Log::debug('Not between asset and liability, return FALSE');
+        return false;
     }
 }
