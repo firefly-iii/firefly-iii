@@ -40,7 +40,7 @@ class UpgradesDatabase extends Command
 {
     use ShowsFriendlyMessages;
 
-    protected $description = 'Upgrades the database to the latest version.';
+    protected $description   = 'Upgrades the database to the latest version.';
     protected $signature   = 'firefly-iii:upgrade-database {--F|force : Force all upgrades.}';
 
     /**
