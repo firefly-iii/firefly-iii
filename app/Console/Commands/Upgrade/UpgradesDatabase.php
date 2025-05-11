@@ -28,7 +28,7 @@ use Illuminate\Support\Facades\Log;
 use Safe\Exceptions\InfoException;
 
 try {
-    set_time_limit(0);
+    \Safe\set_time_limit(0);
 } catch (InfoException) {
     Log::warning('set_time_limit returned false. This could be an issue, unless you also run XDebug.');
 }

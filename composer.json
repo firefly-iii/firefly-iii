@@ -107,7 +107,8 @@
         "spatie/period": "^2.4",
         "symfony/expression-language": "^7.0",
         "symfony/http-client": "^7.1",
-        "symfony/mailgun-mailer": "^7.1"
+        "symfony/mailgun-mailer": "^7.1",
+        "thecodingmachine/safe": "^3.1"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.9",

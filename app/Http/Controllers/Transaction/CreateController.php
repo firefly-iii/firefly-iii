@@ -116,7 +116,7 @@ class CreateController extends Controller
         $accountToTypes             = config('firefly.account_to_transaction');
         $defaultCurrency            = $this->defaultCurrency;
         $previousUrl                = $this->rememberPreviousUrl('transactions.create.url');
-        $parts                      = parse_url($previousUrl);
+        $parts                      = \Safe\parse_url($previousUrl);
         $search                     = sprintf('?%s', $parts['query'] ?? '');
         $previousUrl                = str_replace($search, '', $previousUrl);
         if (!is_array($optionalFields)) {

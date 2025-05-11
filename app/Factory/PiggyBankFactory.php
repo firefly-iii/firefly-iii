@@ -284,7 +284,7 @@ class PiggyBankFactory
                 Log::debug(sprintf('Will link account #%d with info: ', $account->id), $toBeLinked[$account->id]);
             }
         }
-        Log::debug(sprintf('Link information: %s', json_encode($toBeLinked)));
+        Log::debug(sprintf('Link information: %s', \Safe\json_encode($toBeLinked)));
         if (0 !== count($toBeLinked)) {
             $piggyBank->accounts()->sync($toBeLinked);
         }

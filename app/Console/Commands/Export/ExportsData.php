@@ -283,7 +283,7 @@ class ExportsData extends Command
                 $this->friendlyWarning(sprintf('File "%s" exists already but will be replaced.', $file));
             }
             // continue to write to file.
-            file_put_contents($file, $content);
+            \Safe\file_put_contents($file, $content);
             $this->friendlyPositive(sprintf('Wrote %s-export to file "%s".', $key, $file));
         }
     }

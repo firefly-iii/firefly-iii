@@ -81,7 +81,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         }
 
         // is being used in accounts:
-        $meta             = AccountMeta::where('name', 'currency_id')->where('data', json_encode((string) $currency->id))->count();
+        $meta             = AccountMeta::where('name', 'currency_id')->where('data', \Safe\json_encode((string) $currency->id))->count();
         if ($meta > 0) {
             Log::info(sprintf('Used in %d accounts as currency_id, return true. ', $meta));
 
@@ -89,7 +89,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         }
 
         // second search using integer check.
-        $meta             = AccountMeta::where('name', 'currency_id')->where('data', json_encode((int) $currency->id))->count();
+        $meta             = AccountMeta::where('name', 'currency_id')->where('data', \Safe\json_encode((int) $currency->id))->count();
         if ($meta > 0) {
             Log::info(sprintf('Used in %d accounts as currency_id, return true. ', $meta));
 
@@ -117,7 +117,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         // is being used in accounts (as integer)
         $meta             = AccountMeta::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
             ->whereNull('accounts.deleted_at')
-            ->where('account_meta.name', 'currency_id')->where('account_meta.data', json_encode($currency->id))->count()
+            ->where('account_meta.name', 'currency_id')->where('account_meta.data', \Safe\json_encode($currency->id))->count()
         ;
         if ($meta > 0) {
             Log::info(sprintf('Used in %d accounts as currency_id, return true. ', $meta));

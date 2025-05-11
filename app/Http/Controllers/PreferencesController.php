@@ -149,7 +149,7 @@ class PreferencesController extends Controller
         // list of locales also has "equal" which makes it equal to whatever the language is.
 
         try {
-            $locales = json_decode((string) file_get_contents(resource_path(sprintf('locales/%s/locales.json', $language))), true, 512, JSON_THROW_ON_ERROR);
+            $locales = \Safe\json_decode((string) \Safe\file_get_contents(resource_path(sprintf('locales/%s/locales.json', $language))), true, 512, JSON_THROW_ON_ERROR);
         } catch (\JsonException $e) {
             app('log')->error($e->getMessage());
             $locales = [];
@@ -271,7 +271,7 @@ class PreferencesController extends Controller
 
         // custom fiscal year
         $customFiscalYear  = 1 === (int) $request->get('customFiscalYear');
-        $string            = strtotime((string) $request->get('fiscalYearStart'));
+        $string            = \Safe\strtotime((string) $request->get('fiscalYearStart'));
         if (false !== $string) {
             $fiscalYearStart = date('m-d', $string);
             Preferences::set('customFiscalYear', $customFiscalYear);
