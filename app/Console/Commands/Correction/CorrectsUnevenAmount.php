@@ -211,7 +211,7 @@ class CorrectsUnevenAmount extends Command
 
         // may still be able to salvage this journal if it is a transfer with foreign currency info
         if ($this->isForeignCurrencyTransfer($journal) || $this->isBetweenAssetAndLiability($journal)) {
-            Log::debug(sprintf('Can skip foreign currency transfer #%d.', $journal->id));
+            Log::debug(sprintf('Can skip foreign currency transfer / asset+liability transaction #%d.', $journal->id));
 
             return;
         }
