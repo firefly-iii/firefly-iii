@@ -77,8 +77,6 @@ class CorrectsUnevenAmount extends Command
                                    ->whereNotNull('foreign_amount')->get(['transactions.transaction_journal_id']);
         $count        = 0;
 
-        Log::debug(sprintf('Found %d potential journal(s)', $transactions->count()));
-
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
             /** @var null|TransactionJournal $journal */
@@ -120,6 +118,10 @@ class CorrectsUnevenAmount extends Command
                 ++$count;
             }
         }
+        if (0 === $count) {
+            return;
+        }
+        $this->friendlyPositive(sprintf('Fixed %d transfer(s) with unbalanced amounts.', $count));
     }
 
     private function fixUnevenAmounts(): void
@@ -343,8 +345,6 @@ class CorrectsUnevenAmount extends Command
                                    ->whereIn('account_types.type', [AccountTypeEnum::ASSET->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::LOAN->value])
                                    ->get(['transactions.transaction_journal_id']);
 
-        Log::debug(sprintf('Found %d potential journal(s)', $transactions->count()));
-
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
             /** @var null|TransactionJournal $journal */
@@ -359,7 +359,6 @@ class CorrectsUnevenAmount extends Command
 
                 continue;
             }
-            Log::debug(sprintf('Potential fix for #%d', $journal->id));
             $source      = $journal->transactions()->where('amount', '<', 0)->first();
             $destination = $journal->transactions()->where('amount', '>', 0)->first();
             if (null === $source || null === $destination) {
