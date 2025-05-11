@@ -29,6 +29,7 @@ use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Models\AccountBalanceCalculator;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -277,13 +278,13 @@ class CorrectsUnevenAmount extends Command
 
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
-            if (!$this->isForeignCurrencyTransfer($journal)) {
+            if (!$this->isForeignCurrencyTransfer($journal) && !$this->isBetweenAssetAndLiability($journal)) {
                 Transaction::where('transaction_journal_id', $journal->id)->update(['transaction_currency_id' => $journal->transaction_currency_id]);
                 ++$count;
 
                 continue;
             }
-            Log::debug(sprintf('Can skip foreign currency transfer #%d.', $journal->id));
+            Log::debug(sprintf('Can skip foreign currency transfer or transaction between asset and liability #%d.', $journal->id));
         }
         if (0 === $count) {
             return;
@@ -331,6 +332,9 @@ class CorrectsUnevenAmount extends Command
 
     private function convertOldStyleTransactions(): void
     {
+
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
         Log::debug('convertOldStyleTransactions()');
         $count        = 0;
         $transactions = Transaction::distinct()
@@ -348,6 +352,7 @@ class CorrectsUnevenAmount extends Command
         foreach ($transactions as $transaction) {
             /** @var null|TransactionJournal $journal */
             $journal = TransactionJournal::find($transaction->transaction_journal_id);
+            $repository->setUser($journal->user);
             if (null === $journal) {
                 Log::debug('Found no journal, continue.');
 
@@ -358,10 +363,12 @@ class CorrectsUnevenAmount extends Command
 
                 continue;
             }
-            $source      = $journal->transactions()->where('amount', '<', 0)->first();
-            $destination = $journal->transactions()->where('amount', '>', 0)->first();
-            $sourceAccount = $source->account;
-            $destAccount   = $destination->account;
+            $source         = $journal->transactions()->where('amount', '<', 0)->first();
+            $destination    = $journal->transactions()->where('amount', '>', 0)->first();
+            $sourceAccount  = $source->account;
+            $destAccount    = $destination->account;
+            $sourceCurrency = $repository->getAccountCurrency($sourceAccount);
+            $destCurrency   = $repository->getAccountCurrency($destAccount);
             if (null === $source || null === $destination) {
                 Log::debug('Either transaction is NULL, continue.');
 
@@ -372,7 +379,45 @@ class CorrectsUnevenAmount extends Command
 
                 continue;
             }
-            Log::debug('Ready to swap data between transactions.');
+            // source transaction. Switch info when does not match.
+            if ((int) $source->transaction_currency_id !== (int) $sourceCurrency->id) {
+                Log::debug(sprintf('Ready to swap data in transaction #%d.', $source->id));
+                // swap amounts.
+                $amount                          = $source->amount;
+                $currency                        = $source->transaction_currency_id;
+                $source->amount                  = $source->foreign_amount;
+                $source->transaction_currency_id = $source->foreign_currency_id;
+                $source->foreign_amount          = $amount;
+                $source->foreign_currency_id     = $currency;
+                $source->saveQuietly();
+                $source->refresh();
+//                Log::debug(sprintf('source->amount                  = %s', $source->amount));
+//                Log::debug(sprintf('source->transaction_currency_id = %s', $source->transaction_currency_id));
+//                Log::debug(sprintf('source->foreign_amount          = %s', $source->foreign_amount));
+//                Log::debug(sprintf('source->foreign_currency_id     = %s', $source->foreign_currency_id));
+                ++$count;
+            }
+            // same but for destination
+            if ((int) $destination->transaction_currency_id !== (int) $destCurrency->id) {
+                ++$count;
+                Log::debug(sprintf('Ready to swap data in transaction #%d.', $destination->id));
+                // swap amounts.
+                $amount                               = $destination->amount;
+                $currency                             = $destination->transaction_currency_id;
+                $destination->amount                  = $destination->foreign_amount;
+                $destination->transaction_currency_id = $destination->foreign_currency_id;
+                $destination->foreign_amount          = $amount;
+                $destination->foreign_currency_id     = $currency;
+                $destination->balance_dirty           = true;
+                $destination->saveQuietly();
+                $destination->refresh();
+//                Log::debug(sprintf('destination->amount                  = %s', $destination->amount));
+//                Log::debug(sprintf('destination->transaction_currency_id = %s', $destination->transaction_currency_id));
+//                Log::debug(sprintf('destination->foreign_amount          = %s', $destination->foreign_amount));
+//                Log::debug(sprintf('destination->foreign_currency_id     = %s', $destination->foreign_currency_id));
+            }
+
+
 //            // only fix the destination transaction
 //            $destination->foreign_currency_id     = $source->transaction_currency_id;
 //            $destination->foreign_amount          = app('steam')->positive($source->amount);
@@ -383,7 +428,6 @@ class CorrectsUnevenAmount extends Command
 //            $destination->save();
 //            $source->save();
 //            $this->friendlyWarning(sprintf('Corrected foreign amounts of transaction #%d.', $journal->id));
-            ++$count;
         }
         if (0 === $count) {
             return;
