@@ -34,7 +34,7 @@ trait ValidatesBulkTransactionQuery
         $data  = $validator->getData();
         // assumption is all validation has already taken place and the query key exists.
         $query = $data['query'] ?? '[]';
-        $json  = \Safe\json_decode($query, true, 8, JSON_THROW_ON_ERROR);
+        $json  = json_decode($query, true, 8, JSON_THROW_ON_ERROR);
 
         if (
             array_key_exists('where', $json)

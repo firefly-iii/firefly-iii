@@ -91,7 +91,7 @@ class IndexController extends Controller
         $generator->setStart($firstDate);
         $result    = $generator->export();
 
-        $name      = sprintf('%s_transaction_export.csv', \Safe\date('Y_m_d'));
+        $name      = sprintf('%s_transaction_export.csv', date('Y_m_d'));
         $quoted    = sprintf('"%s"', addcslashes($name, '"\\'));
 
         // headers for CSV file.

@@ -46,7 +46,7 @@ class MailError extends Job implements ShouldQueue
         $debug = $this->exception;
         unset($debug['stackTrace'], $debug['headers']);
 
-        app('log')->error(sprintf('Exception is: %s', \Safe\json_encode($debug)));
+        app('log')->error(sprintf('Exception is: %s', json_encode($debug)));
     }
 
     /**
@@ -117,11 +117,11 @@ class MailError extends Job implements ShouldQueue
 
         if (!file_exists($file)) {
             Log::debug(sprintf('Wrote new file in "%s"', $file));
-            \Safe\file_put_contents($file, \Safe\json_encode($limits, JSON_PRETTY_PRINT));
+            file_put_contents($file, json_encode($limits, JSON_PRETTY_PRINT));
         }
         if (file_exists($file)) {
             Log::debug(sprintf('Read file in "%s"', $file));
-            $limits = \Safe\json_decode((string) \Safe\file_get_contents($file), true);
+            $limits = json_decode((string) file_get_contents($file), true);
         }
         // limit reached?
         foreach ($types as $type => $info) {
@@ -149,7 +149,7 @@ class MailError extends Job implements ShouldQueue
             }
             ++$limits[$type]['sent'];
         }
-        \Safe\file_put_contents($file, \Safe\json_encode($limits, JSON_PRETTY_PRINT));
+        file_put_contents($file, json_encode($limits, JSON_PRETTY_PRINT));
         Log::debug('No limits reached, return FALSE.');
 
         return false;

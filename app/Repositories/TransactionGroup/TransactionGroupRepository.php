@@ -304,7 +304,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
         $return = [];
 
         foreach ($query as $row) {
-            $return[$row->name] = new Carbon(\Safe\json_decode($row->data, true, 512, JSON_THROW_ON_ERROR));
+            $return[$row->name] = new Carbon(json_decode($row->data, true, 512, JSON_THROW_ON_ERROR));
         }
 
         return new NullArrayObject($return);
@@ -324,7 +324,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
         $return = [];
 
         foreach ($query as $row) {
-            $return[$row->name] = \Safe\json_decode($row->data);
+            $return[$row->name] = json_decode($row->data);
         }
 
         return new NullArrayObject($return);

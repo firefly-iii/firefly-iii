@@ -52,7 +52,7 @@ class TransactionJournalMeta extends Model
      */
     public function getDataAttribute($value)
     {
-        return \Safe\json_decode($value, false);
+        return json_decode($value, false);
     }
 
     /**
@@ -60,7 +60,7 @@ class TransactionJournalMeta extends Model
      */
     public function setDataAttribute($value): void
     {
-        $data                     = \Safe\json_encode($value);
+        $data                     = json_encode($value);
         $this->attributes['data'] = $data;
         $this->attributes['hash'] = hash('sha256', (string) $data);
     }

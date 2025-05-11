@@ -85,7 +85,7 @@ class EditController extends Controller
         $defaultCurrency            = $this->defaultCurrency;
         $cash                       = $repository->getCashAccount();
         $previousUrl                = $this->rememberPreviousUrl('transactions.edit.url');
-        $parts                      = \Safe\parse_url($previousUrl);
+        $parts                      = parse_url($previousUrl);
         $search                     = sprintf('?%s', $parts['query'] ?? '');
         $previousUrl                = str_replace($search, '', $previousUrl);
 

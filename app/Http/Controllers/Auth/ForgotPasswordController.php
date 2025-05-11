@@ -101,7 +101,7 @@ class ForgotPasswordController extends Controller
      */
     private function validateHost(): void
     {
-        $configuredHost = \Safe\parse_url((string) config('app.url'), PHP_URL_HOST);
+        $configuredHost = parse_url((string) config('app.url'), PHP_URL_HOST);
         if (false === $configuredHost || null === $configuredHost) {
             throw new FireflyException('Please set a valid and correct Firefly III URL in the APP_URL environment variable.');
         }
