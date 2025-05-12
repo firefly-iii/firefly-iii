@@ -55,9 +55,9 @@ var edit_selected_txt = "{{ trans('firefly.mass_edit')|escape('js') }}";
 var edit_bulk_selected_txt = "{{ trans('firefly.bulk_edit')|escape('js') }}";
 var delete_selected_txt = "{{ trans('firefly.mass_delete')|escape('js') }}";
 
-var mass_edit_url   = '{{ route('transactions.mass.edit', ['0']) }}';
-var bulk_edit_url   = '{{ route('transactions.bulk.edit', ['0']) }}';
-var mass_delete_url = '{{ route('transactions.mass.delete', ['0']) }}';
+var mass_edit_url   = '{{ route('transactions.mass.edit', ['']) }}';
+var bulk_edit_url   = '{{ route('transactions.bulk.edit', ['']) }}';
+var mass_delete_url = '{{ route('transactions.mass.delete', ['']) }}';
 
 // for demo:
 var nextLabel = "{{ trans('firefly.intro_next_label')|escape('js') }}";
