@@ -476,7 +476,7 @@ class TransactionJournalFactory
      */
     private function getCurrency(?TransactionCurrency $currency, Account $account): TransactionCurrency
     {
-        Log::debug(sprintf('Now in getCurrency(#%d, "%s")', $currency->id, $account->name));
+        Log::debug(sprintf('Now in getCurrency(#%d, "%s")', $currency?->id, $account->name));
 
         /** @var null|TransactionCurrency $preference */
         $preference = $this->accountRepository->getAccountCurrency($account);
