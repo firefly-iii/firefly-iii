@@ -474,9 +474,7 @@ class TransactionJournalFactory
     /**
      * @throws FireflyException
      */
-
-    
-    private function getCurrency(?TransactionCurrency $currency,    Account $account): TransactionCurrency
+    private function getCurrency(?TransactionCurrency $currency, Account $account): TransactionCurrency
     {
         Log::debug(sprintf('Now in getCurrency(#%d, "%s")', $currency?->id, $account->name));
 
