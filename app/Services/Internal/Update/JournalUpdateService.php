@@ -27,6 +27,7 @@ namespace FireflyIII\Services\Internal\Update;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use Carbon\Exceptions\InvalidFormatException;
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Exceptions\FireflyException;
@@ -723,14 +724,17 @@ class JournalUpdateService
             // the correct fields to update in the destination transaction are NOT the foreign amount and currency
             // but rather the normal amount and currency. This is new behavior.
             $isTransfer                  = TransactionTypeEnum::TRANSFER->value === $this->transactionJournal->transactionType->type;
-            if ($isTransfer) {
+            // also check if it is not between an asset account and a liability, because then the same rule applies.
+            $isBetween = $this->isBetweenAssetAndLiability();
+
+            if ($isTransfer || $isBetween) {
                 Log::debug('Switch amounts, store in amount and not foreign_amount');
                 $dest->transaction_currency_id = $foreignCurrency->id;
                 $dest->amount                  = app('steam')->positive($foreignAmount);
                 $dest->foreign_amount          = app('steam')->positive($source->amount);
                 $dest->foreign_currency_id     = $source->transaction_currency_id;
             }
-            if (!$isTransfer) {
+            if (!$isTransfer && !$isBetween) {
                 $dest->foreign_currency_id = $foreignCurrency->id;
                 $dest->foreign_amount      = app('steam')->positive($foreignAmount);
             }
@@ -767,5 +771,48 @@ class JournalUpdateService
         // refresh transactions.
         $this->sourceTransaction->refresh();
         $this->destinationTransaction->refresh();
+    }
+    private function isBetweenAssetAndLiability(): bool
+    {
+        /** @var Transaction $sourceTransaction */
+        $sourceTransaction      = $this->transactionJournal->transactions()->where('amount', '<', 0)->first();
+
+        /** @var Transaction $destinationTransaction */
+        $destinationTransaction = $this->transactionJournal->transactions()->where('amount', '>', 0)->first();
+        if (null === $sourceTransaction || null === $destinationTransaction) {
+            Log::warning('Either transaction is false, stop.');
+
+            return false;
+        }
+        if (null === $sourceTransaction->foreign_amount || null === $destinationTransaction->foreign_amount) {
+            Log::warning('Either foreign amount is false, stop.');
+
+            return false;
+        }
+
+        $source                 = $sourceTransaction->account;
+        $destination            = $destinationTransaction->account;
+
+        if (null === $source || null === $destination) {
+            Log::warning('Either is false, stop.');
+
+            return false;
+        }
+        $sourceTypes            = [AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value];
+
+        // source is liability, destination is asset
+        if (in_array($source->accountType->type, $sourceTypes, true) && AccountTypeEnum::ASSET->value === $destination->accountType->type) {
+            Log::debug('Source is a liability account, destination is an asset account, return TRUE.');
+
+            return true;
+        }
+        // source is asset, destination is liability
+        if (in_array($destination->accountType->type, $sourceTypes, true) && AccountTypeEnum::ASSET->value === $source->accountType->type) {
+            Log::debug('Destination is a liability account, source is an asset account, return TRUE.');
+
+            return true;
+        }
+
+        return false;
     }
 }
