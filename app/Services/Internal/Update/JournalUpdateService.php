@@ -725,7 +725,7 @@ class JournalUpdateService
             // but rather the normal amount and currency. This is new behavior.
             $isTransfer                  = TransactionTypeEnum::TRANSFER->value === $this->transactionJournal->transactionType->type;
             // also check if it is not between an asset account and a liability, because then the same rule applies.
-            $isBetween = $this->isBetweenAssetAndLiability();
+            $isBetween                   = $this->isBetweenAssetAndLiability();
 
             if ($isTransfer || $isBetween) {
                 Log::debug('Switch amounts, store in amount and not foreign_amount');
@@ -772,6 +772,7 @@ class JournalUpdateService
         $this->sourceTransaction->refresh();
         $this->destinationTransaction->refresh();
     }
+
     private function isBetweenAssetAndLiability(): bool
     {
         /** @var Transaction $sourceTransaction */
