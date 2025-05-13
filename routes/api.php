@@ -840,7 +840,7 @@ Route::group(
         Route::get('default', ['uses' => 'ShowController@showDefault', 'as' => 'show.default']);
         Route::get('native', ['uses' => 'ShowController@showDefault', 'as' => 'show.native']);
         Route::get('{currency_code}', ['uses' => 'ShowController@show', 'as' => 'show']);
-        Route::put('{currency_code}', ['uses' => 'UpdateController@update', 'as' => 'update']);
+        Route::put('{currency_code?}', ['uses' => 'UpdateController@update', 'as' => 'update']);
         Route::delete('{currency_code}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
 
         Route::post('{currency_code}/enable', ['uses' => 'UpdateController@enable', 'as' => 'enable']);
