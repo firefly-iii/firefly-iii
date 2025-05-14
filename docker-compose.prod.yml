@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  app:
+    image: fireflyiii/core:latest
+    container_name: fireflyiii-app-prod
+    restart: unless-stopped
+    env_file:
+      - .env.prod
+    volumes:
+      - fireflyiii_upload_prod:/var/www/html/storage/upload
+      - fireflyiii_export_prod:/var/www/html/storage/export
+    depends_on:
+      - db
+      - cache
+    networks:
+      - fireflyiii_network_prod
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.fireflyiii-prod.rule=Host(`fireflyiii.yourdomain.com`)"
+      - "traefik.http.services.fireflyiii-prod.loadbalancer.server.port=8080"
+
+  db:
+    image: mariadb:10.8
+    container_name: fireflyiii-db-prod
+    restart: unless-stopped
+    env_file:
+      - .env.prod
+    volumes:
+      - fireflyiii_db_prod:/var/lib/mysql
+    networks:
+      - fireflyiii_network_prod
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  cache:
+    image: redis:alpine
+    container_name: fireflyiii-cache-prod
+    restart: unless-stopped
+    networks:
+      - fireflyiii_network_prod
+
+networks:
+  fireflyiii_network_prod:
+    name: fireflyiii_network_prod
+
+volumes:
+  fireflyiii_upload_prod:
+  fireflyiii_export_prod:
+  fireflyiii_db_prod: 

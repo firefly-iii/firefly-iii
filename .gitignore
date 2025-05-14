@@ -28,3 +28,10 @@ public/v1/js/webhooks
 resources/assets/v2/node_modules
 resources/assets/v2/build
 public/v2/i18n
+
+# Docker specific
+.env.dev
+.env.prod
+docker-compose.override.yml
+*.env
+!.env.*.template
