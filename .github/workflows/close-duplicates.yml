@@ -13,7 +13,7 @@ jobs:
   close_duplicates:
     runs-on: ubuntu-latest
     steps:
-      - uses: github/command@v2.0.0
+      - uses: github/command@v2.0.1
         id: command
         with:
           allowed_contexts: "issue"
