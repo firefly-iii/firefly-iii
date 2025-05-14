@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4ac1fa9e94ed4eef76cda81afe72d054",
+    "content-hash": "404a3c73aa12057d75eaf3fb298d9a82",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1879,16 +1879,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v12.13.0",
+            "version": "v12.14.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "52b588bcd8efc6d01bc1493d2d67848f8065f269"
+                "reference": "84b142958d1638a7e89de94ce75c2821c601d3d7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/52b588bcd8efc6d01bc1493d2d67848f8065f269",
-                "reference": "52b588bcd8efc6d01bc1493d2d67848f8065f269",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/84b142958d1638a7e89de94ce75c2821c601d3d7",
+                "reference": "84b142958d1638a7e89de94ce75c2821c601d3d7",
                 "shasum": ""
             },
             "require": {
@@ -2090,47 +2090,48 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2025-05-07T17:29:01+00:00"
+            "time": "2025-05-13T17:50:51+00:00"
         },
         {
             "name": "laravel/passport",
-            "version": "v12.4.2",
+            "version": "v13.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/passport.git",
-                "reference": "65a885607b62d361aedaeb10a946bc6b5a954262"
+                "reference": "d96323a1c3699efe51ca477c3dd8fdd6500d7997"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/passport/zipball/65a885607b62d361aedaeb10a946bc6b5a954262",
-                "reference": "65a885607b62d361aedaeb10a946bc6b5a954262",
+                "url": "https://api.github.com/repos/laravel/passport/zipball/d96323a1c3699efe51ca477c3dd8fdd6500d7997",
+                "reference": "d96323a1c3699efe51ca477c3dd8fdd6500d7997",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
+                "ext-openssl": "*",
                 "firebase/php-jwt": "^6.4",
-                "illuminate/auth": "^9.21|^10.0|^11.0|^12.0",
-                "illuminate/console": "^9.21|^10.0|^11.0|^12.0",
-                "illuminate/container": "^9.21|^10.0|^11.0|^12.0",
-                "illuminate/contracts": "^9.21|^10.0|^11.0|^12.0",
-                "illuminate/cookie": "^9.21|^10.0|^11.0|^12.0",
-                "illuminate/database": "^9.21|^10.0|^11.0|^12.0",
-                "illuminate/encryption": "^9.21|^10.0|^11.0|^12.0",
-                "illuminate/http": "^9.21|^10.0|^11.0|^12.0",
-                "illuminate/support": "^9.21|^10.0|^11.0|^12.0",
-                "lcobucci/jwt": "^4.3|^5.0",
-                "league/oauth2-server": "^8.5.3",
-                "nyholm/psr7": "^1.5",
-                "php": "^8.0",
-                "phpseclib/phpseclib": "^2.0|^3.0",
-                "symfony/console": "^6.0|^7.0",
-                "symfony/psr-http-message-bridge": "^2.1|^6.0|^7.0"
+                "illuminate/auth": "^11.35|^12.0",
+                "illuminate/console": "^11.35|^12.0",
+                "illuminate/container": "^11.35|^12.0",
+                "illuminate/contracts": "^11.35|^12.0",
+                "illuminate/cookie": "^11.35|^12.0",
+                "illuminate/database": "^11.35|^12.0",
+                "illuminate/encryption": "^11.35|^12.0",
+                "illuminate/http": "^11.35|^12.0",
+                "illuminate/support": "^11.35|^12.0",
+                "league/oauth2-server": "^9.2",
+                "php": "^8.2",
+                "php-http/discovery": "^1.20",
+                "phpseclib/phpseclib": "^3.0",
+                "psr/http-factory-implementation": "*",
+                "symfony/console": "^7.1",
+                "symfony/psr-http-message-bridge": "^7.1"
             },
             "require-dev": {
-                "mockery/mockery": "^1.0",
-                "orchestra/testbench": "^7.35|^8.14|^9.0|^10.0",
-                "phpstan/phpstan": "^1.10",
-                "phpunit/phpunit": "^9.3|^10.5|^11.5"
+                "mockery/mockery": "^1.6",
+                "orchestra/testbench": "^9.9|^10.0",
+                "phpstan/phpstan": "^2.0",
+                "phpunit/phpunit": "^11.5|^12.0"
             },
             "type": "library",
             "extra": {
@@ -2166,7 +2167,7 @@
                 "issues": "https://github.com/laravel/passport/issues",
                 "source": "https://github.com/laravel/passport"
             },
-            "time": "2025-02-12T16:11:33+00:00"
+            "time": "2025-05-07T17:16:06+00:00"
         },
         {
             "name": "laravel/prompts",
@@ -2226,6 +2227,70 @@
                 "source": "https://github.com/laravel/prompts/tree/v0.3.5"
             },
             "time": "2025-02-11T13:34:40+00:00"
+        },
+        {
+            "name": "laravel/sanctum",
+            "version": "v4.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/sanctum.git",
+                "reference": "a360a6a1fd2400ead4eb9b6a9c1bb272939194f5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/sanctum/zipball/a360a6a1fd2400ead4eb9b6a9c1bb272939194f5",
+                "reference": "a360a6a1fd2400ead4eb9b6a9c1bb272939194f5",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "illuminate/console": "^11.0|^12.0",
+                "illuminate/contracts": "^11.0|^12.0",
+                "illuminate/database": "^11.0|^12.0",
+                "illuminate/support": "^11.0|^12.0",
+                "php": "^8.2",
+                "symfony/console": "^7.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.6",
+                "orchestra/testbench": "^9.0|^10.0",
+                "phpstan/phpstan": "^1.10",
+                "phpunit/phpunit": "^11.3"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Laravel\\Sanctum\\SanctumServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Laravel\\Sanctum\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                }
+            ],
+            "description": "Laravel Sanctum provides a featherweight authentication system for SPAs and simple APIs.",
+            "keywords": [
+                "auth",
+                "laravel",
+                "sanctum"
+            ],
+            "support": {
+                "issues": "https://github.com/laravel/sanctum/issues",
+                "source": "https://github.com/laravel/sanctum"
+            },
+            "time": "2025-04-23T13:03:38+00:00"
         },
         {
             "name": "laravel/serializable-closure",
@@ -2835,29 +2900,34 @@
         },
         {
             "name": "league/event",
-            "version": "2.3.0",
+            "version": "3.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/event.git",
-                "reference": "062ebb450efbe9a09bc2478e89b7c933875b0935"
+                "reference": "ec38ff7ea10cad7d99a79ac937fbcffb9334c210"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/event/zipball/062ebb450efbe9a09bc2478e89b7c933875b0935",
-                "reference": "062ebb450efbe9a09bc2478e89b7c933875b0935",
+                "url": "https://api.github.com/repos/thephpleague/event/zipball/ec38ff7ea10cad7d99a79ac937fbcffb9334c210",
+                "reference": "ec38ff7ea10cad7d99a79ac937fbcffb9334c210",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.1.0"
+                "php": ">=7.2.0",
+                "psr/event-dispatcher": "^1.0"
+            },
+            "provide": {
+                "psr/event-dispatcher-implementation": "1.0"
             },
             "require-dev": {
-                "henrikbjorn/phpspec-code-coverage": "~1.0.1",
-                "phpspec/phpspec": "^2.2"
+                "friendsofphp/php-cs-fixer": "^2.16",
+                "phpstan/phpstan": "^0.12.45",
+                "phpunit/phpunit": "^8.5"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.2-dev"
+                    "dev-master": "3.0-dev"
                 }
             },
             "autoload": {
@@ -2883,9 +2953,9 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/event/issues",
-                "source": "https://github.com/thephpleague/event/tree/2.3.0"
+                "source": "https://github.com/thephpleague/event/tree/3.0.3"
             },
-            "time": "2025-03-14T19:51:10+00:00"
+            "time": "2024-09-04T16:06:53+00:00"
         },
         {
             "name": "league/flysystem",
@@ -3147,38 +3217,46 @@
         },
         {
             "name": "league/oauth2-server",
-            "version": "8.5.5",
+            "version": "9.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/oauth2-server.git",
-                "reference": "cc8778350f905667e796b3c2364a9d3bd7a73518"
+                "reference": "00323013403e1a1e0f424affafca56c28b60c22c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/oauth2-server/zipball/cc8778350f905667e796b3c2364a9d3bd7a73518",
-                "reference": "cc8778350f905667e796b3c2364a9d3bd7a73518",
+                "url": "https://api.github.com/repos/thephpleague/oauth2-server/zipball/00323013403e1a1e0f424affafca56c28b60c22c",
+                "reference": "00323013403e1a1e0f424affafca56c28b60c22c",
                 "shasum": ""
             },
             "require": {
-                "defuse/php-encryption": "^2.3",
+                "defuse/php-encryption": "^2.4",
+                "ext-json": "*",
                 "ext-openssl": "*",
-                "lcobucci/clock": "^2.2 || ^3.0",
-                "lcobucci/jwt": "^4.3 || ^5.0",
-                "league/event": "^2.2",
-                "league/uri": "^6.7 || ^7.0",
-                "php": "^8.0",
-                "psr/http-message": "^1.0.1 || ^2.0"
+                "lcobucci/clock": "^2.3 || ^3.0",
+                "lcobucci/jwt": "^5.0",
+                "league/event": "^3.0",
+                "league/uri": "^7.0",
+                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
+                "psr/http-message": "^2.0",
+                "psr/http-server-middleware": "^1.0"
             },
             "replace": {
                 "league/oauth2server": "*",
                 "lncd/oauth2": "*"
             },
             "require-dev": {
-                "laminas/laminas-diactoros": "^3.0.0",
-                "phpstan/phpstan": "^0.12.57",
-                "phpstan/phpstan-phpunit": "^0.12.16",
-                "phpunit/phpunit": "^9.6.6",
-                "roave/security-advisories": "dev-master"
+                "laminas/laminas-diactoros": "^3.5",
+                "php-parallel-lint/php-parallel-lint": "^1.3.2",
+                "phpstan/extension-installer": "^1.3.1",
+                "phpstan/phpstan": "^1.12",
+                "phpstan/phpstan-deprecation-rules": "^1.1.4",
+                "phpstan/phpstan-phpunit": "^1.3.15",
+                "phpstan/phpstan-strict-rules": "^1.5.2",
+                "phpunit/phpunit": "^9.6.21",
+                "roave/security-advisories": "dev-master",
+                "slevomat/coding-standard": "^8.14.1",
+                "squizlabs/php_codesniffer": "^3.8"
             },
             "type": "library",
             "autoload": {
@@ -3223,7 +3301,7 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/oauth2-server/issues",
-                "source": "https://github.com/thephpleague/oauth2-server/tree/8.5.5"
+                "source": "https://github.com/thephpleague/oauth2-server/tree/9.2.0"
             },
             "funding": [
                 {
@@ -3231,7 +3309,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-12-20T23:06:10+00:00"
+            "time": "2025-02-15T00:49:10+00:00"
         },
         {
             "name": "league/uri",
@@ -5459,6 +5537,119 @@
                 "source": "https://github.com/php-fig/http-message/tree/2.0"
             },
             "time": "2023-04-04T09:54:51+00:00"
+        },
+        {
+            "name": "psr/http-server-handler",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/http-server-handler.git",
+                "reference": "84c4fb66179be4caaf8e97bd239203245302e7d4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/http-server-handler/zipball/84c4fb66179be4caaf8e97bd239203245302e7d4",
+                "reference": "84c4fb66179be4caaf8e97bd239203245302e7d4",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0",
+                "psr/http-message": "^1.0 || ^2.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Http\\Server\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "https://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for HTTP server-side request handler",
+            "keywords": [
+                "handler",
+                "http",
+                "http-interop",
+                "psr",
+                "psr-15",
+                "psr-7",
+                "request",
+                "response",
+                "server"
+            ],
+            "support": {
+                "source": "https://github.com/php-fig/http-server-handler/tree/1.0.2"
+            },
+            "time": "2023-04-10T20:06:20+00:00"
+        },
+        {
+            "name": "psr/http-server-middleware",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/http-server-middleware.git",
+                "reference": "c1481f747daaa6a0782775cd6a8c26a1bf4a3829"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/http-server-middleware/zipball/c1481f747daaa6a0782775cd6a8c26a1bf4a3829",
+                "reference": "c1481f747daaa6a0782775cd6a8c26a1bf4a3829",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0",
+                "psr/http-message": "^1.0 || ^2.0",
+                "psr/http-server-handler": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Http\\Server\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "https://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for HTTP server-side middleware",
+            "keywords": [
+                "http",
+                "http-interop",
+                "middleware",
+                "psr",
+                "psr-15",
+                "psr-7",
+                "request",
+                "response"
+            ],
+            "support": {
+                "issues": "https://github.com/php-fig/http-server-middleware/issues",
+                "source": "https://github.com/php-fig/http-server-middleware/tree/1.0.2"
+            },
+            "time": "2023-04-11T06:14:47+00:00"
         },
         {
             "name": "psr/log",
@@ -9294,16 +9485,16 @@
         },
         {
             "name": "thecodingmachine/safe",
-            "version": "v3.1.1",
+            "version": "3.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thecodingmachine/safe.git",
-                "reference": "234f6fe34a0bead8c5ae1cfc0800539442e6f619"
+                "reference": "51a45c524c0f074493565a9deaa39025f19b2b24"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thecodingmachine/safe/zipball/234f6fe34a0bead8c5ae1cfc0800539442e6f619",
-                "reference": "234f6fe34a0bead8c5ae1cfc0800539442e6f619",
+                "url": "https://api.github.com/repos/thecodingmachine/safe/zipball/51a45c524c0f074493565a9deaa39025f19b2b24",
+                "reference": "51a45c524c0f074493565a9deaa39025f19b2b24",
                 "shasum": ""
             },
             "require": {
@@ -9413,7 +9604,7 @@
             "description": "PHP core functions that throw exceptions instead of returning FALSE on error",
             "support": {
                 "issues": "https://github.com/thecodingmachine/safe/issues",
-                "source": "https://github.com/thecodingmachine/safe/tree/v3.1.1"
+                "source": "https://github.com/thecodingmachine/safe/tree/3.3.0"
             },
             "funding": [
                 {
@@ -9429,7 +9620,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-04-28T07:56:17+00:00"
+            "time": "2025-05-13T20:06:28+00:00"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",
