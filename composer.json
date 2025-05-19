@@ -89,7 +89,7 @@
         "jc5/recovery": "^2",
         "laravel-notification-channels/pushover": "^4.0",
         "laravel/framework": "^12",
-        "laravel/passport": "^13",
+        "laravel/passport": "^13.0",
         "laravel/sanctum": "^4.1",
         "laravel/slack-notification-channel": "^3.3",
         "laravel/ui": "^4.2",

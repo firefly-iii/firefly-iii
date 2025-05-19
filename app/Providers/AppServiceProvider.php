@@ -41,6 +41,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Schema::defaultStringLength(191);
+        Passport::$clientUuids = false;
         Response::macro('api', function (array $value) {
             $headers = [
                 'Cache-Control' => 'no-store',
