@@ -337,6 +337,7 @@ export default {
                 this.transactions[index].destination_account.name = model;
                 return;
             }
+            // console.log('selectedDestinationAccount');
             this.transactions[index].destination_account = {
                 id: model.id,
                 name: model.name,
@@ -353,6 +354,7 @@ export default {
                 this.transactions[index].destination_account.currency_code = model.account_currency_code;
                 this.transactions[index].destination_account.currency_decimal_places = model.account_currency_decimal_places;
             }
+            // console.log('Selected destination account currency ID  = ' + this.transactions[index].destination_account.currency_id);
         },
         clearSource(index) {
             // reset source account:
@@ -540,7 +542,9 @@ export default {
                     allowed_types: window.expectedSourceTypes.destination[this.ucFirst(transaction.type)]
                 }
             };
+            // console.log('Source currency id is      ' + result.source_account.currency_id);
             // console.log('Destination currency id is ' + result.destination_account.currency_id);
+
             // if transaction type is transfer, the destination currency_id etc. MUST match the actual account currency info.
             // OR if the transaction type is a withdrawal, and the destination account is a liability account, same as above.
             if (
@@ -552,6 +556,16 @@ export default {
                 result.destination_account.currency_code = transaction.foreign_currency_code;
                 result.destination_account.currency_decimal_places = transaction.foreign_currency_decimal_places;
                 // console.log('Set destination currency_id to ' + result.destination_account.currency_id);
+            }
+            // if the transaction type is a deposit, but the source account is a liability, the source
+            // account currency must not be overruled.
+
+            if('deposit' === transaction.type && ['Loan', 'Debt', 'Mortgage'].includes(transaction.source_type)) {
+                // console.log('Overrule for deposit from liability to ' + transaction.foreign_currency_id);
+                result.destination_account.currency_id = transaction.foreign_currency_id;
+                result.destination_account.currency_name = transaction.foreign_currency_name;
+                result.destination_account.currency_code = transaction.foreign_currency_code;
+                result.destination_account.currency_decimal_places = transaction.foreign_currency_decimal_places;
             }
 
 
@@ -611,7 +625,12 @@ export default {
             if ('deposit' === transactionType) {
                 currencyId = this.transactions[0].destination_account.currency_id;
             }
-            // console.log('Overruled currency ID to ' + currencyId);
+            // if transaction type is deposit BUT the source account is a liability, the currency ID must be the SOURCE account ID.
+            if ('deposit' === transactionType && ['Loan', 'Debt', 'Mortgage'].includes(firstSource)) {
+                // console.log('Overruled currency ID to ' + this.transactions[0].source_account.currency_id);
+                currencyId = this.transactions[0].source_account.currency_id;
+            }
+            // console.log('Final currency ID = ' + currencyId);
 
             for (let key in this.transactions) {
                 if (this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
@@ -691,6 +710,7 @@ export default {
                 foreignCurrency = row.foreign_amount.currency_id;
             }
             if (foreignCurrency === row.currency_id) {
+                // console.log('reset foreign currencyto NULL because ' + foreignCurrency + ' = ' + row.currency_id);
                 foreignAmount = null;
                 foreignCurrency = null;
             }
