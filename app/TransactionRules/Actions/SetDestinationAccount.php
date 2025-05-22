@@ -48,10 +48,10 @@ class SetDestinationAccount implements ActionInterface
 
     public function actOnArray(array $journal): bool
     {
-        $accountName      = $this->action->getValue($journal);
+        $accountName = $this->action->getValue($journal);
 
         /** @var User $user */
-        $user             = User::find($journal['user_id']);
+        $user = User::find($journal['user_id']);
 
         /** @var null|TransactionJournal $object */
         $object           = $user->transactionJournals()->find((int) $journal['transaction_journal_id']);
@@ -63,11 +63,11 @@ class SetDestinationAccount implements ActionInterface
 
             return false;
         }
-        $type             = $object->transactionType->type;
+        $type = $object->transactionType->type;
         $this->repository->setUser($user);
 
         // if this is a transfer or a deposit, the new destination account must be an asset account or a default account, and it MUST exist:
-        $newAccount       = $this->findAssetAccount($type, $accountName);
+        $newAccount = $this->findAssetAccount($type, $accountName);
         if ((TransactionTypeEnum::DEPOSIT->value === $type || TransactionTypeEnum::TRANSFER->value === $type) && null === $newAccount) {
             app('log')->error(
                 sprintf(
@@ -83,7 +83,7 @@ class SetDestinationAccount implements ActionInterface
 
         // new destination account must be different from the current source account:
         /** @var null|Transaction $source */
-        $source           = $object->transactions()->where('amount', '<', 0)->first();
+        $source = $object->transactions()->where('amount', '<', 0)->first();
         if (null === $source) {
             app('log')->error('Could not find source transaction.');
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_source_transaction')));
@@ -116,6 +116,18 @@ class SetDestinationAccount implements ActionInterface
         if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
             $newAccount = $this->findWithdrawalDestinationAccount($accountName);
         }
+        if (null === $newAccount) {
+            app('log')->error(
+                sprintf(
+                    'No destination account found for name "%s".',
+                    $accountName
+                )
+            );
+
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_destination', ['name' => $accountName])));
+
+            return false;
+        }
 
         app('log')->debug(sprintf('New destination account is #%d ("%s").', $newAccount->id, $newAccount->name));
 
@@ -123,10 +135,9 @@ class SetDestinationAccount implements ActionInterface
 
         // update destination transaction with new destination account:
         DB::table('transactions')
-            ->where('transaction_journal_id', '=', $object->id)
-            ->where('amount', '>', 0)
-            ->update(['account_id' => $newAccount->id])
-        ;
+          ->where('transaction_journal_id', '=', $object->id)
+          ->where('amount', '>', 0)
+          ->update(['account_id' => $newAccount->id]);
 
         app('log')->debug(sprintf('Updated journal #%d (group #%d) and gave it new destination account ID.', $object->id, $object->transaction_group_id));
 
