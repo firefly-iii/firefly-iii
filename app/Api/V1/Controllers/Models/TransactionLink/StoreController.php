@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Models\TransactionLink;
 
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\TransactionLink\StoreRequest;
 use FireflyIII\Exceptions\FireflyException;
@@ -81,7 +82,7 @@ class StoreController extends Controller
         $data              = $request->getAll();
         $inward            = $this->journalRepository->find($data['inward_id'] ?? 0);
         $outward           = $this->journalRepository->find($data['outward_id'] ?? 0);
-        if (null === $inward || null === $outward) {
+        if (!$inward instanceof TransactionJournal || !$outward instanceof TransactionJournal) {
             throw new FireflyException('200024: Source or destination does not exist.');
         }
         $data['direction'] = 'inward';

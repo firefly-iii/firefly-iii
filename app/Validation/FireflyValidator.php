@@ -44,6 +44,7 @@ use Illuminate\Validation\Validator;
 use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
 use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;
 use PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException;
+use PragmaRX\Google2FALaravel\Facade;
 
 /**
  * Class FireflyValidator.
@@ -79,7 +80,7 @@ class FireflyValidator extends Validator
         }
         $secret           = (string) $secret;
 
-        return (bool) \Google2FA::verifyKey($secret, $value);
+        return (bool) Facade::verifyKey($secret, $value);
     }
 
     /**
@@ -131,7 +132,7 @@ class FireflyValidator extends Validator
         }
         $secret = (string) $user->mfa_secret;
 
-        return (bool) \Google2FA::verifyKey($secret, $value);
+        return (bool) Facade::verifyKey($secret, $value);
     }
 
     /**

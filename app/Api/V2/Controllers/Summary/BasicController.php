@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V2\Controllers\Summary;
 
+use Exception;
 use Carbon\Carbon;
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Generic\DateRequest;
@@ -92,7 +93,7 @@ class BasicController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v2)#/summary/getBasicSummary
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
@@ -398,15 +399,14 @@ class BasicController extends Controller
      */
     protected function notInDateRange(Carbon $date, Carbon $start, Carbon $end): bool // Validate a preference
     {
-        $result = false;
         if ($start->greaterThanOrEqualTo($date) && $end->greaterThanOrEqualTo($date)) {
-            $result = true;
+            return true;
         }
         // start and end in the past? use $end
         if ($start->lessThanOrEqualTo($date) && $end->lessThanOrEqualTo($date)) {
-            $result = true;
+            return true;
         }
 
-        return $result;
+        return false;
     }
 }

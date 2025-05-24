@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
+use Closure;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\User;
 use Illuminate\Auth\AuthenticationException;
@@ -56,7 +57,7 @@ class Authenticate
      * @throws FireflyException
      * @throws AuthenticationException
      */
-    public function handle($request, \Closure $next, ...$guards)
+    public function handle($request, Closure $next, ...$guards)
     {
         $this->authenticate($request, $guards);
 

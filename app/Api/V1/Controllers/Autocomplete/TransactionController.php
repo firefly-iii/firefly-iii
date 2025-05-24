@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
+use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
 use FireflyIII\Enums\UserRoleEnum;
@@ -102,7 +103,7 @@ class TransactionController extends Controller
         if (is_numeric($data['query'])) {
             // search for group, not journal.
             $firstResult = $this->groupRepository->find((int) $data['query']);
-            if (null !== $firstResult) {
+            if ($firstResult instanceof TransactionGroup) {
                 // group may contain multiple journals, each a result:
                 foreach ($firstResult->transactionJournals as $journal) {
                     $result->push($journal);

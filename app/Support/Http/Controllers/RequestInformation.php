@@ -33,7 +33,7 @@ use FireflyIII\User;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Validator;
-use Route as RouteFacade;
+use Illuminate\Support\Facades\Route as RouteFacade;
 
 /**
  * Trait RequestInformation

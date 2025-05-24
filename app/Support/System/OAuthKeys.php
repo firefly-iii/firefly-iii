@@ -26,6 +26,7 @@ namespace FireflyIII\Support\System;
 
 use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Crypt;
 use Laravel\Passport\Console\KeysCommand;
 use Psr\Container\ContainerExceptionInterface;
@@ -88,8 +89,8 @@ class OAuthKeys
 
     public static function generateKeys(): void
     {
-        \Artisan::registerCommand(new KeysCommand());
-        \Artisan::call('firefly-iii:laravel-passport-keys');
+        Artisan::registerCommand(new KeysCommand());
+        Artisan::call('firefly-iii:laravel-passport-keys');
     }
 
     public static function storeKeysInDB(): void

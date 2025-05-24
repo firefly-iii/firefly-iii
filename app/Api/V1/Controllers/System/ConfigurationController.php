@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\System;
 
+use Illuminate\Support\Facades\Validator;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\System\UpdateRequest;
 use FireflyIII\Exceptions\FireflyException;
@@ -158,7 +159,7 @@ class ConfigurationController extends Controller
         $rules     = ['value' => 'required'];
         if (!$this->repository->hasRole(auth()->user(), 'owner')) {
             $messages = ['value' => '200005: You need the "owner" role to do this.'];
-            \Validator::make([], $rules, $messages)->validate();
+            Validator::make([], $rules, $messages)->validate();
         }
         $data      = $request->getAll();
         $shortName = str_replace('configuration.', '', $name);

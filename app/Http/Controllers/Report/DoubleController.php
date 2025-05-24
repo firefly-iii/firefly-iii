@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Report;
 
+use Throwable;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -102,7 +103,7 @@ class DoubleController extends Controller
 
         try {
             $result = view('reports.double.partials.avg-expenses', compact('result'))->render();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             app('log')->error(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
 
@@ -152,7 +153,7 @@ class DoubleController extends Controller
 
         try {
             $result = view('reports.double.partials.avg-income', compact('result'))->render();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             app('log')->error(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
 
@@ -429,7 +430,7 @@ class DoubleController extends Controller
 
         try {
             $result = view('reports.double.partials.top-expenses', compact('result'))->render();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             app('log')->error(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
 
@@ -477,7 +478,7 @@ class DoubleController extends Controller
 
         try {
             $result = view('reports.double.partials.top-income', compact('result'))->render();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             app('log')->error(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
 

@@ -31,6 +31,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Schema;
 
 class AddsTransactionIdentifiers extends Command
 {
@@ -65,7 +66,7 @@ class AddsTransactionIdentifiers extends Command
         }
 
         // if table does not exist, return false
-        if (!\Schema::hasTable('transaction_journals')) {
+        if (!Schema::hasTable('transaction_journals')) {
             return 0;
         }
 

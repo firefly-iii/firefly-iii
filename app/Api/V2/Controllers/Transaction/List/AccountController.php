@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V2\Controllers\Transaction\List;
 
+use Carbon\Carbon;
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Model\Transaction\ListRequest;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
@@ -62,11 +63,11 @@ class AccountController extends Controller
 
         $start     = $request->getStartDate();
         $end       = $request->getEndDate();
-        if (null !== $start) {
+        if ($start instanceof Carbon) {
             app('log')->debug(sprintf('Set start date to %s', $start->toIso8601String()));
             $collector->setStart($start);
         }
-        if (null !== $end) {
+        if ($end instanceof Carbon) {
             app('log')->debug(sprintf('Set end date to %s', $start->toIso8601String()));
             $collector->setEnd($end);
         }

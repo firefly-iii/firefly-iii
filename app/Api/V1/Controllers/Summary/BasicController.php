@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Summary;
 
+use Exception;
 use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Data\DateRequest;
@@ -91,7 +92,7 @@ class BasicController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/summary/getBasicSummary
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function basic(DateRequest $request): JsonResponse
     {
@@ -467,7 +468,7 @@ class BasicController extends Controller
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function getLeftToSpendInfo(Carbon $start, Carbon $end): array
     {
@@ -674,15 +675,14 @@ class BasicController extends Controller
      */
     protected function notInDateRange(Carbon $date, Carbon $start, Carbon $end): bool // Validate a preference
     {
-        $result = false;
         if ($start->greaterThanOrEqualTo($date) && $end->greaterThanOrEqualTo($date)) {
-            $result = true;
+            return true;
         }
         // start and end in the past? use $end
         if ($start->lessThanOrEqualTo($date) && $end->lessThanOrEqualTo($date)) {
-            $result = true;
+            return true;
         }
 
-        return $result;
+        return false;
     }
 }

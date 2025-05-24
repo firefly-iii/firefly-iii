@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Chart;
 
+use FireflyIII\Models\TransactionCurrency;
 use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Chart\ChartRequest;
@@ -99,7 +100,7 @@ class AccountController extends Controller
     private function renderAccountData(array $params, Account $account): void
     {
         $currency     = $this->repository->getAccountCurrency($account);
-        if (null === $currency) {
+        if (!$currency instanceof TransactionCurrency) {
             $currency = $this->default;
         }
         $currentSet   = [

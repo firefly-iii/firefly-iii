@@ -90,7 +90,7 @@ class AccountController extends Controller
             'meta'  => [
                 'type'                    => $account->accountType->type,
                 // TODO is multi currency property.
-                'currency_id'             => null === $currency ? null : (string) $currency->id,
+                'currency_id'             => $currency instanceof TransactionCurrency ? (string) $currency->id : null,
                 'currency_code'           => $currency?->code,
                 'currency_symbol'         => $currency?->symbol,
                 'currency_decimal_places' => $currency?->decimal_places,

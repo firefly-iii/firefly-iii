@@ -32,7 +32,7 @@ return [
     'table'           => 'sessions',
     'store'           => null,
     'lottery'         => [2, 100],
-    'cookie'          => 'firefly_session',
+    'cookie'          => env('COOKIE_NAME','firefly_iii_session'),
     'path'            => env('COOKIE_PATH', '/'),
     'domain'          => env('COOKIE_DOMAIN', null),
     'secure'          => env('COOKIE_SECURE', null),

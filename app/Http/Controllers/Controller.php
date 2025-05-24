@@ -36,7 +36,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\View;
-use Route;
+use Illuminate\Support\Facades\Route;
 
 /**
  * Class Controller.

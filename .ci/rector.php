@@ -32,6 +32,7 @@ return RectorConfig::configure()
                ])
                    ->withPaths([
 //                                   __DIR__ . '/../app',
+__DIR__ . '/../app/Api',
 __DIR__ . '/../app/Http',
 //                                   __DIR__ . '/../bootstrap',
 //                                   __DIR__ . '/../config',
