@@ -129,7 +129,11 @@ return [
         AdminServiceProvider::class,
         RecurringServiceProvider::class,
     ],
-    'aliases'         => [],
+    'aliases'         => [
+        'Auth'       => Illuminate\Support\Facades\Auth::class,
+        'Route'      => Illuminate\Support\Facades\Route::class,
+        'Config'    => Illuminate\Support\Facades\Config::class,
+    ],
 
     'asset_url' => env('ASSET_URL', null),
 

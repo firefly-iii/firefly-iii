@@ -157,7 +157,8 @@ class ProfileController extends Controller
         if (0 === $count) {
             /** @var ClientRepository $repository */
             $repository = app(ClientRepository::class);
-            $repository->createPersonalAccessClient(null, config('app.name').' Personal Access Client', 'http://localhost');
+            $name = sprintf('%s Personal Access Grant Client',config('app.name'));
+            $repository->createPersonalAccessGrantClient($name, config('app.name').' Personal Access Grant Client', 'http://localhost');
         }
 
         $accessToken    = app('preferences')->get('access_token');
