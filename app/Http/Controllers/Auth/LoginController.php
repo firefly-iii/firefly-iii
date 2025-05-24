@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Auth;
 
 use FireflyIII\User;
-use Cookie;
+use Illuminate\Support\Facades\Cookie;
 use FireflyIII\Events\ActuallyLoggedIn;
 use FireflyIII\Events\Security\UnknownUserAttemptedLogin;
 use FireflyIII\Events\Security\UserAttemptedLogin;
@@ -221,7 +221,7 @@ class LoginController extends Controller
      *
      * @throws FireflyException
      */
-    public function showLoginForm(Request $request)
+    public function showLoginForm(?Request $request = null)
     {
         Log::channel('audit')->info('Show login form (1.1).');
 
@@ -247,8 +247,8 @@ class LoginController extends Controller
             $allowReset        = false;
         }
 
-        $email             = $request->old('email');
-        $remember          = $request->old('remember');
+        $email             = $request?->old('email');
+        $remember          = $request?->old('remember');
 
         $storeInCookie     = config('google2fa.store_in_cookie', false);
         if (false !== $storeInCookie) {
