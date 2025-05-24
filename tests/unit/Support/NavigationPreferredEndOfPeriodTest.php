@@ -42,15 +42,12 @@ final class NavigationPreferredEndOfPeriodTest extends TestCase
 {
     private Navigation $navigation;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->navigation = new Navigation();
     }
 
-    /**
-     *
-     */
     #[DataProvider('providePeriods')]
     public function testGivenStartAndEndDatesWhenCallPreferredEndOfPeriodThenReturnsTheExpectedFormatSuccessful(Carbon $start, Carbon $end, string $expected): void
     {

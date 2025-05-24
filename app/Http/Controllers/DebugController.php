@@ -24,8 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
-use function Safe\file_get_contents;
-use function Safe\ini_get;
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Enums\AccountTypeEnum;
@@ -51,6 +49,9 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\View\View;
 use Monolog\Handler\RotatingFileHandler;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+use function Safe\file_get_contents;
+use function Safe\ini_get;
 
 /**
  * Class DebugController
@@ -110,7 +111,7 @@ class DebugController extends Controller
 
         try {
             Artisan::call('twig:clean');
-        } catch (Exception $e) {  // intentional generic exception
+        } catch (\Exception $e) {  // intentional generic exception
             throw new FireflyException($e->getMessage(), 0, $e);
         }
 
@@ -202,7 +203,7 @@ class DebugController extends Controller
                 $return['build'] = trim((string) file_get_contents('/var/www/counter-main.txt'));
                 app('log')->debug(sprintf('build is now "%s"', $return['build']));
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             app('log')->debug('Could not check build counter, but thats ok.');
             app('log')->warning($e->getMessage());
         }
@@ -211,7 +212,7 @@ class DebugController extends Controller
             if (file_exists('/var/www/build-date-main.txt')) {
                 $return['build_date'] = trim((string) file_get_contents('/var/www/build-date-main.txt'));
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             app('log')->debug('Could not check build date, but thats ok.');
             app('log')->warning($e->getMessage());
         }

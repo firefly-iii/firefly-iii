@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\RuleGroup;
 
-use Exception;
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\SelectTransactionsRequest;
@@ -65,7 +64,7 @@ class ExecutionController extends Controller
     /**
      * Execute the given rulegroup on a set of existing transactions.
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function execute(SelectTransactionsRequest $request, RuleGroup $ruleGroup): RedirectResponse
     {

@@ -41,15 +41,12 @@ final class NavigationPreferredCarbonFormatByPeriodTest extends TestCase
 {
     private Navigation $navigation;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->navigation = new Navigation();
     }
 
-    /**
-     *
-     */
     #[DataProvider('providePeriods')]
     public function testGivenAPeriodWhenCallPreferredCarbonFormatByPeriodThenReturnsExpectedFormat(string $period, string $expected): void
     {

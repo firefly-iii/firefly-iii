@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
-use Throwable;
 use Carbon\Carbon;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
@@ -131,7 +130,7 @@ class ReconcileController extends Controller
 
         try {
             $view = view('accounts.reconcile.overview', compact('account', 'start', 'diffCompare', 'difference', 'end', 'clearedAmount', 'startBalance', 'endBalance', 'amount', 'route', 'countCleared', 'reconSum', 'selectedIds'))->render();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             app('log')->debug(sprintf('View error: %s', $e->getMessage()));
             app('log')->error($e->getTraceAsString());
             $view = sprintf('Could not render accounts.reconcile.overview: %s', $e->getMessage());
@@ -229,7 +228,7 @@ class ReconcileController extends Controller
                 'accounts.reconcile.transactions',
                 compact('account', 'journals', 'currency', 'start', 'end', 'selectionStart', 'selectionEnd')
             )->render();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             app('log')->debug(sprintf('Could not render: %s', $e->getMessage()));
             app('log')->error($e->getTraceAsString());
             $html = sprintf('Could not render accounts.reconcile.transactions: %s', $e->getMessage());

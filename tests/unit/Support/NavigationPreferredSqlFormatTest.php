@@ -40,17 +40,14 @@ use Tests\integration\TestCase;
  */
 final class NavigationPreferredSqlFormatTest extends TestCase
 {
-
     private Navigation $navigation;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->navigation = new Navigation();
     }
-    /**
-     *
-     */
+
     #[DataProvider('provideDates')]
     public function testGivenStartAndEndDatesWhenCallPreferredSqlFormatThenReturnsTheExpectedFormatSuccessful(Carbon $start, Carbon $end, string $expected): void
     {

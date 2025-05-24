@@ -24,10 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
-use JsonException;
-use function Safe\json_decode;
-use function Safe\file_get_contents;
-use function Safe\strtotime;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Events\Preferences\UserGroupChangedDefaultCurrency;
 use FireflyIII\Events\Test\UserTestNotificationChannel;
@@ -44,6 +40,10 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+
+use function Safe\json_decode;
+use function Safe\file_get_contents;
+use function Safe\strtotime;
 
 /**
  * Class PreferencesController.
@@ -155,7 +155,7 @@ class PreferencesController extends Controller
 
         try {
             $locales = json_decode((string) file_get_contents(resource_path(sprintf('locales/%s/locales.json', $language))), true, 512, JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
+        } catch (\JsonException $e) {
             app('log')->error($e->getMessage());
             $locales = [];
         }

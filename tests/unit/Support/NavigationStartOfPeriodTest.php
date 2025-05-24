@@ -43,14 +43,12 @@ final class NavigationStartOfPeriodTest extends TestCase
 {
     private Navigation $navigation;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->navigation = new Navigation();
     }
-    /**
-     *
-     */
+
     #[DataProvider('provideDates')]
     public function testGivenADateAndFrequencyWhenCalculateTheDateThenReturnsTheExpectedDateSuccessful(string $frequency, Carbon $from, Carbon $expected): void
     {
@@ -88,9 +86,6 @@ final class NavigationStartOfPeriodTest extends TestCase
         ];
     }
 
-    /**
-     *
-     */
     #[DataProvider('provideUnknownFrequencies')]
     public function testGivenADateAndUnknownFrequencyWhenCalculateTheDateThenReturnsTheSameDateSuccessful(string $frequency, Carbon $from, Carbon $expected): void
     {

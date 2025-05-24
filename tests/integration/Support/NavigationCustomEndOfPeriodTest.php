@@ -35,7 +35,6 @@ use Tests\integration\TestCase;
  */
 final class NavigationCustomEndOfPeriodTest extends TestCase
 {
-
     /**
      * @preserveGlobalState disabled
      */

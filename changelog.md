@@ -7,17 +7,17 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #10114
-- #10180
-- #10197
-- #10203
-- #10265
-- #10290
-- #10302
-- #10305
-- #10308
-- #10320
-- #10336
+- [Issue 10114](https://github.com/firefly-iii/firefly-iii/issues/10114) (Budget for foreign currency not getting updated when a transaction refers to it) reported by @srikakulamts
+- [Issue 10180](https://github.com/firefly-iii/firefly-iii/issues/10180) (missing SPENT info) reported by @frank-bg
+- [Issue 10197](https://github.com/firefly-iii/firefly-iii/issues/10197) (Add rule number) reported by @gogoizzy
+- [PR 10203](https://github.com/firefly-iii/firefly-iii/pull/10203) (Fix Ukrainian language names) reported by @den-is
+- [Issue 10265](https://github.com/firefly-iii/firefly-iii/issues/10265) (Liabilities, foreign currencies have some issues (payment/exchange with native currency)) reported by @jgmm81
+- [Issue 10290](https://github.com/firefly-iii/firefly-iii/issues/10290) (edit multiple transactions individually ignores reconciled state) reported by @goebeler
+- [Issue 10302](https://github.com/firefly-iii/firefly-iii/issues/10302) (Attempt to read property "id" on null Error) reported by @XBadPlayerX
+- [Issue 10305](https://github.com/firefly-iii/firefly-iii/issues/10305) (The info icon used to display transactions is not clickable in the default financial reports "budgets by accounts"-section's sum column) reported by @goebeler
+- [Issue 10308](https://github.com/firefly-iii/firefly-iii/issues/10308) (Liabilities, with some details (payment/exchange with native currency)) reported by @jgmm81
+- [Issue 10320](https://github.com/firefly-iii/firefly-iii/issues/10320) (Button to update transaction keeps being disabled after correcting form errors) reported by @Astro1247
+- [Issue 10336](https://github.com/firefly-iii/firefly-iii/issues/10336) (New install recovering backup from 5.7.18 fails to run.  ($param) must be of type int, string given in orrectsUnevenAmount.php) reported by @perezalvarezhi
 
 ## 6.2.12 - 2025-04-21
 

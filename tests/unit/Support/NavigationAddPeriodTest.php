@@ -41,17 +41,14 @@ use Tests\integration\TestCase;
  */
 final class NavigationAddPeriodTest extends TestCase
 {
-    private  Navigation $navigation;
+    private Navigation $navigation;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->navigation = new Navigation();
     }
 
-    /**
-     *
-     */
     #[DataProvider('providePeriodsWithSkippingParam')]
     public function testGivenAFrequencyAndSkipIntervalWhenCalculateTheDateThenReturnsTheSkippedDateSuccessful(int $skip, string $frequency, Carbon $from, Carbon $expected): void
     {
@@ -104,9 +101,6 @@ final class NavigationAddPeriodTest extends TestCase
         }
     }
 
-    /**
-     *
-     */
     #[DataProvider('providePeriods')]
     public function testGivenAFrequencyWhenCalculateTheDateThenReturnsTheExpectedDateSuccessful(string $frequency, Carbon $from, Carbon $expected): void
     {
@@ -140,9 +134,6 @@ final class NavigationAddPeriodTest extends TestCase
         ];
     }
 
-    /**
-     *
-     */
     #[DataProvider('provideFrequencies')]
     public function testGivenAIntervalWhenCallTheNextDateByIntervalMethodThenReturnsTheExpectedDateSuccessful(Periodicity $periodicity, Carbon $from, Carbon $expected): void
     {
@@ -178,9 +169,6 @@ final class NavigationAddPeriodTest extends TestCase
         ];
     }
 
-    /**
-     *
-     */
     #[DataProvider('provideMonthPeriods')]
     public function testGivenAMonthFrequencyWhenCalculateTheDateThenReturnsTheLastDayOfMonthSuccessful(string $frequency, Carbon $from, Carbon $expected): void
     {
