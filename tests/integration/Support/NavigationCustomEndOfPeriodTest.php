@@ -35,10 +35,6 @@ use Tests\integration\TestCase;
  */
 final class NavigationCustomEndOfPeriodTest extends TestCase
 {
-    public function __construct(string $name)
-    {
-        parent::__construct($name);
-    }
 
     /**
      * @preserveGlobalState disabled
