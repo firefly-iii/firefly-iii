@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Transaction;
 
 use FireflyIII\Models\TransactionGroup;
-use function Safe\parse_url;
 use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -36,6 +35,8 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+
+use function Safe\parse_url;
 
 /**
  * Class CreateController

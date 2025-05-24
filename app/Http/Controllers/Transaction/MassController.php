@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
-use InvalidArgumentException;
 use Carbon\Carbon;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
@@ -232,7 +231,7 @@ class MassController extends Controller
 
         try {
             $carbon = Carbon::parse($value[$journalId]);
-        } catch (InvalidArgumentException $e) {
+        } catch (\InvalidArgumentException $e) {
             Log::warning(sprintf('Could not parse "%s" but dont mind', $value[$journalId]));
             Log::warning($e->getMessage());
 

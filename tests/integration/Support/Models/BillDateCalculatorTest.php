@@ -38,10 +38,9 @@ use Tests\integration\TestCase;
  */
 final class BillDateCalculatorTest extends TestCase
 {
-    private  BillDateCalculator $calculator;
+    private BillDateCalculator $calculator;
 
-
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->calculator = new BillDateCalculator();
@@ -49,8 +48,6 @@ final class BillDateCalculatorTest extends TestCase
 
     /**
      * Stupid long method names I'm not going to do that.
-     *
-     *
      */
     #[DataProvider('provideDates')]
     public function testGivenSomeDataItWorks(Carbon $earliest, Carbon $latest, Carbon $billStart, string $period, int $skip, ?Carbon $lastPaid, array $expected): void

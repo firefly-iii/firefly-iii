@@ -31,7 +31,7 @@
         "apply_rules_checkbox": "Aplicar reglas",
         "fire_webhooks_checkbox": "Disparar webhooks",
         "no_budget_pointer": "Parece que a\u00fan no tienes presupuestos. Debes crear algunos en la p\u00e1gina <a href=\"budgets\">presupuestos<\/a>. Los presupuestos pueden ayudarle a realizar un seguimiento de los gastos.",
-        "no_bill_pointer": "You seem to have no subscription yet. You should create some on the <a href=\"subscriptions\">subscription<\/a>-page. Subscriptions can help you keep track of expenses.",
+        "no_bill_pointer": "Parece que a\u00fan no tienes suscripci\u00f3n. Deber\u00edas crear algunas en la p\u00e1gina <a href=\"subscriptions\">suscripci\u00f3n<\/a>. Las suscripciones pueden ayudarte a llevar un seguimiento de los gastos.",
         "source_account": "Cuenta origen",
         "hidden_fields_preferences": "Puede habilitar m\u00e1s opciones de transacci\u00f3n en sus <a href=\"preferences\">ajustes <\/a>.",
         "destination_account": "Cuenta destino",
@@ -169,7 +169,7 @@
         "webhook_delivery": "Entrega",
         "from_currency_to_currency": "{from} &rarr; {to}",
         "to_currency_from_currency": "{to} &rarr; {from}",
-        "rate": "Rate"
+        "rate": "Denos su evaluaci\u00f3n"
     },
     "list": {
         "title": "T\u00edtulo",

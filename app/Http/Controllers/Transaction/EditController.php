@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
-use function Safe\parse_url;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
@@ -35,6 +34,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
+
+use function Safe\parse_url;
 
 /**
  * Class EditController

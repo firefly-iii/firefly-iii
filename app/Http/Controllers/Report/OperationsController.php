@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Report;
 
-use Throwable;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -79,7 +78,7 @@ class OperationsController extends Controller
 
         try {
             $result = view('reports.partials.income-expenses', compact('report', 'type'))->render();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             app('log')->error(sprintf('Could not render reports.partials.income-expense: %s', $e->getMessage()));
             app('log')->error($e->getTraceAsString());
             $result = 'Could not render view.';
@@ -113,7 +112,7 @@ class OperationsController extends Controller
 
         try {
             $result = view('reports.partials.income-expenses', compact('report', 'type'))->render();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             app('log')->error(sprintf('Could not render reports.partials.income-expenses: %s', $e->getMessage()));
             app('log')->error($e->getTraceAsString());
             $result = 'Could not render view.';
@@ -168,7 +167,7 @@ class OperationsController extends Controller
 
         try {
             $result = view('reports.partials.operations', compact('sums'))->render();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             app('log')->error(sprintf('Could not render reports.partials.operations: %s', $e->getMessage()));
             app('log')->error($e->getTraceAsString());
             $result = 'Could not render view.';

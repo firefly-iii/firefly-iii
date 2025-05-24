@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Auth;
 
-use function Safe\parse_url;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
@@ -34,6 +33,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+
+use function Safe\parse_url;
 
 /**
  * Class ForgotPasswordController

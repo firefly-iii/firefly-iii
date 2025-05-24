@@ -24,8 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\System;
 
-use Artisan;
-use function Safe\file_put_contents;
 use Cache;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
@@ -37,6 +35,8 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Laravel\Passport\Passport;
 use phpseclib3\Crypt\RSA;
+
+use function Safe\file_put_contents;
 
 /**
  * Class InstallController
@@ -142,14 +142,14 @@ class InstallController extends Controller
                 $this->keys();
             }
             if ('generate-keys' !== $command) {
-                Artisan::call($command, $args);
-                app('log')->debug(Artisan::output());
+                \Artisan::call($command, $args);
+                app('log')->debug(\Artisan::output());
             }
-        } catch (Exception $e) { // intentional generic exception
+        } catch (\Exception $e) { // intentional generic exception
             throw new FireflyException($e->getMessage(), 0, $e);
         }
         // clear cache as well.
-        Cache::clear();
+        \Cache::clear();
         app('preferences')->mark();
 
         return true;

@@ -66,8 +66,6 @@ final class CalculatorTest extends TestCase
     }
 
     /**
-     *
-     *
      * @throws IntervalException
      */
     #[DataProvider('provideAllPeriodicity')]
@@ -97,8 +95,6 @@ final class CalculatorTest extends TestCase
     }
 
     /**
-     *
-     *
      * @throws IntervalException
      */
     #[DataProvider('provideSkippedIntervals')]

@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
 
-use function Safe\json_encode;
 use Carbon\Carbon;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
@@ -43,6 +42,8 @@ use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+
+use function Safe\json_encode;
 
 /**
  * Class AccountController.

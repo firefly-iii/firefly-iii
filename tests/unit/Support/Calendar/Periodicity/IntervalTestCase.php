@@ -32,9 +32,6 @@ abstract class IntervalTestCase extends TestCase
 {
     abstract public static function provideIntervals(): array;
 
-    /**
-     *
-     */
     #[DataProvider('provider')]
     public function testGivenAnEpochWhenCallTheNextDateThenReturnsTheExpectedDateSuccessful(IntervalProvider $provider): void
     {

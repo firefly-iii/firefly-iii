@@ -17,8 +17,6 @@ abstract class AbstractQueryParserInterfaceParseQueryTester extends TestCase
     abstract protected function createParser(): QueryParserInterface;
 
     /**
-     *
-     *
      * @param string $query    The query string to parse
      * @param Node   $expected The expected parse result
      */
