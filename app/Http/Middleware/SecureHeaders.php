@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
+use Closure;
+use Exception;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Vite;
@@ -38,9 +40,9 @@ class SecureHeaders
      *
      * @return mixed
      *
-     * @throws \Exception
+     * @throws Exception
      */
-    public function handle(Request $request, \Closure $next)
+    public function handle(Request $request, Closure $next)
     {
         // generate and share nonce.
         $nonce              = base64_encode(random_bytes(16));

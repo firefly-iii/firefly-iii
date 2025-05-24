@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
+use InvalidArgumentException;
 use Carbon\Carbon;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
@@ -191,7 +192,7 @@ class MassController extends Controller
     private function updateJournal(int $journalId, MassEditJournalRequest $request): void
     {
         $journal = $this->repository->find($journalId);
-        if (null === $journal) {
+        if (!$journal instanceof TransactionJournal) {
             throw new FireflyException(sprintf('Trying to edit non-existent or deleted journal #%d', $journalId));
         }
         $service = app(JournalUpdateService::class);
@@ -231,7 +232,7 @@ class MassController extends Controller
 
         try {
             $carbon = Carbon::parse($value[$journalId]);
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             Log::warning(sprintf('Could not parse "%s" but dont mind', $value[$journalId]));
             Log::warning($e->getMessage());
 

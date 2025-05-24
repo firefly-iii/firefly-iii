@@ -23,6 +23,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use Carbon\Carbon;
+use JsonException;
+use function Safe\json_decode;
+use function Safe\file_get_contents;
+use function Safe\strtotime;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Events\Preferences\UserGroupChangedDefaultCurrency;
 use FireflyIII\Events\Test\UserTestNotificationChannel;
@@ -110,7 +115,7 @@ class PreferencesController extends Controller
         if (is_array($fiscalYearStartStr)) {
             $fiscalYearStartStr = '01-01';
         }
-        $fiscalYearStart                = sprintf('%s-%s', date('Y'), (string) $fiscalYearStartStr);
+        $fiscalYearStart                = sprintf('%s-%s', Carbon::now()->format('Y'), (string) $fiscalYearStartStr);
         $tjOptionalFields               = Preferences::get('transaction_journal_optional_fields', [])->data;
         $availableDarkModes             = config('firefly.available_dark_modes');
 
@@ -149,8 +154,8 @@ class PreferencesController extends Controller
         // list of locales also has "equal" which makes it equal to whatever the language is.
 
         try {
-            $locales = \Safe\json_decode((string) \Safe\file_get_contents(resource_path(sprintf('locales/%s/locales.json', $language))), true, 512, JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
+            $locales = json_decode((string) file_get_contents(resource_path(sprintf('locales/%s/locales.json', $language))), true, 512, JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
             app('log')->error($e->getMessage());
             $locales = [];
         }
@@ -271,9 +276,9 @@ class PreferencesController extends Controller
 
         // custom fiscal year
         $customFiscalYear  = 1 === (int) $request->get('customFiscalYear');
-        $string            = \Safe\strtotime((string) $request->get('fiscalYearStart'));
+        $string            = strtotime((string) $request->get('fiscalYearStart'));
         if (false !== $string) {
-            $fiscalYearStart = date('m-d', $string);
+            $fiscalYearStart = Carbon::createFromTimestamp($string)->format('m-d');
             Preferences::set('customFiscalYear', $customFiscalYear);
             Preferences::set('fiscalYearStart', $fiscalYearStart);
         }

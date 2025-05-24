@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\TransactionCurrency;
 
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\CurrencyFormRequest;
@@ -122,7 +123,7 @@ class CreateController extends Controller
         }
         $redirect        = redirect($this->getPreviousUrl('currencies.create.url'));
 
-        if (null !== $currency) {
+        if ($currency instanceof TransactionCurrency) {
             $request->session()->flash('success', (string) trans('firefly.created_currency', ['name' => $currency->name]));
             Log::channel('audit')->info('Created (POST) currency.', $data);
             if (1 === (int) $request->get('create_another')) {

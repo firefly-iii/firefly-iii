@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Admin;
 
+use Carbon\Carbon;
 use FireflyIII\Helpers\Update\UpdateTrait;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
@@ -96,7 +97,7 @@ class UpdateController extends Controller
         $channel         = in_array($channel, ['stable', 'beta', 'alpha'], true) ? $channel : 'stable';
 
         app('fireflyconfig')->set('permission_update_check', $checkForUpdates);
-        app('fireflyconfig')->set('last_update_check', time());
+        app('fireflyconfig')->set('last_update_check', Carbon::now()->getTimestamp());
         app('fireflyconfig')->set('update_channel', $channel);
         session()->flash('success', (string) trans('firefly.configuration_updated'));
 

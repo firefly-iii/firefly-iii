@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Auth;
 
+use Carbon\Carbon;
 use FireflyIII\Events\Security\MFABackupFewLeft;
 use FireflyIII\Events\Security\MFABackupNoLeft;
 use FireflyIII\Events\Security\MFAManyFailedAttempts;
@@ -129,7 +130,7 @@ class TwoFactorController extends Controller
      */
     private function inMFAHistory(string $mfaCode, array $mfaHistory): bool
     {
-        $now = time();
+        $now = Carbon::now()->getTimestamp();
         foreach ($mfaHistory as $entry) {
             $time = $entry['time'];
             $code = $entry['code'];
@@ -149,7 +150,7 @@ class TwoFactorController extends Controller
         /** @var array $mfaHistory */
         $mfaHistory = app('preferences')->get('mfa_history', [])->data;
         $newHistory = [];
-        $now        = time();
+        $now        = Carbon::now()->getTimestamp();
         foreach ($mfaHistory as $entry) {
             $time = $entry['time'];
             $code = $entry['code'];
@@ -184,7 +185,7 @@ class TwoFactorController extends Controller
         /** @var array $mfaHistory */
         $mfaHistory   = app('preferences')->get('mfa_history', [])->data;
         $entry        = [
-            'time' => time(),
+            'time' => Carbon::now()->getTimestamp(),
             'code' => $mfaCode,
         ];
         $mfaHistory[] = $entry;

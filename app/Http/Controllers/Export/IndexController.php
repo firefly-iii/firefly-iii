@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Export;
 
+use Carbon\Carbon;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
@@ -84,14 +86,14 @@ class IndexController extends Controller
         $firstDate = today(config('app.timezone'));
         $firstDate->subYear();
         $journal   = $this->journalRepository->firstNull();
-        if (null !== $journal) {
+        if ($journal instanceof TransactionJournal) {
             Log::debug('First journal is NULL, using today() - 1 year.');
             $firstDate = clone $journal->date;
         }
         $generator->setStart($firstDate);
         $result    = $generator->export();
 
-        $name      = sprintf('%s_transaction_export.csv', date('Y_m_d'));
+        $name      = sprintf('%s_transaction_export.csv', Carbon::now()->format('Y_m_d'));
         $quoted    = sprintf('"%s"', addcslashes($name, '"\\'));
 
         // headers for CSV file.

@@ -24,8 +24,12 @@
 declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
+use Rector\EarlyReturn\Rector\If_\ChangeOrIfContinueToMultiContinueRector;
 
 return RectorConfig::configure()
+    ->withSkip([
+                   ChangeOrIfContinueToMultiContinueRector::class,
+               ])
                    ->withPaths([
 //                                   __DIR__ . '/../app',
 __DIR__ . '/../app/Http',
@@ -43,9 +47,9 @@ __DIR__ . '/../app/Http',
                        privatization: false, // leave false.
                        naming             : false, // leave false
                        instanceOf         : true,
-                       earlyReturn        : false,
-                       strictBooleans     : false,
-                       carbon             : false,
+                       earlyReturn        : true,
+                       strictBooleans     : true,
+                       carbon             : true,
                        rectorPreset       : false,
                        phpunitCodeQuality : false,
                        doctrineCodeQuality: false,
@@ -61,4 +65,5 @@ __DIR__ . '/../app/Http',
                    ->withTypeCoverageLevel(0)
                    ->withDeadCodeLevel(0)
                    ->withCodeQualityLevel(0)
+
                    ->withImportNames(removeUnusedImports: true);// import statements instead of full classes.

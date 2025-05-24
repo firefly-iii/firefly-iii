@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Budget;
 
+use FireflyIII\Models\TransactionJournal;
 use Carbon\Carbon;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
@@ -90,7 +91,7 @@ class ShowController extends Controller
 
         // get first journal ever to set off the budget period overview.
         $first     = $this->journalRepos->firstNull();
-        $firstDate = null !== $first ? $first->date : $start;
+        $firstDate = $first instanceof TransactionJournal ? $first->date : $start;
         $periods   = $this->getNoBudgetPeriodOverview($firstDate, $end);
         $page      = (int) $request->get('page');
         $pageSize  = (int) app('preferences')->get('listPageSize', 50)->data;
@@ -115,7 +116,7 @@ class ShowController extends Controller
     {
         $subTitle  = (string) trans('firefly.all_journals_without_budget');
         $first     = $this->journalRepos->firstNull();
-        $start     = null === $first ? new Carbon() : $first->date;
+        $start     = $first instanceof TransactionJournal ? $first->date : new Carbon();
         $end       = today(config('app.timezone'));
         $page      = (int) $request->get('page');
         $pageSize  = (int) app('preferences')->get('listPageSize', 50)->data;

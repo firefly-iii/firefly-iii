@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Category;
 
+use FireflyIII\Models\TransactionJournal;
 use Carbon\Carbon;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
@@ -119,7 +120,7 @@ class NoCategoryController extends Controller
         app('log')->debug('Start of noCategory()');
         $subTitle  = (string) trans('firefly.all_journals_without_category');
         $first     = $this->journalRepos->firstNull();
-        $start     = null === $first ? new Carbon() : $first->date;
+        $start     = $first instanceof TransactionJournal ? $first->date : new Carbon();
         $end       = today(config('app.timezone'));
         app('log')->debug(sprintf('Start for noCategory() is %s', $start->format('Y-m-d')));
         app('log')->debug(sprintf('End for noCategory() is %s', $end->format('Y-m-d')));

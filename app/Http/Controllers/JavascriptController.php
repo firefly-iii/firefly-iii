@@ -96,7 +96,7 @@ class JavascriptController extends Controller
     {
         $account                   = $repository->find((int) $request->get('account'));
         $currency                  = $this->defaultCurrency;
-        if (null !== $account) {
+        if ($account instanceof Account) {
             $currency = $repository->getAccountCurrency($account) ?? $this->defaultCurrency;
         }
         $locale                    = app('steam')->getLocale();

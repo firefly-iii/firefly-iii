@@ -130,7 +130,7 @@ class RegisterController extends Controller
             $allowRegistration = false;
         }
         if ('web' !== $guard) {
-            $allowRegistration = false;
+            return false;
         }
 
         return $allowRegistration;
@@ -175,7 +175,7 @@ class RegisterController extends Controller
      *
      * @throws FireflyException
      */
-    public function showRegistrationForm(Request $request)
+    public function showRegistrationForm(?Request $request = null)
     {
         $isDemoSite        = app('fireflyconfig')->get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
         $pageTitle         = (string) trans('firefly.register_page_title');
@@ -187,7 +187,7 @@ class RegisterController extends Controller
             return view('error', compact('message'));
         }
 
-        $email             = $request->old('email');
+        $email             = $request?->old('email');
 
         return view('auth.register', compact('isDemoSite', 'email', 'pageTitle'));
     }

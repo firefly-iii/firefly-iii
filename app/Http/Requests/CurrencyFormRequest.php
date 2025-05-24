@@ -70,7 +70,7 @@ class CurrencyFormRequest extends FormRequest
         $currency = $this->route()->parameter('currency');
 
         if (null !== $currency) {
-            $rules = [
+            return [
                 'name'           => 'required|max:48|min:1',
                 'code'           => 'required|min:3|max:51',
                 'symbol'         => 'required|min:1|max:51',

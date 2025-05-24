@@ -159,7 +159,7 @@ class CategoryController extends Controller
         $income     = [];
         $expenses   = [];
         $categoryId = 0;
-        if (null === $category) {
+        if (!$category instanceof Category) {
             /** @var NoCategoryRepositoryInterface $noCatRepository */
             $noCatRepository = app(NoCategoryRepositoryInterface::class);
 
@@ -168,7 +168,7 @@ class CategoryController extends Controller
             $income          = $noCatRepository->listIncome($start, $end, $accounts);
         }
 
-        if (null !== $category) {
+        if ($category instanceof Category) {
             /** @var OperationsRepositoryInterface $opsRepository */
             $opsRepository = app(OperationsRepositoryInterface::class);
             $categoryId    = $category->id;
