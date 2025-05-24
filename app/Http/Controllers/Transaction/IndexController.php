@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
+use FireflyIII\Models\TransactionJournal;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
@@ -81,14 +82,14 @@ class IndexController extends Controller
         $page          = (int) $request->get('page');
         $pageSize      = (int) app('preferences')->get('listPageSize', 50)->data;
 
-        if (null === $start) {
+        if (!$start instanceof Carbon) {
             $start = session('start');
             $end   = session('end');
         }
         if (null === $end) {
             // get last transaction ever?
             $last = $this->repository->getLast();
-            $end  = null !== $last ? $last->date : session('end');
+            $end  = $last instanceof TransactionJournal ? $last->date : session('end');
         }
 
         [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
@@ -97,7 +98,7 @@ class IndexController extends Controller
         $subTitle      = (string) trans(sprintf('firefly.title_%s_between', $objectType), ['start' => $startStr, 'end' => $endStr]);
         $path          = route('transactions.index', [$objectType, $start->format('Y-m-d'), $end->format('Y-m-d')]);
         $firstJournal  = $this->repository->firstNull();
-        $startPeriod   = null === $firstJournal ? new Carbon() : $firstJournal->date;
+        $startPeriod   = $firstJournal instanceof TransactionJournal ? $firstJournal->date : new Carbon();
         $endPeriod     = clone $end;
         $periods       = $this->getTransactionPeriodOverview($objectType, $startPeriod, $endPeriod);
 
@@ -132,9 +133,9 @@ class IndexController extends Controller
         $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
         $path         = route('transactions.index.all', [$objectType]);
         $first        = $this->repository->firstNull();
-        $start        = null === $first ? new Carbon() : $first->date;
+        $start        = $first instanceof TransactionJournal ? $first->date : new Carbon();
         $last         = $this->repository->getLast();
-        $end          = null !== $last ? $last->date : today(config('app.timezone'));
+        $end          = $last instanceof TransactionJournal ? $last->date : today(config('app.timezone'));
         $subTitle     = (string) trans('firefly.all_'.$objectType);
 
         /** @var GroupCollectorInterface $collector */

@@ -143,13 +143,13 @@ class BudgetLimitController extends Controller
         // first search for existing one and update it if necessary.
         $currency = $this->currencyRepos->find((int) $request->get('transaction_currency_id'));
         $budget   = $this->repository->find((int) $request->get('budget_id'));
-        if (null === $currency || null === $budget) {
+        if (!$currency instanceof TransactionCurrency || !$budget instanceof Budget) {
             throw new FireflyException('No valid currency or budget.');
         }
         $start    = Carbon::createFromFormat('Y-m-d', $request->get('start'));
         $end      = Carbon::createFromFormat('Y-m-d', $request->get('end'));
 
-        if (null === $start || null === $end) {
+        if (!$start instanceof Carbon || !$end instanceof Carbon) {
             return response()->json([]);
         }
 
@@ -167,7 +167,7 @@ class BudgetLimitController extends Controller
 
         // sanity check on amount:
         if (0 === bccomp($amount, '0')) {
-            if (null !== $limit) {
+            if ($limit instanceof BudgetLimit) {
                 $this->blRepository->destroyBudgetLimit($limit);
             }
 
@@ -181,11 +181,11 @@ class BudgetLimitController extends Controller
             $amount = bcmul($amount, '-1');
         }
 
-        if (null !== $limit) {
+        if ($limit instanceof BudgetLimit) {
             $limit->amount = $amount;
             $limit->save();
         }
-        if (null === $limit) {
+        if (!$limit instanceof BudgetLimit) {
             $limit = $this->blRepository->store(
                 [
                     'budget_id'   => $request->get('budget_id'),

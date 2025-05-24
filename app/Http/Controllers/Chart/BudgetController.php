@@ -202,7 +202,7 @@ class BudgetController extends Controller
     {
         /** @var GroupCollectorInterface $collector */
         $collector     = app(GroupCollectorInterface::class);
-        $budgetLimitId = null === $budgetLimit ? 0 : $budgetLimit->id;
+        $budgetLimitId = $budgetLimit instanceof BudgetLimit ? $budgetLimit->id : 0;
         $cache         = new CacheProperties();
         $cache->addProperty($budget->id);
         $cache->addProperty($this->convertToNative);
@@ -211,7 +211,7 @@ class BudgetController extends Controller
         $start         = session('first', today(config('app.timezone'))->startOfYear());
         $end           = today();
 
-        if (null !== $budgetLimit) {
+        if ($budgetLimit instanceof BudgetLimit) {
             $start = $budgetLimit->start_date;
             $end   = $budgetLimit->end_date;
             $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date)->setNormalCurrency($budgetLimit->transactionCurrency);
@@ -285,7 +285,7 @@ class BudgetController extends Controller
     {
         /** @var GroupCollectorInterface $collector */
         $collector     = app(GroupCollectorInterface::class);
-        $budgetLimitId = null === $budgetLimit ? 0 : $budgetLimit->id;
+        $budgetLimitId = $budgetLimit instanceof BudgetLimit ? $budgetLimit->id : 0;
         $cache         = new CacheProperties();
         $cache->addProperty($budget->id);
         $cache->addProperty($this->convertToNative);
@@ -293,7 +293,7 @@ class BudgetController extends Controller
         $cache->addProperty('chart.budget.expense-category');
         $start         = session('first', today(config('app.timezone'))->startOfYear());
         $end           = today();
-        if (null !== $budgetLimit) {
+        if ($budgetLimit instanceof BudgetLimit) {
             $start = $budgetLimit->start_date;
             $end   = $budgetLimit->end_date;
             $collector->setNormalCurrency($budgetLimit->transactionCurrency);
@@ -367,7 +367,7 @@ class BudgetController extends Controller
     {
         /** @var GroupCollectorInterface $collector */
         $collector     = app(GroupCollectorInterface::class);
-        $budgetLimitId = null === $budgetLimit ? 0 : $budgetLimit->id;
+        $budgetLimitId = $budgetLimit instanceof BudgetLimit ? $budgetLimit->id : 0;
         $cache         = new CacheProperties();
         $cache->addProperty($budget->id);
         $cache->addProperty($budgetLimitId);
@@ -375,7 +375,7 @@ class BudgetController extends Controller
         $cache->addProperty('chart.budget.expense-expense');
         $start         = session('first', today(config('app.timezone'))->startOfYear());
         $end           = today();
-        if (null !== $budgetLimit) {
+        if ($budgetLimit instanceof BudgetLimit) {
             $start = $budgetLimit->start_date;
             $end   = $budgetLimit->end_date;
             $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date)->setNormalCurrency($budgetLimit->transactionCurrency);
@@ -529,7 +529,7 @@ class BudgetController extends Controller
 
             // get budget limit in this period for this currency.
             $limit                           = $this->blRepository->find($budget, $currency, $currentStart, $currentEnd);
-            if (null !== $limit) {
+            if ($limit instanceof BudgetLimit) {
                 $chartData[1]['entries'][$title] = app('steam')->bcround($limit->amount, $currency->decimal_places);
             }
 

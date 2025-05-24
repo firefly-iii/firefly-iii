@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Auth;
 
+use FireflyIII\User;
 use Cookie;
 use FireflyIII\Events\ActuallyLoggedIn;
 use FireflyIII\Events\Security\UnknownUserAttemptedLogin;
@@ -130,11 +131,11 @@ class LoginController extends Controller
         app('log')->warning('Login attempt failed.');
         $username = (string) $request->get($this->username());
         $user     = $this->repository->findByEmail($username);
-        if (null === $user) {
+        if (!$user instanceof User) {
             // send event to owner.
             event(new UnknownUserAttemptedLogin($username));
         }
-        if (null !== $user) {
+        if ($user instanceof User) {
             event(new UserAttemptedLogin($user));
         }
 
@@ -198,7 +199,7 @@ class LoginController extends Controller
 
         // also logout current 2FA tokens.
         $cookieName = config('google2fa.cookie_name', 'google2fa_token');
-        \Cookie::forget($cookieName);
+        Cookie::forget($cookieName);
 
         $this->guard()->logout();
 
@@ -252,7 +253,7 @@ class LoginController extends Controller
         $storeInCookie     = config('google2fa.store_in_cookie', false);
         if (false !== $storeInCookie) {
             $cookieName = config('google2fa.cookie_name', 'google2fa_token');
-            \Cookie::queue(\Cookie::make($cookieName, 'invalid-'.time()));
+            Cookie::queue(Cookie::make($cookieName, 'invalid-'.time()));
         }
         $usernameField     = $this->username();
 

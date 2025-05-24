@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\System;
 
+use Artisan;
+use function Safe\file_put_contents;
 use Cache;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
@@ -140,14 +142,14 @@ class InstallController extends Controller
                 $this->keys();
             }
             if ('generate-keys' !== $command) {
-                \Artisan::call($command, $args);
-                app('log')->debug(\Artisan::output());
+                Artisan::call($command, $args);
+                app('log')->debug(Artisan::output());
             }
-        } catch (\Exception $e) { // intentional generic exception
+        } catch (Exception $e) { // intentional generic exception
             throw new FireflyException($e->getMessage(), 0, $e);
         }
         // clear cache as well.
-        \Cache::clear();
+        Cache::clear();
         app('preferences')->mark();
 
         return true;
@@ -169,7 +171,7 @@ class InstallController extends Controller
             return;
         }
 
-        \Safe\file_put_contents($publicKey, (string) $key->getPublicKey());
-        \Safe\file_put_contents($privateKey, $key->toString('PKCS1'));
+        file_put_contents($publicKey, (string) $key->getPublicKey());
+        file_put_contents($privateKey, $key->toString('PKCS1'));
     }
 }

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
+use Closure;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\User;
 use Illuminate\Auth\AuthenticationException;
@@ -56,7 +57,7 @@ class Authenticate
      * @throws FireflyException
      * @throws AuthenticationException
      */
-    public function handle($request, \Closure $next, ...$guards)
+    public function handle($request, Closure $next, ...$guards)
     {
         $this->authenticate($request, $guards);
 
@@ -114,10 +115,10 @@ class Authenticate
      */
     private function validateBlockedUser(?User $user, array $guards): void
     {
-        if (null === $user) {
+        if (!$user instanceof User) {
             app('log')->warning('User is null, throw exception?');
         }
-        if (null !== $user) {
+        if ($user instanceof User) {
             // app('log')->debug(get_class($user));
             if (1 === (int) $user->blocked) {
                 $message = (string) trans('firefly.block_account_logout');

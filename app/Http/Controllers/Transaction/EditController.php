@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
+use function Safe\parse_url;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
@@ -85,7 +86,7 @@ class EditController extends Controller
         $defaultCurrency            = $this->defaultCurrency;
         $cash                       = $repository->getCashAccount();
         $previousUrl                = $this->rememberPreviousUrl('transactions.edit.url');
-        $parts                      = \Safe\parse_url($previousUrl);
+        $parts                      = parse_url((string) $previousUrl);
         $search                     = sprintf('?%s', $parts['query'] ?? '');
         $previousUrl                = str_replace($search, '', $previousUrl);
 

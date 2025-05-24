@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Profile;
 
+use Cookie;
+use Google2FA;
 use FireflyIII\Events\Security\DisabledMFA;
 use FireflyIII\Events\Security\EnabledMFA;
 use FireflyIII\Events\Security\MFANewBackupCodes;
@@ -181,7 +183,7 @@ class MfaController extends Controller
 
         // also logout current 2FA tokens.
         $cookieName = config('google2fa.cookie_name', 'google2fa_token');
-        \Cookie::forget($cookieName);
+        Cookie::forget($cookieName);
 
         // send user notification.
         Log::channel('audit')->info(sprintf('User "%s" has disabled MFA', $user->email));
@@ -214,8 +216,8 @@ class MfaController extends Controller
         }
 
         $domain     = $this->getDomain();
-        $secret     = \Google2FA::generateSecretKey();
-        $image      = \Google2FA::getQRCodeInline($domain, auth()->user()->email, $secret);
+        $secret     = Google2FA::generateSecretKey();
+        $image      = Google2FA::getQRCodeInline($domain, auth()->user()->email, $secret);
 
         app('preferences')->set('temp-mfa-secret', $secret);
 
@@ -271,7 +273,7 @@ class MfaController extends Controller
 
         // make sure MFA is logged out.
         if ('testing' !== config('app.env')) {
-            \Google2FA::logout();
+            Google2FA::logout();
         }
 
         // drop all info from session:

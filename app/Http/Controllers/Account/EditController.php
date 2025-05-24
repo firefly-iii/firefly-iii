@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Account;
 
+use FireflyIII\Models\Location;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\AccountFormRequest;
@@ -87,11 +88,11 @@ class EditController extends Controller
         $roles                = $this->getRoles();
         $liabilityTypes       = $this->getLiabilityTypes();
         $location             = $repository->getLocation($account);
-        $latitude             = null !== $location ? $location->latitude : config('firefly.default_location.latitude');
-        $longitude            = null !== $location ? $location->longitude : config('firefly.default_location.longitude');
-        $zoomLevel            = null !== $location ? $location->zoom_level : config('firefly.default_location.zoom_level');
+        $latitude             = $location instanceof Location ? $location->latitude : config('firefly.default_location.latitude');
+        $longitude            = $location instanceof Location ? $location->longitude : config('firefly.default_location.longitude');
+        $zoomLevel            = $location instanceof Location ? $location->zoom_level : config('firefly.default_location.zoom_level');
         $canEditCurrency      = 0 === $account->piggyBanks()->count();
-        $hasLocation          = null !== $location;
+        $hasLocation          = $location instanceof Location;
         $locations            = [
             'location' => [
                 'latitude'     => old('location_latitude') ?? $latitude,

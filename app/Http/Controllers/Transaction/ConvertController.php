@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
+use FireflyIII\Models\TransactionCurrency;
 use Exception;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
@@ -81,7 +82,7 @@ class ConvertController extends Controller
      *
      * @return Factory|Redirector|RedirectResponse|View
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function index(TransactionType $destinationType, TransactionGroup $group)
     {
@@ -213,7 +214,7 @@ class ConvertController extends Controller
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function getLiabilities(): array
     {
@@ -237,7 +238,7 @@ class ConvertController extends Controller
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function getAssetAccounts(): array
     {
@@ -342,7 +343,7 @@ class ConvertController extends Controller
             $sourceCurrency = $this->accountRepository->getAccountCurrency($source);
             $dest           = $this->accountRepository->find((int) $destinationId);
             $destCurrency   = $this->accountRepository->getAccountCurrency($dest);
-            if (null !== $sourceCurrency && null !== $destCurrency && $sourceCurrency->code !== $destCurrency->code) {
+            if ($sourceCurrency instanceof TransactionCurrency && $destCurrency instanceof TransactionCurrency && $sourceCurrency->code !== $destCurrency->code) {
                 $update['currency_id']         = $sourceCurrency->id;
                 $update['foreign_currency_id'] = $destCurrency->id;
                 $update['foreign_amount']      = '1'; // not the best solution but at this point the amount is hard to get.

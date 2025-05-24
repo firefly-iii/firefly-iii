@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
+use FireflyIII\Models\TransactionGroup;
+use function Safe\parse_url;
 use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -65,7 +67,7 @@ class CreateController extends Controller
         $groupId = (int) $request->get('id');
         if (0 !== $groupId) {
             $group = $this->repository->find($groupId);
-            if (null !== $group) {
+            if ($group instanceof TransactionGroup) {
                 /** @var GroupCloneService $service */
                 $service  = app(GroupCloneService::class);
                 $newGroup = $service->cloneGroup($group);
@@ -116,7 +118,7 @@ class CreateController extends Controller
         $accountToTypes             = config('firefly.account_to_transaction');
         $defaultCurrency            = $this->defaultCurrency;
         $previousUrl                = $this->rememberPreviousUrl('transactions.create.url');
-        $parts                      = \Safe\parse_url($previousUrl);
+        $parts                      = parse_url((string) $previousUrl);
         $search                     = sprintf('?%s', $parts['query'] ?? '');
         $previousUrl                = str_replace($search, '', $previousUrl);
         if (!is_array($optionalFields)) {

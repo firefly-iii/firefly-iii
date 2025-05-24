@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use function Safe\file_get_contents;
+use function Safe\ini_get;
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Enums\AccountTypeEnum;
@@ -108,7 +110,7 @@ class DebugController extends Controller
 
         try {
             Artisan::call('twig:clean');
-        } catch (\Exception $e) {  // intentional generic exception
+        } catch (Exception $e) {  // intentional generic exception
             throw new FireflyException($e->getMessage(), 0, $e);
         }
 
@@ -139,7 +141,7 @@ class DebugController extends Controller
             if ($handler instanceof RotatingFileHandler) {
                 $logFile = $handler->getUrl();
                 if (null !== $logFile && file_exists($logFile)) {
-                    $logContent = \Safe\file_get_contents($logFile);
+                    $logContent = file_get_contents($logFile);
                 }
             }
         }
@@ -164,8 +166,8 @@ class DebugController extends Controller
 
     private function getSystemInformation(): array
     {
-        $maxFileSize   = Steam::phpBytes((string) \Safe\ini_get('upload_max_filesize'));
-        $maxPostSize   = Steam::phpBytes((string) \Safe\ini_get('post_max_size'));
+        $maxFileSize   = Steam::phpBytes((string) ini_get('upload_max_filesize'));
+        $maxPostSize   = Steam::phpBytes((string) ini_get('post_max_size'));
         $drivers       = DB::availableDrivers();
         $currentDriver = DB::getDriverName();
 
@@ -177,8 +179,8 @@ class DebugController extends Controller
             'interface'       => \PHP_SAPI,
             'bits'            => \PHP_INT_SIZE * 8,
             'bcscale'         => bcscale(),
-            'display_errors'  => \Safe\ini_get('display_errors'),
-            'error_reporting' => $this->errorReporting((int) \Safe\ini_get('error_reporting')),
+            'display_errors'  => ini_get('display_errors'),
+            'error_reporting' => $this->errorReporting((int) ini_get('error_reporting')),
             'upload_size'     => min($maxFileSize, $maxPostSize),
             'all_drivers'     => $drivers,
             'current_driver'  => $currentDriver,
@@ -197,19 +199,19 @@ class DebugController extends Controller
 
         try {
             if (file_exists('/var/www/counter-main.txt')) {
-                $return['build'] = trim((string) \Safe\file_get_contents('/var/www/counter-main.txt'));
+                $return['build'] = trim((string) file_get_contents('/var/www/counter-main.txt'));
                 app('log')->debug(sprintf('build is now "%s"', $return['build']));
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             app('log')->debug('Could not check build counter, but thats ok.');
             app('log')->warning($e->getMessage());
         }
 
         try {
             if (file_exists('/var/www/build-date-main.txt')) {
-                $return['build_date'] = trim((string) \Safe\file_get_contents('/var/www/build-date-main.txt'));
+                $return['build_date'] = trim((string) file_get_contents('/var/www/build-date-main.txt'));
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             app('log')->debug('Could not check build date, but thats ok.');
             app('log')->warning($e->getMessage());
         }

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use function Safe\preg_match;
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
@@ -143,11 +144,11 @@ class ReportFormRequest extends FormRequest
             // validate as date
             // if regex for YYYY-MM-DD:
             $pattern = '/^(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][\d]|3[01])$/';
-            $result  = \Safe\preg_match($pattern, $string);
+            $result  = preg_match($pattern, $string);
             if (false !== $result && 0 !== $result) {
                 try {
                     $date = new Carbon($parts[1]);
-                } catch (\Exception $e) { // intentional generic exception
+                } catch (Exception $e) { // intentional generic exception
                     $error = sprintf('"%s" is not a valid date range: %s', $range, $e->getMessage());
                     app('log')->error($error);
                     app('log')->error($e->getTraceAsString());
@@ -181,11 +182,11 @@ class ReportFormRequest extends FormRequest
             // validate as date
             // if regex for YYYY-MM-DD:
             $pattern = '/^(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][\d]|3[01])$/';
-            $result  = \Safe\preg_match($pattern, $string);
+            $result  = preg_match($pattern, $string);
             if (false !== $result && 0 !== $result) {
                 try {
                     $date = new Carbon($parts[0]);
-                } catch (\Exception $e) { // intentional generic exception
+                } catch (Exception $e) { // intentional generic exception
                     $error = sprintf('"%s" is not a valid date range: %s', $range, $e->getMessage());
                     app('log')->error($error);
                     app('log')->error($e->getTraceAsString());

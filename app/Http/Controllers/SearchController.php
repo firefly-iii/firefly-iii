@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use Throwable;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Support\Search\SearchInterface;
@@ -118,7 +119,7 @@ class SearchController extends Controller
 
         try {
             $html = view('search.search', compact('groups', 'hasPages', 'searchTime'))->render();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             app('log')->error(sprintf('Cannot render search.search: %s', $e->getMessage()));
             app('log')->error($e->getTraceAsString());
             $html = 'Could not render view.';

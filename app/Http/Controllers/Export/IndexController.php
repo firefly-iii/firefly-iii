@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Export;
 
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
@@ -84,7 +85,7 @@ class IndexController extends Controller
         $firstDate = today(config('app.timezone'));
         $firstDate->subYear();
         $journal   = $this->journalRepository->firstNull();
-        if (null !== $journal) {
+        if ($journal instanceof TransactionJournal) {
             Log::debug('First journal is NULL, using today() - 1 year.');
             $firstDate = clone $journal->date;
         }

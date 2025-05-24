@@ -113,7 +113,7 @@ class LinkController extends Controller
 
         app('log')->debug('We are here (store)');
         $other         = $this->journalRepository->find($linkInfo['transaction_journal_id']);
-        if (null === $other) {
+        if (!$other instanceof TransactionJournal) {
             session()->flash('error', (string) trans('firefly.invalid_link_selection'));
 
             return redirect(route('transactions.show', [$journal->transaction_group_id]));

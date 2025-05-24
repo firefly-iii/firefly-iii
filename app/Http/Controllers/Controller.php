@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use function Safe\realpath;
+use function Safe\ini_get;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
@@ -83,15 +85,15 @@ abstract class Controller extends BaseController
         if ('true' === request()->get('force_default_layout') && 'v2' === config('view.layout')) {
             //config('view.layout','v1');
             Config::set('view.layout', 'v1');
-            View::getFinder()->setPaths([\Safe\realpath(base_path('resources/views'))]); // @phpstan-ignore-line
+            View::getFinder()->setPaths([realpath(base_path('resources/views'))]); // @phpstan-ignore-line
         }
 
         View::share('authGuard', $authGuard);
         View::share('logoutUrl', $logoutUrl);
 
         // upload size
-        $maxFileSize = Steam::phpBytes((string) \Safe\ini_get('upload_max_filesize'));
-        $maxPostSize = Steam::phpBytes((string) \Safe\ini_get('post_max_size'));
+        $maxFileSize = Steam::phpBytes((string) ini_get('upload_max_filesize'));
+        $maxPostSize = Steam::phpBytes((string) ini_get('post_max_size'));
         $uploadSize  = min($maxFileSize, $maxPostSize);
         View::share('uploadSize', $uploadSize);
 

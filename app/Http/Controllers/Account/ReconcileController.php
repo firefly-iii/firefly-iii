@@ -94,7 +94,7 @@ class ReconcileController extends Controller
 
         // get start and end
 
-        if (null === $start && null === $end) {
+        if (!$start instanceof Carbon && !$end instanceof Carbon) {
             /** @var Carbon $start */
             $start = clone session('start', app('navigation')->startOfPeriod(new Carbon(), $range));
 

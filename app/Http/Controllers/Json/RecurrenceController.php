@@ -82,12 +82,12 @@ class RecurrenceController extends Controller
         $skip                          = $skip < 0 || $skip > 31 ? 0 : $skip;
         $weekend                       = $weekend < 1 || $weekend > 4 ? 1 : $weekend;
 
-        if (null === $endDate) {
+        if (!$endDate instanceof Carbon) {
             // safety catch:
             $endDate = now()->addYear();
         }
 
-        if (null === $start || null === $end || null === $firstDate) {
+        if (!$start instanceof Carbon || !$end instanceof Carbon || !$firstDate instanceof Carbon) {
             return response()->json();
         }
 
@@ -161,7 +161,7 @@ class RecurrenceController extends Controller
         } catch (InvalidFormatException) {
             $date = Carbon::today(config('app.timezone'));
         }
-        if (null === $date) {
+        if (!$date instanceof Carbon) {
             return response()->json();
         }
         $date->startOfDay();

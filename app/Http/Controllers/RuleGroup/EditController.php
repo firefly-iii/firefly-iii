@@ -91,7 +91,7 @@ class EditController extends Controller
     {
         $groupId   = (int) $request->get('id');
         $ruleGroup = $this->repository->find($groupId);
-        if (null !== $ruleGroup) {
+        if ($ruleGroup instanceof RuleGroup) {
             $direction = $request->get('direction');
             if ('down' === $direction) {
                 $maxOrder = $this->repository->maxOrder();

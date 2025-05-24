@@ -316,7 +316,7 @@ class IndexController extends Controller
         foreach ($budgetIds as $index => $budgetId) {
             $budgetId = (int) $budgetId;
             $budget   = $repository->find($budgetId);
-            if (null !== $budget) {
+            if ($budget instanceof Budget) {
                 app('log')->debug(sprintf('Set budget #%d ("%s") to position %d', $budget->id, $budget->name, $index + 1));
                 $repository->setBudgetOrder($budget, $index + 1);
             }

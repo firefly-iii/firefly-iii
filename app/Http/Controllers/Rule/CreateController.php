@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Rule;
 
+use FireflyIII\Models\Rule;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\RuleFormRequest;
@@ -128,7 +129,7 @@ class CreateController extends Controller
 
         // title depends on whether or not there is a rule group:
         $subTitle     = (string) trans('firefly.make_new_rule_no_group');
-        if (null !== $ruleGroup) {
+        if ($ruleGroup instanceof RuleGroup) {
             $subTitle = (string) trans('firefly.make_new_rule', ['title' => $ruleGroup->title]);
         }
 
@@ -252,7 +253,7 @@ class CreateController extends Controller
     {
         $ruleId = (int) $request->get('id');
         $rule   = $this->ruleRepos->find($ruleId);
-        if (null !== $rule) {
+        if ($rule instanceof Rule) {
             $this->ruleRepos->duplicate($rule);
         }
 
