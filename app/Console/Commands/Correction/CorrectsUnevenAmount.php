@@ -163,7 +163,7 @@ class CorrectsUnevenAmount extends Command
                 Log::error($e->getTraceAsString());
             }
             if (0 !== $res) {
-                $this->fixJournal($entry->transaction_journal_id);
+                $this->fixJournal((int) $entry->transaction_journal_id);
             }
         }
     }
