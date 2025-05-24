@@ -9,6 +9,7 @@ use FireflyIII\Support\Search\QueryParser\QueryParserInterface;
 use FireflyIII\Support\Search\QueryParser\StringNode;
 use FireflyIII\Support\Search\QueryParser\NodeGroup;
 use FireflyIII\Support\Search\QueryParser\Node;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\integration\TestCase;
 
 abstract class AbstractQueryParserInterfaceParseQueryTester extends TestCase
@@ -16,11 +17,12 @@ abstract class AbstractQueryParserInterfaceParseQueryTester extends TestCase
     abstract protected function createParser(): QueryParserInterface;
 
     /**
-     * @dataProvider queryDataProvider
+     *
      *
      * @param string $query    The query string to parse
      * @param Node   $expected The expected parse result
      */
+    #[DataProvider('queryDataProvider')]
     public function testQueryParsing(string $query, Node $expected): void
     {
         $actual = $this->createParser()->parse($query);

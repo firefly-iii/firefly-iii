@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Tests\unit\Support\Calendar\Periodicity;
 
 use FireflyIII\Support\Calendar\Periodicity\Interval;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\integration\TestCase;
 
 abstract class IntervalTestCase extends TestCase
@@ -32,8 +33,9 @@ abstract class IntervalTestCase extends TestCase
     abstract public static function provideIntervals(): array;
 
     /**
-     * @dataProvider provider
+     *
      */
+    #[DataProvider('provider')]
     public function testGivenAnEpochWhenCallTheNextDateThenReturnsTheExpectedDateSuccessful(IntervalProvider $provider): void
     {
         $period = static::factory()->nextDate($provider->epoch);

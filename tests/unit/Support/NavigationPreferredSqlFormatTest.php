@@ -26,6 +26,7 @@ namespace Tests\unit\Support;
 
 use Carbon\Carbon;
 use FireflyIII\Support\Navigation;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\integration\TestCase;
 
 /**
@@ -39,17 +40,18 @@ use Tests\integration\TestCase;
  */
 final class NavigationPreferredSqlFormatTest extends TestCase
 {
-    private readonly Navigation $navigation;
 
-    public function __construct(string $name)
+    private Navigation $navigation;
+
+    public function setUp(): void
     {
-        parent::__construct($name);
+        parent::setUp();
         $this->navigation = new Navigation();
     }
-
     /**
-     * @dataProvider provideDates
+     *
      */
+    #[DataProvider('provideDates')]
     public function testGivenStartAndEndDatesWhenCallPreferredSqlFormatThenReturnsTheExpectedFormatSuccessful(Carbon $start, Carbon $end, string $expected): void
     {
         $formatPeriod = $this->navigation->preferredSqlFormat($start, $end);
