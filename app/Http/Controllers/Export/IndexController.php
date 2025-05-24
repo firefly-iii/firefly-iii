@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Export;
 
+use Carbon\Carbon;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -92,7 +93,7 @@ class IndexController extends Controller
         $generator->setStart($firstDate);
         $result    = $generator->export();
 
-        $name      = sprintf('%s_transaction_export.csv', date('Y_m_d'));
+        $name      = sprintf('%s_transaction_export.csv', Carbon::now()->format('Y_m_d'));
         $quoted    = sprintf('"%s"', addcslashes($name, '"\\'));
 
         // headers for CSV file.

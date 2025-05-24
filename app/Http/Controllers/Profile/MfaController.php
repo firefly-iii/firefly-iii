@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Profile;
 
+use Carbon\Carbon;
 use Cookie;
 use Google2FA;
 use FireflyIII\Events\Security\DisabledMFA;
@@ -296,7 +297,7 @@ class MfaController extends Controller
         /** @var array $mfaHistory */
         $mfaHistory   = app('preferences')->get('mfa_history', [])->data;
         $entry        = [
-            'time' => time(),
+            'time' => Carbon::now()->getTimestamp(),
             'code' => $mfaCode,
         ];
         $mfaHistory[] = $entry;
@@ -313,7 +314,7 @@ class MfaController extends Controller
         /** @var array $mfaHistory */
         $mfaHistory = app('preferences')->get('mfa_history', [])->data;
         $newHistory = [];
-        $now        = time();
+        $now        = Carbon::now()->getTimestamp();
         foreach ($mfaHistory as $entry) {
             $time = $entry['time'];
             $code = $entry['code'];
