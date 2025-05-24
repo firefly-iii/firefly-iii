@@ -94,7 +94,7 @@ class AccountController extends Controller
     private function renderAccountData(array $params, Account $account): void
     {
         $currency       = $this->repository->getAccountCurrency($account);
-        if (null === $currency) {
+        if (!$currency instanceof TransactionCurrency) {
             $currency = $this->default;
         }
         $currentSet     = [

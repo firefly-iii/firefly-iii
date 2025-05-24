@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
+use Closure;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\Request;
@@ -37,7 +38,7 @@ class IsDemoUser
      *
      * @return mixed
      */
-    public function handle(Request $request, \Closure $next)
+    public function handle(Request $request, Closure $next)
     {
         /** @var null|User $user */
         $user       = $request->user();

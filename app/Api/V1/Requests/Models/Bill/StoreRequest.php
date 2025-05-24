@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Bill;
 
+use ValueError;
+use TypeError;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Support\Request\ChecksLogin;
@@ -109,7 +111,7 @@ class StoreRequest extends FormRequest
 
                 try {
                     $result = bccomp($min, $max);
-                } catch (\ValueError $e) {
+                } catch (ValueError $e) {
                     Log::error($e->getMessage());
                     $validator->errors()->add('amount_min', (string) trans('validation.generic_invalid'));
                     $validator->errors()->add('amount_max', (string) trans('validation.generic_invalid'));
@@ -124,7 +126,7 @@ class StoreRequest extends FormRequest
 
         try {
             $failed = $validator->fails();
-        } catch (\TypeError $e) {
+        } catch (TypeError $e) {
             Log::error($e->getMessage());
             $failed = false;
         }

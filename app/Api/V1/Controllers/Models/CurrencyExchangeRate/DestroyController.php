@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Models\CurrencyExchangeRate;
 
+use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\CurrencyExchangeRate\DestroyRequest;
 use FireflyIII\Enums\UserRoleEnum;
@@ -59,11 +60,11 @@ class DestroyController extends Controller
     public function destroy(DestroyRequest $request, TransactionCurrency $from, TransactionCurrency $to): JsonResponse
     {
         $date = $request->getDate();
-        if (null === $date) {
+        if (!$date instanceof Carbon) {
             throw new ValidationException('Date is required');
         }
         $rate = $this->repository->getSpecificRateOnDate($from, $to, $date);
-        if (null === $rate) {
+        if (!$rate instanceof CurrencyExchangeRate) {
             throw new NotFoundHttpException();
         }
         $this->repository->deleteRate($rate);

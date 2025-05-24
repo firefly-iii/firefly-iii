@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Models\TransactionLinkType;
 
+use Validator;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\TransactionLinkType\UpdateRequest;
 use FireflyIII\Exceptions\FireflyException;
@@ -85,7 +86,7 @@ class UpdateController extends Controller
 
         if (!$this->userRepository->hasRole($admin, 'owner')) {
             $messages = ['name' => '200005: You need the "owner" role to do this.'];
-            \Validator::make([], $rules, $messages)->validate();
+            Validator::make([], $rules, $messages)->validate();
         }
 
         $data        = $request->getAll();
