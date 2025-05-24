@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Middleware;
 
 use Closure;
-use App;
+use Illuminate\Support\Facades\App;
 use Carbon\Carbon;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;

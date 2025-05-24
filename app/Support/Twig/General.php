@@ -33,7 +33,7 @@ use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Search\OperatorQuerySearch;
 use Illuminate\Support\Facades\Log;
 use League\CommonMark\GithubFlavoredMarkdownConverter;
-use Route;
+use Illuminate\Support\Facades\Route;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;

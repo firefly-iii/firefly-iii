@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Models\TransactionLinkType;
 
-use Validator;
+use Illuminate\Support\Facades\Validator;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\TransactionLinkType\StoreRequest;
 use FireflyIII\Exceptions\FireflyException;

@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\System;
 
-use Artisan;
-use Cache;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;

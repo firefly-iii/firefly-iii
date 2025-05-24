@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Profile;
 
-use Cookie;
-use Google2FA;
+use Illuminate\Support\Facades\Cookie;
+use PragmaRX\Google2FALaravel\Facade as Google2FA;
 use Carbon\Carbon;
 use FireflyIII\Events\Security\DisabledMFA;
 use FireflyIII\Events\Security\EnabledMFA;

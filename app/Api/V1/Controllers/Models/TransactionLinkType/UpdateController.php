@@ -23,8 +23,8 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Models\TransactionLinkType;
+use Illuminate\Support\Facades\Validator;
 
-use Validator;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\TransactionLinkType\UpdateRequest;
 use FireflyIII\Exceptions\FireflyException;
