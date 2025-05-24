@@ -46,6 +46,7 @@ use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 /**
  * Class LoginController
@@ -211,7 +212,7 @@ class LoginController extends Controller
         $this->loggedOut($request);
 
         return $request->wantsJson()
-            ? new Response('', 204)
+            ? new Response('', ResponseAlias::HTTP_NO_CONTENT)
             : redirect('/');
     }
 

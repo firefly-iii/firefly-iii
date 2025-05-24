@@ -50,11 +50,11 @@ __DIR__ . '/../app/Http',
                        earlyReturn        : true,
                        strictBooleans     : true,
                        carbon             : true,
-                       rectorPreset       : false,
-                       phpunitCodeQuality : false,
-                       doctrineCodeQuality: false,
-                       symfonyCodeQuality : false,
-                       symfonyConfigs     : false
+                       rectorPreset       : true,
+                       phpunitCodeQuality : true,
+                       doctrineCodeQuality: true,
+                       symfonyCodeQuality : true,
+                       symfonyConfigs     : true
 
                    )
                    ->withComposerBased(
