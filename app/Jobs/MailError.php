@@ -28,6 +28,7 @@ use Illuminate\Mail\Message;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Symfony\Component\Mailer\Exception\TransportException;
 
 /**
@@ -70,7 +71,7 @@ class MailError extends Job implements ShouldQueue
 
         if ($this->attempts() < 3 && '' !== $email) {
             try {
-                \Mail::send(
+                Mail::send(
                     ['emails.error-html', 'emails.error-text'],
                     $args,
                     static function (Message $message) use ($email): void {

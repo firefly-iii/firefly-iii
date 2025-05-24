@@ -39,6 +39,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * Trait AccountServiceTrait
@@ -54,7 +55,7 @@ trait AccountServiceTrait
         }
         $data      = ['iban' => $iban];
         $rules     = ['iban' => 'required|iban'];
-        $validator = \Validator::make($data, $rules);
+        $validator = Validator::make($data, $rules);
         if ($validator->fails()) {
             app('log')->info(sprintf('Detected invalid IBAN ("%s"). Return NULL instead.', $iban));
 

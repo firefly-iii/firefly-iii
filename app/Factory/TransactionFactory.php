@@ -32,6 +32,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Rules\UniqueIban;
 use FireflyIII\Services\Internal\Update\AccountUpdateService;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * Class TransactionFactory
@@ -152,7 +153,7 @@ class TransactionFactory
             return;
         }
         // validate info:
-        $validator = \Validator::make(['iban' => $this->accountInformation['iban']], [
+        $validator = Validator::make(['iban' => $this->accountInformation['iban']], [
             'iban' => ['required', new UniqueIban($this->account, $this->account->accountType->type)],
         ]);
         if ($validator->fails()) {

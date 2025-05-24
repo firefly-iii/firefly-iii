@@ -59,7 +59,7 @@ class AppServiceProvider extends ServiceProvider
 
         // blade extension
         Blade::directive('activeXRoutePartial', function (string $route) {
-            $name = \Route::getCurrentRoute()->getName() ?? '';
+            $name = Route::getCurrentRoute()->getName() ?? '';
             if (str_contains($name, $route)) {
                 return 'menu-open';
             }

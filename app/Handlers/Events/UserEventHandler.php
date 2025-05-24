@@ -54,6 +54,7 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Mail;
 
@@ -266,7 +267,7 @@ class UserEventHandler
         $url      = route('profile.confirm-email-change', [$token->data]);
 
         try {
-            \Mail::to($newEmail)->send(new ConfirmEmailChangeMail($newEmail, $oldEmail, $url));
+            Mail::to($newEmail)->send(new ConfirmEmailChangeMail($newEmail, $oldEmail, $url));
         } catch (\Exception $e) {
             app('log')->error($e->getMessage());
             app('log')->error($e->getTraceAsString());
@@ -291,7 +292,7 @@ class UserEventHandler
         $url      = route('profile.undo-email-change', [$token->data, $hashed]);
 
         try {
-            \Mail::to($oldEmail)->send(new UndoEmailChangeMail($newEmail, $oldEmail, $url));
+            Mail::to($oldEmail)->send(new UndoEmailChangeMail($newEmail, $oldEmail, $url));
         } catch (\Exception $e) {
             app('log')->error($e->getMessage());
             app('log')->error($e->getTraceAsString());
@@ -355,7 +356,7 @@ class UserEventHandler
         $url     = route('invite', [$event->invitee->invite_code]);
 
         try {
-            \Mail::to($invitee)->send(new InvitationMail($invitee, $admin, $url));
+            Mail::to($invitee)->send(new InvitationMail($invitee, $admin, $url));
         } catch (\Exception $e) {
             app('log')->error($e->getMessage());
             app('log')->error($e->getTraceAsString());
