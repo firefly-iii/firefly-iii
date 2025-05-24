@@ -48,12 +48,13 @@ jobs:
       - name: "Create database file"
         run: |
           touch storage/database/database.sqlite
-          chmod 600 storage/oauth-public.key
-          chmod 600 storage/oauth-private.key
           wget -q https://github.com/firefly-iii/test-fixtures/raw/refs/heads/main/test-database.sqlite -O storage/database/database.sqlite
 
       - name: "Upgrades the database to the latest version"
-        run: php artisan firefly-iii:upgrade-database
+        run: |
+          php artisan firefly-iii:upgrade-database
+          chmod 600 storage/oauth-public.key
+          chmod 600 storage/oauth-private.key
 
       - name: "Integrity Database Report"
         run: php artisan firefly-iii:report-integrity
