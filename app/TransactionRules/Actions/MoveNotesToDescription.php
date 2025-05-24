@@ -42,15 +42,10 @@ class MoveNotesToDescription implements ActionInterface
 {
     use ConvertsDataTypes;
 
-    private RuleAction $action;
-
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(RuleAction $action)
-    {
-        $this->action = $action;
-    }
+    public function __construct(private RuleAction $action) {}
 
     public function actOnArray(array $journal): bool
     {

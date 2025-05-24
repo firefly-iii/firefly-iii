@@ -40,10 +40,10 @@ use Illuminate\Support\Collection;
  */
 class BillTransformer extends AbstractTransformer
 {
-    private BillDateCalculator      $calculator;
-    private BillRepositoryInterface $repository;
-    private TransactionCurrency     $default;
-    private bool                    $convertToNative;
+    private readonly BillDateCalculator      $calculator;
+    private readonly bool                    $convertToNative;
+    private readonly TransactionCurrency     $default;
+    private readonly BillRepositoryInterface $repository;
 
     /**
      * BillTransformer constructor.

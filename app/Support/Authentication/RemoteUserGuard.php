@@ -38,20 +38,18 @@ use Illuminate\Support\Facades\Log;
  */
 class RemoteUserGuard implements Guard
 {
-    protected Application  $application;
-    protected UserProvider $provider;
-    protected ?User        $user;
+    protected Application $application;
+    protected ?User       $user;
 
     /**
      * Create a new authentication guard.
      */
-    public function __construct(UserProvider $provider, Application $app)
+    public function __construct(protected UserProvider $provider, Application $app)
     {
         /** @var null|Request $request */
         $request           = $app->get('request');
         Log::debug(sprintf('Created RemoteUserGuard for %s "%s"', $request?->getMethod(), $request?->getRequestUri()));
         $this->application = $app;
-        $this->provider    = $provider;
         $this->user        = null;
     }
 
@@ -59,7 +57,7 @@ class RemoteUserGuard implements Guard
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
         if (null !== $this->user) {
-            Log::debug(sprintf('%s is found: #%d, "%s".', get_class($this->user), $this->user->id, $this->user->email));
+            Log::debug(sprintf('%s is found: #%d, "%s".', $this->user::class, $this->user->id, $this->user->email));
 
             return;
         }

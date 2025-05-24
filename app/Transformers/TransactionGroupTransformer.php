@@ -44,9 +44,9 @@ use Illuminate\Support\Facades\Log;
  */
 class TransactionGroupTransformer extends AbstractTransformer
 {
-    private TransactionGroupRepositoryInterface $groupRepos;
-    private array                               $metaDateFields;
-    private array                               $metaFields;
+    private readonly TransactionGroupRepositoryInterface $groupRepos;
+    private readonly array                               $metaDateFields;
+    private readonly array                               $metaFields;
 
     /**
      * Constructor.
@@ -83,14 +83,14 @@ class TransactionGroupTransformer extends AbstractTransformer
         $first = new NullArrayObject(reset($group['transactions']));
 
         return [
-            'id'                 => (int) $first['transaction_group_id'],
-            'created_at'         => $first['created_at']->toAtomString(),
-            'updated_at'         => $first['updated_at']->toAtomString(),
-            'user'               => (string) $data['user_id'],
-            'user_group'         => (string) $data['user_group_id'],
-            'group_title'        => $data['title'],
-            'transactions'       => $this->transformTransactions($data),
-            'links'              => [
+            'id'           => (int) $first['transaction_group_id'],
+            'created_at'   => $first['created_at']->toAtomString(),
+            'updated_at'   => $first['updated_at']->toAtomString(),
+            'user'         => (string) $data['user_id'],
+            'user_group'   => (string) $data['user_group_id'],
+            'group_title'  => $data['title'],
+            'transactions' => $this->transformTransactions($data),
+            'links'        => [
                 [
                     'rel' => 'self',
                     'uri' => '/transactions/'.$first['transaction_group_id'],
@@ -118,7 +118,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         // amount:
         $amount          = app('steam')->positive((string) ($transaction['amount'] ?? '0'));
         $foreignAmount   = null;
-        if (null !== $transaction['foreign_amount'] && '' !== $transaction['foreign_amount'] && 0 !== bccomp('0', $transaction['foreign_amount'])) {
+        if (null !== $transaction['foreign_amount'] && '' !== $transaction['foreign_amount'] && 0 !== bccomp('0', (string) $transaction['foreign_amount'])) {
             $foreignAmount = app('steam')->positive($transaction['foreign_amount']);
         }
         $type            = $this->stringFromArray($transaction, 'transaction_type_type', TransactionTypeEnum::WITHDRAWAL->value);
@@ -132,7 +132,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         return [
             'user'                            => (string) $transaction['user_id'],
             'transaction_journal_id'          => (string) $transaction['transaction_journal_id'],
-            'type'                            => strtolower($type),
+            'type'                            => strtolower((string) $type),
             'date'                            => $transaction['date']->toAtomString(),
             'order'                           => $transaction['order'],
 
@@ -231,12 +231,6 @@ class TransactionGroupTransformer extends AbstractTransformer
         return null;
     }
 
-    private function getLocation(TransactionJournal $journal): ?Location
-    {
-        /** @var null|Location */
-        return $journal->locations()->first();
-    }
-
     /**
      * @throws FireflyException
      */
@@ -296,7 +290,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         $type            = $journal->transactionType->type;
         $currency        = $source->transactionCurrency;
         $amount          = app('steam')->bcround($this->getAmount($source->amount), $currency->decimal_places ?? 0);
-        $foreignAmount   = $this->getForeignAmount(null === $source->foreign_amount ? null : $source->foreign_amount);
+        $foreignAmount   = $this->getForeignAmount($source->foreign_amount ?? null);
         $metaFieldData   = $this->groupRepos->getMetaFields($journal->id, $this->metaFields);
         $metaDates       = $this->getDates($this->groupRepos->getMetaDateFields($journal->id, $this->metaDateFields));
         $foreignCurrency = $this->getForeignCurrency($source->foreignCurrency);
@@ -321,7 +315,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         return [
             'user'                            => $journal->user_id,
             'transaction_journal_id'          => (string) $journal->id,
-            'type'                            => strtolower($type),
+            'type'                            => strtolower((string) $type),
             'date'                            => $journal->date->toAtomString(),
             'order'                           => $journal->order,
 
@@ -525,5 +519,11 @@ class TransactionGroupTransformer extends AbstractTransformer
         $array['name'] = $bill->name;
 
         return $array;
+    }
+
+    private function getLocation(TransactionJournal $journal): ?Location
+    {
+        /** @var null|Location */
+        return $journal->locations()->first();
     }
 }

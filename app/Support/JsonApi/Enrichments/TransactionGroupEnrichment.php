@@ -42,16 +42,16 @@ use Illuminate\Support\Facades\Log;
 
 class TransactionGroupEnrichment implements EnrichmentInterface
 {
-    private Collection $collection;
-    private array      $notes;
-    private array      $tags;
-    private array      $locations;
-    private array      $journalIds;
-    private User       $user; // @phpstan-ignore-line
-    private UserGroup  $userGroup; // @phpstan-ignore-line
-    private array      $metaData;
-    private array      $dateFields;
-    private array      $attachmentCount;
+    private array          $attachmentCount;
+    private Collection     $collection;
+    private readonly array $dateFields;
+    private array          $journalIds;
+    private array          $locations;
+    private array          $metaData;      // @phpstan-ignore-line
+    private array          $notes; // @phpstan-ignore-line
+    private array          $tags;
+    private User           $user;
+    private UserGroup      $userGroup;
 
     public function __construct()
     {
@@ -62,6 +62,20 @@ class TransactionGroupEnrichment implements EnrichmentInterface
         $this->locations       = [];
         $this->attachmentCount = [];
         $this->dateFields      = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date'];
+    }
+
+    #[\Override]
+    public function enrichSingle(array|Model $model): array|TransactionGroup
+    {
+        Log::debug(__METHOD__);
+        if (is_array($model)) {
+            $collection = new Collection([$model]);
+            $collection = $this->enrich($collection);
+
+            return $collection->first();
+        }
+
+        throw new FireflyException('Cannot enrich single model.');
     }
 
     #[\Override]
@@ -83,20 +97,6 @@ class TransactionGroupEnrichment implements EnrichmentInterface
         return $this->collection;
     }
 
-    #[\Override]
-    public function enrichSingle(array|Model $model): array|TransactionGroup
-    {
-        Log::debug(__METHOD__);
-        if (is_array($model)) {
-            $collection = new Collection([$model]);
-            $collection = $this->enrich($collection);
-
-            return $collection->first();
-        }
-
-        throw new FireflyException('Cannot enrich single model.');
-    }
-
     private function collectJournalIds(): void
     {
         /** @var array $group */
@@ -106,17 +106,6 @@ class TransactionGroupEnrichment implements EnrichmentInterface
             }
         }
         $this->journalIds = array_unique($this->journalIds);
-    }
-
-    public function setUserGroup(UserGroup $userGroup): void
-    {
-        $this->userGroup = $userGroup;
-    }
-
-    public function setUser(User $user): void
-    {
-        $this->user      = $user;
-        $this->userGroup = $user->userGroup;
     }
 
     private function collectNotes(): void
@@ -246,5 +235,16 @@ class TransactionGroupEnrichment implements EnrichmentInterface
 
             return $item;
         });
+    }
+
+    public function setUser(User $user): void
+    {
+        $this->user      = $user;
+        $this->userGroup = $user->userGroup;
+    }
+
+    public function setUserGroup(UserGroup $userGroup): void
+    {
+        $this->userGroup = $userGroup;
     }
 }

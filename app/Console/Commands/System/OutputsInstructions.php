@@ -147,10 +147,7 @@ class OutputsInstructions extends Command
      */
     private function showLine(): void
     {
-        $line = '+';
-        $line .= str_repeat('-', 78);
-        $line .= '+';
-        $this->line($line);
+        $this->line(sprintf('+%s+', str_repeat('-', 78)));
     }
 
     /**
@@ -173,6 +170,13 @@ class OutputsInstructions extends Command
         foreach ($parts as $string) {
             $this->info('| '.sprintf('%-77s', $string).'|');
         }
+    }
+
+    private function donationText(): void
+    {
+        $this->boxed('Did you know you can support the development of Firefly III?');
+        $this->boxed('You can donate in many ways, like GitHub Sponsors or Patreon.');
+        $this->boxed('For more information, please visit https://bit.ly/donate-to-Firefly-III');
     }
 
     /**
@@ -227,12 +231,5 @@ class OutputsInstructions extends Command
         $this->donationText();
         $this->boxed('');
         $this->showLine();
-    }
-
-    private function donationText(): void
-    {
-        $this->boxed('Did you know you can support the development of Firefly III?');
-        $this->boxed('You can donate in many ways, like GitHub Sponsors or Patreon.');
-        $this->boxed('For more information, please visit https://bit.ly/donate-to-Firefly-III');
     }
 }

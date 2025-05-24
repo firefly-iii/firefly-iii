@@ -126,9 +126,9 @@ class BudgetController extends Controller
                     ];
                     $report[$sourceAccountId]['currencies'][$currencyId]['sum'] = bcadd(
                         $report[$sourceAccountId]['currencies'][$currencyId]['sum'],
-                        $journal['amount']
+                        (string) $journal['amount']
                     );
-                    $sums[$currencyId]['sum']                                   = bcadd($sums[$currencyId]['sum'], $journal['amount']);
+                    $sums[$currencyId]['sum']                                   = bcadd($sums[$currencyId]['sum'], (string) $journal['amount']);
                 }
             }
         }
@@ -163,7 +163,7 @@ class BudgetController extends Controller
                         'currency_decimal_places'  => $currency['currency_decimal_places'],
                     ];
                     ++$result[$key]['transactions'];
-                    $result[$key]['sum']       = bcadd($journal['amount'], $result[$key]['sum']);
+                    $result[$key]['sum']       = bcadd((string) $journal['amount'], $result[$key]['sum']);
                     $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string) $result[$key]['transactions']);
                     $result[$key]['avg_float'] = (float) $result[$key]['avg']; // intentional float
                 }
@@ -229,8 +229,8 @@ class BudgetController extends Controller
                         'currency_name'           => $currency['currency_name'],
                         'currency_decimal_places' => $currency['currency_decimal_places'],
                     ];
-                    $report[$budgetId]['currencies'][$currencyId]['sum'] = bcadd($report[$budgetId]['currencies'][$currencyId]['sum'], $journal['amount']);
-                    $sums[$currencyId]['sum']                            = bcadd($sums[$currencyId]['sum'], $journal['amount']);
+                    $report[$budgetId]['currencies'][$currencyId]['sum'] = bcadd($report[$budgetId]['currencies'][$currencyId]['sum'], (string) $journal['amount']);
+                    $sums[$currencyId]['sum']                            = bcadd($sums[$currencyId]['sum'], (string) $journal['amount']);
                 }
             }
         }
@@ -317,8 +317,8 @@ class BudgetController extends Controller
                         'entries'                 => [],
                     ];
                     $report[$key]['entries'][$dateKey] ??= '0';
-                    $report[$key]['entries'][$dateKey] = bcadd($journal['amount'], $report[$key]['entries'][$dateKey]);
-                    $report[$key]['sum']               = bcadd($report[$key]['sum'], $journal['amount']);
+                    $report[$key]['entries'][$dateKey] = bcadd((string) $journal['amount'], $report[$key]['entries'][$dateKey]);
+                    $report[$key]['sum']               = bcadd($report[$key]['sum'], (string) $journal['amount']);
                     $report[$key]['avg']               = bcdiv($report[$key]['sum'], (string) count($periods));
                 }
             }

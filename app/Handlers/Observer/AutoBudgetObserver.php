@@ -37,12 +37,6 @@ class AutoBudgetObserver
         $this->updateNativeAmount($autoBudget);
     }
 
-    public function updated(AutoBudget $autoBudget): void
-    {
-        Log::debug('Observe "updated" of an auto budget.');
-        $this->updateNativeAmount($autoBudget);
-    }
-
     private function updateNativeAmount(AutoBudget $autoBudget): void
     {
         if (!Amount::convertToNative($autoBudget->budget->user)) {
@@ -58,5 +52,11 @@ class AutoBudgetObserver
         }
         $autoBudget->saveQuietly();
         Log::debug('Auto budget native amount is updated.');
+    }
+
+    public function updated(AutoBudget $autoBudget): void
+    {
+        Log::debug('Observe "updated" of an auto budget.');
+        $this->updateNativeAmount($autoBudget);
     }
 }

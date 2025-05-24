@@ -81,16 +81,16 @@
         "ext-tokenizer": "*",
         "ext-xml": "*",
         "ext-xmlwriter": "*",
-        "bacon/bacon-qr-code": "^2",
+        "bacon/bacon-qr-code": "^3.0",
         "diglactic/laravel-breadcrumbs": "^10",
         "gdbots/query-parser": "^3.0",
         "guzzlehttp/guzzle": "^7.9",
         "jc5/google2fa-laravel": "^2.0",
         "jc5/recovery": "^2",
         "laravel-notification-channels/pushover": "^4.0",
-        "laravel/framework": "^11",
-        "laravel/passport": "^12",
-        "laravel/sanctum": "^4",
+        "laravel/framework": "^12",
+        "laravel/passport": "^13.0",
+        "laravel/sanctum": "^4.1",
         "laravel/slack-notification-channel": "^3.3",
         "laravel/ui": "^4.2",
         "league/commonmark": "^2",
@@ -99,7 +99,7 @@
         "mailersend/laravel-driver": "^2.7",
         "nunomaduro/collision": "^8",
         "pragmarx/google2fa": "^8.0",
-        "predis/predis": "^2.2",
+        "predis/predis": "^3",
         "psr/log": "<4",
         "ramsey/uuid": "^4.7",
         "rcrowe/twigbridge": "^0.14",
@@ -109,7 +109,7 @@
         "symfony/expression-language": "^7.0",
         "symfony/http-client": "^7.1",
         "symfony/mailgun-mailer": "^7.1",
-        "wijourdil/ntfy-notification-channel": "^3.0"
+        "thecodingmachine/safe": "^3.1"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.9",
@@ -123,7 +123,9 @@
         "phpstan/phpstan": "^2",
         "phpstan/phpstan-deprecation-rules": "^2",
         "phpstan/phpstan-strict-rules": "^2",
-        "phpunit/phpunit": "^11"
+        "phpunit/phpunit": "^12",
+        "rector/rector": "^2.0",
+        "thecodingmachine/phpstan-safe-rule": "^1.4"
     },
     "suggest": {},
     "autoload": {

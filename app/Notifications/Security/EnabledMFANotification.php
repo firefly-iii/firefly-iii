@@ -40,12 +40,7 @@ class EnabledMFANotification extends Notification
 {
     use Queueable;
 
-    private User $user;
-
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
+    public function __construct(private User $user) {}
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
@@ -67,7 +62,7 @@ class EnabledMFANotification extends Notification
         $userAgent = Request::userAgent();
         $time      = now(config('app.timezone'))->isoFormat((string) trans('config.date_time_js'));
 
-        return (new MailMessage())->markdown('emails.security.enabled-mfa', ['user' => $this->user, 'ip' => $ip, 'host' => $host, 'userAgent' => $userAgent, 'time' => $time])->subject($subject);
+        return new MailMessage()->markdown('emails.security.enabled-mfa', ['user' => $this->user, 'ip' => $ip, 'host' => $host, 'userAgent' => $userAgent, 'time' => $time])->subject($subject);
     }
 
     public function toNtfy(User $notifiable): Message

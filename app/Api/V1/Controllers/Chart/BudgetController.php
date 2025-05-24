@@ -193,7 +193,7 @@ class BudgetController extends Controller
             // var_dump($return);
             /** @var array $journal */
             foreach ($currentBudgetArray['transaction_journals'] as $journal) {
-                $return[$currencyId]['spent'] = bcadd($return[$currencyId]['spent'], $journal['amount']);
+                $return[$currencyId]['spent'] = bcadd($return[$currencyId]['spent'], (string) $journal['amount']);
             }
         }
 
@@ -245,13 +245,13 @@ class BudgetController extends Controller
         }
         $result          = $this->processExpenses($budget->id, $filtered, $limit->start_date, $end);
         if (1 === count($result)) {
-            $compare = bccomp($limit->amount, app('steam')->positive($result[$limitCurrencyId]['spent']));
+            $compare = bccomp($limit->amount, (string) app('steam')->positive($result[$limitCurrencyId]['spent']));
             if (1 === $compare) {
                 // convert this amount into the native currency:
-                $result[$limitCurrencyId]['left'] = bcadd($limit->amount, $result[$limitCurrencyId]['spent']);
+                $result[$limitCurrencyId]['left'] = bcadd($limit->amount, (string) $result[$limitCurrencyId]['spent']);
             }
             if ($compare <= 0) {
-                $result[$limitCurrencyId]['overspent'] = app('steam')->positive(bcadd($limit->amount, $result[$limitCurrencyId]['spent']));
+                $result[$limitCurrencyId]['overspent'] = app('steam')->positive(bcadd($limit->amount, (string) $result[$limitCurrencyId]['spent']));
             }
         }
 

@@ -46,7 +46,7 @@ return [
             'timeout'           => null,
             'scheme'            => env('MAIL_SCHEME'),
             'url'               => env('MAIL_URL'),
-            'local_domain'      => env('MAIL_EHLO_DOMAIN', parse_url(env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
+            'local_domain'      => env('MAIL_EHLO_DOMAIN', parse_url((string) env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
             'verify_peer'       => env('MAIL_VERIFY_PEER', true),
             'allow_self_signed' => env('MAIL_ALLOW_SELF_SIGNED', false),
             'verify_peer_name'  => env('MAIL_VERIFY_PEER_NAME', true),

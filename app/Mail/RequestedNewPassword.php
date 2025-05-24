@@ -36,15 +36,10 @@ class RequestedNewPassword extends Mailable
     use Queueable;
     use SerializesModels;
 
-    public string $url;
-
     /**
      * RequestedNewPassword constructor.
      */
-    public function __construct(string $url)
-    {
-        $this->url = $url;
-    }
+    public function __construct(public string $url) {}
 
     /**
      * Build the message.

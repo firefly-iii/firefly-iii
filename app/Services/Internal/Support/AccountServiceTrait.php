@@ -209,19 +209,19 @@ trait AccountServiceTrait
         $amount     = array_key_exists('opening_balance', $data) ? $data['opening_balance'] : '0';
 
         // amount is positive.
-        if (1 === bccomp($amount, '0')) {
+        if (1 === bccomp((string) $amount, '0')) {
             app('log')->debug(sprintf('Amount is %s, which is positive. Source is a new IB account, destination is #%d', $amount, $account->id));
             $sourceName = trans('firefly.initial_balance_description', ['account' => $account->name], $language);
             $destId     = $account->id;
         }
         // amount is not positive
-        if (-1 === bccomp($amount, '0')) {
+        if (-1 === bccomp((string) $amount, '0')) {
             app('log')->debug(sprintf('Amount is %s, which is negative. Destination is a new IB account, source is #%d', $amount, $account->id));
             $destName = trans('firefly.initial_balance_account', ['account' => $account->name], $language);
             $sourceId = $account->id;
         }
         // amount is 0
-        if (0 === bccomp($amount, '0')) {
+        if (0 === bccomp((string) $amount, '0')) {
             app('log')->debug('Amount is zero, so will not make an OB group.');
 
             throw new FireflyException('Amount for new opening balance was unexpectedly 0.');
@@ -662,10 +662,10 @@ trait AccountServiceTrait
 
         // submit to factory:
         $submission = [
-            'group_title'   => null,
-            'user'          => $account->user,
-            'user_group'    => $account->user->userGroup,
-            'transactions'  => [
+            'group_title'  => null,
+            'user'         => $account->user,
+            'user_group'   => $account->user->userGroup,
+            'transactions' => [
                 [
                     'type'             => 'Opening balance',
                     'date'             => $openingBalanceDate,

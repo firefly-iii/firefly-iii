@@ -35,12 +35,12 @@ use Illuminate\Support\Collection;
  */
 class CategoryReportGenerator
 {
-    private Collection                    $accounts;
-    private Carbon                        $end;
-    private NoCategoryRepositoryInterface $noCatRepository;
-    private OperationsRepositoryInterface $opsRepository;
-    private array                         $report;
-    private Carbon                        $start;
+    private Collection                             $accounts;
+    private Carbon                                 $end;
+    private readonly NoCategoryRepositoryInterface $noCatRepository;
+    private readonly OperationsRepositoryInterface $opsRepository;
+    private array                                  $report;
+    private Carbon                                 $start;
 
     /**
      * CategoryReportGenerator constructor.
@@ -137,29 +137,29 @@ class CategoryReportGenerator
         // loop journals:
         foreach ($categoryRow['transaction_journals'] as $journal) {
             // sum of sums
-            $this->report['sums'][$currencyId]['sum']    = bcadd($this->report['sums'][$currencyId]['sum'], $journal['amount']);
+            $this->report['sums'][$currencyId]['sum']    = bcadd((string) $this->report['sums'][$currencyId]['sum'], (string) $journal['amount']);
             // sum of spent:
-            $this->report['sums'][$currencyId]['spent']  = -1 === bccomp($journal['amount'], '0') ? bcadd(
-                $this->report['sums'][$currencyId]['spent'],
-                $journal['amount']
+            $this->report['sums'][$currencyId]['spent']  = -1 === bccomp((string) $journal['amount'], '0') ? bcadd(
+                (string) $this->report['sums'][$currencyId]['spent'],
+                (string) $journal['amount']
             ) : $this->report['sums'][$currencyId]['spent'];
             // sum of earned
-            $this->report['sums'][$currencyId]['earned'] = 1 === bccomp($journal['amount'], '0') ? bcadd(
-                $this->report['sums'][$currencyId]['earned'],
-                $journal['amount']
+            $this->report['sums'][$currencyId]['earned'] = 1 === bccomp((string) $journal['amount'], '0') ? bcadd(
+                (string) $this->report['sums'][$currencyId]['earned'],
+                (string) $journal['amount']
             ) : $this->report['sums'][$currencyId]['earned'];
 
             // sum of category
-            $this->report['categories'][$key]['sum']     = bcadd($this->report['categories'][$key]['sum'], $journal['amount']);
+            $this->report['categories'][$key]['sum']     = bcadd((string) $this->report['categories'][$key]['sum'], (string) $journal['amount']);
             // total spent in category
-            $this->report['categories'][$key]['spent']   = -1 === bccomp($journal['amount'], '0') ? bcadd(
-                $this->report['categories'][$key]['spent'],
-                $journal['amount']
+            $this->report['categories'][$key]['spent']   = -1 === bccomp((string) $journal['amount'], '0') ? bcadd(
+                (string) $this->report['categories'][$key]['spent'],
+                (string) $journal['amount']
             ) : $this->report['categories'][$key]['spent'];
             // total earned in category
-            $this->report['categories'][$key]['earned']  = 1 === bccomp($journal['amount'], '0') ? bcadd(
-                $this->report['categories'][$key]['earned'],
-                $journal['amount']
+            $this->report['categories'][$key]['earned']  = 1 === bccomp((string) $journal['amount'], '0') ? bcadd(
+                (string) $this->report['categories'][$key]['earned'],
+                (string) $journal['amount']
             ) : $this->report['categories'][$key]['earned'];
         }
     }

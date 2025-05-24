@@ -260,7 +260,7 @@ trait JournalServiceTrait
         if (null === $account) {
             // final attempt, create it.
             if (AccountTypeEnum::ASSET->value === $preferredType) {
-                throw new FireflyException(sprintf('TransactionFactory: Cannot create asset account with these values: %s', json_encode($data)));
+                throw new FireflyException(sprintf('TransactionFactory: Cannot create asset account with these values: %s', \Safe\json_encode($data)));
             }
             // fix name of account if only IBAN is given:
             if ('' === (string) $data['name'] && '' !== (string) $data['iban']) {
@@ -284,7 +284,6 @@ trait JournalServiceTrait
                 Log::warning(sprintf('IBAN "%s" is already in use, quietly ignore it.', $data['iban']));
                 $data['iban'] = null;
             }
-
 
 
             // $data['name'] = $data['name'] ?? '(no name)';

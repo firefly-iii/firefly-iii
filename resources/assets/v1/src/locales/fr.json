@@ -2,7 +2,7 @@
     "firefly": {
         "administrations_page_title": "Administrations financi\u00e8res",
         "administrations_index_menu": "Administrations financi\u00e8res",
-        "expires_at": "Expires at",
+        "expires_at": "Expire le",
         "temp_administrations_introduction": "Firefly III aura bient\u00f4t la possibilit\u00e9 de g\u00e9rer plusieurs administrations financi\u00e8res. Pour le moment, vous n'en avez qu'une. Vous pouvez d\u00e9finir le titre de cette administration et de sa devise locale. Cela remplace le param\u00e8tre pr\u00e9c\u00e9dent o\u00f9 vous d\u00e9finissiez votre \"devise par d\u00e9faut\". Ce param\u00e8tre est d\u00e9sormais li\u00e9 \u00e0 l'administration financi\u00e8re et peut \u00eatre diff\u00e9rent par administration.",
         "administration_currency_form_help": "La page peut mettre longtemps \u00e0 charger si vous modifiez la devise locale, car des op\u00e9rations peuvent n\u00e9cessiter une conversion vers votre (nouvelle) devise locale.",
         "administrations_page_edit_sub_title_js": "Modifier l'administration financi\u00e8re \"{title}\"",

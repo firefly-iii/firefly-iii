@@ -40,14 +40,14 @@ class StoreRequest extends FormRequest
         return $this->getCarbonDate('date');
     }
 
-    public function getRate(): string
-    {
-        return (string) $this->get('rate');
-    }
-
     public function getFromCurrency(): TransactionCurrency
     {
         return TransactionCurrency::where('code', $this->get('from'))->first();
+    }
+
+    public function getRate(): string
+    {
+        return (string) $this->get('rate');
     }
 
     public function getToCurrency(): TransactionCurrency

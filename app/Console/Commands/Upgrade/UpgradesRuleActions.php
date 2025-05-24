@@ -78,8 +78,8 @@ class UpgradesRuleActions extends Command
 
         /** @var RuleAction $action */
         foreach ($actions as $action) {
-            if (str_starts_with($action->action_value, '=')) {
-                $action->action_value = sprintf('%s%s', '\=', substr($action->action_value, 1));
+            if (str_starts_with((string) $action->action_value, '=')) {
+                $action->action_value = sprintf('%s%s', '\=', substr((string) $action->action_value, 1));
                 $action->save();
                 ++$count;
             }

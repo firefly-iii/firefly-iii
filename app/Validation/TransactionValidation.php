@@ -214,7 +214,7 @@ trait TransactionValidation
         $destination         = $accountValidator->destination;
 
         Log::debug(sprintf('Source: #%d "%s (%s)"', $source->id, $source->name, $source->accountType->type));
-        Log::debug(sprintf('Destination: #%d "%s" (%s)', $destination->id, $destination->name, $source->accountType->type));
+        Log::debug(sprintf('Destination: #%d "%s" (%s)', $destination->id, $destination->name, $destination->accountType->type));
 
         if (!$this->isLiabilityOrAsset($source) || !$this->isLiabilityOrAsset($destination)) {
             Log::debug('Any account must be liability or asset account to continue.');
@@ -233,16 +233,16 @@ trait TransactionValidation
 
             return;
         }
-        Log::debug(sprintf('Source account expects %s', $sourceCurrency->code));
-        Log::debug(sprintf('Destination account expects %s', $destinationCurrency->code));
+        Log::debug(sprintf('Source account expects #%d: %s', $sourceCurrency->id, $sourceCurrency->code));
+        Log::debug(sprintf('Destination account expects #%d: %s', $destinationCurrency->id, $destinationCurrency->code));
 
         Log::debug(sprintf('Amount is %s', $transaction['amount']));
 
         if (TransactionTypeEnum::DEPOSIT->value === ucfirst($transactionType)) {
             Log::debug(sprintf('Processing as a "%s"', $transactionType));
             // use case: deposit from liability account to an asset account
-            // the foreign amount must be in the currency of the source
-            // the amount must be in the currency of the destination
+            // the amount must be in the currency of the SOURCE
+            // the foreign amount must be in the currency of the DESTINATION
 
             // no foreign currency information is present:
             if (!$this->hasForeignCurrencyInfo($transaction)) {
@@ -255,7 +255,7 @@ trait TransactionValidation
             $foreignCurrencyCode = $transaction['foreign_currency_code'] ?? false;
             $foreignCurrencyId   = (int) ($transaction['foreign_currency_id'] ?? 0);
             Log::debug(sprintf('Foreign currency code seems to be #%d "%s"', $foreignCurrencyId, $foreignCurrencyCode), $transaction);
-            if ($foreignCurrencyCode !== $sourceCurrency->code && $foreignCurrencyId !== $sourceCurrency->id) {
+            if ($foreignCurrencyCode !== $destinationCurrency->code && $foreignCurrencyId !== $destinationCurrency->id) {
                 $validator->errors()->add(sprintf('transactions.%d.foreign_currency_code', $index), (string) trans('validation.require_foreign_src'));
 
                 return;
@@ -593,7 +593,7 @@ trait TransactionValidation
         /** @var null|TransactionJournal $journal */
         $journal = TransactionJournal::with(['transactionType'])->find($journalId);
         if (null !== $journal) {
-            return strtolower($journal->transactionType->type);
+            return strtolower((string) $journal->transactionType->type);
         }
 
         return 'invalid';

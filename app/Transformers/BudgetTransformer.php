@@ -38,10 +38,10 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class BudgetTransformer extends AbstractTransformer
 {
-    private OperationsRepositoryInterface $opsRepository;
-    private BudgetRepositoryInterface     $repository;
-    private bool                          $convertToNative;
-    private TransactionCurrency           $default;
+    private readonly bool                          $convertToNative;
+    private readonly TransactionCurrency           $default;
+    private readonly OperationsRepositoryInterface $opsRepository;
+    private readonly BudgetRepositoryInterface     $repository;
 
     /**
      * BudgetTransformer constructor.

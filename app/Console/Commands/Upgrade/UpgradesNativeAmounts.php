@@ -32,6 +32,7 @@ use Illuminate\Support\Facades\Artisan;
 class UpgradesNativeAmounts extends Command
 {
     use ShowsFriendlyMessages;
+
     public const string CONFIG_NAME = '620_native_amounts';
 
     protected $description          = 'Runs the native amounts calculations.';
@@ -61,7 +62,7 @@ class UpgradesNativeAmounts extends Command
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
         if (null !== $configVar) {
-            return (bool)$configVar->data;
+            return (bool) $configVar->data;
         }
 
         return false;

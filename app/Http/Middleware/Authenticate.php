@@ -36,17 +36,14 @@ use Illuminate\Http\Request;
 class Authenticate
 {
     /**
-     * The authentication factory instance.
-     */
-    protected Auth $auth;
-
-    /**
      * Create a new middleware instance.
      */
-    public function __construct(Auth $auth)
-    {
-        $this->auth = $auth;
-    }
+    public function __construct(
+        /**
+         * The authentication factory instance.
+         */
+        protected Auth $auth
+    ) {}
 
     /**
      * Handle an incoming request.
@@ -117,10 +114,10 @@ class Authenticate
      */
     private function validateBlockedUser(?User $user, array $guards): void
     {
-        if (null === $user) {
+        if (!$user instanceof User) {
             app('log')->warning('User is null, throw exception?');
         }
-        if (null !== $user) {
+        if ($user instanceof User) {
             // app('log')->debug(get_class($user));
             if (1 === (int) $user->blocked) {
                 $message = (string) trans('firefly.block_account_logout');

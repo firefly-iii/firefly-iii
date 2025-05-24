@@ -106,7 +106,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
      */
     private function generateMessage(Webhook $webhook, Model $model): void
     {
-        $class        = get_class($model);
+        $class        = $model::class;
         // Line is ignored because all of Firefly III's Models have an id property.
         app('log')->debug(sprintf('Now in generateMessage(#%d, %s#%d)', $webhook->id, $class, $model->id));
 

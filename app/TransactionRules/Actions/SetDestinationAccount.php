@@ -39,16 +39,12 @@ use Illuminate\Support\Facades\DB;
  */
 class SetDestinationAccount implements ActionInterface
 {
-    private RuleAction                 $action;
     private AccountRepositoryInterface $repository;
 
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(RuleAction $action)
-    {
-        $this->action = $action;
-    }
+    public function __construct(private readonly RuleAction $action) {}
 
     public function actOnArray(array $journal): bool
     {
@@ -119,6 +115,18 @@ class SetDestinationAccount implements ActionInterface
         // or it is a liability, in which case it must be returned.
         if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
             $newAccount = $this->findWithdrawalDestinationAccount($accountName);
+        }
+        if (null === $newAccount) {
+            app('log')->error(
+                sprintf(
+                    'No destination account found for name "%s".',
+                    $accountName
+                )
+            );
+
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_destination', ['name' => $accountName])));
+
+            return false;
         }
 
         app('log')->debug(sprintf('New destination account is #%d ("%s").', $newAccount->id, $newAccount->name));

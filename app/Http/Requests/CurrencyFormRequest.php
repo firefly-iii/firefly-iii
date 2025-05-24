@@ -70,7 +70,7 @@ class CurrencyFormRequest extends FormRequest
         $currency = $this->route()->parameter('currency');
 
         if (null !== $currency) {
-            $rules = [
+            return [
                 'name'           => 'required|max:48|min:1',
                 'code'           => 'required|min:3|max:51',
                 'symbol'         => 'required|min:1|max:51',
@@ -85,7 +85,7 @@ class CurrencyFormRequest extends FormRequest
     public function withValidator(Validator $validator): void
     {
         if ($validator->fails()) {
-            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+            Log::channel('audit')->error(sprintf('Validation errors in %s', self::class), $validator->errors()->toArray());
         }
     }
 }

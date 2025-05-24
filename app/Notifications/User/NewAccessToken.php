@@ -62,7 +62,7 @@ class NewAccessToken extends Notification
         $userAgent = Request::userAgent();
         $time      = now(config('app.timezone'))->isoFormat((string) trans('config.date_time_js'));
 
-        return (new MailMessage())
+        return new MailMessage()
             ->markdown('emails.token-created', ['ip' => $ip, 'host' => $host, 'userAgent' => $userAgent, 'time' => $time])
             ->subject((string) trans('email.access_token_created_subject'))
         ;

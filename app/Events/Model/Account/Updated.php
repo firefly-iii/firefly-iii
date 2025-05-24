@@ -31,10 +31,5 @@ class Updated
 {
     use SerializesModels;
 
-    public Account $account;
-
-    public function __construct(Account $account)
-    {
-        $this->account = $account;
-    }
+    public function __construct(public Account $account) {}
 }

@@ -117,10 +117,7 @@ class GroupCloneService
     private function cloneNote(Note $note, TransactionJournal $newJournal, int $oldGroupId): void
     {
         $newNote              = $note->replicate();
-        $newNote->text        .= sprintf(
-            "\n\n%s",
-            trans('firefly.clones_journal_x', ['description' => $newJournal->description, 'id' => $oldGroupId])
-        );
+        $newNote->text        = sprintf("%s\n\n%s", $newNote->text, trans('firefly.clones_journal_x', ['description' => $newJournal->description, 'id' => $oldGroupId]));
         $newNote->noteable_id = $newJournal->id;
         $newNote->save();
     }

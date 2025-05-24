@@ -64,6 +64,7 @@ class UpdateRequest extends Request
      *
      * @throws FireflyException
      */
+    #[\Override]
     public function getAll(): array
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
@@ -247,6 +248,7 @@ class UpdateRequest extends Request
     /**
      * The rules that the incoming request must be matched against.
      */
+    #[\Override]
     public function rules(): array
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
@@ -330,6 +332,7 @@ class UpdateRequest extends Request
     /**
      * Configure the validator instance.
      */
+    #[\Override]
     public function withValidator(Validator $validator): void
     {
         app('log')->debug('Now in withValidator');
@@ -361,7 +364,7 @@ class UpdateRequest extends Request
             }
         );
         if ($validator->fails()) {
-            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+            Log::channel('audit')->error(sprintf('Validation errors in %s', self::class), $validator->errors()->toArray());
         }
     }
 }

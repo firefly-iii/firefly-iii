@@ -44,6 +44,7 @@ final class BillControllerTest extends TestCase
      */
     use RefreshDatabase;
 
+    #[\Override]
     protected function createAuthenticatedUser(): User
     {
         $userGroup           = UserGroup::create(['title' => 'Test Group']);
@@ -65,8 +66,8 @@ final class BillControllerTest extends TestCase
                 'user_id'       => $user->id,
                 'name'          => 'Bill '.$i,
                 'user_group_id' => $user->user_group_id,
-                'amount_min'    => rand(1, 100), // random amount
-                'amount_max'    => rand(101, 200), // random amount
+                'amount_min'    => random_int(1, 100), // random amount
+                'amount_max'    => random_int(101, 200), // random amount
                 'match'         => 'MIGRATED_TO_RULES',
                 'date'          => '2024-01-01',
                 'repeat_freq'   => 'monthly',

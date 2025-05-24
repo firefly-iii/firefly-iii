@@ -38,8 +38,8 @@ use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\UserGroup;
-use FireflyIII\Repositories\UserGroup\UserGroupRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use FireflyIII\Repositories\UserGroup\UserGroupRepositoryInterface;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Console\Command;
@@ -128,9 +128,7 @@ class CorrectsNativeAmounts extends Command
         $repository->setUserGroup($userGroup);
         $set        = $repository->getPiggyBanks();
         $set        = $set->filter(
-            static function (PiggyBank $piggyBank) use ($currency) {
-                return $currency->id !== $piggyBank->transaction_currency_id;
-            }
+            static fn (PiggyBank $piggyBank) => $currency->id !== $piggyBank->transaction_currency_id
         );
         foreach ($set as $piggyBank) {
             $piggyBank->encrypted = false;

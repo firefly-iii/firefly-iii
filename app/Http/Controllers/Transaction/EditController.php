@@ -35,6 +35,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 
+use function Safe\parse_url;
+
 /**
  * Class EditController
  */
@@ -85,7 +87,7 @@ class EditController extends Controller
         $defaultCurrency            = $this->defaultCurrency;
         $cash                       = $repository->getCashAccount();
         $previousUrl                = $this->rememberPreviousUrl('transactions.edit.url');
-        $parts                      = parse_url($previousUrl);
+        $parts                      = parse_url((string) $previousUrl);
         $search                     = sprintf('?%s', $parts['query'] ?? '');
         $previousUrl                = str_replace($search, '', $previousUrl);
 

@@ -34,6 +34,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
+use function Safe\parse_url;
+
 /**
  * Class ForgotPasswordController
  */
@@ -59,7 +61,7 @@ class ForgotPasswordController extends Controller
      *
      * @return Factory|RedirectResponse|View
      */
-    public function sendResetLinkEmail(Request $request, UserRepositoryInterface $repository)
+    public function sendResetLinkEmail(Request $request, ?UserRepositoryInterface $repository = null)
     {
         app('log')->info('Start of sendResetLinkEmail()');
         if ('web' !== config('firefly.authentication_guard')) {

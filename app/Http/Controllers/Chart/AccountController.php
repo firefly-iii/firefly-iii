@@ -35,7 +35,6 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
-use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\AugumentData;
 use FireflyIII\Support\Http\Controllers\ChartGeneration;
@@ -43,6 +42,8 @@ use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+
+use function Safe\json_encode;
 
 /**
  * Class AccountController.
@@ -250,7 +251,7 @@ class AccountController extends Controller
                     'currency_code'   => $journal['currency_code'],
                 ];
             }
-            $result[$key]['total'] = bcadd($journal['amount'], $result[$key]['total']);
+            $result[$key]['total'] = bcadd((string) $journal['amount'], $result[$key]['total']);
         }
 
         $names     = $this->getBudgetNames($budgetIds);
@@ -312,7 +313,7 @@ class AccountController extends Controller
                     'currency_code'   => $journal['currency_code'],
                 ];
             }
-            $result[$key]['total'] = bcadd($journal['amount'], $result[$key]['total']);
+            $result[$key]['total'] = bcadd((string) $journal['amount'], $result[$key]['total']);
         }
         $names     = $this->getCategoryNames(array_keys($result));
 
@@ -401,7 +402,7 @@ class AccountController extends Controller
                     'currency_code'   => $journal['currency_code'],
                 ];
             }
-            $result[$key]['total'] = bcadd($journal['amount'], $result[$key]['total']);
+            $result[$key]['total'] = bcadd((string) $journal['amount'], $result[$key]['total']);
         }
 
         $names     = $this->getCategoryNames(array_keys($result));
@@ -511,7 +512,7 @@ class AccountController extends Controller
         foreach ($return as $key => $info) {
             if ('balance' !== $key && 'native_balance' !== $key) {
                 // assume it's a currency:
-                $setCurrency             = $this->currencyRepository->findByCode($key);
+                $setCurrency             = $this->currencyRepository->findByCode((string) $key);
                 $info['currency_symbol'] = $setCurrency->symbol;
                 $info['currency_code']   = $setCurrency->code;
                 $info['label']           = sprintf('%s (%s)', $account->name, $setCurrency->symbol);
@@ -533,6 +534,17 @@ class AccountController extends Controller
         $cache->store($data);
 
         return response()->json($data);
+    }
+
+    private function updateChartKeys(array $array, array $balances): array
+    {
+        foreach (array_keys($balances) as $key) {
+            $array[$key] ??= [
+                'key' => $key,
+            ];
+        }
+
+        return $array;
     }
 
     /**
@@ -675,16 +687,5 @@ class AccountController extends Controller
         $cache->store($data);
 
         return response()->json($data);
-    }
-
-    private function updateChartKeys(array $array, array $balances): array
-    {
-        foreach (array_keys($balances) as $key) {
-            $array[$key] ??= [
-                'key' => $key,
-            ];
-        }
-
-        return $array;
     }
 }

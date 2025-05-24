@@ -40,7 +40,6 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Support\Collection;
 use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
@@ -62,15 +61,15 @@ abstract class Controller extends BaseController
     use ValidatesRequests;
     use ValidatesUserGroupTrait;
 
-    protected const string CONTENT_TYPE      = 'application/vnd.api+json';
-    protected const string JSON_CONTENT_TYPE = 'application/json';
+    protected const string CONTENT_TYPE            = 'application/vnd.api+json';
+    protected const string JSON_CONTENT_TYPE       = 'application/json';
+    protected array               $accepts         = ['application/json', 'application/vnd.api+json'];
 
     /** @var array<int, string> */
-    protected array        $allowedSort;
-    protected ParameterBag $parameters;
-    protected bool        $convertToNative   = false;
-    protected array $accepts                 = ['application/json', 'application/vnd.api+json'];
+    protected array               $allowedSort;
+    protected bool                $convertToNative = false;
     protected TransactionCurrency $nativeCurrency;
+    protected ParameterBag        $parameters;
 
     /**
      * Controller constructor.

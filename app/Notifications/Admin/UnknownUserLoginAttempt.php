@@ -41,12 +41,7 @@ class UnknownUserLoginAttempt extends Notification
 {
     use Queueable;
 
-    private string $address;
-
-    public function __construct(string $address)
-    {
-        $this->address = $address;
-    }
+    public function __construct(private string $address) {}
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

@@ -149,7 +149,7 @@ class CategoryUpdateService
             $dbNote = new Note();
             $dbNote->noteable()->associate($category);
         }
-        $dbNote->text = trim($note);
+        $dbNote->text = trim((string) $note);
         $dbNote->save();
     }
 }

@@ -994,7 +994,7 @@ Breadcrumbs::for(
     'rules.edit',
     static function (Generator $breadcrumbs, Rule $rule): void {
         $breadcrumbs->parent('rules.index');
-        $breadcrumbs->push(trans('firefly.edit_rule', ['title' => $rule->title]), route('rules.edit', [$rule]));
+        $breadcrumbs->push(trans('firefly.edit_rule', ['nr' => $rule->order, 'title' => $rule->title]), route('rules.edit', [$rule]));
     }
 );
 Breadcrumbs::for(
@@ -1202,7 +1202,7 @@ Breadcrumbs::for(
     static function (Generator $breadcrumbs, TransactionGroup $group): void {
         /** @var TransactionJournal $first */
         $first = $group->transactionJournals()->first();
-        $type  = strtolower($first->transactionType->type);
+        $type  = strtolower((string) $first->transactionType->type);
         $title = limitStringLength($first->description);
         if ($group->transactionJournals()->count() > 1) {
             $title = limitStringLength((string)$group->title);
@@ -1241,7 +1241,7 @@ Breadcrumbs::for(
     'transactions.mass.edit',
     static function (Generator $breadcrumbs, array $journals): void {
         if (0 !== count($journals)) {
-            $objectType = strtolower(reset($journals)['transaction_type_type']);
+            $objectType = strtolower((string) reset($journals)['transaction_type_type']);
             $breadcrumbs->parent('transactions.index', $objectType);
             $breadcrumbs->push(trans('firefly.mass_edit_journals'), route('transactions.mass.edit', ['']));
 
@@ -1254,7 +1254,7 @@ Breadcrumbs::for(
 Breadcrumbs::for(
     'transactions.mass.delete',
     static function (Generator $breadcrumbs, array $journals): void {
-        $objectType = strtolower(reset($journals)['transaction_type_type']);
+        $objectType = strtolower((string) reset($journals)['transaction_type_type']);
         $breadcrumbs->parent('transactions.index', $objectType);
         $breadcrumbs->push(trans('firefly.mass_edit_journals'), route('transactions.mass.delete', ['']));
     }
@@ -1267,7 +1267,7 @@ Breadcrumbs::for(
         if (0 !== count($journals)) {
             $ids   = Arr::pluck($journals, 'transaction_journal_id');
             $first = reset($journals);
-            $breadcrumbs->parent('transactions.index', strtolower($first['transaction_type_type']));
+            $breadcrumbs->parent('transactions.index', strtolower((string) $first['transaction_type_type']));
             $breadcrumbs->push(trans('firefly.mass_bulk_journals'), route('transactions.bulk.edit', $ids));
 
             return;

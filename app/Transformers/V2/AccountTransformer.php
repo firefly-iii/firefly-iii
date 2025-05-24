@@ -44,13 +44,13 @@ class AccountTransformer extends AbstractTransformer
     private array               $accountMeta;
     private array               $accountTypes;
     private array               $balanceDifferences;
+    private array               $balances;
     private array               $convertedBalances;
     private array               $currencies;
     private TransactionCurrency $default;
     private array               $fullTypes;
     private array               $lastActivity;
     private array               $objectGroups;
-    private array $balances;
 
     /**
      * This method collects meta-data for one or all accounts in the transformer's collection.
@@ -198,8 +198,8 @@ class AccountTransformer extends AbstractTransformer
             $id = $account->id;
             if (array_key_exists($id, $bStart) && array_key_exists($id, $bEnd)) {
                 $this->balanceDifferences[$id] = [
-                    'balance'        => bcsub($bEnd[$id]['balance'], $bStart[$id]['balance']),
-                    'native_balance' => bcsub($bEnd[$id]['native_balance'], $bStart[$id]['native_balance']),
+                    'balance'        => bcsub((string) $bEnd[$id]['balance'], (string) $bStart[$id]['balance']),
+                    'native_balance' => bcsub((string) $bEnd[$id]['native_balance'], (string) $bStart[$id]['native_balance']),
                 ];
             }
         }
@@ -351,7 +351,7 @@ class AccountTransformer extends AbstractTransformer
         $nativeBalance      = $this->convertedBalances[$id]['native_balance'] ?? null;
 
         // no order for some accounts:
-        if (!in_array(strtolower($accountType), ['liability', 'liabilities', 'asset'], true)) {
+        if (!in_array(strtolower((string) $accountType), ['liability', 'liabilities', 'asset'], true)) {
             $order = null;
         }
 
@@ -381,7 +381,7 @@ class AccountTransformer extends AbstractTransformer
             'name'                           => $account->name,
             'iban'                           => '' === (string) $account->iban ? null : $account->iban,
             'account_number'                 => $this->accountMeta[$id]['account_number'] ?? null,
-            'type'                           => strtolower($accountType),
+            'type'                           => strtolower((string) $accountType),
             'account_role'                   => $accountRole,
             'currency_id'                    => (string) $currency->id,
             'currency_code'                  => $currency->code,

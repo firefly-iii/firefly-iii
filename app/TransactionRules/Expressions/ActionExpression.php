@@ -29,7 +29,7 @@ use Symfony\Component\ExpressionLanguage\SyntaxError;
 
 class ActionExpression
 {
-    private static array       $NAMES
+    private static array                $NAMES
         = [
             //        'transaction_group_id',
             //        'user_id',
@@ -82,17 +82,15 @@ class ActionExpression
             //        'destination_transaction_id',
             'notes',
         ];
-    private string             $expr;
-    private ExpressionLanguage $expressionLanguage;
-    private bool               $isExpression;
-    private ?SyntaxError       $validationError;
+    private readonly ExpressionLanguage $expressionLanguage;
+    private readonly bool               $isExpression;
+    private readonly ?SyntaxError       $validationError;
 
-    public function __construct(string $expr)
+    public function __construct(private readonly string $expr)
     {
         $this->expressionLanguage = app(ExpressionLanguage::class);
-        $this->expr               = $expr;
 
-        $this->isExpression       = self::isExpression($expr);
+        $this->isExpression       = self::isExpression($this->expr);
         $this->validationError    = $this->validate();
     }
 

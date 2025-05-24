@@ -140,7 +140,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
             }
             if (null !== $existingGroup) {
                 // group already exists
-                $groupName = sprintf('%s-%s', $user->email, substr(sha1(rand(1000, 9999).microtime()), 0, 4));
+                $groupName = sprintf('%s-%s', $user->email, substr(sha1(random_int(1000, 9999).microtime()), 0, 4));
             }
             ++$loop;
         }
@@ -286,7 +286,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
         foreach ($rolesSimplified as $role) {
             try {
                 $enum = UserRoleEnum::from($role);
-            } catch (\ValueError $e) {
+            } catch (\ValueError) {
                 // TODO error message
                 continue;
             }

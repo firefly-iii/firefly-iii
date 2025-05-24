@@ -33,6 +33,9 @@
         <th class="hidden-xs">&nbsp;</th>
         <th>{{ trans('list.description') }}</th>
         <th>{{ trans('list.amount') }}</th>
+        {% if config('firefly.feature_flags.running_balance_column') %}
+        <th>{{ trans('list.running_balance') }}</th>
+        {% endif %}
         <th>{{ trans('list.date') }}</th>
         <th>{{ trans('list.source_account') }}</th>
         <th>{{ trans('list.destination_account') }}</th>
@@ -250,6 +253,41 @@
                         {% endif %}
                     {% endif %}
                 </td>
+                {% if config('firefly.feature_flags.running_balance_column') %}
+                <td>
+                    {% if null == transaction.balance_dirty or false == transaction.balance_dirty %}
+                        {% if transaction.transaction_type_type == 'Deposit' %}
+                            {{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                        {% elseif transaction.transaction_type_type == 'Withdrawal' %}
+                            {% if 'Loan' == transaction.destination_account_type or 'Mortgage' == transaction.destination_account_type or 'Debt' == transaction.destination_account_type %}
+                                {% if currency.id == transaction.currency_id %}
+                                    {{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                                {% endif %}
+                                {% if currency.id == transaction.foreign_currency_id %}
+                                    {{ formatAmountBySymbol(transaction.destination_balance_after, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }}
+                                {% endif %}
+
+                            {% else %}
+                                {{ formatAmountBySymbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                            {% endif %}
+                        {% elseif transaction.transaction_type_type == 'Opening balance' %}
+                            {% if transaction.source_account_type == 'Initial balance account' %}
+                                {{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                            {% else %}
+                                {{ formatAmountBySymbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                            {% endif %}
+                        {% elseif transaction.transaction_type_type == 'Transfer' %}
+                            {% if account.id == transaction.source_account_id %}
+                                {{ formatAmountBySymbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                            {% else %}
+                                {{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                            {% endif %}
+                        {% else %}
+                            &nbsp;
+                        {% endif %}
+                    {% endif %}
+                </td>
+                {% endif %}
                 <td style=" {{ style|raw }}">
                     {{ transaction.date.isoFormat(monthAndDayFormat) }}
                 </td>

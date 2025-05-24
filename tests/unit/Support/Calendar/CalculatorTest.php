@@ -27,6 +27,7 @@ namespace Tests\unit\Support\Calendar;
 use FireflyIII\Exceptions\IntervalException;
 use FireflyIII\Support\Calendar\Calculator;
 use FireflyIII\Support\Calendar\Periodicity;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\integration\TestCase;
 use Tests\unit\Support\Calendar\Periodicity\BimonthlyTest;
 use Tests\unit\Support\Calendar\Periodicity\DailyTest;
@@ -65,10 +66,9 @@ final class CalculatorTest extends TestCase
     }
 
     /**
-     * @dataProvider provideAllPeriodicity
-     *
      * @throws IntervalException
      */
+    #[DataProvider('provideAllPeriodicity')]
     public function testGivenADailyPeriodicityWhenCallTheNextDateByIntervalMethodThenReturnsTheExpectedDateSuccessful(CalculatorProvider $provider): void
     {
         $calculator = new Calculator();
@@ -95,10 +95,9 @@ final class CalculatorTest extends TestCase
     }
 
     /**
-     * @dataProvider provideSkippedIntervals
-     *
      * @throws IntervalException
      */
+    #[DataProvider('provideSkippedIntervals')]
     public function testGivenAnEpochWithSkipIntervalNumberWhenCallTheNextDateBySkippedIntervalMethodThenReturnsTheExpectedDateSuccessful(CalculatorProvider $provider): void
     {
         $calculator = new Calculator();

@@ -37,12 +37,6 @@ class AvailableBudgetObserver
         $this->updateNativeAmount($availableBudget);
     }
 
-    public function updated(AvailableBudget $availableBudget): void
-    {
-        // Log::debug('Observe "updated" of an available budget.');
-        $this->updateNativeAmount($availableBudget);
-    }
-
     private function updateNativeAmount(AvailableBudget $availableBudget): void
     {
         if (!Amount::convertToNative($availableBudget->user)) {
@@ -60,5 +54,11 @@ class AvailableBudgetObserver
         }
         $availableBudget->saveQuietly();
         Log::debug('Available budget native amount is updated.');
+    }
+
+    public function updated(AvailableBudget $availableBudget): void
+    {
+        // Log::debug('Observe "updated" of an available budget.');
+        $this->updateNativeAmount($availableBudget);
     }
 }

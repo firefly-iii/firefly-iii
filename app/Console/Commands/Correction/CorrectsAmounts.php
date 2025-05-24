@@ -75,6 +75,65 @@ class CorrectsAmounts extends Command
         return 0;
     }
 
+    private function correctTransfers(): void
+    {
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+        $type       = TransactionType::where('type', TransactionTypeEnum::TRANSFER->value)->first();
+        $journals   = TransactionJournal::where('transaction_type_id', $type->id)->get();
+
+        /** @var TransactionJournal $journal */
+        foreach ($journals as $journal) {
+            $repository->setUser($journal->user);
+            $native         = Amount::getNativeCurrencyByUserGroup($journal->userGroup);
+
+            /** @var null|Transaction $source */
+            $source         = $journal->transactions()->where('amount', '<', 0)->first();
+
+            /** @var null|Transaction $destination */
+            $destination    = $journal->transactions()->where('amount', '>', 0)->first();
+            if (null === $source || null === $destination) {
+                continue;
+            }
+            if (null === $source->foreign_currency_id || null === $destination->foreign_currency_id) {
+                continue;
+            }
+            $sourceAccount  = $source->account;
+            $destAccount    = $destination->account;
+            if (null === $sourceAccount || null === $destAccount) {
+                continue;
+            }
+            $sourceCurrency = $repository->getAccountCurrency($sourceAccount) ?? $native;
+            $destCurrency   = $repository->getAccountCurrency($destAccount) ?? $native;
+
+            if ($sourceCurrency->id === $destCurrency->id) {
+                Log::debug('Both accounts have the same currency. Removing foreign currency info.');
+                $source->foreign_currency_id      = null;
+                $source->foreign_amount           = null;
+                $source->save();
+                $destination->foreign_currency_id = null;
+                $destination->foreign_amount      = null;
+                $destination->save();
+
+                continue;
+            }
+
+            // validate source
+            if ($destCurrency->id !== $source->foreign_currency_id) {
+                Log::debug(sprintf('Journal #%d: Transaction #%d refers to "%s" but should refer to "%s".', $journal->id, $source->id, $source->foreignCurrency->code, $destCurrency->code));
+                $source->foreign_currency_id = $destCurrency->id;
+                $source->save();
+            }
+
+            // validate destination:
+            if ($sourceCurrency->id !== $destination->foreign_currency_id) {
+                Log::debug(sprintf('Journal #%d: Transaction #%d refers to "%s" but should refer to "%s".', $journal->id, $destination->id, $destination->foreignCurrency->code, $sourceCurrency->code));
+                $destination->foreign_currency_id = $sourceCurrency->id;
+                $destination->save();
+            }
+        }
+    }
+
     private function fixAutoBudgets(): void
     {
         $count = AutoBudget::where('amount', '<', 0)->update(['amount' => DB::raw('amount * -1')]);
@@ -175,7 +234,7 @@ class CorrectsAmounts extends Command
     {
         try {
             $check = bccomp((string) $item->trigger_value, '0');
-        } catch (\ValueError $e) {
+        } catch (\ValueError) {
             $this->friendlyError(sprintf('Rule #%d contained invalid %s-trigger "%s". The trigger has been removed, and the rule is disabled.', $item->rule_id, $item->trigger_type, $item->trigger_value));
             $item->rule->active = false;
             $item->rule->save();
@@ -191,64 +250,5 @@ class CorrectsAmounts extends Command
         }
 
         return false;
-    }
-
-    private function correctTransfers(): void
-    {
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-        $type       = TransactionType::where('type', TransactionTypeEnum::TRANSFER->value)->first();
-        $journals   = TransactionJournal::where('transaction_type_id', $type->id)->get();
-
-        /** @var TransactionJournal $journal */
-        foreach ($journals as $journal) {
-            $repository->setUser($journal->user);
-            $native         = Amount::getNativeCurrencyByUserGroup($journal->userGroup);
-
-            /** @var null|Transaction $source */
-            $source         = $journal->transactions()->where('amount', '<', 0)->first();
-
-            /** @var null|Transaction $destination */
-            $destination    = $journal->transactions()->where('amount', '>', 0)->first();
-            if (null === $source || null === $destination) {
-                continue;
-            }
-            if (null === $source->foreign_currency_id || null === $destination->foreign_currency_id) {
-                continue;
-            }
-            $sourceAccount  = $source->account;
-            $destAccount    = $destination->account;
-            if (null === $sourceAccount || null === $destAccount) {
-                continue;
-            }
-            $sourceCurrency = $repository->getAccountCurrency($sourceAccount) ?? $native;
-            $destCurrency   = $repository->getAccountCurrency($destAccount) ?? $native;
-
-            if ($sourceCurrency->id === $destCurrency->id) {
-                Log::debug('Both accounts have the same currency. Removing foreign currency info.');
-                $source->foreign_currency_id      = null;
-                $source->foreign_amount           = null;
-                $source->save();
-                $destination->foreign_currency_id = null;
-                $destination->foreign_amount      = null;
-                $destination->save();
-
-                continue;
-            }
-
-            // validate source
-            if ($destCurrency->id !== $source->foreign_currency_id) {
-                Log::debug(sprintf('Journal #%d: Transaction #%d refers to "%s" but should refer to "%s".', $journal->id, $source->id, $source->foreignCurrency->code, $destCurrency->code));
-                $source->foreign_currency_id = $destCurrency->id;
-                $source->save();
-            }
-
-            // validate destination:
-            if ($sourceCurrency->id !== $destination->foreign_currency_id) {
-                Log::debug(sprintf('Journal #%d: Transaction #%d refers to "%s" but should refer to "%s".', $journal->id, $destination->id, $destination->foreignCurrency->code, $sourceCurrency->code));
-                $destination->foreign_currency_id = $sourceCurrency->id;
-                $destination->save();
-            }
-        }
     }
 }

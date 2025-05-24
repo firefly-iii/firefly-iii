@@ -59,7 +59,7 @@ class RecurrenceFactory
     public function create(array $data): Recurrence
     {
         try {
-            $type = $this->findTransactionType(ucfirst($data['recurrence']['type']));
+            $type = $this->findTransactionType(ucfirst((string) $data['recurrence']['type']));
         } catch (FireflyException $e) {
             $message = sprintf('Cannot make a recurring transaction of type "%s"', $data['recurrence']['type']);
             app('log')->error($message);

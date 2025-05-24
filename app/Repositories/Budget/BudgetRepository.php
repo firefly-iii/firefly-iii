@@ -121,7 +121,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
                 ];
                 // same period
                 if ($limit->start_date->isSameDay($start) && $limit->end_date->isSameDay($end)) {
-                    $return[$currencyCode]['sum']        = bcadd($return[$currencyCode]['sum'], $limit->amount);
+                    $return[$currencyCode]['sum']        = bcadd($return[$currencyCode]['sum'], (string) $limit->amount);
                     $return[$currencyCode]['native_sum'] = bcmul($rate, $return[$currencyCode]['sum']);
                     app('log')->debug(sprintf('Add full amount [1]: %s', $limit->amount));
 
@@ -129,7 +129,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
                 }
                 // limit is inside of date range
                 if ($start->lte($limit->start_date) && $end->gte($limit->end_date)) {
-                    $return[$currencyCode]['sum']        = bcadd($return[$currencyCode]['sum'], $limit->amount);
+                    $return[$currencyCode]['sum']        = bcadd($return[$currencyCode]['sum'], (string) $limit->amount);
                     $return[$currencyCode]['native_sum'] = bcmul($rate, $return[$currencyCode]['sum']);
                     app('log')->debug(sprintf('Add full amount [2]: %s', $limit->amount));
 
@@ -137,13 +137,13 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
                 }
                 $total                               = $limit->start_date->diffInDays($limit->end_date, true) + 1; // include the day itself.
                 $days                                = $this->daysInOverlap($limit, $start, $end);
-                $amount                              = bcmul(bcdiv($limit->amount, (string) $total), (string) $days);
+                $amount                              = bcmul(bcdiv((string) $limit->amount, (string) $total), (string) $days);
                 $return[$currencyCode]['sum']        = bcadd($return[$currencyCode]['sum'], $amount);
                 $return[$currencyCode]['native_sum'] = bcmul($rate, $return[$currencyCode]['sum']);
                 app('log')->debug(
                     sprintf(
                         'Amount per day: %s (%s over %d days). Total amount for %d days: %s',
-                        bcdiv($limit->amount, (string) $total),
+                        bcdiv((string) $limit->amount, (string) $total),
                         $limit->amount,
                         $total,
                         $days,
@@ -225,26 +225,26 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
             ];
             // same period
             if ($limit->start_date->isSameDay($start) && $limit->end_date->isSameDay($end)) {
-                $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $limit->amount);
+                $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], (string) $limit->amount);
                 app('log')->debug(sprintf('Add full amount [1]: %s', $limit->amount));
 
                 continue;
             }
             // limit is inside of date range
             if ($start->lte($limit->start_date) && $end->gte($limit->end_date)) {
-                $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $limit->amount);
+                $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], (string) $limit->amount);
                 app('log')->debug(sprintf('Add full amount [2]: %s', $limit->amount));
 
                 continue;
             }
             $total                        = $limit->start_date->diffInDays($limit->end_date) + 1; // include the day itself.
             $days                         = $this->daysInOverlap($limit, $start, $end);
-            $amount                       = bcmul(bcdiv($limit->amount, (string) $total), (string) $days);
+            $amount                       = bcmul(bcdiv((string) $limit->amount, (string) $total), (string) $days);
             $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $amount);
             app('log')->debug(
                 sprintf(
                     'Amount per day: %s (%s over %d days). Total amount for %d days: %s',
-                    bcdiv($limit->amount, (string) $total),
+                    bcdiv((string) $limit->amount, (string) $total),
                     $limit->amount,
                     $total,
                     $days,
@@ -632,7 +632,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
                 'decimal_places' => $journal['currency_decimal_places'],
                 'sum'            => '0',
             ];
-            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->negative($journal['amount']));
+            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], (string) app('steam')->negative($journal['amount']));
 
             // also do foreign amount:
             $foreignId                 = (int) $journal['foreign_currency_id'];
@@ -645,7 +645,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
                     'decimal_places' => $journal['foreign_currency_decimal_places'],
                     'sum'            => '0',
                 ];
-                $array[$foreignId]['sum'] = bcadd($array[$foreignId]['sum'], app('steam')->negative($journal['foreign_amount']));
+                $array[$foreignId]['sum'] = bcadd($array[$foreignId]['sum'], (string) app('steam')->negative($journal['foreign_amount']));
             }
         }
 
@@ -694,7 +694,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
                 'decimal_places' => $journal['currency_decimal_places'],
                 'sum'            => '0',
             ];
-            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->negative($journal['amount']));
+            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], (string) app('steam')->negative($journal['amount']));
 
             // also do foreign amount:
             $foreignId                 = (int) $journal['foreign_currency_id'];
@@ -707,7 +707,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
                     'decimal_places' => $journal['foreign_currency_decimal_places'],
                     'sum'            => '0',
                 ];
-                $array[$foreignId]['sum'] = bcadd($array[$foreignId]['sum'], app('steam')->negative($journal['foreign_amount']));
+                $array[$foreignId]['sum'] = bcadd($array[$foreignId]['sum'], (string) app('steam')->negative($journal['foreign_amount']));
             }
         }
 

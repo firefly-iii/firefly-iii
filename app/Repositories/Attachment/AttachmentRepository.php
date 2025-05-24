@@ -55,7 +55,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface, UserGroupIn
 
         try {
             Storage::disk('upload')->delete($path);
-        } catch (UnableToDeleteFile $e) {
+        } catch (UnableToDeleteFile) {
             // @ignoreException
         }
         $attachment->delete();

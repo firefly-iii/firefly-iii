@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Tests\unit\Support;
 
 use FireflyIII\Support\Navigation;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\integration\TestCase;
 
 /**
@@ -40,15 +41,13 @@ final class NavigationPreferredCarbonFormatByPeriodTest extends TestCase
 {
     private Navigation $navigation;
 
-    public function __construct(string $name)
+    protected function setUp(): void
     {
-        parent::__construct($name);
+        parent::setUp();
         $this->navigation = new Navigation();
     }
 
-    /**
-     * @dataProvider providePeriods
-     */
+    #[DataProvider('providePeriods')]
     public function testGivenAPeriodWhenCallPreferredCarbonFormatByPeriodThenReturnsExpectedFormat(string $period, string $expected): void
     {
         $formatPeriod = $this->navigation->preferredCarbonFormatByPeriod($period);

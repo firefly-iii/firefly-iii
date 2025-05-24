@@ -115,9 +115,7 @@ class CorrectsTransactionTypes extends Command
     private function getSourceAccount(TransactionJournal $journal): Account
     {
         $collection  = $journal->transactions->filter(
-            static function (Transaction $transaction) {
-                return $transaction->amount < 0;
-            }
+            static fn (Transaction $transaction) => $transaction->amount < 0
         );
         if (0 === $collection->count()) {
             throw new FireflyException(sprintf('300001: Journal #%d has no source transaction.', $journal->id));
@@ -144,9 +142,7 @@ class CorrectsTransactionTypes extends Command
     private function getDestinationAccount(TransactionJournal $journal): Account
     {
         $collection  = $journal->transactions->filter(
-            static function (Transaction $transaction) {
-                return $transaction->amount > 0;
-            }
+            static fn (Transaction $transaction) => $transaction->amount > 0
         );
         if (0 === $collection->count()) {
             throw new FireflyException(sprintf('300004: Journal #%d has no destination transaction.', $journal->id));

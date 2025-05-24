@@ -36,12 +36,13 @@ class GroupMembership extends Model
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;
 
-    protected $casts    = [
-        'created_at'                   => 'datetime',
-        'updated_at'                   => 'datetime',
-        'user_id'                      => 'integer',
-        'user_group_id'                => 'integer',
-    ];
+    protected $casts
+                        = [
+            'created_at'    => 'datetime',
+            'updated_at'    => 'datetime',
+            'user_id'       => 'integer',
+            'user_group_id' => 'integer',
+        ];
 
     protected $fillable = ['user_id', 'user_group_id', 'user_role_id'];
 

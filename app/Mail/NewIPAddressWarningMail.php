@@ -38,16 +38,12 @@ class NewIPAddressWarningMail extends Mailable
     use SerializesModels;
 
     public string $host;
-    public string $ipAddress;
     public string $time;
 
     /**
      * OAuthTokenCreatedMail constructor.
      */
-    public function __construct(string $ipAddress)
-    {
-        $this->ipAddress = $ipAddress;
-    }
+    public function __construct(public string $ipAddress) {}
 
     /**
      * Build the message.

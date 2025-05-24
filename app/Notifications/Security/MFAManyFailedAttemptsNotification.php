@@ -40,14 +40,7 @@ class MFAManyFailedAttemptsNotification extends Notification
 {
     use Queueable;
 
-    private int  $count;
-    private User $user;
-
-    public function __construct(User $user, int $count)
-    {
-        $this->user  = $user;
-        $this->count = $count;
-    }
+    public function __construct(private User $user, private int $count) {}
 
     public function toArray(User $notifiable): array
     {
@@ -66,7 +59,7 @@ class MFAManyFailedAttemptsNotification extends Notification
         $userAgent = Request::userAgent();
         $time      = now(config('app.timezone'))->isoFormat((string) trans('config.date_time_js'));
 
-        return (new MailMessage())->markdown('emails.security.many-failed-attempts', ['user' => $this->user, 'count' => $this->count, 'ip' => $ip, 'host' => $host, 'userAgent' => $userAgent, 'time' => $time])->subject($subject);
+        return new MailMessage()->markdown('emails.security.many-failed-attempts', ['user' => $this->user, 'count' => $this->count, 'ip' => $ip, 'host' => $host, 'userAgent' => $userAgent, 'time' => $time])->subject($subject);
     }
 
     public function toNtfy(User $notifiable): Message

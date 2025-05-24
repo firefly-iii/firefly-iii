@@ -39,16 +39,12 @@ use Illuminate\Support\Facades\DB;
  */
 class SetSourceAccount implements ActionInterface
 {
-    private RuleAction                 $action;
     private AccountRepositoryInterface $repository;
 
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(RuleAction $action)
-    {
-        $this->action = $action;
-    }
+    public function __construct(private readonly RuleAction $action) {}
 
     public function actOnArray(array $journal): bool
     {

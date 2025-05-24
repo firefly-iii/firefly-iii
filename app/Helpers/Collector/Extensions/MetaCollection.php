@@ -29,6 +29,7 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
+use FireflyIII\Models\TransactionJournal;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\JoinClause;
@@ -166,7 +167,7 @@ trait MetaCollection
     {
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'external_id');
-        $this->query->where('journal_meta.data', '!=', sprintf('%s', json_encode($externalId)));
+        $this->query->where('journal_meta.data', '!=', sprintf('%s', \Safe\json_encode($externalId)));
         $this->query->whereNull('journal_meta.deleted_at');
 
         return $this;
@@ -189,14 +190,14 @@ trait MetaCollection
     {
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'external_url');
-        $this->query->where('journal_meta.data', '!=', json_encode($url));
+        $this->query->where('journal_meta.data', '!=', \Safe\json_encode($url));
 
         return $this;
     }
 
     public function excludeInternalReference(string $internalReference): GroupCollectorInterface
     {
-        $internalReference = (string) json_encode($internalReference);
+        $internalReference = (string) \Safe\json_encode($internalReference);
         $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
 
         $this->joinMetaDataTables();
@@ -210,14 +211,14 @@ trait MetaCollection
     {
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'recurrence_id');
-        $this->query->where('journal_meta.data', '!=', sprintf('%s', json_encode($recurringId)));
+        $this->query->where('journal_meta.data', '!=', sprintf('%s', \Safe\json_encode($recurringId)));
 
         return $this;
     }
 
     public function externalIdContains(string $externalId): GroupCollectorInterface
     {
-        $externalId = (string) json_encode($externalId);
+        $externalId = (string) \Safe\json_encode($externalId);
         $externalId = str_replace('\\', '\\\\', trim($externalId, '"'));
 
         $this->joinMetaDataTables();
@@ -229,7 +230,7 @@ trait MetaCollection
 
     public function externalIdDoesNotContain(string $externalId): GroupCollectorInterface
     {
-        $externalId = (string) json_encode($externalId);
+        $externalId = (string) \Safe\json_encode($externalId);
         $externalId = str_replace('\\', '\\\\', trim($externalId, '"'));
 
         $this->joinMetaDataTables();
@@ -241,7 +242,7 @@ trait MetaCollection
 
     public function externalIdDoesNotEnd(string $externalId): GroupCollectorInterface
     {
-        $externalId = (string) json_encode($externalId);
+        $externalId = (string) \Safe\json_encode($externalId);
         $externalId = str_replace('\\', '\\\\', trim($externalId, '"'));
 
         $this->joinMetaDataTables();
@@ -253,7 +254,7 @@ trait MetaCollection
 
     public function externalIdDoesNotStart(string $externalId): GroupCollectorInterface
     {
-        $externalId = (string) json_encode($externalId);
+        $externalId = (string) \Safe\json_encode($externalId);
         $externalId = str_replace('\\', '\\\\', trim($externalId, '"'));
 
         $this->joinMetaDataTables();
@@ -265,7 +266,7 @@ trait MetaCollection
 
     public function externalIdEnds(string $externalId): GroupCollectorInterface
     {
-        $externalId = (string) json_encode($externalId);
+        $externalId = (string) \Safe\json_encode($externalId);
         $externalId = str_replace('\\', '\\\\', trim($externalId, '"'));
 
         $this->joinMetaDataTables();
@@ -277,7 +278,7 @@ trait MetaCollection
 
     public function externalIdStarts(string $externalId): GroupCollectorInterface
     {
-        $externalId = (string) json_encode($externalId);
+        $externalId = (string) \Safe\json_encode($externalId);
         $externalId = str_replace('\\', '\\\\', trim($externalId, '"'));
 
         $this->joinMetaDataTables();
@@ -290,7 +291,7 @@ trait MetaCollection
     public function externalUrlContains(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
-        $url = (string) json_encode($url);
+        $url = (string) \Safe\json_encode($url);
         $url = str_replace('\\', '\\\\', trim($url, '"'));
         $this->query->where('journal_meta.name', '=', 'external_url');
         $this->query->whereLike('journal_meta.data', sprintf('%%%s%%', $url));
@@ -301,7 +302,7 @@ trait MetaCollection
     public function externalUrlDoesNotContain(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
-        $url = (string) json_encode($url);
+        $url = (string) \Safe\json_encode($url);
         $url = str_replace('\\', '\\\\', trim($url, '"'));
         $this->query->where('journal_meta.name', '=', 'external_url');
         $this->query->whereNotLike('journal_meta.data', sprintf('%%%s%%', $url));
@@ -312,7 +313,7 @@ trait MetaCollection
     public function externalUrlDoesNotEnd(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
-        $url = (string) json_encode($url);
+        $url = (string) \Safe\json_encode($url);
         $url = str_replace('\\', '\\\\', ltrim($url, '"'));
         $this->query->where('journal_meta.name', '=', 'external_url');
         $this->query->whereNotLike('journal_meta.data', sprintf('%%%s', $url));
@@ -323,7 +324,7 @@ trait MetaCollection
     public function externalUrlDoesNotStart(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
-        $url = (string) json_encode($url);
+        $url = (string) \Safe\json_encode($url);
         $url = str_replace('\\', '\\\\', rtrim($url, '"'));
         // var_dump($url);
 
@@ -336,7 +337,7 @@ trait MetaCollection
     public function externalUrlEnds(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
-        $url = (string) json_encode($url);
+        $url = (string) \Safe\json_encode($url);
         $url = str_replace('\\', '\\\\', ltrim($url, '"'));
         $this->query->where('journal_meta.name', '=', 'external_url');
         $this->query->whereLike('journal_meta.data', sprintf('%%%s', $url));
@@ -347,7 +348,7 @@ trait MetaCollection
     public function externalUrlStarts(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
-        $url = (string) json_encode($url);
+        $url = (string) \Safe\json_encode($url);
         $url = str_replace('\\', '\\\\', rtrim($url, '"'));
         // var_dump($url);
 
@@ -398,7 +399,7 @@ trait MetaCollection
 
     public function internalReferenceContains(string $internalReference): GroupCollectorInterface
     {
-        $internalReference = (string) json_encode($internalReference);
+        $internalReference = (string) \Safe\json_encode($internalReference);
         $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
         // var_dump($internalReference);
         // exit;
@@ -413,7 +414,7 @@ trait MetaCollection
 
     public function internalReferenceDoesNotContain(string $internalReference): GroupCollectorInterface
     {
-        $internalReference = (string) json_encode($internalReference);
+        $internalReference = (string) \Safe\json_encode($internalReference);
         $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
 
         $this->joinMetaDataTables();
@@ -426,7 +427,7 @@ trait MetaCollection
 
     public function internalReferenceDoesNotEnd(string $internalReference): GroupCollectorInterface
     {
-        $internalReference = (string) json_encode($internalReference);
+        $internalReference = (string) \Safe\json_encode($internalReference);
         $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
 
         $this->joinMetaDataTables();
@@ -439,7 +440,7 @@ trait MetaCollection
 
     public function internalReferenceDoesNotStart(string $internalReference): GroupCollectorInterface
     {
-        $internalReference = (string) json_encode($internalReference);
+        $internalReference = (string) \Safe\json_encode($internalReference);
         $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
 
         $this->joinMetaDataTables();
@@ -452,7 +453,7 @@ trait MetaCollection
 
     public function internalReferenceEnds(string $internalReference): GroupCollectorInterface
     {
-        $internalReference = (string) json_encode($internalReference);
+        $internalReference = (string) \Safe\json_encode($internalReference);
         $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
 
         $this->joinMetaDataTables();
@@ -465,7 +466,7 @@ trait MetaCollection
 
     public function internalReferenceStarts(string $internalReference): GroupCollectorInterface
     {
-        $internalReference = (string) json_encode($internalReference);
+        $internalReference = (string) \Safe\json_encode($internalReference);
         $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
 
         $this->joinMetaDataTables();
@@ -492,7 +493,7 @@ trait MetaCollection
                 'notes',
                 static function (JoinClause $join): void {
                     $join->on('notes.noteable_id', '=', 'transaction_journals.id');
-                    $join->where('notes.noteable_type', '=', 'FireflyIII\Models\TransactionJournal');
+                    $join->where('notes.noteable_type', '=', TransactionJournal::class);
                     $join->whereNull('notes.deleted_at');
                 }
             );
@@ -601,8 +602,8 @@ trait MetaCollection
                     return false;
                 }
                 foreach ($transaction['tags'] as $tag) {
-                    Log::debug(sprintf('"%s" versus', strtolower($tag['name'])), $list);
-                    if (in_array(strtolower($tag['name']), $list, true)) {
+                    Log::debug(sprintf('"%s" versus', strtolower((string) $tag['name'])), $list);
+                    if (in_array(strtolower((string) $tag['name']), $list, true)) {
                         app('log')->debug(sprintf('Transaction has tag "%s" so count++.', $tag['name']));
                         ++$foundTagCount;
                         $journalId = $transaction['transaction_journal_id'];
@@ -703,7 +704,7 @@ trait MetaCollection
     {
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'external_id');
-        $this->query->where('journal_meta.data', '=', sprintf('%s', json_encode($externalId)));
+        $this->query->where('journal_meta.data', '=', sprintf('%s', \Safe\json_encode($externalId)));
         $this->query->whereNull('journal_meta.deleted_at');
 
         return $this;
@@ -713,7 +714,7 @@ trait MetaCollection
     {
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'external_url');
-        $this->query->where('journal_meta.data', '=', json_encode($url));
+        $this->query->where('journal_meta.data', '=', \Safe\json_encode($url));
         $this->query->whereNull('journal_meta.deleted_at');
 
         return $this;
@@ -721,12 +722,12 @@ trait MetaCollection
 
     public function setInternalReference(string $internalReference): GroupCollectorInterface
     {
-        $internalReference = (string) json_encode($internalReference);
+        $internalReference = (string) \Safe\json_encode($internalReference);
         $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
 
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'internal_reference');
-        $this->query->where('journal_meta.data', '=', sprintf('%s', json_encode($internalReference)));
+        $this->query->where('journal_meta.data', '=', sprintf('%s', \Safe\json_encode($internalReference)));
         $this->query->whereNull('journal_meta.deleted_at');
 
         return $this;
@@ -736,7 +737,7 @@ trait MetaCollection
     {
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'recurrence_id');
-        $this->query->where('journal_meta.data', '=', sprintf('%s', json_encode($recurringId)));
+        $this->query->where('journal_meta.data', '=', sprintf('%s', \Safe\json_encode($recurringId)));
         $this->query->whereNull('journal_meta.deleted_at');
 
         return $this;
@@ -746,7 +747,7 @@ trait MetaCollection
     {
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'sepa_ct_id');
-        $this->query->where('journal_meta.data', '=', sprintf('%s', json_encode($sepaCT)));
+        $this->query->where('journal_meta.data', '=', sprintf('%s', \Safe\json_encode($sepaCT)));
         $this->query->whereNull('journal_meta.deleted_at');
 
         return $this;
@@ -779,8 +780,8 @@ trait MetaCollection
             Log::debug(sprintf('Now in setTags(%s) filter', implode(', ', $list)));
             foreach ($object['transactions'] as $transaction) {
                 foreach ($transaction['tags'] as $tag) {
-                    Log::debug(sprintf('"%s" versus', strtolower($tag['name'])), $list);
-                    if (in_array(strtolower($tag['name']), $list, true)) {
+                    Log::debug(sprintf('"%s" versus', strtolower((string) $tag['name'])), $list);
+                    if (in_array(strtolower((string) $tag['name']), $list, true)) {
                         app('log')->debug(sprintf('Transaction has tag "%s" so return true.', $tag['name']));
 
                         return true;
@@ -811,8 +812,8 @@ trait MetaCollection
             foreach ($object['transactions'] as $transaction) {
                 app('log')->debug(sprintf('Transaction has %d tag(s)', count($transaction['tags'])));
                 foreach ($transaction['tags'] as $tag) {
-                    Log::debug(sprintf('"%s" versus', strtolower($tag['name'])), $list);
-                    if (in_array(strtolower($tag['name']), $list, true)) {
+                    Log::debug(sprintf('"%s" versus', strtolower((string) $tag['name'])), $list);
+                    if (in_array(strtolower((string) $tag['name']), $list, true)) {
                         app('log')->debug(sprintf('Transaction has tag "%s", but should not have it, return false.', $tag['name']));
 
                         return false;

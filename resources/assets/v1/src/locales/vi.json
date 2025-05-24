@@ -154,7 +154,7 @@
         "url": "URL",
         "active": "H\u00e0nh \u0111\u1ed9ng",
         "interest_date": "Ng\u00e0y l\u00e3i",
-        "administration_currency": "Native currency",
+        "administration_currency": "Ti\u1ec1n t\u1ec7 b\u1ea3n \u0111\u1ecba",
         "title": "Ti\u00eau \u0111\u1ec1",
         "date": "Ng\u00e0y",
         "book_date": "Ng\u00e0y \u0111\u1eb7t s\u00e1ch",
@@ -169,7 +169,7 @@
         "webhook_delivery": "Ph\u00e2n ph\u1ed1i",
         "from_currency_to_currency": "{from} &rarr; {to}",
         "to_currency_from_currency": "{to} &rarr; {from}",
-        "rate": "Rate"
+        "rate": "T\u1ef7 l\u1ec7"
     },
     "list": {
         "title": "Ti\u00eau \u0111\u1ec1",

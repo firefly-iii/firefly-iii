@@ -36,6 +36,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 
+use function Safe\preg_match;
+
 /**
  * Class CategoryFormRequest.
  */
@@ -251,7 +253,7 @@ class ReportFormRequest extends FormRequest
     public function withValidator(Validator $validator): void
     {
         if ($validator->fails()) {
-            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+            Log::channel('audit')->error(sprintf('Validation errors in %s', self::class), $validator->errors()->toArray());
         }
     }
 }

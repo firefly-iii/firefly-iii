@@ -45,12 +45,7 @@ class UserRegistration extends Notification
 {
     use Queueable;
 
-    private User            $user;
-
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
+    public function __construct(private User $user) {}
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
@@ -71,7 +66,7 @@ class UserRegistration extends Notification
         $userAgent = Request::userAgent();
         $time      = now(config('app.timezone'))->isoFormat((string) trans('config.date_time_js'));
 
-        return (new MailMessage())
+        return new MailMessage()
             ->markdown('emails.registered-admin', ['email' => $this->user->email, 'id' => $this->user->id, 'ip' => $ip, 'host' => $host, 'userAgent' => $userAgent, 'time' => $time])
             ->subject((string) trans('email.registered_subject_admin'))
         ;

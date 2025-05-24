@@ -38,7 +38,6 @@ use FireflyIII\Repositories\Budget\NoBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Chart\Budget\FrontpageChartGenerator;
-use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Http\Controllers\AugumentData;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
@@ -110,7 +109,7 @@ class BudgetController extends Controller
             /** @var Carbon $loopEnd */
             $loopEnd                = app('navigation')->endOfPeriod($loopStart, $step);
             $spent                  = $this->opsRepository->sumExpenses($loopStart, $loopEnd, null, $collection); // this method already converts to native.
-            $label                  = trim(app('navigation')->periodShow($loopStart, $step));
+            $label                  = trim((string) app('navigation')->periodShow($loopStart, $step));
 
             foreach ($spent as $row) {
                 $currencyId                               = $row['currency_id'];
@@ -133,7 +132,7 @@ class BudgetController extends Controller
                 'entries'         => $defaultEntries,
             ];
             foreach ($currency['spent'] as $label => $spent) {
-                $chartData[$currencyId]['entries'][$label] = bcmul($spent, '-1');
+                $chartData[$currencyId]['entries'][$label] = bcmul((string) $spent, '-1');
             }
         }
         $data           = $this->generator->multiSet(array_values($chartData));
@@ -172,15 +171,15 @@ class BudgetController extends Controller
         $budgetCollection                       = new Collection([$budget]);
         $currency                               = $budgetLimit->transactionCurrency;
         if ($this->convertToNative) {
-            $amount   = $budgetLimit->native_amount ?? '0';
+            $amount   = $budgetLimit->native_amount ?? $amount;
             $currency = $this->defaultCurrency;
         }
 
         while ($start <= $end) {
             $current          = clone $start;
-            $expenses         = $this->opsRepository->sumExpenses($current, $current, null, $budgetCollection, $budgetLimit->transactionCurrency);
+            $expenses         = $this->opsRepository->sumExpenses($current, $current, null, $budgetCollection, $budgetLimit->transactionCurrency, $this->convertToNative);
             $spent            = $expenses[$currency->id]['sum'] ?? '0';
-            $amount           = bcadd($amount, $spent);
+            $amount           = bcadd((string) $amount, $spent);
             $format           = $start->isoFormat((string) trans('config.month_and_day_js', [], $locale));
             $entries[$format] = $amount;
 
@@ -191,6 +190,7 @@ class BudgetController extends Controller
         $data['datasets'][0]['currency_symbol'] = $currency->symbol;
         $data['datasets'][0]['currency_code']   = $currency->code;
         $cache->store($data);
+        // var_dump($data);exit;
 
         return response()->json($data);
     }
@@ -202,7 +202,7 @@ class BudgetController extends Controller
     {
         /** @var GroupCollectorInterface $collector */
         $collector     = app(GroupCollectorInterface::class);
-        $budgetLimitId = null === $budgetLimit ? 0 : $budgetLimit->id;
+        $budgetLimitId = $budgetLimit instanceof BudgetLimit ? $budgetLimit->id : 0;
         $cache         = new CacheProperties();
         $cache->addProperty($budget->id);
         $cache->addProperty($this->convertToNative);
@@ -211,10 +211,10 @@ class BudgetController extends Controller
         $start         = session('first', today(config('app.timezone'))->startOfYear());
         $end           = today();
 
-        if (null !== $budgetLimit) {
+        if ($budgetLimit instanceof BudgetLimit) {
             $start = $budgetLimit->start_date;
             $end   = $budgetLimit->end_date;
-            $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date)->setCurrency($budgetLimit->transactionCurrency);
+            $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date)->setNormalCurrency($budgetLimit->transactionCurrency);
         }
         $cache->addProperty($start);
         $cache->addProperty($end);
@@ -256,7 +256,7 @@ class BudgetController extends Controller
                 'currency_code'   => $code,
                 'currency_name'   => $name,
             ];
-            $result[$key]['amount'] = bcadd($amount, $result[$key]['amount']);
+            $result[$key]['amount'] = bcadd((string) $amount, $result[$key]['amount']);
         }
 
         $names         = $this->getAccountNames(array_keys($result));
@@ -285,7 +285,7 @@ class BudgetController extends Controller
     {
         /** @var GroupCollectorInterface $collector */
         $collector     = app(GroupCollectorInterface::class);
-        $budgetLimitId = null === $budgetLimit ? 0 : $budgetLimit->id;
+        $budgetLimitId = $budgetLimit instanceof BudgetLimit ? $budgetLimit->id : 0;
         $cache         = new CacheProperties();
         $cache->addProperty($budget->id);
         $cache->addProperty($this->convertToNative);
@@ -293,10 +293,10 @@ class BudgetController extends Controller
         $cache->addProperty('chart.budget.expense-category');
         $start         = session('first', today(config('app.timezone'))->startOfYear());
         $end           = today();
-        if (null !== $budgetLimit) {
+        if ($budgetLimit instanceof BudgetLimit) {
             $start = $budgetLimit->start_date;
             $end   = $budgetLimit->end_date;
-            $collector->setCurrency($budgetLimit->transactionCurrency);
+            $collector->setNormalCurrency($budgetLimit->transactionCurrency);
         }
         $cache->addProperty($start);
         $cache->addProperty($end);
@@ -340,7 +340,7 @@ class BudgetController extends Controller
                 'currency_code'   => $code,
                 'currency_name'   => $name,
             ];
-            $result[$key]['amount'] = bcadd($amount, $result[$key]['amount']);
+            $result[$key]['amount'] = bcadd((string) $amount, $result[$key]['amount']);
         }
 
         $names         = $this->getCategoryNames(array_keys($result));
@@ -367,7 +367,7 @@ class BudgetController extends Controller
     {
         /** @var GroupCollectorInterface $collector */
         $collector     = app(GroupCollectorInterface::class);
-        $budgetLimitId = null === $budgetLimit ? 0 : $budgetLimit->id;
+        $budgetLimitId = $budgetLimit instanceof BudgetLimit ? $budgetLimit->id : 0;
         $cache         = new CacheProperties();
         $cache->addProperty($budget->id);
         $cache->addProperty($budgetLimitId);
@@ -375,10 +375,10 @@ class BudgetController extends Controller
         $cache->addProperty('chart.budget.expense-expense');
         $start         = session('first', today(config('app.timezone'))->startOfYear());
         $end           = today();
-        if (null !== $budgetLimit) {
+        if ($budgetLimit instanceof BudgetLimit) {
             $start = $budgetLimit->start_date;
             $end   = $budgetLimit->end_date;
-            $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date)->setCurrency($budgetLimit->transactionCurrency);
+            $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date)->setNormalCurrency($budgetLimit->transactionCurrency);
         }
         $cache->addProperty($start);
         $cache->addProperty($end);
@@ -423,7 +423,7 @@ class BudgetController extends Controller
                 'currency_code'   => $code,
                 'currency_name'   => $name,
             ];
-            $result[$key]['amount'] = bcadd($amount, $result[$key]['amount']);
+            $result[$key]['amount'] = bcadd((string) $amount, $result[$key]['amount']);
         }
 
         $names         = $this->getAccountNames(array_keys($result));
@@ -529,7 +529,7 @@ class BudgetController extends Controller
 
             // get budget limit in this period for this currency.
             $limit                           = $this->blRepository->find($budget, $currency, $currentStart, $currentEnd);
-            if (null !== $limit) {
+            if ($limit instanceof BudgetLimit) {
                 $chartData[1]['entries'][$title] = app('steam')->bcround($limit->amount, $currency->decimal_places);
             }
 

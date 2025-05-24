@@ -38,6 +38,7 @@ use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait AugumentData
@@ -109,7 +110,7 @@ trait AugumentData
         $grouped    = $accounts->groupBy('id')->toArray();
         $return     = [];
         foreach ($accountIds as $combinedId) {
-            $parts     = explode('-', $combinedId);
+            $parts     = explode('-', (string) $combinedId);
             $accountId = (int) $parts[0];
             if (array_key_exists($accountId, $grouped)) {
                 $return[$accountId] = $grouped[$accountId][0]['name'];
@@ -151,7 +152,7 @@ trait AugumentData
         $grouped    = $categories->groupBy('id')->toArray();
         $return     = [];
         foreach ($categoryIds as $combinedId) {
-            $parts      = explode('-', $combinedId);
+            $parts      = explode('-', (string) $combinedId);
             $categoryId = (int) $parts[0];
             if (array_key_exists($categoryId, $grouped)) {
                 $return[$categoryId] = $grouped[$categoryId][0]['name'];
@@ -167,6 +168,8 @@ trait AugumentData
      */
     protected function getLimits(Budget $budget, Carbon $start, Carbon $end): Collection // get data + augment with info
     {
+        Log::debug('In getLimits');
+
         /** @var OperationsRepositoryInterface $opsRepository */
         $opsRepository    = app(OperationsRepositoryInterface::class);
 
@@ -195,24 +198,30 @@ trait AugumentData
 
         /** @var BudgetLimit $entry */
         foreach ($set as $entry) {
-            $currency     = $entry->transactionCurrency;
+            Log::debug(sprintf('Now at budget limit #%d', $entry->id));
+            $currency            = $entry->transactionCurrency;
             if ($this->convertToNative) {
                 // the sumExpenses method already handles this.
                 $currency = $this->defaultCurrency;
             }
 
             // clone because these objects change each other.
-            $currentStart = clone $entry->start_date;
-            $currentEnd   = null === $entry->end_date ? null : clone $entry->end_date;
+            $currentStart        = clone $entry->start_date;
+            $currentEnd          = null === $entry->end_date ? null : clone $entry->end_date;
 
             if (null === $currentEnd) {
                 $currentEnd = clone $currentStart;
                 $currentEnd->addMonth();
             }
+            // native amount.
+            $expenses            = $opsRepository->sumExpenses($currentStart, $currentEnd, null, $budgetCollection, $entry->transactionCurrency, $this->convertToNative);
+            $spent               = $expenses[$currency->id]['sum'] ?? '0';
+            $entry->native_spent = $spent;
 
-            $expenses     = $opsRepository->sumExpenses($currentStart, $currentEnd, null, $budgetCollection, $currency);
-            $spent        = $expenses[$currency->id]['sum'] ?? '0';
-            $entry->spent = $spent;
+            // normal amount:
+            $expenses            = $opsRepository->sumExpenses($currentStart, $currentEnd, null, $budgetCollection, $entry->transactionCurrency, false);
+            $spent               = $expenses[$entry->transactionCurrency->id]['sum'] ?? '0';
+            $entry->spent        = $spent;
 
             $limits->push($entry);
         }
@@ -240,7 +249,7 @@ trait AugumentData
             }
 
             $grouped[$name] ??= '0';
-            $grouped[$name] = bcadd($journal['amount'], $grouped[$name]);
+            $grouped[$name] = bcadd((string) $journal['amount'], $grouped[$name]);
         }
 
         return $grouped;
@@ -278,8 +287,8 @@ trait AugumentData
             }
 
             // add amount
-            $sum['per_currency'][$currencyId]['sum'] = bcadd($sum['per_currency'][$currencyId]['sum'], $journal['amount']);
-            $sum['grand_sum']                        = bcadd($sum['grand_sum'], $journal['amount']);
+            $sum['per_currency'][$currencyId]['sum'] = bcadd($sum['per_currency'][$currencyId]['sum'], (string) $journal['amount']);
+            $sum['grand_sum']                        = bcadd($sum['grand_sum'], (string) $journal['amount']);
         }
 
         return $sum;

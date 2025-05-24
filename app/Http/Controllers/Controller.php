@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use function Safe\realpath;
+use function Safe\ini_get;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
@@ -32,6 +34,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\View;
 use Route;
 
@@ -51,13 +54,12 @@ abstract class Controller extends BaseController
 
     // fails on PHP < 8.4
     public protected(set) string $name;
-
-    protected string $dateTimeFormat;
-    protected string $monthAndDayFormat;
-    protected bool $convertToNative = false;
+    protected bool                 $convertToNative = false;
+    protected string               $dateTimeFormat;
     protected ?TransactionCurrency $defaultCurrency;
-    protected string $monthFormat;
-    protected string $redirectUrl = '/';
+    protected string               $monthAndDayFormat;
+    protected string               $monthFormat;
+    protected string               $redirectUrl     = '/';
 
     /**
      * Controller constructor.
@@ -81,6 +83,8 @@ abstract class Controller extends BaseController
 
         // overrule v2 layout back to v1.
         if ('true' === request()->get('force_default_layout') && 'v2' === config('view.layout')) {
+            //config('view.layout','v1');
+            Config::set('view.layout', 'v1');
             View::getFinder()->setPaths([realpath(base_path('resources/views'))]); // @phpstan-ignore-line
         }
 
@@ -94,17 +98,17 @@ abstract class Controller extends BaseController
         View::share('uploadSize', $uploadSize);
 
         // share is alpha, is beta
-        $isAlpha = false;
-        $isBeta = false;
+        $isAlpha   = false;
+        $isBeta    = false;
         $isDevelop = false;
-        if (str_contains(config('firefly.version'), 'alpha')) {
+        if (str_contains((string) config('firefly.version'), 'alpha')) {
             $isAlpha = true;
         }
-        if (str_contains(config('firefly.version'), 'develop') || str_contains(config('firefly.version'), 'branch')) {
+        if (str_contains((string) config('firefly.version'), 'develop') || str_contains((string) config('firefly.version'), 'branch')) {
             $isDevelop = true;
         }
 
-        if (str_contains(config('firefly.version'), 'beta')) {
+        if (str_contains((string) config('firefly.version'), 'beta')) {
             $isBeta = true;
         }
 
@@ -120,16 +124,16 @@ abstract class Controller extends BaseController
                 $this->monthAndDayFormat = (string) trans('config.month_and_day_js', [], $locale);
                 $this->dateTimeFormat    = (string) trans('config.date_time_js', [], $locale);
                 $darkMode                = 'browser';
-                $this->defaultCurrency   =null;
+                $this->defaultCurrency   = null;
                 // get shown-intro-preference:
                 if (auth()->check()) {
-                    $this->defaultCurrency   = Amount::getNativeCurrency();
-                    $language  = Steam::getLanguage();
-                    $locale    = Steam::getLocale();
-                    $darkMode  = app('preferences')->get('darkMode', 'browser')->data;
-                    $this->convertToNative =Amount::convertToNative();
-                    $page      = $this->getPageName();
-                    $shownDemo = $this->hasSeenDemo();
+                    $this->defaultCurrency = Amount::getNativeCurrency();
+                    $language              = Steam::getLanguage();
+                    $locale                = Steam::getLocale();
+                    $darkMode              = app('preferences')->get('darkMode', 'browser')->data;
+                    $this->convertToNative = Amount::convertToNative();
+                    $page                  = $this->getPageName();
+                    $shownDemo             = $this->hasSeenDemo();
                     View::share('language', $language);
                     View::share('locale', $locale);
                     View::share('convertToNative', $this->convertToNative);

@@ -57,7 +57,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
             $diff   = (int) $limit->start_date->diffInDays($limit->end_date, true);
             $diff   = 0 === $diff ? 1 : $diff;
             $amount = $limit->amount;
-            $perDay = bcdiv($amount, (string) $diff);
+            $perDay = bcdiv((string) $amount, (string) $diff);
             $total  = bcadd($total, $perDay);
             ++$count;
             app('log')->debug(sprintf('Found %d budget limits. Per day is %s, total is %s', $count, $perDay, $total));
@@ -110,7 +110,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
                 'entries'                 => [],
             ];
             $date                         = $journal['date']->format($carbonFormat);
-            $data[$key]['entries'][$date] = bcadd($data[$key]['entries'][$date] ?? '0', $journal['amount']);
+            $data[$key]['entries'][$date] = bcadd($data[$key]['entries'][$date] ?? '0', (string) $journal['amount']);
         }
 
         return $data;
@@ -201,9 +201,10 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         Carbon               $end,
         ?Collection          $accounts = null,
         ?Collection          $budgets = null,
-        ?TransactionCurrency $currency = null
+        ?TransactionCurrency $currency = null,
+        bool                 $convertToNative = false
     ): array {
-        Log::debug(sprintf('Start of %s.', __METHOD__));
+        Log::debug(sprintf('Start of %s(date, date, array, array, "%s", "%s").', __METHOD__, $currency?->code, var_export($convertToNative, true)));
         // this collector excludes all transfers TO liabilities (which are also withdrawals)
         // because those expenses only become expenses once they move from the liability to the friend.
         // 2024-12-24 disable the exclusion for now.
@@ -235,10 +236,12 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
             $budgets = $this->getBudgets();
         }
         if (null !== $currency) {
-            Log::debug(sprintf('Limit to currency %s', $currency->code));
-            $collector->setCurrency($currency);
+            Log::debug(sprintf('Limit to normal currency %s', $currency->code));
+            $collector->setNormalCurrency($currency);
         }
-        $collector->setBudgets($budgets);
+        if ($budgets->count() > 0) {
+            $collector->setBudgets($budgets);
+        }
         $journals   = $collector->getExtractedJournals();
 
         // same but for transactions in the foreign currency:
@@ -246,6 +249,8 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
             Log::debug('STOP looking for transactions in the foreign currency.');
         }
         $summarizer = new TransactionSummarizer($this->user);
+        // 2025-04-21 overrule "convertToNative" because in this particular view, we never want to do this.
+        $summarizer->setConvertToNative($convertToNative);
 
         return $summarizer->groupByCurrencyId($journals, 'negative', false);
     }

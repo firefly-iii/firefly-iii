@@ -49,14 +49,14 @@ class AccountValidator
     use TransferValidation;
     use WithdrawalValidation;
 
-    public bool                                 $createMode;
-    public string                               $destError;
-    public ?Account                             $destination;
-    public ?Account                             $source;
-    public string                               $sourceError;
-    private AccountRepositoryInterface          $accountRepository;
-    private array                               $combinations;
-    private string                              $transactionType;
+    public bool                        $createMode;
+    public string                      $destError;
+    public ?Account                    $destination;
+    public ?Account                    $source;
+    public string                      $sourceError;
+    private AccountRepositoryInterface $accountRepository;
+    private array                      $combinations;
+    private string                     $transactionType;
 
     /**
      * AccountValidator constructor.
@@ -305,7 +305,7 @@ class AccountValidator
                 return $first;
             }
         }
-        app('log')->debug('Found nothing!');
+        app('log')->debug('Found nothing in findExistingAccount()');
 
         return null;
     }

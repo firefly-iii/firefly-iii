@@ -53,7 +53,7 @@ class OwnerTestNotificationEmail extends Notification
     {
         $address = (string) config('firefly.site_owner');
 
-        return (new MailMessage())
+        return new MailMessage()
             ->markdown('emails.admin-test', ['email' => $address])
             ->subject((string) trans('email.admin_test_subject'))
         ;

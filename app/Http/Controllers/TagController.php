@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use FireflyIII\Models\Location;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
@@ -124,10 +125,10 @@ class TagController extends Controller
         $subTitleIcon = 'fa-tag';
 
         $location     = $this->repository->getLocation($tag);
-        $latitude     = null !== $location ? $location->latitude : config('firefly.default_location.latitude');
-        $longitude    = null !== $location ? $location->longitude : config('firefly.default_location.longitude');
-        $zoomLevel    = null !== $location ? $location->zoom_level : config('firefly.default_location.zoom_level');
-        $hasLocation  = null !== $location;
+        $latitude     = $location instanceof Location ? $location->latitude : config('firefly.default_location.latitude');
+        $longitude    = $location instanceof Location ? $location->longitude : config('firefly.default_location.longitude');
+        $zoomLevel    = $location instanceof Location ? $location->zoom_level : config('firefly.default_location.zoom_level');
+        $hasLocation  = $location instanceof Location;
         $locations    = [
             'location' => [
                 'latitude'     => old('location_latitude') ?? $latitude,
@@ -155,8 +156,8 @@ class TagController extends Controller
     {
         // start with oldest tag
         $first           = session('first', today()) ?? today();
-        $oldestTagDate   = null === $repository->oldestTag() ? clone $first : $repository->oldestTag()->date;
-        $newestTagDate   = null === $repository->newestTag() ? today() : $repository->newestTag()->date;
+        $oldestTagDate   = $repository->oldestTag() instanceof Tag ? $repository->oldestTag()->date : clone $first;
+        $newestTagDate   = $repository->newestTag() instanceof Tag ? $repository->newestTag()->date : today();
         $oldestTagDate->startOfYear();
         $newestTagDate->endOfYear();
         $tags            = [];
@@ -184,7 +185,7 @@ class TagController extends Controller
         foreach ($tags as $tagId) {
             $tagId = (int) $tagId;
             $tag   = $this->repository->find($tagId);
-            if (null !== $tag) {
+            if ($tag instanceof Tag) {
                 $this->repository->destroy($tag);
                 ++$count;
             }

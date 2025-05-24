@@ -151,9 +151,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
         $merged  = $outward->merge($inward);
 
         return $merged->filter(
-            static function (TransactionJournalLink $link) {
-                return null !== $link->source && null !== $link->destination;
-            }
+            static fn (TransactionJournalLink $link) => null !== $link->source && null !== $link->destination
         );
     }
 
@@ -285,8 +283,8 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
      */
     public function updateLink(TransactionJournalLink $journalLink, array $data): TransactionJournalLink
     {
-        $journalLink->source_id      = null === $data['inward_id'] ? $journalLink->source_id : $data['inward_id'];
-        $journalLink->destination_id = null === $data['outward_id'] ? $journalLink->destination_id : $data['outward_id'];
+        $journalLink->source_id      = $data['inward_id'] ?? $journalLink->source_id;
+        $journalLink->destination_id = $data['outward_id'] ?? $journalLink->destination_id;
         $journalLink->save();
         if (array_key_exists('link_type_name', $data)) {
             $linkType = LinkType::whereName($data['link_type_name'])->first();
@@ -297,7 +295,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
             $journalLink->refresh();
         }
 
-        $journalLink->link_type_id   = null === $data['link_type_id'] ? $journalLink->link_type_id : $data['link_type_id'];
+        $journalLink->link_type_id   = $data['link_type_id'] ?? $journalLink->link_type_id;
         $journalLink->save();
         if (array_key_exists('notes', $data) && null !== $data['notes']) {
             $this->setNoteText($journalLink, $data['notes']);

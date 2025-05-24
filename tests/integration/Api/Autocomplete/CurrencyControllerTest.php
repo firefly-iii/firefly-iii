@@ -44,6 +44,7 @@ final class CurrencyControllerTest extends TestCase
      */
     use RefreshDatabase;
 
+    #[\Override]
     protected function createAuthenticatedUser(): User
     {
         $userGroup           = UserGroup::create(['title' => 'Test Group']);

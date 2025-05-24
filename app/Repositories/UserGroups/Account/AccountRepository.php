@@ -66,7 +66,7 @@ class AccountRepository implements AccountRepositoryInterface
             ->where('accounts.active', true)
             ->where(
                 static function (EloquentBuilder $q1) use ($number): void {
-                    $json = json_encode($number);
+                    $json = \Safe\json_encode($number);
                     $q1->where('account_meta.name', '=', 'account_number');
                     $q1->where('account_meta.data', '=', $json);
                 }
@@ -149,9 +149,7 @@ class AccountRepository implements AccountRepositoryInterface
     public function getMetaValue(Account $account, string $field): ?string
     {
         $result = $account->accountMeta->filter(
-            static function (AccountMeta $meta) use ($field) {
-                return strtolower($meta->name) === strtolower($field);
-            }
+            static fn (AccountMeta $meta) => strtolower($meta->name) === strtolower($field)
         );
         if (0 === $result->count()) {
             return null;

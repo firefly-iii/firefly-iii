@@ -28,14 +28,10 @@ use Carbon\Carbon;
 
 readonly class IntervalProvider
 {
-    public Carbon $epoch;
-    public Carbon $expected;
     public string $label;
 
-    public function __construct(Carbon $epoch, Carbon $expected)
+    public function __construct(public Carbon $epoch, public Carbon $expected)
     {
-        $this->epoch    = $epoch;
-        $this->expected = $expected;
-        $this->label    = "given {$epoch->toDateString()} expects {$expected->toDateString()}";
+        $this->label = "given {$this->epoch->toDateString()} expects {$this->expected->toDateString()}";
     }
 }

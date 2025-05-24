@@ -42,12 +42,12 @@ class Attachment extends Model
 
     protected $casts
                         = [
-            'created_at'                   => 'datetime',
-            'updated_at'                   => 'datetime',
-            'deleted_at'                   => 'datetime',
-            'uploaded'                     => 'boolean',
-            'user_id'                      => 'integer',
-            'user_group_id'                => 'integer',
+            'created_at'    => 'datetime',
+            'updated_at'    => 'datetime',
+            'deleted_at'    => 'datetime',
+            'uploaded'      => 'boolean',
+            'user_id'       => 'integer',
+            'user_group_id' => 'integer',
         ];
 
     protected $fillable = ['attachable_id', 'attachable_type', 'user_id', 'user_group_id', 'md5', 'filename', 'mime', 'title', 'description', 'size', 'uploaded'];

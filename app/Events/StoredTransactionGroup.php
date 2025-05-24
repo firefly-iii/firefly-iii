@@ -34,17 +34,8 @@ class StoredTransactionGroup extends Event
 {
     use SerializesModels;
 
-    public bool             $applyRules;
-    public bool             $fireWebhooks;
-    public TransactionGroup $transactionGroup;
-
     /**
      * Create a new event instance.
      */
-    public function __construct(TransactionGroup $transactionGroup, bool $applyRules, bool $fireWebhooks)
-    {
-        $this->transactionGroup = $transactionGroup;
-        $this->fireWebhooks     = $fireWebhooks;
-        $this->applyRules       = $applyRules;
-    }
+    public function __construct(public TransactionGroup $transactionGroup, public bool $applyRules, public bool $fireWebhooks) {}
 }

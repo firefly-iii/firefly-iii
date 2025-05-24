@@ -173,7 +173,7 @@ class MassController extends Controller
             try {
                 $this->updateJournal($integer, $request);
                 ++$count;
-            } catch (FireflyException $e) {
+            } catch (FireflyException) {
                 // @ignoreException
             }
         }
@@ -191,7 +191,7 @@ class MassController extends Controller
     private function updateJournal(int $journalId, MassEditJournalRequest $request): void
     {
         $journal = $this->repository->find($journalId);
-        if (null === $journal) {
+        if (!$journal instanceof TransactionJournal) {
             throw new FireflyException(sprintf('Trying to edit non-existent or deleted journal #%d', $journalId));
         }
         $service = app(JournalUpdateService::class);

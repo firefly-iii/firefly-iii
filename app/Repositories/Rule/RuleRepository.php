@@ -142,8 +142,8 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
                 continue;
             }
             $triggerType  = $trigger->trigger_type;
-            if (str_starts_with($trigger->trigger_type, '-')) {
-                $triggerType = substr($trigger->trigger_type, 1);
+            if (str_starts_with((string) $trigger->trigger_type, '-')) {
+                $triggerType = substr((string) $trigger->trigger_type, 1);
             }
             $needsContext = config(sprintf('search.operators.%s.needs_context', $triggerType)) ?? true;
             if (false === $needsContext) {
@@ -359,7 +359,7 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
             $stopProcessing = $trigger['stop_processing'] ?? false;
             $active         = $trigger['active'] ?? true;
             $type           = $trigger['type'];
-            if (true === ($trigger['prohibited'] ?? false) && !str_starts_with($type, '-')) {
+            if (true === ($trigger['prohibited'] ?? false) && !str_starts_with((string) $type, '-')) {
                 $type = sprintf('-%s', $type);
             }
 

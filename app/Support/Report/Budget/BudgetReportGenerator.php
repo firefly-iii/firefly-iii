@@ -43,16 +43,16 @@ use Illuminate\Support\Collection;
  */
 class BudgetReportGenerator
 {
-    private Collection                     $accounts;
-    private BudgetLimitRepositoryInterface $blRepository;
-    private Collection                     $budgets;
-    private TransactionCurrency            $currency;
-    private Carbon                         $end;
-    private NoBudgetRepositoryInterface    $nbRepository;
-    private OperationsRepositoryInterface  $opsRepository;
-    private array                          $report;
-    private BudgetRepositoryInterface      $repository;
-    private Carbon                         $start;
+    private Collection                              $accounts;
+    private readonly BudgetLimitRepositoryInterface $blRepository;
+    private Collection                              $budgets;
+    private TransactionCurrency                     $currency;
+    private Carbon                                  $end;
+    private readonly NoBudgetRepositoryInterface    $nbRepository;
+    private readonly OperationsRepositoryInterface  $opsRepository;
+    private array                                   $report;
+    private readonly BudgetRepositoryInterface      $repository;
+    private Carbon                                  $start;
 
     /**
      * BudgetReportGenerator constructor.
@@ -124,7 +124,7 @@ class BudgetReportGenerator
                 ??= '0';
 
             $this->report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budgetId]
-                             = bcadd($this->report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budgetId], $journal['amount']);
+                             = bcadd($this->report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budgetId], (string) $journal['amount']);
         }
     }
 
@@ -223,10 +223,10 @@ class BudgetReportGenerator
                                                                            'currency_symbol'         => $limitCurrency->symbol,
                                                                            'currency_decimal_places' => $limitCurrency->decimal_places,
                                                                        ];
-        $this->report['sums'][$currencyId]['budgeted']  = bcadd($this->report['sums'][$currencyId]['budgeted'], $limit->amount);
-        $this->report['sums'][$currencyId]['spent']     = bcadd($this->report['sums'][$currencyId]['spent'], $spent);
-        $this->report['sums'][$currencyId]['left']      = bcadd($this->report['sums'][$currencyId]['left'], bcadd($limit->amount, $spent));
-        $this->report['sums'][$currencyId]['overspent'] = bcadd($this->report['sums'][$currencyId]['overspent'], $overspent);
+        $this->report['sums'][$currencyId]['budgeted']  = bcadd((string) $this->report['sums'][$currencyId]['budgeted'], $limit->amount);
+        $this->report['sums'][$currencyId]['spent']     = bcadd((string) $this->report['sums'][$currencyId]['spent'], $spent);
+        $this->report['sums'][$currencyId]['left']      = bcadd((string) $this->report['sums'][$currencyId]['left'], bcadd($limit->amount, $spent));
+        $this->report['sums'][$currencyId]['overspent'] = bcadd((string) $this->report['sums'][$currencyId]['overspent'], $overspent);
     }
 
     /**
@@ -267,7 +267,7 @@ class BudgetReportGenerator
                 'currency_symbol'         => $nbCurrencySymbol,
                 'currency_decimal_places' => $nbCurrencyDp,
             ];
-            $this->report['sums'][$nbCurrencyId]['spent']                   = bcadd($this->report['sums'][$nbCurrencyId]['spent'] ?? '0', $noBudgetEntry['sum']);
+            $this->report['sums'][$nbCurrencyId]['spent']                   = bcadd($this->report['sums'][$nbCurrencyId]['spent'] ?? '0', (string) $noBudgetEntry['sum']);
             // append currency info because it may be missing:
             $this->report['sums'][$nbCurrencyId]['currency_id']             = $nbCurrencyId;
             $this->report['sums'][$nbCurrencyId]['currency_code']           = $nbCurrencyCode;
@@ -300,11 +300,11 @@ class BudgetReportGenerator
                 $totalBudgeted                                                                 = $this->report['sums'][$currencyId]['budgeted'] ?? '0';
                 $budgetedPct                                                                   = '0';
 
-                if (0 !== bccomp($spent, '0') && 0 !== bccomp($totalSpent, '0')) {
-                    $spentPct = round((float) bcmul(bcdiv($spent, $totalSpent), '100'));
+                if (0 !== bccomp((string) $spent, '0') && 0 !== bccomp($totalSpent, '0')) {
+                    $spentPct = round((float) bcmul(bcdiv((string) $spent, $totalSpent), '100'));
                 }
-                if (0 !== bccomp($budgeted, '0') && 0 !== bccomp($totalBudgeted, '0')) {
-                    $budgetedPct = round((float) bcmul(bcdiv($budgeted, $totalBudgeted), '100'));
+                if (0 !== bccomp((string) $budgeted, '0') && 0 !== bccomp($totalBudgeted, '0')) {
+                    $budgetedPct = round((float) bcmul(bcdiv((string) $budgeted, $totalBudgeted), '100'));
                 }
                 $this->report['sums'][$currencyId]['budgeted'] ??= '0';
                 $this->report['budgets'][$budgetId]['budget_limits'][$limitId]['spent_pct']    = $spentPct;

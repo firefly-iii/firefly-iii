@@ -89,6 +89,7 @@ class AccountBalanceCalculator
         }
 
         $set      = $query->get(['transactions.id', 'transactions.balance_dirty', 'transactions.transaction_currency_id', 'transaction_journals.date', 'transactions.account_id', 'transactions.amount']);
+        Log::debug(sprintf('Counted %d transaction(s)', $set->count()));
 
         // the balance value is an array.
         // first entry is the balance, second is the date.
@@ -101,7 +102,7 @@ class AccountBalanceCalculator
 
             // before and after are easy:
             $before                                                        = $balances[$entry->account_id][$entry->transaction_currency_id][0];
-            $after                                                         = bcadd($before, $entry->amount);
+            $after                                                         = bcadd($before, (string) $entry->amount);
             if (true === $entry->balance_dirty || $accounts->count() > 0) {
                 // update the transaction:
                 $entry->balance_before = $before;
@@ -200,11 +201,11 @@ class AccountBalanceCalculator
         Log::debug(__METHOD__);
         $object   = new self();
 
-        // recalculate the involved accounts:
-        $accounts = new Collection();
+        $set      = [];
         foreach ($transactionJournal->transactions as $transaction) {
-            $accounts->push($transaction->account);
+            $set[$transaction->account_id] = $transaction->account;
         }
+        $accounts = new Collection($set);
         $object->optimizedCalculation($accounts, $transactionJournal->date);
     }
 }

@@ -42,11 +42,11 @@ use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
  */
 class RecurrenceTransformer extends AbstractTransformer
 {
-    private BillRepositoryInterface      $billRepos;
-    private BudgetRepositoryInterface    $budgetRepos;
-    private CategoryFactory              $factory;
-    private PiggyBankRepositoryInterface $piggyRepos;
-    private RecurringRepositoryInterface $repository;
+    private readonly BillRepositoryInterface      $billRepos;
+    private readonly BudgetRepositoryInterface    $budgetRepos;
+    private readonly CategoryFactory              $factory;
+    private readonly PiggyBankRepositoryInterface $piggyRepos;
+    private readonly RecurringRepositoryInterface $repository;
 
     /**
      * RecurrenceTransformer constructor.
@@ -264,7 +264,7 @@ class RecurrenceTransformer extends AbstractTransformer
                     break;
 
                 case 'tags':
-                    $array['tags'] = json_decode($transactionMeta->value);
+                    $array['tags'] = \Safe\json_decode($transactionMeta->value);
 
                     break;
 

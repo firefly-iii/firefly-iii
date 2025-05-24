@@ -26,6 +26,7 @@ namespace Tests\integration\Support\Models;
 
 use Carbon\Carbon;
 use FireflyIII\Support\Models\BillDateCalculator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\integration\TestCase;
 
 /**
@@ -39,17 +40,16 @@ final class BillDateCalculatorTest extends TestCase
 {
     private BillDateCalculator $calculator;
 
-    public function __construct(string $name)
+    protected function setUp(): void
     {
-        parent::__construct($name);
+        parent::setUp();
         $this->calculator = new BillDateCalculator();
     }
 
     /**
      * Stupid long method names I'm not going to do that.
-     *
-     * @dataProvider provideDates
      */
+    #[DataProvider('provideDates')]
     public function testGivenSomeDataItWorks(Carbon $earliest, Carbon $latest, Carbon $billStart, string $period, int $skip, ?Carbon $lastPaid, array $expected): void
     {
         $result = $this->calculator->getPayDates($earliest, $latest, $billStart, $period, $skip, $lastPaid);

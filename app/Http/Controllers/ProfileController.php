@@ -201,7 +201,7 @@ class ProfileController extends Controller
             return redirect(route('profile.change-email'))->withInput();
         }
         $existing = $repository->findByEmail($newEmail);
-        if (null !== $existing) {
+        if ($existing instanceof User) {
             // force user logout.
             \Auth::guard()->logout(); // @phpstan-ignore-line (does not recognize function)
             $request->session()->invalidate();

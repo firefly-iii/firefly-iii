@@ -125,7 +125,7 @@ trait ConvertsDataTypes
         $string = str_replace($this->characters, "\x20", $string);
 
         // clear zalgo text (TODO also in API v2)
-        $string = preg_replace('/(\pM{2})\pM+/u', '\1', $string);
+        $string = \Safe\preg_replace('/(\pM{2})\pM+/u', '\1', $string);
 
         return trim((string) $string);
     }
@@ -250,7 +250,7 @@ trait ConvertsDataTypes
         if ('' === $value) {
             return null;
         }
-        if (10 === strlen($value)) {
+        if (10 === strlen((string) $value)) {
             // probably a date format.
             try {
                 $carbon = Carbon::createFromFormat('Y-m-d', $value);
@@ -313,7 +313,7 @@ trait ConvertsDataTypes
 
         try {
             $carbon = new Carbon($string, config('app.timezone'));
-        } catch (InvalidFormatException $e) {
+        } catch (InvalidFormatException) {
             // @ignoreException
         }
         if (null === $carbon) {
@@ -324,6 +324,18 @@ trait ConvertsDataTypes
         app('log')->debug(sprintf('Date object: %s (%s)', $carbon->toW3cString(), $carbon->getTimezone()));
 
         return $carbon;
+    }
+
+    protected function floatFromValue(?string $string): ?float
+    {
+        if (null === $string) {
+            return null;
+        }
+        if ('' === $string) {
+            return null;
+        }
+
+        return (float) $string;
     }
 
     /**
@@ -364,7 +376,7 @@ trait ConvertsDataTypes
 
         try {
             $result = '' !== (string) $this->get($field) ? new Carbon((string) $this->get($field), config('app.timezone')) : null;
-        } catch (InvalidFormatException $e) {
+        } catch (InvalidFormatException) {
             // @ignoreException
             Log::debug(sprintf('Exception when parsing date "%s".', $this->get($field)));
         }
@@ -376,18 +388,20 @@ trait ConvertsDataTypes
     }
 
     /**
-     * Parse to integer
+     * Return integer value, or NULL when it's not set.
      */
-    protected function integerFromValue(?string $string): ?int
+    protected function nullableInteger(string $field): ?int
     {
-        if (null === $string) {
-            return null;
-        }
-        if ('' === $string) {
+        if (false === $this->has($field)) {
             return null;
         }
 
-        return (int) $string;
+        $value = (string) $this->get($field);
+        if ('' === $value) {
+            return null;
+        }
+
+        return (int) $value;
     }
 
     protected function parseAccounts(mixed $array): array
@@ -419,7 +433,10 @@ trait ConvertsDataTypes
         return $return;
     }
 
-    protected function floatFromValue(?string $string): ?float
+    /**
+     * Parse to integer
+     */
+    protected function integerFromValue(?string $string): ?int
     {
         if (null === $string) {
             return null;
@@ -428,23 +445,6 @@ trait ConvertsDataTypes
             return null;
         }
 
-        return (float) $string;
-    }
-
-    /**
-     * Return integer value, or NULL when it's not set.
-     */
-    protected function nullableInteger(string $field): ?int
-    {
-        if (false === $this->has($field)) {
-            return null;
-        }
-
-        $value = (string) $this->get($field);
-        if ('' === $value) {
-            return null;
-        }
-
-        return (int) $value;
+        return (int) $string;
     }
 }

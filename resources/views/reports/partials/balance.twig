@@ -38,7 +38,7 @@
                 {% endfor %}
                 <td style="text-align: right;">
                     {% for sum in report.sums[budget.budget_id] %}
-                        {{ formatAmountBySymbol(sum.sum, sum.currency_symbol, sum.currency_decimal_places) }} <span class="fa fa-fw fa-info-circle text-muted"></span>
+                        {{ formatAmountBySymbol(sum.sum, sum.currency_symbol, sum.currency_decimal_places) }}
                         <br/>
                     {% endfor %}
                 </td>

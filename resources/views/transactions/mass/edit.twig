@@ -98,7 +98,10 @@
                                     <!-- Source: {{ journal.source_account_name }} ({{ journal.source_account_id }}) -->
                                     <!-- Destination: {{ journal.destination_account_name }} ({{ journal.destination_account_id }}) -->
                                     <td style="position: relative;">
-
+                                        {% if journal.reconciled == true %}
+                                            <a href="{{ route('accounts.show', [journal.source_account_id]) }}">{{ journal.source_account_name }}</a>
+                                        {% endif %}
+                                        {% if journal.reconciled == false %}
                                         {# SOURCE ACCOUNT ID FOR TRANSFER OR WITHDRAWAL #}
                                         {% if journal.transaction_type_type == 'Transfer' or journal.transaction_type_type == 'Withdrawal' %}
                                             <select class="form-control input-sm" name="source_id[{{ journal.transaction_journal_id }}]">
@@ -117,9 +120,13 @@
                                                    name="source_name[{{ journal.transaction_journal_id }}]" type="text"
                                                    value="{% if journal.source_type != 'Cash account' %}{{ journal.source_account_name }}{% endif %}">
                                         {% endif %}
+                                        {% endif %}
                                     </td>
                                     <td style="position: relative;">
-
+                                        {% if journal.reconciled == true %}
+                                            <a href="{{ route('accounts.show', [journal.destination_account_id]) }}">{{ journal.destination_account_name }}</a>
+                                        {% endif %}
+                                        {% if journal.reconciled == false %}
                                         {# DESTINATION ACCOUNT NAME FOR TRANSFER AND DEPOSIT #}
                                         {% if journal.transaction_type_type == 'Transfer' or journal.transaction_type_type == 'Deposit' %}
 
@@ -137,6 +144,7 @@
                                                    placeholder="{% if journal.destination_type != 'Cash account' %}{{ journal.destination_account_name }}{% endif %}"
                                                    name="destination_name[{{ journal.transaction_journal_id }}]" type="text" autocomplete="off"
                                                    value="{% if journal.destination_type != 'Cash account' %}{{ journal.destination_account_name }}{% endif %}">
+                                        {% endif %}
                                         {% endif %}
                                     </td>
                                     {# category #}

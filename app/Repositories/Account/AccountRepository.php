@@ -108,7 +108,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
             ->where('accounts.active', true)
             ->where(
                 static function (EloquentBuilder $q1) use ($number): void {
-                    $json = json_encode($number);
+                    $json = \Safe\json_encode($number);
                     $q1->where('account_meta.name', '=', 'account_number');
                     $q1->where('account_meta.data', '=', $json);
                 }
@@ -409,9 +409,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
     public function getMetaValue(Account $account, string $field): ?string
     {
         $result = $account->accountMeta->filter(
-            static function (AccountMeta $meta) use ($field) {
-                return strtolower($meta->name) === strtolower($field);
-            }
+            static fn (AccountMeta $meta) => strtolower($meta->name) === strtolower($field)
         );
         if (0 === $result->count()) {
             return null;
@@ -535,6 +533,38 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         return null;
     }
 
+    #[\Override]
+    public function periodCollection(Account $account, Carbon $start, Carbon $end): array
+    {
+        return $account->transactions()
+            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+            ->leftJoin('transaction_currencies', 'transaction_currencies.id', '=', 'transactions.transaction_currency_id')
+            ->leftJoin('transaction_currencies as foreign_currencies', 'foreign_currencies.id', '=', 'transactions.foreign_currency_id')
+            ->where('transaction_journals.date', '>=', $start)
+            ->where('transaction_journals.date', '<=', $end)
+            ->get([
+                // currencies
+                'transaction_currencies.id as currency_id',
+                'transaction_currencies.code as currency_code',
+                'transaction_currencies.name as currency_name',
+                'transaction_currencies.symbol as currency_symbol',
+                'transaction_currencies.decimal_places as currency_decimal_places',
+
+                // foreign
+                'foreign_currencies.id as foreign_currency_id',
+                'foreign_currencies.code as foreign_currency_code',
+                'foreign_currencies.name as foreign_currency_name',
+                'foreign_currencies.symbol as foreign_currency_symbol',
+                'foreign_currencies.decimal_places as foreign_currency_decimal_places',
+
+                // fields
+                'transaction_journals.date', 'transaction_types.type', 'transaction_journals.transaction_currency_id', 'transactions.amount'])
+            ->toArray()
+        ;
+
+    }
+
     public function resetAccountOrder(): void
     {
         $sets = [
@@ -651,37 +681,5 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         $factory->setUser($this->user);
 
         return $factory->create($data);
-    }
-
-    #[\Override]
-    public function periodCollection(Account $account, Carbon $start, Carbon $end): array
-    {
-        return $account->transactions()
-            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-            ->leftJoin('transaction_currencies', 'transaction_currencies.id', '=', 'transactions.transaction_currency_id')
-            ->leftJoin('transaction_currencies as foreign_currencies', 'foreign_currencies.id', '=', 'transactions.foreign_currency_id')
-            ->where('transaction_journals.date', '>=', $start)
-            ->where('transaction_journals.date', '<=', $end)
-            ->get([
-                // currencies
-                'transaction_currencies.id as currency_id',
-                'transaction_currencies.code as currency_code',
-                'transaction_currencies.name as currency_name',
-                'transaction_currencies.symbol as currency_symbol',
-                'transaction_currencies.decimal_places as currency_decimal_places',
-
-                // foreign
-                'foreign_currencies.id as foreign_currency_id',
-                'foreign_currencies.code as foreign_currency_code',
-                'foreign_currencies.name as foreign_currency_name',
-                'foreign_currencies.symbol as foreign_currency_symbol',
-                'foreign_currencies.decimal_places as foreign_currency_decimal_places',
-
-                // fields
-                'transaction_journals.date', 'transaction_types.type', 'transaction_journals.transaction_currency_id', 'transactions.amount'])
-            ->toArray()
-        ;
-
     }
 }

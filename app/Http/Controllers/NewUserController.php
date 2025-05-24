@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Requests\NewUserFormRequest;
@@ -101,7 +102,7 @@ class NewUserController extends Controller
         $currency      = $currencyRepository->find((int) $request->input('amount_currency_id_bank_balance'));
 
         // if is null, set to EUR:
-        if (null === $currency) {
+        if (!$currency instanceof TransactionCurrency) {
             $currency = $currencyRepository->findByCode('EUR');
         }
         $currencyRepository->enable($currency);

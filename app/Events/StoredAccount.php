@@ -34,13 +34,8 @@ class StoredAccount extends Event
 {
     use SerializesModels;
 
-    public Account $account;
-
     /**
      * Create a new event instance.
      */
-    public function __construct(Account $account)
-    {
-        $this->account = $account;
-    }
+    public function __construct(public Account $account) {}
 }

@@ -23,7 +23,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Auth;
 
-use Cookie;
+use Carbon\Carbon;
+use FireflyIII\User;
+use Illuminate\Support\Facades\Cookie;
 use FireflyIII\Events\ActuallyLoggedIn;
 use FireflyIII\Events\Security\UnknownUserAttemptedLogin;
 use FireflyIII\Events\Security\UserAttemptedLogin;
@@ -44,6 +46,7 @@ use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 /**
  * Class LoginController
@@ -89,7 +92,7 @@ class LoginController extends Controller
 
         try {
             $this->validateLogin($request);
-        } catch (ValidationException $e) {
+        } catch (ValidationException) {
             // basic validation exception.
             // report the failed login to the user if the count is 2 or 5.
             // TODO here be warning.
@@ -130,11 +133,11 @@ class LoginController extends Controller
         app('log')->warning('Login attempt failed.');
         $username = (string) $request->get($this->username());
         $user     = $this->repository->findByEmail($username);
-        if (null === $user) {
+        if (!$user instanceof User) {
             // send event to owner.
             event(new UnknownUserAttemptedLogin($username));
         }
-        if (null !== $user) {
+        if ($user instanceof User) {
             event(new UserAttemptedLogin($user));
         }
 
@@ -198,7 +201,7 @@ class LoginController extends Controller
 
         // also logout current 2FA tokens.
         $cookieName = config('google2fa.cookie_name', 'google2fa_token');
-        \Cookie::forget($cookieName);
+        Cookie::forget($cookieName);
 
         $this->guard()->logout();
 
@@ -209,7 +212,7 @@ class LoginController extends Controller
         $this->loggedOut($request);
 
         return $request->wantsJson()
-            ? new Response('', 204)
+            ? new Response('', ResponseAlias::HTTP_NO_CONTENT)
             : redirect('/');
     }
 
@@ -220,7 +223,7 @@ class LoginController extends Controller
      *
      * @throws FireflyException
      */
-    public function showLoginForm(Request $request)
+    public function showLoginForm(?Request $request = null)
     {
         Log::channel('audit')->info('Show login form (1.1).');
 
@@ -246,13 +249,13 @@ class LoginController extends Controller
             $allowReset        = false;
         }
 
-        $email             = $request->old('email');
-        $remember          = $request->old('remember');
+        $email             = $request?->old('email');
+        $remember          = $request?->old('remember');
 
         $storeInCookie     = config('google2fa.store_in_cookie', false);
         if (false !== $storeInCookie) {
             $cookieName = config('google2fa.cookie_name', 'google2fa_token');
-            \Cookie::queue(\Cookie::make($cookieName, 'invalid-'.time()));
+            Cookie::queue(Cookie::make($cookieName, 'invalid-'.Carbon::now()->getTimestamp()));
         }
         $usernameField     = $this->username();
 

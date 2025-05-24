@@ -37,6 +37,7 @@ trait CollectorProperties
 
     /** @var array<int, string> */
     public array    $sorting;
+    private array   $booleanFields;
     private ?int    $endRow;
     private bool    $expandGroupSearch;
     private array   $fields;

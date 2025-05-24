@@ -44,12 +44,12 @@ use Illuminate\Support\Facades\Log;
  */
 class SearchRuleEngine implements RuleEngineInterface
 {
-    private Collection $groups;
-    private array      $operators;
-    private bool       $refreshTriggers;
-    private array      $resultCount;
-    private Collection $rules;
-    private User       $user;
+    private readonly Collection $groups;
+    private array               $operators;
+    private bool                $refreshTriggers;
+    private array               $resultCount;
+    private readonly Collection $rules;
+    private User                $user;
 
     public function __construct()
     {
@@ -109,8 +109,8 @@ class SearchRuleEngine implements RuleEngineInterface
                 continue;
             }
             $contextSearch = $ruleTrigger->trigger_type;
-            if (str_starts_with($ruleTrigger->trigger_type, '-')) {
-                $contextSearch = substr($ruleTrigger->trigger_type, 1);
+            if (str_starts_with((string) $ruleTrigger->trigger_type, '-')) {
+                $contextSearch = substr((string) $ruleTrigger->trigger_type, 1);
             }
 
             // if the trigger needs no context, value is different:

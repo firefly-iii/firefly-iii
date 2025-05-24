@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use Carbon\Carbon;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Events\Preferences\UserGroupChangedDefaultCurrency;
 use FireflyIII\Events\Test\UserTestNotificationChannel;
@@ -39,6 +40,10 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+
+use function Safe\json_decode;
+use function Safe\file_get_contents;
+use function Safe\strtotime;
 
 /**
  * Class PreferencesController.
@@ -110,7 +115,7 @@ class PreferencesController extends Controller
         if (is_array($fiscalYearStartStr)) {
             $fiscalYearStartStr = '01-01';
         }
-        $fiscalYearStart                = sprintf('%s-%s', date('Y'), (string) $fiscalYearStartStr);
+        $fiscalYearStart                = sprintf('%s-%s', Carbon::now()->format('Y'), (string) $fiscalYearStartStr);
         $tjOptionalFields               = Preferences::get('transaction_journal_optional_fields', [])->data;
         $availableDarkModes             = config('firefly.available_dark_modes');
 
@@ -273,7 +278,7 @@ class PreferencesController extends Controller
         $customFiscalYear  = 1 === (int) $request->get('customFiscalYear');
         $string            = strtotime((string) $request->get('fiscalYearStart'));
         if (false !== $string) {
-            $fiscalYearStart = date('m-d', $string);
+            $fiscalYearStart = Carbon::createFromTimestamp($string)->format('m-d');
             Preferences::set('customFiscalYear', $customFiscalYear);
             Preferences::set('fiscalYearStart', $fiscalYearStart);
         }

@@ -31,9 +31,9 @@ use Illuminate\Support\Facades\Log;
 
 class TransactionSummarizer
 {
-    private User                $user;
-    private TransactionCurrency $default;
     private bool                $convertToNative = false;
+    private TransactionCurrency $default;
+    private User                $user;
 
     public function __construct(?User $user = null)
     {
@@ -51,7 +51,7 @@ class TransactionSummarizer
 
     public function groupByCurrencyId(array $journals, string $method = 'negative', bool $includeForeign = true): array
     {
-        Log::debug(sprintf('Now in groupByCurrencyId(array, "%s")', $method));
+        Log::debug(sprintf('Now in groupByCurrencyId([%d journals], "%s")', count($journals), $method));
         $array = [];
         foreach ($journals as $journal) {
             $field                        = 'amount';
@@ -71,6 +71,7 @@ class TransactionSummarizer
             $foreignCurrencyDecimalPlaces = null;
 
             if ($this->convertToNative) {
+                Log::debug('convertToNative is true.');
                 // if convert to native, use the native amount yes or no?
                 $useNative  = $this->default->id !== (int) $journal['currency_id'];
                 $useForeign = $this->default->id === (int) $journal['foreign_currency_id'];
@@ -94,6 +95,7 @@ class TransactionSummarizer
                 }
             }
             if (!$this->convertToNative) {
+                Log::debug('convertToNative is false.');
                 // use foreign amount?
                 $foreignCurrencyId = (int) $journal['foreign_currency_id'];
                 if (0 !== $foreignCurrencyId) {
@@ -117,10 +119,10 @@ class TransactionSummarizer
             ];
 
             if ('positive' === $method) {
-                $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->positive($amount));
+                $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], (string) app('steam')->positive($amount));
             }
             if ('negative' === $method) {
-                $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->negative($amount));
+                $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], (string) app('steam')->negative($amount));
             }
 
             // then process foreign amount, if it exists.
@@ -136,10 +138,10 @@ class TransactionSummarizer
                 ];
 
                 if ('positive' === $method) {
-                    $array[$foreignCurrencyId]['sum'] = bcadd($array[$foreignCurrencyId]['sum'], app('steam')->positive($amount));
+                    $array[$foreignCurrencyId]['sum'] = bcadd($array[$foreignCurrencyId]['sum'], (string) app('steam')->positive($amount));
                 }
                 if ('negative' === $method) {
-                    $array[$foreignCurrencyId]['sum'] = bcadd($array[$foreignCurrencyId]['sum'], app('steam')->negative($amount));
+                    $array[$foreignCurrencyId]['sum'] = bcadd($array[$foreignCurrencyId]['sum'], (string) app('steam')->negative($amount));
                 }
             }
 
@@ -159,9 +161,6 @@ class TransactionSummarizer
         $nameKey         = sprintf('%s_account_name', $direction);
         $convertToNative = Amount::convertToNative($this->user);
         $default         = Amount::getNativeCurrencyByUserGroup($this->user->userGroup);
-
-
-
 
 
         Log::debug(sprintf('groupByDirection(array, %s, %s).', $direction, $method));
@@ -200,7 +199,7 @@ class TransactionSummarizer
             ];
 
             // add the data from the $field to the array.
-            $array[$key]['sum']    = bcadd($array[$key]['sum'], app('steam')->{$method}((string) ($journal[$field] ?? '0'))); // @phpstan-ignore-line
+            $array[$key]['sum']    = bcadd($array[$key]['sum'], (string) app('steam')->{$method}((string) ($journal[$field] ?? '0'))); // @phpstan-ignore-line
             Log::debug(sprintf('Field for transaction #%d is "%s" (%s). Sum: %s', $journal['transaction_group_id'], $currencyCode, $field, $array[$key]['sum']));
 
             // also do foreign amount, but only when convertToNative is false (otherwise we have it already)
@@ -218,10 +217,16 @@ class TransactionSummarizer
                     'currency_code'           => $journal['foreign_currency_code'],
                     'currency_decimal_places' => $journal['foreign_currency_decimal_places'],
                 ];
-                $array[$key]['sum'] = bcadd($array[$key]['sum'], app('steam')->{$method}((string) $journal['foreign_amount'])); // @phpstan-ignore-line
+                $array[$key]['sum'] = bcadd($array[$key]['sum'], (string) app('steam')->{$method}((string) $journal['foreign_amount'])); // @phpstan-ignore-line
             }
         }
 
         return $array;
+    }
+
+    public function setConvertToNative(bool $convertToNative): void
+    {
+        Log::debug(sprintf('Overrule convertToNative to become %s', var_export($convertToNative, true)));
+        $this->convertToNative = $convertToNative;
     }
 }

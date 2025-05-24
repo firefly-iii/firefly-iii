@@ -85,7 +85,7 @@ class BudgetReportController extends Controller
                 ];
                 foreach ($budget['transaction_journals'] as $journal) {
                     $amount                   = app('steam')->positive($journal['amount']);
-                    $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'], (string) $amount);
                 }
             }
         }
@@ -115,7 +115,7 @@ class BudgetReportController extends Controller
                     ];
 
                     $amount                   = app('steam')->positive($journal['amount']);
-                    $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'], (string) $amount);
                 }
             }
         }
@@ -145,7 +145,7 @@ class BudgetReportController extends Controller
                     ];
 
                     $amount                   = app('steam')->positive($journal['amount']);
-                    $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'], (string) $amount);
                 }
             }
         }
@@ -186,7 +186,7 @@ class BudgetReportController extends Controller
                     $key                                   = $journal['date']->isoFormat($format);
                     $amount                                = app('steam')->positive($journal['amount']);
                     $chartData[$spentKey]['entries'][$key] ??= '0';
-                    $chartData[$spentKey]['entries'][$key] = bcadd($chartData[$spentKey]['entries'][$key], $amount);
+                    $chartData[$spentKey]['entries'][$key] = bcadd($chartData[$spentKey]['entries'][$key], (string) $amount);
                 }
             }
         }
@@ -233,7 +233,7 @@ class BudgetReportController extends Controller
                     ];
 
                     $amount                   = app('steam')->positive($journal['amount']);
-                    $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'], (string) $amount);
                 }
             }
         }

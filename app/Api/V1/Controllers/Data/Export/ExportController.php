@@ -30,6 +30,8 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Export\ExportDataGenerator;
 use Illuminate\Http\Response as LaravelResponse;
 
+use function Safe\date;
+
 /**
  * Class ExportController
  */
@@ -88,7 +90,7 @@ class ExportController extends Controller
             ->header('Expires', '0')
             ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
             ->header('Pragma', 'public')
-            ->header('Content-Length', (string) strlen($data[$key]))
+            ->header('Content-Length', (string) strlen((string) $data[$key]))
         ;
 
         return $response;

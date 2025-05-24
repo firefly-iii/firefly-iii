@@ -46,7 +46,7 @@ class Sha3SignatureGenerator implements SignatureGeneratorInterface
         $json      = '';
 
         try {
-            $json = json_encode($message->message, JSON_THROW_ON_ERROR);
+            $json = \Safe\json_encode($message->message, JSON_THROW_ON_ERROR);
         } catch (\JsonException $e) {
             app('log')->error('Could not generate hash.');
             app('log')->error(sprintf('JSON value: %s', $json));
@@ -64,7 +64,7 @@ class Sha3SignatureGenerator implements SignatureGeneratorInterface
         // The actual JSON payload (i.e., the request body)
         $timestamp = time();
         $payload   = sprintf('%s.%s', $timestamp, $json);
-        $signature = hash_hmac('sha3-256', $payload, $message->webhook->secret, false);
+        $signature = hash_hmac('sha3-256', $payload, (string) $message->webhook->secret, false);
 
         // signature string:
         // header included in each signed event contains a timestamp and one or more signatures.

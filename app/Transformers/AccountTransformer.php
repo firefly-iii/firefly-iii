@@ -40,9 +40,9 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class AccountTransformer extends AbstractTransformer
 {
-    protected AccountRepositoryInterface $repository;
     protected bool                       $convertToNative;
     protected TransactionCurrency        $native;
+    protected AccountRepositoryInterface $repository;
 
     /**
      * AccountTransformer constructor.
@@ -152,6 +152,7 @@ class AccountTransformer extends AbstractTransformer
             'longitude'                      => $longitude,
             'latitude'                       => $latitude,
             'zoom_level'                     => $zoomLevel,
+            'last_activity'                  => array_key_exists('last_activity', $account->meta) ? $account->meta['last_activity']->toAtomString() : null,
             'links'                          => [
                 [
                     'rel' => 'self',
@@ -201,7 +202,7 @@ class AccountTransformer extends AbstractTransformer
                 }
                 $monthlyPaymentDate = $object->toAtomString();
             }
-            if (10 !== strlen($monthlyPaymentDate)) {
+            if (10 !== strlen((string) $monthlyPaymentDate)) {
                 $monthlyPaymentDate = Carbon::parse($monthlyPaymentDate, config('app.timezone'))->toAtomString();
             }
         }

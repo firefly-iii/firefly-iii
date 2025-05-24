@@ -192,7 +192,7 @@ class CreditRecalculateService
         //        Log::debug(sprintf('Found %d transaction(s) to process.', $total));
 
         /** @var Transaction $transaction */
-        foreach ($transactions as $index => $transaction) {
+        foreach ($transactions as $transaction) {
             //            Log::debug(sprintf('[%d/%d] Processing transaction.', $index + 1, $total));
             $leftOfDebt = $this->processTransaction($account, $direction, $transaction, $leftOfDebt);
         }
@@ -277,66 +277,66 @@ class CreditRecalculateService
         if ($isSameAccount && $isCredit && $this->isWithdrawalIn($usedAmount, $type)) { // case 1
             $usedAmount = app('steam')->positive($usedAmount);
 
-            return bcadd($leftOfDebt, $usedAmount);
+            return bcadd($leftOfDebt, (string) $usedAmount);
             //            Log::debug(sprintf('Case 1 (withdrawal into credit liability): %s + %s = %s', app('steam')->bcround($leftOfDebt, 2), app('steam')->bcround($usedAmount, 2), app('steam')->bcround($result, 2)));
         }
 
         if ($isSameAccount && $isCredit && $this->isWithdrawalOut($usedAmount, $type)) { // case 2
             $usedAmount = app('steam')->positive($usedAmount);
 
-            return bcsub($leftOfDebt, $usedAmount);
+            return bcsub($leftOfDebt, (string) $usedAmount);
             //            Log::debug(sprintf('Case 2 (withdrawal away from liability): %s - %s = %s', app('steam')->bcround($leftOfDebt, 2), app('steam')->bcround($usedAmount, 2), app('steam')->bcround($result, 2)));
         }
 
         if ($isSameAccount && $isCredit && $this->isDepositOut($usedAmount, $type)) { // case 3
             $usedAmount = app('steam')->positive($usedAmount);
 
-            return bcsub($leftOfDebt, $usedAmount);
+            return bcsub($leftOfDebt, (string) $usedAmount);
             //            Log::debug(sprintf('Case 3 (deposit away from liability): %s - %s = %s', app('steam')->bcround($leftOfDebt, 2), app('steam')->bcround($usedAmount, 2), app('steam')->bcround($result, 2)));
         }
 
         if ($isSameAccount && $isCredit && $this->isDepositIn($usedAmount, $type)) { // case 4
             $usedAmount = app('steam')->positive($usedAmount);
 
-            return bcadd($leftOfDebt, $usedAmount);
+            return bcadd($leftOfDebt, (string) $usedAmount);
             //            Log::debug(sprintf('Case 4 (deposit into credit liability): %s + %s = %s', app('steam')->bcround($leftOfDebt, 2), app('steam')->bcround($usedAmount, 2), app('steam')->bcround($result, 2)));
         }
         if ($isSameAccount && $isCredit && $this->isTransferIn($usedAmount, $type)) { // case 5
             $usedAmount = app('steam')->positive($usedAmount);
 
-            return bcadd($leftOfDebt, $usedAmount);
+            return bcadd($leftOfDebt, (string) $usedAmount);
             //            Log::debug(sprintf('Case 5 (transfer into credit liability): %s + %s = %s', app('steam')->bcround($leftOfDebt, 2), app('steam')->bcround($usedAmount, 2), app('steam')->bcround($result, 2)));
         }
         if ($isSameAccount && $isDebit && $this->isWithdrawalIn($usedAmount, $type)) { // case 6
             $usedAmount = app('steam')->positive($usedAmount);
 
-            return bcsub($leftOfDebt, $usedAmount);
+            return bcsub($leftOfDebt, (string) $usedAmount);
             //            Log::debug(sprintf('Case 6 (withdrawal into debit liability): %s - %s = %s', app('steam')->bcround($leftOfDebt, 2), app('steam')->bcround($usedAmount, 2), app('steam')->bcround($result, 2)));
         }
         if ($isSameAccount && $isDebit && $this->isDepositOut($usedAmount, $type)) { // case 7
             $usedAmount = app('steam')->positive($usedAmount);
 
-            return bcadd($leftOfDebt, $usedAmount);
+            return bcadd($leftOfDebt, (string) $usedAmount);
             //            Log::debug(sprintf('Case 7 (deposit away from liability): %s + %s = %s', app('steam')->bcround($leftOfDebt, 2), app('steam')->bcround($usedAmount, 2), app('steam')->bcround($result, 2)));
         }
         if ($isSameAccount && $isDebit && $this->isWithdrawalOut($usedAmount, $type)) { // case 8
             $usedAmount = app('steam')->positive($usedAmount);
 
-            return bcadd($leftOfDebt, $usedAmount);
+            return bcadd($leftOfDebt, (string) $usedAmount);
             //            Log::debug(sprintf('Case 8 (withdrawal away from liability): %s + %s = %s', app('steam')->bcround($leftOfDebt, 2), app('steam')->bcround($usedAmount, 2), app('steam')->bcround($result, 2)));
         }
 
         if ($isSameAccount && $isDebit && $this->isTransferIn($usedAmount, $type)) { // case 9
             $usedAmount = app('steam')->positive($usedAmount);
 
-            return bcsub($leftOfDebt, $usedAmount);
+            return bcsub($leftOfDebt, (string) $usedAmount);
             // 2024-10-05, #9225 this used to say you would owe more, but a transfer INTO a debit from wherever means you owe LESS.
             //            Log::debug(sprintf('Case 9 (transfer into debit liability, means you owe LESS): %s - %s = %s', app('steam')->bcround($leftOfDebt, 2), app('steam')->bcround($usedAmount, 2), app('steam')->bcround($result, 2)));
         }
         if ($isSameAccount && $isDebit && $this->isTransferOut($usedAmount, $type)) { // case 10
             $usedAmount = app('steam')->positive($usedAmount);
 
-            return bcadd($leftOfDebt, $usedAmount);
+            return bcadd($leftOfDebt, (string) $usedAmount);
             // 2024-10-05, #9225 this used to say you would owe less, but a transfer OUT OF a debit from wherever means you owe MORE.
             //            Log::debug(sprintf('Case 10 (transfer out of debit liability, means you owe MORE): %s + %s = %s', app('steam')->bcround($leftOfDebt, 2), app('steam')->bcround($usedAmount, 2), app('steam')->bcround($result, 2)));
         }
@@ -345,7 +345,7 @@ class CreditRecalculateService
         if (in_array($type, [TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::TRANSFER->value], true)) {
             $usedAmount = app('steam')->negative($usedAmount);
 
-            return bcadd($leftOfDebt, $usedAmount);
+            return bcadd($leftOfDebt, (string) $usedAmount);
             //            Log::debug(sprintf('Case X (all other cases): %s + %s = %s', app('steam')->bcround($leftOfDebt, 2), app('steam')->bcround($usedAmount, 2), app('steam')->bcround($result, 2)));
         }
 

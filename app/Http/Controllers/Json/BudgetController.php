@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
+use FireflyIII\Models\AvailableBudget;
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionCurrency;
@@ -72,7 +73,7 @@ class BudgetController extends Controller
         $available       = '0';
         $percentage      = '0';
 
-        if (null !== $availableBudget) {
+        if ($availableBudget instanceof AvailableBudget) {
             $available = $availableBudget->amount;
             if (0 !== bccomp($available, '0')) {
                 $percentage = bcmul(bcdiv($budgeted, $available), '100');

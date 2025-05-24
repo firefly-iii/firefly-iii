@@ -39,17 +39,12 @@ class RequestedReportOnJournals
     use InteractsWithSockets;
     use SerializesModels;
 
-    public Collection $groups;
-    public int        $userId;
-
     /**
      * Create a new event instance.
      */
-    public function __construct(int $userId, Collection $groups)
+    public function __construct(public int $userId, public Collection $groups)
     {
         app('log')->debug('In event RequestedReportOnJournals.');
-        $this->userId = $userId;
-        $this->groups = $groups;
     }
 
     /**

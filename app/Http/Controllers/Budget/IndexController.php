@@ -177,7 +177,7 @@ class IndexController extends Controller
             $array['end_date']        = $entry->end_date;
 
             // spent in period:
-            $spentArr                 = $this->opsRepository->sumExpenses($entry->start_date, $entry->end_date, null, null, $entry->transactionCurrency);
+            $spentArr                 = $this->opsRepository->sumExpenses($entry->start_date, $entry->end_date, null, null, $entry->transactionCurrency, false);
             $array['spent']           = $spentArr[$entry->transaction_currency_id]['sum'] ?? '0';
             $array['native_spent']    = $this->convertToNative && $entry->transaction_currency_id !== $this->defaultCurrency->id ? $converter->convert($entry->transactionCurrency, $this->defaultCurrency, $entry->start_date, $array['spent']) : null;
             // budgeted in period:
@@ -235,7 +235,7 @@ class IndexController extends Controller
 
             /** @var TransactionCurrency $currency */
             foreach ($currencies as $currency) {
-                $spentArr = $this->opsRepository->sumExpenses($start, $end, null, new Collection([$current]), $currency);
+                $spentArr = $this->opsRepository->sumExpenses($start, $end, null, new Collection([$current]), $currency, false);
                 if (array_key_exists($currency->id, $spentArr) && array_key_exists('sum', $spentArr[$currency->id])) {
                     $array['spent'][$currency->id]['spent']                   = $spentArr[$currency->id]['sum'];
                     $array['spent'][$currency->id]['currency_id']             = $currency->id;
@@ -269,7 +269,7 @@ class IndexController extends Controller
                                                           'currency_symbol'         => $spent['currency_symbol'],
                                                           'currency_decimal_places' => $spent['currency_decimal_places'],
                                                       ];
-                $sums['spent'][$currencyId]['amount'] = bcadd($sums['spent'][$currencyId]['amount'], $spent['spent']);
+                $sums['spent'][$currencyId]['amount'] = bcadd($sums['spent'][$currencyId]['amount'], (string) $spent['spent']);
             }
 
             /** @var array $budgeted */
@@ -282,7 +282,7 @@ class IndexController extends Controller
                                                              'currency_symbol'         => $budgeted['currency_symbol'],
                                                              'currency_decimal_places' => $budgeted['currency_decimal_places'],
                                                          ];
-                $sums['budgeted'][$currencyId]['amount'] = bcadd($sums['budgeted'][$currencyId]['amount'], $budgeted['amount']);
+                $sums['budgeted'][$currencyId]['amount'] = bcadd($sums['budgeted'][$currencyId]['amount'], (string) $budgeted['amount']);
 
                 // also calculate how much left from budgeted:
                 $sums['left'][$currencyId]
@@ -316,7 +316,7 @@ class IndexController extends Controller
         foreach ($budgetIds as $index => $budgetId) {
             $budgetId = (int) $budgetId;
             $budget   = $repository->find($budgetId);
-            if (null !== $budget) {
+            if ($budget instanceof Budget) {
                 app('log')->debug(sprintf('Set budget #%d ("%s") to position %d', $budget->id, $budget->name, $index + 1));
                 $repository->setBudgetOrder($budget, $index + 1);
             }

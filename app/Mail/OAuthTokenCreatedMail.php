@@ -37,15 +37,10 @@ class OAuthTokenCreatedMail extends Mailable
     use Queueable;
     use SerializesModels;
 
-    public Client $client;
-
     /**
      * OAuthTokenCreatedMail constructor.
      */
-    public function __construct(Client $client)
-    {
-        $this->client = $client;
-    }
+    public function __construct(public Client $client) {}
 
     /**
      * Build the message.

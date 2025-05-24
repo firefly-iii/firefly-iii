@@ -35,7 +35,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Debug\Timer;
-use Illuminate\Support\Collection;
 
 /**
  * Trait PeriodOverview.
@@ -66,8 +65,8 @@ use Illuminate\Support\Collection;
  */
 trait PeriodOverview
 {
-    protected JournalRepositoryInterface $journalRepos;
     protected AccountRepositoryInterface $accountRepository;
+    protected JournalRepositoryInterface $journalRepos;
 
     /**
      * This method returns "period entries", so nov-2015, dec-2015, etc etc (this depends on the users session range)
@@ -124,31 +123,6 @@ trait PeriodOverview
         return $entries;
     }
 
-    private function filterTransfers(string $direction, array $transactions, Carbon $start, Carbon $end): array
-    {
-        $result = [];
-
-        /**
-         * @var int   $index
-         * @var array $item
-         */
-        foreach ($transactions as $index => $item) {
-            $date = Carbon::parse($item['date']);
-            if ($date >= $start && $date <= $end) {
-                if ('away' === $direction && -1 === bccomp($item['amount'], '0')) {
-                    $result[] = $item;
-                    unset($transactions[$index]);
-                }
-                if ('in' === $direction && 1 === bccomp($item['amount'], '0')) {
-                    $result[] = $item;
-                    unset($transactions[$index]);
-                }
-            }
-        }
-
-        return [$transactions, $result];
-    }
-
     private function filterTransactionsByType(TransactionTypeEnum $type, array $transactions, Carbon $start, Carbon $end): array
     {
         $result = [];
@@ -168,55 +142,29 @@ trait PeriodOverview
         return [$transactions, $result];
     }
 
-    /**
-     * Filter a list of journals by a set of dates, and then group them by currency.
-     */
-    private function filterJournalsByDate(array $array, Carbon $start, Carbon $end): array
+    private function filterTransfers(string $direction, array $transactions, Carbon $start, Carbon $end): array
     {
         $result = [];
 
-        /** @var array $journal */
-        foreach ($array as $journal) {
-            if ($journal['date'] <= $end && $journal['date'] >= $start) {
-                $result[] = $journal;
+        /**
+         * @var int   $index
+         * @var array $item
+         */
+        foreach ($transactions as $index => $item) {
+            $date = Carbon::parse($item['date']);
+            if ($date >= $start && $date <= $end) {
+                if ('away' === $direction && -1 === bccomp((string) $item['amount'], '0')) {
+                    $result[] = $item;
+                    unset($transactions[$index]);
+                }
+                if ('in' === $direction && 1 === bccomp((string) $item['amount'], '0')) {
+                    $result[] = $item;
+                    unset($transactions[$index]);
+                }
             }
         }
 
-        return $result;
-    }
-
-    /**
-     * Return only transactions where $account is the source.
-     */
-    private function filterTransferredAway(Account $account, array $journals): array
-    {
-        $return = [];
-
-        /** @var array $journal */
-        foreach ($journals as $journal) {
-            if ($account->id === (int) $journal['source_account_id']) {
-                $return[] = $journal;
-            }
-        }
-
-        return $return;
-    }
-
-    /**
-     * Return only transactions where $account is the source.
-     */
-    private function filterTransferredIn(Account $account, array $journals): array
-    {
-        $return = [];
-
-        /** @var array $journal */
-        foreach ($journals as $journal) {
-            if ($account->id === (int) $journal['destination_account_id']) {
-                $return[] = $journal;
-            }
-        }
-
-        return $return;
+        return [$transactions, $result];
     }
 
     private function groupByCurrency(array $journals): array
@@ -338,6 +286,23 @@ trait PeriodOverview
         $cache->store($entries);
 
         return $entries;
+    }
+
+    /**
+     * Filter a list of journals by a set of dates, and then group them by currency.
+     */
+    private function filterJournalsByDate(array $array, Carbon $start, Carbon $end): array
+    {
+        $result = [];
+
+        /** @var array $journal */
+        foreach ($array as $journal) {
+            if ($journal['date'] <= $end && $journal['date'] >= $start) {
+                $result[] = $journal;
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -613,5 +578,39 @@ trait PeriodOverview
         }
 
         return $entries;
+    }
+
+    /**
+     * Return only transactions where $account is the source.
+     */
+    private function filterTransferredAway(Account $account, array $journals): array
+    {
+        $return = [];
+
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            if ($account->id === (int) $journal['source_account_id']) {
+                $return[] = $journal;
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * Return only transactions where $account is the source.
+     */
+    private function filterTransferredIn(Account $account, array $journals): array
+    {
+        $return = [];
+
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            if ($account->id === (int) $journal['destination_account_id']) {
+                $return[] = $journal;
+            }
+        }
+
+        return $return;
     }
 }

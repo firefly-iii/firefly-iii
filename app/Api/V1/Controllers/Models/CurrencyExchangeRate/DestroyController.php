@@ -39,10 +39,8 @@ class DestroyController extends Controller
 {
     use ValidatesUserGroupTrait;
 
-    protected array $acceptedRoles   = [UserRoleEnum::OWNER];
-
     public const string RESOURCE_KEY = 'exchange-rates';
-
+    protected array $acceptedRoles   = [UserRoleEnum::OWNER];
     private ExchangeRateRepositoryInterface $repository;
 
     public function __construct()

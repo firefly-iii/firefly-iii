@@ -50,9 +50,8 @@ class StoreController extends Controller
 {
     use TransactionFilter;
 
-    private TransactionGroupRepositoryInterface $groupRepository;
-
     protected array $acceptedRoles = [UserRoleEnum::MANAGE_TRANSACTIONS];
+    private TransactionGroupRepositoryInterface $groupRepository;
 
     /**
      * TransactionController constructor.

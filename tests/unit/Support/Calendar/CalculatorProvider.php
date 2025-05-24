@@ -30,17 +30,11 @@ use Tests\unit\Support\Calendar\Periodicity\IntervalProvider;
 
 readonly class CalculatorProvider
 {
-    public IntervalProvider $intervalProvider;
     public string           $label;
-    public Periodicity      $periodicity;
-    public int              $skip;
 
-    private function __construct(IntervalProvider $intervalProvider, Periodicity $periodicity, int $skip = 0)
+    private function __construct(public IntervalProvider $intervalProvider, public Periodicity $periodicity, public int $skip = 0)
     {
-        $this->skip             = $skip;
-        $this->intervalProvider = $intervalProvider;
-        $this->periodicity      = $periodicity;
-        $this->label            = "{$periodicity->name} {$intervalProvider->label}";
+        $this->label = "{$this->periodicity->name} {$this->intervalProvider->label}";
     }
 
     public static function providePeriodicityWithSkippedIntervals(): \Generator

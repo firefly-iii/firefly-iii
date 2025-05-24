@@ -35,10 +35,5 @@ class Deleted extends Event
 {
     use SerializesModels;
 
-    public BudgetLimit $budgetLimit;
-
-    public function __construct(BudgetLimit $budgetLimit)
-    {
-        $this->budgetLimit = $budgetLimit;
-    }
+    public function __construct(public BudgetLimit $budgetLimit) {}
 }

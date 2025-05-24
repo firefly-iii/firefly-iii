@@ -24,7 +24,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
-set_time_limit(0);
+use Illuminate\Support\Facades\Log;
+use Safe\Exceptions\InfoException;
+
+try {
+    \Safe\set_time_limit(0);
+} catch (InfoException) {
+    Log::warning('set_time_limit returned false. This could be an issue, unless you also run XDebug.');
+}
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;

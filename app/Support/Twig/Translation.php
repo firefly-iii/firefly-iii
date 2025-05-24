@@ -32,19 +32,19 @@ use Twig\TwigFunction;
  */
 class Translation extends AbstractExtension
 {
+    #[\Override]
     public function getFilters(): array
     {
         return [
             new TwigFilter(
                 '_',
-                static function ($name) {
-                    return (string) trans(sprintf('firefly.%s', $name));
-                },
+                static fn ($name) => (string) trans(sprintf('firefly.%s', $name)),
                 ['is_safe' => ['html']]
             ),
         ];
     }
 
+    #[\Override]
     public function getFunctions(): array
     {
         return [

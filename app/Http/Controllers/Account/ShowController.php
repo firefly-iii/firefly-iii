@@ -33,7 +33,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Debug\Timer;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\PeriodOverview;
-use FireflyIII\Support\JsonApi\Enrichments\TransactionGroupEnrichment;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -144,6 +143,7 @@ class ShowController extends Controller
         // is just part of ONE of the journals. To force this:
         $collector->setExpandGroupSearch(true);
         $groups           = $collector->getPaginatedGroups();
+
 
         Log::debug('End collect transactions');
         Timer::stop('collection');

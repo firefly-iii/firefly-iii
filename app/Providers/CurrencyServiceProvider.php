@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace FireflyIII\Providers;
 
 use FireflyIII\Repositories\Currency\CurrencyRepository;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepository as GroupCurrencyRepository;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface as GroupCurrencyRepositoryInterface;
 use FireflyIII\Repositories\ExchangeRate\ExchangeRateRepository;
 use FireflyIII\Repositories\ExchangeRate\ExchangeRateRepositoryInterface;
@@ -45,6 +45,7 @@ class CurrencyServiceProvider extends ServiceProvider
     /**
      * Register the application services.
      */
+    #[\Override]
     public function register(): void
     {
         $this->app->bind(

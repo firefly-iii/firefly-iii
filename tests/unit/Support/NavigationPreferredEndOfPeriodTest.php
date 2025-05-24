@@ -26,6 +26,7 @@ namespace Tests\unit\Support;
 
 use Carbon\Carbon;
 use FireflyIII\Support\Navigation;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\integration\TestCase;
 
 /**
@@ -41,15 +42,13 @@ final class NavigationPreferredEndOfPeriodTest extends TestCase
 {
     private Navigation $navigation;
 
-    public function __construct(string $name)
+    protected function setUp(): void
     {
-        parent::__construct($name);
+        parent::setUp();
         $this->navigation = new Navigation();
     }
 
-    /**
-     * @dataProvider providePeriods
-     */
+    #[DataProvider('providePeriods')]
     public function testGivenStartAndEndDatesWhenCallPreferredEndOfPeriodThenReturnsTheExpectedFormatSuccessful(Carbon $start, Carbon $end, string $expected): void
     {
         $formatPeriod = $this->navigation->preferredEndOfPeriod($start, $end);

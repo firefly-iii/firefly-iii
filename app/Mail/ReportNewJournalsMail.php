@@ -41,16 +41,12 @@ class ReportNewJournalsMail extends Mailable
     use Queueable;
     use SerializesModels;
 
-    public Collection $groups;
-    public array      $transformed;
+    public array $transformed;
 
     /**
      * ConfirmEmailChangeMail constructor.
      */
-    public function __construct(Collection $groups)
-    {
-        $this->groups = $groups;
-    }
+    public function __construct(public Collection $groups) {}
 
     /**
      * Build the message.

@@ -9,7 +9,7 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">
-                        <a :href="'{{ route('accounts.show', '') }}/' + account.id"
+                        <a :href="'{{ route('accounts.show', '0') }}/' + account.id"
                            x-text="account.name"></a>
 
                         <span class="small">
@@ -42,7 +42,7 @@
                                             <template x-if="group.transactions[0].type === 'transfer'">
                                                 <span class="text-muted fa-solid fa-arrows-rotate fa-fw"></span>
                                             </template>
-                                        <a :href="'{{route('transactions.show', '') }}/' + group.id" x-text="group.title"></a><br/></span>
+                                        <a :href="'{{route('transactions.show', '0') }}/' + group.id" x-text="group.title"></a><br/></span>
                                     </template>
                                     <ul class="list-unstyled list-no-margin">
                                     <template x-for="transaction in group.transactions">
@@ -61,7 +61,7 @@
                                                   <template x-if="transaction.type == 'transfer'">
                                                       <span class="text-muted fa-solid fa-arrows-rotate fa-fw"></span>
                                                   </template>
-                                                  <a :href="'{{route('transactions.show', '') }}/' + group.id" x-text="transaction.description"></a>
+                                                  <a :href="'{{route('transactions.show', '0') }}/' + group.id" x-text="transaction.description"></a>
                                                 </span>
                                             </template>
                                             </li>

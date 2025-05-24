@@ -82,6 +82,7 @@ class GroupCollector implements GroupCollectorInterface
         $this->hasJoinedAttTables   = false;
         $this->expandGroupSearch    = false;
         $this->hasJoinedMetaTables  = false;
+        $this->booleanFields        = ['balance_dirty'];
         $this->integerFields        = [
             'transaction_group_id',
             'user_id',
@@ -100,7 +101,7 @@ class GroupCollector implements GroupCollectorInterface
             'category_id',
             'budget_id',
         ];
-        $this->stringFields         = ['amount', 'foreign_amount', 'native_amount', 'native_foreign_amount'];
+        $this->stringFields         = ['amount', 'foreign_amount', 'native_amount', 'native_foreign_amount', 'source_balance_after', 'destination_balance_after'];
         $this->total                = 0;
         $this->fields               = [
             // group
@@ -131,6 +132,8 @@ class GroupCollector implements GroupCollectorInterface
 
             // currency info:
             'source.amount as amount',
+            'source.balance_after as source_balance_after',
+            'source.balance_dirty as balance_dirty',
             'source.native_amount as native_amount',
             'source.transaction_currency_id as currency_id',
             'currency.code as currency_code',
@@ -149,6 +152,7 @@ class GroupCollector implements GroupCollectorInterface
 
             // destination account info (always present)
             'destination.account_id as destination_account_id',
+            'destination.balance_after as destination_balance_after',
         ];
     }
 
@@ -589,12 +593,15 @@ class GroupCollector implements GroupCollectorInterface
         if (array_key_exists('meta_name', $result) && in_array($result['meta_name'], $dates, true)) {
             $name = $result['meta_name'];
             if (array_key_exists('meta_data', $result) && '' !== (string) $result['meta_data']) {
-                $result[$name] = Carbon::createFromFormat('!Y-m-d', substr(json_decode($result['meta_data']), 0, 10));
+                $result[$name] = Carbon::createFromFormat('!Y-m-d', substr((string) \Safe\json_decode($result['meta_data']), 0, 10));
             }
         }
 
         // convert values to integers:
         $result                  = $this->convertToInteger($result);
+
+        // convert to boolean
+        $result                  = $this->convertToBoolean($result);
 
         // convert back to strings because SQLite is dumb like that.
         $result                  = $this->convertToStrings($result);
@@ -648,6 +655,15 @@ class GroupCollector implements GroupCollectorInterface
     {
         foreach ($this->integerFields as $field) {
             $array[$field] = array_key_exists($field, $array) ? (int) $array[$field] : null;
+        }
+
+        return $array;
+    }
+
+    private function convertToBoolean(array $array): array
+    {
+        foreach ($this->booleanFields as $field) {
+            $array[$field] = array_key_exists($field, $array) ? (bool) $array[$field] : null;
         }
 
         return $array;
@@ -727,8 +743,8 @@ class GroupCollector implements GroupCollectorInterface
                     $groups[$groudId]['sums'][$currencyId]['amount']                  = '0';
                     $groups[$groudId]['sums'][$currencyId]['native_amount']           = '0';
                 }
-                $groups[$groudId]['sums'][$currencyId]['amount']        = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], $transaction['amount']);
-                $groups[$groudId]['sums'][$currencyId]['native_amount'] = bcadd($groups[$groudId]['sums'][$currencyId]['native_amount'], $nativeAmount);
+                $groups[$groudId]['sums'][$currencyId]['amount']        = bcadd((string) $groups[$groudId]['sums'][$currencyId]['amount'], $transaction['amount']);
+                $groups[$groudId]['sums'][$currencyId]['native_amount'] = bcadd((string) $groups[$groudId]['sums'][$currencyId]['native_amount'], $nativeAmount);
 
                 if (null !== $transaction['foreign_amount'] && null !== $transaction['foreign_currency_id']) {
                     $currencyId                                             = (int) $transaction['foreign_currency_id'];
@@ -742,7 +758,7 @@ class GroupCollector implements GroupCollectorInterface
                         $groups[$groudId]['sums'][$currencyId]['amount']                  = '0';
                         $groups[$groudId]['sums'][$currencyId]['native_amount']           = '0';
                     }
-                    $groups[$groudId]['sums'][$currencyId]['amount']        = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], $foreignAmount);
+                    $groups[$groudId]['sums'][$currencyId]['amount']        = bcadd((string) $groups[$groudId]['sums'][$currencyId]['amount'], $foreignAmount);
                     $groups[$groudId]['sums'][$currencyId]['native_amount'] = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], $nativeForeignAmount);
                 }
             }
@@ -884,16 +900,6 @@ class GroupCollector implements GroupCollectorInterface
         return $this;
     }
 
-    /**
-     * Limit results to a specific currency, only normal one.
-     */
-    public function setNormalCurrency(TransactionCurrency $currency): GroupCollectorInterface
-    {
-        $this->query->where('source.transaction_currency_id', $currency->id);
-
-        return $this;
-    }
-
     public function setEndRow(int $endRow): self
     {
         $this->endRow = $endRow;
@@ -937,6 +943,16 @@ class GroupCollector implements GroupCollectorInterface
 
             $this->query->whereIn('transaction_journals.id', $integerIDs);
         }
+
+        return $this;
+    }
+
+    /**
+     * Limit results to a specific currency, only normal one.
+     */
+    public function setNormalCurrency(TransactionCurrency $currency): GroupCollectorInterface
+    {
+        $this->query->where('source.transaction_currency_id', $currency->id);
 
         return $this;
     }

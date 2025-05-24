@@ -35,7 +35,7 @@ use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
  */
 class RuleTransformer extends AbstractTransformer
 {
-    private RuleRepositoryInterface $ruleRepository;
+    private readonly RuleRepositoryInterface $ruleRepository;
 
     /**
      * CurrencyTransformer constructor.

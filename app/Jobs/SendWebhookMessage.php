@@ -42,15 +42,10 @@ class SendWebhookMessage implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    private WebhookMessage $message;
-
     /**
      * Create a new job instance.
      */
-    public function __construct(WebhookMessage $message)
-    {
-        $this->message = $message;
-    }
+    public function __construct(private WebhookMessage $message) {}
 
     /**
      * Execute the job.

@@ -27,6 +27,7 @@ namespace Tests\unit\Support;
 use Carbon\Carbon;
 use FireflyIII\Support\Calendar\Periodicity;
 use FireflyIII\Support\Navigation;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\integration\TestCase;
 
 /**
@@ -42,15 +43,13 @@ final class NavigationAddPeriodTest extends TestCase
 {
     private Navigation $navigation;
 
-    public function __construct(string $name)
+    protected function setUp(): void
     {
-        parent::__construct($name);
+        parent::setUp();
         $this->navigation = new Navigation();
     }
 
-    /**
-     * @dataProvider providePeriodsWithSkippingParam
-     */
+    #[DataProvider('providePeriodsWithSkippingParam')]
     public function testGivenAFrequencyAndSkipIntervalWhenCalculateTheDateThenReturnsTheSkippedDateSuccessful(int $skip, string $frequency, Carbon $from, Carbon $expected): void
     {
         $period = $this->navigation->addPeriod($from, $frequency, $skip);
@@ -102,9 +101,7 @@ final class NavigationAddPeriodTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider providePeriods
-     */
+    #[DataProvider('providePeriods')]
     public function testGivenAFrequencyWhenCalculateTheDateThenReturnsTheExpectedDateSuccessful(string $frequency, Carbon $from, Carbon $expected): void
     {
         $period = $this->navigation->addPeriod($from, $frequency, 0);
@@ -137,9 +134,7 @@ final class NavigationAddPeriodTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideFrequencies
-     */
+    #[DataProvider('provideFrequencies')]
     public function testGivenAIntervalWhenCallTheNextDateByIntervalMethodThenReturnsTheExpectedDateSuccessful(Periodicity $periodicity, Carbon $from, Carbon $expected): void
     {
         $period = $this->navigation->nextDateByInterval($from, $periodicity);
@@ -174,9 +169,7 @@ final class NavigationAddPeriodTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideMonthPeriods
-     */
+    #[DataProvider('provideMonthPeriods')]
     public function testGivenAMonthFrequencyWhenCalculateTheDateThenReturnsTheLastDayOfMonthSuccessful(string $frequency, Carbon $from, Carbon $expected): void
     {
         $period = $this->navigation->addPeriod($from, $frequency, 0);

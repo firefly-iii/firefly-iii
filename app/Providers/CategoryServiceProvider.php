@@ -45,6 +45,7 @@ class CategoryServiceProvider extends ServiceProvider
     /**
      * Register the application services.
      */
+    #[\Override]
     public function register(): void
     {
         // phpstan does not understand reference to 'auth'.

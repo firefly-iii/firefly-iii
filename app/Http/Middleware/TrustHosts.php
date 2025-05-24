@@ -33,6 +33,7 @@ class TrustHosts extends Middleware
      *
      * @return array<int, null|string>
      */
+    #[\Override]
     public function hosts(): array
     {
         return [

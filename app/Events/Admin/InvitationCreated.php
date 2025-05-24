@@ -36,15 +36,10 @@ class InvitationCreated extends Event
 {
     use SerializesModels;
 
-    public InvitedUser $invitee;
-
     public TransactionGroup $transactionGroup;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(InvitedUser $invitee)
-    {
-        $this->invitee = $invitee;
-    }
+    public function __construct(public InvitedUser $invitee) {}
 }

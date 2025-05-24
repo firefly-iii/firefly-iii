@@ -26,6 +26,7 @@ namespace Tests\unit\Support;
 use Carbon\Carbon;
 use FireflyIII\Support\Navigation;
 use Illuminate\Support\Facades\Log;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\integration\TestCase;
 
 /**
@@ -41,15 +42,13 @@ final class NavigationEndOfPeriodTest extends TestCase
 {
     private Navigation $navigation;
 
-    public function __construct(string $name)
+    protected function setUp(): void
     {
-        parent::__construct($name);
+        parent::setUp();
         $this->navigation = new Navigation();
     }
 
-    /**
-     * @dataProvider        provideDates
-     */
+    #[DataProvider('provideDates')]
     public function testGivenADateAndFrequencyWhenCalculateTheDateThenReturnsTheExpectedDateSuccessful(string $frequency, Carbon $from, Carbon $expected): void
     {
         $period = clone $this->navigation->endOfPeriod($from, $frequency);
@@ -87,9 +86,7 @@ final class NavigationEndOfPeriodTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideUnknownFrequencies
-     */
+    #[DataProvider('provideUnknownFrequencies')]
     public function testGivenADateAndUnknownFrequencyWhenCalculateTheDateThenReturnsTheSameDateSuccessful(string $frequency, Carbon $from, Carbon $expected): void
     {
         Log::spy();

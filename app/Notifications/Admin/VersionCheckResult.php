@@ -42,12 +42,7 @@ class VersionCheckResult extends Notification
 {
     use Queueable;
 
-    private string $message;
-
-    public function __construct(string $message)
-    {
-        $this->message = $message;
-    }
+    public function __construct(private string $message) {}
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
@@ -63,7 +58,7 @@ class VersionCheckResult extends Notification
      */
     public function toMail(OwnerNotifiable $notifiable): MailMessage
     {
-        return (new MailMessage())
+        return new MailMessage()
             ->markdown('emails.new-version', ['message' => $this->message])
             ->subject((string) trans('email.new_version_email_subject'))
         ;

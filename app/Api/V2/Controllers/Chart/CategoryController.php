@@ -100,7 +100,7 @@ class CategoryController extends Controller
             $currencyId                    = (int) $journal['currency_id'];
             $currency                      = $currencies[$currencyId] ?? $this->currencyRepos->find($currencyId);
             $currencies[$currencyId]       = $currency;
-            $categoryName                  = null === $journal['category_name'] ? (string) trans('firefly.no_category') : $journal['category_name'];
+            $categoryName                  = $journal['category_name'] ?? (string) trans('firefly.no_category');
             $amount                        = app('steam')->positive($journal['amount']);
             $nativeAmount                  = $converter->convert($default, $currency, $journal['date'], $amount);
             $key                           = sprintf('%s-%s', $categoryName, $currency->code);
@@ -128,15 +128,13 @@ class CategoryController extends Controller
             ];
 
             // add monies
-            $return[$key]['amount']        = bcadd($return[$key]['amount'], $amount);
-            $return[$key]['native_amount'] = bcadd($return[$key]['native_amount'], $nativeAmount);
+            $return[$key]['amount']        = bcadd($return[$key]['amount'], (string) $amount);
+            $return[$key]['native_amount'] = bcadd($return[$key]['native_amount'], (string) $nativeAmount);
         }
         $return     = array_values($return);
 
         // order by native amount
-        usort($return, static function (array $a, array $b) {
-            return (float) $a['native_amount'] < (float) $b['native_amount'] ? 1 : -1;
-        });
+        usort($return, static fn (array $a, array $b) => (float) $a['native_amount'] < (float) $b['native_amount'] ? 1 : -1);
         $converter->summarize();
 
         return response()->json($this->clean($return));

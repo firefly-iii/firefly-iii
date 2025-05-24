@@ -207,7 +207,7 @@ class ReportController extends Controller
                     && in_array($journal['destination_account_id'], $ids, true))) {
                 $key = 'earned';
             }
-            $data[$currencyId][$period][$key] = bcadd($data[$currencyId][$period][$key], $amount);
+            $data[$currencyId][$period][$key] = bcadd((string) $data[$currencyId][$period][$key], (string) $amount);
         }
 
         // loop this data, make chart bars for each currency:

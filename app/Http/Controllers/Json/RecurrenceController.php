@@ -74,7 +74,7 @@ class RecurrenceController extends Controller
         $firstDate                     = Carbon::createFromFormat('Y-m-d', $request->get('first_date'));
         $endDate                       = '' !== (string) $request->get('end_date') ? Carbon::createFromFormat('Y-m-d', $request->get('end_date')) : null;
         $endsAt                        = (string) $request->get('ends');
-        $repetitionType                = explode(',', $request->get('type'))[0];
+        $repetitionType                = explode(',', (string) $request->get('type'))[0];
         $repetitions                   = (int) $request->get('reps');
         $weekend                       = (int) $request->get('weekend');
         $repetitionMoment              = '';
@@ -82,12 +82,12 @@ class RecurrenceController extends Controller
         $skip                          = $skip < 0 || $skip > 31 ? 0 : $skip;
         $weekend                       = $weekend < 1 || $weekend > 4 ? 1 : $weekend;
 
-        if (null === $endDate) {
+        if (!$endDate instanceof Carbon) {
             // safety catch:
             $endDate = now()->addYear();
         }
 
-        if (null === $start || null === $end || null === $firstDate) {
+        if (!$start instanceof Carbon || !$end instanceof Carbon || !$firstDate instanceof Carbon) {
             return response()->json();
         }
 
@@ -101,13 +101,13 @@ class RecurrenceController extends Controller
         $actualStart                   = clone $firstDate;
 
         if ('weekly' === $repetitionType || 'monthly' === $repetitionType) {
-            $repetitionMoment = explode(',', $request->get('type'))[1] ?? '1';
+            $repetitionMoment = explode(',', (string) $request->get('type'))[1] ?? '1';
         }
         if ('ndom' === $repetitionType) {
             $repetitionMoment = str_ireplace('ndom,', '', $request->get('type'));
         }
         if ('yearly' === $repetitionType) {
-            $repetitionMoment = explode(',', $request->get('type'))[1] ?? '2018-01-01';
+            $repetitionMoment = explode(',', (string) $request->get('type'))[1] ?? '2018-01-01';
         }
         $actualStart->startOfDay();
         $repetition                    = new RecurrenceRepetition();
@@ -153,15 +153,15 @@ class RecurrenceController extends Controller
      */
     public function suggest(Request $request): JsonResponse
     {
-        $string      = '' === (string) $request->get('date') ? date('Y-m-d') : (string) $request->get('date');
+        $string      = '' === (string) $request->get('date') ? Carbon::now()->format('Y-m-d') : (string) $request->get('date');
         $today       = today(config('app.timezone'))->startOfDay();
 
         try {
             $date = Carbon::createFromFormat('Y-m-d', $string, config('app.timezone'));
-        } catch (InvalidFormatException $e) {
+        } catch (InvalidFormatException) {
             $date = Carbon::today(config('app.timezone'));
         }
-        if (null === $date) {
+        if (!$date instanceof Carbon) {
             return response()->json();
         }
         $date->startOfDay();

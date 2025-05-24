@@ -99,8 +99,8 @@ class UpdateRequest implements UpdateRequestInterface
         $body              = (string) $res->getBody();
 
         try {
-            $json = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
+            $json = \Safe\json_decode($body, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
             Log::error('Body is not valid JSON');
             Log::error($body);
             $return['message'] = 'Invalid JSON :(';

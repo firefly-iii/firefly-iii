@@ -94,7 +94,7 @@ class ReconcileController extends Controller
 
         // get start and end
 
-        if (null === $start && null === $end) {
+        if (!$start instanceof Carbon && !$end instanceof Carbon) {
             /** @var Carbon $start */
             $start = clone session('start', app('navigation')->startOfPeriod(new Carbon(), $range));
 
@@ -225,10 +225,10 @@ class ReconcileController extends Controller
             ]
         );
         $submission     = [
-            'user'               => auth()->user(),
-            'user_group'         => auth()->user()->userGroup,
-            'group_title'        => null,
-            'transactions'       => [
+            'user'         => auth()->user(),
+            'user_group'   => auth()->user()->userGroup,
+            'group_title'  => null,
+            'transactions' => [
                 [
                     'user'                => auth()->user(),
                     'user_group'          => auth()->user()->userGroup,

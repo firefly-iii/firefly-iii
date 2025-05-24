@@ -383,7 +383,8 @@ let index = function () {
             // one page only.o
             (new Get()).index(params).then(response => {
                 console.log(response);
-                this.totalPages = response.meta.lastPage;
+                this.totalPages = response.meta.pagination.total_pages;
+                console.log('a');
                 for (let i = 0; i < response.data.length; i++) {
                     if (response.data.hasOwnProperty(i)) {
                         let current = response.data[i];

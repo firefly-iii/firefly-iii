@@ -36,11 +36,11 @@ use FireflyIII\Support\Facades\Amount;
  */
 class AvailableBudgetTransformer extends AbstractTransformer
 {
-    private NoBudgetRepositoryInterface   $noBudgetRepository;
-    private OperationsRepositoryInterface $opsRepository;
-    private BudgetRepositoryInterface     $repository;
-    private TransactionCurrency           $default;
-    private bool $convertToNative;
+    private readonly bool                          $convertToNative;
+    private readonly TransactionCurrency           $default;
+    private readonly NoBudgetRepositoryInterface   $noBudgetRepository;
+    private readonly OperationsRepositoryInterface $opsRepository;
+    private readonly BudgetRepositoryInterface     $repository;
 
     /**
      * CurrencyTransformer constructor.

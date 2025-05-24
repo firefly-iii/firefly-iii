@@ -94,15 +94,6 @@ class InterestingMessage
         return null !== $transactionGroupId && null !== $message;
     }
 
-    private function userGroupMessage(Request $request): bool
-    {
-        // get parameters from request.
-        $transactionGroupId = $request->get('user_group_id');
-        $message            = $request->get('message');
-
-        return null !== $transactionGroupId && null !== $message;
-    }
-
     private function handleGroupMessage(Request $request): void
     {
         // get parameters from request.
@@ -130,24 +121,24 @@ class InterestingMessage
             session()->flash('success', (string) trans('firefly.stored_journal', ['description' => $title]));
         }
         if ('updated' === $message) {
-            $type = strtolower($journal->transactionType->type);
+            $type = strtolower((string) $journal->transactionType->type);
             session()->flash('success_url', route('transactions.show', [$transactionGroupId]));
             session()->flash('success', (string) trans(sprintf('firefly.updated_%s', $type), ['description' => $title]));
         }
         if ('no_change' === $message) {
-            $type = strtolower($journal->transactionType->type);
+            $type = strtolower((string) $journal->transactionType->type);
             session()->flash('warning_url', route('transactions.show', [$transactionGroupId]));
             session()->flash('warning', (string) trans(sprintf('firefly.no_changes_%s', $type), ['description' => $title]));
         }
     }
 
-    private function accountMessage(Request $request): bool
+    private function userGroupMessage(Request $request): bool
     {
         // get parameters from request.
-        $accountId = $request->get('account_id');
-        $message   = $request->get('message');
+        $transactionGroupId = $request->get('user_group_id');
+        $message            = $request->get('message');
 
-        return null !== $accountId && null !== $message;
+        return null !== $transactionGroupId && null !== $message;
     }
 
     private function handleUserGroupMessage(Request $request): void
@@ -186,6 +177,15 @@ class InterestingMessage
         if ('updated' === $message) {
             session()->flash('success', (string) trans('firefly.flash_administration_updated', ['title' => $userGroup->title]));
         }
+    }
+
+    private function accountMessage(Request $request): bool
+    {
+        // get parameters from request.
+        $accountId = $request->get('account_id');
+        $message   = $request->get('message');
+
+        return null !== $accountId && null !== $message;
     }
 
     private function handleAccountMessage(Request $request): void

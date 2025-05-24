@@ -41,6 +41,14 @@ class AccountPolicy
     }
 
     /**
+     * TODO needs better authentication, also for group.
+     */
+    public function view(User $user, Account $account): bool
+    {
+        return auth()->check() && $user->id === $account->user_id;
+    }
+
+    /**
      * Everybody can do this, but selection should limit to user.
      */
     public function viewAny(): bool
@@ -56,13 +64,5 @@ class AccountPolicy
     public function viewUser(User $user, Account $account): bool
     {
         return $this->view($user, $account);
-    }
-
-    /**
-     * TODO needs better authentication, also for group.
-     */
-    public function view(User $user, Account $account): bool
-    {
-        return auth()->check() && $user->id === $account->user_id;
     }
 }

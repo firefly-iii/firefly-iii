@@ -121,6 +121,16 @@ class IndexController extends Controller
         return view('accounts.index', compact('objectType', 'inactivePage', 'subTitleIcon', 'subTitle', 'page', 'accounts'));
     }
 
+    private function subtract(array $startBalances, array $endBalances): array
+    {
+        $result = [];
+        foreach ($endBalances as $key => $value) {
+            $result[$key] = bcsub((string) $value, $startBalances[$key] ?? '0');
+        }
+
+        return $result;
+    }
+
     /**
      * Show list of accounts.
      *
@@ -153,7 +163,9 @@ class IndexController extends Controller
 
         /** @var Carbon $end */
         $end           = clone session('end', today(config('app.timezone'))->endOfMonth());
-        $start->subDay();
+
+        // 2025-05-11 removed this so start is exactly the start of the month.
+        // $start->subDay();
 
         $ids           = $accounts->pluck('id')->toArray();
         Log::debug(sprintf('index start: finalAccountsBalance("%s")', $start->format('Y-m-d H:i:s')));
@@ -198,15 +210,5 @@ class IndexController extends Controller
         app('log')->debug(sprintf('Count of accounts after LAP (2): %d', $accounts->getCollection()->count()));
 
         return view('accounts.index', compact('objectType', 'inactiveCount', 'subTitleIcon', 'subTitle', 'page', 'accounts'));
-    }
-
-    private function subtract(array $startBalances, array $endBalances): array
-    {
-        $result = [];
-        foreach ($endBalances as $key => $value) {
-            $result[$key] = bcsub($value, $startBalances[$key] ?? '0');
-        }
-
-        return $result;
     }
 }

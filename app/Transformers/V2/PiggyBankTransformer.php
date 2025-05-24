@@ -196,9 +196,9 @@ class PiggyBankTransformer extends AbstractTransformer
         $group               = $this->groups[$piggyBank->id] ?? null;
 
         if (0 !== bccomp($targetAmount, '0')) { // target amount is not 0.00
-            $leftToSave         = bcsub($targetAmount, $currentAmount);
+            $leftToSave         = bcsub($targetAmount, (string) $currentAmount);
             $nativeLeftToSave   = $this->converter->convert($this->default, $currency, today(), $leftToSave);
-            $percentage         = (int) bcmul(bcdiv($currentAmount, $targetAmount), '100');
+            $percentage         = (int) bcmul(bcdiv((string) $currentAmount, $targetAmount), '100');
             $savePerMonth       = $this->getSuggestedMonthlyAmount($currentAmount, $targetAmount, $piggyBank->start_date, $piggyBank->target_date);
             $nativeSavePerMonth = $this->converter->convert($this->default, $currency, today(), $savePerMonth);
         }
