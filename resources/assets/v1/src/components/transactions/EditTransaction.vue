@@ -244,7 +244,7 @@
                     </div>
                     <div class="box-footer">
                         <div class="btn-group">
-                            <button id="submitButton" class="btn btn-success" @click="submit">{{
+                            <button id="submitButton" ref="submitButtonRef" class="btn btn-success" @click="submit">{{
                                     $t('firefly.update_transaction')
                                 }}
                             </button>
@@ -803,7 +803,7 @@ export default {
         },
         submit: function (e) {
             // console.log('Submit!');
-            let button = $(e.currentTarget);
+            let button = $('#submitButton');
             button.prop("disabled", true);
 
             const page = window.location.href.split('/');
@@ -835,6 +835,7 @@ export default {
                 // something something render errors.
                 this.parseErrors(error.response.data);
                 // something.
+                button.removeAttr('disabled');
             });
             if (e) {
                 e.preventDefault();
