@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support;
 
-use Eloquent;
+use Illuminate\Database\Eloquent\Model;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Form\FormSupport;
 use Illuminate\Support\Collection;
@@ -205,7 +205,7 @@ class ExpandedForm
         $selectList[0] = '(none)';
         $fields        = ['title', 'name', 'description'];
 
-        /** @var \Eloquent $entry */
+        /** @var Model $entry */
         foreach ($set as $entry) {
             // All Eloquent models have an ID
             $entryId              = $entry->id;

@@ -26,6 +26,7 @@ namespace FireflyIII\Console\Commands\Integrity;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Schema;
 
 class ReportsIntegrity extends Command
 {
@@ -41,7 +42,7 @@ class ReportsIntegrity extends Command
     public function handle(): int
     {
         // if table does not exist, return false
-        if (!\Schema::hasTable('users')) {
+        if (!Schema::hasTable('users')) {
             return 1;
         }
         $commands = [

@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use FireflyIII\Events\UserChangedEmail;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Exceptions\ValidationException;
@@ -154,7 +156,8 @@ class ProfileController extends Controller
         if (0 === $count) {
             /** @var ClientRepository $repository */
             $repository = app(ClientRepository::class);
-            $repository->createPersonalAccessClient(null, config('app.name').' Personal Access Client', 'http://localhost');
+            $name       = sprintf('%s Personal Access Grant Client', config('app.name'));
+            $repository->createPersonalAccessClient(null, $name, 'http://localhost');
         }
 
         $accessToken    = app('preferences')->get('access_token');
@@ -203,7 +206,7 @@ class ProfileController extends Controller
         $existing = $repository->findByEmail($newEmail);
         if ($existing instanceof User) {
             // force user logout.
-            \Auth::guard()->logout(); // @phpstan-ignore-line (does not recognize function)
+            Auth::guard()->logout(); // @phpstan-ignore-line (does not recognize function)
             $request->session()->invalidate();
 
             session()->flash('success', (string) trans('firefly.email_changed'));
@@ -217,7 +220,7 @@ class ProfileController extends Controller
         event(new UserChangedEmail($user, $newEmail, $oldEmail));
 
         // force user logout.
-        \Auth::guard()->logout(); // @phpstan-ignore-line (does not recognize function)
+        Auth::guard()->logout(); // @phpstan-ignore-line (does not recognize function)
         $request->session()->invalidate();
         session()->flash('success', (string) trans('firefly.email_changed'));
 
@@ -310,7 +313,7 @@ class ProfileController extends Controller
             return redirect(route('profile.index'));
         }
 
-        if (!\Hash::check($request->get('password'), auth()->user()->password)) {
+        if (!Hash::check($request->get('password'), auth()->user()->password)) {
             session()->flash('error', (string) trans('firefly.invalid_password'));
 
             return redirect(route('profile.delete-account'));
@@ -343,8 +346,8 @@ class ProfileController extends Controller
             'email'    => auth()->user()->email,
             'password' => $request->get('password'),
         ];
-        if (\Auth::once($creds)) {
-            \Auth::logoutOtherDevices($request->get('password'));
+        if (Auth::once($creds)) {
+            Auth::logoutOtherDevices($request->get('password'));
             session()->flash('info', (string) trans('firefly.other_sessions_logged_out'));
 
             return redirect(route('profile.index'));

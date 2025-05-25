@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Models\TransactionCurrency;
 
+use Illuminate\Support\Facades\Validator;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
@@ -74,15 +75,15 @@ class DestroyController extends Controller
         if (!$this->userRepository->hasRole($admin, 'owner')) {
             // access denied:
             $messages = ['currency_code' => '200005: You need the "owner" role to do this.'];
-            \Validator::make([], $rules, $messages)->validate();
+            Validator::make([], $rules, $messages)->validate();
         }
         if ($this->repository->currencyInUse($currency)) {
             $messages = ['currency_code' => '200006: Currency in use.'];
-            \Validator::make([], $rules, $messages)->validate();
+            Validator::make([], $rules, $messages)->validate();
         }
         if ($this->repository->isFallbackCurrency($currency)) {
             $messages = ['currency_code' => '200026: Currency is fallback.'];
-            \Validator::make([], $rules, $messages)->validate();
+            Validator::make([], $rules, $messages)->validate();
         }
 
         $this->repository->destroy($currency);

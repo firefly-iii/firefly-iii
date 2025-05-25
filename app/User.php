@@ -61,6 +61,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
 use Laravel\Passport\HasApiTokens;
 use NotificationChannels\Pushover\PushoverReceiver;
@@ -464,7 +465,7 @@ class User extends Authenticatable
      */
     public function sendPasswordResetNotification($token): void
     {
-        $ipAddress = \Request::ip();
+        $ipAddress = Request::ip();
 
         event(new RequestedNewPassword($this, $token, $ipAddress));
     }

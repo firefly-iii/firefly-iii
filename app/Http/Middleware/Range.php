@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
+use Illuminate\Support\Facades\App;
 use Carbon\Carbon;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
@@ -101,7 +102,7 @@ class Range
         // get locale preference:
         $language          = app('steam')->getLanguage();
         $locale            = app('steam')->getLocale();
-        \App::setLocale($language);
+        App::setLocale($language);
         Carbon::setLocale(substr((string) $locale, 0, 2));
 
         $localeArray       = app('steam')->getLocaleArray($locale);

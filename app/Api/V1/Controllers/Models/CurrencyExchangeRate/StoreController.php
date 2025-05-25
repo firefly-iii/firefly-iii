@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Models\CurrencyExchangeRate;
 
+use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Api\V1\Requests\Models\CurrencyExchangeRate\StoreRequest;
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Repositories\ExchangeRate\ExchangeRateRepositoryInterface;
@@ -61,11 +62,11 @@ class StoreController extends Controller
 
         // already has rate?
         $object      = $this->repository->getSpecificRateOnDate($from, $to, $date);
-        if (null !== $object) {
+        if ($object instanceof CurrencyExchangeRate) {
             // just update it, no matter.
             $rate = $this->repository->updateExchangeRate($object, $rate, $date);
         }
-        if (null === $object) {
+        if (!$object instanceof CurrencyExchangeRate) {
             // store new
             $rate = $this->repository->storeExchangeRate($from, $to, $rate, $date);
         }

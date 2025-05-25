@@ -41,7 +41,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Schema::defaultStringLength(191);
-        Passport::$clientUuids = false;
+        // Passport::$clientUuids = false;
         Response::macro('api', function (array $value) {
             $headers = [
                 'Cache-Control' => 'no-store',
@@ -59,7 +59,7 @@ class AppServiceProvider extends ServiceProvider
 
         // blade extension
         Blade::directive('activeXRoutePartial', function (string $route) {
-            $name = \Route::getCurrentRoute()->getName() ?? '';
+            $name = Route::getCurrentRoute()->getName() ?? '';
             if (str_contains($name, $route)) {
                 return 'menu-open';
             }

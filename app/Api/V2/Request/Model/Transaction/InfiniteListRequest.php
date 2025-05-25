@@ -53,7 +53,7 @@ class InfiniteListRequest extends FormRequest
 
         $start = $this->getStartDate();
         $end   = $this->getEndDate();
-        if (null !== $start && null !== $end) {
+        if ($start instanceof Carbon && $end instanceof Carbon) {
             $array['start'] = $start->format('Y-m-d');
             $array['end']   = $end->format('Y-m-d');
         }

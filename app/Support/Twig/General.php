@@ -33,7 +33,7 @@ use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Search\OperatorQuerySearch;
 use Illuminate\Support\Facades\Log;
 use League\CommonMark\GithubFlavoredMarkdownConverter;
-use Route;
+use Illuminate\Support\Facades\Route;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -247,7 +247,7 @@ class General extends AbstractExtension
             static function (): string {
                 $args  = func_get_args();
                 $route = $args[0]; // name of the route.
-                $name  = \Route::getCurrentRoute()->getName() ?? '';
+                $name  = Route::getCurrentRoute()->getName() ?? '';
                 if (str_contains($name, $route)) {
                     return 'active';
                 }
@@ -271,7 +271,7 @@ class General extends AbstractExtension
 
                 if ($objectType === $activeObjectType
                     && false !== stripos(
-                        (string) \Route::getCurrentRoute()->getName(),
+                        (string) Route::getCurrentRoute()->getName(),
                         (string) $route
                     )) {
                     return 'active';
@@ -294,7 +294,7 @@ class General extends AbstractExtension
             static function (): string {
                 $args  = func_get_args();
                 $route = $args[0]; // name of the route.
-                $name  = \Route::getCurrentRoute()->getName() ?? '';
+                $name  = Route::getCurrentRoute()->getName() ?? '';
                 if (str_contains($name, $route)) {
                     return 'menu-open';
                 }
