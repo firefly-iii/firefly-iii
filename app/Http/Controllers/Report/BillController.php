@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Report;
 
-use Throwable;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
@@ -59,7 +58,7 @@ class BillController extends Controller
 
         try {
             $result = view('reports.partials.bills', compact('report'))->render();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             app('log')->error(sprintf('Could not render reports.partials.budgets: %s', $e->getMessage()));
             app('log')->error($e->getTraceAsString());
             $result = 'Could not render view.';

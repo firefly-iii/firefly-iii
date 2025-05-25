@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
-use Exception;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
 use FireflyIII\Enums\AccountTypeEnum;
@@ -58,7 +57,7 @@ class HomeController extends Controller
     /**
      * Change index date range.
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function dateRange(Request $request): JsonResponse
     {

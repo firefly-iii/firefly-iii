@@ -23,7 +23,6 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
-
 // Cron job API routes:
 use FireflyIII\Http\Middleware\AcceptHeaders;
 

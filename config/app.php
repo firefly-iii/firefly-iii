@@ -63,6 +63,9 @@ use Illuminate\Translation\TranslationServiceProvider;
 use Illuminate\Validation\ValidationServiceProvider;
 use Illuminate\View\ViewServiceProvider;
 use TwigBridge\ServiceProvider;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Route;
 
 return [
     'name'            => envNonEmpty('APP_NAME', 'Firefly III'),
@@ -130,12 +133,12 @@ return [
         RecurringServiceProvider::class,
     ],
     'aliases'         => [
-        'Auth'       => Illuminate\Support\Facades\Auth::class,
-        'Route'      => Illuminate\Support\Facades\Route::class,
-        'Config'    => Illuminate\Support\Facades\Config::class,
+        'Auth'       => Auth::class,
+        'Route'      => Route::class,
+        'Config'     => Config::class,
     ],
 
-    'asset_url' => env('ASSET_URL', null),
+    'asset_url'       => env('ASSET_URL', null),
 
     /*
     |--------------------------------------------------------------------------
@@ -148,5 +151,5 @@ return [
     |
     */
 
-    'faker_locale' => 'en_US',
+    'faker_locale'    => 'en_US',
 ];

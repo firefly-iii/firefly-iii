@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
-use Throwable;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
@@ -51,7 +50,7 @@ class RuleController extends Controller
 
         try {
             $view = view('rules.partials.action', compact('actions', 'count'))->render();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             app('log')->error(sprintf('Cannot render rules.partials.action: %s', $e->getMessage()));
             app('log')->error($e->getTraceAsString());
             $view = 'Could not render view.';
@@ -81,7 +80,7 @@ class RuleController extends Controller
 
         try {
             $view = view('rules.partials.trigger', compact('triggers', 'count'))->render();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             app('log')->error(sprintf('Cannot render rules.partials.trigger: %s', $e->getMessage()));
             app('log')->error($e->getTraceAsString());
             $view = 'Could not render view.';

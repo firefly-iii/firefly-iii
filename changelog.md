@@ -7,8 +7,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #10356
-- #10357
+- [Issue 10356](https://github.com/firefly-iii/firefly-iii/issues/10356) (Call to undefined method createPersonalAccessClient()) reported by @JC5
+- [Issue 10357](https://github.com/firefly-iii/firefly-iii/issues/10357) (Target AuthorizationViewResponse is not instantiable) reported by @JC5
 
 ## 6.2.13 - 2025-05-25
 
