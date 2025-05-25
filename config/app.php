@@ -41,6 +41,11 @@ use FireflyIII\Providers\RuleServiceProvider;
 use FireflyIII\Providers\SearchServiceProvider;
 use FireflyIII\Providers\SessionServiceProvider;
 use FireflyIII\Providers\TagServiceProvider;
+use FireflyIII\Support\Facades\AccountForm;
+use FireflyIII\Support\Facades\CurrencyForm;
+use FireflyIII\Support\Facades\ExpandedForm;
+use FireflyIII\Support\Facades\PiggyBankForm;
+use FireflyIII\Support\Facades\RuleForm;
 use Illuminate\Auth\AuthServiceProvider;
 use Illuminate\Auth\Passwords\PasswordResetServiceProvider;
 use Illuminate\Broadcasting\BroadcastServiceProvider;
@@ -59,13 +64,16 @@ use Illuminate\Pagination\PaginationServiceProvider;
 use Illuminate\Pipeline\PipelineServiceProvider;
 use Illuminate\Queue\QueueServiceProvider;
 use Illuminate\Redis\RedisServiceProvider;
-use Illuminate\Translation\TranslationServiceProvider;
-use Illuminate\Validation\ValidationServiceProvider;
-use Illuminate\View\ViewServiceProvider;
-use TwigBridge\ServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Translation\TranslationServiceProvider;
+use Illuminate\Validation\ValidationServiceProvider;
+use Illuminate\View\ViewServiceProvider;
+use Spatie\Html\Facades\Html;
+use TwigBridge\ServiceProvider;
 
 return [
     'name'            => envNonEmpty('APP_NAME', 'Firefly III'),
@@ -133,9 +141,17 @@ return [
         RecurringServiceProvider::class,
     ],
     'aliases'         => [
-        'Auth'       => Auth::class,
-        'Route'      => Route::class,
-        'Config'     => Config::class,
+        'Auth'          => Auth::class,
+        'Route'         => Route::class,
+        'Config'        => Config::class,
+        'Session'       => Session::class,
+        'URL'           => URL::class,
+        'Html'          => Html::class,
+        'AccountForm'   => AccountForm::class,
+        'CurrencyForm'  => CurrencyForm::class,
+        'ExpandedForm'  => ExpandedForm::class,
+        'PiggyBankForm' => PiggyBankForm::class,
+        'RuleForm'      => RuleForm::class,
     ],
 
     'asset_url'       => env('ASSET_URL', null),
