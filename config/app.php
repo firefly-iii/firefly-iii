@@ -154,7 +154,7 @@ return [
         'RuleForm'      => RuleForm::class,
     ],
 
-    'asset_url' => env('ASSET_URL', null),
+    'asset_url'       => env('ASSET_URL', null),
 
     /*
     |--------------------------------------------------------------------------
@@ -167,5 +167,5 @@ return [
     |
     */
 
-    'faker_locale' => 'en_US',
+    'faker_locale'    => 'en_US',
 ];
