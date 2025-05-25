@@ -25,7 +25,6 @@ namespace FireflyIII\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Exception;
 use FireflyIII\Events\UserChangedEmail;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Exceptions\ValidationException;
@@ -157,7 +156,7 @@ class ProfileController extends Controller
         if (0 === $count) {
             /** @var ClientRepository $repository */
             $repository = app(ClientRepository::class);
-            $name = sprintf('%s Personal Access Grant Client',config('app.name'));
+            $name       = sprintf('%s Personal Access Grant Client', config('app.name'));
             $repository->createPersonalAccessClient(null, $name, 'http://localhost');
         }
 
@@ -363,7 +362,7 @@ class ProfileController extends Controller
      *
      * @return Redirector|RedirectResponse
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function regenerate(Request $request)
     {

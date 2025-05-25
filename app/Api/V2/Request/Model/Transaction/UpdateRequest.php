@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V2\Request\Model\Transaction;
 
-use Override;
 use FireflyIII\Api\V1\Requests\Models\AvailableBudget\Request;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionGroup;
@@ -65,7 +64,7 @@ class UpdateRequest extends Request
      *
      * @throws FireflyException
      */
-    #[Override]
+    #[\Override]
     public function getAll(): array
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
@@ -249,7 +248,7 @@ class UpdateRequest extends Request
     /**
      * The rules that the incoming request must be matched against.
      */
-    #[Override]
+    #[\Override]
     public function rules(): array
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
@@ -333,7 +332,7 @@ class UpdateRequest extends Request
     /**
      * Configure the validator instance.
      */
-    #[Override]
+    #[\Override]
     public function withValidator(Validator $validator): void
     {
         app('log')->debug('Now in withValidator');

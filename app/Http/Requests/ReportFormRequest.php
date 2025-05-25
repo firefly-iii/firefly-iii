@@ -149,7 +149,7 @@ class ReportFormRequest extends FormRequest
             if (false !== $result && 0 !== $result) {
                 try {
                     $date = new Carbon($parts[1]);
-                } catch (Exception $e) { // intentional generic exception
+                } catch (\Exception $e) { // intentional generic exception
                     $error = sprintf('"%s" is not a valid date range: %s', $range, $e->getMessage());
                     app('log')->error($error);
                     app('log')->error($e->getTraceAsString());
@@ -187,7 +187,7 @@ class ReportFormRequest extends FormRequest
             if (false !== $result && 0 !== $result) {
                 try {
                     $date = new Carbon($parts[0]);
-                } catch (Exception $e) { // intentional generic exception
+                } catch (\Exception $e) { // intentional generic exception
                     $error = sprintf('"%s" is not a valid date range: %s', $range, $e->getMessage());
                     app('log')->error($error);
                     app('log')->error($e->getTraceAsString());

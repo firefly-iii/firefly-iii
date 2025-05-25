@@ -82,7 +82,7 @@ class ConvertController extends Controller
      *
      * @return Factory|Redirector|RedirectResponse|View
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function index(TransactionType $destinationType, TransactionGroup $group)
     {
@@ -214,7 +214,7 @@ class ConvertController extends Controller
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function getLiabilities(): array
     {
@@ -238,7 +238,7 @@ class ConvertController extends Controller
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function getAssetAccounts(): array
     {

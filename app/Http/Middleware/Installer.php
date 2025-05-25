@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
-use Closure;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\System\OAuthKeys;
 use Illuminate\Database\QueryException;
@@ -46,7 +45,7 @@ class Installer
      *
      * @throws FireflyException
      */
-    public function handle($request, Closure $next)
+    public function handle($request, \Closure $next)
     {
         // Log::debug(sprintf('Installer middleware for URL %s', $request->url()));
         // ignore installer in test environment.

@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V2\Response\Sum;
 
-use Closure;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
 use Illuminate\Database\Eloquent\Model;
@@ -40,7 +39,7 @@ class AutoSum
     /**
      * @throws FireflyException
      */
-    public function autoSum(Collection $objects, Closure $getCurrency, Closure $getSum): array
+    public function autoSum(Collection $objects, \Closure $getCurrency, \Closure $getSum): array
     {
         $return = [];
 

@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V2\Controllers\Summary;
 
-use Exception;
 use Carbon\Carbon;
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Generic\DateRequest;
@@ -93,7 +92,7 @@ class BasicController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v2)#/summary/getBasicSummary
      *
-     * @throws Exception
+     * @throws \Exception
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
