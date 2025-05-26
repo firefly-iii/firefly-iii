@@ -255,7 +255,7 @@
                 </td>
                 {% if config('firefly.feature_flags.running_balance_column') %}
                 <td>
-                    {% if null == transaction.balance_dirty or false == transaction.balance_dirty %}
+                    {% if null == transaction.balance_dirty or false == transaction.balance_dirty and null != transaction.destination_balance_after %}
                         {% if transaction.transaction_type_type == 'Deposit' %}
                             {{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}
                         {% elseif transaction.transaction_type_type == 'Withdrawal' %}
