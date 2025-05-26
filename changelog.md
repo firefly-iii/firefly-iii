@@ -7,7 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #10367
+- [Issue 10367](https://github.com/firefly-iii/firefly-iii/issues/10367) (Delete account results in error) reported by @sawyert
 
 ## 6.2.15 - 2025-05-26
 
