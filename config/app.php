@@ -66,6 +66,7 @@ use Illuminate\Queue\QueueServiceProvider;
 use Illuminate\Redis\RedisServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
@@ -147,6 +148,7 @@ return [
         'Session'       => Session::class,
         'URL'           => URL::class,
         'Html'          => Html::class,
+        'Lang' => Lang::class,
         'AccountForm'   => AccountForm::class,
         'CurrencyForm'  => CurrencyForm::class,
         'ExpandedForm'  => ExpandedForm::class,
