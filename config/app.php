@@ -148,7 +148,7 @@ return [
         'Session'       => Session::class,
         'URL'           => URL::class,
         'Html'          => Html::class,
-        'Lang' => Lang::class,
+        'Lang'          => Lang::class,
         'AccountForm'   => AccountForm::class,
         'CurrencyForm'  => CurrencyForm::class,
         'ExpandedForm'  => ExpandedForm::class,
