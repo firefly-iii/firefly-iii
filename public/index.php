@@ -1,4 +1,9 @@
 <?php
+declare(strict_types=1);
+
+use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Http\Request;
+
 /**
  * index.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -69,9 +74,9 @@ $app = require_once __DIR__ . '/../bootstrap/app.php';
 |
 */
 
-$kernel   = $app->make(Illuminate\Contracts\Http\Kernel::class);
+$kernel   = $app->make(Kernel::class);
 $response = $kernel->handle(
-    $request = Illuminate\Http\Request::capture()
+    $request = Request::capture()
 );
 $response->send();
 

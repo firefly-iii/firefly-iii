@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Tests\unit\Support\Calendar\Periodicity;
 
+use FireflyIII\Support\Calendar\Periodicity\HalfYearly;
 use Carbon\Carbon;
 use FireflyIII\Support\Calendar\Periodicity;
 use FireflyIII\Support\Calendar\Periodicity\Interval;
@@ -42,7 +43,7 @@ final class HalfYearlyTest extends IntervalTestCase
 {
     public static function factory(): Interval
     {
-        return new Periodicity\HalfYearly();
+        return new HalfYearly();
     }
 
     public static function provideIntervals(): array
