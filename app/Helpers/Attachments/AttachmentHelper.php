@@ -37,6 +37,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\MessageBag;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
+use const DIRECTORY_SEPARATOR;
+
 /**
  * Class AttachmentHelper.
  */
@@ -85,7 +87,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     public function getAttachmentLocation(Attachment $attachment): string
     {
-        return sprintf('%sat-%d.data', \DIRECTORY_SEPARATOR, $attachment->id);
+        return sprintf('%sat-%d.data', DIRECTORY_SEPARATOR, $attachment->id);
     }
 
     /**

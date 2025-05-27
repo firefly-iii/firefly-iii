@@ -30,6 +30,7 @@ use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Support\Calendar\Calculator;
 use FireflyIII\Support\Calendar\Periodicity;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 /**
  * Class Navigation.
@@ -93,7 +94,7 @@ class Navigation
             return $this->calculator->nextDateByInterval($epoch, $periodicity, $skipInterval);
         } catch (IntervalException $exception) {
             Log::warning($exception->getMessage(), ['exception' => $exception]);
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             Log::error($exception->getMessage(), ['exception' => $exception]);
         }
 

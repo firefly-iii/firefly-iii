@@ -35,6 +35,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\UnableToDeleteFile;
+use Exception;
+use LogicException;
 
 /**
  * Class AttachmentRepository.
@@ -44,7 +46,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface, UserGroupIn
     use UserGroupTrait;
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function destroy(Attachment $attachment): bool
     {
@@ -158,7 +160,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface, UserGroupIn
             if (null !== $dbNote) {
                 try {
                     $dbNote->delete();
-                } catch (\LogicException $e) {
+                } catch (LogicException $e) {
                     app('log')->error($e->getMessage());
                 }
             }

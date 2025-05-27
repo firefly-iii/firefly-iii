@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Support\MessageBag;
+use Throwable;
 
 /**
  * Trait FormSupport
@@ -46,7 +47,7 @@ trait FormSupport
 
         try {
             $html = view('form.multi-select', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             app('log')->debug(sprintf('Could not render multi-select(): %s', $e->getMessage()));
             $html = 'Could not render multi-select.';
         }
@@ -131,7 +132,7 @@ trait FormSupport
 
         try {
             $html = view('form.select', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             app('log')->debug(sprintf('Could not render select(): %s', $e->getMessage()));
             $html = 'Could not render select.';
         }

@@ -28,6 +28,7 @@ use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Closure;
 
 /**
  * Class UniqueAccountNumber
@@ -66,7 +67,7 @@ class UniqueAccountNumber implements ValidationRule
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function validate(string $attribute, mixed $value, \Closure $fail): void
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (!auth()->check()) {
             return;

@@ -39,6 +39,7 @@ use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class AccountEnrichment
@@ -78,7 +79,7 @@ class AccountEnrichment implements EnrichmentInterface
         //        $this->end                = null;
     }
 
-    #[\Override]
+    #[Override]
     public function enrichSingle(array|Model $model): Account|array
     {
         Log::debug(__METHOD__);
@@ -88,7 +89,7 @@ class AccountEnrichment implements EnrichmentInterface
         return $collection->first();
     }
 
-    #[\Override]
+    #[Override]
     /**
      * Do the actual enrichment.
      */

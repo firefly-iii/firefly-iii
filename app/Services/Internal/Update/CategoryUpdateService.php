@@ -30,6 +30,7 @@ use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
 use FireflyIII\User;
+use Exception;
 
 /**
  * Class CategoryUpdateService
@@ -59,7 +60,7 @@ class CategoryUpdateService
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function update(Category $category, array $data): Category
     {
@@ -128,7 +129,7 @@ class CategoryUpdateService
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function updateNotes(Category $category, array $data): void
     {

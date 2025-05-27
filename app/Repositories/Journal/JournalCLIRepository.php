@@ -32,6 +32,7 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use stdClass;
 
 /**
  * Class JournalCLIRepository
@@ -184,7 +185,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface, UserGroupIn
         $result     = $query->get(['transaction_journals.id as id', DB::raw('count(transactions.id) as transaction_count')]); // @phpstan-ignore-line
         $journalIds = [];
 
-        /** @var \stdClass $row */
+        /** @var stdClass $row */
         foreach ($result as $row) {
             if ((int) $row->transaction_count > 2) {
                 $journalIds[] = (int) $row->id;

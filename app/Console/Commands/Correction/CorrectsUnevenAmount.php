@@ -34,6 +34,8 @@ use FireflyIII\Support\Models\AccountBalanceCalculator;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use ValueError;
+use stdClass;
 
 class CorrectsUnevenAmount extends Command
 {
@@ -135,7 +137,7 @@ class CorrectsUnevenAmount extends Command
             ->get(['transaction_journal_id', DB::raw('SUM(amount) AS the_sum')])
         ;
 
-        /** @var \stdClass $entry */
+        /** @var stdClass $entry */
         foreach ($journals as $entry) {
             $sum = (string) $entry->the_sum;
             if (!is_numeric($sum)
@@ -157,7 +159,7 @@ class CorrectsUnevenAmount extends Command
 
             try {
                 $res = bccomp($sum, '0');
-            } catch (\ValueError $e) {
+            } catch (ValueError $e) {
                 $this->friendlyError(sprintf('Could not bccomp("%s", "0").', $sum));
                 Log::error($e->getMessage());
                 Log::error($e->getTraceAsString());

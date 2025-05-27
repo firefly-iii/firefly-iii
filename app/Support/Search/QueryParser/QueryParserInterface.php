@@ -25,11 +25,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Search\QueryParser;
 
+use LogicException;
+use TypeError;
+
 interface QueryParserInterface
 {
     /**
-     * @throws \LogicException
-     * @throws \TypeError
+     * @throws LogicException
+     * @throws TypeError
      */
     public function parse(string $query): NodeGroup;
 }

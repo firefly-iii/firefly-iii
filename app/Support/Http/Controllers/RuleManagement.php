@@ -28,6 +28,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Support\Search\OperatorQuerySearch;
 use Illuminate\Http\Request;
+use Throwable;
 
 /**
  * Trait RuleManagement
@@ -54,7 +55,7 @@ trait RuleManagement
                             'count'      => $index + 1,
                         ]
                     )->render();
-                } catch (\Throwable $e) {
+                } catch (Throwable $e) {
                     app('log')->error(sprintf('Throwable was thrown in getPreviousActions(): %s', $e->getMessage()));
                     app('log')->error($e->getTraceAsString());
 
@@ -99,7 +100,7 @@ trait RuleManagement
                             'triggers'      => $triggers,
                         ]
                     )->render();
-                } catch (\Throwable $e) {
+                } catch (Throwable $e) {
                     app('log')->debug(sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage()));
                     app('log')->error($e->getTraceAsString());
 
@@ -145,7 +146,7 @@ trait RuleManagement
                         'triggers'      => $triggers,
                     ]
                 )->render();
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 app('log')->debug(sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage()));
                 app('log')->error($e->getTraceAsString());
 

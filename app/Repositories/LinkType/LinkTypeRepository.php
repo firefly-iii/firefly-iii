@@ -31,6 +31,7 @@ use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
+use Exception;
 
 /**
  * Class LinkTypeRepository.
@@ -71,7 +72,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function destroyLink(TransactionJournalLink $link): bool
     {
@@ -170,7 +171,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
     /**
      * Store link between two journals.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function storeLink(array $information, TransactionJournal $inward, TransactionJournal $outward): ?TransactionJournalLink
     {
@@ -237,7 +238,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function setNoteText(TransactionJournalLink $link, string $text): void
     {
@@ -279,7 +280,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
     /**
      * Update an existing transaction journal link.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function updateLink(TransactionJournalLink $journalLink, array $data): TransactionJournalLink
     {

@@ -28,6 +28,7 @@ use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Closure;
 
 /**
  * Class UniqueIban
@@ -69,7 +70,7 @@ class UniqueIban implements ValidationRule
         return (string) trans('validation.unique_iban_for_user');
     }
 
-    public function validate(string $attribute, mixed $value, \Closure $fail): void
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (!$this->passes($attribute, $value)) {
             $fail((string) trans('validation.unique_iban_for_user'));

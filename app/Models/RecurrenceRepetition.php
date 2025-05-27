@@ -36,16 +36,16 @@ class RecurrenceRepetition extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    #[\Deprecated] /** @deprecated */
+    #[Deprecated] /** @deprecated */
     public const int WEEKEND_DO_NOTHING    = 1;
 
-    #[\Deprecated] /** @deprecated */
+    #[Deprecated] /** @deprecated */
     public const int WEEKEND_SKIP_CREATION = 2;
 
-    #[\Deprecated] /** @deprecated */
+    #[Deprecated] /** @deprecated */
     public const int WEEKEND_TO_FRIDAY     = 3;
 
-    #[\Deprecated] /** @deprecated */
+    #[Deprecated] /** @deprecated */
     public const int WEEKEND_TO_MONDAY     = 4;
 
     protected $casts

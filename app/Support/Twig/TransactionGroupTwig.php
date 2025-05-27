@@ -33,13 +33,14 @@ use FireflyIII\Models\TransactionJournalMeta;
 use Illuminate\Support\Facades\DB;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
+use Override;
 
 /**
  * Class TransactionGroupTwig
  */
 class TransactionGroupTwig extends AbstractExtension
 {
-    #[\Override]
+    #[Override]
     public function getFunctions(): array
     {
         return [

@@ -28,6 +28,7 @@ use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Closure;
 
 /**
  * Class IsDefaultUserGroupName
@@ -39,7 +40,7 @@ class IsDefaultUserGroupName implements ValidationRule
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function validate(string $attribute, mixed $value, \Closure $fail): void
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         app('log')->debug(sprintf('Now in %s(%s)', __METHOD__, $value));
 

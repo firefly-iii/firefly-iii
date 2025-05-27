@@ -48,6 +48,8 @@ use FireflyIII\Support\Search\QueryParser\StringNode;
 use FireflyIII\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use LogicException;
+use TypeError;
 
 /**
  * Class OperatorQuerySearch
@@ -143,7 +145,7 @@ class OperatorQuerySearch implements SearchInterface
 
         try {
             $parsedQuery = $parser->parse($query);
-        } catch (\LogicException|\TypeError $e) {
+        } catch (LogicException|TypeError $e) {
             app('log')->error($e->getMessage());
             app('log')->error(sprintf('Could not parse search: "%s".', $query));
 

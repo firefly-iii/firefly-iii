@@ -31,6 +31,8 @@ use FireflyIII\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Log;
+use Closure;
+use Override;
 
 class IsAllowedGroupAction implements ValidationRule
 {
@@ -47,8 +49,8 @@ class IsAllowedGroupAction implements ValidationRule
     /**
      * @throws AuthorizationException
      */
-    #[\Override]
-    public function validate(string $attribute, mixed $value, \Closure $fail): void
+    #[Override]
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if ('GET' === $this->methodName) {
             // need at least "read only rights".
@@ -69,7 +71,7 @@ class IsAllowedGroupAction implements ValidationRule
         $this->validateUserGroup((int) $value, $fail);
     }
 
-    private function validateUserGroup(int $userGroupId, \Closure $fail): void
+    private function validateUserGroup(int $userGroupId, Closure $fail): void
     {
         Log::debug(sprintf('validateUserGroup: %s', static::class));
         if (!auth()->check()) {

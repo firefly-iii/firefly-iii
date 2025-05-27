@@ -37,6 +37,8 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Override;
+use stdClass;
 
 /**
  * Class AccountRepository
@@ -47,7 +49,7 @@ class AccountRepository implements AccountRepositoryInterface
 {
     use UserGroupTrait;
 
-    #[\Override]
+    #[Override]
     public function countAccounts(array $types): int
     {
         $query = $this->userGroup->accounts();
@@ -120,7 +122,7 @@ class AccountRepository implements AccountRepositoryInterface
         return $account;
     }
 
-    #[\Override]
+    #[Override]
     public function getAccountBalances(Account $account): Collection
     {
         return $account->accountBalances;
@@ -172,7 +174,7 @@ class AccountRepository implements AccountRepositoryInterface
         return $account;
     }
 
-    #[\Override]
+    #[Override]
     public function getAccountTypes(Collection $accounts): Collection
     {
         return AccountType::leftJoin('accounts', 'accounts.account_type_id', '=', 'account_types.id')
@@ -195,7 +197,7 @@ class AccountRepository implements AccountRepositoryInterface
         return $query->get(['accounts.*']);
     }
 
-    #[\Override]
+    #[Override]
     public function getAccountsInOrder(array $types, array $sort, int $startRow, int $endRow): Collection
     {
         $query = $this->userGroup->accounts();
@@ -235,7 +237,7 @@ class AccountRepository implements AccountRepositoryInterface
         return $query->get(['accounts.*']);
     }
 
-    #[\Override]
+    #[Override]
     public function getLastActivity(Collection $accounts): array
     {
         return Transaction::whereIn('account_id', $accounts->pluck('id')->toArray())
@@ -245,7 +247,7 @@ class AccountRepository implements AccountRepositoryInterface
         ;
     }
 
-    #[\Override]
+    #[Override]
     public function getMetaValues(Collection $accounts, array $fields): Collection
     {
         $query = AccountMeta::whereIn('account_id', $accounts->pluck('id')->toArray());
@@ -256,7 +258,7 @@ class AccountRepository implements AccountRepositoryInterface
         return $query->get(['account_meta.id', 'account_meta.account_id', 'account_meta.name', 'account_meta.data']);
     }
 
-    #[\Override]
+    #[Override]
     public function getObjectGroups(Collection $accounts): array
     {
         $groupIds = [];
@@ -265,14 +267,14 @@ class AccountRepository implements AccountRepositoryInterface
             ->whereIn('object_groupable_id', $accounts->pluck('id')->toArray())->get()
         ;
 
-        /** @var \stdClass $row */
+        /** @var stdClass $row */
         foreach ($set as $row) {
             $groupIds[] = $row->object_group_id;
         }
         $groupIds = array_unique($groupIds);
         $groups   = ObjectGroup::whereIn('id', $groupIds)->get();
 
-        /** @var \stdClass $row */
+        /** @var stdClass $row */
         foreach ($set as $row) {
             if (!array_key_exists($row->object_groupable_id, $return)) {
                 /** @var null|ObjectGroup $group */
@@ -368,7 +370,7 @@ class AccountRepository implements AccountRepositoryInterface
         return $query->get(['accounts.*']);
     }
 
-    #[\Override]
+    #[Override]
     public function update(Account $account, array $data): Account
     {
         /** @var AccountUpdateService $service */

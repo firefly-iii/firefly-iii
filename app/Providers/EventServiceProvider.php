@@ -101,6 +101,7 @@ use FireflyIII\Models\WebhookMessage;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Laravel\Passport\Events\AccessTokenCreated;
+use Override;
 
 /**
  * Class EventServiceProvider.
@@ -260,7 +261,7 @@ class EventServiceProvider extends ServiceProvider
     /**
      * Register any events for your application.
      */
-    #[\Override]
+    #[Override]
     public function boot(): void
     {
         $this->registerObservers();

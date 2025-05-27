@@ -27,6 +27,7 @@ use FireflyIII\Repositories\Bill\BillRepository;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use Override;
 
 /**
  * Class BillServiceProvider.
@@ -41,7 +42,7 @@ class BillServiceProvider extends ServiceProvider
     /**
      * Register the application services.
      */
-    #[\Override]
+    #[Override]
     public function register(): void
     {
         $this->app->bind(

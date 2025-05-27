@@ -35,6 +35,8 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Export\ExportDataGenerator;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
+use Exception;
+use InvalidArgumentException;
 
 class ExportsData extends Command
 {
@@ -139,7 +141,7 @@ class ExportsData extends Command
 
     /**
      * @throws FireflyException
-     * @throws \Exception
+     * @throws Exception
      */
     private function parseOptions(): array
     {
@@ -169,7 +171,7 @@ class ExportsData extends Command
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function getDateParameter(string $field): Carbon
     {
@@ -183,7 +185,7 @@ class ExportsData extends Command
         if (is_string($this->option($field))) {
             try {
                 $date = Carbon::createFromFormat('!Y-m-d', $this->option($field));
-            } catch (\InvalidArgumentException $e) {
+            } catch (InvalidArgumentException $e) {
                 app('log')->error($e->getMessage());
                 $this->friendlyError(sprintf('%s date "%s" must be formatted YYYY-MM-DD. Field will be ignored.', $field, $this->option('start')));
                 $error = true;

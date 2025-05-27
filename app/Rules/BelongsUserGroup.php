@@ -33,6 +33,7 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\UserGroup;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Closure;
 
 /**
  * Class BelongsUserGroup
@@ -47,7 +48,7 @@ class BelongsUserGroup implements ValidationRule
      */
     public function __construct(private readonly UserGroup $userGroup) {}
 
-    public function validate(string $attribute, mixed $value, \Closure $fail): void
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $attribute = $this->parseAttribute($attribute);
         if (!auth()->check()) {

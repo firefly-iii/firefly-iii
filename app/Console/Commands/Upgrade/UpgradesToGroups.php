@@ -36,6 +36,7 @@ use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Exception;
 
 class UpgradesToGroups extends Command
 {
@@ -103,7 +104,7 @@ class UpgradesToGroups extends Command
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function makeGroupsFromSplitJournals(): void
     {
@@ -119,7 +120,7 @@ class UpgradesToGroups extends Command
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function makeMultiGroup(TransactionJournal $journal): void
     {

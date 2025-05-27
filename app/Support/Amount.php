@@ -31,6 +31,7 @@ use FireflyIII\Models\UserGroup;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use NumberFormatter;
 
 /**
  * Class Amount.
@@ -60,10 +61,10 @@ class Amount
         $rounded = app('steam')->bcround($amount, $decimalPlaces);
         $coloured ??= true;
 
-        $fmt     = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
-        $fmt->setSymbol(\NumberFormatter::CURRENCY_SYMBOL, $symbol);
-        $fmt->setAttribute(\NumberFormatter::MIN_FRACTION_DIGITS, $decimalPlaces);
-        $fmt->setAttribute(\NumberFormatter::MAX_FRACTION_DIGITS, $decimalPlaces);
+        $fmt     = new NumberFormatter($locale, NumberFormatter::CURRENCY);
+        $fmt->setSymbol(NumberFormatter::CURRENCY_SYMBOL, $symbol);
+        $fmt->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, $decimalPlaces);
+        $fmt->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $decimalPlaces);
         $result  = (string) $fmt->format((float) $rounded); // intentional float
 
         if (true === $coloured) {
@@ -262,10 +263,10 @@ class Amount
         $info['n_sep_by_space']    = $this->getLocaleField($info, 'n_sep_by_space');
         $info['p_sep_by_space']    = $this->getLocaleField($info, 'p_sep_by_space');
 
-        $fmt                       = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
+        $fmt                       = new NumberFormatter($locale, NumberFormatter::CURRENCY);
 
-        $info['mon_decimal_point'] = $fmt->getSymbol(\NumberFormatter::MONETARY_SEPARATOR_SYMBOL);
-        $info['mon_thousands_sep'] = $fmt->getSymbol(\NumberFormatter::MONETARY_GROUPING_SEPARATOR_SYMBOL);
+        $info['mon_decimal_point'] = $fmt->getSymbol(NumberFormatter::MONETARY_SEPARATOR_SYMBOL);
+        $info['mon_thousands_sep'] = $fmt->getSymbol(NumberFormatter::MONETARY_GROUPING_SEPARATOR_SYMBOL);
 
         return $info;
     }

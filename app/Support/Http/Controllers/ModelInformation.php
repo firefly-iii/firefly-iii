@@ -32,6 +32,7 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use Throwable;
 
 /**
  * Trait ModelInformation
@@ -55,7 +56,7 @@ trait ModelInformation
                     'count'      => 1,
                 ]
             )->render();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             app('log')->error(sprintf('Throwable was thrown in getActionsForBill(): %s', $e->getMessage()));
             app('log')->error($e->getTraceAsString());
             $result = 'Could not render view. See log files.';
@@ -142,7 +143,7 @@ trait ModelInformation
                         'triggers'   => $triggers,
                     ]
                 )->render();
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 app('log')->debug(sprintf('Throwable was thrown in getTriggersForBill(): %s', $e->getMessage()));
                 app('log')->debug($e->getTraceAsString());
 
@@ -258,7 +259,7 @@ trait ModelInformation
                     'triggers'   => $triggers,
                 ];
                 $string     = view('rules.partials.trigger', $renderInfo)->render();
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 app('log')->debug(sprintf('Throwable was thrown in getTriggersForJournal(): %s', $e->getMessage()));
                 app('log')->debug($e->getTraceAsString());
 

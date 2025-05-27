@@ -39,6 +39,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Exception;
 
 /**
  * Class CategoryRepository.
@@ -271,7 +272,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function lastUseDate(Category $category, Collection $accounts): ?Carbon
     {
@@ -314,7 +315,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function getLastTransactionDate(Category $category, Collection $accounts): ?Carbon
     {
@@ -347,7 +348,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function update(Category $category, array $data): Category
     {

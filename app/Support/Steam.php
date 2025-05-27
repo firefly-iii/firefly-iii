@@ -34,6 +34,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Exception;
+use ValueError;
 
 /**
  * Class Steam.
@@ -466,7 +468,7 @@ class Steam
 
         try {
             $hostName = gethostbyaddr($ipAddress);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             app('log')->error($e->getMessage());
             $hostName = $ipAddress;
         }
@@ -673,7 +675,7 @@ class Steam
             if (-1 === bccomp($amount, '0')) {
                 $amount = bcmul($amount, '-1');
             }
-        } catch (\ValueError $e) {
+        } catch (ValueError $e) {
             Log::error(sprintf('ValueError in Steam::positive("%s"): %s', $amount, $e->getMessage()));
             Log::error($e->getTraceAsString());
 

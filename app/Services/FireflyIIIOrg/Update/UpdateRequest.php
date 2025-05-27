@@ -29,6 +29,7 @@ use FireflyIII\Events\NewVersionAvailable;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Log;
+use JsonException;
 
 /**
  * Class UpdateRequest
@@ -100,7 +101,7 @@ class UpdateRequest implements UpdateRequestInterface
 
         try {
             $json = \Safe\json_decode($body, true, 512, JSON_THROW_ON_ERROR);
-        } catch (\JsonException) {
+        } catch (JsonException) {
             Log::error('Body is not valid JSON');
             Log::error($body);
             $return['message'] = 'Invalid JSON :(';

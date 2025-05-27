@@ -41,6 +41,7 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Override;
 
 /**
  * Class PiggyBankRepository.
@@ -390,7 +391,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         return $balance;
     }
 
-    #[\Override]
+    #[Override]
     public function purgeAll(): void
     {
         PiggyBank::withTrashed()
@@ -407,7 +408,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         ;
     }
 
-    #[\Override]
+    #[Override]
     public function resetOrder(): void
     {
         $factory       = new PiggyBankFactory();

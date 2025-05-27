@@ -31,6 +31,7 @@ use FireflyIII\Repositories\ExchangeRate\ExchangeRateRepository;
 use FireflyIII\Repositories\ExchangeRate\ExchangeRateRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use Override;
 
 /**
  * Class CurrencyServiceProvider.
@@ -45,7 +46,7 @@ class CurrencyServiceProvider extends ServiceProvider
     /**
      * Register the application services.
      */
-    #[\Override]
+    #[Override]
     public function register(): void
     {
         $this->app->bind(

@@ -35,6 +35,8 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use Override;
+use ValueError;
 
 /**
  * Class UserGroupRepository
@@ -176,13 +178,13 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
         return UserGroup::all();
     }
 
-    #[\Override]
+    #[Override]
     public function getById(int $id): ?UserGroup
     {
         return UserGroup::find($id);
     }
 
-    #[\Override]
+    #[Override]
     public function getMembershipsFromGroupId(int $groupId): Collection
     {
         return $this->user->groupMemberships()->where('user_group_id', $groupId)->get();
@@ -286,7 +288,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
         foreach ($rolesSimplified as $role) {
             try {
                 $enum = UserRoleEnum::from($role);
-            } catch (\ValueError) {
+            } catch (ValueError) {
                 // TODO error message
                 continue;
             }
@@ -313,7 +315,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
         return $roles;
     }
 
-    #[\Override]
+    #[Override]
     public function useUserGroup(UserGroup $userGroup): void
     {
         $this->user->user_group_id = $userGroup->id;

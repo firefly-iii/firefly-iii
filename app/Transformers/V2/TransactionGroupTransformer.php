@@ -40,6 +40,7 @@ use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\NullArrayObject;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use stdClass;
 
 /**
  * Class TransactionGroupTransformer
@@ -169,7 +170,7 @@ class TransactionGroupTransformer extends AbstractTransformer
             ->get(['tag_transaction_journal.transaction_journal_id', 'tags.tag'])
         ;
 
-        /** @var \stdClass $tag */
+        /** @var stdClass $tag */
         foreach ($tags as $tag) {
             $id                            = (int) $tag->transaction_journal_id;
             $this->journals[$id]['tags'][] = $tag->tag;

@@ -53,6 +53,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use function Safe\file_get_contents;
 use function Safe\ini_get;
 
+use const PHP_INT_SIZE;
+use const PHP_SAPI;
+
 /**
  * Class DebugController
  */
@@ -177,8 +180,8 @@ class DebugController extends Controller
             'php_version'     => PHP_VERSION,
             'php_os'          => PHP_OS,
             'uname'           => php_uname('m'),
-            'interface'       => \PHP_SAPI,
-            'bits'            => \PHP_INT_SIZE * 8,
+            'interface'       => PHP_SAPI,
+            'bits'            => PHP_INT_SIZE * 8,
             'bcscale'         => bcscale(),
             'display_errors'  => ini_get('display_errors'),
             'error_reporting' => $this->errorReporting((int) ini_get('error_reporting')),

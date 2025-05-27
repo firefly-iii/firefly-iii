@@ -25,6 +25,7 @@ namespace Database\Seeders;
 
 use FireflyIII\Models\Role;
 use Illuminate\Database\Seeder;
+use PDOException;
 
 /**
  * Class PermissionSeeder.
@@ -49,7 +50,7 @@ class PermissionSeeder extends Seeder
             if (null === Role::where('name', $role['name'])->first()) {
                 try {
                     Role::create($role);
-                } catch (\PDOException $e) {
+                } catch (PDOException $e) {
                     // @ignoreException
                 }
             }

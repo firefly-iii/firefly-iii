@@ -29,6 +29,7 @@ use FireflyIII\Models\UserGroup;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\integration\TestCase;
 use FireflyIII\User;
+use Override;
 
 /**
  * Class BudgetControllerTest
@@ -44,7 +45,7 @@ final class BudgetControllerTest extends TestCase
      */
     use RefreshDatabase;
 
-    #[\Override]
+    #[Override]
     protected function createAuthenticatedUser(): User
     {
         $userGroup           = UserGroup::create(['title' => 'Test Group']);

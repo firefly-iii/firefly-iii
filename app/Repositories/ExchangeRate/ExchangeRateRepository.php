@@ -31,24 +31,25 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Override;
 
 class ExchangeRateRepository implements ExchangeRateRepositoryInterface, UserGroupInterface
 {
     use UserGroupTrait;
 
-    #[\Override]
+    #[Override]
     public function deleteRate(CurrencyExchangeRate $rate): void
     {
         $this->userGroup->currencyExchangeRates()->where('id', $rate->id)->delete();
     }
 
-    #[\Override]
+    #[Override]
     public function getAll(): Collection
     {
         return $this->userGroup->currencyExchangeRates()->orderBy('date', 'ASC')->get();
     }
 
-    #[\Override]
+    #[Override]
     public function getRates(TransactionCurrency $from, TransactionCurrency $to): Collection
     {
         // orderBy('date', 'DESC')->toRawSql();
@@ -71,7 +72,7 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface, UserGro
 
     }
 
-    #[\Override]
+    #[Override]
     public function getSpecificRateOnDate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): ?CurrencyExchangeRate
     {
         /** @var null|CurrencyExchangeRate */
@@ -84,7 +85,7 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface, UserGro
         ;
     }
 
-    #[\Override]
+    #[Override]
     public function storeExchangeRate(TransactionCurrency $from, TransactionCurrency $to, string $rate, Carbon $date): CurrencyExchangeRate
     {
         $object                   = new CurrencyExchangeRate();
@@ -100,7 +101,7 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface, UserGro
         return $object;
     }
 
-    #[\Override]
+    #[Override]
     public function updateExchangeRate(CurrencyExchangeRate $object, string $rate, ?Carbon $date = null): CurrencyExchangeRate
     {
         $object->rate = $rate;

@@ -34,6 +34,7 @@ use FireflyIII\Support\Cronjobs\RecurringCronjob;
 use FireflyIII\Support\Cronjobs\UpdateCheckCronjob;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use InvalidArgumentException;
 
 class Cron extends Command
 {
@@ -62,7 +63,7 @@ class Cron extends Command
 
         try {
             $date = new Carbon($this->option('date'));
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             $this->friendlyError(sprintf('"%s" is not a valid date', $this->option('date')));
         }
         $force = (bool) $this->option('force'); // @phpstan-ignore-line

@@ -28,12 +28,13 @@ use FireflyIII\Helpers\Update\UpdateTrait;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 class UpdateCheckCronjob extends AbstractCronjob
 {
     use UpdateTrait;
 
-    #[\Override]
+    #[Override]
     public function fire(): void
     {
         Log::debug('Now in checkForUpdates()');

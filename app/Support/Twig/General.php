@@ -37,13 +37,14 @@ use Illuminate\Support\Facades\Route;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
+use Override;
 
 /**
  * Class TwigSupport.
  */
 class General extends AbstractExtension
 {
-    #[\Override]
+    #[Override]
     public function getFilters(): array
     {
         return [
@@ -187,7 +188,7 @@ class General extends AbstractExtension
         );
     }
 
-    #[\Override]
+    #[Override]
     public function getFunctions(): array
     {
         return [

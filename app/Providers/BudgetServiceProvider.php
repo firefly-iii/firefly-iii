@@ -35,6 +35,7 @@ use FireflyIII\Repositories\Budget\OperationsRepository;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use Override;
 
 /**
  * Class BudgetServiceProvider.
@@ -51,7 +52,7 @@ class BudgetServiceProvider extends ServiceProvider
      *
      * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
-    #[\Override]
+    #[Override]
     public function register(): void
     {
         // reference to auth is not understood by phpstan.

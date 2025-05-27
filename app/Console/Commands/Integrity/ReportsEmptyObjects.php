@@ -30,6 +30,7 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
 use Illuminate\Console\Command;
+use stdClass;
 
 class ReportsEmptyObjects extends Command
 {
@@ -66,7 +67,7 @@ class ReportsEmptyObjects extends Command
             ->get(['budgets.id', 'budgets.name', 'budgets.user_id', 'users.email'])
         ;
 
-        /** @var \stdClass $entry */
+        /** @var stdClass $entry */
         foreach ($set as $entry) {
             $line = sprintf(
                 'User #%d (%s) has budget #%d ("%s") which has no transaction journals.',
@@ -92,7 +93,7 @@ class ReportsEmptyObjects extends Command
             ->get(['categories.id', 'categories.name', 'categories.user_id', 'users.email'])
         ;
 
-        /** @var \stdClass $entry */
+        /** @var stdClass $entry */
         foreach ($set as $entry) {
             $line = sprintf(
                 'User #%d (%s) has category #%d ("%s") which has no transaction journals.',
@@ -115,7 +116,7 @@ class ReportsEmptyObjects extends Command
             ->get(['tags.id', 'tags.tag', 'tags.user_id', 'users.email'])
         ;
 
-        /** @var \stdClass $entry */
+        /** @var stdClass $entry */
         foreach ($set as $entry) {
             $line = sprintf(
                 'User #%d (%s) has tag #%d ("%s") which has no transaction journals.',
@@ -142,7 +143,7 @@ class ReportsEmptyObjects extends Command
             )
         ;
 
-        /** @var \stdClass $entry */
+        /** @var stdClass $entry */
         foreach ($set as $entry) {
             $line = 'User #%d (%s) has account #%d ("%s") which has no transactions.';
             $line = sprintf($line, $entry->user_id, $entry->email, $entry->id, $entry->name);

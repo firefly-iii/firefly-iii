@@ -263,7 +263,7 @@
                                 {% if currency.id == transaction.currency_id %}
                                     {{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}
                                 {% endif %}
-                                {% if currency.id == transaction.foreign_currency_id %}
+                                {% if currency.id == transaction.foreign_currency_id and null != transaction.destination_balance_after %}
                                     {{ formatAmountBySymbol(transaction.destination_balance_after, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }}
                                 {% endif %}
 

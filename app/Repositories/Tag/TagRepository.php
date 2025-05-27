@@ -37,6 +37,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Exception;
 
 /**
  * Class TagRepository.
@@ -51,7 +52,7 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function destroy(Tag $tag): bool
     {

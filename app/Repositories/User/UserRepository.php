@@ -34,6 +34,8 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Exception;
+use Override;
 
 /**
  * Class UserRepository.
@@ -44,7 +46,7 @@ class UserRepository implements UserRepositoryInterface
      * This updates the users email address and records some things so it can be confirmed or undone later.
      * The user is blocked until the change is confirmed.
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @see updateEmail
      */
@@ -99,7 +101,7 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function destroy(User $user): bool
     {
@@ -243,7 +245,7 @@ class UserRepository implements UserRepositoryInterface
         return false;
     }
 
-    #[\Override]
+    #[Override]
     public function getUserGroups(User $user): Collection
     {
         $memberships = $user->groupMemberships()->get();

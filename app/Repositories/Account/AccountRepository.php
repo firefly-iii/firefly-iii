@@ -45,6 +45,7 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
+use Override;
 
 /**
  * Class AccountRepository.
@@ -162,7 +163,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         return $account;
     }
 
-    #[\Override]
+    #[Override]
     public function getAccountBalances(Account $account): Collection
     {
         return $account->accountBalances;
@@ -533,7 +534,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         return null;
     }
 
-    #[\Override]
+    #[Override]
     public function periodCollection(Account $account, Carbon $start, Carbon $end): array
     {
         return $account->transactions()

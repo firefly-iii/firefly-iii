@@ -25,6 +25,7 @@ namespace FireflyIII\Providers;
 
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
+use Override;
 
 /**
  * Class RouteServiceProvider
@@ -37,7 +38,7 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * Define the routes for the application.
      */
-    #[\Override]
+    #[Override]
     public function boot(): void
     {
         $this->routes(function (): void {

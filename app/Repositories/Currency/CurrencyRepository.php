@@ -42,6 +42,7 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class CurrencyRepository.
@@ -277,7 +278,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         return $result;
     }
 
-    #[\Override]
+    #[Override]
     public function find(int $currencyId): ?TransactionCurrency
     {
         return TransactionCurrency::find($currencyId);

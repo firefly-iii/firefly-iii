@@ -25,6 +25,7 @@ namespace FireflyIII\Support;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use JsonException;
 
 /**
  * Class CacheProperties.
@@ -80,7 +81,7 @@ class CacheProperties
         foreach ($this->properties as $property) {
             try {
                 $content = sprintf('%s%s', $content, \Safe\json_encode($property, JSON_THROW_ON_ERROR));
-            } catch (\JsonException) {
+            } catch (JsonException) {
                 // @ignoreException
                 $content = sprintf('%s%s', $content, hash('sha256', (string) time()));
             }

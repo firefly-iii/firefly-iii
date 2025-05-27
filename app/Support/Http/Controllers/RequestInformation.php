@@ -34,6 +34,7 @@ use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Route as RouteFacade;
+use Hash;
 
 /**
  * Trait RequestInformation
@@ -169,7 +170,7 @@ trait RequestInformation
      */
     final protected function validatePassword(User $user, string $current, string $new): bool // get request info
     {
-        if (!\Hash::check($current, $user->password)) {
+        if (!Hash::check($current, $user->password)) {
             throw new ValidationException((string) trans('firefly.invalid_current_password'));
         }
 

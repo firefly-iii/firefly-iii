@@ -24,7 +24,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Exceptions;
 
-class BadHttpHeaderException extends \Exception
+use Exception;
+
+class BadHttpHeaderException extends Exception
 {
     public int $statusCode = 406;
 }

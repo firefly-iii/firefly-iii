@@ -48,6 +48,7 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Exception;
 
 /**
  * Class TransactionGroupRepository
@@ -291,7 +292,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
     /**
      * Return object with all found meta field things as Carbon objects.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function getMetaDateFields(int $journalId, array $fields): NullArrayObject
     {

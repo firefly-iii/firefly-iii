@@ -44,6 +44,9 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use ErrorException;
+use Override;
+use Throwable;
 
 // temp
 /**
@@ -52,7 +55,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class Handler extends ExceptionHandler
 {
     /**
-     * @var array<int, class-string<\Throwable>>
+     * @var array<int, class-string<Throwable>>
      */
     protected $dontReport
         = [
@@ -70,7 +73,7 @@ class Handler extends ExceptionHandler
     /**
      * Register the exception handling callbacks for the application.
      */
-    #[\Override]
+    #[Override]
     public function register(): void {}
 
     /**
@@ -79,13 +82,13 @@ class Handler extends ExceptionHandler
      *
      * @param Request $request
      *
-     * @throws \Throwable
+     * @throws Throwable
      *
      * @SuppressWarnings("PHPMD.NPathComplexity")
      * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      */
-    #[\Override]
-    public function render($request, \Throwable $e): Response
+    #[Override]
+    public function render($request, Throwable $e): Response
     {
         $expectsJson = $request->expectsJson();
 
@@ -188,7 +191,7 @@ class Handler extends ExceptionHandler
             return response()->view('errors.DatabaseException', ['exception' => $e, 'debug' => $isDebug], 500);
         }
 
-        if ($e instanceof FireflyException || $e instanceof \ErrorException || $e instanceof OAuthServerException) {
+        if ($e instanceof FireflyException || $e instanceof ErrorException || $e instanceof OAuthServerException) {
             app('log')->debug('Return Firefly III error view.');
             $isDebug = config('app.debug');
 
@@ -203,10 +206,10 @@ class Handler extends ExceptionHandler
     /**
      * Report or log an exception.
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
-    #[\Override]
-    public function report(\Throwable $e): void
+    #[Override]
+    public function report(Throwable $e): void
     {
         $doMailError = (bool) config('firefly.send_error_message');
         if ($this->shouldntReportLocal($e) || !$doMailError) {
@@ -250,7 +253,7 @@ class Handler extends ExceptionHandler
         parent::report($e);
     }
 
-    private function shouldntReportLocal(\Throwable $e): bool
+    private function shouldntReportLocal(Throwable $e): bool
     {
         return null !== Arr::first(
             $this->dontReport,
@@ -263,7 +266,7 @@ class Handler extends ExceptionHandler
      *
      * @param Request $request
      */
-    #[\Override]
+    #[Override]
     protected function invalid($request, LaravelValidationException $exception): \Illuminate\Http\Response|JsonResponse|RedirectResponse
     {
         // protect against open redirect when submitting invalid forms.

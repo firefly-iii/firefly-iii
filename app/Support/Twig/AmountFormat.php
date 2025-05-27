@@ -31,13 +31,14 @@ use Illuminate\Support\Facades\Log;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
+use Override;
 
 /**
  * Contains all amount formatting routines.
  */
 class AmountFormat extends AbstractExtension
 {
-    #[\Override]
+    #[Override]
     public function getFilters(): array
     {
         return [
@@ -72,7 +73,7 @@ class AmountFormat extends AbstractExtension
         );
     }
 
-    #[\Override]
+    #[Override]
     public function getFunctions(): array
     {
         return [

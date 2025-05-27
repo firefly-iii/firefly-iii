@@ -26,13 +26,15 @@ namespace FireflyIII\Rules\Account;
 
 use FireflyIII\Support\Http\Api\AccountFilter;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Closure;
+use Override;
 
 class IsValidAccountType implements ValidationRule
 {
     use AccountFilter;
 
-    #[\Override]
-    public function validate(string $attribute, mixed $value, \Closure $fail): void
+    #[Override]
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         // only check the type.
         if (array_key_exists('type', $value)) {

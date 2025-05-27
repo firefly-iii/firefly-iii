@@ -26,6 +26,8 @@ namespace FireflyIII\Rules;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Validator;
+use Closure;
+use JsonException;
 
 /**
  * Class IsValidBulkClause
@@ -49,7 +51,7 @@ class IsValidBulkClause implements ValidationRule
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function validate(string $attribute, mixed $value, \Closure $fail): void
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $result = $this->basicValidation((string) $value);
         if (false === $result) {
@@ -64,7 +66,7 @@ class IsValidBulkClause implements ValidationRule
     {
         try {
             $array = \Safe\json_decode($value, true, 8, JSON_THROW_ON_ERROR);
-        } catch (\JsonException) {
+        } catch (JsonException) {
             $this->error = (string) trans('validation.json');
 
             return false;

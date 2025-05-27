@@ -39,6 +39,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 class TransactionGroupEnrichment implements EnrichmentInterface
 {
@@ -64,7 +65,7 @@ class TransactionGroupEnrichment implements EnrichmentInterface
         $this->dateFields      = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date'];
     }
 
-    #[\Override]
+    #[Override]
     public function enrichSingle(array|Model $model): array|TransactionGroup
     {
         Log::debug(__METHOD__);
@@ -78,7 +79,7 @@ class TransactionGroupEnrichment implements EnrichmentInterface
         throw new FireflyException('Cannot enrich single model.');
     }
 
-    #[\Override]
+    #[Override]
     public function enrich(Collection $collection): Collection
     {
         Log::debug(sprintf('Now doing account enrichment for %d transaction group(s)', $collection->count()));

@@ -45,6 +45,8 @@ use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Closure;
+use Override;
 
 /**
  * Class GroupCollector
@@ -582,7 +584,7 @@ class GroupCollector implements GroupCollectorInterface
             $result['date']->setTimezone(config('app.timezone'));
             $result['created_at']->setTimezone(config('app.timezone'));
             $result['updated_at']->setTimezone(config('app.timezone'));
-        } catch (\Exception $e) { // intentional generic exception
+        } catch (Exception $e) { // intentional generic exception
             app('log')->error($e->getMessage());
 
             throw new FireflyException($e->getMessage(), 0, $e);
@@ -778,7 +780,7 @@ class GroupCollector implements GroupCollectorInterface
         app('log')->debug(sprintf('GroupCollector: postFilterCollection has %d filter(s) and %d transaction(s).', count($this->postFilters), count($currentCollection)));
 
         /**
-         * @var \Closure $function
+         * @var Closure $function
          */
         foreach ($this->postFilters as $function) {
             app('log')->debug('Applying filter...');
@@ -812,7 +814,7 @@ class GroupCollector implements GroupCollectorInterface
         return $currentCollection;
     }
 
-    #[\Override]
+    #[Override]
     public function sortCollection(Collection $collection): Collection
     {
         /**
@@ -1004,7 +1006,7 @@ class GroupCollector implements GroupCollectorInterface
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     public function setSorting(array $instructions): GroupCollectorInterface
     {
         $this->sorting = $instructions;

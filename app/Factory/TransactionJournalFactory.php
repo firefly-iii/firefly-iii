@@ -51,6 +51,8 @@ use FireflyIII\User;
 use FireflyIII\Validation\AccountValidator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Exception;
+use JsonException;
 
 /**
  * Class TransactionJournalFactory
@@ -76,7 +78,7 @@ class TransactionJournalFactory
     /**
      * Constructor.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct()
     {
@@ -324,7 +326,7 @@ class TransactionJournalFactory
 
         try {
             $json = \Safe\json_encode($dataRow, JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
+        } catch (JsonException $e) {
             Log::error(sprintf('Could not encode dataRow: %s', $e->getMessage()));
             $json = microtime();
         }

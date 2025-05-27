@@ -36,6 +36,7 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class BudgetLimitRepository
@@ -254,7 +255,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface, UserGroup
         ;
     }
 
-    #[\Override]
+    #[Override]
     public function getNoteText(BudgetLimit $budgetLimit): string
     {
         return (string) $budgetLimit->notes()->first()?->text;
@@ -323,7 +324,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface, UserGroup
         ;
     }
 
-    #[\Override]
+    #[Override]
     public function setNoteText(BudgetLimit $budgetLimit, string $text): void
     {
         $dbNote = $budgetLimit->notes()->first();

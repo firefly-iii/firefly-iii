@@ -45,6 +45,8 @@ use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
 use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;
 use PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException;
 use PragmaRX\Google2FALaravel\Facade;
+use Config;
+use ValueError;
 
 /**
  * Class FireflyValidator.
@@ -216,7 +218,7 @@ class FireflyValidator extends Validator
 
         try {
             $checksum = bcmod($iban, '97');
-        } catch (\ValueError $e) { // @phpstan-ignore-line
+        } catch (ValueError $e) { // @phpstan-ignore-line
             $message = sprintf('Could not validate IBAN check value "%s" (IBAN "%s")', $iban, $value);
             Log::error($message);
             Log::error($e->getTraceAsString());
@@ -537,7 +539,7 @@ class FireflyValidator extends Validator
     private function validateByAccountTypeString(string $value, array $parameters, string $type): bool
     {
         /** @var null|array $search */
-        $search         = \Config::get('firefly.accountTypeByIdentifier.'.$type);
+        $search         = Config::get('firefly.accountTypeByIdentifier.'.$type);
 
         if (null === $search) {
             return false;
