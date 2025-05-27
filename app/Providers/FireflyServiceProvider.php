@@ -76,6 +76,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use Override;
 
 /**
  * Class FireflyServiceProvider.
@@ -99,7 +100,7 @@ class FireflyServiceProvider extends ServiceProvider
      *
      * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
-    #[\Override]
+    #[Override]
     public function register(): void
     {
         $this->app->bind(

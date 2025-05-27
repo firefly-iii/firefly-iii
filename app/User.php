@@ -66,6 +66,7 @@ use Illuminate\Support\Str;
 use Laravel\Passport\HasApiTokens;
 use NotificationChannels\Pushover\PushoverReceiver;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Exception;
 
 class User extends Authenticatable
 {
@@ -166,7 +167,7 @@ class User extends Authenticatable
     /**
      * Generates access token.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function generateAccessToken(): string
     {

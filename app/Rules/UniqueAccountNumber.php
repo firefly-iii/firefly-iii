@@ -28,6 +28,9 @@ use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Closure;
+
+use function Safe\json_encode;
 
 /**
  * Class UniqueAccountNumber
@@ -66,7 +69,7 @@ class UniqueAccountNumber implements ValidationRule
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function validate(string $attribute, mixed $value, \Closure $fail): void
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (!auth()->check()) {
             return;
@@ -133,10 +136,10 @@ class UniqueAccountNumber implements ValidationRule
             ->where('accounts.user_id', auth()->user()->id)
             ->where('account_types.type', $type)
             ->where('account_meta.name', '=', 'account_number')
-            ->where('account_meta.data', \Safe\json_encode($accountNumber))
+            ->where('account_meta.data', json_encode($accountNumber))
         ;
 
-        if (null !== $this->account) {
+        if ($this->account instanceof Account) {
             $query->where('accounts.id', '!=', $this->account->id);
         }
 

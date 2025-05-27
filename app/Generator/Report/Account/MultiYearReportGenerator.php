@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Generator\Report\Account;
 
+use Override;
+
 /**
  * Class MultiYearReportGenerator.
  */
@@ -31,7 +33,7 @@ class MultiYearReportGenerator extends MonthReportGenerator
     /**
      * Returns the preferred period.
      */
-    #[\Override]
+    #[Override]
     protected function preferredPeriod(): string
     {
         return 'year';

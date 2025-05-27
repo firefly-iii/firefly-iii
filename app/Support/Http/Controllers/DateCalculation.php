@@ -77,7 +77,7 @@ trait DateCalculation
             $step = '1M';
         }
         if ($months > 100) {
-            $step = '1Y';
+            return '1Y';
         }
 
         return $step;

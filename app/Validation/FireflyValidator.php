@@ -45,6 +45,12 @@ use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
 use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;
 use PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException;
 use PragmaRX\Google2FALaravel\Facade;
+use Config;
+use ValueError;
+
+use function Safe\preg_match;
+use function Safe\iconv;
+use function Safe\json_encode;
 
 /**
  * Class FireflyValidator.
@@ -111,7 +117,7 @@ class FireflyValidator extends Validator
             return false;
         }
         $regex  = '/^[a-z]{6}[0-9a-z]{2}([0-9a-z]{3})?\z/i';
-        $result = \Safe\preg_match($regex, $value);
+        $result = preg_match($regex, $value);
         if (false === $result || 0 === $result) {
             return false;
         }
@@ -201,7 +207,7 @@ class FireflyValidator extends Validator
         $value   = strtoupper($value);
 
         // replace characters outside of ASCI range.
-        $value   = (string) \Safe\iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $value);
+        $value   = (string) iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $value);
         $search  = [' ', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
         $replace = ['', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35'];
 
@@ -216,7 +222,7 @@ class FireflyValidator extends Validator
 
         try {
             $checksum = bcmod($iban, '97');
-        } catch (\ValueError $e) { // @phpstan-ignore-line
+        } catch (ValueError $e) { // @phpstan-ignore-line
             $message = sprintf('Could not validate IBAN check value "%s" (IBAN "%s")', $iban, $value);
             Log::error($message);
             Log::error($e->getTraceAsString());
@@ -537,7 +543,7 @@ class FireflyValidator extends Validator
     private function validateByAccountTypeString(string $value, array $parameters, string $type): bool
     {
         /** @var null|array $search */
-        $search         = \Config::get('firefly.accountTypeByIdentifier.'.$type);
+        $search         = Config::get('firefly.accountTypeByIdentifier.'.$type);
 
         if (null === $search) {
             return false;
@@ -635,7 +641,7 @@ class FireflyValidator extends Validator
             ->whereNull('accounts.deleted_at')
             ->where('accounts.user_id', auth()->user()->id)
             ->where('account_meta.name', 'account_number')
-            ->where('account_meta.data', \Safe\json_encode($value))
+            ->where('account_meta.data', json_encode($value))
         ;
 
         if ($accountId > 0) {

@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace Tests\unit\Support;
 
+use Override;
+use Iterator;
 use Carbon\Carbon;
 use FireflyIII\Support\Navigation;
 use Illuminate\Support\Facades\Log;
@@ -42,6 +44,7 @@ final class NavigationEndOfPeriodTest extends TestCase
 {
     private Navigation $navigation;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -55,35 +58,56 @@ final class NavigationEndOfPeriodTest extends TestCase
         self::assertSame($expected->toDateString(), $period->toDateString());
     }
 
-    public static function provideDates(): iterable
+    public static function provideDates(): Iterator
     {
-        return [
-            '1D'                            => ['frequency' => '1D', 'from' => Carbon::now(), 'expected' => Carbon::now()->endOfDay()],
-            'daily'                         => ['frequency' => 'daily', 'from' => Carbon::now(), 'expected' => Carbon::now()->endOfDay()],
-            '1W'                            => ['frequency' => '1W', 'from' => Carbon::now(), 'expected' => Carbon::now()->addWeek()->subDay()->endOfDay()],
-            'week'                          => ['frequency' => 'week', 'from' => Carbon::now(), 'expected' => Carbon::now()->addWeek()->subDay()->endOfDay()],
-            'weekly'                        => ['frequency' => 'weekly', 'from' => Carbon::now(), 'expected' => Carbon::now()->addWeek()->subDay()->endOfDay()],
-            'month'                         => ['frequency' => 'month', 'from' => Carbon::now(), 'expected' => Carbon::now()->addMonth()->subDay()->endOfDay()],
-            '1M'                            => ['frequency' => '1M', 'from' => Carbon::now(), 'expected' => Carbon::now()->addMonth()->subDay()->endOfDay()],
-            'monthly'                       => ['frequency' => 'monthly', 'from' => Carbon::now(), 'expected' => Carbon::now()->addMonth()->subDay()->endOfDay()],
-            '3M'                            => ['frequency' => '3M', 'from' => Carbon::now(), 'expected' => Carbon::now()->addQuarter()->subDay()->endOfDay()],
-            'quarter'                       => ['frequency' => 'quarter', 'from' => Carbon::now(), 'expected' => Carbon::now()->addQuarter()->subDay()->endOfDay()],
-            'quarterly'                     => ['frequency' => 'quarterly', 'from' => Carbon::now(), 'expected' => Carbon::now()->addQuarter()->subDay()->endOfDay()],
-            'year'                          => ['frequency' => 'year', 'from' => Carbon::now(), 'expected' => Carbon::now()->addYearNoOverflow()->subDay()->endOfDay()],
-            'yearly'                        => ['frequency' => 'yearly', 'from' => Carbon::now(), 'expected' => Carbon::now()->addYearNoOverflow()->subDay()->endOfDay()],
-            '1Y'                            => ['frequency' => '1Y', 'from' => Carbon::now(), 'expected' => Carbon::now()->addYearNoOverflow()->subDay()->endOfDay()],
-            'half-year'                     => ['frequency' => 'half-year', 'from' => Carbon::parse('2023-05-20'), 'expected' => Carbon::parse('2023-11-19')->endOfDay()],
-            '6M'                            => ['frequency' => '6M', 'from' => Carbon::parse('2023-08-20'), 'expected' => Carbon::parse('2024-02-19')],
-            'last7'                         => ['frequency' => 'last7', 'from' => Carbon::now(), 'expected' => Carbon::now()->addDays(7)->endOfDay()],
-            'last30'                        => ['frequency' => 'last30', 'from' => Carbon::now(), 'expected' => Carbon::now()->addDays(30)->endOfDay()],
-            'last90'                        => ['frequency' => 'last90', 'from' => Carbon::now(), 'expected' => Carbon::now()->addDays(90)->endOfDay()],
-            'last365'                       => ['frequency' => 'last365', 'from' => Carbon::now(), 'expected' => Carbon::now()->addDays(365)->endOfDay()],
-            'MTD'                           => ['frequency' => 'MTD', 'from' => Carbon::now(),
-                'expected'                                  => Carbon::now()->isSameMonth(Carbon::now()) ? Carbon::now()->endOfDay() : Carbon::now()->endOfMonth()],
-            'QTD'                           => ['frequency' => 'QTD', 'from' => Carbon::now(), 'expected' => Carbon::now()->firstOfQuarter()->startOfDay()],
-            'YTD'                           => ['frequency' => 'YTD', 'from' => Carbon::now(), 'expected' => Carbon::now()->firstOfYear()->startOfDay()],
-            'week 2023-08-05 to 2023-08-11' => ['frequency' => '1W', 'from' => Carbon::parse('2023-08-05'), 'expected' => Carbon::parse('2023-08-11')->endOfDay()],
-        ];
+        yield '1D' => ['1D', Carbon::now(), Carbon::now()->endOfDay()];
+
+        yield 'daily' => ['daily', Carbon::now(), Carbon::now()->endOfDay()];
+
+        yield '1W' => ['1W', Carbon::now(), Carbon::now()->addWeek()->subDay()->endOfDay()];
+
+        yield 'week' => ['week', Carbon::now(), Carbon::now()->addWeek()->subDay()->endOfDay()];
+
+        yield 'weekly' => ['weekly', Carbon::now(), Carbon::now()->addWeek()->subDay()->endOfDay()];
+
+        yield 'month' => ['month', Carbon::now(), Carbon::now()->addMonth()->subDay()->endOfDay()];
+
+        yield '1M' => ['1M', Carbon::now(), Carbon::now()->addMonth()->subDay()->endOfDay()];
+
+        yield 'monthly' => ['monthly', Carbon::now(), Carbon::now()->addMonth()->subDay()->endOfDay()];
+
+        yield '3M' => ['3M', Carbon::now(), Carbon::now()->addQuarter()->subDay()->endOfDay()];
+
+        yield 'quarter' => ['quarter', Carbon::now(), Carbon::now()->addQuarter()->subDay()->endOfDay()];
+
+        yield 'quarterly' => ['quarterly', Carbon::now(), Carbon::now()->addQuarter()->subDay()->endOfDay()];
+
+        yield 'year' => ['year', Carbon::now(), Carbon::now()->addYearNoOverflow()->subDay()->endOfDay()];
+
+        yield 'yearly' => ['yearly', Carbon::now(), Carbon::now()->addYearNoOverflow()->subDay()->endOfDay()];
+
+        yield '1Y' => ['1Y', Carbon::now(), Carbon::now()->addYearNoOverflow()->subDay()->endOfDay()];
+
+        yield 'half-year' => ['half-year', Carbon::parse('2023-05-20'), Carbon::parse('2023-11-19')->endOfDay()];
+
+        yield '6M' => ['6M', Carbon::parse('2023-08-20'), Carbon::parse('2024-02-19')];
+
+        yield 'last7' => ['last7', Carbon::now(), Carbon::now()->addDays(7)->endOfDay()];
+
+        yield 'last30' => ['last30', Carbon::now(), Carbon::now()->addDays(30)->endOfDay()];
+
+        yield 'last90' => ['last90', Carbon::now(), Carbon::now()->addDays(90)->endOfDay()];
+
+        yield 'last365' => ['last365', Carbon::now(), Carbon::now()->addDays(365)->endOfDay()];
+
+        yield 'MTD' => ['MTD', Carbon::now(),
+            Carbon::now()->isSameMonth(Carbon::now()) ? Carbon::now()->endOfDay() : Carbon::now()->endOfMonth()];
+
+        yield 'QTD' => ['QTD', Carbon::now(), Carbon::now()->firstOfQuarter()->startOfDay()];
+
+        yield 'YTD' => ['YTD', Carbon::now(), Carbon::now()->firstOfYear()->startOfDay()];
+
+        yield 'week 2023-08-05 to 2023-08-11' => ['1W', Carbon::parse('2023-08-05'), Carbon::parse('2023-08-11')->endOfDay()];
     }
 
     #[DataProvider('provideUnknownFrequencies')]
@@ -98,12 +122,12 @@ final class NavigationEndOfPeriodTest extends TestCase
         Log::shouldHaveReceived('error', [$expectedMessage]);
     }
 
-    public static function provideUnknownFrequencies(): iterable
+    public static function provideUnknownFrequencies(): Iterator
     {
-        return [
-            '1day'    => ['frequency' => '1day', 'from' => Carbon::now(), 'expected' => Carbon::now()],
-            'unknown' => ['frequency' => 'unknown', 'from' => Carbon::now(), 'expected' => Carbon::now()->startOfDay()],
-            'empty'   => ['frequency' => '', 'from' => Carbon::now(), 'expected' => Carbon::now()->startOfDay()],
-        ];
+        yield '1day' => ['1day', Carbon::now(), Carbon::now()];
+
+        yield 'unknown' => ['unknown', Carbon::now(), Carbon::now()->startOfDay()];
+
+        yield 'empty' => ['', Carbon::now(), Carbon::now()->startOfDay()];
     }
 }

@@ -149,10 +149,10 @@ class PopupReport implements PopupReportInterface
             ->setRange($attributes['startDate'], $attributes['endDate'])->withAccountInformation()
         ;
 
-        if (null !== $category) {
+        if ($category instanceof Category) {
             $collector->setCategory($category);
         }
-        if (null === $category) {
+        if (!$category instanceof Category) {
             $collector->withoutCategory();
         }
 

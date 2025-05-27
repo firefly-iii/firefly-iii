@@ -49,7 +49,7 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface, UserGroupIn
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->withoutCategory();
-        if (null !== $accounts && $accounts->count() > 0) {
+        if ($accounts instanceof Collection && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
         $journals  = $collector->getExtractedJournals();
@@ -95,7 +95,7 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface, UserGroupIn
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::DEPOSIT->value])->withoutCategory();
-        if (null !== $accounts && $accounts->count() > 0) {
+        if ($accounts instanceof Collection && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
         $journals  = $collector->getExtractedJournals();
@@ -140,7 +140,7 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface, UserGroupIn
         $collector  = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->withoutCategory();
 
-        if (null !== $accounts && $accounts->count() > 0) {
+        if ($accounts instanceof Collection && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
         $journals   = $collector->getExtractedJournals();
@@ -158,7 +158,7 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface, UserGroupIn
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::DEPOSIT->value])->withoutCategory();
 
-        if (null !== $accounts && $accounts->count() > 0) {
+        if ($accounts instanceof Collection && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
         $journals  = $collector->getExtractedJournals();
@@ -186,7 +186,7 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface, UserGroupIn
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::TRANSFER->value])->withoutCategory();
 
-        if (null !== $accounts && $accounts->count() > 0) {
+        if ($accounts instanceof Collection && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
         $journals  = $collector->getExtractedJournals();

@@ -26,13 +26,14 @@ namespace FireflyIII\Support\Twig;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
+use Override;
 
 /**
  * Class Budget.
  */
 class Translation extends AbstractExtension
 {
-    #[\Override]
+    #[Override]
     public function getFilters(): array
     {
         return [
@@ -44,7 +45,7 @@ class Translation extends AbstractExtension
         ];
     }
 
-    #[\Override]
+    #[Override]
     public function getFunctions(): array
     {
         return [

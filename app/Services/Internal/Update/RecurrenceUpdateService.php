@@ -145,7 +145,7 @@ class RecurrenceUpdateService
         app('log')->debug('Loop and find');
         foreach ($repetitions as $current) {
             $match  = $this->matchRepetition($recurrence, $current);
-            if (null === $match) {
+            if (!$match instanceof RecurrenceRepetition) {
                 throw new FireflyException('Cannot match recurring repetition to existing repetition. Not sure what to do. Break.');
             }
             $fields = [

@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Factory;
 
+use FireflyIII\Models\Bill;
+use FireflyIII\Models\PiggyBank;
 use Carbon\Carbon;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
@@ -51,6 +53,10 @@ use FireflyIII\User;
 use FireflyIII\Validation\AccountValidator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Exception;
+use JsonException;
+
+use function Safe\json_encode;
 
 /**
  * Class TransactionJournalFactory
@@ -76,7 +82,7 @@ class TransactionJournalFactory
     /**
      * Constructor.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct()
     {
@@ -120,10 +126,10 @@ class TransactionJournalFactory
             foreach ($transactions as $index => $row) {
                 Log::debug(sprintf('Now creating journal %d/%d', $index + 1, count($transactions)));
                 $journal = $this->createJournal(new NullArrayObject($row));
-                if (null !== $journal) {
+                if ($journal instanceof TransactionJournal) {
                     $collection->push($journal);
                 }
-                if (null === $journal) {
+                if (!$journal instanceof TransactionJournal) {
                     Log::error('The createJournal() method returned NULL. This may indicate an error.');
                 }
             }
@@ -173,7 +179,7 @@ class TransactionJournalFactory
 
         $foreignCurrency       = $this->currencyRepository->findCurrencyNull($row['foreign_currency_id'], $row['foreign_currency_code']);
         $bill                  = $this->billRepository->findBill((int) $row['bill_id'], $row['bill_name']);
-        $billId                = TransactionTypeEnum::WITHDRAWAL->value === $type->type && null !== $bill ? $bill->id : null;
+        $billId                = TransactionTypeEnum::WITHDRAWAL->value === $type->type && $bill instanceof Bill ? $bill->id : null;
         $description           = (string) $row['description'];
 
         // Manipulate basic fields
@@ -284,7 +290,7 @@ class TransactionJournalFactory
         // see the currency they expect to see.
         $amount                = (string) $row['amount'];
         $foreignAmount         = (string) $row['foreign_amount'];
-        if (null !== $foreignCurrency && $foreignCurrency->id !== $currency->id
+        if ($foreignCurrency instanceof TransactionCurrency && $foreignCurrency->id !== $currency->id
             && (TransactionTypeEnum::TRANSFER->value === $type->type || $this->isBetweenAssetAndLiability($sourceAccount, $destinationAccount))
         ) {
             $transactionFactory->setCurrency($foreignCurrency);
@@ -323,8 +329,8 @@ class TransactionJournalFactory
         unset($dataRow['import_hash_v2'], $dataRow['original_source']);
 
         try {
-            $json = \Safe\json_encode($dataRow, JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
+            $json = json_encode($dataRow, JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
             Log::error(sprintf('Could not encode dataRow: %s', $e->getMessage()));
             $json = microtime();
         }
@@ -352,7 +358,7 @@ class TransactionJournalFactory
             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
             ->whereNotNull('transaction_journals.id')
             ->where('transaction_journals.user_id', $this->user->id)
-            ->where('data', \Safe\json_encode($hash, JSON_THROW_ON_ERROR))
+            ->where('data', json_encode($hash, JSON_THROW_ON_ERROR))
             ->with(['transactionJournal', 'transactionJournal.transactionGroup'])
             ->first(['journal_meta.*'])
         ;
@@ -425,12 +431,12 @@ class TransactionJournalFactory
     private function reconciliationSanityCheck(?Account $sourceAccount, ?Account $destinationAccount): array
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
-        if (null !== $sourceAccount && null !== $destinationAccount) {
+        if ($sourceAccount instanceof Account && $destinationAccount instanceof Account) {
             Log::debug('Both accounts exist, simply return them.');
 
             return [$sourceAccount, $destinationAccount];
         }
-        if (null === $destinationAccount) {
+        if (!$destinationAccount instanceof Account) {
             Log::debug('Destination account is NULL, source account is not.');
             $account = $this->accountRepository->getReconciliation($sourceAccount);
             Log::debug(sprintf('Will return account #%d ("%s") of type "%s"', $account->id, $account->name, $account->accountType->type));
@@ -438,7 +444,7 @@ class TransactionJournalFactory
             return [$sourceAccount, $account];
         }
 
-        if (null === $sourceAccount) { // @phpstan-ignore-line
+        if (!$sourceAccount instanceof Account) { // @phpstan-ignore-line
             Log::debug('Source account is NULL, destination account is not.');
             $account = $this->accountRepository->getReconciliation($destinationAccount);
             Log::debug(sprintf('Will return account #%d ("%s") of type "%s"', $account->id, $account->name, $account->accountType->type));
@@ -480,7 +486,7 @@ class TransactionJournalFactory
 
         /** @var null|TransactionCurrency $preference */
         $preference = $this->accountRepository->getAccountCurrency($account);
-        if (null === $preference && null === $currency) {
+        if (null === $preference && !$currency instanceof TransactionCurrency) {
             // return user's default:
             return app('amount')->getNativeCurrencyByUserGroup($this->user->userGroup);
         }
@@ -496,10 +502,10 @@ class TransactionJournalFactory
     private function compareCurrencies(?TransactionCurrency $currency, ?TransactionCurrency $foreignCurrency): ?TransactionCurrency
     {
         Log::debug(sprintf('Now in compareCurrencies("%s", "%s")', $currency?->code, $foreignCurrency?->code));
-        if (null === $currency) {
+        if (!$currency instanceof TransactionCurrency) {
             return null;
         }
-        if (null !== $foreignCurrency && $foreignCurrency->id === $currency->id) {
+        if ($foreignCurrency instanceof TransactionCurrency && $foreignCurrency->id === $currency->id) {
             return null;
         }
 
@@ -556,7 +562,7 @@ class TransactionJournalFactory
 
         $piggyBank = $this->piggyRepository->findPiggyBank((int) $data['piggy_bank_id'], $data['piggy_bank_name']);
 
-        if (null !== $piggyBank) {
+        if ($piggyBank instanceof PiggyBank) {
             $this->piggyEventFactory->create($journal, $piggyBank);
             Log::debug('Create piggy event.');
 

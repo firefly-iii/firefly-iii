@@ -110,7 +110,7 @@ class Preferences
         $groupId = null;
         $items   = config('firefly.admin_specific_prefs') ?? [];
         if (in_array($preferenceName, $items, true)) {
-            $groupId = (int) $user->user_group_id;
+            return (int) $user->user_group_id;
         }
 
         return $groupId;
@@ -215,7 +215,7 @@ class Preferences
     public function getEncrypted(string $name, mixed $default = null): ?Preference
     {
         $result = $this->get($name, $default);
-        if (null === $result) {
+        if (!$result instanceof Preference) {
             return null;
         }
         if ('' === $result->data) {
@@ -286,7 +286,7 @@ class Preferences
         $lastActivity = microtime();
         $preference   = $this->get('lastActivity', microtime());
 
-        if (null !== $preference && null !== $preference->data) {
+        if ($preference instanceof Preference && null !== $preference->data) {
             $lastActivity = $preference->data;
         }
         if (is_array($lastActivity)) {

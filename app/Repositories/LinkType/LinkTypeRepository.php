@@ -31,6 +31,7 @@ use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
+use Exception;
 
 /**
  * Class LinkTypeRepository.
@@ -46,7 +47,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
 
     public function destroy(LinkType $linkType, ?LinkType $moveTo = null): bool
     {
-        if (null !== $moveTo) {
+        if ($moveTo instanceof LinkType) {
             TransactionJournalLink::where('link_type_id', $linkType->id)->update(['link_type_id' => $moveTo->id]);
         }
         $linkType->delete();
@@ -71,7 +72,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function destroyLink(TransactionJournalLink $link): bool
     {
@@ -124,7 +125,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
             ->whereNull('dest_journals.deleted_at')
         ;
 
-        if (null !== $linkType) {
+        if ($linkType instanceof LinkType) {
             $query->where('journal_links.link_type_id', $linkType->id);
         }
 
@@ -170,23 +171,23 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
     /**
      * Store link between two journals.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function storeLink(array $information, TransactionJournal $inward, TransactionJournal $outward): ?TransactionJournalLink
     {
         $linkType = $this->find((int) ($information['link_type_id'] ?? 0));
 
-        if (null === $linkType) {
+        if (!$linkType instanceof LinkType) {
             $linkType = $this->findByName($information['link_type_name']);
         }
 
-        if (null === $linkType) {
+        if (!$linkType instanceof LinkType) {
             return null;
         }
 
         // might exist already:
         $existing = $this->findSpecificLink($linkType, $inward, $outward);
-        if (null !== $existing) {
+        if ($existing instanceof TransactionJournalLink) {
             return $existing;
         }
 
@@ -237,7 +238,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function setNoteText(TransactionJournalLink $link, string $text): void
     {
@@ -279,7 +280,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
     /**
      * Update an existing transaction journal link.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function updateLink(TransactionJournalLink $journalLink, array $data): TransactionJournalLink
     {

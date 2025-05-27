@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Support\MessageBag;
+use Throwable;
 
 /**
  * Trait FormSupport
@@ -46,7 +47,7 @@ trait FormSupport
 
         try {
             $html = view('form.multi-select', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             app('log')->debug(sprintf('Could not render multi-select(): %s', $e->getMessage()));
             $html = 'Could not render multi-select.';
         }
@@ -84,14 +85,13 @@ trait FormSupport
     {
         // Get errors from session:
         /** @var null|MessageBag $errors */
-        $errors  = session('errors');
-        $classes = 'form-group';
+        $errors = session('errors');
 
         if (null !== $errors && $errors->has($name)) {
-            $classes = 'form-group has-error has-feedback';
+            return 'form-group has-error has-feedback';
         }
 
-        return $classes;
+        return 'form-group';
     }
 
     /**
@@ -111,7 +111,7 @@ trait FormSupport
         }
 
         if ($value instanceof Carbon) {
-            $value = $value->format('Y-m-d');
+            return $value->format('Y-m-d');
         }
 
         return $value;
@@ -131,7 +131,7 @@ trait FormSupport
 
         try {
             $html = view('form.select', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             app('log')->debug(sprintf('Could not render select(): %s', $e->getMessage()));
             $html = 'Could not render select.';
         }

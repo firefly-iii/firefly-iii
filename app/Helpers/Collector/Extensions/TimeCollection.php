@@ -73,7 +73,11 @@ trait TimeCollection
         $filter              = static function (array $object) use ($field, $start, $end): bool {
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
-                    return $transaction[$field]->lt($start) || $transaction[$field]->gt($end);
+                    if ($transaction[$field]->lt($start)) {
+                        return true;
+                    }
+
+                    return $transaction[$field]->gt($end);
                 }
             }
 
@@ -589,17 +593,17 @@ trait TimeCollection
      */
     public function setRange(?Carbon $start, ?Carbon $end): GroupCollectorInterface
     {
-        if (null !== $start && null !== $end && $end < $start) {
+        if ($start instanceof Carbon && $end instanceof Carbon && $end < $start) {
             [$start, $end] = [$end, $start];
         }
         // always got to end of day / start of day for ranges.
         $startStr = $start?->format('Y-m-d 00:00:00');
         $endStr   = $end?->format('Y-m-d 23:59:59');
 
-        if (null !== $start) {
+        if ($start instanceof Carbon) {
             $this->query->where('transaction_journals.date', '>=', $startStr);
         }
-        if (null !== $end) {
+        if ($end instanceof Carbon) {
             $this->query->where('transaction_journals.date', '<=', $endStr);
         }
 

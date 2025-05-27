@@ -108,13 +108,12 @@ class PreferencesEventHandler
         /** @var Budget $budget */
         foreach ($set as $budget) {
             foreach ($budget->autoBudgets as $autoBudget) {
-                if (null !== $autoBudget->native_amount) {
-                    if (null !== $autoBudget->native_amount) {
-                        Log::debug(sprintf('Resetting native_amount for budget #%d and auto budget #%d.', $budget->id, $autoBudget->id));
-                        $autoBudget->native_amount = null;
-                        $autoBudget->saveQuietly();
-                    }
+                if (null === $autoBudget->native_amount) {
+                    continue;
                 }
+                Log::debug(sprintf('Resetting native_amount for budget #%d and auto budget #%d.', $budget->id, $autoBudget->id));
+                $autoBudget->native_amount = null;
+                $autoBudget->saveQuietly();
             }
             foreach ($budget->budgetlimits as $limit) {
                 if (null !== $limit->native_amount) {

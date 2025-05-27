@@ -36,14 +36,14 @@ class TransactionTypeRepository implements TransactionTypeRepositoryInterface
     public function findTransactionType(?TransactionType $type, ?string $typeString): TransactionType
     {
         app('log')->debug('Now looking for a transaction type.');
-        if (null !== $type) {
+        if ($type instanceof TransactionType) {
             app('log')->debug(sprintf('Found $type in parameters, its %s. Will return it.', $type->type));
 
             return $type;
         }
         $typeString ??= TransactionTypeEnum::WITHDRAWAL->value;
         $search = $this->findByType($typeString);
-        if (null === $search) {
+        if (!$search instanceof TransactionType) {
             $search = $this->findByType(TransactionTypeEnum::WITHDRAWAL->value);
         }
         app('log')->debug(sprintf('Tried to search for "%s", came up with "%s". Will return it.', $typeString, $search->type));

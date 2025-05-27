@@ -27,6 +27,7 @@ use FireflyIII\Repositories\Attachment\AttachmentRepository;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use Override;
 
 /**
  * Class AttachmentServiceProvider.
@@ -41,7 +42,7 @@ class AttachmentServiceProvider extends ServiceProvider
     /**
      * Register the application services.
      */
-    #[\Override]
+    #[Override]
     public function register(): void
     {
         $this->app->bind(

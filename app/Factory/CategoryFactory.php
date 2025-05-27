@@ -59,7 +59,7 @@ class CategoryFactory
 
         if ('' !== $categoryName) {
             $category = $this->findByName($categoryName);
-            if (null !== $category) {
+            if ($category instanceof Category) {
                 return $category;
             }
 

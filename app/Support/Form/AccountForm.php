@@ -28,6 +28,7 @@ use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use Throwable;
 
 /**
  * Class AccountForm
@@ -58,7 +59,7 @@ class AccountForm
 
     private function getAccountsGrouped(array $types, ?AccountRepositoryInterface $repository = null): array
     {
-        if (null === $repository) {
+        if (!$repository instanceof AccountRepositoryInterface) {
             $repository = $this->getAccountRepository();
         }
         $accountList    = $repository->getActiveAccountsByType($types);
@@ -124,7 +125,7 @@ class AccountForm
 
         try {
             $html = view('form.assetAccountCheckList', compact('classes', 'selected', 'name', 'label', 'options', 'grouped'))->render();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             app('log')->debug(sprintf('Could not render assetAccountCheckList(): %s', $e->getMessage()));
             $html = 'Could not render assetAccountCheckList.';
 

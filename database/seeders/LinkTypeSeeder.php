@@ -25,6 +25,7 @@ namespace Database\Seeders;
 
 use FireflyIII\Models\LinkType;
 use Illuminate\Database\Seeder;
+use PDOException;
 
 /**
  * Class LinkTypeSeeder.
@@ -63,7 +64,7 @@ class LinkTypeSeeder extends Seeder
             if (null === LinkType::where('name', $type['name'])->first()) {
                 try {
                     LinkType::create($type);
-                } catch (\PDOException $e) {
+                } catch (PDOException $e) {
                     // @ignoreException
                 }
             }

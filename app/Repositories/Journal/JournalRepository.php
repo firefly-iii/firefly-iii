@@ -77,13 +77,12 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
     public function firstNull(): ?TransactionJournal
     {
         /** @var null|TransactionJournal $entry */
-        $entry  = $this->user->transactionJournals()->orderBy('date', 'ASC')->first(['transaction_journals.*']);
-        $result = null;
+        $entry = $this->user->transactionJournals()->orderBy('date', 'ASC')->first(['transaction_journals.*']);
         if (null !== $entry) {
-            $result = $entry;
+            return $entry;
         }
 
-        return $result;
+        return null;
     }
 
     public function getDestinationAccount(TransactionJournal $journal): Account
@@ -120,13 +119,12 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
     public function getLast(): ?TransactionJournal
     {
         /** @var null|TransactionJournal $entry */
-        $entry  = $this->user->transactionJournals()->orderBy('date', 'DESC')->first(['transaction_journals.*']);
-        $result = null;
+        $entry = $this->user->transactionJournals()->orderBy('date', 'DESC')->first(['transaction_journals.*']);
         if (null !== $entry) {
-            $result = $entry;
+            return $entry;
         }
 
-        return $result;
+        return null;
     }
 
     public function getLinkNoteText(TransactionJournalLink $link): string

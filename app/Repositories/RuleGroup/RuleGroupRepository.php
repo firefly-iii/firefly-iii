@@ -32,6 +32,7 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Exception;
 
 /**
  * Class RuleGroupRepository.
@@ -72,13 +73,13 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function destroy(RuleGroup $ruleGroup, ?RuleGroup $moveTo): bool
     {
         /** @var Rule $rule */
         foreach ($ruleGroup->rules as $rule) {
-            if (null === $moveTo) {
+            if (!$moveTo instanceof RuleGroup) {
                 $rule->delete();
 
                 continue;
@@ -91,7 +92,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
         $ruleGroup->delete();
 
         $this->resetOrder();
-        if (null !== $moveTo) {
+        if ($moveTo instanceof RuleGroup) {
             $this->resetRuleOrder($moveTo);
         }
 

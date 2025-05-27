@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use FireflyIII\Events\UserChangedEmail;
@@ -362,7 +363,7 @@ class ProfileController extends Controller
      *
      * @return Redirector|RedirectResponse
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function regenerate(Request $request)
     {

@@ -25,6 +25,7 @@ namespace FireflyIII\Providers;
 
 use FireflyIII\Http\Middleware\StartFireflySession;
 use Illuminate\Session\SessionServiceProvider as BaseSessionServiceProvider;
+use Override;
 
 /**
  * Class SessionServiceProvider.
@@ -34,7 +35,7 @@ class SessionServiceProvider extends BaseSessionServiceProvider
     /**
      * Register the service provider.
      */
-    #[\Override]
+    #[Override]
     public function register(): void
     {
         $this->registerSessionManager();

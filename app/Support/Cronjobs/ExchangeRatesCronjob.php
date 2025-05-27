@@ -39,7 +39,7 @@ class ExchangeRatesCronjob extends AbstractCronjob
         /** @var Configuration $config */
         $config        = app('fireflyconfig')->get('last_cer_job', 0);
         $lastTime      = (int) $config->data;
-        $diff          = time() - $lastTime;
+        $diff          = Carbon::now()->getTimestamp() - $lastTime;
         $diffForHumans = today(config('app.timezone'))->diffForHumans(Carbon::createFromTimestamp($lastTime), null, true);
         if (0 === $lastTime) {
             Log::info('Exchange rates cron-job has never fired before.');

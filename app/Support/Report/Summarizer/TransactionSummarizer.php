@@ -37,7 +37,7 @@ class TransactionSummarizer
 
     public function __construct(?User $user = null)
     {
-        if (null !== $user) {
+        if ($user instanceof User) {
             $this->setUser($user);
         }
     }

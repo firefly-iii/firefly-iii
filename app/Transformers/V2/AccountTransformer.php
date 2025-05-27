@@ -127,12 +127,11 @@ class AccountTransformer extends AbstractTransformer
 
     private function getDate(): Carbon
     {
-        $date = today(config('app.timezone'));
         if (null !== $this->parameters->get('date')) {
-            $date = $this->parameters->get('date');
+            return $this->parameters->get('date');
         }
 
-        return $date;
+        return today(config('app.timezone'));
     }
 
     private function getDefaultCurrency(): void

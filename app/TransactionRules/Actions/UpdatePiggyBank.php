@@ -56,7 +56,7 @@ class UpdatePiggyBank implements ActionInterface
         $journalObj  = $user->transactionJournals()->find($journal['transaction_journal_id']);
 
         $piggyBank   = $this->findPiggyBank($user, $actionValue);
-        if (null === $piggyBank) {
+        if (!$piggyBank instanceof PiggyBank) {
             Log::info(
                 sprintf('No piggy bank named "%s", cant execute action #%d of rule #%d', $actionValue, $this->action->id, $this->action->rule_id)
             );
@@ -150,7 +150,7 @@ class UpdatePiggyBank implements ActionInterface
 
     private function isConnected(PiggyBank $piggyBank, ?Account $link): bool
     {
-        if (null === $link) {
+        if (!$link instanceof Account) {
             return false;
         }
         foreach ($piggyBank->accounts as $account) {

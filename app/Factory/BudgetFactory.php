@@ -53,7 +53,7 @@ class BudgetFactory
 
         if ('' !== $budgetName) {
             $budget = $this->findByName($budgetName);
-            if (null !== $budget) {
+            if ($budget instanceof Budget) {
                 return $budget;
             }
         }

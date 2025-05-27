@@ -83,7 +83,7 @@ class AccountBalanceCalculator
         if ($accounts->count() > 0) {
             $query->whereIn('transactions.account_id', $accounts->pluck('id')->toArray());
         }
-        if (null !== $notBefore) {
+        if ($notBefore instanceof Carbon) {
             $notBefore->startOfDay();
             $query->where('transaction_journals.date', '>=', $notBefore);
         }
@@ -124,7 +124,7 @@ class AccountBalanceCalculator
 
     private function getLatestBalance(int $accountId, int $currencyId, ?Carbon $notBefore): string
     {
-        if (null === $notBefore) {
+        if (!$notBefore instanceof Carbon) {
             return '0';
         }
         Log::debug(sprintf('getLatestBalance: notBefore date is "%s", calculating', $notBefore->format('Y-m-d')));

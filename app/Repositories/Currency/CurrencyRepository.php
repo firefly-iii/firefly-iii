@@ -42,6 +42,9 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Override;
+
+use function Safe\json_encode;
 
 /**
  * Class CurrencyRepository.
@@ -81,7 +84,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         }
 
         // is being used in accounts:
-        $meta             = AccountMeta::where('name', 'currency_id')->where('data', \Safe\json_encode((string) $currency->id))->count();
+        $meta             = AccountMeta::where('name', 'currency_id')->where('data', json_encode((string) $currency->id))->count();
         if ($meta > 0) {
             Log::info(sprintf('Used in %d accounts as currency_id, return true. ', $meta));
 
@@ -89,7 +92,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         }
 
         // second search using integer check.
-        $meta             = AccountMeta::where('name', 'currency_id')->where('data', \Safe\json_encode((int) $currency->id))->count();
+        $meta             = AccountMeta::where('name', 'currency_id')->where('data', json_encode((int) $currency->id))->count();
         if ($meta > 0) {
             Log::info(sprintf('Used in %d accounts as currency_id, return true. ', $meta));
 
@@ -117,7 +120,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         // is being used in accounts (as integer)
         $meta             = AccountMeta::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
             ->whereNull('accounts.deleted_at')
-            ->where('account_meta.name', 'currency_id')->where('account_meta.data', \Safe\json_encode($currency->id))->count()
+            ->where('account_meta.name', 'currency_id')->where('account_meta.data', json_encode($currency->id))->count()
         ;
         if ($meta > 0) {
             Log::info(sprintf('Used in %d accounts as currency_id, return true. ', $meta));
@@ -236,7 +239,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
     {
         $result = $this->findCurrencyNull($currencyId, $currencyCode);
 
-        if (null === $result) {
+        if (!$result instanceof TransactionCurrency) {
             Log::debug('Grabbing default currency for this user...');
 
             /** @var null|TransactionCurrency $result */
@@ -259,7 +262,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
     {
         Log::debug(sprintf('Now in findCurrencyNull(%s, "%s")', var_export($currencyId, true), $currencyCode));
         $result = $this->find((int) $currencyId);
-        if (null !== $result) {
+        if ($result instanceof TransactionCurrency) {
             Log::debug(sprintf('Found currency by ID: %s', $result->code));
 
             return $result;
@@ -268,7 +271,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
             Log::debug(sprintf('Searching for currency with code "%s"...', $currencyCode));
             $result = $this->findByCode((string) $currencyCode);
         }
-        if (null !== $result && false === $result->enabled) {
+        if ($result instanceof TransactionCurrency && false === $result->enabled) {
             Log::debug(sprintf('Also enabled currency %s', $result->code));
             $this->enable($result);
         }
@@ -277,7 +280,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         return $result;
     }
 
-    #[\Override]
+    #[Override]
     public function find(int $currencyId): ?TransactionCurrency
     {
         return TransactionCurrency::find($currencyId);

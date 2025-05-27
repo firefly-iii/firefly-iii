@@ -34,6 +34,11 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Exception;
+use ValueError;
+
+use function Safe\preg_replace;
+use function Safe\parse_url;
 
 /**
  * Class Steam.
@@ -95,25 +100,25 @@ class Steam
                 unset($set[$defaultCurrency->code]);
             }
             // todo rethink this logic.
-            if (null !== $currency && $defaultCurrency->id !== $currency->id) {
+            if ($currency instanceof TransactionCurrency && $defaultCurrency->id !== $currency->id) {
                 Log::debug(sprintf('Unset balance for account #%d', $account->id));
                 unset($set['balance']);
             }
 
-            if (null === $currency) {
+            if (!$currency instanceof TransactionCurrency) {
                 Log::debug(sprintf('Unset balance for account #%d', $account->id));
                 unset($set['balance']);
             }
         }
 
         if (!$convertToNative) {
-            if (null === $currency) {
+            if (!$currency instanceof TransactionCurrency) {
                 Log::debug(sprintf('Unset native_balance and make defaultCurrency balance the balance for account #%d', $account->id));
                 $set['balance'] = $set[$defaultCurrency->code] ?? '0';
                 unset($set[$defaultCurrency->code]);
             }
 
-            if (null !== $currency) {
+            if ($currency instanceof TransactionCurrency) {
                 Log::debug(sprintf('Unset [%s] + [%s] balance for account #%d', $defaultCurrency->code, $currency->code, $account->id));
                 unset($set[$defaultCurrency->code], $set[$currency->code]);
             }
@@ -184,8 +189,8 @@ class Steam
         ];
 
         // clear zalgo text
-        $string = \Safe\preg_replace('/(\pM{2})\pM+/u', '\1', $string);
-        $string = \Safe\preg_replace('/\s+/', '', $string);
+        $string = preg_replace('/(\pM{2})\pM+/u', '\1', $string);
+        $string = preg_replace('/\s+/', '', $string);
 
         return str_replace($search, '', $string);
     }
@@ -221,7 +226,7 @@ class Steam
         $startBalance         = $this->finalAccountBalance($account, $request);
         $nativeCurrency       = app('amount')->getNativeCurrencyByUserGroup($account->user->userGroup);
         $accountCurrency      = $this->getAccountCurrency($account);
-        $hasCurrency          = null !== $accountCurrency;
+        $hasCurrency          = $accountCurrency instanceof TransactionCurrency;
         $currency             = $accountCurrency ?? $nativeCurrency;
         Log::debug(sprintf('Currency is %s', $currency->code));
 
@@ -339,7 +344,7 @@ class Steam
         if (null === $convertToNative) {
             $convertToNative = Amount::convertToNative($account->user);
         }
-        if (null === $native) {
+        if (!$native instanceof TransactionCurrency) {
             $native = Amount::getNativeCurrencyByUserGroup($account->user->userGroup);
         }
         // account balance thing.
@@ -466,7 +471,7 @@ class Steam
 
         try {
             $hostName = gethostbyaddr($ipAddress);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             app('log')->error($e->getMessage());
             $hostName = $ipAddress;
         }
@@ -514,7 +519,7 @@ class Steam
 
         // Check for Windows to replace the locale correctly.
         if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
-            $locale = str_replace('_', '-', $locale);
+            return str_replace('_', '-', $locale);
         }
 
         return $locale;
@@ -566,8 +571,8 @@ class Steam
     {
         // Log::debug(sprintf('getSafeUrl(%s, %s)', $unknownUrl, $safeUrl));
         $returnUrl      = $safeUrl;
-        $unknownHost    = \Safe\parse_url($unknownUrl, PHP_URL_HOST);
-        $safeHost       = \Safe\parse_url($safeUrl, PHP_URL_HOST);
+        $unknownHost    = parse_url($unknownUrl, PHP_URL_HOST);
+        $safeHost       = parse_url($safeUrl, PHP_URL_HOST);
 
         if (null !== $unknownHost && $unknownHost === $safeHost) {
             $returnUrl = $unknownUrl;
@@ -576,7 +581,7 @@ class Steam
         // URL must not lead to weird pages
         $forbiddenWords = ['jscript', 'json', 'debug', 'serviceworker', 'offline', 'delete', '/login', '/attachments/view'];
         if (Str::contains($returnUrl, $forbiddenWords)) {
-            $returnUrl = $safeUrl;
+            return $safeUrl;
         }
 
         return $returnUrl;
@@ -590,7 +595,7 @@ class Steam
         $amount = $this->floatalize($amount);
 
         if (1 === bccomp($amount, '0')) {
-            $amount = bcmul($amount, '-1');
+            return bcmul($amount, '-1');
         }
 
         return $amount;
@@ -673,7 +678,7 @@ class Steam
             if (-1 === bccomp($amount, '0')) {
                 $amount = bcmul($amount, '-1');
             }
-        } catch (\ValueError $e) {
+        } catch (ValueError $e) {
             Log::error(sprintf('ValueError in Steam::positive("%s"): %s', $amount, $e->getMessage()));
             Log::error($e->getTraceAsString());
 

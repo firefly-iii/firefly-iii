@@ -27,6 +27,7 @@ namespace FireflyIII\Console\Commands\System;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 use PDO;
+use PDOException;
 
 class CreatesDatabase extends Command
 {
@@ -53,15 +54,15 @@ class CreatesDatabase extends Command
         $this->friendlyLine(sprintf('DSN is %s', $dsn));
 
         $options = [
-            \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
-            \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
-            \PDO::ATTR_EMULATE_PREPARES   => false,
+            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES   => false,
         ];
 
         // when it fails, display error
         try {
-            $pdo = new \PDO($dsn, (string) env('DB_USERNAME'), (string) env('DB_PASSWORD'), $options);
-        } catch (\PDOException $e) {
+            $pdo = new PDO($dsn, (string) env('DB_USERNAME'), (string) env('DB_PASSWORD'), $options);
+        } catch (PDOException $e) {
             $this->friendlyError(sprintf('Error when connecting to DB: %s', $e->getMessage()));
 
             return 1;

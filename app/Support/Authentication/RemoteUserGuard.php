@@ -56,7 +56,7 @@ class RemoteUserGuard implements Guard
     public function authenticate(): void
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
-        if (null !== $this->user) {
+        if ($this->user instanceof User) {
             Log::debug(sprintf('%s is found: #%d, "%s".', $this->user::class, $this->user->id, $this->user->email));
 
             return;
@@ -112,14 +112,14 @@ class RemoteUserGuard implements Guard
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
 
-        return null !== $this->user();
+        return $this->user() instanceof User;
     }
 
     public function user(): ?User
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
         $user = $this->user;
-        if (null === $user) {
+        if (!$user instanceof User) {
             Log::debug('User is NULL');
 
             return null;

@@ -120,7 +120,7 @@ class AddsTransactionIdentifiers extends Command
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
             $opposing = $this->findOpposing($transaction, $exclude);
-            if (null !== $opposing) {
+            if ($opposing instanceof Transaction) {
                 // give both a new identifier:
                 $transaction->identifier = $identifier;
                 $opposing->identifier    = $identifier;

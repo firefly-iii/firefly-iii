@@ -32,6 +32,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
+use stdClass;
 
 /**
  * Class AccountDestroyService
@@ -43,12 +44,12 @@ class AccountDestroyService
         // find and delete opening balance journal + opposing account
         $this->destroyOpeningBalance($account);
 
-        if (null !== $moveTo) {
+        if ($moveTo instanceof Account) {
             $this->moveTransactions($account, $moveTo);
             $this->updateRecurrences($account, $moveTo);
         }
         // delete recurring transactions with this account:
-        if (null === $moveTo) {
+        if (!$moveTo instanceof Account) {
             $this->destroyRecurrences($account);
         }
 
@@ -119,7 +120,7 @@ class AccountDestroyService
         $service    = app(JournalDestroyService::class);
         $user       = $account->user;
 
-        /** @var \stdClass $row */
+        /** @var stdClass $row */
         foreach ($collection as $row) {
             if ((int) $row->the_count > 1) {
                 $journalId = $row->transaction_journal_id;

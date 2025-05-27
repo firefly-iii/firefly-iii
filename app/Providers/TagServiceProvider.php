@@ -29,6 +29,7 @@ use FireflyIII\Repositories\Tag\TagRepository;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use Override;
 
 /**
  * Class TagServiceProvider.
@@ -43,7 +44,7 @@ class TagServiceProvider extends ServiceProvider
     /**
      * Register the application services.
      */
-    #[\Override]
+    #[Override]
     public function register(): void
     {
         $this->app->bind(

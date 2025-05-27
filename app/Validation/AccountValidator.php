@@ -79,10 +79,10 @@ class AccountValidator
 
     public function setSource(?Account $account): void
     {
-        if (null === $account) {
+        if (!$account instanceof Account) {
             app('log')->debug('AccountValidator source is set to NULL');
         }
-        if (null !== $account) {
+        if ($account instanceof Account) {
             app('log')->debug(sprintf('AccountValidator source is set to #%d: "%s" (%s)', $account->id, $account->name, $account->accountType?->type));
         }
         $this->source = $account;
@@ -90,10 +90,10 @@ class AccountValidator
 
     public function setDestination(?Account $account): void
     {
-        if (null === $account) {
+        if (!$account instanceof Account) {
             app('log')->debug('AccountValidator destination is set to NULL');
         }
-        if (null !== $account) {
+        if ($account instanceof Account) {
             app('log')->debug(sprintf('AccountValidator destination is set to #%d: "%s" (%s)', $account->id, $account->name, $account->accountType->type));
         }
         $this->destination = $account;
@@ -118,7 +118,7 @@ class AccountValidator
     public function validateDestination(array $array): bool
     {
         app('log')->debug('Now in AccountValidator::validateDestination()', $array);
-        if (null === $this->source) {
+        if (!$this->source instanceof Account) {
             app('log')->error('Source is NULL, always FALSE.');
             $this->destError = 'No source account validation has taken place yet. Please do this first or overrule the object.';
 
@@ -260,10 +260,10 @@ class AccountValidator
         // find by ID
         if (null !== $accountId && $accountId > 0) {
             $first       = $this->accountRepository->find($accountId);
-            $accountType = null === $first ? 'invalid' : $first->accountType->type;
+            $accountType = $first instanceof Account ? $first->accountType->type : 'invalid';
             $check       = in_array($accountType, $validTypes, true);
             $check       = $inverse ? !$check : $check; // reverse the validation check if necessary.
-            if ((null !== $first) && $check) {
+            if (($first instanceof Account) && $check) {
                 app('log')->debug(sprintf('ID: Found %s account #%d ("%s", IBAN "%s")', $first->accountType->type, $first->id, $first->name, $first->iban ?? 'no iban'));
 
                 return $first;
@@ -273,10 +273,10 @@ class AccountValidator
         // find by iban
         if (null !== $accountIban && '' !== (string) $accountIban) {
             $first       = $this->accountRepository->findByIbanNull($accountIban, $validTypes);
-            $accountType = null === $first ? 'invalid' : $first->accountType->type;
+            $accountType = $first instanceof Account ? $first->accountType->type : 'invalid';
             $check       = in_array($accountType, $validTypes, true);
             $check       = $inverse ? !$check : $check; // reverse the validation check if necessary.
-            if ((null !== $first) && $check) {
+            if (($first instanceof Account) && $check) {
                 app('log')->debug(sprintf('Iban: Found %s account #%d ("%s", IBAN "%s")', $first->accountType->type, $first->id, $first->name, $first->iban ?? 'no iban'));
 
                 return $first;
@@ -286,10 +286,10 @@ class AccountValidator
         // find by number
         if (null !== $accountNumber && '' !== (string) $accountNumber) {
             $first       = $this->accountRepository->findByAccountNumber($accountNumber, $validTypes);
-            $accountType = null === $first ? 'invalid' : $first->accountType->type;
+            $accountType = $first instanceof Account ? $first->accountType->type : 'invalid';
             $check       = in_array($accountType, $validTypes, true);
             $check       = $inverse ? !$check : $check; // reverse the validation check if necessary.
-            if ((null !== $first) && $check) {
+            if (($first instanceof Account) && $check) {
                 app('log')->debug(sprintf('Number: Found %s account #%d ("%s", IBAN "%s")', $first->accountType->type, $first->id, $first->name, $first->iban ?? 'no iban'));
 
                 return $first;
@@ -299,7 +299,7 @@ class AccountValidator
         // find by name:
         if ('' !== (string) $accountName) {
             $first = $this->accountRepository->findByName($accountName, $validTypes);
-            if (null !== $first) {
+            if ($first instanceof Account) {
                 app('log')->debug(sprintf('Name: Found %s account #%d ("%s", IBAN "%s")', $first->accountType->type, $first->id, $first->name, $first->iban ?? 'no iban'));
 
                 return $first;

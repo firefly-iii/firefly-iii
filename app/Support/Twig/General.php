@@ -37,13 +37,16 @@ use Illuminate\Support\Facades\Route;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
+use Override;
+
+use function Safe\parse_url;
 
 /**
  * Class TwigSupport.
  */
 class General extends AbstractExtension
 {
-    #[\Override]
+    #[Override]
     public function getFilters(): array
     {
         return [
@@ -63,7 +66,7 @@ class General extends AbstractExtension
         return new TwigFilter(
             'balance',
             static function (?Account $account): string {
-                if (null === $account) {
+                if (!$account instanceof Account) {
                     return '0';
                 }
 
@@ -179,15 +182,15 @@ class General extends AbstractExtension
         return new TwigFilter(
             'phphost',
             static function (string $string): string {
-                $proto = (string) \Safe\parse_url($string, PHP_URL_SCHEME);
-                $host  = (string) \Safe\parse_url($string, PHP_URL_HOST);
+                $proto = (string) parse_url($string, PHP_URL_SCHEME);
+                $host  = (string) parse_url($string, PHP_URL_HOST);
 
                 return e(sprintf('%s://%s', $proto, $host));
             }
         );
     }
 
-    #[\Override]
+    #[Override]
     public function getFunctions(): array
     {
         return [

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
@@ -141,7 +142,7 @@ class UpgradesAccountCurrencies extends Command
             return;
         }
         // do not match and opening balance id is not null.
-        if ($accountCurrency !== $obCurrency && null !== $openingBalance) {
+        if ($accountCurrency !== $obCurrency && $openingBalance instanceof TransactionJournal) {
             // update opening balance:
             $openingBalance->transaction_currency_id = $accountCurrency;
             $openingBalance->save();

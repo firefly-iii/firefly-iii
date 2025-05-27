@@ -24,10 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support;
 
+use ArrayObject;
+
 /**
  * Class NullArrayObject
  */
-class NullArrayObject extends \ArrayObject
+class NullArrayObject extends ArrayObject
 {
     /**
      * NullArrayObject constructor.

@@ -37,7 +37,7 @@ class PiggyBankEventFactory
     public function create(TransactionJournal $journal, ?PiggyBank $piggyBank): void
     {
         app('log')->debug(sprintf('Now in PiggyBankEventCreate for a %s', $journal->transactionType->type));
-        if (null === $piggyBank) {
+        if (!$piggyBank instanceof PiggyBank) {
             app('log')->debug('Piggy bank is null');
 
             return;

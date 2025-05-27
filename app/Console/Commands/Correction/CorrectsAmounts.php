@@ -42,6 +42,7 @@ use FireflyIII\Support\Facades\Amount;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use ValueError;
 
 class CorrectsAmounts extends Command
 {
@@ -234,7 +235,7 @@ class CorrectsAmounts extends Command
     {
         try {
             $check = bccomp((string) $item->trigger_value, '0');
-        } catch (\ValueError) {
+        } catch (ValueError) {
             $this->friendlyError(sprintf('Rule #%d contained invalid %s-trigger "%s". The trigger has been removed, and the rule is disabled.', $item->rule_id, $item->trigger_type, $item->trigger_value));
             $item->rule->active = false;
             $item->rule->save();

@@ -21,6 +21,11 @@
 
 declare(strict_types=1);
 
+use Illuminate\Foundation\Application;
+use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Contracts\Debug\ExceptionHandler;
+use FireflyIII\Exceptions\Handler;
+
 /*
 |--------------------------------------------------------------------------
 | Create The Application
@@ -45,7 +50,7 @@ if (!function_exists('envNonEmpty')) {
     {
         $result = env($key, $default); // @phpstan-ignore-line
         if ('' === $result) {
-            $result = $default;
+            return $default;
         }
 
         return $result;
@@ -65,7 +70,7 @@ if (!function_exists('stringIsEqual')) {
     }
 }
 
-$app = new Illuminate\Foundation\Application(
+$app = new Application(
     (string)realpath(__DIR__ . '/../')
 );
 
@@ -81,7 +86,7 @@ $app = new Illuminate\Foundation\Application(
 */
 
 $app->singleton(
-    Illuminate\Contracts\Http\Kernel::class,
+    Kernel::class,
     FireflyIII\Http\Kernel::class
 );
 
@@ -91,8 +96,8 @@ $app->singleton(
 );
 
 $app->singleton(
-    Illuminate\Contracts\Debug\ExceptionHandler::class,
-    FireflyIII\Exceptions\Handler::class
+    ExceptionHandler::class,
+    Handler::class
 );
 
 /*

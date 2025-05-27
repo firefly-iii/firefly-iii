@@ -31,6 +31,7 @@ use FireflyIII\Models\UserGroup;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use NumberFormatter;
 
 /**
  * Class Amount.
@@ -60,10 +61,10 @@ class Amount
         $rounded = app('steam')->bcround($amount, $decimalPlaces);
         $coloured ??= true;
 
-        $fmt     = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
-        $fmt->setSymbol(\NumberFormatter::CURRENCY_SYMBOL, $symbol);
-        $fmt->setAttribute(\NumberFormatter::MIN_FRACTION_DIGITS, $decimalPlaces);
-        $fmt->setAttribute(\NumberFormatter::MAX_FRACTION_DIGITS, $decimalPlaces);
+        $fmt     = new NumberFormatter($locale, NumberFormatter::CURRENCY);
+        $fmt->setSymbol(NumberFormatter::CURRENCY_SYMBOL, $symbol);
+        $fmt->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, $decimalPlaces);
+        $fmt->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $decimalPlaces);
         $result  = (string) $fmt->format((float) $rounded); // intentional float
 
         if (true === $coloured) {
@@ -114,7 +115,7 @@ class Amount
 
     public function convertToNative(?User $user = null): bool
     {
-        if (null === $user) {
+        if (!$user instanceof User) {
             return true === Preferences::get('convert_to_native', false)->data && true === config('cer.enabled');
             //            Log::debug(sprintf('convertToNative [a]: %s', var_export($result, true)));
         }
@@ -262,10 +263,10 @@ class Amount
         $info['n_sep_by_space']    = $this->getLocaleField($info, 'n_sep_by_space');
         $info['p_sep_by_space']    = $this->getLocaleField($info, 'p_sep_by_space');
 
-        $fmt                       = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
+        $fmt                       = new NumberFormatter($locale, NumberFormatter::CURRENCY);
 
-        $info['mon_decimal_point'] = $fmt->getSymbol(\NumberFormatter::MONETARY_SEPARATOR_SYMBOL);
-        $info['mon_thousands_sep'] = $fmt->getSymbol(\NumberFormatter::MONETARY_GROUPING_SEPARATOR_SYMBOL);
+        $info['mon_decimal_point'] = $fmt->getSymbol(NumberFormatter::MONETARY_SEPARATOR_SYMBOL);
+        $info['mon_thousands_sep'] = $fmt->getSymbol(NumberFormatter::MONETARY_GROUPING_SEPARATOR_SYMBOL);
 
         return $info;
     }
@@ -285,7 +286,7 @@ class Amount
     public static function getAmountJsConfig(bool $sepBySpace, int $signPosn, string $sign, bool $csPrecedes): string
     {
         // negative first:
-        $space  = ' ';
+        $space = ' ';
 
         // require space between symbol and amount?
         if (false === $sepBySpace) {
@@ -294,11 +295,11 @@ class Amount
 
         // there are five possible positions for the "+" or "-" sign (if it is even used)
         // pos_a and pos_e could be the ( and ) symbol.
-        $posA   = ''; // before everything
-        $posB   = ''; // before currency symbol
-        $posC   = ''; // after currency symbol
-        $posD   = ''; // before amount
-        $posE   = ''; // after everything
+        $posA  = ''; // before everything
+        $posB  = ''; // before currency symbol
+        $posC  = ''; // after currency symbol
+        $posD  = ''; // before amount
+        $posE  = ''; // after everything
 
         // format would be (currency before amount)
         // AB%sC_D%vE
@@ -339,14 +340,10 @@ class Amount
                 $posC = $sign;
         }
 
-        // default is amount before currency
-        $format = $posA.$posD.'%v'.$space.$posB.'%s'.$posC.$posE;
-
         if ($csPrecedes) {
-            // alternative is currency before amount
-            $format = $posA.$posB.'%s'.$posC.$space.$posD.'%v'.$posE;
+            return $posA.$posB.'%s'.$posC.$space.$posD.'%v'.$posE;
         }
 
-        return $format;
+        return $posA.$posD.'%v'.$space.$posB.'%s'.$posC.$posE;
     }
 }

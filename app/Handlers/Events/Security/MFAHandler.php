@@ -39,6 +39,7 @@ use FireflyIII\Notifications\Security\MFAManyFailedAttemptsNotification;
 use FireflyIII\Notifications\Security\MFAUsedBackupCodeNotification;
 use FireflyIII\Notifications\Security\NewBackupCodesNotification;
 use Illuminate\Support\Facades\Notification;
+use Exception;
 
 class MFAHandler
 {
@@ -51,7 +52,7 @@ class MFAHandler
 
         try {
             Notification::send($user, new MFABackupFewLeftNotification($user, $count));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $message = $e->getMessage();
             if (str_contains($message, 'Bcc')) {
                 app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
@@ -76,7 +77,7 @@ class MFAHandler
 
         try {
             Notification::send($user, new MFABackupNoLeftNotification($user));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $message = $e->getMessage();
             if (str_contains($message, 'Bcc')) {
                 app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
@@ -101,7 +102,7 @@ class MFAHandler
 
         try {
             Notification::send($user, new DisabledMFANotification($user));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $message = $e->getMessage();
             if (str_contains($message, 'Bcc')) {
                 app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
@@ -126,7 +127,7 @@ class MFAHandler
 
         try {
             Notification::send($user, new EnabledMFANotification($user));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $message = $e->getMessage();
             if (str_contains($message, 'Bcc')) {
                 app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
@@ -152,7 +153,7 @@ class MFAHandler
 
         try {
             Notification::send($user, new MFAManyFailedAttemptsNotification($user, $count));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $message = $e->getMessage();
             if (str_contains($message, 'Bcc')) {
                 app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
@@ -177,7 +178,7 @@ class MFAHandler
 
         try {
             Notification::send($user, new NewBackupCodesNotification($user));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $message = $e->getMessage();
             if (str_contains($message, 'Bcc')) {
                 app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
@@ -202,7 +203,7 @@ class MFAHandler
 
         try {
             Notification::send($user, new MFAUsedBackupCodeNotification($user));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $message = $e->getMessage();
             if (str_contains($message, 'Bcc')) {
                 app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');

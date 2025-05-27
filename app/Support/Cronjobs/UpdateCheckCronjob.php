@@ -24,16 +24,18 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Cronjobs;
 
+use Carbon\Carbon;
 use FireflyIII\Helpers\Update\UpdateTrait;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 class UpdateCheckCronjob extends AbstractCronjob
 {
     use UpdateTrait;
 
-    #[\Override]
+    #[Override]
     public function fire(): void
     {
         Log::debug('Now in checkForUpdates()');
@@ -54,8 +56,8 @@ class UpdateCheckCronjob extends AbstractCronjob
 
         // TODO this is duplicate.
         /** @var Configuration $lastCheckTime */
-        $lastCheckTime      = FireflyConfig::get('last_update_check', time());
-        $now                = time();
+        $lastCheckTime      = FireflyConfig::get('last_update_check', Carbon::now()->getTimestamp());
+        $now                = Carbon::now()->getTimestamp();
         $diff               = $now - $lastCheckTime->data;
         Log::debug(sprintf('Last check time is %d, current time is %d, difference is %d', $lastCheckTime->data, $now, $diff));
         if ($diff < 604800 && false === $this->force) {
@@ -63,7 +65,7 @@ class UpdateCheckCronjob extends AbstractCronjob
             $this->jobFired     = false;
             $this->jobErrored   = false;
             $this->jobSucceeded = true;
-            $this->message      = sprintf('Checked for updates less than a week ago (on %s).', date('Y-m-d H:i:s', $lastCheckTime->data));
+            $this->message      = sprintf('Checked for updates less than a week ago (on %s).', Carbon::createFromTimestamp($lastCheckTime->data)->format('Y-m-d H:i:s'));
 
             return;
         }

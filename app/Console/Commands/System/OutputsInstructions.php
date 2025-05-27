@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\System;
 
+use Carbon\Carbon;
 use FireflyIII\Support\System\GeneratesInstallationId;
 use Illuminate\Console\Command;
 
@@ -111,8 +112,8 @@ class OutputsInstructions extends Command
      */
     private function showLogo(): void
     {
-        $today  = date('m-d');
-        $month  = date('m');
+        $today  = Carbon::now()->format('m-d');
+        $month  = Carbon::now()->format('m');
         // variation in colors and effects just because I can!
         // default is Ukraine flag:
         $colors = ['blue', 'blue', 'blue', 'yellow', 'yellow', 'yellow', 'default', 'default'];

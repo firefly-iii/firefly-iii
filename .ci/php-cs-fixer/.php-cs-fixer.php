@@ -53,6 +53,9 @@ return $config->setRules(
         'statement_indentation'         => true,
         'void_return'                   => true,
 
+        // about importing statements
+        'global_namespace_import' => ['import_classes' => true, 'import_constants' => true, 'import_functions' => true],
+
         // disabled rules
         'native_function_invocation'    => false, // annoying
         'php_unit_data_provider_name'   => false, // bloody annoying long test names
