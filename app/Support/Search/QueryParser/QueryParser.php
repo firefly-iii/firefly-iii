@@ -51,7 +51,7 @@ class QueryParser implements QueryParserInterface
         $nodes      = [];
         $nodeResult = $this->buildNextNode($isSubquery);
 
-        while (null !== $nodeResult->node) {
+        while ($nodeResult->node instanceof Node) {
             $nodes[]    = $nodeResult->node;
             if ($nodeResult->isSubqueryEnd) {
                 break;

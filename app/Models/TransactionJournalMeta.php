@@ -29,6 +29,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use function Safe\json_decode;
+use function Safe\json_encode;
+
 class TransactionJournalMeta extends Model
 {
     use ReturnsIntegerIdTrait;
@@ -52,7 +55,7 @@ class TransactionJournalMeta extends Model
      */
     public function getDataAttribute($value)
     {
-        return \Safe\json_decode($value, false);
+        return json_decode((string) $value, false);
     }
 
     /**
@@ -60,7 +63,7 @@ class TransactionJournalMeta extends Model
      */
     public function setDataAttribute($value): void
     {
-        $data                     = \Safe\json_encode($value);
+        $data                     = json_encode($value);
         $this->attributes['data'] = $data;
         $this->attributes['hash'] = hash('sha256', (string) $data);
     }

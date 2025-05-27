@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
+use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\Bill;
@@ -100,7 +101,7 @@ class BillUpdateService
             $objectGroupTitle = $data['object_group_title'] ?? '';
             if ('' !== $objectGroupTitle) {
                 $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
-                if (null !== $objectGroup) {
+                if ($objectGroup instanceof ObjectGroup) {
                     $bill->objectGroups()->sync([$objectGroup->id]);
                     $bill->save();
                 }
@@ -116,7 +117,7 @@ class BillUpdateService
             $objectGroupId = (int) ($data['object_group_id'] ?? 0);
             if (0 !== $objectGroupId) {
                 $objectGroup = $this->findObjectGroupById($objectGroupId);
-                if (null !== $objectGroup) {
+                if ($objectGroup instanceof ObjectGroup) {
                     $bill->objectGroups()->sync([$objectGroup->id]);
                     $bill->save();
                 }
@@ -232,14 +233,14 @@ class BillUpdateService
         /** @var Rule $rule */
         foreach ($rules as $rule) {
             $trigger = $this->getRuleTrigger($rule, $key);
-            if (null !== $trigger && $trigger->trigger_value === $oldValue) {
+            if ($trigger instanceof RuleTrigger && $trigger->trigger_value === $oldValue) {
                 app('log')->debug(sprintf('Updated rule trigger #%d from value "%s" to value "%s"', $trigger->id, $oldValue, $newValue));
                 $trigger->trigger_value = $newValue;
                 $trigger->save();
 
                 continue;
             }
-            if (null !== $trigger && $trigger->trigger_value !== $oldValue && in_array($key, ['amount_more', 'amount_less'], true)
+            if ($trigger instanceof RuleTrigger && $trigger->trigger_value !== $oldValue && in_array($key, ['amount_more', 'amount_less'], true)
                 && 0 === bccomp($trigger->trigger_value, $oldValue)) {
                 app('log')->debug(sprintf('Updated rule trigger #%d from value "%s" to value "%s"', $trigger->id, $oldValue, $newValue));
                 $trigger->trigger_value = $newValue;

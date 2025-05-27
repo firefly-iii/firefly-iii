@@ -54,7 +54,7 @@ class FireflyConfig
     public function getEncrypted(string $name, mixed $default = null): ?Configuration
     {
         $result = $this->get($name, $default);
-        if (null === $result) {
+        if (!$result instanceof Configuration) {
             return null;
         }
         if ('' === $result->data) {

@@ -34,6 +34,8 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 use JsonException;
 
+use function Safe\json_encode;
+
 /**
  * Class StandardWebhookSender
  */
@@ -81,7 +83,7 @@ class StandardWebhookSender implements WebhookSenderInterface
         app('log')->debug(sprintf('Trying to send webhook message #%d', $this->message->id));
 
         try {
-            $json = \Safe\json_encode($this->message->message, JSON_THROW_ON_ERROR);
+            $json = json_encode($this->message->message, JSON_THROW_ON_ERROR);
         } catch (JsonException $e) {
             app('log')->error('Did not send message because of a JSON error.');
             app('log')->error($e->getMessage());

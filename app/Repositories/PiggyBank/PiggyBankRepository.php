@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\PiggyBank;
 
+use FireflyIII\User;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\PiggyBankFactory;
@@ -69,7 +70,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
 
         if (null !== $piggyBankId) {
             $searchResult = $this->find($piggyBankId);
-            if (null !== $searchResult) {
+            if ($searchResult instanceof PiggyBank) {
                 app('log')->debug(sprintf('Found piggy based on #%d, will return it.', $piggyBankId));
 
                 return $searchResult;
@@ -77,7 +78,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         }
         if (null !== $piggyBankName) {
             $searchResult = $this->findByName($piggyBankName);
-            if (null !== $searchResult) {
+            if ($searchResult instanceof PiggyBank) {
                 app('log')->debug(sprintf('Found piggy based on "%s", will return it.', $piggyBankName));
 
                 return $searchResult;
@@ -133,7 +134,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
     {
         $sum = '0';
         foreach ($piggyBank->accounts as $current) {
-            if (null !== $account && $account->id !== $current->id) {
+            if ($account instanceof Account && $account->id !== $current->id) {
                 continue;
             }
             $amount = (string) $current->pivot->native_current_amount;
@@ -267,7 +268,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
     {
         $sum = '0';
         foreach ($piggyBank->accounts as $current) {
-            if (null !== $account && $account->id !== $current->id) {
+            if ($account instanceof Account && $account->id !== $current->id) {
                 continue;
             }
             $amount = (string) $current->pivot->current_amount;
@@ -311,10 +312,10 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         $query = PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
             ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
         ;
-        if (null === $this->user) {
+        if (!$this->user instanceof User) {
             $query->where('accounts.user_group_id', $this->userGroup->id);
         }
-        if (null !== $this->user) {
+        if ($this->user instanceof User) {
             $query->where('accounts.user_id', $this->user->id);
         }
 

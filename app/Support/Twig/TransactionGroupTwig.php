@@ -35,6 +35,8 @@ use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 use Override;
 
+use function Safe\json_decode;
+
 /**
  * Class TransactionGroupTwig
  */
@@ -91,7 +93,7 @@ class TransactionGroupTwig extends AbstractExtension
 
         $result     = app('amount')->formatFlat($array['currency_symbol'], (int) $array['currency_decimal_places'], $amount, $colored);
         if (TransactionTypeEnum::TRANSFER->value === $type) {
-            $result = sprintf('<span class="text-info money-transfer">%s</span>', $result);
+            return sprintf('<span class="text-info money-transfer">%s</span>', $result);
         }
 
         return $result;
@@ -111,7 +113,7 @@ class TransactionGroupTwig extends AbstractExtension
 
         // reconciliation and it comes from reconciliation?
         if (TransactionTypeEnum::RECONCILIATION->value === $transactionType && AccountTypeEnum::RECONCILIATION->value !== $sourceType) {
-            $amount = bcmul($amount, '-1');
+            return bcmul($amount, '-1');
         }
 
         return $amount;
@@ -134,7 +136,7 @@ class TransactionGroupTwig extends AbstractExtension
         }
         $result     = app('amount')->formatFlat($array['foreign_currency_symbol'], (int) $array['foreign_currency_decimal_places'], $amount, $colored);
         if (TransactionTypeEnum::TRANSFER->value === $type) {
-            $result = sprintf('<span class="text-info money-transfer">%s</span>', $result);
+            return sprintf('<span class="text-info money-transfer">%s</span>', $result);
         }
 
         return $result;
@@ -182,7 +184,7 @@ class TransactionGroupTwig extends AbstractExtension
         }
         $result     = app('amount')->formatFlat($currency->symbol, $currency->decimal_places, $amount, $colored);
         if (TransactionTypeEnum::TRANSFER->value === $type) {
-            $result = sprintf('<span class="text-info money-transfer">%s</span>', $result);
+            return sprintf('<span class="text-info money-transfer">%s</span>', $result);
         }
 
         return $result;
@@ -217,7 +219,7 @@ class TransactionGroupTwig extends AbstractExtension
         }
         $result     = app('amount')->formatFlat($currency->symbol, $currency->decimal_places, $amount, $colored);
         if (TransactionTypeEnum::TRANSFER->value === $type) {
-            $result = sprintf('<span class="text-info money-transfer">%s</span>', $result);
+            return sprintf('<span class="text-info money-transfer">%s</span>', $result);
         }
 
         return $result;
@@ -256,7 +258,7 @@ class TransactionGroupTwig extends AbstractExtension
                     return today(config('app.timezone'));
                 }
 
-                return new Carbon(\Safe\json_decode($entry->data, false));
+                return new Carbon(json_decode((string) $entry->data, false));
             }
         );
     }
@@ -277,7 +279,7 @@ class TransactionGroupTwig extends AbstractExtension
                     return '';
                 }
 
-                return \Safe\json_decode($entry->data, true);
+                return json_decode((string) $entry->data, true);
             }
         );
     }

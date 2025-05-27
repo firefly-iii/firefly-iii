@@ -50,6 +50,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Exception;
 
+use function Safe\json_decode;
+
 /**
  * Class TransactionGroupRepository
  */
@@ -245,15 +247,14 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
         $currency    = $transaction->transactionCurrency;
         $type        = $journal->transactionType->type;
         $amount      = app('steam')->positive($transaction->amount);
-        $return      = '';
         if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
-            $return = app('amount')->formatAnything($currency, app('steam')->negative($amount));
+            return app('amount')->formatAnything($currency, app('steam')->negative($amount));
         }
         if (TransactionTypeEnum::WITHDRAWAL->value !== $type) {
-            $return = app('amount')->formatAnything($currency, $amount);
+            return app('amount')->formatAnything($currency, $amount);
         }
 
-        return $return;
+        return '';
     }
 
     private function getFormattedForeignAmount(TransactionJournal $journal): string
@@ -269,15 +270,14 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
         $currency    = $transaction->foreignCurrency;
         $type        = $journal->transactionType->type;
         $amount      = app('steam')->positive($transaction->foreign_amount);
-        $return      = '';
         if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
-            $return = app('amount')->formatAnything($currency, app('steam')->negative($amount));
+            return app('amount')->formatAnything($currency, app('steam')->negative($amount));
         }
         if (TransactionTypeEnum::WITHDRAWAL->value !== $type) {
-            $return = app('amount')->formatAnything($currency, $amount);
+            return app('amount')->formatAnything($currency, $amount);
         }
 
-        return $return;
+        return '';
     }
 
     public function getLocation(int $journalId): ?Location
@@ -305,7 +305,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
         $return = [];
 
         foreach ($query as $row) {
-            $return[$row->name] = new Carbon(\Safe\json_decode($row->data, true, 512, JSON_THROW_ON_ERROR));
+            $return[$row->name] = new Carbon(json_decode((string) $row->data, true, 512, JSON_THROW_ON_ERROR));
         }
 
         return new NullArrayObject($return);
@@ -325,7 +325,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
         $return = [];
 
         foreach ($query as $row) {
-            $return[$row->name] = \Safe\json_decode($row->data);
+            $return[$row->name] = json_decode((string) $row->data);
         }
 
         return new NullArrayObject($return);

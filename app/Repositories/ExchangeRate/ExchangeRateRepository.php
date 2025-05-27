@@ -105,7 +105,7 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface, UserGro
     public function updateExchangeRate(CurrencyExchangeRate $object, string $rate, ?Carbon $date = null): CurrencyExchangeRate
     {
         $object->rate = $rate;
-        if (null !== $date) {
+        if ($date instanceof Carbon) {
             $object->date = $date;
         }
         $object->save();

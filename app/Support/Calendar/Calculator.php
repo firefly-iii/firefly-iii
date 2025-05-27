@@ -65,7 +65,7 @@ class Calculator
 
     private static function loadIntervalMap(): SplObjectStorage
     {
-        if (null !== self::$intervalMap) {
+        if (self::$intervalMap instanceof SplObjectStorage) {
             return self::$intervalMap;
         }
         self::$intervalMap = new SplObjectStorage();

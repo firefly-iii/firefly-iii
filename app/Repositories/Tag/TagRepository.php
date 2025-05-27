@@ -231,7 +231,7 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
 
-        if (null !== $start && null !== $end) {
+        if ($start instanceof Carbon && $end instanceof Carbon) {
             $collector->setRange($start, $end);
         }
 
@@ -354,7 +354,7 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
             // otherwise, update or create.
             if (!(null === $data['latitude'] && null === $data['longitude'] && null === $data['zoom_level'])) {
                 $location             = $this->getLocation($tag);
-                if (null === $location) {
+                if (!$location instanceof Location) {
                     $location = new Location();
                     $location->locatable()->associate($tag);
                 }

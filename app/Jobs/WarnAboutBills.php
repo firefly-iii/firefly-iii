@@ -55,7 +55,7 @@ class WarnAboutBills implements ShouldQueue
         $newDate->startOfDay();
         $this->date  = $newDate;
 
-        if (null !== $date) {
+        if ($date instanceof Carbon) {
             $newDate    = clone $date;
             $newDate->startOfDay();
             $this->date = $newDate;

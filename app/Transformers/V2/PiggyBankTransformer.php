@@ -248,12 +248,12 @@ class PiggyBankTransformer extends AbstractTransformer
     private function getSuggestedMonthlyAmount(string $currentAmount, string $targetAmount, ?Carbon $startDate, ?Carbon $targetDate): string
     {
         $savePerMonth = '0';
-        if (null === $targetDate) {
+        if (!$targetDate instanceof Carbon) {
             return '0';
         }
         if (bccomp($currentAmount, $targetAmount) < 1) {
             $now             = today(config('app.timezone'));
-            $startDate       = null !== $startDate && $startDate->gte($now) ? $startDate : $now;
+            $startDate       = $startDate instanceof Carbon && $startDate->gte($now) ? $startDate : $now;
             $diffInMonths    = (int) $startDate->diffInMonths($targetDate);
             $remainingAmount = bcsub($targetAmount, $currentAmount);
 

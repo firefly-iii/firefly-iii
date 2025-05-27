@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Bill;
 
+use FireflyIII\Models\ObjectGroup;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\BillFactory;
@@ -119,7 +120,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
     {
         if (null !== $billId) {
             $searchResult = $this->find($billId);
-            if (null !== $searchResult) {
+            if ($searchResult instanceof Bill) {
                 app('log')->debug(sprintf('Found bill based on #%d, will return it.', $billId));
 
                 return $searchResult;
@@ -127,7 +128,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
         }
         if (null !== $billName) {
             $searchResult = $this->findByName($billName);
-            if (null !== $searchResult) {
+            if ($searchResult instanceof Bill) {
                 app('log')->debug(sprintf('Found bill based on "%s", will return it.', $billName));
 
                 return $searchResult;
@@ -503,7 +504,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
     public function setObjectGroup(Bill $bill, string $objectGroupTitle): Bill
     {
         $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
-        if (null !== $objectGroup) {
+        if ($objectGroup instanceof ObjectGroup) {
             $bill->objectGroups()->sync([$objectGroup->id]);
         }
 

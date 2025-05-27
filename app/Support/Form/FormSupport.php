@@ -85,14 +85,13 @@ trait FormSupport
     {
         // Get errors from session:
         /** @var null|MessageBag $errors */
-        $errors  = session('errors');
-        $classes = 'form-group';
+        $errors = session('errors');
 
         if (null !== $errors && $errors->has($name)) {
-            $classes = 'form-group has-error has-feedback';
+            return 'form-group has-error has-feedback';
         }
 
-        return $classes;
+        return 'form-group';
     }
 
     /**
@@ -112,7 +111,7 @@ trait FormSupport
         }
 
         if ($value instanceof Carbon) {
-            $value = $value->format('Y-m-d');
+            return $value->format('Y-m-d');
         }
 
         return $value;

@@ -150,51 +150,51 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
 
         // depends on transaction type:
         if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
-            if (null !== $accounts) {
+            if ($accounts instanceof Collection) {
                 $collector->setSourceAccounts($accounts);
             }
-            if (null !== $opposing) {
+            if ($opposing instanceof Collection) {
                 $collector->setDestinationAccounts($opposing);
             }
         }
         if (TransactionTypeEnum::DEPOSIT->value === $type) {
-            if (null !== $accounts) {
+            if ($accounts instanceof Collection) {
                 $collector->setDestinationAccounts($accounts);
             }
-            if (null !== $opposing) {
+            if ($opposing instanceof Collection) {
                 $collector->setSourceAccounts($opposing);
             }
         }
         // supports only accounts, not opposing.
-        if (TransactionTypeEnum::TRANSFER->value === $type && null !== $accounts) {
+        if (TransactionTypeEnum::TRANSFER->value === $type && $accounts instanceof Collection) {
             $collector->setAccounts($accounts);
         }
 
-        if (null !== $currency) {
+        if ($currency instanceof TransactionCurrency) {
             $collector->setCurrency($currency);
         }
         $journals  = $collector->getExtractedJournals();
 
         // same but for foreign currencies:
-        if (null !== $currency) {
+        if ($currency instanceof TransactionCurrency) {
             /** @var GroupCollectorInterface $collector */
             $collector = app(GroupCollectorInterface::class);
             $collector->setUser($this->user)->setRange($start, $end)->setTypes([$type])->withAccountInformation()
                 ->setForeignCurrency($currency)
             ;
             if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
-                if (null !== $accounts) {
+                if ($accounts instanceof Collection) {
                     $collector->setSourceAccounts($accounts);
                 }
-                if (null !== $opposing) {
+                if ($opposing instanceof Collection) {
                     $collector->setDestinationAccounts($opposing);
                 }
             }
             if (TransactionTypeEnum::DEPOSIT->value === $type) {
-                if (null !== $accounts) {
+                if ($accounts instanceof Collection) {
                     $collector->setDestinationAccounts($accounts);
                 }
-                if (null !== $opposing) {
+                if ($opposing instanceof Collection) {
                     $collector->setSourceAccounts($opposing);
                 }
             }

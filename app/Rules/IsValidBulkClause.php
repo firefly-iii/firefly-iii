@@ -29,6 +29,8 @@ use Illuminate\Support\Facades\Validator;
 use Closure;
 use JsonException;
 
+use function Safe\json_decode;
+
 /**
  * Class IsValidBulkClause
  */
@@ -65,7 +67,7 @@ class IsValidBulkClause implements ValidationRule
     private function basicValidation(string $value): bool
     {
         try {
-            $array = \Safe\json_decode($value, true, 8, JSON_THROW_ON_ERROR);
+            $array = json_decode($value, true, 8, JSON_THROW_ON_ERROR);
         } catch (JsonException) {
             $this->error = (string) trans('validation.json');
 

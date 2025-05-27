@@ -88,7 +88,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface, UserGroup
             ->where('budgets.active', true)
             ->where('budgets.user_id', $this->user->id)
         ;
-        if (null !== $budgets && $budgets->count() > 0) {
+        if ($budgets instanceof Collection && $budgets->count() > 0) {
             $query->whereIn('budget_limits.budget_id', $budgets->pluck('id')->toArray());
         }
 
@@ -135,7 +135,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface, UserGroup
     public function getAllBudgetLimits(?Carbon $start = null, ?Carbon $end = null): Collection
     {
         // both are NULL:
-        if (null === $start && null === $end) {
+        if (!$start instanceof Carbon && !$end instanceof Carbon) {
             return BudgetLimit::leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
                 ->with(['budget'])
                 ->where('budgets.user_id', $this->user->id)
@@ -144,17 +144,17 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface, UserGroup
             ;
         }
         // one of the two is NULL.
-        if (null === $start xor null === $end) {
+        if (!$start instanceof Carbon xor !$end instanceof Carbon) {
             $query = BudgetLimit::leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
                 ->with(['budget'])
                 ->whereNull('budgets.deleted_at')
                 ->where('budgets.user_id', $this->user->id)
             ;
-            if (null !== $end) {
+            if ($end instanceof Carbon) {
                 // end date must be before $end.
                 $query->where('end_date', '<=', $end->format('Y-m-d 00:00:00'));
             }
-            if (null !== $start) {
+            if ($start instanceof Carbon) {
                 // start date must be after $start.
                 $query->where('start_date', '>=', $start->format('Y-m-d 00:00:00'));
             }
@@ -201,17 +201,17 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface, UserGroup
 
     public function getBudgetLimits(Budget $budget, ?Carbon $start = null, ?Carbon $end = null): Collection
     {
-        if (null === $end && null === $start) {
+        if (!$end instanceof Carbon && !$start instanceof Carbon) {
             return $budget->budgetlimits()->with(['transactionCurrency'])->orderBy('budget_limits.start_date', 'DESC')->get(['budget_limits.*']);
         }
-        if (null === $end xor null === $start) {
+        if (!$end instanceof Carbon xor !$start instanceof Carbon) {
             $query = $budget->budgetlimits()->with(['transactionCurrency'])->orderBy('budget_limits.start_date', 'DESC');
             // one of the two is null
-            if (null !== $end) {
+            if ($end instanceof Carbon) {
                 // end date must be before $end.
                 $query->where('end_date', '<=', $end->format('Y-m-d 00:00:00'));
             }
-            if (null !== $start) {
+            if ($start instanceof Carbon) {
                 // start date must be after $start.
                 $query->where('start_date', '>=', $start->format('Y-m-d 00:00:00'));
             }

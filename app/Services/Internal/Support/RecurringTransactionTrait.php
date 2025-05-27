@@ -43,6 +43,8 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Validation\AccountValidator;
 use Illuminate\Support\Facades\Log;
 
+use function Safe\json_encode;
+
 /**
  * Trait RecurringTransactionTrait
  */
@@ -307,9 +309,9 @@ trait RecurringTransactionTrait
             /** @var null|RecurrenceMeta $entry */
             $entry        = $transaction->recurrenceTransactionMeta()->where('name', 'tags')->first();
             if (null === $entry) {
-                $entry = RecurrenceTransactionMeta::create(['rt_id' => $transaction->id, 'name' => 'tags', 'value' => \Safe\json_encode($tags)]);
+                $entry = RecurrenceTransactionMeta::create(['rt_id' => $transaction->id, 'name' => 'tags', 'value' => json_encode($tags)]);
             }
-            $entry->value = \Safe\json_encode($tags);
+            $entry->value = json_encode($tags);
             $entry->save();
         }
         if (0 === count($tags)) {

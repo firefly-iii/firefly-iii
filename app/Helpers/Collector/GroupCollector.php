@@ -48,6 +48,8 @@ use Illuminate\Support\Facades\Log;
 use Closure;
 use Override;
 
+use function Safe\json_decode;
+
 /**
  * Class GroupCollector
  */
@@ -595,7 +597,7 @@ class GroupCollector implements GroupCollectorInterface
         if (array_key_exists('meta_name', $result) && in_array($result['meta_name'], $dates, true)) {
             $name = $result['meta_name'];
             if (array_key_exists('meta_data', $result) && '' !== (string) $result['meta_data']) {
-                $result[$name] = Carbon::createFromFormat('!Y-m-d', substr((string) \Safe\json_decode($result['meta_data']), 0, 10));
+                $result[$name] = Carbon::createFromFormat('!Y-m-d', substr((string) json_decode((string) $result['meta_data']), 0, 10));
             }
         }
 
@@ -1046,7 +1048,7 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function setUser(User $user): GroupCollectorInterface
     {
-        if (null === $this->user) {
+        if (!$this->user instanceof User) {
             $this->user = $user;
             $this->startQuery();
         }
@@ -1106,7 +1108,7 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function setUserGroup(UserGroup $userGroup): GroupCollectorInterface
     {
-        if (null === $this->userGroup) {
+        if (!$this->userGroup instanceof UserGroup) {
             $this->userGroup = $userGroup;
             $this->startQueryForGroup();
         }

@@ -79,7 +79,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
     {
         /** @var Rule $rule */
         foreach ($ruleGroup->rules as $rule) {
-            if (null === $moveTo) {
+            if (!$moveTo instanceof RuleGroup) {
                 $rule->delete();
 
                 continue;
@@ -92,7 +92,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
         $ruleGroup->delete();
 
         $this->resetOrder();
-        if (null !== $moveTo) {
+        if ($moveTo instanceof RuleGroup) {
             $this->resetRuleOrder($moveTo);
         }
 

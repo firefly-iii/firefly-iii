@@ -59,7 +59,7 @@ class AccountForm
 
     private function getAccountsGrouped(array $types, ?AccountRepositoryInterface $repository = null): array
     {
-        if (null === $repository) {
+        if (!$repository instanceof AccountRepositoryInterface) {
             $repository = $this->getAccountRepository();
         }
         $accountList    = $repository->getActiveAccountsByType($types);

@@ -115,7 +115,7 @@ class Amount
 
     public function convertToNative(?User $user = null): bool
     {
-        if (null === $user) {
+        if (!$user instanceof User) {
             return true === Preferences::get('convert_to_native', false)->data && true === config('cer.enabled');
             //            Log::debug(sprintf('convertToNative [a]: %s', var_export($result, true)));
         }
@@ -286,7 +286,7 @@ class Amount
     public static function getAmountJsConfig(bool $sepBySpace, int $signPosn, string $sign, bool $csPrecedes): string
     {
         // negative first:
-        $space  = ' ';
+        $space = ' ';
 
         // require space between symbol and amount?
         if (false === $sepBySpace) {
@@ -295,11 +295,11 @@ class Amount
 
         // there are five possible positions for the "+" or "-" sign (if it is even used)
         // pos_a and pos_e could be the ( and ) symbol.
-        $posA   = ''; // before everything
-        $posB   = ''; // before currency symbol
-        $posC   = ''; // after currency symbol
-        $posD   = ''; // before amount
-        $posE   = ''; // after everything
+        $posA  = ''; // before everything
+        $posB  = ''; // before currency symbol
+        $posC  = ''; // after currency symbol
+        $posD  = ''; // before amount
+        $posE  = ''; // after everything
 
         // format would be (currency before amount)
         // AB%sC_D%vE
@@ -340,14 +340,10 @@ class Amount
                 $posC = $sign;
         }
 
-        // default is amount before currency
-        $format = $posA.$posD.'%v'.$space.$posB.'%s'.$posC.$posE;
-
         if ($csPrecedes) {
-            // alternative is currency before amount
-            $format = $posA.$posB.'%s'.$posC.$space.$posD.'%v'.$posE;
+            return $posA.$posB.'%s'.$posC.$space.$posD.'%v'.$posE;
         }
 
-        return $format;
+        return $posA.$posD.'%v'.$space.$posB.'%s'.$posC.$posE;
     }
 }

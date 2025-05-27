@@ -27,6 +27,9 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use function Safe\json_decode;
+use function Safe\json_encode;
+
 class Configuration extends Model
 {
     use ReturnsIntegerIdTrait;
@@ -50,7 +53,7 @@ class Configuration extends Model
      */
     public function getDataAttribute($value)
     {
-        return \Safe\json_decode($value);
+        return json_decode((string) $value);
     }
 
     /**
@@ -58,6 +61,6 @@ class Configuration extends Model
      */
     public function setDataAttribute($value): void
     {
-        $this->attributes['data'] = \Safe\json_encode($value);
+        $this->attributes['data'] = json_encode($value);
     }
 }

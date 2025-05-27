@@ -60,10 +60,10 @@ class CreditRecalculateService
         if (true !== config('firefly.feature_flags.handle_debts')) {
             return;
         }
-        if (null !== $this->group && null === $this->account) {
+        if ($this->group instanceof TransactionGroup && !$this->account instanceof Account) {
             $this->processGroup();
         }
-        if (null !== $this->account && null === $this->group) {
+        if ($this->account instanceof Account && !$this->group instanceof TransactionGroup) {
             // work based on account.
             $this->processAccount();
         }
@@ -163,7 +163,7 @@ class CreditRecalculateService
         $this->repository->setUser($account->user);
         $direction      = (string) $this->repository->getMetaValue($account, 'liability_direction');
         $openingBalance = $this->repository->getOpeningBalance($account);
-        if (null !== $openingBalance) {
+        if ($openingBalance instanceof TransactionJournal) {
             //            Log::debug(sprintf('Found opening balance transaction journal #%d', $openingBalance->id));
             // if account direction is "debit" ("I owe this amount") the opening balance must always be AWAY from the account:
             if ('debit' === $direction) {
@@ -358,7 +358,7 @@ class CreditRecalculateService
     {
         $usedAmount = $transaction->amount;
         //        Log::debug(sprintf('Amount of transaction is %s', app('steam')->bcround($usedAmount, 2)));
-        if (null !== $foreignCurrency && $foreignCurrency->id === $accountCurrency->id) {
+        if ($foreignCurrency instanceof TransactionCurrency && $foreignCurrency->id === $accountCurrency->id) {
             $usedAmount = $transaction->foreign_amount;
             //            Log::debug(sprintf('Overruled by foreign amount. Amount of transaction is now %s', app('steam')->bcround($usedAmount, 2)));
         }

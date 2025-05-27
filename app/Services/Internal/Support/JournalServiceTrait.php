@@ -39,6 +39,8 @@ use FireflyIII\Rules\UniqueIban;
 use FireflyIII\Support\NullArrayObject;
 use Illuminate\Support\Facades\Log;
 
+use function Safe\json_encode;
+
 /**
  * Trait JournalServiceTrait
  */
@@ -140,7 +142,7 @@ trait JournalServiceTrait
 
     private function findAccountByIban(?Account $account, array $data, array $types): ?Account
     {
-        if (null !== $account) {
+        if ($account instanceof Account) {
             Log::debug(sprintf('Already have account #%d ("%s"), return that.', $account->id, $account->name));
 
             return $account;
@@ -167,7 +169,7 @@ trait JournalServiceTrait
 
     private function findAccountByNumber(?Account $account, array $data, array $types): ?Account
     {
-        if (null !== $account) {
+        if ($account instanceof Account) {
             Log::debug(sprintf('Already have account #%d ("%s"), return that.', $account->id, $account->name));
 
             return $account;
@@ -196,7 +198,7 @@ trait JournalServiceTrait
 
     private function findAccountByName(?Account $account, array $data, array $types): ?Account
     {
-        if (null !== $account) {
+        if ($account instanceof Account) {
             Log::debug(sprintf('Already have account #%d ("%s"), return that.', $account->id, $account->name));
 
             return $account;
@@ -247,7 +249,7 @@ trait JournalServiceTrait
     {
         Log::debug('Now in createAccount()', $data);
         // return new account.
-        if (null !== $account) {
+        if ($account instanceof Account) {
             Log::debug(
                 sprintf(
                     'Was given %s account #%d ("%s") so will simply return that.',
@@ -257,10 +259,10 @@ trait JournalServiceTrait
                 )
             );
         }
-        if (null === $account) {
+        if (!$account instanceof Account) {
             // final attempt, create it.
             if (AccountTypeEnum::ASSET->value === $preferredType) {
-                throw new FireflyException(sprintf('TransactionFactory: Cannot create asset account with these values: %s', \Safe\json_encode($data)));
+                throw new FireflyException(sprintf('TransactionFactory: Cannot create asset account with these values: %s', json_encode($data)));
             }
             // fix name of account if only IBAN is given:
             if ('' === (string) $data['name'] && '' !== (string) $data['iban']) {
@@ -320,7 +322,7 @@ trait JournalServiceTrait
     private function getCashAccount(?Account $account, array $data, array $types): ?Account
     {
         // return cash account.
-        if (null === $account && '' === (string) $data['name']
+        if (!$account instanceof Account && '' === (string) $data['name']
             && in_array(AccountTypeEnum::CASH->value, $types, true)) {
             $account = $this->accountRepository->getCashAccount();
         }

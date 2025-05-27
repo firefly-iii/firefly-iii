@@ -47,7 +47,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
 
     public function destroy(LinkType $linkType, ?LinkType $moveTo = null): bool
     {
-        if (null !== $moveTo) {
+        if ($moveTo instanceof LinkType) {
             TransactionJournalLink::where('link_type_id', $linkType->id)->update(['link_type_id' => $moveTo->id]);
         }
         $linkType->delete();
@@ -125,7 +125,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
             ->whereNull('dest_journals.deleted_at')
         ;
 
-        if (null !== $linkType) {
+        if ($linkType instanceof LinkType) {
             $query->where('journal_links.link_type_id', $linkType->id);
         }
 
@@ -177,17 +177,17 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
     {
         $linkType = $this->find((int) ($information['link_type_id'] ?? 0));
 
-        if (null === $linkType) {
+        if (!$linkType instanceof LinkType) {
             $linkType = $this->findByName($information['link_type_name']);
         }
 
-        if (null === $linkType) {
+        if (!$linkType instanceof LinkType) {
             return null;
         }
 
         // might exist already:
         $existing = $this->findSpecificLink($linkType, $inward, $outward);
-        if (null !== $existing) {
+        if ($existing instanceof TransactionJournalLink) {
             return $existing;
         }
 

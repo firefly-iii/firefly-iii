@@ -30,6 +30,8 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Log;
 use Closure;
 
+use function Safe\json_encode;
+
 class IsValidPositiveAmount implements ValidationRule
 {
     use ValidatesAmountsTrait;
@@ -41,7 +43,7 @@ class IsValidPositiveAmount implements ValidationRule
     {
         if (is_array($value)) {
             $fail('validation.numeric')->translate();
-            $message = sprintf('IsValidPositiveAmount: "%s" is not a number.', \Safe\json_encode($value));
+            $message = sprintf('IsValidPositiveAmount: "%s" is not a number.', json_encode($value));
             Log::debug($message);
             Log::channel('audit')->info($message);
 

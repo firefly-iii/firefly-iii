@@ -47,6 +47,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Override;
 
+use function Safe\json_encode;
+
 /**
  * Class AccountRepository.
  */
@@ -109,7 +111,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
             ->where('accounts.active', true)
             ->where(
                 static function (EloquentBuilder $q1) use ($number): void {
-                    $json = \Safe\json_encode($number);
+                    $json = json_encode($number);
                     $q1->where('account_meta.name', '=', 'account_number');
                     $q1->where('account_meta.data', '=', $json);
                 }

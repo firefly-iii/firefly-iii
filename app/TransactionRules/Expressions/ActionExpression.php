@@ -135,7 +135,7 @@ class ActionExpression
 
     public function isValid(): bool
     {
-        return null === $this->validationError;
+        return !$this->validationError instanceof SyntaxError;
     }
 
     private function evaluateExpression(string $expr, array $journal): string

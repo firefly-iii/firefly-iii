@@ -31,24 +31,13 @@ return RectorConfig::configure()
         ChangeOrIfContinueToMultiContinueRector::class,
     ])
     ->withPaths([
-//                                   __DIR__ . '/../app',
-        __DIR__ . '/../app/Api',
-        __DIR__ . '/../app/Casts',
-        __DIR__ . '/../app/Console',
-        __DIR__ . '/../app/Entities',
-        __DIR__ . '/../app/Enums',
-        __DIR__ . '/../app/Enums',
-        __DIR__ . '/../app/Events',
-        __DIR__ . '/../app/Exceptions',
-        __DIR__ . '/../app/Factory',
-        __DIR__ . '/../app/Generator',
-        __DIR__ . '/../app/Http',
-//                                   __DIR__ . '/../bootstrap',
-//                                   __DIR__ . '/../config',
-//                                   __DIR__ . '/../public',
-//                                   __DIR__ . '/../resources',
-//                                   __DIR__ . '/../routes',
-// __DIR__ . '/../tests',
+        __DIR__ . '/../app',
+        __DIR__ . '/../bootstrap',
+        __DIR__ . '/../config',
+        __DIR__ . '/../public',
+        __DIR__ . '/../resources',
+        __DIR__ . '/../routes',
+        __DIR__ . '/../tests',
     ])
     // uncomment to reach your current PHP version
     ->withPhpSets()

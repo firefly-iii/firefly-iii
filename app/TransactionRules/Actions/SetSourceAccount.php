@@ -67,7 +67,7 @@ class SetSourceAccount implements ActionInterface
 
         // if this is a transfer or a withdrawal, the new source account must be an asset account or a default account, and it MUST exist:
         $newAccount       = $this->findAssetAccount($type, $accountName);
-        if ((TransactionTypeEnum::WITHDRAWAL->value === $type || TransactionTypeEnum::TRANSFER->value === $type) && null === $newAccount) {
+        if ((TransactionTypeEnum::WITHDRAWAL->value === $type || TransactionTypeEnum::TRANSFER->value === $type) && !$newAccount instanceof Account) {
             app('log')->error(
                 sprintf('Cant change source account of journal #%d because no asset account with name "%s" exists.', $object->id, $accountName)
             );
@@ -92,7 +92,7 @@ class SetSourceAccount implements ActionInterface
 
             return false;
         }
-        if (null !== $newAccount && $newAccount->id === $destination->account_id) {
+        if ($newAccount instanceof Account && $newAccount->id === $destination->account_id) {
             app('log')->error(
                 sprintf(
                     'New source account ID #%d and current destination account ID #%d are the same. Do nothing.',
@@ -141,7 +141,7 @@ class SetSourceAccount implements ActionInterface
     {
         $allowed = config('firefly.expected_source_types.source.Deposit');
         $account = $this->repository->findByName($accountName, $allowed);
-        if (null === $account) {
+        if (!$account instanceof Account) {
             // create new revenue account with this name:
             $data    = [
                 'name'              => $accountName,

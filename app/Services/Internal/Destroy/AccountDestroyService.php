@@ -44,12 +44,12 @@ class AccountDestroyService
         // find and delete opening balance journal + opposing account
         $this->destroyOpeningBalance($account);
 
-        if (null !== $moveTo) {
+        if ($moveTo instanceof Account) {
             $this->moveTransactions($account, $moveTo);
             $this->updateRecurrences($account, $moveTo);
         }
         // delete recurring transactions with this account:
-        if (null === $moveTo) {
+        if (!$moveTo instanceof Account) {
             $this->destroyRecurrences($account);
         }
 

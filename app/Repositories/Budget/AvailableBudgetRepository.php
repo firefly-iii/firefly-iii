@@ -65,7 +65,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
     public function get(?Carbon $start = null, ?Carbon $end = null): Collection
     {
         $query  = $this->user->availableBudgets()->with(['transactionCurrency']);
-        if (null !== $start && null !== $end) {
+        if ($start instanceof Carbon && $end instanceof Carbon) {
             $query->where(
                 static function (Builder $q1) use ($start, $end): void {
                     $q1->where('start_date', '=', $start->format('Y-m-d'));
@@ -123,7 +123,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
             ->where('end_date', $end->format('Y-m-d'))->first()
         ;
         if (null !== $availableBudget) {
-            $amount = $availableBudget->amount;
+            return $availableBudget->amount;
         }
 
         return $amount;
@@ -172,10 +172,10 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
     {
         $query = $this->user->availableBudgets();
 
-        if (null !== $start) {
+        if ($start instanceof Carbon) {
             $query->where('start_date', '>=', $start->format('Y-m-d'));
         }
-        if (null !== $end) {
+        if ($end instanceof Carbon) {
             $query->where('end_date', '<=', $end->format('Y-m-d'));
         }
 

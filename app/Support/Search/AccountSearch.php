@@ -29,6 +29,8 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
+use function Safe\json_encode;
+
 /**
  * Class AccountSearch
  */
@@ -81,7 +83,7 @@ class AccountSearch implements GenericSearchInterface
                 // meta data:
                 $searchQuery->orWhere(
                     static function (Builder $q) use ($originalQuery): void {
-                        $json = \Safe\json_encode($originalQuery, JSON_THROW_ON_ERROR);
+                        $json = json_encode($originalQuery, JSON_THROW_ON_ERROR);
                         $q->where('account_meta.name', '=', 'account_number');
                         $q->whereLike('account_meta.data', $json);
                     }
@@ -108,7 +110,7 @@ class AccountSearch implements GenericSearchInterface
                 // meta data:
                 $searchQuery->Where(
                     static function (Builder $q) use ($originalQuery): void {
-                        $json = \Safe\json_encode($originalQuery, JSON_THROW_ON_ERROR);
+                        $json = json_encode($originalQuery, JSON_THROW_ON_ERROR);
                         $q->where('account_meta.name', 'account_number');
                         $q->where('account_meta.data', $json);
                     }

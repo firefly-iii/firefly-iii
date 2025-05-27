@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
+use Carbon\Carbon;
 use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Update\UpdateTrait;
@@ -68,12 +69,12 @@ class VersionCheckEventHandler
         }
 
         /** @var Configuration $lastCheckTime */
-        $lastCheckTime = app('fireflyconfig')->get('last_update_check', time());
-        $now           = time();
+        $lastCheckTime = app('fireflyconfig')->get('last_update_check', Carbon::now()->getTimestamp());
+        $now           = Carbon::now()->getTimestamp();
         $diff          = $now - $lastCheckTime->data;
         Log::debug(sprintf('Last check time is %d, current time is %d, difference is %d', $lastCheckTime->data, $now, $diff));
         if ($diff < 604800) {
-            Log::debug(sprintf('Checked for updates less than a week ago (on %s).', date('Y-m-d H:i:s', $lastCheckTime->data)));
+            Log::debug(sprintf('Checked for updates less than a week ago (on %s).', Carbon::createFromTimestamp($lastCheckTime->data)->format('Y-m-d H:i:s')));
 
             return;
         }
@@ -82,7 +83,7 @@ class VersionCheckEventHandler
         $release       = $this->getLatestRelease();
 
         session()->flash($release['level'], $release['message']);
-        app('fireflyconfig')->set('last_update_check', time());
+        app('fireflyconfig')->set('last_update_check', Carbon::now()->getTimestamp());
     }
 
     /**
@@ -100,12 +101,12 @@ class VersionCheckEventHandler
         }
 
         /** @var Configuration $lastCheckTime */
-        $lastCheckTime = app('fireflyconfig')->get('last_update_warning', time());
-        $now           = time();
+        $lastCheckTime = app('fireflyconfig')->get('last_update_warning', Carbon::now()->getTimestamp());
+        $now           = Carbon::now()->getTimestamp();
         $diff          = $now - $lastCheckTime->data;
         Log::debug(sprintf('Last warning time is %d, current time is %d, difference is %d', $lastCheckTime->data, $now, $diff));
         if ($diff < 604800 * 4) {
-            Log::debug(sprintf('Warned about updates less than four weeks ago (on %s).', date('Y-m-d H:i:s', $lastCheckTime->data)));
+            Log::debug(sprintf('Warned about updates less than four weeks ago (on %s).', Carbon::createFromTimestamp($lastCheckTime->data)->format('Y-m-d H:i:s')));
 
             return;
         }
@@ -113,6 +114,6 @@ class VersionCheckEventHandler
         Log::debug('Have warned about a new version in four weeks!');
 
         session()->flash('info', (string) trans('firefly.disabled_but_check'));
-        app('fireflyconfig')->set('last_update_warning', time());
+        app('fireflyconfig')->set('last_update_warning', Carbon::now()->getTimestamp());
     }
 }

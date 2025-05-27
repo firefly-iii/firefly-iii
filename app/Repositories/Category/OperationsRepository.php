@@ -53,14 +53,14 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
-        if (null !== $accounts && $accounts->count() > 0) {
+        if ($accounts instanceof Collection && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
             $collector->excludeDestinationAccounts($accounts); // to exclude withdrawals to liabilities.
         }
-        if (null !== $categories && $categories->count() > 0) {
+        if ($categories instanceof Collection && $categories->count() > 0) {
             $collector->setCategories($categories);
         }
-        if (null === $categories || 0 === $categories->count()) {
+        if (!$categories instanceof Collection || 0 === $categories->count()) {
             $collector->setCategories($this->getCategories());
         }
         $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation();
@@ -131,14 +131,14 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::DEPOSIT->value]);
-        if (null !== $accounts && $accounts->count() > 0) {
+        if ($accounts instanceof Collection && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
             $collector->excludeSourceAccounts($accounts); // to prevent income from liabilities.
         }
-        if (null !== $categories && $categories->count() > 0) {
+        if ($categories instanceof Collection && $categories->count() > 0) {
             $collector->setCategories($categories);
         }
-        if (null === $categories || 0 === $categories->count()) {
+        if (!$categories instanceof Collection || 0 === $categories->count()) {
             $collector->setCategories($this->getCategories());
         }
         $collector->withCategoryInformation()->withAccountInformation();
@@ -197,10 +197,10 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::TRANSFER->value])
             ->setDestinationAccounts($accounts)->excludeSourceAccounts($accounts)
         ;
-        if (null !== $categories && $categories->count() > 0) {
+        if ($categories instanceof Collection && $categories->count() > 0) {
             $collector->setCategories($categories);
         }
-        if (null === $categories || 0 === $categories->count()) {
+        if (!$categories instanceof Collection || 0 === $categories->count()) {
             $collector->setCategories($this->getCategories());
         }
         $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation();
@@ -260,10 +260,10 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::TRANSFER->value])
             ->setSourceAccounts($accounts)->excludeDestinationAccounts($accounts)
         ;
-        if (null !== $categories && $categories->count() > 0) {
+        if ($categories instanceof Collection && $categories->count() > 0) {
             $collector->setCategories($categories);
         }
-        if (null === $categories || 0 === $categories->count()) {
+        if (!$categories instanceof Collection || 0 === $categories->count()) {
             $collector->setCategories($this->getCategories());
         }
         $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation();
@@ -325,10 +325,10 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         $collector  = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
 
-        if (null !== $accounts && $accounts->count() > 0) {
+        if ($accounts instanceof Collection && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        if (null === $categories || 0 === $categories->count()) {
+        if (!$categories instanceof Collection || 0 === $categories->count()) {
             $categories = $this->getCategories();
         }
         $collector->setCategories($categories);
@@ -350,10 +350,10 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
             ->setTypes([TransactionTypeEnum::DEPOSIT->value])
         ;
 
-        if (null !== $accounts && $accounts->count() > 0) {
+        if ($accounts instanceof Collection && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        if (null === $categories || 0 === $categories->count()) {
+        if (!$categories instanceof Collection || 0 === $categories->count()) {
             $categories = $this->getCategories();
         }
         $collector->setCategories($categories);
@@ -419,10 +419,10 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
             ->setTypes([TransactionTypeEnum::TRANSFER->value])
         ;
 
-        if (null !== $accounts && $accounts->count() > 0) {
+        if ($accounts instanceof Collection && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        if (null === $categories || 0 === $categories->count()) {
+        if (!$categories instanceof Collection || 0 === $categories->count()) {
             $categories = $this->getCategories();
         }
         $collector->setCategories($categories);

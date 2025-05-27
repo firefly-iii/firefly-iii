@@ -160,7 +160,7 @@ class UniqueIban implements ValidationRule
                         ->whereIn('account_types.type', $typesArray)
         ;
 
-        if (null !== $this->account) {
+        if ($this->account instanceof Account) {
             $query->where('accounts.id', '!=', $this->account->id);
         }
 

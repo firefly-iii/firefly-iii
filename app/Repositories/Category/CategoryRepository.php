@@ -111,18 +111,18 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
         app('log')->debug('Now in findCategory()');
         app('log')->debug(sprintf('Searching for category with ID #%d...', $categoryId));
         $result = $this->find((int) $categoryId);
-        if (null === $result) {
+        if (!$result instanceof Category) {
             app('log')->debug(sprintf('Searching for category with name %s...', $categoryName));
             $result = $this->findByName((string) $categoryName);
-            if (null === $result && '' !== (string) $categoryName) {
+            if (!$result instanceof Category && '' !== (string) $categoryName) {
                 // create it!
                 $result = $this->store(['name' => $categoryName]);
             }
         }
-        if (null !== $result) {
+        if ($result instanceof Category) {
             app('log')->debug(sprintf('Found category #%d: %s', $result->id, $result->name));
         }
-        app('log')->debug(sprintf('Found category result is null? %s', var_export(null === $result, true)));
+        app('log')->debug(sprintf('Found category result is null? %s', var_export(!$result instanceof Category, true)));
 
         return $result;
     }
@@ -191,13 +191,13 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
         $firstJournalDate     = $this->getFirstJournalDate($category);
         $firstTransactionDate = $this->getFirstTransactionDate($category);
 
-        if (null === $firstTransactionDate && null === $firstJournalDate) {
+        if (!$firstTransactionDate instanceof Carbon && !$firstJournalDate instanceof Carbon) {
             return null;
         }
-        if (null === $firstTransactionDate) {
+        if (!$firstTransactionDate instanceof Carbon) {
             return $firstJournalDate;
         }
-        if (null === $firstJournalDate) {
+        if (!$firstJournalDate instanceof Carbon) {
             return $firstTransactionDate;
         }
 
@@ -279,13 +279,13 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
         $lastJournalDate     = $this->getLastJournalDate($category, $accounts);
         $lastTransactionDate = $this->getLastTransactionDate($category, $accounts);
 
-        if (null === $lastTransactionDate && null === $lastJournalDate) {
+        if (!$lastTransactionDate instanceof Carbon && !$lastJournalDate instanceof Carbon) {
             return null;
         }
-        if (null === $lastTransactionDate) {
+        if (!$lastTransactionDate instanceof Carbon) {
             return $lastJournalDate;
         }
-        if (null === $lastJournalDate) {
+        if (!$lastJournalDate instanceof Carbon) {
             return $lastTransactionDate;
         }
 

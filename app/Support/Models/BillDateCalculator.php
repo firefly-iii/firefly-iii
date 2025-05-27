@@ -83,7 +83,7 @@ class BillDateCalculator
             // AND date is after last paid date
             if (
                 $nextExpectedMatch->gte($earliest) // date is after "earliest possible date"
-                && (null === $lastPaid || $nextExpectedMatch->gt($lastPaid)) // date is after last paid date, if that date is not NULL
+                && (!$lastPaid instanceof Carbon || $nextExpectedMatch->gt($lastPaid)) // date is after last paid date, if that date is not NULL
             ) {
                 Log::debug('Add date to set, because it is after earliest possible date and after last paid date.');
                 $set->push(clone $nextExpectedMatch);

@@ -74,7 +74,7 @@ class AvailableBudgetTransformer extends AbstractTransformer
             'currency_code'                  => $currency->code,
             'currency_symbol'                => $currency->symbol,
             'currency_decimal_places'        => $currency->decimal_places,
-            'native_currency_id'             => null === $default ? null : (string) $default->id,
+            'native_currency_id'             => $default instanceof TransactionCurrency ? (string) $default->id : null,
             'native_currency_code'           => $default?->code,
             'native_currency_symbol'         => $default?->symbol,
             'native_currency_decimal_places' => $default?->decimal_places,

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\User;
 
+use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\GroupMembership;
@@ -56,7 +57,7 @@ class UserRepository implements UserRepositoryInterface
 
         // save old email as pref
         app('preferences')->setForUser($user, 'previous_email_latest', $oldEmail);
-        app('preferences')->setForUser($user, 'previous_email_'.date('Y-m-d-H-i-s'), $oldEmail);
+        app('preferences')->setForUser($user, 'previous_email_'.Carbon::now()->format('Y-m-d-H-i-s'), $oldEmail);
 
         // set undo and confirm token:
         app('preferences')->setForUser($user, 'email_change_undo_token', bin2hex(random_bytes(16)));
@@ -230,7 +231,7 @@ class UserRepository implements UserRepositoryInterface
 
     public function hasRole(null|Authenticatable|User $user, string $role): bool
     {
-        if (null === $user) {
+        if (!$user instanceof Authenticatable) {
             return false;
         }
         if ($user instanceof User) {
@@ -391,7 +392,7 @@ class UserRepository implements UserRepositoryInterface
 
         // save old email as pref
         app('preferences')->setForUser($user, 'admin_previous_email_latest', $oldEmail);
-        app('preferences')->setForUser($user, 'admin_previous_email_'.date('Y-m-d-H-i-s'), $oldEmail);
+        app('preferences')->setForUser($user, 'admin_previous_email_'.Carbon::now()->format('Y-m-d-H-i-s'), $oldEmail);
 
         $user->email = $newEmail;
         $user->save();
@@ -405,7 +406,7 @@ class UserRepository implements UserRepositoryInterface
     public function removeRole(User $user, string $role): void
     {
         $roleObj = $this->getRole($role);
-        if (null === $roleObj) {
+        if (!$roleObj instanceof Role) {
             return;
         }
         $user->roles()->detach($roleObj->id);

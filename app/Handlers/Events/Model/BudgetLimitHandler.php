@@ -204,7 +204,7 @@ class BudgetLimitHandler
             if (!$limitPeriod->equals($abPeriod) && !$abPeriod->contains($limitPeriod) && $abPeriod->overlapsWith($limitPeriod)) {
                 Log::debug('This budget limit is something else entirely!');
                 $overlap = $abPeriod->overlap($limitPeriod);
-                if (null !== $overlap) {
+                if ($overlap instanceof Period) {
                     $length    = $overlap->length();
                     $daily     = bcmul($this->getDailyAmount($budgetLimit), (string) $length);
                     $newAmount = bcadd($newAmount, $daily);

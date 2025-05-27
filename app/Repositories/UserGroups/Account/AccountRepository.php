@@ -40,6 +40,8 @@ use Illuminate\Support\Facades\DB;
 use Override;
 use stdClass;
 
+use function Safe\json_encode;
+
 /**
  * Class AccountRepository
  *
@@ -68,7 +70,7 @@ class AccountRepository implements AccountRepositoryInterface
             ->where('accounts.active', true)
             ->where(
                 static function (EloquentBuilder $q1) use ($number): void {
-                    $json = \Safe\json_encode($number);
+                    $json = json_encode($number);
                     $q1->where('account_meta.name', '=', 'account_number');
                     $q1->where('account_meta.data', '=', $json);
                 }
@@ -167,7 +169,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $account = $this->user->accounts()->find($accountId);
         if (null === $account) {
-            $account = $this->userGroup->accounts()->find($accountId);
+            return $this->userGroup->accounts()->find($accountId);
         }
 
         /** @var null|Account */

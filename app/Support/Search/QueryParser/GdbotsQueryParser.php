@@ -33,6 +33,8 @@ use Illuminate\Support\Facades\Log;
 use LogicException;
 use TypeError;
 
+use function Safe\fwrite;
+
 class GdbotsQueryParser implements QueryParserInterface
 {
     private readonly BaseQueryParser $parser;
@@ -56,7 +58,7 @@ class GdbotsQueryParser implements QueryParserInterface
 
             return new NodeGroup($nodes);
         } catch (LogicException|TypeError $e) {
-            \Safe\fwrite(STDERR, "Setting up GdbotsQueryParserTest\n");
+            fwrite(STDERR, "Setting up GdbotsQueryParserTest\n");
             app('log')->error($e->getMessage());
             app('log')->error(sprintf('Could not parse search: "%s".', $query));
 

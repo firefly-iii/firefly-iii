@@ -52,7 +52,7 @@ class ReturnsSettings
             'ntfy_pass'   => '',
 
         ];
-        if ('user' === $type && null !== $user) {
+        if ('user' === $type && $user instanceof User) {
             $settings['ntfy_server'] = Preferences::getEncryptedForUser($user, 'ntfy_server', 'https://ntfy.sh')->data;
             $settings['ntfy_topic']  = Preferences::getEncryptedForUser($user, 'ntfy_topic', '')->data;
             $settings['ntfy_auth']   = '1' === Preferences::getForUser($user, 'ntfy_auth', false)->data;
