@@ -133,12 +133,12 @@ class AccountController extends Controller
              */
             foreach ($expenses as $key => $endBalance) {
                 if (!$this->convertToNative && 'native_balance' === $key) {
-                    Log::debug(sprintf('[a] Will skip expense array "%s"', $key));
+//                    Log::debug(sprintf('[a] Will skip expense array "%s"', $key));
 
                     continue;
                 }
                 if ($this->convertToNative && 'native_balance' !== $key) {
-                    Log::debug(sprintf('[b] Will skip expense array "%s"', $key));
+//                    Log::debug(sprintf('[b] Will skip expense array "%s"', $key));
 
                     continue;
                 }
@@ -616,12 +616,12 @@ class AccountController extends Controller
              */
             foreach ($expenses as $key => $endBalance) {
                 if (!$this->convertToNative && 'native_balance' === $key) {
-                    Log::debug(sprintf('[a] Will skip expense array "%s"', $key));
+//                    Log::debug(sprintf('[a] Will skip expense array "%s"', $key));
 
                     continue;
                 }
                 if ($this->convertToNative && 'native_balance' !== $key) {
-                    Log::debug(sprintf('[b] Will skip expense array "%s"', $key));
+//                    Log::debug(sprintf('[b] Will skip expense array "%s"', $key));
 
                     continue;
                 }
