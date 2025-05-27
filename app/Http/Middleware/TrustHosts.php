@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
+use Override;
 use Illuminate\Http\Middleware\TrustHosts as Middleware;
 
 class TrustHosts extends Middleware
@@ -33,7 +34,7 @@ class TrustHosts extends Middleware
      *
      * @return array<int, null|string>
      */
-    #[\Override]
+    #[Override]
     public function hosts(): array
     {
         return [

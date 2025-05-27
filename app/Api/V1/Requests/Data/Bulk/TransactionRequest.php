@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Data\Bulk;
 
+use JsonException;
 use FireflyIII\Enums\ClauseType;
 use FireflyIII\Rules\IsValidBulkClause;
 use FireflyIII\Support\Request\ChecksLogin;
@@ -52,7 +53,7 @@ class TransactionRequest extends FormRequest
             $data = [
                 'query' => json_decode($this->get('query'), true, 8, JSON_THROW_ON_ERROR),
             ];
-        } catch (\JsonException $e) {
+        } catch (JsonException $e) {
             // dont really care. the validation should catch invalid json.
             app('log')->error($e->getMessage());
         }

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Models\RuleGroup;
 
+use Exception;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\RuleGroup\TestRequest;
 use FireflyIII\Api\V1\Requests\Models\RuleGroup\TriggerRequest;
@@ -128,7 +129,7 @@ class TriggerController extends Controller
      *
      * Execute the given rule group on a set of existing transactions.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function triggerGroup(TriggerRequest $request, RuleGroup $group): JsonResponse
     {

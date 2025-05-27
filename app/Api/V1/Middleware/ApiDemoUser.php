@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Middleware;
 
+use Closure;
 use FireflyIII\User;
 use Illuminate\Http\Request;
 
@@ -36,7 +37,7 @@ class ApiDemoUser
      *
      * @return mixed
      */
-    public function handle(Request $request, \Closure $next)
+    public function handle(Request $request, Closure $next)
     {
         /** @var null|User $user */
         $user = $request->user();
