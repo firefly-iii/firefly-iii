@@ -30,6 +30,8 @@ use FireflyIII\Models\RecurrenceMeta;
 use FireflyIII\Models\RecurrenceTransactionMeta;
 use Illuminate\Console\Command;
 
+use function Safe\json_encode;
+
 class UpgradesRecurrenceMetaData extends Command
 {
     use ShowsFriendlyMessages;
@@ -100,7 +102,7 @@ class UpgradesRecurrenceMetaData extends Command
 
         if ('tags' === $meta->name) {
             $array = explode(',', $meta->value);
-            $value = \Safe\json_encode($array, JSON_THROW_ON_ERROR);
+            $value = json_encode($array, JSON_THROW_ON_ERROR);
         }
 
         RecurrenceTransactionMeta::create(

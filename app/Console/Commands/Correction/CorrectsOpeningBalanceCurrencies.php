@@ -76,7 +76,7 @@ class CorrectsOpeningBalanceCurrencies extends Command
     {
         // get the asset account for this opening balance:
         $account = $this->getAccount($journal);
-        if (null === $account) {
+        if (!$account instanceof Account) {
             $message = sprintf('Transaction journal #%d has no valid account. Can\'t fix this line.', $journal->id);
             app('log')->warning($message);
             $this->friendlyError($message);

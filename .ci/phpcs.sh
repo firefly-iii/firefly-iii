@@ -29,7 +29,7 @@ rm -f .php-cs-fixer.cache
 PHP_CS_FIXER_IGNORE_ENV=true ./vendor/bin/php-cs-fixer fix \
     --config $SCRIPT_DIR/php-cs-fixer/.php-cs-fixer.php \
     --format=txt -v \
-    --allow-risky=yes -v 
+    --allow-risky=yes
 
 EXIT_CODE=$?
 

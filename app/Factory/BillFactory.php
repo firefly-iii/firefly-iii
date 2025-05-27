@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Factory;
 
+use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
@@ -93,7 +94,7 @@ class BillFactory
         $objectGroupTitle = $data['object_group_title'] ?? '';
         if ('' !== $objectGroupTitle) {
             $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
-            if (null !== $objectGroup) {
+            if ($objectGroup instanceof ObjectGroup) {
                 $bill->objectGroups()->sync([$objectGroup->id]);
                 $bill->save();
             }
@@ -102,7 +103,7 @@ class BillFactory
         $objectGroupId    = (int) ($data['object_group_id'] ?? 0);
         if (0 !== $objectGroupId) {
             $objectGroup = $this->findObjectGroupById($objectGroupId);
-            if (null !== $objectGroup) {
+            if ($objectGroup instanceof ObjectGroup) {
                 $bill->objectGroups()->sync([$objectGroup->id]);
                 $bill->save();
             }
@@ -124,7 +125,7 @@ class BillFactory
 
         // then find by name:
         if (null === $bill && '' !== $billName) {
-            $bill = $this->findByName($billName);
+            return $this->findByName($billName);
         }
 
         return $bill;

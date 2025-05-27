@@ -120,7 +120,7 @@ class UpgradesVariousCurrencyInformation extends Command
 
         $leadTransaction = $this->getLeadTransaction($journal);
 
-        if (null === $leadTransaction) {
+        if (!$leadTransaction instanceof Transaction) {
             $this->friendlyError(sprintf('Could not reliably determine which transaction is in the lead for transaction journal #%d.', $journal->id));
 
             return;
@@ -129,7 +129,7 @@ class UpgradesVariousCurrencyInformation extends Command
         $account         = $leadTransaction->account;
         $currency        = $this->getCurrency($account);
         $isMultiCurrency = $this->isMultiCurrency($account);
-        if (null === $currency) {
+        if (!$currency instanceof TransactionCurrency) {
             $this->friendlyError(
                 sprintf(
                     'Account #%d ("%s") has no currency preference, so transaction journal #%d can\'t be corrected',
@@ -227,7 +227,7 @@ class UpgradesVariousCurrencyInformation extends Command
             return $this->accountCurrencies[$accountId];
         }
         $currency                            = $this->accountRepos->getAccountCurrency($account);
-        if (null === $currency) {
+        if (!$currency instanceof TransactionCurrency) {
             $this->accountCurrencies[$accountId] = 0;
 
             return null;

@@ -122,7 +122,7 @@ class UpgradesLiabilities extends Command
     {
         $source      = $this->getSourceTransaction($openingBalance);
         $destination = $this->getDestinationTransaction($openingBalance);
-        if (null === $source || null === $destination) {
+        if (!$source instanceof Transaction || !$destination instanceof Transaction) {
             return;
         }
         // source MUST be the liability.

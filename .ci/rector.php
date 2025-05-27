@@ -28,43 +28,51 @@ use Rector\EarlyReturn\Rector\If_\ChangeOrIfContinueToMultiContinueRector;
 
 return RectorConfig::configure()
     ->withSkip([
-                   ChangeOrIfContinueToMultiContinueRector::class,
-               ])
-                   ->withPaths([
+        ChangeOrIfContinueToMultiContinueRector::class,
+    ])
+    ->withPaths([
 //                                   __DIR__ . '/../app',
-__DIR__ . '/../app/Api',
-__DIR__ . '/../app/Http',
+        __DIR__ . '/../app/Api',
+        __DIR__ . '/../app/Casts',
+        __DIR__ . '/../app/Console',
+        __DIR__ . '/../app/Entities',
+        __DIR__ . '/../app/Enums',
+        __DIR__ . '/../app/Enums',
+        __DIR__ . '/../app/Events',
+        __DIR__ . '/../app/Exceptions',
+        __DIR__ . '/../app/Factory',
+        __DIR__ . '/../app/Generator',
+        __DIR__ . '/../app/Http',
 //                                   __DIR__ . '/../bootstrap',
 //                                   __DIR__ . '/../config',
 //                                   __DIR__ . '/../public',
 //                                   __DIR__ . '/../resources',
 //                                   __DIR__ . '/../routes',
 // __DIR__ . '/../tests',
-                               ])
-                                                   // uncomment to reach your current PHP version
-                   ->withPhpSets()
-                   ->withPreparedSets(
-                       codingStyle        : false, // leave false
-                       privatization: false, // leave false.
-                       naming             : false, // leave false
-                       instanceOf         : true,
-                       earlyReturn        : true,
-                       strictBooleans     : true,
-                       carbon             : true,
-                       rectorPreset       : true,
-                       phpunitCodeQuality : true,
-                       doctrineCodeQuality: true,
-                       symfonyCodeQuality : true,
-                       symfonyConfigs     : true
+    ])
+    // uncomment to reach your current PHP version
+    ->withPhpSets()
+    ->withPreparedSets(
+        codingStyle: false, // leave false
+        privatization: false, // leave false.
+        naming: false, // leave false
+        instanceOf: true,
+        earlyReturn: true,
+        strictBooleans: true,
+        carbon: true,
+        rectorPreset: true,
+        phpunitCodeQuality: true,
+        doctrineCodeQuality: true,
+        symfonyCodeQuality: true,
+        symfonyConfigs: true
 
-                   )
-                   ->withComposerBased(
-                       twig: true,
-                       doctrine: true,
-                       phpunit: true,
-                       symfony: true)
-                   ->withTypeCoverageLevel(0)
-                   ->withDeadCodeLevel(0)
-                   ->withCodeQualityLevel(0)
-
-                   ->withImportNames(removeUnusedImports: true);// import statements instead of full classes.
+    )
+    ->withComposerBased(
+        twig: true,
+        doctrine: true,
+        phpunit: true,
+        symfony: true)
+    ->withTypeCoverageLevel(0)
+    ->withDeadCodeLevel(0)
+    ->withCodeQualityLevel(0)
+    ->withImportNames(removeUnusedImports: true);// import statements instead of full classes.

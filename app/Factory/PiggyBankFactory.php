@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Factory;
 
+use FireflyIII\Models\ObjectGroup;
+use FireflyIII\Models\Account;
 use FireflyIII\Events\Model\PiggyBank\ChangedAmount;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\PiggyBank;
@@ -34,6 +36,8 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
+
+use function Safe\json_encode;
 
 /**
  * Class PiggyBankFactory
@@ -99,7 +103,7 @@ class PiggyBankFactory
         $objectGroupTitle                         = $data['object_group_title'] ?? '';
         if ('' !== $objectGroupTitle) {
             $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
-            if (null !== $objectGroup) {
+            if ($objectGroup instanceof ObjectGroup) {
                 $piggyBank->objectGroups()->sync([$objectGroup->id]);
             }
         }
@@ -107,7 +111,7 @@ class PiggyBankFactory
         $objectGroupId                            = (int) ($data['object_group_id'] ?? 0);
         if (0 !== $objectGroupId) {
             $objectGroup = $this->findObjectGroupById($objectGroupId);
-            if (null !== $objectGroup) {
+            if ($objectGroup instanceof ObjectGroup) {
                 $piggyBank->objectGroups()->sync([$objectGroup->id]);
             }
         }
@@ -241,7 +245,7 @@ class PiggyBankFactory
         /** @var array $info */
         foreach ($accounts as $info) {
             $account = $this->accountRepository->find((int) ($info['account_id'] ?? 0));
-            if (null === $account) {
+            if (!$account instanceof Account) {
                 Log::debug(sprintf('Account #%d not found, skipping.', (int) ($info['account_id'] ?? 0)));
 
                 continue;
@@ -284,7 +288,7 @@ class PiggyBankFactory
                 Log::debug(sprintf('Will link account #%d with info: ', $account->id), $toBeLinked[$account->id]);
             }
         }
-        Log::debug(sprintf('Link information: %s', \Safe\json_encode($toBeLinked)));
+        Log::debug(sprintf('Link information: %s', json_encode($toBeLinked)));
         if (0 !== count($toBeLinked)) {
             $piggyBank->accounts()->sync($toBeLinked);
         }

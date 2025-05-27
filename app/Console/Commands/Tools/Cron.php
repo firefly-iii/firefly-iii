@@ -134,7 +134,7 @@ class Cron extends Command
         $exchangeRates = new ExchangeRatesCronjob();
         $exchangeRates->setForce($force);
         // set date in cron job:
-        if (null !== $date) {
+        if ($date instanceof Carbon) {
             $exchangeRates->setDate($date);
         }
 
@@ -177,7 +177,7 @@ class Cron extends Command
         $recurring->setForce($force);
 
         // set date in cron job:
-        if (null !== $date) {
+        if ($date instanceof Carbon) {
             $recurring->setDate($date);
         }
 
@@ -198,7 +198,7 @@ class Cron extends Command
         $autoBudget = new AutoBudgetCronjob();
         $autoBudget->setForce($force);
         // set date in cron job:
-        if (null !== $date) {
+        if ($date instanceof Carbon) {
             $autoBudget->setDate($date);
         }
 
@@ -223,7 +223,7 @@ class Cron extends Command
         $autoBudget = new BillWarningCronjob();
         $autoBudget->setForce($force);
         // set date in cron job:
-        if (null !== $date) {
+        if ($date instanceof Carbon) {
             $autoBudget->setDate($date);
         }
 

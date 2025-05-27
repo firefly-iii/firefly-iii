@@ -248,7 +248,7 @@ class ApplyRules extends Command
 
         foreach ($ruleList as $ruleId) {
             $rule = $this->ruleRepository->find((int) $ruleId);
-            if (null !== $rule && true === $rule->active) {
+            if ($rule instanceof Rule && true === $rule->active) {
                 $this->ruleSelection[] = $rule->id;
             }
         }

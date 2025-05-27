@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
+use Carbon\Carbon;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Factory\TransactionGroupFactory;
 use FireflyIII\Models\Budget;
@@ -192,7 +193,7 @@ class UpgradesToGroups extends Command
         app('log')->debug(sprintf('Now going to add transaction #%d to the array.', $transaction->id));
         $opposingTr     = $this->findOpposingTransaction($journal, $transaction);
 
-        if (null === $opposingTr) {
+        if (!$opposingTr instanceof Transaction) {
             $this->friendlyError(
                 sprintf(
                     'Journal #%d has no opposing transaction for transaction #%d. Cannot upgrade this entry.',
@@ -367,8 +368,8 @@ class UpgradesToGroups extends Command
     {
         $groupId = DB::table('transaction_groups')->insertGetId(
             [
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
+                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 'title'      => null,
                 'user_id'    => $array['user_id'],
             ]

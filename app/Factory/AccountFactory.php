@@ -75,7 +75,7 @@ class AccountFactory
         app('log')->debug(sprintf('findOrCreate("%s", "%s")', $accountName, $accountType));
 
         $type   = $this->accountRepository->getAccountTypeByType($accountType);
-        if (null === $type) {
+        if (!$type instanceof AccountType) {
             throw new FireflyException(sprintf('Cannot find account type "%s"', $accountType));
         }
         $return = $this->user->accounts->where('account_type_id', $type->id)->where('name', $accountName)->first();
@@ -111,7 +111,7 @@ class AccountFactory
         // account may exist already:
         $return       = $this->find($data['name'], $type->type);
 
-        if (null !== $return) {
+        if ($return instanceof Account) {
             return $return;
         }
 

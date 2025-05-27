@@ -30,6 +30,8 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\FilesystemException;
 
+use function Safe\json_decode;
+
 class VerifySecurityAlerts extends Command
 {
     use ShowsFriendlyMessages;
@@ -57,7 +59,7 @@ class VerifySecurityAlerts extends Command
             return 0;
         }
         $content = $disk->get('alerts.json');
-        $json    = \Safe\json_decode($content, true, 10);
+        $json    = json_decode((string) $content, true, 10);
 
         /** @var array $array */
         foreach ($json as $array) {

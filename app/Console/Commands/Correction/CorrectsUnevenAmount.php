@@ -387,7 +387,7 @@ class CorrectsUnevenAmount extends Command
 
                 continue;
             }
-            if (0 === bccomp($source->amount, $source->foreign_amount) && 0 === bccomp($source->foreign_amount, $source->amount)) {
+            if (0 === bccomp((string) $source->amount, (string) $source->foreign_amount) && 0 === bccomp((string) $source->foreign_amount, (string) $source->amount)) {
                 Log::debug('Already fixed, continue.');
 
                 continue;

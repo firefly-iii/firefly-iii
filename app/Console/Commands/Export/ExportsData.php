@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Export;
 
+use FireflyIII\Models\TransactionJournal;
 use Carbon\Carbon;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Console\Commands\VerifiesAccessToken;
@@ -37,6 +38,8 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Exception;
 use InvalidArgumentException;
+
+use function Safe\file_put_contents;
 
 class ExportsData extends Command
 {
@@ -203,7 +206,7 @@ class ExportsData extends Command
 
         if (true === $error && 'start' === $field) {
             $journal = $this->journalRepository->firstNull();
-            $date    = null === $journal ? today(config('app.timezone'))->subYear() : $journal->date;
+            $date    = $journal instanceof TransactionJournal ? $journal->date : today(config('app.timezone'))->subYear();
             $date->startOfDay();
 
             return $date;
@@ -275,7 +278,7 @@ class ExportsData extends Command
      */
     private function exportData(array $options, array $data): void
     {
-        $date = date('Y_m_d');
+        $date = Carbon::now()->format('Y_m_d');
         foreach ($data as $key => $content) {
             $file = sprintf('%s%s_%s.csv', $options['directory'], $date, $key);
             if (false === $options['force'] && file_exists($file)) {
@@ -285,7 +288,7 @@ class ExportsData extends Command
                 $this->friendlyWarning(sprintf('File "%s" exists already but will be replaced.', $file));
             }
             // continue to write to file.
-            \Safe\file_put_contents($file, $content);
+            file_put_contents($file, $content);
             $this->friendlyPositive(sprintf('Wrote %s-export to file "%s".', $key, $file));
         }
     }
