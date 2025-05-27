@@ -26,6 +26,8 @@ namespace FireflyIII\Rules;
 
 use Carbon\Carbon;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Closure;
+use InvalidArgumentException;
 
 /**
  * Class ValidRecurrenceRepetitionValue
@@ -35,7 +37,7 @@ class ValidRecurrenceRepetitionValue implements ValidationRule
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function validate(string $attribute, mixed $value, \Closure $fail): void
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $value = (string) $value;
 
@@ -102,7 +104,7 @@ class ValidRecurrenceRepetitionValue implements ValidationRule
 
         try {
             Carbon::createFromFormat('Y-m-d', $dateString);
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             app('log')->debug(sprintf('Could not parse date %s: %s', $dateString, $e->getMessage()));
 
             return false;

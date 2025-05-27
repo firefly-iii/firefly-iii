@@ -44,7 +44,7 @@ class RecurringCronjob extends AbstractCronjob
         /** @var Configuration $config */
         $config        = app('fireflyconfig')->get('last_rt_job', 0);
         $lastTime      = (int) $config->data;
-        $diff          = time() - $lastTime;
+        $diff          = Carbon::now()->getTimestamp() - $lastTime;
         $diffForHumans = today(config('app.timezone'))->diffForHumans(Carbon::createFromTimestamp($lastTime), null, true);
 
         if (0 === $lastTime) {

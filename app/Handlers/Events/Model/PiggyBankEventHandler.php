@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events\Model;
 
+use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Events\Model\PiggyBank\ChangedAmount;
 use FireflyIII\Models\PiggyBankEvent;
 
@@ -36,7 +37,7 @@ class PiggyBankEventHandler
     {
         // find journal if group is present.
         $journal = $event->transactionJournal;
-        if (null !== $event->transactionGroup) {
+        if ($event->transactionGroup instanceof TransactionGroup) {
             $journal = $event->transactionGroup->transactionJournals()->first();
         }
         $date    = $journal->date ?? today(config('app.timezone'));

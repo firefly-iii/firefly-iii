@@ -32,6 +32,8 @@ use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
+use function Safe\preg_replace;
+
 /**
  * Trait ConvertsDataTypes
  */
@@ -125,7 +127,7 @@ trait ConvertsDataTypes
         $string = str_replace($this->characters, "\x20", $string);
 
         // clear zalgo text (TODO also in API v2)
-        $string = \Safe\preg_replace('/(\pM{2})\pM+/u', '\1', $string);
+        $string = preg_replace('/(\pM{2})\pM+/u', '\1', $string);
 
         return trim((string) $string);
     }
@@ -263,7 +265,7 @@ trait ConvertsDataTypes
 
                 return null;
             }
-            if (null === $carbon) {
+            if (!$carbon instanceof Carbon) {
                 app('log')->error(sprintf('[2] "%s" is of an invalid format.', $value));
 
                 return null;
@@ -316,7 +318,7 @@ trait ConvertsDataTypes
         } catch (InvalidFormatException) {
             // @ignoreException
         }
-        if (null === $carbon) {
+        if (!$carbon instanceof Carbon) {
             app('log')->debug(sprintf('Invalid date: %s', $string));
 
             return null;
@@ -380,7 +382,7 @@ trait ConvertsDataTypes
             // @ignoreException
             Log::debug(sprintf('Exception when parsing date "%s".', $this->get($field)));
         }
-        if (null === $result) {
+        if (!$result instanceof Carbon) {
             app('log')->debug(sprintf('Exception when parsing date "%s".', $this->get($field)));
         }
 

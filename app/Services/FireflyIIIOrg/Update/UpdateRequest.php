@@ -29,6 +29,9 @@ use FireflyIII\Events\NewVersionAvailable;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Log;
+use JsonException;
+
+use function Safe\json_decode;
 
 /**
  * Class UpdateRequest
@@ -99,8 +102,8 @@ class UpdateRequest implements UpdateRequestInterface
         $body              = (string) $res->getBody();
 
         try {
-            $json = \Safe\json_decode($body, true, 512, JSON_THROW_ON_ERROR);
-        } catch (\JsonException) {
+            $json = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
+        } catch (JsonException) {
             Log::error('Body is not valid JSON');
             Log::error($body);
             $return['message'] = 'Invalid JSON :(';
@@ -117,7 +120,7 @@ class UpdateRequest implements UpdateRequestInterface
         // parse response a bit. No message yet.
         $response          = $json['firefly_iii'][$channel];
         $date              = Carbon::createFromFormat('Y-m-d', $response['date']);
-        if (null === $date) {
+        if (!$date instanceof Carbon) {
             $date = today(config('app.timezone'));
         }
         $return['version'] = $response['version'];

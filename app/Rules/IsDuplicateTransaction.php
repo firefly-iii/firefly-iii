@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Rules;
 
 use Illuminate\Contracts\Validation\ValidationRule;
+use Closure;
 
 /**
  * TODO not sure where this is used.
@@ -38,7 +39,7 @@ class IsDuplicateTransaction implements ValidationRule
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function validate(string $attribute, mixed $value, \Closure $fail): void
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $this->value = $value;
 

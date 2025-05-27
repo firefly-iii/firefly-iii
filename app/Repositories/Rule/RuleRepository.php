@@ -33,6 +33,7 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use FireflyIII\Support\Search\OperatorQuerySearch;
 use Illuminate\Support\Collection;
+use Exception;
 
 /**
  * Class RuleRepository.
@@ -42,7 +43,7 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
     use UserGroupTrait;
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function destroy(Rule $rule): bool
     {

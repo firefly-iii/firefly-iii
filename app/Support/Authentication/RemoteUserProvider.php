@@ -31,13 +31,14 @@ use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Support\Str;
+use Override;
 
 /**
  * Class RemoteUserProvider
  */
 class RemoteUserProvider implements UserProvider
 {
-    #[\Override]
+    #[Override]
     public function rehashPasswordIfRequired(Authenticatable $user, array $credentials, bool $force = false): void
     {
         app('log')->debug(sprintf('Now at %s', __METHOD__));

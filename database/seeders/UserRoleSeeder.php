@@ -27,6 +27,7 @@ namespace Database\Seeders;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\UserRole;
 use Illuminate\Database\Seeder;
+use PDOException;
 
 /**
  * Class UserRoleSeeder
@@ -48,7 +49,7 @@ class UserRoleSeeder extends Seeder
             if (null === UserRole::where('title', $role)->first()) {
                 try {
                     UserRole::create(['title' => $role]);
-                } catch (\PDOException $e) {
+                } catch (PDOException $e) {
                     // @ignoreException
                 }
             }

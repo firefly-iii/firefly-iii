@@ -200,12 +200,12 @@ trait TransactionValidation
 
             return;
         }
-        if (null === $accountValidator->source) {
+        if (!$accountValidator->source instanceof Account) {
             Log::debug('No source, return');
 
             return;
         }
-        if (null === $accountValidator->destination) {
+        if (!$accountValidator->destination instanceof Account) {
             Log::debug('No destination, return');
 
             return;
@@ -292,7 +292,11 @@ trait TransactionValidation
 
     private function isLiabilityOrAsset(Account $account): bool
     {
-        return $this->isLiability($account) || $this->isAsset($account);
+        if ($this->isLiability($account)) {
+            return true;
+        }
+
+        return (bool) $this->isAsset($account);
     }
 
     private function isLiability(Account $account): bool

@@ -331,6 +331,7 @@ return [
     // TODO duplicate with firefly.php
     'languages' => [
         // currently enabled languages
+        'af_ZA',
         'bg_BG',
         'cs_CZ',
         'da_DK',

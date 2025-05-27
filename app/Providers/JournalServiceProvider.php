@@ -35,6 +35,7 @@ use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepository;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use Override;
 
 /**
  * Class JournalServiceProvider.
@@ -49,7 +50,7 @@ class JournalServiceProvider extends ServiceProvider
     /**
      * Register the application services.
      */
-    #[\Override]
+    #[Override]
     public function register(): void
     {
         $this->registerRepository();

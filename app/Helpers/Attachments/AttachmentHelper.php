@@ -37,6 +37,14 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\MessageBag;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
+use function Safe\tmpfile;
+use function Safe\fwrite;
+use function Safe\finfo_open;
+use function Safe\fclose;
+use function Safe\md5_file;
+
+use const DIRECTORY_SEPARATOR;
+
 /**
  * Class AttachmentHelper.
  */
@@ -85,7 +93,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     public function getAttachmentLocation(Attachment $attachment): string
     {
-        return sprintf('%sat-%d.data', \DIRECTORY_SEPARATOR, $attachment->id);
+        return sprintf('%sat-%d.data', DIRECTORY_SEPARATOR, $attachment->id);
     }
 
     /**
@@ -118,7 +126,7 @@ class AttachmentHelper implements AttachmentHelperInterface
     public function saveAttachmentFromApi(Attachment $attachment, string $content): bool
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
-        $resource             = \Safe\tmpfile();
+        $resource             = tmpfile();
         if (false === $resource) {
             Log::error('Cannot create temp-file for file upload.');
 
@@ -133,17 +141,17 @@ class AttachmentHelper implements AttachmentHelperInterface
 
         $path                 = stream_get_meta_data($resource)['uri'];
         Log::debug(sprintf('Path is %s', $path));
-        $result               = \Safe\fwrite($resource, $content);
+        $result               = fwrite($resource, $content);
         if (false === $result) {
             Log::error('Could not write temp file.');
 
             return false;
         }
         Log::debug(sprintf('Wrote %d bytes to temp file.', $result));
-        $finfo                = \Safe\finfo_open(FILEINFO_MIME_TYPE);
+        $finfo                = finfo_open(FILEINFO_MIME_TYPE);
         if (false === $finfo) {
             Log::error('Could not open finfo.');
-            \Safe\fclose($resource);
+            fclose($resource);
 
             return false;
         }
@@ -151,7 +159,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         $allowedMime          = config('firefly.allowedMimes');
         if (!in_array($mime, $allowedMime, true)) {
             Log::error(sprintf('Mime type %s is not allowed for API file upload.', $mime));
-            \Safe\fclose($resource);
+            fclose($resource);
 
             return false;
         }
@@ -163,7 +171,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         $this->uploadDisk->put($file, $content);
 
         // update attachment.
-        $attachment->md5      = (string) \Safe\md5_file($path);
+        $attachment->md5      = (string) md5_file($path);
         $attachment->mime     = $mime;
         $attachment->size     = strlen($content);
         $attachment->uploaded = true;
@@ -225,7 +233,7 @@ class AttachmentHelper implements AttachmentHelperInterface
             $attachment           = new Attachment(); // create Attachment object.
             $attachment->user()->associate($user);
             $attachment->attachable()->associate($model);
-            $attachment->md5      = (string) \Safe\md5_file($file->getRealPath());
+            $attachment->md5      = (string) md5_file($file->getRealPath());
             $attachment->filename = $file->getClientOriginalName();
             $attachment->mime     = $file->getMimeType();
             $attachment->size     = $file->getSize();
@@ -280,7 +288,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         }
 
         if (true === $result && $this->hasFile($file, $model)) {
-            $result = false;
+            return false;
         }
 
         return $result;
@@ -333,7 +341,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     protected function hasFile(UploadedFile $file, Model $model): bool
     {
-        $md5    = \Safe\md5_file($file->getRealPath());
+        $md5    = md5_file($file->getRealPath());
         $name   = $file->getClientOriginalName();
         $class  = $model::class;
         $count  = 0;

@@ -28,6 +28,8 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
+use Exception;
+use stdClass;
 
 /**
  * Deletes transactions where the journal has been deleted.
@@ -43,7 +45,7 @@ class RemovesOrphanedTransactions extends Command
     /**
      * Execute the console command.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function handle(): int
     {
@@ -85,7 +87,7 @@ class RemovesOrphanedTransactions extends Command
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function deleteOrphanedTransactions(): void
     {
@@ -102,7 +104,7 @@ class RemovesOrphanedTransactions extends Command
             )
         ;
 
-        /** @var \stdClass $entry */
+        /** @var stdClass $entry */
         foreach ($set as $entry) {
             $transaction = Transaction::find((int) $entry->transaction_id);
             if (null !== $transaction) {

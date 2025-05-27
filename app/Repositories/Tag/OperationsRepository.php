@@ -50,14 +50,14 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         $collector      = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
         $tagIds         = [];
-        if (null !== $accounts && $accounts->count() > 0) {
+        if ($accounts instanceof Collection && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        if (null !== $tags && $tags->count() > 0) {
+        if ($tags instanceof Collection && $tags->count() > 0) {
             $collector->setTags($tags);
             $tagIds = $tags->pluck('id')->toArray();
         }
-        if (null === $tags || 0 === $tags->count()) {
+        if (!$tags instanceof Collection || 0 === $tags->count()) {
             $collector->setTags($this->getTags());
             $tagIds = $this->getTags()->pluck('id')->toArray();
         }
@@ -133,14 +133,14 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         $collector      = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::DEPOSIT->value]);
         $tagIds         = [];
-        if (null !== $accounts && $accounts->count() > 0) {
+        if ($accounts instanceof Collection && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        if (null !== $tags && $tags->count() > 0) {
+        if ($tags instanceof Collection && $tags->count() > 0) {
             $collector->setTags($tags);
             $tagIds = $tags->pluck('id')->toArray();
         }
-        if (null === $tags || 0 === $tags->count()) {
+        if (!$tags instanceof Collection || 0 === $tags->count()) {
             $collector->setTags($this->getTags());
             $tagIds = $this->getTags()->pluck('id')->toArray();
         }

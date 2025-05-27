@@ -269,7 +269,7 @@ class BillTransformer extends AbstractTransformer
         }
         if ($nextMatch->isSameDay($lastPaidDate)) {
             // Add another period because it's the same day as the last paid date.
-            $nextMatch = app('navigation')->addPeriod($nextMatch, $bill->repeat_freq, $bill->skip);
+            return app('navigation')->addPeriod($nextMatch, $bill->repeat_freq, $bill->skip);
         }
 
         return $nextMatch;

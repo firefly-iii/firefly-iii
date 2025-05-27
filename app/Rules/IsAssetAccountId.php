@@ -26,6 +26,7 @@ namespace FireflyIII\Rules;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Account;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Closure;
 
 /**
  * Class IsAssetAccountId
@@ -35,7 +36,7 @@ class IsAssetAccountId implements ValidationRule
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function validate(string $attribute, mixed $value, \Closure $fail): void
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $accountId = (int) $value;
 

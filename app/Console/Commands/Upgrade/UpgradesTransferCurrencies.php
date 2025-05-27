@@ -202,7 +202,7 @@ class UpgradesTransferCurrencies extends Command
     {
         $this->sourceTransaction = $this->getSourceTransaction($journal);
         $this->sourceAccount     = $this->sourceTransaction?->account;
-        $this->sourceCurrency    = null === $this->sourceAccount ? null : $this->getCurrency($this->sourceAccount);
+        $this->sourceCurrency    = $this->sourceAccount instanceof Account ? $this->getCurrency($this->sourceAccount) : null;
     }
 
     private function getSourceTransaction(TransactionJournal $transfer): ?Transaction
@@ -221,7 +221,7 @@ class UpgradesTransferCurrencies extends Command
             return $this->accountCurrencies[$accountId];
         }
         $currency                            = $this->accountRepos->getAccountCurrency($account);
-        if (null === $currency) {
+        if (!$currency instanceof TransactionCurrency) {
             $this->accountCurrencies[$accountId] = 0;
 
             return null;
@@ -238,7 +238,7 @@ class UpgradesTransferCurrencies extends Command
     {
         $this->destinationTransaction = $this->getDestinationTransaction($journal);
         $this->destinationAccount     = $this->destinationTransaction?->account;
-        $this->destinationCurrency    = null === $this->destinationAccount ? null : $this->getCurrency($this->destinationAccount);
+        $this->destinationCurrency    = $this->destinationAccount instanceof Account ? $this->getCurrency($this->destinationAccount) : null;
     }
 
     private function getDestinationTransaction(TransactionJournal $transfer): ?Transaction
@@ -252,15 +252,15 @@ class UpgradesTransferCurrencies extends Command
      */
     private function isEmptyTransactions(): bool
     {
-        return null === $this->sourceTransaction || null === $this->destinationTransaction
-               || null === $this->sourceAccount
-               || null === $this->destinationAccount;
+        return !$this->sourceTransaction instanceof Transaction || !$this->destinationTransaction instanceof Transaction
+               || !$this->sourceAccount instanceof Account
+               || !$this->destinationAccount instanceof Account;
     }
 
     private function isNoCurrencyPresent(): bool
     {
         // source account must have a currency preference.
-        if (null === $this->sourceCurrency) {
+        if (!$this->sourceCurrency instanceof TransactionCurrency) {
             $message = sprintf('Account #%d ("%s") must have currency preference but has none.', $this->sourceAccount->id, $this->sourceAccount->name);
             app('log')->error($message);
             $this->friendlyError($message);
@@ -269,7 +269,7 @@ class UpgradesTransferCurrencies extends Command
         }
 
         // destination account must have a currency preference.
-        if (null === $this->destinationCurrency) {
+        if (!$this->destinationCurrency instanceof TransactionCurrency) {
             $message = sprintf(
                 'Account #%d ("%s") must have currency preference but has none.',
                 $this->destinationAccount->id,
@@ -290,7 +290,7 @@ class UpgradesTransferCurrencies extends Command
      */
     private function fixSourceNoCurrency(): void
     {
-        if (null === $this->sourceTransaction->transaction_currency_id && null !== $this->sourceCurrency) {
+        if (null === $this->sourceTransaction->transaction_currency_id && $this->sourceCurrency instanceof TransactionCurrency) {
             $this->sourceTransaction
                 ->transaction_currency_id
                      = $this->sourceCurrency->id
@@ -312,7 +312,7 @@ class UpgradesTransferCurrencies extends Command
      */
     private function fixSourceUnmatchedCurrency(): void
     {
-        if (null !== $this->sourceCurrency
+        if ($this->sourceCurrency instanceof TransactionCurrency
             && null === $this->sourceTransaction->foreign_amount
             && (int) $this->sourceTransaction->transaction_currency_id !== $this->sourceCurrency->id
         ) {
@@ -336,7 +336,7 @@ class UpgradesTransferCurrencies extends Command
      */
     private function fixDestNoCurrency(): void
     {
-        if (null === $this->destinationTransaction->transaction_currency_id && null !== $this->destinationCurrency) {
+        if (null === $this->destinationTransaction->transaction_currency_id && $this->destinationCurrency instanceof TransactionCurrency) {
             $this->destinationTransaction
                 ->transaction_currency_id
                      = $this->destinationCurrency->id
@@ -358,7 +358,7 @@ class UpgradesTransferCurrencies extends Command
      */
     private function fixDestinationUnmatchedCurrency(): void
     {
-        if (null !== $this->destinationCurrency
+        if ($this->destinationCurrency instanceof TransactionCurrency
             && null === $this->destinationTransaction->foreign_amount
             && (int) $this->destinationTransaction->transaction_currency_id !== $this->destinationCurrency->id
         ) {

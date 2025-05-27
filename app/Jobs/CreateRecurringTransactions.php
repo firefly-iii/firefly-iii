@@ -74,7 +74,7 @@ class CreateRecurringTransactions implements ShouldQueue
         $newDate->startOfDay();
         $this->date              = $newDate;
 
-        if (null !== $date) {
+        if ($date instanceof Carbon) {
             $newDate    = clone $date;
             $newDate->startOfDay();
             $this->date = $newDate;
@@ -257,7 +257,7 @@ class CreateRecurringTransactions implements ShouldQueue
     {
         $startDate = clone $recurrence->first_date;
         if (null !== $recurrence->latest_date && $recurrence->latest_date->gte($startDate)) {
-            $startDate = clone $recurrence->latest_date;
+            return clone $recurrence->latest_date;
         }
 
         return $startDate;
@@ -321,7 +321,7 @@ class CreateRecurringTransactions implements ShouldQueue
         /** @var Carbon $date */
         foreach ($occurrences as $date) {
             $result = $this->handleOccurrence($recurrence, $repetition, $date);
-            if (null !== $result) {
+            if ($result instanceof TransactionGroup) {
                 $collection->push($result);
             }
         }

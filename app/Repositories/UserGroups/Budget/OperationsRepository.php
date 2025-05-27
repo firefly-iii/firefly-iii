@@ -49,13 +49,13 @@ class OperationsRepository implements OperationsRepositoryInterface
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setUserGroup($this->userGroup)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
-        if (null !== $accounts && $accounts->count() > 0) {
+        if ($accounts instanceof Collection && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        if (null !== $budgets && $budgets->count() > 0) {
+        if ($budgets instanceof Collection && $budgets->count() > 0) {
             $collector->setBudgets($budgets);
         }
-        if (null === $budgets || (0 === $budgets->count())) {
+        if (!$budgets instanceof Collection || (0 === $budgets->count())) {
             $collector->setBudgets($this->getBudgets());
         }
         $collector->withBudgetInformation()->withAccountInformation()->withCategoryInformation();

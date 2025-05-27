@@ -26,6 +26,7 @@ namespace Database\Seeders;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Database\Seeder;
+use PDOException;
 
 /**
  * Class TransactionTypeSeeder.
@@ -48,7 +49,7 @@ class TransactionTypeSeeder extends Seeder
             if (null === TransactionType::where('type', $type)->first()) {
                 try {
                     TransactionType::create(['type' => $type]);
-                } catch (\PDOException $e) {
+                } catch (PDOException $e) {
                     // @ignoreException
                 }
             }

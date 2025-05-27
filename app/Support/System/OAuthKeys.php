@@ -32,6 +32,9 @@ use Laravel\Passport\Console\KeysCommand;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
+use function Safe\file_get_contents;
+use function Safe\file_put_contents;
+
 /**
  * Class OAuthKeys
  */
@@ -97,8 +100,8 @@ class OAuthKeys
     {
         $private = storage_path('oauth-private.key');
         $public  = storage_path('oauth-public.key');
-        app('fireflyconfig')->set(self::PRIVATE_KEY, Crypt::encrypt(\Safe\file_get_contents($private)));
-        app('fireflyconfig')->set(self::PUBLIC_KEY, Crypt::encrypt(\Safe\file_get_contents($public)));
+        app('fireflyconfig')->set(self::PRIVATE_KEY, Crypt::encrypt(file_get_contents($private)));
+        app('fireflyconfig')->set(self::PUBLIC_KEY, Crypt::encrypt(file_get_contents($public)));
     }
 
     /**
@@ -124,8 +127,8 @@ class OAuthKeys
         }
         $private    = storage_path('oauth-private.key');
         $public     = storage_path('oauth-public.key');
-        \Safe\file_put_contents($private, $privateContent);
-        \Safe\file_put_contents($public, $publicContent);
+        file_put_contents($private, $privateContent);
+        file_put_contents($public, $publicContent);
 
         return true;
     }

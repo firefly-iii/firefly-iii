@@ -31,6 +31,7 @@ use FireflyIII\Repositories\Account\OperationsRepository;
 use FireflyIII\Repositories\Account\OperationsRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use Override;
 
 /**
  * Class AccountServiceProvider.
@@ -45,7 +46,7 @@ class AccountServiceProvider extends ServiceProvider
     /**
      * Register the application services.
      */
-    #[\Override]
+    #[Override]
     public function register(): void
     {
         $this->registerRepository();

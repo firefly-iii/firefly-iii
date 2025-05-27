@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use Illuminate\Support\Collection;
+use Throwable;
 
 /**
  * Class MonthReportGenerator.
@@ -65,7 +66,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
                 'reports.tag.month',
                 compact('accountIds', 'reportType', 'tagIds')
             )->with('start', $this->start)->with('end', $this->end)->with('tags', $this->tags)->with('accounts', $this->accounts)->render();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             app('log')->error(sprintf('Cannot render reports.tag.month: %s', $e->getMessage()));
             app('log')->error($e->getTraceAsString());
             $result = sprintf('Could not render report view: %s', $e->getMessage());

@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.2.16 - 2025-xx-xx
+
+### Fixed
+
+- [Issue 10367](https://github.com/firefly-iii/firefly-iii/issues/10367) (Delete account results in error) reported by @sawyert
+
+## 6.2.15 - 2025-05-26
+
+### Fixed
+
+- Restore missing facades.
+
 ## 6.2.14 - 2025-05-26
 
 ### Fixed

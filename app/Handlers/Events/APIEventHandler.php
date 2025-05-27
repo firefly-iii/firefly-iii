@@ -28,6 +28,7 @@ use FireflyIII\Notifications\User\NewAccessToken;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Facades\Notification;
 use Laravel\Passport\Events\AccessTokenCreated;
+use Exception;
 
 /**
  * Class APIEventHandler
@@ -48,7 +49,7 @@ class APIEventHandler
         if (null !== $user) {
             try {
                 Notification::send($user, new NewAccessToken());
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $message = $e->getMessage();
                 if (str_contains($message, 'Bcc')) {
                     app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');

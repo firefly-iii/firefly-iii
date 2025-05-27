@@ -36,6 +36,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Support\Facades\Log;
+use Exception;
 
 /**
  * Trait ModifiesPiggyBanks
@@ -142,7 +143,7 @@ trait ModifiesPiggyBanks
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function destroy(PiggyBank $piggyBank): bool
     {

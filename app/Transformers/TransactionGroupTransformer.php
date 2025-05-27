@@ -306,7 +306,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         $latitude        = null;
         $zoomLevel       = null;
         $location        = $this->getLocation($journal);
-        if (null !== $location) {
+        if ($location instanceof Location) {
             $longitude = $location->longitude;
             $latitude  = $location->latitude;
             $zoomLevel = $location->zoom_level;
@@ -428,12 +428,11 @@ class TransactionGroupTransformer extends AbstractTransformer
 
     private function getForeignAmount(?string $foreignAmount): ?string
     {
-        $result = null;
         if (null !== $foreignAmount && '' !== $foreignAmount && 0 !== bccomp('0', $foreignAmount)) {
-            $result = app('steam')->positive($foreignAmount);
+            return app('steam')->positive($foreignAmount);
         }
 
-        return $result;
+        return null;
     }
 
     private function getDates(NullArrayObject $dates): array
@@ -465,7 +464,7 @@ class TransactionGroupTransformer extends AbstractTransformer
             'symbol'         => null,
             'decimal_places' => null,
         ];
-        if (null === $currency) {
+        if (!$currency instanceof TransactionCurrency) {
             return $array;
         }
         $array['id']             = $currency->id;
@@ -482,7 +481,7 @@ class TransactionGroupTransformer extends AbstractTransformer
             'id'   => null,
             'name' => null,
         ];
-        if (null === $budget) {
+        if (!$budget instanceof Budget) {
             return $array;
         }
         $array['id']   = $budget->id;
@@ -497,7 +496,7 @@ class TransactionGroupTransformer extends AbstractTransformer
             'id'   => null,
             'name' => null,
         ];
-        if (null === $category) {
+        if (!$category instanceof Category) {
             return $array;
         }
         $array['id']   = $category->id;
@@ -512,7 +511,7 @@ class TransactionGroupTransformer extends AbstractTransformer
             'id'   => null,
             'name' => null,
         ];
-        if (null === $bill) {
+        if (!$bill instanceof Bill) {
             return $array;
         }
         $array['id']   = (string) $bill->id;

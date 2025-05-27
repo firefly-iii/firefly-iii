@@ -85,10 +85,10 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface, UserGroupInterf
         $collector  = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
 
-        if (null !== $accounts && $accounts->count() > 0) {
+        if ($accounts instanceof Collection && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        if (null !== $currency) {
+        if ($currency instanceof TransactionCurrency) {
             $collector->setCurrency($currency);
         }
         $collector->withoutBudget();

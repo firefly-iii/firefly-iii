@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\unit\Support\Search\QueryParser;
 
+use Iterator;
 use FireflyIII\Support\Search\QueryParser\FieldNode;
 use FireflyIII\Support\Search\QueryParser\QueryParserInterface;
 use FireflyIII\Support\Search\QueryParser\StringNode;
@@ -29,170 +30,190 @@ abstract class AbstractQueryParserInterfaceParseQueryTester extends TestCase
 
     }
 
-    public static function queryDataProvider(): iterable
+    public static function queryDataProvider(): Iterator
     {
-        return [
-            'empty query'                           => [
-                'query'    => '',
-                'expected' => new NodeGroup([]),
-            ],
-            'simple word'                           => [
-                'query'    => 'groceries',
-                'expected' => new NodeGroup([new StringNode('groceries')]),
-            ],
-            'prohibited word'                       => [
-                'query'    => '-groceries',
-                'expected' => new NodeGroup([new StringNode('groceries', true)]),
-            ],
-            'prohibited field'                      => [
-                'query'    => '-amount:100',
-                'expected' => new NodeGroup([new FieldNode('amount', '100', true)]),
-            ],
-            'quoted word'                           => [
-                'query'    => '"test phrase"',
-                'expected' => new NodeGroup([new StringNode('test phrase')]),
-            ],
-            'prohibited quoted word'                => [
-                'query'    => '-"test phrase"',
-                'expected' => new NodeGroup([new StringNode('test phrase', true)]),
-            ],
-            'multiple words'                        => [
-                'query'    => 'groceries shopping market',
-                'expected' => new NodeGroup([
-                    new StringNode('groceries'),
-                    new StringNode('shopping'),
-                    new StringNode('market'),
-                ]),
-            ],
-            'field operator'                        => [
-                'query'    => 'amount:100',
-                'expected' => new NodeGroup([new FieldNode('amount', '100')]),
-            ],
-            'quoted field value with single space'  => [
-                'query'    => 'description:"test phrase"',
-                'expected' => new NodeGroup([new FieldNode('description', 'test phrase')]),
-            ],
-            'multiple fields'                       => [
-                'query'    => 'amount:100 category:food',
-                'expected' => new NodeGroup([
+        yield 'empty query' => [
+            '',
+            new NodeGroup([]),
+        ];
+
+        yield 'simple word' => [
+            'groceries',
+            new NodeGroup([new StringNode('groceries')]),
+        ];
+
+        yield 'prohibited word' => [
+            '-groceries',
+            new NodeGroup([new StringNode('groceries', true)]),
+        ];
+
+        yield 'prohibited field' => [
+            '-amount:100',
+            new NodeGroup([new FieldNode('amount', '100', true)]),
+        ];
+
+        yield 'quoted word' => [
+            '"test phrase"',
+            new NodeGroup([new StringNode('test phrase')]),
+        ];
+
+        yield 'prohibited quoted word' => [
+            '-"test phrase"',
+            new NodeGroup([new StringNode('test phrase', true)]),
+        ];
+
+        yield 'multiple words' => [
+            'groceries shopping market',
+            new NodeGroup([
+                new StringNode('groceries'),
+                new StringNode('shopping'),
+                new StringNode('market'),
+            ]),
+        ];
+
+        yield 'field operator' => [
+            'amount:100',
+            new NodeGroup([new FieldNode('amount', '100')]),
+        ];
+
+        yield 'quoted field value with single space' => [
+            'description:"test phrase"',
+            new NodeGroup([new FieldNode('description', 'test phrase')]),
+        ];
+
+        yield 'multiple fields' => [
+            'amount:100 category:food',
+            new NodeGroup([
+                new FieldNode('amount', '100'),
+                new FieldNode('category', 'food'),
+            ]),
+        ];
+
+        yield 'simple subquery' => [
+            '(amount:100 category:food)',
+            new NodeGroup([
+                new NodeGroup([
                     new FieldNode('amount', '100'),
                     new FieldNode('category', 'food'),
                 ]),
-            ],
-            'simple subquery'                       => [
-                'query'    => '(amount:100 category:food)',
-                'expected' => new NodeGroup([
-                    new NodeGroup([
-                        new FieldNode('amount', '100'),
-                        new FieldNode('category', 'food'),
-                    ]),
-                ]),
-            ],
-            'prohibited subquery'                   => [
-                'query'    => '-(amount:100 category:food)',
-                'expected' => new NodeGroup([
-                    new NodeGroup([
-                        new FieldNode('amount', '100'),
-                        new FieldNode('category', 'food'),
-                    ], true),
-                ]),
-            ],
-            'nested subquery'                       => [
-                'query'    => '(amount:100 (description:"test" category:food))',
-                'expected' => new NodeGroup([
-                    new NodeGroup([
-                        new FieldNode('amount', '100'),
-                        new NodeGroup([
-                            new FieldNode('description', 'test'),
-                            new FieldNode('category', 'food'),
-                        ]),
-                    ]),
-                ]),
-            ],
-            'mixed words and operators'             => [
-                'query'    => 'groceries amount:50 shopping',
-                'expected' => new NodeGroup([
-                    new StringNode('groceries'),
-                    new FieldNode('amount', '50'),
-                    new StringNode('shopping'),
-                ]),
-            ],
-            'subquery after field value'            => [
-                'query'    => 'amount:100 (description:"market" category:food)',
-                'expected' => new NodeGroup([
+            ]),
+        ];
+
+        yield 'prohibited subquery' => [
+            '-(amount:100 category:food)',
+            new NodeGroup([
+                new NodeGroup([
+                    new FieldNode('amount', '100'),
+                    new FieldNode('category', 'food'),
+                ], true),
+            ]),
+        ];
+
+        yield 'nested subquery' => [
+            '(amount:100 (description:"test" category:food))',
+            new NodeGroup([
+                new NodeGroup([
                     new FieldNode('amount', '100'),
                     new NodeGroup([
-                        new FieldNode('description', 'market'),
+                        new FieldNode('description', 'test'),
                         new FieldNode('category', 'food'),
                     ]),
                 ]),
-            ],
-            'word followed by subquery'             => [
-                'query'    => 'groceries (amount:100 description_contains:"test")',
-                'expected' => new NodeGroup([
-                    new StringNode('groceries'),
+            ]),
+        ];
+
+        yield 'mixed words and operators' => [
+            'groceries amount:50 shopping',
+            new NodeGroup([
+                new StringNode('groceries'),
+                new FieldNode('amount', '50'),
+                new StringNode('shopping'),
+            ]),
+        ];
+
+        yield 'subquery after field value' => [
+            'amount:100 (description:"market" category:food)',
+            new NodeGroup([
+                new FieldNode('amount', '100'),
+                new NodeGroup([
+                    new FieldNode('description', 'market'),
+                    new FieldNode('category', 'food'),
+                ]),
+            ]),
+        ];
+
+        yield 'word followed by subquery' => [
+            'groceries (amount:100 description_contains:"test")',
+            new NodeGroup([
+                new StringNode('groceries'),
+                new NodeGroup([
+                    new FieldNode('amount', '100'),
+                    new FieldNode('description_contains', 'test'),
+                ]),
+            ]),
+        ];
+
+        yield 'nested subquery with prohibited field' => [
+            '(amount:100 (description_contains:"test payment" -has_attachments:true))',
+            new NodeGroup([
+                new NodeGroup([
+                    new FieldNode('amount', '100'),
                     new NodeGroup([
-                        new FieldNode('amount', '100'),
-                        new FieldNode('description_contains', 'test'),
+                        new FieldNode('description_contains', 'test payment'),
+                        new FieldNode('has_attachments', 'true', true),
                     ]),
                 ]),
-            ],
-            'nested subquery with prohibited field' => [
-                'query'    => '(amount:100 (description_contains:"test payment" -has_attachments:true))',
-                'expected' => new NodeGroup([
+            ]),
+        ];
+
+        yield 'complex nested subqueries' => [
+            'shopping (amount:50 market (-category:food word description:"test phrase" (has_notes:true)))',
+            new NodeGroup([
+                new StringNode('shopping'),
+                new NodeGroup([
+                    new FieldNode('amount', '50'),
+                    new StringNode('market'),
                     new NodeGroup([
-                        new FieldNode('amount', '100'),
+                        new FieldNode('category', 'food', true),
+                        new StringNode('word'),
+                        new FieldNode('description', 'test phrase'),
                         new NodeGroup([
-                            new FieldNode('description_contains', 'test payment'),
-                            new FieldNode('has_attachments', 'true', true),
+                            new FieldNode('has_notes', 'true'),
                         ]),
                     ]),
                 ]),
-            ],
-            'complex nested subqueries'             => [
-                'query'    => 'shopping (amount:50 market (-category:food word description:"test phrase" (has_notes:true)))',
-                'expected' => new NodeGroup([
-                    new StringNode('shopping'),
-                    new NodeGroup([
-                        new FieldNode('amount', '50'),
-                        new StringNode('market'),
-                        new NodeGroup([
-                            new FieldNode('category', 'food', true),
-                            new StringNode('word'),
-                            new FieldNode('description', 'test phrase'),
-                            new NodeGroup([
-                                new FieldNode('has_notes', 'true'),
-                            ]),
-                        ]),
-                    ]),
+            ]),
+        ];
+
+        yield 'word with multiple spaces' => [
+            '"multiple   spaces"',
+            new NodeGroup([new StringNode('multiple   spaces')]),
+        ];
+
+        yield 'field with multiple spaces in value' => [
+            'description:"multiple   spaces   here"',
+            new NodeGroup([new FieldNode('description', 'multiple   spaces   here')]),
+        ];
+
+        yield 'unmatched right parenthesis in word' => [
+            'test)word',
+            new NodeGroup([new StringNode('test)word')]),
+        ];
+
+        yield 'unmatched right parenthesis in field' => [
+            'description:test)phrase',
+            new NodeGroup([new FieldNode('description', 'test)phrase')]),
+        ];
+
+        yield 'subquery followed by word' => [
+            '(amount:100 category:food) shopping',
+            new NodeGroup([
+                new NodeGroup([
+                    new FieldNode('amount', '100'),
+                    new FieldNode('category', 'food'),
                 ]),
-            ],
-            'word with multiple spaces'             => [
-                'query'    => '"multiple   spaces"',
-                'expected' => new NodeGroup([new StringNode('multiple   spaces')]),
-            ],
-            'field with multiple spaces in value'   => [
-                'query'    => 'description:"multiple   spaces   here"',
-                'expected' => new NodeGroup([new FieldNode('description', 'multiple   spaces   here')]),
-            ],
-            'unmatched right parenthesis in word'   => [
-                'query'    => 'test)word',
-                'expected' => new NodeGroup([new StringNode('test)word')]),
-            ],
-            'unmatched right parenthesis in field'  => [
-                'query'    => 'description:test)phrase',
-                'expected' => new NodeGroup([new FieldNode('description', 'test)phrase')]),
-            ],
-            'subquery followed by word'             => [
-                'query'    => '(amount:100 category:food) shopping',
-                'expected' => new NodeGroup([
-                    new NodeGroup([
-                        new FieldNode('amount', '100'),
-                        new FieldNode('category', 'food'),
-                    ]),
-                    new StringNode('shopping'),
-                ]),
-            ],
+                new StringNode('shopping'),
+            ]),
         ];
     }
 }

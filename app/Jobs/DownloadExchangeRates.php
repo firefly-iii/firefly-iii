@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Jobs;
 
+use FireflyIII\Models\CurrencyExchangeRate;
 use Carbon\Carbon;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
@@ -38,6 +39,8 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
+
+use function Safe\json_decode;
 
 /**
  * Class DownloadExchangeRates
@@ -67,7 +70,7 @@ class DownloadExchangeRates implements ShouldQueue
         $userRepository   = app(UserRepositoryInterface::class);
         $this->users      = $userRepository->all();
 
-        if (null !== $date) {
+        if ($date instanceof Carbon) {
             $newDate    = clone $date;
             $newDate->startOfDay();
             $this->date = $newDate;
@@ -113,14 +116,14 @@ class DownloadExchangeRates implements ShouldQueue
             return;
         }
         $body       = (string) $res->getBody();
-        $json       = \Safe\json_decode($body, true);
+        $json       = json_decode($body, true);
         if (false === $json || null === $json) {
             app('log')->warning(sprintf('Trying to grab "%s" resulted in bad JSON.', $url));
 
             return;
         }
         $date       = Carbon::createFromFormat('Y-m-d', $json['date'], config('app.timezone'));
-        if (null === $date) {
+        if (!$date instanceof Carbon) {
             return;
         }
         $this->saveRates($currency, $date, $json['rates']);
@@ -130,7 +133,7 @@ class DownloadExchangeRates implements ShouldQueue
     {
         foreach ($rates as $code => $rate) {
             $to = $this->getCurrency($code);
-            if (null === $to) {
+            if (!$to instanceof TransactionCurrency) {
                 app('log')->debug(sprintf('Currency %s is not in use, do not save rate.', $code));
 
                 continue;
@@ -150,7 +153,7 @@ class DownloadExchangeRates implements ShouldQueue
         }
         // find it in the database.
         $currency            = $this->repository->findByCode($code);
-        if (null === $currency) {
+        if (!$currency instanceof TransactionCurrency) {
             app('log')->debug(sprintf('Did not find currency %s.', $code));
             $this->active[$code] = null;
 
@@ -173,7 +176,7 @@ class DownloadExchangeRates implements ShouldQueue
         foreach ($this->users as $user) {
             $this->repository->setUser($user);
             $existing = $this->repository->getExchangeRate($from, $to, $date);
-            if (null === $existing) {
+            if (!$existing instanceof CurrencyExchangeRate) {
                 app('log')->debug(sprintf('Saved rate from %s to %s for user #%d.', $from->code, $to->code, $user->id));
                 $this->repository->setExchangeRate($from, $to, $date, $rate);
             }

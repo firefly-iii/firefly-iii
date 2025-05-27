@@ -226,7 +226,7 @@ class JournalUpdateService
 
     private function getOriginalSourceAccount(): Account
     {
-        if (null === $this->sourceAccount) {
+        if (!$this->sourceAccount instanceof Account) {
             $source              = $this->getSourceTransaction();
             $this->sourceAccount = $source->account;
         }
@@ -236,7 +236,7 @@ class JournalUpdateService
 
     private function getSourceTransaction(): Transaction
     {
-        if (null === $this->sourceTransaction) {
+        if (!$this->sourceTransaction instanceof Transaction) {
             /** @var null|Transaction $result */
             $result                  = $this->transactionJournal->transactions()->with(['account'])->where('amount', '<', 0)->first();
             $this->sourceTransaction = $result;
@@ -304,7 +304,7 @@ class JournalUpdateService
 
     private function getOriginalDestinationAccount(): Account
     {
-        if (null === $this->destinationAccount) {
+        if (!$this->destinationAccount instanceof Account) {
             $destination              = $this->getDestinationTransaction();
             $this->destinationAccount = $destination->account;
         }
@@ -317,7 +317,7 @@ class JournalUpdateService
      */
     private function getDestinationTransaction(): Transaction
     {
-        if (null === $this->destinationTransaction) {
+        if (!$this->destinationTransaction instanceof Transaction) {
             /** @var null|Transaction $result */
             $result                       = $this->transactionJournal->transactions()->where('amount', '>', 0)->first();
             $this->destinationTransaction = $result;

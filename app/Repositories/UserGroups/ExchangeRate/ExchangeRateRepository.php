@@ -30,6 +30,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Override;
 
 /**
  * Class ExchangeRateRepository
@@ -40,19 +41,19 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface
 {
     use UserGroupTrait;
 
-    #[\Override]
+    #[Override]
     public function deleteRate(CurrencyExchangeRate $rate): void
     {
         $this->userGroup->currencyExchangeRates()->where('id', $rate->id)->delete();
     }
 
-    #[\Override]
+    #[Override]
     public function getAll(): Collection
     {
         return $this->userGroup->currencyExchangeRates()->orderBy('date', 'ASC')->get();
     }
 
-    #[\Override]
+    #[Override]
     public function getRates(TransactionCurrency $from, TransactionCurrency $to): Collection
     {
         // orderBy('date', 'DESC')->toRawSql();
@@ -75,7 +76,7 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface
 
     }
 
-    #[\Override]
+    #[Override]
     public function getSpecificRateOnDate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): ?CurrencyExchangeRate
     {
         /** @var null|CurrencyExchangeRate */
@@ -88,7 +89,7 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface
         ;
     }
 
-    #[\Override]
+    #[Override]
     public function storeExchangeRate(TransactionCurrency $from, TransactionCurrency $to, string $rate, Carbon $date): CurrencyExchangeRate
     {
         $object                   = new CurrencyExchangeRate();
@@ -104,11 +105,11 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface
         return $object;
     }
 
-    #[\Override]
+    #[Override]
     public function updateExchangeRate(CurrencyExchangeRate $object, string $rate, ?Carbon $date = null): CurrencyExchangeRate
     {
         $object->rate = $rate;
-        if (null !== $date) {
+        if ($date instanceof Carbon) {
             $object->date = $date;
         }
         $object->save();

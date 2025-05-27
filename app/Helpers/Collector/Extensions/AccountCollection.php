@@ -30,13 +30,14 @@ use FireflyIII\Support\Facades\Steam;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Trait AccountCollection
  */
 trait AccountCollection
 {
-    #[\Override]
+    #[Override]
     public function accountBalanceIs(string $direction, string $operator, string $value): GroupCollectorInterface
     {
         Log::warning(sprintf('GroupCollector will be SLOW: accountBalanceIs: "%s" "%s" "%s"', $direction, $operator, $value));

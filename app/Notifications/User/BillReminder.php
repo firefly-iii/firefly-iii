@@ -66,12 +66,11 @@ class BillReminder extends Notification
 
     private function getSubject(): string
     {
-        $message = (string) trans(sprintf('email.bill_warning_subject_%s', $this->field), ['diff' => $this->diff, 'name' => $this->bill->name]);
         if (0 === $this->diff) {
-            $message = (string) trans(sprintf('email.bill_warning_subject_now_%s', $this->field), ['diff' => $this->diff, 'name' => $this->bill->name]);
+            return (string) trans(sprintf('email.bill_warning_subject_now_%s', $this->field), ['diff' => $this->diff, 'name' => $this->bill->name]);
         }
 
-        return $message;
+        return (string) trans(sprintf('email.bill_warning_subject_%s', $this->field), ['diff' => $this->diff, 'name' => $this->bill->name]);
     }
 
     public function toNtfy(User $notifiable): Message

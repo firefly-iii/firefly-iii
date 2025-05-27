@@ -28,6 +28,7 @@ namespace FireflyIII\Rules\Admin;
 use FireflyIII\Support\Validation\ValidatesAmountsTrait;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Log;
+use Closure;
 
 class IsValidSlackUrl implements ValidationRule
 {
@@ -36,7 +37,7 @@ class IsValidSlackUrl implements ValidationRule
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function validate(string $attribute, mixed $value, \Closure $fail): void
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $value = (string) $value;
         if ('' === $value) {

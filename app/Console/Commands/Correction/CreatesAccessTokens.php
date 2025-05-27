@@ -28,6 +28,7 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Console\Command;
+use Exception;
 
 class CreatesAccessTokens extends Command
 {
@@ -40,7 +41,7 @@ class CreatesAccessTokens extends Command
     /**
      * Execute the console command.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function handle(): int
     {

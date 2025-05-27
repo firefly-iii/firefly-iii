@@ -27,6 +27,7 @@ use FireflyIII\Repositories\Recurring\RecurringRepository;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use Override;
 
 /**
  * Class RecurringServiceProvider.
@@ -41,7 +42,7 @@ class RecurringServiceProvider extends ServiceProvider
     /**
      * Register the application services.
      */
-    #[\Override]
+    #[Override]
     public function register(): void
     {
         $this->app->bind(

@@ -126,13 +126,13 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
-        if (null !== $accounts && $accounts->count() > 0) {
+        if ($accounts instanceof Collection && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        if (null !== $budgets && $budgets->count() > 0) {
+        if ($budgets instanceof Collection && $budgets->count() > 0) {
             $collector->setBudgets($budgets);
         }
-        if (null === $budgets || 0 === $budgets->count()) {
+        if (!$budgets instanceof Collection || 0 === $budgets->count()) {
             $collector->setBudgets($this->getBudgets());
         }
         $collector->withBudgetInformation()->withAccountInformation()->withCategoryInformation();
@@ -229,13 +229,13 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
             ->setTypes([TransactionTypeEnum::WITHDRAWAL->value])
         ;
 
-        if (null !== $accounts) {
+        if ($accounts instanceof Collection) {
             $collector->setAccounts($accounts);
         }
-        if (null === $budgets) {
+        if (!$budgets instanceof Collection) {
             $budgets = $this->getBudgets();
         }
-        if (null !== $currency) {
+        if ($currency instanceof TransactionCurrency) {
             Log::debug(sprintf('Limit to normal currency %s', $currency->code));
             $collector->setNormalCurrency($currency);
         }
@@ -245,7 +245,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         $journals   = $collector->getExtractedJournals();
 
         // same but for transactions in the foreign currency:
-        if (null !== $currency) {
+        if ($currency instanceof TransactionCurrency) {
             Log::debug('STOP looking for transactions in the foreign currency.');
         }
         $summarizer = new TransactionSummarizer($this->user);

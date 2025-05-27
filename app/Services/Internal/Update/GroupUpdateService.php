@@ -187,10 +187,10 @@ class GroupUpdateService
                 Log::debug('Call createTransactionJournal');
                 $newJournal = $this->createTransactionJournal($transactionGroup, $transaction);
                 Log::debug('Done calling createTransactionJournal');
-                if (null !== $newJournal) {
+                if ($newJournal instanceof TransactionJournal) {
                     $updated[] = $newJournal->id;
                 }
-                if (null === $newJournal) {
+                if (!$newJournal instanceof TransactionJournal) {
                     Log::error('createTransactionJournal returned NULL, indicating something went wrong.');
                 }
             }

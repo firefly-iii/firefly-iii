@@ -45,6 +45,9 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
+use Override;
+
+use function Safe\json_encode;
 
 /**
  * Class AccountRepository.
@@ -108,7 +111,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
             ->where('accounts.active', true)
             ->where(
                 static function (EloquentBuilder $q1) use ($number): void {
-                    $json = \Safe\json_encode($number);
+                    $json = json_encode($number);
                     $q1->where('account_meta.name', '=', 'account_number');
                     $q1->where('account_meta.data', '=', $json);
                 }
@@ -162,7 +165,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         return $account;
     }
 
-    #[\Override]
+    #[Override]
     public function getAccountBalances(Account $account): Collection
     {
         return $account->accountBalances;
@@ -533,7 +536,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         return null;
     }
 
-    #[\Override]
+    #[Override]
     public function periodCollection(Account $account, Carbon $start, Carbon $end): array
     {
         return $account->transactions()

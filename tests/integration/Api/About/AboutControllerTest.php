@@ -27,6 +27,7 @@ namespace Tests\integration\Api\About;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\integration\TestCase;
+use Override;
 
 /**
  * Class AboutControllerTest
@@ -40,7 +41,7 @@ final class AboutControllerTest extends TestCase
     use RefreshDatabase;
     private $user;
 
-    #[\Override]
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

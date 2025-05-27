@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace Tests\unit\Support;
 
+use Override;
+use Iterator;
 use Carbon\Carbon;
 use FireflyIII\Support\Navigation;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -42,6 +44,7 @@ final class NavigationPreferredRangeFormatTest extends TestCase
 {
     private Navigation $navigation;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -55,21 +58,30 @@ final class NavigationPreferredRangeFormatTest extends TestCase
         self::assertSame($expected, $formatPeriod);
     }
 
-    public static function providePeriods(): iterable
+    public static function providePeriods(): Iterator
     {
-        return [
-            '1 week'    => ['start' => Carbon::now(), 'end' => Carbon::now()->addWeek(), 'expected' => '1D'],
-            '1 month'   => ['start' => Carbon::now(), 'end' => Carbon::now()->addMonth(), 'expected' => '1D'],
-            '2 months'  => ['start' => Carbon::now(), 'end' => Carbon::now()->addMonths(2), 'expected' => '1M'],
-            '3 months'  => ['start' => Carbon::now(), 'end' => Carbon::now()->addMonths(3), 'expected' => '1M'],
-            '6 months'  => ['start' => Carbon::now(), 'end' => Carbon::now()->addMonths(6), 'expected' => '1M'],
-            '7 months'  => ['start' => Carbon::now(), 'end' => Carbon::now()->addMonths(7), 'expected' => '1M'],
-            '11 months' => ['start' => Carbon::now(), 'end' => Carbon::now()->addMonths(11), 'expected' => '1M'],
-            '12 months' => ['start' => Carbon::now(), 'end' => Carbon::now()->addMonths(12), 'expected' => '1M'],
-            '13 months' => ['start' => Carbon::now(), 'end' => Carbon::now()->addMonths(13), 'expected' => '1Y'],
-            '16 months' => ['start' => Carbon::now(), 'end' => Carbon::now()->addMonths(16), 'expected' => '1Y'],
-            '1 year'    => ['start' => Carbon::now(), 'end' => Carbon::now()->addYear(), 'expected' => '1M'],
-            '2 years'   => ['start' => Carbon::now(), 'end' => Carbon::now()->addYears(2), 'expected' => '1Y'],
-        ];
+        yield '1 week' => [Carbon::now(), Carbon::now()->addWeek(), '1D'];
+
+        yield '1 month' => [Carbon::now(), Carbon::now()->addMonth(), '1D'];
+
+        yield '2 months' => [Carbon::now(), Carbon::now()->addMonths(2), '1M'];
+
+        yield '3 months' => [Carbon::now(), Carbon::now()->addMonths(3), '1M'];
+
+        yield '6 months' => [Carbon::now(), Carbon::now()->addMonths(6), '1M'];
+
+        yield '7 months' => [Carbon::now(), Carbon::now()->addMonths(7), '1M'];
+
+        yield '11 months' => [Carbon::now(), Carbon::now()->addMonths(11), '1M'];
+
+        yield '12 months' => [Carbon::now(), Carbon::now()->addMonths(12), '1M'];
+
+        yield '13 months' => [Carbon::now(), Carbon::now()->addMonths(13), '1Y'];
+
+        yield '16 months' => [Carbon::now(), Carbon::now()->addMonths(16), '1Y'];
+
+        yield '1 year' => [Carbon::now(), Carbon::now()->addYear(), '1M'];
+
+        yield '2 years' => [Carbon::now(), Carbon::now()->addYears(2), '1Y'];
     }
 }

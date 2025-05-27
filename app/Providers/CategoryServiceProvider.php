@@ -31,6 +31,7 @@ use FireflyIII\Repositories\Category\OperationsRepository;
 use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use Override;
 
 /**
  * Class CategoryServiceProvider.
@@ -45,7 +46,7 @@ class CategoryServiceProvider extends ServiceProvider
     /**
      * Register the application services.
      */
-    #[\Override]
+    #[Override]
     public function register(): void
     {
         // phpstan does not understand reference to 'auth'.

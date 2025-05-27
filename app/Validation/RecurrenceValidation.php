@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceTransaction;
 use Illuminate\Validation\Validator;
+use InvalidArgumentException;
 
 /**
  * Trait RecurrenceValidation
@@ -165,13 +166,13 @@ trait RecurrenceValidation
         $reps        = array_key_exists('nr_of_repetitions', $data) ? (int) $data['nr_of_repetitions'] : null;
         $repeatUntil = array_key_exists('repeat_until', $data) ? new Carbon($data['repeat_until']) : null;
 
-        if (null === $reps && null === $repeatUntil) {
+        if (null === $reps && !$repeatUntil instanceof Carbon) {
             $validator->errors()->add('nr_of_repetitions', trans('validation.require_repeat_until'));
             $validator->errors()->add('repeat_until', trans('validation.require_repeat_until'));
 
             return;
         }
-        if ($reps > 0 && null !== $repeatUntil) {
+        if ($reps > 0 && $repeatUntil instanceof Carbon) {
             $validator->errors()->add('nr_of_repetitions', trans('validation.require_repeat_until'));
             $validator->errors()->add('repeat_until', trans('validation.require_repeat_until'));
         }
@@ -294,7 +295,7 @@ trait RecurrenceValidation
     {
         try {
             Carbon::createFromFormat('Y-m-d', $moment);
-        } catch (\InvalidArgumentException $e) { // @phpstan-ignore-line
+        } catch (InvalidArgumentException $e) { // @phpstan-ignore-line
             app('log')->debug(sprintf('Invalid argument for Carbon: %s', $e->getMessage()));
             $validator->errors()->add(sprintf('repetitions.%d.moment', $index), (string) trans('validation.valid_recurrence_rep_moment'));
         }

@@ -39,7 +39,7 @@ class ReturnsAvailableChannels
         if ('owner' === $type) {
             return self::returnOwnerChannels();
         }
-        if ('user' === $type && null !== $user) {
+        if ('user' === $type && $user instanceof User) {
             return self::returnUserChannels($user);
         }
 

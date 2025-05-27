@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Rules;
 
 use Illuminate\Contracts\Validation\ValidationRule;
+use Closure;
 
 /**
  * Class IsBoolean
@@ -34,7 +35,7 @@ class IsBoolean implements ValidationRule
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function validate(string $attribute, mixed $value, \Closure $fail): void
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (is_bool($value)) {
             return;

@@ -27,6 +27,7 @@ use FireflyIII\Repositories\Rule\RuleRepository;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use Override;
 
 /**
  * Class RuleServiceProvider.
@@ -41,7 +42,7 @@ class RuleServiceProvider extends ServiceProvider
     /**
      * Register the application services.
      */
-    #[\Override]
+    #[Override]
     public function register(): void
     {
         $this->app->bind(

@@ -91,7 +91,7 @@ class BillTransformer extends AbstractTransformer
         $payDatesFormatted = [];
         foreach ($paidData as $object) {
             $date                = Carbon::createFromFormat('!Y-m-d', $object['date'], config('app.timezone'));
-            if (null === $date) {
+            if (!$date instanceof Carbon) {
                 $date = today(config('app.timezone'));
             }
             $object['date']      = $date->toAtomString();
@@ -100,7 +100,7 @@ class BillTransformer extends AbstractTransformer
 
         foreach ($payDates as $string) {
             $date                = Carbon::createFromFormat('!Y-m-d', $string, config('app.timezone'));
-            if (null === $date) {
+            if (!$date instanceof Carbon) {
                 $date = today(config('app.timezone'));
             }
             $payDatesFormatted[] = $date->toAtomString();
@@ -113,7 +113,7 @@ class BillTransformer extends AbstractTransformer
 
         if (null !== $firstPayDate) {
             $nemDate = Carbon::createFromFormat('!Y-m-d', $firstPayDate, config('app.timezone'));
-            if (null === $nemDate) {
+            if (!$nemDate instanceof Carbon) {
                 $nemDate = today(config('app.timezone'));
             }
             $nem     = $nemDate->toAtomString();
@@ -138,7 +138,7 @@ class BillTransformer extends AbstractTransformer
             $current = $payDatesFormatted[0] ?? null;
             if (null !== $current && !$nemDate->isToday()) {
                 $temp2   = Carbon::createFromFormat('Y-m-d\TH:i:sP', $current);
-                if (null === $temp2) {
+                if (!$temp2 instanceof Carbon) {
                     $temp2 = today(config('app.timezone'));
                 }
                 $nemDiff = trans('firefly.bill_expected_date', ['date' => $temp2->diffForHumans(today(config('app.timezone')), CarbonInterface::DIFF_RELATIVE_TO_NOW)]);

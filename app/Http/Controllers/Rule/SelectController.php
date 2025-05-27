@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Rule;
 
+use Throwable;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -174,7 +175,7 @@ class SelectController extends Controller
 
         try {
             $view = view('list.journals-array-tiny', ['groups' => $collection])->render();
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             app('log')->error(sprintf('Could not render view in testTriggers(): %s', $exception->getMessage()));
             app('log')->error($exception->getTraceAsString());
             $view = sprintf('Could not render list.journals-tiny: %s', $exception->getMessage());
@@ -216,7 +217,7 @@ class SelectController extends Controller
 
         try {
             $view = view('list.journals-array-tiny', ['groups' => $collection])->render();
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             $message = sprintf('Could not render view in testTriggersByRule(): %s', $exception->getMessage());
             app('log')->error($message);
             app('log')->error($exception->getTraceAsString());

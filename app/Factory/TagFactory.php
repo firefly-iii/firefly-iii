@@ -59,7 +59,7 @@ class TagFactory
                 'zoom_level'  => null,
             ]
         );
-        if (null === $newTag) {
+        if (!$newTag instanceof Tag) {
             app('log')->error(sprintf('TagFactory::findOrCreate("%s") but tag is unexpectedly NULL!', $tag));
 
             return null;

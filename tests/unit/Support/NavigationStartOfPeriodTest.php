@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace Tests\unit\Support;
 
+use Override;
+use Iterator;
 use Carbon\Carbon;
 use FireflyIII\Support\Navigation;
 use Illuminate\Support\Facades\Log;
@@ -43,6 +45,7 @@ final class NavigationStartOfPeriodTest extends TestCase
 {
     private Navigation $navigation;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -56,34 +59,55 @@ final class NavigationStartOfPeriodTest extends TestCase
         self::assertSame($expected->toDateString(), $period->toDateString());
     }
 
-    public static function provideDates(): iterable
+    public static function provideDates(): Iterator
     {
-        return [
-            'custom'    => ['frequency' => 'custom', 'from' => Carbon::now(), 'expected' => Carbon::now()],
-            '1D'        => ['frequency' => '1D', 'from' => Carbon::now(), 'expected' => Carbon::now()->startOfDay()],
-            'daily'     => ['frequency' => 'daily', 'from' => Carbon::now(), 'expected' => Carbon::now()->startOfDay()],
-            '1W'        => ['frequency' => '1W', 'from' => Carbon::now(), 'expected' => Carbon::now()->startOfWeek()],
-            'week'      => ['frequency' => 'week', 'from' => Carbon::now(), 'expected' => Carbon::now()->startOfWeek()],
-            'weekly'    => ['frequency' => 'weekly', 'from' => Carbon::now(), 'expected' => Carbon::now()->startOfWeek()],
-            'month'     => ['frequency' => 'month', 'from' => Carbon::now(), 'expected' => Carbon::now()->startOfMonth()],
-            '1M'        => ['frequency' => '1M', 'from' => Carbon::now(), 'expected' => Carbon::now()->startOfMonth()],
-            'monthly'   => ['frequency' => 'monthly', 'from' => Carbon::now(), 'expected' => Carbon::now()->startOfMonth()],
-            '3M'        => ['frequency' => '3M', 'from' => Carbon::now(), 'expected' => Carbon::now()->firstOfQuarter()],
-            'quarter'   => ['frequency' => 'quarter', 'from' => Carbon::now(), 'expected' => Carbon::now()->firstOfQuarter()],
-            'quarterly' => ['frequency' => 'quarterly', 'from' => Carbon::now(), 'expected' => Carbon::now()->firstOfQuarter()],
-            'year'      => ['frequency' => 'year', 'from' => Carbon::now(), 'expected' => Carbon::now()->startOfYear()],
-            'yearly'    => ['frequency' => 'yearly', 'from' => Carbon::now(), 'expected' => Carbon::now()->startOfYear()],
-            '1Y'        => ['frequency' => '1Y', 'from' => Carbon::now(), 'expected' => Carbon::now()->startOfYear()],
-            'half-year' => ['frequency' => 'half-year', 'from' => Carbon::parse('2023-05-20'), 'expected' => Carbon::parse('2023-01-01')->startOfYear()],
-            '6M'        => ['frequency' => '6M', 'from' => Carbon::parse('2023-08-20'), 'expected' => Carbon::parse('2023-07-01')],
-            'last7'     => ['frequency' => 'last7', 'from' => Carbon::now(), 'expected' => Carbon::now()->subDays(7)->startOfDay()],
-            'last30'    => ['frequency' => 'last30', 'from' => Carbon::now(), 'expected' => Carbon::now()->subDays(30)->startOfDay()],
-            'last90'    => ['frequency' => 'last90', 'from' => Carbon::now(), 'expected' => Carbon::now()->subDays(90)->startOfDay()],
-            'last365'   => ['frequency' => 'last365', 'from' => Carbon::now(), 'expected' => Carbon::now()->subDays(365)->startOfDay()],
-            'MTD'       => ['frequency' => 'MTD', 'from' => Carbon::now(), 'expected' => Carbon::now()->startOfMonth()->startOfDay()],
-            'QTD'       => ['frequency' => 'QTD', 'from' => Carbon::now(), 'expected' => Carbon::now()->firstOfQuarter()->startOfDay()],
-            'YTD'       => ['frequency' => 'YTD', 'from' => Carbon::now(), 'expected' => Carbon::now()->startOfYear()->startOfDay()],
-        ];
+        yield 'custom' => ['custom', Carbon::now(), Carbon::now()];
+
+        yield '1D' => ['1D', Carbon::now(), Carbon::now()->startOfDay()];
+
+        yield 'daily' => ['daily', Carbon::now(), Carbon::now()->startOfDay()];
+
+        yield '1W' => ['1W', Carbon::now(), Carbon::now()->startOfWeek()];
+
+        yield 'week' => ['week', Carbon::now(), Carbon::now()->startOfWeek()];
+
+        yield 'weekly' => ['weekly', Carbon::now(), Carbon::now()->startOfWeek()];
+
+        yield 'month' => ['month', Carbon::now(), Carbon::now()->startOfMonth()];
+
+        yield '1M' => ['1M', Carbon::now(), Carbon::now()->startOfMonth()];
+
+        yield 'monthly' => ['monthly', Carbon::now(), Carbon::now()->startOfMonth()];
+
+        yield '3M' => ['3M', Carbon::now(), Carbon::now()->firstOfQuarter()];
+
+        yield 'quarter' => ['quarter', Carbon::now(), Carbon::now()->firstOfQuarter()];
+
+        yield 'quarterly' => ['quarterly', Carbon::now(), Carbon::now()->firstOfQuarter()];
+
+        yield 'year' => ['year', Carbon::now(), Carbon::now()->startOfYear()];
+
+        yield 'yearly' => ['yearly', Carbon::now(), Carbon::now()->startOfYear()];
+
+        yield '1Y' => ['1Y', Carbon::now(), Carbon::now()->startOfYear()];
+
+        yield 'half-year' => ['half-year', Carbon::parse('2023-05-20'), Carbon::parse('2023-01-01')->startOfYear()];
+
+        yield '6M' => ['6M', Carbon::parse('2023-08-20'), Carbon::parse('2023-07-01')];
+
+        yield 'last7' => ['last7', Carbon::now(), Carbon::now()->subDays(7)->startOfDay()];
+
+        yield 'last30' => ['last30', Carbon::now(), Carbon::now()->subDays(30)->startOfDay()];
+
+        yield 'last90' => ['last90', Carbon::now(), Carbon::now()->subDays(90)->startOfDay()];
+
+        yield 'last365' => ['last365', Carbon::now(), Carbon::now()->subDays(365)->startOfDay()];
+
+        yield 'MTD' => ['MTD', Carbon::now(), Carbon::now()->startOfMonth()->startOfDay()];
+
+        yield 'QTD' => ['QTD', Carbon::now(), Carbon::now()->firstOfQuarter()->startOfDay()];
+
+        yield 'YTD' => ['YTD', Carbon::now(), Carbon::now()->startOfYear()->startOfDay()];
     }
 
     #[DataProvider('provideUnknownFrequencies')]
@@ -100,12 +124,12 @@ final class NavigationStartOfPeriodTest extends TestCase
         self::assertSame($expected->toDateString(), $period->toDateString());
     }
 
-    public static function provideUnknownFrequencies(): iterable
+    public static function provideUnknownFrequencies(): Iterator
     {
-        return [
-            '1day'    => ['frequency' => '1day', 'from' => Carbon::now(), 'expected' => Carbon::now()],
-            'unknown' => ['frequency' => 'unknown', 'from' => Carbon::now(), 'expected' => Carbon::now()->startOfDay()],
-            'empty'   => ['frequency' => '', 'from' => Carbon::now(), 'expected' => Carbon::now()->startOfDay()],
-        ];
+        yield '1day' => ['1day', Carbon::now(), Carbon::now()];
+
+        yield 'unknown' => ['unknown', Carbon::now(), Carbon::now()->startOfDay()];
+
+        yield 'empty' => ['', Carbon::now(), Carbon::now()->startOfDay()];
     }
 }

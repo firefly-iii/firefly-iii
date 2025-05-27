@@ -27,6 +27,7 @@ namespace FireflyIII\Handlers\Events;
 use FireflyIII\Events\WarnUserAboutBill;
 use FireflyIII\Notifications\User\BillReminder;
 use Illuminate\Support\Facades\Notification;
+use Exception;
 
 /**
  * Class BillEventHandler
@@ -47,7 +48,7 @@ class BillEventHandler
 
             try {
                 Notification::send($bill->user, new BillReminder($bill, $event->field, $event->diff));
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $message = $e->getMessage();
                 if (str_contains($message, 'Bcc')) {
                     app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');

@@ -54,12 +54,11 @@ if (!function_exists('limitStringLength')) {
     {
         $maxChars = 75;
         $length   = strlen($string);
-        $result   = $string;
         if ($length > $maxChars) {
-            $result = substr_replace($string, ' ... ', (int)($maxChars / 2), $length - $maxChars);
+            return substr_replace($string, ' ... ', (int)($maxChars / 2), $length - $maxChars);
         }
 
-        return $result;
+        return $string;
     }
 }
 
@@ -109,7 +108,7 @@ Breadcrumbs::for(
 
         $breadcrumbs->parent('accounts.index', $what);
         $breadcrumbs->push(limitStringLength($account->name), route('accounts.show.all', [$account->id]));
-        if (null !== $start && null !== $end) {
+        if ($start instanceof Carbon && $end instanceof Carbon) {
             $title = trans(
                 'firefly.between_dates_breadcrumb',
                 [
@@ -451,7 +450,7 @@ Breadcrumbs::for(
     static function (Generator $breadcrumbs, ?Carbon $start = null, ?Carbon $end = null): void {
         $breadcrumbs->parent('budgets.index');
         $breadcrumbs->push(trans('firefly.journals_without_budget'), route('budgets.no-budget'));
-        if (null !== $start && null !== $end) {
+        if ($start instanceof Carbon && $end instanceof Carbon) {
             $title = trans(
                 'firefly.between_dates_breadcrumb',
                 [
@@ -539,7 +538,7 @@ Breadcrumbs::for(
     static function (Generator $breadcrumbs, Category $category, ?Carbon $start = null, ?Carbon $end = null): void {
         $breadcrumbs->parent('categories.index');
         $breadcrumbs->push(limitStringLength($category->name), route('categories.show', [$category->id]));
-        if (null !== $start && null !== $end) {
+        if ($start instanceof Carbon && $end instanceof Carbon) {
             $title = trans(
                 'firefly.between_dates_breadcrumb',
                 [
@@ -566,7 +565,7 @@ Breadcrumbs::for(
     static function (Generator $breadcrumbs, ?Carbon $start = null, ?Carbon $end = null): void {
         $breadcrumbs->parent('categories.index');
         $breadcrumbs->push(trans('firefly.journals_without_category'), route('categories.no-category'));
-        if (null !== $start && null !== $end) {
+        if ($start instanceof Carbon && $end instanceof Carbon) {
             $title = trans(
                 'firefly.between_dates_breadcrumb',
                 [
@@ -965,10 +964,10 @@ Breadcrumbs::for(
     'rules.create',
     static function (Generator $breadcrumbs, ?RuleGroup $ruleGroup = null): void {
         $breadcrumbs->parent('rules.index');
-        if (null === $ruleGroup) {
+        if (!$ruleGroup instanceof RuleGroup) {
             $breadcrumbs->push(trans('firefly.make_new_rule_no_group'), route('rules.create'));
         }
-        if (null !== $ruleGroup) {
+        if ($ruleGroup instanceof RuleGroup) {
             $breadcrumbs->push(trans('firefly.make_new_rule', ['title' => $ruleGroup->title]), route('rules.create', [$ruleGroup]));
         }
     }
@@ -1096,7 +1095,7 @@ Breadcrumbs::for(
         $breadcrumbs->parent('tags.index');
 
         $breadcrumbs->push($tag->tag, route('tags.show', [$tag->id, $start, $end]));
-        if (null !== $start && null !== $end) {
+        if ($start instanceof Carbon && $end instanceof Carbon) {
             $title = trans(
                 'firefly.between_dates_breadcrumb',
                 [
@@ -1127,7 +1126,7 @@ Breadcrumbs::for(
         $breadcrumbs->parent('home');
         $breadcrumbs->push(trans('breadcrumbs.'.$what.'_list'), route('transactions.index', [$what]));
 
-        if (null !== $start && null !== $end) {
+        if ($start instanceof Carbon && $end instanceof Carbon) {
             // add date range:
             $title = trans(
                 'firefly.between_dates_breadcrumb',

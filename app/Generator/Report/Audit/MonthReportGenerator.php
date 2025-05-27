@@ -34,6 +34,7 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 /**
  * Class MonthReportGenerator.
@@ -103,7 +104,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
                 ->with('start', $this->start)->with('end', $this->end)->with('accounts', $this->accounts)
                 ->render()
             ;
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             app('log')->error(sprintf('Cannot render reports.audit.report: %s', $e->getMessage()));
             app('log')->error($e->getTraceAsString());
             $result = sprintf('Could not render report view: %s', $e->getMessage());

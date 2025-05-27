@@ -37,6 +37,8 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 
+use function Safe\json_decode;
+
 /**
  * Class RecurringTransactionTransformer
  */
@@ -264,7 +266,7 @@ class RecurrenceTransformer extends AbstractTransformer
                     break;
 
                 case 'tags':
-                    $array['tags'] = \Safe\json_decode($transactionMeta->value);
+                    $array['tags'] = json_decode((string) $transactionMeta->value);
 
                     break;
 

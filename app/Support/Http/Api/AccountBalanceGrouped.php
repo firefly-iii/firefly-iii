@@ -215,7 +215,6 @@ class AccountBalanceGrouped
 
     private function getDataKey(array $journal): string
     {
-        $key = 'spent';
         // deposit = incoming
         // transfer or reconcile or opening balance, and these accounts are the destination.
         if (
@@ -230,10 +229,10 @@ class AccountBalanceGrouped
                 && in_array($journal['destination_account_id'], $this->accountIds, true)
             )
         ) {
-            $key = 'earned';
+            return 'earned';
         }
 
-        return $key;
+        return 'spent';
     }
 
     private function getRate(TransactionCurrency $currency, Carbon $date): string

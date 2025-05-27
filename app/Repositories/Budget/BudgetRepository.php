@@ -303,16 +303,16 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         // first things first: delete when no longer required:
         $autoBudgetType = array_key_exists('auto_budget_type', $data) ? $data['auto_budget_type'] : null;
 
-        if (0 === $autoBudgetType && null !== $autoBudget) {
+        if (0 === $autoBudgetType && $autoBudget instanceof AutoBudget) {
             // delete!
             $autoBudget->delete();
 
             return $budget;
         }
-        if (0 === $autoBudgetType && null === $autoBudget) {
+        if (0 === $autoBudgetType && !$autoBudget instanceof AutoBudget) {
             return $budget;
         }
-        if (null === $autoBudgetType && null === $autoBudget) {
+        if (null === $autoBudgetType && !$autoBudget instanceof AutoBudget) {
             return $budget;
         }
         $this->updateAutoBudget($budget, $data);
@@ -393,7 +393,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         // grab default currency:
         $currency   = app('amount')->getNativeCurrencyByUserGroup($this->user->userGroup);
 
-        if (null === $autoBudget) {
+        if (!$autoBudget instanceof AutoBudget) {
             // at this point it's a blind assumption auto_budget_type is 1 or 2.
             $autoBudget                          = new AutoBudget();
             $autoBudget->auto_budget_type        = $data['auto_budget_type'];
@@ -488,14 +488,14 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         app('log')->debug('Now in findBudget()');
         app('log')->debug(sprintf('Searching for budget with ID #%d...', $budgetId));
         $result = $this->find((int) $budgetId);
-        if (null === $result && null !== $budgetName && '' !== $budgetName) {
+        if (!$result instanceof Budget && null !== $budgetName && '' !== $budgetName) {
             app('log')->debug(sprintf('Searching for budget with name %s...', $budgetName));
             $result = $this->findByName($budgetName);
         }
-        if (null !== $result) {
+        if ($result instanceof Budget) {
             app('log')->debug(sprintf('Found budget #%d: %s', $result->id, $result->name));
         }
-        app('log')->debug(sprintf('Found result is null? %s', var_export(null === $result, true)));
+        app('log')->debug(sprintf('Found result is null? %s', var_export(!$result instanceof Budget, true)));
 
         return $result;
     }

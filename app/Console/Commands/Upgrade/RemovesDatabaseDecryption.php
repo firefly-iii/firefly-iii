@@ -31,6 +31,10 @@ use Illuminate\Console\Command;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use JsonException;
+use stdClass;
+
+use function Safe\json_decode;
 
 class RemovesDatabaseDecryption extends Command
 {
@@ -105,13 +109,13 @@ class RemovesDatabaseDecryption extends Command
     {
         $rows = DB::table($table)->get(['id', $field]);
 
-        /** @var \stdClass $row */
+        /** @var stdClass $row */
         foreach ($rows as $row) {
             $this->decryptRow($table, $field, $row);
         }
     }
 
-    private function decryptRow(string $table, string $field, \stdClass $row): void
+    private function decryptRow(string $table, string $field, stdClass $row): void
     {
         $original = $row->{$field};
         if (null === $original) {
@@ -167,8 +171,8 @@ class RemovesDatabaseDecryption extends Command
     {
         // try to json_decrypt the value.
         try {
-            $newValue = \Safe\json_decode($value, true, 512, JSON_THROW_ON_ERROR) ?? $value;
-        } catch (\JsonException $e) {
+            $newValue = json_decode($value, true, 512, JSON_THROW_ON_ERROR) ?? $value;
+        } catch (JsonException $e) {
             $message = sprintf('Could not JSON decode preference row #%d: %s. This does not have to be a problem.', $id, $e->getMessage());
             $this->friendlyError($message);
             app('log')->warning($message);

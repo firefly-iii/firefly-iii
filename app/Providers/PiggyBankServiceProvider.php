@@ -27,6 +27,7 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepository;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use Override;
 
 /**
  * Class PiggyBankServiceProvider.
@@ -41,7 +42,7 @@ class PiggyBankServiceProvider extends ServiceProvider
     /**
      * Register the application services.
      */
-    #[\Override]
+    #[Override]
     public function register(): void
     {
         $this->app->bind(

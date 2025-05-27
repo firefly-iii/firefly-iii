@@ -25,6 +25,7 @@ namespace Database\Seeders;
 
 use FireflyIII\Models\TransactionCurrency;
 use Illuminate\Database\Seeder;
+use PDOException;
 
 /**
  * Class TransactionCurrencySeeder.
@@ -82,7 +83,7 @@ class TransactionCurrencySeeder extends Seeder
             if (null === TransactionCurrency::where('code', $currency['code'])->first()) {
                 try {
                     TransactionCurrency::create($currency);
-                } catch (\PDOException $e) {
+                } catch (PDOException $e) {
                     // @ignoreException
                 }
             }

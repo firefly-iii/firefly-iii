@@ -123,7 +123,7 @@ class UpgradesBillsToRules extends Command
         $groupTitle = (string) trans('firefly.rulegroup_for_bills_title', [], $language);
         $ruleGroup  = $this->ruleGroupRepository->findByTitle($groupTitle);
 
-        if (null === $ruleGroup) {
+        if (!$ruleGroup instanceof RuleGroup) {
             $ruleGroup = $this->ruleGroupRepository->store(
                 [
                     'title'       => (string) trans('firefly.rulegroup_for_bills_title', [], $language),
