@@ -26,6 +26,7 @@ namespace FireflyIII\Factory;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
+use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class AccountMetaFactory
@@ -41,10 +42,15 @@ class AccountMetaFactory
         $entry = $account->accountMeta()->where('name', $field)->first();
         // must not be an empty string:
         if ('' !== $value) {
+            if('account_number' === $field) {
+                $value = Steam::filterSpaces($value);
+                $value = trim(str_replace([' ',"\t", "\n", "\r"], '', $value));
+            }
             // if $data has field and $entry is null, create new one:
             if (null === $entry) {
                 return $this->create(['account_id' => $account->id, 'name' => $field, 'data' => $value]);
             }
+
 
             // if $data has field and $entry is not null, update $entry:
             $entry->data = $value;
