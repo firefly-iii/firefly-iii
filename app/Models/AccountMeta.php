@@ -45,7 +45,7 @@ class AccountMeta extends Model
 
     protected function data(): Attribute
     {
-        return Attribute::make(get: fn(mixed $value) => (string) json_decode((string) $value, true), set: fn(mixed $value) => ['data' => json_encode($value)]);
+        return Attribute::make(get: fn (mixed $value) => (string) json_decode((string) $value, true), set: fn (mixed $value) => ['data' => json_encode($value)]);
     }
 
     protected function casts(): array

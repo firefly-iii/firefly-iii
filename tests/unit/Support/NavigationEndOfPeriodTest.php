@@ -55,7 +55,7 @@ final class NavigationEndOfPeriodTest extends TestCase
     public function testGivenADateAndFrequencyWhenCalculateTheDateThenReturnsTheExpectedDateSuccessful(string $frequency, Carbon $from, Carbon $expected): void
     {
         $period = clone $this->navigation->endOfPeriod($from, $frequency);
-        $this->assertSame($expected->toDateString(), $period->toDateString());
+        self::assertSame($expected->toDateString(), $period->toDateString());
     }
 
     public static function provideDates(): Iterator
@@ -116,7 +116,7 @@ final class NavigationEndOfPeriodTest extends TestCase
         Log::spy();
 
         $period          = $this->navigation->endOfPeriod($from, $frequency);
-        $this->assertSame($expected->toDateString(), $period->toDateString());
+        self::assertSame($expected->toDateString(), $period->toDateString());
         $expectedMessage = sprintf('Cannot do endOfPeriod for $repeat_freq "%s"', $frequency);
 
         Log::shouldHaveReceived('error', [$expectedMessage]);

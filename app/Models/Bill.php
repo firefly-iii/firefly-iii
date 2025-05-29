@@ -185,6 +185,7 @@ class Bill extends Model
             get: static fn ($value) => (int) $value,
         );
     }
+
     protected function casts(): array
     {
         return [

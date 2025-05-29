@@ -84,12 +84,9 @@ class Rule extends Model
         return $this->hasMany(RuleTrigger::class);
     }
 
-    /**
-     * @param mixed $value
-     */
     protected function description(): Attribute
     {
-        return Attribute::make(set: fn($value) => ['description' => e($value)]);
+        return Attribute::make(set: fn ($value) => ['description' => e($value)]);
     }
 
     public function userGroup(): BelongsTo
@@ -110,6 +107,7 @@ class Rule extends Model
             get: static fn ($value) => (int) $value,
         );
     }
+
     protected function casts(): array
     {
         return [

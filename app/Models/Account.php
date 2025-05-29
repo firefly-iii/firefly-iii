@@ -106,6 +106,7 @@ class Account extends Model
                 ->where('name', 'account_number')
                 ->first()
             ;
+
             return null !== $metaValue ? $metaValue->data : '';
         });
     }
@@ -122,6 +123,7 @@ class Account extends Model
             if (AccountTypeEnum::CASH->value === $this->accountType->type) {
                 return '';
             }
+
             return $name;
         });
     }
@@ -221,6 +223,7 @@ class Account extends Model
             get: static fn ($value) => (string) $value,
         );
     }
+
     protected function casts(): array
     {
         return [

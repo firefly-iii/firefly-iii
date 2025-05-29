@@ -81,6 +81,7 @@ class CurrencyExchangeRate extends Model
             get: static fn ($value) => (string) $value,
         );
     }
+
     protected function casts(): array
     {
         return [

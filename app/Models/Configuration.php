@@ -41,13 +41,11 @@ class Configuration extends Model
     /**
      * TODO can be replaced with native laravel code.
      *
-     * @param mixed $value
-     *
      * @return mixed
      */
     protected function data(): Attribute
     {
-        return Attribute::make(get: fn($value) => json_decode((string) $value), set: fn($value) => ['data' => json_encode($value)]);
+        return Attribute::make(get: fn ($value) => json_decode((string) $value), set: fn ($value) => ['data' => json_encode($value)]);
     }
 
     protected function casts(): array

@@ -38,6 +38,7 @@ class Role extends Model
     {
         return $this->belongsToMany(User::class);
     }
+
     protected function casts(): array
     {
         return [

@@ -58,6 +58,7 @@ class LinkType extends Model
     {
         return $this->hasMany(TransactionJournalLink::class);
     }
+
     protected function casts(): array
     {
         return [
