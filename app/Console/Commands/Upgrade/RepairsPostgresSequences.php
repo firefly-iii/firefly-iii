@@ -1,7 +1,7 @@
 <?php
 
 /*
- * FixPostgresSequences.php
+ * RepairsPostgresSequences.php
  * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
