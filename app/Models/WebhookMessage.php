@@ -36,15 +36,6 @@ class WebhookMessage extends Model
 {
     use ReturnsIntegerIdTrait;
 
-    protected $casts
-        = [
-            'sent'    => 'boolean',
-            'errored' => 'boolean',
-            'uuid'    => 'string',
-            'message' => 'json',
-            'logs'    => 'json',
-        ];
-
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
@@ -93,5 +84,15 @@ class WebhookMessage extends Model
         return Attribute::make(
             get: static fn ($value) => (int) $value,
         );
+    }
+    protected function casts(): array
+    {
+        return [
+            'sent'    => 'boolean',
+            'errored' => 'boolean',
+            'uuid'    => 'string',
+            'message' => 'json',
+            'logs'    => 'json',
+        ];
     }
 }

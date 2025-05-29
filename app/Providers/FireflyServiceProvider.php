@@ -163,8 +163,7 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(ALERepositoryInterface::class, ALERepository::class);
 
         $this->app->bind(
-            ObjectGroupRepositoryInterface::class,
-            static function (Application $app) {
+            static function (Application $app): ObjectGroupRepositoryInterface {
                 /** @var ObjectGroupRepository $repository */
                 $repository = app(ObjectGroupRepository::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
@@ -176,8 +175,7 @@ class FireflyServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
-            WebhookRepositoryInterface::class,
-            static function (Application $app) {
+            static function (Application $app): WebhookRepositoryInterface {
                 /** @var WebhookRepository $repository */
                 $repository = app(WebhookRepository::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
@@ -190,8 +188,7 @@ class FireflyServiceProvider extends ServiceProvider
 
         // rule expression language
         $this->app->singleton(
-            ExpressionLanguage::class,
-            static function () {
+            static function (): ExpressionLanguage {
                 $expressionLanguage = new ExpressionLanguage();
                 $expressionLanguage->registerProvider(new ActionExpressionLanguageProvider());
 
@@ -200,8 +197,7 @@ class FireflyServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
-            RuleEngineInterface::class,
-            static function (Application $app) {
+            static function (Application $app): RuleEngineInterface {
                 /** @var SearchRuleEngine $engine */
                 $engine = app(SearchRuleEngine::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
@@ -213,8 +209,7 @@ class FireflyServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
-            UserGroupRepositoryInterface::class,
-            static function (Application $app) {
+            static function (Application $app): UserGroupRepositoryInterface {
                 /** @var UserGroupRepository $repository */
                 $repository = app(UserGroupRepository::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)

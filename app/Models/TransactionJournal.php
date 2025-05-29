@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Carbon\Carbon;
 use FireflyIII\Casts\SeparateTimezoneCaster;
 use FireflyIII\Enums\TransactionTypeEnum;
@@ -51,23 +52,6 @@ class TransactionJournal extends Model
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
-
-    protected $casts
-                      = [
-            'created_at'    => 'datetime',
-            'updated_at'    => 'datetime',
-            'deleted_at'    => 'datetime',
-            'date'          => SeparateTimezoneCaster::class,
-            'interest_date' => 'date',
-            'book_date'     => 'date',
-            'process_date'  => 'date',
-            'order'         => 'int',
-            'tag_count'     => 'int',
-            'encrypted'     => 'boolean',
-            'completed'     => 'boolean',
-            'user_id'       => 'integer',
-            'user_group_id' => 'integer',
-        ];
 
     protected $fillable
                       = [
@@ -181,7 +165,8 @@ class TransactionJournal extends Model
         return $query->where('transaction_journals.date', '<=', $date->format('Y-m-d H:i:s'));
     }
 
-    public function scopeTransactionTypes(EloquentBuilder $query, array $types): void
+    #[Scope]
+    protected function transactionTypes(EloquentBuilder $query, array $types): void
     {
         if (!self::isJoined($query, 'transaction_types')) {
             $query->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
@@ -258,5 +243,23 @@ class TransactionJournal extends Model
         return Attribute::make(
             get: static fn ($value) => (int) $value,
         );
+    }
+    protected function casts(): array
+    {
+        return [
+            'created_at'    => 'datetime',
+            'updated_at'    => 'datetime',
+            'deleted_at'    => 'datetime',
+            'date'          => SeparateTimezoneCaster::class,
+            'interest_date' => 'date',
+            'book_date'     => 'date',
+            'process_date'  => 'date',
+            'order'         => 'int',
+            'tag_count'     => 'int',
+            'encrypted'     => 'boolean',
+            'completed'     => 'boolean',
+            'user_id'       => 'integer',
+            'user_group_id' => 'integer',
+        ];
     }
 }

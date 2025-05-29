@@ -25,20 +25,32 @@ declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
 use Rector\EarlyReturn\Rector\If_\ChangeOrIfContinueToMultiContinueRector;
+use Rector\Transform\Rector\String_\StringToClassConstantRector;
+use RectorLaravel\Set\LaravelLevelSetList;
+
 
 return RectorConfig::configure()
     ->withSkip([
         ChangeOrIfContinueToMultiContinueRector::class,
+        StringToClassConstantRector::class => [
+            __DIR__ . '/../app/Http/Controllers/Auth/LoginController.php',
+        ]
     ])
     ->withPaths([
         __DIR__ . '/../app',
-        __DIR__ . '/../bootstrap',
-        __DIR__ . '/../config',
-        __DIR__ . '/../public',
-        __DIR__ . '/../resources/lang/en_US',
-        __DIR__ . '/../routes',
-        __DIR__ . '/../tests',
+//        __DIR__ . '/../bootstrap',
+//        __DIR__ . '/../config',
+//        __DIR__ . '/../public',
+//        __DIR__ . '/../resources/lang/en_US',
+//        __DIR__ . '/../routes',
+//        __DIR__ . '/../tests',
     ])
+    ->withSets([
+        LaravelLevelSetList::UP_TO_LARAVEL_120,
+    ])
+//    ->withConfiguredRule(ReplaceServiceContainerCallArgRector::class, [
+//        new ReplaceServiceContainerCallArg('log', new ClassConstFetch(new Name('Illuminate\Support\Facades\Log'), 'class')),
+//    ])
     // uncomment to reach your current PHP version
     ->withPhpSets()
     ->withPreparedSets(

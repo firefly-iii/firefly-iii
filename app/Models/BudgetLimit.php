@@ -37,17 +37,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class BudgetLimit extends Model
 {
     use ReturnsIntegerIdTrait;
-
-    protected $casts
-                        = [
-            'created_at'    => 'datetime',
-            'updated_at'    => 'datetime',
-            'start_date'    => SeparateTimezoneCaster::class,
-            'end_date'      => SeparateTimezoneCaster::class,
-            'auto_budget'   => 'boolean',
-            'amount'        => 'string',
-            'native_amount' => 'string',
-        ];
     protected $dispatchesEvents
                         = [
             'created' => Created::class,
@@ -119,5 +108,17 @@ class BudgetLimit extends Model
         return Attribute::make(
             get: static fn ($value) => (int) $value,
         );
+    }
+    protected function casts(): array
+    {
+        return [
+            'created_at'    => 'datetime',
+            'updated_at'    => 'datetime',
+            'start_date'    => SeparateTimezoneCaster::class,
+            'end_date'      => SeparateTimezoneCaster::class,
+            'auto_budget'   => 'boolean',
+            'amount'        => 'string',
+            'native_amount' => 'string',
+        ];
     }
 }

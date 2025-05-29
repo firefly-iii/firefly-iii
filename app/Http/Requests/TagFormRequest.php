@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Models\Location;
 use FireflyIII\Models\Tag;
 use FireflyIII\Support\Request\AppendsLocationData;
@@ -30,7 +31,6 @@ use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Validator;
 
 /**
  * Class TagFormRequest.

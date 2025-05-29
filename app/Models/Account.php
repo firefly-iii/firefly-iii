@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
@@ -45,19 +46,6 @@ class Account extends Model
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
-
-    protected $casts
-                                     = [
-            'created_at'             => 'datetime',
-            'updated_at'             => 'datetime',
-            'user_id'                => 'integer',
-            'user_group_id'          => 'integer',
-            'deleted_at'             => 'datetime',
-            'active'                 => 'boolean',
-            'encrypted'              => 'boolean',
-            'virtual_balance'        => 'string',
-            'native_virtual_balance' => 'string',
-        ];
 
     protected $fillable              = ['user_id', 'user_group_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban', 'native_virtual_balance'];
 
@@ -110,15 +98,16 @@ class Account extends Model
     /**
      * Get the account number.
      */
-    public function getAccountNumberAttribute(): string
+    protected function accountNumber(): Attribute
     {
-        /** @var null|AccountMeta $metaValue */
-        $metaValue = $this->accountMeta()
-            ->where('name', 'account_number')
-            ->first()
-        ;
-
-        return null !== $metaValue ? $metaValue->data : '';
+        return Attribute::make(get: function () {
+            /** @var null|AccountMeta $metaValue */
+            $metaValue = $this->accountMeta()
+                ->where('name', 'account_number')
+                ->first()
+            ;
+            return null !== $metaValue ? $metaValue->data : '';
+        });
     }
 
     public function accountMeta(): HasMany
@@ -126,15 +115,15 @@ class Account extends Model
         return $this->hasMany(AccountMeta::class);
     }
 
-    public function getEditNameAttribute(): string
+    protected function editName(): Attribute
     {
-        $name = $this->name;
-
-        if (AccountTypeEnum::CASH->value === $this->accountType->type) {
-            return '';
-        }
-
-        return $name;
+        return Attribute::make(get: function () {
+            $name = $this->name;
+            if (AccountTypeEnum::CASH->value === $this->accountType->type) {
+                return '';
+            }
+            return $name;
+        });
     }
 
     public function locations(): MorphMany
@@ -163,7 +152,8 @@ class Account extends Model
         return $this->belongsToMany(PiggyBank::class);
     }
 
-    public function scopeAccountTypeIn(EloquentBuilder $query, array $types): void
+    #[Scope]
+    protected function accountTypeIn(EloquentBuilder $query, array $types): void
     {
         if (false === $this->joinedAccountTypes) {
             $query->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id');
@@ -230,5 +220,19 @@ class Account extends Model
         return Attribute::make(
             get: static fn ($value) => (string) $value,
         );
+    }
+    protected function casts(): array
+    {
+        return [
+            'created_at'             => 'datetime',
+            'updated_at'             => 'datetime',
+            'user_id'                => 'integer',
+            'user_group_id'          => 'integer',
+            'deleted_at'             => 'datetime',
+            'active'                 => 'boolean',
+            'encrypted'              => 'boolean',
+            'virtual_balance'        => 'string',
+            'native_virtual_balance' => 'string',
+        ];
     }
 }

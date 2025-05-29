@@ -46,8 +46,7 @@ class BillServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(
-            BillRepositoryInterface::class,
-            static function (Application $app) {
+            static function (Application $app): BillRepositoryInterface {
                 /** @var BillRepositoryInterface $repository */
                 $repository = app(BillRepository::class);
 

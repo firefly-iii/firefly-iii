@@ -51,8 +51,7 @@ class CategoryServiceProvider extends ServiceProvider
     {
         // phpstan does not understand reference to 'auth'.
         $this->app->bind(
-            CategoryRepositoryInterface::class,
-            static function (Application $app) {
+            static function (Application $app): CategoryRepositoryInterface {
                 /** @var CategoryRepository $repository */
                 $repository = app(CategoryRepository::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line
@@ -64,8 +63,7 @@ class CategoryServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
-            OperationsRepositoryInterface::class,
-            static function (Application $app) {
+            static function (Application $app): OperationsRepositoryInterface {
                 /** @var OperationsRepository $repository */
                 $repository = app(OperationsRepository::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line
@@ -77,8 +75,7 @@ class CategoryServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
-            NoCategoryRepositoryInterface::class,
-            static function (Application $app) {
+            static function (Application $app): NoCategoryRepositoryInterface {
                 /** @var NoCategoryRepository $repository */
                 $repository = app(NoCategoryRepository::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line

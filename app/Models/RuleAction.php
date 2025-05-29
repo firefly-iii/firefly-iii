@@ -35,15 +35,6 @@ class RuleAction extends Model
 {
     use ReturnsIntegerIdTrait;
 
-    protected $casts
-                        = [
-            'created_at'      => 'datetime',
-            'updated_at'      => 'datetime',
-            'active'          => 'boolean',
-            'order'           => 'int',
-            'stop_processing' => 'boolean',
-        ];
-
     protected $fillable = ['rule_id', 'action_type', 'action_value', 'order', 'active', 'stop_processing'];
 
     public function getValue(array $journal): string
@@ -87,5 +78,15 @@ class RuleAction extends Model
         return Attribute::make(
             get: static fn ($value) => (int) $value,
         );
+    }
+    protected function casts(): array
+    {
+        return [
+            'created_at'      => 'datetime',
+            'updated_at'      => 'datetime',
+            'active'          => 'boolean',
+            'order'           => 'int',
+            'stop_processing' => 'boolean',
+        ];
     }
 }

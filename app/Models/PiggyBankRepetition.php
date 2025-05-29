@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Carbon\Carbon;
 use FireflyIII\Casts\SeparateTimezoneCaster;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
@@ -35,15 +36,6 @@ class PiggyBankRepetition extends Model
 {
     use ReturnsIntegerIdTrait;
 
-    protected $casts
-                        = [
-            'created_at'      => 'datetime',
-            'updated_at'      => 'datetime',
-            'start_date'      => SeparateTimezoneCaster::class,
-            'target_date'     => SeparateTimezoneCaster::class,
-            'virtual_balance' => 'string',
-        ];
-
     protected $fillable = ['piggy_bank_id', 'start_date', 'start_date_tz', 'target_date', 'target_date_tz', 'current_amount'];
 
     public function piggyBank(): BelongsTo
@@ -51,7 +43,8 @@ class PiggyBankRepetition extends Model
         return $this->belongsTo(PiggyBank::class);
     }
 
-    public function scopeOnDates(EloquentBuilder $query, Carbon $start, Carbon $target): EloquentBuilder
+    #[Scope]
+    protected function onDates(EloquentBuilder $query, Carbon $start, Carbon $target): EloquentBuilder
     {
         return $query->where('start_date', $start->format('Y-m-d'))->where('target_date', $target->format('Y-m-d'));
     }
@@ -59,7 +52,8 @@ class PiggyBankRepetition extends Model
     /**
      * @return EloquentBuilder
      */
-    public function scopeRelevantOnDate(EloquentBuilder $query, Carbon $date)
+    #[Scope]
+    protected function relevantOnDate(EloquentBuilder $query, Carbon $date)
     {
         return $query->where(
             static function (EloquentBuilder $q) use ($date): void {
@@ -99,5 +93,15 @@ class PiggyBankRepetition extends Model
         return Attribute::make(
             get: static fn ($value) => (int) $value,
         );
+    }
+    protected function casts(): array
+    {
+        return [
+            'created_at'      => 'datetime',
+            'updated_at'      => 'datetime',
+            'start_date'      => SeparateTimezoneCaster::class,
+            'target_date'     => SeparateTimezoneCaster::class,
+            'virtual_balance' => 'string',
+        ];
     }
 }

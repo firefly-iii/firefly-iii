@@ -39,14 +39,6 @@ class TransactionCurrency extends Model
 
     public ?bool $userGroupEnabled = null;
     public ?bool $userGroupNative  = null;
-    protected $casts
-                                   = [
-            'created_at'     => 'datetime',
-            'updated_at'     => 'datetime',
-            'deleted_at'     => 'datetime',
-            'decimal_places' => 'int',
-            'enabled'        => 'bool',
-        ];
 
     protected $fillable            = ['name', 'code', 'symbol', 'decimal_places', 'enabled'];
 
@@ -114,5 +106,15 @@ class TransactionCurrency extends Model
         return Attribute::make(
             get: static fn ($value) => (int) $value,
         );
+    }
+    protected function casts(): array
+    {
+        return [
+            'created_at'     => 'datetime',
+            'updated_at'     => 'datetime',
+            'deleted_at'     => 'datetime',
+            'decimal_places' => 'int',
+            'enabled'        => 'bool',
+        ];
     }
 }

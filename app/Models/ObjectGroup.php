@@ -37,15 +37,6 @@ class ObjectGroup extends Model
 {
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;
-
-    protected $casts
-                        = [
-            'created_at'    => 'datetime',
-            'updated_at'    => 'datetime',
-            'user_id'       => 'integer',
-            'user_group_id' => 'integer',
-            'deleted_at'    => 'datetime',
-        ];
     protected $fillable = ['title', 'order', 'user_id', 'user_group_id'];
 
     /**
@@ -104,5 +95,15 @@ class ObjectGroup extends Model
         return Attribute::make(
             get: static fn ($value) => (int) $value,
         );
+    }
+    protected function casts(): array
+    {
+        return [
+            'created_at'    => 'datetime',
+            'updated_at'    => 'datetime',
+            'user_id'       => 'integer',
+            'user_group_id' => 'integer',
+            'deleted_at'    => 'datetime',
+        ];
     }
 }

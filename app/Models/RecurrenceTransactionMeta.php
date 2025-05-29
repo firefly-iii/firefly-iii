@@ -35,15 +35,6 @@ class RecurrenceTransactionMeta extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    protected $casts
-                        = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'deleted_at' => 'datetime',
-            'name'       => 'string',
-            'value'      => 'string',
-        ];
-
     protected $fillable = ['rt_id', 'name', 'value'];
 
     protected $table    = 'rt_meta';
@@ -58,5 +49,15 @@ class RecurrenceTransactionMeta extends Model
         return Attribute::make(
             get: static fn ($value) => (int) $value,
         );
+    }
+    protected function casts(): array
+    {
+        return [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
+            'name'       => 'string',
+            'value'      => 'string',
+        ];
     }
 }

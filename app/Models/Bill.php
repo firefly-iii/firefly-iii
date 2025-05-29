@@ -42,25 +42,6 @@ class Bill extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    protected $casts
-                      = [
-            'created_at'        => 'datetime',
-            'updated_at'        => 'datetime',
-            'deleted_at'        => 'datetime',
-            'date'              => SeparateTimezoneCaster::class,
-            'end_date'          => SeparateTimezoneCaster::class,
-            'extension_date'    => SeparateTimezoneCaster::class,
-            'skip'              => 'int',
-            'automatch'         => 'boolean',
-            'active'            => 'boolean',
-            'name_encrypted'    => 'boolean',
-            'match_encrypted'   => 'boolean',
-            'amount_min'        => 'string',
-            'amount_max'        => 'string',
-            'native_amount_min' => 'string',
-            'native_amount_max' => 'string',
-        ];
-
     protected $fillable
                       = [
             'name',
@@ -203,5 +184,25 @@ class Bill extends Model
         return Attribute::make(
             get: static fn ($value) => (int) $value,
         );
+    }
+    protected function casts(): array
+    {
+        return [
+            'created_at'        => 'datetime',
+            'updated_at'        => 'datetime',
+            'deleted_at'        => 'datetime',
+            'date'              => SeparateTimezoneCaster::class,
+            'end_date'          => SeparateTimezoneCaster::class,
+            'extension_date'    => SeparateTimezoneCaster::class,
+            'skip'              => 'int',
+            'automatch'         => 'boolean',
+            'active'            => 'boolean',
+            'name_encrypted'    => 'boolean',
+            'match_encrypted'   => 'boolean',
+            'amount_min'        => 'string',
+            'amount_max'        => 'string',
+            'native_amount_min' => 'string',
+            'native_amount_max' => 'string',
+        ];
     }
 }

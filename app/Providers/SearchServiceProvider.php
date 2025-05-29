@@ -49,8 +49,7 @@ class SearchServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(
-            QueryParserInterface::class,
-            static function (): GdbotsQueryParser|QueryParser {
+            static function (): QueryParserInterface {
                 $implementation = config('search.query_parser');
 
                 return match ($implementation) {
@@ -61,8 +60,7 @@ class SearchServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
-            SearchInterface::class,
-            static function (Application $app) {
+            static function (Application $app): SearchInterface {
                 /** @var OperatorQuerySearch $search */
                 $search = app(OperatorQuerySearch::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)

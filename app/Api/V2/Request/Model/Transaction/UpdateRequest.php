@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V2\Request\Model\Transaction;
 
+use Illuminate\Contracts\Validation\Validator;
 use Override;
 use FireflyIII\Api\V1\Requests\Models\AvailableBudget\Request;
 use FireflyIII\Exceptions\FireflyException;
@@ -38,7 +39,6 @@ use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\GroupValidation;
 use FireflyIII\Validation\TransactionValidation;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Validator;
 
 /**
  * Class UpdateRequest

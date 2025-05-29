@@ -59,8 +59,7 @@ class AccountServiceProvider extends ServiceProvider
     private function registerRepository(): void
     {
         $this->app->bind(
-            AccountRepositoryInterface::class,
-            static function (Application $app) {
+            static function (Application $app): AccountRepositoryInterface {
                 /** @var AccountRepositoryInterface $repository */
                 $repository = app(AccountRepository::class);
 
@@ -74,8 +73,7 @@ class AccountServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
-            OperationsRepositoryInterface::class,
-            static function (Application $app) {
+            static function (Application $app): OperationsRepositoryInterface {
                 /** @var OperationsRepository $repository */
                 $repository = app(OperationsRepository::class);
 
@@ -95,8 +93,7 @@ class AccountServiceProvider extends ServiceProvider
     private function registerTasker(): void
     {
         $this->app->bind(
-            AccountTaskerInterface::class,
-            static function (Application $app) {
+            static function (Application $app): AccountTaskerInterface {
                 /** @var AccountTaskerInterface $tasker */
                 $tasker = app(AccountTasker::class);
 

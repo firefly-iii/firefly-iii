@@ -40,6 +40,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Log;
 use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
@@ -123,9 +124,9 @@ abstract class Controller extends BaseController
             try {
                 $date = request()->query->get($field);
             } catch (BadRequestException $e) {
-                app('log')->error(sprintf('Request field "%s" contains a non-scalar value. Value set to NULL.', $field));
-                app('log')->error($e->getMessage());
-                app('log')->error($e->getTraceAsString());
+                Log::error(sprintf('Request field "%s" contains a non-scalar value. Value set to NULL.', $field));
+                Log::error($e->getMessage());
+                Log::error($e->getTraceAsString());
                 $value = null;
             }
             $obj  = null;
@@ -134,7 +135,7 @@ abstract class Controller extends BaseController
                     $obj = Carbon::parse((string) $date);
                 } catch (InvalidFormatException $e) {
                     // don't care
-                    app('log')->warning(
+                    Log::warning(
                         sprintf(
                             'Ignored invalid date "%s" in API controller parameter check: %s',
                             substr((string) $date, 0, 20),
@@ -152,9 +153,9 @@ abstract class Controller extends BaseController
             try {
                 $value = request()->query->get($integer);
             } catch (BadRequestException $e) {
-                app('log')->error(sprintf('Request field "%s" contains a non-scalar value. Value set to NULL.', $integer));
-                app('log')->error($e->getMessage());
-                app('log')->error($e->getTraceAsString());
+                Log::error(sprintf('Request field "%s" contains a non-scalar value. Value set to NULL.', $integer));
+                Log::error($e->getMessage());
+                Log::error($e->getTraceAsString());
                 $value = null;
             }
             if (null !== $value) {
@@ -192,9 +193,9 @@ abstract class Controller extends BaseController
         try {
             $param = (string) request()->query->get('sort');
         } catch (BadRequestException $e) {
-            app('log')->error('Request field "sort" contains a non-scalar value. Value set to NULL.');
-            app('log')->error($e->getMessage());
-            app('log')->error($e->getTraceAsString());
+            Log::error('Request field "sort" contains a non-scalar value. Value set to NULL.');
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             $param = '';
         }
         if ('' === $param) {

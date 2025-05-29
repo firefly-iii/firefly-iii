@@ -42,24 +42,6 @@ class Recurrence extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    protected $casts
-                     = [
-            'created_at'    => 'datetime',
-            'updated_at'    => 'datetime',
-            'deleted_at'    => 'datetime',
-            'title'         => 'string',
-            'id'            => 'int',
-            'description'   => 'string',
-            'first_date'    => SeparateTimezoneCaster::class,
-            'repeat_until'  => SeparateTimezoneCaster::class,
-            'latest_date'   => SeparateTimezoneCaster::class,
-            'repetitions'   => 'int',
-            'active'        => 'bool',
-            'apply_rules'   => 'bool',
-            'user_id'       => 'integer',
-            'user_group_id' => 'integer',
-        ];
-
     protected $fillable
                      = ['user_id', 'user_group_id', 'transaction_type_id', 'title', 'description', 'first_date', 'first_date_tz', 'repeat_until', 'repeat_until_tz', 'latest_date', 'latest_date_tz', 'repetitions', 'apply_rules', 'active'];
 
@@ -136,5 +118,24 @@ class Recurrence extends Model
         return Attribute::make(
             get: static fn ($value) => (int) $value,
         );
+    }
+    protected function casts(): array
+    {
+        return [
+            'created_at'    => 'datetime',
+            'updated_at'    => 'datetime',
+            'deleted_at'    => 'datetime',
+            'title'         => 'string',
+            'id'            => 'int',
+            'description'   => 'string',
+            'first_date'    => SeparateTimezoneCaster::class,
+            'repeat_until'  => SeparateTimezoneCaster::class,
+            'latest_date'   => SeparateTimezoneCaster::class,
+            'repetitions'   => 'int',
+            'active'        => 'bool',
+            'apply_rules'   => 'bool',
+            'user_id'       => 'integer',
+            'user_group_id' => 'integer',
+        ];
     }
 }
