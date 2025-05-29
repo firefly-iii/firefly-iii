@@ -86,6 +86,7 @@ class Tag extends Model
     {
         return $this->belongsToMany(TransactionJournal::class);
     }
+
     protected function casts(): array
     {
         return [

@@ -40,15 +40,15 @@ class TransactionJournalMeta extends Model
     protected $fillable = ['transaction_journal_id', 'name', 'data', 'hash'];
 
     protected $table    = 'journal_meta';
+
     /**
-     * @param mixed $value
-     *
      * @return mixed
      */
     protected function data(): Attribute
     {
-        return Attribute::make(get: fn($value) => json_decode((string) $value, false), set: function ($value) {
-            $data                     = json_encode($value);
+        return Attribute::make(get: fn ($value) => json_decode((string) $value, false), set: function ($value) {
+            $data = json_encode($value);
+
             return ['data' => $data, 'hash' => hash('sha256', (string) $data)];
         });
     }
@@ -64,6 +64,7 @@ class TransactionJournalMeta extends Model
             get: static fn ($value) => (int) $value,
         );
     }
+
     protected function casts(): array
     {
         return [

@@ -532,6 +532,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(Webhook::class);
     }
+
     protected function casts(): array
     {
         return [

@@ -73,7 +73,7 @@ final class CalculatorTest extends TestCase
     {
         $calculator = new Calculator();
         $period     = $calculator->nextDateByInterval($provider->epoch(), $provider->periodicity);
-        $this->assertSame($provider->expected()->toDateString(), $period->toDateString());
+        self::assertSame($provider->expected()->toDateString(), $period->toDateString());
     }
 
     public static function provideAllPeriodicity(): iterable
@@ -102,7 +102,7 @@ final class CalculatorTest extends TestCase
     {
         $calculator = new Calculator();
         $period     = $calculator->nextDateByInterval($provider->epoch(), $provider->periodicity, $provider->skip);
-        $this->assertSame($provider->expected()->toDateString(), $period->toDateString());
+        self::assertSame($provider->expected()->toDateString(), $period->toDateString());
     }
 
     public static function provideSkippedIntervals(): iterable

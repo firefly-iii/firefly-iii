@@ -94,6 +94,7 @@ class Category extends Model
     {
         return $this->belongsToMany(Transaction::class, 'category_transaction', 'category_id');
     }
+
     protected function casts(): array
     {
         return [

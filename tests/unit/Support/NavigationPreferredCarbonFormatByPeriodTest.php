@@ -54,7 +54,7 @@ final class NavigationPreferredCarbonFormatByPeriodTest extends TestCase
     public function testGivenAPeriodWhenCallPreferredCarbonFormatByPeriodThenReturnsExpectedFormat(string $period, string $expected): void
     {
         $formatPeriod = $this->navigation->preferredCarbonFormatByPeriod($period);
-        $this->assertSame($expected, $formatPeriod);
+        self::assertSame($expected, $formatPeriod);
     }
 
     public static function providePeriods(): Iterator

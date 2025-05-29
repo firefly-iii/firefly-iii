@@ -85,6 +85,7 @@ class TransactionGroup extends Model
     {
         return $this->belongsTo(UserGroup::class);
     }
+
     protected function casts(): array
     {
         return [
