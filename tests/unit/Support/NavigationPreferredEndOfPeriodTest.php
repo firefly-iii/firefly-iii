@@ -55,7 +55,7 @@ final class NavigationPreferredEndOfPeriodTest extends TestCase
     public function testGivenStartAndEndDatesWhenCallPreferredEndOfPeriodThenReturnsTheExpectedFormatSuccessful(Carbon $start, Carbon $end, string $expected): void
     {
         $formatPeriod = $this->navigation->preferredEndOfPeriod($start, $end);
-        self::assertSame($expected, $formatPeriod);
+        $this->assertSame($expected, $formatPeriod);
     }
 
     public static function providePeriods(): Iterator

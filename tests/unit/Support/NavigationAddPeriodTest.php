@@ -56,7 +56,7 @@ final class NavigationAddPeriodTest extends TestCase
     public function testGivenAFrequencyAndSkipIntervalWhenCalculateTheDateThenReturnsTheSkippedDateSuccessful(int $skip, string $frequency, Carbon $from, Carbon $expected): void
     {
         $period = $this->navigation->addPeriod($from, $frequency, $skip);
-        self::assertSame($expected->toDateString(), $period->toDateString());
+        $this->assertSame($expected->toDateString(), $period->toDateString());
     }
 
     public static function providePeriodsWithSkippingParam(): iterable
@@ -108,7 +108,7 @@ final class NavigationAddPeriodTest extends TestCase
     public function testGivenAFrequencyWhenCalculateTheDateThenReturnsTheExpectedDateSuccessful(string $frequency, Carbon $from, Carbon $expected): void
     {
         $period = $this->navigation->addPeriod($from, $frequency, 0);
-        self::assertSame($expected->toDateString(), $period->toDateString());
+        $this->assertSame($expected->toDateString(), $period->toDateString());
     }
 
     public static function providePeriods(): Iterator
@@ -158,7 +158,7 @@ final class NavigationAddPeriodTest extends TestCase
     public function testGivenAIntervalWhenCallTheNextDateByIntervalMethodThenReturnsTheExpectedDateSuccessful(Periodicity $periodicity, Carbon $from, Carbon $expected): void
     {
         $period = $this->navigation->nextDateByInterval($from, $periodicity);
-        self::assertSame($expected->toDateString(), $period->toDateString());
+        $this->assertSame($expected->toDateString(), $period->toDateString());
     }
 
     public static function provideFrequencies(): Iterator
@@ -212,7 +212,7 @@ final class NavigationAddPeriodTest extends TestCase
     public function testGivenAMonthFrequencyWhenCalculateTheDateThenReturnsTheLastDayOfMonthSuccessful(string $frequency, Carbon $from, Carbon $expected): void
     {
         $period = $this->navigation->addPeriod($from, $frequency, 0);
-        self::assertSame($expected->toDateString(), $period->toDateString());
+        $this->assertSame($expected->toDateString(), $period->toDateString());
     }
 
     public static function provideMonthPeriods(): Iterator

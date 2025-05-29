@@ -56,7 +56,7 @@ final class BillDateCalculatorTest extends TestCase
     public function testGivenSomeDataItWorks(Carbon $earliest, Carbon $latest, Carbon $billStart, string $period, int $skip, ?Carbon $lastPaid, array $expected): void
     {
         $result = $this->calculator->getPayDates($earliest, $latest, $billStart, $period, $skip, $lastPaid);
-        self::assertSame($expected, $result);
+        $this->assertSame($expected, $result);
     }
 
     public static function provideDates(): Iterator

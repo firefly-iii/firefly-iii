@@ -56,7 +56,7 @@ final class NavigationStartOfPeriodTest extends TestCase
     public function testGivenADateAndFrequencyWhenCalculateTheDateThenReturnsTheExpectedDateSuccessful(string $frequency, Carbon $from, Carbon $expected): void
     {
         $period = $this->navigation->startOfPeriod($from, $frequency);
-        self::assertSame($expected->toDateString(), $period->toDateString());
+        $this->assertSame($expected->toDateString(), $period->toDateString());
     }
 
     public static function provideDates(): Iterator
@@ -121,7 +121,7 @@ final class NavigationStartOfPeriodTest extends TestCase
         ;
 
         $period = $this->navigation->startOfPeriod($from, $frequency);
-        self::assertSame($expected->toDateString(), $period->toDateString());
+        $this->assertSame($expected->toDateString(), $period->toDateString());
     }
 
     public static function provideUnknownFrequencies(): Iterator

@@ -36,7 +36,7 @@ abstract class IntervalTestCase extends TestCase
     public function testGivenAnEpochWhenCallTheNextDateThenReturnsTheExpectedDateSuccessful(IntervalProvider $provider): void
     {
         $period = static::factory()->nextDate($provider->epoch);
-        self::assertSame($provider->expected->toDateString(), $period->toDateString());
+        $this->assertSame($provider->expected->toDateString(), $period->toDateString());
     }
 
     public static function provider(): iterable

@@ -34,16 +34,17 @@ return RectorConfig::configure()
         ChangeOrIfContinueToMultiContinueRector::class,
         StringToClassConstantRector::class => [
             __DIR__ . '/../app/Http/Controllers/Auth/LoginController.php',
-        ]
+        ],
+        __DIR__.'/../bootstrap/cache/*'
     ])
     ->withPaths([
         __DIR__ . '/../app',
-//        __DIR__ . '/../bootstrap',
-//        __DIR__ . '/../config',
-//        __DIR__ . '/../public',
-//        __DIR__ . '/../resources/lang/en_US',
-//        __DIR__ . '/../routes',
-//        __DIR__ . '/../tests',
+        __DIR__ . '/../bootstrap',
+        __DIR__ . '/../config',
+        __DIR__ . '/../public',
+        __DIR__ . '/../resources/lang/en_US',
+        __DIR__ . '/../routes',
+        __DIR__ . '/../tests',
     ])
     ->withSets([
         LaravelLevelSetList::UP_TO_LARAVEL_120,
