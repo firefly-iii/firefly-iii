@@ -86,7 +86,7 @@ class GroupCollector implements GroupCollectorInterface
         $this->hasJoinedAttTables   = false;
         $this->expandGroupSearch    = false;
         $this->hasJoinedMetaTables  = false;
-        $this->booleanFields        = ['balance_dirty'];
+        $this->booleanFields        = ['source_balance_dirty','destination_balance_dirty'];
         $this->integerFields        = [
             'transaction_group_id',
             'user_id',
@@ -137,7 +137,7 @@ class GroupCollector implements GroupCollectorInterface
             // currency info:
             'source.amount as amount',
             'source.balance_after as source_balance_after',
-            'source.balance_dirty as balance_dirty',
+            'source.balance_dirty as source_balance_dirty',
             'source.native_amount as native_amount',
             'source.transaction_currency_id as currency_id',
             'currency.code as currency_code',
@@ -157,6 +157,7 @@ class GroupCollector implements GroupCollectorInterface
             // destination account info (always present)
             'destination.account_id as destination_account_id',
             'destination.balance_after as destination_balance_after',
+            'destination.balance_dirty as destination_balance_dirty',
         ];
     }
 
