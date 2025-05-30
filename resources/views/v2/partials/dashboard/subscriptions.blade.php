@@ -30,7 +30,7 @@
                         <template x-for="bill in group.bills">
                             <tr>
                                 <td>
-                                    <a :href="'{{ route('subscriptions.show',['0'])  }}/' + bill.id" :title="bill.name">
+                                    <a :href="'{{ route('subscriptions.show',[''])  }}/' + bill.id" :title="bill.name">
                                         <span x-text="bill.name"></span>
                                     </a>
                                     <template x-if="bill.paid">
