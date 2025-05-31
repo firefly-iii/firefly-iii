@@ -66,7 +66,7 @@ class TransactionGroupEnrichment implements EnrichmentInterface
         $this->locations       = [];
         $this->attachmentCount = [];
         $this->dateFields      = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date'];
-        $this->nativeCurrency   = Amount::getNativeCurrency();
+        $this->nativeCurrency  = Amount::getNativeCurrency();
     }
 
     #[Override]
@@ -196,7 +196,7 @@ class TransactionGroupEnrichment implements EnrichmentInterface
         $metaData         = $this->metaData;
         $locations        = $this->locations;
         $attachmentCount  = $this->attachmentCount;
-        $nativeCurrency = $this->nativeCurrency;
+        $nativeCurrency   = $this->nativeCurrency;
 
         $this->collection = $this->collection->map(function (array $item) use ($nativeCurrency, $notes, $tags, $metaData, $locations, $attachmentCount) {
             foreach ($item['transactions'] as $index => $transaction) {

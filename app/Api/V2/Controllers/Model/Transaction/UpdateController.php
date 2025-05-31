@@ -69,7 +69,7 @@ class UpdateController extends Controller
         $transactionGroup = $this->groupRepository->update($transactionGroup, $data);
         $applyRules       = $data['apply_rules'] ?? true;
         $fireWebhooks     = $data['fire_webhooks'] ?? true;
-        $amountChanged = true;
+        $amountChanged    = true;
 
         event(new UpdatedTransactionGroup($transactionGroup, $applyRules, $fireWebhooks, $amountChanged));
         app('preferences')->mark();
