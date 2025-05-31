@@ -86,7 +86,7 @@ class GroupCollector implements GroupCollectorInterface
         $this->hasJoinedAttTables   = false;
         $this->expandGroupSearch    = false;
         $this->hasJoinedMetaTables  = false;
-        $this->booleanFields        = ['source_balance_dirty','destination_balance_dirty'];
+        $this->booleanFields        = ['source_balance_dirty', 'destination_balance_dirty'];
         $this->integerFields        = [
             'transaction_group_id',
             'user_id',

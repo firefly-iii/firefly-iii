@@ -54,7 +54,7 @@ class UpdateController extends Controller
         $this->middleware(
             function ($request, $next) {
                 /** @var User $admin */
-                $admin = auth()->user();
+                $admin                 = auth()->user();
 
                 $this->groupRepository = app(TransactionGroupRepositoryInterface::class);
                 $this->groupRepository->setUser($admin);
@@ -73,47 +73,48 @@ class UpdateController extends Controller
     public function update(UpdateRequest $request, TransactionGroup $transactionGroup): JsonResponse
     {
         app('log')->debug('Now in update routine for transaction group');
-        $data = $request->getAll();
-        $oldAmount = $this->groupRepository->getTotalAmount($transactionGroup);
+        $data             = $request->getAll();
+        $oldAmount        = $this->groupRepository->getTotalAmount($transactionGroup);
         $transactionGroup = $this->groupRepository->update($transactionGroup, $data);
-        $newAmount = $this->groupRepository->getTotalAmount($transactionGroup);
-        $manager = $this->getManager();
+        $newAmount        = $this->groupRepository->getTotalAmount($transactionGroup);
+        $manager          = $this->getManager();
 
         Log::debug(sprintf('Old amount: %s, new amount: %s', $oldAmount, $newAmount));
 
         app('preferences')->mark();
-        $applyRules = $data['apply_rules'] ?? true;
-        $fireWebhooks = $data['fire_webhooks'] ?? true;
-        $amountChanged = 0 !== bccomp($oldAmount, $newAmount);
+        $applyRules       = $data['apply_rules'] ?? true;
+        $fireWebhooks     = $data['fire_webhooks'] ?? true;
+        $amountChanged    = 0 !== bccomp($oldAmount, $newAmount);
         event(new UpdatedTransactionGroup($transactionGroup, $applyRules, $fireWebhooks, $amountChanged));
 
         /** @var User $admin */
-        $admin = auth()->user();
+        $admin            = auth()->user();
 
         // use new group collector:
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector        = app(GroupCollectorInterface::class);
         $collector
             ->setUser($admin)
             // filter on transaction group.
             ->setTransactionGroup($transactionGroup)
             // all info needed for the API:
-            ->withAPIInformation();
+            ->withAPIInformation()
+        ;
 
-        $selectedGroup = $collector->getGroups()->first();
+        $selectedGroup    = $collector->getGroups()->first();
         if (null === $selectedGroup) {
             throw new NotFoundHttpException();
         }
 
         // enrich
-        $enrichment = new TransactionGroupEnrichment();
+        $enrichment       = new TransactionGroupEnrichment();
         $enrichment->setUser($admin);
-        $selectedGroup = $enrichment->enrichSingle($selectedGroup);
+        $selectedGroup    = $enrichment->enrichSingle($selectedGroup);
 
         /** @var TransactionGroupTransformer $transformer */
-        $transformer = app(TransactionGroupTransformer::class);
+        $transformer      = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);
-        $resource = new Item($selectedGroup, $transformer, 'transactions');
+        $resource         = new Item($selectedGroup, $transformer, 'transactions');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

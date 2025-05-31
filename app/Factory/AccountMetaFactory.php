@@ -42,9 +42,9 @@ class AccountMetaFactory
         $entry = $account->accountMeta()->where('name', $field)->first();
         // must not be an empty string:
         if ('' !== $value) {
-            if('account_number' === $field) {
+            if ('account_number' === $field) {
                 $value = Steam::filterSpaces($value);
-                $value = trim(str_replace([' ',"\t", "\n", "\r"], '', $value));
+                $value = trim(str_replace([' ', "\t", "\n", "\r"], '', $value));
             }
             // if $data has field and $entry is null, create new one:
             if (null === $entry) {
