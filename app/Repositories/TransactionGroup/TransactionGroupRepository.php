@@ -432,4 +432,19 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
 
         return $service->update($transactionGroup, $data);
     }
+
+    public function getTotalAmount(TransactionGroup $group): string
+    {
+        $sum = '0';
+        /** @var TransactionJournal $journal */
+        foreach($group->transactionJournals as $journal) {
+            /** @var Transaction $transaction */
+            foreach($journal->transactions as $transaction) {
+                if(-1 === bccomp('0', (string) $transaction->amount)) {
+                    $sum = bcadd($sum, $transaction->amount);
+                }
+            }
+        }
+        return $sum;
+    }
 }

@@ -217,7 +217,8 @@ class MassController extends Controller
         $service->setData($data);
         $service->update();
         // trigger rules
-        event(new UpdatedTransactionGroup($journal->transactionGroup, true, true));
+        $amountChanged = $service->isAmountChanged();
+        event(new UpdatedTransactionGroup($journal->transactionGroup, true, true, $amountChanged));
     }
 
     private function getDateFromRequest(MassEditJournalRequest $request, int $journalId, string $key): ?Carbon

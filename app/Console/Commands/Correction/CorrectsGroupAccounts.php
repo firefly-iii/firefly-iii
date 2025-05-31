@@ -58,7 +58,7 @@ class CorrectsGroupAccounts extends Command
         $handler = new UpdatedGroupEventHandler();
         foreach ($groups as $groupId) {
             $group = TransactionGroup::find($groupId);
-            $event = new UpdatedTransactionGroup($group, true, true);
+            $event = new UpdatedTransactionGroup($group, true, true, false);
             $handler->unifyAccounts($event);
         }
 

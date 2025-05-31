@@ -49,6 +49,8 @@ interface TransactionGroupRepositoryInterface
 {
     public function countAttachments(int $journalId): int;
 
+    public function getTotalAmount(TransactionGroup $group): string;
+
     public function destroy(TransactionGroup $group): void;
 
     /**

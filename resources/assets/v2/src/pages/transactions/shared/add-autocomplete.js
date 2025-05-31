@@ -38,7 +38,7 @@ export function addAutocomplete(options) {
                 'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
             }
         },
-        queryParam: 'filter[query]',
+        queryParam: 'query',
         hiddenInput: true,
         // preventBrowserAutocomplete: true,
         highlightTyped: true,
@@ -48,6 +48,7 @@ export function addAutocomplete(options) {
         params.serverParams['filter[account_types]'] = options.account_types;
     }
     if (typeof options.onRenderItem !== 'undefined' && null !== options.onRenderItem) {
+        console.log('overrule onRenderItem.');
         params.onRenderItem = options.onRenderItem;
     }
     if (options.valueField) {
