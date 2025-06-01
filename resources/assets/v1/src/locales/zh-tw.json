@@ -183,6 +183,6 @@
     },
     "config": {
         "html_language": "zh-tw",
-        "date_time_fns": "yyyy\u5e74 M\u6708 D\u65e5 dddd \u65bc HH:mm:ss"
+        "date_time_fns": "yyyy\u5e74 M\u6708 d\u65e5 \u65bc HH:mm:ss"
     }
 }
