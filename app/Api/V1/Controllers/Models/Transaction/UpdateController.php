@@ -74,18 +74,16 @@ class UpdateController extends Controller
     {
         app('log')->debug('Now in update routine for transaction group');
         $data             = $request->getAll();
-        $oldAmount        = $this->groupRepository->getTotalAmount($transactionGroup);
+        $oldHash        = $this->groupRepository->getCompareHash($transactionGroup);
         $transactionGroup = $this->groupRepository->update($transactionGroup, $data);
-        $newAmount        = $this->groupRepository->getTotalAmount($transactionGroup);
+        $newHash        = $this->groupRepository->getCompareHash($transactionGroup);
         $manager          = $this->getManager();
-
-        Log::debug(sprintf('Old amount: %s, new amount: %s', $oldAmount, $newAmount));
 
         app('preferences')->mark();
         $applyRules       = $data['apply_rules'] ?? true;
         $fireWebhooks     = $data['fire_webhooks'] ?? true;
-        $amountChanged    = 0 !== bccomp($oldAmount, $newAmount);
-        event(new UpdatedTransactionGroup($transactionGroup, $applyRules, $fireWebhooks, $amountChanged));
+        $runRecalculations    = $oldHash !== $newHash;
+        event(new UpdatedTransactionGroup($transactionGroup, $applyRules, $fireWebhooks, $runRecalculations));
 
         /** @var User $admin */
         $admin            = auth()->user();

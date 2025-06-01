@@ -43,6 +43,7 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\Services\Internal\Support\JournalServiceTrait;
 use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\NullArrayObject;
@@ -60,6 +61,7 @@ class JournalUpdateService
 
     private BillRepositoryInterface $billRepository;
     private CurrencyRepositoryInterface $currencyRepository;
+    private TransactionGroupRepositoryInterface $transactionGroupRepository;
     private array $data;
     private ?Account $destinationAccount;
     private ?Transaction $destinationTransaction;
@@ -69,7 +71,7 @@ class JournalUpdateService
     private ?Transaction $sourceTransaction;
     private ?TransactionGroup $transactionGroup;
     private ?TransactionJournal $transactionJournal;
-    private bool $amountChanged = false;
+    private string $startCompareHash = '';
 
     /**
      * JournalUpdateService constructor.
@@ -88,6 +90,7 @@ class JournalUpdateService
         $this->tagFactory             = app(TagFactory::class);
         $this->accountRepository      = app(AccountRepositoryInterface::class);
         $this->currencyRepository     = app(CurrencyRepositoryInterface::class);
+        $this->transactionGroupRepository = app(TransactionGroupRepositoryInterface::class);
         $this->metaString             = [
             'sepa_cc',
             'sepa_ct_op',
@@ -120,10 +123,12 @@ class JournalUpdateService
         $this->budgetRepository->setUser($transactionGroup->user);
         $this->tagFactory->setUser($transactionGroup->user);
         $this->accountRepository->setUser($transactionGroup->user);
+        $this->transactionGroupRepository->setUser($transactionGroup->user);
         $this->destinationAccount     = null;
         $this->destinationTransaction = null;
         $this->sourceAccount          = null;
         $this->sourceTransaction      = null;
+        $this->startCompareHash = $this->transactionGroupRepository->getCompareHash($transactionGroup);
     }
 
     public function setTransactionJournal(TransactionJournal $transactionJournal): void
@@ -675,7 +680,6 @@ class JournalUpdateService
             return;
         }
         $origSourceTransaction                = $this->getSourceTransaction();
-        $this->amountChanged                  = 0 !== bccomp($origSourceTransaction->amount, app('steam')->negative($amount));
         $origSourceTransaction->amount        = app('steam')->negative($amount);
         $origSourceTransaction->balance_dirty = true;
         $origSourceTransaction->save();
@@ -818,8 +822,12 @@ class JournalUpdateService
         return false;
     }
 
-    public function isAmountChanged(): bool
-    {
-        return $this->amountChanged;
+    public function isCompareHashChanged(): bool {
+        Log::debug(sprintf('Now in %s', __METHOD__));
+        $compareHash = $this->transactionGroupRepository->getCompareHash($this->transactionGroup);
+        Log::debug(sprintf('Compare hash is       "%s".', $compareHash));
+        Log::debug(sprintf('Start compare hash is "%s".', $this->startCompareHash));
+
+        return $compareHash !== $this->startCompareHash;
     }
 }

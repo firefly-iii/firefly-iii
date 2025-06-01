@@ -292,7 +292,7 @@ class ConvertController extends Controller
         $group->refresh();
 
         session()->flash('success', (string) trans('firefly.converted_to_'.$destinationType->type));
-        event(new UpdatedTransactionGroup($group, true, true, false));
+        event(new UpdatedTransactionGroup($group, true, true, true));
 
         return redirect(route('transactions.show', [$group->id]));
     }

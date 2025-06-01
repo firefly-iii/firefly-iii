@@ -55,7 +55,7 @@ export function changeDestinationAccount(item, ac) {
 export function selectDestinationAccount(item, ac) {
     const index = parseInt(ac._searchInput.attributes['data-index'].value);
     document.querySelector('#form')._x_dataStack[0].$data.entries[index].destination_account = {
-        id: item.id, name: item.title, alpine_name: item.title, type: item.meta.type, currency_code: item.meta.currency_code,
+        id: item.id, name: item.name, alpine_name: item.name, type: item.type, currency_code: item.currency_code,
     };
     document.querySelector('#form')._x_dataStack[0].changedDestinationAccount();
 }
@@ -78,7 +78,7 @@ export function changeSourceAccount(item, ac) {
 export function selectSourceAccount(item, ac) {
     const index = parseInt(ac._searchInput.attributes['data-index'].value);
     document.querySelector('#form')._x_dataStack[0].$data.entries[index].source_account = {
-        id: item.id, name: item.title, alpine_name: item.title, type: item.meta.type, currency_code: item.meta.currency_code,
+        id: item.id, name: item.name, alpine_name: item.name, type: item.type, currency_code: item.currency_code,
     };
     document.querySelector('#form')._x_dataStack[0].changedSourceAccount();
 }

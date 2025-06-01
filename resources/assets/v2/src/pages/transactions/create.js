@@ -490,7 +490,6 @@ let transactions = function () {
                 // addedSplit, is called from the HTML
                 // for source account
                 const renderAccount = function (item, b, c) {
-                    console.log('render account');
                     return item.name_with_balance + '<br><small class="text-muted">' + i18next.t('firefly.account_type_' + item.type) + '</small>';
                 };
                 console.log('here we are in');
@@ -499,7 +498,7 @@ let transactions = function () {
                     serverUrl: urls.account,
                     onRenderItem: renderAccount,
                     valueField: 'id',
-                    labelField: 'title',
+                    labelField: 'name_with_balance',
                     onChange: changeSourceAccount,
                     onSelectItem: selectSourceAccount,
                     hiddenValue: this.entries[count].source_account.alpine_name
@@ -509,7 +508,7 @@ let transactions = function () {
                     serverUrl: urls.account,
                     account_types: this.filters.destination,
                     valueField: 'id',
-                    labelField: 'title',
+                    labelField: 'name_with_balance',
                     onRenderItem: renderAccount,
                     onChange: changeDestinationAccount,
                     onSelectItem: selectDestinationAccount
