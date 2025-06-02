@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\PiggyBank;
 
 use FireflyIII\Events\Model\PiggyBank\ChangedAmount;
+use FireflyIII\Events\Model\PiggyBank\ChangedName;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\PiggyBankFactory;
 use FireflyIII\Models\Account;
@@ -64,15 +65,15 @@ trait ModifiesPiggyBanks
 
     public function removeAmount(PiggyBank $piggyBank, Account $account, string $amount, ?TransactionJournal $journal = null): bool
     {
-        $currentAmount                = $this->getCurrentAmount($piggyBank, $account);
-        $pivot                        = $piggyBank->accounts()->where('accounts.id', $account->id)->first()->pivot;
-        $pivot->current_amount        = bcsub((string) $currentAmount, $amount);
+        $currentAmount = $this->getCurrentAmount($piggyBank, $account);
+        $pivot = $piggyBank->accounts()->where('accounts.id', $account->id)->first()->pivot;
+        $pivot->current_amount = bcsub((string)$currentAmount, $amount);
         $pivot->native_current_amount = null;
 
         // also update native_current_amount.
-        $userCurrency                 = app('amount')->getNativeCurrencyByUserGroup($this->user->userGroup);
+        $userCurrency = app('amount')->getNativeCurrencyByUserGroup($this->user->userGroup);
         if ($userCurrency->id !== $piggyBank->transaction_currency_id) {
-            $converter                    = new ExchangeRateConverter();
+            $converter = new ExchangeRateConverter();
             $converter->setIgnoreSettings(true);
             $pivot->native_current_amount = $converter->convert($piggyBank->transactionCurrency, $userCurrency, today(), $pivot->current_amount);
         }
@@ -87,15 +88,15 @@ trait ModifiesPiggyBanks
 
     public function addAmount(PiggyBank $piggyBank, Account $account, string $amount, ?TransactionJournal $journal = null): bool
     {
-        $currentAmount                = $this->getCurrentAmount($piggyBank, $account);
-        $pivot                        = $piggyBank->accounts()->where('accounts.id', $account->id)->first()->pivot;
-        $pivot->current_amount        = bcadd((string) $currentAmount, $amount);
+        $currentAmount = $this->getCurrentAmount($piggyBank, $account);
+        $pivot = $piggyBank->accounts()->where('accounts.id', $account->id)->first()->pivot;
+        $pivot->current_amount = bcadd((string)$currentAmount, $amount);
         $pivot->native_current_amount = null;
 
         // also update native_current_amount.
-        $userCurrency                 = app('amount')->getNativeCurrencyByUserGroup($this->user->userGroup);
+        $userCurrency = app('amount')->getNativeCurrencyByUserGroup($this->user->userGroup);
         if ($userCurrency->id !== $piggyBank->transaction_currency_id) {
-            $converter                    = new ExchangeRateConverter();
+            $converter = new ExchangeRateConverter();
             $converter->setIgnoreSettings(true);
             $pivot->native_current_amount = $converter->convert($piggyBank->transactionCurrency, $userCurrency, today(), $pivot->current_amount);
         }
@@ -111,24 +112,24 @@ trait ModifiesPiggyBanks
     public function canAddAmount(PiggyBank $piggyBank, Account $account, string $amount): bool
     {
         Log::debug('Now in canAddAmount');
-        $today         = today(config('app.timezone'))->endOfDay();
+        $today = today(config('app.timezone'))->endOfDay();
         $leftOnAccount = $this->leftOnAccount($piggyBank, $account, $today);
-        $savedSoFar    = $this->getCurrentAmount($piggyBank);
-        $maxAmount     = $leftOnAccount;
+        $savedSoFar = $this->getCurrentAmount($piggyBank);
+        $maxAmount = $leftOnAccount;
 
         Log::debug(sprintf('Left on account: %s on %s', $leftOnAccount, $today->format('Y-m-d H:i:s')));
         Log::debug(sprintf('Saved so far: %s', $savedSoFar));
 
 
         if (0 !== bccomp($piggyBank->target_amount, '0')) {
-            $leftToSave = bcsub($piggyBank->target_amount, (string) $savedSoFar);
-            $maxAmount  = 1 === bccomp((string) $leftOnAccount, $leftToSave) ? $leftToSave : $leftOnAccount;
+            $leftToSave = bcsub($piggyBank->target_amount, (string)$savedSoFar);
+            $maxAmount = 1 === bccomp((string)$leftOnAccount, $leftToSave) ? $leftToSave : $leftOnAccount;
             Log::debug(sprintf('Left to save: %s', $leftToSave));
             Log::debug(sprintf('Maximum amount: %s', $maxAmount));
         }
 
-        $compare       = bccomp($amount, (string) $maxAmount);
-        $result        = $compare <= 0;
+        $compare = bccomp($amount, (string)$maxAmount);
+        $result = $compare <= 0;
 
         Log::debug(sprintf('Compare <= 0? %d, so canAddAmount is %s', $compare, var_export($result, true)));
 
@@ -139,7 +140,7 @@ trait ModifiesPiggyBanks
     {
         $savedSoFar = $this->getCurrentAmount($piggyBank, $account);
 
-        return bccomp($amount, (string) $savedSoFar) <= 0;
+        return bccomp($amount, (string)$savedSoFar) <= 0;
     }
 
     /**
@@ -162,15 +163,15 @@ trait ModifiesPiggyBanks
 
     public function setCurrentAmount(PiggyBank $piggyBank, string $amount): PiggyBank
     {
-        $repetition                 = $this->getRepetition($piggyBank);
+        $repetition = $this->getRepetition($piggyBank);
         if (null === $repetition) {
             return $piggyBank;
         }
-        $max                        = $piggyBank->target_amount;
+        $max = $piggyBank->target_amount;
         if (1 === bccomp($amount, $max) && 0 !== bccomp($piggyBank->target_amount, '0')) {
             $amount = $max;
         }
-        $difference                 = bcsub($amount, (string) $repetition->current_amount);
+        $difference = bcsub($amount, (string)$repetition->current_amount);
         $repetition->current_amount = $amount;
         $repetition->save();
 
@@ -201,7 +202,7 @@ trait ModifiesPiggyBanks
      */
     public function store(array $data): PiggyBank
     {
-        $factory       = new PiggyBankFactory();
+        $factory = new PiggyBankFactory();
         $factory->user = $this->user;
 
         return $factory->store($data);
@@ -209,20 +210,20 @@ trait ModifiesPiggyBanks
 
     public function update(PiggyBank $piggyBank, array $data): PiggyBank
     {
-        $piggyBank     = $this->updateProperties($piggyBank, $data);
+        $piggyBank = $this->updateProperties($piggyBank, $data);
         if (array_key_exists('notes', $data)) {
-            $this->updateNote($piggyBank, (string) $data['notes']);
+            $this->updateNote($piggyBank, (string)$data['notes']);
         }
 
         // update the order of the piggy bank:
-        $oldOrder      = $piggyBank->order;
-        $newOrder      = (int) ($data['order'] ?? $oldOrder);
+        $oldOrder = $piggyBank->order;
+        $newOrder = (int)($data['order'] ?? $oldOrder);
         if ($oldOrder !== $newOrder) {
             $this->setOrder($piggyBank, $newOrder);
         }
 
         // update the accounts
-        $factory       = new PiggyBankFactory();
+        $factory = new PiggyBankFactory();
         $factory->user = $this->user;
 
         // the piggy bank currency is set or updated FIRST, if it exists.
@@ -233,9 +234,9 @@ trait ModifiesPiggyBanks
         // if the piggy bank is now smaller than the sum of the money saved,
         // remove money from all accounts until the piggy bank is the right amount.
         $currentAmount = $this->getCurrentAmount($piggyBank);
-        if (1 === bccomp((string) $currentAmount, (string) $piggyBank->target_amount) && 0 !== bccomp((string) $piggyBank->target_amount, '0')) {
+        if (1 === bccomp((string)$currentAmount, (string)$piggyBank->target_amount) && 0 !== bccomp((string)$piggyBank->target_amount, '0')) {
             Log::debug(sprintf('Current amount is %s, target amount is %s', $currentAmount, $piggyBank->target_amount));
-            $difference = bcsub((string) $piggyBank->target_amount, (string) $currentAmount);
+            $difference = bcsub((string)$piggyBank->target_amount, (string)$currentAmount);
 
             // an amount will be removed, create "negative" event:
             //            Log::debug(sprintf('ChangedAmount: is triggered with difference "%s"', $difference));
@@ -248,7 +249,7 @@ trait ModifiesPiggyBanks
 
         // update using name:
         if (array_key_exists('object_group_title', $data)) {
-            $objectGroupTitle = (string) $data['object_group_title'];
+            $objectGroupTitle = (string)$data['object_group_title'];
             if ('' !== $objectGroupTitle) {
                 $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
                 if (null !== $objectGroup) {
@@ -264,7 +265,7 @@ trait ModifiesPiggyBanks
 
         // try also with ID:
         if (array_key_exists('object_group_id', $data)) {
-            $objectGroupId = (int) ($data['object_group_id'] ?? 0);
+            $objectGroupId = (int)($data['object_group_id'] ?? 0);
             if (0 !== $objectGroupId) {
                 $objectGroup = $this->findObjectGroupById($objectGroupId);
                 if (null !== $objectGroup) {
@@ -282,6 +283,7 @@ trait ModifiesPiggyBanks
     private function updateProperties(PiggyBank $piggyBank, array $data): PiggyBank
     {
         if (array_key_exists('name', $data) && '' !== $data['name']) {
+            event(new ChangedName($piggyBank, $piggyBank->name, $data['name']));
             $piggyBank->name = $data['name'];
         }
         if (array_key_exists('transaction_currency_id', $data) && is_int($data['transaction_currency_id'])) {
@@ -298,11 +300,11 @@ trait ModifiesPiggyBanks
             $piggyBank->target_amount = '0';
         }
         if (array_key_exists('target_date', $data) && '' !== $data['target_date']) {
-            $piggyBank->target_date    = $data['target_date'];
+            $piggyBank->target_date = $data['target_date'];
             $piggyBank->target_date_tz = $data['target_date']?->format('e');
         }
         if (array_key_exists('start_date', $data)) {
-            $piggyBank->start_date    = $data['start_date'];
+            $piggyBank->start_date = $data['start_date'];
             $piggyBank->start_date_tz = $data['target_date']?->format('e');
         }
         $piggyBank->save();
@@ -318,7 +320,7 @@ trait ModifiesPiggyBanks
 
             return;
         }
-        $dbNote       = $piggyBank->notes()->first();
+        $dbNote = $piggyBank->notes()->first();
         if (null === $dbNote) {
             $dbNote = new Note();
             $dbNote->noteable()->associate($piggyBank);
@@ -329,7 +331,7 @@ trait ModifiesPiggyBanks
 
     public function setOrder(PiggyBank $piggyBank, int $newOrder): bool
     {
-        $oldOrder         = $piggyBank->order;
+        $oldOrder = $piggyBank->order;
         // Log::debug(sprintf('Will move piggy bank #%d ("%s") from %d to %d', $piggyBank->id, $piggyBank->name, $oldOrder, $newOrder));
         if ($newOrder > $oldOrder) {
             PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
@@ -337,8 +339,7 @@ trait ModifiesPiggyBanks
                 ->where('accounts.user_id', $this->user->id)
                 ->where('piggy_banks.order', '<=', $newOrder)->where('piggy_banks.order', '>', $oldOrder)
                 ->where('piggy_banks.id', '!=', $piggyBank->id)
-                ->distinct()->decrement('piggy_banks.order')
-            ;
+                ->distinct()->decrement('piggy_banks.order');
 
             $piggyBank->order = $newOrder;
             Log::debug(sprintf('[1] Order of piggy #%d ("%s") from %d to %d', $piggyBank->id, $piggyBank->name, $oldOrder, $newOrder));
@@ -351,8 +352,7 @@ trait ModifiesPiggyBanks
             ->where('accounts.user_id', $this->user->id)
             ->where('piggy_banks.order', '>=', $newOrder)->where('piggy_banks.order', '<', $oldOrder)
             ->where('piggy_banks.id', '!=', $piggyBank->id)
-            ->distinct()->increment('piggy_banks.order')
-        ;
+            ->distinct()->increment('piggy_banks.order');
 
         $piggyBank->order = $newOrder;
         Log::debug(sprintf('[2] Order of piggy #%d ("%s") from %d to %d', $piggyBank->id, $piggyBank->name, $oldOrder, $newOrder));
@@ -366,14 +366,14 @@ trait ModifiesPiggyBanks
         foreach ($piggyBank->accounts as $account) {
             $current = $account->pivot->current_amount;
             // if this account contains more than the amount, remove the amount and return.
-            if (1 === bccomp((string) $current, $amount)) {
+            if (1 === bccomp((string)$current, $amount)) {
                 $this->removeAmount($piggyBank, $account, $amount);
 
                 return;
             }
             // if this account contains less than the amount, remove the current amount, update the amount and continue.
             $this->removeAmount($piggyBank, $account, $current);
-            $amount  = bcsub($amount, (string) $current);
+            $amount = bcsub($amount, (string)$current);
         }
     }
 }

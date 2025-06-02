@@ -24,6 +24,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events\Model;
 
+use FireflyIII\Events\Model\PiggyBank\ChangedName;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\Rule;
+use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Events\Model\PiggyBank\ChangedAmount;
 use FireflyIII\Models\PiggyBankEvent;
@@ -33,6 +37,23 @@ use FireflyIII\Models\PiggyBankEvent;
  */
 class PiggyBankEventHandler
 {
+
+    public function changedPiggyBankName(ChangedName $event): void {
+        // loop all accounts, collect all user's rules.
+        /** @var Account $account */
+        foreach($event->piggyBank->accounts as $account) {
+            /** @var Rule $rule */
+            foreach($account->user->rules as $rule) {
+                /** @var RuleAction $ruleAction */
+                foreach($rule->ruleActions()->where('action_type', 'update_piggy')->get() as $ruleAction) {
+                    if($event->oldName === $ruleAction->action_value) {
+                        $ruleAction->action_value = $event->newName;
+                        $ruleAction->save();
+                    }
+                }
+            }
+        }
+    }
     public function changePiggyAmount(ChangedAmount $event): void
     {
         // find journal if group is present.
