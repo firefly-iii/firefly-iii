@@ -79,12 +79,12 @@ class ExchangeRateConverter
     public function getCurrencyRate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): string
     {
         if (false === $this->enabled()) {
-            Log::debug('ExchangeRateConverter: disabled, return "1".');
+            // Log::debug('ExchangeRateConverter: disabled, return "1".');
 
             return '1';
         }
         if ($from->id === $to->id) {
-            Log::debug('ExchangeRateConverter: From and to are the same, return "1".');
+//            Log::debug('ExchangeRateConverter: From and to are the same, return "1".');
 
             return '1';
         }

@@ -35,6 +35,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Debug\Timer;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait PeriodOverview.
@@ -77,6 +78,7 @@ trait PeriodOverview
      */
     protected function getAccountPeriodOverview(Account $account, Carbon $start, Carbon $end): array
     {
+        Log::debug('Now in getAccountPeriodOverview()');
         Timer::start('account-period-total');
         $this->accountRepository = app(AccountRepositoryInterface::class);
         $range                   = app('navigation')->getViewRange(true);
@@ -100,6 +102,7 @@ trait PeriodOverview
         $transactions            = $this->accountRepository->periodCollection($account, $start, $end);
 
         // loop dates
+        Log::debug(sprintf('Count of loops: %d', count($dates)));
         foreach ($dates as $currentDate) {
             $title                            = app('navigation')->periodShow($currentDate['start'], $currentDate['period']);
             [$transactions, $spent]           = $this->filterTransactionsByType(TransactionTypeEnum::WITHDRAWAL, $transactions, $currentDate['start'], $currentDate['end']);
@@ -119,6 +122,7 @@ trait PeriodOverview
         }
         $cache->store($entries);
         Timer::stop('account-period-total');
+        Log::debug('End of getAccountPeriodOverview()');
 
         return $entries;
     }
