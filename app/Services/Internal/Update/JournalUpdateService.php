@@ -78,20 +78,20 @@ class JournalUpdateService
      */
     public function __construct()
     {
-        $this->destinationAccount     = null;
-        $this->destinationTransaction = null;
-        $this->sourceAccount          = null;
-        $this->sourceTransaction      = null;
-        $this->transactionGroup       = null;
-        $this->transactionJournal     = null;
-        $this->billRepository         = app(BillRepositoryInterface::class);
-        $this->categoryRepository     = app(CategoryRepositoryInterface::class);
-        $this->budgetRepository       = app(BudgetRepositoryInterface::class);
-        $this->tagFactory             = app(TagFactory::class);
-        $this->accountRepository      = app(AccountRepositoryInterface::class);
-        $this->currencyRepository     = app(CurrencyRepositoryInterface::class);
+        $this->destinationAccount         = null;
+        $this->destinationTransaction     = null;
+        $this->sourceAccount              = null;
+        $this->sourceTransaction          = null;
+        $this->transactionGroup           = null;
+        $this->transactionJournal         = null;
+        $this->billRepository             = app(BillRepositoryInterface::class);
+        $this->categoryRepository         = app(CategoryRepositoryInterface::class);
+        $this->budgetRepository           = app(BudgetRepositoryInterface::class);
+        $this->tagFactory                 = app(TagFactory::class);
+        $this->accountRepository          = app(AccountRepositoryInterface::class);
+        $this->currencyRepository         = app(CurrencyRepositoryInterface::class);
         $this->transactionGroupRepository = app(TransactionGroupRepositoryInterface::class);
-        $this->metaString             = [
+        $this->metaString                 = [
             'sepa_cc',
             'sepa_ct_op',
             'sepa_ct_id',
@@ -106,7 +106,7 @@ class JournalUpdateService
             'external_id',
             'external_url',
         ];
-        $this->metaDate               = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date',
+        $this->metaDate                   = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date',
             'invoice_date', ];
     }
 
@@ -128,7 +128,7 @@ class JournalUpdateService
         $this->destinationTransaction = null;
         $this->sourceAccount          = null;
         $this->sourceTransaction      = null;
-        $this->startCompareHash = $this->transactionGroupRepository->getCompareHash($transactionGroup);
+        $this->startCompareHash       = $this->transactionGroupRepository->getCompareHash($transactionGroup);
     }
 
     public function setTransactionJournal(TransactionJournal $transactionJournal): void
@@ -822,7 +822,8 @@ class JournalUpdateService
         return false;
     }
 
-    public function isCompareHashChanged(): bool {
+    public function isCompareHashChanged(): bool
+    {
         Log::debug(sprintf('Now in %s', __METHOD__));
         $compareHash = $this->transactionGroupRepository->getCompareHash($this->transactionGroup);
         Log::debug(sprintf('Compare hash is       "%s".', $compareHash));
