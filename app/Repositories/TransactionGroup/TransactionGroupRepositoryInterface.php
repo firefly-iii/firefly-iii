@@ -51,9 +51,6 @@ interface TransactionGroupRepositoryInterface
 
     /**
      * Small method that returns a hash that can be used to compare two transaction groups.
-     *
-     * @param TransactionGroup $group
-     * @return string
      */
     public function getCompareHash(TransactionGroup $group): string;
 
