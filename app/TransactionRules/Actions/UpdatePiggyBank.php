@@ -40,7 +40,9 @@ class UpdatePiggyBank implements ActionInterface
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(private readonly RuleAction $action) {}
+    public function __construct(private readonly RuleAction $action)
+    {
+    }
 
     public function actOnArray(array $journal): bool
     {
@@ -50,12 +52,12 @@ class UpdatePiggyBank implements ActionInterface
 
         // refresh the transaction type.
         /** @var User $user */
-        $user        = User::find($journal['user_id']);
+        $user = User::find($journal['user_id']);
 
         /** @var TransactionJournal $journalObj */
-        $journalObj  = $user->transactionJournals()->find($journal['transaction_journal_id']);
+        $journalObj = $user->transactionJournals()->find($journal['transaction_journal_id']);
 
-        $piggyBank   = $this->findPiggyBank($user, $actionValue);
+        $piggyBank = $this->findPiggyBank($user, $actionValue);
         if (!$piggyBank instanceof PiggyBank) {
             Log::info(
                 sprintf('No piggy bank named "%s", cant execute action #%d of rule #%d', $actionValue, $this->action->id, $this->action->rule_id)
@@ -67,10 +69,19 @@ class UpdatePiggyBank implements ActionInterface
 
         Log::debug(sprintf('Found piggy bank #%d ("%s")', $piggyBank->id, $piggyBank->name));
 
+        // piggy bank already has an event for this transaction journal?
+        if ($this->alreadyEventPresent($piggyBank, $journal)) {
+            Log::info(sprintf('Piggy bank #%d ("%s") already has an event for transaction journal #%d, so no action will be taken.', $piggyBank->id, $piggyBank->name, $journalObj->id));
+
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_piggy', ['name' => $actionValue])));
+            return false;
+        }
+
+
         /** @var Transaction $destination */
         $destination = $journalObj->transactions()->where('amount', '>', 0)->first();
 
-        $accounts    = $this->getAccounts($journalObj);
+        $accounts = $this->getAccounts($journalObj);
         Log::debug(sprintf('Source account is #%d: "%s"', $accounts['source']->id, $accounts['source']->name));
         Log::debug(sprintf('Destination account is #%d: "%s"', $accounts['destination']->id, $accounts['source']->name));
 
@@ -86,9 +97,9 @@ class UpdatePiggyBank implements ActionInterface
                     null,
                     [
                         'currency_symbol' => $journalObj->transactionCurrency->symbol,
-                        'decimal_places'  => $journalObj->transactionCurrency->decimal_places,
-                        'amount'          => $destination->amount,
-                        'piggy'           => $piggyBank->name,
+                        'decimal_places' => $journalObj->transactionCurrency->decimal_places,
+                        'amount' => $destination->amount,
+                        'piggy' => $piggyBank->name,
                     ]
                 )
             );
@@ -109,10 +120,10 @@ class UpdatePiggyBank implements ActionInterface
                     null,
                     [
                         'currency_symbol' => $journalObj->transactionCurrency->symbol,
-                        'decimal_places'  => $journalObj->transactionCurrency->decimal_places,
-                        'amount'          => $destination->amount,
-                        'piggy'           => $piggyBank->name,
-                        'piggy_id'        => $piggyBank->id,
+                        'decimal_places' => $journalObj->transactionCurrency->decimal_places,
+                        'amount' => $destination->amount,
+                        'piggy' => $piggyBank->name,
+                        'piggy_id' => $piggyBank->id,
                     ]
                 )
             );
@@ -143,7 +154,7 @@ class UpdatePiggyBank implements ActionInterface
     private function getAccounts(TransactionJournal $journal): array
     {
         return [
-            'source'      => $journal->transactions()->where('amount', '<', '0')->first()?->account,
+            'source' => $journal->transactions()->where('amount', '<', '0')->first()?->account,
             'destination' => $journal->transactions()->where('amount', '>', '0')->first()?->account,
         ];
     }
@@ -169,11 +180,11 @@ class UpdatePiggyBank implements ActionInterface
         $repository->setUser($journal->user);
 
         // how much can we remove from this piggy bank?
-        $toRemove   = $repository->getCurrentAmount($piggyBank, $account);
+        $toRemove = $repository->getCurrentAmount($piggyBank, $account);
         Log::debug(sprintf('Amount is %s, max to remove is %s', $amount, $toRemove));
 
         // if $amount is bigger than $toRemove, shrink it.
-        $amount     = -1 === bccomp($amount, $toRemove) ? $amount : $toRemove;
+        $amount = -1 === bccomp($amount, $toRemove) ? $amount : $toRemove;
         Log::debug(sprintf('Amount is now %s', $amount));
 
         // if amount is zero, stop.
@@ -202,7 +213,7 @@ class UpdatePiggyBank implements ActionInterface
 
         // how much can we add to the piggy bank?
         if (0 !== bccomp($piggyBank->target_amount, '0')) {
-            $toAdd  = bcsub($piggyBank->target_amount, $repository->getCurrentAmount($piggyBank, $account));
+            $toAdd = bcsub($piggyBank->target_amount, $repository->getCurrentAmount($piggyBank, $account));
             Log::debug(sprintf('Max amount to add to piggy bank is %s, amount is %s', $toAdd, $amount));
 
             // update amount to fit:
@@ -230,5 +241,10 @@ class UpdatePiggyBank implements ActionInterface
         Log::debug(sprintf('Will now add %s to piggy bank.', $amount));
 
         $repository->addAmount($piggyBank, $account, $amount, $journal);
+    }
+
+    private function alreadyEventPresent(PiggyBank $piggyBank, array $journal): bool
+    {
+        return $piggyBank->piggyBankEvents()->where('transaction_journal_id', $journal['transaction_journal_id'])->exists();
     }
 }
