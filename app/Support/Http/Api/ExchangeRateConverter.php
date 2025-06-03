@@ -84,7 +84,7 @@ class ExchangeRateConverter
             return '1';
         }
         if ($from->id === $to->id) {
-//            Log::debug('ExchangeRateConverter: From and to are the same, return "1".');
+            //            Log::debug('ExchangeRateConverter: From and to are the same, return "1".');
 
             return '1';
         }
