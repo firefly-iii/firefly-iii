@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\Events\Model\PiggyBank;
 
 use FireflyIII\Events\Event;
@@ -10,7 +12,5 @@ class ChangedName extends Event
 {
     use SerializesModels;
 
-    public function __construct(public PiggyBank $piggyBank, public string $oldName, public string $newName)
-    {
-    }
+    public function __construct(public PiggyBank $piggyBank, public string $oldName, public string $newName) {}
 }

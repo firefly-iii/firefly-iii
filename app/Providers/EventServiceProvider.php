@@ -211,7 +211,7 @@ class EventServiceProvider extends ServiceProvider
             ChangedAmount::class                   => [
                 'FireflyIII\Handlers\Events\Model\PiggyBankEventHandler@changePiggyAmount',
             ],
-            ChangedName::class => [
+            ChangedName::class                     => [
                 'FireflyIII\Handlers\Events\Model\PiggyBankEventHandler@changedPiggyBankName',
             ],
 
