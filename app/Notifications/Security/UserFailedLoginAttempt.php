@@ -67,7 +67,7 @@ class UserFailedLoginAttempt extends Notification
     {
         $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
         $message  = new Message();
-        $ip        = Request::ip();
+        $ip       = Request::ip();
         $message->topic($settings['ntfy_topic']);
         $message->title((string) trans('email.failed_login_subject'));
         $message->body((string) trans('email.failed_login_message', ['ip' => $ip, 'email' => $this->user->email]));
@@ -80,7 +80,8 @@ class UserFailedLoginAttempt extends Notification
      */
     public function toPushover(User $notifiable): PushoverMessage
     {
-        $ip        = Request::ip();
+        $ip = Request::ip();
+
         return PushoverMessage::create((string) trans('email.failed_login_message', ['ip' => $ip, 'email' => $this->user->email]))
             ->title((string) trans('email.failed_login_subject'))
         ;
@@ -91,7 +92,7 @@ class UserFailedLoginAttempt extends Notification
      */
     public function toSlack(User $notifiable): SlackMessage
     {
-        $ip        = Request::ip();
+        $ip      = Request::ip();
         $message = (string) trans('email.failed_login_message', ['ip' => $ip, 'email' => $this->user->email]);
 
         return new SlackMessage()->content($message);

@@ -939,16 +939,16 @@
         },
         {
             "name": "filp/whoops",
-            "version": "2.18.0",
+            "version": "2.18.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filp/whoops.git",
-                "reference": "a7de6c3c6c3c022f5cfc337f8ede6a14460cf77e"
+                "reference": "8fcc6a862f2e7b94eb4221fd0819ddba3d30ab26"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filp/whoops/zipball/a7de6c3c6c3c022f5cfc337f8ede6a14460cf77e",
-                "reference": "a7de6c3c6c3c022f5cfc337f8ede6a14460cf77e",
+                "url": "https://api.github.com/repos/filp/whoops/zipball/8fcc6a862f2e7b94eb4221fd0819ddba3d30ab26",
+                "reference": "8fcc6a862f2e7b94eb4221fd0819ddba3d30ab26",
                 "shasum": ""
             },
             "require": {
@@ -998,7 +998,7 @@
             ],
             "support": {
                 "issues": "https://github.com/filp/whoops/issues",
-                "source": "https://github.com/filp/whoops/tree/2.18.0"
+                "source": "https://github.com/filp/whoops/tree/2.18.1"
             },
             "funding": [
                 {
@@ -1006,7 +1006,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-03-15T12:00:00+00:00"
+            "time": "2025-06-03T18:56:14+00:00"
         },
         {
             "name": "firebase/php-jwt",
@@ -3473,22 +3473,22 @@
         },
         {
             "name": "mailersend/laravel-driver",
-            "version": "v2.9.1",
+            "version": "v2.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mailersend/mailersend-laravel-driver.git",
-                "reference": "87fd5ab76808bbaac9221be0d306baef13e98725"
+                "reference": "63acebb5064745076df27b1a80423986b6d7b69e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mailersend/mailersend-laravel-driver/zipball/87fd5ab76808bbaac9221be0d306baef13e98725",
-                "reference": "87fd5ab76808bbaac9221be0d306baef13e98725",
+                "url": "https://api.github.com/repos/mailersend/mailersend-laravel-driver/zipball/63acebb5064745076df27b1a80423986b6d7b69e",
+                "reference": "63acebb5064745076df27b1a80423986b6d7b69e",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "illuminate/support": "^9.0 || ^10.0  || ^11.0 || ^12.0",
-                "mailersend/mailersend": "^0.31.0",
+                "mailersend/mailersend": "^0.34.0",
                 "nyholm/psr7": "^1.5",
                 "php": ">=8.0",
                 "php-http/guzzle7-adapter": "^1.0",
@@ -3536,29 +3536,28 @@
             ],
             "support": {
                 "issues": "https://github.com/mailersend/mailersend-laravel-driver/issues",
-                "source": "https://github.com/mailersend/mailersend-laravel-driver/tree/v2.9.1"
+                "source": "https://github.com/mailersend/mailersend-laravel-driver/tree/v2.11.0"
             },
-            "time": "2025-04-09T09:33:07+00:00"
+            "time": "2025-06-04T08:47:41+00:00"
         },
         {
             "name": "mailersend/mailersend",
-            "version": "v0.31.0",
+            "version": "v0.34.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mailersend/mailersend-php.git",
-                "reference": "513ff83ee768526055ad52987cde401ea7218c67"
+                "reference": "1cb8c42e5569e7455b1e0e794dcbf68e3b7898ab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mailersend/mailersend-php/zipball/513ff83ee768526055ad52987cde401ea7218c67",
-                "reference": "513ff83ee768526055ad52987cde401ea7218c67",
+                "url": "https://api.github.com/repos/mailersend/mailersend-php/zipball/1cb8c42e5569e7455b1e0e794dcbf68e3b7898ab",
+                "reference": "1cb8c42e5569e7455b1e0e794dcbf68e3b7898ab",
                 "shasum": ""
             },
             "require": {
                 "beberlei/assert": "^3.2",
                 "ext-json": "*",
-                "illuminate/collections": "^8.0 || ^9.0 || ^10.0 || ^11.0 || ^12.0",
-                "php": "^7.4|^8.0",
+                "php": "^7.4 || ^8.0 <8.5",
                 "php-http/client-common": "^2.2",
                 "php-http/discovery": "^1.9",
                 "php-http/httplug": "^2.1",
@@ -3603,9 +3602,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mailersend/mailersend-php/issues",
-                "source": "https://github.com/mailersend/mailersend-php/tree/v0.31.0"
+                "source": "https://github.com/mailersend/mailersend-php/tree/v0.34.0"
             },
-            "time": "2025-04-03T12:16:11+00:00"
+            "time": "2025-06-04T07:53:52+00:00"
         },
         {
             "name": "monolog/monolog",
