@@ -803,6 +803,7 @@ Route::group(
         Route::post('store', ['uses' => 'PiggyBank\CreateController@store', 'as' => 'store']);
         Route::post('update/{piggyBank}', ['uses' => 'PiggyBank\EditController@update', 'as' => 'update']);
         Route::post('destroy/{piggyBank}', ['uses' => 'PiggyBank\DeleteController@destroy', 'as' => 'destroy']);
+        Route::post('reset-history/{piggyBank}', ['uses' => 'PiggyBank\EditController@resetHistory', 'as' => 'reset']);
         Route::post('add/{piggyBank}', ['uses' => 'PiggyBank\AmountController@postAdd', 'as' => 'add']);
         Route::post('remove/{piggyBank}', ['uses' => 'PiggyBank\AmountController@postRemove', 'as' => 'remove']);
 
