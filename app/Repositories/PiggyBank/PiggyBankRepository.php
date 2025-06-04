@@ -443,8 +443,8 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
     public function resetHistory(PiggyBank $piggyBank): void
     {
         $piggyBank->piggyBankEvents()->delete();
-        foreach($piggyBank->accounts as $account) {
-            if(0 !== bccomp('0',$account->pivot->current_amount)) {
+        foreach ($piggyBank->accounts as $account) {
+            if (0 !== bccomp('0', $account->pivot->current_amount)) {
                 event(new ChangedAmount($piggyBank, $account->pivot->current_amount, null, null));
             }
         }
