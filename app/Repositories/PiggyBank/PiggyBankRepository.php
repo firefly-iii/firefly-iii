@@ -276,7 +276,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
             $amount = '' === $amount ? '0' : $amount;
             $sum    = bcadd($sum, $amount);
         }
-        // Log::debug(sprintf('Current amount in piggy bank #%d ("%s") is %s', $piggyBank->id, $piggyBank->name, $sum));
+        Log::debug(sprintf('Current amount in piggy bank #%d ("%s") is %s', $piggyBank->id, $piggyBank->name, $sum));
 
         return $sum;
     }
