@@ -87,7 +87,7 @@ class ExecutionController extends Controller
 
         // set rules:
         // #10427, file rule group and not the set of rules.
-        $collection = new Collection([$ruleGroup]);
+        $collection    = new Collection([$ruleGroup]);
         $newRuleEngine->setRuleGroups($collection);
         $newRuleEngine->fire();
 
