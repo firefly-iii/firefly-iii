@@ -34,6 +34,7 @@ use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
 /**
@@ -75,7 +76,6 @@ class ExecutionController extends Controller
         $accounts      = implode(',', $request->get('accounts'));
         $startDate     = new Carbon($request->get('start'));
         $endDate       = new Carbon($request->get('end'));
-        $rules         = $this->ruleGroupRepository->getActiveRules($ruleGroup);
         // create new rule engine:
         $newRuleEngine = app(RuleEngineInterface::class);
         $newRuleEngine->setUser($user);
@@ -86,7 +86,9 @@ class ExecutionController extends Controller
         $newRuleEngine->addOperator(['type' => 'account_id', 'value' => $accounts]);
 
         // set rules:
-        $newRuleEngine->setRules($rules);
+        // #10427, file rule group and not the set of rules.
+        $collection = new Collection([$ruleGroup]);
+        $newRuleEngine->setRuleGroups($collection);
         $newRuleEngine->fire();
 
         // Tell the user that the job is queued
