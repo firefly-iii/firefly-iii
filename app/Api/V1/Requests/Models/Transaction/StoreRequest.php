@@ -58,7 +58,7 @@ class StoreRequest extends FormRequest
      */
     public function getAll(): array
     {
-        app('log')->debug('get all data in TransactionStoreRequest');
+        Log::debug('get all data in TransactionStoreRequest');
 
         return [
             'group_title'             => $this->convertString('group_title'),
@@ -175,7 +175,7 @@ class StoreRequest extends FormRequest
      */
     public function rules(): array
     {
-        app('log')->debug('Collect rules of TransactionStoreRequest');
+        Log::debug('Collect rules of TransactionStoreRequest');
         $validProtocols = config('firefly.valid_url_protocols');
         $locationRules  = Location::requestRules([]);
 
@@ -276,9 +276,9 @@ class StoreRequest extends FormRequest
                 $this->validateTransactionArray($validator);
 
                 // must submit at least one transaction.
-                app('log')->debug('Now going to validateOneTransaction');
+                Log::debug('Now going to validateOneTransaction');
                 $this->validateOneTransaction($validator);
-                app('log')->debug('Now done with validateOneTransaction');
+                Log::debug('Now done with validateOneTransaction');
 
                 // all journals must have a description
                 $this->validateDescriptions($validator);

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\System;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\System\UpdateRequest;
@@ -65,8 +66,8 @@ class ConfigurationController extends Controller
         try {
             $dynamicData = $this->getDynamicConfiguration();
         } catch (FireflyException $e) {
-            app('log')->error($e->getMessage());
-            app('log')->error($e->getTraceAsString());
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
 
             throw new FireflyException('200030: Could not load config variables.', 0, $e);
         }

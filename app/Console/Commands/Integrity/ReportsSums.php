@@ -26,6 +26,7 @@ namespace FireflyIII\Console\Commands\Integrity;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 
@@ -60,6 +61,8 @@ class ReportsSums extends Command
             $foreign = (string) $user->transactions()->selectRaw('SUM(foreign_amount) as total')->value('total');
             $sum     = '' === $sum ? '0' : $sum;
             $foreign = '' === $foreign ? '0' : $foreign;
+            $sum = Steam::floatalize($sum);
+            $foreign = Steam::floatalize($foreign);
             $total   = bcadd($sum, $foreign);
 
             if (0 !== bccomp($total, '0')) {

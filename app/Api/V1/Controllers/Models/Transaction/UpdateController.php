@@ -34,6 +34,7 @@ use FireflyIII\Support\JsonApi\Enrichments\TransactionGroupEnrichment;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 use League\Fractal\Resource\Item;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -71,7 +72,7 @@ class UpdateController extends Controller
      */
     public function update(UpdateRequest $request, TransactionGroup $transactionGroup): JsonResponse
     {
-        app('log')->debug('Now in update routine for transaction group');
+        Log::debug('Now in update routine for transaction group');
         $data              = $request->getAll();
         $oldHash           = $this->groupRepository->getCompareHash($transactionGroup);
         $transactionGroup  = $this->groupRepository->update($transactionGroup, $data);

@@ -212,7 +212,7 @@ class BudgetController extends Controller
      */
     private function budgetLimits(Budget $budget, Collection $limits): array
     {
-        app('log')->debug(sprintf('Now in budgetLimits(#%d)', $budget->id));
+        Log::debug(sprintf('Now in budgetLimits(#%d)', $budget->id));
         $data = [];
 
         /** @var BudgetLimit $limit */

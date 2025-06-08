@@ -32,6 +32,7 @@ use FireflyIII\Support\JsonApi\Enrichments\AccountEnrichment;
 use FireflyIII\Transformers\AccountTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 use League\Fractal\Resource\Item;
 
 /**
@@ -67,7 +68,7 @@ class UpdateController extends Controller
      */
     public function update(UpdateRequest $request, Account $account): JsonResponse
     {
-        app('log')->debug(sprintf('Now in %s', __METHOD__));
+        Log::debug(sprintf('Now in %s', __METHOD__));
         $data         = $request->getUpdateData();
         $data['type'] = config('firefly.shortNamesByFullName.'.$account->accountType->type);
         $account      = $this->repository->update($account, $data);

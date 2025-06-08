@@ -47,7 +47,7 @@ class StoreRequest extends FormRequest
      */
     public function getAll(): array
     {
-        app('log')->debug('Raw fields in Bill StoreRequest', $this->all());
+        Log::debug('Raw fields in Bill StoreRequest', $this->all());
         $fields = [
             'name'               => ['name', 'convertString'],
             'amount_min'         => ['amount_min', 'convertString'],
