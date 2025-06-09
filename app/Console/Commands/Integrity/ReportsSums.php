@@ -61,7 +61,7 @@ class ReportsSums extends Command
             $foreign = (string) $user->transactions()->selectRaw('SUM(foreign_amount) as total')->value('total');
             $sum     = '' === $sum ? '0' : $sum;
             $foreign = '' === $foreign ? '0' : $foreign;
-            $sum = Steam::floatalize($sum);
+            $sum     = Steam::floatalize($sum);
             $foreign = Steam::floatalize($foreign);
             $total   = bcadd($sum, $foreign);
 
