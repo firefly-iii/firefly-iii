@@ -233,16 +233,13 @@ class BudgetController extends Controller
         $end->endOfDay();
         $spent           = $this->opsRepository->listExpenses($limit->start_date, $end, null, new Collection([$budget]));
         $limitCurrencyId = $limit->transaction_currency_id;
-        $filtered        = [];
 
         /** @var array $entry */
-        foreach ($spent as $currencyId => $entry) {
-            // only spent the entry where the entry's currency matches the budget limit's currency
-            // so $filtered will only have 1 or 0 entries
-            if ($entry['currency_id'] === $limitCurrencyId) {
-                $filtered[$currencyId] = $entry;
-            }
-        }
+        // only spent the entry where the entry's currency matches the budget limit's currency
+        // so $filtered will only have 1 or 0 entries
+        $filtered = array_filter($spent, function ($entry) use ($limitCurrencyId) {
+            return $entry['currency_id'] === $limitCurrencyId;
+        });
         $result          = $this->processExpenses($budget->id, $filtered, $limit->start_date, $end);
         if (1 === count($result)) {
             $compare = bccomp($limit->amount, (string) app('steam')->positive($result[$limitCurrencyId]['spent']));

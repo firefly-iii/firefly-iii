@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\System;
 
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use FireflyIII\Api\V1\Controllers\Controller;
@@ -32,6 +33,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Binder\EitherConfigKey;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Class ConfigurationController
@@ -93,13 +95,14 @@ class ConfigurationController extends Controller
 
     /**
      * Get all config values.
+     * @throws FireflyException
      */
     private function getDynamicConfiguration(): array
     {
-        $isDemoSite  = app('fireflyconfig')->get('is_demo_site');
-        $updateCheck = app('fireflyconfig')->get('permission_update_check');
-        $lastCheck   = app('fireflyconfig')->get('last_update_check');
-        $singleUser  = app('fireflyconfig')->get('single_user_mode');
+        $isDemoSite  = FireflyConfig::get('is_demo_site');
+        $updateCheck = FireflyConfig::get('permission_update_check');
+        $lastCheck   = FireflyConfig::get('last_update_check');
+        $singleUser  = FireflyConfig::get('single_user_mode');
 
         return [
             'is_demo_site'            => $isDemoSite?->data,
@@ -153,7 +156,11 @@ class ConfigurationController extends Controller
      *
      * Update the configuration.
      *
+     * @param UpdateRequest $request
+     * @param string $name
+     * @return JsonResponse
      * @throws FireflyException
+     * @throws ValidationException
      */
     public function update(UpdateRequest $request, string $name): JsonResponse
     {
@@ -165,7 +172,7 @@ class ConfigurationController extends Controller
         $data      = $request->getAll();
         $shortName = str_replace('configuration.', '', $name);
 
-        app('fireflyconfig')->set($shortName, $data['value']);
+        FireflyConfig::set($shortName, $data['value']);
 
         // get updated config:
         $newConfig = $this->getDynamicConfiguration();

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Chart;
 
+use FireflyIII\Exceptions\ValidationException;
 use FireflyIII\Models\TransactionCurrency;
 use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
@@ -35,6 +36,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Chart\ChartData;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Api\ApiSupport;
 use FireflyIII\Support\Http\Api\CollectsAccountsFromFilter;
@@ -139,7 +141,9 @@ class AccountController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/charts/getChartAccountOverview
      *
-     * @throws FireflyException
+     * @param DateRequest $request
+     * @return JsonResponse
+     * @throws ValidationException
      */
     public function overview(DateRequest $request): JsonResponse
     {
@@ -160,7 +164,7 @@ class AccountController extends Controller
         $defaultSet = $this->repository->getAccountsByType([AccountTypeEnum::ASSET->value])->pluck('id')->toArray();
 
         /** @var Preference $frontpage */
-        $frontpage  = app('preferences')->get('frontpageAccounts', $defaultSet);
+        Preferences::get('frontpageAccounts', $defaultSet);
 
         if (!(is_array($frontpage->data) && count($frontpage->data) > 0)) {
             $frontpage->data = $defaultSet;

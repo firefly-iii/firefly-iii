@@ -64,7 +64,7 @@ class DestroyController extends Controller
     public function destroy(DestroyRequest $request): JsonResponse
     {
         $objects         = $request->getObjects();
-        $this->unused    = $request->boolean('unused', false);
+        $this->unused    = $request->boolean('unused');
 
         $allExceptAssets = [AccountTypeEnum::BENEFICIARY->value, AccountTypeEnum::CASH->value, AccountTypeEnum::CREDITCARD->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::EXPENSE->value, AccountTypeEnum::IMPORT->value, AccountTypeEnum::INITIAL_BALANCE->value, AccountTypeEnum::LIABILITY_CREDIT->value, AccountTypeEnum::RECONCILIATION->value, AccountTypeEnum::REVENUE->value];
         $all             = [AccountTypeEnum::ASSET->value, AccountTypeEnum::BENEFICIARY->value, AccountTypeEnum::CASH->value, AccountTypeEnum::CREDITCARD->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::EXPENSE->value, AccountTypeEnum::IMPORT->value, AccountTypeEnum::INITIAL_BALANCE->value, AccountTypeEnum::LIABILITY_CREDIT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::RECONCILIATION->value];

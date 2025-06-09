@@ -53,9 +53,6 @@ class UpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        /** @var UserGroup $userGroup */
-        $userGroup = $this->route()->parameter('userGroup');
-
         return [
             'title'                => ['required', 'min:1', 'max:255'],
             'native_currency_id'   => 'exists:transaction_currencies,id',

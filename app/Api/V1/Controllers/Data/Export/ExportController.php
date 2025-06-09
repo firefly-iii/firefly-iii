@@ -30,6 +30,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Export\ExportDataGenerator;
 use Illuminate\Http\Response as LaravelResponse;
 
+use Safe\Exceptions\DatetimeException;
 use function Safe\date;
 
 /**
@@ -71,7 +72,10 @@ class ExportController extends Controller
     }
 
     /**
+     * @param string $key
+     * @return LaravelResponse
      * @throws FireflyException
+     * @throws DatetimeException
      */
     private function returnExport(string $key): LaravelResponse
     {

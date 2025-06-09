@@ -127,7 +127,6 @@ abstract class Controller extends BaseController
                 Log::error(sprintf('Request field "%s" contains a non-scalar value. Value set to NULL.', $field));
                 Log::error($e->getMessage());
                 Log::error($e->getTraceAsString());
-                $value = null;
             }
             $obj  = null;
             if (null !== $date) {

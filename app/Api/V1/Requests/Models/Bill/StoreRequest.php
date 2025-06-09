@@ -128,7 +128,6 @@ class StoreRequest extends FormRequest
             $failed = $validator->fails();
         } catch (TypeError $e) {
             Log::error($e->getMessage());
-            $failed = false;
         }
         if ($failed) {
             Log::channel('audit')->error(sprintf('Validation errors in %s', self::class), $validator->errors()->toArray());

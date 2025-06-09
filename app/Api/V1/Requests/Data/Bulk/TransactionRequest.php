@@ -54,7 +54,7 @@ class TransactionRequest extends FormRequest
                 'query' => json_decode($this->get('query'), true, 8, JSON_THROW_ON_ERROR),
             ];
         } catch (JsonException $e) {
-            // dont really care. the validation should catch invalid json.
+            // don't really care. the validation should catch invalid json.
             Log::error($e->getMessage());
         }
 

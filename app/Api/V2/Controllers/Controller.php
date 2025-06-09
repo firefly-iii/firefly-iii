@@ -82,7 +82,7 @@ class Controller extends BaseController
 
         try {
             $page = (int) request()->get('page');
-        } catch (ContainerExceptionInterface|NotFoundExceptionInterface $e) {
+        } catch (ContainerExceptionInterface) {
             $page = 1;
         }
 

@@ -34,6 +34,7 @@ use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\LinkTypeTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 use League\Fractal\Resource\Item;
 
 /**
@@ -71,7 +72,9 @@ class StoreController extends Controller
      *
      * Store new object.
      *
-     * @throws FireflyException
+     * @param StoreRequest $request
+     * @return JsonResponse
+     * @throws ValidationException
      */
     public function store(StoreRequest $request): JsonResponse
     {

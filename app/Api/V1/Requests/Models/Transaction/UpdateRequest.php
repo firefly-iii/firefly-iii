@@ -183,7 +183,7 @@ class UpdateRequest extends FormRequest
         foreach ($this->dateFields as $fieldName) {
             app('log')->debug(sprintf('Now at date field %s', $fieldName));
             if (array_key_exists($fieldName, $transaction)) {
-                app('log')->debug(sprintf('New value: "%s"', (string) $transaction[$fieldName]));
+                Log::debug(sprintf('New value: "%s"', $transaction[$fieldName]));
                 $current[$fieldName] = $this->dateFromValue((string) $transaction[$fieldName]);
             }
         }
