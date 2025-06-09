@@ -64,7 +64,7 @@ class ForgotPasswordController extends Controller
     public function sendResetLinkEmail(Request $request, UserRepositoryInterface $repository)
     {
         Log::info('Start of sendResetLinkEmail()');
-        if ('web' !== config('firefly.authentication_guard')) {
+        if ('web'   !== config('firefly.authentication_guard')) {
             $message = sprintf('Cannot reset password when authenticating over "%s".', config('firefly.authentication_guard'));
             Log::error($message);
 
@@ -131,8 +131,8 @@ class ForgotPasswordController extends Controller
         }
 
         // is allowed to?
-        $singleUserMode    = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
-        $userCount         = User::count();
+        $singleUserMode     = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
+        $userCount            = User::count();
         $allowRegistration = true;
         $pageTitle         = (string) trans('firefly.forgot_pw_page_title');
         if (true === $singleUserMode && $userCount > 0) {
