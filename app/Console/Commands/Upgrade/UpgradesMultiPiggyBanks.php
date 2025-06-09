@@ -87,9 +87,10 @@ class UpgradesMultiPiggyBanks extends Command
 
     private function upgradePiggyBank(PiggyBank $piggyBank): void
     {
-        if(null === $piggyBank->account) {
+        if (null === $piggyBank->account) {
             // #10432 account has been deleted, delete piggy bank.
             $piggyBank->delete();
+
             return;
         }
         $this->repository->setUser($piggyBank->account->user);
