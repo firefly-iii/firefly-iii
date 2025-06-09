@@ -465,20 +465,27 @@ jobs:
       - name: Upload artifacts
         run: |
           # add zip file to release.
+          echo "Upload $zipName to $releaseName"
           gh release upload $releaseName $zipName
+          echo "Upload $tarName to $releaseName"
           gh release upload $releaseName $tarName
 
           # add sha256 sum to release
+          echo "Upload $zipName.sha256 to $releaseName"
           gh release upload $releaseName $zipName.sha256
+          echo "Upload $tarName.sha256 to $releaseName"
           gh release upload $releaseName $tarName.sha256
 
           # add signatures to release
+          echo "Upload $zipName.asc to $releaseName"
           gh release upload $releaseName $zipName.asc
+          echo "Upload $tarName.asc to $releaseName"
           gh release upload $releaseName $tarName.asc
 
           # get current HEAD and add as file to the release
           HEAD=$(git rev-parse HEAD)
           echo $HEAD > HEAD.txt
+          echo "Upload HEAD.txt to $releaseName"
           gh release upload $releaseName HEAD.txt
 
           # remove all temporary files
