@@ -278,6 +278,8 @@ class Steam
             $carbonKey                            = $carbon->format('Y-m-d');
             // make sure sum is a string:
             $sumOfDay                             = (string) ($entry->sum_of_day ?? '0');
+            // #10426 make sure sum is not in scientific notation.
+            $sumOfDay                             = $this->floatalize($sumOfDay);
 
             // find currency of this entry, does not have to exist.
             $currencies[$entry->transaction_currency_id] ??= TransactionCurrency::find($entry->transaction_currency_id);

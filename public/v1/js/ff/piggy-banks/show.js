@@ -24,4 +24,12 @@ $(function () {
     if (typeof(lineChart) === 'function' && typeof(piggyBankID) !== 'undefined') {
         lineChart('chart/piggy-bank/' + piggyBankID, 'piggy-bank-history');
     }
+
+    // on submit of logout button:
+    $('.reset-link').click(function(e) {
+        console.log('here we are');
+        e.preventDefault();
+        document.getElementById('reset-form').submit();
+        return false;
+    });
 });

@@ -58,7 +58,8 @@ class CorrectsGroupAccounts extends Command
         $handler = new UpdatedGroupEventHandler();
         foreach ($groups as $groupId) {
             $group = TransactionGroup::find($groupId);
-            $event = new UpdatedTransactionGroup($group, true, true);
+            // TODO in theory the "unifyAccounts" method could lead to the need for run recalculations.
+            $event = new UpdatedTransactionGroup($group, true, true, false);
             $handler->unifyAccounts($event);
         }
 

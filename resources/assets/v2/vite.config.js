@@ -83,7 +83,7 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
 
         server: {
             cors: true,
-            origin: 'https://firefly.sd.internal:5173',
+            origin: 'https://192.168.96.154:5173',
             watch: {
                 usePolling: true,
             },

@@ -34,12 +34,6 @@ class TransactionJournalLink extends Model
 {
     use ReturnsIntegerIdTrait;
 
-    protected $casts
-                     = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-        ];
-
     protected $table = 'journal_links';
 
     /**
@@ -108,5 +102,13 @@ class TransactionJournalLink extends Model
         return Attribute::make(
             get: static fn ($value) => (int) $value,
         );
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+        ];
     }
 }

@@ -25,7 +25,6 @@ namespace FireflyIII\Providers;
 
 use FireflyIII\Repositories\Currency\CurrencyRepository;
 use FireflyIII\Repositories\Currency\CurrencyRepository as GroupCurrencyRepository;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface as GroupCurrencyRepositoryInterface;
 use FireflyIII\Repositories\ExchangeRate\ExchangeRateRepository;
 use FireflyIII\Repositories\ExchangeRate\ExchangeRateRepositoryInterface;
@@ -50,8 +49,7 @@ class CurrencyServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(
-            CurrencyRepositoryInterface::class,
-            static function (Application $app) {
+            static function (Application $app): GroupCurrencyRepositoryInterface {
                 /** @var CurrencyRepository $repository */
                 $repository = app(CurrencyRepository::class);
                 // phpstan does not get the reference to auth
@@ -63,8 +61,7 @@ class CurrencyServiceProvider extends ServiceProvider
             }
         );
         $this->app->bind(
-            GroupCurrencyRepositoryInterface::class,
-            static function (Application $app) {
+            static function (Application $app): GroupCurrencyRepositoryInterface {
                 /** @var GroupCurrencyRepository $repository */
                 $repository = app(GroupCurrencyRepository::class);
                 // phpstan does not get the reference to auth
@@ -77,8 +74,7 @@ class CurrencyServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
-            ExchangeRateRepositoryInterface::class,
-            static function (Application $app) {
+            static function (Application $app): ExchangeRateRepositoryInterface {
                 /** @var ExchangeRateRepository $repository */
                 $repository = app(ExchangeRateRepository::class);
                 // phpstan does not get the reference to auth

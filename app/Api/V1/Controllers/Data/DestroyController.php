@@ -64,7 +64,7 @@ class DestroyController extends Controller
     public function destroy(DestroyRequest $request): JsonResponse
     {
         $objects         = $request->getObjects();
-        $this->unused    = $request->boolean('unused', false);
+        $this->unused    = $request->boolean('unused');
 
         $allExceptAssets = [AccountTypeEnum::BENEFICIARY->value, AccountTypeEnum::CASH->value, AccountTypeEnum::CREDITCARD->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::EXPENSE->value, AccountTypeEnum::IMPORT->value, AccountTypeEnum::INITIAL_BALANCE->value, AccountTypeEnum::LIABILITY_CREDIT->value, AccountTypeEnum::RECONCILIATION->value, AccountTypeEnum::REVENUE->value];
         $all             = [AccountTypeEnum::ASSET->value, AccountTypeEnum::BENEFICIARY->value, AccountTypeEnum::CASH->value, AccountTypeEnum::CREDITCARD->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::EXPENSE->value, AccountTypeEnum::IMPORT->value, AccountTypeEnum::INITIAL_BALANCE->value, AccountTypeEnum::LIABILITY_CREDIT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::RECONCILIATION->value];
@@ -176,14 +176,14 @@ class DestroyController extends Controller
         foreach ($collection as $account) {
             $count = $account->transactions()->count();
             if (true === $this->unused && 0 === $count) {
-                app('log')->info(sprintf('Deleted unused account #%d "%s"', $account->id, $account->name));
+                Log::info(sprintf('Deleted unused account #%d "%s"', $account->id, $account->name));
                 Log::channel('audit')->info(sprintf('Deleted unused account #%d "%s"', $account->id, $account->name));
                 $service->destroy($account, null);
 
                 continue;
             }
             if (false === $this->unused) {
-                app('log')->info(sprintf('Deleting account #%d "%s"', $account->id, $account->name));
+                Log::info(sprintf('Deleting account #%d "%s"', $account->id, $account->name));
                 Log::channel('audit')->warning(sprintf('Deleted account #%d "%s"', $account->id, $account->name));
                 $service->destroy($account, null);
             }

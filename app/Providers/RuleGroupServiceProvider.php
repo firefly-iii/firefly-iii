@@ -46,8 +46,7 @@ class RuleGroupServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(
-            RuleGroupRepositoryInterface::class,
-            static function (Application $app) {
+            static function (Application $app): RuleGroupRepositoryInterface {
                 /** @var RuleGroupRepository $repository */
                 $repository = app(RuleGroupRepository::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)

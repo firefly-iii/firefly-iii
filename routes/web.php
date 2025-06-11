@@ -183,7 +183,7 @@ Route::group(
 
         // show
         Route::get('show/{account}/all', ['uses' => 'Account\ShowController@showAll', 'as' => 'show.all']);
-        Route::get('show/{account}/{start_date?}/{end_date?}', ['uses' => 'Account\ShowController@show', 'as' => 'show'])
+        Route::get('show/{account?}/{start_date?}/{end_date?}', ['uses' => 'Account\ShowController@show', 'as' => 'show'])
             ->where(['start_date' => DATEFORMAT])
             ->where(['end_date' => DATEFORMAT])
         ;
@@ -255,7 +255,7 @@ Route::group(
         Route::get('create', ['uses' => 'Bill\CreateController@create', 'as' => 'create']);
         Route::get('edit/{bill}', ['uses' => 'Bill\EditController@edit', 'as' => 'edit']);
         Route::get('delete/{bill}', ['uses' => 'Bill\DeleteController@delete', 'as' => 'delete']);
-        Route::get('show/{bill}', ['uses' => 'Bill\ShowController@show', 'as' => 'show']);
+        Route::get('show/{bill?}', ['uses' => 'Bill\ShowController@show', 'as' => 'show']);
 
         Route::post('store', ['uses' => 'Bill\CreateController@store', 'as' => 'store']);
         Route::post('update/{bill}', ['uses' => 'Bill\EditController@update', 'as' => 'update']);
@@ -803,6 +803,7 @@ Route::group(
         Route::post('store', ['uses' => 'PiggyBank\CreateController@store', 'as' => 'store']);
         Route::post('update/{piggyBank}', ['uses' => 'PiggyBank\EditController@update', 'as' => 'update']);
         Route::post('destroy/{piggyBank}', ['uses' => 'PiggyBank\DeleteController@destroy', 'as' => 'destroy']);
+        Route::post('reset-history/{piggyBank}', ['uses' => 'PiggyBank\EditController@resetHistory', 'as' => 'reset']);
         Route::post('add/{piggyBank}', ['uses' => 'PiggyBank\AmountController@postAdd', 'as' => 'add']);
         Route::post('remove/{piggyBank}', ['uses' => 'PiggyBank\AmountController@postRemove', 'as' => 'remove']);
 
@@ -1295,7 +1296,7 @@ Route::group(
         // unreconcile
         Route::post('unreconcile/{tj}', ['uses' => 'Transaction\EditController@unreconcile', 'as' => 'unreconcile']);
 
-        Route::get('show/{transactionGroup}', ['uses' => 'Transaction\ShowController@show', 'as' => 'show']);
+        Route::get('show/{transactionGroup?}', ['uses' => 'Transaction\ShowController@show', 'as' => 'show']);
         Route::get('debug/{transactionGroup}', ['uses' => 'Transaction\ShowController@debugShow', 'as' => 'debug']);
     }
 );

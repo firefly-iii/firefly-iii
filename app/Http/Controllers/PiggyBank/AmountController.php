@@ -75,13 +75,22 @@ class AmountController extends Controller
         $totalSaved = $this->piggyRepos->getCurrentAmount($piggyBank);
         foreach ($piggyBank->accounts as $account) {
             $leftOnAccount = $this->piggyRepos->leftOnAccount($piggyBank, $account, $date);
-            $savedSoFar    = $this->piggyRepos->getCurrentAmount($piggyBank, $account);
-            $leftToSave    = bcsub($piggyBank->target_amount, $savedSoFar);
+            $leftToSave    = bcsub($piggyBank->target_amount, $totalSaved);
             $maxAmount     = 0 === bccomp($piggyBank->target_amount, '0') ? $leftOnAccount : min($leftOnAccount, $leftToSave);
+
+            Log::debug(sprintf(
+                'Account "%s", left on account "%s", saved so far "%s", left to save "%s", max amount "%s".',
+                $account->name,
+                $leftOnAccount,
+                $totalSaved,
+                $leftToSave,
+                $maxAmount,
+            ));
+
             $accounts[]    = [
                 'account'         => $account,
                 'left_on_account' => $leftOnAccount,
-                'saved_so_far'    => $savedSoFar,
+                'total_saved'     => $totalSaved,
                 'left_to_save'    => $leftToSave,
                 'max_amount'      => $maxAmount,
             ];
@@ -100,18 +109,18 @@ class AmountController extends Controller
     public function addMobile(PiggyBank $piggyBank)
     {
         /** @var Carbon $date */
-        $date     = session('end', today(config('app.timezone')));
-        $accounts = [];
-        $total    = '0';
+        $date       = session('end', today(config('app.timezone')));
+        $accounts   = [];
+        $total      = '0';
+        $totalSaved = $this->piggyRepos->getCurrentAmount($piggyBank);
         foreach ($piggyBank->accounts as $account) {
             $leftOnAccount = $this->piggyRepos->leftOnAccount($piggyBank, $account, $date);
-            $savedSoFar    = $this->piggyRepos->getCurrentAmount($piggyBank, $account);
-            $leftToSave    = bcsub($piggyBank->target_amount, $savedSoFar);
+            $leftToSave    = bcsub($piggyBank->target_amount, $totalSaved);
             $maxAmount     = 0 === bccomp($piggyBank->target_amount, '0') ? $leftOnAccount : min($leftOnAccount, $leftToSave);
             $accounts[]    = [
                 'account'         => $account,
                 'left_on_account' => $leftOnAccount,
-                'saved_so_far'    => $savedSoFar,
+                'total_saved'     => $totalSaved,
                 'left_to_save'    => $leftToSave,
                 'max_amount'      => $maxAmount,
             ];

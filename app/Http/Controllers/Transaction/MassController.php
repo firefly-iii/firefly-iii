@@ -191,15 +191,15 @@ class MassController extends Controller
      */
     private function updateJournal(int $journalId, MassEditJournalRequest $request): void
     {
-        $journal = $this->repository->find($journalId);
+        $journal           = $this->repository->find($journalId);
         if (!$journal instanceof TransactionJournal) {
             throw new FireflyException(sprintf('Trying to edit non-existent or deleted journal #%d', $journalId));
         }
-        $service = app(JournalUpdateService::class);
+        $service           = app(JournalUpdateService::class);
         // for each field, call the update service.
         $service->setTransactionJournal($journal);
 
-        $data    = [
+        $data              = [
             'date'             => $this->getDateFromRequest($request, $journal->id, 'date'),
             'description'      => $this->getStringFromRequest($request, $journal->id, 'description'),
             'source_id'        => $this->getIntFromRequest($request, $journal->id, 'source_id'),
@@ -217,7 +217,8 @@ class MassController extends Controller
         $service->setData($data);
         $service->update();
         // trigger rules
-        event(new UpdatedTransactionGroup($journal->transactionGroup, true, true));
+        $runRecalculations = $service->isCompareHashChanged();
+        event(new UpdatedTransactionGroup($journal->transactionGroup, true, true, $runRecalculations));
     }
 
     private function getDateFromRequest(MassEditJournalRequest $request, int $journalId, string $key): ?Carbon

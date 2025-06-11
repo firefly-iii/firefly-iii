@@ -84,7 +84,7 @@ class StoreController extends Controller
      */
     public function store(StoreRequest $request): JsonResponse
     {
-        app('log')->debug('Now in API StoreController::store()');
+        Log::debug('Now in API StoreController::store()');
         $data               = $request->getAll();
         $data['user']       = auth()->user();
         $data['user_group'] = $this->userGroup;
@@ -95,13 +95,13 @@ class StoreController extends Controller
         try {
             $transactionGroup = $this->groupRepository->store($data);
         } catch (DuplicateTransactionException $e) {
-            app('log')->warning('Caught a duplicate transaction. Return error message.');
+            Log::warning('Caught a duplicate transaction. Return error message.');
             $validator = Validator::make(['transactions' => [['description' => $e->getMessage()]]], ['transactions.0.description' => new IsDuplicateTransaction()]);
 
             throw new ValidationException($validator);
         } catch (FireflyException $e) {
-            app('log')->warning('Caught an exception. Return error message.');
-            app('log')->error($e->getMessage());
+            Log::warning('Caught an exception. Return error message.');
+            Log::error($e->getMessage());
             $message   = sprintf('Internal exception: %s', $e->getMessage());
             $validator = Validator::make(['transactions' => [['description' => $message]]], ['transactions.0.description' => new IsDuplicateTransaction()]);
 

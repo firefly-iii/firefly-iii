@@ -46,8 +46,7 @@ class AttachmentServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(
-            AttachmentRepositoryInterface::class,
-            static function (Application $app) {
+            static function (Application $app): AttachmentRepositoryInterface {
                 /** @var AttachmentRepositoryInterface $repository */
                 $repository = app(AttachmentRepository::class);
                 // reference to auth is not understood by phpstan.

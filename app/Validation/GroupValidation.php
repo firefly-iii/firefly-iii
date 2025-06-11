@@ -24,10 +24,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation;
 
+use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
-use Illuminate\Validation\Validator;
 
 /**
  * Trait GroupValidation.

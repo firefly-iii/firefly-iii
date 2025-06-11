@@ -49,7 +49,9 @@ class UpdatedGroupEventHandler
         $this->processRules($event);
         $this->recalculateCredit($event);
         $this->triggerWebhooks($event);
-        $this->updateRunningBalance($event);
+        if ($event->runRecalculations) {
+            $this->updateRunningBalance($event);
+        }
 
     }
 

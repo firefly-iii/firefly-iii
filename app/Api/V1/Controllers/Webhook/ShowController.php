@@ -138,7 +138,7 @@ class ShowController extends Controller
             throw new NotFoundHttpException('Webhooks are not enabled.');
         }
 
-        app('log')->debug(sprintf('Now in triggerTransaction(%d, %d)', $webhook->id, $group->id));
+        Log::debug(sprintf('Now in triggerTransaction(%d, %d)', $webhook->id, $group->id));
         Log::channel('audit')->info(sprintf('User triggers webhook #%d on transaction group #%d.', $webhook->id, $group->id));
 
         /** @var MessageGeneratorInterface $engine */
@@ -155,7 +155,7 @@ class ShowController extends Controller
         $engine->generateMessages();
 
         // trigger event to send them:
-        app('log')->debug('send event RequestedSendWebhookMessages');
+        Log::debug('send event RequestedSendWebhookMessages');
         event(new RequestedSendWebhookMessages());
 
         return response()->json([], 204);

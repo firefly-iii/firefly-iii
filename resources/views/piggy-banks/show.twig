@@ -54,8 +54,20 @@
                                 </td>
                             </tr>
                         {% endif %}
+                        {% for account in piggy.accounts %}
+                            <tr>
+                                <td>
+                                    {{ 'saved_so_far'|_ }}
+                                    (<a href="{{ route('accounts.show', account.id) }}">{{ account.name }}</a>)
+                                </td>
+                                <td>
+                                    {{ formatAmountBySymbol(account.current_amount, piggy.currency_symbol, piggy.currency_decimal_places) }}
+                                </td>
+                            </tr>
+
+                        {% endfor %}
                         <tr>
-                            <td>{{ 'saved_so_far'|_ }}</td>
+                            <td>{{ 'saved_so_far_total'|_ }}</td>
                             <td>
                                 {{ formatAmountBySymbol(piggy.current_amount, piggy.currency_symbol, piggy.currency_decimal_places) }}
                             </td>
@@ -102,7 +114,7 @@
             </div>
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'event_history'|_ }}</h3>
+                    <h3 class="box-title">{{ 'event_history'|_ }} (<a onclick="return confirm('{{ 'reset_history_confirm'|_|escape('js') }}');" class="reset-link" href="#">{{ 'reset_history'|_ }}</a>)</h3>
                 </div>
                 <div class="box-body no-padding" id="piggyEvents">
                     {% include 'list/piggy-bank-events' %}
@@ -140,6 +152,9 @@
             </div>
         {% endif %}
     </div>
+    <form id="reset-form" action="{{ route('piggy-banks.reset', [piggyBank.id]) }}" method="POST" style="display: none;">
+        <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+    </form>
 {% endblock %}
 
 {% block scripts %}

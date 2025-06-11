@@ -114,6 +114,7 @@
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.9",
         "barryvdh/laravel-ide-helper": "^3",
+        "driftingly/rector-laravel": "^2.0",
         "fakerphp/faker": "1.*",
         "filp/whoops": "2.*",
         "larastan/larastan": "^3",

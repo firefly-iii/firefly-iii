@@ -73,8 +73,8 @@ class PiggyBankEventTransformer extends AbstractTransformer
 
         return [
             'id'                      => (string) $event->id,
-            'created_at'              => $event->created_at->toAtomString(),
-            'updated_at'              => $event->updated_at->toAtomString(),
+            'created_at'              => $event->created_at?->toAtomString(),
+            'updated_at'              => $event->updated_at?->toAtomString(),
             'amount'                  => app('steam')->bcround($event->amount, $currency->decimal_places),
             'currency_id'             => (string) $currency->id,
             'currency_code'           => $currency->code,

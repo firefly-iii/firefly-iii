@@ -144,11 +144,37 @@ class TransactionGroupTransformer extends AbstractTransformer
 
             'foreign_currency_id'             => $this->stringFromArray($transaction, 'foreign_currency_id', null),
             'foreign_currency_code'           => $transaction['foreign_currency_code'],
+            'foreign_currency_name'           => $transaction['foreign_currency_name'],
             'foreign_currency_symbol'         => $transaction['foreign_currency_symbol'],
             'foreign_currency_decimal_places' => $transaction['foreign_currency_decimal_places'],
 
             'amount'                          => $amount,
             'foreign_amount'                  => $foreignAmount,
+
+            // native amount, defaults to NULL when convertToNative is false.
+            'native_amount'                   => $transaction['native_amount'] ?? null,
+
+            // native currency, always present.
+            'native_currency_id'              => $transaction['native_currency']['id'] ?? null,
+            'native_currency_code'            => $transaction['native_currency']['code'] ?? null,
+            'native_currency_name'            => $transaction['native_currency']['name'] ?? null,
+            'native_currency_symbol'          => $transaction['native_currency']['symbol'] ?? null,
+            'native_currency_decimal_places'  => $transaction['native_currency']['decimal_places'] ?? null,
+
+            // source balance after
+            'source_balance_after'            => $transaction['source_balance_after'] ?? null,
+            'source_balance_dirty'            => $transaction['source_balance_dirty'],
+
+            // destination balance after
+            'destination_balance_after'       => $transaction['destination_balance_after'] ?? null,
+            'destination_balance_dirty'       => $transaction['destination_balance_dirty'],
+
+            // balance before and after, if not dirty.
+            // 'running_balance_dirty'                  => $transaction['balance_dirty'] ?? false,
+            // 'running_balance_before'                  => $transaction['balance_before'] ?? null,
+            // 'running_balance_after'                   => $transaction['balance_after'] ?? null,
+
+
 
             'description'                     => $transaction['description'],
 

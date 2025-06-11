@@ -34,16 +34,6 @@ class Location extends Model
 {
     use ReturnsIntegerIdTrait;
 
-    protected $casts
-                        = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'deleted_at' => 'datetime',
-            'zoomLevel'  => 'int',
-            'latitude'   => 'float',
-            'longitude'  => 'float',
-        ];
-
     protected $fillable = ['locatable_id', 'locatable_type', 'latitude', 'longitude', 'zoom_level'];
 
     /**
@@ -81,5 +71,17 @@ class Location extends Model
         return Attribute::make(
             get: static fn ($value) => (int) $value,
         );
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
+            'zoomLevel'  => 'int',
+            'latitude'   => 'float',
+            'longitude'  => 'float',
+        ];
     }
 }

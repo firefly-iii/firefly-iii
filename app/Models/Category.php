@@ -40,16 +40,6 @@ class Category extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    protected $casts
-                        = [
-            'created_at'    => 'datetime',
-            'updated_at'    => 'datetime',
-            'deleted_at'    => 'datetime',
-            'encrypted'     => 'boolean',
-            'user_id'       => 'integer',
-            'user_group_id' => 'integer',
-        ];
-
     protected $fillable = ['user_id', 'user_group_id', 'name'];
 
     protected $hidden   = ['encrypted'];
@@ -103,5 +93,17 @@ class Category extends Model
     public function transactions(): BelongsToMany
     {
         return $this->belongsToMany(Transaction::class, 'category_transaction', 'category_id');
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'created_at'    => 'datetime',
+            'updated_at'    => 'datetime',
+            'deleted_at'    => 'datetime',
+            'encrypted'     => 'boolean',
+            'user_id'       => 'integer',
+            'user_group_id' => 'integer',
+        ];
     }
 }

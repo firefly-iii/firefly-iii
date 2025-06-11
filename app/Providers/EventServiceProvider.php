@@ -31,6 +31,7 @@ use FireflyIII\Events\Model\BudgetLimit\Created;
 use FireflyIII\Events\Model\BudgetLimit\Deleted;
 use FireflyIII\Events\Model\BudgetLimit\Updated;
 use FireflyIII\Events\Model\PiggyBank\ChangedAmount;
+use FireflyIII\Events\Model\PiggyBank\ChangedName;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnObject;
 use FireflyIII\Events\NewVersionAvailable;
@@ -209,6 +210,9 @@ class EventServiceProvider extends ServiceProvider
             // piggy bank related events:
             ChangedAmount::class                   => [
                 'FireflyIII\Handlers\Events\Model\PiggyBankEventHandler@changePiggyAmount',
+            ],
+            ChangedName::class                     => [
+                'FireflyIII\Handlers\Events\Model\PiggyBankEventHandler@changedPiggyBankName',
             ],
 
             // budget related events: CRUD budget limit

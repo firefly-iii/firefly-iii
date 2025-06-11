@@ -40,19 +40,6 @@ class Tag extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    protected $casts
-                        = [
-            'created_at'    => 'datetime',
-            'updated_at'    => 'datetime',
-            'deleted_at'    => 'datetime',
-            'date'          => SeparateTimezoneCaster::class,
-            'zoomLevel'     => 'int',
-            'latitude'      => 'float',
-            'longitude'     => 'float',
-            'user_id'       => 'integer',
-            'user_group_id' => 'integer',
-        ];
-
     protected $fillable = ['user_id', 'user_group_id', 'tag', 'date', 'date_tz', 'description', 'tagMode'];
 
     protected $hidden   = ['zoomLevel', 'latitude', 'longitude'];
@@ -98,5 +85,20 @@ class Tag extends Model
     public function transactionJournals(): BelongsToMany
     {
         return $this->belongsToMany(TransactionJournal::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'created_at'    => 'datetime',
+            'updated_at'    => 'datetime',
+            'deleted_at'    => 'datetime',
+            'date'          => SeparateTimezoneCaster::class,
+            'zoomLevel'     => 'int',
+            'latitude'      => 'float',
+            'longitude'     => 'float',
+            'user_id'       => 'integer',
+            'user_group_id' => 'integer',
+        ];
     }
 }

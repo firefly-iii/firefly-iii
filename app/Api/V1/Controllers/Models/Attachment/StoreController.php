@@ -80,7 +80,7 @@ class StoreController extends Controller
 
             throw new NotFoundHttpException();
         }
-        app('log')->debug(sprintf('Now in %s', __METHOD__));
+        Log::debug(sprintf('Now in %s', __METHOD__));
         $data        = $request->getAll();
         $attachment  = $this->repository->store($data);
         $manager     = $this->getManager();
@@ -109,13 +109,13 @@ class StoreController extends Controller
         $helper = app(AttachmentHelperInterface::class);
         $body   = $request->getContent();
         if ('' === $body) {
-            app('log')->error('Body of attachment is empty.');
+            Log::error('Body of attachment is empty.');
 
             return response()->json([], 422);
         }
         $result = $helper->saveAttachmentFromApi($attachment, $body);
         if (false === $result) {
-            app('log')->error('Could not save attachment from API.');
+            Log::error('Could not save attachment from API.');
 
             return response()->json([], 422);
         }

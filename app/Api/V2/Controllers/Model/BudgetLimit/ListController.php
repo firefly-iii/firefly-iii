@@ -53,7 +53,7 @@ class ListController extends Controller
      */
     public function index(): JsonResponse
     {
-        return response()->json([]);
+        return response()->json();
         //        throw new FireflyException('Needs refactoring, move to IndexController.');
         //        $pageSize   = $this->parameters->get('limit');
         //        $dates      = $request->getAll();

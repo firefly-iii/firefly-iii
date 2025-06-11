@@ -25,4 +25,12 @@
 
 SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
+echo $1
+
+if [ "$1" == "--dry-run" ]; then
+    echo "Running rector in dry run."
+    $SCRIPT_DIR/../vendor/bin/rector --config $SCRIPT_DIR/rector.php --dry-run
+    exit $?
+fi
+
 $SCRIPT_DIR/../vendor/bin/rector --config $SCRIPT_DIR/rector.php

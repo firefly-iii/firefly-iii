@@ -38,16 +38,17 @@ export function addAutocomplete(options) {
                 'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
             }
         },
-        queryParam: 'filter[query]',
+        queryParam: 'query',
         hiddenInput: true,
         // preventBrowserAutocomplete: true,
         highlightTyped: true,
         liveServer: true,
     };
     if (typeof options.account_types !== 'undefined' && options.account_types.length > 0) {
-        params.serverParams['filter[account_types]'] = options.account_types;
+        params.serverParams['types'] = options.account_types;
     }
     if (typeof options.onRenderItem !== 'undefined' && null !== options.onRenderItem) {
+        console.log('overrule onRenderItem.');
         params.onRenderItem = options.onRenderItem;
     }
     if (options.valueField) {

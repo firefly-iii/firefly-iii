@@ -30,6 +30,7 @@ use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Models\AccountBalanceCalculator;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -140,6 +141,7 @@ class CorrectsUnevenAmount extends Command
         /** @var stdClass $entry */
         foreach ($journals as $entry) {
             $sum = (string) $entry->the_sum;
+            $sum = Steam::floatalize($sum);
             if (!is_numeric($sum)
                 || '' === $sum // @phpstan-ignore-line
                 || str_contains($sum, 'e')

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Carbon\Carbon;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Builder;
@@ -38,25 +39,6 @@ class Transaction extends Model
     use HasFactory;
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
-
-    protected $casts
-                      = [
-            'created_at'            => 'datetime',
-            'updated_at'            => 'datetime',
-            'deleted_at'            => 'datetime',
-            'identifier'            => 'int',
-            'encrypted'             => 'boolean', // model does not have these fields though
-            'bill_name_encrypted'   => 'boolean',
-            'reconciled'            => 'boolean',
-            'balance_dirty'         => 'boolean',
-            'balance_before'        => 'string',
-            'balance_after'         => 'string',
-            'date'                  => 'datetime',
-            'amount'                => 'string',
-            'foreign_amount'        => 'string',
-            'native_amount'         => 'string',
-            'native_foreign_amount' => 'string',
-        ];
 
     protected $fillable
                       = [
@@ -110,7 +92,8 @@ class Transaction extends Model
     /**
      * Check for transactions AFTER a specified date.
      */
-    public function scopeAfter(Builder $query, Carbon $date): void
+    #[Scope]
+    protected function after(Builder $query, Carbon $date): void
     {
         if (!self::isJoined($query, 'transaction_journals')) {
             $query->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id');
@@ -137,7 +120,8 @@ class Transaction extends Model
     /**
      * Check for transactions BEFORE the specified date.
      */
-    public function scopeBefore(Builder $query, Carbon $date): void
+    #[Scope]
+    protected function before(Builder $query, Carbon $date): void
     {
         if (!self::isJoined($query, 'transaction_journals')) {
             $query->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id');
@@ -145,7 +129,8 @@ class Transaction extends Model
         $query->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'));
     }
 
-    public function scopeTransactionTypes(Builder $query, array $types): void
+    #[Scope]
+    protected function transactionTypes(Builder $query, array $types): void
     {
         if (!self::isJoined($query, 'transaction_journals')) {
             $query->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id');
@@ -214,5 +199,26 @@ class Transaction extends Model
         return Attribute::make(
             get: static fn ($value) => (int) $value,
         );
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'created_at'            => 'datetime',
+            'updated_at'            => 'datetime',
+            'deleted_at'            => 'datetime',
+            'identifier'            => 'int',
+            'encrypted'             => 'boolean', // model does not have these fields though
+            'bill_name_encrypted'   => 'boolean',
+            'reconciled'            => 'boolean',
+            'balance_dirty'         => 'boolean',
+            'balance_before'        => 'string',
+            'balance_after'         => 'string',
+            'date'                  => 'datetime',
+            'amount'                => 'string',
+            'foreign_amount'        => 'string',
+            'native_amount'         => 'string',
+            'native_foreign_amount' => 'string',
+        ];
     }
 }

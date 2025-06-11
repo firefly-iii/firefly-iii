@@ -48,8 +48,7 @@ class TagServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(
-            TagRepositoryInterface::class,
-            static function (Application $app) {
+            static function (Application $app): TagRepositoryInterface {
                 /** @var TagRepository $repository */
                 $repository = app(TagRepository::class);
 
@@ -62,8 +61,7 @@ class TagServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
-            OperationsRepositoryInterface::class,
-            static function (Application $app) {
+            static function (Application $app): OperationsRepositoryInterface {
                 /** @var OperationsRepository $repository */
                 $repository = app(OperationsRepository::class);
 

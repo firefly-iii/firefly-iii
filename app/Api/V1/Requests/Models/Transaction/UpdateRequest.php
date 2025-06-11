@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Transaction;
 
+use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Rules\BelongsUser;
@@ -37,7 +38,6 @@ use FireflyIII\Validation\GroupValidation;
 use FireflyIII\Validation\TransactionValidation;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Validator;
 
 /**
  * Class UpdateRequest
@@ -183,7 +183,7 @@ class UpdateRequest extends FormRequest
         foreach ($this->dateFields as $fieldName) {
             app('log')->debug(sprintf('Now at date field %s', $fieldName));
             if (array_key_exists($fieldName, $transaction)) {
-                app('log')->debug(sprintf('New value: "%s"', (string) $transaction[$fieldName]));
+                Log::debug(sprintf('New value: "%s"', $transaction[$fieldName]));
                 $current[$fieldName] = $this->dateFromValue((string) $transaction[$fieldName]);
             }
         }

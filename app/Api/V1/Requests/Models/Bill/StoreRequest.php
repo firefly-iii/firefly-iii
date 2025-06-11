@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Bill;
 
+use Illuminate\Contracts\Validation\Validator;
 use ValueError;
 use TypeError;
 use FireflyIII\Rules\IsBoolean;
@@ -32,7 +33,6 @@ use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Validator;
 
 /**
  * Class StoreRequest
@@ -47,7 +47,7 @@ class StoreRequest extends FormRequest
      */
     public function getAll(): array
     {
-        app('log')->debug('Raw fields in Bill StoreRequest', $this->all());
+        Log::debug('Raw fields in Bill StoreRequest', $this->all());
         $fields = [
             'name'               => ['name', 'convertString'],
             'amount_min'         => ['amount_min', 'convertString'],
@@ -128,7 +128,6 @@ class StoreRequest extends FormRequest
             $failed = $validator->fails();
         } catch (TypeError $e) {
             Log::error($e->getMessage());
-            $failed = false;
         }
         if ($failed) {
             Log::channel('audit')->error(sprintf('Validation errors in %s', self::class), $validator->errors()->toArray());

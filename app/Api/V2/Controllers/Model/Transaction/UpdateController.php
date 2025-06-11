@@ -70,7 +70,7 @@ class UpdateController extends Controller
         $applyRules       = $data['apply_rules'] ?? true;
         $fireWebhooks     = $data['fire_webhooks'] ?? true;
 
-        event(new UpdatedTransactionGroup($transactionGroup, $applyRules, $fireWebhooks));
+        event(new UpdatedTransactionGroup($transactionGroup, $applyRules, $fireWebhooks, true));
         app('preferences')->mark();
 
         /** @var User $admin */

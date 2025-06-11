@@ -35,6 +35,7 @@ use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\LinkTypeTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 use League\Fractal\Resource\Item;
 
 /**
@@ -73,6 +74,7 @@ class UpdateController extends Controller
      * Update object.
      *
      * @throws FireflyException
+     * @throws ValidationException
      */
     public function update(UpdateRequest $request, LinkType $linkType): JsonResponse
     {

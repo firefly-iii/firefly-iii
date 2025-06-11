@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V2\Request\Model\Transaction;
 
+use Illuminate\Contracts\Validation\Validator;
 use Override;
 use FireflyIII\Api\V1\Requests\Models\AvailableBudget\Request;
 use FireflyIII\Exceptions\FireflyException;
@@ -38,7 +39,6 @@ use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\GroupValidation;
 use FireflyIII\Validation\TransactionValidation;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Validator;
 
 /**
  * Class UpdateRequest
@@ -68,7 +68,7 @@ class UpdateRequest extends Request
     #[Override]
     public function getAll(): array
     {
-        app('log')->debug(sprintf('Now in %s', __METHOD__));
+        Log::debug(sprintf('Now in %s', __METHOD__));
         $this->integerFields  = ['order', 'currency_id', 'foreign_currency_id', 'transaction_journal_id', 'source_id', 'destination_id', 'budget_id', 'category_id', 'bill_id', 'recurrence_id'];
         $this->dateFields     = ['date', 'interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date'];
         $this->textareaFields = ['notes'];
@@ -101,7 +101,7 @@ class UpdateRequest extends Request
      */
     private function getTransactionData(): array
     {
-        app('log')->debug(sprintf('Now in %s', __METHOD__));
+        Log::debug(sprintf('Now in %s', __METHOD__));
         $return       = [];
 
         /** @var null|array $transactions */
@@ -185,9 +185,9 @@ class UpdateRequest extends Request
     private function getDateData(array $current, array $transaction): array
     {
         foreach ($this->dateFields as $fieldName) {
-            app('log')->debug(sprintf('Now at date field %s', $fieldName));
+            Log::debug(sprintf('Now at date field %s', $fieldName));
             if (array_key_exists($fieldName, $transaction)) {
-                app('log')->debug(sprintf('New value: "%s"', (string) $transaction[$fieldName]));
+                Log::debug(sprintf('New value: "%s"', $transaction[$fieldName]));
                 $current[$fieldName] = $this->dateFromValue((string) $transaction[$fieldName]);
             }
         }
@@ -252,7 +252,7 @@ class UpdateRequest extends Request
     #[Override]
     public function rules(): array
     {
-        app('log')->debug(sprintf('Now in %s', __METHOD__));
+        Log::debug(sprintf('Now in %s', __METHOD__));
         $validProtocols = config('firefly.valid_url_protocols');
 
         return [
@@ -336,7 +336,7 @@ class UpdateRequest extends Request
     #[Override]
     public function withValidator(Validator $validator): void
     {
-        app('log')->debug('Now in withValidator');
+        Log::debug('Now in withValidator');
 
         /** @var TransactionGroup $transactionGroup */
         $transactionGroup = $this->route()->parameter('userGroupTransaction');

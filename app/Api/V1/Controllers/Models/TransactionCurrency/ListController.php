@@ -250,10 +250,8 @@ class ListController extends Controller
         $collection     = $unfiltered->filter(
             static function (Recurrence $recurrence) use ($currency) {  // @phpstan-ignore-line
                 /** @var RecurrenceTransaction $transaction */
-                foreach ($recurrence->recurrenceTransactions as $transaction) {
-                    if ($transaction->transaction_currency_id === $currency->id || $transaction->foreign_currency_id === $currency->id) {
-                        return $recurrence;
-                    }
+                if (array_any($recurrence->recurrenceTransactions, fn ($transaction) => $transaction->transaction_currency_id === $currency->id || $transaction->foreign_currency_id === $currency->id)) {
+                    return $recurrence;
                 }
 
                 return null;
@@ -297,10 +295,8 @@ class ListController extends Controller
         $collection  = $unfiltered->filter(
             static function (Rule $rule) use ($currency) { // @phpstan-ignore-line
                 /** @var RuleTrigger $trigger */
-                foreach ($rule->ruleTriggers as $trigger) {
-                    if ('currency_is' === $trigger->trigger_type && $currency->name === $trigger->trigger_value) {
-                        return $rule;
-                    }
+                if (array_any($rule->ruleTriggers, fn ($trigger) => 'currency_is' === $trigger->trigger_type && $currency->name === $trigger->trigger_value)) {
+                    return $rule;
                 }
 
                 return null;

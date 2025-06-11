@@ -32,6 +32,7 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Class DestroyController
@@ -65,6 +66,7 @@ class DestroyController extends Controller
      * Remove the specified resource from storage.
      *
      * @throws FireflyException
+     * @throws ValidationException
      */
     public function destroy(TransactionCurrency $currency): JsonResponse
     {

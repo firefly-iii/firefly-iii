@@ -34,6 +34,7 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepository;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class DestroyController
@@ -73,7 +74,7 @@ class DestroyController extends Controller
      */
     public function destroy(TransactionGroup $transactionGroup): JsonResponse
     {
-        app('log')->debug(sprintf('Now in %s', __METHOD__));
+        Log::debug(sprintf('Now in %s', __METHOD__));
         // grab asset account(s) from group:
         $accounts = [];
 
@@ -95,7 +96,7 @@ class DestroyController extends Controller
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            app('log')->debug(sprintf('Now going to trigger updated account event for account #%d', $account->id));
+            Log::debug(sprintf('Now going to trigger updated account event for account #%d', $account->id));
             event(new UpdatedAccount($account));
         }
 

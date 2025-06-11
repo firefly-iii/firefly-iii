@@ -37,35 +37,20 @@ class TransactionJournalMeta extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    protected $casts
-                        = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'deleted_at' => 'datetime',
-        ];
-
     protected $fillable = ['transaction_journal_id', 'name', 'data', 'hash'];
 
     protected $table    = 'journal_meta';
 
     /**
-     * @param mixed $value
-     *
      * @return mixed
      */
-    public function getDataAttribute($value)
+    protected function data(): Attribute
     {
-        return json_decode((string) $value, false);
-    }
+        return Attribute::make(get: fn ($value) => json_decode((string) $value, false), set: function ($value) {
+            $data = json_encode($value);
 
-    /**
-     * @param mixed $value
-     */
-    public function setDataAttribute($value): void
-    {
-        $data                     = json_encode($value);
-        $this->attributes['data'] = $data;
-        $this->attributes['hash'] = hash('sha256', (string) $data);
+            return ['data' => $data, 'hash' => hash('sha256', (string) $data)];
+        });
     }
 
     public function transactionJournal(): BelongsTo
@@ -78,5 +63,14 @@ class TransactionJournalMeta extends Model
         return Attribute::make(
             get: static fn ($value) => (int) $value,
         );
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
+        ];
     }
 }

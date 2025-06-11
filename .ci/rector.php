@@ -25,10 +25,17 @@ declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
 use Rector\EarlyReturn\Rector\If_\ChangeOrIfContinueToMultiContinueRector;
+use Rector\Transform\Rector\String_\StringToClassConstantRector;
+use RectorLaravel\Set\LaravelLevelSetList;
+
 
 return RectorConfig::configure()
     ->withSkip([
         ChangeOrIfContinueToMultiContinueRector::class,
+        StringToClassConstantRector::class => [
+            __DIR__ . '/../app/Http/Controllers/Auth/LoginController.php',
+        ],
+        __DIR__.'/../bootstrap/cache/*'
     ])
     ->withPaths([
         __DIR__ . '/../app',
@@ -39,6 +46,12 @@ return RectorConfig::configure()
         __DIR__ . '/../routes',
         __DIR__ . '/../tests',
     ])
+    ->withSets([
+        LaravelLevelSetList::UP_TO_LARAVEL_120,
+    ])
+//    ->withConfiguredRule(ReplaceServiceContainerCallArgRector::class, [
+//        new ReplaceServiceContainerCallArg('log', new ClassConstFetch(new Name('Illuminate\Support\Facades\Log'), 'class')),
+//    ])
     // uncomment to reach your current PHP version
     ->withPhpSets()
     ->withPreparedSets(

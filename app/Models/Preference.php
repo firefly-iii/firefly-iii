@@ -35,15 +35,6 @@ class Preference extends Model
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;
 
-    protected $casts
-                        = [
-            'created_at'    => 'datetime',
-            'updated_at'    => 'datetime',
-            'data'          => 'array',
-            'user_id'       => 'integer',
-            'user_group_id' => 'integer',
-        ];
-
     protected $fillable = ['user_id', 'data', 'name', 'user_group_id'];
 
     /**
@@ -101,5 +92,16 @@ class Preference extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'created_at'    => 'datetime',
+            'updated_at'    => 'datetime',
+            'data'          => 'array',
+            'user_id'       => 'integer',
+            'user_group_id' => 'integer',
+        ];
     }
 }

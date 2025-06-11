@@ -39,7 +39,7 @@ class FireflyConfig
 {
     public function delete(string $name): void
     {
-        $fullName = 'ff-config-'.$name;
+        $fullName = 'ff3-config-'.$name;
         if (Cache::has($fullName)) {
             Cache::forget($fullName);
         }
@@ -81,7 +81,7 @@ class FireflyConfig
      */
     public function get(string $name, mixed $default = null): ?Configuration
     {
-        $fullName = 'ff-config-'.$name;
+        $fullName = 'ff3-config-'.$name;
         if (Cache::has($fullName)) {
             return Cache::get($fullName);
         }

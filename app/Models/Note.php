@@ -34,13 +34,6 @@ class Note extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    protected $casts
-                        = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'deleted_at' => 'datetime',
-        ];
-
     protected $fillable = ['title', 'text', 'noteable_id', 'noteable_type'];
 
     /**
@@ -56,5 +49,14 @@ class Note extends Model
         return Attribute::make(
             get: static fn ($value) => (int) $value,
         );
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
+        ];
     }
 }

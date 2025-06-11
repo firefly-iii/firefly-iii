@@ -37,5 +37,5 @@ class UpdatedTransactionGroup extends Event
     /**
      * Create a new event instance.
      */
-    public function __construct(public TransactionGroup $transactionGroup, public bool $applyRules, public bool $fireWebhooks) {}
+    public function __construct(public TransactionGroup $transactionGroup, public bool $applyRules, public bool $fireWebhooks, public bool $runRecalculations) {}
 }

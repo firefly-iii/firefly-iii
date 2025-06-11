@@ -36,14 +36,6 @@ class InvitedUser extends Model
 {
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;
-
-    protected $casts
-                        = [
-            'expires'       => SeparateTimezoneCaster::class,
-            'redeemed'      => 'boolean',
-            'user_id'       => 'integer',
-            'user_group_id' => 'integer',
-        ];
     protected $fillable = ['user_group_id', 'user_id', 'email', 'invite_code', 'expires', 'expires_tz', 'redeemed'];
 
     /**
@@ -67,5 +59,15 @@ class InvitedUser extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'expires'       => SeparateTimezoneCaster::class,
+            'redeemed'      => 'boolean',
+            'user_id'       => 'integer',
+            'user_group_id' => 'integer',
+        ];
     }
 }

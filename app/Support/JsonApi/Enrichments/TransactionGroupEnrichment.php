@@ -30,10 +30,12 @@ use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Location;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Tag;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Models\UserGroup;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -52,6 +54,7 @@ class TransactionGroupEnrichment implements EnrichmentInterface
     private array          $notes; // @phpstan-ignore-line
     private array          $tags;
     private User           $user;
+    private TransactionCurrency $nativeCurrency;
     private UserGroup      $userGroup;
 
     public function __construct()
@@ -63,6 +66,7 @@ class TransactionGroupEnrichment implements EnrichmentInterface
         $this->locations       = [];
         $this->attachmentCount = [];
         $this->dateFields      = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date'];
+        $this->nativeCurrency  = Amount::getNativeCurrency();
     }
 
     #[Override]
@@ -192,8 +196,9 @@ class TransactionGroupEnrichment implements EnrichmentInterface
         $metaData         = $this->metaData;
         $locations        = $this->locations;
         $attachmentCount  = $this->attachmentCount;
+        $nativeCurrency   = $this->nativeCurrency;
 
-        $this->collection = $this->collection->map(function (array $item) use ($notes, $tags, $metaData, $locations, $attachmentCount) {
+        $this->collection = $this->collection->map(function (array $item) use ($nativeCurrency, $notes, $tags, $metaData, $locations, $attachmentCount) {
             foreach ($item['transactions'] as $index => $transaction) {
                 $journalId                                        = (int) $transaction['transaction_journal_id'];
 
@@ -211,6 +216,15 @@ class TransactionGroupEnrichment implements EnrichmentInterface
                     'latitude'   => null,
                     'longitude'  => null,
                     'zoom_level' => null,
+                ];
+
+                // native currency
+                $item['transactions'][$index]['native_currency']  = [
+                    'id'               => (string) $nativeCurrency->id,
+                    'code'             => $nativeCurrency->code,
+                    'name'             => $nativeCurrency->name,
+                    'symbol'           => $nativeCurrency->symbol,
+                    'decimal_places'   => $nativeCurrency->decimal_places,
                 ];
 
                 // append meta data

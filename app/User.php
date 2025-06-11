@@ -73,13 +73,6 @@ class User extends Authenticatable
     use HasApiTokens;
     use Notifiable;
     use ReturnsIntegerIdTrait;
-
-    protected $casts
-                        = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'blocked'    => 'boolean',
-        ];
     protected $fillable = ['email', 'password', 'blocked', 'blocked_code'];
     protected $hidden   = ['password', 'remember_token'];
     protected $table    = 'users';
@@ -538,5 +531,14 @@ class User extends Authenticatable
     public function webhooks(): HasMany
     {
         return $this->hasMany(Webhook::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'blocked'    => 'boolean',
+        ];
     }
 }

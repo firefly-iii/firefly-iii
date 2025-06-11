@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\PiggyBank;
 
+use FireflyIII\Events\Model\PiggyBank\ChangedAmount;
 use FireflyIII\User;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
@@ -275,7 +276,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
             $amount = '' === $amount ? '0' : $amount;
             $sum    = bcadd($sum, $amount);
         }
-        // Log::debug(sprintf('Current amount in piggy bank #%d ("%s") is %s', $piggyBank->id, $piggyBank->name, $sum));
+        Log::debug(sprintf('Current amount in piggy bank #%d ("%s") is %s', $piggyBank->id, $piggyBank->name, $sum));
 
         return $sum;
     }
@@ -437,5 +438,15 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         ;
 
         return $search->take($limit)->get(['piggy_banks.*']);
+    }
+
+    public function resetHistory(PiggyBank $piggyBank): void
+    {
+        $piggyBank->piggyBankEvents()->delete();
+        foreach ($piggyBank->accounts as $account) {
+            if (0 !== bccomp('0', $account->pivot->current_amount)) {
+                event(new ChangedAmount($piggyBank, $account->pivot->current_amount, null, null));
+            }
+        }
     }
 }

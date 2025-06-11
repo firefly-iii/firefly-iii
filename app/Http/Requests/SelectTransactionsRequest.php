@@ -23,11 +23,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
-use Carbon\Carbon;
+use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Support\Request\ChecksLogin;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Validator;
 
 /**
  * Class SelectTransactionsRequest.
@@ -41,15 +40,9 @@ class SelectTransactionsRequest extends FormRequest
      */
     public function rules(): array
     {
-        // fixed
-        /** @var Carbon $sessionFirst */
-        $sessionFirst = clone session('first');
-        $first        = $sessionFirst->subDay()->format('Y-m-d');
-        $today        = today(config('app.timezone'))->addDay()->format('Y-m-d');
-
         return [
-            'start'      => 'required|date|after:'.$first,
-            'end'        => 'required|date|before:'.$today,
+            'start'      => 'required|date|after:1900-01-01|before:2099-12-31|before:end|required_with:end',
+            'end'        => 'required|date|after:1900-01-01|before:2099-12-31|after:start|required_with:start',
             'accounts'   => 'required',
             'accounts.*' => 'required|exists:accounts,id|belongsToUser:accounts',
         ];

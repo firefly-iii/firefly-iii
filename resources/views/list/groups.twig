@@ -163,22 +163,31 @@
                     {% endif %}
                 </td>
                 <td style="{{ style|raw }};text-align:right">
+
                     {#  deposit #}
                     {% if transaction.transaction_type_type == 'Deposit' %}
+                        {# amount of deposit #}
                         {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                        {# foreign amount of deposit #}
                         {% if null != transaction.foreign_amount %}
                             ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                         {% endif %}
+                        {# native amount of deposit #}
                         {% if convertToNative and 0 != transaction.native_amount %}
                             ({{ formatAmountBySymbol(transaction.native_amount*-1, defaultCurrency.symbol, defaultCurrency.decimal_places) }})
                         {% endif %}
                         {# transfer #}
                     {% elseif transaction.transaction_type_type == 'Transfer' %}
                         <span class="text-info money-transfer">
-                        {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places, false) }}
+                            {# amount of transfer #}
+                            {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places, false) }}
+
+                            {# foreign amount of transfer #}
                             {% if null != transaction.foreign_amount %}
                                 ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places, false) }})
                             {% endif %}
+
+                            {# native amount of transfer #}
                             {% if convertToNative and 0 != transaction.native_amount %}
                                 ({{ formatAmountBySymbol(transaction.native_amount*-1, defaultCurrency.symbol, defaultCurrency.decimal_places) }})
                             {% endif %}
@@ -244,10 +253,14 @@
 
                         {# THE REST #}
                     {% else %}
+                        {# amount of withdrawal #}
                         {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
+
+                        {# foreign amount of withdrawal #}
                         {% if null != transaction.foreign_amount %}
                             ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                         {% endif %}
+                        {# native amount of withdrawal #}
                         {% if convertToNative and 0 != transaction.native_amount %}
                             ({{ formatAmountBySymbol(transaction.native_amount, defaultCurrency.symbol, defaultCurrency.decimal_places) }})
                         {% endif %}
@@ -263,8 +276,8 @@
                                 {% if currency.id == transaction.currency_id %}
                                     {{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}
                                 {% endif %}
-                                {% if currency.id == transaction.foreign_currency_id and null != transaction.destination_balance_after %}
-                                    {{ formatAmountBySymbol(transaction.destination_balance_after, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }}
+                                {% if currency.id == transaction.foreign_currency_id and null != transaction.destination_balance_after and null != transaction.destination_balance_after %}
+                                    {{ formatAmountBySymbol(transaction.destination_balance_after, transaction.foreign_currency_symbol ?? transaction.currency_symbol, transaction.foreign_currency_decimal_places ?? transaction.currency_decimal_places) }}
                                 {% endif %}
 
                             {% else %}

@@ -28,6 +28,7 @@ use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\System\CronRequest;
 use FireflyIII\Support\Http\Controllers\CronRunner;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class CronController
@@ -44,8 +45,8 @@ class CronController extends Controller
     {
         $config                           = $request->getAll();
 
-        app('log')->debug(sprintf('Now in %s', __METHOD__));
-        app('log')->debug(sprintf('Date is %s', $config['date']->toIsoString()));
+        Log::debug(sprintf('Now in %s', __METHOD__));
+        Log::debug(sprintf('Date is %s', $config['date']->toIsoString()));
         $return                           = [];
         $return['recurring_transactions'] = $this->runRecurring($config['force'], $config['date']);
         $return['auto_budgets']           = $this->runAutoBudget($config['force'], $config['date']);

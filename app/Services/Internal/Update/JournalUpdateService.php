@@ -43,6 +43,7 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\Services\Internal\Support\JournalServiceTrait;
 use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\NullArrayObject;
@@ -58,36 +59,39 @@ class JournalUpdateService
 {
     use JournalServiceTrait;
 
-    private BillRepositoryInterface     $billRepository;
+    private BillRepositoryInterface $billRepository;
     private CurrencyRepositoryInterface $currencyRepository;
-    private array                       $data;
-    private ?Account                    $destinationAccount;
-    private ?Transaction                $destinationTransaction;
-    private array                       $metaDate;
-    private array                       $metaString;
-    private ?Account                    $sourceAccount;
-    private ?Transaction                $sourceTransaction;
-    private ?TransactionGroup           $transactionGroup;
-    private ?TransactionJournal         $transactionJournal;
+    private TransactionGroupRepositoryInterface $transactionGroupRepository;
+    private array $data;
+    private ?Account $destinationAccount;
+    private ?Transaction $destinationTransaction;
+    private array $metaDate;
+    private array $metaString;
+    private ?Account $sourceAccount;
+    private ?Transaction $sourceTransaction;
+    private ?TransactionGroup $transactionGroup;
+    private ?TransactionJournal $transactionJournal;
+    private string $startCompareHash = '';
 
     /**
      * JournalUpdateService constructor.
      */
     public function __construct()
     {
-        $this->destinationAccount     = null;
-        $this->destinationTransaction = null;
-        $this->sourceAccount          = null;
-        $this->sourceTransaction      = null;
-        $this->transactionGroup       = null;
-        $this->transactionJournal     = null;
-        $this->billRepository         = app(BillRepositoryInterface::class);
-        $this->categoryRepository     = app(CategoryRepositoryInterface::class);
-        $this->budgetRepository       = app(BudgetRepositoryInterface::class);
-        $this->tagFactory             = app(TagFactory::class);
-        $this->accountRepository      = app(AccountRepositoryInterface::class);
-        $this->currencyRepository     = app(CurrencyRepositoryInterface::class);
-        $this->metaString             = [
+        $this->destinationAccount         = null;
+        $this->destinationTransaction     = null;
+        $this->sourceAccount              = null;
+        $this->sourceTransaction          = null;
+        $this->transactionGroup           = null;
+        $this->transactionJournal         = null;
+        $this->billRepository             = app(BillRepositoryInterface::class);
+        $this->categoryRepository         = app(CategoryRepositoryInterface::class);
+        $this->budgetRepository           = app(BudgetRepositoryInterface::class);
+        $this->tagFactory                 = app(TagFactory::class);
+        $this->accountRepository          = app(AccountRepositoryInterface::class);
+        $this->currencyRepository         = app(CurrencyRepositoryInterface::class);
+        $this->transactionGroupRepository = app(TransactionGroupRepositoryInterface::class);
+        $this->metaString                 = [
             'sepa_cc',
             'sepa_ct_op',
             'sepa_ct_id',
@@ -102,7 +106,7 @@ class JournalUpdateService
             'external_id',
             'external_url',
         ];
-        $this->metaDate               = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date',
+        $this->metaDate                   = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date',
             'invoice_date', ];
     }
 
@@ -119,10 +123,12 @@ class JournalUpdateService
         $this->budgetRepository->setUser($transactionGroup->user);
         $this->tagFactory->setUser($transactionGroup->user);
         $this->accountRepository->setUser($transactionGroup->user);
+        $this->transactionGroupRepository->setUser($transactionGroup->user);
         $this->destinationAccount     = null;
         $this->destinationTransaction = null;
         $this->sourceAccount          = null;
         $this->sourceTransaction      = null;
+        $this->startCompareHash       = $this->transactionGroupRepository->getCompareHash($transactionGroup);
     }
 
     public function setTransactionJournal(TransactionJournal $transactionJournal): void
@@ -338,7 +344,7 @@ class JournalUpdateService
         }
 
         $sourceInfo   = [
-            'id'     => (int) ($this->data['source_id'] ?? null),
+            'id'     => (int)($this->data['source_id'] ?? null),
             'name'   => $this->data['source_name'] ?? null,
             'iban'   => $this->data['source_iban'] ?? null,
             'number' => $this->data['source_number'] ?? null,
@@ -402,7 +408,7 @@ class JournalUpdateService
         }
 
         $destInfo     = [
-            'id'     => (int) ($this->data['destination_id'] ?? null),
+            'id'     => (int)($this->data['destination_id'] ?? null),
             'name'   => $this->data['destination_name'] ?? null,
             'iban'   => $this->data['destination_iban'] ?? null,
             'number' => $this->data['destination_number'] ?? null,
@@ -468,8 +474,8 @@ class JournalUpdateService
         )
             && TransactionTypeEnum::WITHDRAWAL->value === $type
         ) {
-            $billId                            = (int) ($this->data['bill_id'] ?? 0);
-            $billName                          = (string) ($this->data['bill_name'] ?? '');
+            $billId                            = (int)($this->data['bill_id'] ?? 0);
+            $billName                          = (string)($this->data['bill_name'] ?? '');
             $bill                              = $this->billRepository->findBill($billId, $billName);
             $this->transactionJournal->bill_id = $bill?->id;
             Log::debug('Updated bill ID');
@@ -481,7 +487,7 @@ class JournalUpdateService
      */
     private function updateField(string $fieldName): void
     {
-        if (array_key_exists($fieldName, $this->data) && '' !== (string) $this->data[$fieldName]) {
+        if (array_key_exists($fieldName, $this->data) && '' !== (string)$this->data[$fieldName]) {
             $value                                  = $this->data[$fieldName];
 
             if ('date' === $fieldName) {
@@ -557,7 +563,7 @@ class JournalUpdateService
     {
         // update notes.
         if ($this->hasFields(['notes'])) {
-            $notes = '' === (string) $this->data['notes'] ? null : $this->data['notes'];
+            $notes = '' === (string)$this->data['notes'] ? null : $this->data['notes'];
             $this->storeNotes($this->transactionJournal, $notes);
         }
     }
@@ -605,7 +611,7 @@ class JournalUpdateService
         foreach ($this->metaDate as $field) {
             if ($this->hasFields([$field])) {
                 try {
-                    $value = '' === (string) $this->data[$field] ? null : new Carbon($this->data[$field]);
+                    $value = '' === (string)$this->data[$field] ? null : new Carbon($this->data[$field]);
                 } catch (InvalidDateException|InvalidFormatException $e) { // @phpstan-ignore-line
                     Log::debug(sprintf('%s is not a valid date value: %s', $this->data[$field], $e->getMessage()));
 
@@ -673,7 +679,6 @@ class JournalUpdateService
 
             return;
         }
-
         $origSourceTransaction                = $this->getSourceTransaction();
         $origSourceTransaction->amount        = app('steam')->negative($amount);
         $origSourceTransaction->balance_dirty = true;
@@ -705,7 +710,7 @@ class JournalUpdateService
         $newForeignId    = $this->data['foreign_currency_id'] ?? null;
         $newForeignCode  = $this->data['foreign_currency_code'] ?? null;
         $foreignCurrency = $this->currencyRepository->findCurrencyNull($newForeignId, $newForeignCode)
-                           ?? $foreignCurrency;
+            ?? $foreignCurrency;
 
         // not the same as normal currency
         if (null !== $foreignCurrency && $foreignCurrency->id === $this->transactionJournal->transaction_currency_id) {
@@ -815,5 +820,15 @@ class JournalUpdateService
         }
 
         return false;
+    }
+
+    public function isCompareHashChanged(): bool
+    {
+        Log::debug(sprintf('Now in %s', __METHOD__));
+        $compareHash = $this->transactionGroupRepository->getCompareHash($this->transactionGroup);
+        Log::debug(sprintf('Compare hash is       "%s".', $compareHash));
+        Log::debug(sprintf('Start compare hash is "%s".', $this->startCompareHash));
+
+        return $compareHash !== $this->startCompareHash;
     }
 }

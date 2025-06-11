@@ -67,6 +67,16 @@ class UpdatePiggyBank implements ActionInterface
 
         Log::debug(sprintf('Found piggy bank #%d ("%s")', $piggyBank->id, $piggyBank->name));
 
+        // piggy bank already has an event for this transaction journal?
+        if ($this->alreadyEventPresent($piggyBank, $journal)) {
+            Log::info(sprintf('Piggy bank #%d ("%s") already has an event for transaction journal #%d, so no action will be taken.', $piggyBank->id, $piggyBank->name, $journalObj->id));
+
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_piggy', ['name' => $actionValue])));
+
+            return false;
+        }
+
+
         /** @var Transaction $destination */
         $destination = $journalObj->transactions()->where('amount', '>', 0)->first();
 
@@ -230,5 +240,10 @@ class UpdatePiggyBank implements ActionInterface
         Log::debug(sprintf('Will now add %s to piggy bank.', $amount));
 
         $repository->addAmount($piggyBank, $account, $amount, $journal);
+    }
+
+    private function alreadyEventPresent(PiggyBank $piggyBank, array $journal): bool
+    {
+        return $piggyBank->piggyBankEvents()->where('transaction_journal_id', $journal['transaction_journal_id'])->exists();
     }
 }

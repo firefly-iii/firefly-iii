@@ -39,20 +39,6 @@ class Rule extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    protected $casts
-                        = [
-            'created_at'      => 'datetime',
-            'updated_at'      => 'datetime',
-            'deleted_at'      => 'datetime',
-            'active'          => 'boolean',
-            'order'           => 'int',
-            'stop_processing' => 'boolean',
-            'id'              => 'int',
-            'strict'          => 'boolean',
-            'user_id'         => 'integer',
-            'user_group_id'   => 'integer',
-        ];
-
     protected $fillable = ['rule_group_id', 'order', 'active', 'title', 'description', 'user_id', 'user_group_id', 'strict'];
 
     /**
@@ -98,12 +84,9 @@ class Rule extends Model
         return $this->hasMany(RuleTrigger::class);
     }
 
-    /**
-     * @param mixed $value
-     */
-    public function setDescriptionAttribute($value): void
+    protected function description(): Attribute
     {
-        $this->attributes['description'] = e($value);
+        return Attribute::make(set: fn ($value) => ['description' => e($value)]);
     }
 
     public function userGroup(): BelongsTo
@@ -123,5 +106,21 @@ class Rule extends Model
         return Attribute::make(
             get: static fn ($value) => (int) $value,
         );
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'created_at'      => 'datetime',
+            'updated_at'      => 'datetime',
+            'deleted_at'      => 'datetime',
+            'active'          => 'boolean',
+            'order'           => 'int',
+            'stop_processing' => 'boolean',
+            'id'              => 'int',
+            'strict'          => 'boolean',
+            'user_id'         => 'integer',
+            'user_group_id'   => 'integer',
+        ];
     }
 }

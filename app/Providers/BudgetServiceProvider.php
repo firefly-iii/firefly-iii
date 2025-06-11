@@ -57,8 +57,7 @@ class BudgetServiceProvider extends ServiceProvider
     {
         // reference to auth is not understood by phpstan.
         $this->app->bind(
-            BudgetRepositoryInterface::class,
-            static function (Application $app) {
+            static function (Application $app): BudgetRepositoryInterface {
                 /** @var BudgetRepositoryInterface $repository */
                 $repository = app(BudgetRepository::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line
@@ -71,8 +70,7 @@ class BudgetServiceProvider extends ServiceProvider
 
         // available budget repos
         $this->app->bind(
-            AvailableBudgetRepositoryInterface::class,
-            static function (Application $app) {
+            static function (Application $app): AvailableBudgetRepositoryInterface {
                 /** @var AvailableBudgetRepositoryInterface $repository */
                 $repository = app(AvailableBudgetRepository::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line
@@ -85,8 +83,7 @@ class BudgetServiceProvider extends ServiceProvider
 
         // budget limit repository.
         $this->app->bind(
-            BudgetLimitRepositoryInterface::class,
-            static function (Application $app) {
+            static function (Application $app): BudgetLimitRepositoryInterface {
                 /** @var BudgetLimitRepositoryInterface $repository */
                 $repository = app(BudgetLimitRepository::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line
@@ -99,8 +96,7 @@ class BudgetServiceProvider extends ServiceProvider
 
         // no budget repos
         $this->app->bind(
-            NoBudgetRepositoryInterface::class,
-            static function (Application $app) {
+            static function (Application $app): NoBudgetRepositoryInterface {
                 /** @var NoBudgetRepositoryInterface $repository */
                 $repository = app(NoBudgetRepository::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line
@@ -113,8 +109,7 @@ class BudgetServiceProvider extends ServiceProvider
 
         // operations repos
         $this->app->bind(
-            OperationsRepositoryInterface::class,
-            static function (Application $app) {
+            static function (Application $app): OperationsRepositoryInterface {
                 /** @var OperationsRepositoryInterface $repository */
                 $repository = app(OperationsRepository::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line

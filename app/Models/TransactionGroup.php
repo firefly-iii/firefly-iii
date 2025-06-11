@@ -38,18 +38,6 @@ class TransactionGroup extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    protected $casts
-                        = [
-            'id'            => 'integer',
-            'created_at'    => 'datetime',
-            'updated_at'    => 'datetime',
-            'deleted_at'    => 'datetime',
-            'title'         => 'string',
-            'date'          => 'datetime',
-            'user_id'       => 'integer',
-            'user_group_id' => 'integer',
-        ];
-
     protected $fillable = ['user_id', 'user_group_id', 'title'];
 
     /**
@@ -96,5 +84,19 @@ class TransactionGroup extends Model
     public function userGroup(): BelongsTo
     {
         return $this->belongsTo(UserGroup::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'id'            => 'integer',
+            'created_at'    => 'datetime',
+            'updated_at'    => 'datetime',
+            'deleted_at'    => 'datetime',
+            'title'         => 'string',
+            'date'          => 'datetime',
+            'user_id'       => 'integer',
+            'user_group_id' => 'integer',
+        ];
     }
 }

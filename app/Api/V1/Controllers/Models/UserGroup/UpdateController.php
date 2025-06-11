@@ -30,6 +30,7 @@ use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\UserGroup\UserGroupRepositoryInterface;
 use FireflyIII\Transformers\UserGroupTransformer;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 class UpdateController extends Controller
 {
@@ -54,7 +55,7 @@ class UpdateController extends Controller
 
     public function update(UpdateRequest $request, UserGroup $userGroup): JsonResponse
     {
-        app('log')->debug(sprintf('Now in %s', __METHOD__));
+        Log::debug(sprintf('Now in %s', __METHOD__));
         $data        = $request->getData();
         $userGroup   = $this->repository->update($userGroup, $data);
         $userGroup->refresh();

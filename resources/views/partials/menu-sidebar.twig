@@ -6,6 +6,13 @@
         </a>
     </li>
 
+    <li class="{{ activeRouteStrict('search.index') }} visible-xs hidden-sm hidden-md hidden-lg">
+        <a href="{{ route('search.index') }}">
+            <em class="fa fa-search fa-fw"></em>
+            <span>{{ 'search'|_ }}</span>
+        </a>
+    </li>
+
     <li class="header text-uppercase">{{ 'financial_control'|_ }}</li>
 
     <li class="{{ activeRoutePartial('budgets') }}" id="budget-menu">

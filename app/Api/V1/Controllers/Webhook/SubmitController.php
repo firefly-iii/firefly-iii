@@ -76,6 +76,6 @@ class SubmitController extends Controller
             SendWebhookMessage::dispatch($message)->afterResponse();
         }
 
-        return response()->json([]);
+        return response()->json();
     }
 }

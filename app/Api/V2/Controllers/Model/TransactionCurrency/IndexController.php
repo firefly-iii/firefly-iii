@@ -31,6 +31,7 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Transformers\CurrencyTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class IndexController extends Controller
 {
@@ -56,6 +57,7 @@ class IndexController extends Controller
     public function index(IndexRequest $request): JsonResponse
     {
         $settings    = $request->getAll();
+        $currencies  = new Collection();
         if (true === $settings['enabled']) {
             $currencies = $this->repository->get();
         }

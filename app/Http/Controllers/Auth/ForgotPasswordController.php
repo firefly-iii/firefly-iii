@@ -61,12 +61,12 @@ class ForgotPasswordController extends Controller
      *
      * @return Factory|RedirectResponse|View
      */
-    public function sendResetLinkEmail(Request $request, ?UserRepositoryInterface $repository = null)
+    public function sendResetLinkEmail(Request $request, UserRepositoryInterface $repository)
     {
-        app('log')->info('Start of sendResetLinkEmail()');
-        if ('web' !== config('firefly.authentication_guard')) {
+        Log::info('Start of sendResetLinkEmail()');
+        if ('web'   !== config('firefly.authentication_guard')) {
             $message = sprintf('Cannot reset password when authenticating over "%s".', config('firefly.authentication_guard'));
-            app('log')->error($message);
+            Log::error($message);
 
             return view('error', compact('message'));
         }
@@ -89,7 +89,7 @@ class ForgotPasswordController extends Controller
         // need to show to the user. Finally, we'll send out a proper response.
         $result   = $this->broker()->sendResetLink($request->only('email'));
         if ('passwords.throttled' === $result) {
-            app('log')->error(sprintf('Cowardly refuse to send a password reset message to user #%d because the reset button has been throttled.', $user->id));
+            Log::error(sprintf('Cowardly refuse to send a password reset message to user #%d because the reset button has been throttled.', $user->id));
         }
 
         // always send the same response to the user:

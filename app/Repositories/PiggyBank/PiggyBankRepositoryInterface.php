@@ -47,6 +47,8 @@ use Illuminate\Support\Collection;
  */
 interface PiggyBankRepositoryInterface
 {
+    public function resetHistory(PiggyBank $piggyBank): void;
+
     public function addAmount(PiggyBank $piggyBank, Account $account, string $amount, ?TransactionJournal $journal = null): bool;
 
     public function addAmountToPiggyBank(PiggyBank $piggyBank, string $amount, TransactionJournal $journal): void;

@@ -37,19 +37,6 @@ class CurrencyExchangeRate extends Model
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
-
-    protected $casts
-                        = [
-            'created_at'       => 'datetime',
-            'updated_at'       => 'datetime',
-            'user_id'          => 'integer',
-            'user_group_id'    => 'integer',
-            'from_currency_id' => 'integer',
-            'to_currency_id'   => 'integer',
-            'date'             => SeparateTimezoneCaster::class,
-            'rate'             => 'string',
-            'user_rate'        => 'string',
-        ];
     protected $fillable = ['user_id', 'from_currency_id', 'to_currency_id', 'date', 'date_tz', 'rate'];
 
     public function fromCurrency(): BelongsTo
@@ -93,5 +80,20 @@ class CurrencyExchangeRate extends Model
         return Attribute::make(
             get: static fn ($value) => (string) $value,
         );
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'created_at'       => 'datetime',
+            'updated_at'       => 'datetime',
+            'user_id'          => 'integer',
+            'user_group_id'    => 'integer',
+            'from_currency_id' => 'integer',
+            'to_currency_id'   => 'integer',
+            'date'             => SeparateTimezoneCaster::class,
+            'rate'             => 'string',
+            'user_rate'        => 'string',
+        ];
     }
 }
