@@ -334,6 +334,10 @@
                                     {% endif %}
                                 </td>
                             </tr>
+                            <tr>
+                                <td>{{ 'transaction_journal_id'|_ }}</td>
+                                <td>#{{ journal.transaction_journal_id }}</td>
+                            </tr>
                             {% if null != journal.category_id %}
                                 <tr>
                                     <td style="width:30%;">{{ 'category'|_ }}</td>

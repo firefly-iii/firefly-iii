@@ -31,6 +31,7 @@ return [
     'close'                                                   => 'Close',
     'actions'                                                 => 'Actions',
     'edit'                                                    => 'Edit',
+    'transaction_journal_id'                                                    => 'Transaction journal ID',
     'delete'                                                  => 'Delete',
     'split'                                                   => 'Split',
     'single_split'                                            => 'Split',
