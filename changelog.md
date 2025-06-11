@@ -13,17 +13,17 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 - Transactions can't be linked to a piggy  bank twice.
-- #10229
-- #10382
-- #10399
-- #10403
-- #10413
-- #10419
-- #10426
-- #10427
-- #10432
-- #10433
-- #10441
+- [Issue 10229](https://github.com/firefly-iii/firefly-iii/issues/10229) (Please show transaction ID in the Meta information) reported by @srikakulamts
+- [Issue 10382](https://github.com/firefly-iii/firefly-iii/issues/10382) (Have a link to search page on mobile layout) reported by @sergeolkhovik
+- [Issue 10399](https://github.com/firefly-iii/firefly-iii/issues/10399) (Can not apply rules to future dates) reported by @sanderr
+- [Issue 10403](https://github.com/firefly-iii/firefly-iii/issues/10403) (Piggy banks over multiple accounts are too restrictive) reported by @sanderr
+- [Issue 10413](https://github.com/firefly-iii/firefly-iii/issues/10413) (Piggy Bank math seems broken, deductions are not registered, Saved so far 0 but balance is positive) reported by @Skiri-ki
+- [Issue 10419](https://github.com/firefly-iii/firefly-iii/issues/10419) (Add quarters to report view to prefill date ranges) reported by @othmar52
+- [Issue 10426](https://github.com/firefly-iii/firefly-iii/issues/10426) (bcadd(): Argument #1 ($num1) is not well-formed) reported by @grgar
+- [Discussion 10427](https://github.com/orgs/firefly-iii/discussions/10427) ("Stop processing" doesn't seem to work? (6.2.12)) started by @rarosalion
+- [Issue 10432](https://github.com/firefly-iii/firefly-iii/issues/10432) (Error during upgrade 6.1.25 → 6.2.16: $piggyBank->account is null) reported by @Digi92
+- [Issue 10433](https://github.com/firefly-iii/firefly-iii/issues/10433) (500 error when using forgot password link (running in Docker)) reported by @jegelandsdal
+- [Issue 10441](https://github.com/firefly-iii/firefly-iii/issues/10441) (Missing spent per day info on mismatching budget limit periods) reported by @Kaotic3
 
 ### API
 

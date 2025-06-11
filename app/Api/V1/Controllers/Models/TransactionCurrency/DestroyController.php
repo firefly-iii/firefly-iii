@@ -65,8 +65,6 @@ class DestroyController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @param TransactionCurrency $currency
-     * @return JsonResponse
      * @throws FireflyException
      * @throws ValidationException
      */

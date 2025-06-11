@@ -237,7 +237,7 @@ class BudgetController extends Controller
         /** @var array $entry */
         // only spent the entry where the entry's currency matches the budget limit's currency
         // so $filtered will only have 1 or 0 entries
-        $filtered = array_filter($spent, function ($entry) use ($limitCurrencyId) {
+        $filtered        = array_filter($spent, function ($entry) use ($limitCurrencyId) {
             return $entry['currency_id'] === $limitCurrencyId;
         });
         $result          = $this->processExpenses($budget->id, $filtered, $limit->start_date, $end);
