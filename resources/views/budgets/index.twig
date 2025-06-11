@@ -339,6 +339,7 @@
                                                 {% if spentInfo.currency_id == budgetLimit.currency_id and budgetLimit.in_range %}
                                                     {# the code below is used for budget limits INSIDE the current view range. #}
                                                     {% set countLimit = countLimit + 1 %}
+
                                                     <span class="left_span" data-currency="{{ spentInfo.currency_id }}" data-limit="{{ budgetLimit.id }}"
                                                           data-value="{{ spentInfo.spent + budgetLimit.amount }}" class="amount_left">
                                                         {# the amount left is automatically calculated. #}
@@ -356,7 +357,9 @@
                                                     <br/>
                                                 {% endif %}
                                             {% endfor %}
+
                                             {% if countLimit == 0 %}
+
                                                 {# this code is used for budget limits OUTSIDE the current view range. #}
                                                 <span class="left_span" data-id="{{ budget.id }}" data-currency="{{ spentInfo.currency_id }}" data-limit="0"
                                                       class="amount_left" data-value="{{ spentInfo.spent }}">
@@ -366,7 +369,9 @@
                                             {% endif %}
                                         {% endfor %}
                                         {% for budgetLimit in budget.budgeted %}
+                                            D
                                             {% if null == budget.spent[budgetLimit.currency_id] %}
+                                                E
                                                 <span class="left_span" data-currency="{{ spentInfo.currency_id }}" data-limit="{{ budgetLimit.id }}"
                                                       data-value="{{ spentInfo.spent + budgetLimit.amount }}" class="amount_left">
                                                 {{ formatAmountBySymbol(budgetLimit.amount, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }}
@@ -377,6 +382,10 @@
                                                             ({{ formatAmountBySymbol(budgetLimit.amount / activeDaysLeft, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }})
                                                         {% endif %}
                                                     {% endif %}
+                                            {% if not budgetLimit.in_range %}
+                                                {# For issue #10441, add per day if the budget limit is out of range. #}
+                                                ({{ formatAmountBySymbol(budgetLimit.amount / budgetLimit.total_days, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }})
+                                                {% endif %}
                                             </span>
                                                 <br/>
                                             {% endif %}
