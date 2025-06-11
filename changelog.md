@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.2.17 - 2025-06-12
+
+### Changed
+
+- Firefly III will trim account numbers with spaces for better matching during imports
+- Running balance is only updated when amounts or accounts change.
+
+### Fixed
+
+- Transactions can't be linked to a piggy  bank twice.
+- #10229
+- #10382
+- #10399
+- #10403
+- #10413
+- #10419
+- #10426
+- #10427
+- #10432
+- #10433
+- #10441
+
+### API
+
+- Transactions now contain balance before/after.
+
 ## 6.2.16 - 2025-xx-xx
 
 ### Fixed
