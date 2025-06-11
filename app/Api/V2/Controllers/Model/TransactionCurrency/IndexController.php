@@ -57,7 +57,7 @@ class IndexController extends Controller
     public function index(IndexRequest $request): JsonResponse
     {
         $settings    = $request->getAll();
-        $currencies = new Collection();
+        $currencies  = new Collection();
         if (true === $settings['enabled']) {
             $currencies = $this->repository->get();
         }

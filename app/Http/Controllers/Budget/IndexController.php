@@ -137,6 +137,7 @@ class IndexController extends Controller
         // get all inactive budgets, and simply list them:
         $inactive         = $this->repository->getInactiveBudgets();
         $defaultCurrency  = $this->defaultCurrency;
+
         return view(
             'budgets.index',
             compact(
@@ -224,7 +225,7 @@ class IndexController extends Controller
                     'start_date'              => $limit->start_date->isoFormat($this->monthAndDayFormat),
                     'end_date'                => $limit->end_date->isoFormat($this->monthAndDayFormat),
                     'in_range'                => $limit->start_date->isSameDay($start) && $limit->end_date->isSameDay($end),
-                    'total_days' => $limit->start_date->diffInDays($limit->end_date) + 1,
+                    'total_days'              => $limit->start_date->diffInDays($limit->end_date) + 1,
                     'currency_id'             => $currency->id,
                     'currency_symbol'         => $currency->symbol,
                     'currency_name'           => $currency->name,

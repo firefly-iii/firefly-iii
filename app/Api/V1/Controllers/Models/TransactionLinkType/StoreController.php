@@ -27,7 +27,6 @@ namespace FireflyIII\Api\V1\Controllers\Models\TransactionLinkType;
 use Illuminate\Support\Facades\Validator;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\TransactionLinkType\StoreRequest;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Http\Api\TransactionFilter;
@@ -72,8 +71,6 @@ class StoreController extends Controller
      *
      * Store new object.
      *
-     * @param StoreRequest $request
-     * @return JsonResponse
      * @throws ValidationException
      */
     public function store(StoreRequest $request): JsonResponse

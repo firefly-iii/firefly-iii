@@ -65,28 +65,28 @@ class UpdateController extends Controller
     public function update(UpdateRequest $request, TransactionGroup $transactionGroup): JsonResponse
     {
         app('log')->debug('Now in update routine for transaction group [v2]!');
-        $data              = $request->getAll();
-        $transactionGroup  = $this->groupRepository->update($transactionGroup, $data);
-        $applyRules        = $data['apply_rules'] ?? true;
-        $fireWebhooks      = $data['fire_webhooks'] ?? true;
+        $data             = $request->getAll();
+        $transactionGroup = $this->groupRepository->update($transactionGroup, $data);
+        $applyRules       = $data['apply_rules'] ?? true;
+        $fireWebhooks     = $data['fire_webhooks'] ?? true;
 
         event(new UpdatedTransactionGroup($transactionGroup, $applyRules, $fireWebhooks, true));
         app('preferences')->mark();
 
         /** @var User $admin */
-        $admin             = auth()->user();
+        $admin            = auth()->user();
 
         // use new group collector:
         /** @var GroupCollectorInterface $collector */
-        $collector         = app(GroupCollectorInterface::class);
+        $collector        = app(GroupCollectorInterface::class);
         $collector->setUser($admin)->setTransactionGroup($transactionGroup);
 
-        $selectedGroup     = $collector->getGroups()->first();
+        $selectedGroup    = $collector->getGroups()->first();
         if (null === $selectedGroup) {
             throw new FireflyException('200032: Cannot find transaction. Possibly, a rule deleted this transaction after its creation.');
         }
 
-        $transformer       = new TransactionGroupTransformer();
+        $transformer      = new TransactionGroupTransformer();
         $transformer->setParameters($this->parameters);
 
         return response()->api($this->jsonApiObject('transactions', $selectedGroup, $transformer))->header('Content-Type', self::CONTENT_TYPE);

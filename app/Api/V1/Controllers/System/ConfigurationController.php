@@ -95,6 +95,7 @@ class ConfigurationController extends Controller
 
     /**
      * Get all config values.
+     *
      * @throws FireflyException
      */
     private function getDynamicConfiguration(): array
@@ -156,9 +157,6 @@ class ConfigurationController extends Controller
      *
      * Update the configuration.
      *
-     * @param UpdateRequest $request
-     * @param string $name
-     * @return JsonResponse
      * @throws FireflyException
      * @throws ValidationException
      */
