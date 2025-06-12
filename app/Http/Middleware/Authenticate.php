@@ -101,6 +101,7 @@ class Authenticate
             if ($result) {
                 $user = $this->auth->guard($guard)->user();
                 $this->validateBlockedUser($user, $guards);
+
                 // According to PHPstan the method returns void, but we'll see.
                 return $this->auth->shouldUse($guard); // @phpstan-ignore-line
             }
@@ -109,7 +110,7 @@ class Authenticate
         // this is a massive hack, but if the hander has the oauth exception
         // at this point we can report its error instead of a generic one.
         $message = 'Unauthenticated.';
-        if(Handler::$lastError instanceof OAuthServerException) {
+        if (Handler::$lastError instanceof OAuthServerException) {
             $message = Handler::$lastError->getHint();
         }
 

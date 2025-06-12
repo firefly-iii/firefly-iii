@@ -59,11 +59,12 @@ use function Safe\parse_url;
 class Handler extends ExceptionHandler
 {
     public static ?Throwable $lastError = null;
+
     /**
      * @var array<int, class-string<Throwable>>
      */
     protected $dontReport
-        = [
+                                        = [
             AuthenticationException::class,
             LaravelValidationException::class,
             NotFoundHttpException::class,
@@ -217,13 +218,13 @@ class Handler extends ExceptionHandler
     public function report(Throwable $e): void
     {
         self::$lastError = $e;
-        $doMailError = (bool) config('firefly.send_error_message');
+        $doMailError     = (bool) config('firefly.send_error_message');
         if ($this->shouldntReportLocal($e) || !$doMailError) {
             parent::report($e);
 
             return;
         }
-        $userData    = [
+        $userData        = [
             'id'    => 0,
             'email' => 'unknown@example.com',
         ];
@@ -232,9 +233,9 @@ class Handler extends ExceptionHandler
             $userData['email'] = auth()->user()->email;
         }
 
-        $headers     = request()->headers->all();
+        $headers         = request()->headers->all();
 
-        $data        = [
+        $data            = [
             'class'        => $e::class,
             'errorMessage' => $e->getMessage(),
             'time'         => Carbon::now()->format('r'),
@@ -252,8 +253,8 @@ class Handler extends ExceptionHandler
         ];
 
         // create job that will mail.
-        $ipAddress   = request()->ip() ?? '0.0.0.0';
-        $job         = new MailError($userData, (string) config('firefly.site_owner'), $ipAddress, $data);
+        $ipAddress       = request()->ip() ?? '0.0.0.0';
+        $job             = new MailError($userData, (string) config('firefly.site_owner'), $ipAddress, $data);
         dispatch($job);
 
         parent::report($e);

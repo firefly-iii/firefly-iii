@@ -162,7 +162,7 @@ class AccountController extends Controller
         $defaultSet = $this->repository->getAccountsByType([AccountTypeEnum::ASSET->value])->pluck('id')->toArray();
 
         /** @var Preference $frontpage */
-        $frontpage = Preferences::get('frontpageAccounts', $defaultSet);
+        $frontpage  = Preferences::get('frontpageAccounts', $defaultSet);
 
         if (!(is_array($frontpage->data) && count($frontpage->data) > 0)) {
             $frontpage->data = $defaultSet;
