@@ -58,6 +58,7 @@ use function Safe\parse_url;
  */
 class Handler extends ExceptionHandler
 {
+    public static ?Throwable $lastError = null;
     /**
      * @var array<int, class-string<Throwable>>
      */
@@ -123,7 +124,7 @@ class Handler extends ExceptionHandler
             // somehow Laravel handler does not catch this:
             app('log')->debug('Return JSON unauthenticated error.');
 
-            return response()->json(['message' => 'Unauthenticated', 'exception' => 'AuthenticationException'], 401);
+            return response()->json(['message' => $e->getMessage(), 'exception' => 'AuthenticationException'], 401);
         }
 
         if ($e instanceof OAuthServerException && $expectsJson) {
@@ -215,6 +216,7 @@ class Handler extends ExceptionHandler
     #[Override]
     public function report(Throwable $e): void
     {
+        self::$lastError = $e;
         $doMailError = (bool) config('firefly.send_error_message');
         if ($this->shouldntReportLocal($e) || !$doMailError) {
             parent::report($e);

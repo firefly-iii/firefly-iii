@@ -26,10 +26,12 @@ namespace FireflyIII\Http\Middleware;
 
 use Closure;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Exceptions\Handler;
 use FireflyIII\User;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Auth\Factory as Auth;
 use Illuminate\Http\Request;
+use League\OAuth2\Server\Exception\OAuthServerException;
 
 /**
  * Class Authenticate
@@ -84,6 +86,7 @@ class Authenticate
             if ($this->auth->check()) {
                 // do an extra check on user object.
                 /** @noinspection PhpUndefinedMethodInspection */
+
                 /** @var User $user */
                 $user = $this->auth->authenticate();
                 $this->validateBlockedUser($user, $guards);
@@ -94,20 +97,23 @@ class Authenticate
         }
 
         foreach ($guards as $guard) {
-            if ('api' !== $guard) {
-                $this->auth->guard($guard)->authenticate();
-            }
             $result = $this->auth->guard($guard)->check();
             if ($result) {
                 $user = $this->auth->guard($guard)->user();
                 $this->validateBlockedUser($user, $guards);
-
                 // According to PHPstan the method returns void, but we'll see.
                 return $this->auth->shouldUse($guard); // @phpstan-ignore-line
             }
         }
 
-        throw new AuthenticationException('Unauthenticated.', $guards);
+        // this is a massive hack, but if the hander has the oauth exception
+        // at this point we can report its error instead of a generic one.
+        $message = 'Unauthenticated.';
+        if(Handler::$lastError instanceof OAuthServerException) {
+            $message = Handler::$lastError->getHint();
+        }
+
+        throw new AuthenticationException($message, $guards);
     }
 
     /**
