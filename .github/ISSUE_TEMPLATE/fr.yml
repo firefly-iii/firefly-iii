@@ -1,4 +1,4 @@
-name: Feature Request
+name: Feature request
 description: Request a feature or enhancement in Firefly III (or associated tools)
 body:
   - type: checkboxes
@@ -30,11 +30,6 @@ body:
       description: Describe what your feature would add to Firefly III.
     validations:
       required: true
-
-  - type: textarea
-    attributes:
-      label: What are alternatives?
-      description: Please describe what alternatives currently exist.
 
   - type: textarea
     attributes:
