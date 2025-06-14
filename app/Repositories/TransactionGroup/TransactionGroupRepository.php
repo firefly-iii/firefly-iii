@@ -443,7 +443,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
             /** @var Transaction $transaction */
             foreach ($journal->transactions as $transaction) {
                 if (-1 === bccomp('0', (string)$transaction->amount)) {
-                    $sum   = bcadd($sum, $transaction->amount);
+                    $sum   = bcadd($sum, (string) $transaction->amount);
                     $names = sprintf('%s%s', $names, $transaction->account->name);
                 }
             }

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
+use Deprecated;
 use Carbon\Carbon;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
@@ -46,9 +47,8 @@ class BoxController extends Controller
 
     /**
      * Deprecated method, no longer in use.
-     *
-     * @deprecated
      */
+    #[Deprecated]
     public function available(): JsonResponse
     {
         return response()->json([]);

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Budget;
 
+use Deprecated;
 use Carbon\Carbon;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\TransactionCurrency;
@@ -44,9 +45,7 @@ use Illuminate\Support\Collection;
  */
 interface NoBudgetRepositoryInterface
 {
-    /**
-     * @deprecated
-     */
+    #[Deprecated]
     public function getNoBudgetPeriodReport(Collection $accounts, Carbon $start, Carbon $end): array;
 
     public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?TransactionCurrency $currency = null): array;

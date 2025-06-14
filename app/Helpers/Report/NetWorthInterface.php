@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Report;
 
+use Deprecated;
 use Carbon\Carbon;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
@@ -53,8 +54,7 @@ interface NetWorthInterface
      * TODO move to repository
      *
      * Same as above but cleaner function with less dependencies.
-     *
-     * @deprecated
      */
+    #[Deprecated]
     public function sumNetWorthByCurrency(Carbon $date): array;
 }

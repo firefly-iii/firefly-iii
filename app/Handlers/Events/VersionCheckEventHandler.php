@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
+use Deprecated;
 use Carbon\Carbon;
 use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\Exceptions\FireflyException;
@@ -42,9 +43,8 @@ class VersionCheckEventHandler
      * Checks with GitHub to see if there is a new version.
      *
      * @throws FireflyException
-     *
-     * @deprecated ?
      */
+    #[Deprecated(message: '?')]
     public function checkForUpdates(RequestedVersionCheckStatus $event): void
     {
         Log::debug('Now in checkForUpdates()');

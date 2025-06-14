@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Budget;
 
+use Deprecated;
 use Carbon\Carbon;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\Budget;
@@ -51,9 +52,7 @@ interface OperationsRepositoryInterface
      */
     public function budgetedPerDay(Budget $budget): string;
 
-    /**
-     * @deprecated
-     */
+    #[Deprecated]
     public function getBudgetPeriodReport(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**

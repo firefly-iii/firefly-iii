@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Budget;
 
+use Deprecated;
 use Carbon\Carbon;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\AvailableBudget;
@@ -66,9 +67,7 @@ interface AvailableBudgetRepositoryInterface
      */
     public function get(?Carbon $start = null, ?Carbon $end = null): Collection;
 
-    /**
-     * @deprecated
-     */
+    #[Deprecated]
     public function getAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end): string;
 
     public function getAvailableBudgetWithCurrency(Carbon $start, Carbon $end): array;
@@ -90,9 +89,7 @@ interface AvailableBudgetRepositoryInterface
      */
     public function getByCurrencyDate(Carbon $start, Carbon $end, TransactionCurrency $currency): ?AvailableBudget;
 
-    /**
-     * @deprecated
-     */
+    #[Deprecated]
     public function setAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end, string $amount): AvailableBudget;
 
     public function store(array $data): ?AvailableBudget;

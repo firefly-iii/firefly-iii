@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII;
 
+use Deprecated;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Exceptions\FireflyException;
@@ -188,9 +189,8 @@ class User extends Authenticatable
      * Get the models LDAP domain.
      *
      * @return string
-     *
-     * @deprecated
      */
+    #[Deprecated]
     public function getLdapDomain()
     {
         return $this->{$this->getLdapDomainColumn()};
@@ -200,9 +200,8 @@ class User extends Authenticatable
      * Get the database column name of the domain.
      *
      * @return string
-     *
-     * @deprecated
      */
+    #[Deprecated]
     public function getLdapDomainColumn()
     {
         return 'domain';
@@ -212,9 +211,8 @@ class User extends Authenticatable
      * Get the models LDAP GUID.
      *
      * @return string
-     *
-     * @deprecated
      */
+    #[Deprecated]
     public function getLdapGuid()
     {
         return $this->{$this->getLdapGuidColumn()};
@@ -224,9 +222,8 @@ class User extends Authenticatable
      * Get the models LDAP GUID database column name.
      *
      * @return string
-     *
-     * @deprecated
      */
+    #[Deprecated]
     public function getLdapGuidColumn()
     {
         return 'objectguid';
@@ -468,9 +465,8 @@ class User extends Authenticatable
      * Set the models LDAP domain.
      *
      * @param string $domain
-     *
-     * @deprecated
      */
+    #[Deprecated]
     public function setLdapDomain($domain): void
     {
         $this->{$this->getLdapDomainColumn()} = $domain;
@@ -480,9 +476,8 @@ class User extends Authenticatable
      * Set the models LDAP GUID.
      *
      * @param string $guid
-     *
-     * @deprecated
      */
+    #[Deprecated]
     public function setLdapGuid($guid): void
     {
         $this->{$this->getLdapGuidColumn()} = $guid;

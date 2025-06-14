@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support;
 
+use Deprecated;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
@@ -195,25 +196,19 @@ class Amount
         return $user->currencies()->orderBy('code', 'ASC')->get();
     }
 
-    /**
-     * @deprecated
-     */
+    #[Deprecated]
     public function getDefaultCurrency(): TransactionCurrency
     {
         return $this->getNativeCurrency();
     }
 
-    /**
-     * @deprecated use getDefaultCurrencyByUserGroup instead
-     */
+    #[Deprecated(message: 'use getDefaultCurrencyByUserGroup instead')]
     public function getDefaultCurrencyByUser(User $user): TransactionCurrency
     {
         return $this->getDefaultCurrencyByUserGroup($user->userGroup);
     }
 
-    /**
-     * @deprecated
-     */
+    #[Deprecated]
     public function getDefaultCurrencyByUserGroup(UserGroup $userGroup): TransactionCurrency
     {
         return $this->getNativeCurrencyByUserGroup($userGroup);
