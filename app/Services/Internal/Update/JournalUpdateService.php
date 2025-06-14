@@ -825,11 +825,11 @@ class JournalUpdateService
     public function isCompareHashChanged(): bool
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
-        $compareHash =  hash('sha256', sprintf('%s', Carbon::now()->getTimestamp()));
-        if(!$this->transactionGroup instanceof TransactionGroup) {
+        $compareHash = hash('sha256', sprintf('%s', Carbon::now()->getTimestamp()));
+        if (!$this->transactionGroup instanceof TransactionGroup) {
             $compareHash = $this->transactionGroupRepository->getCompareHash($this->transactionJournal->transactionGroup);
         }
-        if($this->transactionGroup instanceof TransactionGroup) {
+        if ($this->transactionGroup instanceof TransactionGroup) {
             $this->transactionGroupRepository->getCompareHash($this->transactionGroup);
         }
         Log::debug(sprintf('Compare hash is       "%s".', $compareHash));
