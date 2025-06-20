@@ -12,8 +12,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #10454
-- #10470
+- [Issue 10454](https://github.com/firefly-iii/firefly-iii/issues/10454) (Bulk edit individually give an error) reported by @Rick45
+- [Issue 10470](https://github.com/firefly-iii/firefly-iii/issues/10470) (API endpoint `/api/v1/chart/account/overview` throws error) reported by @dreautall
 - Remove some leftover debug info
 
 ## 6.2.17 - 2025-06-12
