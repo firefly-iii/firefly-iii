@@ -51,7 +51,7 @@ class TransactionSummarizer
 
     public function groupByCurrencyId(array $journals, string $method = 'negative', bool $includeForeign = true): array
     {
-        Log::debug(sprintf('Now in groupByCurrencyId([%d journals], "%s")', count($journals), $method));
+        Log::debug(sprintf('Now in groupByCurrencyId([%d journals], "%s", %s)', count($journals), $method, var_export($includeForeign, true)));
         $array = [];
         foreach ($journals as $journal) {
             $field                        = 'amount';

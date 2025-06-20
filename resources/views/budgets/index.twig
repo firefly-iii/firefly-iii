@@ -369,9 +369,7 @@
                                             {% endif %}
                                         {% endfor %}
                                         {% for budgetLimit in budget.budgeted %}
-                                            D
                                             {% if null == budget.spent[budgetLimit.currency_id] %}
-                                                E
                                                 <span class="left_span" data-currency="{{ spentInfo.currency_id }}" data-limit="{{ budgetLimit.id }}"
                                                       data-value="{{ spentInfo.spent + budgetLimit.amount }}" class="amount_left">
                                                 {{ formatAmountBySymbol(budgetLimit.amount, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }}

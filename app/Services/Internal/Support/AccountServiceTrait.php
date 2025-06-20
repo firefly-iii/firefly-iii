@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Support;
 
+use Deprecated;
 use Carbon\Carbon;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\DuplicateTransactionException;
@@ -193,8 +194,8 @@ trait AccountServiceTrait
     /**
      * @throws FireflyException
      *                          *
-     * @deprecated
      */
+    #[Deprecated]
     protected function createOBGroup(Account $account, array $data): TransactionGroup
     {
         app('log')->debug('Now going to create an OB group.');

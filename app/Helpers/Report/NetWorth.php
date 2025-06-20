@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Report;
 
+use Deprecated;
 use Carbon\Carbon;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
@@ -134,9 +135,7 @@ class NetWorth implements NetWorthInterface
         $this->currencyRepos->setUserGroup($this->userGroup);
     }
 
-    /**
-     * @deprecated
-     */
+    #[Deprecated]
     public function sumNetWorthByCurrency(Carbon $date): array
     {
         /**

@@ -54,7 +54,7 @@ class TransactionGroupEnrichment implements EnrichmentInterface
     private array          $notes; // @phpstan-ignore-line
     private array          $tags;
     private User           $user;
-    private TransactionCurrency $nativeCurrency;
+    private readonly TransactionCurrency $nativeCurrency;
     private UserGroup      $userGroup;
 
     public function __construct()

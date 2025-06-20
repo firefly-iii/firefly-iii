@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.2.18 - 2025-06-20
+
+### Changed
+
+- Give more details about OAuth errors.
+- Currency seeder adds "RMB" instead of "CNY" for Chinese Yuan.
+
+### Fixed
+
+- [Issue 10454](https://github.com/firefly-iii/firefly-iii/issues/10454) (Bulk edit individually give an error) reported by @Rick45
+- [Issue 10470](https://github.com/firefly-iii/firefly-iii/issues/10470) (API endpoint `/api/v1/chart/account/overview` throws error) reported by @dreautall
+- Remove some leftover debug info
+
 ## 6.2.17 - 2025-06-12
 
 ### Changed

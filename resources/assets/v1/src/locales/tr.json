@@ -31,7 +31,7 @@
         "apply_rules_checkbox": "Apply rules",
         "fire_webhooks_checkbox": "Fire webhooks",
         "no_budget_pointer": "Hen\u00fcz b\u00fct\u00e7eniz yok gibi g\u00f6r\u00fcn\u00fcyor. <a href=\"budgets\">b\u00fct\u00e7eler<\/a> sayfas\u0131nda biraz olu\u015fturmal\u0131s\u0131n\u0131z. B\u00fct\u00e7eler, giderleri takip etmenize yard\u0131mc\u0131 olabilir.",
-        "no_bill_pointer": "You seem to have no subscription yet. You should create some on the <a href=\"subscriptions\">subscription<\/a>-page. Subscriptions can help you keep track of expenses.",
+        "no_bill_pointer": "Hen\u00fcz aboneli\u011finiz yok gibi g\u00f6r\u00fcn\u00fcyor. <a href=\"subscriptions\">Abonelik<\/a> sayfas\u0131nda bir abonelik olu\u015fturmal\u0131s\u0131n\u0131z. Abonelikler, harcamalar\u0131n\u0131z\u0131 takip etmenize yard\u0131mc\u0131 olabilir.",
         "source_account": "Kaynak hesap",
         "hidden_fields_preferences": "You can enable more transaction options in your <a href=\"preferences\">preferences<\/a>.",
         "destination_account": "Hedef hesap",

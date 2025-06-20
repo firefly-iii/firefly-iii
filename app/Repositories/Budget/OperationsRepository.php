@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Budget;
 
+use Deprecated;
 use Carbon\Carbon;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
@@ -74,9 +75,8 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
     /**
      * This method is being used to generate the budget overview in the year/multi-year report. Its used
      * in both the year/multi-year budget overview AND in the accompanying chart.
-     *
-     * @deprecated
      */
+    #[Deprecated]
     public function getBudgetPeriodReport(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array
     {
         $carbonFormat = app('navigation')->preferredCarbonFormat($start, $end);
@@ -204,7 +204,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         ?TransactionCurrency $currency = null,
         bool                 $convertToNative = false
     ): array {
-        Log::debug(sprintf('Start of %s(date, date, array, array, "%s", "%s").', __METHOD__, $currency?->code, var_export($convertToNative, true)));
+        Log::debug(sprintf('Start of %s(date, date, array, array, "%s", %s).', __METHOD__, $currency?->code, var_export($convertToNative, true)));
         // this collector excludes all transfers TO liabilities (which are also withdrawals)
         // because those expenses only become expenses once they move from the liability to the friend.
         // 2024-12-24 disable the exclusion for now.
