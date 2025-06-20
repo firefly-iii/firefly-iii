@@ -263,6 +263,7 @@ class IndexController extends Controller
         /** @var array $budget */
         foreach ($budgets as $budget) {
             Log::debug(sprintf('Now working on budget #%d ("%s")', $budget['id'], $budget['name']));
+
             /** @var array $spent */
             foreach ($budget['spent'] as $spent) {
                 $currencyId                           = $spent['currency_id'];
