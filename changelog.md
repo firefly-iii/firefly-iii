@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.2.18 - 2025-06-20
+
+### Changed
+
+- Give more details about OAuth errors.
+- Currency seeder adds "RMB" instead of "CNY" for Chinese Yuan.
+
+### Fixed
+
+- #10454
+- #10470
+- Remove some leftover debug info
+
 ## 6.2.17 - 2025-06-12
 
 ### Changed
