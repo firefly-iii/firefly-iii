@@ -70,6 +70,7 @@ interface OperationsRepositoryInterface
         Carbon               $end,
         ?Collection          $accounts = null,
         ?Collection          $budgets = null,
-        ?TransactionCurrency $currency = null
+        ?TransactionCurrency $currency = null,
+        bool                 $convertToNative = false
     ): array;
 }
