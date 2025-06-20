@@ -3,3 +3,6 @@ contact_links:
   - name: Ask a question
     url: https://github.com/firefly-iii/firefly-iii/discussions
     about: Please ask and answer questions here.
+  - name: I need support! 
+    url: https://github.com/firefly-iii/firefly-iii/discussions
+    about: I think I broke something...
