@@ -178,7 +178,7 @@ class Kernel extends HttpKernel
             'api'                   => [
                 AcceptHeaders::class,
                 EnsureFrontendRequestsAreStateful::class,
-                'auth:api',
+                'auth:api,sanctum',
                 'bindings',
             ],
             // do only bindings, no auth
