@@ -582,7 +582,7 @@ class Navigation
      */
     public function preferredEndOfPeriod(Carbon $start, Carbon $end): string
     {
-        if ((int) $start->diffInMonths($end, true) > 1) {
+        if ((int) $start->diffInMonths($end, true) > 1 && (int) $start->diffInMonths($end, true) <= 12) {
             return 'endOfMonth';
         }
 
