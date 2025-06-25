@@ -27,6 +27,7 @@ namespace FireflyIII\Support\Cronjobs;
 use Carbon\Carbon;
 use FireflyIII\Jobs\CreateAutoBudgetLimits;
 use FireflyIII\Models\Configuration;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class AutoBudgetCronjob
@@ -36,7 +37,7 @@ class AutoBudgetCronjob extends AbstractCronjob
     public function fire(): void
     {
         /** @var Configuration $config */
-        $config        = app('fireflyconfig')->get('last_ab_job', 0);
+        $config        = FireflyConfig::get('last_ab_job', 0);
         $lastTime      = (int) $config->data;
         $diff          = Carbon::now()->getTimestamp() - $lastTime;
         $diffForHumans = today(config('app.timezone'))->diffForHumans(Carbon::createFromTimestamp($lastTime), null, true);
@@ -78,7 +79,7 @@ class AutoBudgetCronjob extends AbstractCronjob
         $this->jobSucceeded = true;
         $this->message      = 'Auto-budget cron job fired successfully.';
 
-        app('fireflyconfig')->set('last_ab_job', (int) $this->date->format('U'));
+        FireflyConfig::set('last_ab_job', (int) $this->date->format('U'));
         app('log')->info('Done with auto budget cron job task.');
     }
 }
