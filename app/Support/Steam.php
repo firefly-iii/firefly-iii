@@ -342,7 +342,7 @@ class Steam
 
             return $cache->get();
         }
-        //Log::debug(sprintf('finalAccountBalance(#%d, %s)', $account->id, $date->format('Y-m-d H:i:s')));
+        // Log::debug(sprintf('finalAccountBalance(#%d, %s)', $account->id, $date->format('Y-m-d H:i:s')));
         if (null === $convertToNative) {
             $convertToNative = Amount::convertToNative($account->user);
         }
@@ -401,7 +401,7 @@ class Steam
             // Log::debug(sprintf('Virtual balance makes the (native) total %s', $return['balance']));
         }
         $final             = array_merge($return, $others);
-        //Log::debug('Final balance is', $final);
+        // Log::debug('Final balance is', $final);
         $cache->store($final);
 
         return $final;
