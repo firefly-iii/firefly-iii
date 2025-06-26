@@ -82,7 +82,7 @@ class NetWorth implements NetWorthInterface
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-//            Log::debug(sprintf('Now at account #%d ("%s")', $account->id, $account->name));
+            //            Log::debug(sprintf('Now at account #%d ("%s")', $account->id, $account->name));
             $currency                           = $this->accountRepository->getAccountCurrency($account) ?? $default;
             $useNative                          = $convertToNative && $default->id !== $currency->id;
             $currency                           = $useNative ? $default : $currency;
@@ -93,12 +93,12 @@ class NetWorth implements NetWorthInterface
                 $balance       = $balances[$account->id]['balance'] ?? '0';
                 $nativeBalance = $balances[$account->id]['native_balance'] ?? '0';
             }
-//            Log::debug(sprintf('Balance is %s, native balance is %s', $balance, $nativeBalance));
+            //            Log::debug(sprintf('Balance is %s, native balance is %s', $balance, $nativeBalance));
             // always subtract virtual balance again.
             $balance                            = '' !== (string) $account->virtual_balance ? bcsub($balance, (string) $account->virtual_balance) : $balance;
             $nativeBalance                      = '' !== (string) $account->native_virtual_balance ? bcsub($nativeBalance, (string) $account->native_virtual_balance) : $nativeBalance;
             $amountToUse                        = $useNative ? $nativeBalance : $balance;
-//            Log::debug(sprintf('Will use %s %s', $currencyCode, $amountToUse));
+            //            Log::debug(sprintf('Will use %s %s', $currencyCode, $amountToUse));
 
             $netWorth[$currencyCode] ??= [
                 'balance'                 => '0',

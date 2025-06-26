@@ -64,6 +64,7 @@ return $config->setRules(
         'global_namespace_import' => true, // matches with rector.
 
         // complex rules
+        'phpdoc_to_comment' => ['ignored_tags' => ['var']],
         'php_unit_test_case_static_method_calls' => [
             'call_type' => 'this',
         ],

@@ -71,12 +71,12 @@ class TransactionSummarizer
             $foreignCurrencyDecimalPlaces = null;
 
             if ($this->convertToNative) {
-//                Log::debug('convertToNative is true.');
+                //                Log::debug('convertToNative is true.');
                 // if convert to native, use the native amount yes or no?
                 $useNative  = $this->default->id !== (int) $journal['currency_id'];
                 $useForeign = $this->default->id === (int) $journal['foreign_currency_id'];
                 if ($useNative) {
-//                    Log::debug(sprintf('Journal #%d switches to native amount (original is %s)', $journal['transaction_journal_id'], $journal['currency_code']));
+                    //                    Log::debug(sprintf('Journal #%d switches to native amount (original is %s)', $journal['transaction_journal_id'], $journal['currency_code']));
                     $field                 = 'native_amount';
                     $currencyId            = $this->default->id;
                     $currencyName          = $this->default->name;
@@ -85,7 +85,7 @@ class TransactionSummarizer
                     $currencyDecimalPlaces = $this->default->decimal_places;
                 }
                 if ($useForeign) {
-//                    Log::debug(sprintf('Journal #%d switches to foreign amount (foreign is %s)', $journal['transaction_journal_id'], $journal['foreign_currency_code']));
+                    //                    Log::debug(sprintf('Journal #%d switches to foreign amount (foreign is %s)', $journal['transaction_journal_id'], $journal['foreign_currency_code']));
                     $field                 = 'foreign_amount';
                     $currencyId            = (int) $journal['foreign_currency_id'];
                     $currencyName          = $journal['foreign_currency_name'];
@@ -95,7 +95,7 @@ class TransactionSummarizer
                 }
             }
             if (!$this->convertToNative) {
-//                Log::debug('convertToNative is false.');
+                //                Log::debug('convertToNative is false.');
                 // use foreign amount?
                 $foreignCurrencyId = (int) $journal['foreign_currency_id'];
                 if (0 !== $foreignCurrencyId) {

@@ -45,6 +45,6 @@ final class NavigationCustomEndOfPeriodTest extends TestCase
         $navigation = new Navigation();
 
         $period     = $navigation->endOfPeriod($from, 'custom');
-        self::assertSame($expected->toDateString(), $period->toDateString());
+        $this->assertSame($expected->toDateString(), $period->toDateString());
     }
 }
