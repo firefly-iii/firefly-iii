@@ -97,25 +97,25 @@ trait PeriodOverview
         /** @var array $dates */
         $dates                   = app('navigation')->blockPeriods($start, $end, $range);
         $entries                 = [];
-        $spent= [];
-        $earned = [];
-        $transferredAway = [];
-        $transferredIn = [];
+        $spent                   = [];
+        $earned                  = [];
+        $transferredAway         = [];
+        $transferredIn           = [];
 
         // run a custom query because doing this with the collector is MEGA slow.
         $transactions            = $this->accountRepository->periodCollection($account, $start, $end);
 
         // loop dates
         Log::debug(sprintf('Count of loops: %d', count($dates)));
-        $loops = 0;
+        $loops                   = 0;
         // stop after 10 loops for memory reasons.
         foreach ($dates as $currentDate) {
             $title                            = app('navigation')->periodShow($currentDate['start'], $currentDate['period']);
-            if($loops < 10) {
-                [$transactions, $spent] = $this->filterTransactionsByType(TransactionTypeEnum::WITHDRAWAL, $transactions, $currentDate['start'], $currentDate['end']);
-                [$transactions, $earned] = $this->filterTransactionsByType(TransactionTypeEnum::DEPOSIT, $transactions, $currentDate['start'], $currentDate['end']);
+            if ($loops < 10) {
+                [$transactions, $spent]           = $this->filterTransactionsByType(TransactionTypeEnum::WITHDRAWAL, $transactions, $currentDate['start'], $currentDate['end']);
+                [$transactions, $earned]          = $this->filterTransactionsByType(TransactionTypeEnum::DEPOSIT, $transactions, $currentDate['start'], $currentDate['end']);
                 [$transactions, $transferredAway] = $this->filterTransfers('away', $transactions, $currentDate['start'], $currentDate['end']);
-                [$transactions, $transferredIn] = $this->filterTransfers('in', $transactions, $currentDate['start'], $currentDate['end']);
+                [$transactions, $transferredIn]   = $this->filterTransfers('in', $transactions, $currentDate['start'], $currentDate['end']);
             }
             $entries[]
                                               = [
@@ -127,7 +127,7 @@ trait PeriodOverview
                                                   'transferred_away'   => $this->groupByCurrency($transferredAway),
                                                   'transferred_in'     => $this->groupByCurrency($transferredIn),
                                               ];
-            $loops++;
+            ++$loops;
         }
         $cache->store($entries);
         Timer::stop('account-period-total');
@@ -557,19 +557,19 @@ trait PeriodOverview
         /** @var array $dates */
         $dates         = app('navigation')->blockPeriods($start, $end, $range);
         $entries       = [];
-        $spent       = [];
-        $earned      = [];
-        $transferred = [];
+        $spent         = [];
+        $earned        = [];
+        $transferred   = [];
         // collect all journals in this period (regardless of type)
         $collector     = app(GroupCollectorInterface::class);
         $collector->setTypes($types)->setRange($start, $end);
         $genericSet    = $collector->getExtractedJournals();
-        $loops = 0;
+        $loops         = 0;
 
         foreach ($dates as $currentDate) {
             $title       = app('navigation')->periodShow($currentDate['end'], $currentDate['period']);
 
-            if($loops < 10) {
+            if ($loops < 10) {
                 // set to correct array
                 if ('expenses' === $transactionType || 'withdrawal' === $transactionType) {
                     $spent = $this->filterJournalsByDate($genericSet, $currentDate['start'], $currentDate['end']);
@@ -590,7 +590,7 @@ trait PeriodOverview
                              'earned'             => $this->groupByCurrency($earned),
                              'transferred'        => $this->groupByCurrency($transferred),
                          ];
-            $loops++;
+            ++$loops;
         }
 
         return $entries;
