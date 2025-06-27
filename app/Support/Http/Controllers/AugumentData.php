@@ -106,7 +106,7 @@ trait AugumentData
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
-        $accounts   = $repository->getAccountsByType([AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::EXPENSE->value, AccountTypeEnum::CASH->value]);
+        $accounts   = $repository->getAccountsByType([AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::EXPENSE->value, AccountTypeEnum::CASH->value]);
         $grouped    = $accounts->groupBy('id')->toArray();
         $return     = [];
         foreach ($accountIds as $combinedId) {
