@@ -17,11 +17,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 - Running balance calculation also triggers on edit.
-- #10489
-- #10493
-- #10499
-- #10507
-- #10510
+- [Issue 10489](https://github.com/firefly-iii/firefly-iii/issues/10489) (Cannot create personal access token if using remote guard auth in latest version) reported by @Palomox
+- [Issue 10493](https://github.com/firefly-iii/firefly-iii/issues/10493) (Reports First Graph Wrong) reported by @nicolopozzato
+- [Issue 10499](https://github.com/firefly-iii/firefly-iii/issues/10499) (Password change results in error 500 (Class "Hash" not found)) reported by @willermo
+- [Issue 10507](https://github.com/firefly-iii/firefly-iii/issues/10507) (Opening balance transactions includes in `has_no_category` filter) reported by @lompi
+- [Issue 10510](https://github.com/firefly-iii/firefly-iii/issues/10510) (Liability accounts show as 'no name' on budget transaction report pie chart.) reported by @slackspace-io
 
 ## 6.2.18 - 2025-06-20
 
