@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.2.19 - 2025-06-29
+
+### Changed
+
+- Currency seeder adds "CNY" again, because it turns out "RMB" is not the official, ISO 4217 code for the Chinese Yuan.
+- The "period overview" next to the transaction lists (withdrawals, deposits and transfers) is limited to 10 entries because it uses a lot of memory. I still have to fix this.
+
+### Removed
+
+- Support for ntfy, since the underlying library is no longer maintained. Will be replaced in the future.
+
+### Fixed
+
+- Running balance calculation also triggers on edit.
+- #10489
+- #10493
+- #10499
+- #10507
+- #10510
+
 ## 6.2.18 - 2025-06-20
 
 ### Changed
