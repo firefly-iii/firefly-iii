@@ -1094,6 +1094,10 @@ class GroupCollector implements GroupCollectorInterface
             ->whereNull('transaction_groups.deleted_at')
             ->whereNull('transaction_journals.deleted_at')
             ->whereNull('source.deleted_at')
+
+            // #10507 ignore opening balance.
+            ->where('transaction_types.type', '!=', TransactionTypeEnum::OPENING_BALANCE->value)
+
             ->whereNotNull('transaction_groups.id')
             ->whereNull('destination.deleted_at')
             ->orderBy('transaction_journals.date', 'DESC')

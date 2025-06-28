@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.2.19 - 2025-06-29
+
+### Changed
+
+- Currency seeder adds "CNY" again, because it turns out "RMB" is not the official, ISO 4217 code for the Chinese Yuan.
+- The "period overview" next to the transaction lists (withdrawals, deposits and transfers) is limited to 10 entries because it uses a lot of memory. I still have to fix this.
+
+### Removed
+
+- Support for ntfy, since the underlying library is no longer maintained. Will be replaced in the future.
+
+### Fixed
+
+- Running balance calculation also triggers on edit.
+- [Issue 10489](https://github.com/firefly-iii/firefly-iii/issues/10489) (Cannot create personal access token if using remote guard auth in latest version) reported by @Palomox
+- [Issue 10493](https://github.com/firefly-iii/firefly-iii/issues/10493) (Reports First Graph Wrong) reported by @nicolopozzato
+- [Issue 10499](https://github.com/firefly-iii/firefly-iii/issues/10499) (Password change results in error 500 (Class "Hash" not found)) reported by @willermo
+- [Issue 10507](https://github.com/firefly-iii/firefly-iii/issues/10507) (Opening balance transactions includes in `has_no_category` filter) reported by @lompi
+- [Issue 10510](https://github.com/firefly-iii/firefly-iii/issues/10510) (Liability accounts show as 'no name' on budget transaction report pie chart.) reported by @slackspace-io
+
 ## 6.2.18 - 2025-06-20
 
 ### Changed

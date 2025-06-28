@@ -55,7 +55,7 @@ final class NavigationPreferredRangeFormatTest extends TestCase
     public function testGivenStartAndEndDatesWhenCallPreferredRangeFormatThenReturnsTheExpectedFormatSuccessful(Carbon $start, Carbon $end, string $expected): void
     {
         $formatPeriod = $this->navigation->preferredRangeFormat($start, $end);
-        self::assertSame($expected, $formatPeriod);
+        $this->assertSame($expected, $formatPeriod);
     }
 
     public static function providePeriods(): Iterator

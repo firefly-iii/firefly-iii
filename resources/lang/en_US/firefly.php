@@ -133,7 +133,7 @@ return [
     'expenses_by_budget'                                                        => 'Expenses by budget',
     'income_by_category'                                                        => 'Income by category',
     'expenses_by_asset_account'                                                 => 'Expenses by asset account',
-    'expenses_by_expense_account'                                               => 'Expenses by expense account',
+    'expenses_by_expense_account'                                               => 'Expenses by destination account',
     'cannot_redirect_to_account'                                                => 'Firefly III cannot redirect you to the correct page. Apologies.',
     'sum_of_expenses'                                                           => 'Sum of expenses',
     'sum_of_income'                                                             => 'Sum of income',

@@ -19,26 +19,24 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use PhpCsFixer\Runner\Parallel\ParallelConfigFactory;
-
 $current = __DIR__;
 
 $paths = [
     $current . '/../../app',
     $current . '/../../config',
-    $current . '/../../database',
     $current . '/../../routes',
     $current . '/../../tests',
-    $current . '/../../resources/lang/en_US',
 ];
 
 $finder = PhpCsFixer\Finder::create()
                            ->in($paths);
 
 
-$config = new PhpCsFixer\Config();
-$config->setParallelConfig(ParallelConfigFactory::detect());
+$config = (new PhpCsFixer\Config())
+        ->setParallelConfig(PhpCsFixer\Runner\Parallel\ParallelConfigFactory::detect())
+        ;
 return $config->setRules(
+
     [
         // rule sets
         '@PHP83Migration'               => true,
@@ -53,9 +51,6 @@ return $config->setRules(
         'statement_indentation'         => true,
         'void_return'                   => true,
 
-        // about importing statements
-        'global_namespace_import' => ['import_classes' => true, 'import_constants' => true, 'import_functions' => true],
-
         // disabled rules
         'native_function_invocation'    => false, // annoying
         'php_unit_data_provider_name'   => false, // bloody annoying long test names
@@ -64,9 +59,15 @@ return $config->setRules(
         'comment_to_phpdoc'             => false, // breaks phpstan lines in combination with PHPStorm.
         'type_declaration_spaces'       => false,
         'cast_spaces'                   => false,
-        'phpdoc_to_comment'             => false, // do not overrule single line comment style, breaks phpstan.
+
+        // enabled rules
+        'global_namespace_import' => true, // matches with rector.
 
         // complex rules
+        'phpdoc_to_comment' => ['ignored_tags' => ['var']],
+        'php_unit_test_case_static_method_calls' => [
+            'call_type' => 'this',
+        ],
         'array_syntax'                  => ['syntax' => 'short'],
         'binary_operator_spaces'        => [
             'default'   => 'at_least_single_space',
@@ -76,5 +77,7 @@ return $config->setRules(
                 '??=' => 'align_single_space_minimal_by_scope',
             ],
         ],
-    ])
+    ]
+
+)
               ->setFinder($finder);

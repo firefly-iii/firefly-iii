@@ -78,7 +78,7 @@ final class ObjectGroupControllerTest extends TestCase
         $response = $this->get(route('api.v1.autocomplete.object-groups'), ['Accept' => 'application/json']);
         $response->assertStatus(401);
         $response->assertHeader('Content-Type', 'application/json');
-        $response->assertContent('{"message":"Unauthenticated","exception":"AuthenticationException"}');
+        $response->assertContent('{"message":"Unauthenticated.","exception":"AuthenticationException"}');
     }
 
     public function testGivenAuthenticatedRequestWhenCallingTheObjectGroupsEndpointThenReturns200HttpCode(): void

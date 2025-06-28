@@ -34,7 +34,7 @@ use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Route as RouteFacade;
-use Hash;
+use Illuminate\Support\Facades\Hash;
 
 use function Safe\parse_url;
 

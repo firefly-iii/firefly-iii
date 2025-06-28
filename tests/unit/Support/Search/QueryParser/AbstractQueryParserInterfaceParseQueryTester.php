@@ -26,7 +26,7 @@ abstract class AbstractQueryParserInterfaceParseQueryTester extends TestCase
     {
         $actual = $this->createParser()->parse($query);
 
-        self::assertObjectEquals($expected, $actual);
+        $this->assertObjectEquals($expected, $actual);
 
     }
 
