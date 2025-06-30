@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Authentication;
 
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Guard;
@@ -55,7 +56,7 @@ class RemoteUserGuard implements Guard
 
     public function authenticate(): void
     {
-        Log::debug(sprintf('Now at %s', __METHOD__));
+         Log::debug(sprintf('Now at %s', __METHOD__));
         if ($this->user instanceof User) {
             Log::debug(sprintf('%s is found: #%d, "%s".', $this->user::class, $this->user->id, $this->user->email));
 
@@ -66,7 +67,7 @@ class RemoteUserGuard implements Guard
         $userID        = request()->server($header) ?? null;
 
         if (function_exists('apache_request_headers')) {
-            Log::debug('Use apache_request_headers to find user ID.');
+             Log::debug('Use apache_request_headers to find user ID.');
             $userID = request()->server($header) ?? apache_request_headers()[$header] ?? null;
         }
 
@@ -76,7 +77,7 @@ class RemoteUserGuard implements Guard
             throw new FireflyException('The guard header was unexpectedly empty. See the logs.');
         }
 
-        Log::debug(sprintf('User ID found in header is "%s"', $userID));
+         Log::debug(sprintf('User ID found in header is "%s"', $userID));
 
         /** @var User $retrievedUser */
         $retrievedUser = $this->provider->retrieveById($userID);
@@ -86,14 +87,14 @@ class RemoteUserGuard implements Guard
 
         if (null !== $header) {
             $emailAddress = (string) (request()->server($header) ?? apache_request_headers()[$header] ?? null);
-            $preference   = app('preferences')->getForUser($retrievedUser, 'remote_guard_alt_email');
+            $preference   = Preferences::getForUser($retrievedUser, 'remote_guard_alt_email');
 
             if ('' !== $emailAddress && null === $preference && $emailAddress !== $userID) {
-                app('preferences')->setForUser($retrievedUser, 'remote_guard_alt_email', $emailAddress);
+                Preferences::setForUser($retrievedUser, 'remote_guard_alt_email', $emailAddress);
             }
             // if the pref isn't null and the object returned isn't null, update the email address.
             if ('' !== $emailAddress && null !== $preference && $emailAddress !== $preference->data) {
-                app('preferences')->setForUser($retrievedUser, 'remote_guard_alt_email', $emailAddress);
+                Preferences::setForUser($retrievedUser, 'remote_guard_alt_email', $emailAddress);
             }
         }
 
