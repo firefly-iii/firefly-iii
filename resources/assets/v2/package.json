@@ -12,7 +12,7 @@
         "laravel-vite-plugin": "^1",
         "patch-package": "^8",
         "sass": "^1",
-        "vite": "^6",
+        "vite": "^7",
         "vite-plugin-manifest-sri": "^0.2.0"
     },
     "dependencies": {
