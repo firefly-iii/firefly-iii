@@ -28,6 +28,7 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Traits\RefreshNotesTrait;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class SetDescription.
@@ -51,7 +52,12 @@ class SetDescription implements ActionInterface
         $after  = $this->action->getValue($journal);
 
         // replace newlines.
-        $after  = str_replace(["\r", "\n", "\t", "\036", "\025"], '', $after);
+        $after  = trim(str_replace(["\r", "\n", "\t", "\036", "\025"], '', $after));
+
+        if('' === $after) {
+            Log::warning('Action resulted in an empty description, reset to default value.');
+            $after = '(no description)';
+        }
 
         DB::table('transaction_journals')
             ->where('id', '=', $journal['transaction_journal_id'])
