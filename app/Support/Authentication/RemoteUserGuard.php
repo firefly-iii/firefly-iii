@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Authentication;
 
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Guard;
@@ -86,14 +87,14 @@ class RemoteUserGuard implements Guard
 
         if (null !== $header) {
             $emailAddress = (string) (request()->server($header) ?? apache_request_headers()[$header] ?? null);
-            $preference   = app('preferences')->getForUser($retrievedUser, 'remote_guard_alt_email');
+            $preference   = Preferences::getForUser($retrievedUser, 'remote_guard_alt_email');
 
             if ('' !== $emailAddress && null === $preference && $emailAddress !== $userID) {
-                app('preferences')->setForUser($retrievedUser, 'remote_guard_alt_email', $emailAddress);
+                Preferences::setForUser($retrievedUser, 'remote_guard_alt_email', $emailAddress);
             }
             // if the pref isn't null and the object returned isn't null, update the email address.
             if ('' !== $emailAddress && null !== $preference && $emailAddress !== $preference->data) {
-                app('preferences')->setForUser($retrievedUser, 'remote_guard_alt_email', $emailAddress);
+                Preferences::setForUser($retrievedUser, 'remote_guard_alt_email', $emailAddress);
             }
         }
 

@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.2.20 - 2025-07-02
+
+### Changed
+
+- New query parser is now the default.
+
+### Fixed
+
+- [Issue 10517](https://github.com/firefly-iii/firefly-iii/issues/10517) (401 when trying to create personal access token with Remote user authentication) reported by @MaxPelly
+- [Discussion 10530](https://github.com/orgs/firefly-iii/discussions/10530) (Find and delete transactions with empty descriptions) started by @umfk
+- [Issue 10535](https://github.com/firefly-iii/firefly-iii/issues/10535) (Internal Firefly III Exception: Undefined array key "currency") reported by @MaelFr
+
 ## 6.2.19 - 2025-06-29
 
 ### Changed

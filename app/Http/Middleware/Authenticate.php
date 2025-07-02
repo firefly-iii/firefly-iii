@@ -97,6 +97,9 @@ class Authenticate
         }
 
         foreach ($guards as $guard) {
+            if ('api' !== $guard) {
+                $this->auth->guard($guard)->authenticate();
+            }
             $result = $this->auth->guard($guard)->check();
             if ($result) {
                 $user = $this->auth->guard($guard)->user();
@@ -107,7 +110,7 @@ class Authenticate
             }
         }
 
-        // this is a massive hack, but if the hander has the oauth exception
+        // this is a massive hack, but if the handler has the oauth exception
         // at this point we can report its error instead of a generic one.
         $message = 'Unauthenticated.';
         if (Handler::$lastError instanceof OAuthServerException) {
