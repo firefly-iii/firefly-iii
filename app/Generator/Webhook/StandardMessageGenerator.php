@@ -175,10 +175,10 @@ class StandardMessageGenerator implements MessageGeneratorInterface
             case WebhookResponse::ACCOUNTS->value:
                 /** @var TransactionGroup $model */
                 $accounts                = $this->collectAccounts($model);
-                $enrichment = new AccountEnrichment();
+                $enrichment              = new AccountEnrichment();
                 $enrichment->setUser($model->user);
                 $enrichment->setNative(Amount::getNativeCurrencyByUserGroup($model->userGroup));
-                $accounts    = $enrichment->enrich($accounts);
+                $accounts                = $enrichment->enrich($accounts);
                 foreach ($accounts as $account) {
                     $transformer               = new AccountTransformer();
                     $transformer->setParameters(new ParameterBag());
