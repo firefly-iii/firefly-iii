@@ -434,6 +434,7 @@ class GroupCollector implements GroupCollectorInterface
 
     public function findNothing(): GroupCollectorInterface
     {
+        Log::warning('The search engine was instructed to FIND NOTHING. This may be a bug.');
         $this->query->where('transaction_groups.id', -1);
 
         return $this;
