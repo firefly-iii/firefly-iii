@@ -608,12 +608,12 @@ class OperatorQuerySearch implements SearchInterface
                 foreach ($parts as $accountId) {
                     $accountId = (int) $accountId;
                     Log::debug(sprintf('Searching for account with ID #%d', $accountId));
-                    $account = $this->accountRepository->find($accountId);
+                    $account   = $this->accountRepository->find($accountId);
                     if (null !== $account) {
                         Log::debug(sprintf('Found account with ID #%d ("%s")', $accountId, $account->name));
                         $collection->push($account);
                     }
-                    if(null === $account) {
+                    if (null === $account) {
                         Log::debug(sprintf('Did not find account with ID #%d', $accountId));
                     }
                 }
