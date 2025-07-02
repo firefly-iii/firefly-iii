@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.2.20 - 2025-07-02
+
+### Changed
+
+- New query parser is now the default.
+
+### Fixed
+
+- #10517
+- #10530
+- #10535
+
 ## 6.2.19 - 2025-06-29
 
 ### Changed
