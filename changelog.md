@@ -11,9 +11,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #10517
-- #10530
-- #10535
+- [Issue 10517](https://github.com/firefly-iii/firefly-iii/issues/10517) (401 when trying to create personal access token with Remote user authentication) reported by @MaxPelly
+- [Discussion 10530](https://github.com/orgs/firefly-iii/discussions/10530) (Find and delete transactions with empty descriptions) started by @umfk
+- [Issue 10535](https://github.com/firefly-iii/firefly-iii/issues/10535) (Internal Firefly III Exception: Undefined array key "currency") reported by @MaelFr
 
 ## 6.2.19 - 2025-06-29
 
