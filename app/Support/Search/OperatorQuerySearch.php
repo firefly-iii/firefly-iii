@@ -2030,8 +2030,7 @@ class OperatorQuerySearch implements SearchInterface
         // get accounts:
         $accounts        = $this->accountRepository->searchAccount($value, $searchTypes, 1337);
         if (0 === $accounts->count() && false === $prohibited) {
-            Log::debug('Found zero accounts, search for non existing account, NO results will be returned.');
-            Log::warning(sprintf('Call to findNothing() from %s.', $operator));
+            Log::warning('Found zero accounts, search for non existing account, NO results will be returned.');
             $this->collector->findNothing();
 
             return;
@@ -2047,8 +2046,7 @@ class OperatorQuerySearch implements SearchInterface
         );
 
         if (0 === $filtered->count()) {
-            Log::debug('Left with zero accounts, so cannot find anything, NO results will be returned.');
-            Log::warning(sprintf('Call to findNothing() from %s.', $operator));
+            Log::warning('Left with zero accounts, so cannot find anything, NO results will be returned.');
             $this->collector->findNothing();
 
             return;
@@ -2113,7 +2111,7 @@ class OperatorQuerySearch implements SearchInterface
         $accounts        = $this->accountRepository->searchAccountNr($value, $searchTypes, 1337);
         if (0 === $accounts->count()) {
             Log::debug('Found zero accounts, search for invalid account.');
-            Log::warning(sprintf('Call to findNothing() from %s.', $operator));
+            Log::warning('Call to findNothing() from searchAccountNr().');
             $this->collector->findNothing();
 
             return;
@@ -2140,7 +2138,7 @@ class OperatorQuerySearch implements SearchInterface
 
         if (0 === $filtered->count()) {
             Log::debug('Left with zero, search for invalid account');
-            Log::warning(sprintf('Call to findNothing() from %s.', $operator));
+            Log::warning('Call to findNothing() from searchAccountNr().');
             $this->collector->findNothing();
 
             return;
