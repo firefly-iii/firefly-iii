@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace Tests\unit\Support;
 
 use Override;
-use Iterator;
 use FireflyIII\Support\Navigation;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\integration\TestCase;
@@ -57,7 +56,7 @@ final class NavigationPreferredCarbonFormatByPeriodTest extends TestCase
         $this->assertSame($expected, $formatPeriod);
     }
 
-    public static function providePeriods(): Iterator
+    public static function providePeriods(): iterable
     {
         yield 'unknown' => ['1day', 'Y-m-d'];
 

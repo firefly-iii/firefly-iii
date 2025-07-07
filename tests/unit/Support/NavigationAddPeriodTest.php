@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace Tests\unit\Support;
 
 use Override;
-use Iterator;
 use Carbon\Carbon;
 use FireflyIII\Support\Calendar\Periodicity;
 use FireflyIII\Support\Navigation;
@@ -111,7 +110,7 @@ final class NavigationAddPeriodTest extends TestCase
         $this->assertSame($expected->toDateString(), $period->toDateString());
     }
 
-    public static function providePeriods(): Iterator
+    public static function providePeriods(): iterable
     {
         yield '1D' => ['1D', Carbon::now(), Carbon::tomorrow()];
 
@@ -161,7 +160,7 @@ final class NavigationAddPeriodTest extends TestCase
         $this->assertSame($expected->toDateString(), $period->toDateString());
     }
 
-    public static function provideFrequencies(): Iterator
+    public static function provideFrequencies(): iterable
     {
         yield Periodicity::Daily->name => [Periodicity::Daily, Carbon::now(), Carbon::tomorrow()];
 
@@ -215,7 +214,7 @@ final class NavigationAddPeriodTest extends TestCase
         $this->assertSame($expected->toDateString(), $period->toDateString());
     }
 
-    public static function provideMonthPeriods(): Iterator
+    public static function provideMonthPeriods(): iterable
     {
         yield '1M' => ['1M', Carbon::parse('2023-06-25'), Carbon::parse('2023-06-25')->addMonthsNoOverflow(1)];
 
