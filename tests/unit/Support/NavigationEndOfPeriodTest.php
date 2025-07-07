@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tests\unit\Support;
 
 use Override;
-use Iterator;
 use Carbon\Carbon;
 use FireflyIII\Support\Navigation;
 use Illuminate\Support\Facades\Log;
@@ -58,7 +57,7 @@ final class NavigationEndOfPeriodTest extends TestCase
         $this->assertSame($expected->toDateString(), $period->toDateString());
     }
 
-    public static function provideDates(): Iterator
+    public static function provideDates(): iterable
     {
         yield '1D' => ['1D', Carbon::now(), Carbon::now()->endOfDay()];
 
@@ -122,7 +121,7 @@ final class NavigationEndOfPeriodTest extends TestCase
         Log::shouldHaveReceived('error', [$expectedMessage]);
     }
 
-    public static function provideUnknownFrequencies(): Iterator
+    public static function provideUnknownFrequencies(): iterable
     {
         yield '1day' => ['1day', Carbon::now(), Carbon::now()];
 
