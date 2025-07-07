@@ -78,8 +78,8 @@ return [
         'running_balance_column' => env('USE_RUNNING_BALANCE', false),
         // see cer.php for exchange rates feature flag.
     ],
-    'version'                      => 'develop/2025-07-06',
-    'build_time'                   => 1751823230,
+    'version'                      => 'develop/2025-07-07',
+    'build_time'                   => 1751859127,
     'api_version'                  => '2.1.0', // field is no longer used.
     'db_version'                   => 25,
 
