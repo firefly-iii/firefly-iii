@@ -78,7 +78,7 @@ class TagFactory
             'user_id'       => $this->user->id,
             'user_group_id' => $this->userGroup->id,
             'tag'           => trim((string) $data['tag']),
-            'tagMode'       => 'nothing',
+            'tag_mode'       => 'nothing',
             'date'          => $data['date'],
             'description'   => $data['description'],
             'latitude'      => null,

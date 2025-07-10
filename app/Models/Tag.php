@@ -40,7 +40,7 @@ class Tag extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    protected $fillable = ['user_id', 'user_group_id', 'tag', 'date', 'date_tz', 'description', 'tagMode'];
+    protected $fillable = ['user_id', 'user_group_id', 'tag', 'date', 'date_tz', 'description', 'tag_mode'];
 
     protected $hidden   = ['zoomLevel', 'latitude', 'longitude'];
 

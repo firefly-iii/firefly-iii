@@ -82,13 +82,13 @@
                                     {% for tag in journal.tags %}
 
                                         <h4 style="display: inline;"><a class="label label-success" href="{{ route('tags.show',tag) }}">
-                                                {% if tag.tagMode == 'nothing' %}
+                                                {% if tag.tag_mode == 'nothing' %}
                                                     <span class="fa fa-fw fa-tag"></span>
                                                 {% endif %}
-                                                {% if tag.tagMode == 'balancingAct' %}
+                                                {% if tag.tag_mode == 'balancingAct' %}
                                                     <span class="fa fa-fw fa-refresh"></span>
                                                 {% endif %}
-                                                {% if tag.tagMode == 'advancePayment' %}
+                                                {% if tag.tag_mode == 'advancePayment' %}
                                                     <span class="fa fa-fw fa-sort-numeric-desc"></span>
                                                 {% endif %}
                                                 {{ tag.tag }}</a>
