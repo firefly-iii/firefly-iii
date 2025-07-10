@@ -75,15 +75,15 @@ class TagFactory
         $latitude  = 0.0 === (float) $data['latitude'] ? null : (float) $data['latitude'];   // intentional float
         $longitude = 0.0 === (float) $data['longitude'] ? null : (float) $data['longitude']; // intentional float
         $array     = [
-            'user_id'       => $this->user->id,
-            'user_group_id' => $this->userGroup->id,
-            'tag'           => trim((string) $data['tag']),
+            'user_id'        => $this->user->id,
+            'user_group_id'  => $this->userGroup->id,
+            'tag'            => trim((string) $data['tag']),
             'tag_mode'       => 'nothing',
-            'date'          => $data['date'],
-            'description'   => $data['description'],
-            'latitude'      => null,
-            'longitude'     => null,
-            'zoomLevel'     => null,
+            'date'           => $data['date'],
+            'description'    => $data['description'],
+            'latitude'       => null,
+            'longitude'      => null,
+            'zoomLevel'      => null,
         ];
 
         /** @var null|Tag $tag */
