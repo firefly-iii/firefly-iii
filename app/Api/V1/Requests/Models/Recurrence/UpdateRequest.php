@@ -154,7 +154,7 @@ class UpdateRequest extends FormRequest
         return [
             'title'                                => sprintf('min:1|max:255|uniqueObjectForUser:recurrences,title,%d', $recurrence->id),
             'description'                          => 'min:1|max:32768',
-            'first_date'                           => 'date|after:1900-01-01|before:2099-12-31',
+            'first_date'                           => 'date|after:1970-01-02|before:2038-01-17',
             'apply_rules'                          => [new IsBoolean()],
             'active'                               => [new IsBoolean()],
             'repeat_until'                         => 'nullable|date',

@@ -65,9 +65,9 @@ class DateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'date'  => 'date|after:1900-01-01|before:2099-12-31',
-            'start' => 'date|after:1900-01-01|before:2099-12-31|before:end|required_with:end',
-            'end'   => 'date|after:1900-01-01|before:2099-12-31|after:start|required_with:start',
+            'date'  => 'date|after:1970-01-02|before:2038-01-17',
+            'start' => 'date|after:1970-01-02|before:2038-01-17|before:end|required_with:end',
+            'end'   => 'date|after:1970-01-02|before:2038-01-17|after:start|required_with:start',
         ];
     }
 }

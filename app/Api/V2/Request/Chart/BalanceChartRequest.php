@@ -60,8 +60,8 @@ class BalanceChartRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'start'      => 'required|date|after:1900-01-01|before:2099-12-31',
-            'end'        => 'required|date|after_or_equal:start|before:2099-12-31|after:1900-01-01',
+            'start'      => 'required|date|after:1970-01-02|before:2038-01-17',
+            'end'        => 'required|date|after_or_equal:start|before:2038-01-17|after:1970-01-02',
             'accounts.*' => 'required|exists:accounts,id',
             'period'     => sprintf('required|in:%s', implode(',', config('firefly.valid_view_ranges'))),
         ];

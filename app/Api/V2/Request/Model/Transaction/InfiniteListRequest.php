@@ -109,8 +109,8 @@ class InfiniteListRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'start'     => 'date|after:1900-01-01|before:2099-12-31',
-            'end'       => 'date|after:start|after:1900-01-01|before:2099-12-31',
+            'start'     => 'date|after:1970-01-02|before:2038-01-17',
+            'end'       => 'date|after:start|after:1970-01-02|before:2038-01-17',
             'start_row' => 'integer|min:0|max:4294967296',
             'end_row'   => 'integer|min:0|max:4294967296|gt:start_row',
         ];
