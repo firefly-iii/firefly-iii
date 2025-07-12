@@ -107,7 +107,7 @@ class RecurrenceController extends Controller
             $repetitionMoment = str_ireplace('ndom,', '', $request->get('type'));
         }
         if ('yearly' === $repetitionType) {
-            $repetitionMoment = explode(',', (string) $request->get('type'))[1] ?? '2018-01-01';
+            $repetitionMoment = explode(',', (string) $request->get('type'))[1] ?? '2025-01-01';
         }
         $actualStart->startOfDay();
         $repetition                    = new RecurrenceRepetition();
