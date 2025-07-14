@@ -110,6 +110,7 @@
     "/public/v1/js/lib/jquery.autocomplete.min.js": "/public/v1/js/lib/jquery.autocomplete.min.js",
     "/public/v1/js/lib/jquery.color-2.1.2.min.js": "/public/v1/js/lib/jquery.color-2.1.2.min.js",
     "/public/v1/js/lib/modernizr-custom.js": "/public/v1/js/lib/modernizr-custom.js",
+    "/public/v1/js/lib/moment/af_ZA.js": "/public/v1/js/lib/moment/af_ZA.js",
     "/public/v1/js/lib/moment/bg_BG.js": "/public/v1/js/lib/moment/bg_BG.js",
     "/public/v1/js/lib/moment/ca_ES.js": "/public/v1/js/lib/moment/ca_ES.js",
     "/public/v1/js/lib/moment/cs_CZ.js": "/public/v1/js/lib/moment/cs_CZ.js",
