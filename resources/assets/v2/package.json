@@ -9,7 +9,7 @@
     },
     "devDependencies": {
         "axios": "^1",
-        "laravel-vite-plugin": "^1",
+        "laravel-vite-plugin": "^2",
         "patch-package": "^8",
         "sass": "^1",
         "vite": "^6",
