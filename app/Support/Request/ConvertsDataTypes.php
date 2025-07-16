@@ -257,16 +257,16 @@ trait ConvertsDataTypes
             try {
                 $carbon = Carbon::createFromFormat('Y-m-d', $value);
             } catch (InvalidDateException $e) { // @phpstan-ignore-line
-                app('log')->error(sprintf('[1] "%s" is not a valid date: %s', $value, $e->getMessage()));
+                Log::error(sprintf('[1] "%s" is not a valid date: %s', $value, $e->getMessage()));
 
                 return null;
             } catch (InvalidFormatException $e) { // @phpstan-ignore-line
-                app('log')->error(sprintf('[2] "%s" is of an invalid format: %s', $value, $e->getMessage()));
+                Log::error(sprintf('[2] "%s" is of an invalid format: %s', $value, $e->getMessage()));
 
                 return null;
             }
             if (!$carbon instanceof Carbon) {
-                app('log')->error(sprintf('[2] "%s" is of an invalid format.', $value));
+                Log::error(sprintf('[2] "%s" is of an invalid format.', $value));
 
                 return null;
             }
@@ -278,11 +278,11 @@ trait ConvertsDataTypes
         try {
             $carbon = Carbon::parse($value);
         } catch (InvalidDateException $e) { // @phpstan-ignore-line
-            app('log')->error(sprintf('[3] "%s" is not a valid date or time: %s', $value, $e->getMessage()));
+            Log::error(sprintf('[3] "%s" is not a valid date or time: %s', $value, $e->getMessage()));
 
             return null;
         } catch (InvalidFormatException $e) {
-            app('log')->error(sprintf('[4] "%s" is of an invalid format: %s', $value, $e->getMessage()));
+            Log::error(sprintf('[4] "%s" is of an invalid format: %s', $value, $e->getMessage()));
 
             return null;
         }
@@ -306,6 +306,7 @@ trait ConvertsDataTypes
     protected function dateFromValue(?string $string): ?Carbon
     {
         if (null === $string) {
+
             return null;
         }
         if ('' === $string) {
@@ -319,11 +320,11 @@ trait ConvertsDataTypes
             // @ignoreException
         }
         if (!$carbon instanceof Carbon) {
-            app('log')->debug(sprintf('Invalid date: %s', $string));
+            Log::debug(sprintf('Invalid date: %s', $string));
 
             return null;
         }
-        app('log')->debug(sprintf('Date object: %s (%s)', $carbon->toW3cString(), $carbon->getTimezone()));
+        Log::debug(sprintf('Date object: %s (%s) from "%s"', $carbon->toW3cString(), $carbon->getTimezone(), $string));
 
         return $carbon;
     }
@@ -383,7 +384,7 @@ trait ConvertsDataTypes
             Log::debug(sprintf('Exception when parsing date "%s".', $this->get($field)));
         }
         if (!$result instanceof Carbon) {
-            app('log')->debug(sprintf('Exception when parsing date "%s".', $this->get($field)));
+            Log::debug(sprintf('Exception when parsing date "%s".', $this->get($field)));
         }
 
         return $result;

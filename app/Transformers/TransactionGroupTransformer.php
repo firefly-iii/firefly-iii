@@ -128,7 +128,6 @@ class TransactionGroupTransformer extends AbstractTransformer
         $recurrenceTotal = null !== $recurrenceTotal ? (int) $recurrenceTotal : null;
         $recurrenceCount = $transaction['meta']['recurrence_count'] ?? null;
         $recurrenceCount = null !== $recurrenceCount ? (int) $recurrenceCount : null;
-
         return [
             'user'                            => (string) $transaction['user_id'],
             'transaction_journal_id'          => (string) $transaction['transaction_journal_id'],
@@ -220,12 +219,12 @@ class TransactionGroupTransformer extends AbstractTransformer
             'sepa_ci'                         => $transaction['meta']['sepa_ci'] ?? null,
             'sepa_batch_id'                   => $transaction['meta']['sepa_batch_id'] ?? null,
 
-            'interest_date'                   => $transaction['meta_date']['interest_date'] ?? null,
-            'book_date'                       => $transaction['meta_date']['book_date'] ?? null,
-            'process_date'                    => $transaction['meta_date']['process_date'] ?? null,
-            'due_date'                        => $transaction['meta_date']['due_date'] ?? null,
-            'payment_date'                    => $transaction['meta_date']['payment_date'] ?? null,
-            'invoice_date'                    => $transaction['meta_date']['invoice_date'] ?? null,
+            'interest_date'                   => array_key_exists('interest_date', $transaction['meta_date']) ? $transaction['meta_date']['interest_date']->toW3CString() : null,
+            'book_date'                       => array_key_exists('book_date', $transaction['meta_date']) ? $transaction['meta_date']['book_date']->toW3CString() : null,
+            'process_date'                    => array_key_exists('process_date', $transaction['meta_date']) ? $transaction['meta_date']['process_date']->toW3CString() : null,
+            'due_date'                        => array_key_exists('due_date', $transaction['meta_date']) ? $transaction['meta_date']['due_date']->toW3CString() : null,
+            'payment_date'                    => array_key_exists('payment_date', $transaction['meta_date']) ? $transaction['meta_date']['payment_date']->toW3CString() : null,
+            'invoice_date'                    => array_key_exists('invoice_date', $transaction['meta_date']) ? $transaction['meta_date']['invoice_date']->toW3CString() : null,
             // location data
             'longitude'                       => $transaction['location']['longitude'],
             'latitude'                        => $transaction['location']['latitude'],
