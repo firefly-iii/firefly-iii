@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.2.21 - 2025-07-18
+
+### Added
+
+- Debug information to search engine.
+
+### Changed
+
+- Rename table field for postgres databases.
+
+### Fixed
+
+- #10581
+- #10601
+
 ## 6.2.20 - 2025-07-02
 
 ### Changed
