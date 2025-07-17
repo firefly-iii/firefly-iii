@@ -128,6 +128,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         $recurrenceTotal = null !== $recurrenceTotal ? (int) $recurrenceTotal : null;
         $recurrenceCount = $transaction['meta']['recurrence_count'] ?? null;
         $recurrenceCount = null !== $recurrenceCount ? (int) $recurrenceCount : null;
+
         return [
             'user'                            => (string) $transaction['user_id'],
             'transaction_journal_id'          => (string) $transaction['transaction_journal_id'],

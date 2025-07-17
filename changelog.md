@@ -15,8 +15,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #10581
-- #10601
+- [Issue 10581](https://github.com/firefly-iii/firefly-iii/issues/10581) (Epoch doesn't fit in a PHP integer error on 32-bit systems due to strict date validation) reported by @kksandr7
+- [Discussion 10601](https://github.com/orgs/firefly-iii/discussions/10601) (Edit a transaction will result in an incorrect date) started by @MasterZhang007
 
 ## 6.2.20 - 2025-07-02
 
