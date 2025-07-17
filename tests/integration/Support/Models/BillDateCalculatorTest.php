@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace Tests\integration\Support\Models;
 
 use Override;
-use Iterator;
 use Carbon\Carbon;
 use FireflyIII\Support\Models\BillDateCalculator;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -59,7 +58,7 @@ final class BillDateCalculatorTest extends TestCase
         $this->assertSame($expected, $result);
     }
 
-    public static function provideDates(): Iterator
+    public static function provideDates(): iterable
     {
         // Carbon $earliest, Carbon $latest, Carbon $billStart, string $period, int $skip, ?Carbon $lastPaid
         // basic monthly bill.x

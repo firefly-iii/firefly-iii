@@ -86,7 +86,7 @@ class AutocompleteRequest extends FormRequest
         $valid = array_keys($this->types);
 
         return [
-            'date'              => 'nullable|date|after:1900-01-01|before:2100-01-01',
+            'date'              => 'nullable|date|after:1970-01-02|before:2038-01-17',
             'query'             => 'nullable|string',
             'size'              => 'nullable|integer|min:1|max:100',
             'page'              => 'nullable|integer|min:1',

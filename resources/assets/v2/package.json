@@ -9,16 +9,16 @@
     },
     "devDependencies": {
         "axios": "^1",
-        "laravel-vite-plugin": "^1",
+        "laravel-vite-plugin": "^2",
         "patch-package": "^8",
         "sass": "^1",
-        "vite": "^6",
+        "vite": "^7",
         "vite-plugin-manifest-sri": "^0.2.0"
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^6.4.0",
         "@popperjs/core": "^2.11.8",
-        "admin-lte": "^4.0.0-beta3",
+        "admin-lte": "^4.0.0-rc4",
         "alpinejs": "^3.13.7",
         "bootstrap": "^5",
         "bootstrap5-autocomplete": "^1",

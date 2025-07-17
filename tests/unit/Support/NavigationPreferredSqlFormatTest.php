@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace Tests\unit\Support;
 
 use Override;
-use Iterator;
 use Carbon\Carbon;
 use FireflyIII\Support\Navigation;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -58,7 +57,7 @@ final class NavigationPreferredSqlFormatTest extends TestCase
         $this->assertSame($expected, $formatPeriod);
     }
 
-    public static function provideDates(): Iterator
+    public static function provideDates(): iterable
     {
         yield '1 week' => [Carbon::now(), Carbon::now()->addWeek(), '%Y-%m-%d'];
 

@@ -61,8 +61,8 @@ class ChartRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'start'       => 'required|date|after:1900-01-01|before:2099-12-31|before_or_equal:end',
-            'end'         => 'required|date|after:1900-01-01|before:2099-12-31|after_or_equal:start',
+            'start'       => 'required|date|after:1970-01-02|before:2038-01-17|before_or_equal:end',
+            'end'         => 'required|date|after:1970-01-02|before:2038-01-17|after_or_equal:start',
             'preselected' => sprintf('nullable|in:%s', implode(',', config('firefly.preselected_accounts'))),
             'period'      => sprintf('nullable|in:%s', implode(',', config('firefly.valid_view_ranges'))),
             'accounts.*'  => 'exists:accounts,id',

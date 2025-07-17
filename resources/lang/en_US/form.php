@@ -64,7 +64,7 @@ return [
     'budget_id'                    => 'Budget',
     'bill_id'                      => 'Subscription',
     'opening_balance'              => 'Opening balance',
-    'tagMode'                      => 'Tag mode',
+    'tag_mode'                      => 'Tag mode',
     'virtual_balance'              => 'Virtual balance',
 
 

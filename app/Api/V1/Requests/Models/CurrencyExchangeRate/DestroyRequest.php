@@ -45,7 +45,7 @@ class DestroyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'date' => 'required|date|after:1900-01-01|before:2099-12-31',
+            'date' => 'required|date|after:1970-01-02|before:2038-01-17',
         ];
     }
 }

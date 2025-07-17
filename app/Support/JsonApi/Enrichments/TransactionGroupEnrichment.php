@@ -149,7 +149,9 @@ class TransactionGroupEnrichment implements EnrichmentInterface
                 continue;
             }
             if (in_array($name, $this->dateFields, true)) {
-                $this->metaData[$entry['transaction_journal_id']][$name] = Carbon::parse($data);
+                Log::debug(sprintf('Meta data for "%s" is a date  : "%s"', $name, $data));
+                $this->metaData[$entry['transaction_journal_id']][$name] = Carbon::parse($data, config('app.timezone'));
+                Log::debug(sprintf('Meta data for "%s" converts to: "%s"', $name, $this->metaData[$entry['transaction_journal_id']][$name]->toW3CString()));
 
                 continue;
             }

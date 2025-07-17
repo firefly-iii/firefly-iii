@@ -116,7 +116,7 @@ class Controller extends BaseController
                     app('log')->warning(sprintf('Ignored invalid date "%s" in API v2 controller parameter check: %s', substr((string) $date, 0, 20), $e->getMessage()));
                 }
                 // out of range? set to null.
-                if ($obj instanceof Carbon && ($obj->year <= 1900 || $obj->year > 2099)) {
+                if ($obj instanceof Carbon && ($obj->year <= 1970 || $obj->year > 2038)) {
                     app('log')->warning(sprintf('Refuse to use date "%s" in API v2 controller parameter check: %s', $field, $obj->toAtomString()));
                     $obj = null;
                 }

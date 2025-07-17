@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.2.21 - 2025-07-18
+
+### Added
+
+- Debug information to search engine.
+
+### Changed
+
+- Rename table field for postgres databases.
+
+### Fixed
+
+- [Issue 10581](https://github.com/firefly-iii/firefly-iii/issues/10581) (Epoch doesn't fit in a PHP integer error on 32-bit systems due to strict date validation) reported by @kksandr7
+- [Discussion 10601](https://github.com/orgs/firefly-iii/discussions/10601) (Edit a transaction will result in an incorrect date) started by @MasterZhang007
+
 ## 6.2.20 - 2025-07-02
 
 ### Changed

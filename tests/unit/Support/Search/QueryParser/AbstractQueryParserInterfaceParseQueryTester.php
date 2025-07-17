@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\unit\Support\Search\QueryParser;
 
-use Iterator;
 use FireflyIII\Support\Search\QueryParser\FieldNode;
 use FireflyIII\Support\Search\QueryParser\QueryParserInterface;
 use FireflyIII\Support\Search\QueryParser\StringNode;
@@ -30,7 +29,7 @@ abstract class AbstractQueryParserInterfaceParseQueryTester extends TestCase
 
     }
 
-    public static function queryDataProvider(): Iterator
+    public static function queryDataProvider(): iterable
     {
         yield 'empty query' => [
             '',
