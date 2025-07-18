@@ -33,6 +33,7 @@ $finder = PhpCsFixer\Finder::create()
 
 
 $config = (new PhpCsFixer\Config())
+        // ->setUnsupportedPhpVersionAllowed(true) // use this when PHP 8.5 comes out.
         ->setParallelConfig(PhpCsFixer\Runner\Parallel\ParallelConfigFactory::detect())
         ;
 return $config->setRules(
