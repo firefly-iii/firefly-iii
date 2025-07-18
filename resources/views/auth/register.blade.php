@@ -29,7 +29,7 @@
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="invite_code" value="{{ $inviteCode ?? '' }}">
                 <div class="input-group mb-3">
-                    <input type="email" name="email" autofocus required value="{{ $email }}" class="form-control" "
+                    <input type="email" name="email" autofocus required value="{{ $email }}" class="form-control"
                            placeholder="{{ trans('form.email') }}"/>
                     <div class="input-group-text"> <em class="fa-solid fa-envelope"></em> </div>
                 </div>
