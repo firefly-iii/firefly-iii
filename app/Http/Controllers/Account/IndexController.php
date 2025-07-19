@@ -88,7 +88,9 @@ class IndexController extends Controller
 
         /** @var Carbon $end */
         $end           = clone session('end', today(config('app.timezone'))->endOfMonth());
-        $start->subDay();
+
+        // #10618 go to the end of the previous day.
+        $start->subSecond();
 
         $ids           = $accounts->pluck('id')->toArray();
         Log::debug(sprintf('inactive start: finalAccountsBalance("%s")', $start->format('Y-m-d H:i:s')));
@@ -164,8 +166,8 @@ class IndexController extends Controller
         /** @var Carbon $end */
         $end           = clone session('end', today(config('app.timezone'))->endOfMonth());
 
-        // 2025-05-11 removed this so start is exactly the start of the month.
-        // $start->subDay();
+        // #10618 go to the end of the previous day.
+        $start->subSecond();
 
         $ids           = $accounts->pluck('id')->toArray();
         Log::debug(sprintf('index start: finalAccountsBalance("%s")', $start->format('Y-m-d H:i:s')));
