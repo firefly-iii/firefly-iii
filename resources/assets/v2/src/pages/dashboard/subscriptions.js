@@ -31,6 +31,71 @@ let afterPromises = false;
 let apiData = [];
 let subscriptionData = {};
 
+function addObjectGroupInfo(data) {
+    let objectGroupId = parseInt(data.object_group_id);
+    if (!subscriptionData.hasOwnProperty(objectGroupId)) {
+        subscriptionData[objectGroupId] = {
+            id: objectGroupId,
+            title: null === data.object_group_title ? i18next.t('firefly.default_group_title_name_plain') : data.object_group_title,
+            order: parseInt(data.object_group_order),
+            payment_info: {},
+            bills: [],
+        };
+    }
+}
+
+function parseBillInfo(data) {
+    let result = {
+        id: data.id,
+        name: data.attributes.name,
+        amount_min: data.attributes.amount_min,
+        amount_max: data.attributes.amount_max,
+        amount: (parseFloat(data.attributes.amount_max) + parseFloat(data.attributes.amount_min)) / 2,
+        currency_code: data.attributes.currency_code,
+        // paid transactions:
+        transactions: [],
+        // unpaid moments
+        pay_dates: data.attributes.pay_dates,
+        paid: data.attributes.paid_dates.length > 0,
+    };
+    // set variables
+    result.expected_amount = formatMoney(result.amount, result.currency_code);
+    result.expected_times = i18next.t('firefly.subscr_expected_x_times', {
+        times: data.attributes.pay_dates.length,
+        amount: result.expected_amount
+    });
+    return result;
+}
+
+function parsePaidTransactions(paid_dates, bill) {
+    if( !paid_dates || paid_dates.length < 1) {
+        return [];
+    }
+    let result = [];
+    // add transactions (simpler version)
+    for (let i in paid_dates) {
+        if (paid_dates.hasOwnProperty(i)) {
+            const currentPayment = paid_dates[i];
+            console.log(currentPayment);
+            // math: -100+(paid/expected)*100
+            let percentage = Math.round(-100 + ((parseFloat(currentPayment.amount) ) / parseFloat(bill.amount)) * 100);
+            let currentTransaction = {
+                amount: formatMoney(currentPayment.amount, currentPayment.currency_code),
+                percentage: percentage,
+                date: format(new Date(currentPayment.date), 'PP'),
+                foreign_amount: null,
+            };
+            if (null !== currentPayment.foreign_currency_code) {
+                currentTransaction.foreign_amount =  currentPayment.foreign_amount;
+                currentTransaction.foreign_currency_code = currentPayment.foreign_currency_code;
+            }
+
+            result.push(currentTransaction);
+        }
+    }
+    return result;
+}
+
 function downloadSubscriptions(params) {
     const getter = new Get();
     return getter.list(params)
@@ -41,80 +106,14 @@ function downloadSubscriptions(params) {
             for (let i in data) {
                 if (data.hasOwnProperty(i)) {
                     let current = data[i];
-                    //console.log(current);
                     if (current.attributes.active && current.attributes.pay_dates.length > 0) {
-                        let objectGroupId = null === current.attributes.object_group_id ? 0 : current.attributes.object_group_id;
-                        let objectGroupTitle = null === current.attributes.object_group_title ? i18next.t('firefly.default_group_title_name_plain') : current.attributes.object_group_title;
-                        let objectGroupOrder = null === current.attributes.object_group_order ? 0 : current.attributes.object_group_order;
-                        if (!subscriptionData.hasOwnProperty(objectGroupId)) {
-                            subscriptionData[objectGroupId] = {
-                                id: objectGroupId,
-                                title: objectGroupTitle,
-                                order: objectGroupOrder,
-                                payment_info: {},
-                                bills: [],
-                            };
-                        }
-                        // TODO this conversion needs to be inside some kind of a parsing class.
-                        let bill = {
-                            id: current.id,
-                            name: current.attributes.name,
-                            // amount
-                            amount_min: current.attributes.amount_min,
-                            amount_max: current.attributes.amount_max,
-                            amount: (parseFloat(current.attributes.amount_max) + parseFloat(current.attributes.amount_min)) / 2,
-                            currency_code: current.attributes.currency_code,
+                        // create or update object group
+                        let objectGroupId = parseInt(current.attributes.object_group_id);
+                        addObjectGroupInfo(current.attributes);
 
-                            // native amount
-                            // native_amount_min: current.attributes.native_amount_min,
-                            // native_amount_max: current.attributes.native_amount_max,
-                            // native_amount: (parseFloat(current.attributes.native_amount_max) + parseFloat(current.attributes.native_amount_min)) / 2,
-                            // native_currency_code: current.attributes.native_currency_code,
-
-                            // paid transactions:
-                            transactions: [],
-
-                            // unpaid moments
-                            pay_dates: current.attributes.pay_dates,
-                            paid: current.attributes.paid_dates.length > 0,
-                        };
-                        // set variables
-                        bill.expected_amount = formatMoney(bill.amount, bill.currency_code);
-                        bill.expected_times = i18next.t('firefly.subscr_expected_x_times', {
-                            times: current.attributes.pay_dates.length,
-                            amount: bill.expected_amount
-                        });
-
-                        // add transactions (simpler version)
-                        for (let iii in current.attributes.paid_dates) {
-                            if (current.attributes.paid_dates.hasOwnProperty(iii)) {
-                                const currentPayment = current.attributes.paid_dates[iii];
-                                let percentage = 100;
-                                // math: -100+(paid/expected)*100
-                                if (params.convertToNative) {
-                                    percentage = Math.round(-100 + ((parseFloat(currentPayment.native_amount) * -1) / parseFloat(bill.native_amount)) * 100);
-                                }
-                                if (!params.convertToNative) {
-                                    percentage = Math.round(-100 + ((parseFloat(currentPayment.amount) * -1) / parseFloat(bill.amount)) * 100);
-                                }
-                                // TODO fix me
-                                currentPayment.currency_code = 'EUR';
-                                console.log('Currency code: "'+currentPayment+'"');
-                                console.log(currentPayment);
-                                let currentTransaction = {
-                                    amount: formatMoney(currentPayment.amount, currentPayment.currency_code),
-                                    percentage: percentage,
-                                    date: format(new Date(currentPayment.date), 'PP'),
-                                    foreign_amount: null,
-                                };
-                                if (null !== currentPayment.foreign_currency_code) {
-                                    currentTransaction.foreign_amount =  currentPayment.foreign_amount;
-                                    currentTransaction.foreign_currency_code = currentPayment.foreign_currency_code;
-                                }
-
-                                bill.transactions.push(currentTransaction);
-                            }
-                        }
+                        // create and update the bill.
+                        let bill = parseBillInfo(current);
+                        bill.transactions = parsePaidTransactions(current.attributes.paid_dates, bill);
 
                         subscriptionData[objectGroupId].bills.push(bill);
                         if (0 === current.attributes.paid_dates.length) {

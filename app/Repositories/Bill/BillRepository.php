@@ -312,11 +312,23 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
         Log::debug(sprintf('Search for linked journals between %s and %s', $start->toW3cString(), $end->toW3cString()));
 
         return $bill->transactionJournals()
+            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+            ->leftJoin('transaction_currencies AS currency', 'currency.id', '=', 'transactions.transaction_currency_id')
+            ->leftJoin('transaction_currencies AS foreign_currency', 'foreign_currency.id', '=', 'transactions.foreign_currency_id')
+            ->where('transactions.amount', '>', 0)
             ->before($end)->after($start)->get(
                 [
                     'transaction_journals.id',
                     'transaction_journals.date',
                     'transaction_journals.transaction_group_id',
+                    'transactions.transaction_currency_id',
+                    'currency.code AS transaction_currency_code',
+                    'currency.decimal_places AS transaction_currency_decimal_places',
+                    'transactions.foreign_currency_id',
+                    'foreign_currency.code AS foreign_currency_code',
+                    'foreign_currency.decimal_places AS foreign_currency_decimal_places',
+                    'transactions.amount',
+                    'transactions.foreign_amount',
                 ]
             )
         ;
