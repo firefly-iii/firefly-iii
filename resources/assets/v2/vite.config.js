@@ -83,7 +83,8 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
 
         server: {
             cors: true,
-            origin: 'https://192.168.96.154:5173',
+            // make sure this IP matches the IP of the dev machine.
+            origin: 'https://192.168.96.162:5173',
             watch: {
                 usePolling: true,
             },

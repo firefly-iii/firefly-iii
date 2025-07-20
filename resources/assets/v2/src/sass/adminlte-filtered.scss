@@ -1,5 +1,5 @@
 /*!
- * adminlte-filteres.scss
+ * adminlte-filtered.scss
  * Copyright (c) 2024 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -23,7 +23,7 @@
 // copied from:
 
 /*!
- *   AdminLTE v4.0.0-alpha2
+ *   AdminLTE v4.0.0-rc3
  *   Author: Colorlib
  *   Website: AdminLTE.io <https://adminlte.io>
  *   License: Open source - MIT <https://opensource.org/licenses/MIT>
@@ -84,7 +84,6 @@
 // Bootstrap Utilities
 @import "bootstrap/scss/utilities/api";
 
-
 // AdminLTE Configuration
 // ---------------------------------------------------
 @import "admin-lte/src/scss/variables";
@@ -97,9 +96,12 @@
 @import "admin-lte/src/scss/parts/components";
 @import "admin-lte/src/scss/parts/extra-components";
 
-// @import "admin-lte/src/scss/parts/pages";
-@import "admin-lte/src/scss/pages/login_and_register";
+//
+// Part: Pages
+//
 
+@import "admin-lte/src/scss/pages/login_and_register";
 @import "admin-lte/src/scss/parts/miscellaneous";
 
-
+// AdminLTE Accessibility Styles - WCAG 2.1 AA Compliance
+@import "admin-lte/src/scss/accessibility";

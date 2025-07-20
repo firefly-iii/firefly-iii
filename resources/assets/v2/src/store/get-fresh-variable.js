@@ -26,13 +26,17 @@ export function getFreshVariable(name, defaultValue = null) {
     return getter.getByName(name).then((response) => {
         // console.log('Get from API');
         return Promise.resolve(parseResponse(name, response));
-    }).catch(() => {
-        // preference does not exist (yet).
-        // POST it and then return it anyway.
-        let poster = (new Post);
-        poster.post(name, defaultValue).then((response) => {
-            return Promise.resolve(parseResponse(name, response));
-        });
+    }).catch((response) => {
+        if(response.status === 404) {
+            // preference does not exist (yet).
+            // POST it and then return it anyway.
+            let poster = (new Post);
+            poster.post(name, defaultValue).then((response) => {
+                return Promise.resolve(parseResponse(name, response));
+            });
+            return;
+        }
+        return Promise.resolve(null);
     });
 }
 
