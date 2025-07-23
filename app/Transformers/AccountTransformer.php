@@ -67,62 +67,62 @@ class AccountTransformer extends AbstractTransformer
         }
 
         // get account type:
-        $accountType   = (string)config(sprintf('firefly.shortNamesByFullName.%s', $account->full_account_type));
-        $liabilityType = (string)config(sprintf('firefly.shortLiabilityNameByFullName.%s', $account->full_account_type));
-        $liabilityType = '' === $liabilityType ? null : strtolower($liabilityType);
+        $accountType                                                  = (string)config(sprintf('firefly.shortNamesByFullName.%s', $account->full_account_type));
+        $liabilityType                                                = (string)config(sprintf('firefly.shortLiabilityNameByFullName.%s', $account->full_account_type));
+        $liabilityType                                                = '' === $liabilityType ? null : strtolower($liabilityType);
 
-        $liabilityDirection = $account->meta['liability_direction'] ?? null;
+        $liabilityDirection                                           = $account->meta['liability_direction'] ?? null;
         // get account role (will only work if the type is asset).
-        $accountRole = $this->getAccountRole($account, $accountType);
+        $accountRole                                                  = $this->getAccountRole($account, $accountType);
 
         // date (for balance etc.)
-        $date = $this->getDate();
+        $date                                                         = $this->getDate();
         $date->endOfDay();
 
-        [$creditCardType, $monthlyPaymentDate] = $this->getCCInfo($account, $accountRole, $accountType);
+        [$creditCardType, $monthlyPaymentDate]                        = $this->getCCInfo($account, $accountRole, $accountType);
         [$openingBalance, $nativeOpeningBalance, $openingBalanceDate] = $this->getOpeningBalance($account, $accountType);
-        [$interest, $interestPeriod] = $this->getInterest($account, $accountType);
+        [$interest, $interestPeriod]                                  = $this->getInterest($account, $accountType);
 
-        $native = $this->native;
+        $native                                                       = $this->native;
         if (!$this->convertToNative) {
             // reset native currency to NULL, not interesting.
             $native = null;
         }
 
-        $decimalPlaces         = (int)$account->meta['currency']?->decimal_places;
-        $decimalPlaces         = 0 === $decimalPlaces ? 2 : $decimalPlaces;
-        $openingBalanceRounded = Steam::bcround($openingBalance, $decimalPlaces);
-        $includeNetWorth       = 1 === (int)($account->meta['include_net_worth'] ?? 0);
-        $longitude             = $account->meta['location']['longitude'] ?? null;
-        $latitude              = $account->meta['location']['latitude'] ?? null;
-        $zoomLevel             = $account->meta['location']['zoom_level'] ?? null;
+        $decimalPlaces                                                = (int)$account->meta['currency']?->decimal_places;
+        $decimalPlaces                                                = 0 === $decimalPlaces ? 2 : $decimalPlaces;
+        $openingBalanceRounded                                        = Steam::bcround($openingBalance, $decimalPlaces);
+        $includeNetWorth                                              = 1 === (int)($account->meta['include_net_worth'] ?? 0);
+        $longitude                                                    = $account->meta['location']['longitude'] ?? null;
+        $latitude                                                     = $account->meta['location']['latitude'] ?? null;
+        $zoomLevel                                                    = $account->meta['location']['zoom_level'] ?? null;
 
         // no order for some accounts:
-        $order = $account->order;
+        $order                                                        = $account->order;
         if (!in_array(strtolower($accountType), ['liability', 'liabilities', 'asset'], true)) {
             $order = null;
         }
         // balance, native balance, virtual balance, native virtual balance?
         Log::debug(sprintf('transform: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
-        $finalBalance = Steam::finalAccountBalance($account, $date, $this->native, $this->convertToNative);
+        $finalBalance                                                 = Steam::finalAccountBalance($account, $date, $this->native, $this->convertToNative);
         if ($this->convertToNative) {
             $finalBalance['balance'] = $finalBalance[$account->meta['currency']?->code] ?? '0';
         }
 
-        $currentBalance       = Steam::bcround($finalBalance['balance'] ?? '0', $decimalPlaces);
-        $nativeCurrentBalance = $this->convertToNative ? Steam::bcround($finalBalance['native_balance'] ?? '0', $native->decimal_places) : null;
+        $currentBalance                                               = Steam::bcround($finalBalance['balance'] ?? '0', $decimalPlaces);
+        $nativeCurrentBalance                                         = $this->convertToNative ? Steam::bcround($finalBalance['native_balance'] ?? '0', $native->decimal_places) : null;
 
         // set up balances array:
-        $balances   = [];
-        $balances[] =
-            [
+        $balances                                                     = [];
+        $balances[]
+                                                                      = [
                 'type'                    => 'current',
                 'amount'                  => $currentBalance,
                 'currency_id'             => $account->meta['currency_id'] ?? null,
                 'currency_code'           => $account->meta['currency']?->code,
                 'currency_symbol'         => $account->meta['currency']?->symbol,
                 'currency_decimal_places' => $account->meta['currency']?->decimal_places,
-                'date'                    => $date->toAtomString()
+                'date'                    => $date->toAtomString(),
             ];
         if (null !== $nativeCurrentBalance) {
             $balances[] = [
@@ -132,7 +132,7 @@ class AccountTransformer extends AbstractTransformer
                 'currency_code'            => $native?->code,
                 'currency_symbol'          => $native?->symbol,
                 'ccurrency_decimal_places' => $native?->decimal_places,
-                'date'                     => $date->toAtomString()
+                'date'                     => $date->toAtomString(),
 
             ];
         }
@@ -144,10 +144,10 @@ class AccountTransformer extends AbstractTransformer
                 'currency_code'           => $account->meta['currency']?->code,
                 'currency_symbol'         => $account->meta['currency']?->symbol,
                 'currency_decimal_places' => $account->meta['currency']?->decimal_places,
-                'date'                    => $openingBalanceDate
+                'date'                    => $openingBalanceDate,
             ];
         }
-        if(null !== $account->virtual_balance) {
+        if (null !== $account->virtual_balance) {
             $balances[] = [
                 'type'                    => 'virtual',
                 'amount'                  => Steam::bcround($account->virtual_balance, $decimalPlaces),
@@ -155,7 +155,7 @@ class AccountTransformer extends AbstractTransformer
                 'currency_code'           => $account->meta['currency']?->code,
                 'currency_symbol'         => $account->meta['currency']?->symbol,
                 'currency_decimal_places' => $account->meta['currency']?->decimal_places,
-                'date'                    => $date->toAtomString()
+                'date'                    => $date->toAtomString(),
             ];
         }
 
@@ -243,7 +243,7 @@ class AccountTransformer extends AbstractTransformer
         if (null !== $monthlyPaymentDate) {
             // try classic date:
             if (10 === strlen($monthlyPaymentDate)) {
-                $object = Carbon::createFromFormat('!Y-m-d', $monthlyPaymentDate, config('app.timezone'));
+                $object             = Carbon::createFromFormat('!Y-m-d', $monthlyPaymentDate, config('app.timezone'));
                 if (!$object instanceof Carbon) {
                     $object = today(config('app.timezone'));
                 }
@@ -269,7 +269,7 @@ class AccountTransformer extends AbstractTransformer
             $openingBalanceDate   = $account->meta['opening_balance_date'] ?? null;
         }
         if (null !== $openingBalanceDate) {
-            $object = Carbon::createFromFormat('Y-m-d H:i:s', $openingBalanceDate, config('app.timezone'));
+            $object             = Carbon::createFromFormat('Y-m-d H:i:s', $openingBalanceDate, config('app.timezone'));
             if (!$object instanceof Carbon) {
                 $object = today(config('app.timezone'));
             }
