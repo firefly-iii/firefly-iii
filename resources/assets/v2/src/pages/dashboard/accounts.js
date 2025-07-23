@@ -196,6 +196,14 @@ export default () => ({
                     (new Get).show(accountId, new Date(window.store.get('end'))).then((response) => {
                         let parent = response.data.data;
 
+                        // apply function to each element of parent:
+                        parent.attributes.balances = parent.attributes.balances.map((balance) => {
+                            balance.amount_formatted = formatMoney(balance.amount, balance.currency_code);
+                            return balance;
+                        });
+                        console.log(parent);
+
+
                         // get groups for account:
                         const params = {
                             page: 1,
@@ -243,8 +251,7 @@ export default () => ({
                                 name: parent.attributes.name,
                                 order: parent.attributes.order,
                                 id: parent.id,
-                                balance: parent.attributes.balance,
-                                //native_balance: parent.attributes.native_balance,
+                                balances: parent.attributes.balances,
                                 groups: groups,
                             });
                             // console.log(parent.attributes);

@@ -76,7 +76,7 @@ function parsePaidTransactions(paid_dates, bill) {
     for (let i in paid_dates) {
         if (paid_dates.hasOwnProperty(i)) {
             const currentPayment = paid_dates[i];
-            console.log(currentPayment);
+            // console.log(currentPayment);
             // math: -100+(paid/expected)*100
             let percentage = Math.round(-100 + ((parseFloat(currentPayment.amount) ) / parseFloat(bill.amount)) * 100);
             let currentTransaction = {
