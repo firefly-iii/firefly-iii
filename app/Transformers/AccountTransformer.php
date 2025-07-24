@@ -116,14 +116,14 @@ class AccountTransformer extends AbstractTransformer
         $balances                                                     = [];
         $balances[]
                                                                       = [
-                'type'                    => 'current',
-                'amount'                  => $currentBalance,
-                'currency_id'             => $account->meta['currency_id'] ?? null,
-                'currency_code'           => $account->meta['currency']?->code,
-                'currency_symbol'         => $account->meta['currency']?->symbol,
-                'currency_decimal_places' => $account->meta['currency']?->decimal_places,
-                'date'                    => $date->toAtomString(),
-            ];
+                                                                          'type'                    => 'current',
+                                                                          'amount'                  => $currentBalance,
+                                                                          'currency_id'             => $account->meta['currency_id'] ?? null,
+                                                                          'currency_code'           => $account->meta['currency']?->code,
+                                                                          'currency_symbol'         => $account->meta['currency']?->symbol,
+                                                                          'currency_decimal_places' => $account->meta['currency']?->decimal_places,
+                                                                          'date'                    => $date->toAtomString(),
+                                                                      ];
         if (null !== $nativeCurrentBalance) {
             $balances[] = [
                 'type'                     => 'native_current',
