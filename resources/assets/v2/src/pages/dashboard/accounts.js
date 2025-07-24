@@ -201,7 +201,7 @@ export default () => ({
                             balance.amount_formatted = formatMoney(balance.amount, balance.currency_code);
                             return balance;
                         });
-                        console.log(parent);
+                        // console.log(parent);
 
 
                         // get groups for account:

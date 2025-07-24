@@ -44,6 +44,18 @@ function addObjectGroupInfo(data) {
     }
 }
 
+function parsePayDates(list) {
+    let newList = [];
+    for(let i in list) {
+        if (list.hasOwnProperty(i)) {
+            let current = list[i];
+            // convert to date object:
+            newList.push(new Date(current));
+        }
+    }
+    return newList;
+}
+
 function parseBillInfo(data) {
     let result = {
         id: data.id,
@@ -55,7 +67,7 @@ function parseBillInfo(data) {
         // paid transactions:
         transactions: [],
         // unpaid moments
-        pay_dates: data.attributes.pay_dates,
+        pay_dates: parsePayDates(data.attributes.pay_dates),
         paid: data.attributes.paid_dates.length > 0,
     };
     // set variables
@@ -64,6 +76,7 @@ function parseBillInfo(data) {
         times: data.attributes.pay_dates.length,
         amount: result.expected_amount
     });
+    // console.log(result);
     return result;
 }
 
@@ -96,6 +109,21 @@ function parsePaidTransactions(paid_dates, bill) {
     return result;
 }
 
+function isInRange(bill) {
+    let start = new Date(window.store.get('start'));
+    let end = new Date(window.store.get('end'));
+    for(let i in bill.pay_dates) {
+        if (bill.pay_dates.hasOwnProperty(i)) {
+            let currentDate = bill.pay_dates[i];
+            //console.log(currentDate);
+            if (currentDate >= start && currentDate <= end) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 function downloadSubscriptions(params) {
     const getter = new Get();
     return getter.list(params)
@@ -113,10 +141,18 @@ function downloadSubscriptions(params) {
 
                         // create and update the bill.
                         let bill = parseBillInfo(current);
+
+                        // if not yet paid, and pay_dates is not in current rage, ignore it.
+                        if (false === bill.paid && !isInRange(bill)) {
+                            console.warn('Bill "'+bill.name+'" is not paid and not in range, ignoring: ');
+                            continue;
+                        }
+
+
                         bill.transactions = parsePaidTransactions(current.attributes.paid_dates, bill);
 
                         subscriptionData[objectGroupId].bills.push(bill);
-                        if (0 === current.attributes.paid_dates.length) {
+                        if (false === bill.paid) {
                             // bill is unpaid, count the "pay_dates" and multiply with the "amount".
                             // since bill is unpaid, this can only be in currency amount and native currency amount.
                             const totalAmount = current.attributes.pay_dates.length * bill.amount;
@@ -132,6 +168,7 @@ function downloadSubscriptions(params) {
                                     //native_unpaid: 0,
                                 };
                             }
+
                             subscriptionData[objectGroupId].payment_info[bill.currency_code].unpaid += totalAmount;
                             //subscriptionData[objectGroupId].payment_info[bill.currency_code].native_unpaid += totalNativeAmount;
                         }

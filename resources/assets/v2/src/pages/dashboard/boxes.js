@@ -76,7 +76,7 @@ export default () => ({
                     continue;
                 }
                 let key = current.key;
-                console.log('NOT NATIVE');
+                // console.log('NOT NATIVE');
                 if (key.startsWith('balance-in-')) {
                     this.balanceBox.amounts.push(formatMoney(current.monetary_value, current.currency_code));
                     continue;

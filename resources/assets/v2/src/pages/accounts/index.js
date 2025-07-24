@@ -315,7 +315,7 @@ let index = function () {
             // need to find the input thing
             console.log('Clicked edit button for account on index #' + index + ' and field ' + fieldName);
             const querySelector = 'input[data-field="' + fieldName + '"][data-index="' + index + '"]';
-            console.log(querySelector);
+            // console.log(querySelector);
             const newValue = document.querySelectorAll(querySelector)[0].value ?? '';
             if ('' === newValue) {
                 return;
