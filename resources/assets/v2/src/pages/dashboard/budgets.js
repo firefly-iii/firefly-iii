@@ -123,8 +123,6 @@ export default () => ({
         for (const i in data) {
             if (data.hasOwnProperty(i)) {
                 let current = data[i];
-                console.log('Now at');
-                console.log(current);
                 //         // convert to EUR yes no?
                 let label = current.label + ' (' + current.currency_code + ')';
                 options.data.labels.push(label);
@@ -159,7 +157,7 @@ export default () => ({
 
 
     init() {
-        Promise.all([getVariable('convertToNative', false)]).then((values) => {
+        Promise.all([getVariable('convert_to_native', false)]).then((values) => {
             this.convertToNative = values[0];
             afterPromises = true;
             if (false === this.loading) {
@@ -176,7 +174,7 @@ export default () => ({
                 this.loadChart();
             }
         });
-        window.store.observe('convertToNative', (newValue) => {
+        window.store.observe('convert_to_native', (newValue) => {
             if (!afterPromises) {
                 return;
             }

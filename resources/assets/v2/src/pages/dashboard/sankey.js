@@ -94,6 +94,7 @@ function getObjectName(type, name, direction, code) {
     if ('category' === type && null === name && 'out' === direction) {
         return translations.unknown_category + ' (' + translations.out + (convertToNative ? ', ' + code + ')' : ')');
     }
+
     // account 4x
     if ('account' === type && null === name && 'in' === direction) {
         return translations.unknown_source + (convertToNative ? ' (' + code + ')' : '');
@@ -348,9 +349,13 @@ export default () => ({
     init() {
         // console.log('sankey init');
         transactions = [];
-        Promise.all([getVariable('convertToNative', false)]).then((values) => {
+        Promise.all([getVariable('convert_to_native', false)]).then((values) => {
             this.convertToNative = values[0];
             convertToNative = values[0];
+
+            this.convertToNative = false;
+            convertToNative = false;
+
                 // some translations:
                 translations.all_money = i18next.t('firefly.all_money');
                 translations.category = i18next.t('firefly.category');
@@ -378,7 +383,7 @@ export default () => ({
             this.transactions = [];
             this.loadChart();
         });
-        window.store.observe('convertToNative', (newValue) => {
+        window.store.observe('convert_to_native', (newValue) => {
             if (!afterPromises) {
                 return;
             }

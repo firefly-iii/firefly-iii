@@ -40,7 +40,7 @@ export function setVariable(name, value = null) {
         // preference does not exist (yet).
         // POST it
         let poster = (new Post);
-        poster.post(name, value).then((response) => {
+            poster.post(name, value).then((response) => {
         });
     });
 }

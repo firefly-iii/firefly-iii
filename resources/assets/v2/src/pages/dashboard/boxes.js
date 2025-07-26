@@ -153,7 +153,7 @@ export default () => ({
     init() {
         // console.log('boxes init');
         // TODO can be replaced by "getVariables"
-        Promise.all([getVariable('viewRange'), getVariable('convertToNative', false)]).then((values) => {
+        Promise.all([getVariable('viewRange'), getVariable('convert_to_native', false)]).then((values) => {
             // console.log('boxes after promises');
             afterPromises = true;
             this.convertToNative = values[1];
@@ -167,7 +167,7 @@ export default () => ({
             this.boxData = null;
             this.loadBoxes();
         });
-        window.store.observe('convertToNative', (newValue) => {
+        window.store.observe('convert_to_native', (newValue) => {
             if (!afterPromises) {
                 return;
             }

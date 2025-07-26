@@ -305,7 +305,7 @@ export default () => ({
     },
 
     init() {
-        Promise.all([getVariable('convertToNative', false)]).then((values) => {
+        Promise.all([getVariable('convert_to_native', false)]).then((values) => {
             this.convertToNative = values[0];
             afterPromises = true;
 
@@ -323,7 +323,7 @@ export default () => ({
                 this.startSubscriptions();
             }
         });
-        window.store.observe('convertToNative', (newValue) => {
+        window.store.observe('convert_to_native', (newValue) => {
             if (!afterPromises) {
                 return;
             }

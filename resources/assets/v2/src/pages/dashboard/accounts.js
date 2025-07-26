@@ -44,10 +44,21 @@ export default () => ({
     chartOptions: null,
     switchConvertToNative() {
         this.convertToNative = !this.convertToNative;
-        setVariable('convertToNative', this.convertToNative);
+        setVariable('convert_to_native', this.convertToNative);
     },
     localCacheKey(type) {
         return 'ds_accounts_' + type;
+    },
+
+    eventListeners: {
+        ['@convert-to-native.window'](event){
+            console.log('I heard that! it is now ' + event.detail);
+        }
+    },
+
+
+    doSomeReload() {
+        console.log('doSomeReload');
     },
     getFreshData() {
         const start = new Date(window.store.get('start'));
@@ -273,8 +284,11 @@ export default () => ({
 
     init() {
         // console.log('accounts init');
-        Promise.all([getVariable('viewRange', '1M'), getVariable('convertToNative', false), getVariable('language', 'en_US'),
-            getConfiguration('cer.enabled', false)
+        Promise.all([
+            getVariable('viewRange', '1M'), // 0
+            getVariable('convert_to_native', false), // 1
+            getVariable('language', 'en_US'), // 2
+            getConfiguration('cer.enabled', false) // 3
         ]).then((values) => {
             //console.log('accounts after promises');
             this.convertToNative = values[1] && values[3];
@@ -296,7 +310,7 @@ export default () => ({
             this.loadChart();
             this.loadAccounts();
         });
-        window.store.observe('convertToNative', () => {
+        window.store.observe('convert_to_native', () => {
             if (!afterPromises) {
                 return;
             }

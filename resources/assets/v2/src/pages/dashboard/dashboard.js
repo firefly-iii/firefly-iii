@@ -46,7 +46,8 @@ import {
 } from "chart.js";
 import 'chartjs-adapter-date-fns';
 import {showInternalsButton} from "../../support/page-settings/show-internals-button.js";
-import {showWizardButton} from "../../support/page-settings/show-wizard-button.js";
+import {setVariable} from "../../store/set-variable.js";
+import {getVariable} from "../../store/get-variable.js";
 
 // register things
 Chart.register({
@@ -66,7 +67,25 @@ Chart.register({
     Legend
 });
 
+let index = function () {
+    return {
+        convertToNative: false,
+        saveNativeSettings(event) {
+            setVariable('convert_to_native', event.currentTarget.checked);
+            this.$dispatch('convert-to-native', event.currentTarget.checked);
+            console.log('saveNativeSettings + dispatch.');
+        },
+        init() {
+            Promise.all([getVariable('convert_to_native', false)]).then((values) => {
+                this.convertToNative = values[0];
+                console.log('convert_to_native: ' + this.convertToNative);
+            });
+        }
+    }
+};
+
 const comps = {
+    index,
     dates,
     boxes,
     accounts,

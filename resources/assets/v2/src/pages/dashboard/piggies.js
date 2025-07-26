@@ -129,7 +129,7 @@ export default () => ({
     init() {
         // console.log('piggies init');
         apiData = [];
-        Promise.all([getVariable('convertToNative', false)]).then((values) => {
+        Promise.all([getVariable('convert_to_native', false)]).then((values) => {
 
             afterPromises = true;
             this.convertToNative = values[0];
@@ -144,7 +144,7 @@ export default () => ({
             apiData = [];
             this.loadPiggyBanks();
         });
-        window.store.observe('convertToNative', (newValue) => {
+        window.store.observe('convert_to_native', (newValue) => {
             if (!afterPromises) {
                 return;
             }

@@ -183,7 +183,7 @@ export default () => ({
     },
     init() {
         // console.log('categories init');
-        Promise.all([getVariable('convertToNative', false),]).then((values) => {
+        Promise.all([getVariable('convert_to_native', false),]).then((values) => {
             this.convertToNative = values[0];
             afterPromises = true;
             this.loadChart();
@@ -195,7 +195,7 @@ export default () => ({
             this.chartData = null;
             this.loadChart();
         });
-        window.store.observe('convertToNative', (newValue) => {
+        window.store.observe('convert_to_native', (newValue) => {
             if (!afterPromises) {
                 return;
             }
