@@ -10,6 +10,7 @@
             </div>
             <div class="card-body">
                 <div class="row mb-2">
+                    <!--
                     <template x-for="pie in group.payment_info">
                         <div :class='group.col_size'>
                             <canvas :id='"pie_" + group.id + "_" + pie.currency_code'
@@ -17,6 +18,8 @@
                                     x-init="drawPieChart(group.id, group.title, pie)"></canvas>
                         </div>
                     </template>
+                    -->
+                    Here was chart.
                 </div>
                 <div class="row mb-2">
                     <table class="table table-striped table-hover">

@@ -49,7 +49,7 @@ class BudgetController extends Controller
     use CleansChartData;
     use ValidatesUserGroupTrait;
 
-    protected array $acceptedRoles                      = [UserRoleEnum::READ_ONLY];
+    protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
     protected OperationsRepositoryInterface $opsRepository;
     private BudgetLimitRepositoryInterface  $blRepository;
@@ -80,13 +80,13 @@ class BudgetController extends Controller
      */
     public function dashboard(DateRequest $request): JsonResponse
     {
-        $params  = $request->getAll();
+        $params = $request->getAll();
 
         /** @var Carbon $start */
-        $start   = $params['start'];
+        $start = $params['start'];
 
         /** @var Carbon $end */
-        $end     = $params['end'];
+        $end = $params['end'];
 
         // code from FrontpageChartGenerator, but not in separate class
         $budgets = $this->repository->getActiveBudgets();
@@ -123,7 +123,7 @@ class BudgetController extends Controller
         foreach ($rows as $row) {
             $current  = [
                 'label'                   => $budget->name,
-                'currency_id'             => (string) $row['currency_id'],
+                'currency_id'             => (string)$row['currency_id'],
                 'currency_code'           => $row['currency_code'],
                 'currency_name'           => $row['currency_name'],
                 'currency_decimal_places' => $row['currency_decimal_places'],
@@ -131,6 +131,7 @@ class BudgetController extends Controller
                 'start'                   => $row['start'],
                 'end'                     => $row['end'],
                 'entries'                 => [
+                    'budgeted'  => $row['budgeted'],
                     'spent'     => $row['spent'],
                     'left'      => $row['left'],
                     'overspent' => $row['overspent'],
@@ -163,7 +164,7 @@ class BudgetController extends Controller
      *
      * @throws FireflyException
      */
-    private function processExpenses(int $budgetId, array $array, Carbon $start, Carbon $end): array
+    private function processExpenses(int $budgetId, array $spent, Carbon $start, Carbon $end): array
     {
         $return = [];
 
@@ -171,29 +172,30 @@ class BudgetController extends Controller
          * This array contains the expenses in this budget. Grouped per currency.
          * The grouping is on the main currency only.
          *
-         * @var int   $currencyId
+         * @var int $currencyId
          * @var array $block
          */
-        foreach ($array as $currencyId => $block) {
+        foreach ($spent as $currencyId => $block) {
             $this->currencies[$currencyId] ??= TransactionCurrency::find($currencyId);
             $return[$currencyId]           ??= [
-                'currency_id'             => (string) $currencyId,
+                'currency_id'             => (string)$currencyId,
                 'currency_code'           => $block['currency_code'],
                 'currency_name'           => $block['currency_name'],
                 'currency_symbol'         => $block['currency_symbol'],
-                'currency_decimal_places' => (int) $block['currency_decimal_places'],
+                'currency_decimal_places' => (int)$block['currency_decimal_places'],
                 'start'                   => $start->toAtomString(),
                 'end'                     => $end->toAtomString(),
+                'budgeted'                => '0',
                 'spent'                   => '0',
                 'left'                    => '0',
                 'overspent'               => '0',
             ];
-            $currentBudgetArray = $block['budgets'][$budgetId];
+            $currentBudgetArray            = $block['budgets'][$budgetId];
 
             // var_dump($return);
             /** @var array $journal */
             foreach ($currentBudgetArray['transaction_journals'] as $journal) {
-                $return[$currencyId]['spent'] = bcadd($return[$currencyId]['spent'], (string) $journal['amount']);
+                $return[$currencyId]['spent'] = bcadd($return[$currencyId]['spent'], (string)$journal['amount']);
             }
         }
 
@@ -229,7 +231,7 @@ class BudgetController extends Controller
     private function processLimit(Budget $budget, BudgetLimit $limit): array
     {
         Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
-        $end             = clone $limit->end_date;
+        $end = clone $limit->end_date;
         $end->endOfDay();
         $spent           = $this->opsRepository->listExpenses($limit->start_date, $end, null, new Collection([$budget]));
         $limitCurrencyId = $limit->transaction_currency_id;
@@ -237,16 +239,17 @@ class BudgetController extends Controller
         /** @var array $entry */
         // only spent the entry where the entry's currency matches the budget limit's currency
         // so $filtered will only have 1 or 0 entries
-        $filtered        = array_filter($spent, fn ($entry) => $entry['currency_id'] === $limitCurrencyId);
-        $result          = $this->processExpenses($budget->id, $filtered, $limit->start_date, $end);
+        $filtered = array_filter($spent, fn($entry) => $entry['currency_id'] === $limitCurrencyId);
+        $result   = $this->processExpenses($budget->id, $filtered, $limit->start_date, $end);
         if (1 === count($result)) {
-            $compare = bccomp($limit->amount, (string) app('steam')->positive($result[$limitCurrencyId]['spent']));
+            $compare                              = bccomp($limit->amount, (string)app('steam')->positive($result[$limitCurrencyId]['spent']));
+            $result[$limitCurrencyId]['budgeted'] = $limit->amount;
             if (1 === $compare) {
                 // convert this amount into the native currency:
-                $result[$limitCurrencyId]['left'] = bcadd($limit->amount, (string) $result[$limitCurrencyId]['spent']);
+                $result[$limitCurrencyId]['left'] = bcadd($limit->amount, (string)$result[$limitCurrencyId]['spent']);
             }
             if ($compare <= 0) {
-                $result[$limitCurrencyId]['overspent'] = app('steam')->positive(bcadd($limit->amount, (string) $result[$limitCurrencyId]['spent']));
+                $result[$limitCurrencyId]['overspent'] = app('steam')->positive(bcadd($limit->amount, (string)$result[$limitCurrencyId]['spent']));
             }
         }
 

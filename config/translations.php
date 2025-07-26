@@ -65,6 +65,7 @@ return [
                 'interest_calc_half-year',
                 'interest_calc_quarterly',
                 'spent',
+                'budgeted',
                 'administration_owner',
                 'administration_you',
                 'administration_role_owner',

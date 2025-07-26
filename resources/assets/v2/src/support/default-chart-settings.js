@@ -62,6 +62,36 @@ function getDefaultChartSettings(type) {
             },
         };
     }
+    if('bar' === type) {
+        return {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [],
+            },
+            options: {
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                // Elements options apply to all the options unless overridden in a dataset
+                // In this case, we are setting the border of each horizontal bar to be 2px wide
+                elements: {
+                    bar: {
+                        borderWidth: 2,
+                    }
+                },
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Chart.js Horizontal Bar Chart'
+                    }
+                }
+            },
+        };
+    }
     if ('line' === type) {
         return {
             options: {

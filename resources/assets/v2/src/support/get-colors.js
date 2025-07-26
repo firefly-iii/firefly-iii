@@ -92,6 +92,14 @@ function getColors(type, field) {
                 backgroundColor: background.rgbString(),
             };
             break;
+        case 'budgeted':
+            background = new Color(green.rgbString());
+            background.lighten(0.38);
+            colors = {
+                borderColor: green.rgbString(),
+                backgroundColor: background.rgbString(),
+            };
+            break;
         case 'overspent':
             background = new Color(red.rgbString());
             background.lighten(0.22);
