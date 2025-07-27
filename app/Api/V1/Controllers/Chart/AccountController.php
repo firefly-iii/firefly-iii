@@ -24,16 +24,16 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Chart;
 
-use FireflyIII\Exceptions\ValidationException;
-use FireflyIII\Models\TransactionCurrency;
 use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Chart\ChartRequest;
 use FireflyIII\Api\V1\Requests\Data\DateRequest;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Exceptions\ValidationException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Preference;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Chart\ChartData;
 use FireflyIII\Support\Facades\Preferences;
@@ -42,6 +42,7 @@ use FireflyIII\Support\Http\Api\ApiSupport;
 use FireflyIII\Support\Http\Api\CollectsAccountsFromFilter;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class AccountController
@@ -90,6 +91,7 @@ class AccountController extends Controller
         // loop each account, and collect info:
         /** @var Account $account */
         foreach ($accounts as $account) {
+            Log::debug(sprintf('Account #%d ("%s")', $account->id, $account->name));
             $this->renderAccountData($queryParameters, $account);
         }
 
@@ -101,15 +103,22 @@ class AccountController extends Controller
      */
     private function renderAccountData(array $params, Account $account): void
     {
-        $currency     = $this->repository->getAccountCurrency($account);
+        Log::debug(sprintf('Now in %s(array, #%d)', __METHOD__, $account->id));
+        $currency = $this->repository->getAccountCurrency($account);
+        $currentStart = clone $params['start'];
+        $range        = Steam::finalAccountBalanceInRange($account, $params['start'], clone $params['end'], $this->convertToNative);
+
+
+        $previous     = array_values($range)[0]['balance'];
+        $nativePrevious = null;
         if (!$currency instanceof TransactionCurrency) {
             $currency = $this->default;
         }
-        $currentSet   = [
+        $currentSet = [
             'label'                   => $account->name,
 
             // the currency that belongs to the account.
-            'currency_id'             => (string) $currency->id,
+            'currency_id'             => (string)$currency->id,
             'currency_code'           => $currency->code,
             'currency_symbol'         => $currency->symbol,
             'currency_decimal_places' => $currency->decimal_places,
@@ -121,18 +130,33 @@ class AccountController extends Controller
             'period'                  => '1D',
             'entries'                 => [],
         ];
-        $currentStart = clone $params['start'];
-        $range        = Steam::finalAccountBalanceInRange($account, $params['start'], clone $params['end'], $this->convertToNative);
+        if ($this->convertToNative) {
+            $currentSet['native_entries']                 = [];
+            $currentSet['native_currency_id']             = (string)$this->nativeCurrency->id;
+            $currentSet['native_currency_code']           = $this->nativeCurrency->code;
+            $currentSet['native_currency_symbol']         = $this->nativeCurrency->symbol;
+            $currentSet['native_currency_decimal_places'] = $this->nativeCurrency->decimal_places;
+            $nativePrevious                               = array_values($range)[0]['native_balance'];
+        }
 
-        $previous     = array_values($range)[0]['balance'];
+
         while ($currentStart <= $params['end']) {
-            $format                        = $currentStart->format('Y-m-d');
-            $label                         = $currentStart->toAtomString();
-            $balance                       = array_key_exists($format, $range) ? $range[$format]['balance'] : $previous;
-            $previous                      = $balance;
+            $format   = $currentStart->format('Y-m-d');
+            $label    = $currentStart->toAtomString();
+            $balance  = array_key_exists($format, $range) ? $range[$format]['balance'] : $previous;
+            $previous = $balance;
+            $currentSet['entries'][$label] = $balance;
+
+
+            // do the same for the native balance, if relevant:
+            $nativeBalance = null;
+            if ($this->convertToNative) {
+                $nativeBalance                        = array_key_exists($format, $range) ? $range[$format]['native_balance'] : $nativePrevious;
+                $nativePrevious                       = $nativeBalance;
+                $currentSet['native_entries'][$label] = $nativeBalance;
+            }
 
             $currentStart->addDay();
-            $currentSet['entries'][$label] = $balance;
         }
         $this->chartData->add($currentSet);
     }
@@ -146,40 +170,34 @@ class AccountController extends Controller
     public function overview(DateRequest $request): JsonResponse
     {
         // parameters for chart:
-        $dates      = $request->getAll();
+        $dates = $request->getAll();
+
 
         /** @var Carbon $start */
-        $start      = $dates['start'];
+        $start = $dates['start'];
 
         /** @var Carbon $end */
-        $end        = $dates['end'];
+        $end = $dates['end'];
 
         // set dates to end of day + start of day:
         $start->startOfDay();
         $end->endOfDay();
 
-        // user's preferences
-        $defaultSet = $this->repository->getAccountsByType([AccountTypeEnum::ASSET->value])->pluck('id')->toArray();
-
-        /** @var Preference $frontpage */
-        $frontpage  = Preferences::get('frontpageAccounts', $defaultSet);
-
-        if (!(is_array($frontpage->data) && count($frontpage->data) > 0)) {
-            $frontpage->data = $defaultSet;
-            $frontpage->save();
-        }
-
-        // get accounts:
-        $accounts   = $this->repository->getAccountsById($frontpage->data);
-        $chartData  = [];
+        $frontPageIds = $this->getFrontPageAccountIds();
+        $accounts     = $this->repository->getAccountsById($frontPageIds);
+        $chartData    = [];
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $currency     = $this->repository->getAccountCurrency($account) ?? $this->nativeCurrency;
-            $field        = $this->convertToNative && $currency->id !== $this->nativeCurrency->id ? 'native_balance' : 'balance';
-            $currentSet   = [
+            Log::debug(sprintf('Rendering chart data for account %s (%d)', $account->name, $account->id));
+            $currency       = $this->repository->getAccountCurrency($account) ?? $this->nativeCurrency;
+            $currentStart   = clone $start;
+            $range          = Steam::finalAccountBalanceInRange($account, $start, clone $end, $this->convertToNative);
+            $previous       = array_values($range)[0]['balance'];
+            $nativePrevious = null;
+            $currentSet     = [
                 'label'                   => $account->name,
-                'currency_id'             => (string) $currency->id,
+                'currency_id'             => (string)$currency->id,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
@@ -189,21 +207,56 @@ class AccountController extends Controller
                 'yAxisID'                 => 0, // 0, 1, 2
                 'entries'                 => [],
             ];
-            // TODO this code is also present in the V2 chart account controller so this method is due to be deprecated.
-            $currentStart = clone $start;
-            $range        = Steam::finalAccountBalanceInRange($account, $start, clone $end, $this->convertToNative);
-            $previous     = array_values($range)[0][$field];
-            while ($currentStart <= $end) {
-                $format                        = $currentStart->format('Y-m-d');
-                $label                         = $currentStart->toAtomString();
-                $balance                       = array_key_exists($format, $range) ? $range[$format][$field] : $previous;
-                $previous                      = $balance;
-                $currentStart->addDay();
-                $currentSet['entries'][$label] = $balance;
+
+            // add "native_entries" if convertToNative is true:
+            if ($this->convertToNative) {
+                $currentSet['native_entries']                 = [];
+                $currentSet['native_currency_id']             = (string)$this->nativeCurrency->id;
+                $currentSet['native_currency_code']           = $this->nativeCurrency->code;
+                $currentSet['native_currency_symbol']         = $this->nativeCurrency->symbol;
+                $currentSet['native_currency_decimal_places'] = $this->nativeCurrency->decimal_places;
+                $nativePrevious                               = array_values($range)[0]['native_balance'];
+
             }
-            $chartData[]  = $currentSet;
+
+            // also get the native balance if convertToNative is true:
+            while ($currentStart <= $end) {
+                $format = $currentStart->format('Y-m-d');
+                $label  = $currentStart->toAtomString();
+
+                // balance is based on "balance" from the $range variable.
+                $balance                       = array_key_exists($format, $range) ? $range[$format]['balance'] : $previous;
+                $previous                      = $balance;
+                $currentSet['entries'][$label] = $balance;
+
+                // do the same for the native balance, if relevant:
+                $nativeBalance = null;
+                if ($this->convertToNative) {
+                    $nativeBalance                        = array_key_exists($format, $range) ? $range[$format]['native_balance'] : $nativePrevious;
+                    $nativePrevious                       = $nativeBalance;
+                    $currentSet['native_entries'][$label] = $nativeBalance;
+                }
+
+                $currentStart->addDay();
+
+            }
+            $chartData[] = $currentSet;
         }
 
         return response()->json($chartData);
+    }
+
+    private function getFrontPageAccountIds(): array
+    {
+        $defaultSet = $this->repository->getAccountsByType([AccountTypeEnum::ASSET->value])->pluck('id')->toArray();
+
+        /** @var Preference $frontpage */
+        $frontpage = Preferences::get('frontpageAccounts', $defaultSet);
+
+        if (!(is_array($frontpage->data) && count($frontpage->data) > 0)) {
+            $frontpage->data = $defaultSet;
+            $frontpage->save();
+        }
+        return $frontpage->data ?? $defaultSet;
     }
 }

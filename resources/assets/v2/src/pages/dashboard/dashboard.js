@@ -78,7 +78,6 @@ let index = function () {
         init() {
             Promise.all([getVariable('convert_to_native', false)]).then((values) => {
                 this.convertToNative = values[0];
-                console.log('convert_to_native: ' + this.convertToNative);
             });
         }
     }

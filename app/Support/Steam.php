@@ -93,7 +93,7 @@ class Steam
 
             return [];
         }
-        $defaultCurrency = app('amount')->getNativeCurrency();
+        $defaultCurrency = Amount::getNativeCurrency();
         if ($convertToNative) {
             if ($defaultCurrency->id === $currency?->id) {
                 Log::debug(sprintf('Unset [%s] for account #%d (no longer unset "native_balance")', $defaultCurrency->code, $account->id));
@@ -224,7 +224,7 @@ class Steam
         $request->subDay()->endOfDay();
         Log::debug(sprintf('finalAccountBalanceInRange: Call finalAccountBalance with date/time "%s"', $request->toIso8601String()));
         $startBalance         = $this->finalAccountBalance($account, $request);
-        $nativeCurrency       = app('amount')->getNativeCurrencyByUserGroup($account->user->userGroup);
+        $nativeCurrency       = Amount::getNativeCurrencyByUserGroup($account->user->userGroup);
         $accountCurrency      = $this->getAccountCurrency($account);
         $hasCurrency          = $accountCurrency instanceof TransactionCurrency;
         $currency             = $accountCurrency ?? $nativeCurrency;
@@ -294,7 +294,7 @@ class Steam
             $currentBalance[$entryCurrency->code]        ??= '0';
             $currentBalance[$entryCurrency->code] = bcadd($sumOfDay, (string) $currentBalance[$entryCurrency->code]);
 
-            // if not convert to native, add the amount to "balance", do nothing else.
+            // if not requested to convert to native, add the amount to "balance", do nothing else.
             if (!$convertToNative) {
                 $currentBalance['balance'] = bcadd((string) $currentBalance['balance'], $sumOfDay);
             }
@@ -302,13 +302,13 @@ class Steam
             // if there is a request to convert, convert to "native_balance" and use "balance" for whichever amount is in the native currency.
             if ($convertToNative) {
                 $nativeSumOfDay                   = $converter->convert($entryCurrency, $nativeCurrency, $carbon, $sumOfDay);
-                $currentBalance['native_balance'] = bcadd((string) $currentBalance['native_balance'], $nativeSumOfDay);
+                $currentBalance['native_balance'] = bcadd((string) ($currentBalance['native_balance'] ?? '0'), $nativeSumOfDay);
+                // if it's the same currency as the entry, also add to balance (see other code).
                 if ($currency->id === $entryCurrency->id) {
                     $currentBalance['balance'] = bcadd((string) $currentBalance['balance'], $sumOfDay);
                 }
-
             }
-            // just set it.
+            // add to final array.
             $balances[$carbonKey]                 = $currentBalance;
             Log::debug(sprintf('Updated entry [%s]', $carbonKey), $currentBalance);
         }

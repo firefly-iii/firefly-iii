@@ -27,19 +27,29 @@ export function getConfiguration(name, defaultValue = null) {
     // to make things available quicker than if the store has to grab it through the API.
     // then again, it's not that slow.
     if (validCache && window.hasOwnProperty(name)) {
-        // console.log('Get from window');
+        console.log('Return configuration "' + name + '" from window: ' + window[name]);
         return Promise.resolve(window[name]);
     }
     // load from store2, if it's present.
     const fromStore = window.store.get(name);
     if (validCache && typeof fromStore !== 'undefined') {
+        console.log('Return configuration "' + name + '" from store: ' + fromStore);
         return Promise.resolve(fromStore);
     }
     let getter = (new Get);
     return getter.getByName(name).then((response) => {
         // console.log('Get "' + name + '" from API');
-        return Promise.resolve(parseResponse(name, response));
-    }).catch(() => {
+        console.log('Return configuration "' + name + '" from API: ' + parseConfigurationResponse(name, response));
+        return Promise.resolve(parseConfigurationResponse(name, response));
+    }).catch((error) => {
+        console.log('Returning "'+name+'" from DEFAULT: ' + defaultValue);
+        console.warn(error);
         return defaultValue;
     });
 }
+export function parseConfigurationResponse(name, response) {
+    let value = response.data.data.value;
+    window.store.set(name, value);
+    return value;
+}
+

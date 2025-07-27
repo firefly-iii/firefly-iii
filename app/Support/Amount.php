@@ -120,8 +120,6 @@ class Amount
         if (!$user instanceof User) {
             return true === Preferences::get('convert_to_native', false)->data && true === config('cer.enabled');
         }
-        Log::debug('convertToNative setting', Preferences::getForUser($user, 'convert_to_native', false));
-
         return true === Preferences::getForUser($user, 'convert_to_native', false)->data && true === config('cer.enabled');
     }
 
