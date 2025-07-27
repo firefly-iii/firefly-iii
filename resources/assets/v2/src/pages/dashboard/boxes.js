@@ -35,11 +35,21 @@ export default () => ({
     loading: false,
     boxData: null,
     boxOptions: null,
+    eventListeners: {
+        ['@convert-to-native.window'](event){
+            this.convertToNative = event.detail;
+            this.accountList = [];
+            console.log('I heard that!');
+            this.boxData = null;
+            this.loadBoxes();
+        }
+    },
+
     getFreshData() {
         const start = new Date(window.store.get('start'));
         const end = new Date(window.store.get('end'));
         // TODO cache key is hard coded, problem?
-        const boxesCacheKey = getCacheKey('ds_boxes_data', {start: start, end: end});
+        const boxesCacheKey = getCacheKey('ds_boxes_data', {convertToNative: this.convertToNative, start: start, end: end});
         cleanupCache();
 
         //const cacheValid = window.store.get('cacheValid');

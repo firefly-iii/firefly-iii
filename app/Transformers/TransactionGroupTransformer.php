@@ -121,6 +121,15 @@ class TransactionGroupTransformer extends AbstractTransformer
         if (null !== $transaction['foreign_amount'] && '' !== $transaction['foreign_amount'] && 0 !== bccomp('0', (string) $transaction['foreign_amount'])) {
             $foreignAmount = app('steam')->positive($transaction['foreign_amount']);
         }
+
+        // set native amount to the normal amount if the currency matches.
+        if($transaction['native_currency']['id'] ?? null === $transaction['currency_id']) {
+            $transaction['native_amount'] = $amount;
+        }
+
+        if(array_key_exists('native_amount', $transaction) && null !== $transaction['native_amount']) {
+            $transaction['native_amount'] = app('steam')->positive($transaction['native_amount']);
+        }
         $type            = $this->stringFromArray($transaction, 'transaction_type_type', TransactionTypeEnum::WITHDRAWAL->value);
 
         // must be 0 (int) or NULL

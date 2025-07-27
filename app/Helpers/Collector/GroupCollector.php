@@ -558,7 +558,6 @@ class GroupCollector implements GroupCollectorInterface
                 $groups[$groupId]['transactions'][$journalId] = $this->parseAugmentedJournal($augumentedJournal);
             }
         }
-
         $groups = $this->parseSums($groups);
 
         return new Collection($groups);

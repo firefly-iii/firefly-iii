@@ -166,6 +166,11 @@ export default () => ({
                         // properties of the transaction, used in the generation of the chart:
                         let transaction = group.attributes.transactions[ii];
                         let currencyCode = this.convertToNative ? transaction.native_currency_code : transaction.currency_code;
+                        if(this.convertToNative && (!transaction.hasOwnProperty('native_amount') || null === transaction.native_amount)) {
+                            // skip this transaction, it has no native amount.
+                            console.error('No native amount for transaction #' + group.id + ' ('+this.convertToNative+')');
+                            continue;
+                        }
                         let amount = this.convertToNative ? parseFloat(transaction.native_amount) : parseFloat(transaction.amount);
                         let flowKey;
 
@@ -313,7 +318,7 @@ export default () => ({
     downloadTransactions(params) {
         const start = new Date(window.store.get('start'));
         const end = new Date(window.store.get('end'));
-        const cacheKey = getCacheKey(SANKEY_CACHE_KEY, {start: start, end: end});
+        const cacheKey = getCacheKey(SANKEY_CACHE_KEY, {convertToNative: this.convertToNative, start: start, end: end});
 
         //console.log('Downloading page ' + params.page + '...');
         const getter = new Get();
@@ -352,9 +357,6 @@ export default () => ({
         Promise.all([getVariable('convert_to_native', false)]).then((values) => {
             this.convertToNative = values[0];
             convertToNative = values[0];
-
-            this.convertToNative = false;
-            convertToNative = false;
 
                 // some translations:
                 translations.all_money = i18next.t('firefly.all_money');

@@ -40,19 +40,14 @@ export default () => ({
     loadingAccounts: false,
     accountList: [],
     convertToNative: false,
-    convertToNativeAvailable: false,
     chartOptions: null,
-    switchConvertToNative() {
-        this.convertToNative = !this.convertToNative;
-        setVariable('convert_to_native', this.convertToNative);
-    },
     localCacheKey(type) {
         return 'ds_accounts_' + type;
     },
 
     eventListeners: {
         ['@convert-to-native.window'](event){
-            console.log('I heard that! it is now ' + event.detail);
+            console.log('I heard that! (dashboard/accounts)');
             this.convertToNative = event.detail;
             this.accountList = [];
             chartData = null;
@@ -62,19 +57,16 @@ export default () => ({
     },
 
 
-    doSomeReload() {
-        console.log('doSomeReload');
-    },
     getFreshData() {
-        console.log('get fresh data');
         const start = new Date(window.store.get('start'));
         const end = new Date(window.store.get('end'));
-        const chartCacheKey = getCacheKey(this.localCacheKey('chart'), {start: start, end: end})
+        const chartCacheKey = getCacheKey(this.localCacheKey('chart'), {convertToNative: this.convertToNative, start: start, end: end})
 
         const cacheValid = window.store.get('cacheValid');
         let cachedData = window.store.get(chartCacheKey);
 
         if (cacheValid && typeof cachedData !== 'undefined') {
+            console.log('Generate from cache: ', chartCacheKey);
             this.drawChart(this.generateOptions(cachedData));
             this.loading = false;
             return;
@@ -84,6 +76,7 @@ export default () => ({
             this.chartData = response.data;
             // cache generated options:
             window.store.set(chartCacheKey, response.data);
+            console.log('Generate FRESH!');
             this.drawChart(this.generateOptions(this.chartData));
             this.loading = false;
         });
@@ -108,14 +101,17 @@ export default () => ({
 
                 // use the "native" currency code and use the "native_entries" as array
                 if (this.convertToNative) {
-                    console.log('Convert to native!');
                     currencies.push(current.native_currency_code);
                     dataset.currency_code = current.native_currency_code;
-                    collection = Object.values(current.native_entries);
+                    if(!current.hasOwnProperty('native_entries')) {
+                        console.error('No native entries ('+this.convertToNative+') found for account: ', current);
+                    }
+                    if(current.hasOwnProperty('native_entries')) {
+                        collection = Object.values(current.native_entries);
+                    }
                     yAxis = 'y' + current.native_currency_code;
                 }
                 if (!this.convertToNative) {
-                    console.log('NO convert to native!', this.convertToNative);
                     yAxis = 'y' + current.currency_code;
                     dataset.currency_code = current.currency_code;
                     currencies.push(current.currency_code);
@@ -155,9 +151,7 @@ export default () => ({
         return options;
     },
     loadChart() {
-        console.log('loadChart');
         if (true === this.loading) {
-            console.log('already loading chart');
             return;
         }
         this.loading = true;
@@ -175,7 +169,6 @@ export default () => ({
             chart.options = options.options;
             chart.data = options.data;
             chart.update();
-            console.log('refresh chart');
             return;
         }
         chart = new Chart(document.querySelector("#account-chart"), options);
@@ -303,9 +296,8 @@ export default () => ({
         ]).then((values) => {
             //console.log('accounts after promises');
             this.convertToNative = values[1] && values[3];
-            this.convertToNativeAvailable = values[3];
             afterPromises = true;
-            console.log('convertToNative in accounts.js: ', values);
+            //console.log('convertToNative in accounts.js: ', values);
 
             // main dashboard chart:
             this.loadChart();
