@@ -105,17 +105,17 @@ class AccountController extends Controller
     private function renderAccountData(array $params, Account $account): void
     {
         Log::debug(sprintf('Now in %s(array, #%d)', __METHOD__, $account->id));
-        $currency = $this->repository->getAccountCurrency($account);
-        $currentStart = clone $params['start'];
-        $range        = Steam::finalAccountBalanceInRange($account, $params['start'], clone $params['end'], $this->convertToNative);
+        $currency       = $this->repository->getAccountCurrency($account);
+        $currentStart   = clone $params['start'];
+        $range          = Steam::finalAccountBalanceInRange($account, $params['start'], clone $params['end'], $this->convertToNative);
 
 
-        $previous     = array_values($range)[0]['balance'];
+        $previous       = array_values($range)[0]['balance'];
         $nativePrevious = null;
         if (!$currency instanceof TransactionCurrency) {
             $currency = $this->default;
         }
-        $currentSet = [
+        $currentSet     = [
             'label'                   => $account->name,
 
             // the currency that belongs to the account.
@@ -142,15 +142,15 @@ class AccountController extends Controller
 
 
         while ($currentStart <= $params['end']) {
-            $format   = $currentStart->format('Y-m-d');
-            $label    = $currentStart->toAtomString();
-            $balance  = array_key_exists($format, $range) ? $range[$format]['balance'] : $previous;
-            $previous = $balance;
+            $format                        = $currentStart->format('Y-m-d');
+            $label                         = $currentStart->toAtomString();
+            $balance                       = array_key_exists($format, $range) ? $range[$format]['balance'] : $previous;
+            $previous                      = $balance;
             $currentSet['entries'][$label] = $balance;
 
 
             // do the same for the native balance, if relevant:
-            $nativeBalance = null;
+            $nativeBalance                 = null;
             if ($this->convertToNative) {
                 $nativeBalance                        = array_key_exists($format, $range) ? $range[$format]['native_balance'] : $nativePrevious;
                 $nativePrevious                       = $nativeBalance;
@@ -171,14 +171,14 @@ class AccountController extends Controller
     public function overview(DateRequest $request): JsonResponse
     {
         // parameters for chart:
-        $dates = $request->getAll();
+        $dates        = $request->getAll();
 
 
         /** @var Carbon $start */
-        $start = $dates['start'];
+        $start        = $dates['start'];
 
         /** @var Carbon $end */
-        $end = $dates['end'];
+        $end          = $dates['end'];
 
         // set dates to end of day + start of day:
         $start->startOfDay();
@@ -222,8 +222,8 @@ class AccountController extends Controller
 
             // also get the native balance if convertToNative is true:
             while ($currentStart <= $end) {
-                $format = $currentStart->format('Y-m-d');
-                $label  = $currentStart->toAtomString();
+                $format                        = $currentStart->format('Y-m-d');
+                $label                         = $currentStart->toAtomString();
 
                 // balance is based on "balance" from the $range variable.
                 $balance                       = array_key_exists($format, $range) ? $range[$format]['balance'] : $previous;
@@ -231,7 +231,7 @@ class AccountController extends Controller
                 $currentSet['entries'][$label] = $balance;
 
                 // do the same for the native balance, if relevant:
-                $nativeBalance = null;
+                $nativeBalance                 = null;
                 if ($this->convertToNative) {
                     $nativeBalance                        = array_key_exists($format, $range) ? $range[$format]['native_balance'] : $nativePrevious;
                     $nativePrevious                       = $nativeBalance;
@@ -241,7 +241,7 @@ class AccountController extends Controller
                 $currentStart->addDay();
 
             }
-            $chartData[] = $currentSet;
+            $chartData[]    = $currentSet;
         }
 
         return response()->json($chartData);
@@ -252,12 +252,13 @@ class AccountController extends Controller
         $defaultSet = $this->repository->getAccountsByType([AccountTypeEnum::ASSET->value])->pluck('id')->toArray();
 
         /** @var Preference $frontpage */
-        $frontpage = Preferences::get('frontpageAccounts', $defaultSet);
+        $frontpage  = Preferences::get('frontpageAccounts', $defaultSet);
 
         if (!(is_array($frontpage->data) && count($frontpage->data) > 0)) {
             $frontpage->data = $defaultSet;
             $frontpage->save();
         }
+
         return $frontpage->data ?? $defaultSet;
     }
 }

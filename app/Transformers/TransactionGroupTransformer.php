@@ -123,11 +123,11 @@ class TransactionGroupTransformer extends AbstractTransformer
         }
 
         // set native amount to the normal amount if the currency matches.
-        if($transaction['native_currency']['id'] ?? null === $transaction['currency_id']) {
+        if ($transaction['native_currency']['id'] ?? null === $transaction['currency_id']) {
             $transaction['native_amount'] = $amount;
         }
 
-        if(array_key_exists('native_amount', $transaction) && null !== $transaction['native_amount']) {
+        if (array_key_exists('native_amount', $transaction) && null !== $transaction['native_amount']) {
             $transaction['native_amount'] = app('steam')->positive($transaction['native_amount']);
         }
         $type            = $this->stringFromArray($transaction, 'transaction_type_type', TransactionTypeEnum::WITHDRAWAL->value);
