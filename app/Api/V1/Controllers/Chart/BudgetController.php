@@ -277,30 +277,31 @@ class BudgetController extends Controller
 
     private function filterLimit(int $currencyId, Collection $limits): ?BudgetLimit
     {
-        $amount = '0';
-        $limit = null;
-        $converter  = new ExchangeRateConverter();
+        $amount    = '0';
+        $limit     = null;
+        $converter = new ExchangeRateConverter();
+
         /** @var BudgetLimit $current */
         foreach ($limits as $current) {
-            if(true === $this->convertToNative) {
-                if($current->transaction_currency_id === $this->nativeCurrency->id) {
+            if (true === $this->convertToNative) {
+                if ($current->transaction_currency_id === $this->nativeCurrency->id) {
                     // simply add it.
                     $amount = bcadd($amount, (string)$current->amount);
-                    Log::debug(sprintf('Set amount in limit to %s' , $amount));
+                    Log::debug(sprintf('Set amount in limit to %s', $amount));
                 }
-                if($current->transaction_currency_id !== $this->nativeCurrency->id) {
+                if ($current->transaction_currency_id !== $this->nativeCurrency->id) {
                     // convert and then add it.
-                    $converted  = $converter->convert($current->transactionCurrency,$this->nativeCurrency, $limit->start_date, $limit->amount);
-                    $amount                  = bcadd($amount, $converted);
+                    $converted = $converter->convert($current->transactionCurrency, $this->nativeCurrency, $limit->start_date, $limit->amount);
+                    $amount    = bcadd($amount, $converted);
                     Log::debug(sprintf('Budgeted in limit #%d: %s %s, converted to %s %s', $current->id, $current->transactionCurrency->code, $current->amount, $this->nativeCurrency->code, $converted));
                     Log::debug(sprintf('Set amount in limit to %s', $amount));
                 }
             }
             if ($current->transaction_currency_id === $currencyId) {
-                 $limit = $current;
+                $limit = $current;
             }
         }
-        if(null !== $limit && true === $this->convertToNative) {
+        if (null !== $limit && true === $this->convertToNative) {
             // convert and add all amounts.
             $limit->amount = app('steam')->positive($amount);
             Log::debug(sprintf('Final amount in limit with converted amount %s', $limit->amount));
