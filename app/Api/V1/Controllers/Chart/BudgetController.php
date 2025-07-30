@@ -49,7 +49,7 @@ class BudgetController extends Controller
     use CleansChartData;
     use ValidatesUserGroupTrait;
 
-    protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
+    protected array $acceptedRoles                      = [UserRoleEnum::READ_ONLY];
 
     protected OperationsRepositoryInterface $opsRepository;
     private BudgetLimitRepositoryInterface  $blRepository;
@@ -77,17 +77,18 @@ class BudgetController extends Controller
 
     /**
      * TODO see autocomplete/accountcontroller
+     *
      * @throws FireflyException
      */
     public function dashboard(DateRequest $request): JsonResponse
     {
-        $params = $request->getAll();
+        $params  = $request->getAll();
 
         /** @var Carbon $start */
-        $start = $params['start'];
+        $start   = $params['start'];
 
         /** @var Carbon $end */
-        $end = $params['end'];
+        $end     = $params['end'];
 
         // code from FrontpageChartGenerator, but not in separate class
         $budgets = $this->repository->getActiveBudgets();
@@ -108,7 +109,7 @@ class BudgetController extends Controller
     private function processBudget(Budget $budget, Carbon $start, Carbon $end): array
     {
         // get all limits:
-        $limits = $this->blRepository->getBudgetLimits($budget, $start, $end);
+        $limits   = $this->blRepository->getBudgetLimits($budget, $start, $end);
 
         //      'currency_id' => string '1' (length=1)
         //      'currency_code' => string 'EUR' (length=3)
@@ -123,21 +124,21 @@ class BudgetController extends Controller
         //      'overspent' => string '321.230000000000' (length=16)
 
 
-        $rows = [];
+        $rows     = [];
 
         // instead of using the budget limits as a thing to collect all expenses,
         // use the budget range itself to collect and group them,
         // AND THEN add budgeted amounts from the limits to the rows.
-        $spent = $this->opsRepository->listExpenses($start, $end, null, new Collection([$budget]));
-        $expenses  = $this->processExpenses($budget->id, $spent, $start, $end);
+        $spent    = $this->opsRepository->listExpenses($start, $end, null, new Collection([$budget]));
+        $expenses = $this->processExpenses($budget->id, $spent, $start, $end);
 
         /**
-         * @var int $currencyId
+         * @var int   $currencyId
          * @var array $row
          */
         foreach ($expenses as $currencyId => $row) {
             // budgeted, left and overspent are now 0.
-            $limit = $this->filterLimit($currencyId, $limits);
+            $limit  = $this->filterLimit($currencyId, $limits);
             if (null !== $limit) {
                 $row['budgeted']  = $limit->amount;
                 $row['left']      = bcsub($row['budgeted'], bcmul($row['spent'], '-1'));
@@ -150,13 +151,13 @@ class BudgetController extends Controller
 
 
         // if no limits
-//        if (0 === $limits->count()) {
-//             return as a single item in an array
-//            $rows = $this->noBudgetLimits($budget, $start, $end);
-//        }
+        //        if (0 === $limits->count()) {
+        //             return as a single item in an array
+        //            $rows = $this->noBudgetLimits($budget, $start, $end);
+        //        }
 
         // is always an array
-        $return = [];
+        $return   = [];
         foreach ($rows as $row) {
             $current  = [
                 'label'                   => $budget->name,
@@ -207,7 +208,7 @@ class BudgetController extends Controller
          * This array contains the expenses in this budget. Grouped per currency.
          * The grouping is on the main currency only.
          *
-         * @var int $currencyId
+         * @var int   $currencyId
          * @var array $block
          */
         foreach ($spent as $currencyId => $block) {
@@ -225,7 +226,7 @@ class BudgetController extends Controller
                 'left'                    => '0',
                 'overspent'               => '0',
             ];
-            $currentBudgetArray            = $block['budgets'][$budgetId];
+            $currentBudgetArray = $block['budgets'][$budgetId];
 
             // var_dump($return);
             /** @var array $journal */
@@ -266,7 +267,7 @@ class BudgetController extends Controller
     private function processLimit(Budget $budget, BudgetLimit $limit): array
     {
         Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
-        $end = clone $limit->end_date;
+        $end             = clone $limit->end_date;
         $end->endOfDay();
         $spent           = $this->opsRepository->listExpenses($limit->start_date, $end, null, new Collection([$budget]));
         $limitCurrencyId = $limit->transaction_currency_id;
@@ -274,8 +275,8 @@ class BudgetController extends Controller
         /** @var array $entry */
         // only spent the entry where the entry's currency matches the budget limit's currency
         // so $filtered will only have 1 or 0 entries
-        $filtered = array_filter($spent, fn($entry) => $entry['currency_id'] === $limitCurrencyId);
-        $result   = $this->processExpenses($budget->id, $filtered, $limit->start_date, $end);
+        $filtered        = array_filter($spent, fn ($entry) => $entry['currency_id'] === $limitCurrencyId);
+        $result          = $this->processExpenses($budget->id, $filtered, $limit->start_date, $end);
         if (1 === count($result)) {
             $compare                              = bccomp($limit->amount, (string)app('steam')->positive($result[$limitCurrencyId]['spent']));
             $result[$limitCurrencyId]['budgeted'] = $limit->amount;
@@ -298,6 +299,7 @@ class BudgetController extends Controller
                 return $limit;
             }
         }
+
         return null;
     }
 }

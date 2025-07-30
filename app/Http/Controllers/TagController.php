@@ -161,7 +161,7 @@ class TagController extends Controller
         $oldestTagDate->startOfYear();
         $newestTagDate->endOfYear();
 
-        if($oldestTagDate->year < 1970) {
+        if ($oldestTagDate->year < 1970) {
             $oldestTagDate = Carbon::create(1970, 1, 1, 0, 0, 0, config('app.timezone'));
             request()->session()->flash('error', trans('firefly.bad_date_transaction'));
         }
