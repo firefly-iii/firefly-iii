@@ -80,7 +80,7 @@ class CategoryController extends Controller
     public function dashboard(DateRequest $request): JsonResponse
     {
         /** @var Carbon $start */
-        $start = $this->parameters->get('start');
+        $start      = $this->parameters->get('start');
 
         /** @var Carbon $end */
         $end        = $this->parameters->get('end');
@@ -91,11 +91,11 @@ class CategoryController extends Controller
 
         // get journals for entire period:
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector  = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)->withAccountInformation();
         $collector->setXorAccounts($accounts)->withCategoryInformation();
-        $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value,  TransactionTypeEnum::RECONCILIATION->value]);
-        $journals = $collector->getExtractedJournals();
+        $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::RECONCILIATION->value]);
+        $journals   = $collector->getExtractedJournals();
 
         /** @var array $journal */
         foreach ($journals as $journal) {
@@ -117,14 +117,14 @@ class CategoryController extends Controller
                 $currencyCode          = (string)$this->nativeCurrency->code;
                 $currencySymbol        = (string)$this->nativeCurrency->symbol;
                 $currencyDecimalPlaces = (int)$this->nativeCurrency->decimal_places;
-                $convertedAmount                = $converter->convert($currency, $this->nativeCurrency, $journal['date'], $amount);
+                $convertedAmount       = $converter->convert($currency, $this->nativeCurrency, $journal['date'], $amount);
                 Log::debug(sprintf('Converted %s %s to %s %s', $journal['currency_code'], $amount, $this->nativeCurrency->code, $convertedAmount));
-                $amount = $convertedAmount;
+                $amount                = $convertedAmount;
             }
 
 
-            $categoryName = $journal['category_name'] ?? (string)trans('firefly.no_category');
-            $key          = sprintf('%s-%s', $categoryName, $currencyCode);
+            $categoryName                   = $journal['category_name'] ?? (string)trans('firefly.no_category');
+            $key                            = sprintf('%s-%s', $categoryName, $currencyCode);
             // create arrays
             $return[$key] ??= [
                 'label'                   => $categoryName,
@@ -140,12 +140,12 @@ class CategoryController extends Controller
             ];
 
             // add monies
-            $return[$key]['amount'] = bcadd($return[$key]['amount'], (string)$amount);
+            $return[$key]['amount']         = bcadd($return[$key]['amount'], (string)$amount);
         }
-        $return = array_values($return);
+        $return     = array_values($return);
 
         // order by amount
-        usort($return, static fn(array $a, array $b) => (float)$a['amount'] < (float)$b['amount'] ? 1 : -1);
+        usort($return, static fn (array $a, array $b) => (float)$a['amount'] < (float)$b['amount'] ? 1 : -1);
 
         return response()->json($this->clean($return));
     }
