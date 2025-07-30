@@ -6,7 +6,7 @@
                 >{{ __('firefly.income_and_expense') }}</a>
             </h3>
         </div>
-        <div class="card-body" x-data="sankey">
+        <div class="card-body" x-data="sankey" x-bind="eventListeners">
             <canvas id="sankey-chart"></canvas>
         </div>
     </div>
