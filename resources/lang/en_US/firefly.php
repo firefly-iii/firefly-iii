@@ -234,6 +234,7 @@ return [
     'advanced_options'                                                          => 'Advanced options',
     'advanced_options_explain'                                                  => 'Some pages in Firefly III have advanced options hidden behind this button. This page doesn\'t have anything fancy here, but do check out the others!',
     'here_be_dragons'                                                           => 'Hic sunt dracones',
+    'bad_date_transaction' => 'Firefly III has detected you have transactions from before the year 1970. Please correct these transactions at your earliest convenience.',
 
     // Webhooks
     'webhooks'                                                                  => 'Webhooks',
