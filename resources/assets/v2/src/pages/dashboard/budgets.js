@@ -48,9 +48,19 @@ export default () => ({
         }
         this.getFreshData();
     },
+
+    eventListeners: {
+        ['@convert-to-native.window'](event){
+            console.log('I heard that! (dashboard/budgets)');
+            this.convertToNative = event.detail;
+            chartData = null;
+            this.loadChart();
+        }
+    },
+
     drawChart(options) {
         if (null !== chart) {
-            chart.data.datasets = options.data.datasets;
+            chart.data = options.data;
             chart.update();
             return;
         }
@@ -59,7 +69,7 @@ export default () => ({
     getFreshData() {
         const start = new Date(window.store.get('start'));
         const end = new Date(window.store.get('end'));
-        const cacheKey = getCacheKey('ds_bdg_chart', {start: start, end: end});
+        const cacheKey = getCacheKey('ds_bdg_chart', {convertToNative: this.convertToNative, start: start, end: end});
         //const cacheValid = window.store.get('cacheValid');
         const cacheValid = false;
         let cachedData = window.store.get(cacheKey);

@@ -1,4 +1,4 @@
-<div class="row mb-2" x-data="categories">
+<div class="row mb-2" x-data="categories" x-bind="eventListeners">
     <div class="col">
         <div class="card">
             <div class="card-header">

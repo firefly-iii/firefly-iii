@@ -71,9 +71,10 @@ let index = function () {
     return {
         convertToNative: false,
         saveNativeSettings(event) {
-            setVariable('convert_to_native', event.currentTarget.checked).then(() => {
-                console.log('Set convert to native to: ', event.currentTarget.checked);
-                this.$dispatch('convert-to-native', event.currentTarget.checked);
+            let target = event.currentTarget || event.target;
+            setVariable('convert_to_native',target.checked).then(() => {
+                console.log('Set convert to native to: ', target.checked);
+                this.$dispatch('convert-to-native', target.checked);
             });
         },
         init() {

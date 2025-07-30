@@ -24,14 +24,16 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Budget;
 
-use Deprecated;
 use Carbon\Carbon;
+use Deprecated;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\Report\Summarizer\TransactionSummarizer;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
@@ -55,17 +57,17 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         $total = '0';
         $count = 0;
         foreach ($budget->budgetlimits as $limit) {
-            $diff   = (int) $limit->start_date->diffInDays($limit->end_date, true);
+            $diff   = (int)$limit->start_date->diffInDays($limit->end_date, true);
             $diff   = 0 === $diff ? 1 : $diff;
             $amount = $limit->amount;
-            $perDay = bcdiv((string) $amount, (string) $diff);
+            $perDay = bcdiv((string)$amount, (string)$diff);
             $total  = bcadd($total, $perDay);
             ++$count;
             app('log')->debug(sprintf('Found %d budget limits. Per day is %s, total is %s', $count, $perDay, $total));
         }
-        $avg   = $total;
+        $avg = $total;
         if ($count > 0) {
-            $avg = bcdiv($total, (string) $count);
+            $avg = bcdiv($total, (string)$count);
         }
         app('log')->debug(sprintf('%s / %d = %s = average.', $total, $count, $avg));
 
@@ -84,21 +86,21 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
 
         // get all transactions:
         /** @var GroupCollectorInterface $collector */
-        $collector    = app(GroupCollectorInterface::class);
+        $collector = app(GroupCollectorInterface::class);
         $collector->setAccounts($accounts)->setRange($start, $end);
         $collector->setBudgets($budgets);
-        $journals     = $collector->getExtractedJournals();
+        $journals = $collector->getExtractedJournals();
 
         // loop transactions:
         /** @var array $journal */
         foreach ($journals as $journal) {
             // prep data array for currency:
-            $budgetId                     = (int) $journal['budget_id'];
-            $budgetName                   = $journal['budget_name'];
-            $currencyId                   = (int) $journal['currency_id'];
-            $key                          = sprintf('%d-%d', $budgetId, $currencyId);
+            $budgetId   = (int)$journal['budget_id'];
+            $budgetName = $journal['budget_name'];
+            $currencyId = (int)$journal['currency_id'];
+            $key        = sprintf('%d-%d', $budgetId, $currencyId);
 
-            $data[$key] ??= [
+            $data[$key]                   ??= [
                 'id'                      => $budgetId,
                 'name'                    => sprintf('%s (%s)', $budgetName, $journal['currency_name']),
                 'sum'                     => '0',
@@ -110,7 +112,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
                 'entries'                 => [],
             ];
             $date                         = $journal['date']->format($carbonFormat);
-            $data[$key]['entries'][$date] = bcadd($data[$key]['entries'][$date] ?? '0', (string) $journal['amount']);
+            $data[$key]['entries'][$date] = bcadd($data[$key]['entries'][$date] ?? '0', (string)$journal['amount']);
         }
 
         return $data;
@@ -136,27 +138,53 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
             $collector->setBudgets($this->getBudgets());
         }
         $collector->withBudgetInformation()->withAccountInformation()->withCategoryInformation();
-        $journals  = $collector->getExtractedJournals();
-        $array     = [];
+        $journals = $collector->getExtractedJournals();
+        $array    = [];
+
+        // if needs conversion to native.
+        $convertToNative       = Amount::convertToNative($this->user);
+        $nativeCurrency        = Amount::getNativeCurrencyByUserGroup($this->userGroup);
+        $currencyId            = (int) $nativeCurrency->id;
+        $currencyCode          = $nativeCurrency->code;
+        $currencyName          = $nativeCurrency->name;
+        $currencySymbol        = $nativeCurrency->symbol;
+        $currencyDecimalPlaces = $nativeCurrency->decimal_places;
+        $converter  = new ExchangeRateConverter();
+        $currencies = [
+            $currencyId => $nativeCurrency,
+        ];
 
         foreach ($journals as $journal) {
-            $currencyId                                                                   = (int) $journal['currency_id'];
-            $budgetId                                                                     = (int) $journal['budget_id'];
-            $budgetName                                                                   = (string) $journal['budget_name'];
+            $amount = app('steam')->negative($journal['amount']);
+            $journalCurrencyId = (int)$journal['currency_id'];
+            if (false === $convertToNative) {
+                $currencyId            = $journalCurrencyId;
+                $currencyName          = $journal['currency_name'];
+                $currencySymbol        = $journal['currency_symbol'];
+                $currencyCode          = $journal['currency_code'];
+                $currencyDecimalPlaces = $journal['currency_decimal_places'];
+            }
+            if(true === $convertToNative && $journalCurrencyId !== $currencyId) {
+                $currencies[$journalCurrencyId]??= TransactionCurrency::find($journalCurrencyId);
+                $amount                  = $converter->convert($currencies[$journalCurrencyId], $nativeCurrency, $journal['date'], $amount);
+            }
 
-            // catch "no category" entries.
+            $budgetId   = (int)$journal['budget_id'];
+            $budgetName = (string)$journal['budget_name'];
+
+            // catch "no budget" entries.
             if (0 === $budgetId) {
                 continue;
             }
 
             // info about the currency:
-            $array[$currencyId]                       ??= [
+            $array[$currencyId] ??= [
                 'budgets'                 => [],
                 'currency_id'             => $currencyId,
-                'currency_name'           => $journal['currency_name'],
-                'currency_symbol'         => $journal['currency_symbol'],
-                'currency_code'           => $journal['currency_code'],
-                'currency_decimal_places' => $journal['currency_decimal_places'],
+                'currency_name'           => $currencyName,
+                'currency_symbol'         => $currencySymbol,
+                'currency_code'           => $currencyCode,
+                'currency_decimal_places' => $currencyDecimalPlaces,
             ];
 
             // info about the categories:
@@ -168,9 +196,9 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
 
             // add journal to array:
             // only a subset of the fields.
-            $journalId                                                                    = (int) $journal['transaction_journal_id'];
+            $journalId                                                                    = (int)$journal['transaction_journal_id'];
             $array[$currencyId]['budgets'][$budgetId]['transaction_journals'][$journalId] = [
-                'amount'                   => app('steam')->negative($journal['amount']),
+                'amount'                   => $amount,
                 'destination_account_id'   => $journal['destination_account_id'],
                 'destination_account_name' => $journal['destination_account_name'],
                 'source_account_id'        => $journal['source_account_id'],
@@ -203,7 +231,8 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         ?Collection          $budgets = null,
         ?TransactionCurrency $currency = null,
         bool                 $convertToNative = false
-    ): array {
+    ): array
+    {
         Log::debug(sprintf('Start of %s(date, date, array, array, "%s", %s).', __METHOD__, $currency?->code, var_export($convertToNative, true)));
         // this collector excludes all transfers TO liabilities (which are also withdrawals)
         // because those expenses only become expenses once they move from the liability to the friend.
@@ -211,8 +240,8 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
 
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser($this->user);
-        $subset     = $repository->getAccountsByType(config('firefly.valid_liabilities'));
-        $selection  = new Collection();
+        $subset    = $repository->getAccountsByType(config('firefly.valid_liabilities'));
+        $selection = new Collection();
 
         /** @var Account $account */
         foreach ($subset as $account) {
@@ -222,12 +251,11 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         }
 
         /** @var GroupCollectorInterface $collector */
-        $collector  = app(GroupCollectorInterface::class);
+        $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)
-            ->setRange($start, $end)
+                  ->setRange($start, $end)
             // ->excludeDestinationAccounts($selection)
-            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value])
-        ;
+                  ->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
 
         if ($accounts instanceof Collection) {
             $collector->setAccounts($accounts);
@@ -242,7 +270,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         if ($budgets->count() > 0) {
             $collector->setBudgets($budgets);
         }
-        $journals   = $collector->getExtractedJournals();
+        $journals = $collector->getExtractedJournals();
 
         // same but for transactions in the foreign currency:
         if ($currency instanceof TransactionCurrency) {

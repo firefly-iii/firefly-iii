@@ -36,6 +36,7 @@ use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Support\Http\Api\CleansChartData;
+use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
@@ -110,25 +111,7 @@ class BudgetController extends Controller
     {
         // get all limits:
         $limits   = $this->blRepository->getBudgetLimits($budget, $start, $end);
-
-        //      'currency_id' => string '1' (length=1)
-        //      'currency_code' => string 'EUR' (length=3)
-        //      'currency_name' => string 'Euro' (length=4)
-        //      'currency_symbol' => string '€' (length=3)
-        //      'currency_decimal_places' => int 2
-        //      'start' => string '2025-07-01T00:00:00+02:00' (length=25)
-        //      'end' => string '2025-07-31T23:59:59+02:00' (length=25)
-        //      'budgeted' => string '100.000000000000' (length=16)
-        //      'spent' => string '-421.230000000000' (length=17)
-        //      'left' => string '0' (length=1)
-        //      'overspent' => string '321.230000000000' (length=16)
-
-
         $rows     = [];
-
-        // instead of using the budget limits as a thing to collect all expenses,
-        // use the budget range itself to collect and group them,
-        // AND THEN add budgeted amounts from the limits to the rows.
         $spent    = $this->opsRepository->listExpenses($start, $end, null, new Collection([$budget]));
         $expenses = $this->processExpenses($budget->id, $spent, $start, $end);
 
@@ -294,12 +277,35 @@ class BudgetController extends Controller
 
     private function filterLimit(int $currencyId, Collection $limits): ?BudgetLimit
     {
-        foreach ($limits as $limit) {
-            if ($limit->transaction_currency_id === $currencyId) {
-                return $limit;
+        $amount = '0';
+        $limit = null;
+        $converter  = new ExchangeRateConverter();
+        /** @var BudgetLimit $current */
+        foreach ($limits as $current) {
+            if(true === $this->convertToNative) {
+                if($current->transaction_currency_id === $this->nativeCurrency->id) {
+                    // simply add it.
+                    $amount = bcadd($amount, (string)$current->amount);
+                    Log::debug(sprintf('Set amount in limit to %s' , $amount));
+                }
+                if($current->transaction_currency_id !== $this->nativeCurrency->id) {
+                    // convert and then add it.
+                    $converted  = $converter->convert($current->transactionCurrency,$this->nativeCurrency, $limit->start_date, $limit->amount);
+                    $amount                  = bcadd($amount, $converted);
+                    Log::debug(sprintf('Budgeted in limit #%d: %s %s, converted to %s %s', $current->id, $current->transactionCurrency->code, $current->amount, $this->nativeCurrency->code, $converted));
+                    Log::debug(sprintf('Set amount in limit to %s', $amount));
+                }
+            }
+            if ($current->transaction_currency_id === $currencyId) {
+                 $limit = $current;
             }
         }
+        if(null !== $limit && true === $this->convertToNative) {
+            // convert and add all amounts.
+            $limit->amount = app('steam')->positive($amount);
+            Log::debug(sprintf('Final amount in limit with converted amount %s', $limit->amount));
+        }
 
-        return null;
+        return $limit;
     }
 }

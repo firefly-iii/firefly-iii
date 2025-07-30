@@ -33,6 +33,17 @@ let afterPromises = false;
 export default () => ({
     loading: false,
     convertToNative: false,
+
+    eventListeners: {
+        ['@convert-to-native.window'](event){
+            console.log('I heard that! (dashboard/categories)');
+            this.convertToNative = event.detail;
+            chartData = null;
+            this.loadChart();
+        }
+    },
+
+
     generateOptions(data) {
         currencies = [];
         let options = getDefaultChartSettings('column');
@@ -147,7 +158,7 @@ export default () => ({
     getFreshData() {
         const start = new Date(window.store.get('start'));
         const end = new Date(window.store.get('end'));
-        const cacheKey = getCacheKey('ds_ct_chart', {start: start, end: end});
+        const cacheKey = getCacheKey('ds_ct_chart', {convertToNative: this.convertToNative, start: start, end: end});
 
         const cacheValid = window.store.get('cacheValid');
         let cachedData = window.store.get(cacheKey);
