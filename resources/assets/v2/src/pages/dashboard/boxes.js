@@ -39,7 +39,7 @@ export default () => ({
         ['@convert-to-native.window'](event){
             this.convertToNative = event.detail;
             this.accountList = [];
-            console.log('I heard that!');
+            console.log('I heard that! (dashboard/boxes)');
             this.boxData = null;
             this.loadBoxes();
         }
