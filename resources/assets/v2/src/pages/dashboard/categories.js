@@ -54,11 +54,6 @@ export default () => ({
             if (data.hasOwnProperty(i)) {
                 let current = data[i];
                 let code = current.currency_code;
-                // only use native code when doing auto conversion.
-                if (this.convertToNative) {
-                    code = current.native_currency_code;
-                }
-
                 if (!series.hasOwnProperty(code)) {
                     series[code] = {
                         name: code,
@@ -76,9 +71,6 @@ export default () => ({
                 let yAxis = 'y';
                 let current = data[i];
                 let code = current.currency_code;
-                if (this.convertToNative) {
-                    code = current.native_currency_code;
-                }
 
                 // loop series, add 0 if not present or add actual amount.
                 for (const ii in series) {
@@ -88,10 +80,6 @@ export default () => ({
                             // this series' currency matches this column's currency.
                             amount = parseFloat(current.amount);
                             yAxis = 'y' + current.currency_code;
-                            if (this.convertToNative) {
-                                amount = parseFloat(current.native_amount);
-                                yAxis = 'y' + current.native_currency_code;
-                            }
                         }
                         if (series[ii].data.hasOwnProperty(current.label)) {
                             // there is a value for this particular currency. The amount from this column will be added.
