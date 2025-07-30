@@ -163,8 +163,8 @@ function downloadSubscriptions(params) {
                                     currency_code: bill.currency_code,
                                     paid: 0,
                                     unpaid: 0,
-                                    native_currency_code: bill.native_currency_code,
-                                    native_paid: 0,
+                                    // native_currency_code: bill.native_currency_code,
+                                    // native_paid: 0,
                                     //native_unpaid: 0,
                                 };
                             }
@@ -218,6 +218,9 @@ export default () => ({
     loading: false,
     convertToNative: false,
     subscriptions: [],
+    formatMoney(amount, currencyCode) {
+        return formatMoney(amount, currencyCode);
+    },
     startSubscriptions() {
         this.loading = true;
         let start = new Date(window.store.get('start'));
@@ -256,6 +259,7 @@ export default () => ({
                     //console.log(group);
                 }
             }
+            console.log('Subscriptions: ', this.subscriptions);
 
             // then assign to this.subscriptions.
             this.loading = false;

@@ -1864,6 +1864,7 @@ return [
     'remove_budgeted_amount'                                                    => 'Remove budgeted amount in :currency',
 
     // bills:
+    'left_to_pay_lc' => 'left to pay',
     'skip_help_text'                                                            => 'Use the skip field to create bi-monthly (skip = 1) or other custom intervals.',
     'subscription'                                                              => 'Subscription',
     'not_expected_period'                                                       => 'Not expected this period',
