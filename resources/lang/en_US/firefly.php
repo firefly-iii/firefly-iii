@@ -1865,6 +1865,8 @@ return [
 
     // bills:
     'left_to_pay_lc' => 'left to pay',
+    'less_than_expected' => 'less than expected',
+    'more_than_expected' => 'more than expected',
     'skip_help_text'                                                            => 'Use the skip field to create bi-monthly (skip = 1) or other custom intervals.',
     'subscription'                                                              => 'Subscription',
     'not_expected_period'                                                       => 'Not expected this period',

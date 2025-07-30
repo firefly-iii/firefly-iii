@@ -1,4 +1,4 @@
-<div class="col" x-data="subscriptions">
+<div class="col" x-data="subscriptions" x-bind="eventListeners">
     <template x-for="group in subscriptions">
         <div class="card mb-2">
             <div class="card-header">
@@ -62,7 +62,16 @@
                                             <template x-for="transaction in bill.transactions">
                                                 <li>
                                                     <span :title="transaction.amount" x-text="transaction.amount"></span>
-                                                    (<span title="Less or more than expected." x-text="transaction.percentage"></span>%)
+                                                    <template x-if="transaction.percentage < 0">
+                                                        <span>
+                                                        (<span :title="transaction.percentage + '% {{ __("firefly.less_than_expected") }}'" x-text="transaction.percentage"></span>%)
+                                                        </span>
+                                                    </template>
+                                                    <template x-if="transaction.percentage > 0">
+                                                        <span>
+                                                        (<span :title="transaction.percentage + '% {{ __("firefly.more_than_expected") }}'" x-text="transaction.percentage"></span>%)
+                                                        </span>
+                                                    </template>
                                                 </li>
                                             </template>
                                         </ul>

@@ -163,14 +163,10 @@ function downloadSubscriptions(params) {
                                     currency_code: bill.currency_code,
                                     paid: 0,
                                     unpaid: 0,
-                                    // native_currency_code: bill.native_currency_code,
-                                    // native_paid: 0,
-                                    //native_unpaid: 0,
                                 };
                             }
 
                             subscriptionData[objectGroupId].payment_info[bill.currency_code].unpaid += totalAmount;
-                            //subscriptionData[objectGroupId].payment_info[bill.currency_code].native_unpaid += totalNativeAmount;
                         }
 
                         if (current.attributes.paid_dates.length > 0) {
@@ -178,8 +174,6 @@ function downloadSubscriptions(params) {
                                 if (current.attributes.paid_dates.hasOwnProperty(ii)) {
                                     // bill is paid!
                                     // since bill is paid, 3 possible currencies:
-                                    // native, currency, foreign currency.
-                                    // foreign currency amount (converted to native or not) will be ignored.
                                     let currentJournal = current.attributes.paid_dates[ii];
                                     // new array for the currency
                                     if (!subscriptionData[objectGroupId].payment_info.hasOwnProperty(currentJournal.currency_code)) {
@@ -187,15 +181,10 @@ function downloadSubscriptions(params) {
                                             currency_code: bill.currency_code,
                                             paid: 0,
                                             unpaid: 0,
-                                            // native_currency_code: bill.native_currency_code,
-                                            // native_paid: 0,
-                                            //native_unpaid: 0,
                                         };
                                     }
                                     const amount = parseFloat(currentJournal.amount) * -1;
-                                    // const nativeAmount = parseFloat(currentJournal.native_amount) * -1;
                                     subscriptionData[objectGroupId].payment_info[currentJournal.currency_code].paid += amount;
-                                    // subscriptionData[objectGroupId].payment_info[currentJournal.currency_code].native_paid += nativeAmount;
                                 }
                             }
                         }
@@ -221,6 +210,14 @@ export default () => ({
     formatMoney(amount, currencyCode) {
         return formatMoney(amount, currencyCode);
     },
+    eventListeners: {
+        ['@convert-to-native.window'](event){
+            console.log('I heard that! (dashboard/subscriptions)');
+            this.convertToNative = event.detail;
+            this.startSubscriptions();
+        }
+    },
+
     startSubscriptions() {
         this.loading = true;
         let start = new Date(window.store.get('start'));
