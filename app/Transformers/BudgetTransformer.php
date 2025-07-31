@@ -38,8 +38,8 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class BudgetTransformer extends AbstractTransformer
 {
-    private readonly bool                          $convertToNative;
-    private readonly TransactionCurrency           $default;
+    private readonly bool                          $convertToPrimary;
+    private readonly TransactionCurrency           $primary;
     private readonly OperationsRepositoryInterface $opsRepository;
     private readonly BudgetRepositoryInterface     $repository;
 
@@ -51,8 +51,8 @@ class BudgetTransformer extends AbstractTransformer
         $this->opsRepository   = app(OperationsRepositoryInterface::class);
         $this->repository      = app(BudgetRepositoryInterface::class);
         $this->parameters      = new ParameterBag();
-        $this->default         = Amount::getPrimaryCurrency();
-        $this->convertToNative = Amount::convertToPrimary();
+        $this->primary         = Amount::getPrimaryCurrency();
+        $this->convertToPrimary = Amount::convertToPrimary();
     }
 
     /**
@@ -72,7 +72,7 @@ class BudgetTransformer extends AbstractTransformer
         // info for auto budget.
         $abType     = null;
         $abAmount   = null;
-        $abNative   = null;
+        $abPrimary   = null;
         $abPeriod   = null;
         $notes      = $this->repository->getNoteText($budget);
 
@@ -82,17 +82,17 @@ class BudgetTransformer extends AbstractTransformer
             AutoBudgetType::AUTO_BUDGET_ADJUSTED->value => 'adjusted',
         ];
         $currency   = $autoBudget?->transactionCurrency;
-        $default    = $this->default;
-        if (!$this->convertToNative) {
-            $default = null;
+        $primary    = $this->primary;
+        if (!$this->convertToPrimary) {
+            $primary = null;
         }
         if (null === $autoBudget) {
-            $currency = $default;
+            $currency = $primary;
         }
         if (null !== $autoBudget) {
             $abType   = $types[$autoBudget->auto_budget_type];
             $abAmount = app('steam')->bcround($autoBudget->amount, $currency->decimal_places);
-            $abNative = $this->convertToNative ? app('steam')->bcround($autoBudget->native_amount, $default->decimal_places) : null;
+            $abPrimary = $this->convertToPrimary ? app('steam')->bcround($autoBudget->native_amount, $primary->decimal_places) : null;
             $abPeriod = $autoBudget->period;
         }
 
@@ -113,16 +113,16 @@ class BudgetTransformer extends AbstractTransformer
             'currency_decimal_places'        => $autoBudget?->transactionCurrency->decimal_places,
             'currency_symbol'                => $autoBudget?->transactionCurrency->symbol,
 
-            'native_currency_id'             => $default instanceof TransactionCurrency ? (string) $default->id : null,
-            'native_currency_code'           => $default?->code,
-            'native_currency_symbol'         => $default?->symbol,
-            'native_currency_decimal_places' => $default?->decimal_places,
+            'primary_currency_id'             => $primary instanceof TransactionCurrency ? (string) $primary->id : null,
+            'primary_currency_code'           => $primary?->code,
+            'primary_currency_symbol'         => $primary?->symbol,
+            'primary_currency_decimal_places' => $primary?->decimal_places,
 
-            // amount and native amount if present.
+            // amount and primary currency amount if present.
 
             'auto_budget_amount'             => $abAmount,
-            'native_auto_budget_amount'      => $abNative,
-            'spent'                          => $spent, // always in native.
+            'pc_auto_budget_amount'      => $abPrimary,
+            'spent'                          => $spent, // always in primary currency.
             'links'                          => [
                 [
                     'rel' => 'self',

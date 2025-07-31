@@ -135,7 +135,7 @@ class PiggyBankTransformer extends AbstractTransformer
                 'id'                    => (string) $account->id,
                 'name'                  => $account->name,
                 'current_amount'        => (string) $account->pivot->current_amount,
-                'native_current_amount' => (string) $account->pivot->native_current_amount,
+                'pc_current_amount' => (string) $account->pivot->native_current_amount,
                 // TODO add balance, add left to save.
             ];
         }
