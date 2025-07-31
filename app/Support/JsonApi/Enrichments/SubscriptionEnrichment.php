@@ -90,6 +90,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
 
             // Convert amounts to native currency if needed
             if ($this->convertToNative && $item->currency_id !== $this->nativeCurrency->id) {
+                Log::debug('Convert to native currency');
                 $converter          = new ExchangeRateConverter();
                 $amounts            = [
                     'amount_min' => Steam::bcround($converter->convert($item->transactionCurrency, $this->nativeCurrency, today(), $item->amount_min), $this->nativeCurrency->decimal_places),
@@ -235,6 +236,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
         Log::debug(sprintf('Count %d entries in set', $set->count()));
 
         // for each bill, do a loop.
+        $converter = new ExchangeRateConverter();
         /** @var Bill $subscription */
         foreach ($this->collection as $subscription) {
             // Grab from array the most recent payment. If none exist, fall back to the start date and pretend *that* was the last paid date.
@@ -264,6 +266,13 @@ class SubscriptionEnrichment implements EnrichmentInterface
                     $array['foreign_currency_code']           = $entry->foreign_currency_code;
                     $array['foreign_currency_decimal_places'] = $entry->foreign_currency_decimal_places;
                     $array['foreign_amount']                  = Steam::bcround($entry->foreign_amount, $entry->foreign_currency_decimal_places);
+                }
+                if($this->convertToNative) {
+                    $array['amount'] = $converter->convert($entry->transactionCurrency, $this->nativeCurrency, $entry->date, $entry->amount);
+                    $array['currency_id'] = $this->nativeCurrency->id;
+                    $array['currency_code'] = $this->nativeCurrency->code;
+                    $array['currency_decimal_places'] = $this->nativeCurrency->decimal_places;
+
                 }
 
                 $result[] = $array;
@@ -334,6 +343,10 @@ class SubscriptionEnrichment implements EnrichmentInterface
 
     private function collectPayDates(): void
     {
+        if(null === $this->start || null === $this->end) {
+            Log::debug('Parameters are NULL, set empty array');
+            return;
+        }
         /** @var Bill $subscription */
         foreach ($this->collection as $subscription) {
             $id                  = (int)$subscription->id;
