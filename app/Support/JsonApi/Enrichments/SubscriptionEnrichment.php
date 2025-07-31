@@ -185,6 +185,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
         Log::debug('Now in collectPaidDates for bills');
         if (null === $this->start || null === $this->end) {
             Log::debug('Parameters are NULL, set empty array');
+
             return;
         }
 
@@ -192,13 +193,13 @@ class SubscriptionEnrichment implements EnrichmentInterface
         // 2023-07-18 this particular date is used to search for the last paid date.
         // 2023-07-18 the cloned $searchDate is used to grab the correct transactions.
         /** @var Carbon $start */
-        $start       = clone $this->start;
-        $searchStart = clone $start;
+        $start           = clone $this->start;
+        $searchStart     = clone $start;
         $start->subDay();
 
         /** @var Carbon $end */
-        $end         = clone $this->end;
-        $searchEnd   = clone $end;
+        $end             = clone $this->end;
+        $searchEnd       = clone $end;
 
         // move the search dates to the start of the day.
         $searchStart->startOfDay();
@@ -208,7 +209,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
         Log::debug(sprintf('Search parameters are: start: %s, end: %s', $searchStart->format('Y-m-d H:i:s'), $searchEnd->format('Y-m-d H:i:s')));
 
         // Get from database when bills were paid.
-        $set         = $this->user->transactionJournals()
+        $set             = $this->user->transactionJournals()
             ->whereIn('bill_id', $this->subscriptionIds)
             ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->leftJoin('transaction_currencies AS currency', 'currency.id', '=', 'transactions.transaction_currency_id')
@@ -238,18 +239,18 @@ class SubscriptionEnrichment implements EnrichmentInterface
         foreach ($this->collection as $subscription) {
             // Grab from array the most recent payment. If none exist, fall back to the start date and pretend *that* was the last paid date.
             Log::debug(sprintf('Grab last paid date from function, return %s if it comes up with nothing.', $start->format('Y-m-d')));
-            $lastPaidDate                       = $this->lastPaidDate($subscription, $set, $start);
+            $lastPaidDate                             = $this->lastPaidDate($subscription, $set, $start);
             Log::debug(sprintf('Result of lastPaidDate is %s', $lastPaidDate->format('Y-m-d')));
 
             // At this point the "next match" is exactly after the last time the bill was paid.
-            $result                             = [];
+            $result                                   = [];
             foreach ($set as $entry) {
                 $array    = [
                     'transaction_group_id'    => (string)$entry->transaction_group_id,
                     'transaction_journal_id'  => (string)$entry->id,
                     'date'                    => $entry->date->toAtomString(),
                     'date_object'             => $entry->date,
-                    'bill_id' => $entry->bill_id,
+                    'bill_id'                 => $entry->bill_id,
                     'currency_id'             => $entry->transaction_currency_id,
                     'currency_code'           => $entry->transaction_currency_code,
                     'currency_decimal_places' => $entry->transaction_currency_decimal_places,
