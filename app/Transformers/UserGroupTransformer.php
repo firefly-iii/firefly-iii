@@ -114,11 +114,11 @@ class UserGroupTransformer extends AbstractTransformer
             'in_use'                         => $this->inUse[$userGroup->id] ?? false,
             'can_see_members'                => $this->membershipsVisible[$userGroup->id] ?? false,
             'title'                          => $userGroup->title,
-            'native_currency_id'             => (string) $currency->id,
-            'native_currency_name'           => $currency->name,
-            'native_currency_code'           => $currency->code,
-            'native_currency_symbol'         => $currency->symbol,
-            'native_currency_decimal_places' => $currency->decimal_places,
+            'primary_currency_id'             => (string) $currency->id,
+            'primary_currency_name'           => $currency->name,
+            'primary_currency_code'           => $currency->code,
+            'primary_currency_symbol'         => $currency->symbol,
+            'primary_currency_decimal_places' => $currency->decimal_places,
             'members'                        => array_values($this->memberships[$userGroup->id] ?? []),
         ];
         // if the user has a specific role in this group, then collect the memberships.
