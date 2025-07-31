@@ -78,7 +78,7 @@ class UpdateController extends Controller
         $enrichment->setNative($this->nativeCurrency);
         $enrichment->setStart($this->parameters->get('start'));
         $enrichment->setEnd($this->parameters->get('end'));
-        $bill       = $enrichment->enrichSingle($bill);
+        $bill        = $enrichment->enrichSingle($bill);
 
         /** @var BillTransformer $transformer */
         $transformer = app(BillTransformer::class);
