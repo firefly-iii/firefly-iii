@@ -126,7 +126,7 @@ class PiggyBankStoreRequest extends FormRequest
         $currencyId = (int) ($data['transaction_currency_id'] ?? 0);
         $currency   = TransactionCurrency::find($currencyId);
         if (null === $currency) {
-            return Amount::getNativeCurrency();
+            return Amount::getPrimaryCurrency();
         }
 
         return $currency;

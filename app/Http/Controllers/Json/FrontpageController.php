@@ -45,8 +45,8 @@ class FrontpageController extends Controller
     {
         $set             = $repository->getPiggyBanks();
         $info            = [];
-        $native          = Amount::getNativeCurrency();
-        $convertToNative = Amount::convertToNative();
+        $native          = Amount::getPrimaryCurrency();
+        $convertToNative = Amount::convertToPrimary();
 
 
         /** @var PiggyBank $piggyBank */

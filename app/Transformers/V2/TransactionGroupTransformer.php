@@ -82,7 +82,7 @@ class TransactionGroupTransformer extends AbstractTransformer
             }
         }
 
-        $this->default     = app('amount')->getNativeCurrency();
+        $this->default     = app('amount')->getPrimaryCurrency();
         $this->converter   = new ExchangeRateConverter();
 
         $this->collectAllMetaData();

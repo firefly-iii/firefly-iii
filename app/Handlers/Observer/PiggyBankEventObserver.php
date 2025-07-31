@@ -45,7 +45,7 @@ class PiggyBankEventObserver
 
             return;
         }
-        if (!Amount::convertToNative($user)) {
+        if (!Amount::convertToPrimary($user)) {
             return;
         }
         $userCurrency         = app('amount')->getPrimaryCurrencyByUserGroup($event->piggyBank->accounts()->first()->user->userGroup);

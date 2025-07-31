@@ -142,8 +142,8 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
         Log::debug(sprintf('Found %d available budgets (already converted)', $availableBudgets->count()));
 
         // use native amount if necessary?
-        $convertToNative  = Amount::convertToNative($this->user);
-        $default          = Amount::getNativeCurrency();
+        $convertToNative  = Amount::convertToPrimary($this->user);
+        $default          = Amount::getPrimaryCurrency();
 
         /** @var AvailableBudget $availableBudget */
         foreach ($availableBudgets as $availableBudget) {

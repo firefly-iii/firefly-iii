@@ -275,7 +275,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
             ];
             $result[$currencyId]['sum']        = bcadd($result[$currencyId]['sum'], (string) $transaction->amount);
             $result[$currencyId]['native_sum'] = bcadd($result[$currencyId]['native_sum'], $transaction->native_amount ?? '0');
-            if ($journal->foreign_currency_id === Amount::getNativeCurrency()->id) {
+            if ($journal->foreign_currency_id === Amount::getPrimaryCurrency()->id) {
                 $result[$currencyId]['native_sum'] = bcadd($result[$currencyId]['native_sum'], (string) $transaction->amount);
             }
             ++$result[$currencyId]['count'];
@@ -411,7 +411,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
             ];
             $result[$currencyId]['sum']        = bcadd($result[$currencyId]['sum'], (string) $transaction->amount);
             $result[$currencyId]['native_sum'] = bcadd($result[$currencyId]['native_sum'], $transaction->native_amount ?? '0');
-            if ($journal->foreign_currency_id === Amount::getNativeCurrency()->id) {
+            if ($journal->foreign_currency_id === Amount::getPrimaryCurrency()->id) {
                 $result[$currencyId]['native_sum'] = bcadd($result[$currencyId]['native_sum'], (string) $transaction->amount);
             }
             ++$result[$currencyId]['count'];
@@ -534,8 +534,8 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
         Log::debug(sprintf('sumPaidInRange from %s to %s', $start->toW3cString(), $end->toW3cString()));
         $bills           = $this->getActiveBills();
         $return          = [];
-        $convertToNative = Amount::convertToNative($this->user);
-        $default         = app('amount')->getNativeCurrency();
+        $convertToNative = Amount::convertToPrimary($this->user);
+        $default         = app('amount')->getPrimaryCurrency();
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {
@@ -600,8 +600,8 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
         app('log')->debug(sprintf('Now in sumUnpaidInRange("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d')));
         $bills           = $this->getActiveBills();
         $return          = [];
-        $convertToNative = Amount::convertToNative($this->user);
-        $default         = app('amount')->getNativeCurrency();
+        $convertToNative = Amount::convertToPrimary($this->user);
+        $default         = app('amount')->getPrimaryCurrency();
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {

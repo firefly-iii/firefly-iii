@@ -64,7 +64,7 @@ class NetWorth implements NetWorthInterface
     public function byAccounts(Collection $accounts, Carbon $date): array
     {
         // start in the past, end in the future? use $date
-        $convertToNative = Amount::convertToNative();
+        $convertToNative = Amount::convertToPrimary();
         $ids             = implode(',', $accounts->pluck('id')->toArray());
         $cache           = new CacheProperties();
         $cache->addProperty($date);
@@ -75,7 +75,7 @@ class NetWorth implements NetWorthInterface
             return $cache->get();
         }
         Log::debug(sprintf('Now in byAccounts("%s", "%s")', $ids, $date->format('Y-m-d H:i:s')));
-        $default         = Amount::getNativeCurrency();
+        $default         = Amount::getPrimaryCurrency();
         $netWorth        = [];
         Log::debug(sprintf('NetWorth: finalAccountsBalance("%s")', $date->format('Y-m-d H:i:s')));
         $balances        = Steam::finalAccountsBalance($accounts, $date);

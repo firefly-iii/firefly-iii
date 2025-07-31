@@ -738,7 +738,7 @@ class ExportDataGenerator
 
         $metaFields = config('firefly.journal_meta_fields');
         $header     = array_merge($header, $metaFields);
-        $default    = Amount::getNativeCurrency();
+        $default    = Amount::getPrimaryCurrency();
 
         $collector  = app(GroupCollectorInterface::class);
         $collector->setUser($this->user);

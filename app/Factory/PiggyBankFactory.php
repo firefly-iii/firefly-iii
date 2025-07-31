@@ -126,7 +126,7 @@ class PiggyBankFactory
     private function getCurrency(array $data): TransactionCurrency
     {
         // currency:
-        $defaultCurrency = app('amount')->getNativeCurrency();
+        $defaultCurrency = app('amount')->getPrimaryCurrency();
         $currency        = null;
         if (array_key_exists('transaction_currency_code', $data)) {
             $currency = $this->currencyRepository->findByCode((string)($data['transaction_currency_code'] ?? ''));

@@ -39,7 +39,7 @@ class AutoBudgetObserver
 
     private function updateNativeAmount(AutoBudget $autoBudget): void
     {
-        if (!Amount::convertToNative($autoBudget->budget->user)) {
+        if (!Amount::convertToPrimary($autoBudget->budget->user)) {
             return;
         }
         $userCurrency              = app('amount')->getPrimaryCurrencyByUserGroup($autoBudget->budget->user->userGroup);

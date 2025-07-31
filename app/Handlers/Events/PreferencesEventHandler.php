@@ -60,7 +60,7 @@ class PreferencesEventHandler
         $this->resetBudgets($event->userGroup);
         $this->resetTransactions($event->userGroup);
         // fire laravel command to recalculate them all.
-        if (Amount::convertToNative()) {
+        if (Amount::convertToPrimary()) {
             Log::debug('Will now convert to native.');
             Artisan::call('correction:recalculate-native-amounts');
 

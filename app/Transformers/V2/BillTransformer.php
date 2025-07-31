@@ -99,7 +99,7 @@ class BillTransformer extends AbstractTransformer
             ];
         }
         Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
-        $this->default    = app('amount')->getNativeCurrency();
+        $this->default    = app('amount')->getPrimaryCurrency();
         $this->converter  = new ExchangeRateConverter();
 
         // grab all paid dates:

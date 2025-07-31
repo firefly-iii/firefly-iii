@@ -43,7 +43,7 @@ class BillObserver
 
     private function updateNativeAmount(Bill $bill): void
     {
-        if (!Amount::convertToNative($bill->user)) {
+        if (!Amount::convertToPrimary($bill->user)) {
             return;
         }
         $userCurrency            = app('amount')->getPrimaryCurrencyByUserGroup($bill->user->userGroup);

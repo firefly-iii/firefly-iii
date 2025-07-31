@@ -49,7 +49,7 @@ class AccountObserver
 
     private function updateNativeAmount(Account $account): void
     {
-        if (!Amount::convertToNative($account->user)) {
+        if (!Amount::convertToPrimary($account->user)) {
             return;
         }
         $userCurrency = app('amount')->getPrimaryCurrencyByUserGroup($account->user->userGroup);

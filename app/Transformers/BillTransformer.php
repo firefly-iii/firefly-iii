@@ -40,7 +40,7 @@ class BillTransformer extends AbstractTransformer
      */
     public function __construct()
     {
-        $this->native = Amount::getNativeCurrency();
+        $this->native = Amount::getPrimaryCurrency();
     }
 
     /**

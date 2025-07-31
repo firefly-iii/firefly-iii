@@ -127,8 +127,8 @@ class BasicController extends Controller
     {
         Log::debug('getBalanceInformation');
         // some config settings
-        $convertToNative = Amount::convertToNative();
-        $default         = Amount::getNativeCurrency();
+        $convertToNative = Amount::convertToPrimary();
+        $default         = Amount::getPrimaryCurrency();
         // prep some arrays:
         $sums            = [];
         $return          = [];

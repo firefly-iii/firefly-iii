@@ -93,7 +93,7 @@ class Steam
 
             return [];
         }
-        $defaultCurrency = Amount::getNativeCurrency();
+        $defaultCurrency = Amount::getPrimaryCurrency();
         if ($convertToNative) {
             if ($defaultCurrency->id === $currency?->id) {
                 Log::debug(sprintf('Unset [%s] for account #%d (no longer unset "native_balance")', $defaultCurrency->code, $account->id));
@@ -344,7 +344,7 @@ class Steam
         }
         // Log::debug(sprintf('finalAccountBalance(#%d, %s)', $account->id, $date->format('Y-m-d H:i:s')));
         if (null === $convertToNative) {
-            $convertToNative = Amount::convertToNative($account->user);
+            $convertToNative = Amount::convertToPrimary($account->user);
         }
         if (!$native instanceof TransactionCurrency) {
             $native = Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);

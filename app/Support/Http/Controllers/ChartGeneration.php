@@ -48,7 +48,7 @@ trait ChartGeneration
     protected function accountBalanceChart(Collection $accounts, Carbon $start, Carbon $end): array // chart helper method.
     {
         // chart properties for cache:
-        $convertToNative = Amount::convertToNative();
+        $convertToNative = Amount::convertToPrimary();
         $cache           = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
@@ -67,7 +67,7 @@ trait ChartGeneration
         /** @var AccountRepositoryInterface $accountRepos */
         $accountRepos    = app(AccountRepositoryInterface::class);
 
-        $default         = app('amount')->getNativeCurrency();
+        $default         = app('amount')->getPrimaryCurrency();
         $chartData       = [];
 
         Log::debug(sprintf('Start of accountBalanceChart(list, %s, %s)', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));

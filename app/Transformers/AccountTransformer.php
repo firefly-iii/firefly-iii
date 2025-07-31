@@ -51,8 +51,8 @@ class AccountTransformer extends AbstractTransformer
     {
         $this->parameters      = new ParameterBag();
         $this->repository      = app(AccountRepositoryInterface::class);
-        $this->convertToNative = Amount::convertToNative();
-        $this->native          = Amount::getNativeCurrency();
+        $this->convertToNative = Amount::convertToPrimary();
+        $this->native          = Amount::getPrimaryCurrency();
     }
 
     /**

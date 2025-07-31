@@ -142,7 +142,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         $array                 = [];
 
         // if needs conversion to native.
-        $convertToNative       = Amount::convertToNative($this->user);
+        $convertToNative       = Amount::convertToPrimary($this->user);
         $nativeCurrency        = Amount::getPrimaryCurrencyByUserGroup($this->userGroup);
         $currencyId            = (int) $nativeCurrency->id;
         $currencyCode          = $nativeCurrency->code;

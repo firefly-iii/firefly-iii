@@ -39,7 +39,7 @@ class AvailableBudgetObserver
 
     private function updateNativeAmount(AvailableBudget $availableBudget): void
     {
-        if (!Amount::convertToNative($availableBudget->user)) {
+        if (!Amount::convertToPrimary($availableBudget->user)) {
             // Log::debug('Do not update native available amount of the available budget.');
 
             return;

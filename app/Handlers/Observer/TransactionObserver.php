@@ -50,7 +50,7 @@ class TransactionObserver
 
     private function updateNativeAmount(Transaction $transaction): void
     {
-        if (!Amount::convertToNative($transaction->transactionJournal->user)) {
+        if (!Amount::convertToPrimary($transaction->transactionJournal->user)) {
             return;
         }
         $userCurrency                       = app('amount')->getPrimaryCurrencyByUserGroup($transaction->transactionJournal->user->userGroup);

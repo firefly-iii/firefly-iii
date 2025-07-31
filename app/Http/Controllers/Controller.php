@@ -128,11 +128,11 @@ abstract class Controller extends BaseController
                 $this->defaultCurrency   = null;
                 // get shown-intro-preference:
                 if (auth()->check()) {
-                    $this->defaultCurrency = Amount::getNativeCurrency();
+                    $this->defaultCurrency = Amount::getPrimaryCurrency();
                     $language              = Steam::getLanguage();
                     $locale                = Steam::getLocale();
                     $darkMode              = app('preferences')->get('darkMode', 'browser')->data;
-                    $this->convertToNative = Amount::convertToNative();
+                    $this->convertToNative = Amount::convertToPrimary();
                     $page                  = $this->getPageName();
                     $shownDemo             = $this->hasSeenDemo();
                     View::share('language', $language);

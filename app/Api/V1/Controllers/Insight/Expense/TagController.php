@@ -68,8 +68,8 @@ class TagController extends Controller
         $start           = $request->getStart();
         $end             = $request->getEnd();
         $response        = [];
-        $convertToNative = Amount::convertToNative();
-        $default         = Amount::getNativeCurrency();
+        $convertToNative = Amount::convertToPrimary();
+        $default         = Amount::getPrimaryCurrency();
 
         // collect all expenses in this period (regardless of type) by the given bills and accounts.
         $collector       = app(GroupCollectorInterface::class);

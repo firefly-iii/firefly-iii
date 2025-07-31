@@ -119,7 +119,7 @@ class BasicController extends Controller
     private function getBalanceInformation(Carbon $start, Carbon $end): array
     {
         $object    = new SummaryBalanceGrouped();
-        $default   = app('amount')->getNativeCurrency();
+        $default   = app('amount')->getPrimaryCurrency();
 
         $object->setDefault($default);
 
@@ -234,7 +234,7 @@ class BasicController extends Controller
         $available    = $this->abRepository->getAvailableBudgetWithCurrency($start, $end);
         $budgets      = $this->budgetRepository->getActiveBudgets();
         $spent        = $this->opsRepository->listExpenses($start, $end, null, $budgets);
-        $default      = app('amount')->getNativeCurrency();
+        $default      = app('amount')->getPrimaryCurrency();
         $currencies   = [];
         $converter    = new ExchangeRateConverter();
 

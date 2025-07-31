@@ -75,8 +75,8 @@ class General extends AbstractExtension
                 Log::debug(sprintf('twig balance: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
                 $info            = Steam::finalAccountBalance($account, $date);
                 $currency        = Steam::getAccountCurrency($account);
-                $default         = Amount::getNativeCurrency();
-                $convertToNative = Amount::convertToNative();
+                $default         = Amount::getPrimaryCurrency();
+                $convertToNative = Amount::convertToPrimary();
                 $useNative       = $convertToNative && $default->id !== $currency->id;
                 $currency ??= $default;
                 $strings         = [];

@@ -47,8 +47,8 @@ class PeriodController extends Controller
         $start           = $request->getStart();
         $end             = $request->getEnd();
         $response        = [];
-        $convertToNative = Amount::convertToNative();
-        $default         = Amount::getNativeCurrency();
+        $convertToNative = Amount::convertToPrimary();
+        $default         = Amount::getPrimaryCurrency();
 
         // collect all expenses in this period (regardless of type)
         $collector       = app(GroupCollectorInterface::class);

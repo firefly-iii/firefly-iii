@@ -358,8 +358,8 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         }
         $collector->setCategories($categories);
         $journals        = $collector->getExtractedJournals();
-        $convertToNative = Amount::convertToNative($this->user);
-        $default         = Amount::getNativeCurrency();
+        $convertToNative = Amount::convertToPrimary($this->user);
+        $default         = Amount::getPrimaryCurrency();
         $array           = [];
 
         foreach ($journals as $journal) {

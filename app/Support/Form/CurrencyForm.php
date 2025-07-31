@@ -61,7 +61,7 @@ class CurrencyForm
         $classes         = $this->getHolderClasses($name);
         $value           = $this->fillFieldValue($name, $value);
         $options['step'] = 'any';
-        $defaultCurrency = $options['currency'] ?? app('amount')->getNativeCurrency();
+        $defaultCurrency = $options['currency'] ?? app('amount')->getPrimaryCurrency();
 
         /** @var Collection $currencies */
         $currencies      = app('amount')->getCurrencies();
@@ -129,7 +129,7 @@ class CurrencyForm
         $classes         = $this->getHolderClasses($name);
         $value           = $this->fillFieldValue($name, $value);
         $options['step'] = 'any';
-        $defaultCurrency = $options['currency'] ?? app('amount')->getNativeCurrency();
+        $defaultCurrency = $options['currency'] ?? app('amount')->getPrimaryCurrency();
 
         /** @var Collection $currencies */
         $currencies      = app('amount')->getAllCurrencies();
