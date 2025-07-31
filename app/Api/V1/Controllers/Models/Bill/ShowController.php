@@ -85,7 +85,7 @@ class ShowController extends Controller
         $enrichment->setUser($admin);
         $enrichment->setConvertToNative($this->convertToNative);
         $enrichment->setNative($this->nativeCurrency);
-        $bills    = $enrichment->enrich($bills);
+        $bills       = $enrichment->enrich($bills);
 
         /** @var BillTransformer $transformer */
         $transformer = app(BillTransformer::class);
