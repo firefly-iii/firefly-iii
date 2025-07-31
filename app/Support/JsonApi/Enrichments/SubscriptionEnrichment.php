@@ -40,6 +40,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
 
     public function enrich(Collection $collection): Collection
     {
+        Log::debug(sprintf('%s(%s item(s))', __METHOD__, $collection->count()));
         $this->calculator = app(BillDateCalculator::class);
         $this->collection = $collection;
         $this->collectSubscriptionIds();
@@ -205,7 +206,6 @@ class SubscriptionEnrichment implements EnrichmentInterface
         $searchStart->startOfDay();
         $searchEnd->endOfDay();
 
-        Log::debug(sprintf('Parameters are start: %s, end: %s', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
         Log::debug(sprintf('Search parameters are: start: %s, end: %s', $searchStart->format('Y-m-d H:i:s'), $searchEnd->format('Y-m-d H:i:s')));
 
         // Get from database when bills were paid.
@@ -244,7 +244,10 @@ class SubscriptionEnrichment implements EnrichmentInterface
 
             // At this point the "next match" is exactly after the last time the bill was paid.
             $result                                   = [];
-            foreach ($set as $entry) {
+            $filtered = $set->filter(function (TransactionJournal $journal) use ($subscription) {
+                return (int) $journal->bill_id === (int) $subscription->id;
+            });
+            foreach ($filtered as $entry) {
                 $array    = [
                     'transaction_group_id'    => (string)$entry->transaction_group_id,
                     'transaction_journal_id'  => (string)$entry->id,
@@ -288,6 +291,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
         $filtered = $dates->filter(function (TransactionJournal $journal) use ($subscription) {
             return (int) $journal->bill_id === (int) $subscription->id;
         });
+        Log::debug(sprintf('Filtered down from %d to %d entries for bill #%d.', $dates->count(), $filtered->count(), $subscription->id));
         if (0 === $filtered->count()) {
             return $default;
         }
