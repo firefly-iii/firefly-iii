@@ -279,7 +279,7 @@ class BasicController extends Controller
             ];
         }
         if (0 === count($return)) {
-            $currency = $this->nativeCurrency;
+            $currency = $this->primaryCurrency;
             // create objects for big array.
             $return[] = [
                 'key'                     => sprintf('balance-in-%s', $currency->code),
@@ -333,26 +333,26 @@ class BasicController extends Controller
         $paidAmount   = $this->billRepository->sumPaidInRange($start, $end);
         $unpaidAmount = $this->billRepository->sumUnpaidInRange($start, $end);
         $currencies   = [
-            $this->nativeCurrency->id => $this->nativeCurrency,
+            $this->primaryCurrency->id => $this->primaryCurrency,
         ];
 
-        if ($this->convertToNative) {
+        if ($this->convertToPrimary) {
             $converter       = new ExchangeRateConverter();
             $newPaidAmount   = [[
-                'id'             => $this->nativeCurrency->id,
-                'name'           => $this->nativeCurrency->name,
-                'symbol'         => $this->nativeCurrency->symbol,
-                'code'           => $this->nativeCurrency->code,
-                'decimal_places' => $this->nativeCurrency->decimal_places,
+                'id'             => $this->primaryCurrency->id,
+                'name'           => $this->primaryCurrency->name,
+                'symbol'         => $this->primaryCurrency->symbol,
+                'code'           => $this->primaryCurrency->code,
+                'decimal_places' => $this->primaryCurrency->decimal_places,
                 'sum'            => '0',
             ]];
 
             $newUnpaidAmount = [[
-                'id'             => $this->nativeCurrency->id,
-                'name'           => $this->nativeCurrency->name,
-                'symbol'         => $this->nativeCurrency->symbol,
-                'code'           => $this->nativeCurrency->code,
-                'decimal_places' => $this->nativeCurrency->decimal_places,
+                'id'             => $this->primaryCurrency->id,
+                'name'           => $this->primaryCurrency->name,
+                'symbol'         => $this->primaryCurrency->symbol,
+                'code'           => $this->primaryCurrency->code,
+                'decimal_places' => $this->primaryCurrency->decimal_places,
                 'sum'            => '0',
             ]];
             foreach ([$paidAmount, $unpaidAmount] as $index => $array) {
@@ -360,25 +360,25 @@ class BasicController extends Controller
                     $currencyId                = (int) $item['id'];
                     if (0 === $index) {
                         // paid amount
-                        if ($currencyId === $this->nativeCurrency->id) {
+                        if ($currencyId === $this->primaryCurrency->id) {
                             $newPaidAmount[0]['sum'] = bcadd($newPaidAmount[0]['sum'], (string) $item['sum']);
 
                             continue;
                         }
                         $currencies[$currencyId] ??= $this->currencyRepos->find($currencyId);
-                        $convertedAmount         = $converter->convert($currencies[$currencyId], $this->nativeCurrency, $start, $item['sum']);
+                        $convertedAmount         = $converter->convert($currencies[$currencyId], $this->primaryCurrency, $start, $item['sum']);
                         $newPaidAmount[0]['sum'] = bcadd($newPaidAmount[0]['sum'], $convertedAmount);
 
                         continue;
                     }
                     // unpaid amount
-                    if ($currencyId === $this->nativeCurrency->id) {
+                    if ($currencyId === $this->primaryCurrency->id) {
                         $newUnpaidAmount[0]['sum'] = bcadd($newUnpaidAmount[0]['sum'], (string) $item['sum']);
 
                         continue;
                     }
                     $currencies[$currencyId] ??= $this->currencyRepos->find($currencyId);
-                    $convertedAmount           = $converter->convert($currencies[$currencyId], $this->nativeCurrency, $start, $item['sum']);
+                    $convertedAmount           = $converter->convert($currencies[$currencyId], $this->primaryCurrency, $start, $item['sum']);
                     $newUnpaidAmount[0]['sum'] = bcadd($newUnpaidAmount[0]['sum'], $convertedAmount);
                 }
             }
@@ -432,7 +432,7 @@ class BasicController extends Controller
         Log::debug(sprintf('Done with getBillInformation("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d-')));
 
         if (0 === count($return)) {
-            $currency = $this->nativeCurrency;
+            $currency = $this->primaryCurrency;
             unset($info, $amount);
 
             $return[] = [
@@ -577,7 +577,7 @@ class BasicController extends Controller
             //            $amount = '0';
             //            // $days
             //            // fill in by money spent, just count it.
-            //            $currency              = $this->nativeCurrency;
+            //            $currency              = $this->primaryCurrency;
             //            $return[$currency->id] = [
             //                'key'                     => sprintf('left-to-spend-in-%s', $currency->code),
             //                'title'                   => trans('firefly.box_left_to_spend_in_currency', ['currency' => $currency->symbol]),
@@ -649,14 +649,14 @@ class BasicController extends Controller
         }
         if (0 === count($return)) {
             $return[] = [
-                'key'                     => sprintf('net-worth-in-%s', $this->nativeCurrency->code),
-                'title'                   => trans('firefly.box_net_worth_in_currency', ['currency' => $this->nativeCurrency->symbol]),
+                'key'                     => sprintf('net-worth-in-%s', $this->primaryCurrency->code),
+                'title'                   => trans('firefly.box_net_worth_in_currency', ['currency' => $this->primaryCurrency->symbol]),
                 'monetary_value'          => '0',
-                'currency_id'             => (string) $this->nativeCurrency->id,
-                'currency_code'           => $this->nativeCurrency->code,
-                'currency_symbol'         => $this->nativeCurrency->symbol,
-                'currency_decimal_places' => $this->nativeCurrency->decimal_places,
-                'value_parsed'            => app('amount')->formatFlat($this->nativeCurrency->symbol, $this->nativeCurrency->decimal_places, '0', false),
+                'currency_id'             => (string) $this->primaryCurrency->id,
+                'currency_code'           => $this->primaryCurrency->code,
+                'currency_symbol'         => $this->primaryCurrency->symbol,
+                'currency_decimal_places' => $this->primaryCurrency->decimal_places,
+                'value_parsed'            => app('amount')->formatFlat($this->primaryCurrency->symbol, $this->primaryCurrency->decimal_places, '0', false),
                 'local_icon'              => 'line-chart',
                 'sub_title'               => '',
             ];

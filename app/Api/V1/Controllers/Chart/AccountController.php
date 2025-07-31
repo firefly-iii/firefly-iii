@@ -87,7 +87,7 @@ class AccountController extends Controller
         // move date to end of day
         $queryParameters['start']->startOfDay();
         $queryParameters['end']->endOfDay();
-        Log::debug(sprintf('dashboard(), convert to native: %s', var_export($this->convertToNative, true)));
+        Log::debug(sprintf('dashboard(), convert to native: %s', var_export($this->convertToPrimary, true)));
 
         // loop each account, and collect info:
         /** @var Account $account */
@@ -107,7 +107,7 @@ class AccountController extends Controller
         Log::debug(sprintf('Now in %s(array, #%d)', __METHOD__, $account->id));
         $currency       = $this->repository->getAccountCurrency($account);
         $currentStart   = clone $params['start'];
-        $range          = Steam::finalAccountBalanceInRange($account, $params['start'], clone $params['end'], $this->convertToNative);
+        $range          = Steam::finalAccountBalanceInRange($account, $params['start'], clone $params['end'], $this->convertToPrimary);
 
 
         $previous       = array_values($range)[0]['balance'];
@@ -131,12 +131,12 @@ class AccountController extends Controller
             'period'                  => '1D',
             'entries'                 => [],
         ];
-        if ($this->convertToNative) {
+        if ($this->convertToPrimary) {
             $currentSet['native_entries']                 = [];
-            $currentSet['native_currency_id']             = (string)$this->nativeCurrency->id;
-            $currentSet['native_currency_code']           = $this->nativeCurrency->code;
-            $currentSet['native_currency_symbol']         = $this->nativeCurrency->symbol;
-            $currentSet['native_currency_decimal_places'] = $this->nativeCurrency->decimal_places;
+            $currentSet['native_currency_id']             = (string)$this->primaryCurrency->id;
+            $currentSet['native_currency_code']           = $this->primaryCurrency->code;
+            $currentSet['native_currency_symbol']         = $this->primaryCurrency->symbol;
+            $currentSet['native_currency_decimal_places'] = $this->primaryCurrency->decimal_places;
             $nativePrevious                               = array_values($range)[0]['native_balance'];
         }
 
@@ -151,7 +151,7 @@ class AccountController extends Controller
 
             // do the same for the native balance, if relevant:
             $nativeBalance                 = null;
-            if ($this->convertToNative) {
+            if ($this->convertToPrimary) {
                 $nativeBalance                        = array_key_exists($format, $range) ? $range[$format]['native_balance'] : $nativePrevious;
                 $nativePrevious                       = $nativeBalance;
                 $currentSet['native_entries'][$label] = $nativeBalance;
@@ -191,9 +191,9 @@ class AccountController extends Controller
         /** @var Account $account */
         foreach ($accounts as $account) {
             Log::debug(sprintf('Rendering chart data for account %s (%d)', $account->name, $account->id));
-            $currency       = $this->repository->getAccountCurrency($account) ?? $this->nativeCurrency;
+            $currency       = $this->repository->getAccountCurrency($account) ?? $this->primaryCurrency;
             $currentStart   = clone $start;
-            $range          = Steam::finalAccountBalanceInRange($account, $start, clone $end, $this->convertToNative);
+            $range          = Steam::finalAccountBalanceInRange($account, $start, clone $end, $this->convertToPrimary);
             $previous       = array_values($range)[0]['balance'];
             $nativePrevious = null;
             $currentSet     = [
@@ -210,12 +210,12 @@ class AccountController extends Controller
             ];
 
             // add "native_entries" if convertToNative is true:
-            if ($this->convertToNative) {
+            if ($this->convertToPrimary) {
                 $currentSet['native_entries']                 = [];
-                $currentSet['native_currency_id']             = (string)$this->nativeCurrency->id;
-                $currentSet['native_currency_code']           = $this->nativeCurrency->code;
-                $currentSet['native_currency_symbol']         = $this->nativeCurrency->symbol;
-                $currentSet['native_currency_decimal_places'] = $this->nativeCurrency->decimal_places;
+                $currentSet['native_currency_id']             = (string)$this->primaryCurrency->id;
+                $currentSet['native_currency_code']           = $this->primaryCurrency->code;
+                $currentSet['native_currency_symbol']         = $this->primaryCurrency->symbol;
+                $currentSet['native_currency_decimal_places'] = $this->primaryCurrency->decimal_places;
                 $nativePrevious                               = array_values($range)[0]['native_balance'];
 
             }
@@ -232,7 +232,7 @@ class AccountController extends Controller
 
                 // do the same for the native balance, if relevant:
                 $nativeBalance                 = null;
-                if ($this->convertToNative) {
+                if ($this->convertToPrimary) {
                     $nativeBalance                        = array_key_exists($format, $range) ? $range[$format]['native_balance'] : $nativePrevious;
                     $nativePrevious                       = $nativeBalance;
                     $currentSet['native_entries'][$label] = $nativeBalance;

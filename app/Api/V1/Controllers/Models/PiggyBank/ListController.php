@@ -84,7 +84,7 @@ class ListController extends Controller
         $admin       = auth()->user();
         $enrichment  = new AccountEnrichment();
         $enrichment->setUser($admin);
-        $enrichment->setNative($this->nativeCurrency);
+        $enrichment->setNative($this->primaryCurrency);
         $accounts    = $enrichment->enrich($accounts);
 
         // make paginator:

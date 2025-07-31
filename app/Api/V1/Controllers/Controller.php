@@ -68,8 +68,8 @@ abstract class Controller extends BaseController
 
     /** @var array<int, string> */
     protected array               $allowedSort;
-    protected bool                $convertToNative = false;
-    protected TransactionCurrency $nativeCurrency;
+    protected bool                $convertToPrimary = false;
+    protected TransactionCurrency $primaryCurrency;
     protected ParameterBag        $parameters;
 
     /**
@@ -84,8 +84,8 @@ abstract class Controller extends BaseController
                 $this->parameters = $this->getParameters();
                 if (auth()->check()) {
                     $language              = Steam::getLanguage();
-                    $this->convertToNative = Amount::convertToPrimary();
-                    $this->nativeCurrency  = Amount::getPrimaryCurrency();
+                    $this->convertToPrimary = Amount::convertToPrimary();
+                    $this->primaryCurrency  = Amount::getPrimaryCurrency();
                     app()->setLocale($language);
                 }
 

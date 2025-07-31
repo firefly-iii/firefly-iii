@@ -93,14 +93,14 @@ class AccountController extends Controller
         /** @var Account $account */
         foreach ($result as $account) {
             $nameWithBalance = $account->name;
-            $currency        = $this->repository->getAccountCurrency($account) ?? $this->nativeCurrency;
+            $currency        = $this->repository->getAccountCurrency($account) ?? $this->primaryCurrency;
             $useCurrency     = $currency;
             if (in_array($account->accountType->type, $this->balanceTypes, true)) {
                 // this one is correct.
                 Log::debug(sprintf('accounts: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
                 $balance         = Steam::finalAccountBalance($account, $date);
-                $key             = $this->convertToNative && $currency->id !== $this->nativeCurrency->id ? 'native_balance' : 'balance';
-                $useCurrency     = $this->convertToNative && $currency->id !== $this->nativeCurrency->id ? $this->nativeCurrency : $currency;
+                $key             = $this->convertToPrimary && $currency->id !== $this->primaryCurrency->id ? 'native_balance' : 'balance';
+                $useCurrency     = $this->convertToPrimary && $currency->id !== $this->primaryCurrency->id ? $this->primaryCurrency : $currency;
                 $amount          = $balance[$key] ?? '0';
                 $nameWithBalance = sprintf(
                     '%s (%s)',
