@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\Support\JsonApi\Enrichments;
 
-use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\ObjectGroup;
@@ -22,10 +23,10 @@ class SubscriptionEnrichment implements EnrichmentInterface
     private UserGroup           $userGroup;
     private Collection          $collection;
     private bool                $convertToNative = false;
-    private array $subscriptionIds = [];
-    private array $objectGroups = [];
-    private array $mappedObjects = [];
-    private array $notes = [];
+    private array $subscriptionIds               = [];
+    private array $objectGroups                  = [];
+    private array $mappedObjects                 = [];
+    private array $notes                         = [];
     private TransactionCurrency $nativeCurrency;
 
     public function enrich(Collection $collection): Collection
@@ -35,18 +36,18 @@ class SubscriptionEnrichment implements EnrichmentInterface
         $this->collectNotes();
         $this->collectObjectGroups();
 
-        $notes = $this->notes;
-        $objectGroups = $this->objectGroups;
+        $notes            = $this->notes;
+        $objectGroups     = $this->objectGroups;
         $this->collection = $this->collection->map(function (Bill $item) use ($notes, $objectGroups) {
-            $id = (int) $item->id;
-            $currency = $item->transactionCurrency;
-            $meta = [
-                'notes' => null,
-                'object_group_id' => null,
+            $id            = (int) $item->id;
+            $currency      = $item->transactionCurrency;
+            $meta          = [
+                'notes'              => null,
+                'object_group_id'    => null,
                 'object_group_title' => null,
                 'object_group_order' => null,
             ];
-            $amounts  = [
+            $amounts       = [
                 'amount_min' => Steam::bcround($item->amount_min, $currency->decimal_places),
                 'amount_max' => Steam::bcround($item->amount_max, $currency->decimal_places),
                 'average'    => Steam::bcround(bcdiv(bcadd($item->amount_min, $item->amount_max), '2'), $currency->decimal_places),
@@ -54,7 +55,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
 
             // add object group if available
             if (array_key_exists($id, $this->mappedObjects)) {
-                $key = $this->mappedObjects[$id];
+                $key                        = $this->mappedObjects[$id];
                 $meta['object_group_id']    = $objectGroups[$key]['id'];
                 $meta['object_group_title'] = $objectGroups[$key]['title'];
                 $meta['object_group_order'] = $objectGroups[$key]['order'];
@@ -72,17 +73,18 @@ class SubscriptionEnrichment implements EnrichmentInterface
                     'amount_min' => Steam::bcround($converter->convert($item->transactionCurrency, $this->nativeCurrency, today(), $item->amount_min), $this->nativeCurrency->decimal_places),
                     'amount_max' => Steam::bcround($converter->convert($item->transactionCurrency, $this->nativeCurrency, today(), $item->amount_max), $this->nativeCurrency->decimal_places),
                 ];
-                $amounts['average'] =Steam::bcround(bcdiv(bcadd($amounts['amount_min'], $amounts['amount_max']), '2'), $this->nativeCurrency->decimal_places);
+                $amounts['average'] = Steam::bcround(bcdiv(bcadd($amounts['amount_min'], $amounts['amount_max']), '2'), $this->nativeCurrency->decimal_places);
             }
             $item->amounts = $amounts;
             $item->meta    = $meta;
+
             return $item;
         });
 
         return $collection;
     }
 
-    public function enrichSingle(Model|array $model): array|Model
+    public function enrichSingle(array|Model $model): array|Model
     {
         Log::debug(__METHOD__);
         $collection = new Collection([$model]);
@@ -94,9 +96,9 @@ class SubscriptionEnrichment implements EnrichmentInterface
     private function collectNotes(): void
     {
         $notes = Note::query()->whereIn('noteable_id', $this->subscriptionIds)
-                     ->whereNotNull('notes.text')
-                     ->where('notes.text', '!=', '')
-                     ->where('noteable_type', Bill::class)->get(['notes.noteable_id', 'notes.text'])->toArray()
+            ->whereNotNull('notes.text')
+            ->where('notes.text', '!=', '')
+            ->where('noteable_type', Bill::class)->get(['notes.noteable_id', 'notes.text'])->toArray()
         ;
         foreach ($notes as $note) {
             $this->notes[(int) $note['noteable_id']] = (string) $note['text'];
@@ -124,34 +126,35 @@ class SubscriptionEnrichment implements EnrichmentInterface
     {
         $this->nativeCurrency = $nativeCurrency;
     }
+
     private function collectSubscriptionIds(): void
     {
         /** @var Bill $bill */
         foreach ($this->collection as $bill) {
-            $this->subscriptionIds[]     = (int) $bill->id;
+            $this->subscriptionIds[] = (int) $bill->id;
         }
-        $this->subscriptionIds     = array_unique($this->subscriptionIds);
+        $this->subscriptionIds = array_unique($this->subscriptionIds);
     }
 
     private function collectObjectGroups(): void
     {
-        $set = DB::table('object_groupables')
+        $set    = DB::table('object_groupables')
             ->whereIn('object_groupable_id', $this->subscriptionIds)
             ->where('object_groupable_type', Bill::class)
-            ->get(['object_groupable_id','object_group_id']);
+            ->get(['object_groupable_id', 'object_group_id'])
+        ;
 
-        $ids = array_unique($set->pluck('object_group_id')->toArray());
+        $ids    = array_unique($set->pluck('object_group_id')->toArray());
 
-        foreach($set as $entry) {
+        foreach ($set as $entry) {
             $this->mappedObjects[(int)$entry->object_groupable_id] = (int)$entry->object_group_id;
         }
 
-        $groups = ObjectGroup::whereIn('id', $ids)->get(['id', 'title','order'])->toArray();
-        foreach($groups as $group) {
-            $group['id'] = (int) $group['id'];
-            $group['order'] = (int) $group['order'];
+        $groups = ObjectGroup::whereIn('id', $ids)->get(['id', 'title', 'order'])->toArray();
+        foreach ($groups as $group) {
+            $group['id']                           = (int) $group['id'];
+            $group['order']                        = (int) $group['order'];
             $this->objectGroups[(int)$group['id']] = $group;
         }
     }
-
 }
