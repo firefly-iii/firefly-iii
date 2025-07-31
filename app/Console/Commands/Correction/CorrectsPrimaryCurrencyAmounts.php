@@ -2,7 +2,7 @@
 
 
 /*
- * CorrectsNativeAmounts.php
+ * CorrectsPrimaryCurrencyAmounts.php
  * Copyright (c) 2025 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -48,13 +48,13 @@ use Illuminate\Database\Query\Builder as DatabaseBuilder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class CorrectsNativeAmounts extends Command
+class CorrectsPrimaryCurrencyAmounts extends Command
 {
     use ShowsFriendlyMessages;
 
-    protected $description = 'Recalculate native amounts for all objects.';
+    protected $description = 'Recalculate primary currency amounts for all objects.';
 
-    protected $signature   = 'correction:recalculate-native-amounts';
+    protected $signature   = 'correction:recalculate-pc-amounts';
 
     /**
      * Execute the console command.
@@ -66,8 +66,8 @@ class CorrectsNativeAmounts extends Command
 
             return 0;
         }
-        Log::debug('Will update all native amounts. This may take some time.');
-        $this->friendlyWarning('Recalculating native amounts for all objects. This may take some time!');
+        Log::debug('Will update all primary currency amounts. This may take some time.');
+        $this->friendlyWarning('Recalculating primary currency amounts for all objects. This may take some time!');
 
         /** @var UserGroupRepositoryInterface $repository */
         $repository = app(UserGroupRepositoryInterface::class);
@@ -76,7 +76,7 @@ class CorrectsNativeAmounts extends Command
         foreach ($repository->getAll() as $userGroup) {
             $this->recalculateForGroup($userGroup);
         }
-        $this->friendlyInfo('Recalculated all native amounts.');
+        $this->friendlyInfo('Recalculated all primary currency amounts.');
 
         return 0;
     }

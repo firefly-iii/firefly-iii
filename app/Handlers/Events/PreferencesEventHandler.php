@@ -38,17 +38,16 @@ use Illuminate\Support\Facades\Log;
 
 class PreferencesEventHandler
 {
-    public function resetNativeAmounts(UserGroupChangedDefaultCurrency $event): void
+    public function resetPrimaryCurrencyAmounts(UserGroupChangedDefaultCurrency $event): void
     {
-        // Reset the native amounts for all objects that have it.
-        Log::debug('Resetting native amounts for all objects.');
+        // Reset the primary currency amounts for all objects that have it.
+        Log::debug('Resetting primary currency amounts for all objects.');
 
         $tables = [
             // !!! this array is also in the migration
             'accounts'          => ['native_virtual_balance'],
             'available_budgets' => ['native_amount'],
             'bills'             => ['native_amount_min', 'native_amount_max'],
-            // 'transactions' => ['native_amount', 'native_foreign_amount']
         ];
         foreach ($tables as $table => $columns) {
             foreach ($columns as $column) {
@@ -61,12 +60,12 @@ class PreferencesEventHandler
         $this->resetTransactions($event->userGroup);
         // fire laravel command to recalculate them all.
         if (Amount::convertToPrimary()) {
-            Log::debug('Will now convert to native.');
-            Artisan::call('correction:recalculate-native-amounts');
+            Log::debug('Will now convert to primary currency.');
+            Artisan::call('correction:recalculate-pc-amounts');
 
             return;
         }
-        Log::debug('Will NOT convert to native.');
+        Log::debug('Will NOT convert to primary currency.');
     }
 
     private function resetPiggyBanks(UserGroup $userGroup): void

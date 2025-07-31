@@ -2,7 +2,7 @@
 
 
 /*
- * UpgradesNativeAmounts.php
+ * UpgradesPrimaryCurrencyAmounts.php
  * Copyright (c) 2025 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -29,15 +29,15 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 
-class UpgradesNativeAmounts extends Command
+class UpgradesPrimaryCurrencyAmounts extends Command
 {
     use ShowsFriendlyMessages;
 
-    public const string CONFIG_NAME = '620_native_amounts';
+    public const string CONFIG_NAME = '620_pc_amounts';
 
-    protected $description          = 'Runs the native amounts calculations.';
+    protected $description          = 'Runs the primary currency amounts calculations.';
 
-    protected $signature            = 'upgrade:620-native-amounts {--F|force : Force the execution of this command.}';
+    protected $signature            = 'upgrade:620-pc-amounts {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -50,7 +50,7 @@ class UpgradesNativeAmounts extends Command
             return 0;
         }
 
-        Artisan::call('correction:recalculate-native-amounts');
+        Artisan::call('correction:recalculate-pc-amounts');
 
         $this->markAsExecuted();
 

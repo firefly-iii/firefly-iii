@@ -45,10 +45,10 @@ class TransactionObserver
                 AccountBalanceCalculator::recalculateForJournal($transaction->transactionJournal);
             }
         }
-        $this->updateNativeAmount($transaction);
+        $this->updatePrimaryCurrencyAmount($transaction);
     }
 
-    private function updateNativeAmount(Transaction $transaction): void
+    private function updatePrimaryCurrencyAmount(Transaction $transaction): void
     {
         if (!Amount::convertToPrimary($transaction->transactionJournal->user)) {
             return;
@@ -72,7 +72,7 @@ class TransactionObserver
         }
 
         $transaction->saveQuietly();
-        Log::debug('Transaction native amounts are updated.');
+        Log::debug('Transaction primary currency amounts are updated.');
     }
 
     public function deleting(?Transaction $transaction): void
@@ -90,6 +90,6 @@ class TransactionObserver
                 AccountBalanceCalculator::recalculateForJournal($transaction->transactionJournal);
             }
         }
-        $this->updateNativeAmount($transaction);
+        $this->updatePrimaryCurrencyAmount($transaction);
     }
 }

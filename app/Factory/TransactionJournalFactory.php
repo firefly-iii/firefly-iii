@@ -297,7 +297,7 @@ class TransactionJournalFactory
             $transactionFactory->setForeignCurrency($currency);
             $amount        = (string) $row['foreign_amount'];
             $foreignAmount = (string) $row['amount'];
-            Log::debug('Swap native/foreign amounts in transfer for new save method.');
+            Log::debug('Swap primary/foreign amounts in transfer for new save method.');
         }
 
         try {

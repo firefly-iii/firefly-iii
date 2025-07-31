@@ -34,10 +34,10 @@ class PiggyBankEventObserver
     public function created(PiggyBankEvent $event): void
     {
         Log::debug('Observe "created" of a piggy bank event.');
-        $this->updateNativeAmount($event);
+        $this->updatePrimaryCurrencyAmount($event);
     }
 
-    private function updateNativeAmount(PiggyBankEvent $event): void
+    private function updatePrimaryCurrencyAmount(PiggyBankEvent $event): void
     {
         $user                 = $event->piggyBank->accounts()->first()?->user;
         if (null === $user) {
@@ -57,12 +57,12 @@ class PiggyBankEventObserver
             $event->native_amount = $converter->convert($event->piggyBank->transactionCurrency, $userCurrency, today(), $event->amount);
         }
         $event->saveQuietly();
-        Log::debug('Piggy bank event native amount is updated.');
+        Log::debug('Piggy bank event primary currency amount is updated.');
     }
 
     public function updated(PiggyBankEvent $event): void
     {
         Log::debug('Observe "updated" of a piggy bank event.');
-        $this->updateNativeAmount($event);
+        $this->updatePrimaryCurrencyAmount($event);
     }
 }

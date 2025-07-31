@@ -34,13 +34,13 @@ class AvailableBudgetObserver
     public function created(AvailableBudget $availableBudget): void
     {
         // Log::debug('Observe "created" of an available budget.');
-        $this->updateNativeAmount($availableBudget);
+        $this->updatePrimaryCurrencyAmount($availableBudget);
     }
 
-    private function updateNativeAmount(AvailableBudget $availableBudget): void
+    private function updatePrimaryCurrencyAmount(AvailableBudget $availableBudget): void
     {
         if (!Amount::convertToPrimary($availableBudget->user)) {
-            // Log::debug('Do not update native available amount of the available budget.');
+            // Log::debug('Do not update primary currency available amount of the available budget.');
 
             return;
         }
@@ -53,12 +53,12 @@ class AvailableBudgetObserver
             $availableBudget->native_amount = $converter->convert($availableBudget->transactionCurrency, $userCurrency, today(), $availableBudget->amount);
         }
         $availableBudget->saveQuietly();
-        Log::debug('Available budget native amount is updated.');
+        Log::debug('Available budget primary currency amount is updated.');
     }
 
     public function updated(AvailableBudget $availableBudget): void
     {
         // Log::debug('Observe "updated" of an available budget.');
-        $this->updateNativeAmount($availableBudget);
+        $this->updatePrimaryCurrencyAmount($availableBudget);
     }
 }
