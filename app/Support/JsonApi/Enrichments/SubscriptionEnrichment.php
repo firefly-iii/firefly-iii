@@ -244,7 +244,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
 
             // At this point the "next match" is exactly after the last time the bill was paid.
             $result                                   = [];
-            $filtered = $set->filter(function (TransactionJournal $journal) use ($subscription) {
+            $filtered                                 = $set->filter(function (TransactionJournal $journal) use ($subscription) {
                 return (int) $journal->bill_id === (int) $subscription->id;
             });
             foreach ($filtered as $entry) {
