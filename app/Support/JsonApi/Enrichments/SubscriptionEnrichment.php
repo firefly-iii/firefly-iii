@@ -181,11 +181,10 @@ class SubscriptionEnrichment implements EnrichmentInterface
 
     private function collectPaidDates(): void
     {
+        $this->paidDates = [];
         Log::debug('Now in collectPaidDates for bills');
         if (null === $this->start || null === $this->end) {
-            Log::debug('Parameters are NULL, return empty array');
-            $this->paidDates = [];
-
+            Log::debug('Parameters are NULL, set empty array');
             return;
         }
 
@@ -219,6 +218,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
                 [
                     'transaction_journals.id',
                     'transaction_journals.date',
+                    'transaction_journals.bill_id',
                     'transaction_journals.transaction_group_id',
                     'transactions.transaction_currency_id',
                     'currency.code AS transaction_currency_code',
@@ -249,6 +249,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
                     'transaction_journal_id'  => (string)$entry->id,
                     'date'                    => $entry->date->toAtomString(),
                     'date_object'             => $entry->date,
+                    'bill_id' => $entry->bill_id,
                     'currency_id'             => $entry->transaction_currency_id,
                     'currency_code'           => $entry->transaction_currency_code,
                     'currency_decimal_places' => $entry->transaction_currency_decimal_places,
@@ -263,7 +264,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
 
                 $result[] = $array;
             }
-            $this->paidDates[$subscription->id] = $result;
+            $this->paidDates[(int) $subscription->id] = $result;
         }
 
     }
@@ -284,7 +285,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
     protected function lastPaidDate(Bill $subscription, Collection $dates, Carbon $default): Carbon
     {
         $filtered = $dates->filter(function (TransactionJournal $journal) use ($subscription) {
-            return $journal->bill_id === $subscription->id;
+            return (int) $journal->bill_id === (int) $subscription->id;
         });
         if (0 === $filtered->count()) {
             return $default;
