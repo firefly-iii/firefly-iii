@@ -45,7 +45,6 @@ class BillTransformer extends AbstractTransformer
 
     /**
      * Transform the bill.
-     *
      */
     public function transform(Bill $bill): array
     {
@@ -53,53 +52,51 @@ class BillTransformer extends AbstractTransformer
 
 
         return [
-            'id'                      => $bill->id,
-            'created_at'              => $bill->created_at->toAtomString(),
-            'updated_at'              => $bill->updated_at->toAtomString(),
-            'currency_id'             => (string)$bill->transaction_currency_id,
-            'currency_code'           => $currency->code,
-            'currency_symbol'         => $currency->symbol,
-            'currency_decimal_places' => $currency->decimal_places,
+            'id'                             => $bill->id,
+            'created_at'                     => $bill->created_at->toAtomString(),
+            'updated_at'                     => $bill->updated_at->toAtomString(),
+            'currency_id'                    => (string)$bill->transaction_currency_id,
+            'currency_code'                  => $currency->code,
+            'currency_symbol'                => $currency->symbol,
+            'currency_decimal_places'        => $currency->decimal_places,
 
             'native_currency_id'             => (string)$this->native->id,
             'native_currency_code'           => $this->native->code,
             'native_currency_symbol'         => $this->native->symbol,
             'native_currency_decimal_places' => $this->native->decimal_places,
 
-            'name'               => $bill->name,
-            'amount_min'         => $bill->amounts['amount_min'],
-            'amount_max'         => $bill->amounts['amount_max'],
-            'amount_avg'         => $bill->amounts['average'],
-            'date'               => $bill->date->toAtomString(),
-            'end_date'           => $bill->end_date?->toAtomString(),
-            'extension_date'     => $bill->extension_date?->toAtomString(),
-            'repeat_freq'        => $bill->repeat_freq,
-            'skip'               => $bill->skip,
-            'active'             => $bill->active,
-            'order'              => $bill->order,
-            'notes'              => $bill->meta['notes'],
-            'object_group_id'    => $bill->meta['object_group_id'],
-            'object_group_order' => $bill->meta['object_group_order'],
-            'object_group_title' => $bill->meta['object_group_title'],
+            'name'                           => $bill->name,
+            'amount_min'                     => $bill->amounts['amount_min'],
+            'amount_max'                     => $bill->amounts['amount_max'],
+            'amount_avg'                     => $bill->amounts['average'],
+            'date'                           => $bill->date->toAtomString(),
+            'end_date'                       => $bill->end_date?->toAtomString(),
+            'extension_date'                 => $bill->extension_date?->toAtomString(),
+            'repeat_freq'                    => $bill->repeat_freq,
+            'skip'                           => $bill->skip,
+            'active'                         => $bill->active,
+            'order'                          => $bill->order,
+            'notes'                          => $bill->meta['notes'],
+            'object_group_id'                => $bill->meta['object_group_id'],
+            'object_group_order'             => $bill->meta['object_group_order'],
+            'object_group_title'             => $bill->meta['object_group_title'],
 
 
-            'paid_dates'               => $bill->meta['paid_dates'],
-            'pay_dates'                => $bill->meta['pay_dates'],
-            'next_expected_match'      => $bill->meta['nem']?->toAtomString(),
-            'next_expected_match_diff' => $bill->meta['nem_diff'],
+            'paid_dates'                     => $bill->meta['paid_dates'],
+            'pay_dates'                      => $bill->meta['pay_dates'],
+            'next_expected_match'            => $bill->meta['nem']?->toAtomString(),
+            'next_expected_match_diff'       => $bill->meta['nem_diff'],
 
             // these fields need work:
             //            'next_expected_match'            => $nem,
             //            'next_expected_match_diff'       => $nemDiff,
             //            'pay_dates'                      => $payDatesFormatted,
-            'links'                    => [
+            'links'                          => [
                 [
                     'rel' => 'self',
-                    'uri' => '/bills/' . $bill->id,
+                    'uri' => '/bills/'.$bill->id,
                 ],
             ],
         ];
     }
-
-
 }
