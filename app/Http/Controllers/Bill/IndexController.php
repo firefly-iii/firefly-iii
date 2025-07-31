@@ -95,7 +95,7 @@ class IndexController extends Controller
         $enrichment->setNative($this->defaultCurrency);
         $enrichment->setStart($tempStart);
         $enrichment->setEnd($end);
-        $collection       = $enrichment->enrich($collection);
+        $collection  = $enrichment->enrich($collection);
 
 
         $parameters->set('start', $tempStart);
