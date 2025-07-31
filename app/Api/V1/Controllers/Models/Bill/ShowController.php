@@ -109,6 +109,17 @@ class ShowController extends Controller
     {
         $manager     = $this->getManager();
 
+        // enrich
+        /** @var User $admin */
+        $admin       = auth()->user();
+        $enrichment  = new SubscriptionEnrichment();
+        $enrichment->setUser($admin);
+        $enrichment->setConvertToNative($this->convertToNative);
+        $enrichment->setNative($this->nativeCurrency);
+        $enrichment->setStart($this->parameters->get('start'));
+        $enrichment->setEnd($this->parameters->get('end'));
+        $bill       = $enrichment->enrichSingle($bill);
+
         /** @var BillTransformer $transformer */
         $transformer = app(BillTransformer::class);
         $transformer->setParameters($this->parameters);

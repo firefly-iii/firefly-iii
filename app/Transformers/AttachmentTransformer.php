@@ -35,7 +35,7 @@ class AttachmentTransformer extends AbstractTransformer
     private readonly AttachmentRepositoryInterface $repository;
 
     /**
-     * BillTransformer constructor.
+     * AttachmentTransformer constructor.
      */
     public function __construct()
     {

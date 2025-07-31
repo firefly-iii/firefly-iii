@@ -28,6 +28,7 @@ use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepositoryInterface;
+use FireflyIII\Support\JsonApi\Enrichments\SubscriptionEnrichment;
 use FireflyIII\Transformers\BillTransformer;
 use FireflyIII\Transformers\PiggyBankTransformer;
 use FireflyIII\User;
@@ -78,6 +79,17 @@ class ListController extends Controller
         $collection  = $this->repository->getBills($objectGroup);
         $count       = $collection->count();
         $bills       = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+
+        // enrich
+        /** @var User $admin */
+        $admin       = auth()->user();
+        $enrichment  = new SubscriptionEnrichment();
+        $enrichment->setUser($admin);
+        $enrichment->setConvertToNative($this->convertToNative);
+        $enrichment->setNative($this->nativeCurrency);
+        $enrichment->setStart($this->parameters->get('start'));
+        $enrichment->setEnd($this->parameters->get('end'));
+        $bills       = $enrichment->enrich($bills);
 
         // make paginator:
         $paginator   = new LengthAwarePaginator($bills, $count, $pageSize, $this->parameters->get('page'));

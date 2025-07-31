@@ -29,7 +29,9 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\ObjectGroup\OrganisesObjectGroups;
+use FireflyIII\Support\JsonApi\Enrichments\SubscriptionEnrichment;
 use FireflyIII\Transformers\BillTransformer;
+use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
@@ -76,11 +78,26 @@ class IndexController extends Controller
         $collection  = $this->repository->getBills();
         $total       = $collection->count();
 
+
+
         $parameters  = new ParameterBag();
         // sub one day from temp start so the last paid date is one day before it should be.
         $tempStart   = clone $start;
         // 2023-06-23 do not sub one day from temp start, fix is in BillTransformer::payDates instead
         // $tempStart->subDay();
+
+        // enrich
+        /** @var User $admin */
+        $admin       = auth()->user();
+        $enrichment  = new SubscriptionEnrichment();
+        $enrichment->setUser($admin);
+        $enrichment->setConvertToNative($this->convertToNative);
+        $enrichment->setNative($this->defaultCurrency);
+        $enrichment->setStart($tempStart);
+        $enrichment->setEnd($end);
+        $collection       = $enrichment->enrich($collection);
+
+
         $parameters->set('start', $tempStart);
         $parameters->set('end', $end);
         $parameters->set('convertToNative', $this->convertToNative);
