@@ -51,6 +51,7 @@ class BillTransformer extends AbstractTransformer
     {
         $currency = $bill->transactionCurrency;
 
+
         return [
             'id'                      => $bill->id,
             'created_at'              => $bill->created_at->toAtomString(),
@@ -80,6 +81,7 @@ class BillTransformer extends AbstractTransformer
             'object_group_id'    => $bill->meta['object_group_id'],
             'object_group_order' => $bill->meta['object_group_order'],
             'object_group_title' => $bill->meta['object_group_title'],
+
 
             'paid_dates'               => $bill->meta['paid_dates'],
             'pay_dates'                => $bill->meta['pay_dates'],

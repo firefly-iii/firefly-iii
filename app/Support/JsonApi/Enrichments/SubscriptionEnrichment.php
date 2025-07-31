@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\Support\JsonApi\Enrichments;
 
 use Carbon\Carbon;
@@ -96,13 +98,14 @@ class SubscriptionEnrichment implements EnrichmentInterface
             }
             $item->amounts = $amounts;
             $item->meta    = $meta;
+
             return $item;
         });
 
         return $collection;
     }
 
-    public function enrichSingle(Model|array $model): array|Model
+    public function enrichSingle(array|Model $model): array|Model
     {
         Log::debug(__METHOD__);
         $collection = new Collection([$model]);
@@ -160,7 +163,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
                  ->where('object_groupable_type', Bill::class)
                  ->get(['object_groupable_id', 'object_group_id']);
 
-        $ids = array_unique($set->pluck('object_group_id')->toArray());
+        $ids    = array_unique($set->pluck('object_group_id')->toArray());
 
         foreach ($set as $entry) {
             $this->mappedObjects[(int)$entry->object_groupable_id] = (int)$entry->object_group_id;
