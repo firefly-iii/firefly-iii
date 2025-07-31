@@ -87,7 +87,7 @@ class AccountController extends Controller
         // move date to end of day
         $queryParameters['start']->startOfDay();
         $queryParameters['end']->endOfDay();
-        Log::debug(sprintf('dashboard(), convert to native: %s', var_export($this->convertToPrimary, true)));
+        Log::debug(sprintf('dashboard(), convert to primary: %s', var_export($this->convertToPrimary, true)));
 
         // loop each account, and collect info:
         /** @var Account $account */
@@ -111,7 +111,7 @@ class AccountController extends Controller
 
 
         $previous       = array_values($range)[0]['balance'];
-        $nativePrevious = null;
+        $pcPrevious = null;
         if (!$currency instanceof TransactionCurrency) {
             $currency = $this->default;
         }
@@ -132,12 +132,12 @@ class AccountController extends Controller
             'entries'                 => [],
         ];
         if ($this->convertToPrimary) {
-            $currentSet['native_entries']                 = [];
-            $currentSet['native_currency_id']             = (string)$this->primaryCurrency->id;
-            $currentSet['native_currency_code']           = $this->primaryCurrency->code;
-            $currentSet['native_currency_symbol']         = $this->primaryCurrency->symbol;
-            $currentSet['native_currency_decimal_places'] = $this->primaryCurrency->decimal_places;
-            $nativePrevious                               = array_values($range)[0]['native_balance'];
+            $currentSet['pc_entries']                 = [];
+            $currentSet['primary_currency_id']             = (string)$this->primaryCurrency->id;
+            $currentSet['primary_currency_code']           = $this->primaryCurrency->code;
+            $currentSet['primary_currency_symbol']         = $this->primaryCurrency->symbol;
+            $currentSet['primary_currency_decimal_places'] = $this->primaryCurrency->decimal_places;
+            $pcPrevious                               = array_values($range)[0]['pc_balance'];
         }
 
 
@@ -149,12 +149,12 @@ class AccountController extends Controller
             $currentSet['entries'][$label] = $balance;
 
 
-            // do the same for the native balance, if relevant:
-            $nativeBalance                 = null;
+            // do the same for the primary currency balance, if relevant:
+            $pcBalance                 = null;
             if ($this->convertToPrimary) {
-                $nativeBalance                        = array_key_exists($format, $range) ? $range[$format]['native_balance'] : $nativePrevious;
-                $nativePrevious                       = $nativeBalance;
-                $currentSet['native_entries'][$label] = $nativeBalance;
+                $pcBalance                        = array_key_exists($format, $range) ? $range[$format]['pc_balance'] : $pcPrevious;
+                $pcPrevious                       = $pcBalance;
+                $currentSet['pc_entries'][$label] = $pcBalance;
             }
 
             $currentStart->addDay();
@@ -195,7 +195,7 @@ class AccountController extends Controller
             $currentStart   = clone $start;
             $range          = Steam::finalAccountBalanceInRange($account, $start, clone $end, $this->convertToPrimary);
             $previous       = array_values($range)[0]['balance'];
-            $nativePrevious = null;
+            $pcPrevious = null;
             $currentSet     = [
                 'label'                   => $account->name,
                 'currency_id'             => (string)$currency->id,
@@ -209,18 +209,18 @@ class AccountController extends Controller
                 'entries'                 => [],
             ];
 
-            // add "native_entries" if convertToNative is true:
+            // add "pc_entries" if convertToPrimary is true:
             if ($this->convertToPrimary) {
-                $currentSet['native_entries']                 = [];
-                $currentSet['native_currency_id']             = (string)$this->primaryCurrency->id;
-                $currentSet['native_currency_code']           = $this->primaryCurrency->code;
-                $currentSet['native_currency_symbol']         = $this->primaryCurrency->symbol;
-                $currentSet['native_currency_decimal_places'] = $this->primaryCurrency->decimal_places;
-                $nativePrevious                               = array_values($range)[0]['native_balance'];
+                $currentSet['pc_entries']                 = [];
+                $currentSet['primary_currency_id']             = (string)$this->primaryCurrency->id;
+                $currentSet['primary_currency_code']           = $this->primaryCurrency->code;
+                $currentSet['primary_currency_symbol']         = $this->primaryCurrency->symbol;
+                $currentSet['primary_currency_decimal_places'] = $this->primaryCurrency->decimal_places;
+                $pcPrevious                               = array_values($range)[0]['pc_balance'];
 
             }
 
-            // also get the native balance if convertToNative is true:
+            // also get the primary balance if convertToPrimary is true:
             while ($currentStart <= $end) {
                 $format                        = $currentStart->format('Y-m-d');
                 $label                         = $currentStart->toAtomString();
@@ -230,12 +230,12 @@ class AccountController extends Controller
                 $previous                      = $balance;
                 $currentSet['entries'][$label] = $balance;
 
-                // do the same for the native balance, if relevant:
-                $nativeBalance                 = null;
+                // do the same for the primary balance, if relevant:
+                $pcBalance                 = null;
                 if ($this->convertToPrimary) {
-                    $nativeBalance                        = array_key_exists($format, $range) ? $range[$format]['native_balance'] : $nativePrevious;
-                    $nativePrevious                       = $nativeBalance;
-                    $currentSet['native_entries'][$label] = $nativeBalance;
+                    $pcBalance                        = array_key_exists($format, $range) ? $range[$format]['pc_balance'] : $pcPrevious;
+                    $pcPrevious                       = $pcBalance;
+                    $currentSet['pc_entries'][$label] = $pcBalance;
                 }
 
                 $currentStart->addDay();

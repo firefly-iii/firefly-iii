@@ -79,8 +79,8 @@ class StoreController extends Controller
         $admin       = auth()->user();
         $enrichment  = new SubscriptionEnrichment();
         $enrichment->setUser($admin);
-        $enrichment->setConvertToNative($this->convertToPrimary);
-        $enrichment->setNative($this->primaryCurrency);
+        $enrichment->setConvertToPrimary($this->convertToPrimary);
+        $enrichment->setPrimary($this->primaryCurrency);
         $enrichment->setStart($this->parameters->get('start'));
         $enrichment->setEnd($this->parameters->get('end'));
         $bill        = $enrichment->enrichSingle($bill);

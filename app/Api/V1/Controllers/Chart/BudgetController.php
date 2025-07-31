@@ -264,7 +264,7 @@ class BudgetController extends Controller
             $compare                              = bccomp($limit->amount, (string)app('steam')->positive($result[$limitCurrencyId]['spent']));
             $result[$limitCurrencyId]['budgeted'] = $limit->amount;
             if (1 === $compare) {
-                // convert this amount into the native currency:
+                // convert this amount into the primary currency:
                 $result[$limitCurrencyId]['left'] = bcadd($limit->amount, (string)$result[$limitCurrencyId]['spent']);
             }
             if ($compare <= 0) {

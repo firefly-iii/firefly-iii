@@ -127,13 +127,13 @@ class BasicController extends Controller
     {
         Log::debug('getBalanceInformation');
         // some config settings
-        $convertToNative = Amount::convertToPrimary();
-        $default         = Amount::getPrimaryCurrency();
+        $convertToPrimary = Amount::convertToPrimary();
+        $primary         = Amount::getPrimaryCurrency();
         // prep some arrays:
         $sums            = [];
         $return          = [];
         $currencies      = [
-            $default->id => $default,
+            $primary->id => $primary,
         ];
 
         // collect income of user using the new group collector.
@@ -151,32 +151,32 @@ class BasicController extends Controller
         $set             = $collector->setRange($start, $end)->setPage($this->parameters->get('page'))->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->getExtractedJournals();
         $expenses        = $summarizer->groupByCurrencyId($set, 'negative', false);
 
-        // if convert to native, do so right now.
-        if ($convertToNative) {
+        // if convert to primary, do so right now.
+        if ($convertToPrimary) {
             $newExpenses = [
-                $default->id => [
-                    'currency_id'             => $default->id,
-                    'currency_code'           => $default->code,
-                    'currency_symbol'         => $default->symbol,
-                    'currency_decimal_places' => $default->decimal_places,
+                $primary->id => [
+                    'currency_id'             => $primary->id,
+                    'currency_code'           => $primary->code,
+                    'currency_symbol'         => $primary->symbol,
+                    'currency_decimal_places' => $primary->decimal_places,
                     'sum'                     => '0',
                 ],
             ];
             $newIncomes  = [
-                $default->id => [
-                    'currency_id'             => $default->id,
-                    'currency_code'           => $default->code,
-                    'currency_symbol'         => $default->symbol,
-                    'currency_decimal_places' => $default->decimal_places,
+                $primary->id => [
+                    'currency_id'             => $primary->id,
+                    'currency_code'           => $primary->code,
+                    'currency_symbol'         => $primary->symbol,
+                    'currency_decimal_places' => $primary->decimal_places,
                     'sum'                     => '0',
                 ],
             ];
             $sums        = [
-                $default->id => [
-                    'currency_id'             => $default->id,
-                    'currency_code'           => $default->code,
-                    'currency_symbol'         => $default->symbol,
-                    'currency_decimal_places' => $default->decimal_places,
+                $primary->id => [
+                    'currency_id'             => $primary->id,
+                    'currency_code'           => $primary->code,
+                    'currency_symbol'         => $primary->symbol,
+                    'currency_decimal_places' => $primary->decimal_places,
                     'sum'                     => '0',
                 ],
             ];
@@ -188,36 +188,36 @@ class BasicController extends Controller
                 // loop over either one.
                 foreach ($array as $entry) {
 
-                    // if it is the native currency already.
-                    if ($entry['currency_id'] === $default->id) {
-                        $sums[$default->id]['sum'] = bcadd((string) $entry['sum'], $sums[$default->id]['sum']);
+                    // if it is the primary currency already.
+                    if ($entry['currency_id'] === $primary->id) {
+                        $sums[$primary->id]['sum'] = bcadd((string) $entry['sum'], $sums[$primary->id]['sum']);
 
                         // don't forget to add it to newExpenses and newIncome
                         if (0 === $index) {
-                            $newExpenses[$default->id]['sum'] = bcadd($newExpenses[$default->id]['sum'], (string) $entry['sum']);
+                            $newExpenses[$primary->id]['sum'] = bcadd($newExpenses[$primary->id]['sum'], (string) $entry['sum']);
                         }
                         if (1 === $index) {
-                            $newIncomes[$default->id]['sum'] = bcadd($newIncomes[$default->id]['sum'], (string) $entry['sum']);
+                            $newIncomes[$primary->id]['sum'] = bcadd($newIncomes[$primary->id]['sum'], (string) $entry['sum']);
                         }
 
                         continue;
                     }
 
                     $currencies[$entry['currency_id']] ??= $this->currencyRepos->find($entry['currency_id']);
-                    $convertedSum              = $converter->convert($currencies[$entry['currency_id']], $default, $start, $entry['sum']);
-                    $sums[$default->id]['sum'] = bcadd($sums[$default->id]['sum'], $convertedSum);
+                    $convertedSum              = $converter->convert($currencies[$entry['currency_id']], $primary, $start, $entry['sum']);
+                    $sums[$primary->id]['sum'] = bcadd($sums[$primary->id]['sum'], $convertedSum);
                     if (0 === $index) {
-                        $newExpenses[$default->id]['sum'] = bcadd($newExpenses[$default->id]['sum'], $convertedSum);
+                        $newExpenses[$primary->id]['sum'] = bcadd($newExpenses[$primary->id]['sum'], $convertedSum);
                     }
                     if (1 === $index) {
-                        $newIncomes[$default->id]['sum'] = bcadd($newIncomes[$default->id]['sum'], $convertedSum);
+                        $newIncomes[$primary->id]['sum'] = bcadd($newIncomes[$primary->id]['sum'], $convertedSum);
                     }
                 }
             }
             $incomes     = $newIncomes;
             $expenses    = $newExpenses;
         }
-        if (!$convertToNative) {
+        if (!$convertToPrimary) {
             foreach ([$expenses, $incomes] as $array) {
                 foreach ($array as $entry) {
                     $currencyId               = $entry['currency_id'];
@@ -626,7 +626,7 @@ class BasicController extends Controller
         $netWorthSet    = $netWorthHelper->byAccounts($filtered, $end);
         $return         = [];
         foreach ($netWorthSet as $key => $data) {
-            if ('native' === $key) {
+            if ('pc' === $key) {
                 continue;
             }
             $amount   = $data['balance'];

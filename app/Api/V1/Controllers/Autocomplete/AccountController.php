@@ -99,7 +99,7 @@ class AccountController extends Controller
                 // this one is correct.
                 Log::debug(sprintf('accounts: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
                 $balance         = Steam::finalAccountBalance($account, $date);
-                $key             = $this->convertToPrimary && $currency->id !== $this->primaryCurrency->id ? 'native_balance' : 'balance';
+                $key             = $this->convertToPrimary && $currency->id !== $this->primaryCurrency->id ? 'pc_balance' : 'balance';
                 $useCurrency     = $this->convertToPrimary && $currency->id !== $this->primaryCurrency->id ? $this->primaryCurrency : $currency;
                 $amount          = $balance[$key] ?? '0';
                 $nameWithBalance = sprintf(
