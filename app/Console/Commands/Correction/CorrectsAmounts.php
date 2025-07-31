@@ -86,7 +86,7 @@ class CorrectsAmounts extends Command
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             $repository->setUser($journal->user);
-            $native         = Amount::getNativeCurrencyByUserGroup($journal->userGroup);
+            $native         = Amount::getPrimaryCurrencyByUserGroup($journal->userGroup);
 
             /** @var null|Transaction $source */
             $source         = $journal->transactions()->where('amount', '<', 0)->first();

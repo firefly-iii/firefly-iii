@@ -88,7 +88,7 @@ class CorrectsNativeAmounts extends Command
 
         // do a check with the group's currency so we can skip some stuff.
         Preferences::mark();
-        $currency = app('amount')->getNativeCurrencyByUserGroup($userGroup);
+        $currency = app('amount')->getPrimaryCurrencyByUserGroup($userGroup);
 
         $this->recalculatePiggyBanks($userGroup, $currency);
         $this->recalculateBudgets($userGroup, $currency);

@@ -137,25 +137,25 @@ class Amount
         return $this->getSystemCurrency();
     }
 
-    public function getNativeCurrencyByUserGroup(UserGroup $userGroup): TransactionCurrency
+    public function getPrimaryCurrencyByUserGroup(UserGroup $userGroup): TransactionCurrency
     {
         $cache  = new CacheProperties();
-        $cache->addProperty('getNativeCurrencyByGroup');
+        $cache->addProperty('getPrimaryCurrencyByGroup');
         $cache->addProperty($userGroup->id);
         if ($cache->has()) {
             return $cache->get();
         }
 
-        /** @var null|TransactionCurrency $native */
-        $native = $userGroup->currencies()->where('group_default', true)->first();
-        if (null === $native) {
-            $native = $this->getSystemCurrency();
+        /** @var null|TransactionCurrency $primary */
+        $primary = $userGroup->currencies()->where('group_default', true)->first();
+        if (null === $primary) {
+            $primary = $this->getSystemCurrency();
             // could be the user group has no default right now.
-            $userGroup->currencies()->sync([$native->id => ['group_default' => true]]);
+            $userGroup->currencies()->sync([$primary->id => ['group_default' => true]]);
         }
-        $cache->store($native);
+        $cache->store($primary);
 
-        return $native;
+        return $primary;
     }
 
     public function getSystemCurrency(): TransactionCurrency

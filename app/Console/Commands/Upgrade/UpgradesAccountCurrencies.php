@@ -108,7 +108,7 @@ class UpgradesAccountCurrencies extends Command
         $accounts        = $this->accountRepos->getAccountsByType([AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value]);
 
         // get user's currency preference:
-        $defaultCurrency = app('amount')->getNativeCurrencyByUserGroup($user->userGroup);
+        $defaultCurrency = app('amount')->getPrimaryCurrencyByUserGroup($user->userGroup);
 
         /** @var Account $account */
         foreach ($accounts as $account) {

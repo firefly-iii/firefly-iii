@@ -271,7 +271,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface, UserGroup
         $factory                        = app(TransactionCurrencyFactory::class);
         $currency                       = $factory->find($data['currency_id'] ?? null, $data['currency_code'] ?? null);
         if (null === $currency) {
-            $currency = app('amount')->getNativeCurrencyByUserGroup($this->user->userGroup);
+            $currency = app('amount')->getPrimaryCurrencyByUserGroup($this->user->userGroup);
         }
         $currency->enabled              = true;
         $currency->save();
@@ -369,7 +369,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface, UserGroup
         }
         // catch unexpected null:
         if (null === $currency) {
-            $currency = $budgetLimit->transactionCurrency ?? app('amount')->getNativeCurrencyByUserGroup($this->user->userGroup);
+            $currency = $budgetLimit->transactionCurrency ?? app('amount')->getPrimaryCurrencyByUserGroup($this->user->userGroup);
         }
         $currency->enabled                    = true;
         $currency->save();

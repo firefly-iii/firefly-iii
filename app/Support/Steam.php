@@ -224,7 +224,7 @@ class Steam
         $request->subDay()->endOfDay();
         Log::debug(sprintf('finalAccountBalanceInRange: Call finalAccountBalance with date/time "%s"', $request->toIso8601String()));
         $startBalance         = $this->finalAccountBalance($account, $request);
-        $nativeCurrency       = Amount::getNativeCurrencyByUserGroup($account->user->userGroup);
+        $nativeCurrency       = Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
         $accountCurrency      = $this->getAccountCurrency($account);
         $hasCurrency          = $accountCurrency instanceof TransactionCurrency;
         $currency             = $accountCurrency ?? $nativeCurrency;
@@ -347,7 +347,7 @@ class Steam
             $convertToNative = Amount::convertToNative($account->user);
         }
         if (!$native instanceof TransactionCurrency) {
-            $native = Amount::getNativeCurrencyByUserGroup($account->user->userGroup);
+            $native = Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
         }
         // account balance thing.
         $currencyPresent   = isset($account->meta) && array_key_exists('currency', $account->meta) && null !== $account->meta['currency'];
