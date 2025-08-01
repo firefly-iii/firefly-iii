@@ -29,7 +29,7 @@ use FireflyIII\Models\UserGroup;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class UserGroupChangedPrimaryCurrency extends Event
+class UserGroupChangedDefaultCurrency extends Event
 {
     use SerializesModels;
 
