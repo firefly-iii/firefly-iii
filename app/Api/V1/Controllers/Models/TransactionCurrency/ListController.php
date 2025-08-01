@@ -108,7 +108,7 @@ class ListController extends Controller
         $admin             = auth()->user();
         $enrichment        = new AccountEnrichment();
         $enrichment->setUser($admin);
-        $enrichment->setPrimary($this->primaryCurrency);
+        $enrichment->setPrimaryCurrency($this->primaryCurrency);
         $accounts          = $enrichment->enrich($accounts);
 
         // make paginator:
@@ -189,7 +189,7 @@ class ListController extends Controller
         $enrichment  = new SubscriptionEnrichment();
         $enrichment->setUser($admin);
         $enrichment->setConvertToPrimary($this->convertToPrimary);
-        $enrichment->setPrimary($this->primaryCurrency);
+        $enrichment->setPrimaryCurrency($this->primaryCurrency);
         $enrichment->setStart($this->parameters->get('start'));
         $enrichment->setEnd($this->parameters->get('end'));
         $bills       = $enrichment->enrichSingle($bills);

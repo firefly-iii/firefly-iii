@@ -86,7 +86,7 @@ class ListController extends Controller
         $enrichment  = new SubscriptionEnrichment();
         $enrichment->setUser($admin);
         $enrichment->setConvertToPrimary($this->convertToPrimary);
-        $enrichment->setPrimary($this->primaryCurrency);
+        $enrichment->setPrimaryCurrency($this->primaryCurrency);
         $enrichment->setStart($this->parameters->get('start'));
         $enrichment->setEnd($this->parameters->get('end'));
         $bills       = $enrichment->enrich($bills);
