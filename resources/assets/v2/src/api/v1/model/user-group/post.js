@@ -22,12 +22,12 @@ import {api} from "../../../../boot/axios";
 
 export default class Post {
     post(submission) {
-        let url = './api/v2/user-groups';
+        let url = './api/v1/user-groups';
         return api.post(url, submission);
     }
 
     use(groupId) {
-        let url = './api/v2/user-groups/' + groupId  + '/use';
+        let url = './api/v1/user-groups/' + groupId  + '/use';
         return api.post(url, {});
     }
 }

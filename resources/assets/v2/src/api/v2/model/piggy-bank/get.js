@@ -29,7 +29,7 @@ export default class Get {
      * @returns {Promise<AxiosResponse<any>>}
      */
     list(params) {
-        return api.get('/api/v2/piggy-banks', {params: params});
+        return api.get('/api/v1/piggy-banks', {params: params});
     }
 
 }

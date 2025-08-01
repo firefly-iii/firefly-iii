@@ -30,7 +30,7 @@ export default class Put {
      * @returns {Promise<AxiosResponse<any>>}
      */
     put(identifier, params) {
-        return api.put('/api/v2/accounts/' + identifier, params);
+        return api.put('/api/v1/accounts/' + identifier, params);
     }
 
 }

@@ -30,7 +30,7 @@ export default class Get {
      * @returns {Promise<AxiosResponse<any>>}
      */
     show(identifier, params) {
-        return api.get('/api/v2/user-groups/' + identifier, {params: params});
+        return api.get('/api/v1/user-groups/' + identifier, {params: params});
     }
 
     /**
@@ -39,7 +39,7 @@ export default class Get {
      * @returns {Promise<AxiosResponse<any>>}
      */
     index(params) {
-        return api.get('/api/v2/user-groups', {params: params});
+        return api.get('/api/v1/user-groups', {params: params});
     }
 
 }
