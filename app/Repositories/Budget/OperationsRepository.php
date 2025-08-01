@@ -142,8 +142,8 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         $array                 = [];
 
         // if needs conversion to primary.
-        $convertToPrimary       = Amount::convertToPrimary($this->user);
-        $primaryCurrency        = Amount::getPrimaryCurrencyByUserGroup($this->userGroup);
+        $convertToPrimary      = Amount::convertToPrimary($this->user);
+        $primaryCurrency       = Amount::getPrimaryCurrencyByUserGroup($this->userGroup);
         $currencyId            = (int) $primaryCurrency->id;
         $currencyCode          = $primaryCurrency->code;
         $currencyName          = $primaryCurrency->name;

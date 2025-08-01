@@ -224,7 +224,7 @@ class Steam
         $request->subDay()->endOfDay();
         Log::debug(sprintf('finalAccountBalanceInRange: Call finalAccountBalance with date/time "%s"', $request->toIso8601String()));
         $startBalance         = $this->finalAccountBalance($account, $request);
-        $primaryCurrency       = Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
+        $primaryCurrency      = Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
         $accountCurrency      = $this->getAccountCurrency($account);
         $hasCurrency          = $accountCurrency instanceof TransactionCurrency;
         $currency             = $accountCurrency ?? $primaryCurrency;
@@ -241,7 +241,7 @@ class Steam
             $startBalance[$primaryCurrency->code] ??= '0';
         }
         $currencies           = [
-            $currency->id       => $currency,
+            $currency->id        => $currency,
             $primaryCurrency->id => $primaryCurrency,
         ];
 
@@ -361,7 +361,7 @@ class Steam
         $hasCurrency       = null !== $accountCurrency;
         $currency          = $hasCurrency ? $accountCurrency : $primary;
         $return            = [
-            'pc_balance' => '0',
+            'pc_balance'     => '0',
             'balance'        => '0', // this key is overwritten right away, but I must remember it is always created.
         ];
         // balance(s) in all currencies.
@@ -390,7 +390,7 @@ class Steam
 
         if ($convertToPrimary) {
             // the primary currency balance is combined with a converted virtual_balance:
-            $converter                = new ExchangeRateConverter();
+            $converter            = new ExchangeRateConverter();
             $pcVirtualBalance     = $converter->convert($currency, $primary, $date, $virtualBalance);
             $return['pc_balance'] = bcadd($pcVirtualBalance, $return['pc_balance']);
             // Log::debug(sprintf('Primary virtual balance makes the primary total %s', $return['pc_balance']));

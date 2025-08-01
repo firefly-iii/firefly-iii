@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support;
 
-use Deprecated;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
@@ -102,9 +101,9 @@ class Amount
     public function getAmountFromJournal(array $journal): string
     {
         $convertToPrimary = $this->convertToPrimary();
-        $currency        = $this->getPrimaryCurrency();
-        $field           = $convertToPrimary && $currency->id !== $journal['currency_id'] ? 'pc_amount' : 'amount';
-        $amount          = $journal[$field] ?? '0';
+        $currency         = $this->getPrimaryCurrency();
+        $field            = $convertToPrimary && $currency->id !== $journal['currency_id'] ? 'pc_amount' : 'amount';
+        $amount           = $journal[$field] ?? '0';
         // Log::debug(sprintf('Field is %s, amount is %s', $field, $amount));
         // fallback, the transaction has a foreign amount in $currency.
         if ($convertToPrimary && null !== $journal['foreign_amount'] && $currency->id === (int)$journal['foreign_currency_id']) {
@@ -139,7 +138,7 @@ class Amount
 
     public function getPrimaryCurrencyByUserGroup(UserGroup $userGroup): TransactionCurrency
     {
-        $cache  = new CacheProperties();
+        $cache   = new CacheProperties();
         $cache->addProperty('getPrimaryCurrencyByGroup');
         $cache->addProperty($userGroup->id);
         if ($cache->has()) {
@@ -169,7 +168,7 @@ class Amount
      */
     public function getAmountFromJournalObject(TransactionJournal $journal): string
     {
-        $convertToPrimary   = $this->convertToPrimary();
+        $convertToPrimary  = $this->convertToPrimary();
         $currency          = $this->getPrimaryCurrency();
         $field             = $convertToPrimary && $currency->id !== $journal->transaction_currency_id ? 'pc_amount' : 'amount';
 

@@ -112,7 +112,7 @@ class PreferencesController extends Controller
         $darkMode                       = Preferences::get('darkMode', 'browser')->data;
         $customFiscalYear               = Preferences::get('customFiscalYear', 0)->data;
         $fiscalYearStartStr             = Preferences::get('fiscalYearStart', '01-01')->data;
-        $convertToPrimary                = $this->convertToPrimary;
+        $convertToPrimary               = $this->convertToPrimary;
         if (is_array($fiscalYearStartStr)) {
             $fiscalYearStartStr = '01-01';
         }
@@ -266,7 +266,7 @@ class PreferencesController extends Controller
         }
 
         // convert primary
-        $convertToPrimary   = 1 === (int) $request->get('convertToPrimary');
+        $convertToPrimary  = 1 === (int) $request->get('convertToPrimary');
         if ($convertToPrimary && !$this->convertToPrimary) {
             // set to true!
             Log::debug('User sets convertToPrimary to true.');

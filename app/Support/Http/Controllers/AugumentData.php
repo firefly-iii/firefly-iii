@@ -199,29 +199,29 @@ trait AugumentData
         /** @var BudgetLimit $entry */
         foreach ($set as $entry) {
             Log::debug(sprintf('Now at budget limit #%d', $entry->id));
-            $currency            = $entry->transactionCurrency;
+            $currency        = $entry->transactionCurrency;
             if ($this->convertToPrimary) {
                 // the sumExpenses method already handles this.
                 $currency = $this->defaultCurrency;
             }
 
             // clone because these objects change each other.
-            $currentStart        = clone $entry->start_date;
-            $currentEnd          = null === $entry->end_date ? null : clone $entry->end_date;
+            $currentStart    = clone $entry->start_date;
+            $currentEnd      = null === $entry->end_date ? null : clone $entry->end_date;
 
             if (null === $currentEnd) {
                 $currentEnd = clone $currentStart;
                 $currentEnd->addMonth();
             }
             // primary currency amount.
-            $expenses            = $opsRepository->sumExpenses($currentStart, $currentEnd, null, $budgetCollection, $entry->transactionCurrency, $this->convertToPrimary);
-            $spent               = $expenses[$currency->id]['sum'] ?? '0';
+            $expenses        = $opsRepository->sumExpenses($currentStart, $currentEnd, null, $budgetCollection, $entry->transactionCurrency, $this->convertToPrimary);
+            $spent           = $expenses[$currency->id]['sum'] ?? '0';
             $entry->pc_spent = $spent;
 
             // normal amount:
-            $expenses            = $opsRepository->sumExpenses($currentStart, $currentEnd, null, $budgetCollection, $entry->transactionCurrency, false);
-            $spent               = $expenses[$entry->transactionCurrency->id]['sum'] ?? '0';
-            $entry->spent        = $spent;
+            $expenses        = $opsRepository->sumExpenses($currentStart, $currentEnd, null, $budgetCollection, $entry->transactionCurrency, false);
+            $spent           = $expenses[$entry->transactionCurrency->id]['sum'] ?? '0';
+            $entry->spent    = $spent;
 
             $limits->push($entry);
         }

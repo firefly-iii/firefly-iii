@@ -65,13 +65,13 @@ class BillController extends Controller
      */
     public function bill(GenericRequest $request): JsonResponse
     {
-        $accounts        = $request->getAssetAccounts();
-        $bills           = $request->getBills();
-        $start           = $request->getStart();
-        $end             = $request->getEnd();
+        $accounts         = $request->getAssetAccounts();
+        $bills            = $request->getBills();
+        $start            = $request->getStart();
+        $end              = $request->getEnd();
         $convertToPrimary = Amount::convertToPrimary();
-        $primary         = Amount::getPrimaryCurrency();
-        $response        = [];
+        $primary          = Amount::getPrimaryCurrency();
+        $response         = [];
 
         // get all bills:
         if (0 === $bills->count()) {
@@ -79,11 +79,11 @@ class BillController extends Controller
         }
 
         // collect all expenses in this period (regardless of type) by the given bills and accounts.
-        $collector       = app(GroupCollectorInterface::class);
+        $collector        = app(GroupCollectorInterface::class);
         $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->setRange($start, $end)->setSourceAccounts($accounts);
         $collector->setBills($bills);
 
-        $genericSet      = $collector->getExtractedJournals();
+        $genericSet       = $collector->getExtractedJournals();
         foreach ($genericSet as $journal) {
             $billId       = (int) $journal['bill_id'];
             $currencyId   = (int) $journal['currency_id'];
@@ -129,19 +129,19 @@ class BillController extends Controller
      */
     public function noBill(GenericRequest $request): JsonResponse
     {
-        $accounts        = $request->getAssetAccounts();
-        $start           = $request->getStart();
-        $end             = $request->getEnd();
+        $accounts         = $request->getAssetAccounts();
+        $start            = $request->getStart();
+        $end              = $request->getEnd();
         $convertToPrimary = Amount::convertToPrimary();
-        $primary         = Amount::getPrimaryCurrency();
-        $response        = [];
+        $primary          = Amount::getPrimaryCurrency();
+        $response         = [];
 
         // collect all expenses in this period (regardless of type) by the given bills and accounts.
-        $collector       = app(GroupCollectorInterface::class);
+        $collector        = app(GroupCollectorInterface::class);
         $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->setRange($start, $end)->setSourceAccounts($accounts);
         $collector->withoutBill();
 
-        $genericSet      = $collector->getExtractedJournals();
+        $genericSet       = $collector->getExtractedJournals();
 
         foreach ($genericSet as $journal) {
             $currencyId   = (int) $journal['currency_id'];

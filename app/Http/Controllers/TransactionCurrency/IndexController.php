@@ -74,7 +74,7 @@ class IndexController extends Controller
         // order so default and enabled are on top:
         $collection = $collection->sortBy(
             static function (TransactionCurrency $currency) {
-                $primary  = true === $currency->userGroupNative ? 0 : 1;
+                $primary = true === $currency->userGroupNative ? 0 : 1;
                 $enabled = true === $currency->userGroupEnabled ? 0 : 1;
 
                 return sprintf('%s-%s-%s', $primary, $enabled, $currency->code);

@@ -78,8 +78,8 @@ return [
         'running_balance_column' => env('USE_RUNNING_BALANCE', false),
         // see cer.php for exchange rates feature flag.
     ],
-    'version'                      => 'develop/2025-07-31',
-    'build_time'                   => 1753977228,
+    'version'                      => 'develop/2025-08-01',
+    'build_time'                   => 1754046504,
     'api_version'                  => '2.1.0', // field is no longer used.
     'db_version'                   => 26,
 
@@ -181,11 +181,11 @@ return [
     'darkMode'                     => 'browser',
     'list_length'                  => 10, // to be removed if v1 is cancelled.
     'default_preferences'          => [
-        'frontpageAccounts'  => [],
-        'listPageSize'       => 50,
-        'currencyPreference' => 'EUR',
-        'language'           => 'en_US',
-        'locale'             => 'equal',
+        'frontpageAccounts'   => [],
+        'listPageSize'        => 50,
+        'currencyPreference'  => 'EUR',
+        'language'            => 'en_US',
+        'locale'              => 'equal',
         'convertToPrimary'    => false,
     ],
     'default_currency'             => 'EUR',

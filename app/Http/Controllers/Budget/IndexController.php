@@ -172,22 +172,22 @@ class IndexController extends Controller
         // for each, complement with spent amount:
         /** @var AvailableBudget $entry */
         foreach ($ab as $entry) {
-            $array                    = $entry->toArray();
-            $array['start_date']      = $entry->start_date;
-            $array['end_date']        = $entry->end_date;
+            $array                = $entry->toArray();
+            $array['start_date']  = $entry->start_date;
+            $array['end_date']    = $entry->end_date;
 
             // spent in period:
-            $spentArr                 = $this->opsRepository->sumExpenses($entry->start_date, $entry->end_date, null, null, $entry->transactionCurrency, false);
-            $array['spent']           = $spentArr[$entry->transaction_currency_id]['sum'] ?? '0';
+            $spentArr             = $this->opsRepository->sumExpenses($entry->start_date, $entry->end_date, null, null, $entry->transactionCurrency, false);
+            $array['spent']       = $spentArr[$entry->transaction_currency_id]['sum'] ?? '0';
             $array['pc_spent']    = $this->convertToPrimary && $entry->transaction_currency_id !== $this->primaryCurrency->id ? $converter->convert($entry->transactionCurrency, $this->primaryCurrency, $entry->start_date, $array['spent']) : null;
             // budgeted in period:
-            $budgeted                 = $this->blRepository->budgeted($entry->start_date, $entry->end_date, $entry->transactionCurrency);
-            $array['budgeted']        = $budgeted;
+            $budgeted             = $this->blRepository->budgeted($entry->start_date, $entry->end_date, $entry->transactionCurrency);
+            $array['budgeted']    = $budgeted;
             $array['pc_budgeted'] = $this->convertToPrimary && $entry->transaction_currency_id !== $this->primaryCurrency->id ? $converter->convert($entry->transactionCurrency, $this->primaryCurrency, $entry->start_date, $budgeted) : null;
             // this time, because of complex sums, use the currency converter.
 
 
-            $availableBudgets[]       = $array;
+            $availableBudgets[]   = $array;
             unset($spentArr);
         }
 

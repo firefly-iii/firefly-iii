@@ -64,19 +64,19 @@ class TagController extends Controller
      */
     public function noTag(GenericRequest $request): JsonResponse
     {
-        $accounts        = $request->getAssetAccounts();
-        $start           = $request->getStart();
-        $end             = $request->getEnd();
-        $response        = [];
+        $accounts         = $request->getAssetAccounts();
+        $start            = $request->getStart();
+        $end              = $request->getEnd();
+        $response         = [];
         $convertToPrimary = Amount::convertToPrimary();
-        $primary         = Amount::getPrimaryCurrency();
+        $primary          = Amount::getPrimaryCurrency();
 
         // collect all expenses in this period (regardless of type) by the given bills and accounts.
-        $collector       = app(GroupCollectorInterface::class);
+        $collector        = app(GroupCollectorInterface::class);
         $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->setRange($start, $end)->setSourceAccounts($accounts);
         $collector->withoutTags();
 
-        $genericSet      = $collector->getExtractedJournals();
+        $genericSet       = $collector->getExtractedJournals();
 
         foreach ($genericSet as $journal) {
             // same code as many other sumExpense methods. I think this needs some kind of generic method.

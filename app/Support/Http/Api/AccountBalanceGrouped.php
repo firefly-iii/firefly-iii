@@ -65,54 +65,54 @@ class AccountBalanceGrouped
         foreach ($this->data as $currency) {
             // income and expense array prepped:
             $income       = [
-                'label'                          => 'earned',
-                'currency_id'                    => (string) $currency['currency_id'],
-                'currency_symbol'                => $currency['currency_symbol'],
-                'currency_code'                  => $currency['currency_code'],
-                'currency_decimal_places'        => $currency['currency_decimal_places'],
+                'label'                           => 'earned',
+                'currency_id'                     => (string) $currency['currency_id'],
+                'currency_symbol'                 => $currency['currency_symbol'],
+                'currency_code'                   => $currency['currency_code'],
+                'currency_decimal_places'         => $currency['currency_decimal_places'],
                 'primary_currency_id'             => (string) $currency['primary_currency_id'],
                 'primary_currency_symbol'         => $currency['primary_currency_symbol'],
                 'primary_currency_code'           => $currency['primary_currency_code'],
                 'primary_currency_decimal_places' => $currency['primary_currency_decimal_places'],
-                'date'                           => $this->start->toAtomString(),
-                'start'                          => $this->start->toAtomString(),
-                'end'                            => $this->end->toAtomString(),
-                'period'                         => $this->preferredRange,
-                'entries'                        => [],
+                'date'                            => $this->start->toAtomString(),
+                'start'                           => $this->start->toAtomString(),
+                'end'                             => $this->end->toAtomString(),
+                'period'                          => $this->preferredRange,
+                'entries'                         => [],
                 'primary_entries'                 => [],
             ];
             $expense      = [
-                'label'                          => 'spent',
-                'currency_id'                    => (string) $currency['currency_id'],
-                'currency_symbol'                => $currency['currency_symbol'],
-                'currency_code'                  => $currency['currency_code'],
-                'currency_decimal_places'        => $currency['currency_decimal_places'],
+                'label'                           => 'spent',
+                'currency_id'                     => (string) $currency['currency_id'],
+                'currency_symbol'                 => $currency['currency_symbol'],
+                'currency_code'                   => $currency['currency_code'],
+                'currency_decimal_places'         => $currency['currency_decimal_places'],
                 'primary_currency_id'             => (string) $currency['primary_currency_id'],
                 'primary_currency_symbol'         => $currency['primary_currency_symbol'],
                 'primary_currency_code'           => $currency['primary_currency_code'],
                 'primary_currency_decimal_places' => $currency['primary_currency_decimal_places'],
-                'date'                           => $this->start->toAtomString(),
-                'start'                          => $this->start->toAtomString(),
-                'end'                            => $this->end->toAtomString(),
-                'period'                         => $this->preferredRange,
-                'entries'                        => [],
-                'pc_entries'                 => [],
+                'date'                            => $this->start->toAtomString(),
+                'start'                           => $this->start->toAtomString(),
+                'end'                             => $this->end->toAtomString(),
+                'period'                          => $this->preferredRange,
+                'entries'                         => [],
+                'pc_entries'                      => [],
             ];
             // loop all possible periods between $start and $end, and add them to the correct dataset.
             $currentStart = clone $this->start;
             while ($currentStart <= $this->end) {
-                $key                               = $currentStart->format($this->carbonFormat);
-                $label                             = $currentStart->toAtomString();
+                $key                           = $currentStart->format($this->carbonFormat);
+                $label                         = $currentStart->toAtomString();
                 // normal entries
-                $income['entries'][$label]         = app('steam')->bcround($currency[$key]['earned'] ?? '0', $currency['currency_decimal_places']);
-                $expense['entries'][$label]        = app('steam')->bcround($currency[$key]['spent'] ?? '0', $currency['currency_decimal_places']);
+                $income['entries'][$label]     = app('steam')->bcround($currency[$key]['earned'] ?? '0', $currency['currency_decimal_places']);
+                $expense['entries'][$label]    = app('steam')->bcround($currency[$key]['spent'] ?? '0', $currency['currency_decimal_places']);
 
                 // converted entries
                 $income['pc_entries'][$label]  = app('steam')->bcround($currency[$key]['pc_earned'] ?? '0', $currency['primary_currency_decimal_places']);
                 $expense['pc_entries'][$label] = app('steam')->bcround($currency[$key]['pc_spent'] ?? '0', $currency['primary_currency_decimal_places']);
 
                 // next loop
-                $currentStart                      = app('navigation')->addPeriod($currentStart, $this->preferredRange, 0);
+                $currentStart                  = app('navigation')->addPeriod($currentStart, $this->preferredRange, 0);
             }
 
             $chartData[]  = $income;
@@ -187,11 +187,11 @@ class AccountBalanceGrouped
     {
         $currencyId = (int) $journal['currency_id'];
         $this->data[$currencyId] ??= [
-            'currency_id'                    => (string) $currencyId,
-            'currency_symbol'                => $journal['currency_symbol'],
-            'currency_code'                  => $journal['currency_code'],
-            'currency_name'                  => $journal['currency_name'],
-            'currency_decimal_places'        => $journal['currency_decimal_places'],
+            'currency_id'                     => (string) $currencyId,
+            'currency_symbol'                 => $journal['currency_symbol'],
+            'currency_code'                   => $journal['currency_code'],
+            'currency_name'                   => $journal['currency_name'],
+            'currency_decimal_places'         => $journal['currency_decimal_places'],
             // primary currency info (could be the same)
             'primary_currency_id'             => (string) $this->primary->id,
             'primary_currency_code'           => $this->primary->code,
@@ -208,8 +208,8 @@ class AccountBalanceGrouped
             'period'        => $period,
             'spent'         => '0',
             'earned'        => '0',
-            'pc_spent'  => '0',
-            'pc_earned' => '0',
+            'pc_spent'      => '0',
+            'pc_earned'     => '0',
         ];
     }
 
@@ -258,11 +258,11 @@ class AccountBalanceGrouped
         $primaryCurrencyId              = $primary->id;
         $this->currencies               = [$primary->id => $primary]; // currency cache
         $this->data[$primaryCurrencyId] = [
-            'currency_id'                    => (string) $primaryCurrencyId,
-            'currency_symbol'                => $primary->symbol,
-            'currency_code'                  => $primary->code,
-            'currency_name'                  => $primary->name,
-            'currency_decimal_places'        => $primary->decimal_places,
+            'currency_id'                     => (string) $primaryCurrencyId,
+            'currency_symbol'                 => $primary->symbol,
+            'currency_code'                   => $primary->code,
+            'currency_name'                   => $primary->name,
+            'currency_decimal_places'         => $primary->decimal_places,
             'primary_currency_id'             => (string) $primaryCurrencyId,
             'primary_currency_symbol'         => $primary->symbol,
             'primary_currency_code'           => $primary->code,

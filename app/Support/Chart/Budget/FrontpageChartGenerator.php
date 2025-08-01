@@ -150,7 +150,7 @@ class FrontpageChartGenerator
     private function processLimit(array $data, Budget $budget, BudgetLimit $limit): array
     {
         $usePrimary = $this->convertToPrimary && $this->default->id !== $limit->transaction_currency_id;
-        $currency  = $limit->transactionCurrency;
+        $currency   = $limit->transactionCurrency;
         if ($usePrimary) {
             Log::debug(sprintf('Processing limit #%d with (primary currency) %s %s', $limit->id, $this->default->code, $limit->native_amount));
         }
@@ -158,7 +158,7 @@ class FrontpageChartGenerator
             Log::debug(sprintf('Processing limit #%d with %s %s', $limit->id, $limit->transactionCurrency->code, $limit->amount));
         }
 
-        $spent     = $this->opsRepository->sumExpenses($limit->start_date, $limit->end_date, null, new Collection([$budget]), $currency);
+        $spent      = $this->opsRepository->sumExpenses($limit->start_date, $limit->end_date, null, new Collection([$budget]), $currency);
         Log::debug(sprintf('Spent array has %d entries.', count($spent)));
 
         /** @var array $entry */
@@ -196,7 +196,7 @@ class FrontpageChartGenerator
                 $limit->end_date->isoFormat($this->monthAndDayFormat)
             );
         }
-        $usePrimary                  = $this->convertToPrimary && $this->default->id !== $limit->transaction_currency_id;
+        $usePrimary                 = $this->convertToPrimary && $this->default->id !== $limit->transaction_currency_id;
         $amount                     = $limit->amount;
         Log::debug(sprintf('Amount is "%s".', $amount));
         if ($usePrimary && $limit->transaction_currency_id !== $this->default->id) {
