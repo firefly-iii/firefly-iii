@@ -13,7 +13,7 @@
     <script type="text/javascript" nonce="{{ JS_NONCE }}">
         var allowedOpposingTypes = {{ allowedOpposingTypes|json_encode|raw }};
         var accountToTypes = {{ accountToTypes|json_encode|raw }};
-        var defaultCurrency = {{ defaultCurrency.toArray()|json_encode|raw }};
+        var primaryCurrency = {{ primaryCurrency.toArray()|json_encode|raw }};
         var allowedSourceDests = {{ allowedSourceDests|json_encode|raw }};
         var expectedSourceTypes = {{ expectedSourceTypes|json_encode|raw }};
         var cashAccountId = {{ cash.id }};

@@ -31,13 +31,13 @@ export default () => ({
     billBox: {paid: [], unpaid: []},
     leftBox: {left: [], perDay: []},
     netBox: {net: []},
-    convertToNative: false,
+    convertToPrimary: false,
     loading: false,
     boxData: null,
     boxOptions: null,
     eventListeners: {
         ['@convert-to-native.window'](event){
-            this.convertToNative = event.detail;
+            this.convertToPrimary = event.detail;
             this.accountList = [];
             console.log('I heard that! (dashboard/boxes)');
             this.boxData = null;
@@ -49,7 +49,7 @@ export default () => ({
         const start = new Date(window.store.get('start'));
         const end = new Date(window.store.get('end'));
         // TODO cache key is hard coded, problem?
-        const boxesCacheKey = getCacheKey('ds_boxes_data', {convertToNative: this.convertToNative, start: start, end: end});
+        const boxesCacheKey = getCacheKey('ds_boxes_data', {convertToPrimary: this.convertToPrimary, start: start, end: end});
         cleanupCache();
 
         //const cacheValid = window.store.get('cacheValid');
@@ -166,7 +166,7 @@ export default () => ({
         Promise.all([getVariable('viewRange'), getVariable('convert_to_native', false)]).then((values) => {
             // console.log('boxes after promises');
             afterPromises = true;
-            this.convertToNative = values[1];
+            this.convertToPrimary = values[1];
             this.loadBoxes();
         });
         window.store.observe('end', () => {
@@ -181,8 +181,8 @@ export default () => ({
             if (!afterPromises) {
                 return;
             }
-            // console.log('boxes observe convertToNative');
-            this.convertToNative = newValue;
+            // console.log('boxes observe convertToPrimary');
+            this.convertToPrimary = newValue;
             this.loadBoxes();
         });
     },

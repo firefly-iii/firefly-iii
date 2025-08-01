@@ -55,7 +55,7 @@
                 <div class="box">
                     <div class="box-header with-border">
                         <h3 class="box-title">
-                            {{ trans('firefly.total_available_budget_in_currency', {currency: defaultCurrency.name}) }}
+                            {{ trans('firefly.total_available_budget_in_currency', {currency: primaryCurrency.name}) }}
                             <br>
                             <small>{{ trans('firefly.between_dates_breadcrumb', {start: start.isoFormat(monthAndDayFormat), end: end.isoFormat(monthAndDayFormat)}) }}</small>
                         </h3>
@@ -65,8 +65,8 @@
                             {# info about the amount budgeted #}
                             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                 <small>{{ 'budgeted'|_ }} ({{ 'see_below'|_ }}):
-                                    <span class="budgeted_amount" data-value="{{ budgeted }}" data-id="0" data-currency="{{ defaultCurrency.id }}">
-                                        {{ formatAmountBySymbol(budgeted, defaultCurrency.symbol, defaultCurrency.decimal_places) }}
+                                    <span class="budgeted_amount" data-value="{{ budgeted }}" data-id="0" data-currency="{{ primaryCurrency.id }}">
+                                        {{ formatAmountBySymbol(budgeted, primaryCurrency.symbol, primaryCurrency.decimal_places) }}
                                     </span>
                                 </small>
                             </div>
@@ -75,8 +75,8 @@
                                 <small class="available_bar"
                                        data-id="0">{{ trans('firefly.available_between', {start: start.isoFormat(monthAndDayFormat), end: end.isoFormat(monthAndDayFormat) }) }}
                                     :
-                                    <span class="available_amount" data-id="0" data-value="0" data-currency="{{ defaultCurrency.id }}"
-                                          data-value="0">{{ formatAmountBySymbol(0, defaultCurrency.symbol, defaultCurrency.decimal_places, true) }}</span>
+                                    <span class="available_amount" data-id="0" data-value="0" data-currency="{{ primaryCurrency.id }}"
+                                          data-value="0">{{ formatAmountBySymbol(0, primaryCurrency.symbol, primaryCurrency.decimal_places, true) }}</span>
                                 </small>
                             </div>
                         </div>
@@ -84,7 +84,7 @@
                         <div class="row spentInfo" data-id="0" data-value="{{ spent }}">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <small>{{ trans('firefly.spent_between', {start: start.isoFormat(monthAndDayFormat), end: end.isoFormat(monthAndDayFormat)}) }}
-                                    : {{ formatAmountBySymbol(spent, defaultCurrency.symbol, defaultCurrency.decimal_places) }} </small>
+                                    : {{ formatAmountBySymbol(spent, primaryCurrency.symbol, primaryCurrency.decimal_places) }} </small>
                             </div>
                         </div>
                     </div>
@@ -116,8 +116,8 @@
                                     <small>{{ 'budgeted'|_ }}:
                                         <span class="text-success money-positive budgeted_amount" data-id="{{ budget.id }}" data-currency="{{ budget.transaction_currency.id }}">
                                         {{ formatAmountBySymbol(budget.budgeted, budget.transaction_currency.symbol, budget.transaction_currency.decimal_places, false) }}
-                                            {% if null != budget.native_budgeted %}
-                                            ({{ formatAmountBySymbol(budget.native_budgeted, defaultCurrency.symbol, defaultCurrency.decimal_places, false) }})
+                                            {% if null != budget.pc_budgeted %}
+                                            ({{ formatAmountBySymbol(budget.pc_budgeted, primaryCurrency.symbol, primaryCurrency.decimal_places, false) }})
                                             {% endif %}
                                     </span>
                                     </small>
@@ -130,8 +130,8 @@
                                         <span class="available_amount" data-id="{{ budget.id }}" data-currency="{{ budget.transaction_currency.id }}"
                                               data-value="{{ budget.amount }}">
                                             {{ formatAmountBySymbol(budget.amount, budget.transaction_currency.symbol, budget.transaction_currency.decimal_places, true) }}
-                                            {% if(convertToNative and 0 != budget.native_amount) %}
-                                            ({{ formatAmountBySymbol(budget.native_amount, defaultCurrency.symbol, defaultCurrency.decimal_places, true) }})
+                                            {% if(convertToPrimary and 0 != budget.pc_amount) %}
+                                            ({{ formatAmountBySymbol(budget.pc_amount, primaryCurrency.symbol, primaryCurrency.decimal_places, true) }})
                                             {% endif %}
 
                                         </span>
@@ -265,10 +265,10 @@
                                     <td>
                                         {% if 0==budget.budgeted|length %}
                                             <div class="input-group">
-                                                <div class="input-group-addon">{{ defaultCurrency.symbol }}</div>
-                                                <input type="hidden" name="balance_currency_id" value="{{ defaultCurrency.id }}"/>
+                                                <div class="input-group-addon">{{ primaryCurrency.symbol }}</div>
+                                                <input type="hidden" name="balance_currency_id" value="{{ primaryCurrency.id }}"/>
                                                 <input class="form-control budget_amount" data-original="0" data-id="{{ budget.id }}"
-                                                       data-currency="{{ defaultCurrency.id }}" data-limit="0" value="0" autocomplete="off" min="0" name="amount"
+                                                       data-currency="{{ primaryCurrency.id }}" data-limit="0" value="0" autocomplete="off" min="0" name="amount"
                                                        type="number">
                                             </div>
                                             <span class="text-danger budget_warning" data-id="{{ budget.id }}" data-budgetLimit="{{ budgetLimit.id }}"

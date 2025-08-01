@@ -48,7 +48,7 @@
                             <thead>
                             <tr>
                                 <th>{{ $t('list.title') }}</th>
-                                <th>{{ $t('list.native_currency') }}</th>
+                                <th>{{ $t('list.primary_currency') }}</th>
                                 <th class="hidden-sm hidden-xs">&nbsp;</th>
                             </tr>
                             </thead>
@@ -106,8 +106,8 @@ export default {
                         let administration = {
                             id: current.id,
                             title: current.attributes.title,
-                            currency_code: current.attributes.native_currency_code,
-                            currency_name: current.attributes.native_currency_name,
+                            currency_code: current.attributes.primary_currency_code,
+                            currency_name: current.attributes.primary_currency_name,
                         };
                         this.administrations.push(administration);
                     }

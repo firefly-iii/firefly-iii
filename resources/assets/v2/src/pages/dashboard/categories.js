@@ -32,12 +32,12 @@ let afterPromises = false;
 
 export default () => ({
     loading: false,
-    convertToNative: false,
+    convertToPrimary: false,
 
     eventListeners: {
         ['@convert-to-native.window'](event){
             console.log('I heard that! (dashboard/categories)');
-            this.convertToNative = event.detail;
+            this.convertToPrimary = event.detail;
             chartData = null;
             this.loadChart();
         }
@@ -146,7 +146,7 @@ export default () => ({
     getFreshData() {
         const start = new Date(window.store.get('start'));
         const end = new Date(window.store.get('end'));
-        const cacheKey = getCacheKey('ds_ct_chart', {convertToNative: this.convertToNative, start: start, end: end});
+        const cacheKey = getCacheKey('ds_ct_chart', {convertToPrimary: this.convertToPrimary, start: start, end: end});
 
         const cacheValid = window.store.get('cacheValid');
         let cachedData = window.store.get(cacheKey);
@@ -183,7 +183,7 @@ export default () => ({
     init() {
         // console.log('categories init');
         Promise.all([getVariable('convert_to_native', false),]).then((values) => {
-            this.convertToNative = values[0];
+            this.convertToPrimary = values[0];
             afterPromises = true;
             this.loadChart();
         });
@@ -198,7 +198,7 @@ export default () => ({
             if (!afterPromises) {
                 return;
             }
-            this.convertToNative = newValue;
+            this.convertToPrimary = newValue;
             this.loadChart();
         });
     },

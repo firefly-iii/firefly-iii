@@ -407,7 +407,7 @@ let index = function () {
                             interest: current.attributes.interest,
                             interest_period: current.attributes.interest_period,
                             balance: current.attributes.balance,
-                            native_balance: current.attributes.native_balance,
+                            pc_balance: current.attributes.pc_balance,
                             balances: current.attributes.balances,
                         };
                         // get group info:

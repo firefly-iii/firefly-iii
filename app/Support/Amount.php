@@ -103,7 +103,7 @@ class Amount
     {
         $convertToPrimary = $this->convertToPrimary();
         $currency        = $this->getPrimaryCurrency();
-        $field           = $convertToPrimary && $currency->id !== $journal['currency_id'] ? 'native_amount' : 'amount';
+        $field           = $convertToPrimary && $currency->id !== $journal['currency_id'] ? 'pc_amount' : 'amount';
         $amount          = $journal[$field] ?? '0';
         // Log::debug(sprintf('Field is %s, amount is %s', $field, $amount));
         // fallback, the transaction has a foreign amount in $currency.
@@ -118,10 +118,10 @@ class Amount
     public function convertToPrimary(?User $user = null): bool
     {
         if (!$user instanceof User) {
-            return true === Preferences::get('convert_to_native', false)->data && true === config('cer.enabled');
+            return true === Preferences::get('convert_to_primary', false)->data && true === config('cer.enabled');
         }
 
-        return true === Preferences::getForUser($user, 'convert_to_native', false)->data && true === config('cer.enabled');
+        return true === Preferences::getForUser($user, 'convert_to_primary', false)->data && true === config('cer.enabled');
     }
 
     public function getPrimaryCurrency(): TransactionCurrency
@@ -171,7 +171,7 @@ class Amount
     {
         $convertToPrimary   = $this->convertToPrimary();
         $currency          = $this->getPrimaryCurrency();
-        $field             = $convertToPrimary && $currency->id !== $journal->transaction_currency_id ? 'native_amount' : 'amount';
+        $field             = $convertToPrimary && $currency->id !== $journal->transaction_currency_id ? 'pc_amount' : 'amount';
 
         /** @var null|Transaction $sourceTransaction */
         $sourceTransaction = $journal->transactions()->where('amount', '<', 0)->first();

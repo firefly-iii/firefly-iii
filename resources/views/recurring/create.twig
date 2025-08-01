@@ -91,7 +91,7 @@
 
                         {{ ExpandedForm.text('transaction_description') }}
                         {# transaction information (mandatory) #}
-                        {{ CurrencyForm.currencyList('transaction_currency_id', defaultCurrency.id) }}
+                        {{ CurrencyForm.currencyList('transaction_currency_id', primaryCurrency.id) }}
                         {{ ExpandedForm.amountNoCurrency('amount') }}
 
                         {# source account if withdrawal, or if transfer: #}

@@ -48,13 +48,13 @@ trait ChartGeneration
     protected function accountBalanceChart(Collection $accounts, Carbon $start, Carbon $end): array // chart helper method.
     {
         // chart properties for cache:
-        $convertToNative = Amount::convertToPrimary();
+        $convertToPrimary = Amount::convertToPrimary();
         $cache           = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('chart.account.account-balance-chart');
         $cache->addProperty($accounts);
-        $cache->addProperty($convertToNative);
+        $cache->addProperty($convertToPrimary);
         if ($cache->has()) {
             return $cache->get();
         }
@@ -76,9 +76,9 @@ trait ChartGeneration
         foreach ($accounts as $account) {
             Log::debug(sprintf('Now at account #%d ("%s)', $account->id, $account->name));
             $currency     = $accountRepos->getAccountCurrency($account) ?? $default;
-            $useNative    = $convertToNative && $default->id !== $currency->id;
-            $field        = $convertToNative ? 'native_balance' : 'balance';
-            $currency     = $useNative ? $default : $currency;
+            $usePrimary    = $convertToPrimary && $default->id !== $currency->id;
+            $field        = $convertToPrimary ? 'pc_balance' : 'balance';
+            $currency     = $usePrimary ? $default : $currency;
             Log::debug(sprintf('Will use field %s', $field));
             $currentSet   = [
                 'label'           => $account->name,
@@ -87,7 +87,7 @@ trait ChartGeneration
             ];
 
             $currentStart = clone $start;
-            $range        = Steam::finalAccountBalanceInRange($account, clone $start, clone $end, $this->convertToNative);
+            $range        = Steam::finalAccountBalanceInRange($account, clone $start, clone $end, $this->convertToPrimary);
             $previous     = array_values($range)[0];
             Log::debug(sprintf('Start balance for account #%d ("%s) is', $account->id, $account->name), $previous);
             while ($currentStart <= $end) {

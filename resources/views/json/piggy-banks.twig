@@ -10,8 +10,8 @@
                 <div class="progress-bar" role="progressbar" aria-valuenow="{{ entry.percentage }}" aria-valuemin="0" aria-valuemax="100"
                      style="width: {{ entry.percentage }}%;">
                     {% if entry.percentage >=20 %}
-                        {% if convertToNative and 0 != avg.native_amount %}
-                            {{ formatAmountBySymbol(entry.native_amount, entry.native_currency_symbol, entry.native_currency_decimal_places, false) }}
+                        {% if convertToPrimary and 0 != avg.pc_amount %}
+                            {{ formatAmountBySymbol(entry.pc_amount, entry.primary_currency_symbol, entry.primary_currency_decimal_places, false) }}
                             ({{ formatAmountBySymbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places, false) }})
                         {% else %}
                             {{ formatAmountBySymbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places, false) }}
@@ -20,8 +20,8 @@
                 </div>
                 {% if entry.percentage < 20 %}
                     &nbsp;
-                    {% if convertToNative and 0 != avg.native_amount %}
-                        {{ formatAmountBySymbol(entry.native_amount, entry.native_currency_symbol, entry.native_currency_decimal_places, false) }}
+                    {% if convertToPrimary and 0 != avg.pc_amount %}
+                        {{ formatAmountBySymbol(entry.pc_amount, entry.primary_currency_symbol, entry.primary_currency_decimal_places, false) }}
                         ({{ formatAmountBySymbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places, false) }})
                     {% else %}
                         {{ formatAmountBySymbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places, false) }}

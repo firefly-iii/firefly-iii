@@ -30,7 +30,7 @@ import i18next from "i18next";
 let afterPromises = false;
 let apiData = [];
 let subscriptionData = {};
-let convertToNative = false;
+let convertToPrimary = false;
 
 function addObjectGroupInfo(data) {
     let objectGroupId = parseInt(data.object_group_id);
@@ -71,7 +71,7 @@ function parseBillInfo(data) {
         pay_dates: parsePayDates(data.attributes.pay_dates),
         paid: data.attributes.paid_dates.length > 0,
     };
-    if(convertToNative) {
+    if(convertToPrimary) {
         result.currency_code = data.attributes.native_currency_code;
     }
 
@@ -211,7 +211,7 @@ function downloadSubscriptions(params) {
 
 export default () => ({
     loading: false,
-    convertToNative: false,
+    convertToPrimary: false,
     subscriptions: [],
     formatMoney(amount, currencyCode) {
         return formatMoney(amount, currencyCode);
@@ -219,8 +219,8 @@ export default () => ({
     eventListeners: {
         ['@convert-to-native.window'](event){
             console.log('I heard that! (dashboard/subscriptions)');
-            this.convertToNative = event.detail;
-            convertToNative = event.detail;
+            this.convertToPrimary = event.detail;
+            convertToPrimary = event.detail;
             this.startSubscriptions();
         }
     },
@@ -243,7 +243,7 @@ export default () => ({
         let params = {
             start: format(start, 'y-MM-dd'),
             end: format(end, 'y-MM-dd'),
-            // convertToNative: this.convertToNative,
+            // convertToPrimary: this.convertToPrimary,
             page: 1
         };
         downloadSubscriptions(params).then(() => {
@@ -314,8 +314,8 @@ export default () => ({
 
     init() {
         Promise.all([getVariable('convert_to_native', false)]).then((values) => {
-            this.convertToNative = values[0];
-            convertToNative = values[0];
+            this.convertToPrimary = values[0];
+            convertToPrimary = values[0];
             afterPromises = true;
 
             if (false === this.loading) {
@@ -336,7 +336,7 @@ export default () => ({
             if (!afterPromises) {
                 return;
             }
-            this.convertToNative = newValue;
+            this.convertToPrimary = newValue;
             if (false === this.loading) {
                 this.startSubscriptions();
             }

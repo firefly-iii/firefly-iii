@@ -100,14 +100,14 @@
                                         {{ ExpandedForm.date('fiscalYearStart',fiscalYearStart,{ 'label' : 'pref_fiscal_year_start_label'|_ }) }}
                                     </div>
 
-                                    {#  conversion back to native #}
+                                    {#  conversion back to primary currency #}
                                     {% if config('cer.enabled') %}
                                     <div class="preferences-box">
-                                        <h3>{{ 'pref_convert_to_native'|_ }}</h3>
+                                        <h3>{{ 'pref_convert_to_primary'|_ }}</h3>
                                         <p class="text-info">
-                                            {{ 'pref_convert_to_native_help'|_ }}
+                                            {{ 'pref_convert_to_primary_help'|_ }}
                                         </p>
-                                        {{ ExpandedForm.checkbox('convertToNative','1',convertToNative,{ 'label' : 'pref_convert_native_help'|_ }) }}
+                                        {{ ExpandedForm.checkbox('convertToPrimary','1',convertToPrimary,{ 'label' : 'pref_convert_primary_help'|_ }) }}
                                     </div>
                                     {% endif %}
                                 </div>

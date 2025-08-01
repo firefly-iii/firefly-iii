@@ -59,11 +59,11 @@
                     </div>
                     <div class="modal-body">
                         <div class="row mb-3">
-                            <label class="col-sm-4 col-form-label">Convert to native</label>
+                            <label class="col-sm-4 col-form-label">Convert to primary</label>
                             <div class="col-sm-8">
                                     <div class="form-check form-switch form-check-inline">
                                         <label>
-                                            <input class="form-check-input" x-model="convertToNative" type="checkbox" @change="saveNativeSettings"> <span
+                                            <input class="form-check-input" x-model="convertToPrimary" type="checkbox" @change="savePrimarySettings"> <span
                                                 >Yes no</span>
                                         </label>
                                     </div>

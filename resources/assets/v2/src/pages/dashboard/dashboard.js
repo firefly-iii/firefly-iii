@@ -69,7 +69,7 @@ Chart.register({
 
 let index = function () {
     return {
-        convertToNative: false,
+        convertToPrimary: false,
         saveNativeSettings(event) {
             let target = event.currentTarget || event.target;
             setVariable('convert_to_native',target.checked).then(() => {
@@ -79,7 +79,7 @@ let index = function () {
         },
         init() {
             Promise.all([getVariable('convert_to_native', false)]).then((values) => {
-                this.convertToNative = values[0];
+                this.convertToPrimary = values[0];
             });
         }
     }

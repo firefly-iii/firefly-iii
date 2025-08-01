@@ -34,7 +34,7 @@ let afterPromises = false;
 
 export default () => ({
     loading: false,
-    convertToNative: false,
+    convertToPrimary: false,
     loadChart() {
         if (true === this.loading) {
             return;
@@ -52,7 +52,7 @@ export default () => ({
     eventListeners: {
         ['@convert-to-native.window'](event){
             console.log('I heard that! (dashboard/budgets)');
-            this.convertToNative = event.detail;
+            this.convertToPrimary = event.detail;
             chartData = null;
             this.loadChart();
         }
@@ -69,7 +69,7 @@ export default () => ({
     getFreshData() {
         const start = new Date(window.store.get('start'));
         const end = new Date(window.store.get('end'));
-        const cacheKey = getCacheKey('ds_bdg_chart', {convertToNative: this.convertToNative, start: start, end: end});
+        const cacheKey = getCacheKey('ds_bdg_chart', {convertToPrimary: this.convertToPrimary, start: start, end: end});
         //const cacheValid = window.store.get('cacheValid');
         const cacheValid = false;
         let cachedData = window.store.get(cacheKey);
@@ -168,7 +168,7 @@ export default () => ({
 
     init() {
         Promise.all([getVariable('convert_to_native', false)]).then((values) => {
-            this.convertToNative = values[0];
+            this.convertToPrimary = values[0];
             afterPromises = true;
             if (false === this.loading) {
                 this.loadChart();
@@ -188,8 +188,8 @@ export default () => ({
             if (!afterPromises) {
                 return;
             }
-            // console.log('boxes observe convertToNative');
-            this.convertToNative = newValue;
+            // console.log('boxes observe convertToPrimary');
+            this.convertToPrimary = newValue;
             if (false === this.loading) {
                 this.loadChart();
             }

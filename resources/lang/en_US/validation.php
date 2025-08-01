@@ -141,7 +141,7 @@ return [
     'not_in'                           => 'The selected :attribute is invalid.',
     'numeric'                          => 'The :attribute must be a number.',
     'scientific_notation'              => 'The :attribute cannot use the scientific notation.',
-    'numeric_native'                   => 'The native amount must be a number.',
+    'numeric_primary'                   => 'The primary currency amount must be a number.',
     'numeric_destination'              => 'The destination amount must be a number.',
     'numeric_source'                   => 'The source amount must be a number.',
     'generic_invalid'                  => 'This value is invalid.',

@@ -118,7 +118,7 @@ class BudgetLimitTransformer extends AbstractTransformer
             'amount'                          => $amount,
             'pc_amount'                       => $this->convertToPrimary ? app('steam')->bcround($budgetLimit->native_amount, $primary->decimal_places) : null,
             'period'                          => $budgetLimit->period,
-            'spent'                           => $expenses[$currencyId]['sum'] ?? '0', // will be in native if convertToNative.
+            'spent'                           => $expenses[$currencyId]['sum'] ?? '0', // will be in primary currency if convertToPrimary.
             'notes'                           => '' === $notes ? null : $notes,
             'links'                           => [
                 [

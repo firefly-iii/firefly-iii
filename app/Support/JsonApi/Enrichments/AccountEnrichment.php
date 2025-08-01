@@ -55,7 +55,7 @@ class AccountEnrichment implements EnrichmentInterface
     private array               $currencies;
     private array               $locations;
     private array               $meta;
-    private TransactionCurrency $native;
+    private TransactionCurrency $primaryCurrency;
     private array               $notes;
     private array               $openingBalances;
     private User                $user;
@@ -150,7 +150,7 @@ class AccountEnrichment implements EnrichmentInterface
         foreach ($currencies as $currency) {
             $this->currencies[(int) $currency->id] = $currency;
         }
-        $this->currencies[0] = $this->native;
+        $this->currencies[0] = $this->primaryCurrency;
         foreach ($this->currencies as $id => $currency) {
             if (true === $currency) {
                 throw new FireflyException(sprintf('Currency #%d not found.', $id));
@@ -278,9 +278,9 @@ class AccountEnrichment implements EnrichmentInterface
         });
     }
 
-    public function setNative(TransactionCurrency $native): void
+    public function setPrimaryCurrency(TransactionCurrency $primary): void
     {
-        $this->native = $native;
+        $this->primaryCurrency = $primary;
     }
 
     private function collectLastActivities(): void

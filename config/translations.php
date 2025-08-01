@@ -315,7 +315,7 @@ return [
             'list'    => [
                 'title',
                 'active',
-                'native_currency',
+                'primary_currency',
                 'trigger',
                 'response',
                 'delivery',

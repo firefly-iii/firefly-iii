@@ -8,7 +8,7 @@
                         class="btn btn-default dropdown-toggle currency-dropdown" id="currency_dropdown_{{ name }}"
                         data-toggle="dropdown"
                         aria-expanded="false">
-                    <span id="currency_select_symbol_{{ name }}">{{ defaultCurrency.symbol|raw }}</span> <span
+                    <span id="currency_select_symbol_{{ name }}">{{ primaryCurrency.symbol|raw }}</span> <span
                             class="caret"></span>
                 </button>
                 <ul class="dropdown-menu currency-dropdown-menu" role="menu">
@@ -30,5 +30,5 @@
         {% include 'form.feedback' %}
     </div>
 
-    <input type="hidden" name="amount_currency_id_{{ name }}" value="{{ defaultCurrency.id }}"/>
+    <input type="hidden" name="amount_currency_id_{{ name }}" value="{{ primaryCurrency.id }}"/>
 </div>

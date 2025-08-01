@@ -11,7 +11,7 @@
     <script type="text/javascript" nonce="{{ JS_NONCE }}">
         var allowedOpposingTypes = {{ allowedOpposingTypes|json_encode|raw }};
         var accountToTypes = {{ accountToTypes|json_encode|raw }};
-        var defaultCurrency = {{ defaultCurrency.toArray()|json_encode|raw }};
+        var primaryCurrency = {{ primaryCurrency.toArray()|json_encode|raw }};
         var cashAccountId = {{ cash.id }};
         var previousUrl = '{{ previousUrl }}';
         window.sourceId = {{ sourceId }};

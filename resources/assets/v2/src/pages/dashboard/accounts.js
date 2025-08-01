@@ -39,7 +39,7 @@ export default () => ({
     loading: false,
     loadingAccounts: false,
     accountList: [],
-    convertToNative: false,
+    convertToPrimary: false,
     chartOptions: null,
     localCacheKey(type) {
         return 'ds_accounts_' + type;
@@ -48,7 +48,7 @@ export default () => ({
     eventListeners: {
         ['@convert-to-native.window'](event){
             console.log('I heard that! (dashboard/accounts)');
-            this.convertToNative = event.detail;
+            this.convertToPrimary = event.detail;
             this.accountList = [];
             chartData = null;
             this.loadChart();
@@ -60,7 +60,7 @@ export default () => ({
     getFreshData() {
         const start = new Date(window.store.get('start'));
         const end = new Date(window.store.get('end'));
-        const chartCacheKey = getCacheKey(this.localCacheKey('chart'), {convertToNative: this.convertToNative, start: start, end: end})
+        const chartCacheKey = getCacheKey(this.localCacheKey('chart'), {convertToPrimary: this.convertToPrimary, start: start, end: end})
 
         const cacheValid = window.store.get('cacheValid');
         let cachedData = window.store.get(chartCacheKey);
@@ -100,18 +100,18 @@ export default () => ({
                 dataset.label = current.label;
 
                 // use the "native" currency code and use the "native_entries" as array
-                if (this.convertToNative) {
+                if (this.convertToPrimary) {
                     currencies.push(current.native_currency_code);
                     dataset.currency_code = current.native_currency_code;
                     if(!current.hasOwnProperty('native_entries')) {
-                        console.error('No native entries ('+this.convertToNative+') found for account: ', current);
+                        console.error('No native entries ('+this.convertToPrimary+') found for account: ', current);
                     }
                     if(current.hasOwnProperty('native_entries')) {
                         collection = Object.values(current.native_entries);
                     }
                     yAxis = 'y' + current.native_currency_code;
                 }
-                if (!this.convertToNative) {
+                if (!this.convertToPrimary) {
                     yAxis = 'y' + current.currency_code;
                     dataset.currency_code = current.currency_code;
                     currencies.push(current.currency_code);
@@ -295,9 +295,9 @@ export default () => ({
             getConfiguration('cer.enabled', false) // 3
         ]).then((values) => {
             //console.log('accounts after promises');
-            this.convertToNative = values[1] && values[3];
+            this.convertToPrimary = values[1] && values[3];
             afterPromises = true;
-            //console.log('convertToNative in accounts.js: ', values);
+            //console.log('convertToPrimary in accounts.js: ', values);
 
             // main dashboard chart:
             this.loadChart();
@@ -318,7 +318,7 @@ export default () => ({
             if (!afterPromises) {
                 return;
             }
-            // console.log('accounts observe convertToNative');
+            // console.log('accounts observe convertToPrimary');
             this.loadChart();
             this.loadAccounts();
         });

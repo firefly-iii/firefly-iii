@@ -26,7 +26,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
     private User                $user;
     private UserGroup           $userGroup;
     private Collection          $collection;
-    private bool                $convertToNative = false;
+    private bool                $convertToPrimary = false;
     private ?Carbon             $start           = null;
     private ?Carbon             $end             = null;
     private array               $subscriptionIds = [];
@@ -35,7 +35,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
     private array               $paidDates       = [];
     private array               $notes           = [];
     private array               $payDates        = [];
-    private TransactionCurrency $nativeCurrency;
+    private TransactionCurrency $primaryCurrency;
     private BillDateCalculator  $calculator;
 
     public function enrich(Collection $collection): Collection
@@ -88,15 +88,15 @@ class SubscriptionEnrichment implements EnrichmentInterface
                 $meta['notes'] = $notes[$item->id];
             }
 
-            // Convert amounts to native currency if needed
-            if ($this->convertToNative && $item->currency_id !== $this->nativeCurrency->id) {
-                Log::debug('Convert to native currency');
+            // Convert amounts to primary currency if needed
+            if ($this->convertToPrimary && $item->currency_id !== $this->primaryCurrency->id) {
+                Log::debug('Convert to primary currency');
                 $converter          = new ExchangeRateConverter();
                 $amounts            = [
-                    'amount_min' => Steam::bcround($converter->convert($item->transactionCurrency, $this->nativeCurrency, today(), $item->amount_min), $this->nativeCurrency->decimal_places),
-                    'amount_max' => Steam::bcround($converter->convert($item->transactionCurrency, $this->nativeCurrency, today(), $item->amount_max), $this->nativeCurrency->decimal_places),
+                    'amount_min' => Steam::bcround($converter->convert($item->transactionCurrency, $this->primaryCurrency, today(), $item->amount_min), $this->primaryCurrency->decimal_places),
+                    'amount_max' => Steam::bcround($converter->convert($item->transactionCurrency, $this->primaryCurrency, today(), $item->amount_max), $this->primaryCurrency->decimal_places),
                 ];
-                $amounts['average'] = Steam::bcround(bcdiv(bcadd($amounts['amount_min'], $amounts['amount_max']), '2'), $this->nativeCurrency->decimal_places);
+                $amounts['average'] = Steam::bcround(bcdiv(bcadd($amounts['amount_min'], $amounts['amount_max']), '2'), $this->primaryCurrency->decimal_places);
             }
             $item->amounts = $amounts;
             $item->meta    = $meta;
@@ -140,14 +140,14 @@ class SubscriptionEnrichment implements EnrichmentInterface
         $this->userGroup = $userGroup;
     }
 
-    public function setConvertToNative(bool $convertToNative): void
+    public function setConvertToPrimary(bool $convertToPrimary): void
     {
-        $this->convertToNative = $convertToNative;
+        $this->convertToPrimary = $convertToPrimary;
     }
 
-    public function setNative(TransactionCurrency $nativeCurrency): void
+    public function setPrimaryCurrency(TransactionCurrency $primaryCurrency): void
     {
-        $this->nativeCurrency = $nativeCurrency;
+        $this->primaryCurrency = $primaryCurrency;
     }
 
     private function collectSubscriptionIds(): void
@@ -267,11 +267,11 @@ class SubscriptionEnrichment implements EnrichmentInterface
                     $array['foreign_currency_decimal_places'] = $entry->foreign_currency_decimal_places;
                     $array['foreign_amount']                  = Steam::bcround($entry->foreign_amount, $entry->foreign_currency_decimal_places);
                 }
-                if($this->convertToNative) {
-                    $array['amount'] = $converter->convert($entry->transactionCurrency, $this->nativeCurrency, $entry->date, $entry->amount);
-                    $array['currency_id'] = $this->nativeCurrency->id;
-                    $array['currency_code'] = $this->nativeCurrency->code;
-                    $array['currency_decimal_places'] = $this->nativeCurrency->decimal_places;
+                if($this->convertToPrimary) {
+                    $array['amount'] = $converter->convert($entry->transactionCurrency, $this->primaryCurrency, $entry->date, $entry->amount);
+                    $array['currency_id'] = $this->primaryCurrency->id;
+                    $array['currency_code'] = $this->primaryCurrency->code;
+                    $array['currency_decimal_places'] = $this->primaryCurrency->decimal_places;
 
                 }
 

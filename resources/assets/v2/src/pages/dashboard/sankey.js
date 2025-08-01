@@ -33,7 +33,7 @@ let currencies         = [];
 let afterPromises      = false;
 let chart              = null;
 let transactions       = [];
-let convertToNative    = false;
+let convertToPrimary    = false;
 let translations       = {
     category: null,
     unknown_category: null,
@@ -79,7 +79,7 @@ const getColor = function (key) {
 
 // little helper
 function getObjectName(type, name, direction, code) {
-    if(convertToNative) {
+    if(convertToPrimary) {
         return getObjectNameWithoutCurrency(type, name, direction);
     }
     return getObjectNameWithCurrency(type, name, direction, code);
@@ -123,7 +123,7 @@ function getObjectNameWithCurrency(type, name, direction, code) {
 
 
 function getLabel(type, name, code) {
-    if(convertToNative) {
+    if(convertToPrimary) {
         return getLabelWithoutCurrency(type, name);
     }
     return getLabelWithCurrency(type, name, code);
@@ -157,13 +157,13 @@ function getLabelWithCurrency(type, name, code) {
 
 export default () => ({
     loading: false,
-    convertToNative: false,
+    convertToPrimary: false,
     processedData: null,
     eventListeners: {
         ['@convert-to-native.window'](event){
             console.log('I heard that! (dashboard/sankey)');
-            this.convertToNative = event.detail;
-            convertToNative = event.detail;
+            this.convertToPrimary = event.detail;
+            convertToPrimary = event.detail;
             this.processedData = null;
             this.loadChart();
         }
@@ -226,7 +226,7 @@ export default () => ({
         let currencyCode = transaction.currency_code;
         let amount       = parseFloat(transaction.amount);
         let flowKey;
-        if (this.convertToNative) {
+        if (this.convertToPrimary) {
             currencyCode = transaction.native_currency_code;
             amount       = parseFloat(transaction.native_amount);
         }
@@ -254,7 +254,7 @@ export default () => ({
 
         if (!this.processedData.amounts.hasOwnProperty(flowKey)) {
             this.processedData.amounts[flowKey] = {
-                from: translations.all_money + (this.convertToNative ? ' (' + currencyCode + ')' : ''),
+                from: translations.all_money + (this.convertToPrimary ? ' (' + currencyCode + ')' : ''),
                 to: budget,
                 amount: 0
             };
@@ -319,7 +319,7 @@ export default () => ({
         if (!this.processedData.amounts.hasOwnProperty(flowKey)) {
             this.processedData.amounts[flowKey] = {
                 from: category,
-                to: translations.all_money + (this.convertToNative ? ' (' + currencyCode + ')' : ''),
+                to: translations.all_money + (this.convertToPrimary ? ' (' + currencyCode + ')' : ''),
                 amount: 0
             };
         }
@@ -363,7 +363,7 @@ export default () => ({
     downloadTransactions(params) {
         const start    = new Date(window.store.get('start'));
         const end      = new Date(window.store.get('end'));
-        const cacheKey = getCacheKey(SANKEY_CACHE_KEY, {convertToNative: this.convertToNative, start: start, end: end});
+        const cacheKey = getCacheKey(SANKEY_CACHE_KEY, {convertToPrimary: this.convertToPrimary, start: start, end: end});
 
         //console.log('Downloading page ' + params.page + '...');
         const getter = new Get();
@@ -400,8 +400,8 @@ export default () => ({
         // console.log('sankey init');
         transactions = [];
         Promise.all([getVariable('convert_to_native', false)]).then((values) => {
-            this.convertToNative = values[0];
-            convertToNative      = values[0];
+            this.convertToPrimary = values[0];
+            convertToPrimary      = values[0];
 
             // some translations:
             translations.all_money        = i18next.t('firefly.all_money');
@@ -434,8 +434,8 @@ export default () => ({
             if (!afterPromises) {
                 return;
             }
-            // console.log('sankey observe convertToNative');
-            this.convertToNative = newValue;
+            // console.log('sankey observe convertToPrimary');
+            this.convertToPrimary = newValue;
             this.loadChart();
         });
     },

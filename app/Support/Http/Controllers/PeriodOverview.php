@@ -194,15 +194,15 @@ trait PeriodOverview
             $foreignCurrencyId             = $journal['foreign_currency_id'];
             $amount                        = $journal['amount'] ?? '0';
 
-            if ($this->convertToNative && $currencyId !== $this->defaultCurrency->id && $foreignCurrencyId !== $this->defaultCurrency->id) {
-                $amount                = $journal['native_amount'] ?? '0';
-                $currencyId            = $this->defaultCurrency->id;
-                $currencyCode          = $this->defaultCurrency->code;
-                $currencyName          = $this->defaultCurrency->name;
-                $currencySymbol        = $this->defaultCurrency->symbol;
-                $currencyDecimalPlaces = $this->defaultCurrency->decimal_places;
+            if ($this->convertToPrimary && $currencyId !== $this->primaryCurrency->id && $foreignCurrencyId !== $this->primaryCurrency->id) {
+                $amount                = $journal['pc_amount'] ?? '0';
+                $currencyId            = $this->primaryCurrency->id;
+                $currencyCode          = $this->primaryCurrency->code;
+                $currencyName          = $this->primaryCurrency->name;
+                $currencySymbol        = $this->primaryCurrency->symbol;
+                $currencyDecimalPlaces = $this->primaryCurrency->decimal_places;
             }
-            if ($this->convertToNative && $currencyId !== $this->defaultCurrency->id && $foreignCurrencyId === $this->defaultCurrency->id) {
+            if ($this->convertToPrimary && $currencyId !== $this->primaryCurrency->id && $foreignCurrencyId === $this->primaryCurrency->id) {
                 $currencyId            = (int) $foreignCurrencyId;
                 $currencyCode          = $journal['foreign_currency_code'];
                 $currencyName          = $journal['foreign_currency_name'];
@@ -334,7 +334,7 @@ trait PeriodOverview
         $cache         = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
-        $cache->addProperty($this->convertToNative);
+        $cache->addProperty($this->convertToPrimary);
         $cache->addProperty('no-budget-period-entries');
 
         if ($cache->has()) {
