@@ -113,7 +113,7 @@ class Steam
 
         if (!$convertToPrimary) {
             if (!$currency instanceof TransactionCurrency) {
-                Log::debug(sprintf('Unset pc_balance and make defaultCurrency balance the balance for account #%d', $account->id));
+                Log::debug(sprintf('Unset pc_balance and make primaryCurrency balance the balance for account #%d', $account->id));
                 $set['balance'] = $set[$primaryCurrency->code] ?? '0';
                 unset($set[$primaryCurrency->code]);
             }

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * UserGroupChangedDefaultCurrency.php
+ * UserGroupChangedPrimaryCurrency.php
  * Copyright (c) 2024 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -29,7 +29,7 @@ use FireflyIII\Models\UserGroup;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class UserGroupChangedDefaultCurrency extends Event
+class UserGroupChangedPrimaryCurrency extends Event
 {
     use SerializesModels;
 

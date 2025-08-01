@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\UserGroups\Currency;
 
-use FireflyIII\Events\Preferences\UserGroupChangedDefaultCurrency;
+use FireflyIII\Events\Preferences\UserGroupChangedPrimaryCurrency;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\AccountMeta;
@@ -386,7 +386,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         if ($current->id !== $currency->id) {
             Log::debug('Trigger on a different default currency.');
             // clear all primary currency amounts through an event.
-            event(new UserGroupChangedDefaultCurrency($this->userGroup));
+            event(new UserGroupChangedPrimaryCurrency($this->userGroup));
         }
     }
 }

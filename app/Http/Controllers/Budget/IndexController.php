@@ -136,7 +136,7 @@ class IndexController extends Controller
 
         // get all inactive budgets, and simply list them:
         $inactive         = $this->repository->getInactiveBudgets();
-        $defaultCurrency  = $this->primaryCurrency;
+        $primaryCurrency  = $this->primaryCurrency;
 
         return view(
             'budgets.index',
@@ -149,7 +149,7 @@ class IndexController extends Controller
                 'budgets',
                 'currencies',
                 'periodTitle',
-                'defaultCurrency',
+                'primaryCurrency',
                 'activeDaysPassed',
                 'activeDaysLeft',
                 'inactive',
@@ -194,7 +194,7 @@ class IndexController extends Controller
         return $availableBudgets;
     }
 
-    private function getAllBudgets(Carbon $start, Carbon $end, Collection $currencies, TransactionCurrency $defaultCurrency): array
+    private function getAllBudgets(Carbon $start, Carbon $end, Collection $currencies, TransactionCurrency $primaryCurrency): array
     {
         // get all budgets, and paginate them into $budgets.
         $collection = $this->repository->getActiveBudgets();
@@ -216,7 +216,7 @@ class IndexController extends Controller
             /** @var BudgetLimit $limit */
             foreach ($budgetLimits as $limit) {
                 Log::debug(sprintf('Working on budget limit #%d', $limit->id));
-                $currency            = $limit->transactionCurrency ?? $defaultCurrency;
+                $currency            = $limit->transactionCurrency ?? $primaryCurrency;
                 $amount              = app('steam')->bcround($limit->amount, $currency->decimal_places);
                 $array['budgeted'][] = [
                     'id'                      => $limit->id,

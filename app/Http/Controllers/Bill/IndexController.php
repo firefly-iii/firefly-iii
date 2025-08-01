@@ -101,7 +101,7 @@ class IndexController extends Controller
         $parameters->set('start', $tempStart);
         $parameters->set('end', $end);
         $parameters->set('convertToPrimary', $this->convertToPrimary);
-        $parameters->set('defaultCurrency', $this->primaryCurrency);
+        $parameters->set('primaryCurrency', $this->primaryCurrency);
 
         /** @var BillTransformer $transformer */
         $transformer = app(BillTransformer::class);

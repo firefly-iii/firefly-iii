@@ -35,7 +35,7 @@ use FireflyIII\Events\Model\PiggyBank\ChangedName;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnObject;
 use FireflyIII\Events\NewVersionAvailable;
-use FireflyIII\Events\Preferences\UserGroupChangedDefaultCurrency;
+use FireflyIII\Events\Preferences\UserGroupChangedPrimaryCurrency;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Events\RequestedReportOnJournals;
@@ -257,7 +257,7 @@ class EventServiceProvider extends ServiceProvider
                 'FireflyIII\Handlers\Events\Security\MFAHandler@sendMFAFailedAttemptsMail',
             ],
             // preferences
-            UserGroupChangedDefaultCurrency::class => [
+            UserGroupChangedPrimaryCurrency::class => [
                 'FireflyIII\Handlers\Events\PreferencesEventHandler@resetPrimaryCurrencyAmounts',
             ],
         ];

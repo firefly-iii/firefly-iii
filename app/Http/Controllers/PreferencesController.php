@@ -26,7 +26,7 @@ namespace FireflyIII\Http\Controllers;
 use JsonException;
 use Carbon\Carbon;
 use FireflyIII\Enums\AccountTypeEnum;
-use FireflyIII\Events\Preferences\UserGroupChangedDefaultCurrency;
+use FireflyIII\Events\Preferences\UserGroupChangedPrimaryCurrency;
 use FireflyIII\Events\Test\UserTestNotificationChannel;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Requests\PreferencesRequest;
@@ -271,7 +271,7 @@ class PreferencesController extends Controller
             // set to true!
             Log::debug('User sets convertToPrimary to true.');
             Preferences::set('convert_to_primary', $convertToPrimary);
-            event(new UserGroupChangedDefaultCurrency(auth()->user()->userGroup));
+            event(new UserGroupChangedPrimaryCurrency(auth()->user()->userGroup));
         }
         Preferences::set('convert_to_primary', $convertToPrimary);
 

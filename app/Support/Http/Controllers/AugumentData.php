@@ -202,7 +202,7 @@ trait AugumentData
             $currency        = $entry->transactionCurrency;
             if ($this->convertToPrimary) {
                 // the sumExpenses method already handles this.
-                $currency = $this->defaultCurrency;
+                $currency = $this->primaryCurrency;
             }
 
             // clone because these objects change each other.

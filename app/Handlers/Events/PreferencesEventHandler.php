@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
-use FireflyIII\Events\Preferences\UserGroupChangedDefaultCurrency;
+use FireflyIII\Events\Preferences\UserGroupChangedPrimaryCurrency;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\UserGroup;
@@ -38,7 +38,7 @@ use Illuminate\Support\Facades\Log;
 
 class PreferencesEventHandler
 {
-    public function resetPrimaryCurrencyAmounts(UserGroupChangedDefaultCurrency $event): void
+    public function resetPrimaryCurrencyAmounts(UserGroupChangedPrimaryCurrency $event): void
     {
         // Reset the primary currency amounts for all objects that have it.
         Log::debug('Resetting primary currency amounts for all objects.');
