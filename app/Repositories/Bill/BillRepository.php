@@ -264,19 +264,19 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
             $currency                          = $journal->transactionCurrency;
             $result[$currencyId] ??= [
                 'sum'                     => '0',
-                'native_sum'              => '0',
+                'pc_sum'              => '0',
                 'count'                   => 0,
                 'avg'                     => '0',
-                'native_avg'              => '0',
+                'pc_avg'              => '0',
                 'currency_id'             => $currency->id,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
             ];
             $result[$currencyId]['sum']        = bcadd($result[$currencyId]['sum'], (string) $transaction->amount);
-            $result[$currencyId]['native_sum'] = bcadd($result[$currencyId]['native_sum'], $transaction->native_amount ?? '0');
+            $result[$currencyId]['pc_sum'] = bcadd($result[$currencyId]['pc_sum'], $transaction->native_amount ?? '0');
             if ($journal->foreign_currency_id === Amount::getPrimaryCurrency()->id) {
-                $result[$currencyId]['native_sum'] = bcadd($result[$currencyId]['native_sum'], (string) $transaction->amount);
+                $result[$currencyId]['pc_sum'] = bcadd($result[$currencyId]['pc_sum'], (string) $transaction->amount);
             }
             ++$result[$currencyId]['count'];
         }
@@ -288,7 +288,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
          */
         foreach ($result as $currencyId => $arr) {
             $result[$currencyId]['avg']        = bcdiv((string) $arr['sum'], (string) $arr['count']);
-            $result[$currencyId]['native_avg'] = bcdiv((string) $arr['native_sum'], (string) $arr['count']);
+            $result[$currencyId]['pc_avg'] = bcdiv((string) $arr['pc_sum'], (string) $arr['count']);
         }
 
         return $result;
@@ -401,7 +401,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
             $currency                          = $journal->transactionCurrency;
             $result[$currencyId] ??= [
                 'sum'                     => '0',
-                'native_sum'              => '0',
+                'pc_sum'              => '0',
                 'count'                   => 0,
                 'avg'                     => '0',
                 'currency_id'             => $currency->id,
@@ -410,9 +410,9 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
                 'currency_decimal_places' => $currency->decimal_places,
             ];
             $result[$currencyId]['sum']        = bcadd($result[$currencyId]['sum'], (string) $transaction->amount);
-            $result[$currencyId]['native_sum'] = bcadd($result[$currencyId]['native_sum'], $transaction->native_amount ?? '0');
+            $result[$currencyId]['pc_sum'] = bcadd($result[$currencyId]['pc_sum'], $transaction->native_amount ?? '0');
             if ($journal->foreign_currency_id === Amount::getPrimaryCurrency()->id) {
-                $result[$currencyId]['native_sum'] = bcadd($result[$currencyId]['native_sum'], (string) $transaction->amount);
+                $result[$currencyId]['pc_sum'] = bcadd($result[$currencyId]['pc_sum'], (string) $transaction->amount);
             }
             ++$result[$currencyId]['count'];
         }
@@ -424,7 +424,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
          */
         foreach ($result as $currencyId => $arr) {
             $result[$currencyId]['avg']        = bcdiv((string) $arr['sum'], (string) $arr['count']);
-            $result[$currencyId]['native_avg'] = bcdiv((string) $arr['native_sum'], (string) $arr['count']);
+            $result[$currencyId]['pc_avg'] = bcdiv((string) $arr['pc_sum'], (string) $arr['count']);
         }
 
         return $result;
@@ -534,15 +534,15 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
         Log::debug(sprintf('sumPaidInRange from %s to %s', $start->toW3cString(), $end->toW3cString()));
         $bills           = $this->getActiveBills();
         $return          = [];
-        $convertToNative = Amount::convertToPrimary($this->user);
-        $default         = app('amount')->getPrimaryCurrency();
+        $convertToPrimary = Amount::convertToPrimary($this->user);
+        $primary         = app('amount')->getPrimaryCurrency();
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {
 
             /** @var Collection $set */
             $set       = $bill->transactionJournals()->after($start)->before($end)->get(['transaction_journals.*']);
-            $currency  = $convertToNative && $bill->transactionCurrency->id !== $default->id ? $default : $bill->transactionCurrency;
+            $currency  = $convertToPrimary && $bill->transactionCurrency->id !== $primary->id ? $primary : $bill->transactionCurrency;
             $return[(int) $currency->id] ??= [
                 'id'             => (string) $currency->id,
                 'name'           => $currency->name,
@@ -600,8 +600,8 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
         app('log')->debug(sprintf('Now in sumUnpaidInRange("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d')));
         $bills           = $this->getActiveBills();
         $return          = [];
-        $convertToNative = Amount::convertToPrimary($this->user);
-        $default         = app('amount')->getPrimaryCurrency();
+        $convertToPrimary = Amount::convertToPrimary($this->user);
+        $primary         = app('amount')->getPrimaryCurrency();
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {
@@ -612,12 +612,12 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
             // app('log')->debug(sprintf('Pay dates: %d, count: %d, left: %d', $dates->count(), $count, $total));
             // app('log')->debug('dates', $dates->toArray());
 
-            $minField = $convertToNative && $bill->transactionCurrency->id !== $default->id ? 'native_amount_min' : 'amount_min';
-            $maxField = $convertToNative && $bill->transactionCurrency->id !== $default->id ? 'native_amount_max' : 'amount_max';
+            $minField = $convertToPrimary && $bill->transactionCurrency->id !== $primary->id ? 'native_amount_min' : 'amount_min';
+            $maxField = $convertToPrimary && $bill->transactionCurrency->id !== $primary->id ? 'native_amount_max' : 'amount_max';
             // Log::debug(sprintf('min field is %s, max field is %s', $minField, $maxField));
 
             if ($total > 0) {
-                $currency                     = $convertToNative && $bill->transactionCurrency->id !== $default->id ? $default : $bill->transactionCurrency;
+                $currency                     = $convertToPrimary && $bill->transactionCurrency->id !== $primary->id ? $primary : $bill->transactionCurrency;
                 $average                      = bcdiv(bcadd($bill->{$maxField} ?? '0', $bill->{$minField} ?? '0'), '2');
                 Log::debug(sprintf('Amount to pay is %s %s (%d times)', $currency->code, $average, $total));
                 $return[$currency->id] ??= [

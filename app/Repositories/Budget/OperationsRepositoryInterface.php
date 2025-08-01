@@ -71,6 +71,6 @@ interface OperationsRepositoryInterface
         ?Collection          $accounts = null,
         ?Collection          $budgets = null,
         ?TransactionCurrency $currency = null,
-        bool                 $convertToNative = false
+        bool                 $convertToPrimary = false
     ): array;
 }

@@ -141,32 +141,32 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         $journals              = $collector->getExtractedJournals();
         $array                 = [];
 
-        // if needs conversion to native.
-        $convertToNative       = Amount::convertToPrimary($this->user);
-        $nativeCurrency        = Amount::getPrimaryCurrencyByUserGroup($this->userGroup);
-        $currencyId            = (int) $nativeCurrency->id;
-        $currencyCode          = $nativeCurrency->code;
-        $currencyName          = $nativeCurrency->name;
-        $currencySymbol        = $nativeCurrency->symbol;
-        $currencyDecimalPlaces = $nativeCurrency->decimal_places;
+        // if needs conversion to primary.
+        $convertToPrimary       = Amount::convertToPrimary($this->user);
+        $primaryCurrency        = Amount::getPrimaryCurrencyByUserGroup($this->userGroup);
+        $currencyId            = (int) $primaryCurrency->id;
+        $currencyCode          = $primaryCurrency->code;
+        $currencyName          = $primaryCurrency->name;
+        $currencySymbol        = $primaryCurrency->symbol;
+        $currencyDecimalPlaces = $primaryCurrency->decimal_places;
         $converter             = new ExchangeRateConverter();
         $currencies            = [
-            $currencyId => $nativeCurrency,
+            $currencyId => $primaryCurrency,
         ];
 
         foreach ($journals as $journal) {
             $amount                                                                       = app('steam')->negative($journal['amount']);
             $journalCurrencyId                                                            = (int)$journal['currency_id'];
-            if (false === $convertToNative) {
+            if (false === $convertToPrimary) {
                 $currencyId            = $journalCurrencyId;
                 $currencyName          = $journal['currency_name'];
                 $currencySymbol        = $journal['currency_symbol'];
                 $currencyCode          = $journal['currency_code'];
                 $currencyDecimalPlaces = $journal['currency_decimal_places'];
             }
-            if (true === $convertToNative && $journalCurrencyId !== $currencyId) {
+            if (true === $convertToPrimary && $journalCurrencyId !== $currencyId) {
                 $currencies[$journalCurrencyId] ??= TransactionCurrency::find($journalCurrencyId);
-                $amount = $converter->convert($currencies[$journalCurrencyId], $nativeCurrency, $journal['date'], $amount);
+                $amount = $converter->convert($currencies[$journalCurrencyId], $primaryCurrency, $journal['date'], $amount);
             }
 
             $budgetId                                                                     = (int)$journal['budget_id'];
@@ -230,9 +230,9 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         ?Collection          $accounts = null,
         ?Collection          $budgets = null,
         ?TransactionCurrency $currency = null,
-        bool                 $convertToNative = false
+        bool                 $convertToPrimary = false
     ): array {
-        Log::debug(sprintf('Start of %s(date, date, array, array, "%s", %s).', __METHOD__, $currency?->code, var_export($convertToNative, true)));
+        Log::debug(sprintf('Start of %s(date, date, array, array, "%s", %s).', __METHOD__, $currency?->code, var_export($convertToPrimary, true)));
         // this collector excludes all transfers TO liabilities (which are also withdrawals)
         // because those expenses only become expenses once they move from the liability to the friend.
         // 2024-12-24 disable the exclusion for now.
@@ -277,8 +277,8 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
             Log::debug('STOP looking for transactions in the foreign currency.');
         }
         $summarizer = new TransactionSummarizer($this->user);
-        // 2025-04-21 overrule "convertToNative" because in this particular view, we never want to do this.
-        $summarizer->setConvertToNative($convertToNative);
+        // 2025-04-21 overrule "convertToPrimary" because in this particular view, we never want to do this.
+        $summarizer->setConvertToPrimary($convertToPrimary);
 
         return $summarizer->groupByCurrencyId($journals, 'negative', false);
     }

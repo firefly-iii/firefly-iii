@@ -91,7 +91,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         $limitRepository = app(BudgetLimitRepository::class);
         $limitRepository->setUser($this->user);
         $budgets         = $this->getActiveBudgets();
-        $defaultCurrency = app('amount')->getPrimaryCurrency();
+        $primaryCurrency = app('amount')->getPrimaryCurrency();
         $converter       = new ExchangeRateConverter();
 
         /** @var Budget $budget */
@@ -103,7 +103,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
             foreach ($limits as $limit) {
                 app('log')->debug(sprintf('Budget limit #%d', $limit->id));
                 $currency                            = $limit->transactionCurrency;
-                $rate                                = $converter->getCurrencyRate($currency, $defaultCurrency, $end);
+                $rate                                = $converter->getCurrencyRate($currency, $primaryCurrency, $end);
                 $currencyCode                        = $currency->code;
                 $return[$currencyCode] ??= [
                     'currency_id'                    => (string) $currency->id,
@@ -111,18 +111,18 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
                     'currency_symbol'                => $currency->symbol,
                     'currency_code'                  => $currency->code,
                     'currency_decimal_places'        => $currency->decimal_places,
-                    'native_currency_id'             => (string) $defaultCurrency->id,
-                    'native_currency_name'           => $defaultCurrency->name,
-                    'native_currency_symbol'         => $defaultCurrency->symbol,
-                    'native_currency_code'           => $defaultCurrency->code,
-                    'native_currency_decimal_places' => $defaultCurrency->decimal_places,
+                    'primary_currency_id'             => (string) $primaryCurrency->id,
+                    'primary_currency_name'           => $primaryCurrency->name,
+                    'primary_currency_symbol'         => $primaryCurrency->symbol,
+                    'primary_currency_code'           => $primaryCurrency->code,
+                    'primary_currency_decimal_places' => $primaryCurrency->decimal_places,
                     'sum'                            => '0',
-                    'native_sum'                     => '0',
+                    'pc_sum'                     => '0',
                 ];
                 // same period
                 if ($limit->start_date->isSameDay($start) && $limit->end_date->isSameDay($end)) {
                     $return[$currencyCode]['sum']        = bcadd($return[$currencyCode]['sum'], (string) $limit->amount);
-                    $return[$currencyCode]['native_sum'] = bcmul($rate, $return[$currencyCode]['sum']);
+                    $return[$currencyCode]['pc_sum'] = bcmul($rate, $return[$currencyCode]['sum']);
                     app('log')->debug(sprintf('Add full amount [1]: %s', $limit->amount));
 
                     continue;
@@ -130,7 +130,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
                 // limit is inside of date range
                 if ($start->lte($limit->start_date) && $end->gte($limit->end_date)) {
                     $return[$currencyCode]['sum']        = bcadd($return[$currencyCode]['sum'], (string) $limit->amount);
-                    $return[$currencyCode]['native_sum'] = bcmul($rate, $return[$currencyCode]['sum']);
+                    $return[$currencyCode]['pc_sum'] = bcmul($rate, $return[$currencyCode]['sum']);
                     app('log')->debug(sprintf('Add full amount [2]: %s', $limit->amount));
 
                     continue;
@@ -139,7 +139,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
                 $days                                = $this->daysInOverlap($limit, $start, $end);
                 $amount                              = bcmul(bcdiv((string) $limit->amount, (string) $total), (string) $days);
                 $return[$currencyCode]['sum']        = bcadd($return[$currencyCode]['sum'], $amount);
-                $return[$currencyCode]['native_sum'] = bcmul($rate, $return[$currencyCode]['sum']);
+                $return[$currencyCode]['pc_sum'] = bcmul($rate, $return[$currencyCode]['sum']);
                 app('log')->debug(
                     sprintf(
                         'Amount per day: %s (%s over %d days). Total amount for %d days: %s',

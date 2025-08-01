@@ -358,8 +358,8 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         }
         $collector->setCategories($categories);
         $journals        = $collector->getExtractedJournals();
-        $convertToNative = Amount::convertToPrimary($this->user);
-        $default         = Amount::getPrimaryCurrency();
+        $convertToPrimary = Amount::convertToPrimary($this->user);
+        $primary         = Amount::getPrimaryCurrency();
         $array           = [];
 
         foreach ($journals as $journal) {
@@ -370,16 +370,16 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
             $currencySymbol            = $journal['currency_symbol'];
             $currencyCode              = $journal['currency_code'];
             $currencyDecimalPlaces     = $journal['currency_decimal_places'];
-            if ($convertToNative) {
+            if ($convertToPrimary) {
                 $amount = Amount::getAmountFromJournal($journal);
-                if ($default->id !== (int) $journal['currency_id'] && $default->id !== (int) $journal['foreign_currency_id']) {
-                    $currencyId            = $default->id;
-                    $currencyName          = $default->name;
-                    $currencySymbol        = $default->symbol;
-                    $currencyCode          = $default->code;
-                    $currencyDecimalPlaces = $default->decimal_places;
+                if ($primary->id !== (int) $journal['currency_id'] && $primary->id !== (int) $journal['foreign_currency_id']) {
+                    $currencyId            = $primary->id;
+                    $currencyName          = $primary->name;
+                    $currencySymbol        = $primary->symbol;
+                    $currencyCode          = $primary->code;
+                    $currencyDecimalPlaces = $primary->decimal_places;
                 }
-                if ($default->id !== (int) $journal['currency_id'] && $default->id === (int) $journal['foreign_currency_id']) {
+                if ($primary->id !== (int) $journal['currency_id'] && $primary->id === (int) $journal['foreign_currency_id']) {
                     $currencyId            = $journal['foreign_currency_id'];
                     $currencyName          = $journal['foreign_currency_name'];
                     $currencySymbol        = $journal['foreign_currency_symbol'];
@@ -388,7 +388,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
                 }
                 Log::debug(sprintf('[a] Add amount %s %s', $currencyCode, $amount));
             }
-            if (!$convertToNative) {
+            if (!$convertToPrimary) {
                 // ignore the amount in foreign currency.
                 Log::debug(sprintf('[b] Add amount %s %s', $currencyCode, $journal['amount']));
                 $amount = $journal['amount'];

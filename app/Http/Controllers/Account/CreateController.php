@@ -105,7 +105,7 @@ class CreateController extends Controller
         $request->session()->flash(
             'preFilled',
             [
-                'currency_id'       => $this->defaultCurrency->id,
+                'currency_id'       => $this->primaryCurrency->id,
                 'include_net_worth' => $hasOldInput ? (bool) $request->old('include_net_worth') : true,
             ]
         );

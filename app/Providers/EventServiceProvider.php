@@ -258,7 +258,7 @@ class EventServiceProvider extends ServiceProvider
             ],
             // preferences
             UserGroupChangedDefaultCurrency::class => [
-                'FireflyIII\Handlers\Events\PreferencesEventHandler@resetNativeAmounts',
+                'FireflyIII\Handlers\Events\PreferencesEventHandler@resetPrimaryCurrencyAmounts',
             ],
         ];
 

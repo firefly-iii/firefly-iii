@@ -108,7 +108,7 @@ class ReportController extends Controller
             // loop result, add to array.
             /** @var array $netWorthItem */
             foreach ($result as $key => $netWorthItem) {
-                if ('native' === $key) {
+                if ('primary' === $key) {
                     continue;
                 }
                 $currencyId                                = $netWorthItem['currency_id'];

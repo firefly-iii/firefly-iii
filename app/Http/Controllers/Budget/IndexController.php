@@ -119,14 +119,14 @@ class IndexController extends Controller
         // get all available budgets:
         $availableBudgets = $this->getAllAvailableBudgets($start, $end);
         // get all active budgets:
-        $budgets          = $this->getAllBudgets($start, $end, $currencies, $this->defaultCurrency);
+        $budgets          = $this->getAllBudgets($start, $end, $currencies, $this->primaryCurrency);
         $sums             = $this->getSums($budgets);
 
         // get budgeted for default currency:
         if (0 === count($availableBudgets)) {
-            $budgeted = $this->blRepository->budgeted($start, $end, $this->defaultCurrency);
-            $spentArr = $this->opsRepository->sumExpenses($start, $end, null, null, $this->defaultCurrency);
-            $spent    = $spentArr[$this->defaultCurrency->id]['sum'] ?? '0';
+            $budgeted = $this->blRepository->budgeted($start, $end, $this->primaryCurrency);
+            $spentArr = $this->opsRepository->sumExpenses($start, $end, null, null, $this->primaryCurrency);
+            $spent    = $spentArr[$this->primaryCurrency->id]['sum'] ?? '0';
             unset($spentArr);
         }
 
@@ -136,7 +136,7 @@ class IndexController extends Controller
 
         // get all inactive budgets, and simply list them:
         $inactive         = $this->repository->getInactiveBudgets();
-        $defaultCurrency  = $this->defaultCurrency;
+        $defaultCurrency  = $this->primaryCurrency;
 
         return view(
             'budgets.index',
@@ -179,11 +179,11 @@ class IndexController extends Controller
             // spent in period:
             $spentArr                 = $this->opsRepository->sumExpenses($entry->start_date, $entry->end_date, null, null, $entry->transactionCurrency, false);
             $array['spent']           = $spentArr[$entry->transaction_currency_id]['sum'] ?? '0';
-            $array['native_spent']    = $this->convertToNative && $entry->transaction_currency_id !== $this->defaultCurrency->id ? $converter->convert($entry->transactionCurrency, $this->defaultCurrency, $entry->start_date, $array['spent']) : null;
+            $array['pc_spent']    = $this->convertToPrimary && $entry->transaction_currency_id !== $this->primaryCurrency->id ? $converter->convert($entry->transactionCurrency, $this->primaryCurrency, $entry->start_date, $array['spent']) : null;
             // budgeted in period:
             $budgeted                 = $this->blRepository->budgeted($entry->start_date, $entry->end_date, $entry->transactionCurrency);
             $array['budgeted']        = $budgeted;
-            $array['native_budgeted'] = $this->convertToNative && $entry->transaction_currency_id !== $this->defaultCurrency->id ? $converter->convert($entry->transactionCurrency, $this->defaultCurrency, $entry->start_date, $budgeted) : null;
+            $array['pc_budgeted'] = $this->convertToPrimary && $entry->transaction_currency_id !== $this->primaryCurrency->id ? $converter->convert($entry->transactionCurrency, $this->primaryCurrency, $entry->start_date, $budgeted) : null;
             // this time, because of complex sums, use the currency converter.
 
 

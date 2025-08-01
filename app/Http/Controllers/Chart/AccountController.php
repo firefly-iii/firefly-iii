@@ -96,7 +96,7 @@ class AccountController extends Controller
         $cache         = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
-        $cache->addProperty($this->convertToNative);
+        $cache->addProperty($this->convertToPrimary);
         $cache->addProperty('chart.account.expense-accounts');
         if ($cache->has()) {
             return response()->json($cache->get());
@@ -132,19 +132,19 @@ class AccountController extends Controller
              * @var string $endBalance
              */
             foreach ($expenses as $key => $endBalance) {
-                if (!$this->convertToNative && 'native_balance' === $key) {
+                if (!$this->convertToPrimary && 'pc_balance' === $key) {
                     //                    Log::debug(sprintf('[a] Will skip expense array "%s"', $key));
 
                     continue;
                 }
-                if ($this->convertToNative && 'native_balance' !== $key) {
+                if ($this->convertToPrimary && 'pc_balance' !== $key) {
                     //                    Log::debug(sprintf('[b] Will skip expense array "%s"', $key));
 
                     continue;
                 }
                 // Log::debug(sprintf('Will process expense array "%s" with amount %s', $key, $endBalance));
-                $searchCode   = $this->convertToNative ? $this->defaultCurrency->code : $key;
-                $searchCode   = 'balance' === $searchCode || 'native_balance' === $searchCode ? $this->defaultCurrency->code : $searchCode;
+                $searchCode   = $this->convertToPrimary ? $this->primaryCurrency->code : $key;
+                $searchCode   = 'balance' === $searchCode || 'pc_balance' === $searchCode ? $this->primaryCurrency->code : $searchCode;
                 // Log::debug(sprintf('Search code is %s', $searchCode));
                 // see if there is an accompanying start amount.
                 // grab the difference and find the currency.
@@ -433,7 +433,7 @@ class AccountController extends Controller
         $cache->addProperty('chart.account.period');
         $cache->addProperty($start);
         $cache->addProperty($end);
-        $cache->addProperty($this->convertToNative);
+        $cache->addProperty($this->convertToPrimary);
         $cache->addProperty($account->id);
         if ($cache->has()) {
             return response()->json($cache->get());
@@ -453,8 +453,8 @@ class AccountController extends Controller
         $format          = (string) trans('config.month_and_day_js', [], $locale);
         $accountCurrency = $this->accountRepository->getAccountCurrency($account);
 
-        $range           = Steam::finalAccountBalanceInRange($account, $start, $end, $this->convertToNative);
-        $range           = Steam::filterAccountBalances($range, $account, $this->convertToNative, $accountCurrency);
+        $range           = Steam::finalAccountBalanceInRange($account, $start, $end, $this->convertToPrimary);
+        $range           = Steam::filterAccountBalances($range, $account, $this->convertToPrimary, $accountCurrency);
 
         // temp, get end balance.
         Log::debug(sprintf('period: Call finalAccountBalance with date/time "%s"', $end->toIso8601String()));
@@ -462,7 +462,7 @@ class AccountController extends Controller
         Log::debug('END temp get end balance done');
 
         $previous        = array_values($range)[0];
-        $accountCurrency ??= $this->defaultCurrency; // do this AFTER getting the balances.
+        $accountCurrency ??= $this->primaryCurrency; // do this AFTER getting the balances.
         Log::debug('Start chart loop.');
 
         $newRange        = [];
@@ -510,7 +510,7 @@ class AccountController extends Controller
         $chartData       = [];
 
         foreach ($return as $key => $info) {
-            if ('balance' !== $key && 'native_balance' !== $key) {
+            if ('balance' !== $key && 'pc_balance' !== $key) {
                 // assume it's a currency:
                 $setCurrency             = $this->currencyRepository->findByCode((string) $key);
                 $info['currency_symbol'] = $setCurrency->symbol;
@@ -522,10 +522,10 @@ class AccountController extends Controller
                 $info['currency_code']   = $accountCurrency->code;
                 $info['label']           = sprintf('%s (%s)', $account->name, $accountCurrency->symbol);
             }
-            if ('native_balance' === $key) {
-                $info['currency_symbol'] = $this->defaultCurrency->symbol;
-                $info['currency_code']   = $this->defaultCurrency->code;
-                $info['label']           = sprintf('%s (%s) (%s)', $account->name, (string) trans('firefly.sum'), $this->defaultCurrency->symbol);
+            if ('pc_balance' === $key) {
+                $info['currency_symbol'] = $this->primaryCurrency->symbol;
+                $info['currency_code']   = $this->primaryCurrency->code;
+                $info['label']           = sprintf('%s (%s) (%s)', $account->name, (string) trans('firefly.sum'), $this->primaryCurrency->symbol);
             }
             $chartData[] = $info;
         }
@@ -578,7 +578,7 @@ class AccountController extends Controller
         $cache         = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
-        $cache->addProperty($this->convertToNative);
+        $cache->addProperty($this->convertToPrimary);
         $cache->addProperty('chart.account.revenue-accounts');
         if ($cache->has()) {
             return response()->json($cache->get());
@@ -615,19 +615,19 @@ class AccountController extends Controller
              * @var string $endBalance
              */
             foreach ($expenses as $key => $endBalance) {
-                if (!$this->convertToNative && 'native_balance' === $key) {
+                if (!$this->convertToPrimary && 'pc_balance' === $key) {
                     //                    Log::debug(sprintf('[a] Will skip expense array "%s"', $key));
 
                     continue;
                 }
-                if ($this->convertToNative && 'native_balance' !== $key) {
+                if ($this->convertToPrimary && 'pc_balance' !== $key) {
                     //                    Log::debug(sprintf('[b] Will skip expense array "%s"', $key));
 
                     continue;
                 }
                 // Log::debug(sprintf('Will process expense array "%s" with amount %s', $key, $endBalance));
-                $searchCode   = $this->convertToNative ? $this->defaultCurrency->code : $key;
-                $searchCode   = 'balance' === $searchCode || 'native_balance' === $searchCode ? $this->defaultCurrency->code : $searchCode;
+                $searchCode   = $this->convertToPrimary ? $this->primaryCurrency->code : $key;
+                $searchCode   = 'balance' === $searchCode || 'pc_balance' === $searchCode ? $this->primaryCurrency->code : $searchCode;
                 // Log::debug(sprintf('Search code is %s', $searchCode));
                 // see if there is an accompanying start amount.
                 // grab the difference and find the currency.

@@ -182,9 +182,9 @@ class CurrencyRepository implements CurrencyRepositoryInterface
 
         return $all->map(static function (TransactionCurrency $current) use ($local) {
             $hasId                     = $local->contains(static fn (TransactionCurrency $entry) => $entry->id === $current->id);
-            $isNative                  = $local->contains(static fn (TransactionCurrency $entry) => 1 === (int) $entry->pivot->group_default && $entry->id === $current->id);
+            $isPrimary                  = $local->contains(static fn (TransactionCurrency $entry) => 1 === (int) $entry->pivot->group_default && $entry->id === $current->id);
             $current->userGroupEnabled = $hasId;
-            $current->userGroupNative  = $isNative;
+            $current->userGroupNative  = $isPrimary;
 
             return $current;
         });
@@ -385,7 +385,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         $this->userGroup->currencies()->syncWithoutDetaching([$currency->id => ['group_default' => true]]);
         if ($current->id !== $currency->id) {
             Log::debug('Trigger on a different default currency.');
-            // clear all native amounts through an event.
+            // clear all primary currency amounts through an event.
             event(new UserGroupChangedDefaultCurrency($this->userGroup));
         }
     }

@@ -295,7 +295,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
     /**
      * Returns the amount of the opening balance for this account.
      */
-    public function getOpeningBalanceAmount(Account $account, bool $convertToNative): ?string
+    public function getOpeningBalanceAmount(Account $account, bool $convertToPrimary): ?string
     {
         $journal     = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->where('transactions.account_id', $account->id)
@@ -309,7 +309,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         if (null === $transaction) {
             return null;
         }
-        if ($convertToNative) {
+        if ($convertToPrimary) {
             return $transaction->native_amount ?? '0';
         }
 

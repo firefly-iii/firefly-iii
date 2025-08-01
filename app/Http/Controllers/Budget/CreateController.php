@@ -89,7 +89,7 @@ class CreateController extends Controller
 
         $preFilled         = [
             'auto_budget_period'      => $hasOldInput ? (bool) $request->old('auto_budget_period') : 'monthly',
-            'auto_budget_currency_id' => $hasOldInput ? (int) $request->old('auto_budget_currency_id') : $this->defaultCurrency->id,
+            'auto_budget_currency_id' => $hasOldInput ? (int) $request->old('auto_budget_currency_id') : $this->primaryCurrency->id,
         ];
 
         $request->session()->flash('preFilled', $preFilled);

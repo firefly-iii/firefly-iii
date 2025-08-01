@@ -58,7 +58,7 @@ class AccountTasker implements AccountTaskerInterface, UserGroupInterface
 
         /** @var AccountRepositoryInterface $repository */
         $repository      = app(AccountRepositoryInterface::class);
-        $defaultCurrency = app('amount')->getPrimaryCurrencyByUserGroup($this->user->userGroup);
+        $primaryCurrency = app('amount')->getPrimaryCurrencyByUserGroup($this->user->userGroup);
 
         $return          = [
             'accounts' => [],
@@ -68,7 +68,7 @@ class AccountTasker implements AccountTaskerInterface, UserGroupInterface
         /** @var Account $account */
         foreach ($accounts as $account) {
             $id                                     = $account->id;
-            $currency                               = $repository->getAccountCurrency($account) ?? $defaultCurrency;
+            $currency                               = $repository->getAccountCurrency($account) ?? $primaryCurrency;
             $return['sums'][$currency->id] ??= [
                 'start'                   => '0',
                 'end'                     => '0',
@@ -148,11 +148,11 @@ class AccountTasker implements AccountTaskerInterface, UserGroupInterface
      */
     private function groupExpenseByDestination(array $array): array
     {
-        $defaultCurrency = app('amount')->getPrimaryCurrencyByUserGroup($this->user->userGroup);
+        $primaryCurrency = app('amount')->getPrimaryCurrencyByUserGroup($this->user->userGroup);
 
         /** @var CurrencyRepositoryInterface $currencyRepos */
         $currencyRepos   = app(CurrencyRepositoryInterface::class);
-        $currencies      = [$defaultCurrency->id => $defaultCurrency];
+        $currencies      = [$primaryCurrency->id => $primaryCurrency];
         $report          = [
             'accounts' => [],
             'sums'     => [],
@@ -236,11 +236,11 @@ class AccountTasker implements AccountTaskerInterface, UserGroupInterface
      */
     private function groupIncomeBySource(array $array): array
     {
-        $defaultCurrency = app('amount')->getPrimaryCurrencyByUserGroup($this->user->userGroup);
+        $primaryCurrency = app('amount')->getPrimaryCurrencyByUserGroup($this->user->userGroup);
 
         /** @var CurrencyRepositoryInterface $currencyRepos */
         $currencyRepos   = app(CurrencyRepositoryInterface::class);
-        $currencies      = [$defaultCurrency->id => $defaultCurrency];
+        $currencies      = [$primaryCurrency->id => $primaryCurrency];
         $report          = [
             'accounts' => [],
             'sums'     => [],

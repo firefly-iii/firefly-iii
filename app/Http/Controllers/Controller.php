@@ -55,9 +55,9 @@ abstract class Controller extends BaseController
 
     // fails on PHP < 8.4
     public protected(set) string $name;
-    protected bool                 $convertToNative = false;
+    protected bool                 $convertToPrimary = false;
     protected string               $dateTimeFormat;
-    protected ?TransactionCurrency $defaultCurrency;
+    protected ?TransactionCurrency $primaryCurrency;
     protected string               $monthAndDayFormat;
     protected string               $monthFormat;
     protected string               $redirectUrl     = '/';
@@ -125,19 +125,19 @@ abstract class Controller extends BaseController
                 $this->monthAndDayFormat = (string) trans('config.month_and_day_js', [], $locale);
                 $this->dateTimeFormat    = (string) trans('config.date_time_js', [], $locale);
                 $darkMode                = 'browser';
-                $this->defaultCurrency   = null;
+                $this->primaryCurrency   = null;
                 // get shown-intro-preference:
                 if (auth()->check()) {
-                    $this->defaultCurrency = Amount::getPrimaryCurrency();
+                    $this->primaryCurrency = Amount::getPrimaryCurrency();
                     $language              = Steam::getLanguage();
                     $locale                = Steam::getLocale();
                     $darkMode              = app('preferences')->get('darkMode', 'browser')->data;
-                    $this->convertToNative = Amount::convertToPrimary();
+                    $this->convertToPrimary = Amount::convertToPrimary();
                     $page                  = $this->getPageName();
                     $shownDemo             = $this->hasSeenDemo();
                     View::share('language', $language);
                     View::share('locale', $locale);
-                    View::share('convertToNative', $this->convertToNative);
+                    View::share('convertToPrimary', $this->convertToPrimary);
                     View::share('shownDemo', $shownDemo);
                     View::share('current_route_name', $page);
                     View::share('original_route_name', Route::currentRouteName());

@@ -87,7 +87,7 @@ class ReconcileController extends Controller
 
             return redirect(route('accounts.index', [config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type))]));
         }
-        $currency        = $this->accountRepos->getAccountCurrency($account) ?? $this->defaultCurrency;
+        $currency        = $this->accountRepos->getAccountCurrency($account) ?? $this->primaryCurrency;
 
         // no start or end:
         $range           = app('navigation')->getViewRange(false);
@@ -204,7 +204,7 @@ class ReconcileController extends Controller
         }
 
         $reconciliation = $this->accountRepos->getReconciliation($account);
-        $currency       = $this->accountRepos->getAccountCurrency($account) ?? $this->defaultCurrency;
+        $currency       = $this->accountRepos->getAccountCurrency($account) ?? $this->primaryCurrency;
         $source         = $reconciliation;
         $destination    = $account;
         if (1 === bccomp($difference, '0')) {

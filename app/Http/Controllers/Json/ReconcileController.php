@@ -74,7 +74,7 @@ class ReconcileController extends Controller
     {
         $startBalance    = $request->get('startBalance');
         $endBalance      = $request->get('endBalance');
-        $accountCurrency = $this->accountRepos->getAccountCurrency($account) ?? $this->defaultCurrency;
+        $accountCurrency = $this->accountRepos->getAccountCurrency($account) ?? $this->primaryCurrency;
         $amount          = '0';
         $clearedAmount   = '0';
 
@@ -195,7 +195,7 @@ class ReconcileController extends Controller
         $startDate      = clone $start;
         $startDate->subDay();
 
-        $currency       = $this->accountRepos->getAccountCurrency($account) ?? $this->defaultCurrency;
+        $currency       = $this->accountRepos->getAccountCurrency($account) ?? $this->primaryCurrency;
         // correct
         Log::debug(sprintf('transactions: Call finalAccountBalance with date/time "%s"', $startDate->toIso8601String()));
         Log::debug(sprintf('transactions2: Call finalAccountBalance with date/time "%s"', $end->toIso8601String()));
