@@ -50,7 +50,7 @@ export default () => ({
     },
 
     eventListeners: {
-        ['@convert-to-native.window'](event){
+        ['@convert-to-primary.window'](event){
             console.log('I heard that! (dashboard/budgets)');
             this.convertToPrimary = event.detail;
             chartData = null;
@@ -167,7 +167,7 @@ export default () => ({
 
 
     init() {
-        Promise.all([getVariable('convert_to_native', false)]).then((values) => {
+        Promise.all([getVariable('convert_to_primary', false)]).then((values) => {
             this.convertToPrimary = values[0];
             afterPromises = true;
             if (false === this.loading) {
@@ -184,7 +184,7 @@ export default () => ({
                 this.loadChart();
             }
         });
-        window.store.observe('convert_to_native', (newValue) => {
+        window.store.observe('convert_to_primary', (newValue) => {
             if (!afterPromises) {
                 return;
             }

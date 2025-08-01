@@ -87,7 +87,7 @@ let transactions = function () {
         formData: {
             defaultCurrency: null,
             enabledCurrencies: [],
-            nativeCurrencies: [],
+            primaryCurrencies: [],
             foreignCurrencies: [],
             budgets: [],
             piggyBanks: [],
@@ -332,7 +332,7 @@ let transactions = function () {
                 this.formStates.loadingCurrencies = false;
                 this.formData.defaultCurrency = data.defaultCurrency;
                 this.formData.enabledCurrencies = data.enabledCurrencies;
-                this.formData.nativeCurrencies = data.nativeCurrencies;
+                this.formData.primaryCurrencies = data.primaryCurrencies;
                 this.formData.foreignCurrencies = data.foreignCurrencies;
             });
 

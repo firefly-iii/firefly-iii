@@ -72,7 +72,7 @@ function parseBillInfo(data) {
         paid: data.attributes.paid_dates.length > 0,
     };
     if(convertToPrimary) {
-        result.currency_code = data.attributes.native_currency_code;
+        result.currency_code = data.attributes.primary_currency_code;
     }
 
 
@@ -160,9 +160,8 @@ function downloadSubscriptions(params) {
                         subscriptionData[objectGroupId].bills.push(bill);
                         if (false === bill.paid) {
                             // bill is unpaid, count the "pay_dates" and multiply with the "amount".
-                            // since bill is unpaid, this can only be in currency amount and native currency amount.
+                            // since bill is unpaid, this can only be in currency amount and primary currency amount.
                             const totalAmount = current.attributes.pay_dates.length * bill.amount;
-                            // const totalNativeAmount = current.attributes.pay_dates.length * bill.native_amount;
                             // for bill's currency
                             if (!subscriptionData[objectGroupId].payment_info.hasOwnProperty(bill.currency_code)) {
                                 subscriptionData[objectGroupId].payment_info[bill.currency_code] = {
@@ -217,7 +216,7 @@ export default () => ({
         return formatMoney(amount, currencyCode);
     },
     eventListeners: {
-        ['@convert-to-native.window'](event){
+        ['@convert-to-primary.window'](event){
             console.log('I heard that! (dashboard/subscriptions)');
             this.convertToPrimary = event.detail;
             convertToPrimary = event.detail;
@@ -313,7 +312,7 @@ export default () => ({
     },
 
     init() {
-        Promise.all([getVariable('convert_to_native', false)]).then((values) => {
+        Promise.all([getVariable('convert_to_primary', false)]).then((values) => {
             this.convertToPrimary = values[0];
             convertToPrimary = values[0];
             afterPromises = true;
@@ -332,7 +331,7 @@ export default () => ({
                 this.startSubscriptions();
             }
         });
-        window.store.observe('convert_to_native', (newValue) => {
+        window.store.observe('convert_to_primary', (newValue) => {
             if (!afterPromises) {
                 return;
             }

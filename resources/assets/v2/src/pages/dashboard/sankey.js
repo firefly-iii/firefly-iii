@@ -160,7 +160,7 @@ export default () => ({
     convertToPrimary: false,
     processedData: null,
     eventListeners: {
-        ['@convert-to-native.window'](event){
+        ['@convert-to-primary.window'](event){
             console.log('I heard that! (dashboard/sankey)');
             this.convertToPrimary = event.detail;
             convertToPrimary = event.detail;
@@ -227,8 +227,8 @@ export default () => ({
         let amount       = parseFloat(transaction.amount);
         let flowKey;
         if (this.convertToPrimary) {
-            currencyCode = transaction.native_currency_code;
-            amount       = parseFloat(transaction.native_amount);
+            currencyCode = transaction.primary_currency_code;
+            amount       = parseFloat(transaction.pc_amount);
         }
         if ('deposit' === transaction.type) {
             this.parseDeposit(transaction, currencyCode, amount);
@@ -399,7 +399,7 @@ export default () => ({
     init() {
         // console.log('sankey init');
         transactions = [];
-        Promise.all([getVariable('convert_to_native', false)]).then((values) => {
+        Promise.all([getVariable('convert_to_primary', false)]).then((values) => {
             this.convertToPrimary = values[0];
             convertToPrimary      = values[0];
 
@@ -430,7 +430,7 @@ export default () => ({
             this.transactions = [];
             this.loadChart();
         });
-        window.store.observe('convert_to_native', (newValue) => {
+        window.store.observe('convert_to_primary', (newValue) => {
             if (!afterPromises) {
                 return;
             }

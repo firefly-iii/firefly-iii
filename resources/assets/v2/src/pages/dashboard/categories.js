@@ -35,7 +35,7 @@ export default () => ({
     convertToPrimary: false,
 
     eventListeners: {
-        ['@convert-to-native.window'](event){
+        ['@convert-to-primary.window'](event){
             console.log('I heard that! (dashboard/categories)');
             this.convertToPrimary = event.detail;
             chartData = null;
@@ -182,7 +182,7 @@ export default () => ({
     },
     init() {
         // console.log('categories init');
-        Promise.all([getVariable('convert_to_native', false),]).then((values) => {
+        Promise.all([getVariable('convert_to_primary', false),]).then((values) => {
             this.convertToPrimary = values[0];
             afterPromises = true;
             this.loadChart();
@@ -194,7 +194,7 @@ export default () => ({
             this.chartData = null;
             this.loadChart();
         });
-        window.store.observe('convert_to_native', (newValue) => {
+        window.store.observe('convert_to_primary', (newValue) => {
             if (!afterPromises) {
                 return;
             }

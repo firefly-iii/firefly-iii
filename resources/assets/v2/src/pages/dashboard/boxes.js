@@ -36,7 +36,7 @@ export default () => ({
     boxData: null,
     boxOptions: null,
     eventListeners: {
-        ['@convert-to-native.window'](event){
+        ['@convert-to-primary.window'](event){
             this.convertToPrimary = event.detail;
             this.accountList = [];
             console.log('I heard that! (dashboard/boxes)');
@@ -86,7 +86,7 @@ export default () => ({
                     continue;
                 }
                 let key = current.key;
-                // console.log('NOT NATIVE');
+                // console.log('NOT PRIMARY CURRENCY');
                 if (key.startsWith('balance-in-')) {
                     this.balanceBox.amounts.push(formatMoney(current.monetary_value, current.currency_code));
                     continue;
@@ -163,7 +163,7 @@ export default () => ({
     init() {
         // console.log('boxes init');
         // TODO can be replaced by "getVariables"
-        Promise.all([getVariable('viewRange'), getVariable('convert_to_native', false)]).then((values) => {
+        Promise.all([getVariable('viewRange'), getVariable('convert_to_primary', false)]).then((values) => {
             // console.log('boxes after promises');
             afterPromises = true;
             this.convertToPrimary = values[1];
@@ -177,7 +177,7 @@ export default () => ({
             this.boxData = null;
             this.loadBoxes();
         });
-        window.store.observe('convert_to_native', (newValue) => {
+        window.store.observe('convert_to_primary', (newValue) => {
             if (!afterPromises) {
                 return;
             }

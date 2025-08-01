@@ -70,15 +70,15 @@ Chart.register({
 let index = function () {
     return {
         convertToPrimary: false,
-        saveNativeSettings(event) {
+        savePrimarySettings(event) {
             let target = event.currentTarget || event.target;
-            setVariable('convert_to_native',target.checked).then(() => {
-                console.log('Set convert to native to: ', target.checked);
-                this.$dispatch('convert-to-native', target.checked);
+            setVariable('convert_to_primary',target.checked).then(() => {
+                console.log('Set convert to primary to: ', target.checked);
+                this.$dispatch('convert-to-primary', target.checked);
             });
         },
         init() {
-            Promise.all([getVariable('convert_to_native', false)]).then((values) => {
+            Promise.all([getVariable('convert_to_primary', false)]).then((values) => {
                 this.convertToPrimary = values[0];
             });
         }

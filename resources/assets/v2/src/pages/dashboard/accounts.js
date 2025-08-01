@@ -46,7 +46,7 @@ export default () => ({
     },
 
     eventListeners: {
-        ['@convert-to-native.window'](event){
+        ['@convert-to-primary.window'](event){
             console.log('I heard that! (dashboard/accounts)');
             this.convertToPrimary = event.detail;
             this.accountList = [];
@@ -99,17 +99,17 @@ export default () => ({
                 }
                 dataset.label = current.label;
 
-                // use the "native" currency code and use the "native_entries" as array
+                // use the "primary" currency code and use the "pc_entries" as array
                 if (this.convertToPrimary) {
-                    currencies.push(current.native_currency_code);
-                    dataset.currency_code = current.native_currency_code;
-                    if(!current.hasOwnProperty('native_entries')) {
-                        console.error('No native entries ('+this.convertToPrimary+') found for account: ', current);
+                    currencies.push(current.primary_currency_code);
+                    dataset.currency_code = current.primary_currency_code;
+                    if(!current.hasOwnProperty('pc_entries')) {
+                        console.error('No primary entries ('+this.convertToPrimary+') found for account: ', current);
                     }
-                    if(current.hasOwnProperty('native_entries')) {
-                        collection = Object.values(current.native_entries);
+                    if(current.hasOwnProperty('pc_entries')) {
+                        collection = Object.values(current.pc_entries);
                     }
-                    yAxis = 'y' + current.native_currency_code;
+                    yAxis = 'y' + current.primary_currency_code;
                 }
                 if (!this.convertToPrimary) {
                     yAxis = 'y' + current.currency_code;
@@ -240,12 +240,10 @@ export default () => ({
                                 for (let iii = 0; iii < current.attributes.transactions.length; iii++) {
                                     let currentTransaction = current.attributes.transactions[iii];
                                     //console.log(currentTransaction);
-                                    //let nativeAmountRaw = 'withdrawal' === currentTransaction.type ? parseFloat(currentTransaction.native_amount) * -1 : parseFloat(currentTransaction.native_amount);
                                     let amountRaw = 'withdrawal' === currentTransaction.type ? parseFloat(currentTransaction.amount) * -1 : parseFloat(currentTransaction.amount);
 
                                     // if transfer and source is this account, multiply again
                                     if('transfer' === currentTransaction.type && parseInt(currentTransaction.source_id) === accountId) { //
-                                        // nativeAmountRaw = nativeAmountRaw * -1;
                                         amountRaw = amountRaw * -1;
                                     }
 
@@ -255,8 +253,6 @@ export default () => ({
                                         type: currentTransaction.type,
                                         amount_raw: amountRaw,
                                         amount: formatMoney(amountRaw, currentTransaction.currency_code),
-                                        // native_amount_raw: nativeAmountRaw,
-                                        // native_amount: formatMoney(nativeAmountRaw, currentTransaction.native_currency_code),
                                     });
                                 }
                                 groups.push(group);
@@ -290,7 +286,7 @@ export default () => ({
         // console.log('accounts init');
         Promise.all([
             getVariable('viewRange', '1M'), // 0
-            getVariable('convert_to_native', false), // 1
+            getVariable('convert_to_primary', false), // 1
             getVariable('language', 'en_US'), // 2
             getConfiguration('cer.enabled', false) // 3
         ]).then((values) => {
@@ -314,7 +310,7 @@ export default () => ({
             this.loadChart();
             this.loadAccounts();
         });
-        window.store.observe('convert_to_native', () => {
+        window.store.observe('convert_to_primary', () => {
             if (!afterPromises) {
                 return;
             }
