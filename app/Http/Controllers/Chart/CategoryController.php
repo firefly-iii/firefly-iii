@@ -70,7 +70,7 @@ class CategoryController extends Controller
     public function all(Category $category): JsonResponse
     {
         // cache results:
-        $cache                           = new CacheProperties();
+        $cache                            = new CacheProperties();
         $cache->addProperty('chart.category.all');
         $cache->addProperty($category->id);
         $cache->addProperty($this->convertToPrimary);
@@ -79,18 +79,18 @@ class CategoryController extends Controller
         }
 
         /** @var CategoryRepositoryInterface $repository */
-        $repository                      = app(CategoryRepositoryInterface::class);
-        $start                           = $repository->firstUseDate($category) ?? $this->getDate();
-        $range                           = app('navigation')->getViewRange(false);
-        $start                           = app('navigation')->startOfPeriod($start, $range);
-        $end                             = $this->getDate();
+        $repository                       = app(CategoryRepositoryInterface::class);
+        $start                            = $repository->firstUseDate($category) ?? $this->getDate();
+        $range                            = app('navigation')->getViewRange(false);
+        $start                            = app('navigation')->startOfPeriod($start, $range);
+        $end                              = $this->getDate();
 
         /** @var WholePeriodChartGenerator $chartGenerator */
-        $chartGenerator                  = app(WholePeriodChartGenerator::class);
+        $chartGenerator                   = app(WholePeriodChartGenerator::class);
         $chartGenerator->convertToPrimary = $this->convertToPrimary;
 
-        $chartData                       = $chartGenerator->generate($category, $start, $end);
-        $data                            = $this->generator->multiSet($chartData);
+        $chartData                        = $chartGenerator->generate($category, $start, $end);
+        $data                             = $this->generator->multiSet($chartData);
         $cache->store($data);
 
         return response()->json($data);

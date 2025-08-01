@@ -139,29 +139,29 @@ class TransactionGroupTransformer extends AbstractTransformer
         $recurrenceCount = null !== $recurrenceCount ? (int) $recurrenceCount : null;
 
         return [
-            'user'                            => (string) $transaction['user_id'],
-            'transaction_journal_id'          => (string) $transaction['transaction_journal_id'],
-            'type'                            => strtolower((string) $type),
-            'date'                            => $transaction['date']->toAtomString(),
-            'order'                           => $transaction['order'],
+            'user'                             => (string) $transaction['user_id'],
+            'transaction_journal_id'           => (string) $transaction['transaction_journal_id'],
+            'type'                             => strtolower((string) $type),
+            'date'                             => $transaction['date']->toAtomString(),
+            'order'                            => $transaction['order'],
 
-            'currency_id'                     => (string) $transaction['currency_id'],
-            'currency_code'                   => $transaction['currency_code'],
-            'currency_name'                   => $transaction['currency_name'],
-            'currency_symbol'                 => $transaction['currency_symbol'],
-            'currency_decimal_places'         => (int) $transaction['currency_decimal_places'],
+            'currency_id'                      => (string) $transaction['currency_id'],
+            'currency_code'                    => $transaction['currency_code'],
+            'currency_name'                    => $transaction['currency_name'],
+            'currency_symbol'                  => $transaction['currency_symbol'],
+            'currency_decimal_places'          => (int) $transaction['currency_decimal_places'],
 
-            'foreign_currency_id'             => $this->stringFromArray($transaction, 'foreign_currency_id', null),
-            'foreign_currency_code'           => $transaction['foreign_currency_code'],
-            'foreign_currency_name'           => $transaction['foreign_currency_name'],
-            'foreign_currency_symbol'         => $transaction['foreign_currency_symbol'],
-            'foreign_currency_decimal_places' => $transaction['foreign_currency_decimal_places'],
+            'foreign_currency_id'              => $this->stringFromArray($transaction, 'foreign_currency_id', null),
+            'foreign_currency_code'            => $transaction['foreign_currency_code'],
+            'foreign_currency_name'            => $transaction['foreign_currency_name'],
+            'foreign_currency_symbol'          => $transaction['foreign_currency_symbol'],
+            'foreign_currency_decimal_places'  => $transaction['foreign_currency_decimal_places'],
 
-            'amount'                          => $amount,
-            'foreign_amount'                  => $foreignAmount,
+            'amount'                           => $amount,
+            'foreign_amount'                   => $foreignAmount,
 
             // primary currency amount, defaults to NULL when convertToPrimary is false.
-            'pc_amount'                   => $transaction['pc_amount'] ?? null,
+            'pc_amount'                        => $transaction['pc_amount'] ?? null,
 
             // primary currency, always present.
             'primary_currency_id'              => $transaction['primary_currency']['id'] ?? null,
@@ -171,12 +171,12 @@ class TransactionGroupTransformer extends AbstractTransformer
             'primary_currency_decimal_places'  => $transaction['primary_currency']['decimal_places'] ?? null,
 
             // source balance after
-            'source_balance_after'            => $transaction['source_balance_after'] ?? null,
-            'source_balance_dirty'            => $transaction['source_balance_dirty'],
+            'source_balance_after'             => $transaction['source_balance_after'] ?? null,
+            'source_balance_dirty'             => $transaction['source_balance_dirty'],
 
             // destination balance after
-            'destination_balance_after'       => $transaction['destination_balance_after'] ?? null,
-            'destination_balance_dirty'       => $transaction['destination_balance_dirty'],
+            'destination_balance_after'        => $transaction['destination_balance_after'] ?? null,
+            'destination_balance_dirty'        => $transaction['destination_balance_dirty'],
 
             // balance before and after, if not dirty.
             // 'running_balance_dirty'                  => $transaction['balance_dirty'] ?? false,
@@ -185,61 +185,61 @@ class TransactionGroupTransformer extends AbstractTransformer
 
 
 
-            'description'                     => $transaction['description'],
+            'description'                      => $transaction['description'],
 
-            'source_id'                       => (string) $transaction['source_account_id'],
-            'source_name'                     => $transaction['source_account_name'],
-            'source_iban'                     => $transaction['source_account_iban'],
-            'source_type'                     => $transaction['source_account_type'],
+            'source_id'                        => (string) $transaction['source_account_id'],
+            'source_name'                      => $transaction['source_account_name'],
+            'source_iban'                      => $transaction['source_account_iban'],
+            'source_type'                      => $transaction['source_account_type'],
 
-            'destination_id'                  => (string) $transaction['destination_account_id'],
-            'destination_name'                => $transaction['destination_account_name'],
-            'destination_iban'                => $transaction['destination_account_iban'],
-            'destination_type'                => $transaction['destination_account_type'],
+            'destination_id'                   => (string) $transaction['destination_account_id'],
+            'destination_name'                 => $transaction['destination_account_name'],
+            'destination_iban'                 => $transaction['destination_account_iban'],
+            'destination_type'                 => $transaction['destination_account_type'],
 
-            'budget_id'                       => $this->stringFromArray($transaction, 'budget_id', null),
-            'budget_name'                     => $transaction['budget_name'],
+            'budget_id'                        => $this->stringFromArray($transaction, 'budget_id', null),
+            'budget_name'                      => $transaction['budget_name'],
 
-            'category_id'                     => $this->stringFromArray($transaction, 'category_id', null),
-            'category_name'                   => $transaction['category_name'],
+            'category_id'                      => $this->stringFromArray($transaction, 'category_id', null),
+            'category_name'                    => $transaction['category_name'],
 
-            'bill_id'                         => $this->stringFromArray($transaction, 'bill_id', null),
-            'bill_name'                       => $transaction['bill_name'],
+            'bill_id'                          => $this->stringFromArray($transaction, 'bill_id', null),
+            'bill_name'                        => $transaction['bill_name'],
 
-            'reconciled'                      => $transaction['reconciled'],
-            'notes'                           => $transaction['notes'],
-            'tags'                            => $transaction['tags'],
+            'reconciled'                       => $transaction['reconciled'],
+            'notes'                            => $transaction['notes'],
+            'tags'                             => $transaction['tags'],
 
-            'internal_reference'              => $transaction['meta']['internal_reference'] ?? null,
-            'external_id'                     => $transaction['meta']['external_id'] ?? null,
-            'original_source'                 => $transaction['meta']['original_source'] ?? null,
-            'recurrence_id'                   => $transaction['meta']['recurrence_id'] ?? null,
-            'recurrence_total'                => $recurrenceTotal,
-            'recurrence_count'                => $recurrenceCount,
-            'bunq_payment_id'                 => $transaction['meta']['bunq_payment_id'] ?? null,
-            'external_url'                    => $transaction['meta']['external_url'] ?? null,
-            'import_hash_v2'                  => $transaction['meta']['import_hash_v2'] ?? null,
+            'internal_reference'               => $transaction['meta']['internal_reference'] ?? null,
+            'external_id'                      => $transaction['meta']['external_id'] ?? null,
+            'original_source'                  => $transaction['meta']['original_source'] ?? null,
+            'recurrence_id'                    => $transaction['meta']['recurrence_id'] ?? null,
+            'recurrence_total'                 => $recurrenceTotal,
+            'recurrence_count'                 => $recurrenceCount,
+            'bunq_payment_id'                  => $transaction['meta']['bunq_payment_id'] ?? null,
+            'external_url'                     => $transaction['meta']['external_url'] ?? null,
+            'import_hash_v2'                   => $transaction['meta']['import_hash_v2'] ?? null,
 
-            'sepa_cc'                         => $transaction['meta']['sepa_cc'] ?? null,
-            'sepa_ct_op'                      => $transaction['meta']['sepa_ct_op'] ?? null,
-            'sepa_ct_id'                      => $transaction['meta']['sepa_ct_id'] ?? null,
-            'sepa_db'                         => $transaction['meta']['sepa_db'] ?? null,
-            'sepa_country'                    => $transaction['meta']['sepa_country'] ?? null,
-            'sepa_ep'                         => $transaction['meta']['sepa_ep'] ?? null,
-            'sepa_ci'                         => $transaction['meta']['sepa_ci'] ?? null,
-            'sepa_batch_id'                   => $transaction['meta']['sepa_batch_id'] ?? null,
+            'sepa_cc'                          => $transaction['meta']['sepa_cc'] ?? null,
+            'sepa_ct_op'                       => $transaction['meta']['sepa_ct_op'] ?? null,
+            'sepa_ct_id'                       => $transaction['meta']['sepa_ct_id'] ?? null,
+            'sepa_db'                          => $transaction['meta']['sepa_db'] ?? null,
+            'sepa_country'                     => $transaction['meta']['sepa_country'] ?? null,
+            'sepa_ep'                          => $transaction['meta']['sepa_ep'] ?? null,
+            'sepa_ci'                          => $transaction['meta']['sepa_ci'] ?? null,
+            'sepa_batch_id'                    => $transaction['meta']['sepa_batch_id'] ?? null,
 
-            'interest_date'                   => array_key_exists('interest_date', $transaction['meta_date']) ? $transaction['meta_date']['interest_date']->toW3CString() : null,
-            'book_date'                       => array_key_exists('book_date', $transaction['meta_date']) ? $transaction['meta_date']['book_date']->toW3CString() : null,
-            'process_date'                    => array_key_exists('process_date', $transaction['meta_date']) ? $transaction['meta_date']['process_date']->toW3CString() : null,
-            'due_date'                        => array_key_exists('due_date', $transaction['meta_date']) ? $transaction['meta_date']['due_date']->toW3CString() : null,
-            'payment_date'                    => array_key_exists('payment_date', $transaction['meta_date']) ? $transaction['meta_date']['payment_date']->toW3CString() : null,
-            'invoice_date'                    => array_key_exists('invoice_date', $transaction['meta_date']) ? $transaction['meta_date']['invoice_date']->toW3CString() : null,
+            'interest_date'                    => array_key_exists('interest_date', $transaction['meta_date']) ? $transaction['meta_date']['interest_date']->toW3CString() : null,
+            'book_date'                        => array_key_exists('book_date', $transaction['meta_date']) ? $transaction['meta_date']['book_date']->toW3CString() : null,
+            'process_date'                     => array_key_exists('process_date', $transaction['meta_date']) ? $transaction['meta_date']['process_date']->toW3CString() : null,
+            'due_date'                         => array_key_exists('due_date', $transaction['meta_date']) ? $transaction['meta_date']['due_date']->toW3CString() : null,
+            'payment_date'                     => array_key_exists('payment_date', $transaction['meta_date']) ? $transaction['meta_date']['payment_date']->toW3CString() : null,
+            'invoice_date'                     => array_key_exists('invoice_date', $transaction['meta_date']) ? $transaction['meta_date']['invoice_date']->toW3CString() : null,
             // location data
-            'longitude'                       => $transaction['location']['longitude'],
-            'latitude'                        => $transaction['location']['latitude'],
-            'zoom_level'                      => $transaction['location']['zoom_level'],
-            'has_attachments'                 => $transaction['attachment_count'] > 0,
+            'longitude'                        => $transaction['location']['longitude'],
+            'latitude'                         => $transaction['location']['latitude'],
+            'zoom_level'                       => $transaction['location']['zoom_level'],
+            'has_attachments'                  => $transaction['attachment_count'] > 0,
         ];
     }
 

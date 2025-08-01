@@ -39,7 +39,7 @@ class UpdateRequest extends FormRequest
     public function getData(): array
     {
         $fields = [
-            'title'                => ['title', 'convertString'],
+            'title'                 => ['title', 'convertString'],
             'primary_currency_id'   => ['primary_currency_id', 'convertInteger'],
             'primary_currency_code' => ['primary_currency_code', 'convertString'],
         ];
@@ -53,7 +53,7 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title'                => ['required', 'min:1', 'max:255'],
+            'title'                 => ['required', 'min:1', 'max:255'],
             'primary_currency_id'   => 'exists:transaction_currencies,id',
             'primary_currency_code' => 'exists:transaction_currencies,code',
         ];

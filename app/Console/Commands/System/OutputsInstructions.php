@@ -238,14 +238,14 @@ class OutputsInstructions extends Command
 
     private function someQuote(): void
     {
-        $lines = [
+        $lines  = [
             'Forgive yourself for not being at peace.',
             'Doesn\'t look like anything to me.',
             'Be proud of what you make.',
             'Be there or forever wonder.',
-            'A year from now you will wish you had started today.'
+            'A year from now you will wish you had started today.',
         ];
-        $random = random_int(0, count($lines)-1);
+        $random = random_int(0, count($lines) - 1);
         $this->line(sprintf('       "%s"', $lines[$random]));
     }
 }

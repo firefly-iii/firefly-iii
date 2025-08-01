@@ -731,13 +731,13 @@ class GroupCollector implements GroupCollectorInterface
         foreach ($groups as $groudId => $group) {
             /** @var array $transaction */
             foreach ($group['transactions'] as $transaction) {
-                $currencyId                                             = (int) $transaction['currency_id'];
+                $currencyId                                         = (int) $transaction['currency_id'];
                 if (null === $transaction['amount']) {
                     throw new FireflyException(sprintf('Amount is NULL for a transaction in group #%d, please investigate.', $groudId));
                 }
                 $pcAmount                                           = (string) ('' === $transaction['pc_amount'] ? '0' : $transaction['pc_amount']);
                 $pcForeignAmount                                    = (string) ('' === $transaction['pc_foreign_amount'] ? '0' : $transaction['pc_foreign_amount']);
-                $foreignAmount                                          = (string) ('' === $transaction['foreign_amount'] ? '0' : $transaction['foreign_amount']);
+                $foreignAmount                                      = (string) ('' === $transaction['foreign_amount'] ? '0' : $transaction['foreign_amount']);
 
                 // set default:
                 if (!array_key_exists($currencyId, $groups[$groudId]['sums'])) {
@@ -746,13 +746,13 @@ class GroupCollector implements GroupCollectorInterface
                     $groups[$groudId]['sums'][$currencyId]['currency_symbol']         = $transaction['currency_symbol'];
                     $groups[$groudId]['sums'][$currencyId]['currency_decimal_places'] = $transaction['currency_decimal_places'];
                     $groups[$groudId]['sums'][$currencyId]['amount']                  = '0';
-                    $groups[$groudId]['sums'][$currencyId]['pc_amount']           = '0';
+                    $groups[$groudId]['sums'][$currencyId]['pc_amount']               = '0';
                 }
-                $groups[$groudId]['sums'][$currencyId]['amount']        = bcadd((string) $groups[$groudId]['sums'][$currencyId]['amount'], $transaction['amount']);
+                $groups[$groudId]['sums'][$currencyId]['amount']    = bcadd((string) $groups[$groudId]['sums'][$currencyId]['amount'], $transaction['amount']);
                 $groups[$groudId]['sums'][$currencyId]['pc_amount'] = bcadd((string) $groups[$groudId]['sums'][$currencyId]['pc_amount'], $pcAmount);
 
                 if (null !== $transaction['foreign_amount'] && null !== $transaction['foreign_currency_id']) {
-                    $currencyId                                             = (int) $transaction['foreign_currency_id'];
+                    $currencyId                                         = (int) $transaction['foreign_currency_id'];
 
                     // set default:
                     if (!array_key_exists($currencyId, $groups[$groudId]['sums'])) {
@@ -761,9 +761,9 @@ class GroupCollector implements GroupCollectorInterface
                         $groups[$groudId]['sums'][$currencyId]['currency_symbol']         = $transaction['foreign_currency_symbol'];
                         $groups[$groudId]['sums'][$currencyId]['currency_decimal_places'] = $transaction['foreign_currency_decimal_places'];
                         $groups[$groudId]['sums'][$currencyId]['amount']                  = '0';
-                        $groups[$groudId]['sums'][$currencyId]['pc_amount']           = '0';
+                        $groups[$groudId]['sums'][$currencyId]['pc_amount']               = '0';
                     }
-                    $groups[$groudId]['sums'][$currencyId]['amount']        = bcadd((string) $groups[$groudId]['sums'][$currencyId]['amount'], $foreignAmount);
+                    $groups[$groudId]['sums'][$currencyId]['amount']    = bcadd((string) $groups[$groudId]['sums'][$currencyId]['amount'], $foreignAmount);
                     $groups[$groudId]['sums'][$currencyId]['pc_amount'] = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], $pcForeignAmount);
                 }
             }

@@ -757,28 +757,28 @@ class ExportDataGenerator
 
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $metaData            = $repository->getMetaFields($journal['transaction_journal_id'], $metaFields);
-            $amount              = Steam::bcround(Steam::negative($journal['amount']), $journal['currency_decimal_places']);
-            $foreignAmount       = null === $journal['foreign_amount'] ? null : Steam::bcround(Steam::negative($journal['foreign_amount']), $journal['foreign_currency_decimal_places']);
+            $metaData        = $repository->getMetaFields($journal['transaction_journal_id'], $metaFields);
+            $amount          = Steam::bcround(Steam::negative($journal['amount']), $journal['currency_decimal_places']);
+            $foreignAmount   = null === $journal['foreign_amount'] ? null : Steam::bcround(Steam::negative($journal['foreign_amount']), $journal['foreign_currency_decimal_places']);
             $pcAmount        = null === $journal['pc_amount'] ? null : Steam::bcround(Steam::negative($journal['pc_amount']), $primary->decimal_places);
             $pcForeignAmount = null === $journal['pc_foreign_amount'] ? null : Steam::bcround(Steam::negative($journal['pc_foreign_amount']), $primary->decimal_places);
 
             if (TransactionTypeEnum::WITHDRAWAL->value !== $journal['transaction_type_type']) {
-                $amount              = Steam::bcround(Steam::positive($journal['amount']), $journal['currency_decimal_places']);
-                $foreignAmount       = null === $journal['foreign_amount'] ? null : Steam::bcround(Steam::positive($journal['foreign_amount']), $journal['foreign_currency_decimal_places']);
+                $amount          = Steam::bcround(Steam::positive($journal['amount']), $journal['currency_decimal_places']);
+                $foreignAmount   = null === $journal['foreign_amount'] ? null : Steam::bcround(Steam::positive($journal['foreign_amount']), $journal['foreign_currency_decimal_places']);
                 $pcAmount        = null === $journal['pc_amount'] ? null : Steam::bcround(Steam::positive($journal['pc_amount']), $primary->decimal_places);
                 $pcForeignAmount = null === $journal['pc_foreign_amount'] ? null : Steam::bcround(Steam::positive($journal['pc_foreign_amount']), $primary->decimal_places);
             }
 
             // opening balance depends on source account type.
             if (TransactionTypeEnum::OPENING_BALANCE->value === $journal['transaction_type_type'] && AccountTypeEnum::ASSET->value === $journal['source_account_type']) {
-                $amount              = Steam::bcround(Steam::negative($journal['amount']), $journal['currency_decimal_places']);
-                $foreignAmount       = null === $journal['foreign_amount'] ? null : Steam::bcround(Steam::negative($journal['foreign_amount']), $journal['foreign_currency_decimal_places']);
+                $amount          = Steam::bcround(Steam::negative($journal['amount']), $journal['currency_decimal_places']);
+                $foreignAmount   = null === $journal['foreign_amount'] ? null : Steam::bcround(Steam::negative($journal['foreign_amount']), $journal['foreign_currency_decimal_places']);
                 $pcAmount        = null === $journal['pc_amount'] ? null : Steam::bcround(Steam::negative($journal['pc_amount']), $primary->decimal_places);
                 $pcForeignAmount = null === $journal['pc_foreign_amount'] ? null : Steam::bcround(Steam::negative($journal['pc_foreign_amount']), $primary->decimal_places);
             }
 
-            $records[]           = [
+            $records[]       = [
                 $journal['user_id'], $journal['transaction_group_id'], $journal['transaction_journal_id'], $journal['created_at']->toAtomString(), $journal['updated_at']->toAtomString(), $journal['transaction_group_title'], $journal['transaction_type_type'],
                 // amounts and currencies
                 $journal['currency_code'], $amount, $journal['foreign_currency_code'], $foreignAmount, $primary->code, $pcAmount, $pcForeignAmount,

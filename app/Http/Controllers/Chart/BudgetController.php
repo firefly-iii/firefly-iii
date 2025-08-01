@@ -450,10 +450,10 @@ class BudgetController extends Controller
      */
     public function frontpage(): JsonResponse
     {
-        $start                           = session('start', today(config('app.timezone'))->startOfMonth());
-        $end                             = session('end', today(config('app.timezone'))->endOfMonth());
+        $start                            = session('start', today(config('app.timezone'))->startOfMonth());
+        $end                              = session('end', today(config('app.timezone'))->endOfMonth());
         // chart properties for cache:
-        $cache                           = new CacheProperties();
+        $cache                            = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty($this->convertToPrimary);
@@ -462,15 +462,15 @@ class BudgetController extends Controller
             return response()->json($cache->get());
         }
         Log::debug('Regenerate frontpage chart from scratch.');
-        $chartGenerator                  = app(FrontpageChartGenerator::class);
+        $chartGenerator                   = app(FrontpageChartGenerator::class);
         $chartGenerator->setUser(auth()->user());
         $chartGenerator->setStart($start);
         $chartGenerator->setEnd($end);
         $chartGenerator->convertToPrimary = $this->convertToPrimary;
-        $chartGenerator->default         = $this->primaryCurrency;
+        $chartGenerator->default          = $this->primaryCurrency;
 
-        $chartData                       = $chartGenerator->generate();
-        $data                            = $this->generator->multiSet($chartData);
+        $chartData                        = $chartGenerator->generate();
+        $data                             = $this->generator->multiSet($chartData);
         $cache->store($data);
 
         return response()->json($data);

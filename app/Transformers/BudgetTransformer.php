@@ -48,10 +48,10 @@ class BudgetTransformer extends AbstractTransformer
      */
     public function __construct()
     {
-        $this->opsRepository   = app(OperationsRepositoryInterface::class);
-        $this->repository      = app(BudgetRepositoryInterface::class);
-        $this->parameters      = new ParameterBag();
-        $this->primary         = Amount::getPrimaryCurrency();
+        $this->opsRepository    = app(OperationsRepositoryInterface::class);
+        $this->repository       = app(BudgetRepositoryInterface::class);
+        $this->parameters       = new ParameterBag();
+        $this->primary          = Amount::getPrimaryCurrency();
         $this->convertToPrimary = Amount::convertToPrimary();
     }
 
@@ -72,7 +72,7 @@ class BudgetTransformer extends AbstractTransformer
         // info for auto budget.
         $abType     = null;
         $abAmount   = null;
-        $abPrimary   = null;
+        $abPrimary  = null;
         $abPeriod   = null;
         $notes      = $this->repository->getNoteText($budget);
 
@@ -90,28 +90,28 @@ class BudgetTransformer extends AbstractTransformer
             $currency = $primary;
         }
         if (null !== $autoBudget) {
-            $abType   = $types[$autoBudget->auto_budget_type];
-            $abAmount = app('steam')->bcround($autoBudget->amount, $currency->decimal_places);
+            $abType    = $types[$autoBudget->auto_budget_type];
+            $abAmount  = app('steam')->bcround($autoBudget->amount, $currency->decimal_places);
             $abPrimary = $this->convertToPrimary ? app('steam')->bcround($autoBudget->native_amount, $primary->decimal_places) : null;
-            $abPeriod = $autoBudget->period;
+            $abPeriod  = $autoBudget->period;
         }
 
         return [
-            'id'                             => (string) $budget->id,
-            'created_at'                     => $budget->created_at->toAtomString(),
-            'updated_at'                     => $budget->updated_at->toAtomString(),
-            'active'                         => $budget->active,
-            'name'                           => $budget->name,
-            'order'                          => $budget->order,
-            'notes'                          => $notes,
-            'auto_budget_type'               => $abType,
-            'auto_budget_period'             => $abPeriod,
+            'id'                              => (string) $budget->id,
+            'created_at'                      => $budget->created_at->toAtomString(),
+            'updated_at'                      => $budget->updated_at->toAtomString(),
+            'active'                          => $budget->active,
+            'name'                            => $budget->name,
+            'order'                           => $budget->order,
+            'notes'                           => $notes,
+            'auto_budget_type'                => $abType,
+            'auto_budget_period'              => $abPeriod,
 
-            'currency_id'                    => null === $autoBudget ? null : (string) $autoBudget->transactionCurrency->id,
-            'currency_code'                  => $autoBudget?->transactionCurrency->code,
-            'currency_name'                  => $autoBudget?->transactionCurrency->name,
-            'currency_decimal_places'        => $autoBudget?->transactionCurrency->decimal_places,
-            'currency_symbol'                => $autoBudget?->transactionCurrency->symbol,
+            'currency_id'                     => null === $autoBudget ? null : (string) $autoBudget->transactionCurrency->id,
+            'currency_code'                   => $autoBudget?->transactionCurrency->code,
+            'currency_name'                   => $autoBudget?->transactionCurrency->name,
+            'currency_decimal_places'         => $autoBudget?->transactionCurrency->decimal_places,
+            'currency_symbol'                 => $autoBudget?->transactionCurrency->symbol,
 
             'primary_currency_id'             => $primary instanceof TransactionCurrency ? (string) $primary->id : null,
             'primary_currency_code'           => $primary?->code,
@@ -120,10 +120,10 @@ class BudgetTransformer extends AbstractTransformer
 
             // amount and primary currency amount if present.
 
-            'auto_budget_amount'             => $abAmount,
-            'pc_auto_budget_amount'      => $abPrimary,
-            'spent'                          => $spent, // always in primary currency.
-            'links'                          => [
+            'auto_budget_amount'              => $abAmount,
+            'pc_auto_budget_amount'           => $abPrimary,
+            'spent'                           => $spent, // always in primary currency.
+            'links'                           => [
                 [
                     'rel' => 'self',
                     'uri' => '/budgets/'.$budget->id,

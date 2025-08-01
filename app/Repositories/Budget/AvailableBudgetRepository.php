@@ -142,7 +142,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
         Log::debug(sprintf('Found %d available budgets (already converted)', $availableBudgets->count()));
 
         // use primary amount if necessary?
-        $convertToPrimary  = Amount::convertToPrimary($this->user);
+        $convertToPrimary = Amount::convertToPrimary($this->user);
         $primary          = Amount::getPrimaryCurrency();
 
         /** @var AvailableBudget $availableBudget */
