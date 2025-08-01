@@ -108,7 +108,7 @@ class ShowController extends Controller
         $page             = (int) $request->get('page');
         $pageSize         = (int) app('preferences')->get('listPageSize', 50)->data;
         $accountCurrency  = $this->repository->getAccountCurrency($account);
-        $currency         = $accountCurrency ?? $this->defaultCurrency;
+        $currency         = $accountCurrency ?? $this->primaryCurrency;
         $fStart           = $start->isoFormat($this->monthAndDayFormat);
         $fEnd             = $end->isoFormat($this->monthAndDayFormat);
         $subTitle         = (string) trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
@@ -165,7 +165,7 @@ class ShowController extends Controller
         }
 
         Log::debug(sprintf('show: Call finalAccountBalance with date/time "%s"', $now->toIso8601String()));
-        $balances         = Steam::filterAccountBalance(Steam::finalAccountBalance($account, $now), $account, $this->convertToNative, $accountCurrency);
+        $balances         = Steam::filterAccountBalance(Steam::finalAccountBalance($account, $now), $account, $this->convertToPrimary, $accountCurrency);
 
         return view(
             'accounts.show',
@@ -212,7 +212,7 @@ class ShowController extends Controller
         $subTitleIcon    = config('firefly.subIconsByIdentifier.'.$account->accountType->type);
         $page            = (int) $request->get('page');
         $pageSize        = (int) app('preferences')->get('listPageSize', 50)->data;
-        $currency        = $this->repository->getAccountCurrency($account) ?? $this->defaultCurrency;
+        $currency        = $this->repository->getAccountCurrency($account) ?? $this->primaryCurrency;
         $subTitle        = (string) trans('firefly.all_journals_for_account', ['name' => $account->name]);
         $periods         = new Collection();
 
@@ -232,7 +232,7 @@ class ShowController extends Controller
         $showAll         = true;
         // correct
         Log::debug(sprintf('showAll: Call finalAccountBalance with date/time "%s"', $end->toIso8601String()));
-        $balances        = Steam::filterAccountBalance(Steam::finalAccountBalance($account, $end), $account, $this->convertToNative, $accountCurrency);
+        $balances        = Steam::filterAccountBalance(Steam::finalAccountBalance($account, $end), $account, $this->convertToPrimary, $accountCurrency);
 
         return view(
             'accounts.show',

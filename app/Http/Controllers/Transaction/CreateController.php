@@ -117,7 +117,7 @@ class CreateController extends Controller
         $optionalFields             = app('preferences')->get('transaction_journal_optional_fields', [])->data;
         $allowedOpposingTypes       = config('firefly.allowed_opposing_types');
         $accountToTypes             = config('firefly.account_to_transaction');
-        $defaultCurrency            = $this->defaultCurrency;
+        $defaultCurrency            = $this->primaryCurrency;
         $previousUrl                = $this->rememberPreviousUrl('transactions.create.url');
         $parts                      = parse_url((string) $previousUrl);
         $search                     = sprintf('?%s', $parts['query'] ?? '');

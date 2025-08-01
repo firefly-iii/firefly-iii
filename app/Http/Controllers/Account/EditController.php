@@ -125,7 +125,7 @@ class EditController extends Controller
             $openingBalanceAmount = '';
         }
         $openingBalanceDate   = $repository->getOpeningBalanceDate($account);
-        $currency             = $this->repository->getAccountCurrency($account) ?? $this->defaultCurrency;
+        $currency             = $this->repository->getAccountCurrency($account) ?? $this->primaryCurrency;
 
         // include this account in net-worth charts?
         $includeNetWorth      = $repository->getMetaValue($account, 'include_net_worth');

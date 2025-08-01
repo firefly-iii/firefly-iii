@@ -149,8 +149,8 @@ class ShowController extends Controller
         $admin                      = auth()->user();
         $enrichment                 = new SubscriptionEnrichment();
         $enrichment->setUser($admin);
-        $enrichment->setConvertToNative($this->convertToNative);
-        $enrichment->setNative($this->defaultCurrency);
+        $enrichment->setConvertToPrimary($this->convertToPrimary);
+        $enrichment->setPrimary($this->primaryCurrency);
         $enrichment->setStart($start);
         $enrichment->setEnd($end);
         $bill                       = $enrichment->enrichSingle($bill);

@@ -91,8 +91,8 @@ class IndexController extends Controller
         $admin       = auth()->user();
         $enrichment  = new SubscriptionEnrichment();
         $enrichment->setUser($admin);
-        $enrichment->setConvertToNative($this->convertToNative);
-        $enrichment->setNative($this->defaultCurrency);
+        $enrichment->setConvertToPrimary($this->convertToPrimary);
+        $enrichment->setPrimary($this->primaryCurrency);
         $enrichment->setStart($tempStart);
         $enrichment->setEnd($end);
         $collection  = $enrichment->enrich($collection);
@@ -100,8 +100,8 @@ class IndexController extends Controller
 
         $parameters->set('start', $tempStart);
         $parameters->set('end', $end);
-        $parameters->set('convertToNative', $this->convertToNative);
-        $parameters->set('defaultCurrency', $this->defaultCurrency);
+        $parameters->set('convertToPrimary', $this->convertToPrimary);
+        $parameters->set('defaultCurrency', $this->primaryCurrency);
 
         /** @var BillTransformer $transformer */
         $transformer = app(BillTransformer::class);
@@ -130,7 +130,7 @@ class IndexController extends Controller
                 'bills'              => [],
             ];
 
-            $currency                         = $bill->transactionCurrency ?? $this->defaultCurrency;
+            $currency                         = $bill->transactionCurrency ?? $this->primaryCurrency;
             $array['currency_id']             = $currency->id;
             $array['currency_name']           = $currency->name;
             $array['currency_symbol']         = $currency->symbol;

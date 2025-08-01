@@ -40,6 +40,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
 
     public function enrich(Collection $collection): Collection
     {
+        Log::debug(sprintf('%s(%s item(s))', __METHOD__, $collection->count()));
         $this->calculator = app(BillDateCalculator::class);
         $this->collection = $collection;
         $this->collectSubscriptionIds();
@@ -89,6 +90,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
 
             // Convert amounts to native currency if needed
             if ($this->convertToNative && $item->currency_id !== $this->nativeCurrency->id) {
+                Log::debug('Convert to native currency');
                 $converter          = new ExchangeRateConverter();
                 $amounts            = [
                     'amount_min' => Steam::bcround($converter->convert($item->transactionCurrency, $this->nativeCurrency, today(), $item->amount_min), $this->nativeCurrency->decimal_places),
@@ -185,6 +187,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
         Log::debug('Now in collectPaidDates for bills');
         if (null === $this->start || null === $this->end) {
             Log::debug('Parameters are NULL, set empty array');
+
             return;
         }
 
@@ -192,23 +195,22 @@ class SubscriptionEnrichment implements EnrichmentInterface
         // 2023-07-18 this particular date is used to search for the last paid date.
         // 2023-07-18 the cloned $searchDate is used to grab the correct transactions.
         /** @var Carbon $start */
-        $start       = clone $this->start;
-        $searchStart = clone $start;
+        $start           = clone $this->start;
+        $searchStart     = clone $start;
         $start->subDay();
 
         /** @var Carbon $end */
-        $end         = clone $this->end;
-        $searchEnd   = clone $end;
+        $end             = clone $this->end;
+        $searchEnd       = clone $end;
 
         // move the search dates to the start of the day.
         $searchStart->startOfDay();
         $searchEnd->endOfDay();
 
-        Log::debug(sprintf('Parameters are start: %s, end: %s', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
         Log::debug(sprintf('Search parameters are: start: %s, end: %s', $searchStart->format('Y-m-d H:i:s'), $searchEnd->format('Y-m-d H:i:s')));
 
         // Get from database when bills were paid.
-        $set         = $this->user->transactionJournals()
+        $set             = $this->user->transactionJournals()
             ->whereIn('bill_id', $this->subscriptionIds)
             ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->leftJoin('transaction_currencies AS currency', 'currency.id', '=', 'transactions.transaction_currency_id')
@@ -234,22 +236,26 @@ class SubscriptionEnrichment implements EnrichmentInterface
         Log::debug(sprintf('Count %d entries in set', $set->count()));
 
         // for each bill, do a loop.
+        $converter = new ExchangeRateConverter();
         /** @var Bill $subscription */
         foreach ($this->collection as $subscription) {
             // Grab from array the most recent payment. If none exist, fall back to the start date and pretend *that* was the last paid date.
             Log::debug(sprintf('Grab last paid date from function, return %s if it comes up with nothing.', $start->format('Y-m-d')));
-            $lastPaidDate                       = $this->lastPaidDate($subscription, $set, $start);
+            $lastPaidDate                             = $this->lastPaidDate($subscription, $set, $start);
             Log::debug(sprintf('Result of lastPaidDate is %s', $lastPaidDate->format('Y-m-d')));
 
             // At this point the "next match" is exactly after the last time the bill was paid.
-            $result                             = [];
-            foreach ($set as $entry) {
+            $result                                   = [];
+            $filtered                                 = $set->filter(function (TransactionJournal $journal) use ($subscription) {
+                return (int) $journal->bill_id === (int) $subscription->id;
+            });
+            foreach ($filtered as $entry) {
                 $array    = [
                     'transaction_group_id'    => (string)$entry->transaction_group_id,
                     'transaction_journal_id'  => (string)$entry->id,
                     'date'                    => $entry->date->toAtomString(),
                     'date_object'             => $entry->date,
-                    'bill_id' => $entry->bill_id,
+                    'bill_id'                 => $entry->bill_id,
                     'currency_id'             => $entry->transaction_currency_id,
                     'currency_code'           => $entry->transaction_currency_code,
                     'currency_decimal_places' => $entry->transaction_currency_decimal_places,
@@ -260,6 +266,13 @@ class SubscriptionEnrichment implements EnrichmentInterface
                     $array['foreign_currency_code']           = $entry->foreign_currency_code;
                     $array['foreign_currency_decimal_places'] = $entry->foreign_currency_decimal_places;
                     $array['foreign_amount']                  = Steam::bcround($entry->foreign_amount, $entry->foreign_currency_decimal_places);
+                }
+                if($this->convertToNative) {
+                    $array['amount'] = $converter->convert($entry->transactionCurrency, $this->nativeCurrency, $entry->date, $entry->amount);
+                    $array['currency_id'] = $this->nativeCurrency->id;
+                    $array['currency_code'] = $this->nativeCurrency->code;
+                    $array['currency_decimal_places'] = $this->nativeCurrency->decimal_places;
+
                 }
 
                 $result[] = $array;
@@ -287,6 +300,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
         $filtered = $dates->filter(function (TransactionJournal $journal) use ($subscription) {
             return (int) $journal->bill_id === (int) $subscription->id;
         });
+        Log::debug(sprintf('Filtered down from %d to %d entries for bill #%d.', $dates->count(), $filtered->count(), $subscription->id));
         if (0 === $filtered->count()) {
             return $default;
         }
@@ -329,6 +343,10 @@ class SubscriptionEnrichment implements EnrichmentInterface
 
     private function collectPayDates(): void
     {
+        if(null === $this->start || null === $this->end) {
+            Log::debug('Parameters are NULL, set empty array');
+            return;
+        }
         /** @var Bill $subscription */
         foreach ($this->collection as $subscription) {
             $id                  = (int)$subscription->id;

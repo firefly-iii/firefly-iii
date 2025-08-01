@@ -141,7 +141,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
         Log::debug(sprintf('getAuditReport: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
         $dayBeforeBalance  = Steam::finalAccountBalance($account, $date);
         $startBalance      = $dayBeforeBalance['balance'];
-        $defaultCurrency   = app('amount')->getNativeCurrencyByUserGroup($account->user->userGroup);
+        $defaultCurrency   = app('amount')->getPrimaryCurrencyByUserGroup($account->user->userGroup);
         $currency          = $accountRepository->getAccountCurrency($account) ?? $defaultCurrency;
 
         foreach ($journals as $index => $journal) {

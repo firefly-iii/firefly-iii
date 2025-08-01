@@ -33,14 +33,14 @@ use FireflyIII\Support\Facades\Amount;
  */
 class BillTransformer extends AbstractTransformer
 {
-    private readonly TransactionCurrency $native;
+    private readonly TransactionCurrency $primary;
 
     /**
      * BillTransformer constructor.
      */
     public function __construct()
     {
-        $this->native = Amount::getNativeCurrency();
+        $this->primary = Amount::getPrimaryCurrency();
     }
 
     /**
@@ -60,10 +60,10 @@ class BillTransformer extends AbstractTransformer
             'currency_symbol'                => $currency->symbol,
             'currency_decimal_places'        => $currency->decimal_places,
 
-            'native_currency_id'             => (string)$this->native->id,
-            'native_currency_code'           => $this->native->code,
-            'native_currency_symbol'         => $this->native->symbol,
-            'native_currency_decimal_places' => $this->native->decimal_places,
+            'primary_currency_id'             => (string)$this->primary->id,
+            'primary_currency_code'           => $this->primary->code,
+            'primary_currency_symbol'         => $this->primary->symbol,
+            'primary_currency_decimal_places' => $this->primary->decimal_places,
 
             'name'                           => $bill->name,
             'amount_min'                     => $bill->amounts['amount_min'],

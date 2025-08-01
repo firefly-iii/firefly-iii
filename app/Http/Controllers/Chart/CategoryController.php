@@ -73,7 +73,7 @@ class CategoryController extends Controller
         $cache                           = new CacheProperties();
         $cache->addProperty('chart.category.all');
         $cache->addProperty($category->id);
-        $cache->addProperty($this->convertToNative);
+        $cache->addProperty($this->convertToPrimary);
         if ($cache->has()) {
             return response()->json($cache->get());
         }
@@ -87,7 +87,7 @@ class CategoryController extends Controller
 
         /** @var WholePeriodChartGenerator $chartGenerator */
         $chartGenerator                  = app(WholePeriodChartGenerator::class);
-        $chartGenerator->convertToNative = $this->convertToNative;
+        $chartGenerator->convertToPrimary = $this->convertToPrimary;
 
         $chartData                       = $chartGenerator->generate($category, $start, $end);
         $data                            = $this->generator->multiSet($chartData);
@@ -113,7 +113,7 @@ class CategoryController extends Controller
         $cache              = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
-        $cache->addProperty($this->convertToNative);
+        $cache->addProperty($this->convertToPrimary);
         $cache->addProperty('chart.category.frontpage');
         if ($cache->has()) {
             return response()->json($cache->get());
@@ -139,7 +139,7 @@ class CategoryController extends Controller
         $cache->addProperty('chart.category.period');
         $cache->addProperty($accounts->pluck('id')->toArray());
         $cache->addProperty($category);
-        $cache->addProperty($this->convertToNative);
+        $cache->addProperty($this->convertToPrimary);
         if ($cache->has()) {
             return response()->json($cache->get());
         }

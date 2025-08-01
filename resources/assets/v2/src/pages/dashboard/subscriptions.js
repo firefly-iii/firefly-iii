@@ -30,6 +30,7 @@ import i18next from "i18next";
 let afterPromises = false;
 let apiData = [];
 let subscriptionData = {};
+let convertToNative = false;
 
 function addObjectGroupInfo(data) {
     let objectGroupId = parseInt(data.object_group_id);
@@ -70,6 +71,11 @@ function parseBillInfo(data) {
         pay_dates: parsePayDates(data.attributes.pay_dates),
         paid: data.attributes.paid_dates.length > 0,
     };
+    if(convertToNative) {
+        result.currency_code = data.attributes.native_currency_code;
+    }
+
+
     // set variables
     result.expected_amount = formatMoney(result.amount, result.currency_code);
     result.expected_times = i18next.t('firefly.subscr_expected_x_times', {
@@ -214,6 +220,7 @@ export default () => ({
         ['@convert-to-native.window'](event){
             console.log('I heard that! (dashboard/subscriptions)');
             this.convertToNative = event.detail;
+            convertToNative = event.detail;
             this.startSubscriptions();
         }
     },
@@ -308,6 +315,7 @@ export default () => ({
     init() {
         Promise.all([getVariable('convert_to_native', false)]).then((values) => {
             this.convertToNative = values[0];
+            convertToNative = values[0];
             afterPromises = true;
 
             if (false === this.loading) {

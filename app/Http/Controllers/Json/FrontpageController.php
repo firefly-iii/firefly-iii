@@ -45,14 +45,12 @@ class FrontpageController extends Controller
     {
         $set             = $repository->getPiggyBanks();
         $info            = [];
-        $native          = Amount::getNativeCurrency();
-        $convertToNative = Amount::convertToNative();
 
 
         /** @var PiggyBank $piggyBank */
         foreach ($set as $piggyBank) {
             $amount       = $repository->getCurrentAmount($piggyBank);
-            $nativeAmount = $repository->getCurrentNativeAmount($piggyBank);
+            $pcAmount = $repository->getCurrentPrimaryCurrencyAmount($piggyBank);
             if (1 === bccomp($amount, '0')) {
                 // percentage!
                 $pct    = 0;
@@ -64,15 +62,15 @@ class FrontpageController extends Controller
                     'id'                             => $piggyBank->id,
                     'name'                           => $piggyBank->name,
                     'amount'                         => $amount,
-                    'native_amount'                  => $nativeAmount,
+                    'pc_amount'                  => $pcAmount,
                     'target'                         => $piggyBank->target_amount,
-                    'native_target'                  => $piggyBank->native_target_amount,
+                    'pc_target'                  => $piggyBank->native_target_amount,
                     'percentage'                     => $pct,
                     // currency:
                     'currency_symbol'                => $piggyBank->transactionCurrency->symbol,
                     'currency_decimal_places'        => $piggyBank->transactionCurrency->decimal_places,
-                    'native_currency_symbol'         => $native->symbol,
-                    'native_currency_decimal_places' => $native->decimal_places,
+                    'primary_currency_symbol'         => $this->primaryCurrency->symbol,
+                    'primary_currency_decimal_places' => $this->primaryCurrency->decimal_places,
 
                 ];
 
@@ -89,7 +87,9 @@ class FrontpageController extends Controller
         $html            = '';
         if (0 !== count($info)) {
             try {
-                $html = view('json.piggy-banks', compact('info', 'convertToNative', 'native'))->render();
+                $convertToPrimary = $this->convertToPrimary;
+                $primary         = $this->primaryCurrency;
+                $html = view('json.piggy-banks', compact('info', 'convertToPrimary', 'primary'))->render();
             } catch (Throwable $e) {
                 app('log')->error(sprintf('Cannot render json.piggy-banks: %s', $e->getMessage()));
                 app('log')->error($e->getTraceAsString());

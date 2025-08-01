@@ -188,8 +188,8 @@ class ShowController extends Controller
                 'currency' => $budgetLimit->transactionCurrency->name,
             ]
         );
-        if ($this->convertToNative) {
-            $currencySymbol = $this->defaultCurrency->symbol;
+        if ($this->convertToPrimary) {
+            $currencySymbol = $this->primaryCurrency->symbol;
         }
 
         // collector:

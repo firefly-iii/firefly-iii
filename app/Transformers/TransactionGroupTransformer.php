@@ -122,13 +122,13 @@ class TransactionGroupTransformer extends AbstractTransformer
             $foreignAmount = app('steam')->positive($transaction['foreign_amount']);
         }
 
-        // set native amount to the normal amount if the currency matches.
-        if ($transaction['native_currency']['id'] ?? null === $transaction['currency_id']) {
-            $transaction['native_amount'] = $amount;
+        // set primary amount to the normal amount if the currency matches.
+        if ($transaction['primary_currency']['id'] ?? null === $transaction['currency_id']) {
+            $transaction['pc_amount'] = $amount;
         }
 
-        if (array_key_exists('native_amount', $transaction) && null !== $transaction['native_amount']) {
-            $transaction['native_amount'] = app('steam')->positive($transaction['native_amount']);
+        if (array_key_exists('pc_amount', $transaction) && null !== $transaction['pc_amount']) {
+            $transaction['pc_amount'] = app('steam')->positive($transaction['pc_amount']);
         }
         $type            = $this->stringFromArray($transaction, 'transaction_type_type', TransactionTypeEnum::WITHDRAWAL->value);
 
@@ -160,15 +160,15 @@ class TransactionGroupTransformer extends AbstractTransformer
             'amount'                          => $amount,
             'foreign_amount'                  => $foreignAmount,
 
-            // native amount, defaults to NULL when convertToNative is false.
-            'native_amount'                   => $transaction['native_amount'] ?? null,
+            // primary currency amount, defaults to NULL when convertToPrimary is false.
+            'pc_amount'                   => $transaction['pc_amount'] ?? null,
 
-            // native currency, always present.
-            'native_currency_id'              => $transaction['native_currency']['id'] ?? null,
-            'native_currency_code'            => $transaction['native_currency']['code'] ?? null,
-            'native_currency_name'            => $transaction['native_currency']['name'] ?? null,
-            'native_currency_symbol'          => $transaction['native_currency']['symbol'] ?? null,
-            'native_currency_decimal_places'  => $transaction['native_currency']['decimal_places'] ?? null,
+            // primary currency, always present.
+            'primary_currency_id'              => $transaction['primary_currency']['id'] ?? null,
+            'primary_currency_code'            => $transaction['primary_currency']['code'] ?? null,
+            'primary_currency_name'            => $transaction['primary_currency']['name'] ?? null,
+            'primary_currency_symbol'          => $transaction['primary_currency']['symbol'] ?? null,
+            'primary_currency_decimal_places'  => $transaction['primary_currency']['decimal_places'] ?? null,
 
             // source balance after
             'source_balance_after'            => $transaction['source_balance_after'] ?? null,

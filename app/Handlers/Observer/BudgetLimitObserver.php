@@ -34,17 +34,17 @@ class BudgetLimitObserver
     public function created(BudgetLimit $budgetLimit): void
     {
         Log::debug('Observe "created" of a budget limit.');
-        $this->updateNativeAmount($budgetLimit);
+        $this->updatePrimaryCurrencyAmount($budgetLimit);
     }
 
-    private function updateNativeAmount(BudgetLimit $budgetLimit): void
+    private function updatePrimaryCurrencyAmount(BudgetLimit $budgetLimit): void
     {
-        if (!Amount::convertToNative($budgetLimit->budget->user)) {
-            // Log::debug('Do not update native amount of the budget limit.');
+        if (!Amount::convertToPrimary($budgetLimit->budget->user)) {
+            // Log::debug('Do not update primary currency amount of the budget limit.');
 
             return;
         }
-        $userCurrency               = app('amount')->getNativeCurrencyByUserGroup($budgetLimit->budget->user->userGroup);
+        $userCurrency               = app('amount')->getPrimaryCurrencyByUserGroup($budgetLimit->budget->user->userGroup);
         $budgetLimit->native_amount = null;
         if ($budgetLimit->transactionCurrency->id !== $userCurrency->id) {
             $converter                  = new ExchangeRateConverter();
@@ -53,12 +53,12 @@ class BudgetLimitObserver
             $budgetLimit->native_amount = $converter->convert($budgetLimit->transactionCurrency, $userCurrency, today(), $budgetLimit->amount);
         }
         $budgetLimit->saveQuietly();
-        Log::debug('Budget limit native amounts are updated.');
+        Log::debug('Budget limit primary currency amounts are updated.');
     }
 
     public function updated(BudgetLimit $budgetLimit): void
     {
         Log::debug('Observe "updated" of a budget limit.');
-        $this->updateNativeAmount($budgetLimit);
+        $this->updatePrimaryCurrencyAmount($budgetLimit);
     }
 }

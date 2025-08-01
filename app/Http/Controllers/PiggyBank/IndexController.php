@@ -148,7 +148,7 @@ class IndexController extends Controller
         // enrich each account.
         $enrichment         = new AccountEnrichment();
         $enrichment->setUser(auth()->user());
-        $enrichment->setNative($this->defaultCurrency);
+        $enrichment->setPrimary($this->primaryCurrency);
         $return             = [];
 
         /** @var PiggyBank $piggy */

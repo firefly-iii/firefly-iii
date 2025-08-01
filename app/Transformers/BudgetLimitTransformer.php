@@ -37,17 +37,17 @@ use League\Fractal\Resource\Item;
  */
 class BudgetLimitTransformer extends AbstractTransformer
 {
-    protected array $availableIncludes
+    protected array               $availableIncludes
         = [
             'budget',
         ];
-    protected bool                $convertToNative;
-    protected TransactionCurrency $default;
+    protected bool                $convertToPrimary;
+    protected TransactionCurrency $primary;
 
     public function __construct()
     {
-        $this->default         = Amount::getNativeCurrency();
-        $this->convertToNative = Amount::convertToNative();
+        $this->primary          = Amount::getPrimaryCurrency();
+        $this->convertToPrimary = Amount::convertToPrimary();
     }
 
     /**
@@ -65,8 +65,8 @@ class BudgetLimitTransformer extends AbstractTransformer
      */
     public function transform(BudgetLimit $budgetLimit): array
     {
-        $repository            = app(OperationsRepository::class);
-        $limitRepos            = app(BudgetLimitRepositoryInterface::class);
+        $repository = app(OperationsRepository::class);
+        $limitRepos = app(BudgetLimitRepositoryInterface::class);
         $repository->setUser($budgetLimit->budget->user);
         $limitRepos->setUser($budgetLimit->budget->user);
         $expenses              = $repository->sumExpenses(
@@ -92,38 +92,38 @@ class BudgetLimitTransformer extends AbstractTransformer
             $currencySymbol        = $currency->symbol;
             $currencyDecimalPlaces = $currency->decimal_places;
         }
-        $amount                = app('steam')->bcround($amount, $currencyDecimalPlaces);
-        $default               = $this->default;
-        if (!$this->convertToNative) {
-            $default = null;
+        $amount  = app('steam')->bcround($amount, $currencyDecimalPlaces);
+        $primary = $this->primary;
+        if (!$this->convertToPrimary) {
+            $primary = null;
         }
 
 
         return [
-            'id'                             => (string) $budgetLimit->id,
-            'created_at'                     => $budgetLimit->created_at->toAtomString(),
-            'updated_at'                     => $budgetLimit->updated_at->toAtomString(),
-            'start'                          => $budgetLimit->start_date->toAtomString(),
-            'end'                            => $budgetLimit->end_date->endOfDay()->toAtomString(),
-            'budget_id'                      => (string) $budgetLimit->budget_id,
-            'currency_id'                    => (string) $currencyId,
-            'currency_code'                  => $currencyCode,
-            'currency_name'                  => $currencyName,
-            'currency_decimal_places'        => $currencyDecimalPlaces,
-            'currency_symbol'                => $currencySymbol,
-            'native_currency_id'             => $default instanceof TransactionCurrency ? (string) $default->id : null,
-            'native_currency_code'           => $default?->code,
-            'native_currency_symbol'         => $default?->symbol,
-            'native_currency_decimal_places' => $default?->decimal_places,
-            'amount'                         => $amount,
-            'native_amount'                  => $this->convertToNative ? app('steam')->bcround($budgetLimit->native_amount, $default->decimal_places) : null,
-            'period'                         => $budgetLimit->period,
-            'spent'                          => $expenses[$currencyId]['sum'] ?? '0', // will be in native if convertToNative.
-            'notes'                          => '' === $notes ? null : $notes,
-            'links'                          => [
+            'id'                              => (string)$budgetLimit->id,
+            'created_at'                      => $budgetLimit->created_at->toAtomString(),
+            'updated_at'                      => $budgetLimit->updated_at->toAtomString(),
+            'start'                           => $budgetLimit->start_date->toAtomString(),
+            'end'                             => $budgetLimit->end_date->endOfDay()->toAtomString(),
+            'budget_id'                       => (string)$budgetLimit->budget_id,
+            'currency_id'                     => (string)$currencyId,
+            'currency_code'                   => $currencyCode,
+            'currency_name'                   => $currencyName,
+            'currency_decimal_places'         => $currencyDecimalPlaces,
+            'currency_symbol'                 => $currencySymbol,
+            'primary_currency_id'             => $primary instanceof TransactionCurrency ? (string)$primary->id : null,
+            'primary_currency_code'           => $primary?->code,
+            'primary_currency_symbol'         => $primary?->symbol,
+            'primary_currency_decimal_places' => $primary?->decimal_places,
+            'amount'                          => $amount,
+            'pc_amount'                       => $this->convertToPrimary ? app('steam')->bcround($budgetLimit->native_amount, $primary->decimal_places) : null,
+            'period'                          => $budgetLimit->period,
+            'spent'                           => $expenses[$currencyId]['sum'] ?? '0', // will be in native if convertToNative.
+            'notes'                           => '' === $notes ? null : $notes,
+            'links'                           => [
                 [
                     'rel' => 'self',
-                    'uri' => '/budgets/limits/'.$budgetLimit->id,
+                    'uri' => '/budgets/limits/' . $budgetLimit->id,
                 ],
             ],
         ];

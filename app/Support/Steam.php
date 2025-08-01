@@ -93,7 +93,7 @@ class Steam
 
             return [];
         }
-        $defaultCurrency = Amount::getNativeCurrency();
+        $defaultCurrency = Amount::getPrimaryCurrency();
         if ($convertToNative) {
             if ($defaultCurrency->id === $currency?->id) {
                 Log::debug(sprintf('Unset [%s] for account #%d (no longer unset "native_balance")', $defaultCurrency->code, $account->id));
@@ -224,7 +224,7 @@ class Steam
         $request->subDay()->endOfDay();
         Log::debug(sprintf('finalAccountBalanceInRange: Call finalAccountBalance with date/time "%s"', $request->toIso8601String()));
         $startBalance         = $this->finalAccountBalance($account, $request);
-        $nativeCurrency       = Amount::getNativeCurrencyByUserGroup($account->user->userGroup);
+        $nativeCurrency       = Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
         $accountCurrency      = $this->getAccountCurrency($account);
         $hasCurrency          = $accountCurrency instanceof TransactionCurrency;
         $currency             = $accountCurrency ?? $nativeCurrency;
@@ -344,10 +344,10 @@ class Steam
         }
         // Log::debug(sprintf('finalAccountBalance(#%d, %s)', $account->id, $date->format('Y-m-d H:i:s')));
         if (null === $convertToNative) {
-            $convertToNative = Amount::convertToNative($account->user);
+            $convertToNative = Amount::convertToPrimary($account->user);
         }
         if (!$native instanceof TransactionCurrency) {
-            $native = Amount::getNativeCurrencyByUserGroup($account->user->userGroup);
+            $native = Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
         }
         // account balance thing.
         $currencyPresent   = isset($account->meta) && array_key_exists('currency', $account->meta) && null !== $account->meta['currency'];

@@ -44,7 +44,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
         Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         $return           = [];
         $converter        = new ExchangeRateConverter();
-        $default          = app('amount')->getNativeCurrency();
+        $primary          = app('amount')->getPrimaryCurrency();
         $availableBudgets = $this->userGroup->availableBudgets()
             ->where('start_date', $start->format('Y-m-d'))
             ->where('end_date', $end->format('Y-m-d'))->get()
@@ -59,17 +59,17 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
                 'currency_symbol'                => $availableBudget->transactionCurrency->symbol,
                 'currency_name'                  => $availableBudget->transactionCurrency->name,
                 'currency_decimal_places'        => $availableBudget->transactionCurrency->decimal_places,
-                'native_currency_id'             => $default->id,
-                'native_currency_code'           => $default->code,
-                'native_currency_symbol'         => $default->symbol,
-                'native_currency_name'           => $default->name,
-                'native_currency_decimal_places' => $default->decimal_places,
+                'primary_currency_id'             => $primary->id,
+                'primary_currency_code'           => $primary->code,
+                'primary_currency_symbol'         => $primary->symbol,
+                'primary_currency_name'           => $primary->name,
+                'primary_currency_decimal_places' => $primary->decimal_places,
                 'amount'                         => '0',
-                'native_amount'                  => '0',
+                'pc_amount'                  => '0',
             ];
-            $nativeAmount                         = $converter->convert($availableBudget->transactionCurrency, $default, $availableBudget->start_date, $availableBudget->amount);
+            $pcAmount                         = $converter->convert($availableBudget->transactionCurrency, $primary, $availableBudget->start_date, $availableBudget->amount);
             $return[$currencyId]['amount']        = bcadd($return[$currencyId]['amount'], (string) $availableBudget->amount);
-            $return[$currencyId]['native_amount'] = bcadd($return[$currencyId]['native_amount'], $nativeAmount);
+            $return[$currencyId]['pc_amount'] = bcadd($return[$currencyId]['pc_amount'], $pcAmount);
         }
         $converter->summarize();
 

@@ -81,7 +81,7 @@ class UpdateController extends Controller
         $admin        = auth()->user();
         $enrichment   = new AccountEnrichment();
         $enrichment->setUser($admin);
-        $enrichment->setNative($this->nativeCurrency);
+        $enrichment->setPrimary($this->primaryCurrency);
         $account      = $enrichment->enrichSingle($account);
 
         /** @var AccountTransformer $transformer */

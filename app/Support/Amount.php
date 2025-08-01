@@ -101,13 +101,13 @@ class Amount
      */
     public function getAmountFromJournal(array $journal): string
     {
-        $convertToNative = $this->convertToNative();
-        $currency        = $this->getNativeCurrency();
-        $field           = $convertToNative && $currency->id !== $journal['currency_id'] ? 'native_amount' : 'amount';
+        $convertToPrimary = $this->convertToPrimary();
+        $currency        = $this->getPrimaryCurrency();
+        $field           = $convertToPrimary && $currency->id !== $journal['currency_id'] ? 'native_amount' : 'amount';
         $amount          = $journal[$field] ?? '0';
         // Log::debug(sprintf('Field is %s, amount is %s', $field, $amount));
         // fallback, the transaction has a foreign amount in $currency.
-        if ($convertToNative && null !== $journal['foreign_amount'] && $currency->id === (int)$journal['foreign_currency_id']) {
+        if ($convertToPrimary && null !== $journal['foreign_amount'] && $currency->id === (int)$journal['foreign_currency_id']) {
             $amount = $journal['foreign_amount'];
             // Log::debug(sprintf('Overruled, amount is now %s', $amount));
         }
@@ -115,7 +115,7 @@ class Amount
         return (string)$amount;
     }
 
-    public function convertToNative(?User $user = null): bool
+    public function convertToPrimary(?User $user = null): bool
     {
         if (!$user instanceof User) {
             return true === Preferences::get('convert_to_native', false)->data && true === config('cer.enabled');
@@ -124,38 +124,38 @@ class Amount
         return true === Preferences::getForUser($user, 'convert_to_native', false)->data && true === config('cer.enabled');
     }
 
-    public function getNativeCurrency(): TransactionCurrency
+    public function getPrimaryCurrency(): TransactionCurrency
     {
         if (auth()->check()) {
             /** @var User $user */
             $user = auth()->user();
             if (null !== $user->userGroup) {
-                return $this->getNativeCurrencyByUserGroup($user->userGroup);
+                return $this->getPrimaryCurrencyByUserGroup($user->userGroup);
             }
         }
 
         return $this->getSystemCurrency();
     }
 
-    public function getNativeCurrencyByUserGroup(UserGroup $userGroup): TransactionCurrency
+    public function getPrimaryCurrencyByUserGroup(UserGroup $userGroup): TransactionCurrency
     {
         $cache  = new CacheProperties();
-        $cache->addProperty('getNativeCurrencyByGroup');
+        $cache->addProperty('getPrimaryCurrencyByGroup');
         $cache->addProperty($userGroup->id);
         if ($cache->has()) {
             return $cache->get();
         }
 
-        /** @var null|TransactionCurrency $native */
-        $native = $userGroup->currencies()->where('group_default', true)->first();
-        if (null === $native) {
-            $native = $this->getSystemCurrency();
+        /** @var null|TransactionCurrency $primary */
+        $primary = $userGroup->currencies()->where('group_default', true)->first();
+        if (null === $primary) {
+            $primary = $this->getSystemCurrency();
             // could be the user group has no default right now.
-            $userGroup->currencies()->sync([$native->id => ['group_default' => true]]);
+            $userGroup->currencies()->sync([$primary->id => ['group_default' => true]]);
         }
-        $cache->store($native);
+        $cache->store($primary);
 
-        return $native;
+        return $primary;
     }
 
     public function getSystemCurrency(): TransactionCurrency
@@ -169,9 +169,9 @@ class Amount
      */
     public function getAmountFromJournalObject(TransactionJournal $journal): string
     {
-        $convertToNative   = $this->convertToNative();
-        $currency          = $this->getNativeCurrency();
-        $field             = $convertToNative && $currency->id !== $journal->transaction_currency_id ? 'native_amount' : 'amount';
+        $convertToPrimary   = $this->convertToPrimary();
+        $currency          = $this->getPrimaryCurrency();
+        $field             = $convertToPrimary && $currency->id !== $journal->transaction_currency_id ? 'native_amount' : 'amount';
 
         /** @var null|Transaction $sourceTransaction */
         $sourceTransaction = $journal->transactions()->where('amount', '<', 0)->first();
@@ -193,24 +193,6 @@ class Amount
         $user = auth()->user();
 
         return $user->currencies()->orderBy('code', 'ASC')->get();
-    }
-
-    #[Deprecated]
-    public function getDefaultCurrency(): TransactionCurrency
-    {
-        return $this->getNativeCurrency();
-    }
-
-    #[Deprecated(message: 'use getDefaultCurrencyByUserGroup instead')]
-    public function getDefaultCurrencyByUser(User $user): TransactionCurrency
-    {
-        return $this->getDefaultCurrencyByUserGroup($user->userGroup);
-    }
-
-    #[Deprecated]
-    public function getDefaultCurrencyByUserGroup(UserGroup $userGroup): TransactionCurrency
-    {
-        return $this->getNativeCurrencyByUserGroup($userGroup);
     }
 
     /**

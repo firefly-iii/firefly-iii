@@ -37,7 +37,7 @@ use Illuminate\Support\Collection;
 class CategoryTransformer extends AbstractTransformer
 {
     private readonly bool                          $convertToNative;
-    private readonly TransactionCurrency           $default;
+    private readonly TransactionCurrency           $primary;
     private readonly OperationsRepositoryInterface $opsRepository;
     private readonly CategoryRepositoryInterface   $repository;
 
@@ -48,8 +48,8 @@ class CategoryTransformer extends AbstractTransformer
     {
         $this->opsRepository   = app(OperationsRepositoryInterface::class);
         $this->repository      = app(CategoryRepositoryInterface::class);
-        $this->default         = Amount::getNativeCurrency();
-        $this->convertToNative = Amount::convertToNative();
+        $this->primary         = Amount::getPrimaryCurrency();
+        $this->convertToNative = Amount::convertToPrimary();
     }
 
     /**
@@ -60,36 +60,36 @@ class CategoryTransformer extends AbstractTransformer
         $this->opsRepository->setUser($category->user);
         $this->repository->setUser($category->user);
 
-        $spent   = [];
-        $earned  = [];
-        $start   = $this->parameters->get('start');
-        $end     = $this->parameters->get('end');
+        $spent  = [];
+        $earned = [];
+        $start  = $this->parameters->get('start');
+        $end    = $this->parameters->get('end');
         if (null !== $start && null !== $end) {
             $earned = $this->beautify($this->opsRepository->sumIncome($start, $end, null, new Collection([$category])));
             $spent  = $this->beautify($this->opsRepository->sumExpenses($start, $end, null, new Collection([$category])));
         }
-        $default = $this->default;
+        $primary = $this->primary;
         if (!$this->convertToNative) {
-            $default = null;
+            $primary = null;
         }
-        $notes   = $this->repository->getNoteText($category);
+        $notes = $this->repository->getNoteText($category);
 
         return [
-            'id'                             => $category->id,
-            'created_at'                     => $category->created_at->toAtomString(),
-            'updated_at'                     => $category->updated_at->toAtomString(),
-            'name'                           => $category->name,
-            'notes'                          => $notes,
-            'native_currency_id'             => $default instanceof TransactionCurrency ? (string) $default->id : null,
-            'native_currency_code'           => $default?->code,
-            'native_currency_symbol'         => $default?->symbol,
-            'native_currency_decimal_places' => $default?->decimal_places,
-            'spent'                          => $spent,
-            'earned'                         => $earned,
-            'links'                          => [
+            'id'                              => $category->id,
+            'created_at'                      => $category->created_at->toAtomString(),
+            'updated_at'                      => $category->updated_at->toAtomString(),
+            'name'                            => $category->name,
+            'notes'                           => $notes,
+            'primary_currency_id'             => $primary instanceof TransactionCurrency ? (string)$primary->id : null,
+            'primary_currency_code'           => $primary?->code,
+            'primary_currency_symbol'         => $primary?->symbol,
+            'primary_currency_decimal_places' => $primary?->decimal_places,
+            'spent'                           => $spent,
+            'earned'                          => $earned,
+            'links'                           => [
                 [
                     'rel' => 'self',
-                    'uri' => '/categories/'.$category->id,
+                    'uri' => '/categories/' . $category->id,
                 ],
             ],
         ];
@@ -99,7 +99,7 @@ class CategoryTransformer extends AbstractTransformer
     {
         $return = [];
         foreach ($array as $data) {
-            $data['sum'] = app('steam')->bcround($data['sum'], (int) $data['currency_decimal_places']);
+            $data['sum'] = app('steam')->bcround($data['sum'], (int)$data['currency_decimal_places']);
             $return[]    = $data;
         }
 

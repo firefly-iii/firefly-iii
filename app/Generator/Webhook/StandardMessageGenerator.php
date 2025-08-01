@@ -177,7 +177,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
                 $accounts                = $this->collectAccounts($model);
                 $enrichment              = new AccountEnrichment();
                 $enrichment->setUser($model->user);
-                $enrichment->setNative(Amount::getNativeCurrencyByUserGroup($model->userGroup));
+                $enrichment->setPrimary(Amount::getPrimaryCurrencyByUserGroup($model->userGroup));
                 $accounts                = $enrichment->enrich($accounts);
                 foreach ($accounts as $account) {
                     $transformer               = new AccountTransformer();

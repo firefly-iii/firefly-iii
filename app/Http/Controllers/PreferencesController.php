@@ -112,7 +112,7 @@ class PreferencesController extends Controller
         $darkMode                       = Preferences::get('darkMode', 'browser')->data;
         $customFiscalYear               = Preferences::get('customFiscalYear', 0)->data;
         $fiscalYearStartStr             = Preferences::get('fiscalYearStart', '01-01')->data;
-        $convertToNative                = $this->convertToNative;
+        $convertToPrimary                = $this->convertToPrimary;
         if (is_array($fiscalYearStartStr)) {
             $fiscalYearStartStr = '01-01';
         }
@@ -198,7 +198,7 @@ class PreferencesController extends Controller
             'darkMode',
             'availableDarkModes',
             'notifications',
-            'convertToNative',
+            'convertToPrimary',
             'slackUrl',
             'locales',
             'locale',
@@ -265,15 +265,15 @@ class PreferencesController extends Controller
             Preferences::set('ntfy_auth', $all['ntfy_auth'] ?? false);
         }
 
-        // convert native
-        $convertToNative   = 1 === (int) $request->get('convertToNative');
-        if ($convertToNative && !$this->convertToNative) {
+        // convert primary
+        $convertToPrimary   = 1 === (int) $request->get('convertToPrimary');
+        if ($convertToPrimary && !$this->convertToPrimary) {
             // set to true!
-            Log::debug('User sets convertToNative to true.');
-            Preferences::set('convert_to_native', $convertToNative);
+            Log::debug('User sets convertToPrimary to true.');
+            Preferences::set('convert_to_primary', $convertToPrimary);
             event(new UserGroupChangedDefaultCurrency(auth()->user()->userGroup));
         }
-        Preferences::set('convert_to_native', $convertToNative);
+        Preferences::set('convert_to_primary', $convertToPrimary);
 
         // custom fiscal year
         $customFiscalYear  = 1 === (int) $request->get('customFiscalYear');

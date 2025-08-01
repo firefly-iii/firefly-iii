@@ -111,14 +111,14 @@ class CategoryController extends Controller
             $amount                         = app('steam')->positive($journal['amount']);
 
             // overrule if necessary:
-            if ($this->convertToNative && $journalCurrencyId !== $this->nativeCurrency->id) {
-                $currencyId            = (int)$this->nativeCurrency->id;
-                $currencyName          = (string)$this->nativeCurrency->name;
-                $currencyCode          = (string)$this->nativeCurrency->code;
-                $currencySymbol        = (string)$this->nativeCurrency->symbol;
-                $currencyDecimalPlaces = (int)$this->nativeCurrency->decimal_places;
-                $convertedAmount       = $converter->convert($currency, $this->nativeCurrency, $journal['date'], $amount);
-                Log::debug(sprintf('Converted %s %s to %s %s', $journal['currency_code'], $amount, $this->nativeCurrency->code, $convertedAmount));
+            if ($this->convertToPrimary && $journalCurrencyId !== $this->primaryCurrency->id) {
+                $currencyId            = (int)$this->primaryCurrency->id;
+                $currencyName          = (string)$this->primaryCurrency->name;
+                $currencyCode          = (string)$this->primaryCurrency->code;
+                $currencySymbol        = (string)$this->primaryCurrency->symbol;
+                $currencyDecimalPlaces = (int)$this->primaryCurrency->decimal_places;
+                $convertedAmount       = $converter->convert($currency, $this->primaryCurrency, $journal['date'], $amount);
+                Log::debug(sprintf('Converted %s %s to %s %s', $journal['currency_code'], $amount, $this->primaryCurrency->code, $convertedAmount));
                 $amount                = $convertedAmount;
             }
 
