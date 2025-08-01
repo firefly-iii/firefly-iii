@@ -241,7 +241,6 @@ class OutputsInstructions extends Command
         $lines = [
             'Forgive yourself for not being at peace.',
             'Doesn\'t look like anything to me.',
-            'All the decisive blows are struck left-handed. (strength lies in improvisation)',
             'Be proud of what you make.',
             'Be there or forever wonder.',
             'A year from now you will wish you had started today.'
