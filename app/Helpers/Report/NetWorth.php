@@ -65,8 +65,8 @@ class NetWorth implements NetWorthInterface
     {
         // start in the past, end in the future? use $date
         $convertToPrimary = Amount::convertToPrimary();
-        $ids             = implode(',', $accounts->pluck('id')->toArray());
-        $cache           = new CacheProperties();
+        $ids              = implode(',', $accounts->pluck('id')->toArray());
+        $cache            = new CacheProperties();
         $cache->addProperty($date);
         $cache->addProperty($convertToPrimary);
         $cache->addProperty('net-worth-by-accounts');
@@ -75,28 +75,28 @@ class NetWorth implements NetWorthInterface
             return $cache->get();
         }
         Log::debug(sprintf('Now in byAccounts("%s", "%s")', $ids, $date->format('Y-m-d H:i:s')));
-        $primary         = Amount::getPrimaryCurrency();
-        $netWorth        = [];
+        $primary          = Amount::getPrimaryCurrency();
+        $netWorth         = [];
         Log::debug(sprintf('NetWorth: finalAccountsBalance("%s")', $date->format('Y-m-d H:i:s')));
-        $balances        = Steam::finalAccountsBalance($accounts, $date);
+        $balances         = Steam::finalAccountsBalance($accounts, $date);
 
         /** @var Account $account */
         foreach ($accounts as $account) {
             //            Log::debug(sprintf('Now at account #%d ("%s")', $account->id, $account->name));
             $currency                           = $this->accountRepository->getAccountCurrency($account) ?? $primary;
-            $usePrimary                          = $convertToPrimary && $primary->id !== $currency->id;
+            $usePrimary                         = $convertToPrimary && $primary->id !== $currency->id;
             $currency                           = $usePrimary ? $primary : $currency;
             $currencyCode                       = $currency->code;
             $balance                            = '0';
-            $primaryBalance                      = '0';
+            $primaryBalance                     = '0';
             if (array_key_exists($account->id, $balances)) {
-                $balance       = $balances[$account->id]['balance'] ?? '0';
+                $balance        = $balances[$account->id]['balance'] ?? '0';
                 $primaryBalance = $balances[$account->id]['pc_balance'] ?? '0';
             }
             //            Log::debug(sprintf('Balance is %s, primary balance is %s', $balance, $primaryBalance));
             // always subtract virtual balance again.
             $balance                            = '' !== (string) $account->virtual_balance ? bcsub($balance, (string) $account->virtual_balance) : $balance;
-            $primaryBalance                      = '' !== (string) $account->native_virtual_balance ? bcsub($primaryBalance, (string) $account->native_virtual_balance) : $primaryBalance;
+            $primaryBalance                     = '' !== (string) $account->native_virtual_balance ? bcsub($primaryBalance, (string) $account->native_virtual_balance) : $primaryBalance;
             $amountToUse                        = $usePrimary ? $primaryBalance : $balance;
             //            Log::debug(sprintf('Will use %s %s', $currencyCode, $amountToUse));
 

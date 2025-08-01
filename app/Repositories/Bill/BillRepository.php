@@ -259,21 +259,21 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             /** @var Transaction $transaction */
-            $transaction                       = $journal->transactions()->where('amount', '<', 0)->first();
-            $currencyId                        = (int) $journal->transaction_currency_id;
-            $currency                          = $journal->transactionCurrency;
+            $transaction                   = $journal->transactions()->where('amount', '<', 0)->first();
+            $currencyId                    = (int) $journal->transaction_currency_id;
+            $currency                      = $journal->transactionCurrency;
             $result[$currencyId] ??= [
                 'sum'                     => '0',
-                'pc_sum'              => '0',
+                'pc_sum'                  => '0',
                 'count'                   => 0,
                 'avg'                     => '0',
-                'pc_avg'              => '0',
+                'pc_avg'                  => '0',
                 'currency_id'             => $currency->id,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
             ];
-            $result[$currencyId]['sum']        = bcadd($result[$currencyId]['sum'], (string) $transaction->amount);
+            $result[$currencyId]['sum']    = bcadd($result[$currencyId]['sum'], (string) $transaction->amount);
             $result[$currencyId]['pc_sum'] = bcadd($result[$currencyId]['pc_sum'], $transaction->native_amount ?? '0');
             if ($journal->foreign_currency_id === Amount::getPrimaryCurrency()->id) {
                 $result[$currencyId]['pc_sum'] = bcadd($result[$currencyId]['pc_sum'], (string) $transaction->amount);
@@ -287,7 +287,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
          * @var array $arr
          */
         foreach ($result as $currencyId => $arr) {
-            $result[$currencyId]['avg']        = bcdiv((string) $arr['sum'], (string) $arr['count']);
+            $result[$currencyId]['avg']    = bcdiv((string) $arr['sum'], (string) $arr['count']);
             $result[$currencyId]['pc_avg'] = bcdiv((string) $arr['pc_sum'], (string) $arr['count']);
         }
 
@@ -393,15 +393,15 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             /** @var null|Transaction $transaction */
-            $transaction                       = $journal->transactions()->where('amount', '<', 0)->first();
+            $transaction                   = $journal->transactions()->where('amount', '<', 0)->first();
             if (null === $transaction) {
                 continue;
             }
-            $currencyId                        = (int) $journal->transaction_currency_id;
-            $currency                          = $journal->transactionCurrency;
+            $currencyId                    = (int) $journal->transaction_currency_id;
+            $currency                      = $journal->transactionCurrency;
             $result[$currencyId] ??= [
                 'sum'                     => '0',
-                'pc_sum'              => '0',
+                'pc_sum'                  => '0',
                 'count'                   => 0,
                 'avg'                     => '0',
                 'currency_id'             => $currency->id,
@@ -409,7 +409,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
             ];
-            $result[$currencyId]['sum']        = bcadd($result[$currencyId]['sum'], (string) $transaction->amount);
+            $result[$currencyId]['sum']    = bcadd($result[$currencyId]['sum'], (string) $transaction->amount);
             $result[$currencyId]['pc_sum'] = bcadd($result[$currencyId]['pc_sum'], $transaction->native_amount ?? '0');
             if ($journal->foreign_currency_id === Amount::getPrimaryCurrency()->id) {
                 $result[$currencyId]['pc_sum'] = bcadd($result[$currencyId]['pc_sum'], (string) $transaction->amount);
@@ -423,7 +423,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
          * @var array $arr
          */
         foreach ($result as $currencyId => $arr) {
-            $result[$currencyId]['avg']        = bcdiv((string) $arr['sum'], (string) $arr['count']);
+            $result[$currencyId]['avg']    = bcdiv((string) $arr['sum'], (string) $arr['count']);
             $result[$currencyId]['pc_avg'] = bcdiv((string) $arr['pc_sum'], (string) $arr['count']);
         }
 
@@ -532,10 +532,10 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
     public function sumPaidInRange(Carbon $start, Carbon $end): array
     {
         Log::debug(sprintf('sumPaidInRange from %s to %s', $start->toW3cString(), $end->toW3cString()));
-        $bills           = $this->getActiveBills();
-        $return          = [];
+        $bills            = $this->getActiveBills();
+        $return           = [];
         $convertToPrimary = Amount::convertToPrimary($this->user);
-        $primary         = app('amount')->getPrimaryCurrency();
+        $primary          = app('amount')->getPrimaryCurrency();
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {
@@ -575,7 +575,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
             // Log::debug(sprintf('Total sum is now %s', $return[$currency->id]['sum']));
         }
         // remove empty sets
-        $final           = [];
+        $final            = [];
         foreach ($return as $entry) {
             if (0 === bccomp($entry['sum'], '0')) {
                 continue;
@@ -598,10 +598,10 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
     public function sumUnpaidInRange(Carbon $start, Carbon $end): array
     {
         app('log')->debug(sprintf('Now in sumUnpaidInRange("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d')));
-        $bills           = $this->getActiveBills();
-        $return          = [];
+        $bills            = $this->getActiveBills();
+        $return           = [];
         $convertToPrimary = Amount::convertToPrimary($this->user);
-        $primary         = app('amount')->getPrimaryCurrency();
+        $primary          = app('amount')->getPrimaryCurrency();
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {

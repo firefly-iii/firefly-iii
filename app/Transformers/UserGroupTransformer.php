@@ -108,18 +108,18 @@ class UserGroupTransformer extends AbstractTransformer
         $currency = Amount::getPrimaryCurrencyByUserGroup($userGroup);
 
         return [
-            'id'                             => $userGroup->id,
-            'created_at'                     => $userGroup->created_at->toAtomString(),
-            'updated_at'                     => $userGroup->updated_at->toAtomString(),
-            'in_use'                         => $this->inUse[$userGroup->id] ?? false,
-            'can_see_members'                => $this->membershipsVisible[$userGroup->id] ?? false,
-            'title'                          => $userGroup->title,
+            'id'                              => $userGroup->id,
+            'created_at'                      => $userGroup->created_at->toAtomString(),
+            'updated_at'                      => $userGroup->updated_at->toAtomString(),
+            'in_use'                          => $this->inUse[$userGroup->id] ?? false,
+            'can_see_members'                 => $this->membershipsVisible[$userGroup->id] ?? false,
+            'title'                           => $userGroup->title,
             'primary_currency_id'             => (string) $currency->id,
             'primary_currency_name'           => $currency->name,
             'primary_currency_code'           => $currency->code,
             'primary_currency_symbol'         => $currency->symbol,
             'primary_currency_decimal_places' => $currency->decimal_places,
-            'members'                        => array_values($this->memberships[$userGroup->id] ?? []),
+            'members'                         => array_values($this->memberships[$userGroup->id] ?? []),
         ];
         // if the user has a specific role in this group, then collect the memberships.
     }

@@ -49,7 +49,7 @@ trait ChartGeneration
     {
         // chart properties for cache:
         $convertToPrimary = Amount::convertToPrimary();
-        $cache           = new CacheProperties();
+        $cache            = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('chart.account.account-balance-chart');
@@ -59,16 +59,16 @@ trait ChartGeneration
             return $cache->get();
         }
         Log::debug('Regenerate chart.account.account-balance-chart from scratch.');
-        $locale          = app('steam')->getLocale();
+        $locale           = app('steam')->getLocale();
 
         /** @var GeneratorInterface $generator */
-        $generator       = app(GeneratorInterface::class);
+        $generator        = app(GeneratorInterface::class);
 
         /** @var AccountRepositoryInterface $accountRepos */
-        $accountRepos    = app(AccountRepositoryInterface::class);
+        $accountRepos     = app(AccountRepositoryInterface::class);
 
-        $default         = app('amount')->getPrimaryCurrency();
-        $chartData       = [];
+        $default          = app('amount')->getPrimaryCurrency();
+        $chartData        = [];
 
         Log::debug(sprintf('Start of accountBalanceChart(list, %s, %s)', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
 
@@ -76,7 +76,7 @@ trait ChartGeneration
         foreach ($accounts as $account) {
             Log::debug(sprintf('Now at account #%d ("%s)', $account->id, $account->name));
             $currency     = $accountRepos->getAccountCurrency($account) ?? $default;
-            $usePrimary    = $convertToPrimary && $default->id !== $currency->id;
+            $usePrimary   = $convertToPrimary && $default->id !== $currency->id;
             $field        = $convertToPrimary ? 'pc_balance' : 'balance';
             $currency     = $usePrimary ? $default : $currency;
             Log::debug(sprintf('Will use field %s', $field));
@@ -100,7 +100,7 @@ trait ChartGeneration
             }
             $chartData[]  = $currentSet;
         }
-        $data            = $generator->multiSet($chartData);
+        $data             = $generator->multiSet($chartData);
         $cache->store($data);
 
         return $data;

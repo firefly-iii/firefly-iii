@@ -44,8 +44,8 @@ class TransactionSummarizer
 
     public function setUser(User $user): void
     {
-        $this->user            = $user;
-        $this->default         = Amount::getPrimaryCurrencyByUserGroup($user->userGroup);
+        $this->user             = $user;
+        $this->default          = Amount::getPrimaryCurrencyByUserGroup($user->userGroup);
         $this->convertToPrimary = Amount::convertToPrimary($user);
     }
 
@@ -73,7 +73,7 @@ class TransactionSummarizer
             if ($this->convertToPrimary) {
                 //                Log::debug('convertToPrimary is true.');
                 // if convert to primary currency, use the primary currency amount yes or no?
-                $usePrimary  = $this->default->id !== (int) $journal['currency_id'];
+                $usePrimary = $this->default->id !== (int) $journal['currency_id'];
                 $useForeign = $this->default->id === (int) $journal['foreign_currency_id'];
                 if ($usePrimary) {
                     //                    Log::debug(sprintf('Journal #%d switches to primary currency amount (original is %s)', $journal['transaction_journal_id'], $journal['currency_code']));
@@ -156,11 +156,11 @@ class TransactionSummarizer
     public function groupByDirection(array $journals, string $method, string $direction): array
     {
 
-        $array           = [];
-        $idKey           = sprintf('%s_account_id', $direction);
-        $nameKey         = sprintf('%s_account_name', $direction);
+        $array            = [];
+        $idKey            = sprintf('%s_account_id', $direction);
+        $nameKey          = sprintf('%s_account_name', $direction);
         $convertToPrimary = Amount::convertToPrimary($this->user);
-        $primary         = Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
+        $primary          = Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
 
 
         Log::debug(sprintf('groupByDirection(array, %s, %s).', $direction, $method));

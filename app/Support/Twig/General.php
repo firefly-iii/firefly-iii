@@ -71,15 +71,15 @@ class General extends AbstractExtension
                 }
 
                 /** @var Carbon $date */
-                $date            = session('end', today(config('app.timezone'))->endOfMonth());
+                $date             = session('end', today(config('app.timezone'))->endOfMonth());
                 Log::debug(sprintf('twig balance: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
-                $info            = Steam::finalAccountBalance($account, $date);
-                $currency        = Steam::getAccountCurrency($account);
-                $primary         = Amount::getPrimaryCurrency();
+                $info             = Steam::finalAccountBalance($account, $date);
+                $currency         = Steam::getAccountCurrency($account);
+                $primary          = Amount::getPrimaryCurrency();
                 $convertToPrimary = Amount::convertToPrimary();
                 $usePrimary       = $convertToPrimary && $primary->id !== $currency->id;
                 $currency ??= $primary;
-                $strings         = [];
+                $strings          = [];
                 foreach ($info as $key => $balance) {
                     if ('balance' === $key) {
                         // balance in account currency.

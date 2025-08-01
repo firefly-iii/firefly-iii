@@ -27,14 +27,14 @@ class SubscriptionEnrichment implements EnrichmentInterface
     private UserGroup           $userGroup;
     private Collection          $collection;
     private bool                $convertToPrimary = false;
-    private ?Carbon             $start           = null;
-    private ?Carbon             $end             = null;
-    private array               $subscriptionIds = [];
-    private array               $objectGroups    = [];
-    private array               $mappedObjects   = [];
-    private array               $paidDates       = [];
-    private array               $notes           = [];
-    private array               $payDates        = [];
+    private ?Carbon             $start            = null;
+    private ?Carbon             $end              = null;
+    private array               $subscriptionIds  = [];
+    private array               $objectGroups     = [];
+    private array               $mappedObjects    = [];
+    private array               $paidDates        = [];
+    private array               $notes            = [];
+    private array               $payDates         = [];
     private TransactionCurrency $primaryCurrency;
     private BillDateCalculator  $calculator;
 
@@ -236,7 +236,8 @@ class SubscriptionEnrichment implements EnrichmentInterface
         Log::debug(sprintf('Count %d entries in set', $set->count()));
 
         // for each bill, do a loop.
-        $converter = new ExchangeRateConverter();
+        $converter       = new ExchangeRateConverter();
+
         /** @var Bill $subscription */
         foreach ($this->collection as $subscription) {
             // Grab from array the most recent payment. If none exist, fall back to the start date and pretend *that* was the last paid date.
@@ -267,10 +268,10 @@ class SubscriptionEnrichment implements EnrichmentInterface
                     $array['foreign_currency_decimal_places'] = $entry->foreign_currency_decimal_places;
                     $array['foreign_amount']                  = Steam::bcround($entry->foreign_amount, $entry->foreign_currency_decimal_places);
                 }
-                if($this->convertToPrimary) {
-                    $array['amount'] = $converter->convert($entry->transactionCurrency, $this->primaryCurrency, $entry->date, $entry->amount);
-                    $array['currency_id'] = $this->primaryCurrency->id;
-                    $array['currency_code'] = $this->primaryCurrency->code;
+                if ($this->convertToPrimary) {
+                    $array['amount']                  = $converter->convert($entry->transactionCurrency, $this->primaryCurrency, $entry->date, $entry->amount);
+                    $array['currency_id']             = $this->primaryCurrency->id;
+                    $array['currency_code']           = $this->primaryCurrency->code;
                     $array['currency_decimal_places'] = $this->primaryCurrency->decimal_places;
 
                 }
@@ -343,10 +344,12 @@ class SubscriptionEnrichment implements EnrichmentInterface
 
     private function collectPayDates(): void
     {
-        if(null === $this->start || null === $this->end) {
+        if (null === $this->start || null === $this->end) {
             Log::debug('Parameters are NULL, set empty array');
+
             return;
         }
+
         /** @var Bill $subscription */
         foreach ($this->collection as $subscription) {
             $id                  = (int)$subscription->id;

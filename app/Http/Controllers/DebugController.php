@@ -281,16 +281,16 @@ class DebugController extends Controller
         setlocale(LC_ALL, (string) $original);
 
         return [
-            'user_id'           => auth()->user()->id,
-            'user_count'        => User::count(),
-            'user_flags'        => $userFlags,
-            'user_agent'        => $userAgent,
+            'user_id'            => auth()->user()->id,
+            'user_count'         => User::count(),
+            'user_flags'         => $userFlags,
+            'user_agent'         => $userAgent,
             'primary'            => Amount::getPrimaryCurrency(),
             'convert_to_primary' => Amount::convertToPrimary(),
-            'locale_attempts'   => $localeAttempts,
-            'locale'            => Steam::getLocale(),
-            'language'          => Steam::getLanguage(),
-            'view_range'        => Preferences::get('viewRange', '1M')->data,
+            'locale_attempts'    => $localeAttempts,
+            'locale'             => Steam::getLocale(),
+            'language'           => Steam::getLanguage(),
+            'view_range'         => Preferences::get('viewRange', '1M')->data,
         ];
     }
 

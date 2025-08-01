@@ -105,17 +105,17 @@ class AccountController extends Controller
     private function renderAccountData(array $params, Account $account): void
     {
         Log::debug(sprintf('Now in %s(array, #%d)', __METHOD__, $account->id));
-        $currency       = $this->repository->getAccountCurrency($account);
-        $currentStart   = clone $params['start'];
-        $range          = Steam::finalAccountBalanceInRange($account, $params['start'], clone $params['end'], $this->convertToPrimary);
+        $currency     = $this->repository->getAccountCurrency($account);
+        $currentStart = clone $params['start'];
+        $range        = Steam::finalAccountBalanceInRange($account, $params['start'], clone $params['end'], $this->convertToPrimary);
 
 
-        $previous       = array_values($range)[0]['balance'];
-        $pcPrevious = null;
+        $previous     = array_values($range)[0]['balance'];
+        $pcPrevious   = null;
         if (!$currency instanceof TransactionCurrency) {
             $currency = $this->default;
         }
-        $currentSet     = [
+        $currentSet   = [
             'label'                   => $account->name,
 
             // the currency that belongs to the account.
@@ -132,12 +132,12 @@ class AccountController extends Controller
             'entries'                 => [],
         ];
         if ($this->convertToPrimary) {
-            $currentSet['pc_entries']                 = [];
+            $currentSet['pc_entries']                      = [];
             $currentSet['primary_currency_id']             = (string)$this->primaryCurrency->id;
             $currentSet['primary_currency_code']           = $this->primaryCurrency->code;
             $currentSet['primary_currency_symbol']         = $this->primaryCurrency->symbol;
             $currentSet['primary_currency_decimal_places'] = $this->primaryCurrency->decimal_places;
-            $pcPrevious                               = array_values($range)[0]['pc_balance'];
+            $pcPrevious                                    = array_values($range)[0]['pc_balance'];
         }
 
 
@@ -150,7 +150,7 @@ class AccountController extends Controller
 
 
             // do the same for the primary currency balance, if relevant:
-            $pcBalance                 = null;
+            $pcBalance                     = null;
             if ($this->convertToPrimary) {
                 $pcBalance                        = array_key_exists($format, $range) ? $range[$format]['pc_balance'] : $pcPrevious;
                 $pcPrevious                       = $pcBalance;
@@ -191,12 +191,12 @@ class AccountController extends Controller
         /** @var Account $account */
         foreach ($accounts as $account) {
             Log::debug(sprintf('Rendering chart data for account %s (%d)', $account->name, $account->id));
-            $currency       = $this->repository->getAccountCurrency($account) ?? $this->primaryCurrency;
-            $currentStart   = clone $start;
-            $range          = Steam::finalAccountBalanceInRange($account, $start, clone $end, $this->convertToPrimary);
-            $previous       = array_values($range)[0]['balance'];
-            $pcPrevious = null;
-            $currentSet     = [
+            $currency     = $this->repository->getAccountCurrency($account) ?? $this->primaryCurrency;
+            $currentStart = clone $start;
+            $range        = Steam::finalAccountBalanceInRange($account, $start, clone $end, $this->convertToPrimary);
+            $previous     = array_values($range)[0]['balance'];
+            $pcPrevious   = null;
+            $currentSet   = [
                 'label'                   => $account->name,
                 'currency_id'             => (string)$currency->id,
                 'currency_code'           => $currency->code,
@@ -211,12 +211,12 @@ class AccountController extends Controller
 
             // add "pc_entries" if convertToPrimary is true:
             if ($this->convertToPrimary) {
-                $currentSet['pc_entries']                 = [];
+                $currentSet['pc_entries']                      = [];
                 $currentSet['primary_currency_id']             = (string)$this->primaryCurrency->id;
                 $currentSet['primary_currency_code']           = $this->primaryCurrency->code;
                 $currentSet['primary_currency_symbol']         = $this->primaryCurrency->symbol;
                 $currentSet['primary_currency_decimal_places'] = $this->primaryCurrency->decimal_places;
-                $pcPrevious                               = array_values($range)[0]['pc_balance'];
+                $pcPrevious                                    = array_values($range)[0]['pc_balance'];
 
             }
 
@@ -231,7 +231,7 @@ class AccountController extends Controller
                 $currentSet['entries'][$label] = $balance;
 
                 // do the same for the primary balance, if relevant:
-                $pcBalance                 = null;
+                $pcBalance                     = null;
                 if ($this->convertToPrimary) {
                     $pcBalance                        = array_key_exists($format, $range) ? $range[$format]['pc_balance'] : $pcPrevious;
                     $pcPrevious                       = $pcBalance;
@@ -241,7 +241,7 @@ class AccountController extends Controller
                 $currentStart->addDay();
 
             }
-            $chartData[]    = $currentSet;
+            $chartData[]  = $currentSet;
         }
 
         return response()->json($chartData);

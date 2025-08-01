@@ -60,7 +60,7 @@ abstract class Controller extends BaseController
     protected ?TransactionCurrency $primaryCurrency;
     protected string               $monthAndDayFormat;
     protected string               $monthFormat;
-    protected string               $redirectUrl     = '/';
+    protected string               $redirectUrl      = '/';
 
     /**
      * Controller constructor.
@@ -128,13 +128,13 @@ abstract class Controller extends BaseController
                 $this->primaryCurrency   = null;
                 // get shown-intro-preference:
                 if (auth()->check()) {
-                    $this->primaryCurrency = Amount::getPrimaryCurrency();
-                    $language              = Steam::getLanguage();
-                    $locale                = Steam::getLocale();
-                    $darkMode              = app('preferences')->get('darkMode', 'browser')->data;
+                    $this->primaryCurrency  = Amount::getPrimaryCurrency();
+                    $language               = Steam::getLanguage();
+                    $locale                 = Steam::getLocale();
+                    $darkMode               = app('preferences')->get('darkMode', 'browser')->data;
                     $this->convertToPrimary = Amount::convertToPrimary();
-                    $page                  = $this->getPageName();
-                    $shownDemo             = $this->hasSeenDemo();
+                    $page                   = $this->getPageName();
+                    $shownDemo              = $this->hasSeenDemo();
                     View::share('language', $language);
                     View::share('locale', $locale);
                     View::share('convertToPrimary', $this->convertToPrimary);

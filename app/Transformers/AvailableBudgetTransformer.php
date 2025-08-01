@@ -66,7 +66,7 @@ class AvailableBudgetTransformer extends AbstractTransformer
         if (!$this->convertToPrimary) {
             $primary = null;
         }
-        $data  = [
+        $data     = [
             'id'                              => (string)$availableBudget->id,
             'created_at'                      => $availableBudget->created_at->toAtomString(),
             'updated_at'                      => $availableBudget->updated_at->toAtomString(),
@@ -87,12 +87,12 @@ class AvailableBudgetTransformer extends AbstractTransformer
             'links'                           => [
                 [
                     'rel' => 'self',
-                    'uri' => '/available_budgets/' . $availableBudget->id,
+                    'uri' => '/available_budgets/'.$availableBudget->id,
                 ],
             ],
         ];
-        $start = $this->parameters->get('start');
-        $end   = $this->parameters->get('end');
+        $start    = $this->parameters->get('start');
+        $end      = $this->parameters->get('end');
         if (null !== $start && null !== $end) {
             $data['spent_in_budgets'] = $this->getSpentInBudgets();
             $data['spent_no_budget']  = $this->spentOutsideBudgets();

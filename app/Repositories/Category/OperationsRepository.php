@@ -345,7 +345,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
     public function sumIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
-        $collector       = app(GroupCollectorInterface::class);
+        $collector        = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)
             ->setTypes([TransactionTypeEnum::DEPOSIT->value])
         ;
@@ -357,10 +357,10 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
             $categories = $this->getCategories();
         }
         $collector->setCategories($categories);
-        $journals        = $collector->getExtractedJournals();
+        $journals         = $collector->getExtractedJournals();
         $convertToPrimary = Amount::convertToPrimary($this->user);
-        $primary         = Amount::getPrimaryCurrency();
-        $array           = [];
+        $primary          = Amount::getPrimaryCurrency();
+        $array            = [];
 
         foreach ($journals as $journal) {
             // Almost the same as in \FireflyIII\Repositories\Budget\OperationsRepository::sumExpenses

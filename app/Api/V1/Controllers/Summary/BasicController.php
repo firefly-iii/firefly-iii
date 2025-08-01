@@ -128,28 +128,28 @@ class BasicController extends Controller
         Log::debug('getBalanceInformation');
         // some config settings
         $convertToPrimary = Amount::convertToPrimary();
-        $primary         = Amount::getPrimaryCurrency();
+        $primary          = Amount::getPrimaryCurrency();
         // prep some arrays:
-        $sums            = [];
-        $return          = [];
-        $currencies      = [
+        $sums             = [];
+        $return           = [];
+        $currencies       = [
             $primary->id => $primary,
         ];
 
         // collect income of user using the new group collector.
         /** @var GroupCollectorInterface $collector */
-        $collector       = app(GroupCollectorInterface::class);
-        $summarizer      = new TransactionSummarizer();
-        $set             = $collector->setRange($start, $end)->setTypes([TransactionTypeEnum::DEPOSIT->value])->getExtractedJournals();
-        $incomes         = $summarizer->groupByCurrencyId($set, 'positive', false);
+        $collector        = app(GroupCollectorInterface::class);
+        $summarizer       = new TransactionSummarizer();
+        $set              = $collector->setRange($start, $end)->setTypes([TransactionTypeEnum::DEPOSIT->value])->getExtractedJournals();
+        $incomes          = $summarizer->groupByCurrencyId($set, 'positive', false);
 
 
         // collect expenses of user.
         // collect expenses of user using the new group collector.
         /** @var GroupCollectorInterface $collector */
-        $collector       = app(GroupCollectorInterface::class);
-        $set             = $collector->setRange($start, $end)->setPage($this->parameters->get('page'))->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->getExtractedJournals();
-        $expenses        = $summarizer->groupByCurrencyId($set, 'negative', false);
+        $collector        = app(GroupCollectorInterface::class);
+        $set              = $collector->setRange($start, $end)->setPage($this->parameters->get('page'))->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->getExtractedJournals();
+        $expenses         = $summarizer->groupByCurrencyId($set, 'negative', false);
 
         // if convert to primary, do so right now.
         if ($convertToPrimary) {
@@ -233,7 +233,7 @@ class BasicController extends Controller
             }
         }
         // format amounts:
-        $keys            = array_keys($sums);
+        $keys             = array_keys($sums);
         foreach ($keys as $currencyId) {
             $currency = $currencies[$currencyId] ?? $this->currencyRepos->find($currencyId);
             if (null === $currency) {

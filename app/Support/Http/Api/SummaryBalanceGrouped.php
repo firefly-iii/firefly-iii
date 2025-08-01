@@ -112,7 +112,7 @@ class SummaryBalanceGrouped
             $amount                                = bcmul((string) $journal['amount'], $multiplier);
             $currency                              = $this->currencies[$currencyId] ?? TransactionCurrency::find($currencyId);
             $this->currencies[$currencyId]         = $currency;
-            $pcAmount                          = $converter->convert($currency, $this->default, $journal['date'], $amount);
+            $pcAmount                              = $converter->convert($currency, $this->default, $journal['date'], $amount);
             if ((int) $journal['foreign_currency_id'] === $this->default->id) {
                 // use foreign amount instead
                 $pcAmount = $journal['foreign_amount'];
@@ -120,15 +120,15 @@ class SummaryBalanceGrouped
             // prep the arrays
             $this->amounts[$key]                   ??= [];
             $this->amounts[$key][$currencyId]      ??= '0';
-            $this->amounts[$key]['primary']         ??= '0';
+            $this->amounts[$key]['primary']        ??= '0';
             $this->amounts[self::SUM][$currencyId] ??= '0';
-            $this->amounts[self::SUM]['primary']    ??= '0';
+            $this->amounts[self::SUM]['primary']   ??= '0';
 
             // add values:
             $this->amounts[$key][$currencyId]      = bcadd((string) $this->amounts[$key][$currencyId], $amount);
             $this->amounts[self::SUM][$currencyId] = bcadd((string) $this->amounts[self::SUM][$currencyId], $amount);
-            $this->amounts[$key]['primary']         = bcadd((string) $this->amounts[$key]['primary'], (string) $pcAmount);
-            $this->amounts[self::SUM]['primary']    = bcadd((string) $this->amounts[self::SUM]['primary'], (string) $pcAmount);
+            $this->amounts[$key]['primary']        = bcadd((string) $this->amounts[$key]['primary'], (string) $pcAmount);
+            $this->amounts[self::SUM]['primary']   = bcadd((string) $this->amounts[self::SUM]['primary'], (string) $pcAmount);
         }
         $converter->summarize();
     }
