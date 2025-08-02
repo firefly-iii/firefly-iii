@@ -381,7 +381,7 @@ class Steam
         }
         // if there is a request to convert, convert to "pc_balance" and use "balance" for whichever amount is in the primary currency.
         if ($convertToPrimary) {
-            $return['primary_balance'] = $this->convertAllBalances($others, $primary, $date); // todo sum all and convert.
+            $return['pc_balance'] = $this->convertAllBalances($others, $primary, $date); // todo sum all and convert.
             // Log::debug(sprintf('Set pc_balance to %s', $return['pc_balance']));
         }
 
