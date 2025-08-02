@@ -291,7 +291,7 @@ class BudgetController extends Controller
                 }
                 if ($current->transaction_currency_id !== $this->primaryCurrency->id) {
                     // convert and then add it.
-                    $converted = $converter->convert($current->transactionCurrency, $this->primaryCurrency, $limit->start_date, $limit->amount);
+                    $converted = $converter->convert($current->transactionCurrency, $this->primaryCurrency, $current->start_date, $current->amount);
                     $amount    = bcadd($amount, $converted);
                     Log::debug(sprintf('Budgeted in limit #%d: %s %s, converted to %s %s', $current->id, $current->transactionCurrency->code, $current->amount, $this->primaryCurrency->code, $converted));
                     Log::debug(sprintf('Set amount in limit to %s', $amount));

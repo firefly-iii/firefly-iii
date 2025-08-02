@@ -212,10 +212,10 @@ export default () => ({
                         let parent = response.data.data;
 
                         // apply function to each element of parent:
-                        parent.attributes.balances = parent.attributes.balances.map((balance) => {
-                            balance.amount_formatted = formatMoney(balance.amount, balance.currency_code);
-                            return balance;
-                        });
+                        // parent.attributes.balances = parent.attributes.balances.map((balance) => {
+                        //     balance.amount_formatted = formatMoney(balance.amount, balance.currency_code);
+                        //     return balance;
+                        // });
                         // console.log(parent);
 
 
