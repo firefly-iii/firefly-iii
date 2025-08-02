@@ -96,7 +96,10 @@ class StoreRequest extends FormRequest
             function (Validator $validator): void {
                 // validate start before end only if both are there.
                 $data          = $validator->getData();
-                $currency      = $this->getCurrencyFromData($data);
+                $currency      = $this->getCurrencyFromData($validator, $data);
+                if(null === $currency) {
+                    return;
+                }
                 $targetAmount  = (string) ($data['target_amount'] ?? '0');
                 $currentAmount = '0';
                 if (array_key_exists('accounts', $data) && is_array($data['accounts'])) {
@@ -130,7 +133,7 @@ class StoreRequest extends FormRequest
         }
     }
 
-    private function getCurrencyFromData(array $data): TransactionCurrency
+    private function getCurrencyFromData(Validator $validator, array $data): ?TransactionCurrency
     {
         if (array_key_exists('transaction_currency_code', $data) && '' !== (string) $data['transaction_currency_code']) {
             $currency = TransactionCurrency::whereCode($data['transaction_currency_code'])->first();
@@ -144,7 +147,7 @@ class StoreRequest extends FormRequest
                 return $currency;
             }
         }
-
-        throw new FireflyException('Unexpected empty currency.');
+        $validator->errors()->add('transaction_currency_id', trans('validation.require_currency_id_code'));
+        return null;
     }
 }
