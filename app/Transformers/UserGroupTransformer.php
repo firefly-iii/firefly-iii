@@ -89,7 +89,7 @@ class UserGroupTransformer extends AbstractTransformer
             foreach ($members as $member) {
                 $mail                            = $member['user_email'];
                 $new[$groupId][$mail] ??= [
-                    'user_id'    => $member['user_id'],
+                    'user_id'    => (string) $member['user_id'],
                     'user_email' => $member['user_email'],
                     'you'        => $member['you'],
                     'roles'      => [],
