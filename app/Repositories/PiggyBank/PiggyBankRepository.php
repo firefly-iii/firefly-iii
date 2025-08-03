@@ -131,7 +131,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
     /**
      * Get current amount saved in piggy bank.
      */
-    public function getCurrentPrimaryAmount(PiggyBank $piggyBank, ?Account $account = null): string
+    public function getCurrentPrimaryCurrencyAmount(PiggyBank $piggyBank, ?Account $account = null): string
     {
         $sum = '0';
         foreach ($piggyBank->accounts as $current) {
