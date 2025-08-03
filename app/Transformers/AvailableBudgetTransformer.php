@@ -60,42 +60,51 @@ class AvailableBudgetTransformer extends AbstractTransformer
     public function transform(AvailableBudget $availableBudget): array
     {
         $this->repository->setUser($availableBudget->user);
-
         $currency = $availableBudget->transactionCurrency;
-        $primary  = $this->primary;
-        if (!$this->convertToPrimary) {
-            $primary = null;
+        $amount   = app('steam')->bcround($availableBudget->amount, $currency->decimal_places);
+        $pcAmount = null;
+
+        if ($this->convertToPrimary) {
+            $pcAmount = app('steam')->bcround($availableBudget->native_amount, $this->primary->decimal_places);
         }
-        $data     = [
-            'id'                              => (string)$availableBudget->id,
-            'created_at'                      => $availableBudget->created_at->toAtomString(),
-            'updated_at'                      => $availableBudget->updated_at->toAtomString(),
-            'currency_id'                     => (string)$currency->id,
-            'currency_code'                   => $currency->code,
-            'currency_symbol'                 => $currency->symbol,
-            'currency_decimal_places'         => $currency->decimal_places,
-            'primary_currency_id'             => $primary instanceof TransactionCurrency ? (string)$primary->id : null,
-            'primary_currency_code'           => $primary?->code,
-            'primary_currency_symbol'         => $primary?->symbol,
-            'primary_currency_decimal_places' => $primary?->decimal_places,
-            'amount'                          => app('steam')->bcround($availableBudget->amount, $currency->decimal_places),
-            'pc_amount'                       => $this->convertToPrimary ? app('steam')->bcround($availableBudget->native_amount, $currency->decimal_places) : null,
-            'start'                           => $availableBudget->start_date->toAtomString(),
-            'end'                             => $availableBudget->end_date->endOfDay()->toAtomString(),
-            'spent_in_budgets'                => [],
-            'spent_no_budget'                 => [],
-            'links'                           => [
+
+        $data  = [
+            'id'                      => (string) $availableBudget->id,
+            'created_at'              => $availableBudget->created_at->toAtomString(),
+            'updated_at'              => $availableBudget->updated_at->toAtomString(),
+
+            // currencies according to 6.3.0
+            'currency_id'             => (string) $currency->id,
+            'currency_code'           => $currency->code,
+            'currency_symbol'         => $currency->symbol,
+            'currency_decimal_places' => $currency->decimal_places,
+
+            'primary_currency_id'             => (string) $this->primary->id,
+            'primary_currency_code'           => $this->primary->code,
+            'primary_currency_symbol'         => $this->primary->symbol,
+            'primary_currency_decimal_places' => $this->primary->decimal_places,
+
+
+            'amount'                   => $amount,
+            'pc_amount'                => $pcAmount,
+            'start'                    => $availableBudget->start_date->toAtomString(),
+            'end'                      => $availableBudget->end_date->endOfDay()->toAtomString(),
+            'spent_in_budgets'         => $availableBudget->meta['spent_in_budgets'],
+            'pc_spent_in_budgets'      => $availableBudget->meta['pc_spent_in_budgets'],
+            'spent_outside_budgets'    => $availableBudget->meta['spent_outside_budgets'],
+            'pc_spent_outside_budgets' => $availableBudget->meta['pc_spent_outside_budgets'],
+            'links'                    => [
                 [
                     'rel' => 'self',
-                    'uri' => '/available_budgets/'.$availableBudget->id,
+                    'uri' => '/available_budgets/' . $availableBudget->id,
                 ],
             ],
         ];
-        $start    = $this->parameters->get('start');
-        $end      = $this->parameters->get('end');
+        $start = $this->parameters->get('start');
+        $end   = $this->parameters->get('end');
         if (null !== $start && null !== $end) {
-            $data['spent_in_budgets'] = $this->getSpentInBudgets();
-            $data['spent_no_budget']  = $this->spentOutsideBudgets();
+            $data['old_spent_in_budgets'] = $this->getSpentInBudgets();
+            $data['old_spent_no_budget']  = $this->spentOutsideBudgets();
         }
 
         return $data;

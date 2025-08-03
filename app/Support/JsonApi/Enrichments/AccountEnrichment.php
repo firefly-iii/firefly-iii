@@ -62,6 +62,9 @@ class AccountEnrichment implements EnrichmentInterface
     private UserGroup           $userGroup;
     private array               $lastActivities;
 
+    /**
+     * TODO Set primary currency using Amount::method, not through setter.
+     */
     public function __construct()
     {
         $this->accountIds      = [];
