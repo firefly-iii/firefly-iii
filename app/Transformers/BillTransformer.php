@@ -58,6 +58,7 @@ class BillTransformer extends AbstractTransformer
             'name'                    => $bill->name,
 
             // currencies according to 6.3.0
+            'object_has_currency_setting'     => true,
             'currency_id'             => (string) $bill->transaction_currency_id,
             'currency_code'           => $currency->code,
             'currency_symbol'         => $currency->symbol,
@@ -96,10 +97,6 @@ class BillTransformer extends AbstractTransformer
             'next_expected_match'      => $bill->meta['nem']?->toAtomString(),
             'next_expected_match_diff' => $bill->meta['nem_diff'],
 
-            // these fields need work:
-            //            'next_expected_match'            => $nem,
-            //            'next_expected_match_diff'       => $nemDiff,
-            //            'pay_dates'                      => $payDatesFormatted,
             'links'                    => [
                 [
                     'rel' => 'self',

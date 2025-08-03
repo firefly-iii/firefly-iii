@@ -64,6 +64,7 @@ class AvailableBudgetTransformer extends AbstractTransformer
             'updated_at'              => $availableBudget->updated_at->toAtomString(),
 
             // currencies according to 6.3.0
+            'object_has_currency_setting'     => true,
             'currency_id'             => (string) $currency->id,
             'currency_code'           => $currency->code,
             'currency_symbol'         => $currency->symbol,
