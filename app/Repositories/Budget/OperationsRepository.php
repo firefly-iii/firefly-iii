@@ -283,16 +283,15 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         return $summarizer->groupByCurrencyId($journals, 'negative', false);
     }
 
-    public function sumCollectedExpenses(array $expenses, Carbon $start, Carbon $end, bool $convertToPrimary = false): array
+    public function sumCollectedExpenses(array $expenses, Carbon $start, Carbon $end, TransactionCurrency $transactionCurrency, bool $convertToPrimary = false): array
     {
         Log::debug(sprintf('Start of %s.', __METHOD__));
         $summarizer = new TransactionSummarizer($this->user);
-        // 2025-04-21 overrule "convertToPrimary" because in this particular view, we never want to do this.
         $summarizer->setConvertToPrimary($convertToPrimary);
 
         // filter $journals by range.
-        $expenses = array_filter($expenses, static function (array $expense) use ($start, $end): bool {
-            return $expense['date']->between($start, $end);
+        $expenses = array_filter($expenses, static function (array $expense) use ($start, $end, $transactionCurrency): bool {
+            return $expense['date']->between($start, $end) && $expense['currency_id'] === $transactionCurrency->id;
         });
 
         return $summarizer->groupByCurrencyId($expenses, 'negative', false);

@@ -74,7 +74,7 @@ interface OperationsRepositoryInterface
         bool                 $convertToPrimary = false
     ): array;
 
-    public function sumCollectedExpenses(array $expenses, Carbon $start, Carbon $end, bool $convertToPrimary = false): array;
+    public function sumCollectedExpenses(array $expenses, Carbon $start, Carbon $end, TransactionCurrency $transactionCurrency, bool $convertToPrimary = false): array;
 
     public function collectExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $budgets = null, ?TransactionCurrency $currency = null): array;
 }

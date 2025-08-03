@@ -89,8 +89,6 @@ class ShowController extends Controller
         $admin      = auth()->user();
         $enrichment = new AvailableBudgetEnrichment();
         $enrichment->setUser($admin);
-        $enrichment->setStart($start);
-        $enrichment->setEnd($end);
         $availableBudgets = $enrichment->enrich($availableBudgets);
 
         // make paginator:

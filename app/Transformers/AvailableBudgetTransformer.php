@@ -26,9 +26,6 @@ namespace FireflyIII\Transformers;
 
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Budget\NoBudgetRepositoryInterface;
-use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
 
 /**
@@ -36,22 +33,16 @@ use FireflyIII\Support\Facades\Amount;
  */
 class AvailableBudgetTransformer extends AbstractTransformer
 {
-    private readonly bool                          $convertToPrimary;
-    private readonly TransactionCurrency           $primary;
-    private readonly NoBudgetRepositoryInterface   $noBudgetRepository;
-    private readonly OperationsRepositoryInterface $opsRepository;
-    private readonly BudgetRepositoryInterface     $repository;
+    private readonly bool                $convertToPrimary;
+    private readonly TransactionCurrency $primary;
 
     /**
      * CurrencyTransformer constructor.
      */
     public function __construct()
     {
-        $this->repository         = app(BudgetRepositoryInterface::class);
-        $this->opsRepository      = app(OperationsRepositoryInterface::class);
-        $this->noBudgetRepository = app(NoBudgetRepositoryInterface::class);
-        $this->primary            = Amount::getPrimaryCurrency();
-        $this->convertToPrimary   = Amount::convertToPrimary();
+        $this->primary          = Amount::getPrimaryCurrency();
+        $this->convertToPrimary = Amount::convertToPrimary();
     }
 
     /**
@@ -59,7 +50,6 @@ class AvailableBudgetTransformer extends AbstractTransformer
      */
     public function transform(AvailableBudget $availableBudget): array
     {
-        $this->repository->setUser($availableBudget->user);
         $currency = $availableBudget->transactionCurrency;
         $amount   = app('steam')->bcround($availableBudget->amount, $currency->decimal_places);
         $pcAmount = null;
@@ -68,7 +58,7 @@ class AvailableBudgetTransformer extends AbstractTransformer
             $pcAmount = app('steam')->bcround($availableBudget->native_amount, $this->primary->decimal_places);
         }
 
-        $data  = [
+        $data = [
             'id'                      => (string) $availableBudget->id,
             'created_at'              => $availableBudget->created_at->toAtomString(),
             'updated_at'              => $availableBudget->updated_at->toAtomString(),
@@ -100,28 +90,8 @@ class AvailableBudgetTransformer extends AbstractTransformer
                 ],
             ],
         ];
-        $start = $this->parameters->get('start');
-        $end   = $this->parameters->get('end');
-        if (null !== $start && null !== $end) {
-            $data['old_spent_in_budgets'] = $this->getSpentInBudgets();
-            $data['old_spent_no_budget']  = $this->spentOutsideBudgets();
-        }
-
         return $data;
     }
 
-    private function getSpentInBudgets(): array
-    {
-        $allActive = $this->repository->getActiveBudgets();
-        $sums      = $this->opsRepository->sumExpenses($this->parameters->get('start'), $this->parameters->get('end'), null, $allActive);
 
-        return array_values($sums);
-    }
-
-    private function spentOutsideBudgets(): array
-    {
-        $sums = $this->noBudgetRepository->sumExpenses($this->parameters->get('start'), $this->parameters->get('end'));
-
-        return array_values($sums);
-    }
 }

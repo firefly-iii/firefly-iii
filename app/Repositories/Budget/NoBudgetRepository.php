@@ -32,6 +32,7 @@ use FireflyIII\Support\Report\Summarizer\TransactionSummarizer;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class NoBudgetRepository
@@ -98,4 +99,22 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface, UserGroupInterf
 
         return $summarizer->groupByCurrencyId($journals);
     }
+
+    #[\Override] public function collectExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?TransactionCurrency $currency = null): array
+    {
+        /** @var GroupCollectorInterface $collector */
+        $collector  = app(GroupCollectorInterface::class);
+        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
+
+        if ($accounts instanceof Collection && $accounts->count() > 0) {
+            $collector->setAccounts($accounts);
+        }
+        if ($currency instanceof TransactionCurrency) {
+            $collector->setCurrency($currency);
+        }
+        $collector->withoutBudget();
+        $collector->withBudgetInformation();
+        return $collector->getExtractedJournals();
+    }
+
 }

@@ -38,16 +38,16 @@ use Illuminate\Support\Facades\Log;
 
 class AvailableBudgetEnrichment implements EnrichmentInterface
 {
-    private User                $user;
-    private UserGroup           $userGroup;
-    private TransactionCurrency $primaryCurrency;
-    private bool                $convertToPrimary      = false;
-    private array               $ids                   = [];
-    private Collection          $collection;
-    private array               $spentInBudgets        = [];
-    private array               $spentOutsideBudgets   = [];
-    private array               $pcSpentInBudgets      = [];
-    private array               $pcSpentOutsideBudgets = [];
+    private User                                   $user;
+    private UserGroup                              $userGroup;
+    private TransactionCurrency                    $primaryCurrency;
+    private bool                                   $convertToPrimary      = false;
+    private array                                  $ids                   = [];
+    private Collection                             $collection;
+    private array                                  $spentInBudgets        = [];
+    private array                                  $spentOutsideBudgets   = [];
+    private array                                  $pcSpentInBudgets      = [];
+    private array                                  $pcSpentOutsideBudgets = [];
     private readonly NoBudgetRepositoryInterface   $noBudgetRepository;
     private readonly OperationsRepositoryInterface $opsRepository;
     private readonly BudgetRepositoryInterface     $repository;
@@ -58,8 +58,8 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
 
     public function __construct()
     {
-        $this->primaryCurrency  = Amount::getPrimaryCurrency();
-        $this->convertToPrimary = Amount::convertToPrimary();
+        $this->primaryCurrency    = Amount::getPrimaryCurrency();
+        $this->convertToPrimary   = Amount::convertToPrimary();
         $this->noBudgetRepository = app(NoBudgetRepositoryInterface::class);
         $this->opsRepository      = app(OperationsRepositoryInterface::class);
         $this->repository         = app(BudgetRepositoryInterface::class);
@@ -86,7 +86,7 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
 
     #[\Override] public function setUser(User $user): void
     {
-        $this->user      = $user;
+        $this->user = $user;
         $this->setUserGroup($user->userGroup);
     }
 
@@ -107,25 +107,28 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
         $this->ids = array_unique($this->ids);
     }
 
-    public function setStart(?Carbon $start): void
+    private function collectSpentInfo(): void
     {
-        $this->start = $start;
-    }
+        $start               = $this->collection->min('start_date');
+        $end                 = $this->collection->max('end_date');
+        $allActive           = $this->repository->getActiveBudgets();
+        $spentInBudgets      = $this->opsRepository->collectExpenses($start, $end, null, $allActive, null);
+        $spentOutsideBudgets = $this->noBudgetRepository->collectExpenses($start, $end, null, null, null);
+        foreach ($this->collection as $availableBudget) {
+            $id                          = (int) $availableBudget->id;
+            $filteredSpentInBudgets      = $this->opsRepository->sumCollectedExpenses($spentInBudgets, $availableBudget->start_date, $availableBudget->end_date, $availableBudget->transactionCurrency, false);
+            $filteredSpentOutsideBudgets = $this->opsRepository->sumCollectedExpenses($spentOutsideBudgets, $availableBudget->start_date, $availableBudget->end_date, $availableBudget->transactionCurrency, false);
+            $this->spentInBudgets[$id]      = array_values($filteredSpentInBudgets);
+            $this->spentOutsideBudgets[$id] = array_values($filteredSpentOutsideBudgets);
 
-    public function setEnd(?Carbon $end): void
-    {
-        $this->end = $end;
-    }
+            if (true === $this->convertToPrimary) {
+                $pcFilteredSpentInBudgets         = $this->opsRepository->sumCollectedExpenses($spentInBudgets, $availableBudget->start_date, $availableBudget->end_date, $availableBudget->transactionCurrency, true);
+                $pcFilteredSpentOutsideBudgets    = $this->opsRepository->sumCollectedExpenses($spentOutsideBudgets, $availableBudget->start_date, $availableBudget->end_date, $availableBudget->transactionCurrency, true);
+                $this->pcSpentInBudgets[$id]      = array_values($pcFilteredSpentInBudgets);
+                $this->pcSpentOutsideBudgets[$id] = array_values($pcFilteredSpentOutsideBudgets);
+            }
 
-    private function collectSpentInfo(): void {
-        $start = $this->collection->min('start_date');
-        $end   = $this->collection->max('end_date');
-        $allActive = $this->repository->getActiveBudgets();
-        $spentInBudgets = $this->opsRepository->collectExpenses($start, $end, null, $allActive, null);
-        foreach($this->collection as $availableBudget) {
-            $filteredSpentInBudgets = $this->opsRepository->sumCollectedExpenses($spentInBudgets, $availableBudget->start_date, $availableBudget->end_date, $this->convertToPrimary);
-            $id = (int) $availableBudget->id;
-            $this->spentInBudgets[$id] = array_values($filteredSpentInBudgets);
+
             // filter arrays on date.
             // send them to sumCollection thing.
             // save.
@@ -144,9 +147,10 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
             $id         = (int) $item->id;
             $meta       = [
                 'spent_in_budgets'         => $spentInsideBudgets[$id] ?? [],
-                'spent_outside_budgets'    => $spentOutsideBudgets[$id] ?? [],
                 'pc_spent_in_budgets'      => $pcSpentInBudgets[$id] ?? [],
-                'pc_spent_outside_budgets' => $pcSpentOutsideBudgets ?? [],
+
+                'spent_outside_budgets'    => $spentOutsideBudgets[$id] ?? [],
+                'pc_spent_outside_budgets' => $pcSpentOutsideBudgets[$id] ?? [],
             ];
             $item->meta = $meta;
             return $item;
