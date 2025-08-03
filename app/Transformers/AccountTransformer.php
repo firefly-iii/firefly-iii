@@ -103,17 +103,18 @@ class AccountTransformer extends AbstractTransformer
         $finalBalance = Steam::finalAccountBalance($account, $date, $this->primary, $this->convertToPrimary);
         Log::debug(sprintf('Call finalAccountBalance(%s) with date/time "%s"', var_export($this->convertToPrimary, true), $date->toIso8601String()), $finalBalance);
 
-        // set some pc_ default values to NULL:
-        $pcCurrentBalance = null;
-        $pcOpeningBalance = null;
-        $pcVirtualBalance = null;
-        $pcDebtAmount     = null;
-
         // collect current balances:
         $currentBalance = Steam::bcround($finalBalance[$currency->code] ?? '0', $currency->decimal_places);
         $openingBalance = Steam::bcround($openingBalance ?? '0', $currency->decimal_places);
         $virtualBalance = Steam::bcround($account->virtual_balance ?? '0', $currency->decimal_places);
         $debtAmount     = $account->meta['current_debt'] ?? null;
+
+        // TODO this currency conversion must not be happening here.
+        // set some pc_ default values to NULL:
+        $pcCurrentBalance = null;
+        $pcOpeningBalance = null;
+        $pcVirtualBalance = null;
+        $pcDebtAmount     = null;
 
         // convert to primary currency if needed:
         if ($this->convertToPrimary && $currency->id !== $this->primary->id) {
@@ -123,6 +124,12 @@ class AccountTransformer extends AbstractTransformer
             $pcOpeningBalance = $converter->convert($currency, $this->primary, $date, $openingBalance);
             $pcVirtualBalance = $converter->convert($currency, $this->primary, $date, $virtualBalance);
             $pcDebtAmount     = null === $debtAmount ? null : $converter->convert($currency, $this->primary, $date, $debtAmount);
+        }
+        if ($this->convertToPrimary && $currency->id === $this->primary->id) {
+            $pcCurrentBalance = $currentBalance;
+            $pcOpeningBalance = $openingBalance;
+            $pcVirtualBalance = $virtualBalance;
+            $pcDebtAmount     = $debtAmount;
         }
 
         // set opening balance(s) to NULL if the date is null

@@ -64,7 +64,7 @@ class AccountEnrichment implements EnrichmentInterface
     private array               $lastActivities;
 
     /**
-     * TODO Set primary currency using Amount::method, not through setter.
+     * TODO The account enricher must do conversion from and to the primary currency.
      */
     public function __construct()
     {
@@ -78,10 +78,6 @@ class AccountEnrichment implements EnrichmentInterface
         $this->lastActivities  = [];
         $this->locations       = [];
         $this->primaryCurrency = Amount::getPrimaryCurrency();
-        //        $this->repository         = app(AccountRepositoryInterface::class);
-        //        $this->currencyRepository = app(CurrencyRepositoryInterface::class);
-        //        $this->start              = null;
-        //        $this->end                = null;
     }
 
     #[Override]

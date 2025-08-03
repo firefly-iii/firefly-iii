@@ -80,7 +80,20 @@ class SubscriptionEnrichment implements EnrichmentInterface
                 'amount_min' => Steam::bcround($item->amount_min, $currency->decimal_places),
                 'amount_max' => Steam::bcround($item->amount_max, $currency->decimal_places),
                 'average'    => Steam::bcround(bcdiv(bcadd($item->amount_min, $item->amount_max), '2'), $currency->decimal_places),
+                'pc_amount_min' => null,
+                'pc_amount_max' => null,
+                'pc_average'    => null,
             ];
+            if($this->convertToPrimary && $currency->id === $this->primaryCurrency->id) {
+                $amounts['pc_amount_min'] = $amounts['amount_min'];
+                $amounts['pc_amount_max'] = $amounts['amount_max'];
+                $amounts['pc_average']    = $amounts['average'];
+            }
+            if($this->convertToPrimary && $currency->id !== $this->primaryCurrency->id) {
+                $amounts['pc_amount_min'] = Steam::bcround($item->native_amount_min, $this->primaryCurrency->decimal_places);
+                $amounts['pc_amount_max'] = Steam::bcround($item->native_amount_max, $this->primaryCurrency->decimal_places);
+                $amounts['pc_average']    = Steam::bcround(bcdiv(bcadd($item->native_amount_min, $item->native_amount_max), '2'), $this->primaryCurrency->decimal_places);
+            }
 
             // add object group if available
             if (array_key_exists($id, $this->mappedObjects)) {
@@ -95,16 +108,6 @@ class SubscriptionEnrichment implements EnrichmentInterface
                 $meta['notes'] = $notes[$item->id];
             }
 
-            // Convert amounts to primary currency if needed
-            if ($this->convertToPrimary && $item->currency_id !== $this->primaryCurrency->id) {
-                Log::debug('Convert to primary currency');
-                $converter          = new ExchangeRateConverter();
-                $amounts            = [
-                    'amount_min' => Steam::bcround($converter->convert($item->transactionCurrency, $this->primaryCurrency, today(), $item->amount_min), $this->primaryCurrency->decimal_places),
-                    'amount_max' => Steam::bcround($converter->convert($item->transactionCurrency, $this->primaryCurrency, today(), $item->amount_max), $this->primaryCurrency->decimal_places),
-                ];
-                $amounts['average'] = Steam::bcround(bcdiv(bcadd($amounts['amount_min'], $amounts['amount_max']), '2'), $this->primaryCurrency->decimal_places);
-            }
             $item->amounts = $amounts;
             $item->meta    = $meta;
 
