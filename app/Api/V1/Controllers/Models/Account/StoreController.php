@@ -76,7 +76,6 @@ class StoreController extends Controller
         $admin       = auth()->user();
         $enrichment  = new AccountEnrichment();
         $enrichment->setUser($admin);
-        $enrichment->setPrimaryCurrency($this->primaryCurrency);
         $account     = $enrichment->enrichSingle($account);
 
         /** @var AccountTransformer $transformer */

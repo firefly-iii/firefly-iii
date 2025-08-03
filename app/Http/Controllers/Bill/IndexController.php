@@ -91,8 +91,6 @@ class IndexController extends Controller
         $admin       = auth()->user();
         $enrichment  = new SubscriptionEnrichment();
         $enrichment->setUser($admin);
-        $enrichment->setConvertToPrimary($this->convertToPrimary);
-        $enrichment->setPrimaryCurrency($this->primaryCurrency);
         $enrichment->setStart($tempStart);
         $enrichment->setEnd($end);
         $collection  = $enrichment->enrich($collection);

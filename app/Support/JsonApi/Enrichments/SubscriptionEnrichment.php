@@ -12,6 +12,7 @@ use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\UserGroup;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\Models\BillDateCalculator;
@@ -37,6 +38,12 @@ class SubscriptionEnrichment implements EnrichmentInterface
     private array               $payDates         = [];
     private TransactionCurrency $primaryCurrency;
     private BillDateCalculator  $calculator;
+
+    public function __construct()
+    {
+        $this->convertToPrimary = Amount::convertToPrimary();
+        $this->primaryCurrency  = Amount::getPrimaryCurrency();
+    }
 
     public function enrich(Collection $collection): Collection
     {
@@ -138,16 +145,6 @@ class SubscriptionEnrichment implements EnrichmentInterface
     public function setUserGroup(UserGroup $userGroup): void
     {
         $this->userGroup = $userGroup;
-    }
-
-    public function setConvertToPrimary(bool $convertToPrimary): void
-    {
-        $this->convertToPrimary = $convertToPrimary;
-    }
-
-    public function setPrimaryCurrency(TransactionCurrency $primaryCurrency): void
-    {
-        $this->primaryCurrency = $primaryCurrency;
     }
 
     private function collectSubscriptionIds(): void

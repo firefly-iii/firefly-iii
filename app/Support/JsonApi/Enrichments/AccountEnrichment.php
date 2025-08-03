@@ -34,6 +34,7 @@ use FireflyIII\Models\Location;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\UserGroup;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
@@ -76,6 +77,7 @@ class AccountEnrichment implements EnrichmentInterface
         $this->notes           = [];
         $this->lastActivities  = [];
         $this->locations       = [];
+        $this->primaryCurrency = Amount::getPrimaryCurrency();
         //        $this->repository         = app(AccountRepositoryInterface::class);
         //        $this->currencyRepository = app(CurrencyRepositoryInterface::class);
         //        $this->start              = null;
@@ -279,11 +281,6 @@ class AccountEnrichment implements EnrichmentInterface
 
             return $item;
         });
-    }
-
-    public function setPrimaryCurrency(TransactionCurrency $primary): void
-    {
-        $this->primaryCurrency = $primary;
     }
 
     private function collectLastActivities(): void

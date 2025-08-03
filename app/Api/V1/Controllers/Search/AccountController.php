@@ -89,7 +89,6 @@ class AccountController extends Controller
         $admin       = auth()->user();
         $enrichment  = new AccountEnrichment();
         $enrichment->setUser($admin);
-        $enrichment->setPrimaryCurrency($this->primaryCurrency);
         $accounts    = $enrichment->enrich($accounts);
 
         /** @var AccountTransformer $transformer */

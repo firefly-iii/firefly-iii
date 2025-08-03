@@ -83,8 +83,6 @@ class ShowController extends Controller
         $admin       = auth()->user();
         $enrichment  = new SubscriptionEnrichment();
         $enrichment->setUser($admin);
-        $enrichment->setConvertToPrimary($this->convertToPrimary);
-        $enrichment->setPrimaryCurrency($this->primaryCurrency);
         $enrichment->setStart($this->parameters->get('start'));
         $enrichment->setEnd($this->parameters->get('end'));
         $bills       = $enrichment->enrich($bills);
@@ -114,8 +112,6 @@ class ShowController extends Controller
         $admin       = auth()->user();
         $enrichment  = new SubscriptionEnrichment();
         $enrichment->setUser($admin);
-        $enrichment->setConvertToPrimary($this->convertToPrimary);
-        $enrichment->setPrimaryCurrency($this->primaryCurrency);
         $enrichment->setStart($this->parameters->get('start'));
         $enrichment->setEnd($this->parameters->get('end'));
         $bill        = $enrichment->enrichSingle($bill);
