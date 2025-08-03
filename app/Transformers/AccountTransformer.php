@@ -30,9 +30,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
-use FireflyIII\Support\Facades\Steam;
-use FireflyIII\Support\Http\Api\ExchangeRateConverter;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -63,17 +60,19 @@ class AccountTransformer extends AbstractTransformer
     public function transform(Account $account): array
     {
         if (null === $account->meta) {
-            $account->meta = [];
+            $account->meta = [
+                'currency' => null,
+            ];
         }
 
         // get account type:
-        $accountType         = (string)config(sprintf('firefly.shortNamesByFullName.%s', $account->full_account_type));
-        $liabilityType       = (string)config(sprintf('firefly.shortLiabilityNameByFullName.%s', $account->full_account_type));
+        $accountType         = (string) config(sprintf('firefly.shortNamesByFullName.%s', $account->full_account_type));
+        $liabilityType       = (string) config(sprintf('firefly.shortLiabilityNameByFullName.%s', $account->full_account_type));
         $liabilityType       = '' === $liabilityType ? null : strtolower($liabilityType);
         $liabilityDirection  = $account->meta['liability_direction'] ?? null;
         $accountRole         = $this->getAccountRole($account, $accountType);
-        $hasCurrencySettings = array_key_exists('currency_id', $account->meta) && (int)$account->meta['currency_id'] > 0;
-        $includeNetWorth     = 1 === (int)($account->meta['include_net_worth'] ?? 0);
+        $hasCurrencySettings = null !== $account->meta['currency'];
+        $includeNetWorth     = 1 === (int) ($account->meta['include_net_worth'] ?? 0);
         $longitude           = $account->meta['location']['longitude'] ?? null;
         $latitude            = $account->meta['location']['latitude'] ?? null;
         $zoomLevel           = $account->meta['location']['zoom_level'] ?? null;
@@ -83,6 +82,12 @@ class AccountTransformer extends AbstractTransformer
         $date = $this->getDate();
         $date->endOfDay();
 
+        // get primary currency as fallback:
+        $currency = $this->primary; // assume primary currency
+        if ($hasCurrencySettings) {
+            $currency = $account->meta['currency'];
+        }
+
         // no order for some accounts:
         if (!in_array(strtolower($accountType), ['liability', 'liabilities', 'asset'], true)) {
             $order = null;
@@ -90,56 +95,11 @@ class AccountTransformer extends AbstractTransformer
 
         // get some listed information from the account meta-data:
         [$creditCardType, $monthlyPaymentDate] = $this->getCCInfo($account, $accountRole, $accountType);
-        [$openingBalance, $openingBalanceDate] = $this->getOpeningBalance($account, $accountType);
+        $openingBalanceDate = $this->getOpeningBalance($account, $accountType);
         [$interest, $interestPeriod] = $this->getInterest($account, $accountType);
 
-        // get currencies:
-        $currency = $this->primary; // assume primary currency
-        if ($hasCurrencySettings) {
-            $currency = $account->meta['currency'];
-        }
-
-        // get the current balance:
-        $finalBalance = Steam::finalAccountBalance($account, $date, $this->primary, $this->convertToPrimary);
-        Log::debug(sprintf('Call finalAccountBalance(%s) with date/time "%s"', var_export($this->convertToPrimary, true), $date->toIso8601String()), $finalBalance);
-
-        // collect current balances:
-        $currentBalance = Steam::bcround($finalBalance[$currency->code] ?? '0', $currency->decimal_places);
-        $openingBalance = Steam::bcround($openingBalance ?? '0', $currency->decimal_places);
-        $virtualBalance = Steam::bcround($account->virtual_balance ?? '0', $currency->decimal_places);
-        $debtAmount     = $account->meta['current_debt'] ?? null;
-
-        // TODO this currency conversion must not be happening here.
-        // set some pc_ default values to NULL:
-        $pcCurrentBalance = null;
-        $pcOpeningBalance = null;
-        $pcVirtualBalance = null;
-        $pcDebtAmount     = null;
-
-        // convert to primary currency if needed:
-        if ($this->convertToPrimary && $currency->id !== $this->primary->id) {
-            Log::debug(sprintf('Convert to primary, from %s to %s', $currency->code, $this->primary->code));
-            $converter        = new ExchangeRateConverter();
-            $pcCurrentBalance = $converter->convert($currency, $this->primary, $date, $currentBalance);
-            $pcOpeningBalance = $converter->convert($currency, $this->primary, $date, $openingBalance);
-            $pcVirtualBalance = $converter->convert($currency, $this->primary, $date, $virtualBalance);
-            $pcDebtAmount     = null === $debtAmount ? null : $converter->convert($currency, $this->primary, $date, $debtAmount);
-        }
-        if ($this->convertToPrimary && $currency->id === $this->primary->id) {
-            $pcCurrentBalance = $currentBalance;
-            $pcOpeningBalance = $openingBalance;
-            $pcVirtualBalance = $virtualBalance;
-            $pcDebtAmount     = $debtAmount;
-        }
-
-        // set opening balance(s) to NULL if the date is null
-        if (null === $openingBalanceDate) {
-            $openingBalance   = null;
-            $pcOpeningBalance = null;
-        }
-
         return [
-            'id'                              => (string)$account->id,
+            'id'                              => (string) $account->id,
             'created_at'                      => $account->created_at->toAtomString(),
             'updated_at'                      => $account->updated_at->toAtomString(),
             'active'                          => $account->active,
@@ -152,27 +112,27 @@ class AccountTransformer extends AbstractTransformer
             'object_has_currency_setting'     => $hasCurrencySettings,
 
             // currency is object specific or primary, already determined above.
-            'currency_id'                     => (string)$currency['id'],
+            'currency_id'                     => (string) $currency['id'],
             'currency_code'                   => $currency['code'],
             'currency_symbol'                 => $currency['symbol'],
             'currency_decimal_places'         => $currency['decimal_places'],
-            'primary_currency_id'             => (string)$this->primary->id,
+            'primary_currency_id'             => (string) $this->primary->id,
             'primary_currency_code'           => $this->primary->code,
             'primary_currency_symbol'         => $this->primary->symbol,
             'primary_currency_decimal_places' => $this->primary->decimal_places,
 
             // balances, structured for 6.3.0.
-            'current_balance'                 => $currentBalance,
-            'pc_current_balance'              => $pcCurrentBalance,
+            'current_balance'                 => $account->meta['balances']['current_balance'],
+            'pc_current_balance'              => $account->meta['balances']['pc_current_balance'],
 
-            'opening_balance'    => $openingBalance,
-            'pc_opening_balance' => $pcOpeningBalance,
+            'opening_balance'    => $account->meta['balances']['opening_balance'],
+            'pc_opening_balance' => $account->meta['balances']['pc_opening_balance'],
 
-            'virtual_balance'    => $virtualBalance,
-            'pc_virtual_balance' => $pcVirtualBalance,
+            'virtual_balance'    => $account->meta['balances']['virtual_balance'],
+            'pc_virtual_balance' => $account->meta['balances']['pc_virtual_balance'],
 
-            'debt_amount'    => $debtAmount,
-            'pc_debt_amount' => $pcDebtAmount,
+            'debt_amount'    => $account->meta['balances']['debt_amount'],
+            'pc_debt_amount' => $account->meta['balances']['pc_debt_amount'],
 
             'current_balance_date' => $date->toAtomString(),
             'notes'                => $account->meta['notes'] ?? null,
@@ -203,7 +163,7 @@ class AccountTransformer extends AbstractTransformer
     private function getAccountRole(Account $account, string $accountType): ?string
     {
         $accountRole = $account->meta['account_role'] ?? null;
-        if ('asset' !== $accountType || '' === (string)$accountRole) {
+        if ('asset' !== $accountType || '' === (string) $accountRole) {
             return null;
         }
 
@@ -239,7 +199,7 @@ class AccountTransformer extends AbstractTransformer
                 }
                 $monthlyPaymentDate = $object->toAtomString();
             }
-            if (10 !== strlen((string)$monthlyPaymentDate)) {
+            if (10 !== strlen((string) $monthlyPaymentDate)) {
                 $monthlyPaymentDate = Carbon::parse($monthlyPaymentDate, config('app.timezone'))->toAtomString();
             }
         }
@@ -247,15 +207,10 @@ class AccountTransformer extends AbstractTransformer
         return [$creditCardType, $monthlyPaymentDate];
     }
 
-    private function getOpeningBalance(Account $account, string $accountType): array
+    private function getOpeningBalance(Account $account, string $accountType): ?string
     {
-        $openingBalance     = null;
         $openingBalanceDate = null;
-//        $pcOpeningBalance   = null;
         if (in_array($accountType, ['asset', 'liabilities'], true)) {
-            // grab from meta.
-            $openingBalance     = $account->meta['opening_balance_amount'] ?? null;
-            $pcOpeningBalance   = null;
             $openingBalanceDate = $account->meta['opening_balance_date'] ?? null;
         }
         if (null !== $openingBalanceDate) {
@@ -265,15 +220,9 @@ class AccountTransformer extends AbstractTransformer
             }
             $openingBalanceDate = $object->toAtomString();
 
-            // NOW do conversion.
-//            if ($this->convertToPrimary && null !== $account->meta['currency']) {
-//                $converter        = new ExchangeRateConverter();
-//                $pcOpeningBalance = $converter->convert($account->meta['currency'], $this->primary, $object, $openingBalance);
-//            }
-
         }
 
-        return [$openingBalance, $openingBalanceDate];
+        return $openingBalanceDate;
     }
 
     private function getInterest(Account $account, string $accountType): array

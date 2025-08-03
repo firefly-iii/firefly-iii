@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\JsonApi\Enrichments;
 
+use Carbon\Carbon;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
@@ -36,6 +37,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
+use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -62,26 +64,29 @@ class AccountEnrichment implements EnrichmentInterface
     private User                $user;
     private UserGroup           $userGroup;
     private array               $lastActivities;
+    private ?Carbon             $date             = null;
+    private bool                $convertToPrimary = false;
 
     /**
      * TODO The account enricher must do conversion from and to the primary currency.
      */
     public function __construct()
     {
-        $this->accountIds      = [];
-        $this->openingBalances = [];
-        $this->currencies      = [];
-        $this->accountTypeIds  = [];
-        $this->accountTypes    = [];
-        $this->meta            = [];
-        $this->notes           = [];
-        $this->lastActivities  = [];
-        $this->locations       = [];
-        $this->primaryCurrency = Amount::getPrimaryCurrency();
+        $this->accountIds       = [];
+        $this->openingBalances  = [];
+        $this->currencies       = [];
+        $this->accountTypeIds   = [];
+        $this->accountTypes     = [];
+        $this->meta             = [];
+        $this->notes            = [];
+        $this->lastActivities   = [];
+        $this->locations        = [];
+        $this->primaryCurrency  = Amount::getPrimaryCurrency();
+        $this->convertToPrimary = Amount::convertToPrimary();
     }
 
     #[Override]
-    public function enrichSingle(array|Model $model): Account|array
+    public function enrichSingle(array | Model $model): Account | array
     {
         Log::debug(__METHOD__);
         $collection = new Collection([$model]);
@@ -107,6 +112,7 @@ class AccountEnrichment implements EnrichmentInterface
         $this->collectLastActivities();
         $this->collectLocations();
         $this->collectOpeningBalances();
+        $this->collectBalances();
         $this->appendCollectedData();
 
         return $this->collection;
@@ -135,10 +141,9 @@ class AccountEnrichment implements EnrichmentInterface
 
     private function collectMetaData(): void
     {
-        $set                 = AccountMeta::whereIn('name', ['is_multi_currency', 'include_net_worth', 'currency_id', 'account_role', 'account_number', 'BIC', 'liability_direction', 'interest', 'interest_period', 'current_debt'])
-            ->whereIn('account_id', $this->accountIds)
-            ->get(['account_meta.id', 'account_meta.account_id', 'account_meta.name', 'account_meta.data'])->toArray()
-        ;
+        $set = AccountMeta::whereIn('name', ['is_multi_currency', 'include_net_worth', 'currency_id', 'account_role', 'account_number', 'BIC', 'liability_direction', 'interest', 'interest_period', 'current_debt'])
+                          ->whereIn('account_id', $this->accountIds)
+                          ->get(['account_meta.id', 'account_meta.account_id', 'account_meta.name', 'account_meta.data'])->toArray();
 
         /** @var array $entry */
         foreach ($set as $entry) {
@@ -147,7 +152,7 @@ class AccountEnrichment implements EnrichmentInterface
                 $this->currencies[(int) $entry['data']] = true;
             }
         }
-        $currencies          = TransactionCurrency::whereIn('id', array_keys($this->currencies))->get();
+        $currencies = TransactionCurrency::whereIn('id', array_keys($this->currencies))->get();
         foreach ($currencies as $currency) {
             $this->currencies[(int) $currency->id] = $currency;
         }
@@ -162,10 +167,9 @@ class AccountEnrichment implements EnrichmentInterface
     private function collectNotes(): void
     {
         $notes = Note::query()->whereIn('noteable_id', $this->accountIds)
-            ->whereNotNull('notes.text')
-            ->where('notes.text', '!=', '')
-            ->where('noteable_type', Account::class)->get(['notes.noteable_id', 'notes.text'])->toArray()
-        ;
+                     ->whereNotNull('notes.text')
+                     ->where('notes.text', '!=', '')
+                     ->where('noteable_type', Account::class)->get(['notes.noteable_id', 'notes.text'])->toArray();
         foreach ($notes as $note) {
             $this->notes[(int) $note['noteable_id']] = (string) $note['text'];
         }
@@ -175,15 +179,14 @@ class AccountEnrichment implements EnrichmentInterface
     private function collectLocations(): void
     {
         $locations = Location::query()->whereIn('locatable_id', $this->accountIds)
-            ->where('locatable_type', Account::class)->get(['locations.locatable_id', 'locations.latitude', 'locations.longitude', 'locations.zoom_level'])->toArray()
-        ;
+                             ->where('locatable_type', Account::class)->get(['locations.locatable_id', 'locations.latitude', 'locations.longitude', 'locations.zoom_level'])->toArray();
         foreach ($locations as $location) {
             $this->locations[(int) $location['locatable_id']]
                 = [
-                    'latitude'   => (float) $location['latitude'],
-                    'longitude'  => (float) $location['longitude'],
-                    'zoom_level' => (int) $location['zoom_level'],
-                ];
+                'latitude'   => (float) $location['latitude'],
+                'longitude'  => (float) $location['longitude'],
+                'zoom_level' => (int) $location['zoom_level'],
+            ];
         }
         Log::debug(sprintf('Enrich with %d locations(s)', count($this->locations)));
     }
@@ -198,20 +201,19 @@ class AccountEnrichment implements EnrichmentInterface
             ->setUserGroup($this->userGroup)
             ->setAccounts($this->collection)
             ->withAccountInformation()
-            ->setTypes([TransactionTypeEnum::OPENING_BALANCE->value])
-        ;
-        $journals  = $collector->getExtractedJournals();
+            ->setTypes([TransactionTypeEnum::OPENING_BALANCE->value]);
+        $journals = $collector->getExtractedJournals();
         foreach ($journals as $journal) {
             $this->openingBalances[(int) $journal['source_account_id']]
                 = [
-                    'amount' => Steam::negative($journal['amount']),
-                    'date'   => $journal['date'],
-                ];
+                'amount' => Steam::negative($journal['amount']),
+                'date'   => $journal['date'],
+            ];
             $this->openingBalances[(int) $journal['destination_account_id']]
                 = [
-                    'amount' => Steam::positive($journal['amount']),
-                    'date'   => $journal['date'],
-                ];
+                'amount' => Steam::positive($journal['amount']),
+                'date'   => $journal['date'],
+            ];
         }
     }
 
@@ -228,32 +230,30 @@ class AccountEnrichment implements EnrichmentInterface
 
     private function appendCollectedData(): void
     {
-        $accountTypes     = $this->accountTypes;
-        $meta             = $this->meta;
-        $currencies       = $this->currencies;
         $notes            = $this->notes;
         $openingBalances  = $this->openingBalances;
         $locations        = $this->locations;
         $lastActivities   = $this->lastActivities;
-        $this->collection = $this->collection->map(function (Account $item) use ($accountTypes, $meta, $currencies, $notes, $openingBalances, $locations, $lastActivities) {
-            $item->full_account_type = $accountTypes[(int) $item->account_type_id] ?? null;
+        $this->collection = $this->collection->map(function (Account $item) use ($notes, $openingBalances, $locations, $lastActivities) {
+            $item->full_account_type = $this->accountTypes[(int) $item->account_type_id] ?? null;
             $accountMeta             = [
-                'currency' => null,
-                'location' => [
+                'currency'             => null,
+                'location'             => [
                     'latitude'   => null,
                     'longitude'  => null,
                     'zoom_level' => null,
                 ],
+                'opening_balance_date' => null,
             ];
-            if (array_key_exists((int) $item->id, $meta)) {
-                foreach ($meta[(int) $item->id] as $name => $value) {
+            if (array_key_exists((int) $item->id, $this->meta)) {
+                foreach ($this->meta[(int) $item->id] as $name => $value) {
                     $accountMeta[$name] = $value;
                 }
             }
             // also add currency, if present.
             if (array_key_exists('currency_id', $accountMeta)) {
                 $currencyId              = (int) $accountMeta['currency_id'];
-                $accountMeta['currency'] = $currencies[$currencyId];
+                $accountMeta['currency'] = $this->currencies[$currencyId];
             }
 
             // if notes, add notes.
@@ -266,6 +266,64 @@ class AccountEnrichment implements EnrichmentInterface
                 $accountMeta['opening_balance_amount'] = $openingBalances[$item->id]['amount'];
             }
 
+            // add balances
+            // get currencies:
+            $currency = $this->primaryCurrency; // assume primary currency
+            if (null !== $accountMeta['currency']) {
+                $currency = $accountMeta['currency'];
+            }
+
+            // get the current balance:
+            $date         = $this->getDate();
+            $finalBalance = Steam::finalAccountBalance($item, $date, $this->primaryCurrency, $this->convertToPrimary);
+            Log::debug(sprintf('Call finalAccountBalance(%s) with date/time "%s"', var_export($this->convertToPrimary, true), $date->toIso8601String()), $finalBalance);
+
+            // collect current balances:
+            $currentBalance = Steam::bcround($finalBalance[$currency->code] ?? '0', $currency->decimal_places);
+            $openingBalance = Steam::bcround($accountMeta['opening_balance_amount'] ?? '0', $currency->decimal_places);
+            $virtualBalance = Steam::bcround($account->virtual_balance ?? '0', $currency->decimal_places);
+            $debtAmount     = $accountMeta['current_debt'] ?? null;
+
+            // set some pc_ default values to NULL:
+            $pcCurrentBalance = null;
+            $pcOpeningBalance = null;
+            $pcVirtualBalance = null;
+            $pcDebtAmount     = null;
+
+            // convert to primary currency if needed:
+            if ($this->convertToPrimary && $currency->id !== $this->primaryCurrency->id) {
+                Log::debug(sprintf('Convert to primary, from %s to %s', $currency->code, $this->primaryCurrency->code));
+                $converter        = new ExchangeRateConverter();
+                $pcCurrentBalance = $converter->convert($currency, $this->primaryCurrency, $date, $currentBalance);
+                $pcOpeningBalance = $converter->convert($currency, $this->primaryCurrency, $date, $openingBalance);
+                $pcVirtualBalance = $converter->convert($currency, $this->primaryCurrency, $date, $virtualBalance);
+                $pcDebtAmount     = null === $debtAmount ? null : $converter->convert($currency, $this->primaryCurrency, $date, $debtAmount);
+            }
+            if ($this->convertToPrimary && $currency->id === $this->primaryCurrency->id) {
+                $pcCurrentBalance = $currentBalance;
+                $pcOpeningBalance = $openingBalance;
+                $pcVirtualBalance = $virtualBalance;
+                $pcDebtAmount     = $debtAmount;
+            }
+
+            // set opening balance(s) to NULL if the date is null
+            if (null === $accountMeta['opening_balance_date']) {
+                $openingBalance   = null;
+                $pcOpeningBalance = null;
+            }
+            $accountMeta['balances'] = [
+                'current_balance'    => $currentBalance,
+                'pc_current_balance' => $pcCurrentBalance,
+                'opening_balance'    => $openingBalance,
+                'pc_opening_balance' => $pcOpeningBalance,
+                'virtual_balance'    => $virtualBalance,
+                'pc_virtual_balance' => $pcVirtualBalance,
+                'debt_amount'        => $debtAmount,
+                'pc_debt_amount'     => $pcDebtAmount,
+            ];
+            // end add balances
+
+
             // if location, add location:
             if (array_key_exists($item->id, $locations)) {
                 $accountMeta['location'] = $locations[$item->id];
@@ -273,7 +331,7 @@ class AccountEnrichment implements EnrichmentInterface
             if (array_key_exists($item->id, $lastActivities)) {
                 $accountMeta['last_activity'] = $lastActivities[$item->id];
             }
-            $item->meta              = $accountMeta;
+            $item->meta = $accountMeta;
 
             return $item;
         });
@@ -283,4 +341,21 @@ class AccountEnrichment implements EnrichmentInterface
     {
         $this->lastActivities = Steam::getLastActivities($this->accountIds);
     }
+
+    private function collectBalances(): void {}
+
+    public function setDate(?Carbon $date): void
+    {
+        $this->date = $date;
+    }
+
+    public function getDate(): Carbon
+    {
+        if (null === $this->date) {
+            return today();
+        }
+        return $this->date;
+    }
+
+
 }

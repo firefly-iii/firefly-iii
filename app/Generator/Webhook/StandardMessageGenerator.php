@@ -176,6 +176,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
                 /** @var TransactionGroup $model */
                 $accounts                = $this->collectAccounts($model);
                 $enrichment              = new AccountEnrichment();
+                $enrichment->setDate(null);
                 $enrichment->setUser($model->user);
                 $accounts                = $enrichment->enrich($accounts);
                 foreach ($accounts as $account) {

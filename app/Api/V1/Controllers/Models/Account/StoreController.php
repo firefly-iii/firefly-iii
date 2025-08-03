@@ -75,6 +75,7 @@ class StoreController extends Controller
         /** @var User $admin */
         $admin       = auth()->user();
         $enrichment  = new AccountEnrichment();
+        $enrichment->setDate(null);
         $enrichment->setUser($admin);
         $account     = $enrichment->enrichSingle($account);
 

@@ -148,6 +148,7 @@ class IndexController extends Controller
         // enrich each account.
         $enrichment         = new AccountEnrichment();
         $enrichment->setUser(auth()->user());
+        $enrichment->setDate($end);
         $return             = [];
 
         /** @var PiggyBank $piggy */

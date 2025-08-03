@@ -96,6 +96,7 @@ class ShowController extends Controller
         /** @var User $admin */
         $admin       = auth()->user();
         $enrichment  = new AccountEnrichment();
+        $enrichment->setDate($this->parameters->get('date'));
         $enrichment->setUser($admin);
         $accounts    = $enrichment->enrich($accounts);
 
@@ -130,6 +131,7 @@ class ShowController extends Controller
         /** @var User $admin */
         $admin       = auth()->user();
         $enrichment  = new AccountEnrichment();
+        $enrichment->setDate($this->parameters->get('date'));
         $enrichment->setUser($admin);
         $account     = $enrichment->enrichSingle($account);
 
