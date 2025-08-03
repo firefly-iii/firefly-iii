@@ -58,17 +58,17 @@ class AvailableBudgetTransformer extends AbstractTransformer
             $pcAmount = app('steam')->bcround($availableBudget->native_amount, $this->primary->decimal_places);
         }
 
-        $data = [
-            'id'                      => (string) $availableBudget->id,
-            'created_at'              => $availableBudget->created_at->toAtomString(),
-            'updated_at'              => $availableBudget->updated_at->toAtomString(),
+        return [
+            'id'                              => (string) $availableBudget->id,
+            'created_at'                      => $availableBudget->created_at->toAtomString(),
+            'updated_at'                      => $availableBudget->updated_at->toAtomString(),
 
             // currencies according to 6.3.0
             'object_has_currency_setting'     => true,
-            'currency_id'             => (string) $currency->id,
-            'currency_code'           => $currency->code,
-            'currency_symbol'         => $currency->symbol,
-            'currency_decimal_places' => $currency->decimal_places,
+            'currency_id'                     => (string) $currency->id,
+            'currency_code'                   => $currency->code,
+            'currency_symbol'                 => $currency->symbol,
+            'currency_decimal_places'         => $currency->decimal_places,
 
             'primary_currency_id'             => (string) $this->primary->id,
             'primary_currency_code'           => $this->primary->code,
@@ -76,23 +76,20 @@ class AvailableBudgetTransformer extends AbstractTransformer
             'primary_currency_decimal_places' => $this->primary->decimal_places,
 
 
-            'amount'                   => $amount,
-            'pc_amount'                => $pcAmount,
-            'start'                    => $availableBudget->start_date->toAtomString(),
-            'end'                      => $availableBudget->end_date->endOfDay()->toAtomString(),
-            'spent_in_budgets'         => $availableBudget->meta['spent_in_budgets'],
-            'pc_spent_in_budgets'      => $availableBudget->meta['pc_spent_in_budgets'],
-            'spent_outside_budgets'    => $availableBudget->meta['spent_outside_budgets'],
-            'pc_spent_outside_budgets' => $availableBudget->meta['pc_spent_outside_budgets'],
-            'links'                    => [
+            'amount'                          => $amount,
+            'pc_amount'                       => $pcAmount,
+            'start'                           => $availableBudget->start_date->toAtomString(),
+            'end'                             => $availableBudget->end_date->endOfDay()->toAtomString(),
+            'spent_in_budgets'                => $availableBudget->meta['spent_in_budgets'],
+            'pc_spent_in_budgets'             => $availableBudget->meta['pc_spent_in_budgets'],
+            'spent_outside_budgets'           => $availableBudget->meta['spent_outside_budgets'],
+            'pc_spent_outside_budgets'        => $availableBudget->meta['pc_spent_outside_budgets'],
+            'links'                           => [
                 [
                     'rel' => 'self',
-                    'uri' => '/available_budgets/' . $availableBudget->id,
+                    'uri' => '/available_budgets/'.$availableBudget->id,
                 ],
             ],
         ];
-        return $data;
     }
-
-
 }

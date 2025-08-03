@@ -72,12 +72,12 @@ class ShowController extends Controller
      */
     public function index(): JsonResponse
     {
-        $manager = $this->getManager();
+        $manager          = $this->getManager();
 
         // types to get, page size:
-        $pageSize = $this->parameters->get('limit');
-        $start    = $this->parameters->get('start');
-        $end      = $this->parameters->get('end');
+        $pageSize         = $this->parameters->get('limit');
+        $start            = $this->parameters->get('start');
+        $end              = $this->parameters->get('end');
 
         // get list of available budgets. Count it and split it.
         $collection       = $this->abRepository->getAvailableBudgetsByDate($start, $end);
@@ -86,20 +86,20 @@ class ShowController extends Controller
 
         // enrich
         /** @var User $admin */
-        $admin      = auth()->user();
-        $enrichment = new AvailableBudgetEnrichment();
+        $admin            = auth()->user();
+        $enrichment       = new AvailableBudgetEnrichment();
         $enrichment->setUser($admin);
         $availableBudgets = $enrichment->enrich($availableBudgets);
 
         // make paginator:
-        $paginator = new LengthAwarePaginator($availableBudgets, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.available-budgets.index') . $this->buildParams());
+        $paginator        = new LengthAwarePaginator($availableBudgets, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.available-budgets.index').$this->buildParams());
 
         /** @var AvailableBudgetTransformer $transformer */
-        $transformer = app(AvailableBudgetTransformer::class);
+        $transformer      = app(AvailableBudgetTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($availableBudgets, $transformer, 'available_budgets');
+        $resource         = new FractalCollection($availableBudgets, $transformer, 'available_budgets');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -113,25 +113,25 @@ class ShowController extends Controller
      */
     public function show(AvailableBudget $availableBudget): JsonResponse
     {
-        $manager = $this->getManager();
-        $start   = $this->parameters->get('start');
-        $end     = $this->parameters->get('end');
+        $manager         = $this->getManager();
+        $start           = $this->parameters->get('start');
+        $end             = $this->parameters->get('end');
 
         /** @var AvailableBudgetTransformer $transformer */
-        $transformer = app(AvailableBudgetTransformer::class);
+        $transformer     = app(AvailableBudgetTransformer::class);
         $transformer->setParameters($this->parameters);
 
         // enrich
         /** @var User $admin */
-        $admin      = auth()->user();
-        $enrichment = new AvailableBudgetEnrichment();
+        $admin           = auth()->user();
+        $enrichment      = new AvailableBudgetEnrichment();
         $enrichment->setUser($admin);
         $enrichment->setStart($start);
         $enrichment->setEnd($end);
         $availableBudget = $enrichment->enrichSingle($availableBudget);
 
 
-        $resource = new Item($availableBudget, $transformer, 'available_budgets');
+        $resource        = new Item($availableBudget, $transformer, 'available_budgets');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

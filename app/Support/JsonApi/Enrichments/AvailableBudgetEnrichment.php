@@ -1,4 +1,5 @@
 <?php
+
 /*
  * AvailableBudgetEnrichment.php
  * Copyright (c) 2025 james@firefly-iii.org.
@@ -35,6 +36,7 @@ use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 class AvailableBudgetEnrichment implements EnrichmentInterface
 {
@@ -53,8 +55,8 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
     private readonly BudgetRepositoryInterface     $repository;
 
 
-    private ?Carbon $start = null;
-    private ?Carbon $end   = null;
+    private ?Carbon $start                                                = null;
+    private ?Carbon $end                                                  = null;
 
     public function __construct()
     {
@@ -65,7 +67,8 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
         $this->repository         = app(BudgetRepositoryInterface::class);
     }
 
-    #[\Override] public function enrich(Collection $collection): Collection
+    #[Override]
+    public function enrich(Collection $collection): Collection
     {
         $this->collection = $collection;
         $this->collectIds();
@@ -75,7 +78,8 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
         return $this->collection;
     }
 
-    #[\Override] public function enrichSingle(Model | array $model): array | Model
+    #[Override]
+    public function enrichSingle(array|Model $model): array|Model
     {
         Log::debug(__METHOD__);
         $collection = new Collection([$model]);
@@ -84,13 +88,15 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
         return $collection->first();
     }
 
-    #[\Override] public function setUser(User $user): void
+    #[Override]
+    public function setUser(User $user): void
     {
         $this->user = $user;
         $this->setUserGroup($user->userGroup);
     }
 
-    #[\Override] public function setUserGroup(UserGroup $userGroup): void
+    #[Override]
+    public function setUserGroup(UserGroup $userGroup): void
     {
         $this->userGroup = $userGroup;
         $this->noBudgetRepository->setUserGroup($userGroup);
@@ -115,9 +121,9 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
         $spentInBudgets      = $this->opsRepository->collectExpenses($start, $end, null, $allActive, null);
         $spentOutsideBudgets = $this->noBudgetRepository->collectExpenses($start, $end, null, null, null);
         foreach ($this->collection as $availableBudget) {
-            $id                          = (int) $availableBudget->id;
-            $filteredSpentInBudgets      = $this->opsRepository->sumCollectedExpenses($spentInBudgets, $availableBudget->start_date, $availableBudget->end_date, $availableBudget->transactionCurrency, false);
-            $filteredSpentOutsideBudgets = $this->opsRepository->sumCollectedExpenses($spentOutsideBudgets, $availableBudget->start_date, $availableBudget->end_date, $availableBudget->transactionCurrency, false);
+            $id                             = (int) $availableBudget->id;
+            $filteredSpentInBudgets         = $this->opsRepository->sumCollectedExpenses($spentInBudgets, $availableBudget->start_date, $availableBudget->end_date, $availableBudget->transactionCurrency, false);
+            $filteredSpentOutsideBudgets    = $this->opsRepository->sumCollectedExpenses($spentOutsideBudgets, $availableBudget->start_date, $availableBudget->end_date, $availableBudget->transactionCurrency, false);
             $this->spentInBudgets[$id]      = array_values($filteredSpentInBudgets);
             $this->spentOutsideBudgets[$id] = array_values($filteredSpentOutsideBudgets);
 
@@ -153,9 +159,8 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
                 'pc_spent_outside_budgets' => $pcSpentOutsideBudgets[$id] ?? [],
             ];
             $item->meta = $meta;
+
             return $item;
         });
     }
-
-
 }
