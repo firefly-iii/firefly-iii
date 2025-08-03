@@ -34,6 +34,7 @@
                         {{ CurrencyForm.currencyList('auto_budget_currency_id', autoBudget.transaction_currency_id) }}
                         {{ ExpandedForm.amountNoCurrency('auto_budget_amount', preFilled.auto_budget_amount) }}
                         {{ ExpandedForm.select('auto_budget_period', autoBudgetPeriods, autoBudget.period) }}
+                        {{ ExpandedForm.textarea('notes',preFilled.notes,{helpText: trans('firefly.field_supports_markdown')}) }}
                         {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
                     </div>
                 </div>

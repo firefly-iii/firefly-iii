@@ -123,7 +123,7 @@ class BudgetLimitEnrichment implements EnrichmentInterface
                 $this->pcExpenses[$id] = array_values($pcFilteredExpenses);
             }
             if (true === $this->convertToPrimary && $budgetLimit->transactionCurrency->id === $this->primaryCurrency->id) {
-                $this->pcExpenses[$id] = $this->expenses[$id];
+                $this->pcExpenses[$id] = $this->expenses[$id] ?? [];
             }
         }
     }

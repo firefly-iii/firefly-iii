@@ -113,10 +113,13 @@ class AccountTransformer extends AbstractTransformer
 
             // currency is object specific or primary, already determined above.
             'currency_id'                     => (string) $currency['id'],
+            'currency_name'                   => $currency['name'],
             'currency_code'                   => $currency['code'],
             'currency_symbol'                 => $currency['symbol'],
             'currency_decimal_places'         => $currency['decimal_places'],
+
             'primary_currency_id'             => (string) $this->primary->id,
+            'primary_currency_name'           => $this->primary->name,
             'primary_currency_code'           => $this->primary->code,
             'primary_currency_symbol'         => $this->primary->symbol,
             'primary_currency_decimal_places' => $this->primary->decimal_places,

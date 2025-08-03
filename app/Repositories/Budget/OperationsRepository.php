@@ -290,9 +290,23 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         $summarizer = new TransactionSummarizer($this->user);
         $summarizer->setConvertToPrimary($convertToPrimary);
 
-        // filter $journals by range.
+        // filter $journals by range AND currency if it is present.
         $expenses   = array_filter($expenses, static function (array $expense) use ($start, $end, $transactionCurrency): bool {
             return $expense['date']->between($start, $end) && $expense['currency_id'] === $transactionCurrency->id;
+        });
+
+        return $summarizer->groupByCurrencyId($expenses, 'negative', false);
+    }
+
+public function sumCollectedExpensesByBudget(array $expenses, Budget $budget, bool $convertToPrimary = false): array
+    {
+        Log::debug(sprintf('Start of %s.', __METHOD__));
+        $summarizer = new TransactionSummarizer($this->user);
+        $summarizer->setConvertToPrimary($convertToPrimary);
+
+        // filter $journals by range AND currency if it is present.
+        $expenses   = array_filter($expenses, static function (array $expense) use ($budget): bool {
+            return $expense['budget_id'] === $budget->id;
         });
 
         return $summarizer->groupByCurrencyId($expenses, 'negative', false);

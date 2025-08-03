@@ -95,6 +95,7 @@ class EditController extends Controller
         $preFilled         = [
             'active'                  => $hasOldInput ? (bool) $request->old('active') : $budget->active,
             'auto_budget_currency_id' => $hasOldInput ? (int) $request->old('auto_budget_currency_id') : $this->primaryCurrency->id,
+            'notes'                   => $this->repository->getNoteText($budget),
         ];
         if ($autoBudget instanceof AutoBudget) {
             $amount                          = $hasOldInput ? $request->old('auto_budget_amount') : $autoBudget->amount;

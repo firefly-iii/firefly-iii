@@ -60,11 +60,13 @@ class BillTransformer extends AbstractTransformer
             // currencies according to 6.3.0
             'object_has_currency_setting'     => true,
             'currency_id'                     => (string) $bill->transaction_currency_id,
+            'currency_name'                   => $currency->name,
             'currency_code'                   => $currency->code,
             'currency_symbol'                 => $currency->symbol,
             'currency_decimal_places'         => $currency->decimal_places,
 
             'primary_currency_id'             => (string) $this->primary->id,
+            'primary_currency_name'           => $this->primary->name,
             'primary_currency_code'           => $this->primary->code,
             'primary_currency_symbol'         => $this->primary->symbol,
             'primary_currency_decimal_places' => $this->primary->decimal_places,

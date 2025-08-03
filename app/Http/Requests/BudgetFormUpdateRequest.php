@@ -53,6 +53,7 @@ class BudgetFormUpdateRequest extends FormRequest
             'currency_id'        => $this->convertInteger('auto_budget_currency_id'),
             'auto_budget_amount' => $this->convertString('auto_budget_amount'),
             'auto_budget_period' => $this->convertString('auto_budget_period'),
+            'notes'                   => $this->stringWithNewlines('notes'),
         ];
     }
 
