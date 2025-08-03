@@ -28,7 +28,9 @@ use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\Budget\UpdateRequest;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Support\JsonApi\Enrichments\BudgetEnrichment;
 use FireflyIII\Transformers\BudgetTransformer;
+use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use League\Fractal\Resource\Item;
 
@@ -63,15 +65,22 @@ class UpdateController extends Controller
      */
     public function update(UpdateRequest $request, Budget $budget): JsonResponse
     {
-        $data        = $request->getAll();
-        $budget      = $this->repository->update($budget, $data);
-        $manager     = $this->getManager();
+        $data    = $request->getAll();
+        $budget  = $this->repository->update($budget, $data);
+        $manager = $this->getManager();
+
+        // enrich
+        /** @var User $admin */
+        $admin      = auth()->user();
+        $enrichment = new BudgetEnrichment();
+        $enrichment->setUser($admin);
+        $budget = $enrichment->enrichSingle($budget);
 
         /** @var BudgetTransformer $transformer */
         $transformer = app(BudgetTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource    = new Item($budget, $transformer, 'budgets');
+        $resource = new Item($budget, $transformer, 'budgets');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
