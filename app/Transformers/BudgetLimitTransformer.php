@@ -26,10 +26,8 @@ namespace FireflyIII\Transformers;
 
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
-use FireflyIII\Repositories\Budget\OperationsRepository;
 use FireflyIII\Support\Facades\Amount;
-use Illuminate\Support\Collection;
+use FireflyIII\Support\Facades\Steam;
 use League\Fractal\Resource\Item;
 
 /**
@@ -42,11 +40,11 @@ class BudgetLimitTransformer extends AbstractTransformer
             'budget',
         ];
     protected bool                $convertToPrimary;
-    protected TransactionCurrency $primary;
+    protected TransactionCurrency $primaryCurrency;
 
     public function __construct()
     {
-        $this->primary          = Amount::getPrimaryCurrency();
+        $this->primaryCurrency  = Amount::getPrimaryCurrency();
         $this->convertToPrimary = Amount::convertToPrimary();
     }
 
@@ -65,65 +63,53 @@ class BudgetLimitTransformer extends AbstractTransformer
      */
     public function transform(BudgetLimit $budgetLimit): array
     {
-        $repository            = app(OperationsRepository::class);
-        $limitRepos            = app(BudgetLimitRepositoryInterface::class);
-        $repository->setUser($budgetLimit->budget->user);
-        $limitRepos->setUser($budgetLimit->budget->user);
-        $expenses              = $repository->sumExpenses(
-            $budgetLimit->start_date,
-            $budgetLimit->end_date,
-            null,
-            new Collection([$budgetLimit->budget]),
-            $budgetLimit->transactionCurrency
-        );
-        $currency              = $budgetLimit->transactionCurrency;
-        $amount                = $budgetLimit->amount;
-        $notes                 = $limitRepos->getNoteText($budgetLimit);
-        $currencyDecimalPlaces = 2;
-        $currencyId            = null;
-        $currencyName          = null;
-        $currencyCode          = null;
-        $currencySymbol        = null;
-        if (null !== $currency) {
-            $amount                = $budgetLimit->amount;
-            $currencyId            = $currency->id;
-            $currencyName          = $currency->name;
-            $currencyCode          = $currency->code;
-            $currencySymbol        = $currency->symbol;
-            $currencyDecimalPlaces = $currency->decimal_places;
-        }
-        $amount                = app('steam')->bcround($amount, $currencyDecimalPlaces);
-        $primary               = $this->primary;
-        if (!$this->convertToPrimary) {
-            $primary = null;
-        }
 
+        $currency = $budgetLimit->transactionCurrency;
+        if (null === $currency) {
+            $currency = $this->primaryCurrency;
+        }
+        $amount   = Steam::bcround($budgetLimit->amount, $currency->decimal_places);
+        $pcAmount = null;
+        if ($this->convertToPrimary && $currency->id === $this->primaryCurrency->id) {
+            $pcAmount = $amount;
+        }
+        if ($this->convertToPrimary && $currency->id !== $this->primaryCurrency->id) {
+            $pcAmount = Steam::bcround($budgetLimit->native_amount, $this->primaryCurrency->decimal_places);
+        }
 
         return [
-            'id'                              => (string)$budgetLimit->id,
-            'created_at'                      => $budgetLimit->created_at->toAtomString(),
-            'updated_at'                      => $budgetLimit->updated_at->toAtomString(),
-            'start'                           => $budgetLimit->start_date->toAtomString(),
-            'end'                             => $budgetLimit->end_date->endOfDay()->toAtomString(),
-            'budget_id'                       => (string)$budgetLimit->budget_id,
-            'currency_id'                     => (string)$currencyId,
-            'currency_code'                   => $currencyCode,
-            'currency_name'                   => $currencyName,
-            'currency_decimal_places'         => $currencyDecimalPlaces,
-            'currency_symbol'                 => $currencySymbol,
-            'primary_currency_id'             => $primary instanceof TransactionCurrency ? (string)$primary->id : null,
-            'primary_currency_code'           => $primary?->code,
-            'primary_currency_symbol'         => $primary?->symbol,
-            'primary_currency_decimal_places' => $primary?->decimal_places,
-            'amount'                          => $amount,
-            'pc_amount'                       => $this->convertToPrimary ? app('steam')->bcround($budgetLimit->native_amount, $primary->decimal_places) : null,
-            'period'                          => $budgetLimit->period,
-            'spent'                           => $expenses[$currencyId]['sum'] ?? '0', // will be in primary currency if convertToPrimary.
-            'notes'                           => '' === $notes ? null : $notes,
-            'links'                           => [
+            'id'                          => (string)$budgetLimit->id,
+            'created_at'                  => $budgetLimit->created_at->toAtomString(),
+            'updated_at'                  => $budgetLimit->updated_at->toAtomString(),
+            'start'                       => $budgetLimit->start_date->toAtomString(),
+            'end'                         => $budgetLimit->end_date->endOfDay()->toAtomString(),
+            'budget_id'                   => (string)$budgetLimit->budget_id,
+
+            // currency settings according to 6.3.0
+            'object_has_currency_setting' => true,
+
+            'currency_id'             => (string)$currency->id,
+            'currency_name'           => $currency->name,
+            'currency_code'           => $currency->code,
+            'currency_symbol'         => $currency->symbol,
+            'currency_decimal_places' => $currency->decimal_places,
+
+            'primary_currency_id'             => (int)$this->primaryCurrency->id,
+            'primary_currency_name'           => $this->primaryCurrency->name,
+            'primary_currency_code'           => $this->primaryCurrency->code,
+            'primary_currency_symbol'         => $this->primaryCurrency->symbol,
+            'primary_currency_decimal_places' => $this->primaryCurrency->decimal_places,
+
+            'amount'    => $amount,
+            'pc_amount' => $pcAmount,
+            'period'    => $budgetLimit->period,
+            'spent'     => $budgetLimit->meta['spent'],
+            'pc_spent'  => $budgetLimit->meta['pc_spent'],
+            'notes'     => $budgetLimit->meta['notes'],
+            'links'     => [
                 [
                     'rel' => 'self',
-                    'uri' => '/budgets/limits/'.$budgetLimit->id,
+                    'uri' => '/budgets/limits/' . $budgetLimit->id,
                 ],
             ],
         ];

@@ -30,6 +30,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -91,8 +92,8 @@ class BudgetTransformer extends AbstractTransformer
         }
         if (null !== $autoBudget) {
             $abType    = $types[$autoBudget->auto_budget_type];
-            $abAmount  = app('steam')->bcround($autoBudget->amount, $currency->decimal_places);
-            $abPrimary = $this->convertToPrimary ? app('steam')->bcround($autoBudget->native_amount, $primary->decimal_places) : null;
+            $abAmount  = Steam::bcround($autoBudget->amount, $currency->decimal_places);
+            $abPrimary = $this->convertToPrimary ? Steam::bcround($autoBudget->native_amount, $primary->decimal_places) : null;
             $abPeriod  = $autoBudget->period;
         }
 
@@ -136,7 +137,7 @@ class BudgetTransformer extends AbstractTransformer
     {
         $return = [];
         foreach ($array as $data) {
-            $data['sum'] = app('steam')->bcround($data['sum'], (int) $data['currency_decimal_places']);
+            $data['sum'] = Steam::bcround($data['sum'], (int) $data['currency_decimal_places']);
             $return[]    = $data;
         }
 

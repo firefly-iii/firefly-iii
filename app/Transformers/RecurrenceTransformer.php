@@ -193,10 +193,10 @@ class RecurrenceTransformer extends AbstractTransformer
                 $destinationType = $destinationAccount->accountType->type;
                 $destinationIban = $destinationAccount->iban;
             }
-            $amount                = app('steam')->bcround($transaction->amount, $transaction->transactionCurrency->decimal_places);
+            $amount                = Steam::bcround($transaction->amount, $transaction->transactionCurrency->decimal_places);
             $foreignAmount         = null;
             if (null !== $transaction->foreign_currency_id && null !== $transaction->foreign_amount) {
-                $foreignAmount = app('steam')->bcround($transaction->foreign_amount, $foreignCurrencyDp);
+                $foreignAmount = Steam::bcround($transaction->foreign_amount, $foreignCurrencyDp);
             }
             $transactionArray      = [
                 'id'                              => (string) $transaction->id,

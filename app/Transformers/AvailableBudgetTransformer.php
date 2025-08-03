@@ -51,11 +51,11 @@ class AvailableBudgetTransformer extends AbstractTransformer
     public function transform(AvailableBudget $availableBudget): array
     {
         $currency = $availableBudget->transactionCurrency;
-        $amount   = app('steam')->bcround($availableBudget->amount, $currency->decimal_places);
+        $amount   = Steam::bcround($availableBudget->amount, $currency->decimal_places);
         $pcAmount = null;
 
         if ($this->convertToPrimary) {
-            $pcAmount = app('steam')->bcround($availableBudget->native_amount, $this->primary->decimal_places);
+            $pcAmount = Steam::bcround($availableBudget->native_amount, $this->primary->decimal_places);
         }
 
         $data = [

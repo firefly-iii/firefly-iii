@@ -88,9 +88,9 @@ class PiggyBankTransformer extends AbstractTransformer
         if (0 !== bccomp($targetAmount, '0')) { // target amount is not 0.00
             $leftToSave   = bcsub($piggyBank->target_amount, $currentAmount);
             $percentage   = (int) bcmul(bcdiv($currentAmount, $targetAmount), '100');
-            $targetAmount = app('steam')->bcround($targetAmount, $currency->decimal_places);
-            $leftToSave   = app('steam')->bcround($leftToSave, $currency->decimal_places);
-            $savePerMonth = app('steam')->bcround($this->piggyRepos->getSuggestedMonthlyAmount($piggyBank), $currency->decimal_places);
+            $targetAmount = Steam::bcround($targetAmount, $currency->decimal_places);
+            $leftToSave   = Steam::bcround($leftToSave, $currency->decimal_places);
+            $savePerMonth = Steam::bcround($this->piggyRepos->getSuggestedMonthlyAmount($piggyBank), $currency->decimal_places);
         }
         $startDate        = $piggyBank->start_date?->format('Y-m-d');
         $targetDate       = $piggyBank->target_date?->format('Y-m-d');
