@@ -32,7 +32,6 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Models\WebhookMessage;
-use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\JsonApi\Enrichments\AccountEnrichment;
 use FireflyIII\Transformers\AccountTransformer;
 use FireflyIII\Transformers\TransactionGroupTransformer;

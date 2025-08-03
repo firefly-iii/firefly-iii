@@ -151,6 +151,7 @@ class ShowController extends Controller
         $enrichment->setUser($admin);
         $enrichment->setStart($start);
         $enrichment->setEnd($end);
+
         /** @var Bill $bill */
         $bill                       = $enrichment->enrichSingle($bill);
 

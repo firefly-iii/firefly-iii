@@ -154,7 +154,7 @@
         "url": "URL",
         "active": "Aktywny",
         "interest_date": "Data odsetek",
-        "administration_currency": "Primary currency",
+        "administration_currency": "Waluta podstawowa",
         "title": "Tytu\u0142",
         "date": "Data",
         "book_date": "Data ksi\u0119gowania",
@@ -174,7 +174,7 @@
     "list": {
         "title": "Tytu\u0142",
         "active": "Jest aktywny?",
-        "primary_currency": "Primary currency",
+        "primary_currency": "Waluta podstawowa",
         "trigger": "Wyzwalacz",
         "response": "Odpowied\u017a",
         "delivery": "Dor\u0119czenie",

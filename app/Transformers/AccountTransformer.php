@@ -66,24 +66,24 @@ class AccountTransformer extends AbstractTransformer
         }
 
         // get account type:
-        $accountType         = (string) config(sprintf('firefly.shortNamesByFullName.%s', $account->full_account_type));
-        $liabilityType       = (string) config(sprintf('firefly.shortLiabilityNameByFullName.%s', $account->full_account_type));
-        $liabilityType       = '' === $liabilityType ? null : strtolower($liabilityType);
-        $liabilityDirection  = $account->meta['liability_direction'] ?? null;
-        $accountRole         = $this->getAccountRole($account, $accountType);
-        $hasCurrencySettings = null !== $account->meta['currency'];
-        $includeNetWorth     = 1 === (int) ($account->meta['include_net_worth'] ?? 0);
-        $longitude           = $account->meta['location']['longitude'] ?? null;
-        $latitude            = $account->meta['location']['latitude'] ?? null;
-        $zoomLevel           = $account->meta['location']['zoom_level'] ?? null;
-        $order               = $account->order;
+        $accountType                           = (string) config(sprintf('firefly.shortNamesByFullName.%s', $account->full_account_type));
+        $liabilityType                         = (string) config(sprintf('firefly.shortLiabilityNameByFullName.%s', $account->full_account_type));
+        $liabilityType                         = '' === $liabilityType ? null : strtolower($liabilityType);
+        $liabilityDirection                    = $account->meta['liability_direction'] ?? null;
+        $accountRole                           = $this->getAccountRole($account, $accountType);
+        $hasCurrencySettings                   = null !== $account->meta['currency'];
+        $includeNetWorth                       = 1 === (int) ($account->meta['include_net_worth'] ?? 0);
+        $longitude                             = $account->meta['location']['longitude'] ?? null;
+        $latitude                              = $account->meta['location']['latitude'] ?? null;
+        $zoomLevel                             = $account->meta['location']['zoom_level'] ?? null;
+        $order                                 = $account->order;
 
         // date (for balance etc.)
-        $date = $this->getDate();
+        $date                                  = $this->getDate();
         $date->endOfDay();
 
         // get primary currency as fallback:
-        $currency = $this->primary; // assume primary currency
+        $currency                              = $this->primary; // assume primary currency
         if ($hasCurrencySettings) {
             $currency = $account->meta['currency'];
         }
@@ -95,8 +95,8 @@ class AccountTransformer extends AbstractTransformer
 
         // get some listed information from the account meta-data:
         [$creditCardType, $monthlyPaymentDate] = $this->getCCInfo($account, $accountRole, $accountType);
-        $openingBalanceDate = $this->getOpeningBalance($account, $accountType);
-        [$interest, $interestPeriod] = $this->getInterest($account, $accountType);
+        $openingBalanceDate                    = $this->getOpeningBalance($account, $accountType);
+        [$interest, $interestPeriod]           = $this->getInterest($account, $accountType);
 
         return [
             'id'                              => (string) $account->id,
@@ -125,33 +125,33 @@ class AccountTransformer extends AbstractTransformer
             'current_balance'                 => $account->meta['balances']['current_balance'],
             'pc_current_balance'              => $account->meta['balances']['pc_current_balance'],
 
-            'opening_balance'    => $account->meta['balances']['opening_balance'],
-            'pc_opening_balance' => $account->meta['balances']['pc_opening_balance'],
+            'opening_balance'                 => $account->meta['balances']['opening_balance'],
+            'pc_opening_balance'              => $account->meta['balances']['pc_opening_balance'],
 
-            'virtual_balance'    => $account->meta['balances']['virtual_balance'],
-            'pc_virtual_balance' => $account->meta['balances']['pc_virtual_balance'],
+            'virtual_balance'                 => $account->meta['balances']['virtual_balance'],
+            'pc_virtual_balance'              => $account->meta['balances']['pc_virtual_balance'],
 
-            'debt_amount'    => $account->meta['balances']['debt_amount'],
-            'pc_debt_amount' => $account->meta['balances']['pc_debt_amount'],
+            'debt_amount'                     => $account->meta['balances']['debt_amount'],
+            'pc_debt_amount'                  => $account->meta['balances']['pc_debt_amount'],
 
-            'current_balance_date' => $date->toAtomString(),
-            'notes'                => $account->meta['notes'] ?? null,
-            'monthly_payment_date' => $monthlyPaymentDate,
-            'credit_card_type'     => $creditCardType,
-            'account_number'       => $account->meta['account_number'] ?? null,
-            'iban'                 => '' === $account->iban ? null : $account->iban,
-            'bic'                  => $account->meta['BIC'] ?? null,
-            'opening_balance_date' => $openingBalanceDate,
-            'liability_type'       => $liabilityType,
-            'liability_direction'  => $liabilityDirection,
-            'interest'             => $interest,
-            'interest_period'      => $interestPeriod,
-            'include_net_worth'    => $includeNetWorth,
-            'longitude'            => $longitude,
-            'latitude'             => $latitude,
-            'zoom_level'           => $zoomLevel,
-            'last_activity'        => array_key_exists('last_activity', $account->meta) ? $account->meta['last_activity']->toAtomString() : null,
-            'links'                => [
+            'current_balance_date'            => $date->toAtomString(),
+            'notes'                           => $account->meta['notes'] ?? null,
+            'monthly_payment_date'            => $monthlyPaymentDate,
+            'credit_card_type'                => $creditCardType,
+            'account_number'                  => $account->meta['account_number'] ?? null,
+            'iban'                            => '' === $account->iban ? null : $account->iban,
+            'bic'                             => $account->meta['BIC'] ?? null,
+            'opening_balance_date'            => $openingBalanceDate,
+            'liability_type'                  => $liabilityType,
+            'liability_direction'             => $liabilityDirection,
+            'interest'                        => $interest,
+            'interest_period'                 => $interestPeriod,
+            'include_net_worth'               => $includeNetWorth,
+            'longitude'                       => $longitude,
+            'latitude'                        => $latitude,
+            'zoom_level'                      => $zoomLevel,
+            'last_activity'                   => array_key_exists('last_activity', $account->meta) ? $account->meta['last_activity']->toAtomString() : null,
+            'links'                           => [
                 [
                     'rel' => 'self',
                     'uri' => sprintf('/accounts/%d', $account->id),
@@ -193,7 +193,7 @@ class AccountTransformer extends AbstractTransformer
         if (null !== $monthlyPaymentDate) {
             // try classic date:
             if (10 === strlen($monthlyPaymentDate)) {
-                $object = Carbon::createFromFormat('!Y-m-d', $monthlyPaymentDate, config('app.timezone'));
+                $object             = Carbon::createFromFormat('!Y-m-d', $monthlyPaymentDate, config('app.timezone'));
                 if (!$object instanceof Carbon) {
                     $object = today(config('app.timezone'));
                 }
@@ -214,7 +214,7 @@ class AccountTransformer extends AbstractTransformer
             $openingBalanceDate = $account->meta['opening_balance_date'] ?? null;
         }
         if (null !== $openingBalanceDate) {
-            $object = Carbon::createFromFormat('Y-m-d H:i:s', $openingBalanceDate, config('app.timezone'));
+            $object             = Carbon::createFromFormat('Y-m-d H:i:s', $openingBalanceDate, config('app.timezone'));
             if (!$object instanceof Carbon) {
                 $object = today(config('app.timezone'));
             }
