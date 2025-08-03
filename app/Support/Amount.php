@@ -142,7 +142,7 @@ class Amount
         $cache->addProperty('getPrimaryCurrencyByGroup');
         $cache->addProperty($userGroup->id);
         if ($cache->has()) {
-             return $cache->get();
+            return $cache->get();
         }
 
         /** @var null|TransactionCurrency $primary */
