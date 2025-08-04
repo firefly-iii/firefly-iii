@@ -121,6 +121,7 @@ return [
     'languages'                    => [
         // currently enabled languages
         // 'af_ZA' => ['name_locale' => 'Afrikaans', 'name_english' => 'Afrikaans'],
+        'ar_SA' => ['name_locale' => 'العربية', 'name_english' => 'Arabic'],
         'bg_BG' => ['name_locale' => 'Български', 'name_english' => 'Bulgarian'],
         'cs_CZ' => ['name_locale' => 'Czech', 'name_english' => 'Czech'],
         'da_DK' => ['name_locale' => 'Danish', 'name_english' => 'Danish'],

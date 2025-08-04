@@ -333,6 +333,7 @@ return [
     'languages' => [
         // currently enabled languages
         'af_ZA',
+        'ar_SA',
         'bg_BG',
         'cs_CZ',
         'da_DK',
