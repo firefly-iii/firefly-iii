@@ -103,8 +103,8 @@ class BudgetTransformer extends AbstractTransformer
 
             'auto_budget_amount'              => $abAmount,
             'pc_auto_budget_amount'           => $abPrimary,
-            'spent'                           => $this->beautify($budget->meta['spent']), // always in primary currency.
-            'pc_spent'                        => $this->beautify($budget->meta['pc_spent']), // always in primary currency.
+            'spent'                           => $this->beautify($budget->meta['spent']),
+            'pc_spent'                        => $this->beautify($budget->meta['pc_spent']),
             'links'                           => [
                 [
                     'rel' => 'self',

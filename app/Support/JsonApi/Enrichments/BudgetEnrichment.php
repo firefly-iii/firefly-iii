@@ -77,6 +77,7 @@ class BudgetEnrichment implements EnrichmentInterface
         foreach ($this->collection as $budget) {
             $this->ids[] = (int)$budget->id;
         }
+        $this->ids = array_unique($this->ids);
     }
 
     private function collectNotes(): void
