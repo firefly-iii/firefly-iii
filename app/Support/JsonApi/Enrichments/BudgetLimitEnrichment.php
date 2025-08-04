@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\Support\JsonApi\Enrichments;
 
 use Carbon\Carbon;
@@ -43,10 +45,11 @@ class BudgetLimitEnrichment implements EnrichmentInterface
         $this->collectNotes();
         $this->collectBudgets();
         $this->appendCollectedData();
+
         return $this->collection;
     }
 
-    public function enrichSingle(Model|array $model): array|Model
+    public function enrichSingle(array|Model $model): array|Model
     {
         Log::debug(__METHOD__);
         $collection = new Collection()->push($model);
@@ -70,19 +73,21 @@ class BudgetLimitEnrichment implements EnrichmentInterface
     {
         $this->start = $this->collection->min('start_date');
         $this->end   = $this->collection->max('end_date');
+
         /** @var BudgetLimit $limit */
         foreach ($this->collection as $limit) {
             $this->ids[] = (int)$limit->id;
         }
-        $this->ids = array_unique($this->ids);
+        $this->ids   = array_unique($this->ids);
     }
 
     private function collectNotes(): void
     {
         $notes = Note::query()->whereIn('noteable_id', $this->ids)
-                     ->whereNotNull('notes.text')
-                     ->where('notes.text', '!=', '')
-                     ->where('noteable_type', BudgetLimit::class)->get(['notes.noteable_id', 'notes.text'])->toArray();
+            ->whereNotNull('notes.text')
+            ->where('notes.text', '!=', '')
+            ->where('noteable_type', BudgetLimit::class)->get(['notes.noteable_id', 'notes.text'])->toArray()
+        ;
         foreach ($notes as $note) {
             $this->notes[(int)$note['noteable_id']] = (string)$note['text'];
         }
@@ -99,6 +104,7 @@ class BudgetLimitEnrichment implements EnrichmentInterface
                 'pc_spent' => $this->pcExpenses[$id] ?? [],
             ];
             $item->meta = $meta;
+
             return $item;
         });
     }
@@ -108,9 +114,9 @@ class BudgetLimitEnrichment implements EnrichmentInterface
         $budgetIds     = $this->collection->pluck('budget_id')->unique()->toArray();
         $this->budgets = Budget::whereIn('id', $budgetIds)->get();
 
-        $repository = app(OperationsRepository::class);
+        $repository    = app(OperationsRepository::class);
         $repository->setUser($this->user);
-        $expenses = $repository->collectExpenses($this->start, $this->end, null, $this->budgets, null);
+        $expenses      = $repository->collectExpenses($this->start, $this->end, null, $this->budgets, null);
 
         /** @var BudgetLimit $budgetLimit */
         foreach ($this->collection as $budgetLimit) {

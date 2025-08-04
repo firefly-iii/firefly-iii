@@ -73,10 +73,10 @@ class StoreController extends Controller
 
         // enrich
         /** @var User $admin */
-        $admin            = auth()->user();
-        $enrichment       = new BudgetEnrichment();
+        $admin       = auth()->user();
+        $enrichment  = new BudgetEnrichment();
         $enrichment->setUser($admin);
-        $budget = $enrichment->enrichSingle($budget);
+        $budget      = $enrichment->enrichSingle($budget);
 
         /** @var BudgetTransformer $transformer */
         $transformer = app(BudgetTransformer::class);

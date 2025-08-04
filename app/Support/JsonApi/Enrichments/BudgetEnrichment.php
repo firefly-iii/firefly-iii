@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\Support\JsonApi\Enrichments;
 
 use Carbon\Carbon;
@@ -37,7 +39,6 @@ class BudgetEnrichment implements EnrichmentInterface
         $this->primaryCurrency  = Amount::getPrimaryCurrency();
     }
 
-
     public function enrich(Collection $collection): Collection
     {
         $this->collection = $collection;
@@ -50,7 +51,7 @@ class BudgetEnrichment implements EnrichmentInterface
         return $this->collection;
     }
 
-    public function enrichSingle(Model|array $model): array|Model
+    public function enrichSingle(array|Model $model): array|Model
     {
         Log::debug(__METHOD__);
         $collection = new Collection([$model]);
@@ -81,9 +82,10 @@ class BudgetEnrichment implements EnrichmentInterface
     private function collectNotes(): void
     {
         $notes = Note::query()->whereIn('noteable_id', $this->ids)
-                     ->whereNotNull('notes.text')
-                     ->where('notes.text', '!=', '')
-                     ->where('noteable_type', Budget::class)->get(['notes.noteable_id', 'notes.text'])->toArray();
+            ->whereNotNull('notes.text')
+            ->where('notes.text', '!=', '')
+            ->where('noteable_type', Budget::class)->get(['notes.noteable_id', 'notes.text'])->toArray()
+        ;
         foreach ($notes as $note) {
             $this->notes[(int)$note['noteable_id']] = (string)$note['text'];
         }
@@ -98,10 +100,11 @@ class BudgetEnrichment implements EnrichmentInterface
                 'notes'       => $this->notes[$id] ?? null,
                 'currency'    => $this->currencies[$id] ?? null,
                 'auto_budget' => $this->autoBudgets[$id] ?? null,
-                'spent'     => $this->spent[$id] ?? null,
-                'pc_spent'  => $this->pcSpent[$id] ?? null,
+                'spent'       => $this->spent[$id] ?? null,
+                'pc_spent'    => $this->pcSpent[$id] ?? null,
             ];
             $item->meta = $meta;
+
             return $item;
         });
     }
@@ -109,6 +112,7 @@ class BudgetEnrichment implements EnrichmentInterface
     private function collectAutoBudgets(): void
     {
         $set = AutoBudget::whereIn('budget_id', $this->ids)->with(['transactionCurrency'])->get();
+
         /** @var AutoBudget $autoBudget */
         foreach ($set as $autoBudget) {
             $budgetId                     = (int)$autoBudget->budget_id;
@@ -131,7 +135,7 @@ class BudgetEnrichment implements EnrichmentInterface
             $opsRepository->setUserGroup($this->userGroup);
             // $spent = $this->beautify();
             // $set = $this->opsRepository->sumExpenses($start, $end, null, new Collection([$budget]))
-            $expenses = $opsRepository->collectExpenses($this->start, $this->end, null, $this->collection, null);
+            $expenses      = $opsRepository->collectExpenses($this->start, $this->end, null, $this->collection, null);
             foreach ($this->collection as $item) {
                 $id                 = (int)$item->id;
                 $this->spent[$id]   = array_values($opsRepository->sumCollectedExpensesByBudget($expenses, $item, false));
@@ -149,6 +153,4 @@ class BudgetEnrichment implements EnrichmentInterface
     {
         $this->start = $start;
     }
-
-
 }
