@@ -230,10 +230,10 @@ class ListController extends Controller
 
         // enrich
         /** @var User $admin */
-        $admin       = auth()->user();
-        $enrichment  = new BudgetLimitEnrichment();
+        $admin        = auth()->user();
+        $enrichment   = new BudgetLimitEnrichment();
         $enrichment->setUser($admin);
-        $budgetLimits    = $enrichment->enrich($budgetLimits);
+        $budgetLimits = $enrichment->enrich($budgetLimits);
 
         /** @var BudgetLimitTransformer $transformer */
         $transformer  = app(BudgetLimitTransformer::class);
