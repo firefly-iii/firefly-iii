@@ -67,7 +67,7 @@ class BudgetTransformer extends AbstractTransformer
         $abPrimary = null;
         $abPeriod  = null;
 
-        $currency = $budget->meta['currency'] ?? null;
+        $currency  = $budget->meta['currency'] ?? null;
 
         if (null !== $budget->meta['auto_budget']) {
             $abType    = $this->types[$budget->meta['auto_budget']['type']];
@@ -77,23 +77,23 @@ class BudgetTransformer extends AbstractTransformer
         }
 
         return [
-            'id'                          => (string)$budget->id,
-            'created_at'                  => $budget->created_at->toAtomString(),
-            'updated_at'                  => $budget->updated_at->toAtomString(),
-            'active'                      => $budget->active,
-            'name'                        => $budget->name,
-            'order'                       => $budget->order,
-            'notes'                       => $budget->meta['notes'],
-            'auto_budget_type'            => $abType,
-            'auto_budget_period'          => $abPeriod,
+            'id'                              => (string)$budget->id,
+            'created_at'                      => $budget->created_at->toAtomString(),
+            'updated_at'                      => $budget->updated_at->toAtomString(),
+            'active'                          => $budget->active,
+            'name'                            => $budget->name,
+            'order'                           => $budget->order,
+            'notes'                           => $budget->meta['notes'],
+            'auto_budget_type'                => $abType,
+            'auto_budget_period'              => $abPeriod,
 
             // new currency settings.
-            'object_has_currency_setting' => null !== $budget->meta['currency'],
-            'currency_id'                 => null === $currency ? null : (string)$currency->id,
-            'currency_code'               => $currency?->code,
-            'currency_name'               => $currency?->name,
-            'currency_symbol'             => $currency?->symbol,
-            'currency_decimal_places'     => $currency?->decimal_places,
+            'object_has_currency_setting'     => null !== $budget->meta['currency'],
+            'currency_id'                     => null === $currency ? null : (string)$currency->id,
+            'currency_code'                   => $currency?->code,
+            'currency_name'                   => $currency?->name,
+            'currency_symbol'                 => $currency?->symbol,
+            'currency_decimal_places'         => $currency?->decimal_places,
 
             'primary_currency_id'             => (string)$this->primaryCurrency->id,
             'primary_currency_name'           => $this->primaryCurrency->name,
@@ -101,14 +101,14 @@ class BudgetTransformer extends AbstractTransformer
             'primary_currency_symbol'         => $this->primaryCurrency->symbol,
             'primary_currency_decimal_places' => $this->primaryCurrency->decimal_places,
 
-            'auto_budget_amount'    => $abAmount,
-            'pc_auto_budget_amount' => $abPrimary,
-            'spent'                 => $this->beautify($budget->meta['spent']), // always in primary currency.
-            'pc_spent'              => $this->beautify($budget->meta['pc_spent']), // always in primary currency.
-            'links'                 => [
+            'auto_budget_amount'              => $abAmount,
+            'pc_auto_budget_amount'           => $abPrimary,
+            'spent'                           => $this->beautify($budget->meta['spent']), // always in primary currency.
+            'pc_spent'                        => $this->beautify($budget->meta['pc_spent']), // always in primary currency.
+            'links'                           => [
                 [
                     'rel' => 'self',
-                    'uri' => '/budgets/' . $budget->id,
+                    'uri' => '/budgets/'.$budget->id,
                 ],
             ],
         ];

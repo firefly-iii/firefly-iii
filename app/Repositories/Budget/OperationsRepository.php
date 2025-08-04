@@ -298,7 +298,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         return $summarizer->groupByCurrencyId($expenses, 'negative', false);
     }
 
-public function sumCollectedExpensesByBudget(array $expenses, Budget $budget, bool $convertToPrimary = false): array
+    public function sumCollectedExpensesByBudget(array $expenses, Budget $budget, bool $convertToPrimary = false): array
     {
         Log::debug(sprintf('Start of %s.', __METHOD__));
         $summarizer = new TransactionSummarizer($this->user);

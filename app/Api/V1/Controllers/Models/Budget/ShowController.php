@@ -91,7 +91,7 @@ class ShowController extends Controller
         $enrichment->setUser($admin);
         $enrichment->setStart($this->parameters->get('start'));
         $enrichment->setEnd($this->parameters->get('end'));
-        $budgets    = $enrichment->enrich($budgets);
+        $budgets     = $enrichment->enrich($budgets);
 
         // make paginator:
         $paginator   = new LengthAwarePaginator($budgets, $count, $pageSize, $this->parameters->get('page'));
@@ -121,7 +121,7 @@ class ShowController extends Controller
         $enrichment->setUser($admin);
         $enrichment->setStart($this->parameters->get('start'));
         $enrichment->setEnd($this->parameters->get('end'));
-        $budget    = $enrichment->enrichSingle($budget);
+        $budget      = $enrichment->enrichSingle($budget);
 
         /** @var BudgetTransformer $transformer */
         $transformer = app(BudgetTransformer::class);
