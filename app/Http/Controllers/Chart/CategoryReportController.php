@@ -210,7 +210,6 @@ class CategoryReportController extends Controller
         $spent     = $this->opsRepository->listExpenses($start, $end, $accounts, new Collection([$category]));
         $earned    = $this->opsRepository->listIncome($start, $end, $accounts, new Collection([$category]));
         $format    = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
-
         // loop expenses.
         foreach ($spent as $currency) {
             // add things to chart Data for each currency:
@@ -286,7 +285,6 @@ class CategoryReportController extends Controller
             $currentStart = clone $currentEnd;
             $currentStart->addDay()->startOfDay();
         }
-
         return $return;
     }
 
