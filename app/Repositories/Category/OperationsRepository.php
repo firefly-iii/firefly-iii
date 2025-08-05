@@ -449,7 +449,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
     public function collectExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
-        $collector  = app(GroupCollectorInterface::class);
+        $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
 
         if ($accounts instanceof Collection && $accounts->count() > 0) {
@@ -460,15 +460,16 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         }
         $collector->setCategories($categories);
         $collector->withCategoryInformation();
+
         return $collector->getExtractedJournals();
     }
 
     public function collectIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
-        $collector        = app(GroupCollectorInterface::class);
+        $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)
-                  ->setTypes([TransactionTypeEnum::DEPOSIT->value])
+            ->setTypes([TransactionTypeEnum::DEPOSIT->value])
         ;
 
         if ($accounts instanceof Collection && $accounts->count() > 0) {
@@ -478,6 +479,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
             $categories = $this->getCategories();
         }
         $collector->setCategories($categories);
+
         return $collector->getExtractedJournals();
     }
 
@@ -486,7 +488,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)
-                  ->setTypes([TransactionTypeEnum::TRANSFER->value])
+            ->setTypes([TransactionTypeEnum::TRANSFER->value])
         ;
 
         if ($accounts instanceof Collection && $accounts->count() > 0) {
@@ -496,6 +498,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
             $categories = $this->getCategories();
         }
         $collector->setCategories($categories);
+
         return $collector->getExtractedJournals();
     }
 

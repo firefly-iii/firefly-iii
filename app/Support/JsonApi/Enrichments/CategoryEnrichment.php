@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\Support\JsonApi\Enrichments;
 
 use Carbon\Carbon;
@@ -39,7 +41,7 @@ class CategoryEnrichment implements EnrichmentInterface
         return $collection;
     }
 
-    public function enrichSingle(Model|array $model): array|Model
+    public function enrichSingle(array|Model $model): array|Model
     {
         Log::debug(__METHOD__);
         $collection = new Collection([$model]);
@@ -100,9 +102,10 @@ class CategoryEnrichment implements EnrichmentInterface
     private function collectNotes(): void
     {
         $notes = Note::query()->whereIn('noteable_id', $this->ids)
-                     ->whereNotNull('notes.text')
-                     ->where('notes.text', '!=', '')
-                     ->where('noteable_type', Category::class)->get(['notes.noteable_id', 'notes.text'])->toArray();
+            ->whereNotNull('notes.text')
+            ->where('notes.text', '!=', '')
+            ->where('noteable_type', Category::class)->get(['notes.noteable_id', 'notes.text'])->toArray()
+        ;
         foreach ($notes as $note) {
             $this->notes[(int)$note['noteable_id']] = (string)$note['text'];
         }
@@ -116,9 +119,9 @@ class CategoryEnrichment implements EnrichmentInterface
             $opsRepository = app(OperationsRepositoryInterface::class);
             $opsRepository->setUser($this->user);
             $opsRepository->setUserGroup($this->userGroup);
-            $expenses  = $opsRepository->collectExpenses($this->start, $this->end, null, $this->collection);
-            $income    = $opsRepository->collectIncome($this->start, $this->end, null, $this->collection);
-            $transfers = $opsRepository->collectTransfers($this->start, $this->end, null, $this->collection);
+            $expenses      = $opsRepository->collectExpenses($this->start, $this->end, null, $this->collection);
+            $income        = $opsRepository->collectIncome($this->start, $this->end, null, $this->collection);
+            $transfers     = $opsRepository->collectTransfers($this->start, $this->end, null, $this->collection);
             foreach ($this->collection as $item) {
                 $id                     = (int)$item->id;
                 $this->spent[$id]       = array_values($opsRepository->sumCollectedTransactionsByCategory($expenses, $item, 'negative', false));
@@ -130,5 +133,4 @@ class CategoryEnrichment implements EnrichmentInterface
             }
         }
     }
-
 }

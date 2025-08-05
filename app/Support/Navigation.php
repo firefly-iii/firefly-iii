@@ -583,7 +583,7 @@ class Navigation
      */
     public function preferredEndOfPeriod(Carbon $start, Carbon $end): string
     {
-        $diff   = $start->diffInMonths($end, true);
+        $diff = $start->diffInMonths($end, true);
         if ($diff >= 1.001) {
             return 'endOfMonth';
         }
@@ -601,7 +601,7 @@ class Navigation
      */
     public function preferredRangeFormat(Carbon $start, Carbon $end): string
     {
-        $diff   = $start->diffInMonths($end, true);
+        $diff = $start->diffInMonths($end, true);
         if ($diff >= 1.001) {
             return '1M';
         }
@@ -619,7 +619,7 @@ class Navigation
      */
     public function preferredSqlFormat(Carbon $start, Carbon $end): string
     {
-        $diff   = $start->diffInMonths($end, true);
+        $diff = $start->diffInMonths($end, true);
         if ($diff >= 1.001) {
             return '%Y-%m';
         }

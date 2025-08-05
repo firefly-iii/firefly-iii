@@ -51,14 +51,14 @@ class CategoryTransformer extends AbstractTransformer
     {
 
         return [
-            'id'                          => $category->id,
-            'created_at'                  => $category->created_at->toAtomString(),
-            'updated_at'                  => $category->updated_at->toAtomString(),
-            'name'                        => $category->name,
-            'notes'                       => $category->meta['notes'],
+            'id'                              => $category->id,
+            'created_at'                      => $category->created_at->toAtomString(),
+            'updated_at'                      => $category->updated_at->toAtomString(),
+            'name'                            => $category->name,
+            'notes'                           => $category->meta['notes'],
 
             // category never has currency settings.
-            'object_has_currency_setting' => false,
+            'object_has_currency_setting'     => false,
 
 
             'primary_currency_id'             => (string)$this->primaryCurrency->id,
@@ -74,7 +74,7 @@ class CategoryTransformer extends AbstractTransformer
             'links'                           => [
                 [
                     'rel' => 'self',
-                    'uri' => '/categories/' . $category->id,
+                    'uri' => '/categories/'.$category->id,
                 ],
             ],
         ];
