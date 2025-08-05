@@ -1105,7 +1105,7 @@ return [
     'rule_trigger_not_tag_is'                                                   => 'Tag is not ":trigger_value"',
     'rule_trigger_not_tag_is_not'                                               => 'Tag is ":trigger_value"',
     'rule_trigger_not_description_is'                                           => 'Description is not ":trigger_value"',
-    'rule_trigger_not_description_contains'                                     => 'Description does not contain',
+    'rule_trigger_not_description_contains'                                     => 'Description does not contain ":trigger_value"',
     'rule_trigger_not_description_ends'                                         => 'Description does not end with ":trigger_value"',
     'rule_trigger_not_description_starts'                                       => 'Description does not start with ":trigger_value"',
     'rule_trigger_not_notes_is'                                                 => 'Notes are not ":trigger_value"',
