@@ -87,7 +87,7 @@ class ShowController extends Controller
         $enrichment->setUser($admin);
         $enrichment->setStart($this->parameters->get('start'));
         $enrichment->setEnd($this->parameters->get('end'));
-        $categories     = $enrichment->enrich($categories);
+        $categories  = $enrichment->enrich($categories);
 
         // make paginator:
         $paginator   = new LengthAwarePaginator($categories, $count, $pageSize, $this->parameters->get('page'));
@@ -123,7 +123,7 @@ class ShowController extends Controller
         $enrichment->setUser($admin);
         $enrichment->setStart($this->parameters->get('start'));
         $enrichment->setEnd($this->parameters->get('end'));
-        $category     = $enrichment->enrichSingle($category);
+        $category    = $enrichment->enrichSingle($category);
 
         $resource    = new Item($category, $transformer, 'categories');
 

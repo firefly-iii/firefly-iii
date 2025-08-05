@@ -285,6 +285,7 @@ class CategoryReportController extends Controller
             $currentStart = clone $currentEnd;
             $currentStart->addDay()->startOfDay();
         }
+
         return $return;
     }
 

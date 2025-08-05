@@ -44,7 +44,6 @@ use Illuminate\View\View;
 
 use function Safe\json_decode;
 use function Safe\file_get_contents;
-use function Safe\strtotime;
 
 /**
  * Class PreferencesController.
@@ -278,8 +277,8 @@ class PreferencesController extends Controller
         // custom fiscal year
         $customFiscalYear  = 1 === (int) $request->get('customFiscalYear');
         Preferences::set('customFiscalYear', $customFiscalYear);
-        $fiscalYearString = (string) $request->get('fiscalYearStart');
-        if('' !== $fiscalYearString) {
+        $fiscalYearString  = (string) $request->get('fiscalYearStart');
+        if ('' !== $fiscalYearString) {
             $fiscalYearStart = Carbon::parse($fiscalYearString, config('app.timezone'))->format('m-d');
             Preferences::set('fiscalYearStart', $fiscalYearStart);
         }

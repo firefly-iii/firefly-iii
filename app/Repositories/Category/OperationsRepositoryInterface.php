@@ -27,7 +27,6 @@ namespace FireflyIII\Repositories\Category;
 use Carbon\Carbon;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\Category;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -81,8 +80,11 @@ interface OperationsRepositoryInterface
     public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array;
 
     public function collectExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array;
+
     public function collectIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array;
+
     public function collectTransfers(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array;
+
     public function sumCollectedTransactionsByCategory(array $expenses, Category $category, string $method, bool $convertToPrimary = false): array;
 
     /**
