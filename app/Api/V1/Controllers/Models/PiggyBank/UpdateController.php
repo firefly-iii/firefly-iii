@@ -76,7 +76,7 @@ class UpdateController extends Controller
         $transformer = app(PiggyBankTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource    = new Item($piggyBank, $transformer, 'piggy_banks');
+        $resource    = new Item($piggyBank, $transformer, 'piggy-banks');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

@@ -122,7 +122,7 @@ class PiggyBankTransformer extends AbstractTransformer
             'links'                   => [
                 [
                     'rel' => 'self',
-                    'uri' => '/piggy_banks/'.$piggyBank->id,
+                    'uri' => '/piggy-banks/'.$piggyBank->id,
                 ],
             ],
         ];

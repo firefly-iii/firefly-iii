@@ -28,7 +28,9 @@ use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\Category\UpdateRequest;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Support\JsonApi\Enrichments\CategoryEnrichment;
 use FireflyIII\Transformers\CategoryTransformer;
+use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use League\Fractal\Resource\Item;
 
@@ -70,6 +72,15 @@ class UpdateController extends Controller
         /** @var CategoryTransformer $transformer */
         $transformer = app(CategoryTransformer::class);
         $transformer->setParameters($this->parameters);
+
+        // enrich
+        /** @var User $admin */
+        $admin       = auth()->user();
+        $enrichment  = new CategoryEnrichment();
+        $enrichment->setUser($admin);
+        $enrichment->setStart($this->parameters->get('start'));
+        $enrichment->setEnd($this->parameters->get('end'));
+        $category    = $enrichment->enrichSingle($category);
 
         $resource    = new Item($category, $transformer, 'categories');
 

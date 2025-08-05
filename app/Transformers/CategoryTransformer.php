@@ -59,9 +59,8 @@ class CategoryTransformer extends AbstractTransformer
 
             // category never has currency settings.
             'object_has_currency_setting'     => false,
-
-
             'primary_currency_id'             => (string)$this->primaryCurrency->id,
+            'primary_currency_name'           => $this->primaryCurrency->name,
             'primary_currency_code'           => $this->primaryCurrency->code,
             'primary_currency_symbol'         => $this->primaryCurrency->symbol,
             'primary_currency_decimal_places' => (int)$this->primaryCurrency->decimal_places,
@@ -74,7 +73,7 @@ class CategoryTransformer extends AbstractTransformer
             'links'                           => [
                 [
                     'rel' => 'self',
-                    'uri' => '/categories/'.$category->id,
+                    'uri' => '/categories/' . $category->id,
                 ],
             ],
         ];
