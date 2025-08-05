@@ -27,6 +27,7 @@ namespace FireflyIII\Transformers;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class AvailableBudgetTransformer

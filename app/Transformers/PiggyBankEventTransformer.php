@@ -28,6 +28,8 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class PiggyBankEventTransformer
@@ -61,7 +63,7 @@ class PiggyBankEventTransformer extends AbstractTransformer
         $this->piggyRepos->setUser($account->user);
 
         // get associated currency or fall back to the default:
-        $currency  = $this->repository->getAccountCurrency($account) ?? app('amount')->getPrimaryCurrencyByUserGroup($account->user->userGroup);
+        $currency  = $this->repository->getAccountCurrency($account) ?? Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
 
         // get associated journal and transaction, if any:
         $journalId = $event->transaction_journal_id;
