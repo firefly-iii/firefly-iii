@@ -34,6 +34,38 @@
                        'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content'),
                    },
                });
+        $.ajax({
+                   url: 'api/v1/budgets?size=50&date=2025-08-06&start=2025-08-01&end=2025-08-31',
+                   type: 'GET',
+                   headers: {
+                       'Content-Type': 'application/json',
+                       'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content'),
+                   },
+               });
+        $.ajax({
+                   url: 'api/v1/budgets/1/limits?size=50&date=2025-08-06&start=2025-08-01&end=2025-08-31',
+                   type: 'GET',
+                   headers: {
+                       'Content-Type': 'application/json',
+                       'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content'),
+                   },
+               });
+        $.ajax({
+                   url: 'api/v1/categories?size=50&date=2025-08-06&start=2025-08-01&end=2025-08-31',
+                   type: 'GET',
+                   headers: {
+                       'Content-Type': 'application/json',
+                       'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content'),
+                   },
+               });
+        $.ajax({
+                   url: 'api/v1/bills?size=50&date=2025-08-06&start=2025-08-01&end=2025-08-31',
+                   type: 'GET',
+                   headers: {
+                       'Content-Type': 'application/json',
+                       'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content'),
+                   },
+               });
     });
 
 </script>
