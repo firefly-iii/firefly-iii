@@ -26,6 +26,14 @@
                        'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content'),
                    },
                });
+        $.ajax({
+                   url: 'api/v1/available-budgets?size=50&date=2025-08-06',
+                   type: 'GET',
+                   headers: {
+                       'Content-Type': 'application/json',
+                       'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content'),
+                   },
+               });
     });
 
 </script>

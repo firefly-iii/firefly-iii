@@ -45,6 +45,8 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
     private TransactionCurrency                    $primaryCurrency;
     private bool                                   $convertToPrimary      = false;
     private array                                  $ids                   = [];
+    private array                                  $currencyIds           = [];
+    private array                                  $currencies            = [];
     private Collection                             $collection;
     private array                                  $spentInBudgets        = [];
     private array                                  $spentOutsideBudgets   = [];
@@ -55,8 +57,8 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
     private readonly BudgetRepositoryInterface     $repository;
 
 
-    private ?Carbon $start                                                = null;
-    private ?Carbon $end                                                  = null;
+    private ?Carbon $start = null;
+    private ?Carbon $end   = null;
 
     public function __construct()
     {
@@ -72,6 +74,7 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
     {
         $this->collection = $collection;
         $this->collectIds();
+        $this->collectCurrencies();
         $this->collectSpentInfo();
         $this->appendCollectedData();
 
@@ -108,7 +111,8 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
     {
         /** @var AvailableBudget $availableBudget */
         foreach ($this->collection as $availableBudget) {
-            $this->ids[] = (int) $availableBudget->id;
+            $this->ids[]                                  = (int)$availableBudget->id;
+            $this->currencyIds[(int)$availableBudget->id] = (int)$availableBudget->transaction_currency_id;
         }
         $this->ids = array_unique($this->ids);
     }
@@ -121,15 +125,17 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
         $spentInBudgets      = $this->opsRepository->collectExpenses($start, $end, null, $allActive, null);
         $spentOutsideBudgets = $this->noBudgetRepository->collectExpenses($start, $end, null, null, null);
         foreach ($this->collection as $availableBudget) {
-            $id                             = (int) $availableBudget->id;
-            $filteredSpentInBudgets         = $this->opsRepository->sumCollectedExpenses($spentInBudgets, $availableBudget->start_date, $availableBudget->end_date, $availableBudget->transactionCurrency, false);
-            $filteredSpentOutsideBudgets    = $this->opsRepository->sumCollectedExpenses($spentOutsideBudgets, $availableBudget->start_date, $availableBudget->end_date, $availableBudget->transactionCurrency, false);
+            $id                             = (int)$availableBudget->id;
+            $currencyId                     = $this->currencyIds[$id];
+            $currency                       = $this->currencies[$currencyId];
+            $filteredSpentInBudgets         = $this->opsRepository->sumCollectedExpenses($spentInBudgets, $availableBudget->start_date, $availableBudget->end_date, $currency, false);
+            $filteredSpentOutsideBudgets    = $this->opsRepository->sumCollectedExpenses($spentOutsideBudgets, $availableBudget->start_date, $availableBudget->end_date, $currency, false);
             $this->spentInBudgets[$id]      = array_values($filteredSpentInBudgets);
             $this->spentOutsideBudgets[$id] = array_values($filteredSpentOutsideBudgets);
 
             if (true === $this->convertToPrimary) {
-                $pcFilteredSpentInBudgets         = $this->opsRepository->sumCollectedExpenses($spentInBudgets, $availableBudget->start_date, $availableBudget->end_date, $availableBudget->transactionCurrency, true);
-                $pcFilteredSpentOutsideBudgets    = $this->opsRepository->sumCollectedExpenses($spentOutsideBudgets, $availableBudget->start_date, $availableBudget->end_date, $availableBudget->transactionCurrency, true);
+                $pcFilteredSpentInBudgets         = $this->opsRepository->sumCollectedExpenses($spentInBudgets, $availableBudget->start_date, $availableBudget->end_date, $currency, true);
+                $pcFilteredSpentOutsideBudgets    = $this->opsRepository->sumCollectedExpenses($spentOutsideBudgets, $availableBudget->start_date, $availableBudget->end_date, $currency, true);
                 $this->pcSpentInBudgets[$id]      = array_values($pcFilteredSpentInBudgets);
                 $this->pcSpentOutsideBudgets[$id] = array_values($pcFilteredSpentOutsideBudgets);
             }
@@ -145,22 +151,29 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
 
     private function appendCollectedData(): void
     {
-        $spentInsideBudgets    = $this->spentInBudgets;
-        $spentOutsideBudgets   = $this->spentOutsideBudgets;
-        $pcSpentInBudgets      = $this->pcSpentInBudgets;
-        $pcSpentOutsideBudgets = $this->pcSpentOutsideBudgets;
-        $this->collection      = $this->collection->map(function (AvailableBudget $item) use ($spentInsideBudgets, $spentOutsideBudgets, $pcSpentInBudgets, $pcSpentOutsideBudgets) {
-            $id         = (int) $item->id;
+        $this->collection = $this->collection->map(function (AvailableBudget $item) {
+            $id         = (int)$item->id;
+            $currencyId = $this->currencyIds[$id];
+            $currency   = $this->currencies[$currencyId];
             $meta       = [
-                'spent_in_budgets'         => $spentInsideBudgets[$id] ?? [],
-                'pc_spent_in_budgets'      => $pcSpentInBudgets[$id] ?? [],
-
-                'spent_outside_budgets'    => $spentOutsideBudgets[$id] ?? [],
-                'pc_spent_outside_budgets' => $pcSpentOutsideBudgets[$id] ?? [],
+                'currency'                 => $currency,
+                'spent_in_budgets'         => $this->spentInsideBudgets[$id] ?? [],
+                'pc_spent_in_budgets'      => $this->pcSpentInBudgets[$id] ?? [],
+                'spent_outside_budgets'    => $this->spentOutsideBudgets[$id] ?? [],
+                'pc_spent_outside_budgets' => $this->pcSpentOutsideBudgets[$id] ?? [],
             ];
             $item->meta = $meta;
 
             return $item;
         });
+    }
+
+    private function collectCurrencies(): void
+    {
+        $ids = array_unique(array_values($this->currencyIds));
+        $set = TransactionCurrency::whereIn('id', $ids)->get();
+        foreach ($set as $currency) {
+            $this->currencies[(int)$currency->id] = $currency;
+        }
     }
 }
