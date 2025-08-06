@@ -32,8 +32,10 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\ObjectGroup\OrganisesObjectGroups;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Support\JsonApi\Enrichments\AccountEnrichment;
+use FireflyIII\Support\JsonApi\Enrichments\PiggyBankEnrichment;
 use FireflyIII\Transformers\AccountTransformer;
 use FireflyIII\Transformers\PiggyBankTransformer;
+use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -113,6 +115,13 @@ class IndexController extends Controller
         $transformer = app(PiggyBankTransformer::class);
         $transformer->setParameters(new ParameterBag());
         $piggyBanks  = [];
+
+        // enrich
+        /** @var User $admin */
+        $admin       = auth()->user();
+        $enrichment  = new PiggyBankEnrichment();
+        $enrichment->setUser($admin);
+        $collection    = $enrichment->enrich($collection);
 
         /** @var PiggyBank $piggy */
         foreach ($collection as $piggy) {

@@ -30,6 +30,7 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\TransactionFilter;
+use FireflyIII\Support\JsonApi\Enrichments\PiggyBankEnrichment;
 use FireflyIII\Support\JsonApi\Enrichments\TransactionGroupEnrichment;
 use FireflyIII\Transformers\AttachmentTransformer;
 use FireflyIII\Transformers\PiggyBankTransformer;
@@ -116,6 +117,13 @@ class ListController extends Controller
         $collection  = $this->repository->getPiggyBanks($account);
         $count       = $collection->count();
         $piggyBanks  = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+
+        // enrich
+        /** @var User $admin */
+        $admin       = auth()->user();
+        $enrichment  = new PiggyBankEnrichment();
+        $enrichment->setUser($admin);
+        $piggyBanks    = $enrichment->enrich($piggyBanks);
 
         // make paginator:
         $paginator   = new LengthAwarePaginator($piggyBanks, $count, $pageSize, $this->parameters->get('page'));
