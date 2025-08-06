@@ -143,7 +143,7 @@ class AccountTransformer extends AbstractTransformer
             'notes'                           => $account->meta['notes'] ?? null,
             'monthly_payment_date'            => $monthlyPaymentDate,
             'credit_card_type'                => $creditCardType,
-            'account_number'                  => $account->meta['account_number'] ?? null,
+            'account_number'                  => $account->meta['account_number'],
             'iban'                            => '' === $account->iban ? null : $account->iban,
             'bic'                             => $account->meta['BIC'] ?? null,
             'opening_balance_date'            => $openingBalanceDate,
@@ -155,7 +155,7 @@ class AccountTransformer extends AbstractTransformer
             'longitude'                       => $longitude,
             'latitude'                        => $latitude,
             'zoom_level'                      => $zoomLevel,
-            'last_activity'                   => array_key_exists('last_activity', $account->meta) ? $account->meta['last_activity']->toAtomString() : null,
+            'last_activity'                   => $account->meta['last_activity']?->toAtomString(),
             'links'                           => [
                 [
                     'rel' => 'self',
