@@ -60,8 +60,8 @@ class PiggyBankTransformer extends AbstractTransformer
         if (null !== $piggyBank->meta['target_amount'] && 0 !== bccomp($piggyBank->meta['current_amount'], '0')) { // target amount is not 0.00
             $percentage   = (int)bcmul(bcdiv($piggyBank->meta['current_amount'], $piggyBank->meta['target_amount']), '100');
         }
-        $startDate  = $piggyBank->start_date?->format('Y-m-d');
-        $targetDate = $piggyBank->target_date?->format('Y-m-d');
+        $startDate  = $piggyBank->start_date?->toAtomString();
+        $targetDate = $piggyBank->target_date?->toAtomString();
 
         return [
             'id'                          => (string)$piggyBank->id,

@@ -2793,6 +2793,7 @@ return [
     'recurring_monthly'                                                         => 'Every month on the :dayOfMonth(st/nd/rd/th) day',
     'recurring_monthly_skip'                                                    => 'Every :skip(st/nd/rd/th) month on the :dayOfMonth(st/nd/rd/th) day',
     'recurring_ndom'                                                            => 'Every month on the :dayOfMonth(st/nd/rd/th) :weekday',
+    'recurring_ndom_skip' => 'Every :skip(st/nd/rd/th) month on the :dayOfMonth(st/nd/rd/th) :weekday',
     'recurring_yearly'                                                          => 'Every year on :date',
     'overview_for_recurrence'                                                   => 'Overview for recurring transaction ":title"',
     'warning_duplicates_repetitions'                                            => 'In rare instances, dates appear twice in this list. This can happen when multiple repetitions collide. Firefly III will always generate one transaction per day.',
