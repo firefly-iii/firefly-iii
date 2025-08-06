@@ -91,6 +91,7 @@ class PiggyBankEventEnrichment implements EnrichmentInterface
         }
 
         // get account currency preference for ALL.
+        // TODO This method does a find in a loop.
         $set = AccountMeta::whereIn('account_id', array_values($this->accountIds))->where('name', 'currency_id')->get();
         /** @var AccountMeta $item */
         foreach ($set as $item) {

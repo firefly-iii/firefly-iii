@@ -108,6 +108,8 @@ class AccountTransformer extends AbstractTransformer
             'type'                            => strtolower($accountType),
             'account_role'                    => $accountRole,
 
+            // TODO object group
+
             // currency information, structured for 6.3.0.
             'object_has_currency_setting'     => $hasCurrencySettings,
 

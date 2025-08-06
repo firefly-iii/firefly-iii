@@ -87,6 +87,8 @@ class BudgetTransformer extends AbstractTransformer
             'auto_budget_type'                => $abType,
             'auto_budget_period'              => $abPeriod,
 
+            // TODO object group
+
             // new currency settings.
             'object_has_currency_setting'     => null !== $budget->meta['currency'],
             'currency_id'                     => null === $currency ? null : (string)$currency->id,

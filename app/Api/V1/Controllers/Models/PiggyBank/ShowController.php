@@ -28,6 +28,7 @@ use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use FireflyIII\Support\JsonApi\Enrichments\PiggyBankEnrichment;
 use FireflyIII\Transformers\PiggyBankTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -100,6 +101,13 @@ class ShowController extends Controller
     public function show(PiggyBank $piggyBank): JsonResponse
     {
         $manager     = $this->getManager();
+
+        // enrich
+        /** @var User $admin */
+        $admin       = auth()->user();
+        $enrichment  = new PiggyBankEnrichment();
+        $enrichment->setUser($admin);
+        $piggyBank    = $enrichment->enrichSingle($piggyBank);
 
         /** @var PiggyBankTransformer $transformer */
         $transformer = app(PiggyBankTransformer::class);
