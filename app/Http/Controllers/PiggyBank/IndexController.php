@@ -121,7 +121,7 @@ class IndexController extends Controller
         $admin       = auth()->user();
         $enrichment  = new PiggyBankEnrichment();
         $enrichment->setUser($admin);
-        $collection    = $enrichment->enrich($collection);
+        $collection  = $enrichment->enrich($collection);
 
         /** @var PiggyBank $piggy */
         foreach ($collection as $piggy) {

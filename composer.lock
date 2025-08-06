@@ -5101,16 +5101,16 @@
         },
         {
             "name": "predis/predis",
-            "version": "v3.1.0",
+            "version": "v3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/predis/predis.git",
-                "reference": "202e0c5322b906ec4c761c0cefebad6d0959a699"
+                "reference": "9e9deec4dfd3ebf65d32eb368f498c646ba2ecd8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/predis/predis/zipball/202e0c5322b906ec4c761c0cefebad6d0959a699",
-                "reference": "202e0c5322b906ec4c761c0cefebad6d0959a699",
+                "url": "https://api.github.com/repos/predis/predis/zipball/9e9deec4dfd3ebf65d32eb368f498c646ba2ecd8",
+                "reference": "9e9deec4dfd3ebf65d32eb368f498c646ba2ecd8",
                 "shasum": ""
             },
             "require": {
@@ -5152,7 +5152,7 @@
             ],
             "support": {
                 "issues": "https://github.com/predis/predis/issues",
-                "source": "https://github.com/predis/predis/tree/v3.1.0"
+                "source": "https://github.com/predis/predis/tree/v3.2.0"
             },
             "funding": [
                 {
@@ -5160,7 +5160,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-07-22T15:37:44+00:00"
+            "time": "2025-08-06T06:41:24+00:00"
         },
         {
             "name": "psr/cache",

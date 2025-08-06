@@ -73,7 +73,7 @@ class CategoryTransformer extends AbstractTransformer
             'links'                           => [
                 [
                     'rel' => 'self',
-                    'uri' => '/categories/' . $category->id,
+                    'uri' => '/categories/'.$category->id,
                 ],
             ],
         ];

@@ -25,13 +25,9 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
-use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class PiggyBankTransformer
@@ -56,36 +52,36 @@ class PiggyBankTransformer extends AbstractTransformer
     public function transform(PiggyBank $piggyBank): array
     {
         // Amounts, depending on 0.0 state of target amount
-        $percentage   = null;
+        $percentage = null;
         if (null !== $piggyBank->meta['target_amount'] && 0 !== bccomp($piggyBank->meta['current_amount'], '0')) { // target amount is not 0.00
-            $percentage   = (int)bcmul(bcdiv($piggyBank->meta['current_amount'], $piggyBank->meta['target_amount']), '100');
+            $percentage = (int)bcmul(bcdiv($piggyBank->meta['current_amount'], $piggyBank->meta['target_amount']), '100');
         }
         $startDate  = $piggyBank->start_date?->toAtomString();
         $targetDate = $piggyBank->target_date?->toAtomString();
 
         return [
-            'id'                          => (string)$piggyBank->id,
-            'created_at'                  => $piggyBank->created_at->toAtomString(),
-            'updated_at'                  => $piggyBank->updated_at->toAtomString(),
-            'name'                        => $piggyBank->name,
-            'percentage'                  => $percentage,
-            'start_date'                  => $startDate,
-            'target_date'                 => $targetDate,
-            'order'                       => $piggyBank->order,
-            'active'                      => true,
-            'notes'                       => $piggyBank->meta['notes'],
-            'object_group_id'             => $piggyBank->meta['object_group_id'],
-            'object_group_order'          => $piggyBank->meta['object_group_order'],
-            'object_group_title'          => $piggyBank->meta['object_group_title'],
-            'accounts' => $piggyBank->meta['accounts'],
+            'id'                              => (string)$piggyBank->id,
+            'created_at'                      => $piggyBank->created_at->toAtomString(),
+            'updated_at'                      => $piggyBank->updated_at->toAtomString(),
+            'name'                            => $piggyBank->name,
+            'percentage'                      => $percentage,
+            'start_date'                      => $startDate,
+            'target_date'                     => $targetDate,
+            'order'                           => $piggyBank->order,
+            'active'                          => true,
+            'notes'                           => $piggyBank->meta['notes'],
+            'object_group_id'                 => $piggyBank->meta['object_group_id'],
+            'object_group_order'              => $piggyBank->meta['object_group_order'],
+            'object_group_title'              => $piggyBank->meta['object_group_title'],
+            'accounts'                        => $piggyBank->meta['accounts'],
 
             // currency settings, 6.3.0.
-            'object_has_currency_setting' => true,
-            'currency_id'                 => (string)$piggyBank->meta['currency']->id,
-            'currency_name'               => $piggyBank->meta['currency']->name,
-            'currency_code'               => $piggyBank->meta['currency']->code,
-            'currency_symbol'             => $piggyBank->meta['currency']->symbol,
-            'currency_decimal_places'     => $piggyBank->meta['currency']->decimal_places,
+            'object_has_currency_setting'     => true,
+            'currency_id'                     => (string)$piggyBank->meta['currency']->id,
+            'currency_name'                   => $piggyBank->meta['currency']->name,
+            'currency_code'                   => $piggyBank->meta['currency']->code,
+            'currency_symbol'                 => $piggyBank->meta['currency']->symbol,
+            'currency_decimal_places'         => $piggyBank->meta['currency']->decimal_places,
 
             'primary_currency_id'             => (string)$this->primaryCurrency->id,
             'primary_currency_name'           => $this->primaryCurrency->name,
@@ -94,16 +90,16 @@ class PiggyBankTransformer extends AbstractTransformer
             'primary_currency_decimal_places' => (int)$this->primaryCurrency->decimal_places,
 
 
-            'target_amount'     => $piggyBank->meta['target_amount'],
-            'pc_target_amount'  => $piggyBank->meta['pc_target_amount'],
-            'current_amount'    => $piggyBank->meta['current_amount'],
-            'pc_current_amount' => $piggyBank->meta['pc_current_amount'],
-            'left_to_save'      => $piggyBank->meta['left_to_save'],
-            'pc_left_to_save'   => $piggyBank->meta['pc_left_to_save'],
-            'save_per_month'    => $piggyBank->meta['save_per_month'],
-            'pc_save_per_month' => $piggyBank->meta['pc_save_per_month'],
+            'target_amount'                   => $piggyBank->meta['target_amount'],
+            'pc_target_amount'                => $piggyBank->meta['pc_target_amount'],
+            'current_amount'                  => $piggyBank->meta['current_amount'],
+            'pc_current_amount'               => $piggyBank->meta['pc_current_amount'],
+            'left_to_save'                    => $piggyBank->meta['left_to_save'],
+            'pc_left_to_save'                 => $piggyBank->meta['pc_left_to_save'],
+            'save_per_month'                  => $piggyBank->meta['save_per_month'],
+            'pc_save_per_month'               => $piggyBank->meta['pc_save_per_month'],
 
-            'links' => [
+            'links'                           => [
                 [
                     'rel' => 'self',
                     'uri' => sprintf('/piggy-banks/%d', $piggyBank->id),

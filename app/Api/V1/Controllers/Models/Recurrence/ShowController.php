@@ -28,7 +28,6 @@ use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
-use FireflyIII\Support\JsonApi\Enrichments\AccountEnrichment;
 use FireflyIII\Support\JsonApi\Enrichments\RecurringEnrichment;
 use FireflyIII\Transformers\RecurrenceTransformer;
 use FireflyIII\User;
@@ -79,14 +78,14 @@ class ShowController extends Controller
         // get list of budgets. Count it and split it.
         $collection  = $this->repository->get();
         $count       = $collection->count();
-        $recurrences  = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $recurrences = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // enrich
         /** @var User $admin */
         $admin       = auth()->user();
         $enrichment  = new RecurringEnrichment();
         $enrichment->setUser($admin);
-        $recurrences     = $enrichment->enrich($recurrences);
+        $recurrences = $enrichment->enrich($recurrences);
 
         // make paginator:
         $paginator   = new LengthAwarePaginator($recurrences, $count, $pageSize, $this->parameters->get('page'));
@@ -117,7 +116,7 @@ class ShowController extends Controller
         $admin       = auth()->user();
         $enrichment  = new RecurringEnrichment();
         $enrichment->setUser($admin);
-        $recurrence     = $enrichment->enrichSingle($recurrence);
+        $recurrence  = $enrichment->enrichSingle($recurrence);
 
         /** @var RecurrenceTransformer $transformer */
         $transformer = app(RecurrenceTransformer::class);

@@ -154,7 +154,7 @@ class ListController extends Controller
         $admin       = auth()->user();
         $enrichment  = new PiggyBankEventEnrichment();
         $enrichment->setUser($admin);
-        $events    = $enrichment->enrich($events);
+        $events      = $enrichment->enrich($events);
 
         // make paginator:
         $paginator   = new LengthAwarePaginator($events, $count, $pageSize, $this->parameters->get('page'));
