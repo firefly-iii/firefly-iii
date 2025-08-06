@@ -24,34 +24,19 @@ declare(strict_types=1);
 
 namespace FireflyIII\Transformers;
 
-use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Factory\CategoryFactory;
-use FireflyIII\Models\Account;
 use FireflyIII\Models\Recurrence;
-use FireflyIII\Models\RecurrenceRepetition;
-use FireflyIII\Models\RecurrenceTransaction;
-use FireflyIII\Models\RecurrenceTransactionMeta;
-use FireflyIII\Repositories\Bill\BillRepositoryInterface;
-use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
-use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
-use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Facades\Log;
-use function Safe\json_decode;
 
 /**
  * Class RecurringTransactionTransformer
  */
 class RecurrenceTransformer extends AbstractTransformer
 {
-
     /**
      * RecurrenceTransformer constructor.
      */
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     /**
      * Transform the recurring transaction.
@@ -86,7 +71,7 @@ class RecurrenceTransformer extends AbstractTransformer
             'links'             => [
                 [
                     'rel' => 'self',
-                    'uri' => '/recurring/' . $recurrence->id,
+                    'uri' => '/recurring/'.$recurrence->id,
                 ],
             ],
         ];

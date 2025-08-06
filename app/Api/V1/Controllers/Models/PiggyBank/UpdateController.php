@@ -77,7 +77,7 @@ class UpdateController extends Controller
         $admin       = auth()->user();
         $enrichment  = new PiggyBankEnrichment();
         $enrichment->setUser($admin);
-        $piggyBank    = $enrichment->enrichSingle($piggyBank);
+        $piggyBank   = $enrichment->enrichSingle($piggyBank);
 
         $manager     = $this->getManager();
 

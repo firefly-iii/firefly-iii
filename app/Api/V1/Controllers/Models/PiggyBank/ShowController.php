@@ -84,7 +84,7 @@ class ShowController extends Controller
         $admin       = auth()->user();
         $enrichment  = new PiggyBankEnrichment();
         $enrichment->setUser($admin);
-        $piggyBanks    = $enrichment->enrich($piggyBanks);
+        $piggyBanks  = $enrichment->enrich($piggyBanks);
 
         // make paginator:
         $paginator   = new LengthAwarePaginator($piggyBanks, $count, $pageSize, $this->parameters->get('page'));
@@ -115,7 +115,7 @@ class ShowController extends Controller
         $admin       = auth()->user();
         $enrichment  = new PiggyBankEnrichment();
         $enrichment->setUser($admin);
-        $piggyBank    = $enrichment->enrichSingle($piggyBank);
+        $piggyBank   = $enrichment->enrichSingle($piggyBank);
 
 
         /** @var PiggyBankTransformer $transformer */

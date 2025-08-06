@@ -183,6 +183,6 @@
     },
     "config": {
         "html_language": "sv",
-        "date_time_fns": "MMMM do, yyyy @ HH:mm:ss"
+        "date_time_fns": "D MMMM YYYY @ HH:mm:ss"
     }
 }

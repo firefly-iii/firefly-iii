@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\Support\JsonApi\Enrichments;
 
 use FireflyIII\Models\AccountMeta;
@@ -16,7 +18,6 @@ use Illuminate\Support\Facades\Log;
 
 class PiggyBankEventEnrichment implements EnrichmentInterface
 {
-
     private User       $user;
     private UserGroup  $userGroup;
     private Collection $collection;
@@ -27,13 +28,13 @@ class PiggyBankEventEnrichment implements EnrichmentInterface
     private array      $piggybankIds      = [];
     private array      $accountCurrencies = [];
     private array      $currencies        = [];
-    //private bool       $convertToPrimary  = false;
-    //private TransactionCurrency $primaryCurrency;
+    // private bool       $convertToPrimary  = false;
+    // private TransactionCurrency $primaryCurrency;
 
     public function __construct()
     {
-        //$this->convertToPrimary = Amount::convertToPrimary();
-        //$this->primaryCurrency  = Amount::getPrimaryCurrency();
+        // $this->convertToPrimary = Amount::convertToPrimary();
+        // $this->primaryCurrency  = Amount::getPrimaryCurrency();
     }
 
     public function enrich(Collection $collection): Collection
@@ -45,7 +46,7 @@ class PiggyBankEventEnrichment implements EnrichmentInterface
         return $this->collection;
     }
 
-    public function enrichSingle(Model|array $model): array|Model
+    public function enrichSingle(array|Model $model): array|Model
     {
         Log::debug(__METHOD__);
         $collection = new Collection([$model]);
@@ -75,14 +76,15 @@ class PiggyBankEventEnrichment implements EnrichmentInterface
         }
         $this->ids = array_unique($this->ids);
         // collect groups with journal info.
-        $set = TransactionJournal::whereIn('id', $this->journalIds)->get(['id', 'transaction_group_id']);
+        $set       = TransactionJournal::whereIn('id', $this->journalIds)->get(['id', 'transaction_group_id']);
+
         /** @var TransactionJournal $item */
         foreach ($set as $item) {
             $this->groupIds[(int)$item->id] = (int)$item->transaction_group_id;
         }
 
         // collect account info.
-        $set = DB::table('account_piggy_bank')->whereIn('piggy_bank_id', $this->piggybankIds)->get(['piggy_bank_id', 'account_id']);
+        $set       = DB::table('account_piggy_bank')->whereIn('piggy_bank_id', $this->piggybankIds)->get(['piggy_bank_id', 'account_id']);
         foreach ($set as $item) {
             $id = (int)$item->piggy_bank_id;
             if (!array_key_exists($id, $this->accountIds)) {
@@ -92,11 +94,12 @@ class PiggyBankEventEnrichment implements EnrichmentInterface
 
         // get account currency preference for ALL.
         // TODO This method does a find in a loop.
-        $set = AccountMeta::whereIn('account_id', array_values($this->accountIds))->where('name', 'currency_id')->get();
+        $set       = AccountMeta::whereIn('account_id', array_values($this->accountIds))->where('name', 'currency_id')->get();
+
         /** @var AccountMeta $item */
         foreach ($set as $item) {
-            $accountId  = (int)$item->account_id;
-            $currencyId = (int)$item->data;
+            $accountId                           = (int)$item->account_id;
+            $currencyId                          = (int)$item->data;
             if (!array_key_exists($currencyId, $this->currencies)) {
                 $this->currencies[$currencyId] = TransactionCurrency::find($currencyId);
             }
@@ -107,10 +110,10 @@ class PiggyBankEventEnrichment implements EnrichmentInterface
     private function appendCollectedData(): void
     {
         $this->collection = $this->collection->map(function (PiggyBankEvent $item) {
-            $id        = (int)$item->id;
-            $piggyId   = (int)$item->piggy_bank_id;
-            $journalId = (int)$item->transaction_journal_id;
-            $currency  = null;
+            $id         = (int)$item->id;
+            $piggyId    = (int)$item->piggy_bank_id;
+            $journalId  = (int)$item->transaction_journal_id;
+            $currency   = null;
             if (array_key_exists($piggyId, $this->accountIds)) {
                 $accountId = $this->accountIds[$piggyId];
                 if (array_key_exists($accountId, $this->accountCurrencies)) {

@@ -157,7 +157,8 @@ class DebugController extends Controller
         return view('debug', compact('table', 'now', 'logContent'));
     }
 
-    public function apiTest() {
+    public function apiTest()
+    {
         return view('test.api-test');
     }
 
