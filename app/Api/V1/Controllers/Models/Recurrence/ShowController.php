@@ -112,6 +112,13 @@ class ShowController extends Controller
     {
         $manager     = $this->getManager();
 
+        // enrich
+        /** @var User $admin */
+        $admin       = auth()->user();
+        $enrichment  = new RecurringEnrichment();
+        $enrichment->setUser($admin);
+        $recurrence     = $enrichment->enrichSingle($recurrence);
+
         /** @var RecurrenceTransformer $transformer */
         $transformer = app(RecurrenceTransformer::class);
         $transformer->setParameters($this->parameters);
