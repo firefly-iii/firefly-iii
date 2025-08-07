@@ -102,7 +102,7 @@ class PiggyBankEnrichment implements EnrichmentInterface
             if (!array_key_exists($accountId, $this->amounts[$id])) {
                 $this->amounts[$id][$accountId] = [
                     'current_amount'    => '0',
-                    'pc_current_amount' => null,
+                    'pc_current_amount' => '0',
                 ];
             }
             $this->amounts[$id][$accountId]['current_amount'] = bcadd($this->amounts[$id][$accountId]['current_amount'], $item->current_amount);
@@ -156,8 +156,8 @@ class PiggyBankEnrichment implements EnrichmentInterface
                 'object_group_id'    => null,
                 'object_group_order' => null,
                 'object_group_title' => null,
-                'current_amount'     => null,
-                'pc_current_amount'  => null,
+                'current_amount'     => '0',
+                'pc_current_amount'  => '0',
                 'target_amount'      => null === $targetAmount ? null : Steam::bcround($targetAmount, $currency->decimal_places),
                 'pc_target_amount'   => null === $item->native_target_amount ? null : Steam::bcround($item->native_target_amount, $this->primaryCurrency->decimal_places),
                 'left_to_save'       => null,
