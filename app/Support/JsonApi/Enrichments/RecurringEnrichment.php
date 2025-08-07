@@ -309,7 +309,7 @@ class RecurringEnrichment implements EnrichmentInterface
             if (true === $this->convertToPrimary && $currencyId !== (int)$this->primaryCurrency->id) {
                 $pcAmount = $converter->convert($this->currencies[$currencyId], $this->primaryCurrency, today(), $transaction['amount']);
             }
-            if (null !== $transaction['foreign_amount']) {
+            if (null !== $transaction['foreign_amount'] && null !== $transaction['foreign_currency_id']) {
                 $foreignCurrencyId = $transaction['foreign_currency_id'];
                 if ($foreignCurrencyId !== $this->primaryCurrency->id) {
                     $pcForeignAmount = $converter->convert($this->currencies[$foreignCurrencyId], $this->primaryCurrency, today(), $transaction['foreign_amount']);
