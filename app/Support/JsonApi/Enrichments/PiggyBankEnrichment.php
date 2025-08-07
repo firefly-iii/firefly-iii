@@ -25,7 +25,7 @@ class PiggyBankEnrichment implements EnrichmentInterface
     private User                $user;
     private UserGroup           $userGroup;
     private Collection          $collection;
-    private array               $ids;
+    private array               $ids = [];
     private array               $currencyIds       = [];
     private array               $currencies        = [];
     private array               $accountIds        = [];
