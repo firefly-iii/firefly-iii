@@ -34,7 +34,9 @@ use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
+use FireflyIII\Support\JsonApi\Enrichments\RecurringEnrichment;
 use FireflyIII\Transformers\RecurrenceTransformer;
+use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -91,6 +93,13 @@ class EditController extends Controller
         if (0 === $count) {
             throw new FireflyException('This recurring transaction has no meta-data. You will have to delete it and recreate it. Sorry!');
         }
+
+        // enrich
+        /** @var User $admin */
+        $admin       = auth()->user();
+        $enrichment  = new RecurringEnrichment();
+        $enrichment->setUser($admin);
+        $recurrence = $enrichment->enrichSingle($recurrence);
 
         /** @var RecurrenceTransformer $transformer */
         $transformer                      = app(RecurrenceTransformer::class);

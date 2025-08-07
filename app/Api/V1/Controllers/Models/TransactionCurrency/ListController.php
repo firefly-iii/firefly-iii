@@ -44,6 +44,7 @@ use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Support\JsonApi\Enrichments\AccountEnrichment;
 use FireflyIII\Support\JsonApi\Enrichments\BudgetLimitEnrichment;
+use FireflyIII\Support\JsonApi\Enrichments\RecurringEnrichment;
 use FireflyIII\Support\JsonApi\Enrichments\SubscriptionEnrichment;
 use FireflyIII\Support\JsonApi\Enrichments\TransactionGroupEnrichment;
 use FireflyIII\Transformers\AccountTransformer;
@@ -276,17 +277,24 @@ class ListController extends Controller
             }
         );
         $count          = $collection->count();
-        $piggyBanks     = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $recurrences     = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+
+        // enrich
+        /** @var User $admin */
+        $admin       = auth()->user();
+        $enrichment  = new RecurringEnrichment();
+        $enrichment->setUser($admin);
+        $recurrences = $enrichment->enrich($recurrences);
 
         // make paginator:
-        $paginator      = new LengthAwarePaginator($piggyBanks, $count, $pageSize, $this->parameters->get('page'));
+        $paginator      = new LengthAwarePaginator($recurrences, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.currencies.recurrences', [$currency->code]).$this->buildParams());
 
         /** @var RecurrenceTransformer $transformer */
         $transformer    = app(RecurrenceTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource       = new FractalCollection($piggyBanks, $transformer, 'recurrences');
+        $resource       = new FractalCollection($recurrences, $transformer, 'recurrences');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
