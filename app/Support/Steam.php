@@ -755,10 +755,11 @@ class Steam
 
     private function getCurrencies(Collection $accounts): array
     {
-        $currencies         = [];
-        $accountCurrencies  = [];
-        $accountPreferences = [];
-        $primary            = Amount::getPrimaryCurrency();
+        $currencies               = [];
+        $accountCurrencies        = [];
+        $accountPreferences       = [];
+        $primary                  = Amount::getPrimaryCurrency();
+        $currencies[$primary->id] = $primary;
 
         $ids    = $accounts->pluck('id')->toArray();
         $result = AccountMeta::whereIn('account_id', $ids)->where('name', 'currency_id')->get();
@@ -770,8 +771,8 @@ class Steam
                 $accountPreferences[(int)$item->account_id] = $integer;
             }
         }
-        // collect those currencies.
-        $set = TransactionCurrency::whereIn('id', $accountPreferences)->get();
+        // collect those currencies, skip primary because we already have it.
+        $set = TransactionCurrency::whereIn('id', $accountPreferences)->where('id','!=',$primary->id)->get();
         foreach ($set as $item) {
             $currencies[$item->id] = $item;
         }
