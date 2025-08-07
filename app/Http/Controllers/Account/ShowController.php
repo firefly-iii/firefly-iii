@@ -136,6 +136,7 @@ class ShowController extends Controller
             ->setAccounts(new Collection([$account]))
             ->setLimit($pageSize)
             ->setPage($page)
+            ->withAttachmentInformation()
             ->withAPIInformation()
             ->setRange($start, $end)
         ;

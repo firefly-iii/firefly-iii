@@ -252,6 +252,7 @@ class TagController extends Controller
 
         $collector->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withAccountInformation()
             ->setTag($tag)->withBudgetInformation()->withCategoryInformation()
+            ->withAttachmentInformation()
         ;
         $groups       = $collector->getPaginatedGroups();
         $groups->setPath($path);
@@ -283,6 +284,7 @@ class TagController extends Controller
         $collector    = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withAccountInformation()
             ->setTag($tag)->withBudgetInformation()->withCategoryInformation()
+            ->withAttachmentInformation()
         ;
         $groups       = $collector->getPaginatedGroups();
         $groups->setPath($path);
