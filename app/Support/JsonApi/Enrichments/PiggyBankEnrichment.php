@@ -102,11 +102,11 @@ class PiggyBankEnrichment implements EnrichmentInterface
             if (!array_key_exists($accountId, $this->amounts[$id])) {
                 $this->amounts[$id][$accountId] = [
                     'current_amount'    => '0',
-                    'pc_current_amount' => '0',
+                    'pc_current_amount' => null,
                 ];
             }
             $this->amounts[$id][$accountId]['current_amount'] = bcadd($this->amounts[$id][$accountId]['current_amount'], $item->current_amount);
-            if (null !== $this->amounts[$id][$accountId]['pc_current_amount']) {
+            if (null !== $this->amounts[$id][$accountId]['pc_current_amount'] && null !== $item->native_current_amount) {
                 $this->amounts[$id][$accountId]['pc_current_amount'] = bcadd($this->amounts[$id][$accountId]['pc_current_amount'], $item->native_current_amount);
             }
         }
