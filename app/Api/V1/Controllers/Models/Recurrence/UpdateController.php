@@ -74,7 +74,7 @@ class UpdateController extends Controller
         $admin       = auth()->user();
         $enrichment  = new RecurringEnrichment();
         $enrichment->setUser($admin);
-        $recurrence = $enrichment->enrichSingle($recurrence);
+        $recurrence  = $enrichment->enrichSingle($recurrence);
 
         /** @var RecurrenceTransformer $transformer */
         $transformer = app(RecurrenceTransformer::class);

@@ -277,14 +277,14 @@ class ListController extends Controller
             }
         );
         $count          = $collection->count();
-        $recurrences     = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $recurrences    = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // enrich
         /** @var User $admin */
-        $admin       = auth()->user();
-        $enrichment  = new RecurringEnrichment();
+        $admin          = auth()->user();
+        $enrichment     = new RecurringEnrichment();
         $enrichment->setUser($admin);
-        $recurrences = $enrichment->enrich($recurrences);
+        $recurrences    = $enrichment->enrich($recurrences);
 
         // make paginator:
         $paginator      = new LengthAwarePaginator($recurrences, $count, $pageSize, $this->parameters->get('page'));
