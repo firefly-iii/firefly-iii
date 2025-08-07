@@ -531,7 +531,7 @@ class BasicController extends Controller
         }
         unset($leftToSpend);
         if (0 === count($return)) {
-            $days       = (int) $start->diffInDays($end, true) + 1;
+            $days  = (int) $start->diffInDays($end, true) + 1;
             // a small trick to get every expense in this period, regardless of budget.
             $spent = $this->opsRepository->sumExpenses($start, $end, null, new Collection());
             foreach ($spent as $row) {

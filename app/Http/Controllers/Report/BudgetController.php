@@ -307,9 +307,9 @@ class BudgetController extends Controller
                 foreach ($budget['transaction_journals'] as $journal) {
                     // #10678
                     // skip transactions between two asset / liability accounts.
-                    if(
-                        in_array($journal['source_account_type'], config('firefly.valid_currency_account_types')) &&
-                        in_array($journal['destination_account_type'], config('firefly.valid_currency_account_types'))
+                    if (
+                        in_array($journal['source_account_type'], config('firefly.valid_currency_account_types'), true)
+                        && in_array($journal['destination_account_type'], config('firefly.valid_currency_account_types'), true)
                     ) {
                         continue;
                     }

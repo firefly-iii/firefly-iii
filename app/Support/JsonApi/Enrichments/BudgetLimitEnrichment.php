@@ -74,8 +74,8 @@ class BudgetLimitEnrichment implements EnrichmentInterface
 
     private function collectIds(): void
     {
-        $this->start = $this->collection->min('start_date');
-        $this->end   = $this->collection->max('end_date');
+        $this->start       = $this->collection->min('start_date');
+        $this->end         = $this->collection->max('end_date');
 
         /** @var BudgetLimit $limit */
         foreach ($this->collection as $limit) {
@@ -92,9 +92,10 @@ class BudgetLimitEnrichment implements EnrichmentInterface
     private function collectNotes(): void
     {
         $notes = Note::query()->whereIn('noteable_id', $this->ids)
-                     ->whereNotNull('notes.text')
-                     ->where('notes.text', '!=', '')
-                     ->where('noteable_type', BudgetLimit::class)->get(['notes.noteable_id', 'notes.text'])->toArray();
+            ->whereNotNull('notes.text')
+            ->where('notes.text', '!=', '')
+            ->where('noteable_type', BudgetLimit::class)->get(['notes.noteable_id', 'notes.text'])->toArray()
+        ;
         foreach ($notes as $note) {
             $this->notes[(int)$note['noteable_id']] = (string)$note['text'];
         }
@@ -126,9 +127,9 @@ class BudgetLimitEnrichment implements EnrichmentInterface
         $budgetIds     = $this->collection->pluck('budget_id')->unique()->toArray();
         $this->budgets = Budget::whereIn('id', $budgetIds)->get();
 
-        $repository = app(OperationsRepository::class);
+        $repository    = app(OperationsRepository::class);
         $repository->setUser($this->user);
-        $expenses = $repository->collectExpenses($this->start, $this->end, null, $this->budgets, null);
+        $expenses      = $repository->collectExpenses($this->start, $this->end, null, $this->budgets, null);
 
         /** @var BudgetLimit $budgetLimit */
         foreach ($this->collection as $budgetLimit) {
