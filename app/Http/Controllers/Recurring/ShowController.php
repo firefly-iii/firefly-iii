@@ -84,10 +84,10 @@ class ShowController extends Controller
 
         // enrich
         /** @var User $admin */
-        $admin       = auth()->user();
-        $enrichment  = new RecurringEnrichment();
+        $admin                  = auth()->user();
+        $enrichment             = new RecurringEnrichment();
         $enrichment->setUser($admin);
-        $recurrence = $enrichment->enrichSingle($recurrence);
+        $recurrence             = $enrichment->enrichSingle($recurrence);
 
         /** @var RecurrenceTransformer $transformer */
         $transformer            = app(RecurrenceTransformer::class);
