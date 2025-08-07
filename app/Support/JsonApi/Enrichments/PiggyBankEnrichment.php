@@ -25,15 +25,15 @@ class PiggyBankEnrichment implements EnrichmentInterface
     private User                $user;
     private UserGroup           $userGroup;
     private Collection          $collection;
-    private array               $ids = [];
-    private array               $currencyIds       = [];
-    private array               $currencies        = [];
-    private array               $accountIds        = [];
-    //private array               $accountCurrencies = [];
-    private array               $notes             = [];
-    private array               $mappedObjects     = [];
+    private array               $ids           = [];
+    private array               $currencyIds   = [];
+    private array               $currencies    = [];
+    private array               $accountIds    = [];
+    // private array               $accountCurrencies = [];
+    private array               $notes         = [];
+    private array               $mappedObjects = [];
     private TransactionCurrency $primaryCurrency;
-    private array               $amounts           = [];
+    private array               $amounts       = [];
 
     public function __construct()
     {
@@ -116,12 +116,12 @@ class PiggyBankEnrichment implements EnrichmentInterface
 
         /** @var AccountMeta $item */
         foreach ($set as $item) {
-            $accountId                           = (int)$item->account_id;
-            $currencyId                          = (int)$item->data;
+            $accountId  = (int)$item->account_id;
+            $currencyId = (int)$item->data;
             if (!array_key_exists($currencyId, $this->currencies)) {
                 $this->currencies[$currencyId] = TransactionCurrency::find($currencyId);
             }
-            //$this->accountCurrencies[$accountId] = $this->currencies[$currencyId];
+            // $this->accountCurrencies[$accountId] = $this->currencies[$currencyId];
         }
 
         // get account info.

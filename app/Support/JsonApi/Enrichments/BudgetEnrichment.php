@@ -26,16 +26,16 @@ class BudgetEnrichment implements EnrichmentInterface
     private TransactionCurrency $primaryCurrency;
     private User                $user;
     private UserGroup           $userGroup;
-    private array               $ids              = [];
-    private array               $notes            = [];
-    private array               $autoBudgets      = [];
-    private array               $currencies       = [];
-    private ?Carbon             $start            = null;
-    private ?Carbon             $end              = null;
-    private array               $spent            = [];
-    private array               $pcSpent          = [];
-    private array               $objectGroups     = [];
-    private array               $mappedObjects    = [];
+    private array               $ids           = [];
+    private array               $notes         = [];
+    private array               $autoBudgets   = [];
+    private array               $currencies    = [];
+    private ?Carbon             $start         = null;
+    private ?Carbon             $end           = null;
+    private array               $spent         = [];
+    private array               $pcSpent       = [];
+    private array               $objectGroups  = [];
+    private array               $mappedObjects = [];
 
     public function __construct()
     {
@@ -89,9 +89,10 @@ class BudgetEnrichment implements EnrichmentInterface
     private function collectNotes(): void
     {
         $notes = Note::query()->whereIn('noteable_id', $this->ids)
-                     ->whereNotNull('notes.text')
-                     ->where('notes.text', '!=', '')
-                     ->where('noteable_type', Budget::class)->get(['notes.noteable_id', 'notes.text'])->toArray();
+            ->whereNotNull('notes.text')
+            ->where('notes.text', '!=', '')
+            ->where('noteable_type', Budget::class)->get(['notes.noteable_id', 'notes.text'])->toArray()
+        ;
         foreach ($notes as $note) {
             $this->notes[(int)$note['noteable_id']] = (string)$note['text'];
         }
@@ -101,8 +102,8 @@ class BudgetEnrichment implements EnrichmentInterface
     private function appendCollectedData(): void
     {
         $this->collection = $this->collection->map(function (Budget $item) {
-            $id   = (int)$item->id;
-            $meta = [
+            $id         = (int)$item->id;
+            $meta       = [
                 'object_group_id'    => null,
                 'object_group_order' => null,
                 'object_group_title' => null,
@@ -154,7 +155,7 @@ class BudgetEnrichment implements EnrichmentInterface
             $opsRepository->setUserGroup($this->userGroup);
             // $spent = $this->beautify();
             // $set = $this->opsRepository->sumExpenses($start, $end, null, new Collection([$budget]))
-            $expenses = $opsRepository->collectExpenses($this->start, $this->end, null, $this->collection, null);
+            $expenses      = $opsRepository->collectExpenses($this->start, $this->end, null, $this->collection, null);
             foreach ($this->collection as $item) {
                 $id                 = (int)$item->id;
                 $this->spent[$id]   = array_values($opsRepository->sumCollectedExpensesByBudget($expenses, $item, false));
@@ -175,12 +176,13 @@ class BudgetEnrichment implements EnrichmentInterface
 
     private function collectObjectGroups(): void
     {
-        $set = DB::table('object_groupables')
-                 ->whereIn('object_groupable_id', $this->ids)
-                 ->where('object_groupable_type', Budget::class)
-                 ->get(['object_groupable_id', 'object_group_id']);
+        $set    = DB::table('object_groupables')
+            ->whereIn('object_groupable_id', $this->ids)
+            ->where('object_groupable_type', Budget::class)
+            ->get(['object_groupable_id', 'object_group_id'])
+        ;
 
-        $ids = array_unique($set->pluck('object_group_id')->toArray());
+        $ids    = array_unique($set->pluck('object_group_id')->toArray());
 
         foreach ($set as $entry) {
             $this->mappedObjects[(int)$entry->object_groupable_id] = (int)$entry->object_group_id;
