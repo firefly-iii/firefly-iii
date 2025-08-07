@@ -67,7 +67,7 @@ class RecurrenceTransformer extends AbstractTransformer
             'nr_of_repetitions' => $reps,
             'notes'             => $recurrence->meta['notes'],
             'repetitions'       => $recurrence->meta['repetitions'],
-            'transactions'  => $recurrence->meta['transactions'],
+            'transactions'      => $recurrence->meta['transactions'],
             'links'             => [
                 [
                     'rel' => 'self',
