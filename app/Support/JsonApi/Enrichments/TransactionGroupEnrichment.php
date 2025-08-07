@@ -45,26 +45,20 @@ use Override;
 
 class TransactionGroupEnrichment implements EnrichmentInterface
 {
-    private array          $attachmentCount;
+    private array          $attachmentCount = [];
     private Collection     $collection;
     private readonly array $dateFields;
-    private array          $journalIds;
-    private array          $locations;
-    private array          $metaData;      // @phpstan-ignore-line
-    private array          $notes; // @phpstan-ignore-line
-    private array          $tags;
+    private array          $journalIds = [];
+    private array          $locations = [];
+    private array          $metaData = [];
+    private array          $notes = [];
+    private array          $tags = [];
     private User           $user;
     private readonly TransactionCurrency $primaryCurrency;
     private UserGroup      $userGroup;
 
     public function __construct()
     {
-        $this->notes           = [];
-        $this->journalIds      = [];
-        $this->tags            = [];
-        $this->metaData        = [];
-        $this->locations       = [];
-        $this->attachmentCount = [];
         $this->dateFields      = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date'];
         $this->primaryCurrency = Amount::getPrimaryCurrency();
     }

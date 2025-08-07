@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Log;
 class BudgetEnrichment implements EnrichmentInterface
 {
     private Collection          $collection;
-    private bool                $convertToPrimary = true;
+    private bool                $convertToPrimary;
     private TransactionCurrency $primaryCurrency;
     private User                $user;
     private UserGroup           $userGroup;

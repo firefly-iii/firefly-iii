@@ -29,7 +29,7 @@ class PiggyBankEnrichment implements EnrichmentInterface
     private array               $currencyIds       = [];
     private array               $currencies        = [];
     private array               $accountIds        = [];
-    private array               $accountCurrencies = [];
+    //private array               $accountCurrencies = [];
     private array               $notes             = [];
     private array               $mappedObjects     = [];
     private TransactionCurrency $primaryCurrency;
@@ -121,7 +121,7 @@ class PiggyBankEnrichment implements EnrichmentInterface
             if (!array_key_exists($currencyId, $this->currencies)) {
                 $this->currencies[$currencyId] = TransactionCurrency::find($currencyId);
             }
-            $this->accountCurrencies[$accountId] = $this->currencies[$currencyId];
+            //$this->accountCurrencies[$accountId] = $this->currencies[$currencyId];
         }
 
         // get account info.

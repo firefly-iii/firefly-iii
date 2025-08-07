@@ -53,21 +53,21 @@ use Override;
  */
 class AccountEnrichment implements EnrichmentInterface
 {
-    private array               $ids;
-    private array               $accountTypeIds;
-    private array               $accountTypes;
+    private array               $ids = [];
+    private array               $accountTypeIds = [];
+    private array               $accountTypes = [];
     private Collection          $collection;
-    private array               $currencies;
-    private array               $locations;
-    private array               $meta;
+    private array               $currencies = [];
+    private array               $locations = [];
+    private array               $meta = [];
     private TransactionCurrency $primaryCurrency;
-    private array               $notes;
-    private array               $openingBalances;
+    private array               $notes = [];
+    private array               $openingBalances = [];
     private User                $user;
     private UserGroup           $userGroup;
-    private array               $lastActivities;
+    private array               $lastActivities = [];
     private ?Carbon             $date             = null;
-    private bool                $convertToPrimary = false;
+    private bool                $convertToPrimary;
     private array               $balances         = [];
     private array               $objectGroups     = [];
     private array               $mappedObjects    = [];
@@ -77,15 +77,6 @@ class AccountEnrichment implements EnrichmentInterface
      */
     public function __construct()
     {
-        $this->ids              = [];
-        $this->openingBalances  = [];
-        $this->currencies       = [];
-        $this->accountTypeIds   = [];
-        $this->accountTypes     = [];
-        $this->meta             = [];
-        $this->notes            = [];
-        $this->lastActivities   = [];
-        $this->locations        = [];
         $this->primaryCurrency  = Amount::getPrimaryCurrency();
         $this->convertToPrimary = Amount::convertToPrimary();
     }

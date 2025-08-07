@@ -25,7 +25,7 @@ class PiggyBankEventEnrichment implements EnrichmentInterface
     private array      $journalIds        = [];
     private array      $groupIds          = [];
     private array      $accountIds        = [];
-    private array      $piggybankIds      = [];
+    private array      $piggyBankIds      = [];
     private array      $accountCurrencies = [];
     private array      $currencies        = [];
     // private bool       $convertToPrimary  = false;
@@ -72,7 +72,7 @@ class PiggyBankEventEnrichment implements EnrichmentInterface
         foreach ($this->collection as $event) {
             $this->ids[]                         = (int)$event->id;
             $this->journalIds[(int)$event->id]   = (int)$event->transaction_journal_id;
-            $this->piggybankIds[(int)$event->id] = (int)$event->piggy_bank_id;
+            $this->piggyBankIds[(int)$event->id] = (int)$event->piggy_bank_id;
         }
         $this->ids = array_unique($this->ids);
         // collect groups with journal info.
@@ -84,7 +84,7 @@ class PiggyBankEventEnrichment implements EnrichmentInterface
         }
 
         // collect account info.
-        $set       = DB::table('account_piggy_bank')->whereIn('piggy_bank_id', $this->piggybankIds)->get(['piggy_bank_id', 'account_id']);
+        $set       = DB::table('account_piggy_bank')->whereIn('piggy_bank_id', $this->piggyBankIds)->get(['piggy_bank_id', 'account_id']);
         foreach ($set as $item) {
             $id = (int)$item->piggy_bank_id;
             if (!array_key_exists($id, $this->accountIds)) {
@@ -93,7 +93,6 @@ class PiggyBankEventEnrichment implements EnrichmentInterface
         }
 
         // get account currency preference for ALL.
-        // TODO This method does a find in a loop.
         $set       = AccountMeta::whereIn('account_id', array_values($this->accountIds))->where('name', 'currency_id')->get();
 
         /** @var AccountMeta $item */

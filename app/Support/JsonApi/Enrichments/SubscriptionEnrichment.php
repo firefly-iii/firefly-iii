@@ -27,7 +27,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
     private User                $user;
     private UserGroup           $userGroup;
     private Collection          $collection;
-    private bool                $convertToPrimary = false;
+    private bool                $convertToPrimary;
     private ?Carbon             $start            = null;
     private ?Carbon             $end              = null;
     private array               $subscriptionIds  = [];

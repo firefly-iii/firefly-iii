@@ -43,7 +43,7 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
     private User                                   $user;
     private UserGroup                              $userGroup;
     private TransactionCurrency                    $primaryCurrency;
-    private bool                                   $convertToPrimary      = false;
+    private bool                                   $convertToPrimary;
     private array                                  $ids                   = [];
     private array                                  $currencyIds           = [];
     private array                                  $currencies            = [];
@@ -157,7 +157,7 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
             $currency   = $this->currencies[$currencyId];
             $meta       = [
                 'currency'                 => $currency,
-                'spent_in_budgets'         => $this->spentInsideBudgets[$id] ?? [],
+                'spent_in_budgets'         => $this->spentInBudgets[$id] ?? [],
                 'pc_spent_in_budgets'      => $this->pcSpentInBudgets[$id] ?? [],
                 'spent_outside_budgets'    => $this->spentOutsideBudgets[$id] ?? [],
                 'pc_spent_outside_budgets' => $this->pcSpentOutsideBudgets[$id] ?? [],
