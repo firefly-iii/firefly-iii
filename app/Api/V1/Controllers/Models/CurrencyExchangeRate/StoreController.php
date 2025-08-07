@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Models\CurrencyExchangeRate;
 
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Api\V1\Requests\Models\CurrencyExchangeRate\StoreRequest;
 use FireflyIII\Api\V1\Controllers\Controller;
@@ -37,7 +38,7 @@ class StoreController extends Controller
     use ValidatesUserGroupTrait;
 
     public const string RESOURCE_KEY = 'exchange-rates';
-
+    protected array $acceptedRoles   = [UserRoleEnum::OWNER];
     private ExchangeRateRepositoryInterface $repository;
 
     public function __construct()
