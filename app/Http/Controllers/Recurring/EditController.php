@@ -34,6 +34,7 @@ use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
+use FireflyIII\Support\Facades\ExpandedForm;
 use FireflyIII\Support\JsonApi\Enrichments\RecurringEnrichment;
 use FireflyIII\Transformers\RecurrenceTransformer;
 use FireflyIII\User;
@@ -106,8 +107,8 @@ class EditController extends Controller
         $transformer->setParameters(new ParameterBag());
 
         $array                            = $transformer->transform($recurrence);
-        $budgets                          = app('expandedform')->makeSelectListWithEmpty($this->budgetRepos->getActiveBudgets());
-        $bills                            = app('expandedform')->makeSelectListWithEmpty($this->billRepository->getActiveBills());
+        $budgets                          = ExpandedForm::makeSelectListWithEmpty($this->budgetRepos->getActiveBudgets());
+        $bills                            = ExpandedForm::makeSelectListWithEmpty($this->billRepository->getActiveBills());
 
         /** @var RecurrenceRepetition $repetition */
         $repetition                       = $recurrence->recurrenceRepetitions()->first();
