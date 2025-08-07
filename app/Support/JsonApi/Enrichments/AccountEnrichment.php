@@ -344,7 +344,7 @@ class AccountEnrichment implements EnrichmentInterface
 
     private function collectBalances(): void
     {
-        $this->balances = Steam::finalAccountsBalanceOptimized($this->collection, $this->getDate(), $this->primaryCurrency, $this->convertToPrimary);
+        $this->balances = Steam::accountsBalancesOptimized($this->collection, $this->getDate(), $this->primaryCurrency, $this->convertToPrimary);
     }
 
     public function setDate(?Carbon $date): void
