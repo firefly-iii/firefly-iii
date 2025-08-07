@@ -29,6 +29,8 @@ class BudgetLimitEnrichment implements EnrichmentInterface
     private Collection          $budgets;
     private array               $expenses         = [];
     private array               $pcExpenses       = [];
+    private array               $currencyIds      = [];
+    private array               $currencies       = [];
     private bool                $convertToPrimary = true;
     private TransactionCurrency $primaryCurrency;
 
@@ -42,6 +44,7 @@ class BudgetLimitEnrichment implements EnrichmentInterface
     {
         $this->collection = $collection;
         $this->collectIds();
+        $this->collectCurrencies();
         $this->collectNotes();
         $this->collectBudgets();
         $this->appendCollectedData();
@@ -76,18 +79,22 @@ class BudgetLimitEnrichment implements EnrichmentInterface
 
         /** @var BudgetLimit $limit */
         foreach ($this->collection as $limit) {
-            $this->ids[] = (int)$limit->id;
+            $id          = (int)$limit->id;
+            $this->ids[] = $id;
+            if (0 !== (int)$limit->transaction_currency_id) {
+                $this->currencyIds[$id] = (int)$limit->transaction_currency_id;
+            }
         }
-        $this->ids   = array_unique($this->ids);
+        $this->ids         = array_unique($this->ids);
+        $this->currencyIds = array_unique($this->currencyIds);
     }
 
     private function collectNotes(): void
     {
         $notes = Note::query()->whereIn('noteable_id', $this->ids)
-            ->whereNotNull('notes.text')
-            ->where('notes.text', '!=', '')
-            ->where('noteable_type', BudgetLimit::class)->get(['notes.noteable_id', 'notes.text'])->toArray()
-        ;
+                     ->whereNotNull('notes.text')
+                     ->where('notes.text', '!=', '')
+                     ->where('noteable_type', BudgetLimit::class)->get(['notes.noteable_id', 'notes.text'])->toArray();
         foreach ($notes as $note) {
             $this->notes[(int)$note['noteable_id']] = (string)$note['text'];
         }
@@ -98,10 +105,15 @@ class BudgetLimitEnrichment implements EnrichmentInterface
     {
         $this->collection = $this->collection->map(function (BudgetLimit $item) {
             $id         = (int)$item->id;
+            $currencyId = (int)$item->transaction_currency_id;
+            if (0 === $currencyId) {
+                $currencyId = $this->primaryCurrency->id;
+            }
             $meta       = [
                 'notes'    => $this->notes[$id] ?? null,
                 'spent'    => $this->expenses[$id] ?? [],
                 'pc_spent' => $this->pcExpenses[$id] ?? [],
+                'currency' => $this->currencies[$currencyId],
             ];
             $item->meta = $meta;
 
@@ -114,9 +126,9 @@ class BudgetLimitEnrichment implements EnrichmentInterface
         $budgetIds     = $this->collection->pluck('budget_id')->unique()->toArray();
         $this->budgets = Budget::whereIn('id', $budgetIds)->get();
 
-        $repository    = app(OperationsRepository::class);
+        $repository = app(OperationsRepository::class);
         $repository->setUser($this->user);
-        $expenses      = $repository->collectExpenses($this->start, $this->end, null, $this->budgets, null);
+        $expenses = $repository->collectExpenses($this->start, $this->end, null, $this->budgets, null);
 
         /** @var BudgetLimit $budgetLimit */
         foreach ($this->collection as $budgetLimit) {
@@ -131,6 +143,15 @@ class BudgetLimitEnrichment implements EnrichmentInterface
             if (true === $this->convertToPrimary && $budgetLimit->transactionCurrency->id === $this->primaryCurrency->id) {
                 $this->pcExpenses[$id] = $this->expenses[$id] ?? [];
             }
+        }
+    }
+
+    private function collectCurrencies(): void
+    {
+        $this->currencies[$this->primaryCurrency->id] = $this->primaryCurrency;
+        $currencies                                   = TransactionCurrency::whereIn('id', $this->currencyIds)->whereNot('id', $this->primaryCurrency->id)->get();
+        foreach ($currencies as $currency) {
+            $this->currencies[(int)$currency->id] = $currency;
         }
     }
 }

@@ -64,10 +64,7 @@ class BudgetLimitTransformer extends AbstractTransformer
     public function transform(BudgetLimit $budgetLimit): array
     {
 
-        $currency = $budgetLimit->transactionCurrency;
-        if (null === $currency) {
-            $currency = $this->primaryCurrency;
-        }
+        $currency = $budgetLimit->meta['currency'];
         $amount   = Steam::bcround($budgetLimit->amount, $currency->decimal_places);
         $pcAmount = null;
         if ($this->convertToPrimary && $currency->id === $this->primaryCurrency->id) {
@@ -76,9 +73,6 @@ class BudgetLimitTransformer extends AbstractTransformer
         if ($this->convertToPrimary && $currency->id !== $this->primaryCurrency->id) {
             $pcAmount = Steam::bcround($budgetLimit->native_amount, $this->primaryCurrency->decimal_places);
         }
-        // TODO fix currency collection.
-        // TODO fix documentation.a
-
         return [
             'id'                              => (string)$budgetLimit->id,
             'created_at'                      => $budgetLimit->created_at->toAtomString(),

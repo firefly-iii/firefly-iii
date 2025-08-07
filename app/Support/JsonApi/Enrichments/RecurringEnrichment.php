@@ -173,7 +173,7 @@ class RecurringEnrichment implements EnrichmentInterface
 
             $this->transactions[$id][$transactionId]     = [
                 'id'                          => (string)$transactionId,
-                'recurrence_id'               => $id,
+                //'recurrence_id'               => $id,
                 'transaction_currency_id'     => (int)$transaction->transaction_currency_id,
                 'foreign_currency_id'         => null === $transaction->foreign_currency_id ? null : (int)$transaction->foreign_currency_id,
                 'source_id'                   => (int)$transaction->source_id,
