@@ -202,7 +202,7 @@ class IndexController extends Controller
                 // loop all accounts in this piggy bank subtract the current amount from "left to save" in the $accounts array.
                 /** @var array $piggyAccount */
                 foreach ($piggyBank['accounts'] as $piggyAccount) {
-                    $accountId = $piggyAccount['id'];
+                    $accountId = $piggyAccount['account_id'];
                     if (array_key_exists($accountId, $accounts)) {
                         $accounts[$accountId]['left']    = bcsub((string) $accounts[$accountId]['left'], (string) $piggyAccount['current_amount']);
                         $accounts[$accountId]['saved']   = bcadd((string) $accounts[$accountId]['saved'], (string) $piggyAccount['current_amount']);
