@@ -93,7 +93,6 @@ class BillTransformer extends AbstractTransformer
             'object_group_order'              => $bill->meta['object_group_order'],
             'object_group_title'              => $bill->meta['object_group_title'],
 
-
             'paid_dates'                      => $bill->meta['paid_dates'],
             'pay_dates'                       => $bill->meta['pay_dates'],
             'next_expected_match'             => $bill->meta['nem']?->toAtomString(),

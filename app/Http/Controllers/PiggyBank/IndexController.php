@@ -179,14 +179,6 @@ class IndexController extends Controller
                     $return[$accountId]['target']  = '0';
                     $return[$accountId]['to_save'] = '0';
                 }
-
-                // calculate new interesting fields:
-                //                $return[$accountId]['left']             -= $array['current_amount'];
-                //                $return[$accountId]['saved']            += $array['current_amount'];
-                //                $return[$accountId]['target']           += $array['target_amount'];
-                //                $return[$accountId]['to_save']          += ($array['target_amount'] - $array['current_amount']);
-                //                $return['account_name']                    = $account['name'];
-
             }
         }
 

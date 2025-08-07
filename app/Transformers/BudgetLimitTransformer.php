@@ -76,6 +76,8 @@ class BudgetLimitTransformer extends AbstractTransformer
         if ($this->convertToPrimary && $currency->id !== $this->primaryCurrency->id) {
             $pcAmount = Steam::bcround($budgetLimit->native_amount, $this->primaryCurrency->decimal_places);
         }
+        // TODO fix currency collection.
+        // TODO fix documentation.a
 
         return [
             'id'                              => (string)$budgetLimit->id,
