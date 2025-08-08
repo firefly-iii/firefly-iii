@@ -562,7 +562,13 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
                 'foreign_currencies.decimal_places as foreign_currency_decimal_places',
 
                 // fields
-                'transaction_journals.date', 'transaction_types.type', 'transaction_journals.transaction_currency_id', 'transactions.amount'])
+                'transaction_journals.date',
+                'transaction_types.type',
+                'transaction_journals.transaction_currency_id',
+                'transactions.amount',
+                'transactions.native_amount',
+                'transactions.foreign_amount'
+                  ])
             ->toArray()
         ;
 

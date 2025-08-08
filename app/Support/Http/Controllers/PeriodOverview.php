@@ -35,6 +35,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Debug\Timer;
+use FireflyIII\Support\Facades\Navigation;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -81,52 +82,49 @@ trait PeriodOverview
         Log::debug('Now in getAccountPeriodOverview()');
         Timer::start('account-period-total');
         $this->accountRepository = app(AccountRepositoryInterface::class);
-        $range                   = app('navigation')->getViewRange(true);
-        [$start, $end]           = $end < $start ? [$end, $start] : [$start, $end];
+        $range                   = Navigation::getViewRange(true);
+        [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
 
         // properties for cache
-        $cache                   = new CacheProperties();
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('account-show-period-entries');
         $cache->addProperty($account->id);
         if ($cache->has()) {
-            return $cache->get();
+            // return $cache->get();
         }
 
         /** @var array $dates */
-        $dates                   = app('navigation')->blockPeriods($start, $end, $range);
-        $entries                 = [];
-        $spent                   = [];
-        $earned                  = [];
-        $transferredAway         = [];
-        $transferredIn           = [];
+        $dates           = Navigation::blockPeriods($start, $end, $range);
+        $entries         = [];
+        $spent           = [];
+        $earned          = [];
+        $transferredAway = [];
+        $transferredIn   = [];
 
         // run a custom query because doing this with the collector is MEGA slow.
-        $transactions            = $this->accountRepository->periodCollection($account, $start, $end);
-
+        $transactions = $this->accountRepository->periodCollection($account, $start, $end);
         // loop dates
         Log::debug(sprintf('Count of loops: %d', count($dates)));
-        $loops                   = 0;
+        $loops = 0;
         // stop after 10 loops for memory reasons.
         foreach ($dates as $currentDate) {
-            $title                            = app('navigation')->periodShow($currentDate['start'], $currentDate['period']);
-            if ($loops < 10) {
-                [$transactions, $spent]           = $this->filterTransactionsByType(TransactionTypeEnum::WITHDRAWAL, $transactions, $currentDate['start'], $currentDate['end']);
-                [$transactions, $earned]          = $this->filterTransactionsByType(TransactionTypeEnum::DEPOSIT, $transactions, $currentDate['start'], $currentDate['end']);
-                [$transactions, $transferredAway] = $this->filterTransfers('away', $transactions, $currentDate['start'], $currentDate['end']);
-                [$transactions, $transferredIn]   = $this->filterTransfers('in', $transactions, $currentDate['start'], $currentDate['end']);
-            }
+            $title = Navigation::periodShow($currentDate['start'], $currentDate['period']);
+            [$transactions, $spent] = $this->filterTransactionsByType(TransactionTypeEnum::WITHDRAWAL, $transactions, $currentDate['start'], $currentDate['end']);
+            [$transactions, $earned] = $this->filterTransactionsByType(TransactionTypeEnum::DEPOSIT, $transactions, $currentDate['start'], $currentDate['end']);
+            [$transactions, $transferredAway] = $this->filterTransfers('away', $transactions, $currentDate['start'], $currentDate['end']);
+            [$transactions, $transferredIn] = $this->filterTransfers('in', $transactions, $currentDate['start'], $currentDate['end']);
             $entries[]
-                                              = [
-                                                  'title'              => $title,
-                                                  'route'              => route('accounts.show', [$account->id, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
-                                                  'total_transactions' => count($spent) + count($earned) + count($transferredAway) + count($transferredIn),
-                                                  'spent'              => $this->groupByCurrency($spent),
-                                                  'earned'             => $this->groupByCurrency($earned),
-                                                  'transferred_away'   => $this->groupByCurrency($transferredAway),
-                                                  'transferred_in'     => $this->groupByCurrency($transferredIn),
-                                              ];
+                = [
+                'title'              => $title,
+                'route'              => route('accounts.show', [$account->id, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
+                'total_transactions' => count($spent) + count($earned) + count($transferredAway) + count($transferredIn),
+                'spent'              => $this->groupByCurrency($spent),
+                'earned'             => $this->groupByCurrency($earned),
+                'transferred_away'   => $this->groupByCurrency($transferredAway),
+                'transferred_in'     => $this->groupByCurrency($transferredIn),
+            ];
             ++$loops;
         }
         $cache->store($entries);
@@ -139,45 +137,52 @@ trait PeriodOverview
     private function filterTransactionsByType(TransactionTypeEnum $type, array $transactions, Carbon $start, Carbon $end): array
     {
         $result = [];
+        $filtered = [];
 
         /**
-         * @var int   $index
+         * @var int $index
          * @var array $item
          */
         foreach ($transactions as $index => $item) {
             $date = Carbon::parse($item['date']);
-            if ($item['type'] === $type->value && $date >= $start && $date <= $end) {
+            $fits = $item['type'] === $type->value && $date >= $start && $date <= $end;
+            if ($fits) {
                 $result[] = $item;
                 unset($transactions[$index]);
             }
+            if(!$fits) {
+                $filtered[] = $item;
+            }
         }
 
-        return [$transactions, $result];
+        return [$filtered, $result];
     }
 
     private function filterTransfers(string $direction, array $transactions, Carbon $start, Carbon $end): array
     {
         $result = [];
+        $filtered = [];
 
         /**
-         * @var int   $index
+         * @var int $index
          * @var array $item
          */
         foreach ($transactions as $index => $item) {
             $date = Carbon::parse($item['date']);
             if ($date >= $start && $date <= $end) {
-                if ('away' === $direction && -1 === bccomp((string) $item['amount'], '0')) {
+                if ('away' === $direction && -1 === bccomp((string)$item['amount'], '0')) {
                     $result[] = $item;
-                    unset($transactions[$index]);
+                    continue;
                 }
-                if ('in' === $direction && 1 === bccomp((string) $item['amount'], '0')) {
+                if ('in' === $direction && 1 === bccomp((string)$item['amount'], '0')) {
                     $result[] = $item;
-                    unset($transactions[$index]);
+                    continue;
                 }
+                $filtered[] = $item;
             }
         }
 
-        return [$transactions, $result];
+        return [$filtered, $result];
     }
 
     private function groupByCurrency(array $journals): array
@@ -186,13 +191,13 @@ trait PeriodOverview
 
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $currencyId                    = (int) $journal['currency_id'];
-            $currencyCode                  = $journal['currency_code'];
-            $currencyName                  = $journal['currency_name'];
-            $currencySymbol                = $journal['currency_symbol'];
-            $currencyDecimalPlaces         = $journal['currency_decimal_places'];
-            $foreignCurrencyId             = $journal['foreign_currency_id'];
-            $amount                        = $journal['amount'] ?? '0';
+            $currencyId            = (int)$journal['currency_id'];
+            $currencyCode          = $journal['currency_code'];
+            $currencyName          = $journal['currency_name'];
+            $currencySymbol        = $journal['currency_symbol'];
+            $currencyDecimalPlaces = $journal['currency_decimal_places'];
+            $foreignCurrencyId     = $journal['foreign_currency_id'];
+            $amount                = $journal['amount'] ?? '0';
 
             if ($this->convertToPrimary && $currencyId !== $this->primaryCurrency->id && $foreignCurrencyId !== $this->primaryCurrency->id) {
                 $amount                = $journal['pc_amount'] ?? '0';
@@ -203,7 +208,7 @@ trait PeriodOverview
                 $currencyDecimalPlaces = $this->primaryCurrency->decimal_places;
             }
             if ($this->convertToPrimary && $currencyId !== $this->primaryCurrency->id && $foreignCurrencyId === $this->primaryCurrency->id) {
-                $currencyId            = (int) $foreignCurrencyId;
+                $currencyId            = (int)$foreignCurrencyId;
                 $currencyCode          = $journal['foreign_currency_code'];
                 $currencyName          = $journal['foreign_currency_name'];
                 $currencySymbol        = $journal['foreign_currency_symbol'];
@@ -235,11 +240,11 @@ trait PeriodOverview
      */
     protected function getCategoryPeriodOverview(Category $category, Carbon $start, Carbon $end): array
     {
-        $range         = app('navigation')->getViewRange(true);
+        $range = Navigation::getViewRange(true);
         [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
 
         // properties for entries with their amounts.
-        $cache         = new CacheProperties();
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty($range);
@@ -251,50 +256,50 @@ trait PeriodOverview
         }
 
         /** @var array $dates */
-        $dates         = app('navigation')->blockPeriods($start, $end, $range);
-        $entries       = [];
+        $dates   = Navigation::blockPeriods($start, $end, $range);
+        $entries = [];
 
         // collect all expenses in this period:
         /** @var GroupCollectorInterface $collector */
-        $collector     = app(GroupCollectorInterface::class);
+        $collector = app(GroupCollectorInterface::class);
         $collector->setCategory($category);
         $collector->setRange($start, $end);
         $collector->setTypes([TransactionTypeEnum::DEPOSIT->value]);
-        $earnedSet     = $collector->getExtractedJournals();
+        $earnedSet = $collector->getExtractedJournals();
 
         // collect all income in this period:
         /** @var GroupCollectorInterface $collector */
-        $collector     = app(GroupCollectorInterface::class);
+        $collector = app(GroupCollectorInterface::class);
         $collector->setCategory($category);
         $collector->setRange($start, $end);
         $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
-        $spentSet      = $collector->getExtractedJournals();
+        $spentSet = $collector->getExtractedJournals();
 
         // collect all transfers in this period:
         /** @var GroupCollectorInterface $collector */
-        $collector     = app(GroupCollectorInterface::class);
+        $collector = app(GroupCollectorInterface::class);
         $collector->setCategory($category);
         $collector->setRange($start, $end);
         $collector->setTypes([TransactionTypeEnum::TRANSFER->value]);
-        $transferSet   = $collector->getExtractedJournals();
+        $transferSet = $collector->getExtractedJournals();
         foreach ($dates as $currentDate) {
             $spent       = $this->filterJournalsByDate($spentSet, $currentDate['start'], $currentDate['end']);
             $earned      = $this->filterJournalsByDate($earnedSet, $currentDate['start'], $currentDate['end']);
             $transferred = $this->filterJournalsByDate($transferSet, $currentDate['start'], $currentDate['end']);
-            $title       = app('navigation')->periodShow($currentDate['end'], $currentDate['period']);
+            $title       = Navigation::periodShow($currentDate['end'], $currentDate['period']);
             $entries[]
                          = [
-                             'transactions'       => 0,
-                             'title'              => $title,
-                             'route'              => route(
-                                 'categories.show',
-                                 [$category->id, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]
-                             ),
-                             'total_transactions' => count($spent) + count($earned) + count($transferred),
-                             'spent'              => $this->groupByCurrency($spent),
-                             'earned'             => $this->groupByCurrency($earned),
-                             'transferred'        => $this->groupByCurrency($transferred),
-                         ];
+                'transactions'       => 0,
+                'title'              => $title,
+                'route'              => route(
+                    'categories.show',
+                    [$category->id, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]
+                ),
+                'total_transactions' => count($spent) + count($earned) + count($transferred),
+                'spent'              => $this->groupByCurrency($spent),
+                'earned'             => $this->groupByCurrency($earned),
+                'transferred'        => $this->groupByCurrency($transferred),
+            ];
         }
         $cache->store($entries);
 
@@ -327,11 +332,11 @@ trait PeriodOverview
      */
     protected function getNoBudgetPeriodOverview(Carbon $start, Carbon $end): array
     {
-        $range         = app('navigation')->getViewRange(true);
+        $range = Navigation::getViewRange(true);
 
         [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
 
-        $cache         = new CacheProperties();
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty($this->convertToPrimary);
@@ -342,28 +347,28 @@ trait PeriodOverview
         }
 
         /** @var array $dates */
-        $dates         = app('navigation')->blockPeriods($start, $end, $range);
-        $entries       = [];
+        $dates   = Navigation::blockPeriods($start, $end, $range);
+        $entries = [];
 
         // get all expenses without a budget.
         /** @var GroupCollectorInterface $collector */
-        $collector     = app(GroupCollectorInterface::class);
+        $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)->withoutBudget()->withAccountInformation()->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
-        $journals      = $collector->getExtractedJournals();
+        $journals = $collector->getExtractedJournals();
 
         foreach ($dates as $currentDate) {
             $set   = $this->filterJournalsByDate($journals, $currentDate['start'], $currentDate['end']);
-            $title = app('navigation')->periodShow($currentDate['end'], $currentDate['period']);
+            $title = Navigation::periodShow($currentDate['end'], $currentDate['period']);
             $entries[]
                    = [
-                       'title'              => $title,
-                       'route'              => route('budgets.no-budget', [$currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
-                       'total_transactions' => count($set),
-                       'spent'              => $this->groupByCurrency($set),
-                       'earned'             => [],
-                       'transferred_away'   => [],
-                       'transferred_in'     => [],
-                   ];
+                'title'              => $title,
+                'route'              => route('budgets.no-budget', [$currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
+                'total_transactions' => count($set),
+                'spent'              => $this->groupByCurrency($set),
+                'earned'             => [],
+                'transferred_away'   => [],
+                'transferred_in'     => [],
+            ];
         }
         $cache->store($entries);
 
@@ -380,38 +385,38 @@ trait PeriodOverview
     protected function getNoCategoryPeriodOverview(Carbon $theDate): array
     {
         app('log')->debug(sprintf('Now in getNoCategoryPeriodOverview(%s)', $theDate->format('Y-m-d')));
-        $range       = app('navigation')->getViewRange(true);
-        $first       = $this->journalRepos->firstNull();
-        $start       = null === $first ? new Carbon() : $first->date;
-        $end         = clone $theDate;
-        $end         = app('navigation')->endOfPeriod($end, $range);
+        $range = Navigation::getViewRange(true);
+        $first = $this->journalRepos->firstNull();
+        $start = null === $first ? new Carbon() : $first->date;
+        $end   = clone $theDate;
+        $end   = Navigation::endOfPeriod($end, $range);
 
         app('log')->debug(sprintf('Start for getNoCategoryPeriodOverview() is %s', $start->format('Y-m-d')));
         app('log')->debug(sprintf('End for getNoCategoryPeriodOverview() is %s', $end->format('Y-m-d')));
 
         // properties for cache
-        $dates       = app('navigation')->blockPeriods($start, $end, $range);
-        $entries     = [];
+        $dates   = Navigation::blockPeriods($start, $end, $range);
+        $entries = [];
 
         // collect all expenses in this period:
         /** @var GroupCollectorInterface $collector */
-        $collector   = app(GroupCollectorInterface::class);
+        $collector = app(GroupCollectorInterface::class);
         $collector->withoutCategory();
         $collector->setRange($start, $end);
         $collector->setTypes([TransactionTypeEnum::DEPOSIT->value]);
-        $earnedSet   = $collector->getExtractedJournals();
+        $earnedSet = $collector->getExtractedJournals();
 
         // collect all income in this period:
         /** @var GroupCollectorInterface $collector */
-        $collector   = app(GroupCollectorInterface::class);
+        $collector = app(GroupCollectorInterface::class);
         $collector->withoutCategory();
         $collector->setRange($start, $end);
         $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
-        $spentSet    = $collector->getExtractedJournals();
+        $spentSet = $collector->getExtractedJournals();
 
         // collect all transfers in this period:
         /** @var GroupCollectorInterface $collector */
-        $collector   = app(GroupCollectorInterface::class);
+        $collector = app(GroupCollectorInterface::class);
         $collector->withoutCategory();
         $collector->setRange($start, $end);
         $collector->setTypes([TransactionTypeEnum::TRANSFER->value]);
@@ -422,16 +427,16 @@ trait PeriodOverview
             $spent       = $this->filterJournalsByDate($spentSet, $currentDate['start'], $currentDate['end']);
             $earned      = $this->filterJournalsByDate($earnedSet, $currentDate['start'], $currentDate['end']);
             $transferred = $this->filterJournalsByDate($transferSet, $currentDate['start'], $currentDate['end']);
-            $title       = app('navigation')->periodShow($currentDate['end'], $currentDate['period']);
+            $title       = Navigation::periodShow($currentDate['end'], $currentDate['period']);
             $entries[]
                          = [
-                             'title'              => $title,
-                             'route'              => route('categories.no-category', [$currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
-                             'total_transactions' => count($spent) + count($earned) + count($transferred),
-                             'spent'              => $this->groupByCurrency($spent),
-                             'earned'             => $this->groupByCurrency($earned),
-                             'transferred'        => $this->groupByCurrency($transferred),
-                         ];
+                'title'              => $title,
+                'route'              => route('categories.no-category', [$currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
+                'total_transactions' => count($spent) + count($earned) + count($transferred),
+                'spent'              => $this->groupByCurrency($spent),
+                'earned'             => $this->groupByCurrency($earned),
+                'transferred'        => $this->groupByCurrency($transferred),
+            ];
         }
         app('log')->debug('End of loops');
 
@@ -445,11 +450,11 @@ trait PeriodOverview
      */
     protected function getTagPeriodOverview(Tag $tag, Carbon $start, Carbon $end): array // period overview for tags.
     {
-        $range         = app('navigation')->getViewRange(true);
+        $range = Navigation::getViewRange(true);
         [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
 
         // properties for cache
-        $cache         = new CacheProperties();
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('tag-period-entries');
@@ -459,56 +464,56 @@ trait PeriodOverview
         }
 
         /** @var array $dates */
-        $dates         = app('navigation')->blockPeriods($start, $end, $range);
-        $entries       = [];
+        $dates   = Navigation::blockPeriods($start, $end, $range);
+        $entries = [];
 
         // collect all expenses in this period:
         /** @var GroupCollectorInterface $collector */
-        $collector     = app(GroupCollectorInterface::class);
+        $collector = app(GroupCollectorInterface::class);
         $collector->setTag($tag);
         $collector->setRange($start, $end);
         $collector->setTypes([TransactionTypeEnum::DEPOSIT->value]);
-        $earnedSet     = $collector->getExtractedJournals();
+        $earnedSet = $collector->getExtractedJournals();
 
         // collect all income in this period:
         /** @var GroupCollectorInterface $collector */
-        $collector     = app(GroupCollectorInterface::class);
+        $collector = app(GroupCollectorInterface::class);
         $collector->setTag($tag);
         $collector->setRange($start, $end);
         $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
-        $spentSet      = $collector->getExtractedJournals();
+        $spentSet = $collector->getExtractedJournals();
 
         // collect all transfers in this period:
         /** @var GroupCollectorInterface $collector */
-        $collector     = app(GroupCollectorInterface::class);
+        $collector = app(GroupCollectorInterface::class);
         $collector->setTag($tag);
         $collector->setRange($start, $end);
         $collector->setTypes([TransactionTypeEnum::TRANSFER->value]);
-        $transferSet   = $collector->getExtractedJournals();
+        $transferSet = $collector->getExtractedJournals();
 
         // filer all of them:
-        $earnedSet     = $this->filterJournalsByTag($earnedSet, $tag);
-        $spentSet      = $this->filterJournalsByTag($spentSet, $tag);
-        $transferSet   = $this->filterJournalsByTag($transferSet, $tag);
+        $earnedSet   = $this->filterJournalsByTag($earnedSet, $tag);
+        $spentSet    = $this->filterJournalsByTag($spentSet, $tag);
+        $transferSet = $this->filterJournalsByTag($transferSet, $tag);
 
         foreach ($dates as $currentDate) {
             $spent       = $this->filterJournalsByDate($spentSet, $currentDate['start'], $currentDate['end']);
             $earned      = $this->filterJournalsByDate($earnedSet, $currentDate['start'], $currentDate['end']);
             $transferred = $this->filterJournalsByDate($transferSet, $currentDate['start'], $currentDate['end']);
-            $title       = app('navigation')->periodShow($currentDate['end'], $currentDate['period']);
+            $title       = Navigation::periodShow($currentDate['end'], $currentDate['period']);
             $entries[]
                          = [
-                             'transactions'       => 0,
-                             'title'              => $title,
-                             'route'              => route(
-                                 'tags.show',
-                                 [$tag->id, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]
-                             ),
-                             'total_transactions' => count($spent) + count($earned) + count($transferred),
-                             'spent'              => $this->groupByCurrency($spent),
-                             'earned'             => $this->groupByCurrency($earned),
-                             'transferred'        => $this->groupByCurrency($transferred),
-                         ];
+                'transactions'       => 0,
+                'title'              => $title,
+                'route'              => route(
+                    'tags.show',
+                    [$tag->id, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]
+                ),
+                'total_transactions' => count($spent) + count($earned) + count($transferred),
+                'spent'              => $this->groupByCurrency($spent),
+                'earned'             => $this->groupByCurrency($earned),
+                'transferred'        => $this->groupByCurrency($transferred),
+            ];
         }
 
         return $entries;
@@ -518,7 +523,7 @@ trait PeriodOverview
     {
         $return = [];
         foreach ($set as $entry) {
-            $found    = false;
+            $found = false;
 
             /** @var array $localTag */
             foreach ($entry['tags'] as $localTag) {
@@ -540,12 +545,12 @@ trait PeriodOverview
      */
     protected function getTransactionPeriodOverview(string $transactionType, Carbon $start, Carbon $end): array
     {
-        $range         = app('navigation')->getViewRange(true);
-        $types         = config(sprintf('firefly.transactionTypesByType.%s', $transactionType));
+        $range = Navigation::getViewRange(true);
+        $types = config(sprintf('firefly.transactionTypesByType.%s', $transactionType));
         [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
 
         // properties for cache
-        $cache         = new CacheProperties();
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('transactions-period-entries');
@@ -555,19 +560,19 @@ trait PeriodOverview
         }
 
         /** @var array $dates */
-        $dates         = app('navigation')->blockPeriods($start, $end, $range);
-        $entries       = [];
-        $spent         = [];
-        $earned        = [];
-        $transferred   = [];
+        $dates       = Navigation::blockPeriods($start, $end, $range);
+        $entries     = [];
+        $spent       = [];
+        $earned      = [];
+        $transferred = [];
         // collect all journals in this period (regardless of type)
-        $collector     = app(GroupCollectorInterface::class);
+        $collector = app(GroupCollectorInterface::class);
         $collector->setTypes($types)->setRange($start, $end);
-        $genericSet    = $collector->getExtractedJournals();
-        $loops         = 0;
+        $genericSet = $collector->getExtractedJournals();
+        $loops      = 0;
 
         foreach ($dates as $currentDate) {
-            $title       = app('navigation')->periodShow($currentDate['end'], $currentDate['period']);
+            $title = Navigation::periodShow($currentDate['end'], $currentDate['period']);
 
             if ($loops < 10) {
                 // set to correct array
@@ -582,14 +587,14 @@ trait PeriodOverview
                 }
             }
             $entries[]
-                         = [
-                             'title'              => $title,
-                             'route'              => route('transactions.index', [$transactionType, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
-                             'total_transactions' => count($spent) + count($earned) + count($transferred),
-                             'spent'              => $this->groupByCurrency($spent),
-                             'earned'             => $this->groupByCurrency($earned),
-                             'transferred'        => $this->groupByCurrency($transferred),
-                         ];
+                = [
+                'title'              => $title,
+                'route'              => route('transactions.index', [$transactionType, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
+                'total_transactions' => count($spent) + count($earned) + count($transferred),
+                'spent'              => $this->groupByCurrency($spent),
+                'earned'             => $this->groupByCurrency($earned),
+                'transferred'        => $this->groupByCurrency($transferred),
+            ];
             ++$loops;
         }
 
@@ -605,7 +610,7 @@ trait PeriodOverview
 
         /** @var array $journal */
         foreach ($journals as $journal) {
-            if ($account->id === (int) $journal['source_account_id']) {
+            if ($account->id === (int)$journal['source_account_id']) {
                 $return[] = $journal;
             }
         }
@@ -622,7 +627,7 @@ trait PeriodOverview
 
         /** @var array $journal */
         foreach ($journals as $journal) {
-            if ($account->id === (int) $journal['destination_account_id']) {
+            if ($account->id === (int)$journal['destination_account_id']) {
                 $return[] = $journal;
             }
         }

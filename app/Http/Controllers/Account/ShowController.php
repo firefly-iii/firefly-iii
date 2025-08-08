@@ -117,7 +117,6 @@ class ShowController extends Controller
 
         Log::debug('Start period overview');
         Timer::start('period-overview');
-
         $periods          = $this->getAccountPeriodOverview($account, $firstTransaction, $end);
 
         Log::debug('End period overview');

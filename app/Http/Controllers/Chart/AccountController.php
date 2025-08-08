@@ -416,10 +416,11 @@ class AccountController extends Controller
         $cache = new CacheProperties();
         $cache->addProperty($account->id);
         $cache->addProperty($start);
+        $cache->addProperty($this->convertToPrimary);
         $cache->addProperty($end);
         $cache->addProperty('chart.account.income-category');
         if ($cache->has()) {
-            return response()->json($cache->get());
+             return response()->json($cache->get());
         }
 
         // grab all journals:
@@ -435,15 +436,32 @@ class AccountController extends Controller
         foreach ($journals as $journal) {
             $key = sprintf('%d-%d', $journal['category_id'], $journal['currency_id']);
             if (!array_key_exists($key, $result)) {
+
+                // currency info:
+                $currencyId            = (int)$journal['currency_id'];
+                $currencyName          = $journal['currency_name'];
+                $currencySymbol        = $journal['currency_symbol'];
+                $currencyCode          = $journal['currency_code'];
+                $currencyDecimalPlaces = $journal['currency_decimal_places'];
+                $field                 = 'amount';
+                if ($this->convertToPrimary && $this->primaryCurrency->id !== $currencyId) {
+                    $field                 = 'pc_amount';
+                    $currencyName          = $this->primaryCurrency->name;
+                    $currencySymbol        = $this->primaryCurrency->symbol;
+                    $currencyCode          = $this->primaryCurrency->code;
+                    $currencyDecimalPlaces = $this->primaryCurrency->decimal_places;
+                }
+
                 $result[$key] = [
                     'total'           => '0',
                     'category_id'     => $journal['category_id'],
-                    'currency_name'   => $journal['currency_name'],
-                    'currency_symbol' => $journal['currency_symbol'],
-                    'currency_code'   => $journal['currency_code'],
+                    'currency_name'   => $currencyName,
+                    'currency_code'   => $currencyCode,
+                    'currency_symbol' => $currencySymbol,
+                    'currency_decimal_places' => $currencyDecimalPlaces,
                 ];
             }
-            $result[$key]['total'] = bcadd((string)$journal['amount'], $result[$key]['total']);
+            $result[$key]['total'] = bcadd((string)$journal[$field], $result[$key]['total']);
         }
 
         $names = $this->getCategoryNames(array_keys($result));
