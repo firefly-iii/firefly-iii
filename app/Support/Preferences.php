@@ -284,9 +284,9 @@ class Preferences
      */
     public function lastActivity(): string
     {
-        $instance = PreferencesSingleton::getInstance();
-        $pref     = $instance->getPreference('last_activity');
-        if(null !== $pref) {
+        $instance     = PreferencesSingleton::getInstance();
+        $pref         = $instance->getPreference('last_activity');
+        if (null !== $pref) {
             // Log::debug(sprintf('Found last activity in singleton: %s', $pref));
             return $pref;
         }
@@ -299,8 +299,9 @@ class Preferences
         if (is_array($lastActivity)) {
             $lastActivity = implode(',', $lastActivity);
         }
-        $setting = hash('sha256', (string) $lastActivity);
+        $setting      = hash('sha256', (string) $lastActivity);
         $instance->setPreference('last_activity', $setting);
+
         return $setting;
     }
 
