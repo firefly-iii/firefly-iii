@@ -64,7 +64,7 @@
                         <tbody>
                         <tr>
                             <td style="width:40%;">{{ trans('list.type') }}</td>
-                            <td>{{ first.transactiontype.type|_ }}</td>
+                            <td>{{ first.transaction_type_type|_ }}</td>
                         </tr>
                         <tr>
                             <td>{{ trans('list.description') }}</td>
@@ -113,7 +113,7 @@
                 <div class="box-body no-padding">
                     <table class="table table-hover">
                         <tbody>
-                        {% if first.transactiontype.type != 'Withdrawal' or splits == 1 %}
+                        {% if first.transaction_type_type != 'Withdrawal' or splits == 1 %}
                             <tr>
                                 <td style="width:40%;">
                                     {{ trans_choice('firefly.source_accounts', accounts['source']|length ) }}
@@ -134,7 +134,7 @@
                             </tr>
                         {% endif %}
 
-                        {% if first.transactiontype.type != 'Deposit' or splits == 1 %}
+                        {% if first.transaction_type_type != 'Deposit' or splits == 1 %}
                             <tr>
                                 <td>
                                     {{ trans_choice('firefly.destination_accounts', accounts['destination']|length ) }}
@@ -159,17 +159,17 @@
                             <td style="width:30%;">{{ 'total_amount'|_ }}</td>
                             <td>
                                 {% for amount in amounts %}
-                                    {% if first.transactiontype.type == 'Withdrawal' %}
+                                    {% if first.transaction_type_type == 'Withdrawal' %}
                                         {{ formatAmountBySymbol(amount.amount*-1,amount.symbol, amount.decimal_places) }}{% if loop.index0 != amounts|length -1 %}, {% endif %}
-                                    {% elseif first.transactiontype.type == 'Deposit' %}
+                                    {% elseif first.transaction_type_type == 'Deposit' %}
                                         {{ formatAmountBySymbol(amount.amount,amount.symbol, amount.decimal_places) }}{% if loop.index0 != amounts|length -1 %}, {% endif %}
-                                    {% elseif first.transactiontype.type == 'Transfer' %}
+                                    {% elseif first.transaction_type_type == 'Transfer' %}
                                         <span class="text-info money-transfer">
                                         {{ formatAmountBySymbol(amount.amount, amount.symbol, amount.decimal_places, false) }}{% if loop.index0 != amounts|length -1 %}, {% endif %}
                                     </span>
-                                    {% elseif first.transactiontype.type == 'Opening balance' %}
+                                    {% elseif first.transaction_type_type == 'Opening balance' %}
                                         {# Opening balance stored amount is always negative: find out which way the money goes #}
-                                        {% if groupArray.transactions[0].source_type == 'Initial balance account' %}
+                                        {% if groupArray.transactions[0].source_account_type == 'Initial balance account' %}
                                             {{ formatAmountBySymbol(amount.amount*-1,amount.symbol, amount.decimal_places) }}
                                         {% else %}
                                             {{ formatAmountBySymbol(amount.amount,amount.symbol, amount.decimal_places) }}
@@ -202,7 +202,7 @@
         {% set boxSize = 4 %}
     {% endif %}
     <div class="row">
-        {% for index,journal in groupArray.transactions %}
+        {% for index,journal in selectedGroup.transactions %}
             <div class="col-lg-{{ boxSize }}">
                 <div class="box">
                     <div class="box-header with-border">
@@ -289,48 +289,74 @@
                         <table class="table">
                             <tr>
                                 <td colspan="2">
-
-                                    <!-- type is: "{{ first.transactiontype.type }}" -->
-                                    {% if 'Cash account' == journal.source_type %}
+                                    <!-- type is: "{{ first.transaction_type_type }}" -->
+                                    {% if 'Cash account' == journal.source_account_type %}
                                         <span class="text-success">({{ 'cash'|_ }})</span>
                                     {% else %}
-                                        <a href="{{ route('accounts.show', journal.source_id) }}"
-                                           title="{{ journal.source_iban|default(journal.source_name) }}">{{ journal.source_name }}</a> &rarr;
+                                        <a href="{{ route('accounts.show', journal.source_account_id) }}"
+                                           title="{{ journal.source_iban|default(journal.source_account_name) }}">{{ journal.source_account_name }}</a> &rarr;
                                     {% endif %}
 
-                                    {% if first.transactiontype.type == 'Withdrawal' %}
+                                    {% if first.transaction_type_type == 'Withdrawal' %}
                                         {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
-                                    {% elseif first.transactiontype.type == 'Deposit' %}
+                                    {% elseif first.transaction_type_type == 'Deposit' %}
                                         {{ formatAmountBySymbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places) }}
-                                    {% elseif first.transactiontype.type == 'Transfer' or first.transactiontype.type == 'Opening balance' %}
+                                    {% elseif first.transaction_type_type == 'Transfer' or first.transaction_type_type == 'Opening balance' %}
                                         <span class="text-info money-transfer">
                                         {{ formatAmountBySymbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places, false) }}
                                     </span>
-                                    {% elseif first.transactiontype.type == 'Liability credit' %}
+                                    {% elseif first.transaction_type_type == 'Liability credit' %}
                                         <span class="text-info money-transfer">
                                         {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places, false) }}
                                     </span>
                                     {% endif %}
 
+                                    <!-- do primary currency amount -->
+                                    {% if null != journal.pc_amount and primaryCurrency.id != journal.currency_id %}
+                                        {% if first.transaction_type_type == 'Withdrawal' %}
+                                            ({{ formatAmountBySymbol(journal.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                        {% elseif first.transaction_type_type == 'Deposit' %}
+                                            ({{ formatAmountBySymbol(journal.pc_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                        {% elseif first.transaction_type_type == 'Transfer' %}
+                                            <span class="text-info money-transfer">
+                                        ({{ formatAmountBySymbol(journal.pc_amount, primaryCurrency.symbol, primaryCurrency.decimal_places, false) }})
+                                    </span>
+                                        {% endif %}
+                                    {% endif %}
+
                                     <!-- do foreign amount -->
                                     {% if null != journal.foreign_amount %}
-                                        {% if first.transactiontype.type == 'Withdrawal' %}
+                                        {% if first.transaction_type_type == 'Withdrawal' %}
                                             ({{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }})
-                                        {% elseif first.transactiontype.type == 'Deposit' %}
+                                        {% elseif first.transaction_type_type == 'Deposit' %}
                                             ({{ formatAmountBySymbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }})
-                                        {% elseif first.transactiontype.type == 'Transfer' %}
+                                        {% elseif first.transaction_type_type == 'Transfer' %}
                                             <span class="text-info money-transfer">
                                         ({{ formatAmountBySymbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }})
                                     </span>
                                         {% endif %}
                                     {% endif %}
 
+                                    <!-- do foreign PC amount -->
+                                    {% if null != journal.pc_foreign_amount %}
+                                        {% if first.transaction_type_type == 'Withdrawal' %}
+                                            ({{ formatAmountBySymbol(journal.pc_foreign_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                        {% elseif first.transaction_type_type == 'Deposit' %}
+                                            ({{ formatAmountBySymbol(journal.pc_foreign_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                        {% elseif first.transaction_type_type == 'Transfer' %}
+                                            <span class="text-info money-transfer">
+                                        ({{ formatAmountBySymbol(journal.pc_foreign_amount, primaryCurrency.symbol, primaryCurrency.decimal_places, false) }})
+                                    </span>
+                                        {% endif %}
+                                    {% endif %}
+
+
                                     &rarr;
-                                    {% if 'Cash account' == journal.destination_type %}
+                                    {% if 'Cash account' == journal.destination_account_type %}
                                         <span class="text-success">({{ 'cash'|_ }})</span>
                                     {% else %}
-                                        <a href="{{ route('accounts.show', journal.destination_id) }}"
-                                           title="{{ journal.destination_iban|default(journal.destination_name) }}">{{ journal.destination_name }}</a>
+                                        <a href="{{ route('accounts.show', journal.destination_account_id) }}"
+                                           title="{{ journal.destination_iban|default(journal.destination_account_name) }}">{{ journal.destination_account_name }}</a>
                                     {% endif %}
                                 </td>
                             </tr>
@@ -346,7 +372,7 @@
                                     </td>
                                 </tr>
                             {% endif %}
-                            {% if null != journal.budget_id and first.transactiontype.type == 'Withdrawal' %}
+                            {% if null != journal.budget_id and first.transaction_type_type == 'Withdrawal' %}
                                 <tr>
                                     <td style="width:40%;">{{ 'budget'|_ }}</td>
                                     <td>
@@ -354,7 +380,7 @@
                                     </td>
                                 </tr>
                             {% endif %}
-                            {% if null != journal.bill_id and first.transactiontype.type == 'Withdrawal' %}
+                            {% if null != journal.bill_id and first.transaction_type_type == 'Withdrawal' %}
                                 <tr>
                                     <td style="width:40%;">{{ 'bill'|_ }}</td>
                                     <td>

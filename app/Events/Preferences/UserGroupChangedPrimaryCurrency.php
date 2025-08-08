@@ -35,6 +35,6 @@ class UserGroupChangedPrimaryCurrency extends Event
 
     public function __construct(public UserGroup $userGroup)
     {
-        Log::debug('User group changed default currency.');
+        Log::debug('User group changed primary currency.');
     }
 }

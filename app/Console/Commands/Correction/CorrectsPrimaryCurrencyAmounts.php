@@ -40,6 +40,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\UserGroup\UserGroupRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Console\Command;
@@ -72,6 +73,8 @@ class CorrectsPrimaryCurrencyAmounts extends Command
         /** @var UserGroupRepositoryInterface $repository */
         $repository = app(UserGroupRepositoryInterface::class);
 
+        Preferences::mark();
+
         /** @var UserGroup $userGroup */
         foreach ($repository->getAll() as $userGroup) {
             $this->recalculateForGroup($userGroup);
@@ -87,8 +90,7 @@ class CorrectsPrimaryCurrencyAmounts extends Command
         $this->recalculateAccounts($userGroup);
 
         // do a check with the group's currency so we can skip some stuff.
-        Preferences::mark();
-        $currency = app('amount')->getPrimaryCurrencyByUserGroup($userGroup);
+        $currency = Amount::getPrimaryCurrencyByUserGroup($userGroup);
 
         $this->recalculatePiggyBanks($userGroup, $currency);
         $this->recalculateBudgets($userGroup, $currency);

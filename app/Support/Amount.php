@@ -117,18 +117,23 @@ class Amount
     public function convertToPrimary(?User $user = null): bool
     {
         $instance = PreferencesSingleton::getInstance();
-        $pref     = $instance->getPreference('convert_to_primary');
-        if (null === $pref) {
-            if (!$user instanceof User) {
+        if (!$user instanceof User) {
+            $pref = $instance->getPreference('convert_to_primary_no_user');
+            if (null === $pref) {
                 $res = true === Preferences::get('convert_to_primary', false)->data && true === config('cer.enabled');
-                $instance->setPreference('convert_to_primary', $res);
+                $instance->setPreference('convert_to_primary_no_user', $res);
                 return $res;
             }
-
+            return $pref;
+        }
+        $key = sprintf('convert_to_primary_%d', $user->id);
+        $pref = $instance->getPreference($key);
+        if(null === $pref) {
             $res = true === Preferences::getForUser($user, 'convert_to_primary', false)->data && true === config('cer.enabled');
-            $instance->setPreference('convert_to_primary', $res);
+            $instance->setPreference($key, $res);
             return $res;
         }
+
         return $pref;
     }
 

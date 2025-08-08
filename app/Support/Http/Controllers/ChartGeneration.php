@@ -56,7 +56,7 @@ trait ChartGeneration
         $cache->addProperty($accounts);
         $cache->addProperty($convertToPrimary);
         if ($cache->has()) {
-            return $cache->get();
+             return $cache->get();
         }
         Log::debug('Regenerate chart.account.account-balance-chart from scratch.');
         $locale           = app('steam')->getLocale();
@@ -67,7 +67,7 @@ trait ChartGeneration
         /** @var AccountRepositoryInterface $accountRepos */
         $accountRepos     = app(AccountRepositoryInterface::class);
 
-        $default          = app('amount')->getPrimaryCurrency();
+        $primary          = app('amount')->getPrimaryCurrency();
         $chartData        = [];
 
         Log::debug(sprintf('Start of accountBalanceChart(list, %s, %s)', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
@@ -75,10 +75,10 @@ trait ChartGeneration
         /** @var Account $account */
         foreach ($accounts as $account) {
             Log::debug(sprintf('Now at account #%d ("%s)', $account->id, $account->name));
-            $currency     = $accountRepos->getAccountCurrency($account) ?? $default;
-            $usePrimary   = $convertToPrimary && $default->id !== $currency->id;
+            $currency     = $accountRepos->getAccountCurrency($account) ?? $primary;
+            $usePrimary   = $convertToPrimary && $primary->id !== $currency->id;
             $field        = $convertToPrimary ? 'pc_balance' : 'balance';
-            $currency     = $usePrimary ? $default : $currency;
+            $currency     = $usePrimary ? $primary : $currency;
             Log::debug(sprintf('Will use field %s', $field));
             $currentSet   = [
                 'label'           => $account->name,

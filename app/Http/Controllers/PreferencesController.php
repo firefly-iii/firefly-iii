@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use FireflyIII\Support\Singleton\PreferencesSingleton;
 use JsonException;
 use Carbon\Carbon;
 use FireflyIII\Enums\AccountTypeEnum;
@@ -269,7 +270,9 @@ class PreferencesController extends Controller
         if ($convertToPrimary && !$this->convertToPrimary) {
             // set to true!
             Log::debug('User sets convertToPrimary to true.');
-            Preferences::set('convert_to_primary', $convertToPrimary);
+            Preferences::set('convert_to_primary', true);
+            $singleton = PreferencesSingleton::getInstance();
+            $singleton->resetPreferences();
             event(new UserGroupChangedPrimaryCurrency(auth()->user()->userGroup));
         }
         Preferences::set('convert_to_primary', $convertToPrimary);

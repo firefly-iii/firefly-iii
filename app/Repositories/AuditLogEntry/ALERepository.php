@@ -52,4 +52,10 @@ class ALERepository implements ALERepositoryInterface
 
         return $auditLogEntry;
     }
+
+    public function getForId(string $model, int $modelId): Collection
+    {
+        // all Models have an ID.
+        return AuditLogEntry::where('auditable_id', $modelId)->where('auditable_type', $model)->get();
+    }
 }

@@ -73,6 +73,7 @@ class PreferencesEventHandler
         $repository = app(PiggyBankRepositoryInterface::class);
         $repository->setUserGroup($userGroup);
         $piggyBanks = $repository->getPiggyBanks();
+        Log::debug(sprintf('Resetting %d piggy bank(s).', $piggyBanks->count()));
 
         /** @var PiggyBank $piggyBank */
         foreach ($piggyBanks as $piggyBank) {
@@ -103,6 +104,8 @@ class PreferencesEventHandler
         $repository = app(BudgetRepositoryInterface::class);
         $repository->setUserGroup($userGroup);
         $set        = $repository->getBudgets();
+
+        Log::debug(sprintf('Resetting %d budget(s).', $set->count()));
 
         /** @var Budget $budget */
         foreach ($set as $budget) {

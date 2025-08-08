@@ -22,6 +22,10 @@ class PreferencesSingleton
         return self::$instance;
     }
 
+    public function resetPreferences(): void {
+        $this->preferences = [];
+    }
+
     public function setPreference(string $key, mixed $value): void
     {
         $this->preferences[$key] = $value;
