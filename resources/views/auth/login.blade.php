@@ -56,8 +56,12 @@
                     <div class="input-group-text"> <em class="fa-solid fa-user"></em> </div>
                 </div>
                 @endif
-                <div class="input-group mb-3"> <input type="password" name="password" class="form-control" placeholder="{{ trans('form.password') }}" @if(true===$IS_DEMO_SITE)value="{{ $DEMO_PASSWORD }}"@endif autocomplete="current-password">
-                    <div class="input-group-text"> <em class="fa-solid fa-lock"></em> </div>
+                <div class="input-group mb-3">
+                    <input type="password" id="password" name="password" class="form-control" placeholder="{{ trans('form.password') }}" @if(true===$IS_DEMO_SITE)value="{{ $DEMO_PASSWORD }}"@endif autocomplete="current-password">
+                    <div class="input-group-text">
+                        <em class="fa-solid fa-lock"></em>
+                        <i class="fa-solid fa-eye-slash fa-eye" id="togglePassword"></i>
+                    </div>
                 </div> <!--begin::Row-->
                 <div class="row">
                     <div class="col-8">
@@ -79,4 +83,22 @@
         </div> <!-- /.login-card-body -->
     </div>
 
+@endsection
+@section('scripts')
+<script nonce="{{ $JS_NONCE }}">
+    const togglePassword = document.querySelector('#togglePassword');
+    const password = document.querySelector('#password');
+    togglePassword.addEventListener('click', () => {
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        if('text' === type) {
+            togglePassword.classList.add('fa-eye');
+            togglePassword.classList.remove('fa-eye-slash');
+        }
+        if('password' === type) {
+            togglePassword.classList.add('fa-eye-slash');
+            togglePassword.classList.remove('fa-eye');
+        }
+        password.setAttribute('type', type);
+    });
+</script>
 @endsection
