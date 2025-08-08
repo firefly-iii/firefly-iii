@@ -1,28 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\Support\Singleton;
 
 class PreferencesSingleton
 {
     private static ?PreferencesSingleton $instance = null;
 
-    private array $preferences = [];
+    private array $preferences                     = [];
 
     private function __construct()
     {
         // Private constructor to prevent direct instantiation.
     }
 
-    public static function getInstance(): PreferencesSingleton
+    public static function getInstance(): self
     {
-        if (self::$instance === null) {
-            self::$instance = new PreferencesSingleton();
+        if (null === self::$instance) {
+            self::$instance = new self();
         }
 
         return self::$instance;
     }
 
-    public function resetPreferences(): void {
+    public function resetPreferences(): void
+    {
         $this->preferences = [];
     }
 
@@ -35,5 +38,4 @@ class PreferencesSingleton
     {
         return $this->preferences[$key] ?? null;
     }
-
 }

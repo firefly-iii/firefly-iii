@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Chart;
 
-
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Chart\ChartRequest;
 use FireflyIII\Enums\TransactionTypeEnum;
@@ -43,7 +42,7 @@ class BalanceController extends Controller
                 $userGroup        = $this->validateUserGroup($request);
                 $this->repository->setUserGroup($userGroup);
                 $this->collector->setUserGroup($userGroup);
-                $this->chartData = new ChartData();
+                $this->chartData  = new ChartData();
                 // $this->default    = app('amount')->getPrimaryCurrency();
 
                 return $next($request);
@@ -69,17 +68,18 @@ class BalanceController extends Controller
 
         // prepare for currency conversion and data collection:
         /** @var TransactionCurrency $primary */
-        $primary = Amount::getPrimaryCurrency();
+        $primary         = Amount::getPrimaryCurrency();
 
         // get journals for entire period:
 
         $this->collector->setRange($queryParameters['start'], $queryParameters['end'])
-                        ->withAccountInformation()
-                        ->setXorAccounts($accounts)
-                        ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::RECONCILIATION->value, TransactionTypeEnum::TRANSFER->value]);
-        $journals = $this->collector->getExtractedJournals();
+            ->withAccountInformation()
+            ->setXorAccounts($accounts)
+            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::RECONCILIATION->value, TransactionTypeEnum::TRANSFER->value])
+        ;
+        $journals        = $this->collector->getExtractedJournals();
 
-        $object = new AccountBalanceGrouped();
+        $object          = new AccountBalanceGrouped();
         $object->setPreferredRange($queryParameters['period']);
         $object->setPrimary($primary);
         $object->setAccounts($accounts);
@@ -87,7 +87,7 @@ class BalanceController extends Controller
         $object->setStart($queryParameters['start']);
         $object->setEnd($queryParameters['end']);
         $object->groupByCurrencyAndPeriod();
-        $data = $object->convertToChartData();
+        $data            = $object->convertToChartData();
         foreach ($data as $entry) {
             $this->chartData->add($entry);
         }
