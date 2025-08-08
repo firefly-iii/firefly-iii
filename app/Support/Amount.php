@@ -29,9 +29,9 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Support\Facades\Preferences;
+use FireflyIII\Support\Singleton\PreferencesSingleton;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use NumberFormatter;
 
 /**
@@ -58,15 +58,15 @@ class Amount
      */
     public function formatFlat(string $symbol, int $decimalPlaces, string $amount, ?bool $coloured = null): string
     {
-        $locale  = app('steam')->getLocale();
-        $rounded = app('steam')->bcround($amount, $decimalPlaces);
+        $locale   = app('steam')->getLocale();
+        $rounded  = app('steam')->bcround($amount, $decimalPlaces);
         $coloured ??= true;
 
-        $fmt     = new NumberFormatter($locale, NumberFormatter::CURRENCY);
+        $fmt = new NumberFormatter($locale, NumberFormatter::CURRENCY);
         $fmt->setSymbol(NumberFormatter::CURRENCY_SYMBOL, $symbol);
         $fmt->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, $decimalPlaces);
         $fmt->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $decimalPlaces);
-        $result  = (string)$fmt->format((float)$rounded); // intentional float
+        $result = (string)$fmt->format((float)$rounded); // intentional float
 
         if (true === $coloured) {
             if (1 === bccomp((string)$rounded, '0')) {
@@ -116,11 +116,20 @@ class Amount
 
     public function convertToPrimary(?User $user = null): bool
     {
-        if (!$user instanceof User) {
-            return true === Preferences::get('convert_to_primary', false)->data && true === config('cer.enabled');
-        }
+        $instance = PreferencesSingleton::getInstance();
+        $pref     = $instance->getPreference('convert_to_primary');
+        if (null === $pref) {
+            if (!$user instanceof User) {
+                $res = true === Preferences::get('convert_to_primary', false)->data && true === config('cer.enabled');
+                $instance->setPreference('convert_to_primary', $res);
+                return $res;
+            }
 
-        return true === Preferences::getForUser($user, 'convert_to_primary', false)->data && true === config('cer.enabled');
+            $res = true === Preferences::getForUser($user, 'convert_to_primary', false)->data && true === config('cer.enabled');
+            $instance->setPreference('convert_to_primary', $res);
+            return $res;
+        }
+        return $pref;
     }
 
     public function getPrimaryCurrency(): TransactionCurrency
@@ -138,7 +147,7 @@ class Amount
 
     public function getPrimaryCurrencyByUserGroup(UserGroup $userGroup): TransactionCurrency
     {
-        $cache   = new CacheProperties();
+        $cache = new CacheProperties();
         $cache->addProperty('getPrimaryCurrencyByGroup');
         $cache->addProperty($userGroup->id);
         if ($cache->has()) {
@@ -168,16 +177,16 @@ class Amount
      */
     public function getAmountFromJournalObject(TransactionJournal $journal): string
     {
-        $convertToPrimary  = $this->convertToPrimary();
-        $currency          = $this->getPrimaryCurrency();
-        $field             = $convertToPrimary && $currency->id !== $journal->transaction_currency_id ? 'pc_amount' : 'amount';
+        $convertToPrimary = $this->convertToPrimary();
+        $currency         = $this->getPrimaryCurrency();
+        $field            = $convertToPrimary && $currency->id !== $journal->transaction_currency_id ? 'pc_amount' : 'amount';
 
         /** @var null|Transaction $sourceTransaction */
         $sourceTransaction = $journal->transactions()->where('amount', '<', 0)->first();
         if (null === $sourceTransaction) {
             return '0';
         }
-        $amount            = $sourceTransaction->{$field} ?? '0';
+        $amount = $sourceTransaction->{$field} ?? '0';
         if ((int)$sourceTransaction->foreign_currency_id === $currency->id) {
             // use foreign amount instead!
             $amount = (string)$sourceTransaction->foreign_amount; // hard coded to be foreign amount.
@@ -225,20 +234,20 @@ class Amount
     private function getLocaleInfo(): array
     {
         // get config from preference, not from translation:
-        $locale                    = app('steam')->getLocale();
-        $array                     = app('steam')->getLocaleArray($locale);
+        $locale = app('steam')->getLocale();
+        $array  = app('steam')->getLocaleArray($locale);
 
         setlocale(LC_MONETARY, $array);
-        $info                      = localeconv();
+        $info = localeconv();
 
         // correct variables
-        $info['n_cs_precedes']     = $this->getLocaleField($info, 'n_cs_precedes');
-        $info['p_cs_precedes']     = $this->getLocaleField($info, 'p_cs_precedes');
+        $info['n_cs_precedes'] = $this->getLocaleField($info, 'n_cs_precedes');
+        $info['p_cs_precedes'] = $this->getLocaleField($info, 'p_cs_precedes');
 
-        $info['n_sep_by_space']    = $this->getLocaleField($info, 'n_sep_by_space');
-        $info['p_sep_by_space']    = $this->getLocaleField($info, 'p_sep_by_space');
+        $info['n_sep_by_space'] = $this->getLocaleField($info, 'n_sep_by_space');
+        $info['p_sep_by_space'] = $this->getLocaleField($info, 'p_sep_by_space');
 
-        $fmt                       = new NumberFormatter($locale, NumberFormatter::CURRENCY);
+        $fmt = new NumberFormatter($locale, NumberFormatter::CURRENCY);
 
         $info['mon_decimal_point'] = $fmt->getSymbol(NumberFormatter::MONETARY_SEPARATOR_SYMBOL);
         $info['mon_thousands_sep'] = $fmt->getSymbol(NumberFormatter::MONETARY_GROUPING_SEPARATOR_SYMBOL);
@@ -270,11 +279,11 @@ class Amount
 
         // there are five possible positions for the "+" or "-" sign (if it is even used)
         // pos_a and pos_e could be the ( and ) symbol.
-        $posA  = ''; // before everything
-        $posB  = ''; // before currency symbol
-        $posC  = ''; // after currency symbol
-        $posD  = ''; // before amount
-        $posE  = ''; // after everything
+        $posA = ''; // before everything
+        $posB = ''; // before currency symbol
+        $posC = ''; // after currency symbol
+        $posD = ''; // before amount
+        $posE = ''; // after everything
 
         // format would be (currency before amount)
         // AB%sC_D%vE
@@ -316,9 +325,9 @@ class Amount
         }
 
         if ($csPrecedes) {
-            return $posA.$posB.'%s'.$posC.$space.$posD.'%v'.$posE;
+            return $posA . $posB . '%s' . $posC . $space . $posD . '%v' . $posE;
         }
 
-        return $posA.$posD.'%v'.$space.$posB.'%s'.$posC.$posE;
+        return $posA . $posD . '%v' . $space . $posB . '%s' . $posC . $posE;
     }
 }
