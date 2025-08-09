@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\Events\Model\Bill;
 
 use FireflyIII\Events\Event;

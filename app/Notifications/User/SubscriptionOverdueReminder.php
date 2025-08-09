@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\Notifications\User;
 
 use Carbon\Carbon;
@@ -42,9 +44,9 @@ class SubscriptionOverdueReminder extends Notification
         );
 
         return new MailMessage()
-            ->markdown('emails.subscription-overdue-warning', ['bill' => $this->bill,'dates' => $this->dates])
+            ->markdown('emails.subscription-overdue-warning', ['bill' => $this->bill, 'dates' => $this->dates])
             ->subject($this->getSubject())
-            ;
+        ;
     }
 
     private function getSubject(): string
@@ -69,8 +71,8 @@ class SubscriptionOverdueReminder extends Notification
     public function toPushover(User $notifiable): PushoverMessage
     {
         return PushoverMessage::create((string) trans('email.bill_warning_please_action'))
-                              ->title($this->getSubject())
-            ;
+            ->title($this->getSubject())
+        ;
     }
 
     /**
@@ -87,7 +89,7 @@ class SubscriptionOverdueReminder extends Notification
                 $attachment->title((string) trans('firefly.visit_bill', ['name' => $bill->name]), $url);
             })
             ->content($this->getSubject())
-            ;
+        ;
     }
 
     /**
@@ -97,5 +99,4 @@ class SubscriptionOverdueReminder extends Notification
     {
         return ReturnsAvailableChannels::returnChannels('user', $notifiable);
     }
-
 }

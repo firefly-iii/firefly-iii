@@ -252,6 +252,7 @@ class Cron extends Command
             $this->friendlyPositive(sprintf('"Send bill warnings" cron ran with success: %s', $autoBudget->message));
         }
     }
+
     private function webhookCronJob(bool $force, ?Carbon $date): void
     {
         $webhook = new WebhookCronjob();

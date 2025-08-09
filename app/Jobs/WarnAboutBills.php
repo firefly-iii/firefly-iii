@@ -55,12 +55,12 @@ class WarnAboutBills implements ShouldQueue
      */
     public function __construct(?Carbon $date)
     {
-        $newDate = new Carbon();
+        $newDate     = new Carbon();
         $newDate->startOfDay();
-        $this->date = $newDate;
+        $this->date  = $newDate;
 
         if ($date instanceof Carbon) {
-            $newDate = clone $date;
+            $newDate    = clone $date;
             $newDate->startOfDay();
             $this->date = $newDate;
         }
@@ -148,7 +148,7 @@ class WarnAboutBills implements ShouldQueue
 
     public function setDate(Carbon $date): void
     {
-        $newDate = clone $date;
+        $newDate    = clone $date;
         $newDate->startOfDay();
         $this->date = $newDate;
     }
@@ -168,7 +168,8 @@ class WarnAboutBills implements ShouldQueue
         $enrichment->setUser($bill->user);
         $enrichment->setStart($start);
         $enrichment->setEnd($end);
-        $single = $enrichment->enrichSingle($bill);
+        $single     = $enrichment->enrichSingle($bill);
+
         return [
             'pay_dates'  => $single->meta['pay_dates'] ?? [],
             'paid_dates' => $single->meta['paid_dates'] ?? [],
@@ -177,19 +178,20 @@ class WarnAboutBills implements ShouldQueue
 
     private function needsOverdueAlert(array $dates): bool
     {
-        $count = count($dates['pay_dates']) - count($dates['paid_dates']);
+        $count    = count($dates['pay_dates']) - count($dates['paid_dates']);
         if (0 === $count || 0 === count($dates['pay_dates'])) {
             return false;
         }
         // the earliest date in the list of pay dates must be 48hrs or more ago.
         $earliest = new Carbon($dates['pay_dates'][0]);
         $earliest->startOfDay();
-        Log::debug(sprintf('Earliest expected pay date is %s' , $earliest->toAtomString()));
-        $diff = $earliest->diffInDays($this->date);
+        Log::debug(sprintf('Earliest expected pay date is %s', $earliest->toAtomString()));
+        $diff     = $earliest->diffInDays($this->date);
         Log::debug(sprintf('Difference in days is %s', $diff));
         if ($diff < 2) {
             return false;
         }
+
         return true;
     }
 
