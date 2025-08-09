@@ -92,7 +92,7 @@ class SubscriptionsOverdueReminder extends Notification
      */
     public function toSlack(User $notifiable): SlackMessage
     {
-        $url  = route('bills.index');
+        $url = route('bills.index');
 
         return new SlackMessage()
             ->warning()
