@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FireflyIII\Events\Model\Bill;
 
 use FireflyIII\Events\Event;
-use FireflyIII\Models\Bill;
 use FireflyIII\User;
 use Illuminate\Queue\SerializesModels;
 

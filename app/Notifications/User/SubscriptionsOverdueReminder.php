@@ -18,9 +18,7 @@ class SubscriptionsOverdueReminder extends Notification
 {
     use Queueable;
 
-    public function __construct(private array $overdue)
-    {
-    }
+    public function __construct(private array $overdue) {}
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
@@ -37,7 +35,7 @@ class SubscriptionsOverdueReminder extends Notification
     public function toMail(User $notifiable): MailMessage
     {
         // format the data
-        $info = [];
+        $info  = [];
         $count = 0;
         foreach ($this->overdue as $item) {
             $current              = [
@@ -46,13 +44,17 @@ class SubscriptionsOverdueReminder extends Notification
             $current['pay_dates'] = array_map(
                 static function (string $date): string {
                     return new Carbon($date)->isoFormat((string)trans('config.month_and_day_moment_js'));
-                }, $item['dates']['pay_dates']);
+                },
+                $item['dates']['pay_dates']
+            );
             $info[]               = $current;
-            $count++;
+            ++$count;
         }
+
         return new MailMessage()
-            ->markdown('emails.subscriptions-overdue-warning', ['info' => $info,'count' => $count])
-            ->subject($this->getSubject());
+            ->markdown('emails.subscriptions-overdue-warning', ['info' => $info, 'count' => $count])
+            ->subject($this->getSubject())
+        ;
     }
 
     private function getSubject(): string
@@ -60,6 +62,7 @@ class SubscriptionsOverdueReminder extends Notification
         if (count($this->overdue) > 1) {
             return (string)trans('email.subscriptions_overdue_subject_multi', ['count' => count($this->overdue)]);
         }
+
         return (string)trans('email.subscriptions_overdue_subject_single');
     }
 
@@ -80,7 +83,8 @@ class SubscriptionsOverdueReminder extends Notification
     public function toPushover(User $notifiable): PushoverMessage
     {
         return PushoverMessage::create((string)trans('email.bill_warning_please_action'))
-                              ->title($this->getSubject());
+            ->title($this->getSubject())
+        ;
     }
 
     /**
@@ -96,7 +100,8 @@ class SubscriptionsOverdueReminder extends Notification
             ->attachment(static function ($attachment) use ($bill, $url): void {
                 $attachment->title((string)trans('firefly.visit_bill', ['name' => $bill->name]), $url);
             })
-            ->content($this->getSubject());
+            ->content($this->getSubject())
+        ;
     }
 
     /**
