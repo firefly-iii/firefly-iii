@@ -321,6 +321,7 @@ class Steam
 
     public function accountsBalancesOptimized(Collection $accounts, Carbon $date, ?TransactionCurrency $primary = null, ?bool $convertToPrimary = null): array
     {
+        Log::debug(sprintf('accountsBalancesOptimized: Called with date/time "%s"', $date->toIso8601String()));
         $result     = [];
         $convertToPrimary ??= Amount::convertToPrimary();
         $primary          ??= Amount::getPrimaryCurrency();

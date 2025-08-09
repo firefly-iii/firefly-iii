@@ -116,8 +116,8 @@ class AccountController extends Controller
         // grab all balances
         Log::debug(sprintf('expenseAccounts: finalAccountsBalance("%s")', $start->format('Y-m-d H:i:s')));
         Log::debug(sprintf('expenseAccounts: finalAccountsBalance("%s")', $end->format('Y-m-d H:i:s')));
-        $startBalances = Steam::finalAccountsBalance($accounts, $start, $this->primaryCurrency, $this->convertToPrimary);
-        $endBalances   = Steam::finalAccountsBalance($accounts, $end, $this->primaryCurrency, $this->convertToPrimary);
+        $startBalances = Steam::accountsBalancesOptimized($accounts, $start, $this->primaryCurrency, $this->convertToPrimary);
+        $endBalances   = Steam::accountsBalancesOptimized($accounts, $end, $this->primaryCurrency, $this->convertToPrimary);
 
         // loop the accounts, then check for balance and currency info.
         foreach ($accounts as $account) {
@@ -656,8 +656,8 @@ class AccountController extends Controller
         // grab all balances
         Log::debug(sprintf('revAccounts: finalAccountsBalance("%s")', $start->format('Y-m-d H:i:s')));
         Log::debug(sprintf('revAccounts: finalAccountsBalance("%s")', $end->format('Y-m-d H:i:s')));
-        $startBalances = Steam::finalAccountsBalance($accounts, $start);
-        $endBalances   = Steam::finalAccountsBalance($accounts, $end);
+        $startBalances = Steam::accountsBalancesOptimized($accounts, $start);
+        $endBalances   = Steam::accountsBalancesOptimized($accounts, $end);
 
 
         // loop the accounts, then check for balance and currency info.

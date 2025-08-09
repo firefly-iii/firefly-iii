@@ -52,8 +52,8 @@ class AccountTasker implements AccountTaskerInterface, UserGroupInterface
         $end->endOfDay();                 // needs to be end of day to be correct.
         Log::debug(sprintf('getAccountReport: finalAccountsBalance("%s")', $yesterday->format('Y-m-d H:i:s')));
         Log::debug(sprintf('getAccountReport: finalAccountsBalance("%s")', $end->format('Y-m-d H:i:s')));
-        $startSet        = Steam::finalAccountsBalance($accounts, $yesterday);
-        $endSet          = Steam::finalAccountsBalance($accounts, $end);
+        $startSet        = Steam::accountsBalancesOptimized($accounts, $yesterday);
+        $endSet          = Steam::accountsBalancesOptimized($accounts, $end);
         Log::debug('Start of accountreport');
 
         /** @var AccountRepositoryInterface $repository */

@@ -95,8 +95,8 @@ class IndexController extends Controller
         $ids           = $accounts->pluck('id')->toArray();
         Log::debug(sprintf('inactive start: finalAccountsBalance("%s")', $start->format('Y-m-d H:i:s')));
         Log::debug(sprintf('inactive end: finalAccountsBalance("%s")', $end->format('Y-m-d H:i:s')));
-        $startBalances = Steam::finalAccountsBalance($accounts, $start);
-        $endBalances   = Steam::finalAccountsBalance($accounts, $end);
+        $startBalances = Steam::accountsBalancesOptimized($accounts, $start);
+        $endBalances   = Steam::accountsBalancesOptimized($accounts, $end);
         $activities    = Steam::getLastActivities($ids);
 
 
@@ -172,8 +172,8 @@ class IndexController extends Controller
         $ids           = $accounts->pluck('id')->toArray();
         Log::debug(sprintf('index start: finalAccountsBalance("%s")', $start->format('Y-m-d H:i:s')));
         Log::debug(sprintf('index end: finalAccountsBalance("%s")', $end->format('Y-m-d H:i:s')));
-        $startBalances = Steam::finalAccountsBalance($accounts, $start);
-        $endBalances   = Steam::finalAccountsBalance($accounts, $end);
+        $startBalances = Steam::accountsBalancesOptimized($accounts, $start);
+        $endBalances   = Steam::accountsBalancesOptimized($accounts, $end);
         $activities    = Steam::getLastActivities($ids);
 
 
