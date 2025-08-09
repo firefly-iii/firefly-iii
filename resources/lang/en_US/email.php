@@ -141,8 +141,10 @@ return [
     // subscription is overdue.
     'subscriptions_overdue_subject_multi'               => 'You have :count subscriptions that are overdue to be paid',
     'subscriptions_overdue_subject_single'               => 'You have a subscription that is overdue to be paid',
-    'subscriptions_overdue_warning_intro' => 'You have :count subscription(s) that are overdue to be paid. At the following date(s) a payment was expected, but it has not yet arrived.',
-    'subscriptions_overdue_please_action' => 'Perhaps you have simply not linked a transaction to these subscription(s). In that case, please do so. You will NOT get another warning about these overdue subscriptions(s).',
+    'subscriptions_overdue_warning_intro_single' => 'You have one subscription that is overdue to be paid. At the following date(s) a payment was expected, but it has not yet arrived.',
+    'subscriptions_overdue_warning_intro_multi' => 'You have :count subscription(s) that are overdue to be paid. At the following date(s) a payment was expected, but it has not yet arrived.',
+    'subscriptions_overdue_please_action_single' => 'Perhaps you have simply not linked a transaction to this subscription. In that case, please do so. You will NOT get another warning about this overdue subscription. A new warning will be sent out for the NEXT due payment.',
+    'subscriptions_overdue_please_action_multi' => 'Perhaps you have simply not linked a transaction to these subscriptions. In that case, please do so. You will NOT get another warning about these overdue subscriptions. A new warning will be sent out for the NEXT due payments.',
     'subscriptions_overdue_outro' => 'If you believe this message is wrong, please contact the Firefly III developer. Thank you for using Firefly III.',
     // bill warning
     'bill_warning_subject_end_date'               => 'Your subscription ":name" is due to end in :diff days',
