@@ -566,7 +566,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
                 'transaction_types.type',
                 'transaction_journals.transaction_currency_id',
                 'transactions.amount',
-                'transactions.native_amount',
+                'transactions.native_amount as pc_amount',
                 'transactions.foreign_amount',
             ])
             ->toArray()

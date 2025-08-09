@@ -98,10 +98,10 @@ trait PeriodOverview
         /** @var array $dates */
         $dates                   = Navigation::blockPeriods($start, $end, $range);
         $entries                 = [];
-        $spent                   = [];
-        $earned                  = [];
-        $transferredAway         = [];
-        $transferredIn           = [];
+//        $spent                   = [];
+//        $earned                  = [];
+//        $transferredAway         = [];
+//        $transferredIn           = [];
 
         // run a custom query because doing this with the collector is MEGA slow.
         $transactions            = $this->accountRepository->periodCollection($account, $start, $end);
@@ -180,8 +180,8 @@ trait PeriodOverview
 
                     continue;
                 }
-                $filtered[] = $item;
             }
+            $filtered[] = $item;
         }
 
         return [$filtered, $result];
