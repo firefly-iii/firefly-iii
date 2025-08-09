@@ -9,10 +9,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+- #6836
+- #9640
+- #9650
 - Add Arabic as language, translations follow.
 
 ### Changed
 
+- #10071
 - Renamed all instances of "default" and "native" currency to "primary" currency. This influences translations and API endpoints. The database is not changed because that's difficult to do reliably.
 
 ### Deprecated
@@ -27,22 +31,19 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #10618
-- #10646
-- #10687
-- #10700
-- #10708
-- #10704
-- #10702
-- #10706
-- #10709
-- #10678
-- #10656
 - #10565
 - #10600
-- #10071
-- #9640
-- #9650
+- #10618
+- #10646
+- #10656
+- #10678
+- #10687
+- #10700
+- #10702
+- #10704
+- #10706
+- #10708
+- #10709
 - Tag overview will no longer search for tags dated < 1970.
 
 ### API
@@ -52,6 +53,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - All API read endpoints are DB optimized and should be faster.
 - All documentation should be in sync again.
 - [More info in the docs](https://docs.firefly-iii.org/references/firefly-iii/api/).
+- #9379
 
 ## 6.2.21 - 2025-07-18
 
