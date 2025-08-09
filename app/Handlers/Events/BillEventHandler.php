@@ -26,9 +26,10 @@ namespace FireflyIII\Handlers\Events;
 
 use Exception;
 use FireflyIII\Events\Model\Bill\WarnUserAboutBill;
-use FireflyIII\Events\Model\Bill\WarnUserAboutOverdueSubscription;
+use FireflyIII\Events\Model\Bill\WarnUserAboutOverdueSubscriptions;
+use FireflyIII\Models\Bill;
 use FireflyIII\Notifications\User\BillReminder;
-use FireflyIII\Notifications\User\SubscriptionOverdueReminder;
+use FireflyIII\Notifications\User\SubscriptionsOverdueReminder;
 use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
@@ -38,47 +39,65 @@ use Illuminate\Support\Facades\Notification;
  */
 class BillEventHandler
 {
-    public function warnAboutOverdueSubscription(WarnUserAboutOverdueSubscription $event): void
+    public function warnAboutOverdueSubscriptions(WarnUserAboutOverdueSubscriptions $event): void
     {
-        $bill             = $event->bill;
-        $dates            = $event->dates;
-
-        $key              = sprintf('bill_overdue_%s_%s', $bill->id, substr(hash('sha256', json_encode($dates['pay_dates'], JSON_THROW_ON_ERROR)), 0, 10));
-        $pref             = Preferences::getForUser($bill->user, $key, false);
-        if (true === $pref->data) {
-            Log::debug(sprintf('User %s has already been warned about overdue subscription %s.', $bill->user->id, $bill->id));
-
-            return;
+        Log::debug(sprintf('Now in %s', __METHOD__));
+        // make sure user does not get the warning twice.
+        $overdue    = $event->overdue;
+        $user       = $event->user;
+        $toBeWarned = [];
+        Log::debug(sprintf('%d bills to warn about.', count($overdue)));
+        foreach ($overdue as $item) {
+            /** @var Bill $bill */
+            $bill = $item['bill'];
+            $key  = sprintf('bill_overdue_%s_%s', $bill->id, substr(hash('sha256', json_encode($item['dates']['pay_dates'], JSON_THROW_ON_ERROR)), 0, 10));
+            $pref = Preferences::getForUser($bill->user, $key, false);
+            if (true === $pref->data) {
+                Log::debug(sprintf('User #%d has already been warned about overdue subscription #%d.', $bill->user->id, $bill->id));
+                continue;
+            }
+            $toBeWarned[] = $item;
         }
+        unset($bill);
+        Log::debug(sprintf('Now %d bills to warn about.', count($toBeWarned)));
 
         /** @var bool $sendNotification */
-        $sendNotification = Preferences::getForUser($bill->user, 'notification_bill_reminder', true)->data;
-
-        if (true === $sendNotification) {
-            Log::debug('Will warning about overdue subscription.');
-            Preferences::setForUser($bill->user, $key, true);
-
-            try {
-                Notification::send($bill->user, new SubscriptionOverdueReminder($bill, $dates));
-            } catch (Exception $e) {
-                $message = $e->getMessage();
-                if (str_contains($message, 'Bcc')) {
-                    Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                    return;
-                }
-                if (str_contains($message, 'RFC 2822')) {
-                    Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                    return;
-                }
-                Log::error($e->getMessage());
-                Log::error($e->getTraceAsString());
-            }
-
+        $sendNotification = Preferences::getForUser($user, 'notification_bill_reminder', true)->data;
+        if (false === $sendNotification) {
+            Log::debug('User has disabled bill reminders.');
             return;
         }
-        Log::debug('User has disabled bill reminders.');
+        Log::debug(sprintf('Will warning about %d overdue subscription(s).', count($toBeWarned)));
+        if (0 === count($toBeWarned)) {
+            Log::debug('No overdue subscriptions to warn about.');
+            return;
+        }
+        foreach ($toBeWarned as $item) {
+            /** @var Bill $bill */
+            $bill = $item['bill'];
+            $key  = sprintf('bill_overdue_%s_%s', $bill->id, substr(hash('sha256', json_encode($item['dates']['pay_dates'], JSON_THROW_ON_ERROR)), 0, 10));
+            Preferences::setForUser($bill->user, $key, true);
+        }
+        Log::warning('should hit this ONCE');
+        try {
+            Notification::send($user, new SubscriptionsOverdueReminder($overdue));
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+            if (str_contains($message, 'Bcc')) {
+                Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+
+                return;
+            }
+            if (str_contains($message, 'RFC 2822')) {
+                Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+
+                return;
+            }
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+        }
+
+
     }
 
     public function warnAboutBill(WarnUserAboutBill $event): void

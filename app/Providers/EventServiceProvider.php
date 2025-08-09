@@ -28,7 +28,7 @@ use FireflyIII\Events\Admin\InvitationCreated;
 use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Events\DetectedNewIPAddress;
 use FireflyIII\Events\Model\Bill\WarnUserAboutBill;
-use FireflyIII\Events\Model\Bill\WarnUserAboutOverdueSubscription;
+use FireflyIII\Events\Model\Bill\WarnUserAboutOverdueSubscriptions;
 use FireflyIII\Events\Model\BudgetLimit\Created;
 use FireflyIII\Events\Model\BudgetLimit\Deleted;
 use FireflyIII\Events\Model\BudgetLimit\Updated;
@@ -203,8 +203,8 @@ class EventServiceProvider extends ServiceProvider
             WarnUserAboutBill::class                => [
                 'FireflyIII\Handlers\Events\BillEventHandler@warnAboutBill',
             ],
-            WarnUserAboutOverdueSubscription::class => [
-                'FireflyIII\Handlers\Events\BillEventHandler@warnAboutOverdueSubscription',
+            WarnUserAboutOverdueSubscriptions::class => [
+                'FireflyIII\Handlers\Events\BillEventHandler@warnAboutOverdueSubscriptions',
             ],
 
             // audit log events:
