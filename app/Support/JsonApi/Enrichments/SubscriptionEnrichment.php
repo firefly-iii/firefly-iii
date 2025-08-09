@@ -56,6 +56,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
         $this->collectPaidDates();
         $this->collectPayDates();
 
+
         // TODO clean me up.
 
         $notes            = $this->notes;

@@ -1864,6 +1864,7 @@ return [
     'remove_budgeted_amount'                                                    => 'Remove budgeted amount in :currency',
 
     // bills:
+    'left_to_pay_active_bills' => 'active, expected and not yet paid subscriptions',
     'left_to_pay_lc' => 'left to pay',
     'less_than_expected' => 'less than expected',
     'more_than_expected' => 'more than expected',
