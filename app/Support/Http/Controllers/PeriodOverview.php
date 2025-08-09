@@ -168,7 +168,7 @@ trait PeriodOverview
          * @var array $item
          */
         foreach ($transactions as $index => $item) {
-            $date = Carbon::parse($item['date']);
+            $date       = Carbon::parse($item['date']);
             if ($date >= $start && $date <= $end) {
                 if ('away' === $direction && -1 === bccomp((string)$item['amount'], '0')) {
                     $result[] = $item;
