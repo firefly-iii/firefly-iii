@@ -3,6 +3,56 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.3.0 - 2025-08-xx
+
+> ⚠️ Firefly III v6.3.0 introduces a lot of API changes that deal with multi-currency support. Make sure your beloved apps are updated to support this.
+
+### Added
+
+- Add Arabic as language, translations follow.
+
+### Changed
+
+- Renamed all instances of "default" and "native" currency to "primary" currency. This influences translations and API endpoints. The database is not changed because that's difficult to do reliably.
+
+### Deprecated
+
+- Any API-field called `default_*` or `native_*`. Use `primary_*` instead.
+- All v2 endpoints.
+
+### Removed
+
+- Any API-field called `default_*` or `native_*`. Use `primary_*` instead.
+- All v2 endpoints.
+
+### Fixed
+
+- #10618
+- #10646
+- #10687
+- #10700
+- #10708
+- #10704
+- #10702
+- #10706
+- #10709
+- #10678
+- #10656
+- #10565
+- #10600
+- #10071
+- #9640
+- #9650
+- Tag overview will no longer search for tags dated < 1970.
+
+### API
+
+- All remaining API v2 endpoints are deprecated and removed in favour of the API v1 endpoints.
+- All API read endpoints now support multi-currency. Fields such as the balance and amount fields will also be available as `pc_*`-fields. Objects with currency information also come with new `primary_currency_*` fields.
+- All API read endpoints are DB optimized and should be faster.
+- All documentation should be in sync again.
+- [More info in the docs](https://docs.firefly-iii.org/references/firefly-iii/api/).
+
 ## 6.2.21 - 2025-07-18
 
 ### Added
