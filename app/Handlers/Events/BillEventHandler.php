@@ -69,7 +69,7 @@ class BillEventHandler
 
             return;
         }
-        Log::debug(sprintf('Will warning about %d overdue subscription(s).', count($toBeWarned)));
+        Log::debug(sprintf('Will warn about %d overdue subscription(s).', count($toBeWarned)));
         if (0 === count($toBeWarned)) {
             Log::debug('No overdue subscriptions to warn about.');
 
@@ -84,7 +84,7 @@ class BillEventHandler
         Log::warning('should hit this ONCE');
 
         try {
-            Notification::send($user, new SubscriptionsOverdueReminder($overdue));
+            Notification::send($user, new SubscriptionsOverdueReminder($toBeWarned));
         } catch (Exception $e) {
             $message = $e->getMessage();
             if (str_contains($message, 'Bcc')) {
