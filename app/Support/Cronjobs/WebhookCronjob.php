@@ -27,7 +27,6 @@ namespace FireflyIII\Support\Cronjobs;
 use Carbon\Carbon;
 use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Jobs\WarnAboutBills;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Support\Facades\Log;

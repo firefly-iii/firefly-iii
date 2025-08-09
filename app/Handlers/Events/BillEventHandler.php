@@ -40,15 +40,17 @@ class BillEventHandler
 {
     public function warnAboutOverdueSubscription(WarnUserAboutOverdueSubscription $event): void
     {
-        $bill  = $event->bill;
-        $dates = $event->dates;
+        $bill             = $event->bill;
+        $dates            = $event->dates;
 
-        $key  = sprintf('bill_overdue_%s_%s', $bill->id, substr(hash('sha256', json_encode($dates['pay_dates'], JSON_THROW_ON_ERROR)), 0, 10));
-        $pref = Preferences::getForUser($bill->user, $key, false);
+        $key              = sprintf('bill_overdue_%s_%s', $bill->id, substr(hash('sha256', json_encode($dates['pay_dates'], JSON_THROW_ON_ERROR)), 0, 10));
+        $pref             = Preferences::getForUser($bill->user, $key, false);
         if (true === $pref->data) {
             Log::debug(sprintf('User %s has already been warned about overdue subscription %s.', $bill->user->id, $bill->id));
+
             return;
         }
+
         /** @var bool $sendNotification */
         $sendNotification = Preferences::getForUser($bill->user, 'notification_bill_reminder', true)->data;
 
@@ -73,6 +75,7 @@ class BillEventHandler
                 Log::error($e->getMessage());
                 Log::error($e->getTraceAsString());
             }
+
             return;
         }
         Log::debug('User has disabled bill reminders.');
@@ -107,6 +110,7 @@ class BillEventHandler
                 Log::error($e->getMessage());
                 Log::error($e->getTraceAsString());
             }
+
             return;
         }
         Log::debug('User has disabled bill reminders.');

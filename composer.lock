@@ -10347,16 +10347,16 @@
         },
         {
             "name": "driftingly/rector-laravel",
-            "version": "2.0.5",
+            "version": "2.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/driftingly/rector-laravel.git",
-                "reference": "ac61de4f267c23249d175d7fc9149fd01528567d"
+                "reference": "5be95811801fc06126dd844beaeb6a41721ba3d3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/driftingly/rector-laravel/zipball/ac61de4f267c23249d175d7fc9149fd01528567d",
-                "reference": "ac61de4f267c23249d175d7fc9149fd01528567d",
+                "url": "https://api.github.com/repos/driftingly/rector-laravel/zipball/5be95811801fc06126dd844beaeb6a41721ba3d3",
+                "reference": "5be95811801fc06126dd844beaeb6a41721ba3d3",
                 "shasum": ""
             },
             "require": {
@@ -10376,9 +10376,9 @@
             "description": "Rector upgrades rules for Laravel Framework",
             "support": {
                 "issues": "https://github.com/driftingly/rector-laravel/issues",
-                "source": "https://github.com/driftingly/rector-laravel/tree/2.0.5"
+                "source": "https://github.com/driftingly/rector-laravel/tree/2.0.6"
             },
-            "time": "2025-05-14T17:30:41+00:00"
+            "time": "2025-08-08T22:10:01+00:00"
         },
         {
             "name": "fakerphp/faker",

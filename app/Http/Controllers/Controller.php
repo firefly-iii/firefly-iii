@@ -145,7 +145,7 @@ abstract class Controller extends BaseController
                     View::share('original_route_name', Route::currentRouteName());
 
                     // lottery to send any remaining webhooks:
-                    if(7 === random_int(1, 10)) {
+                    if (7 === random_int(1, 10)) {
                         // trigger event to send them:
                         Log::debug('send event RequestedSendWebhookMessages through lottery');
                         event(new RequestedSendWebhookMessages());
