@@ -19,18 +19,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 10071](https://github.com/firefly-iii/firefly-iii/issues/10071) (Allow toggling password field to text) reported by @ragul-engg
 - Renamed all instances of "default" and "native" currency to "primary" currency. This influences translations and API endpoints. The database is not changed because that's difficult to do reliably.
 
-### Deprecated
-
-- Any API-field called `default_*` or `native_*`. Use `primary_*` instead.
-- All v2 endpoints.
-
 ### Removed
 
 - Any API-field called `default_*` or `native_*`. Use `primary_*` instead.
 - All v2 endpoints.
 
 ### Fixed
-
+- #9849 
 - [Issue 10565](https://github.com/firefly-iii/firefly-iii/issues/10565) (Unable to delete reconciliation transaction) reported by @berta24
 - [Issue 10600](https://github.com/firefly-iii/firefly-iii/issues/10600) (Show attachmen iccon when listing tranactions) reported by @JcMinarro
 - [Discussion 10618](https://github.com/orgs/firefly-iii/discussions/10618) (Starting balance includes transactions that occur at 00:00 on the 1st of month) started by @jteez
@@ -40,6 +35,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 10687](https://github.com/firefly-iii/firefly-iii/issues/10687) (Creating new Piggy Bank via API fails (Unexpected empty currency)) reported by @Madnex
 - [Issue 10700](https://github.com/firefly-iii/firefly-iii/issues/10700) (Setting financial year date is inconsistent due to timezone calculations) reported by @AgeManning
 - [Issue 10702](https://github.com/firefly-iii/firefly-iii/issues/10702) (Wrong order of months in category report) reported by @kapuett
+- #10703
 - [Issue 10704](https://github.com/firefly-iii/firefly-iii/issues/10704) (Some triggers with rule automation seems to have an issue) reported by @Alienlog
 - [Issue 10706](https://github.com/firefly-iii/firefly-iii/issues/10706) (Add KRW in Default Currency List) reported by @readingsnail
 - [Issue 10708](https://github.com/firefly-iii/firefly-iii/issues/10708) (Incomplete display of a rule when a trigger negates "description caontains") reported by @dethegeek
