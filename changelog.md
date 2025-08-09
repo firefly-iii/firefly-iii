@@ -9,14 +9,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
-- #6836
-- #9640
-- #9650
+- [Issue 6836](https://github.com/firefly-iii/firefly-iii/issues/6836) (Send email about coming/past-due bills) reported by @elgatho
+- [Issue 9640](https://github.com/firefly-iii/firefly-iii/issues/9640) (UI Improvements for Rules) reported by @siriuspal
+- [Issue 9650](https://github.com/firefly-iii/firefly-iii/issues/9650) (Extra line in bills overview) reported by @poudenes
 - Add Arabic as language, translations follow.
 
 ### Changed
 
-- #10071
+- [Issue 10071](https://github.com/firefly-iii/firefly-iii/issues/10071) (Allow toggling password field to text) reported by @ragul-engg
 - Renamed all instances of "default" and "native" currency to "primary" currency. This influences translations and API endpoints. The database is not changed because that's difficult to do reliably.
 
 ### Deprecated
@@ -31,19 +31,19 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #10565
-- #10600
-- #10618
-- #10646
-- #10656
-- #10678
-- #10687
-- #10700
-- #10702
-- #10704
-- #10706
-- #10708
-- #10709
+- [Issue 10565](https://github.com/firefly-iii/firefly-iii/issues/10565) (Unable to delete reconciliation transaction) reported by @berta24
+- [Issue 10600](https://github.com/firefly-iii/firefly-iii/issues/10600) (Show attachmen iccon when listing tranactions) reported by @JcMinarro
+- [Discussion 10618](https://github.com/orgs/firefly-iii/discussions/10618) (Starting balance includes transactions that occur at 00:00 on the 1st of month) started by @jteez
+- [Issue 10646](https://github.com/firefly-iii/firefly-iii/issues/10646) (Webhooks fire even if disabled) reported by @lvu
+- [Issue 10656](https://github.com/firefly-iii/firefly-iii/issues/10656) (spent info "per day" shows the period total) reported by @frank-bg
+- [Issue 10678](https://github.com/firefly-iii/firefly-iii/issues/10678) (Transactions from asset to liability account do not appear on category reports.) reported by @slackspace-io
+- [Issue 10687](https://github.com/firefly-iii/firefly-iii/issues/10687) (Creating new Piggy Bank via API fails (Unexpected empty currency)) reported by @Madnex
+- [Issue 10700](https://github.com/firefly-iii/firefly-iii/issues/10700) (Setting financial year date is inconsistent due to timezone calculations) reported by @AgeManning
+- [Issue 10702](https://github.com/firefly-iii/firefly-iii/issues/10702) (Wrong order of months in category report) reported by @kapuett
+- [Issue 10704](https://github.com/firefly-iii/firefly-iii/issues/10704) (Some triggers with rule automation seems to have an issue) reported by @Alienlog
+- [Issue 10706](https://github.com/firefly-iii/firefly-iii/issues/10706) (Add KRW in Default Currency List) reported by @readingsnail
+- [Issue 10708](https://github.com/firefly-iii/firefly-iii/issues/10708) (Incomplete display of a rule when a trigger negates "description caontains") reported by @dethegeek
+- [Issue 10709](https://github.com/firefly-iii/firefly-iii/issues/10709) (has_any_external_id search parameter invalid) reported by @Alienlog
 - Tag overview will no longer search for tags dated < 1970.
 
 ### API
@@ -53,7 +53,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - All API read endpoints are DB optimized and should be faster.
 - All documentation should be in sync again.
 - [More info in the docs](https://docs.firefly-iii.org/references/firefly-iii/api/).
-- #9379
+- [PR 9379](https://github.com/firefly-iii/firefly-iii/pull/9379) (Bump alpinejs from 3.14.1 to 3.14.3) reported by @dependabot[bot]
 
 ## 6.2.21 - 2025-07-18
 
