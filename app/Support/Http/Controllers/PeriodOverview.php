@@ -92,7 +92,7 @@ trait PeriodOverview
         $cache->addProperty('account-show-period-entries');
         $cache->addProperty($account->id);
         if ($cache->has()) {
-             return $cache->get();
+            return $cache->get();
         }
 
         /** @var array $dates */
