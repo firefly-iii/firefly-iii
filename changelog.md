@@ -53,7 +53,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - All API read endpoints are DB optimized and should be faster.
 - All documentation should be in sync again.
 - [More info in the docs](https://docs.firefly-iii.org/references/firefly-iii/api/).
-- [PR 9379](https://github.com/firefly-iii/firefly-iii/pull/9379) (Bump alpinejs from 3.14.1 to 3.14.3) reported by @dependabot[bot]
 
 ## 6.2.21 - 2025-07-18
 
