@@ -80,13 +80,13 @@ class AccountController extends Controller
      */
     public function accounts(AutocompleteRequest $request): JsonResponse
     {
-        $data   = $request->getData();
-        $types  = $data['types'];
-        $query  = $data['query'];
-        $date   = $data['date'] ?? today(config('app.timezone'));
-        $return = [];
+        $data        = $request->getData();
+        $types       = $data['types'];
+        $query       = $data['query'];
+        $date        = $data['date'] ?? today(config('app.timezone'));
+        $return      = [];
         Timer::start(sprintf('AC accounts "%s"', $query));
-        $result = $this->repository->searchAccount((string) $query, $types, $this->parameters->get('limit'));
+        $result      = $this->repository->searchAccount((string) $query, $types, $this->parameters->get('limit'));
 
         // set date to subday + end-of-day for account balance. so it is at $date 23:59:59
         $date->endOfDay();
@@ -101,7 +101,7 @@ class AccountController extends Controller
             if (in_array($account->accountType->type, $this->balanceTypes, true)) {
                 // this one is correct.
                 Log::debug(sprintf('accounts: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
-                $balance = $allBalances[$account->id] ?? [];
+                $balance         = $allBalances[$account->id] ?? [];
                 $key             = $this->convertToPrimary && $currency->id !== $this->primaryCurrency->id ? 'pc_balance' : 'balance';
                 $useCurrency     = $this->convertToPrimary && $currency->id !== $this->primaryCurrency->id ? $this->primaryCurrency : $currency;
                 $amount          = $balance[$key] ?? '0';
