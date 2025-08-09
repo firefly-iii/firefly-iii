@@ -521,17 +521,6 @@ class Steam
         return $total;
     }
 
-    public function finalAccountsBalance(Collection $accounts, Carbon $date): array
-    {
-        Log::debug(sprintf('finalAccountsBalance: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
-        $balances = [];
-        foreach ($accounts as $account) {
-            $balances[$account->id] = $this->finalAccountBalance($account, $date);
-        }
-
-        return $balances;
-    }
-
     /**
      * @throws FireflyException
      */

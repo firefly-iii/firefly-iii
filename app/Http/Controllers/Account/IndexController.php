@@ -93,10 +93,10 @@ class IndexController extends Controller
         $start->subSecond();
 
         $ids           = $accounts->pluck('id')->toArray();
-        Log::debug(sprintf('inactive start: finalAccountsBalance("%s")', $start->format('Y-m-d H:i:s')));
-        Log::debug(sprintf('inactive end: finalAccountsBalance("%s")', $end->format('Y-m-d H:i:s')));
-        $startBalances = Steam::accountsBalancesOptimized($accounts, $start);
-        $endBalances   = Steam::accountsBalancesOptimized($accounts, $end);
+        Log::debug(sprintf('inactive start: accountsBalancesOptimized("%s")', $start->format('Y-m-d H:i:s')));
+        Log::debug(sprintf('inactive end: accountsBalancesOptimized("%s")', $end->format('Y-m-d H:i:s')));
+        $startBalances = Steam::accountsBalancesOptimized($accounts, $start, $this->primaryCurrency, $this->convertToPrimary);
+        $endBalances   = Steam::accountsBalancesOptimized($accounts, $end, $this->primaryCurrency, $this->convertToPrimary);
         $activities    = Steam::getLastActivities($ids);
 
 
@@ -170,10 +170,10 @@ class IndexController extends Controller
         $start->subSecond();
 
         $ids           = $accounts->pluck('id')->toArray();
-        Log::debug(sprintf('index start: finalAccountsBalance("%s")', $start->format('Y-m-d H:i:s')));
-        Log::debug(sprintf('index end: finalAccountsBalance("%s")', $end->format('Y-m-d H:i:s')));
-        $startBalances = Steam::accountsBalancesOptimized($accounts, $start);
-        $endBalances   = Steam::accountsBalancesOptimized($accounts, $end);
+        Log::debug(sprintf('index start: accountsBalancesOptimized("%s")', $start->format('Y-m-d H:i:s')));
+        Log::debug(sprintf('index end: accountsBalancesOptimized("%s")', $end->format('Y-m-d H:i:s')));
+        $startBalances = Steam::accountsBalancesOptimized($accounts, $start, $this->primaryCurrency, $this->convertToPrimary);
+        $endBalances   = Steam::accountsBalancesOptimized($accounts, $end, $this->primaryCurrency, $this->convertToPrimary);
         $activities    = Steam::getLastActivities($ids);
 
 
