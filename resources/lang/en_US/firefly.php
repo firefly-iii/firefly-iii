@@ -1875,6 +1875,7 @@ return [
     'subscr_expected_x_times'                                                   => 'Expect to pay {{amount}} {{times}} times this period',
     'not_or_not_yet'                                                            => 'Not (yet)',
     'visit_bill'                                                                => 'Visit subscription ":name" at Firefly III',
+    'visit_bills'                                                                => 'Visit subscriptions at Firefly III',
     'match_between_amounts'                                                     => 'Subscription matches transactions between :low and :high.',
     'running_again_loss'                                                        => 'Previously linked transactions to this subscription may lose their connection, if they (no longer) match the rule(s).',
     'bill_related_rules'                                                        => 'Rules related to this subscription',

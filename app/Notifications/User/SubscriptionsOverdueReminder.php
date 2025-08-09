@@ -92,13 +92,12 @@ class SubscriptionsOverdueReminder extends Notification
      */
     public function toSlack(User $notifiable): SlackMessage
     {
-        $bill = $this->bill;
-        $url  = route('bills.show', [$bill->id]);
+        $url  = route('bills.index');
 
         return new SlackMessage()
             ->warning()
-            ->attachment(static function ($attachment) use ($bill, $url): void {
-                $attachment->title((string)trans('firefly.visit_bill', ['name' => $bill->name]), $url);
+            ->attachment(static function ($attachment) use ($url): void {
+                $attachment->title((string)trans('firefly.visit_bills'), $url);
             })
             ->content($this->getSubject())
         ;
