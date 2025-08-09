@@ -569,8 +569,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
                 'transactions.native_amount as pc_amount',
                 'transactions.foreign_amount',
             ])
-            ->toArray()
-        ;
+            ->toArray();
 
     }
 

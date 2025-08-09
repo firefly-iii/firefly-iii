@@ -92,23 +92,22 @@ trait PeriodOverview
         $cache->addProperty('account-show-period-entries');
         $cache->addProperty($account->id);
         if ($cache->has()) {
-            // return $cache->get();
+             return $cache->get();
         }
 
         /** @var array $dates */
         $dates                   = Navigation::blockPeriods($start, $end, $range);
         $entries                 = [];
-//        $spent                   = [];
-//        $earned                  = [];
-//        $transferredAway         = [];
-//        $transferredIn           = [];
 
         // run a custom query because doing this with the collector is MEGA slow.
+        Timer::start('account-period-collect');
         $transactions            = $this->accountRepository->periodCollection($account, $start, $end);
+        Timer::stop('account-period-collect');
         // loop dates
         Log::debug(sprintf('Count of loops: %d', count($dates)));
         $loops                   = 0;
         // stop after 10 loops for memory reasons.
+        Timer::start('account-period-loop');
         foreach ($dates as $currentDate) {
             $title                            = Navigation::periodShow($currentDate['start'], $currentDate['period']);
             [$transactions, $spent]           = $this->filterTransactionsByType(TransactionTypeEnum::WITHDRAWAL, $transactions, $currentDate['start'], $currentDate['end']);
@@ -127,6 +126,7 @@ trait PeriodOverview
                                               ];
             ++$loops;
         }
+        Timer::stop('account-period-loop');
         $cache->store($entries);
         Timer::stop('account-period-total');
         Log::debug('End of getAccountPeriodOverview()');
