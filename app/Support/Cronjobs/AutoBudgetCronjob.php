@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use FireflyIII\Jobs\CreateAutoBudgetLimits;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Support\Facades\FireflyConfig;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class AutoBudgetCronjob
@@ -42,22 +43,22 @@ class AutoBudgetCronjob extends AbstractCronjob
         $diff          = Carbon::now()->getTimestamp() - $lastTime;
         $diffForHumans = today(config('app.timezone'))->diffForHumans(Carbon::createFromTimestamp($lastTime), null, true);
         if (0 === $lastTime) {
-            app('log')->info('Auto budget cron-job has never fired before.');
+            Log::info('Auto budget cron-job has never fired before.');
         }
         // less than half a day ago:
         if ($lastTime > 0 && $diff <= 43200) {
-            app('log')->info(sprintf('It has been %s since the auto budget cron-job has fired.', $diffForHumans));
+            Log::info(sprintf('It has been %s since the auto budget cron-job has fired.', $diffForHumans));
             if (false === $this->force) {
-                app('log')->info('The auto budget cron-job will not fire now.');
+                Log::info('The auto budget cron-job will not fire now.');
                 $this->message = sprintf('It has been %s since the auto budget cron-job has fired. It will not fire now.', $diffForHumans);
 
                 return;
             }
-            app('log')->info('Execution of the auto budget cron-job has been FORCED.');
+            Log::info('Execution of the auto budget cron-job has been FORCED.');
         }
 
         if ($lastTime > 0 && $diff > 43200) {
-            app('log')->info(sprintf('It has been %s since the auto budget cron-job has fired. It will fire now!', $diffForHumans));
+            Log::info(sprintf('It has been %s since the auto budget cron-job has fired. It will fire now!', $diffForHumans));
         }
 
         $this->fireAutoBudget();
@@ -66,7 +67,7 @@ class AutoBudgetCronjob extends AbstractCronjob
 
     private function fireAutoBudget(): void
     {
-        app('log')->info(sprintf('Will now fire auto budget cron job task for date "%s".', $this->date->format('Y-m-d')));
+        Log::info(sprintf('Will now fire auto budget cron job task for date "%s".', $this->date->format('Y-m-d')));
 
         /** @var CreateAutoBudgetLimits $job */
         $job                = app(CreateAutoBudgetLimits::class, [$this->date]);
@@ -80,6 +81,6 @@ class AutoBudgetCronjob extends AbstractCronjob
         $this->message      = 'Auto-budget cron job fired successfully.';
 
         FireflyConfig::set('last_ab_job', (int) $this->date->format('U'));
-        app('log')->info('Done with auto budget cron job task.');
+        Log::info('Done with auto budget cron job task.');
     }
 }

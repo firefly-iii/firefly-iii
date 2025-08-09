@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
@@ -33,6 +34,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Route;
 
@@ -141,6 +143,14 @@ abstract class Controller extends BaseController
                     View::share('shownDemo', $shownDemo);
                     View::share('current_route_name', $page);
                     View::share('original_route_name', Route::currentRouteName());
+
+                    // lottery to send any remaining webhooks:
+                    if(7 === random_int(1, 10)) {
+                        // trigger event to send them:
+                        Log::debug('send event RequestedSendWebhookMessages through lottery');
+                        event(new RequestedSendWebhookMessages());
+                    }
+
                 }
                 View::share('darkMode', $darkMode);
 

@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Cronjobs;
 
 use Carbon\Carbon;
+use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Jobs\WarnAboutBills;
 use FireflyIII\Models\Configuration;
@@ -32,9 +33,9 @@ use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Class BillWarningCronjob
+ * Class WebhookCronjob
  */
-class BillWarningCronjob extends AbstractCronjob
+class WebhookCronjob extends AbstractCronjob
 {
     /**
      * @throws FireflyException
@@ -44,20 +45,20 @@ class BillWarningCronjob extends AbstractCronjob
         Log::debug(sprintf('Now in %s', __METHOD__));
 
         /** @var Configuration $config */
-        $config        = FireflyConfig::get('last_bw_job', 0);
+        $config        = FireflyConfig::get('last_webhook_job', 0);
         $lastTime      = (int) $config->data;
         $diff          = Carbon::now()->getTimestamp() - $lastTime;
         $diffForHumans = today(config('app.timezone'))->diffForHumans(Carbon::createFromTimestamp($lastTime), null, true);
 
         if (0 === $lastTime) {
-            Log::info('The bill notification cron-job has never fired before.');
+            Log::info('The webhook cron-job has never fired before.');
         }
-        // less than half a day ago:
-        if ($lastTime > 0 && $diff <= 43200) {
-            Log::info(sprintf('It has been %s since the bill notification cron-job has fired.', $diffForHumans));
+        // less than ten minutes ago.
+        if ($lastTime > 0 && $diff <= 600) {
+            Log::info(sprintf('It has been %s since the webhook cron-job has fired.', $diffForHumans));
             if (false === $this->force) {
                 Log::info('The cron-job will not fire now.');
-                $this->message      = sprintf('It has been %s since the bill notification cron-job has fired. It will not fire now.', $diffForHumans);
+                $this->message      = sprintf('It has been %s since the webhook cron-job has fired. It will not fire now.', $diffForHumans);
                 $this->jobFired     = false;
                 $this->jobErrored   = false;
                 $this->jobSucceeded = false;
@@ -65,36 +66,33 @@ class BillWarningCronjob extends AbstractCronjob
                 return;
             }
 
-            Log::info('Execution of the bill notification cron-job has been FORCED.');
+            Log::info('Execution of the webhook cron-job has been FORCED.');
         }
 
-        if ($lastTime > 0 && $diff > 43200) {
-            Log::info(sprintf('It has been %s since the bill notification cron-job has fired. It will fire now!', $diffForHumans));
+        if ($lastTime > 0 && $diff > 600) {
+            Log::info(sprintf('It has been %s since the webhook cron-job has fired. It will fire now!', $diffForHumans));
         }
 
-        $this->fireWarnings();
+        $this->fireWebhookmessages();
 
         app('preferences')->mark();
     }
 
-    private function fireWarnings(): void
+    private function fireWebhookmessages(): void
     {
-        Log::info(sprintf('Will now fire bill notification job task for date "%s".', $this->date->format('Y-m-d H:i:s')));
+        Log::info(sprintf('Will now send webhook messages for date "%s".', $this->date->format('Y-m-d H:i:s')));
 
-        /** @var WarnAboutBills $job */
-        $job                = app(WarnAboutBills::class);
-        $job->setDate($this->date);
-        $job->setForce($this->force);
-        $job->handle();
+        Log::debug('send event RequestedSendWebhookMessages through cron job.');
+        event(new RequestedSendWebhookMessages());
 
         // get stuff from job:
         $this->jobFired     = true;
         $this->jobErrored   = false;
         $this->jobSucceeded = true;
-        $this->message      = 'Bill notification cron job fired successfully.';
+        $this->message      = 'Send webhook messages cron job fired successfully.';
 
-        FireflyConfig::set('last_bw_job', (int) $this->date->format('U'));
+        FireflyConfig::set('last_webhook_job', (int) $this->date->format('U'));
         Log::info(sprintf('Marked the last time this job has run as "%s" (%d)', $this->date->format('Y-m-d H:i:s'), (int) $this->date->format('U')));
-        Log::info('Done with bill notification cron job task.');
+        Log::info('Done with webhook cron job task.');
     }
 }

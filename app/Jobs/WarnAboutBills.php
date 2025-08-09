@@ -25,13 +25,17 @@ declare(strict_types=1);
 namespace FireflyIII\Jobs;
 
 use Carbon\Carbon;
-use FireflyIII\Events\WarnUserAboutBill;
+use FireflyIII\Events\Model\Bill\WarnUserAboutBill;
+use FireflyIII\Events\Model\Bill\WarnUserAboutOverdueSubscription;
 use FireflyIII\Models\Bill;
+use FireflyIII\Support\Facades\Navigation;
+use FireflyIII\Support\JsonApi\Enrichments\SubscriptionEnrichment;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class WarnAboutBills
@@ -51,19 +55,19 @@ class WarnAboutBills implements ShouldQueue
      */
     public function __construct(?Carbon $date)
     {
-        $newDate     = new Carbon();
+        $newDate = new Carbon();
         $newDate->startOfDay();
-        $this->date  = $newDate;
+        $this->date = $newDate;
 
         if ($date instanceof Carbon) {
-            $newDate    = clone $date;
+            $newDate = clone $date;
             $newDate->startOfDay();
             $this->date = $newDate;
         }
 
         $this->force = false;
 
-        app('log')->debug(sprintf('Created new WarnAboutBills("%s")', $this->date->format('Y-m-d')));
+        Log::debug(sprintf('Created new WarnAboutBills("%s")', $this->date->format('Y-m-d')));
     }
 
     /**
@@ -71,12 +75,16 @@ class WarnAboutBills implements ShouldQueue
      */
     public function handle(): void
     {
-        app('log')->debug(sprintf('Now at start of WarnAboutBills() job for %s.', $this->date->format('D d M Y')));
+        Log::debug(sprintf('Now at start of WarnAboutBills() job for %s.', $this->date->format('D d M Y')));
         $bills = Bill::all();
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {
-            app('log')->debug(sprintf('Now checking bill #%d ("%s")', $bill->id, $bill->name));
+            Log::debug(sprintf('Now checking bill #%d ("%s")', $bill->id, $bill->name));
+            $dates = $this->getDates($bill);
+            if ($this->needsOverdueAlert($dates)) {
+                $this->sendOverdueAlert($bill, $dates);
+            }
             if ($this->hasDateFields($bill)) {
                 if ($this->needsWarning($bill, 'end_date')) {
                     $this->sendWarning($bill, 'end_date');
@@ -86,7 +94,7 @@ class WarnAboutBills implements ShouldQueue
                 }
             }
         }
-        app('log')->debug('Done with handle()');
+        Log::debug('Done with handle()');
 
         // clear cache:
         app('preferences')->mark();
@@ -95,12 +103,12 @@ class WarnAboutBills implements ShouldQueue
     private function hasDateFields(Bill $bill): bool
     {
         if (false === $bill->active) {
-            app('log')->debug('Bill is not active.');
+            Log::debug('Bill is not active.');
 
             return false;
         }
         if (null === $bill->end_date && null === $bill->extension_date) {
-            app('log')->debug('Bill has no date fields.');
+            Log::debug('Bill has no date fields.');
 
             return false;
         }
@@ -115,7 +123,7 @@ class WarnAboutBills implements ShouldQueue
         }
         $diff = $this->getDiff($bill, $field);
         $list = config('firefly.bill_reminder_periods');
-        app('log')->debug(sprintf('Difference in days for field "%s" ("%s") is %d day(s)', $field, $bill->{$field}->format('Y-m-d'), $diff));
+        Log::debug(sprintf('Difference in days for field "%s" ("%s") is %d day(s)', $field, $bill->{$field}->format('Y-m-d'), $diff));
         if (in_array($diff, $list, true)) {
             return true;
         }
@@ -128,19 +136,19 @@ class WarnAboutBills implements ShouldQueue
         $today  = clone $this->date;
         $carbon = clone $bill->{$field};
 
-        return (int) $today->diffInDays($carbon);
+        return (int)$today->diffInDays($carbon);
     }
 
     private function sendWarning(Bill $bill, string $field): void
     {
         $diff = $this->getDiff($bill, $field);
-        app('log')->debug('Will now send warning!');
+        Log::debug('Will now send warning!');
         event(new WarnUserAboutBill($bill, $field, $diff));
     }
 
     public function setDate(Carbon $date): void
     {
-        $newDate    = clone $date;
+        $newDate = clone $date;
         $newDate->startOfDay();
         $this->date = $newDate;
     }
@@ -148,5 +156,46 @@ class WarnAboutBills implements ShouldQueue
     public function setForce(bool $force): void
     {
         $this->force = $force;
+    }
+
+    private function getDates(Bill $bill): array
+    {
+        $start      = clone $this->date;
+        $start      = Navigation::startOfPeriod($start, $bill->repeat_freq);
+        $end        = clone $start;
+        $end        = Navigation::endOfPeriod($end, $bill->repeat_freq);
+        $enrichment = new SubscriptionEnrichment();
+        $enrichment->setUser($bill->user);
+        $enrichment->setStart($start);
+        $enrichment->setEnd($end);
+        $single = $enrichment->enrichSingle($bill);
+        return [
+            'pay_dates'  => $single->meta['pay_dates'] ?? [],
+            'paid_dates' => $single->meta['paid_dates'] ?? [],
+        ];
+    }
+
+    private function needsOverdueAlert(array $dates): bool
+    {
+        $count = count($dates['pay_dates']) - count($dates['paid_dates']);
+        if (0 === $count || 0 === count($dates['pay_dates'])) {
+            return false;
+        }
+        // the earliest date in the list of pay dates must be 48hrs or more ago.
+        $earliest = new Carbon($dates['pay_dates'][0]);
+        $earliest->startOfDay();
+        Log::debug(sprintf('Earliest expected pay date is %s' , $earliest->toAtomString()));
+        $diff = $earliest->diffInDays($this->date);
+        Log::debug(sprintf('Difference in days is %s', $diff));
+        if ($diff < 2) {
+            return false;
+        }
+        return true;
+    }
+
+    private function sendOverdueAlert(Bill $bill, array $dates): void
+    {
+        Log::debug('Will now send warning about overdue bill.');
+        event(new WarnUserAboutOverdueSubscription($bill, $dates));
     }
 }

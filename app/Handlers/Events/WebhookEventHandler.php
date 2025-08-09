@@ -50,8 +50,7 @@ class WebhookEventHandler
             ->get(['webhook_messages.*'])
             ->filter(
                 static fn (WebhookMessage $message) => $message->webhookAttempts()->count() <= 2
-            )->splice(0, 5)
-        ;
+            )->splice(0, 5);
         Log::debug(sprintf('Found %d webhook message(s) ready to be send.', $messages->count()));
         foreach ($messages as $message) {
             if (false === $message->sent) {
