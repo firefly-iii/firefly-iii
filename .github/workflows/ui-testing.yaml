@@ -55,7 +55,8 @@ jobs:
     - name: Run Selenium tests
       env:
         HEADLESS: true
-        FIREFLY_BASE_URL: http://52.212.42.101:8080
+        FIREFLY_BASE_URL: http://52.212.42.101:8080/api/v1
+        FIREFLY_URL: http://52.212.42.101:8080
       run: |
         pytest tests/ -v
         pytest UI-tests/ -v
