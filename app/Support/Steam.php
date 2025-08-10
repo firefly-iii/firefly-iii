@@ -515,11 +515,11 @@ class Steam
             if (null === $preference) {
                 $singleton->setPreference($key, $currency);
             }
-            if ($currency->id === $primary->id) {
-                return $amount;
+            $current = $amount;
+            if ($currency->id !== $primary->id) {
+                $current = $converter->convert($currency, $primary, $date, $amount);
+                Log::debug(sprintf('Convert %s %s to %s %s', $currency->code, $amount, $primary->code, $current));
             }
-            $current = $converter->convert($currency, $primary, $date, $amount);
-            Log::debug(sprintf('Convert %s %s to %s %s', $currency->code, $amount, $primary->code, $current));
             $total = bcadd($current, $total);
         }
 
