@@ -82,7 +82,7 @@ class ShowController extends Controller
      *                                              */
     public function show(Request $request, Account $account, ?Carbon $start = null, ?Carbon $end = null)
     {
-        if(0 === $account->id) {
+        if (0 === $account->id) {
             throw new NotFoundHttpException();
         }
         $objectType       = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
@@ -119,7 +119,7 @@ class ShowController extends Controller
         $firstTransaction = $this->repository->oldestJournalDate($account) ?? $start;
 
         Log::debug('Start period overview');
-        $timer = Timer::getInstance();
+        $timer            = Timer::getInstance();
         $timer->start('period-overview');
         $periods          = $this->getAccountPeriodOverview($account, $firstTransaction, $end);
 
