@@ -121,7 +121,7 @@ class ShowController extends Controller
         // go back max 3 years.
         $threeYearsAgo    = clone $start;
         $threeYearsAgo->startOfYear()->subYears(3);
-        if($firstTransaction->lt($threeYearsAgo)) {
+        if ($firstTransaction->lt($threeYearsAgo)) {
             $firstTransaction = clone $threeYearsAgo;
         }
 
