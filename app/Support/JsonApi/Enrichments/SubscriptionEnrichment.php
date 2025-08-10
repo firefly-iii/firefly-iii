@@ -345,7 +345,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
 
     private function getLastPaidDate(array $paidData): ?Carbon
     {
-        Log::debug('getLastPaidDate()');
+        //Log::debug('getLastPaidDate()');
         $return = null;
         foreach ($paidData as $entry) {
             if (null !== $return) {
@@ -354,15 +354,15 @@ class SubscriptionEnrichment implements EnrichmentInterface
                 if ($current->gt($return)) {
                     $return = clone $current;
                 }
-                Log::debug(sprintf('Last paid date is: %s', $return->format('Y-m-d')));
+                Log::debug(sprintf('[a] Last paid date is: %s', $return->format('Y-m-d')));
             }
             if (null === $return) {
                 /** @var Carbon $return */
                 $return = $entry['date_object'];
-                Log::debug(sprintf('Last paid date is: %s', $return->format('Y-m-d')));
+                Log::debug(sprintf('[b] Last paid date is: %s', $return->format('Y-m-d')));
             }
         }
-        Log::debug(sprintf('Last paid date is: "%s"', $return?->format('Y-m-d')));
+        Log::debug(sprintf('[c] Last paid date is: "%s"', $return?->format('Y-m-d')));
 
         return $return;
     }
