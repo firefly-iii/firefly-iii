@@ -2,6 +2,9 @@
 name: Selenium UI Tests and API Tests
 
 on:
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       environment:
@@ -21,10 +24,7 @@ on:
         options:
           - chrome
           - firefox
-  pull_request:
-    branches:
-      - main
-
+          
 jobs:
   selenium-tests:
     runs-on: ubuntu-latest
