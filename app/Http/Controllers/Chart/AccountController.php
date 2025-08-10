@@ -101,7 +101,7 @@ class AccountController extends Controller
         $cache->addProperty($this->convertToPrimary);
         $cache->addProperty('chart.account.expense-accounts');
         if ($cache->has()) {
-             return response()->json($cache->get());
+            return response()->json($cache->get());
         }
 
         // prep some vars:
