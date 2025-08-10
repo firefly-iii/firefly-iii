@@ -85,7 +85,8 @@ class AccountController extends Controller
         $query       = $data['query'];
         $date        = $data['date'] ?? today(config('app.timezone'));
         $return      = [];
-        Timer::start(sprintf('AC accounts "%s"', $query));
+        $timer = Timer::getInstance();
+        $timer->start(sprintf('AC accounts "%s"', $query));
         $result      = $this->repository->searchAccount((string) $query, $types, $this->parameters->get('limit'));
 
         // set date to subday + end-of-day for account balance. so it is at $date 23:59:59
@@ -137,7 +138,7 @@ class AccountController extends Controller
                 return $posA - $posB;
             }
         );
-        Timer::stop(sprintf('AC accounts "%s"', $query));
+        $timer->stop(sprintf('AC accounts "%s"', $query));
 
         return response()->api($return);
     }

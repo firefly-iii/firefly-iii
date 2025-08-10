@@ -28,19 +28,34 @@ use Illuminate\Support\Facades\Log;
 
 class Timer
 {
-    private static array $times = [];
+    private array         $times    = [];
+    private static ?Timer $instance = null;
 
-    public static function start(string $title): void
+    private function __construct()
     {
-        self::$times[$title] = microtime(true);
+        // Private constructor to prevent direct instantiation.
     }
 
-    public static function stop(string $title): void
+    public static function getInstance(): self
     {
-        $start = self::$times[$title] ?? 0;
+        if (null === self::$instance) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
+    }
+
+    public function start(string $title): void
+    {
+        $this->times[$title] = microtime(true);
+    }
+
+    public function stop(string $title): void
+    {
+        $start = $this->times[$title] ?? 0;
         $end   = microtime(true);
         $diff  = $end - $start;
-        unset(self::$times[$title]);
+        unset($this->times[$title]);
         Log::debug(sprintf('Timer "%s" took %f seconds', $title, $diff));
     }
 }

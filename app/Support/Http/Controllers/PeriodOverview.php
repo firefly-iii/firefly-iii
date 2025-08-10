@@ -80,7 +80,8 @@ trait PeriodOverview
     protected function getAccountPeriodOverview(Account $account, Carbon $start, Carbon $end): array
     {
         Log::debug('Now in getAccountPeriodOverview()');
-        Timer::start('account-period-total');
+        $timer = Timer::getInstance();
+        $timer->start('account-period-total');
         $this->accountRepository = app(AccountRepositoryInterface::class);
         $range                   = Navigation::getViewRange(true);
         [$start, $end]           = $end < $start ? [$end, $start] : [$start, $end];
@@ -101,14 +102,14 @@ trait PeriodOverview
         $entries                 = [];
 
         // run a custom query because doing this with the collector is MEGA slow.
-        Timer::start('account-period-collect');
+        $timer->start('account-period-collect');
         $transactions            = $this->accountRepository->periodCollection($account, $start, $end);
-        Timer::stop('account-period-collect');
+        $timer->stop('account-period-collect');
         // loop dates
         Log::debug(sprintf('Count of loops: %d', count($dates)));
         $loops                   = 0;
         // stop after 10 loops for memory reasons.
-        Timer::start('account-period-loop');
+        $timer->start('account-period-loop');
         foreach ($dates as $currentDate) {
             $title                            = Navigation::periodShow($currentDate['start'], $currentDate['period']);
             [$transactions, $spent]           = $this->filterTransactionsByType(TransactionTypeEnum::WITHDRAWAL, $transactions, $currentDate['start'], $currentDate['end']);
@@ -127,9 +128,9 @@ trait PeriodOverview
                                               ];
             ++$loops;
         }
-        Timer::stop('account-period-loop');
+        $timer->stop('account-period-loop');
         $cache->store($entries);
-        Timer::stop('account-period-total');
+        $timer->stop('account-period-total');
         Log::debug('End of getAccountPeriodOverview()');
 
         return $entries;

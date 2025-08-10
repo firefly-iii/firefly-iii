@@ -128,6 +128,12 @@
                     <h3 class="box-title">{{ 'quick_link_reports'|_ }}</h3>
                 </div>
                 <div class="box-body">
+                    {% if '' == accountList %}
+                    <p class="text-danger">
+                        {{ 'quick_link_needs_accounts'|_ }}
+                    </p>
+                    {% endif %}
+                    {% if '' != accountList %}
                     <p>
                         {{ 'quick_link_examples'|_ }}
                     </p>
@@ -172,6 +178,7 @@
                     <p>
                         <em>{{ 'reports_can_bookmark'|_ }}</em>
                     </p>
+                    {% endif %}
                 </div>
             </div>
 

@@ -2333,6 +2333,7 @@ return [
 
 
     // reports:
+    'quick_link_needs_accounts' => 'In order to generate reports, you need to add at least one asset account to Firefly III.',
     'report_default'                                                            => 'Default financial report between :start and :end',
     'report_audit'                                                              => 'Transaction history overview between :start and :end',
     'report_category'                                                           => 'Category report between :start and :end',

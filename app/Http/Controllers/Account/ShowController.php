@@ -40,6 +40,7 @@ use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class ShowController
@@ -81,7 +82,9 @@ class ShowController extends Controller
      *                                              */
     public function show(Request $request, Account $account, ?Carbon $start = null, ?Carbon $end = null)
     {
-
+        if(0 === $account->id) {
+            throw new NotFoundHttpException();
+        }
         $objectType       = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
 
         if (!$this->isEditableAccount($account)) {
@@ -116,18 +119,19 @@ class ShowController extends Controller
         $firstTransaction = $this->repository->oldestJournalDate($account) ?? $start;
 
         Log::debug('Start period overview');
-        Timer::start('period-overview');
+        $timer = Timer::getInstance();
+        $timer->start('period-overview');
         $periods          = $this->getAccountPeriodOverview($account, $firstTransaction, $end);
 
         Log::debug('End period overview');
-        Timer::stop('period-overview');
+        $timer->stop('period-overview');
 
         // if layout = v2, overrule the page title.
         if ('v1' !== config('view.layout')) {
             $subTitle = (string) trans('firefly.all_journals_for_account', ['name' => $account->name]);
         }
         Log::debug('Collect transactions');
-        Timer::start('collection');
+        $timer->start('collection');
 
         /** @var GroupCollectorInterface $collector */
         $collector        = app(GroupCollectorInterface::class);
@@ -146,7 +150,7 @@ class ShowController extends Controller
 
 
         Log::debug('End collect transactions');
-        Timer::stop('collection');
+        $timer->stop('collection');
 
         // enrich data in arrays.
 
