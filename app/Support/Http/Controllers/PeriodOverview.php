@@ -94,6 +94,7 @@ trait PeriodOverview
         $cache->addProperty($account->id);
         if ($cache->has()) {
             Log::debug('Return CACHED in getAccountPeriodOverview()');
+
             return $cache->get();
         }
 
