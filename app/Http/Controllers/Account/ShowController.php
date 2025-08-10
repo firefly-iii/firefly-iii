@@ -118,6 +118,10 @@ class ShowController extends Controller
         $chartUrl         = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
         $firstTransaction = $this->repository->oldestJournalDate($account) ?? $start;
 
+        // go back max 3 years.
+        $threeYearsAgo = $start->subYears(3);
+        $firstTransaction = $firstTransaction->lt($threeYearsAgo) ? $threeYearsAgo : $firstTransaction;
+
         Log::debug('Start period overview');
         $timer            = Timer::getInstance();
         $timer->start('period-overview');
