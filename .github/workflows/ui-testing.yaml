@@ -66,8 +66,8 @@ jobs:
          API_TESTING_TOKEN: ${{ secrets.API_TESTING_TOKEN }}
          STATIC_CRON_TOKEN: ${{ secrets.STATIC_CRON_TOKEN }}
       run: |
-        pytest API-tests/ -v --disable-warnings --tb=short
-        pytest API-tests/ -v --disable-warnings --tb=short --junitxml=api_test_results.xml
+        pytest tests/ -v --disable-warnings --tb=short
+        pytest tests/ -v --disable-warnings --tb=short --junitxml=api_test_results.xml
 
 
 
