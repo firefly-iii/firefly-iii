@@ -101,7 +101,7 @@ class AccountController extends Controller
         $cache->addProperty($this->convertToPrimary);
         $cache->addProperty('chart.account.expense-accounts');
         if ($cache->has()) {
-            return response()->json($cache->get());
+             return response()->json($cache->get());
         }
 
         // prep some vars:
@@ -118,7 +118,7 @@ class AccountController extends Controller
         Log::debug(sprintf('expenseAccounts: accountsBalancesOptimized("%s")', $end->format('Y-m-d H:i:s')));
         $startBalances = Steam::accountsBalancesOptimized($accounts, $start, $this->primaryCurrency, $this->convertToPrimary);
         $endBalances   = Steam::accountsBalancesOptimized($accounts, $end, $this->primaryCurrency, $this->convertToPrimary);
-
+        Log::debug('Done collecting balances');
         // loop the accounts, then check for balance and currency info.
         foreach ($accounts as $account) {
             // Log::debug(sprintf('[a] Now in account #%d ("%s")', $account->id, $account->name));
