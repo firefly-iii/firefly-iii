@@ -119,7 +119,7 @@ class ShowController extends Controller
         $firstTransaction = $this->repository->oldestJournalDate($account) ?? $start;
 
         // go back max 3 years.
-        $threeYearsAgo = $start->subYears(3);
+        $threeYearsAgo    = $start->subYears(3);
         $firstTransaction = $firstTransaction->lt($threeYearsAgo) ? $threeYearsAgo : $firstTransaction;
 
         Log::debug('Start period overview');
