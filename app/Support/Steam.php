@@ -515,7 +515,7 @@ class Steam
             if (null === $preference) {
                 $singleton->setPreference($key, $currency);
             }
-            if ($currency->id !== $primary->id) {
+            if ($currency->id === $primary->id) {
                 return $amount;
             }
             $current = $converter->convert($currency, $primary, $date, $amount);
