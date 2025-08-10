@@ -1,0 +1,66 @@
+# .github/workflows/ui-testing.yaml
+name: Selenium UI Tests and API Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to test against'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - development
+          - staging
+          - production
+      browser:
+        description: 'Browser to run tests on'
+        required: true
+        default: 'chrome'
+        type: choice
+        options:
+          - chrome
+          - firefox
+          
+jobs:
+  selenium-tests:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 1  # Fetch only the latest commit to speed up the checkout process
+        repository: hamad-fyad/firefly
+        token: ${{ secrets.UI_TESTING_GITHUB_TOKEN }}
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirments.txt
+        
+    - name: Install Chrome and ChromeDriver
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y google-chrome-stable
+        
+    - name: Run Selenium tests
+      env:
+        HEADLESS: "true"
+        FIREFLY_BASE_URL: http://52.212.42.101:8080/api/v1
+        FIREFLY_URL: http://52.212.42.101:8080
+        API_TESTING_TOKEN: ${{ secrets.API_TESTING_TOKEN }}
+        STATIC_CRON_TOKEN: ${{ secrets.STATIC_CRON_TOKEN }}
+      run: |
+        pytest tests/ -v
+        pytest UI-tests/ -v
+        
+
