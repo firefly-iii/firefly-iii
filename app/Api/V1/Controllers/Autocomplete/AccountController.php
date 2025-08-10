@@ -85,7 +85,7 @@ class AccountController extends Controller
         $query       = $data['query'];
         $date        = $data['date'] ?? today(config('app.timezone'));
         $return      = [];
-        $timer = Timer::getInstance();
+        $timer       = Timer::getInstance();
         $timer->start(sprintf('AC accounts "%s"', $query));
         $result      = $this->repository->searchAccount((string) $query, $types, $this->parameters->get('limit'));
 

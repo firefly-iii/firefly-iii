@@ -80,7 +80,7 @@ trait PeriodOverview
     protected function getAccountPeriodOverview(Account $account, Carbon $start, Carbon $end): array
     {
         Log::debug('Now in getAccountPeriodOverview()');
-        $timer = Timer::getInstance();
+        $timer                   = Timer::getInstance();
         $timer->start('account-period-total');
         $this->accountRepository = app(AccountRepositoryInterface::class);
         $range                   = Navigation::getViewRange(true);
