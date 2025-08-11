@@ -69,5 +69,3 @@ jobs:
         pytest tests/ -v --disable-warnings --tb=short
         pytest tests/ -v --disable-warnings --tb=short --junitxml=api_test_results.xml
 
-
-
