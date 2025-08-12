@@ -58,5 +58,5 @@ jobs:
         FIREFLY_URL: http://52.212.42.101:8080
 
       run: |
-        pytest UI-tests/ -v
+        pytest tests-UI/ -v
     
